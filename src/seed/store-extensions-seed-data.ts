@@ -1,5 +1,5 @@
 /*
- * WHY: Seeds the 11 store-extension collections for YGO marketplace (2 stores).
+ * WHY: Seeds the 11 store-extension collections for the Beyblade marketplace (2 stores).
  * WHAT: payoutMethods, shippingConfigs, analyticsCards, analyticsAlerts, storeCategories,
  *       listingTemplates, moderationQueue, reports, itemRequests, storeWhatsAppConfig, storeGoogleConfig.
  *
@@ -37,24 +37,24 @@ const NOW = new Date();
 // ───── payoutMethods (4 records) ──────────────────────────────────────────
 export const payoutMethodsSeedData: Partial<PayoutMethodDocument>[] = [
   {
-    id: "payout-method-kaiba-corp-upi-default",
-    sellerId: "user-seto-kaiba",
-    storeId: "store-kaiba-corp-cards",
+    id: "payout-method-beyblade-arena-upi-default",
+    sellerId: "user-tyson-blader",
+    storeId: "store-beyblade-arena",
     type: "upi",
     label: "Primary UPI",
-    upiVpa: "kaibacorp@upi",
+    upiVpa: "beybladearena@upi",
     isDefault: true,
     isActive: true,
   },
   {
-    id: "payout-method-kaiba-corp-bank",
-    sellerId: "user-seto-kaiba",
-    storeId: "store-kaiba-corp-cards",
+    id: "payout-method-beyblade-arena-bank",
+    sellerId: "user-tyson-blader",
+    storeId: "store-beyblade-arena",
     type: "bank",
     label: "HDFC Current Account",
     accountNumber: "50200012345678",
     ifscCode: "HDFC0001234",
-    accountHolderName: "Kaiba Corp Card Vault LLP",
+    accountHolderName: "Beyblade Arena LLP",
     bankName: "HDFC Bank",
     isDefault: false,
     isActive: true,
@@ -87,22 +87,22 @@ export const payoutMethodsSeedData: Partial<PayoutMethodDocument>[] = [
 // ───── shippingConfigs (4 records) ────────────────────────────────────────
 export const shippingConfigsSeedData: Partial<ShippingConfigDocument>[] = [
   {
-    id: "ship-config-kaiba-corp-free",
-    storeId: "store-kaiba-corp-cards",
-    label: "Free over ₹999",
+    id: "ship-config-beyblade-arena-free",
+    storeId: "store-beyblade-arena",
+    label: "Free over ₹599",
     method: "free",
-    freeAbove: 999,
+    freeAbove: 599,
     estimatedDays: 5,
     isDefault: true,
     isActive: true,
   },
   {
-    id: "ship-config-kaiba-corp-express",
-    storeId: "store-kaiba-corp-cards",
+    id: "ship-config-beyblade-arena-express",
+    storeId: "store-beyblade-arena",
     label: "Express (2 days)",
     method: "express",
-    flatRate: 199,
-    expressSurcharge: 99,
+    flatRate: 149,
+    expressSurcharge: 79,
     estimatedDays: 2,
     isDefault: false,
     isActive: true,
@@ -131,11 +131,11 @@ export const shippingConfigsSeedData: Partial<ShippingConfigDocument>[] = [
 
 // ───── analyticsCards (9 records) ─────────────────────────────────────────
 export const analyticsCardsSeedData: Partial<AnalyticsCardDocument>[] = [
-  { id: "ac-seller-revenue-30d", scope: "seller", ownerId: "user-seto-kaiba", title: "Revenue · 30d", type: "metric", metric: "revenue:30d", filters: {}, position: 0, isBuiltIn: true, isVisible: true },
-  { id: "ac-seller-orders-30d", scope: "seller", ownerId: "user-seto-kaiba", title: "Orders · 30d", type: "metric", metric: "orders:30d", filters: {}, position: 1, isBuiltIn: true, isVisible: true },
-  { id: "ac-seller-aov", scope: "seller", ownerId: "user-seto-kaiba", title: "Avg Order Value", type: "metric", metric: "aov:30d", filters: {}, position: 2, isBuiltIn: true, isVisible: true },
-  { id: "ac-seller-traffic", scope: "seller", ownerId: "user-seto-kaiba", title: "Storefront Traffic", type: "line", metric: "store-views:30d", filters: {}, position: 3, isBuiltIn: true, isVisible: true },
-  { id: "ac-seller-top-products", scope: "seller", ownerId: "user-seto-kaiba", title: "Top Products", type: "table", metric: "top-products:30d", filters: {}, position: 4, isBuiltIn: true, isVisible: true },
+  { id: "ac-seller-revenue-30d", scope: "seller", ownerId: "user-tyson-blader", title: "Revenue · 30d", type: "metric", metric: "revenue:30d", filters: {}, position: 0, isBuiltIn: true, isVisible: true },
+  { id: "ac-seller-orders-30d", scope: "seller", ownerId: "user-tyson-blader", title: "Orders · 30d", type: "metric", metric: "orders:30d", filters: {}, position: 1, isBuiltIn: true, isVisible: true },
+  { id: "ac-seller-aov", scope: "seller", ownerId: "user-tyson-blader", title: "Avg Order Value", type: "metric", metric: "aov:30d", filters: {}, position: 2, isBuiltIn: true, isVisible: true },
+  { id: "ac-seller-traffic", scope: "seller", ownerId: "user-tyson-blader", title: "Storefront Traffic", type: "line", metric: "store-views:30d", filters: {}, position: 3, isBuiltIn: true, isVisible: true },
+  { id: "ac-seller-top-products", scope: "seller", ownerId: "user-tyson-blader", title: "Top Products", type: "table", metric: "top-products:30d", filters: {}, position: 4, isBuiltIn: true, isVisible: true },
   { id: "ac-admin-platform-gmv", scope: "admin", ownerId: "user-admin-letitrip", title: "Platform GMV", type: "metric", metric: "platform-gmv:30d", filters: {}, position: 0, isBuiltIn: true, isVisible: true },
   { id: "ac-admin-active-stores", scope: "admin", ownerId: "user-admin-letitrip", title: "Active Stores", type: "metric", metric: "active-stores", filters: {}, position: 1, isBuiltIn: true, isVisible: true },
   { id: "ac-admin-pending-mod", scope: "admin", ownerId: "user-admin-letitrip", title: "Pending Moderation", type: "metric", metric: "moderation-pending", filters: {}, position: 2, isBuiltIn: true, isVisible: true },
@@ -144,39 +144,39 @@ export const analyticsCardsSeedData: Partial<AnalyticsCardDocument>[] = [
 
 // ───── analyticsAlerts (4 records) ────────────────────────────────────────
 export const analyticsAlertsSeedData: Partial<AnalyticsAlertDocument>[] = [
-  { id: "alert-low-stock-kaiba", scope: "seller", ownerId: "user-seto-kaiba", label: "Low stock", metric: "min-stock", operator: "<", threshold: 5, windowHours: 24, isActive: true, notifyChannels: ["in-app", "email"] },
-  { id: "alert-no-sales-kaiba", scope: "seller", ownerId: "user-seto-kaiba", label: "Zero sales 48h", metric: "orders-window", operator: "==", threshold: 0, windowHours: 48, isActive: true, notifyChannels: ["in-app"] },
+  { id: "alert-low-stock-arena", scope: "seller", ownerId: "user-tyson-blader", label: "Low stock", metric: "min-stock", operator: "<", threshold: 5, windowHours: 24, isActive: true, notifyChannels: ["in-app", "email"] },
+  { id: "alert-no-sales-arena", scope: "seller", ownerId: "user-tyson-blader", label: "Zero sales 48h", metric: "orders-window", operator: "==", threshold: 0, windowHours: 48, isActive: true, notifyChannels: ["in-app"] },
   { id: "alert-platform-error-rate", scope: "admin", ownerId: "user-admin-letitrip", label: "API error rate > 5%", metric: "api-error-rate", operator: ">", threshold: 0.05, windowHours: 1, isActive: true, notifyChannels: ["in-app", "email", "whatsapp"] },
   { id: "alert-fraud-surge", scope: "admin", ownerId: "user-admin-letitrip", label: "Fraud reports surge", metric: "reports-1h", operator: ">", threshold: 10, windowHours: 1, isActive: true, notifyChannels: ["in-app", "email"] },
 ];
 
 // ───── storeCategories (4 records) ────────────────────────────────────────
 export const storeCategoriesSeedData: Partial<StoreCategoryDocument>[] = [
-  { id: "scat-kaiba-lob-singles", storeId: "store-kaiba-corp-cards", label: "LOB Singles", slug: "lob-singles", displayOrder: 0, productIds: [], isActive: true, description: "Legend of Blue Eyes White Dragon singles.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg") },
-  { id: "scat-kaiba-graded-slabs", storeId: "store-kaiba-corp-cards", label: "Graded Slabs", slug: "graded-slabs", displayOrder: 1, productIds: [], isActive: true, description: "PSA, BGS, and CGC graded Yu-Gi-Oh! slabs.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg") },
-  { id: "scat-letitrip-sealed", storeId: "store-letitrip-official", label: "Sealed Products", slug: "sealed-products", displayOrder: 0, productIds: [], isActive: true, description: "Factory-sealed booster boxes, tins, and structure decks.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg") },
-  { id: "scat-letitrip-accessories", storeId: "store-letitrip-official", label: "Accessories", slug: "accessories", displayOrder: 1, productIds: [], isActive: true, description: "Deck boxes, sleeves, playmats, and binders.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg") },
+  { id: "scat-arena-original-series", storeId: "store-beyblade-arena", label: "Original Series", slug: "original-series", displayOrder: 0, productIds: [], isActive: true, description: "Original 1999-2003 series beyblades.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-original-series-20260101/600/400") },
+  { id: "scat-arena-metal-fight", storeId: "store-beyblade-arena", label: "Metal Fight", slug: "metal-fight", displayOrder: 1, productIds: [], isActive: true, description: "Metal Fight / Metal Fusion era beyblades.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-metal-fight-20260101/600/400") },
+  { id: "scat-letitrip-sealed", storeId: "store-letitrip-official", label: "Sealed Products", slug: "sealed-products", displayOrder: 0, productIds: [], isActive: true, description: "Factory-sealed launcher sets, stadiums, and starter boxes.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-sealed-products-20260101/600/400") },
+  { id: "scat-letitrip-accessories", storeId: "store-letitrip-official", label: "Accessories", slug: "accessories", displayOrder: 1, productIds: [], isActive: true, description: "Launchers, grip tape, ripcords, and carry cases.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-accessories-20260101/600/400") },
 ];
 
 // ───── listingTemplates (4 records) ───────────────────────────────────────
 export const listingTemplatesSeedData: Partial<ListingTemplateDocument>[] = [
   {
-    id: "tmpl-standard-ygo-card",
-    storeId: "store-kaiba-corp-cards",
-    ownerId: "user-seto-kaiba",
-    name: "YGO Card · Standard",
-    description: "Default fields for a graded Yu-Gi-Oh! card listing.",
+    id: "tmpl-standard-beyblade",
+    storeId: "store-beyblade-arena",
+    ownerId: "user-tyson-blader",
+    name: "Beyblade · Standard",
+    description: "Default fields for a standard beyblade listing.",
     listingType: "standard",
-    defaults: { condition: "mint", currency: "INR", tags: ["yugioh", "tcg"] },
+    defaults: { condition: "mint", currency: "INR", tags: ["beyblade", "spinning-tops"] },
     isShared: true,
     isActive: true,
     usageCount: 14,
   },
   {
-    id: "tmpl-auction-vintage-ygo",
-    storeId: "store-kaiba-corp-cards",
-    ownerId: "user-seto-kaiba",
-    name: "Vintage YGO Auction",
+    id: "tmpl-auction-vintage-beyblade",
+    storeId: "store-beyblade-arena",
+    ownerId: "user-tyson-blader",
+    name: "Vintage Beyblade Auction",
     listingType: "auction",
     defaults: { reserveMultiplier: 1.2, auctionDays: 7, currency: "INR" },
     isShared: false,
@@ -184,10 +184,10 @@ export const listingTemplatesSeedData: Partial<ListingTemplateDocument>[] = [
     usageCount: 5,
   },
   {
-    id: "tmpl-preorder-konami",
+    id: "tmpl-preorder-takara-tomy",
     storeId: "store-letitrip-official",
     ownerId: "user-admin-letitrip",
-    name: "Konami Pre-Order",
+    name: "Takara-Tomy Pre-Order",
     listingType: "pre-order",
     defaults: { releaseLeadDays: 90, depositPercent: 30 },
     isShared: false,
@@ -195,10 +195,10 @@ export const listingTemplatesSeedData: Partial<ListingTemplateDocument>[] = [
     usageCount: 9,
   },
   {
-    id: "tmpl-bundle-ygo-set",
-    storeId: "store-kaiba-corp-cards",
-    ownerId: "user-seto-kaiba",
-    name: "YGO Set Bundle",
+    id: "tmpl-bundle-beyblade-set",
+    storeId: "store-beyblade-arena",
+    ownerId: "user-tyson-blader",
+    name: "Beyblade Set Bundle",
     listingType: "bundle",
     defaults: { minItems: 3, maxItems: 10, autoDiscountPercent: 12 },
     isShared: true,
@@ -209,35 +209,35 @@ export const listingTemplatesSeedData: Partial<ListingTemplateDocument>[] = [
 
 // ───── moderationQueue (6 records) ────────────────────────────────────────
 export const moderationQueueSeedData: Partial<ModerationQueueDocument>[] = [
-  { id: "mod-video-blue-eyes-auction", mediaType: "video", mediaUrl: "/media/product-video-blue-eyes-lob-psa10-20260518.mp4", entityType: "product", entityId: "auction-blue-eyes-lob-1st-psa10", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "pending", submittedAt: new Date(NOW.getTime() - 3600_000) },
-  { id: "mod-video-dark-magician-unbox", mediaType: "video", mediaUrl: "/media/product-video-dark-magician-lob-20260518.mp4", entityType: "product", entityId: "product-dark-magician-lob-nm", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "pending", submittedAt: new Date(NOW.getTime() - 7200_000) },
-  { id: "mod-review-exodia", mediaType: "rich-text", entityType: "review", entityId: "review-exodia-head-yugi-20260510", ownerId: "user-yugi-muto", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
-  { id: "mod-image-kaiba-banner", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/store-banner-kaiba-corp-cards-20260518/1600/400"), entityType: "storefront", entityId: "store-kaiba-corp-cards", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
-  { id: "mod-blog-grading-guide", mediaType: "rich-text", entityType: "blog", entityId: "blog-how-to-grade-yugioh-cards", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 432000_000), submittedAt: new Date(NOW.getTime() - 438000_000) },
-  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/event-cover-ygo-duel-championship-20260518/1200/600"), entityType: "event", entityId: "event-ygo-duel-championship-june-2026", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
+  { id: "mod-video-dragoon-auction", mediaType: "video", mediaUrl: "/media/product-video-dragoon-storm-20260518.mp4", entityType: "product", entityId: "auction-beyblade-original-dragoon-storm", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "pending", submittedAt: new Date(NOW.getTime() - 3600_000) },
+  { id: "mod-video-dranzer-unbox", mediaType: "video", mediaUrl: "/media/product-video-original-dranzer-s-20260518.mp4", entityType: "product", entityId: "product-beyblade-original-dranzer-s", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "pending", submittedAt: new Date(NOW.getTime() - 7200_000) },
+  { id: "mod-review-driger-v", mediaType: "rich-text", entityType: "review", entityId: "review-8", ownerId: "user-yugi-muto", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
+  { id: "mod-image-arena-banner", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/store-banner-beyblade-arena-20260518/1600/400"), entityType: "storefront", entityId: "store-beyblade-arena", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
+  { id: "mod-blog-authentication-guide", mediaType: "rich-text", entityType: "blog", entityId: "blog-spot-genuine-takara-tomy-beyblade", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 432000_000), submittedAt: new Date(NOW.getTime() - 438000_000) },
+  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/event-cover-beyblade-tournament-20260518/1200/600"), entityType: "event", entityId: "event-favourite-blader-poll", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
 ];
 
 // ───── reports (5 records) ────────────────────────────────────────────────
 export const reportsSeedData: Partial<ReportDocument>[] = [
-  { id: "report-counterfeit-blue-eyes", entityType: "product", entityId: "product-suspect-blue-eyes", reporterId: "user-yugi-muto", reason: "counterfeit", detail: "Card edges look reprinted; eye of Anubis hologram missing.", evidenceUrls: [], status: "pending" },
+  { id: "report-counterfeit-l-drago", entityType: "product", entityId: "product-suspect-l-drago", reporterId: "user-yugi-muto", reason: "counterfeit", detail: "Weight feels hollow; laser-etched logo missing on the underside.", evidenceUrls: [], status: "pending" },
   { id: "report-scam-store-fly-by-night", entityType: "store", entityId: "store-suspect-fly-by-night", reporterId: "user-seto-kaiba", reason: "scam", detail: "Reports of orders not shipped after 4 weeks.", evidenceUrls: [], status: "under-review", assignedTo: "user-admin-letitrip" },
-  { id: "report-spam-review-ygo", entityType: "review", entityId: "review-ygo-spammy", reporterId: "user-yugi-muto", reason: "spam", detail: "Promotional link in review.", evidenceUrls: [], status: "actioned", resolution: "Review hidden.", resolvedAt: new Date(NOW.getTime() - 86400_000) },
-  { id: "report-prohibited-replica-listing", entityType: "product", entityId: "product-suspect-replica-slab", reporterId: "user-admin-letitrip", reason: "prohibited", detail: "Fake PSA slab with forged cert number.", evidenceUrls: [], status: "pending" },
-  { id: "report-ip-violation-fan-art-print", entityType: "product", entityId: "product-bootleg-ygo-print", reporterId: "user-seto-kaiba", reason: "ip-violation", detail: "Unauthorised Yu-Gi-Oh! art prints — not licensed by Konami.", evidenceUrls: [], status: "under-review", assignedTo: "user-admin-letitrip" },
+  { id: "report-spam-review-beyblade", entityType: "review", entityId: "review-spammy", reporterId: "user-yugi-muto", reason: "spam", detail: "Promotional link in review.", evidenceUrls: [], status: "actioned", resolution: "Review hidden.", resolvedAt: new Date(NOW.getTime() - 86400_000) },
+  { id: "report-prohibited-replica-listing", entityType: "product", entityId: "product-suspect-replica-driver", reporterId: "user-admin-letitrip", reason: "prohibited", detail: "Fake authenticity certificate with forged serial number.", evidenceUrls: [], status: "pending" },
+  { id: "report-ip-violation-fan-art-print", entityType: "product", entityId: "product-bootleg-beyblade-print", reporterId: "user-seto-kaiba", reason: "ip-violation", detail: "Unauthorised Beyblade art prints — not licensed by Takara-Tomy.", evidenceUrls: [], status: "under-review", assignedTo: "user-admin-letitrip" },
 ];
 
 // ───── itemRequests (4 records) ───────────────────────────────────────────
 export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
   {
-    id: "irq-blue-eyes-1st-ed-psa8",
+    id: "irq-l-drago-sealed",
     opUserId: "user-yugi-muto",
-    opDisplayName: "Yugi Muto",
-    title: "Looking for Blue-Eyes White Dragon LOB 1st Ed PSA 8+",
-    description: "Hunting a LOB 1st Edition Blue-Eyes, grade 8 or above. Budget ₹2,50,000.",
-    category: "trading-cards",
-    brand: "konami",
-    maxBudget: 250000,
-    imageUrls: [seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg")],
+    opDisplayName: "Rehan Sheikh",
+    title: "Looking for sealed Metal Lightning L-Drago",
+    description: "Hunting a sealed Metal Lightning L-Drago, tournament-grade tip. Budget ₹8,000.",
+    category: "spinning-tops",
+    brand: "takara-tomy",
+    maxBudget: 8000,
+    imageUrls: [seedExtMedia("https://picsum.photos/seed/irq-l-drago-sealed-20260101/600/600")],
     status: "open",
     replyCount: 2,
     replies: [],
@@ -245,15 +245,15 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     approvedBy: "user-admin-letitrip",
   },
   {
-    id: "irq-exodia-complete-set",
+    id: "irq-original-complete-set",
     opUserId: "user-yugi-muto",
-    opDisplayName: "Yugi Muto",
-    title: "Complete Exodia Set — LOB 1st Edition",
-    description: "Need all 5 pieces in NM+ condition. Willing to pay premium for matching set.",
-    category: "trading-cards",
-    brand: "konami",
-    maxBudget: 150000,
-    imageUrls: [seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg")],
+    opDisplayName: "Rehan Sheikh",
+    title: "Complete Original Series Set — Sealed",
+    description: "Need all 5 original starter beyblades in sealed condition. Willing to pay premium for a matching set.",
+    category: "spinning-tops",
+    brand: "takara-tomy",
+    maxBudget: 15000,
+    imageUrls: [seedExtMedia("https://picsum.photos/seed/irq-original-set-20260101/600/600")],
     status: "open",
     replyCount: 0,
     replies: [],
@@ -261,15 +261,15 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     approvedBy: "user-admin-letitrip",
   },
   {
-    id: "irq-lob-sealed-booster",
+    id: "irq-x-bx08-sealed",
     opUserId: "user-admin-letitrip",
     opDisplayName: "LetItRip Admin",
-    title: "LOB Sealed Booster Pack — any printing",
-    description: "Sealed only. 1st Ed or Unlimited OK. For platform demo.",
-    category: "trading-cards",
-    brand: "konami",
-    maxBudget: 15000,
-    imageUrls: [seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg")],
+    title: "Beyblade X BX-08 Wave — any launcher combo",
+    description: "Sealed only. For platform demo.",
+    category: "spinning-tops",
+    brand: "takara-tomy",
+    maxBudget: 1500,
+    imageUrls: [seedExtMedia("https://picsum.photos/seed/irq-x-bx08-20260101/600/600")],
     status: "fulfilled",
     replyCount: 4,
     replies: [],
@@ -278,12 +278,12 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     closedAt: new Date(NOW.getTime() - 2 * 86400_000),
   },
   {
-    id: "irq-rejected-replica-slab",
+    id: "irq-rejected-replica-driver",
     opUserId: "user-yugi-muto",
-    opDisplayName: "Yugi Muto",
-    title: "Looking for cheap PSA slabs",
-    description: "Cheapest possible graded cards, any condition.",
-    category: "trading-cards",
+    opDisplayName: "Rehan Sheikh",
+    title: "Looking for cheap metal drivers",
+    description: "Cheapest possible metal drivers, any condition.",
+    category: "spinning-tops",
     imageUrls: [],
     status: "rejected",
     replyCount: 0,
@@ -294,15 +294,15 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
 // ───── storeWhatsAppConfig (2 records) ────────────────────────────────────
 export const storeWhatsAppConfigSeedData: Partial<StoreWhatsAppConfigDocument>[] = [
   {
-    id: "whatsapp-kaiba-corp",
-    storeId: "store-kaiba-corp-cards",
+    id: "whatsapp-beyblade-arena",
+    storeId: "store-beyblade-arena",
     isConnected: true,
     isPaid: true,
     phoneNumber: "+919876501001",
-    businessProfileName: "Kaiba Corp Card Vault",
+    businessProfileName: "Beyblade Arena",
     catalogUrl: "https://wa.me/c/919876501001",
-    autoReply: "Hi! Thanks for messaging Kaiba Corp Card Vault. We respond within 2 hours.",
-    welcomeMessage: "Welcome to Kaiba Corp Card Vault! Browse our YGO catalog above.",
+    autoReply: "Hi! Thanks for messaging Beyblade Arena. We respond within 2 hours.",
+    welcomeMessage: "Welcome to Beyblade Arena! Browse our full catalog above.",
     onboardingStatus: "approved",
   },
   {
@@ -317,11 +317,11 @@ export const storeWhatsAppConfigSeedData: Partial<StoreWhatsAppConfigDocument>[]
 // ───── storeGoogleConfig (2 records) ──────────────────────────────────────
 export const storeGoogleConfigSeedData: Partial<StoreGoogleConfigDocument>[] = [
   {
-    id: "google-kaiba-corp",
-    storeId: "store-kaiba-corp-cards",
+    id: "google-beyblade-arena",
+    storeId: "store-beyblade-arena",
     isConnected: true,
-    placeId: "ChIJkaibacorpcards12345",
-    businessName: "Kaiba Corp Card Vault",
+    placeId: "ChIJbeybladearena12345",
+    businessName: "Beyblade Arena",
     averageRating: 4.8,
     totalReviews: 89,
     lastSyncedAt: new Date(NOW.getTime() - 3600_000),

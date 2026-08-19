@@ -1,5 +1,5 @@
 /*
- * WHY: Seeds purchase orders representing completed transactions across YGO marketplace buyers and sellers.
+ * WHY: Seeds purchase orders representing completed transactions across Beyblade marketplace buyers and sellers.
  * WHAT: Exports 50 orders across 3 buyer/store combos. All statuses distributed. Order IDs: order-{itemCount}-{YYYYMMDD}-{rand6}.
  *
  * EXPORTS:
@@ -18,66 +18,81 @@ import type { OrderDocument } from "../features/orders/schemas/firestore";
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-const generateOrderId = (itemCount: number, daysBack: number): string => {
+// Deterministic 6-char base36 suffix derived from a seed string — replaces the
+// previous Math.random() suffix, which regenerated a fresh id on every module
+// import (every `load`/`status`/`delete` CLI invocation), so re-running `load`
+// never actually updated existing docs and `status`/`delete` could never find
+// what a previous `load` had written. A simple string hash keeps ids stable
+// across runs on the same day while remaining unique per (itemCount, daysBack, seed).
+function seededSuffix(seed: string): string {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (Math.imul(31, hash) + seed.charCodeAt(i)) | 0;
+  }
+  // Force unsigned before base36 so the suffix is always 6 lowercase alnum chars.
+  return (hash >>> 0).toString(36).padStart(6, "0").slice(0, 6);
+}
+
+const generateOrderId = (itemCount: number, daysBack: number, seed: string): string => {
   const date = new Date(NOW.getTime() - daysBack * 86_400_000);
   const yyyymmdd = date.toISOString().split("T")[0].replace(/-/g, "");
-  const rand = Math.random().toString(36).substring(2, 8);
+  const rand = seededSuffix(`${itemCount}-${daysBack}-${seed}`);
   return `order-${itemCount}-${yyyymmdd}-${rand}`;
 };
 
 const USER_NAMES: Record<string, string> = {
-  "user-yugi-muto": "Yugi Muto",
+  "user-yugi-muto": "Rehan Sheikh",
   "user-admin-letitrip": "LetItRip Admin",
-  "user-seto-kaiba": "Seto Kaiba",
+  "user-seto-kaiba": "Vivaan Kapoor",
 };
 
 const USER_EMAILS: Record<string, string> = {
-  "user-yugi-muto": "yugi@duelkingdom.in",
+  "user-yugi-muto": "rehan.sheikh@gmail.com",
   "user-admin-letitrip": "admin@letitrip.in",
-  "user-seto-kaiba": "kaiba@kaibalandmark.in",
+  "user-seto-kaiba": "vivaan.kapoor@gmail.com",
 };
 
 const _rawOrdersSeedData: Partial<OrderDocument>[] = [
   // ────────────────────────────────────────────────────────────────────────────
-  // Yugi buying from Kaiba — 4 explicit orders
+  // Rehan buying from Beyblade Arena — 4 explicit orders
   // ────────────────────────────────────────────────────────────────────────────
   {
-    id: generateOrderId(2, 45),
-    productId: "product-dark-magician-lob-1st",
-    productTitle: "Dark Magician — LOB 1st Edition",
+    id: generateOrderId(2, 45, "yugi-dranzer-pegasus"),
+    productId: "product-beyblade-original-dranzer-s",
+    productTitle: "Beyblade Original Dranzer S",
     userId: "user-yugi-muto",
-    userName: "Yugi Muto",
-    userEmail: "yugi@duelkingdom.in",
-    storeId: "store-kaiba-corp-cards",
+    userName: "Rehan Sheikh",
+    userEmail: "rehan.sheikh@gmail.com",
+    storeId: "store-beyblade-arena",
     items: [
       {
-        productId: "product-dark-magician-lob-1st",
-        productTitle: "Dark Magician — LOB 1st Edition",
+        productId: "product-beyblade-original-dranzer-s",
+        productTitle: "Beyblade Original Dranzer S",
         listingType: "standard",
         quantity: 1,
-        unitPrice: 4999,
-        totalPrice: 4999,
+        unitPrice: 1799,
+        totalPrice: 1799,
       },
       {
-        productId: "sublisting-dark-magician-lob-unlimited",
-        productTitle: "Dark Magician — LOB Unlimited (NM)",
+        productId: "product-beyblade-metal-storm-pegasus",
+        productTitle: "Beyblade Metal Storm Pegasus",
         listingType: "standard",
         quantity: 1,
-        unitPrice: 2999,
-        totalPrice: 2999,
+        unitPrice: 2499,
+        totalPrice: 2499,
       },
     ],
     quantity: 2,
-    unitPrice: 4999,
-    totalPrice: 7998,
+    unitPrice: 1799,
+    totalPrice: 4298,
     currency: "INR",
     status: "delivered",
     paymentStatus: "paid",
     paymentMethod: "cash",
     paymentId: "pay-yugi-kaiba-001",
     shippingAddress: "addr-yugi-home",
-    trackingNumber: "JP-0001-KAIBA-DELIVERED",
-    shippingCarrier: "Japan Post",
+    trackingNumber: "IN-0001-ARENA-DELIVERED",
+    shippingCarrier: "India Post",
     shippingDate: daysAgo(30),
     deliveryDate: daysAgo(20),
     orderDate: daysAgo(45),
@@ -85,40 +100,40 @@ const _rawOrdersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(20),
   },
   {
-    id: generateOrderId(1, 40),
-    productId: "sublisting-blue-eyes-lob-1st-nm",
-    productTitle: "Blue-Eyes White Dragon — LOB 1st Edition (NM)",
+    id: generateOrderId(1, 40, "yugi-metal-flame-sagittario"),
+    productId: "product-beyblade-metal-flame-sagittario",
+    productTitle: "Beyblade Metal Flame Sagittario",
     userId: "user-yugi-muto",
-    userName: "Yugi Muto",
-    userEmail: "yugi@duelkingdom.in",
-    storeId: "store-kaiba-corp-cards",
+    userName: "Rehan Sheikh",
+    userEmail: "rehan.sheikh@gmail.com",
+    storeId: "store-beyblade-arena",
     quantity: 1,
-    unitPrice: 7999,
-    totalPrice: 7999,
+    unitPrice: 2299,
+    totalPrice: 2299,
     currency: "INR",
     status: "shipped",
     paymentStatus: "paid",
     paymentMethod: "cash",
     paymentId: "pay-yugi-kaiba-002",
     shippingAddress: "addr-yugi-home",
-    trackingNumber: "JP-0002-KAIBA-SHIPPED",
-    shippingCarrier: "Japan Post",
+    trackingNumber: "IN-0002-ARENA-SHIPPED",
+    shippingCarrier: "India Post",
     shippingDate: daysAgo(8),
     orderDate: daysAgo(40),
     createdAt: daysAgo(40),
     updatedAt: daysAgo(8),
   },
   {
-    id: generateOrderId(3, 35),
-    productId: "product-lob-booster-pack",
-    productTitle: "LOB Booster Pack",
+    id: generateOrderId(3, 35, "yugi-x-bx08-wave"),
+    productId: "preorder-beyblade-x-bx-08-wave",
+    productTitle: "Beyblade X BX-08 Wave",
     userId: "user-yugi-muto",
-    userName: "Yugi Muto",
-    userEmail: "yugi@duelkingdom.in",
-    storeId: "store-kaiba-corp-cards",
+    userName: "Rehan Sheikh",
+    userEmail: "rehan.sheikh@gmail.com",
+    storeId: "store-beyblade-arena",
     quantity: 3,
-    unitPrice: 1499,
-    totalPrice: 4497,
+    unitPrice: 899,
+    totalPrice: 2697,
     currency: "INR",
     status: "processing",
     paymentStatus: "paid",
@@ -130,16 +145,16 @@ const _rawOrdersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(2),
   },
   {
-    id: generateOrderId(1, 30),
-    productId: "sublisting-pot-of-greed-lob-1st",
-    productTitle: "Pot of Greed — LOB 1st Edition (NM)",
+    id: generateOrderId(1, 30, "yugi-burst-valkyrie"),
+    productId: "product-beyblade-burst-valkyrie",
+    productTitle: "Beyblade Burst Valkyrie",
     userId: "user-yugi-muto",
-    userName: "Yugi Muto",
-    userEmail: "yugi@duelkingdom.in",
-    storeId: "store-kaiba-corp-cards",
+    userName: "Rehan Sheikh",
+    userEmail: "rehan.sheikh@gmail.com",
+    storeId: "store-beyblade-arena",
     quantity: 1,
-    unitPrice: 14999,
-    totalPrice: 14999,
+    unitPrice: 1899,
+    totalPrice: 1899,
     currency: "INR",
     status: "pending",
     paymentStatus: "pending",
@@ -152,19 +167,19 @@ const _rawOrdersSeedData: Partial<OrderDocument>[] = [
   },
 
   // ────────────────────────────────────────────────────────────────────────────
-  // Yugi buying from LetItRip Official
+  // Rehan buying from LetItRip Official
   // ────────────────────────────────────────────────────────────────────────────
   {
-    id: generateOrderId(1, 28),
-    productId: "product-duelist-kingdom-playmat",
-    productTitle: "Duelist Kingdom Playmat",
+    id: generateOrderId(1, 28, "yugi-mystery-box"),
+    productId: "prizedraw-beyblade-mystery-box",
+    productTitle: "Beyblade Mystery Box",
     userId: "user-yugi-muto",
-    userName: "Yugi Muto",
-    userEmail: "yugi@duelkingdom.in",
+    userName: "Rehan Sheikh",
+    userEmail: "rehan.sheikh@gmail.com",
     storeId: "store-letitrip-official",
     quantity: 1,
-    unitPrice: 1299,
-    totalPrice: 1299,
+    unitPrice: 499,
+    totalPrice: 499,
     currency: "INR",
     status: "delivered",
     paymentStatus: "paid",
@@ -181,27 +196,27 @@ const _rawOrdersSeedData: Partial<OrderDocument>[] = [
   },
 
   // ────────────────────────────────────────────────────────────────────────────
-  // Admin buying from Kaiba
+  // Admin buying from Beyblade Arena
   // ────────────────────────────────────────────────────────────────────────────
   {
-    id: generateOrderId(1, 50),
-    productId: "product-kaiba-starter-deck",
-    productTitle: "Starter Deck: Kaiba",
+    id: generateOrderId(1, 50, "admin-x-knife-shinobi"),
+    productId: "product-beyblade-x-knife-shinobi",
+    productTitle: "Beyblade X Knife Shinobi",
     userId: "user-admin-letitrip",
     userName: "LetItRip Admin",
     userEmail: "admin@letitrip.in",
-    storeId: "store-kaiba-corp-cards",
+    storeId: "store-beyblade-arena",
     quantity: 1,
-    unitPrice: 1999,
-    totalPrice: 1999,
+    unitPrice: 2999,
+    totalPrice: 2999,
     currency: "INR",
     status: "delivered",
     paymentStatus: "paid",
     paymentMethod: "cash",
     paymentId: "pay-admin-kaiba-001",
     shippingAddress: "addr-letitrip-hq",
-    trackingNumber: "JP-0010-KAIBA-DELIVERED",
-    shippingCarrier: "DHL International",
+    trackingNumber: "IN-0010-ARENA-DELIVERED",
+    shippingCarrier: "DHL India",
     shippingDate: daysAgo(40),
     deliveryDate: daysAgo(30),
     orderDate: daysAgo(50),
@@ -210,26 +225,26 @@ const _rawOrdersSeedData: Partial<OrderDocument>[] = [
   },
 
   // ────────────────────────────────────────────────────────────────────────────
-  // Kaiba buying from LetItRip Official
+  // Vivaan buying from Beyblade Arena
   // ────────────────────────────────────────────────────────────────────────────
   {
-    id: generateOrderId(1, 55),
-    productId: "product-millennium-puzzle-model",
-    productTitle: "Millennium Puzzle Model Kit",
+    id: generateOrderId(1, 55, "kaiba-driger-v"),
+    productId: "product-beyblade-original-driger-v",
+    productTitle: "Beyblade Original Driger V",
     userId: "user-seto-kaiba",
-    userName: "Seto Kaiba",
-    userEmail: "kaiba@kaibalandmark.in",
-    storeId: "store-letitrip-official",
+    userName: "Vivaan Kapoor",
+    userEmail: "vivaan.kapoor@gmail.com",
+    storeId: "store-beyblade-arena",
     quantity: 1,
-    unitPrice: 3299,
-    totalPrice: 3299,
+    unitPrice: 1999,
+    totalPrice: 1999,
     currency: "INR",
     status: "delivered",
     paymentStatus: "paid",
     paymentMethod: "cash",
     paymentId: "pay-kaiba-admin-001",
     shippingAddress: "addr-kaiba-mansion",
-    trackingNumber: "IN-0005-ADMIN-DELIVERED",
+    trackingNumber: "IN-0005-ARENA-DELIVERED",
     shippingCarrier: "India Post",
     shippingDate: daysAgo(12),
     deliveryDate: daysAgo(5),
@@ -240,13 +255,14 @@ const _rawOrdersSeedData: Partial<OrderDocument>[] = [
 ];
 
 const productPool = [
-  { productId: "product-dark-magician-lob-1st", productTitle: "Dark Magician — LOB 1st Edition", unitPrice: 4999 },
-  { productId: "sublisting-blue-eyes-lob-1st-nm", productTitle: "Blue-Eyes White Dragon — LOB 1st Edition (NM)", unitPrice: 7999 },
-  { productId: "product-lob-booster-pack", productTitle: "LOB Booster Pack", unitPrice: 1499 },
-  { productId: "product-kaiba-starter-deck", productTitle: "Starter Deck: Kaiba", unitPrice: 1999 },
-  { productId: "product-duelist-kingdom-playmat", productTitle: "Duelist Kingdom Playmat", unitPrice: 1299 },
-  { productId: "sublisting-pot-of-greed-lob-1st", productTitle: "Pot of Greed — LOB 1st Edition (NM)", unitPrice: 14999 },
-  { productId: "product-millennium-puzzle-model", productTitle: "Millennium Puzzle Model Kit", unitPrice: 3299 },
+  { productId: "product-beyblade-original-dranzer-s", productTitle: "Beyblade Original Dranzer S", unitPrice: 1799 },
+  { productId: "product-beyblade-original-driger-v", productTitle: "Beyblade Original Driger V", unitPrice: 1999 },
+  { productId: "product-beyblade-metal-storm-pegasus", productTitle: "Beyblade Metal Storm Pegasus", unitPrice: 2499 },
+  { productId: "product-beyblade-metal-flame-sagittario", productTitle: "Beyblade Metal Flame Sagittario", unitPrice: 2299 },
+  { productId: "product-beyblade-burst-valkyrie", productTitle: "Beyblade Burst Valkyrie", unitPrice: 1899 },
+  { productId: "product-beyblade-burst-regalia-genesis", productTitle: "Beyblade Burst Regalia Genesis", unitPrice: 3499 },
+  { productId: "product-beyblade-x-wizard-arrow", productTitle: "Beyblade X Wizard Arrow", unitPrice: 1699 },
+  { productId: "product-beyblade-x-knife-shinobi", productTitle: "Beyblade X Knife Shinobi", unitPrice: 2999 },
 ];
 
 const statuses = [
@@ -274,10 +290,10 @@ const paymentStatuses: Record<string, string> = {
 };
 
 const buyerStoreMatrix = [
-  { userId: "user-yugi-muto", storeId: "store-kaiba-corp-cards", addressId: "addr-yugi-home" },
+  { userId: "user-yugi-muto", storeId: "store-beyblade-arena", addressId: "addr-yugi-home" },
   { userId: "user-yugi-muto", storeId: "store-letitrip-official", addressId: "addr-yugi-home" },
-  { userId: "user-admin-letitrip", storeId: "store-kaiba-corp-cards", addressId: "addr-letitrip-hq" },
-  { userId: "user-seto-kaiba", storeId: "store-letitrip-official", addressId: "addr-kaiba-mansion" },
+  { userId: "user-admin-letitrip", storeId: "store-beyblade-arena", addressId: "addr-letitrip-hq" },
+  { userId: "user-seto-kaiba", storeId: "store-beyblade-arena", addressId: "addr-kaiba-mansion" },
 ];
 
 const expandedOrders: Partial<OrderDocument>[] = [];
@@ -289,7 +305,7 @@ for (let i = _rawOrdersSeedData.length; i < 50; i++) {
   const qty = (i % 3) + 1;
 
   expandedOrders.push({
-    id: generateOrderId(qty, daysBack),
+    id: generateOrderId(qty, daysBack, `${combo.userId}-${product.productId}-${i}`),
     productId: product.productId,
     productTitle: product.productTitle,
     userId: combo.userId,
@@ -316,15 +332,15 @@ for (let i = _rawOrdersSeedData.length; i < 50; i++) {
 // cashOrderPendingProof: buyer submitted proof, admin has NOT yet verified.
 const cashOrderPendingProof: Partial<OrderDocument> = {
   id: "order-1-20260729-cash01",
-  productId: "product-dark-magician-lob-1st",
-  productTitle: "Dark Magician — LOB 1st Edition",
+  productId: "product-beyblade-original-dranzer-s",
+  productTitle: "Beyblade Original Dranzer S",
   userId: "user-yugi-muto",
-  userName: "Yugi Muto",
-  userEmail: "yugi@duelkingdom.in",
-  storeId: "store-kaiba-corp-cards",
+  userName: "Rehan Sheikh",
+  userEmail: "rehan.sheikh@gmail.com",
+  storeId: "store-beyblade-arena",
   quantity: 1,
-  unitPrice: 4999,
-  totalPrice: 4999,
+  unitPrice: 1799,
+  totalPrice: 1799,
   currency: "INR",
   status: "pending",
   paymentStatus: "pending",
@@ -341,15 +357,15 @@ const cashOrderPendingProof: Partial<OrderDocument> = {
 
 const cashOrderVerified: Partial<OrderDocument> = {
   id: "order-1-20260729-cash02",
-  productId: "product-hot-wheels-redline-vintage",
-  productTitle: "Hot Wheels Redline — Vintage",
+  productId: "product-beyblade-metal-storm-pegasus",
+  productTitle: "Beyblade Metal Storm Pegasus",
   userId: "user-yugi-muto",
-  userName: "Yugi Muto",
-  userEmail: "yugi@duelkingdom.in",
-  storeId: "store-diecast-depot",
+  userName: "Rehan Sheikh",
+  userEmail: "rehan.sheikh@gmail.com",
+  storeId: "store-beyblade-arena",
   quantity: 1,
-  unitPrice: 1299,
-  totalPrice: 1299,
+  unitPrice: 2499,
+  totalPrice: 2499,
   currency: "INR",
   status: "processing",
   paymentStatus: "paid",

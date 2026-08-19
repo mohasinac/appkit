@@ -1,7 +1,7 @@
 /*
  * WHY: Provides 18 seed user accounts covering all marketplace roles and demographics.
- * WHAT: Exports 18 UserDocument partials — 1 admin, 7 sellers (store owners, one of which
- *       is also the dedicated isTester QA account), 10 buyers.
+ * WHAT: Exports 18 UserDocument partials — 1 admin, 2 sellers (store owners, one of which
+ *       is also the dedicated isTester QA account), 15 buyers.
  *       All passwords are TempPass123! in the Firebase Auth emulator. UIDs match slugs.
  *
  * EXPORTS:
@@ -33,9 +33,9 @@ export const usersSeedData: Partial<UserDocument>[] = [
     phoneVerified: true,
     displayName: "LetItRip Admin",
     photoURL:
-      seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
+      seedExtMedia("https://picsum.photos/seed/user-avatar-letitrip-admin-20260101/400/400"),
     avatarMetadata: {
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
+      url: seedExtMedia("https://picsum.photos/seed/user-avatar-letitrip-admin-20260101/400/400"),
       position: { x: 50, y: 50 },
       zoom: 1.0,
     },
@@ -51,10 +51,10 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showPhone: false,
       showOrders: false,
       showWishlist: false,
-      bio: "LetItRip platform administrator. India's largest YGO collectibles marketplace.",
+      bio: "LetItRip platform administrator. India's largest collectibles marketplace.",
       location: "Mumbai, Maharashtra",
       storeName: "LetItRip Official",
-      storeCategory: "trading-cards",
+      storeCategory: "spinning-tops",
     },
     stats: { totalOrders: 20, auctionsWon: 2, itemsSold: 200, reviewsCount: 0 },
     metadata: {
@@ -66,62 +66,15 @@ export const usersSeedData: Partial<UserDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── Seller: Seto Kaiba (also acts as buyer — bids on admin's auctions) ──────
+  // ── Buyer: Vivaan Kapoor (rival tournament blader — was a seller persona, now a
+  //    high-spend buyer/collector; the platform only has 2 real seller stores) ──
   {
     uid: "user-seto-kaiba",
-    email: "kaiba@kaibalandmark.in",
+    email: "vivaan.kapoor@gmail.com",
     phoneNumber: `${_ph}9999900001`,
     phoneVerified: true,
-    displayName: "Seto Kaiba",
-    photoURL:
-      seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"),
-    avatarMetadata: {
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"),
-      position: { x: 50, y: 50 },
-      zoom: 1.0,
-    },
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
-    emailVerified: true,
-    disabled: false,
-    storeId: "store-kaiba-corp-cards",
-    storeSlug: "store-kaiba-corp-cards",
-    storeStatus: "approved",
-    publicProfile: {
-      isPublic: true,
-      showEmail: false,
-      showPhone: false,
-      showOrders: false,
-      showWishlist: false,
-      bio: "CEO of Kaiba Corp. Collector and seller of authenticated YGO cards. Blue-Eyes White Dragon enthusiast.",
-      location: "Domino City",
-      socialLinks: { instagram: "https://instagram.com/kaibacorp" },
-      storeName: "Kaiba Corp Card Vault",
-      storeCategory: "trading-cards",
-    },
-    stats: { totalOrders: 20, auctionsWon: 3, itemsSold: 580, reviewsCount: 35 },
-    metadata: {
-      lastSignInTime: daysAgo(1),
-      creationTime: daysAgo(350).toISOString(),
-      loginCount: 250,
-    },
-    createdAt: daysAgo(350),
-    updatedAt: daysAgo(1),
-  },
-
-  // ── Buyer: Yugi Muto (pure buyer) ───────────────────────────────────────────
-  {
-    uid: "user-yugi-muto",
-    email: "yugi@duelkingdom.in",
-    phoneNumber: `${_ph}9999900002`,
-    phoneVerified: true,
-    displayName: "Yugi Muto",
-    photoURL:
-      seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"),
-    avatarMetadata: {
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"),
-      position: { x: 50, y: 50 },
-      zoom: 1.0,
-    },
+    displayName: "Vivaan Kapoor",
+    photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-vivaan-kapoor-20260101/400/400"),
     role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
@@ -131,9 +84,40 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showPhone: false,
       showOrders: false,
       showWishlist: false,
-      bio: "King of Games. Duelist from Domino City. Collecting the cards of destiny.",
-      location: "Domino City",
-      socialLinks: { instagram: "https://instagram.com/yugi.duelkingdom" },
+      bio: "Beyblade collector and rival tournament blader. Always hunting the next limited edition to add to my vault.",
+      location: "Nagpur, Maharashtra",
+      socialLinks: { instagram: "https://instagram.com/vivaan.beyblade" },
+    },
+    stats: { totalOrders: 20, auctionsWon: 3, itemsSold: 0, reviewsCount: 35 },
+    metadata: {
+      lastSignInTime: daysAgo(1),
+      creationTime: daysAgo(350).toISOString(),
+      loginCount: 250,
+    },
+    createdAt: daysAgo(350),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── Buyer: Rehan Sheikh (Beyblade stadium champion, pure buyer) ─────────────
+  {
+    uid: "user-yugi-muto",
+    email: "rehan.sheikh@gmail.com",
+    phoneNumber: `${_ph}9999900002`,
+    phoneVerified: true,
+    displayName: "Rehan Sheikh",
+    photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-rehan-sheikh-20260101/400/400"),
+    role: USER_FIELDS.ROLE_VALUES.USER,
+    emailVerified: true,
+    disabled: false,
+    publicProfile: {
+      isPublic: true,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Beyblade stadium champion — undefeated in 40+ local tournaments. Chasing limited-edition Takara-Tomy launchers and vintage originals.",
+      location: "Indore, Madhya Pradesh",
+      socialLinks: { instagram: "https://instagram.com/rehan.letitrip" },
     },
     stats: { totalOrders: 30, auctionsWon: 5, itemsSold: 0, reviewsCount: 20 },
     metadata: {
@@ -145,7 +129,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ── Seller: Ash (Pokémon Palace owner) ──────────────────────────────────────
+  // ── Buyer: Ash (Pokémon + collectibles enthusiast) ──────────────────────────
   {
     uid: "user-ash-trainer",
     email: "ash@pokemonpalace.in",
@@ -153,30 +137,25 @@ export const usersSeedData: Partial<UserDocument>[] = [
     phoneVerified: true,
     displayName: "Ash Ketchum",
     photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-ash-ketchum-20260101/400/400"),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeId: "store-pokemon-palace",
-    storeSlug: "store-pokemon-palace",
-    storeStatus: "approved",
     publicProfile: {
       isPublic: true,
       showEmail: false,
       showPhone: false,
       showOrders: false,
       showWishlist: false,
-      bio: "Pokémon Master and TCG collector. Running Pokémon Palace from Bengaluru.",
+      bio: "Pokémon Master and collectibles enthusiast from Bengaluru. Always chasing the next rare pull.",
       location: "Bengaluru, Karnataka",
-      storeName: "Pokémon Palace",
-      storeCategory: "trading-cards",
     },
-    stats: { totalOrders: 5, auctionsWon: 1, itemsSold: 120, reviewsCount: 8 },
+    stats: { totalOrders: 5, auctionsWon: 1, itemsSold: 0, reviewsCount: 8 },
     metadata: { lastSignInTime: daysAgo(3), creationTime: daysAgo(200).toISOString(), loginCount: 90 },
     createdAt: daysAgo(200),
     updatedAt: daysAgo(3),
   },
 
-  // ── Seller: Priya (CardGame Hub owner) ──────────────────────────────────────
+  // ── Buyer: Priya (multi-TCG collector) ──────────────────────────────────────
   {
     uid: "user-priya-cards",
     email: "priya@cardgamehub.in",
@@ -184,24 +163,19 @@ export const usersSeedData: Partial<UserDocument>[] = [
     phoneVerified: true,
     displayName: "Priya Sharma",
     photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-priya-sharma-20260101/400/400"),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeId: "store-cardgame-hub",
-    storeSlug: "store-cardgame-hub",
-    storeStatus: "approved",
     publicProfile: {
       isPublic: true,
       showEmail: false,
       showPhone: false,
       showOrders: false,
       showWishlist: false,
-      bio: "TCG enthusiast and tournament organizer from Hyderabad. Multi-TCG specialist.",
+      bio: "TCG enthusiast and tournament organizer from Hyderabad. Multi-TCG collector.",
       location: "Hyderabad, Telangana",
-      storeName: "CardGame Hub",
-      storeCategory: "trading-cards",
     },
-    stats: { totalOrders: 3, auctionsWon: 0, itemsSold: 85, reviewsCount: 4 },
+    stats: { totalOrders: 3, auctionsWon: 0, itemsSold: 0, reviewsCount: 4 },
     metadata: { lastSignInTime: daysAgo(5), creationTime: daysAgo(180).toISOString(), loginCount: 60 },
     createdAt: daysAgo(180),
     updatedAt: daysAgo(5),
@@ -238,7 +212,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Seller: Megumi (Tokyo Toys India owner) ────────────────────────────────
+  // ── Buyer: Megumi (anime figure + model kit collector) ─────────────────────
   {
     uid: "user-megumi-figures",
     email: "megumi@tokyotoys.in",
@@ -246,30 +220,25 @@ export const usersSeedData: Partial<UserDocument>[] = [
     phoneVerified: true,
     displayName: "Megumi Tanaka",
     photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-megumi-tanaka-20260101/400/400"),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeId: "store-tokyo-toys-india",
-    storeSlug: "store-tokyo-toys-india",
-    storeStatus: "approved",
     publicProfile: {
       isPublic: true,
       showEmail: false,
       showPhone: false,
       showOrders: false,
       showWishlist: false,
-      bio: "Direct imports from Akihabara. Authentic anime figures and model kits, no bootlegs.",
+      bio: "Anime figure and model kit collector from Pune. Always on the hunt for authentic imports.",
       location: "Pune, Maharashtra",
-      storeName: "Tokyo Toys India",
-      storeCategory: "action-figures",
     },
-    stats: { totalOrders: 2, auctionsWon: 0, itemsSold: 65, reviewsCount: 3 },
+    stats: { totalOrders: 2, auctionsWon: 0, itemsSold: 0, reviewsCount: 3 },
     metadata: { lastSignInTime: daysAgo(2), creationTime: daysAgo(120).toISOString(), loginCount: 55 },
     createdAt: daysAgo(120),
     updatedAt: daysAgo(2),
   },
 
-  // ── Seller: Amuro (Gundam Galaxy owner) ─────────────────────────────────────
+  // ── Buyer: Amuro (Gunpla builder) ───────────────────────────────────────────
   {
     uid: "user-amuro-builder",
     email: "amuro@gundamgalaxy.in",
@@ -277,24 +246,19 @@ export const usersSeedData: Partial<UserDocument>[] = [
     phoneVerified: true,
     displayName: "Amuro Ray",
     photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-amuro-ray-20260101/400/400"),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeId: "store-gundam-galaxy",
-    storeSlug: "store-gundam-galaxy",
-    storeStatus: "approved",
     publicProfile: {
       isPublic: true,
       showEmail: false,
       showPhone: false,
       showOrders: false,
       showWishlist: false,
-      bio: "Gunpla builder since 2005. Over 200 kits built. Importing from Bandai Hobby distributors.",
+      bio: "Gunpla builder since 2005. Over 200 kits built. Collects Bandai Hobby imports.",
       location: "Kolkata, West Bengal",
-      storeName: "Gundam Galaxy",
-      storeCategory: "model-kits",
     },
-    stats: { totalOrders: 1, auctionsWon: 0, itemsSold: 42, reviewsCount: 2 },
+    stats: { totalOrders: 1, auctionsWon: 0, itemsSold: 0, reviewsCount: 2 },
     metadata: { lastSignInTime: daysAgo(6), creationTime: daysAgo(90).toISOString(), loginCount: 35 },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(6),

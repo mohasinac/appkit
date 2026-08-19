@@ -1,6 +1,6 @@
 /*
- * WHY: Seeds claimed coupons wallet for YGO marketplace.
- * WHAT: 3 records for Yugi — active (spin), expired (manual), used (manual). Tabs Active/Expired/Used.
+ * WHY: Seeds claimed coupons wallet for the Beyblade marketplace.
+ * WHAT: 3 records for Rehan — active (spin), expired (manual), used (manual). Tabs Active/Expired/Used.
  *
  * EXPORTS:
  *   claimedCouponsSeedData — Array of ClaimedCouponDocument for seed runner
@@ -23,13 +23,13 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
   // Active — won from a spin wheel, expires in 14 days
   {
-    id: createClaimedCouponId("user-yugi-muto", "YUGI10"),
+    id: createClaimedCouponId("user-yugi-muto", "REHAN10"),
     userId: "user-yugi-muto",
-    couponId: "coupon-yugi10",
-    couponCode: "YUGI10",
+    couponId: "coupon-rehan10",
+    couponCode: "REHAN10",
     source: "spin",
     couponSnapshot: {
-      name: "Yugi's Welcome 10% Off",
+      name: "Rehan's Welcome 10% Off",
       description: "10% off your first order on LetItRip.",
       type: "percentage",
       scope: "admin",
@@ -44,13 +44,13 @@ export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
   },
   // Expired — manually claimed 30 days ago, no purchase made
   {
-    id: createClaimedCouponId("user-yugi-muto", "EXODIA50"),
+    id: createClaimedCouponId("user-yugi-muto", "BLADER50"),
     userId: "user-yugi-muto",
-    couponId: "coupon-exodia50",
-    couponCode: "EXODIA50",
+    couponId: "coupon-blader50",
+    couponCode: "BLADER50",
     source: "manual",
     couponSnapshot: {
-      name: "Exodia ₹500 Off",
+      name: "Blader's Power ₹500 Off",
       description: "₹500 flat discount on orders above ₹5,000.",
       type: "fixed",
       scope: "admin",

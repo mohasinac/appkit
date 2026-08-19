@@ -26,6 +26,12 @@ function buildPreOrderFilters(params: SearchParams): string {
   if (store) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, store));
   const preOrderProductionStatus = sp(params, "preOrderProductionStatus");
   if (preOrderProductionStatus) parts.push(sieveFilter("preOrderProductionStatus", SIEVE_OP.EQ, preOrderProductionStatus));
+  // Mirror PreOrdersIndexListing's client-side default (same Root Cause pattern as
+  // auctions' dateFrom default — SSR initialData is seeded into React Query with
+  // staleTime:Infinity, so if this filter doesn't already exclude closed/out-of-stock
+  // pre-orders, the client never refetches and they leak into the default view).
+  const showClosed = sp(params, "showClosed") === "true";
+  if (!showClosed) parts.push(sieveFilter("stockQuantity", SIEVE_OP.GT, 0));
   return parts.join(",");
 }
 

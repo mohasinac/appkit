@@ -2,7 +2,7 @@
  * WHY: Seeds 6 carousel slides for the marketplace homepage hero carousel.
  * WHAT: 5 active + 1 inactive. Picsum.photos placeholder backgrounds (deterministic,
  * free, no API key) with dim overlay, CTAs for shop/auctions/bundles/pre-orders/graded.
- * One slide (slide-blue-eyes-auction) uses background.type:"video" with a direct,
+ * One slide (slide-beyblade-auction) uses background.type:"video" with a direct,
  * Creative-Commons-licensed MP4 URL — HeroCarousel renders video backgrounds via a
  * native <video> element (MediaVideo), not a YouTube iframe embed, so this needs a
  * playable video file URL rather than a YouTube video ID.
@@ -42,13 +42,17 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     updatedAt: daysAgo(3),
   },
   {
-    id: "slide-blue-eyes-auction",
+    id: "slide-beyblade-auction",
     title: "Rare Auctions Live Now",
     order: 2,
     active: true,
     background: {
       type: "video",
-      url: seedExtMedia("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
+      // Direct MP4 URL, deliberately NOT wrapped in seedExtMedia() — that
+      // helper routes through /api/media/ext, which only serves images
+      // (rejects non-image content-type with 400). MediaVideo watermarks
+      // video client-side instead, so the raw external URL is correct here.
+      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
       thumbnail: seedExtMedia("https://picsum.photos/seed/carousel-auctions-live-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
@@ -59,7 +63,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     updatedAt: daysAgo(2),
   },
   {
-    id: "slide-exodia-hunt",
+    id: "slide-beyblade-collection-hunt",
     title: "Complete Your Collection",
     order: 3,
     active: true,
@@ -75,7 +79,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     updatedAt: daysAgo(5),
   },
   {
-    id: "slide-gx-era",
+    id: "slide-preorders-open",
     title: "Pre-Orders Now Open",
     order: 4,
     active: true,
@@ -84,23 +88,23 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       url: seedExtMedia("https://picsum.photos/seed/carousel-preorders-open-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
-    link: { url: "/pre-orders", openInNewTab: false },
+    link: { url: String(ROUTES.PUBLIC.PRE_ORDERS), openInNewTab: false },
     settings: { autoplayDelayMs: 5000, height: "tall" },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(45),
     updatedAt: daysAgo(4),
   },
   {
-    id: "slide-psa-graded",
-    title: "Graded Slabs — Authenticated Collectibles",
+    id: "slide-authenticated-originals",
+    title: "Authenticated Takara-Tomy Originals",
     order: 5,
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://picsum.photos/seed/carousel-graded-slabs-20260101/1600/700"),
+      url: seedExtMedia("https://picsum.photos/seed/carousel-authenticated-originals-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
-    link: { url: "/categories/category-graded-cards", openInNewTab: false },
+    link: { url: String(ROUTES.PUBLIC.CATEGORY_DETAIL("category-spinning-tops")), openInNewTab: false },
     settings: { autoplayDelayMs: 5000, height: "tall" },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(40),

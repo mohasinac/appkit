@@ -1,8 +1,8 @@
 /*
- * WHY: Seeds product reviews from buyers across all collectible categories on the marketplace.
- * WHAT: Exports 65 reviews spread across multiple stores and product types (trading cards, figures,
- *       diecast, beyblades, model kits). Ratings 3–5 stars, mix of verified/unverified. Seller
- *       responses on ~16 reviews. Images on ~11 reviews.
+ * WHY: Seeds product reviews from buyers across the Beyblade catalog on the marketplace.
+ * WHAT: Exports 65 reviews spread across the 14 real Beyblade products. Ratings 3–5 stars, mix
+ *       of verified/unverified. Seller responses on ~16 reviews. Images (1-3, seedExtMedia
+ *       picsum) on ~11 reviews; a video (raw external mp4 + seedExtMedia thumbnail) on 5 reviews.
  *
  * EXPORTS:
  *   reviewsSeedData — Array of 65 review documents
@@ -16,9 +16,15 @@
  */
 
 import type { ReviewDocument } from "../features/reviews/schemas/firestore";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+// Public, direct-playable sample MP4 — review.video.url renders through a raw
+// <video src> element (ReviewDetailShell.tsx), NOT the /api/media/ext image
+// proxy, so it must stay an unwrapped external URL (never seedExtMedia()).
+const SAMPLE_VIDEO_URL = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
 const reviewTemplates = [
   { title: "Excellent quality and fast shipping!", comment: "Received exactly as described. Item is in perfect condition. Will buy again!", rating: 5 },
@@ -55,27 +61,28 @@ const sellerReplies = [
 ];
 
 const products = [
-  { id: "product-dark-magician-lob-1st", title: "Dark Magician LOB 1st Edition", store: "store-letitrip-official" },
-  { id: "product-blue-eyes-white-dragon-sdk", title: "Blue-Eyes White Dragon SDK", store: "store-letitrip-official" },
-  { id: "product-lob-booster-pack", title: "Legend of Blue Eyes Booster Pack", store: "store-letitrip-official" },
-  { id: "product-kaiba-starter-deck", title: "Kaiba Starter Deck", store: "store-letitrip-official" },
-  { id: "product-duelist-kingdom-playmat", title: "Duelist Kingdom Playmat", store: "store-letitrip-official" },
-  { id: "product-topper-tin-2004", title: "2004 Collector Tin Topper", store: "store-letitrip-official" },
-  { id: "product-dark-magician-figure", title: "Dark Magician Figure", store: "store-letitrip-official" },
-  { id: "product-exodia-art-print", title: "Exodia Art Print", store: "store-letitrip-official" },
-  { id: "product-millennium-puzzle-model", title: "Millennium Puzzle Model", store: "store-letitrip-official" },
-  { id: "product-duel-disk-replica", title: "Duel Disk Replica", store: "store-kaiba-corp-cards" },
-  { id: "product-cyber-dragon-dp1", title: "Cyber Dragon DP1", store: "store-kaiba-corp-cards" },
-  { id: "product-mirror-force-mrd", title: "Mirror Force MRD", store: "store-kaiba-corp-cards" },
-  { id: "product-pot-of-greed-lob", title: "Pot of Greed LOB", store: "store-kaiba-corp-cards" },
-  { id: "product-monster-reborn-lob", title: "Monster Reborn LOB", store: "store-kaiba-corp-cards" },
-  { id: "product-kaiba-figure-15cm", title: "Kaiba 15cm Figure", store: "store-kaiba-corp-cards" },
+  { id: "auction-beyblade-original-dragoon-storm", title: "Beyblade Original Dragoon Storm", store: "store-beyblade-arena" },
+  { id: "auction-beyblade-metal-lightning-l-drago", title: "Beyblade Metal Lightning L-Drago", store: "store-beyblade-arena" },
+  { id: "classified-beyblade-stadium-set", title: "Beyblade Stadium Set", store: "store-beyblade-arena" },
+  { id: "digitalcode-beyblade-x-app-unlock", title: "Beyblade X App Unlock Code", store: "store-beyblade-arena" },
+  { id: "preorder-beyblade-x-bx-08-wave", title: "Beyblade X BX-08 Wave", store: "store-beyblade-arena" },
+  { id: "prizedraw-beyblade-mystery-box", title: "Beyblade Mystery Box", store: "store-letitrip-official" },
+  { id: "product-beyblade-original-dranzer-s", title: "Beyblade Original Dranzer S", store: "store-beyblade-arena" },
+  { id: "product-beyblade-original-driger-v", title: "Beyblade Original Driger V", store: "store-beyblade-arena" },
+  { id: "product-beyblade-metal-storm-pegasus", title: "Beyblade Metal Storm Pegasus", store: "store-beyblade-arena" },
+  { id: "product-beyblade-metal-flame-sagittario", title: "Beyblade Metal Flame Sagittario", store: "store-beyblade-arena" },
+  { id: "product-beyblade-burst-valkyrie", title: "Beyblade Burst Valkyrie", store: "store-beyblade-arena" },
+  { id: "product-beyblade-burst-regalia-genesis", title: "Beyblade Burst Regalia Genesis", store: "store-beyblade-arena" },
+  { id: "product-beyblade-x-wizard-arrow", title: "Beyblade X Wizard Arrow", store: "store-beyblade-arena" },
+  { id: "product-beyblade-x-knife-shinobi", title: "Beyblade X Knife Shinobi", store: "store-beyblade-arena" },
 ];
 
 const buyers = [
-  { id: "user-yugi-muto", name: "Yugi Muto" },
+  { id: "user-yugi-muto", name: "Rehan Sheikh" },
   { id: "user-admin-letitrip", name: "LetItRip Admin" },
-  { id: "user-seto-kaiba", name: "Seto Kaiba" },
+  { id: "user-seto-kaiba", name: "Vivaan Kapoor" },
+  { id: "user-meera-bey", name: "Meera Nair" },
+  { id: "user-rohit-collector", name: "Rohit Agarwal" },
 ];
 
 const _rawReviewsSeedData: Partial<ReviewDocument>[] = [];
@@ -86,7 +93,11 @@ for (let i = 0; i < 65; i++) {
   const buyer = buyers[i % buyers.length];
   const daysAgoCreated = 90 - i;
   const hasSellerReply = i % 4 === 0;
+  // ~17% of reviews ("detailed" ones) carry buyer-submitted photos.
   const hasImage = i % 6 === 0;
+  const imageCount = (i % 3) + 1;
+  // A smaller handful (5 of 65) also carry an unboxing/battle-test video.
+  const hasVideo = i % 13 === 0;
 
   _rawReviewsSeedData.push({
     id: `review-${i + 1}`,
@@ -98,8 +109,19 @@ for (let i = 0; i < 65; i++) {
     rating: template.rating,
     title: template.title,
     comment: template.comment,
-    images: hasImage ? [`/media/review-image-${product.id.replace("product-", "")}-1-20260508.jpg`] : [],
+    images: hasImage
+      ? Array.from({ length: imageCount }, (_, n) =>
+          seedExtMedia(`https://picsum.photos/seed/review-image-${product.id}-${i + 1}-${n + 1}/800/800`),
+        )
+      : [],
     hasImages: hasImage,
+    video: hasVideo
+      ? {
+          url: SAMPLE_VIDEO_URL,
+          thumbnailUrl: seedExtMedia(`https://picsum.photos/seed/review-video-thumb-${product.id}-${i + 1}/800/450`),
+          duration: 18 + (i % 5) * 6,
+        }
+      : undefined,
     verified: i % 3 !== 2,
     status: "approved",
     helpfulCount: Math.floor(Math.random() * 20),

@@ -24,39 +24,39 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 const _rawAddressesSeedData: Partial<AddressDocument>[] = [
-  // Yugi Muto — Home
+  // Rehan Sheikh — Home
   {
     id: "addr-yugi-home",
     ownerType: "user",
     ownerId: "user-yugi-muto",
     label: "Home",
-    fullName: "Yugi Muto",
+    fullName: "Rehan Sheikh",
     phone: "+91-99999-10001",
-    addressLine1: "123 Duel City Lane",
-    addressLine2: "Domino City",
-    city: "Domino City",
-    state: "Tokyo",
-    postalCode: "110-0001",
-    country: "Japan",
+    addressLine1: "123 Stadium Lane",
+    addressLine2: "Vijay Nagar",
+    city: "Indore",
+    state: "Madhya Pradesh",
+    postalCode: "452010",
+    country: "India",
     isDefault: true,
     createdAt: daysAgo(180),
     updatedAt: daysAgo(1),
   },
 
-  // Seto Kaiba — Kaiba Mansion
+  // Vivaan Kapoor — Home
   {
     id: "addr-kaiba-mansion",
     ownerType: "user",
     ownerId: "user-seto-kaiba",
-    label: "Kaiba Mansion",
-    fullName: "Seto Kaiba",
+    label: "Home",
+    fullName: "Vivaan Kapoor",
     phone: "+91-99999-20001",
-    addressLine1: "1000 Kaiba Estate Drive",
-    addressLine2: "Domino Heights",
-    city: "Domino City",
-    state: "Tokyo",
-    postalCode: "110-0020",
-    country: "Japan",
+    addressLine1: "1000 Civil Lines Drive",
+    addressLine2: "Sitabuldi",
+    city: "Nagpur",
+    state: "Maharashtra",
+    postalCode: "440012",
+    country: "India",
     isDefault: true,
     createdAt: daysAgo(200),
     updatedAt: daysAgo(10),

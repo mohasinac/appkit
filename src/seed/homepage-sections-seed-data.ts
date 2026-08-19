@@ -178,7 +178,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   {
-    id: "section-exodia-banner",
+    id: "section-beyblade-banner",
     type: "banner",
     order: 10,
     enabled: true,
@@ -394,13 +394,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   {
-    id: "section-brand-konami",
+    id: "section-brand-takara-tomy",
     type: "products",
     order: 22,
     enabled: true,
     config: {
-      title: "Konami Official Products",
-      subtitle: "Official Yu-Gi-Oh! TCG products from Konami",
+      title: "Takara-Tomy Official Products",
+      subtitle: "Authentic Takara-Tomy Beyblades, direct from Japan",
       maxProducts: 12,
       rows: 2,
       itemsPerRow: 4,
@@ -408,7 +408,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       autoScroll: true,
       scrollInterval: 5000,
       loop: true,
-      filterByBrand: "brand-konami",
+      filterByBrand: "brand-takara-tomy",
       sortBy: "featured",
     },
     createdAt: daysAgo(2),
@@ -416,13 +416,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   {
-    id: "section-brand-upper-deck",
+    id: "section-brand-beyblade",
     type: "products",
     order: 23,
     enabled: true,
     config: {
-      title: "Upper Deck Entertainment",
-      subtitle: "Classic YGO TCG releases from Upper Deck",
+      title: "Beyblade Brand Spotlight",
+      subtitle: "Original, Metal Fight, Burst, and X — every generation",
       maxProducts: 12,
       rows: 2,
       itemsPerRow: 4,
@@ -430,7 +430,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       autoScroll: true,
       scrollInterval: 5000,
       loop: true,
-      filterByBrand: "brand-upper-deck",
+      filterByBrand: "brand-beyblade",
       sortBy: "featured",
     },
     createdAt: daysAgo(2),

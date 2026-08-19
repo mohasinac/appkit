@@ -10,7 +10,7 @@
  *
  * Usage (from consumer project root, e.g. d:/proj/letitrip.in):
  *   npx appkit-seed load                       # load all collections
- *   npx appkit-seed load --collections users,brands,categories
+ *   npx appkit-seed load --collections users,categories
  *   npx appkit-seed delete --yes               # purge all (skip confirmation)
  *   npx appkit-seed load --dry-run             # plan without writing
  *   npx appkit-seed status                     # show seed/existing counts
@@ -170,7 +170,7 @@ const { encryptPiiFields, addPiiIndices, encryptPayoutDetails, encryptPayoutBank
 
 const {
   // seed data
-  brandsSeedData, usersSeedData, addressesSeedData, storeAddressesSeedData,
+  usersSeedData, addressesSeedData, storeAddressesSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
   productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
@@ -188,8 +188,8 @@ const {
   blogTesterSeedData, eventsTesterSeedData,
   couponsTesterSeedData, bidsTesterSeedData, ordersTesterSeedData,
   // collection constants
-  USER_COLLECTION, ADDRESS_SUBCOLLECTION, STORE_ADDRESS_SUBCOLLECTION,
-  BRANDS_COLLECTION, CATEGORIES_COLLECTION, STORE_COLLECTION,
+  USER_COLLECTION,
+  CATEGORIES_COLLECTION, STORE_COLLECTION,
   PRODUCT_COLLECTION, ORDER_COLLECTION, REVIEW_COLLECTION, BID_COLLECTION,
   COUPONS_COLLECTION, CAROUSELS_COLLECTION, CAROUSEL_SLIDES_COLLECTION,
   HOMEPAGE_SECTIONS_COLLECTION, SITE_SETTINGS_COLLECTION, FAQS_COLLECTION,
@@ -216,7 +216,6 @@ const COLLECTION_MAP = {
   addresses: "addresses",
   storeAddresses: "storeAddresses",
   couponUsage: "couponUsage",
-  brands: BRANDS_COLLECTION,
   categories: CATEGORIES_COLLECTION,
   stores: STORE_COLLECTION,
   products: PRODUCT_COLLECTION,
@@ -249,7 +248,8 @@ const SEED_DATA_MAP = {
   users: usersSeedData,
   addresses: addressesSeedData,
   storeAddresses: storeAddressesSeedData,
-  brands: brandsSeedData,
+  // SB-UNI-C: brands were merged into categories (categoryType:"brand") — no
+  // standalone brands collection/seed exists anymore.
   categories: [...(categoriesSeedData || []), ...(categoriesTesterSeedData || [])],
   stores: [...(storesSeedData || []), ...(storesTesterSeedData || [])],
   products: [
@@ -666,15 +666,17 @@ async function cmdDelete() {
           const ref = db.collection(USER_COLLECTION).doc(u.uid);
           if ((await ref.get()).exists) { await ref.delete(); stats.deleted++; }
         }
-      } else if (colName === "addresses") {
-        const userIds = [...new Set(seed.map((d) => d.userId).filter(Boolean))];
-        for (const uid of userIds) {
-          stats.deleted += await purgeCollection(`${USER_COLLECTION}/${uid}/${ADDRESS_SUBCOLLECTION}`);
-        }
-      } else if (colName === "storeAddresses") {
-        const slugs = [...new Set(seed.map((d) => d.storeSlug).filter(Boolean))];
-        for (const slug of slugs) {
-          stats.deleted += await purgeCollection(`${STORE_COLLECTION}/${slug}/${STORE_ADDRESS_SUBCOLLECTION}`);
+      } else if (colName === "addresses" || colName === "storeAddresses") {
+        // SB-UNI-A (2026-05-13): both user and store addresses live in the
+        // single top-level `addresses` collection now, keyed by `id` — the
+        // old per-parent subcollection paths (users/{uid}/addresses,
+        // stores/{slug}/addresses) no longer exist, so deleting from them was
+        // always a silent no-op. Delete by doc id straight from `addresses`.
+        for (const d of seed) {
+          if (!d.id) { stats.skipped++; continue; }
+          const ref = db.collection("addresses").doc(d.id);
+          if ((await ref.get()).exists) { await ref.delete(); stats.deleted++; }
+          else stats.skipped++;
         }
       } else if (colName === "couponUsage") {
         const userIds = [...new Set(seed.map((d) => d.userId).filter(Boolean))];

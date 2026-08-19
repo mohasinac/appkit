@@ -48,6 +48,12 @@ function buildProductFilters(params: SearchParams): string {
   if (freeShipping === "true") {
     parts.push(sieveFilter(PRODUCT_FIELDS.SHIPPING_PAID_BY, SIEVE_OP.EQ, PRODUCT_FIELDS.SHIPPING_PAID_BY_VALUES.SELLER));
   }
+  // Mirror ProductsIndexListing's client-side "Show sold" default (same Root Cause
+  // pattern as auctions' dateFrom default — SSR initialData is seeded into React
+  // Query with staleTime:Infinity, so if this filter doesn't already exclude sold /
+  // out-of-stock products, the client never refetches and they leak into the default view).
+  const showSold = sp(params, "showSold") === "true";
+  if (!showSold) parts.push(sieveFilter(PRODUCT_FIELDS.STOCK_QUANTITY, SIEVE_OP.GT, 0));
   return sieveAnd(...parts);
 }
 

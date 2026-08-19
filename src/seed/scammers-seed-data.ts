@@ -1,6 +1,6 @@
 /*
- * WHY: Seeds scammer profiles for YGO marketplace — 3 profiles covering the full status workflow.
- * WHAT: 1 verified, 1 pending_review, 1 rejected. Fictional YGO-related scam scenarios.
+ * WHY: Seeds scammer profiles for the collectibles marketplace — 3 profiles covering the full status workflow.
+ * WHAT: 1 verified, 1 pending_review, 1 rejected. Fictional Beyblade-related scam scenarios.
  *
  * EXPORTS:
  *   scammersSeedData — Array of Partial<ScammerDocument> for seed runner
@@ -25,21 +25,21 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
   {
     id: "scammer-fake-lob-seller",
     seoSlug: "scammer-fake-lob-seller",
-    displayNames: ["YGO_King_India", "LOB Cards Official"],
+    displayNames: ["Bey_King_India", "Rare Blades Official"],
     phones: ["9876543210", "8765432109"],
-    upiIds: ["9876543210@paytm", "ygokingcards@okicici"],
-    emails: ["ygokingcards.fake@gmail.com"],
+    upiIds: ["9876543210@paytm", "beykingblades@okicici"],
+    emails: ["beykingblades.fake@gmail.com"],
     socialMedia: [
-      { platform: "instagram", handle: "ygo_king_india_official", url: "https://instagram.com/ygo_king_india_official" },
+      { platform: "instagram", handle: "bey_king_india_official", url: "https://instagram.com/bey_king_india_official" },
       { platform: "whatsapp", handle: "9876543210" },
     ],
     scamType: "advance_payment_ghost",
     scamPlatform: "whatsapp",
     description:
-      "Seller listed a Blue-Eyes White Dragon LOB 1st Edition PSA 9 on a Facebook group for ₹25,000 — significantly below market. When I messaged, he asked for ₹5,000 advance to 'hold' the card before shipping. After I paid via UPI (9876543210@paytm), he went silent. The account name on UPI matched 'YGO King'. Later found 2 more people in the same group who had the same experience with the same UPI ID.",
-    amountLost: 5000,
-    itemInvolved: "Blue-Eyes White Dragon LOB 1st Edition PSA 9 (Yu-Gi-Oh!)",
-    evidence: [seedExtMedia("https://picsum.photos/seed/scammer-evidence-ygoking-chat-screenshot-20260402/800/600")],
+      "Seller listed an original-series Dranzer S sealed launcher set on a Facebook group for ₹2,500 — significantly below market. When I messaged, he asked for ₹500 advance to 'hold' the set before shipping. After I paid via UPI (9876543210@paytm), he went silent. The account name on UPI matched 'Bey King'. Later found 2 more people in the same group who had the same experience with the same UPI ID.",
+    amountLost: 500,
+    itemInvolved: "Beyblade Original Dranzer S — Sealed Launcher Set",
+    evidence: [seedExtMedia("https://picsum.photos/seed/scammer-evidence-beyking-chat-screenshot-20260402/800/600")],
     reportedBy: "user-yugi-muto",
     reportedByAnon: false,
     status: SCAMMER_FIELDS.STATUS_VALUES.VERIFIED,
@@ -60,22 +60,22 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
 
   // ── 2. Pending review — fake pre-order listing ────────────────────────────────
   {
-    id: "scammer-fake-konami-preorder",
-    seoSlug: "scammer-fake-konami-preorder",
-    displayNames: ["Konami_Agent_India", "KA India Cards"],
+    id: "scammer-fake-takara-tomy-preorder",
+    seoSlug: "scammer-fake-takara-tomy-preorder",
+    displayNames: ["TakaraTomy_Agent_India", "TT India Blades"],
     phones: ["7654321098"],
-    upiIds: ["konamiagentindia@ybl"],
-    emails: ["konami.agent.india@gmail.com"],
+    upiIds: ["takaratomyagentindia@ybl"],
+    emails: ["takaratomy.agent.india@gmail.com"],
     socialMedia: [
-      { platform: "instagram", handle: "konami_agent_india_official" },
-      { platform: "telegram", handle: "konami_agent_india" },
+      { platform: "instagram", handle: "takaratomy_agent_india_official" },
+      { platform: "telegram", handle: "takaratomy_agent_india" },
     ],
     scamType: "fake_preorder_listing",
     scamPlatform: "instagram",
     description:
-      "Account posed as an authorized pre-order agent for the upcoming Konami 25th Anniversary Ultimate Collection booster box. Collected ₹4,500 from me for a 'guaranteed allocation slot' via UPI. Instagram profile had ~4,000 followers (likely bought) and fake order screenshots. After payment, the account blocked me. Similar reports found on Reddit r/YuGiOhIndia.",
-    amountLost: 4500,
-    itemInvolved: "Konami 25th Anniversary Ultimate Collection (fake pre-order)",
+      "Account posed as an authorized pre-order agent for the upcoming Beyblade X BX-08 wave. Collected ₹800 from me for a 'guaranteed allocation slot' via UPI. Instagram profile had ~4,000 followers (likely bought) and fake order screenshots. After payment, the account blocked me. Similar reports found on Reddit r/BeybladeIndia.",
+    amountLost: 800,
+    itemInvolved: "Beyblade X BX-08 Wave (fake pre-order)",
     evidence: [],
     reportedBy: "user-seto-kaiba",
     reportedByAnon: true,
@@ -104,9 +104,9 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     scamType: "empty_box_ship",
     scamPlatform: "olx",
     description:
-      "Sold a sealed Duelist of the Roses booster box on OLX, buyer claims item never arrived but tracking shows delivered. Buyer opened a scam report. Seller provided courier tracking + photograph of sealed package at drop-off. Report rejected after review.",
+      "Sold a sealed Beyblade Burst Regalia Genesis on OLX, buyer claims item never arrived but tracking shows delivered. Buyer opened a scam report. Seller provided courier tracking + photograph of sealed package at drop-off. Report rejected after review.",
     amountLost: 0,
-    itemInvolved: "Duelist of the Roses Booster Box (Yu-Gi-Oh!)",
+    itemInvolved: "Beyblade Burst Regalia Genesis — Sealed",
     evidence: [],
     reportedBy: "user-yugi-muto",
     reportedByAnon: false,

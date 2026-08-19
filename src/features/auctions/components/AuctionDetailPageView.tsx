@@ -339,7 +339,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                       {formatCurrency(currentBid, currency)}
                     </Span>
                     <Span size="xs" color="muted">
-                      {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
+                      {bidCount} {bidCount === 1 ? "bid" : "bids"}
+                      {!isEnded && <> · min increment {formatCurrency(minBidIncrement, currency)}</>}
                     </Span>
                   </Row>
                   <PlaceBidModalButton
@@ -364,7 +365,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               <Stack className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
                 <Stack gap="xs">
                   <Text size="xs" color="muted">
-                    Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
+                    Starting bid: {formatCurrency(startingBid, currency)}
+                    {!isEnded && <> · min increment {formatCurrency(minBidIncrement, currency)}</>}
                   </Text>
                 </Stack>
                 <Stack gap="sm">

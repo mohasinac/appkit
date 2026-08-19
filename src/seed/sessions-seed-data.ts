@@ -1,5 +1,5 @@
 /*
- * WHY: Seeds user sessions for YGO marketplace — 3 users, mix of active/expired/revoked.
+ * WHY: Seeds user sessions for the Beyblade marketplace — 3 users, mix of active/expired/revoked.
  * WHAT: 5 sessions total (3 active, 1 expired, 1 revoked). Covers desktop + mobile, multi-device.
  *
  * EXPORTS:
@@ -48,7 +48,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // Yugi — Chrome Android (active)
+  // Rehan — Chrome Android (active)
   {
     id: "session-yugi-chrome-android-001",
     userId: "user-yugi-muto",
@@ -59,14 +59,14 @@ export const sessionsSeedData: SessionDocument[] = [
       device: "Mobile",
       ip: "203.0.113.10",
     },
-    location: { country: _locale.countryName, city: "Domino City" },
+    location: { country: _locale.countryName, city: "Indore" },
     createdAt: daysAgo(3),
     lastActivity: daysAgo(0),
     expiresAt: daysAhead(27),
     isActive: true,
   },
 
-  // Kaiba — Safari macOS (active)
+  // Vivaan — Safari macOS (active)
   {
     id: "session-kaiba-safari-mac-001",
     userId: "user-seto-kaiba",
@@ -77,14 +77,14 @@ export const sessionsSeedData: SessionDocument[] = [
       device: "Desktop",
       ip: "203.0.113.20",
     },
-    location: { country: _locale.countryName, city: "Domino City" },
+    location: { country: _locale.countryName, city: "Nagpur" },
     createdAt: daysAgo(2),
     lastActivity: daysAgo(0),
     expiresAt: daysAhead(28),
     isActive: true,
   },
 
-  // Yugi — expired old session
+  // Rehan — expired old session
   {
     id: "session-yugi-expired-001",
     userId: "user-yugi-muto",
@@ -95,7 +95,7 @@ export const sessionsSeedData: SessionDocument[] = [
       device: "Mobile",
       ip: "203.0.113.11",
     },
-    location: { country: _locale.countryName, city: "Domino City" },
+    location: { country: _locale.countryName, city: "Indore" },
     createdAt: daysAgo(40),
     lastActivity: daysAgo(36),
     expiresAt: daysAgo(35),

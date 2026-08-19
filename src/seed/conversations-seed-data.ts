@@ -1,6 +1,6 @@
 /*
- * WHY: Seeds buyer ↔ seller conversations for YGO marketplace.
- * WHAT: 6 conversations covering grading queries, offer negotiation, shipping delays, returns, bulk orders, tracking.
+ * WHY: Seeds buyer ↔ seller conversations for the Beyblade marketplace.
+ * WHAT: 6 conversations covering condition queries, offer negotiation, prize-draw fairness, shipping delays, returns, bulk orders, tracking.
  *
  * EXPORTS:
  *   conversationsSeedData — Array of Partial<ConversationDocument> for seed runner
@@ -21,30 +21,30 @@ const hoursAgo = (n: number) => new Date(NOW.getTime() - n * 3_600_000);
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const conversationsSeedData: Partial<ConversationDocument>[] = [
-  // ── 1. Blue-Eyes LOB PSA 10 — Pre-purchase grading query ─────────────────
+  // ── 1. Metal Lightning L-Drago — Pre-purchase condition query ────────────
   {
-    id: "conv-blue-eyes-yugi-kaiba-001",
+    id: "conv-l-drago-yugi-kaiba-001",
     buyerId: "user-yugi-muto",
-    buyerDisplayName: "Yugi Muto",
-    sellerDisplayName: "Seto Kaiba",
-    storeId: "store-kaiba-corp-cards",
-    storeName: "Kaiba Corp Card Vault",
-    productId: "auction-blue-eyes-lob-1st-psa10",
-    productTitle: "Blue-Eyes White Dragon LOB 1st Ed — PSA 10",
+    buyerDisplayName: "Rehan Sheikh",
+    sellerDisplayName: "Tyson Granger",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    productId: "auction-beyblade-metal-lightning-l-drago",
+    productTitle: "Beyblade Metal Lightning L-Drago",
     messages: [
       {
         id: "msg-001-1",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "Hi! Is this PSA 10 a gem mint or does it have any edge wear on the slab? I'm buying for my collection, not resale, so I want to know the centering before I bid.",
+        body: "Hi! Is this a sharp, unrounded tip or has it seen a lot of stadium battles? I'm buying for my collection, not battling, so I want to know the tip wear before I bid.",
         isRead: true,
         sentAt: daysAgo(3),
       },
       {
         id: "msg-001-2",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
-        body: "Hey Yugi! The centering is approximately 55/45 front and 60/40 back — well within PSA 10 standards. The slab itself has no cracks. This was submitted by me personally from a sealed LOB booster. Happy to share full slab photos on WhatsApp if you DM me before bidding.",
+        body: "Hey Rehan! The tip is factory-sharp with visible grooves — barely used, maybe 10 launches total. No cracks on the layer. This came direct from a sealed Metal Fight booster. Happy to share close-up photos on WhatsApp if you DM me before bidding.",
         isRead: true,
         sentAt: daysAgo(3),
       },
@@ -52,20 +52,20 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-001-3",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "That sounds great! Can you also confirm the cert number so I can verify on PSA's website?",
+        body: "That sounds great! Can you also confirm it's genuine Takara-Tomy and not a clone?",
         isRead: true,
         sentAt: daysAgo(2),
       },
       {
         id: "msg-001-4",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
-        body: "PSA Cert #: 84729183. You can verify at psacard.com. Grade is confirmed Gem Mint 10. Good luck in the auction!",
+        body: "100% genuine — laser-etched logo on the underside, verified. Good luck in the auction!",
         isRead: false,
         sentAt: daysAgo(2),
       },
     ],
-    lastMessage: "PSA Cert #: 84729183. You can verify at psacard.com. Grade is confirmed Gem Mint 10. Good luck in the auction!",
+    lastMessage: "100% genuine — laser-etched logo on the underside, verified. Good luck in the auction!",
     lastMessageAt: daysAgo(2),
     unreadBuyer: 1,
     unreadSeller: 0,
@@ -74,30 +74,30 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ── 2. Dark Magician Girl IOC — Offer negotiation ────────────────────────
+  // ── 2. Burst Valkyrie — Offer negotiation ────────────────────────────────
   {
-    id: "conv-dmg-ioc-yugi-kaiba-002",
+    id: "conv-burst-valkyrie-yugi-kaiba-002",
     buyerId: "user-yugi-muto",
-    buyerDisplayName: "Yugi Muto",
-    sellerDisplayName: "Seto Kaiba",
-    storeId: "store-kaiba-corp-cards",
-    storeName: "Kaiba Corp Card Vault",
-    productId: "product-dark-magician-girl-ioc",
-    productTitle: "Dark Magician Girl IOC 1st Edition (NM)",
+    buyerDisplayName: "Rehan Sheikh",
+    sellerDisplayName: "Tyson Granger",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    productId: "product-beyblade-burst-valkyrie",
+    productTitle: "Beyblade Burst Valkyrie",
     messages: [
       {
         id: "msg-002-1",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "Would you take ₹7,500 for the Dark Magician Girl IOC? I see it's listed at ₹8,999.",
+        body: "Would you take ₹1,500 for the Burst Valkyrie? I see it's listed at ₹1,899.",
         isRead: true,
         sentAt: daysAgo(1),
       },
       {
         id: "msg-002-2",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
-        body: "Hi Yugi! Best I can do is ₹8,200 — it's a clean 1st Ed with no whitening. I'll cover shipping at that price.",
+        body: "Hi Rehan! Best I can do is ₹1,700 — it's a clean, sealed piece with no sticker damage. I'll cover shipping at that price.",
         isRead: true,
         sentAt: daysAgo(1),
       },
@@ -105,12 +105,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-002-3",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "Deal at ₹8,200 with free shipping. Can I use the Make Offer feature or should you update the listing?",
+        body: "Deal at ₹1,700 with free shipping. Can I use the Make Offer feature or should you update the listing?",
         isRead: false,
         sentAt: hoursAgo(8),
       },
     ],
-    lastMessage: "Deal at ₹8,200 with free shipping. Can I use the Make Offer feature or should you update the listing?",
+    lastMessage: "Deal at ₹1,700 with free shipping. Can I use the Make Offer feature or should you update the listing?",
     lastMessageAt: hoursAgo(8),
     unreadBuyer: 0,
     unreadSeller: 1,
@@ -119,22 +119,22 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: hoursAgo(8),
   },
 
-  // ── 3. Exodia Head LOB — Authenticity check ──────────────────────────────
+  // ── 3. Mystery Box — Prize draw fairness question ────────────────────────
   {
-    id: "conv-exodia-yugi-admin-003",
+    id: "conv-mystery-box-yugi-admin-003",
     buyerId: "user-yugi-muto",
-    buyerDisplayName: "Yugi Muto",
+    buyerDisplayName: "Rehan Sheikh",
     sellerDisplayName: "LetItRip Admin",
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
-    productId: "product-exodia-head-lob-nm",
-    productTitle: "Exodia the Forbidden One LOB 1st Ed (NM)",
+    productId: "prizedraw-beyblade-mystery-box",
+    productTitle: "Beyblade Mystery Box",
     messages: [
       {
         id: "msg-003-1",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "Is this a genuine Konami print or a reprint? My friend got burned with a counterfeit Exodia last month.",
+        body: "How is the winner for the mystery box actually selected? My friend got burned by a rigged giveaway last month.",
         isRead: true,
         sentAt: daysAgo(2),
       },
@@ -142,7 +142,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-003-2",
         senderId: "user-admin-letitrip",
         senderRole: "seller",
-        body: "100% genuine Konami LOB 1st Edition. You can tell by the eye of Anubis hologram on the lower right corner — it's gold, not silver (silver = unlimited). I can send macro photos of the holo stamp before you buy. We also have a 7-day authenticity guarantee.",
+        body: "Great question — the draw uses a cryptographically random selection (crypto.randomInt) run server-side, logged with a timestamp, and the winner is announced publicly on the event page. No manual picking involved. Happy to walk you through the mechanics before you enter.",
         isRead: true,
         sentAt: daysAgo(2),
       },
@@ -150,12 +150,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-003-3",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "Perfect, that's exactly what I needed to hear. Placing the order now!",
+        body: "Perfect, that's exactly what I needed to hear. Entering now!",
         isRead: true,
         sentAt: daysAgo(1),
       },
     ],
-    lastMessage: "Perfect, that's exactly what I needed to hear. Placing the order now!",
+    lastMessage: "Perfect, that's exactly what I needed to hear. Entering now!",
     lastMessageAt: daysAgo(1),
     unreadBuyer: 0,
     unreadSeller: 0,
@@ -164,30 +164,30 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── 4. Sealed Booster Box — Shipping delay ───────────────────────────────
+  // ── 4. Original Dranzer S — Shipping delay ───────────────────────────────
   {
-    id: "conv-booster-box-admin-kaiba-004",
+    id: "conv-dranzer-s-admin-kaiba-004",
     buyerId: "user-admin-letitrip",
     buyerDisplayName: "LetItRip Admin",
-    sellerDisplayName: "Seto Kaiba",
-    storeId: "store-kaiba-corp-cards",
-    storeName: "Kaiba Corp Card Vault",
-    productId: "product-lob-booster-box-sealed",
-    productTitle: "Legend of Blue Eyes White Dragon — Sealed Booster Box",
+    sellerDisplayName: "Tyson Granger",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    productId: "product-beyblade-original-dranzer-s",
+    productTitle: "Beyblade Original Dranzer S",
     messages: [
       {
         id: "msg-004-1",
         senderId: "user-admin-letitrip",
         senderRole: "buyer",
-        body: "Hi Kaiba, I ordered the LOB sealed booster box 3 days ago. The tracking shows it's still at the dispatch hub in Mumbai. Is there a delay?",
+        body: "Hi Tyson, I ordered the sealed Dranzer S 3 days ago. The tracking shows it's still at the dispatch hub in Chennai. Is there a delay?",
         isRead: true,
         sentAt: daysAgo(2),
       },
       {
         id: "msg-004-2",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
-        body: "Apologies for the delay! There was a backlog at the courier facility — they've confirmed it will leave Mumbai tonight. Updated tracking should show movement tomorrow morning. If it doesn't arrive by end of week, I'll initiate a replacement. Very sorry for the inconvenience!",
+        body: "Apologies for the delay! There was a backlog at the courier facility — they've confirmed it will leave Chennai tonight. Updated tracking should show movement tomorrow morning. If it doesn't arrive by end of week, I'll initiate a replacement. Very sorry for the inconvenience!",
         isRead: true,
         sentAt: daysAgo(2),
       },
@@ -209,35 +209,35 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── 5. Bulk LOB Singles — Bulk order query ───────────────────────────────
+  // ── 5. Bulk Original Series — Bulk order query ───────────────────────────
   {
-    id: "conv-bulk-lob-yugi-kaiba-005",
+    id: "conv-bulk-original-yugi-kaiba-005",
     buyerId: "user-yugi-muto",
-    buyerDisplayName: "Yugi Muto",
-    sellerDisplayName: "Seto Kaiba",
-    storeId: "store-kaiba-corp-cards",
-    storeName: "Kaiba Corp Card Vault",
-    productId: "product-pot-of-greed-lob",
-    productTitle: "Pot of Greed LOB 1st Edition",
+    buyerDisplayName: "Rehan Sheikh",
+    sellerDisplayName: "Tyson Granger",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    productId: "product-beyblade-original-driger-v",
+    productTitle: "Beyblade Original Driger V",
     messages: [
       {
         id: "msg-005-1",
         senderId: "user-yugi-muto",
         senderRole: "buyer",
-        body: "Do you have 3 copies of Pot of Greed LOB? I'm completing my LOB set and need multiples for the trade binder.",
+        body: "Do you have 3 copies of the Original Driger V? I'm completing my original-series set and need multiples for tournament backup.",
         isRead: true,
         sentAt: minsAgo(240),
       },
       {
         id: "msg-005-2",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
-        body: "Yes! I have 5 copies in stock. For 3+ copies I can do ₹12,000 per card (saving ₹999 per card vs list price) + free shipping. All cards are NM with clean edges.",
+        body: "Yes! I have 5 copies in stock. For 3+ copies I can do ₹1,600 per piece (saving ₹399 per piece vs list price) + free shipping. All pieces are NM with sharp tips.",
         isRead: false,
         sentAt: minsAgo(200),
       },
     ],
-    lastMessage: "Yes! I have 5 copies in stock. For 3+ copies I can do ₹12,000 per card (saving ₹999 per card vs list price) + free shipping. All cards are NM with clean edges.",
+    lastMessage: "Yes! I have 5 copies in stock. For 3+ copies I can do ₹1,600 per piece (saving ₹399 per piece vs list price) + free shipping. All pieces are NM with sharp tips.",
     lastMessageAt: minsAgo(200),
     unreadBuyer: 1,
     unreadSeller: 0,
@@ -246,28 +246,28 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: minsAgo(200),
   },
 
-  // ── 6. Chaos Emperor Dragon — Post-purchase tracking (archived) ──────────
+  // ── 6. X Knife Shinobi — Post-purchase tracking (archived) ───────────────
   {
-    id: "conv-ced-admin-kaiba-006",
+    id: "conv-x-knife-admin-kaiba-006",
     buyerId: "user-admin-letitrip",
     buyerDisplayName: "LetItRip Admin",
-    sellerDisplayName: "Seto Kaiba",
-    storeId: "store-kaiba-corp-cards",
-    storeName: "Kaiba Corp Card Vault",
-    productId: "product-chaos-emperor-dragon-ioc",
-    productTitle: "Chaos Emperor Dragon — Envoy of the End IOC 1st Ed",
+    sellerDisplayName: "Tyson Granger",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    productId: "product-beyblade-x-knife-shinobi",
+    productTitle: "Beyblade X Knife Shinobi",
     messages: [
       {
         id: "msg-006-1",
         senderId: "user-admin-letitrip",
         senderRole: "buyer",
-        body: "Hi! My order for CED IOC shipped 2 days ago — the courier's tracking page shows it left your city but has not updated since. Can you check with the courier?",
+        body: "Hi! My order for the X Knife Shinobi shipped 2 days ago — the courier's tracking page shows it left your city but has not updated since. Can you check with the courier?",
         isRead: true,
         sentAt: daysAgo(6),
       },
       {
         id: "msg-006-2",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
         body: "Hi! Yes, I raised a ticket with the courier about that. They confirmed it is in transit at the sorting facility — tracking updates can lag by 24-48 hours. Should arrive tomorrow or day after.",
         isRead: true,
@@ -277,13 +277,13 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-006-3",
         senderId: "user-admin-letitrip",
         senderRole: "buyer",
-        body: "Got the card today, arrived in perfect condition. Thanks Kaiba!",
+        body: "Got the piece today, arrived in perfect condition. Thanks Tyson!",
         isRead: true,
         sentAt: daysAgo(4),
       },
       {
         id: "msg-006-4",
-        senderId: "user-seto-kaiba",
+        senderId: "user-tyson-blader",
         senderRole: "seller",
         body: "Glad it arrived safely! Please leave a review when you get a chance.",
         isRead: true,

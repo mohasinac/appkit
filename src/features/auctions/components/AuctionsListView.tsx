@@ -28,7 +28,14 @@ function buildAuctionFilters(params: SearchParams): string {
     if (values.length === 1) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, values[0]));
     else if (values.length > 1) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, values.join("|")));
   }
-  const dateFrom = sp(params, "dateFrom");
+  // Mirror AuctionsIndexListing's client-side default (Root Cause pattern —
+  // SSR initialData is seeded into React Query with staleTime:Infinity, so if
+  // this SSR filter doesn't already exclude ended auctions, the client never
+  // refetches and ended auctions leak into the default "Show ended" off view).
+  const showEnded = sp(params, "showEnded") === "true";
+  const dateFrom = showEnded
+    ? sp(params, "dateFrom")
+    : sp(params, "dateFrom") || new Date().toISOString();
   const dateTo = sp(params, "dateTo");
   if (dateFrom) parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, dateFrom));
   if (dateTo) parts.push(sieveFilter("auctionEndDate", SIEVE_OP.LTE, dateTo));

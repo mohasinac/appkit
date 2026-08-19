@@ -43,6 +43,10 @@ function buildArtStickersFilters(params: SearchParams): string {
   if (maxPrice) parts.push(sieveFilter(PRODUCT_FIELDS.PRICE, SIEVE_OP.LTE, maxPrice));
   const storeId = sp(params, "seller");
   if (storeId) parts.push(sieveFilter(PRODUCT_FIELDS.STORE_ID, SIEVE_OP.EQ, storeId));
+  // Mirror ProductsIndexListing's client-side "Show sold" default — see
+  // ProductsIndexPageView.tsx's buildProductFilters for the full explanation.
+  const showSold = sp(params, "showSold") === "true";
+  if (!showSold) parts.push(sieveFilter(PRODUCT_FIELDS.STOCK_QUANTITY, SIEVE_OP.GT, 0));
   return sieveAnd(...parts);
 }
 

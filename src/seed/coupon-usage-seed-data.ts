@@ -1,6 +1,6 @@
 /*
- * WHY: Seeds per-user coupon usage subcollection for YGO marketplace.
- * WHAT: 4 records: Yugi used YUGI10 + FREESHIP499, Kaiba used KAIBA25, Admin used EXODIA50.
+ * WHY: Seeds per-user coupon usage subcollection for the Beyblade marketplace.
+ * WHAT: 4 records: Rehan used REHAN10 + FREESHIP499, Vivaan used ARENA25, Admin used BLADER50.
  *
  * EXPORTS:
  *   CouponUsageSeedRecord (interface)
@@ -27,17 +27,17 @@ export interface CouponUsageSeedRecord {
 }
 
 export const couponUsageSeedData: CouponUsageSeedRecord[] = [
-  // Yugi used YUGI10 once (perUserLimit: 1 → exhausted)
+  // Rehan used REHAN10 once (perUserLimit: 1 → exhausted)
   {
     userId: "user-yugi-muto",
-    couponId: "coupon-yugi10",
-    couponCode: "YUGI10",
+    couponId: "coupon-rehan10",
+    couponCode: "REHAN10",
     usageCount: 1,
     lastUsedAt: daysAgo(45),
     orders: ["order-2-20260325-a1b2c3"],
   },
 
-  // Yugi used FREESHIP499 once (no perUserLimit)
+  // Rehan used FREESHIP499 once (no perUserLimit)
   {
     userId: "user-yugi-muto",
     couponId: "coupon-freeship499",
@@ -47,21 +47,21 @@ export const couponUsageSeedData: CouponUsageSeedRecord[] = [
     orders: ["order-1-20260410-j1k2l3"],
   },
 
-  // Kaiba used KAIBA25 once (perUserLimit: 2 → one more use left)
+  // Vivaan used ARENA25 once (perUserLimit: 2 → one more use left)
   {
     userId: "user-seto-kaiba",
-    couponId: "coupon-kaiba25",
-    couponCode: "KAIBA25",
+    couponId: "coupon-arena25",
+    couponCode: "ARENA25",
     usageCount: 1,
     lastUsedAt: daysAgo(15),
     orders: ["order-1-20260425-p7q8r9"],
   },
 
-  // Admin used EXODIA50 once (perUserLimit: 1 → exhausted)
+  // Admin used BLADER50 once (perUserLimit: 1 → exhausted)
   {
     userId: "user-admin-letitrip",
-    couponId: "coupon-exodia50",
-    couponCode: "EXODIA50",
+    couponId: "coupon-blader50",
+    couponCode: "BLADER50",
     usageCount: 1,
     lastUsedAt: daysAgo(10),
     orders: ["order-1-20260430-g7h8i9"],

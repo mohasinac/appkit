@@ -25,9 +25,9 @@ export const carouselsSeedData: CarouselDocument[] = [
     status: "active",
     slideIds: [
       "slide-hero-homepage",
-      "slide-blue-eyes-auction",
-      "slide-exodia-hunt",
-      "slide-gx-era",
+      "slide-beyblade-auction",
+      "slide-beyblade-collection-hunt",
+      "slide-preorders-open",
       "slide-psa-graded",
     ],
     createdBy: "user-admin-letitrip",
