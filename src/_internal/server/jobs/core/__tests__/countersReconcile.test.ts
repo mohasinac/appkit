@@ -124,6 +124,37 @@ describe("runCountersReconcile — categories reconcile", () => {
     await runCountersReconcile(ctx);
     expect(mockCategoriesSetMetrics).not.toHaveBeenCalled();
   });
+
+  it("prefers categorySlugs[0] over the deprecated category field", async () => {
+    const productDocs = [
+      { id: "product-1", data: () => ({ categorySlugs: ["category-beyblade-burst"], category: "Beyblade Burst", listingType: "standard" }) },
+      { id: "product-2", data: () => ({ categorySlugs: ["category-beyblade-burst", "category-spinning-tops"], listingType: "auction" }) },
+    ];
+    mockCategoriesFindById.mockResolvedValue({ parentIds: [] });
+    const ctx = makeCtx(productDocs);
+    await runCountersReconcile(ctx);
+    expect(mockCategoriesSetMetrics).toHaveBeenCalledWith(
+      "category-beyblade-burst",
+      1, 1,
+      ["product-1"],
+      ["product-2"],
+    );
+  });
+
+  it("falls back to the deprecated category field when categorySlugs is absent", async () => {
+    const productDocs = [
+      { id: "product-legacy", data: () => ({ category: "category-legacy", listingType: "standard" }) },
+    ];
+    mockCategoriesFindById.mockResolvedValue({ parentIds: [] });
+    const ctx = makeCtx(productDocs);
+    await runCountersReconcile(ctx);
+    expect(mockCategoriesSetMetrics).toHaveBeenCalledWith(
+      "category-legacy",
+      1, 0,
+      ["product-legacy"],
+      [],
+    );
+  });
 });
 
 describe("runCountersReconcile — stores reconcile", () => {

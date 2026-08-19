@@ -171,16 +171,19 @@ export async function getRelatedProducts(
   excludeId: string,
   limit = 6,
 ): Promise<ProductListResult> {
-  const result = await productRepository.list({
-    filters: sieveAnd(sieveFilter("categoryId", SIEVE_OP.EQ, categoryId), PUBLISHED_CLAUSE),
-    sorts: sortBy("createdAt", "DESC"),
-    page: 1,
-    pageSize: limit + 1,
-  });
-  return {
-    ...result,
-    items: result.items.filter((p) => p.id !== excludeId).slice(0, limit),
-  };
+  // `categoryId` here is really a category slug — products store their
+  // category FK in categorySlugs[] (array-contains), not a scalar
+  // "categoryId" field, which never existed on ProductDocument.
+  const docs = await productRepository.findByCategory(categoryId);
+  const items = docs
+    .filter((p) => p.id !== excludeId && p.status === ProductStatusValues.PUBLISHED)
+    .sort((a, b) => {
+      const aTime = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+      const bTime = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+      return bTime - aTime;
+    })
+    .slice(0, limit);
+  return { items, total: items.length, page: 1, pageSize: limit, totalPages: 1, hasMore: false };
 }
 
 export async function getStoreStorefrontProducts(

@@ -133,6 +133,63 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     }
   }
 
+  /**
+   * Published posts sharing at least one tag with the given list.
+   * `array-contains-any` caps at 10 values, so only the first 10 tags are used.
+   */
+  async findByTagsOverlap(
+    tags: string[],
+    excludeId: string,
+    limit = 3,
+  ): Promise<BlogPostDocument[]> {
+    if (tags.length === 0) return [];
+    try {
+      const snapshot = await this.db
+        .collection(this.collection)
+        .where(BLOG_POST_FIELDS.STATUS, "==", "published" as BlogPostStatus)
+        .where(BLOG_POST_FIELDS.TAGS, "array-contains-any", tags.slice(0, 10))
+        .limit(limit + 1)
+        .get();
+
+      return snapshot.docs
+        .map((doc) => this.mapDoc<BlogPostDocument>(doc))
+        .filter((post) => post.id !== excludeId)
+        .slice(0, limit);
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to find posts by tag overlap: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
+  /** Other published posts by the same author. */
+  async findByAuthor(
+    authorId: string,
+    excludeId: string,
+    limit = 3,
+  ): Promise<BlogPostDocument[]> {
+    try {
+      const snapshot = await this.db
+        .collection(this.collection)
+        .where(BLOG_POST_FIELDS.STATUS, "==", "published" as BlogPostStatus)
+        .where(BLOG_POST_FIELDS.AUTHOR_ID, "==", authorId)
+        .orderBy(BLOG_POST_FIELDS.PUBLISHED_AT, "desc")
+        .limit(limit + 1)
+        .get();
+
+      return snapshot.docs
+        .map((doc) => this.mapDoc<BlogPostDocument>(doc))
+        .filter((post) => post.id !== excludeId)
+        .slice(0, limit);
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to find posts by author: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
   static readonly SIEVE_FIELDS = {
     id: { canFilter: true, canSort: false },
     title: { canFilter: true, canSort: true },

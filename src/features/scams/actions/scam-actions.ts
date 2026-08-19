@@ -15,7 +15,10 @@ export interface ScammerProfilePageData {
   scammer: ScammerDocument;
   incidents: ScammerIncidentDocument[];
   comments: ScammerCommentDocument[];
+  /** Admin-curated cross-links — confirmed to be the same person under a different alias. */
   relatedScammers: ScammerDocument[];
+  /** Other verified profiles with the same scamType — pattern similarity only, never identity. */
+  similarScamReports: ScammerDocument[];
 }
 
 export interface ScammerListResult {
@@ -87,13 +90,14 @@ export async function getScammerProfilePageData(
   const scammer = await getPublicScammerById(id);
   if (!scammer) return null;
 
-  const [incidents, comments, relatedScammers] = await Promise.all([
+  const [incidents, comments, relatedScammers, similarScamReports] = await Promise.all([
     scammerRepository.listPublicIncidents(scammer.id),
     scammerRepository.listPublicComments(scammer.id),
     scammerRepository.findManyById(scammer.relatedScammerIds),
+    scammerRepository.findBySameType(scammer.scamType, scammer.id),
   ]);
 
-  return { scammer, incidents, comments, relatedScammers };
+  return { scammer, incidents, comments, relatedScammers, similarScamReports };
 }
 
 export type SellerTrustStatus = "clear" | "flagged";

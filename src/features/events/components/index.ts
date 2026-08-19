@@ -11,6 +11,8 @@ export {
 } from "./EventFilters";
 export type { EventFiltersProps, EventFilterVariant } from "./EventFilters";
 export { EventCard } from "./EventCard";
+export { RelatedEventsCarousel } from "./RelatedEventsCarousel";
+export type { RelatedEventItem } from "./RelatedEventsCarousel";
 export { EventsListView } from "./EventsListView";
 export { EventsIndexListing } from "./EventsIndexListing";
 export type { EventsIndexListingProps } from "./EventsIndexListing";

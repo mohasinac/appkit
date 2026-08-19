@@ -69,6 +69,8 @@ export function useBlogPost(slug: string, opts?: UseBlogPostOptions) {
   return {
     post: query.data?.post ?? null,
     related: query.data?.related ?? [],
+    relatedByTags: query.data?.relatedByTags ?? [],
+    relatedByAuthor: query.data?.relatedByAuthor ?? [],
     isLoading: query.isLoading,
     error: query.error,
   };

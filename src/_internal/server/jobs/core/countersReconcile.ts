@@ -23,8 +23,14 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
 
   const leafCounts: Record<string, { productIds: string[]; auctionIds: string[] }> = {};
   for (const doc of snap.docs) {
-    const data = doc.data() as { category?: string; listingType?: string };
-    const catId = data.category;
+    const data = doc.data() as { category?: string; categorySlugs?: string[]; listingType?: string };
+    // `category` is @deprecated in favor of `categorySlugs[]` — mirrors the
+    // same effective-category selection as onProductWrite.ts's live trigger
+    // so the nightly reconcile agrees with real-time updates instead of
+    // silently no-op'ing on products written via categorySlugs-only paths.
+    const catId = Array.isArray(data.categorySlugs) && data.categorySlugs.length > 0
+      ? data.categorySlugs[0]
+      : data.category;
     if (!catId) continue;
     if (!leafCounts[catId]) leafCounts[catId] = { productIds: [], auctionIds: [] };
     if (data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION) leafCounts[catId].auctionIds.push(doc.id);

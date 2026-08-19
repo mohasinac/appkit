@@ -380,6 +380,7 @@ export interface ScamProfileViewProps {
   incidents?: ScammerIncidentDocument[];
   comments?: ScammerCommentDocument[];
   relatedScammers?: ScammerDocument[];
+  similarScamReports?: ScammerDocument[];
 }
 
 export function ScamProfileView({
@@ -388,6 +389,7 @@ export function ScamProfileView({
   incidents = [],
   comments = [],
   relatedScammers = [],
+  similarScamReports = [],
 }: ScamProfileViewProps) {
   const reportHref = String(ROUTES.PUBLIC.SCAM_REPORT);
   const registryHref = String(ROUTES.PUBLIC.SCAMS);
@@ -510,6 +512,37 @@ export function ScamProfileView({
                   <Heading level={2} size="base" weight="semibold">Related Profiles</Heading>
                   <Stack gap="sm">
                     {relatedScammers.map((rel) => (
+                      <Link key={rel.id} href={String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id))} className="block">
+                        <Card variant="outlined" padding="sm" className="hover:opacity-80 transition-opacity">
+                          <Row gap="sm" align="center" justify="between">
+                            <Stack gap="none">
+                              <Text size="sm" weight="medium">{rel.displayNames[0]}</Text>
+                              <Text variant="secondary" size="xs">
+                                {SCAM_TYPE_LABELS[rel.scamType] ?? rel.scamType}
+                              </Text>
+                            </Stack>
+                            <Row gap="xs" align="center">
+                              <Badge variant={statusVariant(rel.status)}>
+                                {SCAMMER_STATUS_LABELS[rel.status] ?? rel.status}
+                              </Badge>
+                              <Link2 className="h-4 w-4 text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]" />
+                            </Row>
+                          </Row>
+                        </Card>
+                      </Link>
+                    ))}
+                  </Stack>
+                </Stack>
+              )}
+
+              {similarScamReports.length > 0 && (
+                <Stack gap="sm">
+                  <Heading level={2} size="base" weight="semibold">Similar Scam Reports</Heading>
+                  <Text variant="secondary" size="xs">
+                    Other profiles reported for the same scam pattern ({SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}). This does not mean they are the same person.
+                  </Text>
+                  <Stack gap="sm">
+                    {similarScamReports.map((rel) => (
                       <Link key={rel.id} href={String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id))} className="block">
                         <Card variant="outlined" padding="sm" className="hover:opacity-80 transition-opacity">
                           <Row gap="sm" align="center" justify="between">

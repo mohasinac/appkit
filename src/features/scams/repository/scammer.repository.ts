@@ -185,6 +185,30 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
     }
   }
 
+  /**
+   * Other verified profiles with the same scamType — a "similar scam pattern"
+   * discovery signal, distinct from `relatedScammerIds` (which links profiles
+   * confirmed to be the same person). Never implies identity, only pattern similarity.
+   */
+  async findBySameType(scamType: string, excludeId: string, limit = 5): Promise<ScammerDocument[]> {
+    try {
+      const snap = await this.getCollection()
+        .where(SCAMMER_FIELDS.STATUS, "==", "verified")
+        .where(SCAMMER_FIELDS.SCAM_TYPE, "==", scamType)
+        .orderBy(SCAMMER_FIELDS.CREATED_AT, "desc")
+        .limit(limit + 1)
+        .get();
+      return snap.docs
+        .map((d) => this.mapDoc<ScammerDocument>(d))
+        .filter((s) => s.id !== excludeId)
+        .slice(0, limit);
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.warn("scammer-repo: findBySameType failed — returning empty", { scamType, error: err instanceof Error ? err.message : String(err) });
+      return [];
+    }
+  }
+
   async findManyById(ids: string[]): Promise<ScammerDocument[]> {
     if (!ids.length) return [];
     try {

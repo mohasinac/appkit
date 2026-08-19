@@ -5,6 +5,7 @@ import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../.
 import { ROUTES } from "../../../next";
 import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
+import { ReviewCard } from "./ReviewsList";
 
 export interface ReviewDetailPageViewProps {
   id: string;
@@ -43,6 +44,13 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
     );
   }
 
+  const [sameProductDocs, sameStoreDocs] = await Promise.all([
+    reviewRepository.findApprovedByProduct(review.productId).catch(() => []),
+    storeSlug ? reviewRepository.findApprovedByStore(storeSlug).catch(() => []) : Promise.resolve([]),
+  ]);
+  const sameProductReviews = (sameProductDocs as unknown as Review[]).filter((r) => r.id !== review.id).slice(0, 6);
+  const sameStoreReviews = (sameStoreDocs as unknown as Review[]).filter((r) => r.id !== review.id).slice(0, 6);
+
   return (
     <Main>
       {/* Breadcrumb */}
@@ -66,6 +74,36 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
         review={review}
         storeHref={storeSlug ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug)) : null}
       />
+
+      {sameProductReviews.length > 0 && (
+        <Section padding="y-lg" border="subtle" className="border-t">
+          <Container size="sm">
+            <Heading level={2} className="mb-4" size="lg" weight="semibold">
+              More reviews for {review.productTitle ?? "this product"}
+            </Heading>
+            <Div layout="grid" gap="4" className="sm:grid-cols-2">
+              {sameProductReviews.map((r) => (
+                <ReviewCard key={r.id} review={r} context="listing" />
+              ))}
+            </Div>
+          </Container>
+        </Section>
+      )}
+
+      {sameStoreReviews.length > 0 && (
+        <Section padding="y-lg" border="subtle" className="border-t">
+          <Container size="sm">
+            <Heading level={2} className="mb-4" size="lg" weight="semibold">
+              More reviews for {review.storeName ?? "this store"}
+            </Heading>
+            <Div layout="grid" gap="4" className="sm:grid-cols-2">
+              {sameStoreReviews.map((r) => (
+                <ReviewCard key={r.id} review={r} context="store" />
+              ))}
+            </Div>
+          </Container>
+        </Section>
+      )}
     </Main>
   );
 }

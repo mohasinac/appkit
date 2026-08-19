@@ -293,6 +293,16 @@ export async function getEventLeaderboard(
   return eventEntryRepository.getLeaderboard(event.id);
 }
 
+/** Related events — other active events sharing at least one tag, excluding this one. */
+export async function getRelatedEvents(
+  tags: string[],
+  excludeId: string,
+  limit = 6,
+): Promise<EventDocument[]> {
+  const docs = await eventRepository.findByTagsOverlap(tags, limit + 1);
+  return docs.filter((e) => e.id !== excludeId).slice(0, limit);
+}
+
 export async function adminListEvents(params?: {
   filters?: string;
   sorts?: string;

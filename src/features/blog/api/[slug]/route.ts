@@ -20,7 +20,12 @@ type RouteContext = { params: Promise<{ slug: string }> };
 
 export interface BlogPostDetailResponse {
   post: BlogPost;
+  /** Same category — the original single "related" signal. */
   related: BlogPost[];
+  /** Posts sharing at least one tag. */
+  relatedByTags: BlogPost[];
+  /** Other posts by the same author. */
+  relatedByAuthor: BlogPost[];
 }
 
 function toBlogPost(doc: BlogPostDocument): BlogPost {
@@ -52,12 +57,19 @@ export async function GET(
     // Increment view count fire-and-forget — must not block response
     safeFireAndForget(blogRepository.incrementViews(post.id), "blog: incrementViews");
 
-    // Related posts: same category, latest 3, excluding current
-    const related = (
-      await blogRepository.findRelated(post.category, post.id, 3)
-    ).map(toBlogPost);
+    // Related posts: same category / tag overlap / same author — latest 3 each, excluding current
+    const [related, relatedByTags, relatedByAuthor] = await Promise.all([
+      blogRepository.findRelated(post.category, post.id, 3),
+      blogRepository.findByTagsOverlap(post.tags ?? [], post.id, 3),
+      blogRepository.findByAuthor(post.authorId, post.id, 3),
+    ]);
 
-    const body: BlogPostDetailResponse = { post: toBlogPost(post), related };
+    const body: BlogPostDetailResponse = {
+      post: toBlogPost(post),
+      related: related.map(toBlogPost),
+      relatedByTags: relatedByTags.map(toBlogPost),
+      relatedByAuthor: relatedByAuthor.map(toBlogPost),
+    };
     return NextResponse.json({ success: true, data: body });
   } catch (error) {
     void normalizeError(error);

@@ -11,6 +11,7 @@ import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../.
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 import { BrandDetailTabs } from "./BrandDetailTabs";
+import { CategoryGrid } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
 
@@ -30,7 +31,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
   const brandName = brand?.name;
 
-  const [productsResult, auctionsResult, preOrdersResult, prizeDrawsResult, allBundles] = await Promise.all([
+  const [productsResult, auctionsResult, preOrdersResult, prizeDrawsResult, allBundles, activeBrands] = await Promise.all([
     brandName
       ? productRepository
           .list({
@@ -79,6 +80,8 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           .listByType("bundle", { activeOnly: true, limit: 50 })
           .catch(() => [])
       : Promise.resolve([]),
+    // Related brands — every other active brand row, excluding this one.
+    categoriesRepository.findActiveBrands().catch(() => []) as Promise<CategoryItem[]>,
   ]);
 
   const brandLower = brandName?.toLowerCase();
@@ -88,6 +91,8 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
         return seo.includes(brandLower);
       })
     : [];
+
+  const relatedBrands = activeBrands.filter((b) => b.id !== brand?.id);
 
   const coverImage = brand?.display?.coverImage;
   const hasCover = Boolean(coverImage);
@@ -211,6 +216,21 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           )}
         </Container>
       </Section>
+
+      {/* ── Related brands ───────────────────────────────────────────────── */}
+      {relatedBrands.length > 0 && (
+        <Section border="subtle" surface="default" className="border-t" padding="y-lg">
+          <Container size="xl">
+            <Heading level={2} className="mb-4" size="xl" weight="semibold">
+              Related Brands
+            </Heading>
+            <CategoryGrid
+              categories={relatedBrands}
+              getHref={(b) => String(ROUTES.PUBLIC.BRAND_DETAIL(b.slug))}
+            />
+          </Container>
+        </Section>
+      )}
     </Main>
   );
 }

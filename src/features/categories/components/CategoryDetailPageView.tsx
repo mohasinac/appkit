@@ -11,6 +11,7 @@ import { ROUTES } from "../../../next";
 import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
+import { CategoryGrid } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 
 const __O = {
@@ -31,7 +32,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // the categorySlugs[] array, not the legacy `category` string field.
   const catFilter = category?.id ? sieveFilter("categorySlugs", SIEVE_OP.CONTAINS, category.id) : null;
 
-  const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories] = await Promise.all([
+  const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories, rootSiblingCategories] = await Promise.all([
     catFilter
       ? productRepository
           .list({
@@ -82,7 +83,17 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     category?.id
       ? categoriesRepository.getChildren(category.id).catch(() => []) as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
+    // Related categories — every other category sharing this category's root
+    // (siblings + cousins across the tree, up to the tier-0/1/2 depth the
+    // catalog actually uses), not just direct children.
+    category?.rootId
+      ? categoriesRepository.getCategoriesByRootId(category.rootId).catch(() => []) as Promise<CategoryItem[]>
+      : Promise.resolve([] as CategoryItem[]),
   ]);
+
+  const relatedCategories = rootSiblingCategories.filter(
+    (c) => c.id !== category?.id && (!c.categoryType || c.categoryType === "category"),
+  );
 
   // Stores tab — query stores whose storeCategory matches this category or any child
   const storeCategorySlugs = [
@@ -252,6 +263,21 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           />
         </Container>
       </Section>
+
+      {/* ── Related categories ───────────────────────────────────────────── */}
+      {relatedCategories.length > 0 && (
+        <Section border="subtle" surface="default" className="border-t" padding="y-lg">
+          <Container size="xl">
+            <Heading level={2} className="mb-4" size="xl" weight="semibold">
+              Related Categories
+            </Heading>
+            <CategoryGrid
+              categories={relatedCategories}
+              getHref={(c) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(c.slug))}
+            />
+          </Container>
+        </Section>
+      )}
     </Main>
   );
 }

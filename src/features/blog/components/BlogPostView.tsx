@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { Div, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
+import { Iframe } from "../../../ui/components/Iframe";
 import { MediaImage } from "../../media/MediaImage";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
@@ -43,6 +44,8 @@ export interface BlogPostViewProps {
     viewsLabel?: string;
     featured?: string;
     relatedTitle?: string;
+    relatedByTagsTitle?: string;
+    relatedByAuthorTitle?: string;
   };
   /** Render the cover image */
   renderImage?: (post: BlogPost) => React.ReactNode;
@@ -82,11 +85,11 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
   );
 }
 
-function renderBlogPostRelated(related: BlogPost[], labels: BlogPostViewLabels, renderRelatedCard?: (post: BlogPost, index: number) => React.ReactNode) {
+function renderBlogPostRelated(related: BlogPost[], title: string, renderRelatedCard?: (post: BlogPost, index: number) => React.ReactNode) {
   if (related.length === 0) return null;
   return (
     <Div>
-      <Heading level={2} className="mb-6" size="xl" weight="semibold">{labels?.relatedTitle ?? "Related Posts"}</Heading>
+      <Heading level={2} className="mb-6" size="xl" weight="semibold">{title}</Heading>
       <Div layout="grid" gap="6" className="sm:grid-cols-3">
         {related.map((rel, i) =>
           renderRelatedCard ? (
@@ -113,7 +116,7 @@ export function BlogPostView({
   renderAuthorBio,
   className = "",
 }: BlogPostViewProps) {
-  const { post, related, isLoading, error } = useBlogPost(slug, {
+  const { post, related, relatedByTags, relatedByAuthor, isLoading, error } = useBlogPost(slug, {
     initialData,
   });
 
@@ -167,6 +170,18 @@ export function BlogPostView({
       <Div className="max-w-3xl mx-auto" paddingY="y-3xl" paddingX="x-md">
         {renderBlogPostHeader(post, date, labels)}
 
+        {/* Optional YouTube video embed — 11-char id, whitelisted before interpolation into the iframe src */}
+        {post.youtubeId && /^[A-Za-z0-9_-]{6,20}$/.test(post.youtubeId) && (
+          <Div className="mb-8">
+            <Iframe
+              src={`https://www.youtube-nocookie.com/embed/${post.youtubeId}`}
+              title={`${post.title} — video`}
+              aspect="video"
+              rounded="lg"
+            />
+          </Div>
+        )}
+
         {/* Tags — each tag links to /blog?tags=<tag> for filtered listing */}
         {post.tags && post.tags.length > 0 && (
           <Row wrap gap="sm" className="mb-8">
@@ -192,7 +207,11 @@ export function BlogPostView({
           )}
         </Div>
 
-        {renderBlogPostRelated(related, labels, renderRelatedCard)}
+        <Stack gap="xl">
+          {renderBlogPostRelated(related, labels?.relatedTitle ?? "Related Posts", renderRelatedCard)}
+          {renderBlogPostRelated(relatedByTags, labels?.relatedByTagsTitle ?? "You might also like", renderRelatedCard)}
+          {renderBlogPostRelated(relatedByAuthor, labels?.relatedByAuthorTitle ?? `More from ${post.authorName}`, renderRelatedCard)}
+        </Stack>
 
         {/* Back button */}
         {renderBackButton && <Div border="default" className="mt-10 border-t" padding="t-xl">{renderBackButton()}</Div>}

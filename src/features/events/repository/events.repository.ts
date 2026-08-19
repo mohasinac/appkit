@@ -65,6 +65,26 @@ class EventRepository extends BaseRepository<EventDocument> {
     return this.findById(idOrSlug);
   }
 
+  /**
+   * Active events sharing at least one tag with the given list — "related
+   * events" discovery. `array-contains-any` caps at 10 values, so only the
+   * first 10 tags are used.
+   */
+  async findByTagsOverlap(tags: string[], limit = 8): Promise<EventDocument[]> {
+    if (tags.length === 0) return [];
+    try {
+      const snap = await this.getCollection()
+        .where(EVENT_FIELDS.STATUS, "==", EVENT_FIELDS.STATUS_VALUES.ACTIVE)
+        .where(EVENT_FIELDS.TAGS, "array-contains-any", tags.slice(0, 10))
+        .limit(limit)
+        .get();
+      return snap.docs.map((doc) => this.mapDoc<EventDocument>(doc));
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError("Failed to find events by tag overlap", error);
+    }
+  }
+
   async listActive(): Promise<EventDocument[]> {
     try {
       const now = new Date();
