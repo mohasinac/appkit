@@ -63,6 +63,9 @@ export function useUpdateCurrentProfile(options?: {
       apiClient.patch(endpoint, data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      // useCurrentUser()/useRBAC() read identity via a separate ["auth","me"]
+      // query — without this, displayName/photoURL stay stale for up to 5min.
+      await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
       options?.onSuccess?.(data);
     },
     onError: options?.onError,

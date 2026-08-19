@@ -1086,9 +1086,6 @@ export { updateHomepageSection } from "./features/homepage/server";
 // updateSectionSchema - Helper for update section schema.
 export { updateSectionSchema } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// extractStoragePathFromUrl - Shared export for extract storage path from url.
-export { extractStoragePathFromUrl } from "./features/media/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaArray - Shared export for finalize staged media array.
 export { finalizeStagedMediaArray } from "./features/media/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

@@ -17,6 +17,7 @@ export interface AdminStoreEditorViewProps {
   storeName?: string;
   currentStatus?: string;
   currentIsVerified?: boolean;
+  currentIsFeatured?: boolean;
   currentCapabilities?: string[];
 }
 
@@ -73,6 +74,7 @@ export function AdminStoreEditorView({
   storeName,
   currentStatus,
   currentIsVerified,
+  currentIsFeatured,
   currentCapabilities,
 }: AdminStoreEditorViewProps) {
   const queryClient = useQueryClient();
@@ -80,7 +82,7 @@ export function AdminStoreEditorView({
 
   const [storeStatus, setStoreStatus] = React.useState(currentStatus ?? "pending");
   const [adminNotes, setAdminNotes] = React.useState("");
-  const [isFeatured, setIsFeatured] = React.useState(false);
+  const [isFeatured, setIsFeatured] = React.useState(currentIsFeatured ?? false);
   const [isVerified, setIsVerified] = React.useState(currentIsVerified ?? false);
   const [suspensionReason, setSuspensionReason] = React.useState("");
   const [capabilities, setCapabilities] = React.useState<Set<string>>(
@@ -99,12 +101,12 @@ export function AdminStoreEditorView({
     if (open) {
       setStoreStatus(currentStatus ?? "pending");
       setAdminNotes("");
-      setIsFeatured(false);
+      setIsFeatured(currentIsFeatured ?? false);
       setIsVerified(currentIsVerified ?? false);
       setSuspensionReason("");
       setCapabilities(new Set(currentCapabilities ?? ["suggest_brands", "create_coupons"]));
     }
-  }, [open, currentStatus, currentIsVerified, currentCapabilities]);
+  }, [open, currentStatus, currentIsVerified, currentIsFeatured, currentCapabilities]);
 
   const saveMutation = useApiMutation({
     mutationFn: async () => {

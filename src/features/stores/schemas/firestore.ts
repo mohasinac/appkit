@@ -98,6 +98,14 @@ export interface StoreDocument extends BaseDocument {
   isVacationMode?: boolean;
   vacationMessage?: string;
 
+  // ── Admin moderation fields (admin-only writes via updateStoreSchema) ────────
+  /** Internal admin note, never shown to the store owner or the public. */
+  adminNotes?: string;
+  /** Admin "verified store" badge — distinct from `status`/`isPublic`. */
+  isVerified?: boolean;
+  /** Reason recorded when `status` is set to "suspended". */
+  suspensionReason?: string;
+
   stats?: {
     totalProducts: number;
     itemsSold: number;
@@ -197,6 +205,11 @@ export const STORE_FIELDS = {
   STATS: "stats",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
+  ADMIN_NOTES: "adminNotes",
+  IS_FEATURED: "isFeatured",
+  IS_VERIFIED: "isVerified",
+  SUSPENSION_REASON: "suspensionReason",
+  CAPABILITIES: "capabilities",
 
   STATUS_VALUES: {
     PENDING: "pending",

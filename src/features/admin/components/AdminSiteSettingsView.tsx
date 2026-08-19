@@ -608,6 +608,9 @@ export function AdminSiteSettingsView({
     onSuccess: () => {
       showToast("Site settings saved.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "site-settings"] });
+      // Public-facing consumers (Navbar, checkout, watermark, etc.) read via the
+      // shared useSiteSettings() hook under a different key — must invalidate both.
+      queryClient.invalidateQueries({ queryKey: ["site-settings"] });
     },
     onError: (err: Error) =>
       showToast((err as Error)?.message ?? "Failed to save site settings.", "error"),

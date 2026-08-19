@@ -6723,9 +6723,6 @@ export type { VideoTrimModalProps } from "./features/media/index";
 
 // ./features/media/server
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// extractStoragePathFromUrl - Shared export for extract storage path from url.
-export { extractStoragePathFromUrl } from "./features/media/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaArray - Shared export for finalize staged media array.
 export { finalizeStagedMediaArray } from "./features/media/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

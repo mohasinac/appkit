@@ -72,6 +72,10 @@ export interface ProductItem {
   featured?: boolean;
   isPromoted?: boolean;
   allowShipBeforeEmiComplete?: boolean;
+  /** P-8 GST — buyer-facing tax rate on this product (%). Unset/0 = exempt. */
+  gstRate?: 0 | 5 | 12 | 18 | 28;
+  /** P-8 GST — Harmonized System of Nomenclature code for GST-compliant invoices. */
+  hsnCode?: string;
   printMeta?: ProductPrintMeta;
   currentBid?: number;
   availableQuantity?: number;

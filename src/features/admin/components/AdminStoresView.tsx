@@ -168,6 +168,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         storeName={editorRow?.primary}
         currentStatus={editorRow?.status?.toLowerCase()}
         currentIsVerified={Boolean(editorRow?._raw?.isVerified)}
+        currentIsFeatured={Boolean(editorRow?._raw?.isFeatured)}
         currentCapabilities={
           Array.isArray(editorRow?._raw?.capabilities)
             ? (editorRow!._raw!.capabilities as string[])

@@ -54,10 +54,10 @@ function makeInput(overrides = {}) {
   return {
     orderId: "order-1",
     order: {
-      buyerDisplayName: "Ravi Kumar",
-      buyerId: "user-ravi",
-      items: [{ title: "Pokemon Charizard" }],
-      totalAmount: 25000,
+      userName: "Ravi Kumar",
+      userId: "user-ravi",
+      items: [{ productTitle: "Pokemon Charizard" }],
+      totalPrice: 25000,
       storeId: "store-pokemon-palace",
       ...overrides,
     },
@@ -182,41 +182,33 @@ describe("handleOrderCreate — store owner notification", () => {
 });
 
 describe("handleOrderCreate — message content", () => {
-  it("uses buyerDisplayName in announcement", async () => {
+  it("uses userName in announcement", async () => {
     const ctx = makeCtx();
-    await handleOrderCreate(makeInput({ buyerDisplayName: "Priya Singh" }), ctx);
+    await handleOrderCreate(makeInput({ userName: "Priya Singh" }), ctx);
     expect(mockBuildMessage).toHaveBeenCalledWith(
       expect.objectContaining({ buyerName: "Priya Singh" }),
     );
   });
 
-  it("uses 'A customer' as fallback when buyerDisplayName is missing", async () => {
+  it("uses 'A customer' as fallback when userName is missing", async () => {
     const ctx = makeCtx();
-    await handleOrderCreate(makeInput({ buyerDisplayName: undefined }), ctx);
+    await handleOrderCreate(makeInput({ userName: undefined }), ctx);
     expect(mockBuildMessage).toHaveBeenCalledWith(
       expect.objectContaining({ buyerName: "A customer" }),
     );
   });
 
-  it("uses first item title as firstItemName", async () => {
+  it("uses first item's productTitle as firstItemName", async () => {
     const ctx = makeCtx();
-    await handleOrderCreate(makeInput({ items: [{ title: "Charizard PSA 9" }] }), ctx);
+    await handleOrderCreate(makeInput({ items: [{ productTitle: "Charizard PSA 9" }] }), ctx);
     expect(mockBuildMessage).toHaveBeenCalledWith(
       expect.objectContaining({ firstItemName: "Charizard PSA 9" }),
     );
   });
 
-  it("falls back to item.name when title is missing", async () => {
-    const ctx = makeCtx();
-    await handleOrderCreate(makeInput({ items: [{ name: "Blastoise" }] }), ctx);
-    expect(mockBuildMessage).toHaveBeenCalledWith(
-      expect.objectContaining({ firstItemName: "Blastoise" }),
-    );
-  });
-
   it("additionalItemCount = items.length - 1", async () => {
     const ctx = makeCtx();
-    const items = [{ title: "A" }, { title: "B" }, { title: "C" }];
+    const items = [{ productTitle: "A" }, { productTitle: "B" }, { productTitle: "C" }];
     await handleOrderCreate(makeInput({ items }), ctx);
     expect(mockBuildMessage).toHaveBeenCalledWith(
       expect.objectContaining({ additionalItemCount: 2 }),

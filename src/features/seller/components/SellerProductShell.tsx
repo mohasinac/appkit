@@ -64,6 +64,8 @@ export interface SellerProductDraft {
   isPromoted?: boolean;
   isNew?: boolean;
   isOnSale?: boolean;
+  allowOffers?: boolean;
+  minOfferPercent?: number;
   // Shipping
   shippingPaidBy?: "buyer" | "seller";
   pickupAddressId?: string;
@@ -944,6 +946,23 @@ function StepPricing({
           label="Mark as New Arrival"
         />
       </FormGroup>
+      <Toggle
+        checked={!!values.allowOffers}
+        onChange={(checked) =>
+          onChange({ allowOffers: checked, minOfferPercent: checked ? values.minOfferPercent ?? 50 : undefined })
+        }
+        label="Allow buyer offers"
+      />
+      {values.allowOffers && (
+        <FormField
+          name="minOfferPercent"
+          label="Minimum offer (% of price)"
+          type="number"
+          value={String(values.minOfferPercent ?? "")}
+          onChange={(v) => onChange({ minOfferPercent: Number(v) })}
+          placeholder="50"
+        />
+      )}
     </Stack>
   );
 }

@@ -493,6 +493,68 @@ export function ProductForm({
           onChange={(e) => update({ allowShipBeforeEmiComplete: e.target.checked })}
           disabled={isReadonly}
         />
+        <Checkbox
+          label={t("formAllowOffers")}
+          checked={!!product.allowOffers}
+          onChange={(e) =>
+            update({
+              allowOffers: e.target.checked,
+              minOfferPercent: e.target.checked ? product.minOfferPercent ?? 50 : undefined,
+            })
+          }
+          disabled={isReadonly}
+        />
+      </FormGroup>
+
+      {product.allowOffers && (
+        <>
+          <Alert variant="info" title={t("formAllowOffersHelp")}>
+            {t("formAllowOffersHelp")}
+          </Alert>
+          <FormField
+            name="minOfferPercent"
+            label={t("formMinOfferPercent")}
+            type="number"
+            value={String(product.minOfferPercent ?? "")}
+            onChange={(value) => update({ minOfferPercent: Number(value) })}
+            disabled={isReadonly}
+            placeholder="50"
+          />
+        </>
+      )}
+
+      <Heading level={4} className="mt-4">
+        {t("sectionTaxGst")}
+      </Heading>
+
+      <FormGroup columns={2}>
+        <FormField
+          name="gstRate"
+          label={t("formGstRate")}
+          type="select"
+          // Unset is semantically "exempt" (see ProductDocument.gstRate JSDoc),
+          // same as 0% — default the control to 0 so the select stays a fixed
+          // 5-option enum instead of adding a 6th "unset" placeholder entry.
+          value={String(product.gstRate ?? 0)}
+          onChange={(value) => update({ gstRate: Number(value) as 0 | 5 | 12 | 18 | 28 })}
+          disabled={isReadonly}
+          options={[
+            { value: "0", label: "0%" },
+            { value: "5", label: "5%" },
+            { value: "12", label: "12%" },
+            { value: "18", label: "18%" },
+            { value: "28", label: "28%" },
+          ]}
+        />
+        <FormField
+          name="hsnCode"
+          label={t("formHsnCode")}
+          type="text"
+          value={product.hsnCode ?? ""}
+          onChange={(value) => update({ hsnCode: value })}
+          disabled={isReadonly}
+          placeholder="e.g. 9503"
+        />
       </FormGroup>
 
       <Heading level={4} className="mt-4">

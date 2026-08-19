@@ -38,6 +38,48 @@ function matchesQuery(item: RawChecklistItem, query: string): boolean {
   return haystack.includes(query.toLowerCase());
 }
 
+interface TesterChecklistPageSectionProps {
+  page: { pageLabel: string; items: RawChecklistItem[] };
+  testerDisplayName: string;
+  onAnswer: (checklistItemId: string, answer: TesterAnswer) => void;
+  onSaveNote: (checklistItemId: string, comment: string, screenshotUrl: string) => Promise<void>;
+}
+
+function TesterChecklistPageSection({ page, testerDisplayName, onAnswer, onSaveNote }: TesterChecklistPageSectionProps) {
+  const answeredCount = page.items.filter((i) => i.answer).length;
+  return (
+    <Details tone="card" defaultOpen={false}>
+      <Summary>
+        {page.pageLabel} ({answeredCount}/{page.items.length} answered)
+      </Summary>
+      <Div padding="t-sm">
+        <Stack gap="sm">
+          {page.items
+            .slice()
+            .sort((a, b) => a.order - b.order)
+            .map((item) => (
+              <TesterChecklistStepRow
+                key={item.id}
+                testerDisplayName={testerDisplayName}
+                item={{
+                  checklistItemId: item.id,
+                  label: item.label,
+                  description: item.description,
+                  href: item.href,
+                  answer: item.answer,
+                  comment: item.comment,
+                  screenshotUrl: item.screenshotUrl,
+                }}
+                onAnswer={onAnswer}
+                onSaveNote={onSaveNote}
+              />
+            ))}
+        </Stack>
+      </Div>
+    </Details>
+  );
+}
+
 export interface TesterHubViewProps {
   sandboxExpiresAt?: string | null;
 }
@@ -139,40 +181,15 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
                 {Array.from(groups.entries()).map(([groupKey, group]) => (
                   <Stack key={groupKey} gap="sm">
                     <Heading level={4}>{group.groupLabel}</Heading>
-                    {Array.from(group.pages.entries()).map(([pageKey, page]) => {
-                      const answeredCount = page.items.filter((i) => i.answer).length;
-                      return (
-                        <Details key={pageKey} tone="card" defaultOpen={false}>
-                          <Summary>
-                            {page.pageLabel} ({answeredCount}/{page.items.length} answered)
-                          </Summary>
-                          <Div padding="t-sm">
-                            <Stack gap="sm">
-                              {page.items
-                                .slice()
-                                .sort((a, b) => a.order - b.order)
-                                .map((item) => (
-                                  <TesterChecklistStepRow
-                                    key={item.id}
-                                    testerDisplayName={user?.displayName ?? user?.email ?? "tester"}
-                                    item={{
-                                      checklistItemId: item.id,
-                                      label: item.label,
-                                      description: item.description,
-                                      href: item.href,
-                                      answer: item.answer,
-                                      comment: item.comment,
-                                      screenshotUrl: item.screenshotUrl,
-                                    }}
-                                    onAnswer={handleAnswer}
-                                    onSaveNote={handleSaveNote}
-                                  />
-                                ))}
-                            </Stack>
-                          </Div>
-                        </Details>
-                      );
-                    })}
+                    {Array.from(group.pages.entries()).map(([pageKey, page]) => (
+                      <TesterChecklistPageSection
+                        key={pageKey}
+                        page={page}
+                        testerDisplayName={user?.displayName ?? user?.email ?? "tester"}
+                        onAnswer={handleAnswer}
+                        onSaveNote={handleSaveNote}
+                      />
+                    ))}
                   </Stack>
                 ))}
               </Stack>

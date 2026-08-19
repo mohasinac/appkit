@@ -6,19 +6,13 @@ import {
   buildPurchaseAnnouncementMessage,
 } from "../../../../features/whatsapp-bot/server";
 import type { JobContext } from "../runtime/types";
+import type { OrderDocument, OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 
-interface OrderItem {
-  title?: string;
-  name?: string;
-}
-
-export interface NewOrder {
-  buyerDisplayName?: string;
-  buyerId?: string;
-  items?: OrderItem[];
-  totalAmount?: number;
-  storeId?: string;
-}
+// Mirrors the real OrderDocument field names — the trigger receives the raw
+// Firestore snapshot, so this must match, not a hand-picked convenience shape.
+export type NewOrder = Pick<OrderDocument, "userName" | "userId" | "totalPrice" | "storeId"> & {
+  items?: Pick<OrderDocumentItem, "productTitle">[];
+};
 
 export interface HandleOrderCreateInput {
   orderId: string;
@@ -94,15 +88,15 @@ export async function handleOrderCreate(
 
   const items = order.items ?? [];
   const firstItem = items[0];
-  const firstItemName = firstItem?.title ?? firstItem?.name ?? "an item";
+  const firstItemName = firstItem?.productTitle ?? "an item";
   const additionalItemCount = Math.max(0, items.length - 1);
-  const buyerName = order.buyerDisplayName ?? "A customer";
+  const buyerName = order.userName ?? "A customer";
 
   const message = buildPurchaseAnnouncementMessage({
     buyerName,
     firstItemName,
     additionalItemCount,
-    totalAmount: order.totalAmount ?? 0,
+    totalAmount: order.totalPrice ?? 0,
     orderId,
   });
 

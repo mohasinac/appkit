@@ -253,6 +253,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
+      // Public-facing useHomepageSections() reads under a separate key.
+      await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
       toast.showToast(mode === "create" ? "Section created." : "Section updated.", "success");
       setIsModalOpen(false);
     },
@@ -273,6 +275,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
+      // Public-facing useHomepageSections() reads under a separate key.
+      await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
       setReorderServerSnapshot(cloneReorderItems(reorderDraft));
       setReorderUndoStack([]);
       toast.showToast("Section order updated.", "success");

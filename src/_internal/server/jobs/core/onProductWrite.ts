@@ -21,6 +21,13 @@ const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
 
 void UNAVAILABLE_PRODUCT_STATUSES;
 
+function getEffectiveCategory(doc: ProductDoc | null): string | null {
+  if (!doc) return null;
+  const categorySlugs = doc.categorySlugs as string[] | undefined;
+  if (Array.isArray(categorySlugs) && categorySlugs.length > 0) return categorySlugs[0];
+  return (doc.category as string | undefined) ?? null;
+}
+
 async function getParentIds(categoryId: string): Promise<string[]> {
   if (!categoryId) return [];
   return (await categoriesRepository.findById(categoryId))?.parentIds ?? [];
@@ -106,8 +113,12 @@ export async function handleProductWrite(
 
   const beforeStatus = (before?.status as string | undefined) ?? null;
   const afterStatus = (after?.status as string | undefined) ?? null;
-  const beforeCategory = (before?.category as string | undefined) ?? null;
-  const afterCategory = (after?.category as string | undefined) ?? null;
+  // `category` is @deprecated in favor of `categorySlugs[]` — the repository's
+  // mapDoc() normalizes this on read, but a raw trigger snapshot bypasses that,
+  // so a product written via categorySlugs-only paths would otherwise silently
+  // no-op category metrics here. Prefer categorySlugs[0], fall back to legacy category.
+  const beforeCategory = getEffectiveCategory(before);
+  const afterCategory = getEffectiveCategory(after);
   const beforeStoreId =
     ((before?.storeId as string | undefined) || (before?.sellerId as string | undefined)) ?? null;
   const afterStoreId =

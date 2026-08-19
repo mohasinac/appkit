@@ -2,22 +2,25 @@ export * from "./firestore";
 
 import { z } from "zod";
 
+const REQUIRED_TITLE = "Title is required";
+const REQUIRED_TEXT = "Text is required";
+
 export const aboutHowItemSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  text: z.string().min(1, "Text is required"),
+  title: z.string().min(1, REQUIRED_TITLE),
+  text: z.string().min(1, REQUIRED_TEXT),
   icon: z.string().min(1, "Icon is required"),
   tone: z.enum(["indigo", "teal", "amber", "rose"]).optional(),
 });
 
 export const aboutValueItemSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  text: z.string().min(1, "Text is required"),
+  title: z.string().min(1, REQUIRED_TITLE),
+  text: z.string().min(1, REQUIRED_TEXT),
   icon: z.string().min(1, "Icon is required"),
 });
 
 export const aboutMilestoneSchema = z.object({
   year: z.string().min(1, "Year is required"),
-  text: z.string().min(1, "Text is required"),
+  text: z.string().min(1, REQUIRED_TEXT),
 });
 
 export const aboutTeamMemberSchema = z.object({
@@ -30,7 +33,7 @@ export const aboutTeamMemberSchema = z.object({
 });
 
 export const aboutContentSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+  title: z.string().min(1, REQUIRED_TITLE),
   subtitle: z.string().min(1, "Subtitle is required"),
   missionTitle: z.string().min(1, "Mission title is required"),
   missionText: z.string().min(1, "Mission text is required"),

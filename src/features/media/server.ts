@@ -1,5 +1,4 @@
 export {
-  extractStoragePathFromUrl,
   finalizeStagedMediaUrl,
   finalizeStagedMediaField,
   finalizeStagedMediaArray,
