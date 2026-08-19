@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
+import { BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
@@ -63,9 +63,9 @@ export function EventCard({
   const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
 
   return (
-    <Article border="default"
-      rounded="xl" shadow="hover-md"
-      className={`group relative flex h-full flex-col overflow-hidden bg-[var(--appkit-color-surface)] ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
+    <Stack as="article" border="default"
+      rounded="xl" shadow="hover-md" gap="none"
+      className={`group relative h-full overflow-hidden bg-[var(--appkit-color-surface)] ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -147,6 +147,6 @@ export function EventCard({
           </TextLink>
         )}
       </Stack>
-    </Article>
+    </Stack>
   );
 }

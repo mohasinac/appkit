@@ -12,6 +12,7 @@ import {
   assertPrizeDrawWonItemsImmutable,
 } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
+import type { PrizeDrawItem } from "../../../../features/products/schemas/firestore";
 
 export async function createProductAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -64,7 +65,7 @@ export async function updateProductAction(productId: string, input: unknown): Pr
       const product = await assertProductOwnership(productId, user.uid);
       const parsed = productUpdateSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
-      assertPrizeDrawWonItemsImmutable(product, (parsed.data as { prizeDrawItems?: unknown }).prizeDrawItems);
+      assertPrizeDrawWonItemsImmutable(product, (parsed.data as { prizeDrawItems?: PrizeDrawItem[] }).prizeDrawItems);
       return productRepository.update(productId, parsed.data as any);
   });
 }

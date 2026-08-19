@@ -6,6 +6,7 @@ import { Button, Div, IconButton, Input, Li, Nav, Row, Span, Stack, Ul } from ".
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";
+import { findActiveNavGroup, findActiveNavItem } from "../../../_internal/client/features/layout/navActive";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -43,10 +44,6 @@ export interface AdminSidebarProps {
   className?: string;
 }
 
-function isNavItemActive(item: AdminNavItem, activePath: string): boolean {
-  return activePath === item.href || activePath.startsWith(item.href + "/");
-}
-
 function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: boolean; onClick?: () => void }) {
   return (
     <Link
@@ -73,14 +70,24 @@ function GroupsContent({
   activePath: string;
   onItemClick?: () => void;
 }) {
-  // Accordion — only one group open at a time. Initial pick: the first group
-  // whose defaultOpen is true, or that contains the active path.
+  // Accordion — only one group open at a time. Initial pick: the group
+  // containing the active path, else the first group with defaultOpen.
   const [openGroup, setOpenGroup] = useState<string | null>(() => {
-    const match = groups.find(
-      (g) => g.defaultOpen ?? g.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/")),
-    );
-    return match?.title ?? null;
+    const active = findActiveNavGroup(groups, activePath);
+    if (active) return active.title;
+    return groups.find((g) => g.defaultOpen)?.title ?? null;
   });
+  // Re-sync whenever the route changes — the sidebar stays mounted across
+  // client-side navigation, so the lazy initializer above only fires once.
+  useEffect(() => {
+    const active = findActiveNavGroup(groups, activePath);
+    if (active) setOpenGroup(active.title);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePath]);
+  const activeItem = findActiveNavItem(
+    groups.flatMap((g) => g.items),
+    activePath,
+  );
   const { query, setQuery, isSearching, filteredGroups } = useSidebarSearch(groups);
   const toggle = useCallback(
     (title: string) => {
@@ -107,7 +114,7 @@ function GroupsContent({
       )}
       {filteredGroups.map((group) => {
         const isOpen = isSearching || openGroup === group.title;
-        const hasActive = group.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/"));
+        const hasActive = !!findActiveNavItem(group.items, activePath);
         return (
           <Div key={group.title} className="mb-0.5">
             <Button
@@ -138,7 +145,7 @@ function GroupsContent({
               <Ul paddingX="x-sm" paddingY="y-bottom-xs" spacing="2xs">
                 {group.items.map((item) => (
                   <Li key={item.href}>
-                    <NavLink item={item} isActive={isNavItemActive(item, activePath)} onClick={onItemClick} />
+                    <NavLink item={item} isActive={activeItem?.href === item.href} onClick={onItemClick} />
                   </Li>
                 ))}
               </Ul>

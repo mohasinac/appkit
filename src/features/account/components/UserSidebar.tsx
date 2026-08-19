@@ -7,6 +7,7 @@ import { Button, ConfirmDeleteModal, Div, IconButton, Input, Li, Nav, Row, Span,
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";
+import { findActiveNavGroup, findActiveNavItem } from "../../../_internal/client/features/layout/navActive";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -40,10 +41,6 @@ export interface UserSidebarProps {
   variant?: "sidebar" | "overlay";
   /** Optional slot rendered below the scrollable nav, e.g. cross-dashboard links. */
   renderFooter?: () => React.ReactNode;
-}
-
-function isNavItemActive(item: UserNavItem, activeHref: string): boolean {
-  return activeHref === item.href || activeHref.startsWith(item.href + "/");
 }
 
 function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boolean; onClick?: () => void }) {

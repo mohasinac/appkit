@@ -249,7 +249,7 @@ export function MarketplacePreorderCard({
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}
             </Row>
-            <Row justify="between" className="mt-auto pt-2" gap="sm">
+            <Row justify="between" className="mt-auto pt-[var(--appkit-space-2)]" gap="sm">
               <Button type="button" variant="primary" size="sm" textSize="xs" className="flex-1" onClick={handleNavigate}>
                 {mergedLabels.reserveNow}
               </Button>

@@ -21,6 +21,9 @@
 import type { TesterChecklistItemDocument } from "../schemas";
 import { assignDefaultPhases } from "../utils/phases";
 
+const ADMIN_TESTING_GROUP_LABEL = "Admin (Testing)";
+const BUG_HUNTER_REWARDS_PAGE_LABEL = "Bug Hunter Rewards";
+
 interface CaseInput {
   key: string;
   label: string;
@@ -701,7 +704,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
 
   ...group(
     "admin",
-    "Admin (Testing)",
+    ADMIN_TESTING_GROUP_LABEL,
     [
       {
         pageKey: "catalog-listings",
@@ -879,7 +882,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       },
       {
         pageKey: "bug-hunter-rewards",
-        pageLabel: "Bug Hunter Rewards",
+        pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
         cases: [
           {
             key: "confirm-bug",
@@ -917,9 +920,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   {
     id: "checklist-admin-bug-hunter-rewards-demo-fixture",
     groupKey: "admin",
-    groupLabel: "Admin (Testing)",
+    groupLabel: ADMIN_TESTING_GROUP_LABEL,
     pageKey: "bug-hunter-rewards",
-    pageLabel: "Bug Hunter Rewards",
+    pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
     label: "Demo fixture — reported bug, already confirmed and reopened (v1, disabled)",
     description: "Seed-only fixture demonstrating a confirmed bug: this v1 case is disabled (isActive:false) and credited to \"Mock User 18\". Its retest is \"Demo fixture — reported bug, already confirmed and reopened (v2, active)\" in this same page.",
     order: 100,
@@ -935,9 +938,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   {
     id: "checklist-admin-bug-hunter-rewards-demo-fixture-v2",
     groupKey: "admin",
-    groupLabel: "Admin (Testing)",
+    groupLabel: ADMIN_TESTING_GROUP_LABEL,
     pageKey: "bug-hunter-rewards",
-    pageLabel: "Bug Hunter Rewards",
+    pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
     label: "Demo fixture — reported bug, already confirmed and reopened (v2, active)",
     description: "Seed-only fixture — the retest version reopened from the disabled v1 case in this same page. Active and answerable again; a fresh \"No\" answer here can be used to try Mark as Bug end-to-end.",
     order: 101,

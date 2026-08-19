@@ -157,7 +157,8 @@ export function MarketplaceBundleCard({
             size="xs"
             weight="bold"
             color="inverse"
-            className="absolute left-2 top-2 bg-success-surface"
+            surface="success-surface"
+            className="absolute left-2 top-2"
             rounded="full"
             padding="pill-xs"
           >

@@ -2,6 +2,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
 import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 import { assignPrizeDrawWinner } from "./prizeDrawAssignWinner";
+import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 
 const PRODUCT_COLLECTION = "products";
 const ORDER_COLLECTION = "orders";
@@ -45,7 +46,7 @@ export async function runPrizeDrawExpiryReveal(ctx: JobContext): Promise<void> {
 
     const orders = await ctx.db
       .collection(ORDER_COLLECTION)
-      .where("prizeDrawProductId", "==", doc.id)
+      .where(ORDER_FIELDS.PRIZE_DRAW_PRODUCT_ID, "==", doc.id)
       .where(ORDER_FIELDS.PAYMENT_STATUS, "==", ORDER_FIELDS.PAYMENT_STATUS_VALUES.PAID)
       .where(ORDER_FIELDS.STATUS, "in", [
         ORDER_FIELDS.STATUS_VALUES.PENDING,
@@ -56,7 +57,7 @@ export async function runPrizeDrawExpiryReveal(ctx: JobContext): Promise<void> {
 
     let revealed = 0;
     for (const orderDoc of orders.docs) {
-      const order = orderDoc.data() as { prizeWon?: unknown };
+      const order = orderDoc.data() as Pick<OrderDocument, "prizeWon">;
       if (order.prizeWon) continue;
       try {
         const result = await assignPrizeDrawWinner(ctx, {

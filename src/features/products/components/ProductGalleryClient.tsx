@@ -117,7 +117,9 @@ export function ProductGalleryClient({ images, video, productName }: ProductGall
             justify="center"
           >
             <Row
-              className="h-16 w-16 rounded-full bg-black/50 text-white"
+              surface="overlay-sm"
+              rounded="full"
+              className="h-16 w-16 text-white"
               align="center"
               justify="center"
             >
@@ -154,7 +156,8 @@ export function ProductGalleryClient({ images, video, productName }: ProductGall
               />
               {slide.kind === "video" && (
                 <Row
-                  className="absolute inset-0 pointer-events-none bg-black/25"
+                  surface="overlay-xs"
+                  className="absolute inset-0 pointer-events-none"
                   align="center"
                   justify="center"
                 >

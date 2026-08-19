@@ -3,6 +3,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Button, Div, Select, TextLink } from "../../../ui";
 
+const CLS_ACTIVE_TAB = "border-primary text-primary";
+
 export interface StoreTab {
   value: string;
   label: string;
@@ -57,10 +59,10 @@ export function StoreNavTabs({
   };
 
   return (
-    <Div layout="flex" gap="2"
+    <Div layout="flex" gap="2" align="center"
       role="tablist"
       border="bottom"
-      className={`items-center overflow-x-auto ${className}`}
+      className={`overflow-x-auto ${className}`}
     >
       {dropdownTabs.length > 0 && (
         <Select
@@ -70,7 +72,7 @@ export function StoreNavTabs({
           value={activeDropdownTab?.value ?? ""}
           placeholder={activeDropdownTab ? undefined : dropdownPlaceholder}
           onValueChange={handleDropdownChange}
-          className={`max-w-[12rem] flex-shrink-0 whitespace-nowrap ${activeDropdownTab ? "border-primary text-primary" : ""}`}
+          className={`max-w-[12rem] flex-shrink-0 whitespace-nowrap ${activeDropdownTab ? CLS_ACTIVE_TAB : ""}`}
         />
       )}
       {tabs.map((tab) =>
@@ -87,7 +89,7 @@ export function StoreNavTabs({
             weight="medium"
             className={`whitespace-nowrap border-b-2 -mb-px transition-colors ${
  activeValue === tab.value
- ? "border-primary text-primary"
+ ? CLS_ACTIVE_TAB
  : "border-transparent text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-800 hover:text-[var(--appkit-color-text-muted)]"
  }`}
           >
@@ -108,7 +110,7 @@ export function StoreNavTabs({
             rounded="none"
             className={`whitespace-nowrap border-b-2 -mb-px transition-colors ${
  activeValue === tab.value
- ? "border-primary text-primary"
+ ? CLS_ACTIVE_TAB
  : "border-transparent text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-800 hover:text-[var(--appkit-color-text-muted)]"
  }`}
           >

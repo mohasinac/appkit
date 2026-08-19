@@ -28,6 +28,7 @@ import { testDataExpiresAt } from "./tester-ttl";
 
 const TESTER_STORE_ID = "store-tester-sandbox";
 const TESTER_STORE_NAME = "Tester Sandbox Store";
+const TESTER_GROUP_TITLE = "Tester Sandbox Bundle";
 const GADGETS_CATEGORY_SLUGS = ["category-tester-gadgets", "category-tester-sandbox"];
 const GADGETS_CATEGORY_NAMES = ["Test Gadgets", "Tester Sandbox"];
 const COLLECTIBLES_CATEGORY_SLUGS = ["category-tester-collectibles", "category-tester-sandbox"];
@@ -76,7 +77,7 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     // resolvable and ShowGroupSection renders nothing (members.length <= 1).
     groupId: "group-tester-sandbox-bundle",
     groupParentSlug: "group-tester-sandbox-bundle",
-    groupTitle: "Tester Sandbox Bundle",
+    groupTitle: TESTER_GROUP_TITLE,
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
@@ -105,7 +106,7 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isOnSale: false,
     groupId: "group-tester-sandbox-bundle",
     groupParentSlug: "group-tester-sandbox-bundle",
-    groupTitle: "Tester Sandbox Bundle",
+    groupTitle: TESTER_GROUP_TITLE,
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
@@ -497,7 +498,7 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isOnSale: false,
     isGroupParent: true,
     groupId: "group-tester-sandbox-bundle",
-    groupTitle: "Tester Sandbox Bundle",
+    groupTitle: TESTER_GROUP_TITLE,
     groupChildSlugs: ["product-tester-standard-1", "product-tester-standard-2"],
     createdAt: new Date(),
     updatedAt: new Date(),

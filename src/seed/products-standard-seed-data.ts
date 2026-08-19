@@ -302,8 +302,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
       seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-2-20260819/900/900"),
     ],
     video: {
-      // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
       thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-original-dragoon-f-video-demo-20260819/800/450"),
       duration: 15,
     },
@@ -336,8 +335,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
       seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-2-20260819/900/900"),
     ],
     video: {
-      // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
       thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-x-dran-sword-video-demo-20260819/800/450"),
       duration: 20,
     },

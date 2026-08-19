@@ -290,7 +290,7 @@ export interface ProductDocument extends BaseDocument {
   // ── SB1 (S19 / S22 Phase 4 2026-05-12) — canonical listing-kind discriminator
   /**
    * Required since Phase 4 dropped the legacy `isAuction` / `isPreOrder`
-   * booleans. Every product document carries this; queries route through
+   * booleans. Every product document carries this — queries route through
    * `where("listingType", "==", X)` against the `listingType+...` composite
    * indexes in `appkit/firebase/base/firestore.indexes.json`.
    * SB-UNI-F — extended with classified | digital-code | live.
@@ -329,9 +329,10 @@ export interface ProductDocument extends BaseDocument {
   prizeRevealWindowEnd?: Date;
   /**
    * "pending" is legacy-only (no longer written by new listings — reveal is
-   * fully automatic, there's no seller-facing delayed-start concept anymore;
+   * fully automatic, there's no seller-facing delayed-start concept anymore —
    * draft→published is how a seller holds a draw back). New listings go
-   * straight to "open"; "closed" once every eligible order has been revealed.
+   * straight to "open", flipping to "closed" once every eligible order has
+   * been revealed.
    */
   prizeRevealStatus?: "pending" | "open" | "closed";
   /**

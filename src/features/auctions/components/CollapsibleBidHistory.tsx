@@ -12,28 +12,29 @@ const __O = {
 } as const;
 
 interface RawBidLike {
-  id?: unknown;
-  userId?: unknown;
-  bidderId?: unknown;
-  userName?: unknown;
-  bidderName?: unknown;
-  bidAmount?: unknown;
-  amount?: unknown;
-  bidDate?: unknown;
-  createdAt?: unknown;
-  bidAt?: unknown;
+  id?: string | number;
+  userId?: string;
+  bidderId?: string;
+  userName?: string;
+  bidderName?: string;
+  bidAmount?: number;
+  amount?: number;
+  bidDate?: string | Date;
+  createdAt?: string | Date;
+  bidAt?: string | Date;
 }
 
 /** Shared shape mapper — SSR's raw bid docs and useBids()'s client-fetched
  *  pages both go through this so every page (SSR page 1, client pages 2+)
  *  renders identically. */
 export function toBidHistoryEntry(b: RawBidLike): BidHistoryEntry {
+  const placedAtRaw = b.bidDate ?? b.createdAt ?? b.bidAt ?? "";
   return {
     id: String(b.id ?? ""),
     bidderId: String(b.userId ?? b.bidderId ?? ""),
-    bidderName: (b.bidderName ?? b.userName) as string | undefined,
+    bidderName: b.bidderName ?? b.userName,
     amount: typeof b.bidAmount === "number" ? b.bidAmount : typeof b.amount === "number" ? b.amount : 0,
-    placedAt: (b.bidDate ?? b.createdAt ?? b.bidAt ?? "") as string,
+    placedAt: placedAtRaw instanceof Date ? placedAtRaw.toISOString() : placedAtRaw,
   };
 }
 

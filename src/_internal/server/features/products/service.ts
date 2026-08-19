@@ -67,13 +67,13 @@ export function assertPrizeDrawNotLocked(
  */
 export function assertPrizeDrawWonItemsImmutable(
   currentProduct: Pick<ProductDocument, "prizeDrawItems">,
-  incomingItems: unknown,
+  input: unknown,
 ): void {
-  if (!Array.isArray(incomingItems)) return;
+  if (!Array.isArray(input)) return;
   const current = currentProduct.prizeDrawItems ?? [];
   for (const currentItem of current) {
     if (!currentItem.isWon) continue;
-    const incoming = (incomingItems as PrizeDrawItem[]).find(
+    const incoming = (input as PrizeDrawItem[]).find(
       (it) => it.itemNumber === currentItem.itemNumber,
     );
     if (!incoming) continue;
