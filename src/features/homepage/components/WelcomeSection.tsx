@@ -191,11 +191,11 @@ if (isLoading) {
               className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)]`} shadow="2xl" border="default" rounded="3xl"
             >
               <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
-              <Stack centered gap="sm" className={`absolute inset-0 ${flex.center} px-[2.5rem]`}>
-                <SiteMark title={brandLogoText || "LetItRip.in"} size="hero" />
+              <Stack centered gap="sm" className={`absolute inset-0 ${flex.center} p-[2.5rem]`}>
+                <SiteMark title={brandLogoText || "LetItRip.in"} size="xl" />
                 <SiteLogo
                   title={brandLogoText || "LetItRip.in"}
-                  size="hero"
+                  size="xl"
                 />
               </Stack>
             </Div>
