@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect } from "react";
-import { Div, Row, Span } from "../../ui";
+import { Div, Row, Span, SiteMark } from "../../ui";
 import { resolveMediaUrl } from "../../utils/media-url";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 
@@ -164,6 +164,17 @@ function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
     opacity,
   };
   if (config.type === "image" && config.imageUrl) {
+    // The bundled brand marker renders via the live `<SiteMark>` primitive so
+    // it follows the active theme's gradient (same `--appkit-logo-stop-*`
+    // vars as everywhere else in the UI) instead of a static raster asset
+    // baked with fixed colors. Admin-uploaded overrides stay raw `<img>`.
+    if (config.imageUrl === "/logo.svg") {
+      return (
+        <Div className="z-10 [&_svg]:w-full [&_svg]:h-auto" style={containerStyle} aria-hidden="true">
+          <SiteMark size="sm" />
+        </Div>
+      );
+    }
     return (
       <Div
         className="z-10"
