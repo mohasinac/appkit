@@ -5,7 +5,11 @@
  *      without manually driving each one through the full checkout/shipping/return
  *      flow first. Buyer is the dedicated user-tester-qa persona. Auto-expires in 7
  *      days via testerSandboxCleanup (orders aren't cascade-deleted — see note below).
- * WHAT: Exports ordersTesterSeedData — 13 Partial<OrderDocument> for the seed runner.
+ *      Also includes one 5-item order specifically to exercise the "My Orders" /
+ *      dashboard Recent Orders item-summary UI (thumbnails/title/qty for the first 3
+ *      items + a "+N more" badge beyond that) — the other fixtures here are all
+ *      single- or 2-item orders, which never trigger the "+N more" badge at all.
+ * WHAT: Exports ordersTesterSeedData — 14 Partial<OrderDocument> for the seed runner.
  *
  * NOTE: OrderDocument does not currently carry isTestData/testDataExpiresAt (unlike
  *       categories/stores/products/blogPosts/events) — testerSandboxCleanup does not
@@ -14,7 +18,7 @@
  *       orders is a follow-up, not blocking.
  *
  * EXPORTS:
- *   ordersTesterSeedData — Array of 13 Partial<OrderDocument> for the seed runner
+ *   ordersTesterSeedData — Array of 14 Partial<OrderDocument> for the seed runner
  *
  * @tag domain:orders,tester
  * @tag layer:seed
@@ -279,5 +283,42 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
     orderDate: daysAgo(1),
     createdAt: daysAgo(1),
     updatedAt: NOW,
+  } as Partial<OrderDocument>,
+
+  // ── Multi-item order — 5 line items so the "My Orders" list / dashboard Recent
+  //    Orders widget shows real thumbnails+title+qty for the first 3 and a genuine
+  //    "+2 more" badge for the rest (every other fixture above tops out at 2 items).
+  {
+    id: "order-tester-sandbox-multi-item",
+    productId: STANDARD_PRODUCT_ID,
+    productTitle: STANDARD_PRODUCT_TITLE,
+    userId: BUYER_ID,
+    userName: BUYER_NAME,
+    userEmail: BUYER_EMAIL,
+    storeId: STORE_ID,
+    storeName: STORE_NAME,
+    items: [
+      { productId: "product-tester-standard-1", productTitle: "Test Gadget — Standard Listing #1", listingType: "standard", quantity: 1, unitPrice: 199, totalPrice: 199 },
+      { productId: "product-tester-standard-2", productTitle: "Test Collectible — Standard Listing #2", listingType: "standard", quantity: 1, unitPrice: 149, totalPrice: 149 },
+      { productId: "product-tester-standard-accessory-case", productTitle: "Test Accessory — Carry Case", listingType: "standard", quantity: 1, unitPrice: 99, totalPrice: 99 },
+      { productId: "product-tester-standard-accessory-stand", productTitle: "Test Accessory — Display Stand", listingType: "standard", quantity: 2, unitPrice: 49, totalPrice: 98 },
+      { productId: "product-tester-standard-accessory-stickers", productTitle: "Test Accessory — Sticker Set", listingType: "standard", quantity: 3, unitPrice: 19, totalPrice: 57 },
+    ],
+    orderType: "standard",
+    quantity: 8,
+    unitPrice: 199,
+    totalPrice: 602,
+    currency: "INR",
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "upi_manual",
+    shippingAddress: "addr-tester-qa-home",
+    trackingNumber: "TEST-TRACK-MULTI-001",
+    shippingCarrier: "Test Carrier",
+    shippingDate: daysAgo(2),
+    deliveryDate: daysAgo(1),
+    orderDate: daysAgo(3),
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(1),
   } as Partial<OrderDocument>,
 ];

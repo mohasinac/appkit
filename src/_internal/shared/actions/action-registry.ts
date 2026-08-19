@@ -851,6 +851,14 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     // ── Order lifecycle ─────────────────────────────────────────────────
+    "view-order": {
+      id: "user.view-order",
+      label: "View Details",
+      ariaLabel: "View order details",
+      description: "Open the full details of this order.",
+      kind: "ghost",
+      iconKey: "Eye",
+    },
     "track-order": {
       id: "user.track-order",
       label: "Track Order",
