@@ -26,6 +26,7 @@ interface ChecklistItemRow {
   id: string;
   primary: string;
   secondary: string;
+  phase: number;
   status: string;
   updatedAt: string;
 }
@@ -45,6 +46,12 @@ const COLUMNS: AdminTableColumn<ChecklistItemRow>[] = [
         </Text>
       </Stack>
     ),
+  },
+  {
+    key: "phase",
+    header: "Phase",
+    className: "w-20",
+    render: (row) => <Text size="sm" color="muted">{row.phase}</Text>,
   },
   {
     key: "status",
@@ -87,6 +94,7 @@ export function AdminTesterChecklistView({
       endpoint: ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEMS,
       sortOptions: [
         { value: "order", label: "Order" },
+        { value: "phase", label: "Phase" },
         { value: sortBy("createdAt", "DESC"), label: "Newest" },
         { value: "label", label: "Test case A–Z" },
       ],
@@ -96,6 +104,7 @@ export function AdminTesterChecklistView({
           id: toStringValue(item.id, `checklist-${index}`),
           primary: toStringValue(item.label, "Untitled test case"),
           secondary: `${toStringValue(item.groupLabel, "Uncategorized")} / ${toStringValue(item.pageLabel, "")}`,
+          phase: typeof item.phase === "number" ? item.phase : 1,
           status: toStringValue(
             typeof item.isActive === "boolean"
               ? item.isActive

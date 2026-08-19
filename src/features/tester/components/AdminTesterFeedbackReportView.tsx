@@ -12,6 +12,7 @@ interface CoverageItem {
   checklistItemId: string;
   groupKey: string;
   pageKey: string;
+  phase: number;
   yesCount: number;
   noCount: number;
   totalAnswered: number;
@@ -36,20 +37,24 @@ export function AdminTesterFeedbackReportView() {
   const itemCoverage = query.data?.itemCoverage ?? [];
   const totals = query.data?.totals ?? { totalAnswered: 0, totalYes: 0, totalNo: 0 };
 
-  const byGroup = new Map<string, GroupCoverageDatum>();
+  const byPhase = new Map<number, GroupCoverageDatum>();
   for (const item of itemCoverage) {
-    if (!byGroup.has(item.groupKey)) {
-      byGroup.set(item.groupKey, { groupLabel: item.groupKey, yes: 0, no: 0 });
+    const phase = item.phase ?? 0;
+    if (!byPhase.has(phase)) {
+      byPhase.set(phase, { groupLabel: `Phase ${phase}`, yes: 0, no: 0 });
     }
-    const entry = byGroup.get(item.groupKey)!;
+    const entry = byPhase.get(phase)!;
     entry.yes += item.yesCount;
     entry.no += item.noCount;
   }
+  const sortedPhaseData = Array.from(byPhase.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([, datum]) => datum);
 
   return (
     <Stack gap="lg">
       <TesterFeedbackChart
-        data={Array.from(byGroup.values())}
+        data={sortedPhaseData}
         totalCases={itemCoverage.length}
         totalAnswered={totals.totalAnswered}
         totalYes={totals.totalYes}

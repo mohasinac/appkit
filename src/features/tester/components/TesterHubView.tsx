@@ -18,6 +18,7 @@ interface RawChecklistItem {
   groupLabel: string;
   pageKey: string;
   pageLabel: string;
+  phase: number;
   label: string;
   description?: string;
   href?: string;
@@ -70,20 +71,23 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
     );
   }
 
+  // Items arrive pre-sorted by catalog `order` (listActive() orders by it).
   const items: RawChecklistItem[] = query.data?.items ?? [];
   const filtered = items.filter((item) => matchesQuery(item, search));
 
-  const groups = new Map<string, { groupLabel: string; pages: Map<string, { pageLabel: string; items: RawChecklistItem[] }> }>();
+  const phases = new Map<
+    number,
+    Map<string, { groupLabel: string; pages: Map<string, { pageLabel: string; items: RawChecklistItem[] }> }>
+  >();
   for (const item of filtered) {
-    if (!groups.has(item.groupKey)) {
-      groups.set(item.groupKey, { groupLabel: item.groupLabel, pages: new Map() });
-    }
+    if (!phases.has(item.phase)) phases.set(item.phase, new Map());
+    const groups = phases.get(item.phase)!;
+    if (!groups.has(item.groupKey)) groups.set(item.groupKey, { groupLabel: item.groupLabel, pages: new Map() });
     const group = groups.get(item.groupKey)!;
-    if (!group.pages.has(item.pageKey)) {
-      group.pages.set(item.pageKey, { pageLabel: item.pageLabel, items: [] });
-    }
+    if (!group.pages.has(item.pageKey)) group.pages.set(item.pageKey, { pageLabel: item.pageLabel, items: [] });
     group.pages.get(item.pageKey)!.items.push(item);
   }
+  const sortedPhaseNumbers = Array.from(phases.keys()).sort((a, b) => a - b);
 
   const handleAnswer = (checklistItemId: string, answer: TesterAnswer) => {
     upsertMutation.mutate({ checklistItemId, patch: { answer } });
@@ -117,45 +121,65 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
 
       {query.isLoading && <Text color="muted">Loading checklist…</Text>}
 
-      {Array.from(groups.entries()).map(([groupKey, group]) => (
-        <Stack key={groupKey} gap="sm">
-          <Heading level={3}>{group.groupLabel}</Heading>
-          {Array.from(group.pages.entries()).map(([pageKey, page]) => {
-            const answeredCount = page.items.filter((i) => i.answer).length;
-            return (
-              <Details key={pageKey} tone="card" defaultOpen={false}>
-                <Summary>
-                  {page.pageLabel} ({answeredCount}/{page.items.length} answered)
-                </Summary>
-                <Div padding="t-sm">
-                  <Stack gap="sm">
-                    {page.items
-                      .slice()
-                      .sort((a, b) => a.order - b.order)
-                      .map((item) => (
-                        <TesterChecklistStepRow
-                          key={item.id}
-                          testerDisplayName={user?.displayName ?? user?.email ?? "tester"}
-                          item={{
-                            checklistItemId: item.id,
-                            label: item.label,
-                            description: item.description,
-                            href: item.href,
-                            answer: item.answer,
-                            comment: item.comment,
-                            screenshotUrl: item.screenshotUrl,
-                          }}
-                          onAnswer={handleAnswer}
-                          onSaveNote={handleSaveNote}
-                        />
-                      ))}
+      {sortedPhaseNumbers.map((phaseNumber) => {
+        const groups = phases.get(phaseNumber)!;
+        const phaseItemCount = Array.from(groups.values())
+          .flatMap((g) => Array.from(g.pages.values()))
+          .reduce((sum, page) => sum + page.items.length, 0);
+        const phaseAnswered = Array.from(groups.values())
+          .flatMap((g) => Array.from(g.pages.values()))
+          .reduce((sum, page) => sum + page.items.filter((i) => i.answer).length, 0);
+        return (
+          <Details key={phaseNumber} tone="card" defaultOpen={false}>
+            <Summary size="lg" weight="bold">
+              Phase {phaseNumber} ({phaseAnswered}/{phaseItemCount} answered)
+            </Summary>
+            <Div padding="t-sm">
+              <Stack gap="md">
+                {Array.from(groups.entries()).map(([groupKey, group]) => (
+                  <Stack key={groupKey} gap="sm">
+                    <Heading level={4}>{group.groupLabel}</Heading>
+                    {Array.from(group.pages.entries()).map(([pageKey, page]) => {
+                      const answeredCount = page.items.filter((i) => i.answer).length;
+                      return (
+                        <Details key={pageKey} tone="card" defaultOpen={false}>
+                          <Summary>
+                            {page.pageLabel} ({answeredCount}/{page.items.length} answered)
+                          </Summary>
+                          <Div padding="t-sm">
+                            <Stack gap="sm">
+                              {page.items
+                                .slice()
+                                .sort((a, b) => a.order - b.order)
+                                .map((item) => (
+                                  <TesterChecklistStepRow
+                                    key={item.id}
+                                    testerDisplayName={user?.displayName ?? user?.email ?? "tester"}
+                                    item={{
+                                      checklistItemId: item.id,
+                                      label: item.label,
+                                      description: item.description,
+                                      href: item.href,
+                                      answer: item.answer,
+                                      comment: item.comment,
+                                      screenshotUrl: item.screenshotUrl,
+                                    }}
+                                    onAnswer={handleAnswer}
+                                    onSaveNote={handleSaveNote}
+                                  />
+                                ))}
+                            </Stack>
+                          </Div>
+                        </Details>
+                      );
+                    })}
                   </Stack>
-                </Div>
-              </Details>
-            );
-          })}
-        </Stack>
-      ))}
+                ))}
+              </Stack>
+            </Div>
+          </Details>
+        );
+      })}
     </Stack>
   );
 }

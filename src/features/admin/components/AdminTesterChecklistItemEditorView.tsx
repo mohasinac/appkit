@@ -73,6 +73,7 @@ export function AdminTesterChecklistItemEditorView({
   const [description, setDescription] = React.useState("");
   const [href, setHref] = React.useState("");
   const [order, setOrder] = React.useState(0);
+  const [phase, setPhase] = React.useState(1);
   const [isActive, setIsActive] = React.useState(true);
   const [adminOnly, setAdminOnly] = React.useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
@@ -99,6 +100,7 @@ export function AdminTesterChecklistItemEditorView({
     setDescription(item.description ?? "");
     setHref(item.href ?? "");
     setOrder(typeof item.order === "number" ? item.order : 0);
+    setPhase(typeof item.phase === "number" ? item.phase : 1);
     setIsActive(item.isActive ?? true);
     setAdminOnly(item.adminOnly ?? false);
   }, [itemQuery.data]);
@@ -124,6 +126,7 @@ export function AdminTesterChecklistItemEditorView({
         description: description || "",
         href: href || "",
         order,
+        phase,
         isActive,
         adminOnly,
       };
@@ -229,14 +232,24 @@ export function AdminTesterChecklistItemEditorView({
               hint="Jumps the tester straight to the feature being tested."
             />
 
-            <Input
-              label="Display order"
-              value={String(order)}
-              onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
-              type="number"
-              min={0}
-              helperText="Lower = shown first within the page."
-            />
+            <Div layout="grid" gap="4" className="grid-cols-2">
+              <Input
+                label="Display order"
+                value={String(order)}
+                onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
+                type="number"
+                min={0}
+                helperText="Lower = shown first within the page."
+              />
+              <Input
+                label="Phase"
+                value={String(phase)}
+                onChange={(e) => setPhase(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                type="number"
+                min={1}
+                helperText="Test batch this case belongs to — testers work through one phase at a time."
+              />
+            </Div>
 
             <Stack className={`${__P.p4}`} gap="3" rounded="lg" border="default">
               <Text size="sm" weight="medium" color="muted">Visibility</Text>

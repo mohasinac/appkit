@@ -96,13 +96,14 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
     sortOptions: [
       { value: sortBy(TESTER_CHECKLIST_RESPONSE_FIELDS.CREATED_AT, "DESC"), label: "Newest" },
       { value: sortBy(TESTER_CHECKLIST_RESPONSE_FIELDS.CREATED_AT, "ASC"), label: "Oldest" },
+      { value: sortBy(TESTER_CHECKLIST_RESPONSE_FIELDS.PHASE, "ASC"), label: "Phase" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `feedback-${index}`),
         primary: toStringValue(item.testerDisplayName, "Unknown tester"),
-        secondary: `${toStringValue(item.groupKey, "")} / ${toStringValue(item.pageKey, "")}${item.comment ? " — " + toStringValue(item.comment, "") : ""}`,
+        secondary: `Phase ${toStringValue(item.phase, "?")} — ${toStringValue(item.groupKey, "")} / ${toStringValue(item.pageKey, "")}${item.comment ? " — " + toStringValue(item.comment, "") : ""}`,
         answer: toStringValue(item.answer, ""),
         status: toStringValue(item.status, "new"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),

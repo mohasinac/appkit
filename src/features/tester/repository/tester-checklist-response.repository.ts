@@ -15,6 +15,7 @@ export interface UpsertResponseInput {
   checklistItemId: string;
   groupKey: string;
   pageKey: string;
+  phase: number;
   answer?: TesterAnswer | null;
   comment?: string;
   screenshotUrl?: string;
@@ -23,15 +24,24 @@ export interface UpsertResponseInput {
 export interface ChecklistItemCoverage {
   checklistItemId: string;
   groupKey: string;
+  groupLabel: string;
   pageKey: string;
+  pageLabel: string;
+  phase: number;
   yesCount: number;
   noCount: number;
   totalAnswered: number;
 }
 
+export type CoverageIssue = TesterChecklistResponseDocument & {
+  groupLabel: string;
+  pageLabel: string;
+  label: string;
+};
+
 export interface CoverageReport {
   itemCoverage: ChecklistItemCoverage[];
-  issues: TesterChecklistResponseDocument[]; // every answer === "no"
+  issues: CoverageIssue[]; // every answer === "no"
   totals: { totalAnswered: number; totalYes: number; totalNo: number };
 }
 
@@ -51,6 +61,7 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
     checklistItemId: { canFilter: true, canSort: false },
     groupKey: { canFilter: true, canSort: true },
     pageKey: { canFilter: true, canSort: true },
+    phase: { canFilter: true, canSort: true },
     answer: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true },
@@ -71,6 +82,7 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
       checklistItemId: input.checklistItemId,
       groupKey: input.groupKey,
       pageKey: input.pageKey,
+      phase: input.phase,
       status: "new",
     };
     if (input.answer !== undefined) patch.answer = input.answer;
@@ -107,25 +119,38 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
     } as Partial<TesterChecklistResponseDocument>);
   }
 
-  /** Single collection scan (small table: testers x cases) — no join needed. */
+  /** Joins responses against the checklist catalog for human labels
+   * (groupLabel/pageLabel) — small tables (testers x cases, and the
+   * ~300-item catalog), so the extra read is cheap. `phase` itself is
+   * already denormalized onto the response doc, no join needed for it. */
   async getCoverageReport(): Promise<CoverageReport> {
-    const snapshot = await this.db.collection(this.collection).get();
+    const [{ items }, snapshot] = await Promise.all([
+      testerChecklistItemRepository.list({ page: "1", pageSize: "1000" }),
+      this.db.collection(this.collection).get(),
+    ]);
+    const itemById = new Map(items.map((item) => [item.id, item]));
     const docs = snapshot.docs.map((doc) => this.mapDoc<TesterChecklistResponseDocument>(doc));
 
     const byItem = new Map<string, ChecklistItemCoverage>();
-    const issues: TesterChecklistResponseDocument[] = [];
+    const issues: CoverageIssue[] = [];
     let totalYes = 0;
     let totalNo = 0;
 
     for (const doc of docs) {
       if (!doc.answer) continue;
+      const catalogItem = itemById.get(doc.checklistItemId);
+      const groupLabel = catalogItem?.groupLabel ?? doc.groupKey;
+      const pageLabel = catalogItem?.pageLabel ?? doc.pageKey;
 
       let entry = byItem.get(doc.checklistItemId);
       if (!entry) {
         entry = {
           checklistItemId: doc.checklistItemId,
           groupKey: doc.groupKey,
+          groupLabel,
           pageKey: doc.pageKey,
+          pageLabel,
+          phase: doc.phase,
           yesCount: 0,
           noCount: 0,
           totalAnswered: 0,
@@ -140,7 +165,12 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
       } else {
         entry.noCount += 1;
         totalNo += 1;
-        issues.push(doc);
+        issues.push({
+          ...doc,
+          groupLabel,
+          pageLabel,
+          label: catalogItem?.label ?? doc.checklistItemId,
+        });
       }
     }
 
@@ -155,8 +185,10 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
    * Markdown dump of every answered case, joined against the checklist item
    * catalog for the human-readable label/href — optimized for a future dev
    * (or Claude session) to read directly and go fix the reported issues.
-   * Mirrors appkit/scripts/export-tester-feedback.mjs's CLI output exactly;
-   * keep the two in sync.
+   * Grouped by phase (ascending), then group, then page — mirrors how the
+   * Tester Hub itself is organized. Mirrors
+   * appkit/scripts/export-tester-feedback.mjs's CLI output exactly; keep
+   * the two in sync.
    */
   async getMarkdownReport(siteOrigin: string): Promise<string> {
     const [items, snapshot] = await Promise.all([
@@ -170,6 +202,7 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
       .filter((r) => r.answer === "yes" || r.answer === "no");
 
     interface GroupBucket {
+      phase: number;
       groupLabel: string;
       pageLabel: string;
       items: (TesterChecklistResponseDocument & { label: string; href?: string })[];
@@ -177,14 +210,15 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
     const grouped = new Map<string, GroupBucket>();
     for (const r of responses) {
       const item = itemById.get(r.checklistItemId);
+      const phase = item?.phase ?? r.phase ?? 0;
       const groupLabel = item?.groupLabel ?? r.groupKey ?? "Unknown group";
       const pageLabel = item?.pageLabel ?? r.pageKey ?? "Unknown page";
-      const key = `${groupLabel}␟${pageLabel}`;
-      if (!grouped.has(key)) grouped.set(key, { groupLabel, pageLabel, items: [] });
+      const key = `${phase}␟${groupLabel}␟${pageLabel}`;
+      if (!grouped.has(key)) grouped.set(key, { phase, groupLabel, pageLabel, items: [] });
       grouped.get(key)!.items.push({ ...r, label: item?.label ?? r.checklistItemId, href: item?.href });
     }
     const sortedGroups = Array.from(grouped.values()).sort(
-      (a, b) => a.groupLabel.localeCompare(b.groupLabel) || a.pageLabel.localeCompare(b.pageLabel),
+      (a, b) => a.phase - b.phase || a.groupLabel.localeCompare(b.groupLabel) || a.pageLabel.localeCompare(b.pageLabel),
     );
 
     const issues = responses.filter((r) => r.answer === "no");
@@ -206,9 +240,15 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
       lines.push("_No issues reported yet._");
       lines.push("");
     } else {
+      let lastPhase: number | null = null;
       for (const group of sortedGroups) {
         const groupIssues = group.items.filter((r) => r.answer === "no");
         if (groupIssues.length === 0) continue;
+        if (group.phase !== lastPhase) {
+          lines.push(`## Phase ${group.phase}`);
+          lines.push("");
+          lastPhase = group.phase;
+        }
         lines.push(`### ${group.groupLabel} › ${group.pageLabel}`);
         lines.push("");
         for (const r of groupIssues) {
@@ -232,9 +272,15 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
       lines.push("_No notes on passing cases._");
       lines.push("");
     } else {
+      let lastPhase: number | null = null;
       for (const group of sortedGroups) {
         const groupNotes = group.items.filter((r) => r.answer === "yes" && r.comment?.trim());
         if (groupNotes.length === 0) continue;
+        if (group.phase !== lastPhase) {
+          lines.push(`## Phase ${group.phase}`);
+          lines.push("");
+          lastPhase = group.phase;
+        }
         lines.push(`### ${group.groupLabel} › ${group.pageLabel}`);
         lines.push("");
         for (const r of groupNotes) {

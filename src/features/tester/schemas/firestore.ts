@@ -20,6 +20,13 @@ export interface TesterChecklistItemDocument extends BaseDocument {
   description?: string;
   href?: string; // deep link to the real feature being tested
   order: number;
+  // Admin-assigned test batch (1-based) — lets a tester work through ~10-50
+  // cases per session instead of the full catalog at once. Independent of
+  // groupKey/pageKey: a phase can span multiple groups, or one large group
+  // can span multiple phases. Initial values are computed by
+  // assignDefaultPhases() (utils/phases.ts) at seed time; admins can
+  // re-assign per item afterward via the catalog editor.
+  phase: number;
   isActive: boolean;
   searchTokens: string[];
   // true = only shown to isTester && canTestAdmin testers (or real admins) —
@@ -33,6 +40,7 @@ export const TESTER_CHECKLIST_ITEM_ID_PREFIX = "checklist-" as const;
 export const TESTER_CHECKLIST_ITEM_INDEXED_FIELDS = [
   "groupKey",
   "pageKey",
+  "phase",
   "order",
   "isActive",
   "searchTokens",
@@ -41,6 +49,7 @@ export const TESTER_CHECKLIST_ITEM_INDEXED_FIELDS = [
 
 export const DEFAULT_TESTER_CHECKLIST_ITEM_DATA: Partial<TesterChecklistItemDocument> = {
   order: 0,
+  phase: 1,
   isActive: true,
   searchTokens: [],
   adminOnly: false,
@@ -62,6 +71,7 @@ export type TesterChecklistItemUpdateInput = Partial<
     | "description"
     | "href"
     | "order"
+    | "phase"
     | "isActive"
     | "adminOnly"
   >
@@ -98,6 +108,7 @@ export interface TesterChecklistResponseDocument extends BaseDocument {
   checklistItemId: string; // FK -> TesterChecklistItemDocument.id
   groupKey: string; // denormalized from the item at answer-time, for report grouping without a join
   pageKey: string;
+  phase: number; // denormalized from the item at answer-time, same reason
   answer: TesterAnswer | null; // null = not yet answered
   comment?: string;
   screenshotUrl?: string;
@@ -111,6 +122,7 @@ export const TESTER_CHECKLIST_RESPONSE_INDEXED_FIELDS = [
   "checklistItemId",
   "groupKey",
   "pageKey",
+  "phase",
   "answer",
   "status",
   "createdAt",
@@ -128,6 +140,7 @@ export function createChecklistResponseId(testerId: string, checklistItemId: str
 export const testerChecklistResponseQueryHelpers = {
   byTester: (testerId: string) => ["testerId", "==", testerId] as const,
   byItem: (checklistItemId: string) => ["checklistItemId", "==", checklistItemId] as const,
+  byPhase: (phase: number) => ["phase", "==", phase] as const,
   byAnswer: (answer: TesterAnswer) => ["answer", "==", answer] as const,
   byStatus: (status: TesterFeedbackStatus) => ["status", "==", status] as const,
 } as const;
@@ -144,6 +157,7 @@ export const TESTER_CHECKLIST_ITEM_FIELDS = {
   DESCRIPTION: "description",
   HREF: "href",
   ORDER: "order",
+  PHASE: "phase",
   IS_ACTIVE: "isActive",
   SEARCH_TOKENS: "searchTokens",
   ADMIN_ONLY: "adminOnly",
@@ -158,6 +172,7 @@ export const TESTER_CHECKLIST_RESPONSE_FIELDS = {
   CHECKLIST_ITEM_ID: "checklistItemId",
   GROUP_KEY: "groupKey",
   PAGE_KEY: "pageKey",
+  PHASE: "phase",
   ANSWER: "answer",
   COMMENT: "comment",
   SCREENSHOT_URL: "screenshotUrl",

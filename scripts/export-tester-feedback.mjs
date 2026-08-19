@@ -111,19 +111,20 @@ const responses = responsesSnap.docs
   .map((d) => ({ id: d.id, ...d.data() }))
   .filter((r) => r.answer === "yes" || r.answer === "no");
 
-// group -> page -> [responses], sorted for stable output
+// phase -> group -> page -> [responses], sorted for stable output
 const grouped = new Map();
 for (const r of responses) {
   const item = itemById.get(r.checklistItemId);
+  const phase = item?.phase ?? r.phase ?? 0;
   const groupLabel = item?.groupLabel ?? r.groupKey ?? "Unknown group";
   const pageLabel = item?.pageLabel ?? r.pageKey ?? "Unknown page";
-  const key = `${groupLabel}\u241f${pageLabel}`;
-  if (!grouped.has(key)) grouped.set(key, { groupLabel, pageLabel, items: [] });
+  const key = `${phase}\u241f${groupLabel}\u241f${pageLabel}`;
+  if (!grouped.has(key)) grouped.set(key, { phase, groupLabel, pageLabel, items: [] });
   grouped.get(key).items.push({ ...r, label: item?.label ?? r.checklistItemId, href: item?.href });
 }
 
 const sortedGroups = Array.from(grouped.values()).sort(
-  (a, b) => a.groupLabel.localeCompare(b.groupLabel) || a.pageLabel.localeCompare(b.pageLabel),
+  (a, b) => a.phase - b.phase || a.groupLabel.localeCompare(b.groupLabel) || a.pageLabel.localeCompare(b.pageLabel),
 );
 
 const issues = responses.filter((r) => r.answer === "no");
@@ -147,9 +148,15 @@ if (issues.length === 0) {
   lines.push("_No issues reported yet._");
   lines.push("");
 } else {
+  let lastPhase = null;
   for (const group of sortedGroups) {
     const groupIssues = group.items.filter((r) => r.answer === "no");
     if (groupIssues.length === 0) continue;
+    if (group.phase !== lastPhase) {
+      lines.push(`## Phase ${group.phase}`);
+      lines.push("");
+      lastPhase = group.phase;
+    }
     lines.push(`### ${group.groupLabel} \u203a ${group.pageLabel}`);
     lines.push("");
     for (const r of groupIssues) {
@@ -173,9 +180,15 @@ if (passingWithNotes.length === 0) {
   lines.push("_No notes on passing cases._");
   lines.push("");
 } else {
+  let lastPhase = null;
   for (const group of sortedGroups) {
     const groupNotes = group.items.filter((r) => r.answer === "yes" && r.comment && r.comment.trim());
     if (groupNotes.length === 0) continue;
+    if (group.phase !== lastPhase) {
+      lines.push(`## Phase ${group.phase}`);
+      lines.push("");
+      lastPhase = group.phase;
+    }
     lines.push(`### ${group.groupLabel} \u203a ${group.pageLabel}`);
     lines.push("");
     for (const r of groupNotes) {

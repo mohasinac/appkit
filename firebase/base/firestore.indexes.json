@@ -5231,6 +5231,20 @@
       ]
     },
     {
+      "collectionGroup": "testerChecklistItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "phase",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "testerChecklistResponses",
       "queryScope": "COLLECTION",
       "fields": [
@@ -5269,6 +5283,34 @@
         {
           "fieldPath": "createdAt",
           "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "answer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "phase",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "phase",
+          "order": "ASCENDING"
         }
       ]
     },

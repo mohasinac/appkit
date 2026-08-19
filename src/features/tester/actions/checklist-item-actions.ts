@@ -14,6 +14,7 @@ const checklistItemBaseSchema = z.object({
   description: z.string().max(2000).optional(),
   href: z.string().max(300).optional(),
   order: z.number().int().min(0).default(0),
+  phase: z.number().int().min(1).default(1),
   isActive: z.boolean().default(true),
   adminOnly: z.boolean().default(false),
 });
@@ -38,6 +39,7 @@ export async function createChecklistItem(
     description: input.description,
     href: input.href,
     order: input.order ?? 0,
+    phase: input.phase ?? 1,
     isActive: input.isActive ?? true,
     adminOnly: input.adminOnly ?? false,
   });

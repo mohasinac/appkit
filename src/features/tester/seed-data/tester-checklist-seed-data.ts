@@ -19,6 +19,7 @@
  */
 
 import type { TesterChecklistItemDocument } from "../schemas";
+import { assignDefaultPhases } from "../utils/phases";
 
 interface CaseInput {
   key: string;
@@ -54,7 +55,13 @@ function group(
   return items;
 }
 
-export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
+/**
+ * Array order below IS the intended catalog order (groups concatenated via
+ * spread, in authoring order) — `assignDefaultPhases` walks it directly
+ * rather than sorting by `order`, since `order` restarts at 0 within each
+ * group and is not globally unique across groups.
+ */
+const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   ...group("account-auth", "Account & Auth", [
     {
       pageKey: "signup-login",
@@ -704,3 +711,13 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
     { adminOnly: true },
   ),
 ];
+
+const defaultPhases = assignDefaultPhases(
+  rawTesterChecklistItems as { groupKey: string; pageKey: string }[],
+);
+
+export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] =
+  rawTesterChecklistItems.map((item, index) => ({
+    ...item,
+    phase: defaultPhases[index],
+  }));

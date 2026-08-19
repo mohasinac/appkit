@@ -16,6 +16,7 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     pageKey: { canFilter: true, canSort: true },
     label: { canFilter: true, canSort: false },
     order: { canFilter: true, canSort: true },
+    phase: { canFilter: true, canSort: true },
     isActive: { canFilter: true, canSort: false },
     searchTokens: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true },
