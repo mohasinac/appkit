@@ -13,6 +13,7 @@
 - [Other Feature Views](#other-feature-views)
 - [Hooks](#hooks--appkitsrcfeatureshooks)
 - [Repositories](#repositories--appkitsrcrepositories)
+- [Fee Calculators](#fee-calculators--appkitsrc_internalserverfeaturescheckout-uses-these-defined-in-appkitsrc_internalsharedfeescalculatorts)
 - [Utilities](#utilities--appkitsrcutils)
 - [Security / PII](#security--pii--appkitsrcsecurity)
 - [Constants](#constants--appkitsrcconstants)
@@ -318,6 +319,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `PublicCatalogueView` | `features/catalogue/components/PublicCatalogueView.tsx` | Read-only public catalogue for one owner (`visibility:"public"` items only) |
 | `AdminCatalogueApprovalsView` | `features/catalogue/components/AdminCatalogueApprovalsView.tsx` | Admin approval queue for buyer "Request to sell" submissions — Approve/Reject with reason |
 | `OrderPaymentSummary` | `features/orders/components/OrderPaymentSummary.tsx` | Shared payment-detail display reading `order.paymentRecord`, with a legacy-field fallback for pre-Feature-C orders |
+| `BackToTop` | `features/layout/BackToTop.tsx` | Floating scroll-to-top button, mounted once in `AppLayoutShell` (persists across client-side navigation, never remounts). 2026-08-19 — dropped the `sessionStorage` dismiss persistence (Root Cause Pattern #41: a persistent-shell dismissible control that only resets on full reload reads as "gone forever" after one click, since the mount survives route changes) and added a `usePathname()` effect that resets `dismissed` on every route change instead — dismiss now hides the button for the current page view only, guaranteed to reappear on next navigation. |
 | `TesterHubView` | `features/tester/components/TesterHubView.tsx` | `/user/tester` — searchable (title or route) grouped-accordion QA checklist; Yes/No per case + inline comment/screenshot, deterministic-ID upsert so state survives reloads. Access gate is `isTester \|\| isAdminUser` (2026-08-19). Admin-only groups (`adminOnly: true` checklist items, e.g. the new "Admin (Testing)" group) are filtered server-side in `GET /api/user/tester-checklist` via `isEffectiveAdminUser` — the view itself renders whatever the API returns, no separate client gate (2026-08-19). |
 | `TesterChecklistStepRow` | `features/tester/components/TesterChecklistStepRow.tsx` | One checklist step — Yes/No button pair + expandable note/screenshot form (2026-08-17) |
 | `TesterFeedbackChart` | `features/tester/components/TesterFeedbackChart.tsx` | Recharts bar chart of pass/fail per group, dynamic-imported like `AdminAnalyticsCharts.tsx` (2026-08-17) |
@@ -464,8 +466,27 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `jobsRepository` | singleton | `jobs` | Background job queue (`enqueueJob()`/`onJobCreated` Firebase Function pattern, Rule #6 heavy-work offload) |
 | `testerChecklistItemRepository` | singleton | `testerChecklistItems` | Tester QA program (2026-08-17) — admin-managed test-case catalog, `createItem()`/`listActive()`/`list()` (Sieve) |
 | `testerChecklistResponseRepository` | singleton | `testerChecklistResponses` | Tester QA program — one doc per (tester, case), `upsertResponse()` (deterministic ID `${testerId}__${checklistItemId}`), `getCoverageReport()` (powers the admin Report + Main Issues tabs), `getMarkdownReport(siteOrigin)` (2026-08-17 — Markdown dump of every answered case, joined against the checklist catalog for readable labels; consumed by both `appkit/scripts/export-tester-feedback.mjs` and `GET /api/admin/tester-feedback/export`; keep the two output shapes in sync) |
+| `analyticsRollupRepository` | singleton | `analytics` (singleton doc `dashboardRollup`) | 2026-08-19 — `getDashboardRollup()`/`setDashboardRollup({totalRevenue, deliveredOrderCount})`. Written daily by the `revenueRollup` scheduled Function (`"30 1 * * *"` UTC); read by `GET /api/admin/dashboard` as a single-doc read instead of an unbounded `delivered`-orders scan (Firestore Budget row, CLAUDE.md). |
 
 **`appkit/scripts/export-tester-feedback.mjs`** (`npm run tester:export-feedback`, 2026-08-17) — standalone CLI, mirrors `getMarkdownReport()`'s output exactly. Queries Firestore directly via `getAdminDb()`, writes `tester-feedback-report.md` at the repo root (gitignored). Two sections: **Issues** (every "No" answer — checkbox list with tester name, comment, screenshot link, deep link, review status) and **Notes on passing cases** (every "Yes" that still left a comment — usually styling/readability feedback). Purpose-built so a future dev or Claude session can `Read` the file directly and go fix what's reported, without a live Firestore query.
+
+---
+
+## Fee Calculators — `appkit/src/_internal/server/features/checkout` uses these; defined in `appkit/src/_internal/shared/fees/calculator.ts`
+
+Import: `import { computeX, XFeeRates } from "@mohasinac/appkit"` (pure functions, no Firestore access — safe on client and server)
+
+| Name | Shape | What it does |
+|------|-------|-------------|
+| `computeCheckoutFees(subtotal, commissions)` / `CheckoutFees` | flat + percent | Platform fee + GST breakdown for a cart subtotal |
+| `computePayoutDeduction(grossAmount, commissions)` / `PayoutDeduction` | percent | Seller payout commission deduction |
+| `computeCodHandlingFee(subtotal, rates)` / `CodHandlingFeeRates` | `max(min, subtotal × percent)` | COD handling surcharge |
+| `computeWhatsAppNotifyFee(addonSelected, rates)` / `WhatsAppNotifyFeeRates` | flat | ₹10 opt-in WhatsApp order-update notifications addon |
+| `computeGiftWrapFee(addonSelected, rates)` / `GiftWrapFeeRates` | flat | 2026-08-19 — opt-in gift wrap addon (default ~₹49), `giftWrapMessage` free-text note persists to `OrderDocument` and surfaces on `SellerOrdersView` |
+| `computeShipmentProtectionFee(subtotal, addonSelected, rates)` / `ShipmentProtectionFeeRates` | `max(min, subtotal × percent)` | 2026-08-19 — opt-in shipment protection/insurance addon (default ~2%, ₹30 floor) — same shape as COD handling fee |
+| `calculateGst(...)` / `GstBreakdown` | percent | GST split (CGST/SGST or IGST) for order line items |
+
+All four opt-in addon fees (COD, WhatsApp, Gift Wrap, Shipment Protection) follow the identical wiring pattern end-to-end: `siteSettings.commissions.<name>FeeEnabled` admin toggle (`AdminSiteSettingsView.tsx` Fees tab) → `<FieldCheckbox>` in `CheckoutRouteClient.tsx` → folded into `orderTotal` in `createRazorpayGroupOrder()`/`createOrderForGroup()` (`checkout/actions.ts`) → persisted as `<name>Addon`/`<name>Fee` on `OrderDocument`. Adding a 5th addon means one more `computeXFee` here, one more toggle pair, one more checkout field — no new architecture.
 
 ---
 
@@ -557,6 +578,6 @@ Import: `import { ADMIN_ENDPOINTS } from "@mohasinac/appkit"` (or `/client`)
 | `FORM_ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for 7 form action IDs (form-submit, form-cancel, form-reset, form-save-draft, form-publish, form-delete, form-discard) |
 | `FORM_ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `FormActionId` — `{ id, label, variant, type, iconName?, destructive? }`. Used as defaults by `FormShell` and `DrawerFormFooter`. |
 | `FORM_FOOTER_PRESET` | `features/products/constants/action-defs.ts` | Named groups of FormActionIds for common footer layouts: `drawerEdit`, `drawerEditDelete`, `contentEditor`, `modalForm`, `settingsForm` |
-| `DASHBOARD_QUICK_ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for 17 dashboard quick action IDs (admin/seller/user shortcut buttons) |
-| `DASHBOARD_QUICK_ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `DashboardQuickActionId` — `{ id, label, variant, iconName?, routeKey? }` |
-| `DASHBOARD_QUICK_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered quick action IDs per dashboard type: `admin`, `seller`, `user` |
+| `DASHBOARD_QUICK_ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for 42 dashboard quick action IDs (22 admin / 13 seller / 7 user shortcut buttons — extended 2026-08-19 from the original 17, including `ADMIN_INTEGRATION_GUIDES`) |
+| `DASHBOARD_QUICK_ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `DashboardQuickActionId` — `{ id, label, variant, iconName?, requiresAuth?, requiredRole?, requiredPermission? }`. Consumed by `admin/dashboard/page.tsx`, `store/page.tsx`, `user/page.tsx` — each maps its `DASHBOARD_QUICK_ACTIONS.<role>` array through this record with RBAC filtering on `requiredRole`/`requiredPermission` |
+| `DASHBOARD_QUICK_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered quick action IDs per dashboard type: `admin` (20), `seller` (13), `user` (7) |
