@@ -21,6 +21,7 @@ function GuideSection({
 }
 
 const LIST_DISC = "list-disc leading-relaxed";
+const TEXT_MUTED = "leading-relaxed text-[var(--appkit-color-text-muted)]";
 
 export type StoreWhatsAppGuideViewProps = Record<string, never>;
 
@@ -63,7 +64,7 @@ export function StoreWhatsAppGuideView(_props: StoreWhatsAppGuideViewProps) {
       </GuideSection>
 
       <GuideSection title="2. Generate a catalog-scoped access token">
-        <Text className="leading-relaxed text-[var(--appkit-color-text-muted)]" size="sm">
+        <Text className={TEXT_MUTED} size="sm">
           You need a Meta access token with <Code size="xs" padding="xs" rounded="default" surface="subtle">catalog_management</Code> permission, scoped to that catalog. This is generated the same way as the platform-level WhatsApp System User token (ask your admin — Admin Guide → WhatsApp Integration, step 3) but assigned to the <Span weight="bold">catalog</Span> asset instead of the WhatsApp Business Account asset.
         </Text>
       </GuideSection>
@@ -82,13 +83,13 @@ export function StoreWhatsAppGuideView(_props: StoreWhatsAppGuideViewProps) {
       </GuideSection>
 
       <GuideSection title="4. Push products to the catalog">
-        <Text className="leading-relaxed text-[var(--appkit-color-text-muted)]" size="sm">
+        <Text className={TEXT_MUTED} size="sm">
           Once connected, trigger a sync that batches published <Code size="xs" padding="xs" rounded="default" surface="subtle">standard</Code>-listing products (up to 50 per API call) to the Meta catalog via the Commerce API <Code size="xs" padding="xs" rounded="default" surface="subtle">items_batch</Code> endpoint — title, description, price, image, availability, and condition.
         </Text>
       </GuideSection>
 
       <GuideSection title="5. Import products from the catalog">
-        <Text className="leading-relaxed text-[var(--appkit-color-text-muted)]" size="sm">
+        <Text className={TEXT_MUTED} size="sm">
           The reverse flow fetches products already in the Meta catalog and creates them as local <Span weight="bold">draft</Span> listings, deduplicating against existing products by slug/retailer-id matching.
         </Text>
       </GuideSection>
