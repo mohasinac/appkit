@@ -2,7 +2,7 @@
 
 import { Code, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -172,6 +172,25 @@ export function AdminSupportTicketDetailView({
   const [storeIsFeatured, setStoreIsFeatured] = React.useState(false);
   const linkedStoreId = parties.storeId?.trim();
   const isStoreChangeRequest = category === "store_change_request";
+
+  // Seed the panel from the store's REAL current values, not hardcoded
+  // defaults — applyStoreChange below sends all three fields unconditionally,
+  // so an unseeded default would silently reset a real verified/featured
+  // store back to false/"active" on the very first unrelated save.
+  const storeQuery = useQuery({
+    queryKey: ["admin", "support-ticket-store-change", linkedStoreId],
+    queryFn: async () => {
+      const res = await apiClient.get(ADMIN_ENDPOINTS.STORE_BY_ID(linkedStoreId!));
+      return ((res as any)?.data ?? res) as { status?: string; isVerified?: boolean; isFeatured?: boolean };
+    },
+    enabled: open && isStoreChangeRequest && !!linkedStoreId,
+    select: (data) => {
+      setStoreStatus(data.status ?? "active");
+      setStoreIsVerified(Boolean(data.isVerified));
+      setStoreIsFeatured(Boolean(data.isFeatured));
+      return data;
+    },
+  });
 
   const applyStoreChange = useApiMutation({
     mutationFn: async () => {
@@ -492,6 +511,7 @@ export function AdminSupportTicketDetailView({
             storeIsFeatured={storeIsFeatured}
             setStoreIsFeatured={setStoreIsFeatured}
             applyStoreChange={applyStoreChange}
+            isLoadingStore={storeQuery.isLoading}
           />
         )}
 
@@ -659,6 +679,7 @@ function StoreChangePanel(props: {
   storeIsFeatured: boolean;
   setStoreIsFeatured: (v: boolean) => void;
   applyStoreChange: any;
+  isLoadingStore: boolean;
 }) {
   const {
     linkedStoreId,
@@ -669,6 +690,7 @@ function StoreChangePanel(props: {
     storeIsFeatured,
     setStoreIsFeatured,
     applyStoreChange,
+    isLoadingStore,
   } = props;
   return (
     <Stack
@@ -683,6 +705,9 @@ function StoreChangePanel(props: {
           <Text size="xs" color="muted">
             Editing store: <Code className="font-mono">{linkedStoreId}</Code>
           </Text>
+          {isLoadingStore && (
+            <Text size="xs" color="muted">Loading current store state…</Text>
+          )}
           <Select
             label="Store status"
             options={[
@@ -693,23 +718,26 @@ function StoreChangePanel(props: {
             ]}
             value={storeStatus}
             onValueChange={setStoreStatus}
+            disabled={isLoadingStore}
           />
           <Toggle
             label="Verified badge"
             checked={storeIsVerified}
             onChange={setStoreIsVerified}
+            disabled={isLoadingStore}
           />
           <Toggle
             label="Featured store"
             checked={storeIsFeatured}
             onChange={setStoreIsFeatured}
+            disabled={isLoadingStore}
           />
           <Button
             type="button"
             variant="primary"
             size="sm"
             isLoading={applyStoreChange.isPending}
-            disabled={applyStoreChange.isPending}
+            disabled={applyStoreChange.isPending || isLoadingStore}
             onClick={() => applyStoreChange.mutate()}
           >
             Apply store change
