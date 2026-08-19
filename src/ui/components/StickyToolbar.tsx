@@ -204,9 +204,9 @@ export function StickyToolbar({
           onClick={toggle}
           aria-label={`Hide ${label}`}
           aria-expanded={true}
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-1.5 py-1 text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text)]"
         >
-          ⌃
+          <ChevronDown className="h-3.5 w-3.5 rotate-180 transition-transform duration-150" aria-hidden="true" />
         </button>
       )}
     </div>

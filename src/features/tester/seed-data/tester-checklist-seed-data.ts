@@ -152,7 +152,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Verify against \"Beyblade Burst B-01 Valkyrie\" (product-beyblade-burst-valkyrie) — all 4 sections should show real items: other Beyblade Burst products, other \"Beyblade\"-brand products, other attack-type/starter-set tagged products, and other Beyblade Arena store listings.",
           href: "/products",
         },
-        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry, then the reveal, correctly shows win/lose and auto-refunds non-winners" },
+        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry correctly assigns a prize once payment is confirmed (instant mode) or shows a pending state until the draw closes (scheduled mode)" },
         {
           key: "bundle-purchase",
           label: "Purchasing a bundle works and shows all included items in the order",
@@ -758,11 +758,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageKey: "prize-draws-lotteries",
         pageLabel: "Prize Draws / Lotteries",
         cases: [
-          { key: "prizedraw-create", label: "Admin can create a prize-draw listing", href: "/admin/prize-draws" },
-          { key: "prizedraw-reveal-winner", label: "Admin can reveal a prize-draw winner via the crypto.randomInt reveal flow" },
-          { key: "prizedraw-auto-refund", label: "Non-winning entries are auto-refunded correctly after a reveal" },
+          { key: "prizedraw-create", label: "Admin can create a prize-draw listing, choosing instant or scheduled reveal mode and a 1–15 day duration", href: "/admin/prize-draws" },
+          { key: "prizedraw-reveal-winner", label: "Winners are assigned automatically via crypto.randomInt (on payment confirmation for instant mode, or at expiry/sellout for scheduled mode) — never by a manual admin click" },
+          { key: "prizedraw-scam-guard", label: "A prize draw with active entries cannot be unpublished, archived, or deleted, and an already-won item's details cannot be edited" },
           { key: "prizedraw-lock-on-reveal", label: "Lock-on-reveal correctly blocks further entries after the draw" },
-          { key: "prizedraw-entries-view", label: "Admin can view prize-draw / lottery entries", href: "/admin/lotteries" },
+          { key: "prizedraw-entries-view", label: "Admin and the owning seller can view the prize-draw winner mapping (which item went to which order), but it's never shown publicly", href: "/admin/lotteries" },
         ],
       },
       {
