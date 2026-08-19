@@ -9,6 +9,17 @@ import type {
 } from "./types";
 import { DEFAULT_LISTING_RULE } from "./_defaults";
 import { PRIZE_DRAW_MAX_REVEALS_PER_ORDER } from "./_limits";
+import type { CheckoutPaymentMethod } from "../../features/checkout/config";
+
+/**
+ * Deferred/unconfirmed-payment methods are not allowed for prize-draw
+ * checkout — instant-mode winner assignment triggers on the order's payment
+ * actually being confirmed, which cod/cash/emi don't guarantee happens (or
+ * happens promptly). Only "upi_manual" (bank/UPI transfer, confirmed later by
+ * seller/admin) and "online" (Razorpay, confirms near-instantly) are allowed;
+ * "admin_bypass" stays usable for QA regardless.
+ */
+const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "cash", "emi"];
 
 export const prizeDrawRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
@@ -18,6 +29,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
   canMergeWithSameProduct: false,
   maxLinesPerOrder: PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
   refundPolicy: { full: false, partial: false, partialGranularity: "none" },
+  blockedPaymentMethods: PRIZE_DRAW_BLOCKED_PAYMENT_METHODS,
 
   splitKey: (item: CartItemDocument) => `prize-draw:${item.itemId}`,
 
@@ -44,7 +56,18 @@ export const prizeDrawRule: ListingCheckoutRule = {
     return chunks;
   },
 
-  preflightChecks: (pairs: CartItemProductPair[]): void => {
+  preflightChecks: (pairs: CartItemProductPair[], paymentMethod?: CheckoutPaymentMethod): void => {
+    if (paymentMethod && PRIZE_DRAW_BLOCKED_PAYMENT_METHODS.includes(paymentMethod)) {
+      const hasPrizeDraw = pairs.some((p) => p.product.listingType === "prize-draw");
+      if (hasPrizeDraw) {
+        throw Object.assign(
+          new ValidationError(
+            "Prize-draw entries can only be paid by manual bank/UPI transfer or Razorpay — cash on delivery and EMI are not available for this listing type.",
+          ),
+          { code: "PRIZE_DRAW_PAYMENT_METHOD_BLOCKED" },
+        );
+      }
+    }
     for (const { item, product } of pairs) {
       if (product.listingType !== "prize-draw") continue;
       const max = product.prizeMaxEntries ?? 0;
@@ -91,5 +114,8 @@ export const prizeDrawRule: ListingCheckoutRule = {
   ): Record<string, JsonValue> => ({
     prizeDrawProductId: groupFirstProduct.id,
     isNonRefundable: true,
+    ...(groupFirstProduct.prizeRevealMode
+      ? { prizeRevealMode: groupFirstProduct.prizeRevealMode }
+      : {}),
   }),
 };

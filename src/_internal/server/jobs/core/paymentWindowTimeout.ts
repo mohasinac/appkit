@@ -13,8 +13,8 @@ import type { JobContext } from "../runtime/types";
  * its `paymentDeadline`. Runs every 5 minutes (`EVERY_5_MIN`), so an order
  * can overshoot its 15-minute deadline by up to ~5 minutes before this
  * catches it — acceptable, matches the existing tight-interval precedent
- * (`prizeRevealOpen`/`prizeRevealClose`) rather than inventing a 1-minute
- * cron that would multiply invocation cost for marginal UX gain.
+ * (`prizeDrawExpiryReveal`) rather than inventing a 1-minute cron that would
+ * multiply invocation cost for marginal UX gain.
  *
  * Orders that already have a `paymentProofUrl` are excluded by the
  * repository query — those are the 2-hour auto-approve sweep's domain

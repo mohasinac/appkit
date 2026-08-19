@@ -30,8 +30,13 @@ export type { PrizeDrawCollageProps } from "./PrizeDrawCollage";
 export { PrizeRevealModal } from "./PrizeRevealModal";
 export type {
   PrizeRevealModalProps,
-  PrizeRevealResponse,
+  PrizeRevealResult,
 } from "./PrizeRevealModal";
+export { PrizeDrawWinnerMappingView } from "./PrizeDrawWinnerMappingView";
+export type {
+  PrizeDrawWinnerMappingViewProps,
+  PrizeDrawWinnerMappingRow,
+} from "./PrizeDrawWinnerMappingView";
 export { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
 export type {
   MarketplacePrizeDrawCardProps,
@@ -89,7 +94,7 @@ export type { MakeOfferButtonProps } from "./MakeOfferButton";
 export { RelatedProducts } from "./RelatedProducts";
 export type { RelatedProductsProps } from "./RelatedProducts";
 export { ProductGalleryClient } from "./ProductGalleryClient";
-export type { ProductGalleryClientProps } from "./ProductGalleryClient";
+export type { ProductGalleryClientProps, ProductGalleryVideo } from "./ProductGalleryClient";
 export { ProductTabsShell } from "./ProductTabsShell";
 export type { ProductTabsShellProps, CustomTabDef } from "./ProductTabsShell";
 // W1-34: Product detail missing sections

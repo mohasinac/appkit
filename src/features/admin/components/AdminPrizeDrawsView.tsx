@@ -3,8 +3,8 @@
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { Pencil } from "lucide-react";
-import { Badge, Button, FilterChipGroup, ListingLayout, Span, Text, TextLink } from "../../../ui";
+import { Pencil, ListChecks } from "lucide-react";
+import { Badge, Button, FilterChipGroup, ListingLayout, Row, Span, Text, TextLink } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
@@ -150,11 +150,18 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
         onClick: () => selection.clearSelection(),
       })),
     renderRowActions: (row) => (
-      <Button variant="ghost" size="sm" asChild>
-        <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">
-          <Pencil className="w-4 h-4" />
-        </TextLink>
-      </Button>
+      <Row gap="xs">
+        <Button variant="ghost" size="sm" asChild>
+          <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">
+            <Pencil className="w-4 h-4" />
+          </TextLink>
+        </Button>
+        <Button variant="ghost" size="sm" asChild>
+          <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_ENTRIES(row.id))} aria-label="View entries">
+            <ListChecks className="w-4 h-4" />
+          </TextLink>
+        </Button>
+      </Row>
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <FilterChipGroup

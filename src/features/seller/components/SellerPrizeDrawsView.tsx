@@ -201,6 +201,11 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
             onClick: () =>
               void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id)) }),
           },
+          {
+            label: "View Entries",
+            onClick: () =>
+              void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRIZE_DRAW_ENTRIES(row.id)) }),
+          },
           ...(onDelete
             ? [
                 {

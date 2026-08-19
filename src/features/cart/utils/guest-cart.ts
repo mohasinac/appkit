@@ -8,6 +8,16 @@ const DEFAULT_GUEST_RETURN_TO_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_return_to`
   : "guest_return_to";
 
+/** Fired whenever guest cart storage is written, so every `useGuestCart()`
+ *  instance in the tab (header badge, listing quick-add, cart page) can
+ *  re-read storage and stay in sync without waiting for a remount. */
+export const GUEST_CART_CHANGE_EVENT = "appkit/cart/guest-changed";
+
+function dispatchGuestCartChange(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(GUEST_CART_CHANGE_EVENT));
+}
+
 export class CartFullError extends Error {
   readonly code = "CART_FULL" as const;
   readonly limit = CART_MAX_ITEMS;
@@ -66,6 +76,7 @@ function writeItems(
 ): void {
   if (!storage) return;
   storage.setItem(key, JSON.stringify(items));
+  dispatchGuestCartChange();
 }
 
 export function getGuestCartItems(

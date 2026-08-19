@@ -254,6 +254,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
     },
     bundleProductIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
+    bundleOriginalTotal: 4597, // 1499 + 1799 + 1299
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-original-collectors-set-20260101/1200/900"), showInFooter: false },
     isActive: true,
@@ -286,6 +287,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
     },
     bundleProductIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
+    bundleOriginalTotal: 3997, // 1299 + 1199 + 1499
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-metal-fusion-duo-20260101/1200/900"), showInFooter: false },
     isActive: true,
@@ -312,12 +314,15 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Valkyrie and Regalia Genesis — top-tier Burst-era attackers in one set.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePrice: 3799,
+    // Was 3799 — priced ABOVE the 999+1399+1199=3597 member total (no real
+    // discount, contradicted the bundle's whole purpose). Corrected 2026-08-19.
+    bundlePrice: 2899,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
     },
     bundleProductIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
+    bundleOriginalTotal: 3597, // 999 + 1399 + 1199
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-burst-battlers-pack-20260101/1200/900"), showInFooter: false },
     isActive: true,
@@ -350,6 +355,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
     },
     bundleProductIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
+    bundleOriginalTotal: 2847, // 899 + 949 + 999
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-x-series-starter-20260101/1200/900"), showInFooter: false },
     isActive: true,
@@ -376,7 +382,9 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "One top from every Beyblade generation — Original, Metal Fight, Burst, and X — the ultimate collector's starter pack.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePrice: 5999,
+    // Was 5999 — priced ABOVE the 1799+1299+999+899=4996 member total (no
+    // real discount, contradicted the bundle's whole purpose). Corrected 2026-08-19.
+    bundlePrice: 3999,
     bundleQueryRule: {
       type: "static",
       productIds: [
@@ -392,6 +400,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       "product-beyblade-burst-valkyrie",
       "product-beyblade-x-wizard-arrow",
     ],
+    bundleOriginalTotal: 4996, // 1799 + 1299 + 999 + 899
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-every-generation-starter-pack-20260101/1200/900"), showInFooter: false },
     isActive: true,

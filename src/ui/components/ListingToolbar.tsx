@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { usePathname } from "next/navigation";
 import {
   CheckSquare,
   Search,
@@ -105,6 +106,24 @@ export interface ListingToolbarProps {
   labels?: ListingToolbarLabels;
 
   className?: string;
+
+  /**
+   * Whether the toolbar can be collapsed to a thin re-expand strip, matching
+   * the collapse affordance used by dashboard sections (`CollapsibleSection`).
+   * Default `true` — every listing page gets this for free without needing
+   * to opt in individually. The collapsed state is session-scoped and keyed
+   * per-route (see `toolbarId`), so collapsing on one listing page doesn't
+   * affect another.
+   */
+  dismissible?: boolean;
+  /**
+   * Storage key for the collapsed state. Defaults to the current pathname
+   * so distinct listing pages never collide — only override when a single
+   * route legitimately hosts more than one `ListingToolbar`.
+   */
+  toolbarId?: string;
+  /** Accessible label for the collapse/expand control. Default "Toolbar". */
+  collapseLabel?: string;
 }
 
 const VIEW_BTN_BASE =
@@ -140,8 +159,13 @@ export function ListingToolbar({
   extra,
   labels,
   className = "",
+  dismissible = true,
+  toolbarId,
+  collapseLabel = "Toolbar",
 }: ListingToolbarProps) {
   const l = { ...DEFAULT_LABELS, ...labels };
+  const pathname = usePathname();
+  const resolvedToolbarId = toolbarId ?? `listing-toolbar${pathname ? `:${pathname}` : ""}`;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onSearchKeyDown) {
@@ -161,9 +185,12 @@ export function ListingToolbar({
       border
       padding="none"
       z="above-toolbar"
-      className={`py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
+      className={`py-3 px-3 sm:py-3.5 sm:px-4 shadow-sm ${className}`}
+      dismissible={dismissible}
+      id={resolvedToolbarId}
+      label={collapseLabel}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3">
 
         {/* Search row OR Bulk-select controls */}
         {bulkMode ? (

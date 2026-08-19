@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import { SIEVE_OP, sieveAnd, sieveFilter, sortBy, type FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository, reviewRepository } from "../../../repositories";
 
 const __P = {
@@ -277,6 +277,8 @@ export async function ProductDetailPageView({
       ? [p.mainImage]
       : [];
 
+  const productVideo = p.video as { url: string; thumbnailUrl?: string } | undefined;
+
   const stockQuantity =
     typeof p.stockQuantity === "number" ? (p.stockQuantity as number) : null;
   const availableQuantity =
@@ -299,6 +301,10 @@ export async function ProductDetailPageView({
   const categorySlugs: string[] = Array.isArray(p.categorySlugs)
     ? (p.categorySlugs as string[])
     : category ? [category] : [];
+  // The real category FK — `category` above is only the deprecated display-name
+  // cache (SB-UNI drift, Root Cause #24-class bug: don't route links/queries
+  // through it as if it were a slug).
+  const primaryCategorySlug: string | null = categorySlugs[0] ?? null;
   const categoryNames: string[] = Array.isArray(p.categoryNames)
     ? (p.categoryNames as string[])
     : categoryName ? [categoryName] : [];
@@ -379,13 +385,40 @@ export async function ProductDetailPageView({
   const isGroupParent = p.isGroupParent === true;
   const groupTitle = typeof p.groupTitle === "string" ? p.groupTitle : undefined;
 
-  // -- Fetch reviews + related in parallel ------------------------------------
-  const [reviewDocs, relatedDocs] = await Promise.all([
+  const storeId = typeof p.storeId === "string" ? (p.storeId as string) : null;
+
+  // -- Fetch reviews + 4 related-listing signals in parallel ------------------
+  const [reviewDocs, sameCategoryDocs, sameBrandDocs, tagOverlapDocs, sameStoreDocs] = await Promise.all([
     reviewRepository
       .findApprovedByProduct(product.id)
       .catch(() => [] as unknown[]),
-    category
-      ? productRepository.findByCategory(category).catch(() => [] as unknown[])
+    primaryCategorySlug
+      ? productRepository.findByCategory(primaryCategorySlug).catch(() => [] as unknown[])
+      : Promise.resolve([] as unknown[]),
+    brand
+      ? productRepository
+          .list({
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brand)),
+            sorts: sortBy("createdAt", "DESC"),
+            page: 1,
+            pageSize: 9,
+          })
+          .then((r) => r.items)
+          .catch(() => [] as unknown[])
+      : Promise.resolve([] as unknown[]),
+    tags.length > 0
+      ? productRepository.findByTagsOverlap(tags, 9).catch(() => [] as unknown[])
+      : Promise.resolve([] as unknown[]),
+    storeId
+      ? productRepository
+          .list({
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("storeId", SIEVE_OP.EQ, storeId)),
+            sorts: sortBy("createdAt", "DESC"),
+            page: 1,
+            pageSize: 9,
+          })
+          .then((r) => r.items)
+          .catch(() => [] as unknown[])
       : Promise.resolve([] as unknown[]),
   ]);
 
@@ -393,27 +426,33 @@ export async function ProductDetailPageView({
     toReview,
   );
   const _now = new Date();
-  const relatedItems: ProductItem[] = (
-    relatedDocs as FirestoreDocument[]
-  )
-    .filter((r) => {
-      if (r.id === product.id) return false;
-      const s = r.status as string | undefined;
-      if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
-      if (r.isSold === true) return false;
-      if (r.availableQuantity === 0) return false;
-      if (r.listingType === "auction" && r.auctionEndDate) {
-        const end = r.auctionEndDate;
-        const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-          ? (end as unknown as { toDate: () => Date }).toDate()
-          : end instanceof Date ? end : new Date(String(end));
-        if (endDate <= _now) return false;
-      }
-      if (r.listingType === "prize-draw" && r.prizeRevealStatus === "closed") return false;
-      return true;
-    })
-    .slice(0, 8)
-    .map(toProductItem);
+  const currentProductId = product.id;
+  function toRelatedItems(docs: unknown[]): ProductItem[] {
+    return (docs as FirestoreDocument[])
+      .filter((r) => {
+        if (r.id === currentProductId) return false;
+        const s = r.status as string | undefined;
+        if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
+        if (r.isSold === true) return false;
+        if (r.availableQuantity === 0) return false;
+        if (r.listingType === "auction" && r.auctionEndDate) {
+          const end = r.auctionEndDate;
+          const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
+            ? (end as unknown as { toDate: () => Date }).toDate()
+            : end instanceof Date ? end : new Date(String(end));
+          if (endDate <= _now) return false;
+        }
+        if (r.listingType === "prize-draw" && r.prizeRevealStatus === "closed") return false;
+        return true;
+      })
+      .slice(0, 8)
+      .map(toProductItem);
+  }
+
+  const relatedItems = toRelatedItems(sameCategoryDocs);
+  const relatedByBrand = toRelatedItems(sameBrandDocs);
+  const relatedByTags = toRelatedItems(tagOverlapDocs);
+  const relatedByStore = toRelatedItems(sameStoreDocs);
 
   return (
     <Main>
@@ -440,10 +479,10 @@ export async function ProductDetailPageView({
                 <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className={CLS_BREADCRUMB_LINK}>
                   Products
                 </Link>
-                {category && (
+                {(primaryCategorySlug || category) && (
                   <>
                     <Span aria-hidden>/</Span>
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(primaryCategorySlug ?? category!))} className={CLS_BREADCRUMB_LINK}>
                       {categoryName || category}
                     </Link>
                   </>
@@ -459,7 +498,7 @@ export async function ProductDetailPageView({
             </Row>
           )}
           renderGallery={() => (
-            <ProductGalleryClient images={images} productName={title || undefined} />
+            <ProductGalleryClient images={images} video={productVideo} productName={title || undefined} />
           )}
           renderInfo={() => (
             <Stack gap="md">
@@ -938,8 +977,27 @@ export async function ProductDetailPageView({
               : undefined
           }
           renderRelated={() =>
-            relatedItems.length > 0 ? (
-              <RelatedProductsCarousel items={relatedItems} />
+            relatedItems.length > 0 ||
+            relatedByBrand.length > 0 ||
+            relatedByTags.length > 0 ||
+            relatedByStore.length > 0 ? (
+              <Stack gap="xl">
+                {relatedItems.length > 0 && (
+                  <RelatedProductsCarousel
+                    items={relatedItems}
+                    title={categoryName || category ? `More in ${categoryName || category}` : "More in this category"}
+                  />
+                )}
+                {relatedByBrand.length > 0 && (
+                  <RelatedProductsCarousel items={relatedByBrand} title={brand ? `More by ${brand}` : "More by this brand"} />
+                )}
+                {relatedByTags.length > 0 && (
+                  <RelatedProductsCarousel items={relatedByTags} title="You might also like" />
+                )}
+                {relatedByStore.length > 0 && (
+                  <RelatedProductsCarousel items={relatedByStore} title={storeName ? `More from ${storeName}` : "More from this seller"} />
+                )}
+              </Stack>
             ) : null
           }
         />

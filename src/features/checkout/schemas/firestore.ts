@@ -4,8 +4,6 @@
  */
 
 export type FailedCheckoutReason =
-  | "otp_not_verified"
-  | "consent_expired"
   | "stock_failed"
   | "address_not_found"
   | "cart_empty"
@@ -16,8 +14,6 @@ export type FailedPaymentReason =
   | "signature_mismatch"
   | "payment_cancelled"
   | "amount_mismatch"
-  | "otp_not_verified"
-  | "consent_expired"
   | "product_unavailable"
   | "stock_insufficient"
   | "unknown";

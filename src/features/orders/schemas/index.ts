@@ -58,8 +58,6 @@ export const orderDocumentItemSchema = z.object({
   totalPrice: rupeesSchema,
   listingType: orderListingTypeSchema.optional(),
   prizeRevealStatus: z.enum(["pending", "open", "closed", "revealed"]).optional(),
-  prizeRevealDeadline: z.string().optional(),
-  revealedItemNumber: z.number().int().optional(),
 });
 
 export const orderRefundEventSchema = z.object({
@@ -164,9 +162,8 @@ export const orderFirestoreSchema = z.object({
   payoutId: z.string().optional(),
   offerId: z.string().optional(),
   prizeWon: prizeWonSchema.optional(),
-  prizeRevealDeadline: firestoreDateSchema.optional(),
-  prizeRevealExpired: z.boolean().optional(),
   prizeDrawProductId: z.string().optional(),
+  prizeRevealMode: z.enum(["instant", "scheduled"]).optional(),
   isNonRefundable: z.boolean().optional(),
   bundleId: z.string().optional(),
   paymentBatchId: z.string().optional(),

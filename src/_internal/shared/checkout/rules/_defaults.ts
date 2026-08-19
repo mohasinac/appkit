@@ -7,6 +7,7 @@ import type {
 } from "./types";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 import { STANDARD_MAX_QTY_PER_LINE } from "./_limits";
 
 export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
@@ -14,7 +15,6 @@ export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
   cartEligible: true,
   cartIneligibleHint: "This listing type cannot be added to the cart.",
   requiresShippingAddress: true,
-  requiresConsentOtp: true,
   nonRefundable: false,
   maxQuantityPerLine: STANDARD_MAX_QTY_PER_LINE,
   canMergeWithSameProduct: true,
@@ -26,7 +26,7 @@ export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
 
   splitMultipleOrders: (item: CartItemDocument) => [item],
 
-  preflightChecks: (_pairs: CartItemProductPair[]) => { /* no-op */ },
+  preflightChecks: (_pairs: CartItemProductPair[], _paymentMethod?: CheckoutPaymentMethod) => { /* no-op */ },
 
   stockDecrementExtras: (_product: ProductDocument, _qty: number) => ({}),
 

@@ -412,6 +412,8 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
       ? [p.mainImage]
       : [];
 
+  const productVideo = p.video as { url: string; thumbnailUrl?: string } | undefined;
+
   const reservedCount =
     typeof p.preOrderCurrentCount === "number"
       ? p.preOrderCurrentCount
@@ -522,7 +524,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
 
         <PreOrderDetailView
           renderGallery={() => (
-            <ProductGalleryClient images={images} productName={title} />
+            <ProductGalleryClient images={images} video={productVideo} productName={title} />
           )}
           renderInfo={() => (
             <PreOrderInfoSection

@@ -35,10 +35,10 @@ export {
   type JobRunResult,
 } from "./jobRunners";
 export { runAuctionSettlement } from "./auctionSettlement";
-export { runPrizeRevealOpen } from "./prizeRevealOpen";
-export { runPrizeRevealClose } from "./prizeRevealClose";
-export { runPrizeRevealExpiry } from "./prizeRevealExpiry";
-export { runPrizeRevealReminder } from "./prizeRevealReminder";
+export { assignPrizeDrawWinner, type AssignPrizeDrawWinnerResult } from "./prizeDrawAssignWinner";
+export { handlePrizeDrawPaymentConfirmed } from "./onPrizeDrawPaymentConfirmed";
+export { handlePrizeDrawSoldOut } from "./prizeDrawSoldOutReveal";
+export { runPrizeDrawExpiryReveal } from "./prizeDrawExpiryReveal";
 
 // Callables
 export { runPromotions, type PromotionsCallableResult } from "./promotions";

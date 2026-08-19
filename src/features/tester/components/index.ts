@@ -9,3 +9,5 @@ export { AdminTesterFeedbackReportView } from "./AdminTesterFeedbackReportView";
 export { AdminTesterFeedbackIssuesView } from "./AdminTesterFeedbackIssuesView";
 export { AdminTesterFeedbackListView } from "./AdminTesterFeedbackListView";
 export type { AdminTesterFeedbackListViewProps } from "./AdminTesterFeedbackListView";
+export { BugHunterLeaderboardView } from "./BugHunterLeaderboardView";
+export type { BugHunterLeaderboardViewProps } from "./BugHunterLeaderboardView";

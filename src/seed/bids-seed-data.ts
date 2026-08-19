@@ -8,6 +8,9 @@
  *       personas (Mock User 11, Mock User 14, Mock User 9), never the store's own seller
  *       (user-tyson-blader owns store-beyblade-arena). Status: newest bid per auction is
  *       "active", the rest "outbid". Bid IDs: bid-{productSlug}-{userName}-{YYYYMMDD}-{rand6}.
+ *       L-Drago's ladder is deliberately 13 bids deep (cycling the 3 personas) so the
+ *       auction detail page's paginated Bid History section (pageSize 5) and the /user/bids
+ *       dashboard both have real multi-page data to exercise — see CollapsibleBidHistory.tsx.
  *
  * EXPORTS:
  *   bidsSeedData — Array of bid documents, one set per seeded auction, counts matching
@@ -88,18 +91,27 @@ const _rawBidsSeedData: Partial<BidDocument>[] = [
     bidderIds: ["user-rohit-collector", "user-ananya-collector", "user-meera-bey"],
   }),
 
-  // auction-beyblade-metal-lightning-l-drago — bidCount: 5, currentBid: 2299
+  // auction-beyblade-metal-lightning-l-drago — bidCount: 13, currentBid: 3199
+  // Deliberately deep ladder (see file header) to exercise Bid History pagination.
   ...buildLadder({
     productId: "auction-beyblade-metal-lightning-l-drago",
     productTitle: "Metal Fight Beyblade BB-99 Lightning L-Drago",
     startingBid: 1999,
-    currentBid: 2299,
+    currentBid: 3199,
     bidderIds: [
       "user-meera-bey",
       "user-rohit-collector",
       "user-ananya-collector",
       "user-rohit-collector",
       "user-meera-bey",
+      "user-ananya-collector",
+      "user-rohit-collector",
+      "user-meera-bey",
+      "user-ananya-collector",
+      "user-rohit-collector",
+      "user-meera-bey",
+      "user-ananya-collector",
+      "user-rohit-collector",
     ],
   }),
 ];

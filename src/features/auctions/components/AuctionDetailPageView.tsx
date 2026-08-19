@@ -57,6 +57,7 @@ import type { ReviewDocument } from "../../reviews/schemas/firestore";
 import { PlaceBidModalButton } from "./PlaceBidFormClient";
 import type { PlaceBidInput } from "./PlaceBidFormClient";
 import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
+import { LiveBidPrice } from "./LiveBidPrice";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 
 export interface AuctionDetailPageViewProps {
@@ -81,6 +82,7 @@ function toDescriptionHtml(raw: JsonValue): string {
 }
 
 interface AuctionInfoPanelProps {
+  productId: string;
   title: string; currentBid: number; currency: string; bidCount: number;
   isEnded: boolean; endDate: Date | null; buyNowPrice: number | null;
   featured: boolean; freeShipping: boolean; condition: string | null;
@@ -92,7 +94,7 @@ interface AuctionInfoPanelProps {
 }
 
 function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
-  const { title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
+  const { productId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
   return (
     <Stack gap="md">
       <Div>
@@ -108,10 +110,15 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       </Div>
       <Div>
         <Text className="mb-0.5" color="muted" size="xs">Current bid</Text>
-        <Row align="center" gap="sm" wrap>
-          <Span weight="bold" className="text-primary-600 dark:text-primary-400" size="2xl">{formatCurrency(currentBid, currency)}</Span>
-          <Span size="sm" weight="medium" rounded="full" padding="pill-md" surface="subtle" color="muted">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
-        </Row>
+        <LiveBidPrice
+          productId={productId}
+          currentBid={currentBid}
+          bidCount={bidCount}
+          currency={currency}
+          isEnded={isEnded}
+          priceSize="2xl"
+          badgeSize="sm"
+        />
         {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
@@ -191,7 +198,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     ? (initialAuction ?? undefined)
     : await productRepository.findByIdOrSlug(id).catch(() => undefined);
   const bidsResult = product
-    ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
+    ? await listBidsByProduct(String(product.id), { pageSize: 5 }).catch(() => null)
     : null;
 
   const storeId = (product as unknown as FirestoreDocument)?.storeId as string | undefined;
@@ -247,6 +254,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     : typeof p.mainImage === "string"
       ? [p.mainImage]
       : [];
+
+  const productVideo = p.video as { url: string; thumbnailUrl?: string } | undefined;
 
   const endDate = p.auctionEndDate ? new Date(p.auctionEndDate as string) : null;
   const isEnded = endDate ? endDate < new Date() : false;
@@ -326,22 +335,29 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
 
         <AuctionDetailView
           renderGallery={() => (
-            <ProductGalleryClient images={images} productName={title} />
+            <ProductGalleryClient images={images} video={productVideo} productName={title} />
           )}
-          renderInfo={() => renderAuctionInfoPanel({ title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
+          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">
                 {/* Compact summary card — modal owns the form */}
                 <Stack className={`${__P.p5}`} border="subtle" gap="3" rounded="xl" surface="muted">
                   <Row justify="between" align="baseline">
-                    <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
-                      {formatCurrency(currentBid, currency)}
-                    </Span>
-                    <Span size="xs" color="muted">
-                      {bidCount} {bidCount === 1 ? "bid" : "bids"}
-                      {!isEnded && <> · min increment {formatCurrency(minBidIncrement, currency)}</>}
-                    </Span>
+                    <LiveBidPrice
+                      productId={String(product.id)}
+                      currentBid={currentBid}
+                      bidCount={bidCount}
+                      currency={currency}
+                      isEnded={isEnded}
+                      priceSize="xl"
+                      badgeSize="xs"
+                    />
+                    {!isEnded && (
+                      <Span size="xs" color="muted">
+                        min increment {formatCurrency(minBidIncrement, currency)}
+                      </Span>
+                    )}
                   </Row>
                   <PlaceBidModalButton
                     productId={String(product.id)}
@@ -403,12 +419,15 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           renderMobileBidForm={() =>
             !isEnded && onPlaceBid ? (
               <Stack className={`lg:hidden ${__P.p4}`} border="subtle" gap="3" rounded="xl" surface="muted">
-                <Row align="center" gap="sm">
-                  <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
-                    {formatCurrency(currentBid, currency)}
-                  </Span>
-                  <Span size="xs" color="muted">{bidCount} bids</Span>
-                </Row>
+                <LiveBidPrice
+                  productId={String(product.id)}
+                  currentBid={currentBid}
+                  bidCount={bidCount}
+                  currency={currency}
+                  isEnded={isEnded}
+                  priceSize="base"
+                  badgeSize="xs"
+                />
                 <PlaceBidModalButton
                   productId={String(product.id)}
                   currentBid={currentBid}
@@ -487,14 +506,14 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             />
           )}
           renderBidHistory={() => {
-            const bids = (bidsResult?.items ?? []).map((b: FirestoreDocument) => ({
-              id: String(b.id ?? ""),
-              bidderId: String(b.userId ?? b.bidderId ?? ""),
-              bidderName: (b.bidderName ?? b.userName) as string | undefined,
-              amount: (typeof b.bidAmount === "number" ? b.bidAmount : typeof b.amount === "number" ? b.amount : 0),
-              placedAt: (b.bidDate ?? b.createdAt ?? b.bidAt ?? "") as string,
-            }));
-            return <CollapsibleBidHistory bids={bids} currency={currency} />;
+            if (!bidsResult) return null;
+            return (
+              <CollapsibleBidHistory
+                productId={String(product.id)}
+                initialData={bidsResult}
+                currency={currency}
+              />
+            );
           }}
           renderRelated={() => {
             const now = new Date();

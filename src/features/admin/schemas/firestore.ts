@@ -33,9 +33,8 @@ export type NotificationType =
   | "offer_expired"
   | "offer_counter_accepted"
   | "refund_initiated"
-  | "prize_reveal_ready"
+  | "prize_won"
   | "prize_reveal_expired"
-  | "prize_reveal_reminder"
   | "emi_installment_due_soon"
   | "emi_installment_overdue"
   | "payment_review";
@@ -119,9 +118,8 @@ export const NOTIFICATION_FIELDS = {
     OFFER_COUNTER_ACCEPTED: "offer_counter_accepted" as NotificationType,
     REFUND_INITIATED: "refund_initiated" as NotificationType,
     ACCOUNT_ACTION: "account_action" as NotificationType,
-    PRIZE_REVEAL_READY: "prize_reveal_ready" as NotificationType,
+    PRIZE_WON: "prize_won" as NotificationType,
     PRIZE_REVEAL_EXPIRED: "prize_reveal_expired" as NotificationType,
-    PRIZE_REVEAL_REMINDER: "prize_reveal_reminder" as NotificationType,
   },
   PRIORITY_VALUES: {
     LOW: "low" as NotificationPriority,
@@ -646,7 +644,7 @@ export interface SiteSettingsDocument extends BaseDocument {
   /**
    * Image watermark configuration applied by the `/api/media/[...slug]` CDN
    * proxy. When absent the proxy falls back to text watermark "letitrip.in" at
-   * 30% width with 20% opacity.
+   * 10% width with 10% opacity, centered.
    */
   watermark?: {
     /** `"text"` renders the `text` field; `"image"` overlays `imageUrl`. */
@@ -661,8 +659,17 @@ export interface SiteSettingsDocument extends BaseDocument {
     imageUrl?: string;
     /** Percentage of target image width (0–100). 0 disables the watermark. */
     size?: number;
-    /** Percentage opacity (0–100). Default 20. */
+    /** Percentage opacity (0–100). Default 10. */
     opacity?: number;
+    /**
+     * Anchor preset: 4 corners + center, or `"custom"` to use `offsetX`/
+     * `offsetY` instead. Default `"center"`.
+     */
+    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center" | "custom";
+    /** `position: "custom"` only — % of image width from center. +right / -left. Default 0. */
+    offsetX?: number;
+    /** `position: "custom"` only — % of image height from center. +down / -up. Default 0. */
+    offsetY?: number;
   };
   /** Encrypted provider credentials � never return raw to the client. */
   credentials?: SiteSettingsCredentials;

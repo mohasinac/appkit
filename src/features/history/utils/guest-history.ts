@@ -12,7 +12,7 @@ const DEFAULT_GUEST_HISTORY_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_history`
   : "guest_history";
 
-export type GuestHistoryType = "product" | "auction" | "preorder";
+export type GuestHistoryType = "product" | "auction" | "preorder" | "prize-draw";
 
 export interface GuestHistoryItem {
   productId: string;

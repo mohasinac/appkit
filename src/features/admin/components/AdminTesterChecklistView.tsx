@@ -3,9 +3,13 @@
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useMemo } from "react";
-import { FilterChipGroup, Heading, ListingLayout, Span, Text } from "../../../ui";
+import { useQueryClient } from "@tanstack/react-query";
+import { FilterChipGroup, Heading, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { apiClient } from "../../../http";
+import { useApiMutation } from "../../../client";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
@@ -13,9 +17,11 @@ import {
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
-import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
 import { AdminTesterChecklistItemEditorView } from "./AdminTesterChecklistItemEditorView";
 import type { AdminTableColumn } from "../types";
+
+const LISTING_QUERY_KEY = ["admin", "tester-checklist-items", "listing"];
 
 interface AdminTesterChecklistItemsResponse {
   items?: JsonArray;
@@ -29,6 +35,8 @@ interface ChecklistItemRow {
   phase: number;
   status: string;
   updatedAt: string;
+  bugConfirmed: boolean;
+  supersededByItemId?: string;
 }
 
 const COLUMNS: AdminTableColumn<ChecklistItemRow>[] = [
@@ -82,15 +90,31 @@ export function AdminTesterChecklistView({
   onBulkDelete,
   ...props
 }: AdminTesterChecklistViewProps) {
+  const queryClient = useQueryClient();
+
+  const reopenMutation = useApiMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.post(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_REOPEN(id), {});
+    },
+    successMessage: "Case reopened for retest.",
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: LISTING_QUERY_KEY });
+    },
+  });
+
   const config = useMemo<ListingViewConfig<AdminTesterChecklistItemsResponse, ChecklistItemRow>>(
     () => ({
       portal: "admin",
       title: "Tester Checklist",
       searchPlaceholder: "Search test cases, groups, or pages",
       emptyLabel: "No checklist items found",
-      filterKeys: ["isActive"],
+      filterKeys: ["isActive", "bugConfirmed"],
+      // Bug-confirmed (and reopened-away) cases are always isActive:false —
+      // default to Active so they don't clutter the catalog; "Inactive" /
+      // "All" remain an explicit escape hatch via the filter chips below.
+      filterDefaults: { isActive: "true" },
       defaultSort: sortBy("order", "ASC"),
-      queryKey: ["admin", "tester-checklist-items", "listing"],
+      queryKey: LISTING_QUERY_KEY,
       endpoint: ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEMS,
       sortOptions: [
         { value: "order", label: "Order" },
@@ -100,25 +124,47 @@ export function AdminTesterChecklistView({
       ],
       columns: COLUMNS,
       mapRows: (response) =>
-        toRecordArray(response.items).map((item, index) => ({
-          id: toStringValue(item.id, `checklist-${index}`),
-          primary: toStringValue(item.label, "Untitled test case"),
-          secondary: `${toStringValue(item.groupLabel, "Uncategorized")} / ${toStringValue(item.pageLabel, "")}`,
-          phase: typeof item.phase === "number" ? item.phase : 1,
-          status: toStringValue(
-            typeof item.isActive === "boolean"
-              ? item.isActive
-                ? "Active"
-                : "Inactive"
-              : item.status,
-            "Active",
-          ),
-          updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-        })),
+        toRecordArray(response.items).map((item, index) => {
+          const bugConfirmed = item.bugConfirmed === true;
+          const version = typeof item.version === "number" ? item.version : 1;
+          const status = bugConfirmed
+            ? "Bug Confirmed"
+            : toStringValue(
+                typeof item.isActive === "boolean"
+                  ? item.isActive
+                    ? "Active"
+                    : "Inactive"
+                  : item.status,
+                "Active",
+              );
+          const secondary = bugConfirmed
+            ? `${toStringValue(item.groupLabel, "Uncategorized")} / ${toStringValue(item.pageLabel, "")} — 🐛 found by ${toStringValue(item.bugHunterName, "unknown tester")} (v${version})`
+            : `${toStringValue(item.groupLabel, "Uncategorized")} / ${toStringValue(item.pageLabel, "")}`;
+          return {
+            id: toStringValue(item.id, `checklist-${index}`),
+            primary: toStringValue(item.label, "Untitled test case"),
+            secondary,
+            phase: typeof item.phase === "number" ? item.phase : 1,
+            status,
+            updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+            bugConfirmed,
+            supersededByItemId: item.supersededByItemId
+              ? toStringValue(item.supersededByItemId, "")
+              : undefined,
+          };
+        }),
       getTotal: (response, mappedRows) =>
         typeof response.total === "number" ? response.total : mappedRows.length,
-      buildFilters: (state) =>
-        state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined,
+      buildFilters: (state) => {
+        const parts: string[] = [];
+        if (state.isActive && state.isActive !== "All") {
+          parts.push(sieveFilter("isActive", SIEVE_OP.EQ, state.isActive));
+        }
+        if (state.bugConfirmed && state.bugConfirmed !== "All") {
+          parts.push(sieveFilter("bugConfirmed", SIEVE_OP.EQ, state.bugConfirmed));
+        }
+        return parts.join(",") || undefined;
+      },
       primaryAction: {
         label: "Add Test Case",
         onClick: ({ openCreatePanel }) => openCreatePanel(),
@@ -140,15 +186,37 @@ export function AdminTesterChecklistView({
           })) satisfies BulkActionItem[];
       },
       renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-        <FilterChipGroup
-          label="Status"
-          tabs={[
-            { id: "All", label: "All" },
-            { id: "true", label: "Active" },
-            { id: "false", label: "Inactive" },
+        <Stack gap="md">
+          <FilterChipGroup
+            label="Status"
+            tabs={[
+              { id: "All", label: "All" },
+              { id: "true", label: "Active" },
+              { id: "false", label: "Inactive" },
+            ]}
+            value={pendingFilters.isActive || ""}
+            onChange={(v) => setPendingFilters((p) => ({ ...p, isActive: v }))}
+          />
+          <FilterChipGroup
+            label="Bug status"
+            tabs={[
+              { id: "All", label: "All" },
+              { id: "true", label: "Bug Confirmed" },
+            ]}
+            value={pendingFilters.bugConfirmed || ""}
+            onChange={(v) => setPendingFilters((p) => ({ ...p, bugConfirmed: v }))}
+          />
+        </Stack>
+      ),
+      renderRowActions: (row) => (
+        <RowActionMenu
+          actions={[
+            {
+              label: ACTIONS.ADMIN["reopen-checklist-item"].label,
+              disabled: !row.bugConfirmed || !!row.supersededByItemId,
+              onClick: () => reopenMutation.mutate(row.id),
+            },
           ]}
-          value={pendingFilters.isActive || ""}
-          onChange={(v) => setPendingFilters((p) => ({ ...p, isActive: v }))}
         />
       ),
       renderEditor: ({ editId, closePanel }) => (
@@ -161,7 +229,7 @@ export function AdminTesterChecklistView({
       ),
       resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Test Case" : "Edit Test Case"),
     }),
-    [onBulkDelete],
+    [onBulkDelete, reopenMutation],
   );
 
   if (React.Children.count(children) > 0) {

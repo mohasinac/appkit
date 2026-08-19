@@ -176,8 +176,17 @@ export function AdminSiteSettingsView({
   const [watermarkType, setWatermarkType] = React.useState<"text" | "image">("text");
   const [watermarkText, setWatermarkText] = React.useState("letitrip.in");
   const [watermarkImageUrl, setWatermarkImageUrl] = React.useState("");
-  const [watermarkSize, setWatermarkSize] = React.useState(30);
-  const [watermarkOpacity, setWatermarkOpacity] = React.useState(20);
+  const [watermarkSize, setWatermarkSize] = React.useState(10);
+  const [watermarkOpacity, setWatermarkOpacity] = React.useState(10);
+  // 4 corners + center are picked from the Select; "custom" is only ever set
+  // by the offset toggle below, never a 6th Select option (keeps the picker
+  // at 5 options — see PaginatedSelect rule for >5).
+  const [watermarkPosition, setWatermarkPosition] = React.useState<
+    "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center"
+  >("center");
+  const [watermarkUseCustomOffset, setWatermarkUseCustomOffset] = React.useState(false);
+  const [watermarkOffsetX, setWatermarkOffsetX] = React.useState(0);
+  const [watermarkOffsetY, setWatermarkOffsetY] = React.useState(0);
   const watermarkPreviewRef = React.useRef<HTMLSpanElement>(null);
   React.useEffect(() => {
     const el = watermarkPreviewRef.current;
@@ -402,8 +411,13 @@ export function AdminSiteSettingsView({
     setWatermarkType(s.watermark?.type ?? "text");
     setWatermarkText(s.watermark?.text ?? "letitrip.in");
     setWatermarkImageUrl(s.watermark?.imageUrl ?? "");
-    setWatermarkSize(s.watermark?.size ?? 30);
-    setWatermarkOpacity(s.watermark?.opacity ?? 20);
+    setWatermarkSize(s.watermark?.size ?? 10);
+    setWatermarkOpacity(s.watermark?.opacity ?? 10);
+    const loadedPosition = s.watermark?.position ?? "center";
+    setWatermarkUseCustomOffset(loadedPosition === "custom");
+    setWatermarkPosition(loadedPosition === "custom" ? "center" : (loadedPosition as typeof watermarkPosition));
+    setWatermarkOffsetX(s.watermark?.offsetX ?? 0);
+    setWatermarkOffsetY(s.watermark?.offsetY ?? 0);
 
     setPlatformFeePercent(s.commissions?.platformFeePercent ?? 5);
     setGstPercent(s.commissions?.gstPercent ?? 18);
@@ -603,7 +617,16 @@ export function AdminSiteSettingsView({
       seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
       contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp },
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
-      watermark: { type: watermarkType, text: watermarkText, imageUrl: watermarkImageUrl, size: watermarkSize, opacity: watermarkOpacity },
+      watermark: {
+        type: watermarkType,
+        text: watermarkText,
+        imageUrl: watermarkImageUrl,
+        size: watermarkSize,
+        opacity: watermarkOpacity,
+        position: watermarkUseCustomOffset ? "custom" : watermarkPosition,
+        offsetX: watermarkOffsetX,
+        offsetY: watermarkOffsetY,
+      },
       commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, whatsappNotifyFeeEnabled, whatsappNotifyFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
@@ -1041,6 +1064,44 @@ export function AdminSiteSettingsView({
               )}
               <Slider label={`Size — ${watermarkSize}% of image width`} value={watermarkSize} onChange={setWatermarkSize} min={5} max={100} step={5} />
               <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
+              <Select
+                label="Position"
+                options={[
+                  { label: "Center", value: "center" },
+                  { label: "Top left", value: "top-left" },
+                  { label: "Top right", value: "top-right" },
+                  { label: "Bottom left", value: "bottom-left" },
+                  { label: "Bottom right", value: "bottom-right" },
+                ]}
+                value={watermarkPosition}
+                onValueChange={(v) => setWatermarkPosition(v as typeof watermarkPosition)}
+                disabled={watermarkUseCustomOffset}
+              />
+              <Toggle
+                checked={watermarkUseCustomOffset}
+                onChange={setWatermarkUseCustomOffset}
+                label="Use a custom X/Y offset instead"
+              />
+              {watermarkUseCustomOffset && (
+                <Grid cols={2} gap="md">
+                  <Input
+                    label="X offset (%) — + right / − left of center"
+                    value={String(watermarkOffsetX)}
+                    onChange={(e) => setWatermarkOffsetX(Math.max(-45, Math.min(45, parseInt(e.target.value) || 0)))}
+                    type="number"
+                    min={-45}
+                    max={45}
+                  />
+                  <Input
+                    label="Y offset (%) — + down / − up from center"
+                    value={String(watermarkOffsetY)}
+                    onChange={(e) => setWatermarkOffsetY(Math.max(-45, Math.min(45, parseInt(e.target.value) || 0)))}
+                    type="number"
+                    min={-45}
+                    max={45}
+                  />
+                </Grid>
+              )}
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Text size="xs" color="muted">Preview (text watermark only)</Text>
                 <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">

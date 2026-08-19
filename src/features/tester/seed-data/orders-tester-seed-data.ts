@@ -159,11 +159,16 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
     updatedAt: NOW,
   } as Partial<OrderDocument>,
 
-  // ── Bundle purchase — group-tester-sandbox-bundle expands into its two children ──
+  // ── Bundle purchase — a real checkout produces ONE order item for the whole
+  //    bundle (see addBundleToCartAction / checkout/actions.ts bundle-expansion),
+  //    not one item per member product. Previously mis-modeled against
+  //    "group-tester-sandbox-bundle" (a real standalone product that separately
+  //    demonstrates the Tier-GP product-group "Set" feature, not a bundle at
+  //    all) — the actual bundle is the categories row "bundle-tester-sandbox".
   {
     id: "order-tester-sandbox-bundle",
-    productId: "group-tester-sandbox-bundle",
-    productTitle: "Test Bundle — Standard #1 + Standard #2",
+    productId: "bundle-tester-sandbox",
+    productTitle: "Test Bundle",
     userId: BUYER_ID,
     userName: BUYER_NAME,
     userEmail: BUYER_EMAIL,
@@ -171,32 +176,22 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
     storeName: STORE_NAME,
     items: [
       {
-        productId: "product-tester-standard-1",
-        productTitle: "Test Gadget — Standard Listing #1",
+        productId: "bundle-tester-sandbox",
+        productTitle: "Test Bundle",
         listingType: "standard",
         quantity: 1,
         unitPrice: 199,
         totalPrice: 199,
-        bundleCategorySlug: "group-tester-sandbox-bundle",
-        bundleProductIds: ["product-tester-standard-1", "product-tester-standard-2"],
-      },
-      {
-        productId: "product-tester-standard-2",
-        productTitle: "Test Collectible — Standard Listing #2",
-        listingType: "standard",
-        quantity: 1,
-        unitPrice: 149,
-        totalPrice: 149,
-        bundleCategorySlug: "group-tester-sandbox-bundle",
+        bundleCategorySlug: "bundle-tester-sandbox",
         bundleProductIds: ["product-tester-standard-1", "product-tester-standard-2"],
       },
     ],
     orderType: "standard",
-    bundleId: "group-tester-sandbox-bundle",
+    bundleId: "bundle-tester-sandbox",
     isNonRefundable: true,
-    quantity: 2,
-    unitPrice: 164,
-    totalPrice: 329,
+    quantity: 1,
+    unitPrice: 199,
+    totalPrice: 199,
     currency: "INR",
     status: "processing",
     paymentStatus: "paid",
@@ -227,13 +222,12 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
         unitPrice: 50,
         totalPrice: 50,
         prizeRevealStatus: "revealed",
-        revealedItemNumber: 1,
       },
     ],
     orderType: "prize-draw",
     prizeDrawProductId: PRIZEDRAW_PRODUCT_ID,
+    prizeRevealMode: "scheduled",
     prizeWon: { itemNumber: 1, title: "Test Prize — Grand", images: [], wonAt: daysAgo(1) },
-    prizeRevealDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     isNonRefundable: true,
     quantity: 1,
     unitPrice: 50,
@@ -247,7 +241,11 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(1),
   } as Partial<OrderDocument>,
 
-  // ── Prize draw — non-winning entry, auto-refunded ────────────────────────────
+  // ── Prize draw — a second entry on the same closed draw, revealed to a
+  //    different item. Every paid entry on a prize draw is eventually
+  //    assigned some item (prizeMaxEntries === item count) — there's no
+  //    "losing" outcome under the automatic-reveal model, unlike a lottery
+  //    with fewer prizes than tickets. ─────────────────────────────────────
   {
     id: "order-tester-sandbox-prizedraw-lose",
     productId: PRIZEDRAW_PRODUCT_ID,
@@ -265,21 +263,21 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
         quantity: 1,
         unitPrice: 50,
         totalPrice: 50,
-        prizeRevealStatus: "closed",
+        prizeRevealStatus: "revealed",
       },
     ],
     orderType: "prize-draw",
     prizeDrawProductId: PRIZEDRAW_PRODUCT_ID,
+    prizeRevealMode: "scheduled",
+    prizeWon: { itemNumber: 2, title: "Test Prize — Runner-up", images: [], wonAt: daysAgo(1) },
+    isNonRefundable: true,
     quantity: 1,
     unitPrice: 50,
     totalPrice: 50,
     currency: "INR",
-    status: "refunded",
-    paymentStatus: "refunded",
+    status: "delivered",
+    paymentStatus: "paid",
     paymentMethod: "upi_manual",
-    refundAmount: 50,
-    refundStatus: "completed",
-    refundNote: "Disposable test — non-winning prize-draw entry auto-refunded after reveal.",
     orderDate: daysAgo(1),
     createdAt: daysAgo(1),
     updatedAt: NOW,

@@ -33,6 +33,8 @@ export const BUNDLE_COPY = {
     priceFallback: "—",
     itemCount: (n: number) => `${n} item${n !== 1 ? "s" : ""}`,
     emptyMembers: "Bundle contents are being updated. Check back shortly.",
+    discountBadge: (percent: number) => `${percent}% OFF`,
+    savingsLabel: (formattedSavings: string) => `You save ${formattedSavings}`,
     // SB-UNI-5 2026-05-13 — CTA functional. Disabled-CTA copy retained for
     // consumers that opt out of the wired CTA (the new client island reads
     // the active strings below).

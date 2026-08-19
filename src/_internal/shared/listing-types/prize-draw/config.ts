@@ -7,7 +7,7 @@ export const config = {
   listingType: LISTING_TYPE,
   slugPrefix: "prizedraw-",
   cartLine: "single-product" as const,
-  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRODUCT_DETAIL(idOrSlug)),
+  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRIZE_DRAW_DETAIL(idOrSlug)),
   badge: undefined as { label: string; className: string } | undefined,
   priceLabel: "Price (₹)",
   typeLabel: "Prize Draw",

@@ -1,3 +1,5 @@
+import type { ListingType } from "../../products/types/index";
+
 export type ReviewStatus = "pending" | "approved" | "rejected";
 
 export interface ReviewImage {
@@ -17,6 +19,8 @@ export interface Review {
   id: string;
   productId: string;
   productTitle?: string;
+  /** Denormalized from the product at review-creation time — drives the correct detail-page link. */
+  listingType?: ListingType;
   storeSlug?: string;
   storeName?: string;
   userId: string;

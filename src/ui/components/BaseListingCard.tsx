@@ -79,7 +79,7 @@ function BaseListingCardRoot({
       onTouchCancel={onTouchCancel}
       className={[
         "group relative w-full min-w-0 overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] transition-shadow",
-        variant === "list" ? "flex flex-row items-stretch" : "flex flex-col",
+        variant === "list" ? "flex flex-row items-stretch" : "flex flex-col h-full",
         isSelected
           ? "border-primary outline outline-2 outline-primary shadow-sm"
           : "border-[var(--appkit-color-border)] shadow-sm hover:shadow-md",

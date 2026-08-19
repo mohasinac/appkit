@@ -2,6 +2,8 @@ export {
   getBundleForDetail,
   listBundleMembers,
   listFeaturedBundles,
+  resolveBundleMemberIds,
+  resolveBundleOriginalTotal,
   type BundleDataOptions,
 } from "./data";
 export { buildBundleMetadata, type BundleMetadataOptions } from "./metadata";

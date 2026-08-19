@@ -162,7 +162,7 @@ export function AdminBlogEditorView({
         slug: draft.slug || toSlug(draft.title),
         excerpt: draft.excerpt,
         content: draft.content,
-        coverImage: draft.coverImage || undefined,
+        coverImage: draft.coverImage ? { type: "image", url: draft.coverImage } : undefined,
         youtubeId: draft.youtubeId || undefined,
         category: draft.category,
         tags: draft.tags,

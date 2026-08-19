@@ -17,6 +17,7 @@ import {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
+import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import type { CategoryDocument } from "../../categories/schemas";
 import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 
@@ -91,6 +92,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
   const memberCount = bundle.bundleProductIds?.length ?? 0;
   const cover = bundle.display?.coverImage;
   const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
+  const discount = computeBundleDiscount(bundle.bundlePrice, bundle.bundleOriginalTotal);
 
   return (
     <Stack
@@ -110,6 +112,11 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
               {PLACEHOLDER_EMOJI}
             </Row>
           )}
+          {discount && (
+            <Badge variant="success" className="absolute left-2 top-2">
+              {BUNDLE_COPY.detail.discountBadge(discount.percent)}
+            </Badge>
+          )}
         </Div>
         <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
         <Row gap="sm" align="center" className="mt-1" wrap>
@@ -118,6 +125,11 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
               ? formatCurrency(bundle.bundlePrice, "INR")
               : BUNDLE_COPY.featured.priceFallback}
           </Text>
+          {discount && (
+            <Text size="xs" color="muted" className="line-through">
+              {formatCurrency(discount.originalTotal, "INR")}
+            </Text>
+          )}
           <Text size="xs" color="muted">
             · {BUNDLE_COPY.featured.itemCount(memberCount)}
           </Text>

@@ -1,9 +1,11 @@
 /*
- * WHY: Shared tester sandbox — a small self-contained category tree (root + 2 leaves),
- *      1 brand row, and 1 bundle row so testers can exercise browsing/filtering/bundle
- *      flows without touching real catalog data. Auto-expires after 7 days.
- * WHAT: Exports categoriesTesterSeedData — 3 plain categories + 1 categoryType:"brand" +
- *       1 categoryType:"bundle" (bundleProductIds references products-tester-seed-data.ts).
+ * WHY: Shared tester sandbox — a small self-contained category tree (root + 3 leaves,
+ *      one leaf deliberately isActive:false), 1 brand row, and 1 bundle row so testers
+ *      can exercise browsing/filtering/bundle flows without touching real catalog data.
+ *      Auto-expires after 7 days.
+ * WHAT: Exports categoriesTesterSeedData — 4 plain categories + 1 categoryType:"brand" +
+ *       1 categoryType:"bundle" (bundleProductIds + bundleOriginalTotal reference
+ *       products-tester-seed-data.ts).
  *
  * EXPORTS:
  *   categoriesTesterSeedData — Array of Partial<CategoryDocument> for the seed runner

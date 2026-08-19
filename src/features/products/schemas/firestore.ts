@@ -320,18 +320,40 @@ export interface ProductDocument extends BaseDocument {
   pricePerEntry?: number;
   prizeMaxEntries?: number;
   prizeCurrentEntries?: number;
+  /**
+   * Draw start, set once at creation (= createdAt) — never seller-edited.
+   * `prizeRevealWindowEnd` is derived from this + `prizeDrawDurationDays`.
+   */
   prizeRevealWindowStart?: Date;
+  /** Hard expiry — `prizeRevealWindowStart` + `prizeDrawDurationDays` days. */
   prizeRevealWindowEnd?: Date;
+  /**
+   * "pending" is legacy-only (no longer written by new listings — reveal is
+   * fully automatic, there's no seller-facing delayed-start concept anymore;
+   * draft→published is how a seller holds a draw back). New listings go
+   * straight to "open"; "closed" once every eligible order has been revealed.
+   */
   prizeRevealStatus?: "pending" | "open" | "closed";
-  prizeRevealDeadlineDays?: number;
+  /**
+   * Seller-facing duration input, 1–15 days (PRIZE_DRAW_DURATION_DAYS_MIN/MAX
+   * in checkout/rules/_limits.ts). Drives `prizeRevealWindowEnd` at creation.
+   */
+  prizeDrawDurationDays?: number;
   /** Public proof-of-fairness file (commit-reveal scheme). */
   prizeGithubFileUrl?: string;
   /**
    * Draw mode for prize-draw listings.
-   * "reveal" = classic buyer-reveal flow (default, backward-compat).
+   * "reveal" = classic automatic-reveal flow (default, backward-compat).
    * "lottery" = user self-pull with weighted random slot assignment.
    */
   prizeDrawMode?: "reveal" | "lottery";
+  /**
+   * Reveal trigger for "reveal" mode draws (irrelevant for "lottery" mode).
+   * "instant" — winner assigned the moment the order's payment is confirmed.
+   * "scheduled" — winner assigned automatically at whichever comes first:
+   * `prizeRevealWindowEnd` or full sellout (`prizeCurrentEntries === prizeMaxEntries`).
+   */
+  prizeRevealMode?: "instant" | "scheduled";
   /**
    * Full lottery config. Only set when prizeDrawMode === "lottery".
    * Includes server-only price/weight fields — stripped by adapter before any client response.
@@ -394,6 +416,8 @@ export interface PrizeDrawItem {
   /** Per-slot price in decimal rupees for lottery mode. Lower price = higher weight = higher chance. */
   prizeSlotPrice?: number;
   isWon: boolean;
+  /** Order id this item was assigned to — set alongside isWon:true. Admin/seller-only mapping (never public) so the seller knows which physical item ships to which order. */
+  wonByOrderId?: string;
 }
 
 /** Runtime-accessible product status values — use instead of bare string literals. */

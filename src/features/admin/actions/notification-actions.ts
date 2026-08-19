@@ -161,9 +161,8 @@ export async function sendNotification(
     offer_expired: "offers", offer_counter_accepted: "offers",
     refund_initiated: "orderUpdates",
     product_available: "system",
-    prize_reveal_ready: "orderUpdates",
+    prize_won: "orderUpdates",
     prize_reveal_expired: "orderUpdates",
-    prize_reveal_reminder: "orderUpdates",
   };
   const typeKey = typeToPrefsKey[type];
   // If the user has explicitly disabled this notification type, skip all external channels.

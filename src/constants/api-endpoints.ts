@@ -166,10 +166,12 @@ export const ADMIN_ENDPOINTS = {
   FAQ_BY_ID: (id: string) => `/api/admin/faqs/${id}`,
   TESTER_CHECKLIST_ITEMS: "/api/admin/tester-checklist-items",
   TESTER_CHECKLIST_ITEM_BY_ID: (id: string) => `/api/admin/tester-checklist-items/${id}`,
+  TESTER_CHECKLIST_ITEM_REOPEN: (id: string) => `/api/admin/tester-checklist-items/${id}/reopen`,
   TESTER_FEEDBACK: "/api/admin/tester-feedback",
   TESTER_FEEDBACK_BY_ID: (id: string) => `/api/admin/tester-feedback/${id}`,
   TESTER_FEEDBACK_REPORT: "/api/admin/tester-feedback/report",
   TESTER_FEEDBACK_EXPORT: "/api/admin/tester-feedback/export",
+  TESTER_FEEDBACK_CONFIRM_BUG: (id: string) => `/api/admin/tester-feedback/${id}/confirm-bug`,
   STORES: "/api/admin/stores",
   STORE_BY_ID: (uid: string) => `/api/admin/stores/${uid}`,
   PAYOUTS: "/api/admin/payouts",
@@ -507,12 +509,10 @@ export const PRODUCT_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Prize Draws
+// Prize Draws — no client-callable endpoints. Reveal is fully automatic
+// (assignPrizeDrawWinner, triggered by payment confirmation / sellout /
+// expiry) — there is no buyer-facing reveal action to call anymore.
 // ---------------------------------------------------------------------------
-
-export const PRIZE_DRAW_ENDPOINTS = {
-  REVEAL: (productId: string) => `/api/prize-draws/${encodeURIComponent(productId)}/reveal`,
-} as const;
 
 // ---------------------------------------------------------------------------
 // Sublisting Categories (public)
@@ -754,7 +754,6 @@ export const API_ENDPOINTS = {
   ORDERS: ORDER_ENDPOINTS,
   PREORDERS: PREORDER_ENDPOINTS,
   PRODUCTS: PRODUCT_ENDPOINTS,
-  PRIZE_DRAWS: PRIZE_DRAW_ENDPOINTS,
   PROMOTIONS: PROMOTION_ENDPOINTS,
   REVIEWS: REVIEW_ENDPOINTS,
   SEARCH: SEARCH_ENDPOINTS,

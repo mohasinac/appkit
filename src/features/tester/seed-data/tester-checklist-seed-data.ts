@@ -146,8 +146,25 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A product's video slide opens in theater mode with playback, zoom, and rotate controls",
           description: "Product video is no longer a YouTube embed — when a product has a video, it appears as a trailing gallery slide (poster image + play badge) alongside the photos. Clicking it opens the full-screen lightbox in theater mode, plays the video with native controls, and the zoom (+/-) and rotate (R) buttons in the top bar still apply. Test on the two seeded fixtures: \"Beyblade Original — Dragoon F (Video Demo)\" and \"Beyblade X BX-02 Dran Sword (Video Demo)\".",
         },
+        {
+          key: "related-listings-sections",
+          label: "A standard product's detail page shows up to 4 \"related\" carousels below the main content — More in [category], More by [brand], You might also like (shared tags), and More from [store] — each populated with real items, not empty",
+          description: "Verify against \"Beyblade Burst B-01 Valkyrie\" (product-beyblade-burst-valkyrie) — all 4 sections should show real items: other Beyblade Burst products, other \"Beyblade\"-brand products, other attack-type/starter-set tagged products, and other Beyblade Arena store listings.",
+          href: "/products",
+        },
         { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry, then the reveal, correctly shows win/lose and auto-refunds non-winners" },
-        { key: "bundle-purchase", label: "Purchasing a bundle/grouped-listing works and shows all included items in the order" },
+        {
+          key: "bundle-purchase",
+          label: "Purchasing a bundle works and shows all included items in the order",
+          description: "Verify against \"Test Bundle\" (bundle-tester-sandbox, findable from the bundles listing page) — after checkout, the order should show a single \"Test Bundle\" line item, not two separate product lines.",
+          href: "/bundles",
+        },
+        {
+          key: "product-group-set-widget",
+          label: "A product's detail page shows a collapsible \"Part of / Parts in this group\" panel with a working thumbnail strip and a \"View whole group\" table when the product belongs to a product-group (\"Set\")",
+          description: "Verify against \"Test Product Set — Standard #1 + Standard #2\" (group-tester-sandbox-bundle) and either of its two children (product-tester-standard-1 / product-tester-standard-2), findable from the products listing page — all three should show the panel with each other listed, the arrow/triangle expand icons should render as real glyphs (not garbled text), and \"View whole group\" should open a working modal/drawer.",
+          href: "/products",
+        },
         { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button" },
         { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase" },
         { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly" },
@@ -168,8 +185,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "shipping-address-edit", label: "Editing an existing shipping address from checkout works" },
         { key: "shipping-method-selection", label: "Selecting a shipping method/provider at checkout recalculates the shipping fee correctly" },
         { key: "gst-breakdown-display", label: "When GST is enabled in Site Settings, checkout shows the correct CGST/SGST or IGST breakdown based on buyer vs seller state" },
-        { key: "checkout-identity-verification-step", label: "The always-on \"Identity Verification\" step (step 2 of 3, right after selecting an address) appears on every checkout regardless of cart value, sends an email OTP, and correctly advances to Payment once verified", href: "/checkout" },
-        { key: "checkout-otp-highvalue", label: "Separately from the Identity Verification step above: carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\") additionally prompt a \"Verify this order\" email OTP right before payment (except COD)" },
+        { key: "checkout-otp-highvalue", label: "Carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\") prompt a \"Verify this order\" email OTP right before payment (except COD)" },
         { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and Razorpay (when enabled) at checkout works" },
         { key: "payment-window-countdown", label: "Manual-payment orders show a 15-minute countdown timer on the payment page" },
         { key: "payment-proof-upload", label: "Uploading manual payment proof (screenshot, UTR, mark-as-paid + agreement checkboxes) works" },
@@ -262,6 +278,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "leave-review", label: "Leaving a review with rating + photo works" },
         { key: "view-seller-reviews", label: "Viewing a seller's reviews on their store page works" },
         { key: "seller-response", label: "Seller responding to a review works" },
+        {
+          key: "review-detail-related-sections",
+          label: "An individual review's permalink page (/reviews/[id]) shows \"More reviews for [product]\" and \"More reviews for [store]\" sections with real reviews, not empty",
+          description: "Verify against review-7 (the first review on \"Beyblade Original — Dranzer S\"), reachable via My Reviews or a store's Reviews tab.",
+          href: "/reviews",
+        },
       ],
     },
     {
@@ -451,6 +473,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "blog-listing", label: "Blog listing page shows all published posts" },
         { key: "blog-cover-image-display", label: "A blog post's cover image displays on both its listing card and its detail page" },
         { key: "blog-youtube-embed", label: "A blog post with a YouTube video ID set shows a working embedded video player above the article content" },
+        {
+          key: "blog-related-posts-sections",
+          label: "A blog post detail page shows three \"related\" sections below the article — Related Posts (same category), You might also like (shared tags), and More from [author] — each populated with real posts, not empty",
+          description: "Verify against \"How to Spot a Genuine Takara-Tomy Beyblade\" (slug: spot-genuine-takara-tomy-beyblade) — the tag-overlap section should include \"Authenticating Beyblades — What to Check Before You Buy\" (shares \"authentication\"/\"counterfeit\" tags, different category), proving it's genuinely tag-based and not just re-showing the same-category list.",
+          href: "/blog",
+        },
       ],
     },
     {
@@ -459,6 +487,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "view-event", label: "Viewing an event detail page works", href: "/user/events" },
         { key: "events-listing-cards-images", label: "The events listing page shows each event's real cover image (not a generic icon placeholder) when one is set, and all cards in a row are the same height", href: "/events" },
+        {
+          key: "related-events-section",
+          label: "An event's Overview tab shows a \"Related Events\" carousel of other active events sharing at least one tag, with real events (not empty)",
+          description: "Verify against \"Beyblade Original Series Clearance Sale\" (event-original-series-clearance) — it shares the \"original-series\" tag with the favourite-blader poll event and the \"singles\" tag with the buy-3-get-1 offer event, so Related Events should show both.",
+          href: "/events",
+        },
         { key: "poll-vote-inline", label: "Voting in a poll event from the Overview tab works, shows a confirmation, and a repeat visit shows the already-voted state" },
         { key: "survey-feedback-submit", label: "Submitting a survey or feedback event's Participate form works, enforces required fields, and shows a success confirmation" },
         { key: "offer-coupon-display-copy", label: "An offer event shows its coupon code prominently on the Overview tab, and the \"Copy code\" button copies it to the clipboard with visible confirmation" },
@@ -588,6 +622,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "bundles-listing-page", label: "The bundles listing page loads correctly", href: "/bundles" },
         { key: "categories-index", label: "The categories index page loads correctly", href: "/categories" },
         { key: "brands-index-detail", label: "The brands index and an individual brand detail page load correctly" },
+        {
+          key: "category-item-counts-accurate",
+          label: "Category cards on the categories index page show an accurate, non-zero item count matching what's actually inside each category",
+          description: "Verify \"Beyblade Burst\" shows 2 items (matching the 2 real products inside it when browsed), not \"0 items\". If any category shows 0 despite having published products, run `npm run categories:backfill-metrics` to recompute the counters.",
+          href: "/categories",
+        },
+        {
+          key: "category-brand-related-sections",
+          label: "A category detail page shows a \"Related Categories\" section (other categories sharing the same root) and a brand detail page shows a \"Related Brands\" section, each with real items",
+          description: "Verify against \"Beyblade Burst\" (category-beyblade-burst) — Related Categories should show Beyblade Original, Metal Fight, and Beyblade X (siblings under the \"Spinning Tops\" root).",
+          href: "/categories",
+        },
       ],
     },
     {
@@ -599,6 +645,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "sellers-directory", label: "The sellers directory page loads correctly", href: "/sellers" },
         { key: "seller-detail-page", label: "An individual seller's public detail page loads correctly" },
         { key: "scams-registry", label: "The scams registry page and an individual scam detail page load correctly", href: "/scams" },
+        {
+          key: "scam-related-profiles-sections",
+          label: "A scammer profile page shows a \"Related Profiles\" section (explicit same-person cross-links) and a separately-labeled \"Similar Scam Reports\" section (same scam type, with a note that it does not imply the same person)",
+          description: "Verify against \"MetalFusion_PreorderAgent\" (scammer-fake-metal-fusion-preorder-agent) — Related Profiles should show \"MF_Backup_Store\" (confirmed same operator), and Similar Scam Reports should separately show \"Bey_King_India\" (a different person using the same advance-payment-ghost pattern). Confirm the two sections are visually distinct and the Similar Scam Reports caption is present.",
+          href: "/scams",
+        },
       ],
     },
     {
@@ -629,6 +681,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "oauth-loading-redirect", label: "The OAuth-loading redirect page transitions correctly after a Google sign-in" },
         { key: "checkout-success-page", label: "The checkout-success page shows correct order details after payment", href: "/checkout/success" },
         { key: "unauthorized-404-pages", label: "Unauthorized and 404 error pages render correctly instead of crashing" },
+      ],
+    },
+    {
+      pageKey: "bug-hunters",
+      pageLabel: "Bug Hunters Leaderboard",
+      cases: [
+        {
+          key: "leaderboard-loads",
+          label: "The public Bug Hunters leaderboard (/bug-hunters) loads and lists testers ranked by confirmed-bug count, most bugs first",
+          description: "Verify against the seeded demo fixture — \"Mock User 18\" should appear on the leaderboard with 1 confirmed bug (from the \"Demo fixture\" case under Admin (Testing) → Bug Hunter Rewards).",
+          href: "/bug-hunters",
+        },
+        { key: "leaderboard-empty-state", label: "If no bugs have been confirmed yet, the leaderboard shows a clear \"No confirmed bugs yet\" empty state instead of a blank page or error" },
+        { key: "leaderboard-footer-link", label: "A \"Bug Hunters\" link is present in the site footer's Support column and navigates to /bug-hunters" },
       ],
     },
   ]),
@@ -776,7 +842,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Site & System",
         cases: [
           { key: "site-settings-admin", label: "Admin site settings page saves correctly", href: "/admin/site" },
-          { key: "identity-otp-toggle-admin", label: "Toggling \"Require identity verification OTP at checkout\" off in Site Settings → Shipping saves correctly, and every subsequent checkout then skips the Identity Verification step entirely (address advances straight to Payment); toggling it back on restores the step for all buyers", href: "/admin/site" },
           { key: "admin-dashboard-widgets", label: "Admin dashboard widgets show accurate data", href: "/admin/dashboard" },
           { key: "analytics-admin", label: "Admin analytics dashboard shows accurate data", href: "/admin/analytics" },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
@@ -812,9 +877,75 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "watermark-video-overlay-parity", label: "A product video's live watermark overlay appears at the same position, size, and opacity as the image watermark pipeline" },
         ],
       },
+      {
+        pageKey: "bug-hunter-rewards",
+        pageLabel: "Bug Hunter Rewards",
+        cases: [
+          {
+            key: "confirm-bug",
+            label: "Admin can mark a tester's \"No\" answer as a confirmed bug from the Main Issues tab (or the All Submissions tab) — the reporting tester is credited as the bug hunter and the case is disabled so no other tester can answer it",
+            description: "From /admin/tester-feedback → Main Issues, click \"Mark as Bug\" on any open issue. Confirm: (1) the confirmation dialog appears before it commits, (2) the issue's card now shows a \"🐛 Confirmed — credited to [tester name]\" badge, (3) re-opening the Tester Hub as any other tester no longer shows that case at all.",
+            href: "/admin/tester-feedback",
+          },
+          {
+            key: "confirm-bug-idempotent",
+            label: "Attempting to mark the same case as a bug a second time (e.g. from a duplicate \"No\" report on the same case) is rejected rather than silently re-crediting a different tester",
+          },
+          {
+            key: "reopen-case",
+            label: "Admin can reopen a bug-confirmed case as a new version for retest — the new version is active and answerable again, while the old case stays disabled in the catalog with its bug-hunter credit intact",
+            description: "Verify against the seeded \"Demo fixture — reported bug, already confirmed and reopened\" pair under this page: the v1 case should show Status \"Bug Confirmed\" and be hidden from the catalog's default (Active-only) view, while its v2 case shows Status \"Active\" and is answerable from the Tester Hub. From /admin/tester-checklist, switch the Status filter to \"Inactive\" or \"Bug status → Bug Confirmed\" to find v1, then use its \"Reopen as New Test Case\" row action on any other bug-confirmed case to try the flow live.",
+            href: "/admin/tester-checklist",
+          },
+          {
+            key: "catalog-default-active-filter",
+            label: "The Tester Checklist catalog (/admin/tester-checklist) shows only Active cases by default — bug-confirmed and reopened-away cases are hidden unless the Status filter is switched to \"Inactive\"/\"All\" or the \"Bug status\" filter is set to \"Bug Confirmed\"",
+            href: "/admin/tester-checklist",
+          },
+        ],
+      },
     ],
     { adminOnly: true },
   ),
+
+  // Demo fixture pair — deliberately outside group() since these two items
+  // exercise the confirm-bug → reopen-as-new-version lifecycle directly
+  // (bugConfirmed/bugHunterId/version/previousVersionId/supersededByItemId
+  // are not part of the CaseInput shape group() builds). Lets an admin/
+  // tester see the full state machine immediately after a fresh reseed,
+  // and gives the /bug-hunters leaderboard a non-empty first entry.
+  {
+    id: "checklist-admin-bug-hunter-rewards-demo-fixture",
+    groupKey: "admin",
+    groupLabel: "Admin (Testing)",
+    pageKey: "bug-hunter-rewards",
+    pageLabel: "Bug Hunter Rewards",
+    label: "Demo fixture — reported bug, already confirmed and reopened (v1, disabled)",
+    description: "Seed-only fixture demonstrating a confirmed bug: this v1 case is disabled (isActive:false) and credited to \"Mock User 18\". Its retest is \"Demo fixture — reported bug, already confirmed and reopened (v2, active)\" in this same page.",
+    order: 100,
+    isActive: false,
+    adminOnly: true,
+    bugConfirmed: true,
+    bugHunterId: "user-tester-qa",
+    bugHunterName: "Mock User 18",
+    bugConfirmedAt: new Date("2026-08-18T10:00:00.000Z"),
+    version: 1,
+    supersededByItemId: "checklist-admin-bug-hunter-rewards-demo-fixture-v2",
+  },
+  {
+    id: "checklist-admin-bug-hunter-rewards-demo-fixture-v2",
+    groupKey: "admin",
+    groupLabel: "Admin (Testing)",
+    pageKey: "bug-hunter-rewards",
+    pageLabel: "Bug Hunter Rewards",
+    label: "Demo fixture — reported bug, already confirmed and reopened (v2, active)",
+    description: "Seed-only fixture — the retest version reopened from the disabled v1 case in this same page. Active and answerable again; a fresh \"No\" answer here can be used to try Mark as Bug end-to-end.",
+    order: 101,
+    isActive: true,
+    adminOnly: true,
+    version: 2,
+    previousVersionId: "checklist-admin-bug-hunter-rewards-demo-fixture",
+  },
 ];
 
 const defaultPhases = assignDefaultPhases(

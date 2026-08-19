@@ -1,11 +1,13 @@
 /*
  * WHY: Seeds a minimal, Beyblade-focused catalog of standard product listings — 2 products per
- *      generation (Original, Metal Fight, Burst, X), all from the Beyblade Arena store.
- * WHAT: Exports 8 standard products with listingType:"standard", covering all 4 generation
+ *      generation (Original, Metal Fight, Burst, X), all from the Beyblade Arena store, plus
+ *      2 video-demo products (one per generation family) so the product gallery's video slide
+ *      (theater-mode playback, zoom/rotate) has real, playable fixtures to test against.
+ * WHAT: Exports 10 standard products with listingType:"standard", covering all 4 generation
  *       leaf categories (tagged with both leaf + root category slugs).
  *
  * EXPORTS:
- *   productsStandardSeedData — Array of 8 standard products with listingType:"standard"
+ *   productsStandardSeedData — Array of 10 standard products with listingType:"standard"
  *
  * @tag domain:products,catalog
  * @tag layer:seed
@@ -59,6 +61,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     featured: true,
+    tags: ["attack-type"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-10"),
@@ -87,6 +90,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
+    tags: ["vintage-collectible"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-12"),
@@ -118,6 +122,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     featured: true,
+    tags: ["attack-type"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-14"),
@@ -146,6 +151,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["balance-type", "tournament-grade"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-16"),
@@ -177,6 +183,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     featured: true,
+    tags: ["attack-type", "starter-set"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-18"),
@@ -205,6 +212,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["attack-type"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-20"),
@@ -236,6 +244,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     featured: true,
+    tags: ["attack-type", "starter-set"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-22"),
@@ -264,10 +273,81 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["balance-type", "tournament-grade"],
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-04-24"),
     updatedAt: new Date("2026-05-04"),
+  },
+
+  // ===== Video-demo fixtures — real playable video field for gallery testing =====
+  {
+    id: "product-beyblade-original-dragoon-f-video-demo",
+    slug: "product-beyblade-original-dragoon-f-video-demo",
+    barcodeId: "LIR-BEY-VID-001",
+    title: "Beyblade Original — Dragoon F (Video Demo)",
+    description: "Dragoon F attack-type top from the original series. Listed with an unboxing/spin video for gallery testing.",
+    categorySlugs: ["category-beyblade-original", "category-spinning-tops"],
+    categoryNames: ["Beyblade Original", "Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    price: 1599,
+    currency: "INR",
+    stockQuantity: 5,
+    availableQuantity: 5,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-1-20260819/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-1-20260819/900/900"),
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-2-20260819/900/900"),
+    ],
+    video: {
+      // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
+      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-original-dragoon-f-video-demo-20260819/800/450"),
+      duration: 15,
+    },
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["vintage-collectible"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-19"),
+    updatedAt: new Date("2026-08-19"),
+  },
+  {
+    id: "product-beyblade-x-dran-sword-video-demo",
+    slug: "product-beyblade-x-dran-sword-video-demo",
+    barcodeId: "LIR-BEY-VID-002",
+    title: "Beyblade X BX-02 Dran Sword (Video Demo)",
+    description: "Dran Sword 3-60F attack-type top from the Beyblade X Xtreme Gear generation. Listed with a battle-test video for gallery testing.",
+    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
+    categoryNames: ["Beyblade X", "Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    price: 949,
+    currency: "INR",
+    stockQuantity: 8,
+    availableQuantity: 8,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-1-20260819/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-1-20260819/900/900"),
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-2-20260819/900/900"),
+    ],
+    video: {
+      // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
+      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-x-dran-sword-video-demo-20260819/800/450"),
+      duration: 20,
+    },
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["attack-type", "tournament-grade"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-19"),
+    updatedAt: new Date("2026-08-19"),
   },
 ];
 

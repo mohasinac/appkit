@@ -73,6 +73,7 @@ export async function createReview(
   return reviewRepository.create({
     productId: input.productId,
     productTitle: product.title,
+    listingType: product.listingType,
     storeId: product.storeId,
     storeName: product.storeName,
     userId,

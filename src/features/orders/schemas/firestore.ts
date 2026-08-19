@@ -105,10 +105,6 @@ export interface OrderDocumentItem {
  listingType?: ListingType;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
-  /** SB8-F â€" ISO timestamp; deadline by which the buyer must claim the prize. */
- prizeRevealDeadline?: string;
- /** SB8-F â€" set after the reveal API picks a winner. */
-  revealedItemNumber?: number;
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
   cancelledQuantity?: number;
   cancelledAt?: Date;
@@ -259,12 +255,10 @@ export interface OrderDocument extends BaseDocument {
     images: string[];
     wonAt: Date;
   };
-  /** Deadline for the buyer to claim the won prize (typically 7 days). */
-  prizeRevealDeadline?: Date;
-  /** True once `prizeRevealDeadline` passes without a claim â€" auto-forfeit. */
- prizeRevealExpired?: boolean;
- /** Source product id when the order came from a prize-draw entry. */
+  /** Source product id when the order came from a prize-draw entry. */
  prizeDrawProductId?: string;
+ /** Denormalized from the product at order-creation time — drives reveal copy on the order-detail page without an extra product fetch. */
+ prizeRevealMode?: "instant" | "scheduled";
  /** True for prize-draw entries and bundle purchases that bypass refund. */
  isNonRefundable?: boolean;
  /** Set when the order came from a bundle â€" points back to `bundles/{id}`. */

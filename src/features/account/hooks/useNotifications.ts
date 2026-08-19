@@ -39,6 +39,11 @@ export function useNotifications<TNotification = any>(
         `${notificationsEndpoint}?limit=${limit}`,
       ),
     staleTime: 30_000,
+    // Notifications originate server-side (order/bid/moderation events) with
+    // no client-driven local-first path to short-circuit, unlike cart/
+    // wishlist. Poll on the same ~30s cadence as useSyncManager so the bell
+    // badge picks up new notifications without requiring a window refocus.
+    refetchInterval: 30_000,
   });
 
   const { mutate: markRead } = useMutation<unknown, Error, string>({

@@ -84,6 +84,15 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
     },
   });
 
+  const confirmBugMutation = useApiMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.post(ADMIN_ENDPOINTS.TESTER_FEEDBACK_CONFIRM_BUG(id), {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "tester-feedback"] });
+    },
+  });
+
   const config: ListingViewConfig<AdminTesterFeedbackResponse, FeedbackRow> = {
     portal: "admin",
     title: "All Submissions",
@@ -148,6 +157,11 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
             label: ACTIONS.ADMIN["mark-feedback-reviewed"].label,
             disabled: row.status === "reviewed",
             onClick: () => patchMutation.mutate(row.id),
+          },
+          {
+            label: ACTIONS.ADMIN["confirm-bug"].label,
+            disabled: row.answer !== "no",
+            onClick: () => confirmBugMutation.mutate(row.id),
           },
         ]}
       />

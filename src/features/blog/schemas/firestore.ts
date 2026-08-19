@@ -27,6 +27,8 @@ export interface BlogPostDocument extends BaseDocument {
   coverImage?: MediaFieldInput;
   contentImages?: MediaField[];
   additionalImages?: MediaField[];
+  /** YouTube video ID (11 chars, e.g. "dQw4w9WgXcQ") embedded above the article content. */
+  youtubeId?: string;
   category: BlogPostCategory;
   tags: string[];
   isFeatured: boolean;
@@ -60,6 +62,7 @@ export const BLOG_POST_FIELDS = {
   COVER_IMAGE: "coverImage",
   CONTENT_IMAGES: "contentImages",
   ADDITIONAL_IMAGES: "additionalImages",
+  YOUTUBE_ID: "youtubeId",
   CATEGORY: "category",
   TAGS: "tags",
   IS_FEATURED: "isFeatured",

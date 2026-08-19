@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, type ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 import { normalizeError } from "../../errors/normalize";
 
 /**
@@ -87,14 +88,18 @@ function resolveOffsetClass(offset: StickyToolbarOffset): string {
   }
   if (offset === "header+pagination") {
     // Matches the sticky pagination-row offset repeated verbatim across
-    // every DataListingView-style index listing (44px = the fixed toolbar
-    // row height above it) — consolidated here instead of copy-pasted.
-    return "top-[calc(var(--header-height,0px)+44px)]";
+    // every DataListingView-style index listing (64px = the ListingToolbar
+    // row height above it — py-3/py-3.5 padding + its ~38px content row) —
+    // consolidated here instead of copy-pasted. Keep in sync with
+    // ListingToolbar's own padding classes; a mismatch makes the pagination
+    // row overlap/hide behind the toolbar (the "too compact when sticky"
+    // regression fixed 2026-08-19).
+    return "top-[calc(var(--header-height,0px)+64px)]";
   }
   if (offset === "header+bulk-actions") {
     // Matches the sticky bulk-action-bar offset that stacks below both the
-    // filter toolbar (44px) and the pagination row above it (88px total).
-    return "top-[calc(var(--header-height,0px)+88px)]";
+    // filter toolbar (64px) and the pagination row above it (~52px more).
+    return "top-[calc(var(--header-height,0px)+116px)]";
   }
   // Numeric offsets are applied via inline style instead (see below) —
   // Tailwind's static scanner can never see a dynamically-interpolated
@@ -169,9 +174,10 @@ export function StickyToolbar({
           onClick={toggle}
           aria-label={`Show ${label}`}
           aria-expanded={false}
-          className="px-4 py-0.5 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
+          className="flex items-center gap-1 px-4 py-0.5 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
         >
-          ⌄ Show {label}
+          <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+          Show {label}
         </button>
       </div>
     );

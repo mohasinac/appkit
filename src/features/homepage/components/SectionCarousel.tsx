@@ -272,12 +272,13 @@ const headingGradient: "none" | "brand" =
           />
         )}
 
-        {/* View More button */}
+        {/* View More button — solid primary fill so it reads as the section's
+            CTA rather than blending into the (often white) page background. */}
         {viewMoreHref && !isLoading && (
           <Row className="mt-6" justify="start">
             <TextLink rounded="lg" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
-              className={`inline-flex items-[center] gap-[0.375rem] border transition-colors ${ useLightText ? "border-white/40 text-white hover:bg-[rgba(255,255,255,0.1)]" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm" weight="medium"
+              className={`inline-flex items-[center] gap-[0.375rem] transition-colors bg-primary text-white hover:bg-primary-600 ${useLightText ? "shadow-lg" : ""}`} size="sm" weight="semibold"
             >
               {viewMoreLabel}
             </TextLink>

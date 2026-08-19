@@ -220,6 +220,21 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return snap.docs.map((d) => this.mapDoc<ProductDocument>(d));
   }
 
+  /**
+   * Published products sharing at least one tag with the given list — "you
+   * might also like" style discovery. `array-contains-any` caps at 10 values,
+   * so only the first 10 tags are used.
+   */
+  async findByTagsOverlap(tags: string[], limit = 8): Promise<ProductDocument[]> {
+    if (tags.length === 0) return [];
+    const snap = await this.getCollection()
+      .where(PRODUCT_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
+      .where(PRODUCT_FIELDS.TAGS, "array-contains-any", tags.slice(0, 10))
+      .limit(limit)
+      .get();
+    return snap.docs.map((d) => this.mapDoc<ProductDocument>(d));
+  }
+
   async findByBarcodeId(barcodeId: string): Promise<ProductDocument | null> {
     const docs = await this.findBy("barcodeId", barcodeId);
     return docs[0] ?? null;
@@ -329,10 +344,14 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   async findByGroupId(groupId: string): Promise<ProductDocument[]> {
+    // Tier GP: groups may mix standard products + pre-orders (never auctions).
     const snapshot = await this.db
       .collection(this.collection)
       .where("groupId", "==", groupId)
-      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.STANDARD)
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "in", [
+        LISTING_TYPE_VALUES.STANDARD,
+        LISTING_TYPE_VALUES.PRE_ORDER,
+      ])
       .get();
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
   }

@@ -169,7 +169,8 @@ export interface ProductItem {
   prizeRevealWindowStart?: string | Date;
   prizeRevealWindowEnd?: string | Date;
   prizeRevealStatus?: "pending" | "open" | "closed";
-  prizeRevealDeadlineDays?: number;
+  prizeDrawDurationDays?: number;
+  prizeRevealMode?: "instant" | "scheduled";
   prizeGithubFileUrl?: string;
 
   // SB1-B — hard cap on units a single user may purchase (bundle / prize-draw / pre-order)

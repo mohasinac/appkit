@@ -7,6 +7,7 @@ import {
   isInGuestWishlist,
   clearGuestWishlist,
   getGuestWishlistByType,
+  GUEST_WISHLIST_CHANGE_EVENT,
   type GuestWishlistItem,
 } from "../utils/guest-wishlist";
 
@@ -22,6 +23,16 @@ export function useGuestWishlist() {
   useEffect(() => {
     setItems(getGuestWishlistItems());
     setIsInitialized(true);
+    // Cross-instance sync within the same tab (e.g. a listing-page heart
+    // toggle writing storage while the header badge's own useGuestWishlist()
+    // instance is mounted elsewhere) + cross-tab via "storage".
+    const onChange = () => setItems(getGuestWishlistItems());
+    window.addEventListener(GUEST_WISHLIST_CHANGE_EVENT, onChange);
+    window.addEventListener("storage", onChange);
+    return () => {
+      window.removeEventListener(GUEST_WISHLIST_CHANGE_EVENT, onChange);
+      window.removeEventListener("storage", onChange);
+    };
   }, []);
 
   const add = useCallback(

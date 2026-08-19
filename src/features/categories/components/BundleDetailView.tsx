@@ -37,6 +37,7 @@ import { BundleBuyNowCta } from "./BundleBuyNowCta";
 import { BundleCollage } from "./BundleCollage";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
+import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -69,6 +70,7 @@ export function BundleDetailView({
   const priceLabel = bundle.bundlePrice
     ? formatCurrency(bundle.bundlePrice, "INR")
     : BUNDLE_COPY.detail.priceFallback;
+  const discount = computeBundleDiscount(bundle.bundlePrice, bundle.bundleOriginalTotal);
 
   return (
     <Main>
@@ -94,10 +96,20 @@ export function BundleDetailView({
                   {bundle.name}
                 </Heading>
 
-                <Row gap="sm" align="center">
+                <Row gap="sm" align="center" wrap>
                   <Text size="lg" weight="bold">
                     {priceLabel}
                   </Text>
+                  {discount && (
+                    <>
+                      <Text size="sm" color="muted" className="line-through">
+                        {formatCurrency(discount.originalTotal, "INR")}
+                      </Text>
+                      <Badge variant="success">
+                        {BUNDLE_COPY.detail.discountBadge(discount.percent)}
+                      </Badge>
+                    </>
+                  )}
                   <Text size="sm" color="muted">
                     · {BUNDLE_COPY.detail.itemCount(memberCount)}
                   </Text>
@@ -105,6 +117,11 @@ export function BundleDetailView({
                     {STOCK_BADGE_TEXT[stock]}
                   </Badge>
                 </Row>
+                {discount && (
+                  <Text size="sm" color="success" weight="medium">
+                    {BUNDLE_COPY.detail.savingsLabel(formatCurrency(discount.savings, "INR"))}
+                  </Text>
+                )}
 
                 {bundle.description && (
                   <Stack gap="xs">
@@ -158,6 +175,9 @@ export function BundleDetailView({
                       >
                         {p.title}
                       </Link>
+                      <Span size="xs" color="muted">
+                        {formatCurrency(p.price ?? 0, p.currency ?? "INR")}
+                      </Span>
                     </Li>
                   ))}
                 </Ul>

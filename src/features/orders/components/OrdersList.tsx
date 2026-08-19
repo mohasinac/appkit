@@ -46,10 +46,6 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
       it.prizeRevealStatus !== "revealed",
   );
   const revealsRemaining = unrevealedPrizeDraws.length;
-  const earliestDeadline = unrevealedPrizeDraws
-    .map((it) => it.prizeRevealDeadline)
-    .filter((d): d is string => !!d)
-    .sort()[0];
 
   return (
     <Div padding="5" 
@@ -84,11 +80,6 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
           <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
             {revealsRemaining} {revealsRemaining === 1 ? "reveal" : "reveals"} pending
           </Span>
-          {earliestDeadline && (
-            <Span size="xs" color="muted">
-              before {new Date(earliestDeadline).toLocaleDateString(getDefaultLocale(), { month: "short", day: "numeric" })}
-            </Span>
-          )}
         </Row>
       )}
       <Row wrap gap="3" className="mt-4">

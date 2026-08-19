@@ -64,7 +64,7 @@ export interface TitleBarLayoutProps {
 
 /** Shared icon-button class for all action buttons in the title bar. */
 const iconBtn =
-  "flex items-center justify-center w-9 h-9 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-primary-50 hover:text-primary-700 hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-400 transition-colors";
+  "flex items-center justify-center w-9 h-9 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-400 transition-colors";
 
 /** Badge counter class for wishlist/cart counts. */
 const countBadge =
@@ -287,7 +287,7 @@ export function TitleBarLayout({
       {loginHref && (
         <Link
           href={loginHref}
-          className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 hover:bg-[var(--appkit-color-surface-elevated)]"
+          className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 dark:hover:bg-[var(--appkit-color-surface-elevated)]"
         >
           Sign in
         </Link>

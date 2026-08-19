@@ -6,7 +6,8 @@
  *      detail page's listing-type dropdown (see StoreNavTabs). Auto-expires after 7 days
  *      (testerSandboxCleanup cascades into any bids on the auction).
  * WHAT: Exports productsTesterSeedData — 2 standard + 2 auction + 1 pre-order + 1 prize-draw +
- *       1 classified + 1 digital-code + 1 live + 1 art + 1 stickers product + 1 bundle-parent.
+ *       1 classified + 1 digital-code + 1 live + 1 art + 1 stickers product + 1 product-group
+ *       ("Set") parent (product-tester-standard-1/2 are its children, linked via groupId).
  *
  * EXPORTS:
  *   productsTesterSeedData — Array of Partial<ProductDocument> for the seed runner
@@ -69,6 +70,13 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     customSections: [],
     isPromoted: false,
     isOnSale: false,
+    // Child of the "group-tester-sandbox-bundle" product-group ("Set") parent
+    // below — findByGroupId() queries products by this field directly, so
+    // without it the parent's groupChildSlugs[] mirror is never actually
+    // resolvable and ShowGroupSection renders nothing (members.length <= 1).
+    groupId: "group-tester-sandbox-bundle",
+    groupParentSlug: "group-tester-sandbox-bundle",
+    groupTitle: "Tester Sandbox Bundle",
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
@@ -95,6 +103,9 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     customSections: [],
     isPromoted: false,
     isOnSale: false,
+    groupId: "group-tester-sandbox-bundle",
+    groupParentSlug: "group-tester-sandbox-bundle",
+    groupTitle: "Tester Sandbox Bundle",
     createdAt: new Date(),
     updatedAt: new Date(),
   }),
@@ -249,13 +260,14 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isPromoted: false,
     isOnSale: false,
     prizeDrawMode: "reveal" as const,
+    prizeRevealMode: "instant" as const,
     pricePerEntry: 50,
     prizeMaxEntries: 3,
     prizeCurrentEntries: 0,
+    prizeDrawDurationDays: 7,
     prizeRevealWindowStart: new Date(),
     prizeRevealWindowEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     prizeRevealStatus: "open" as const,
-    prizeRevealDeadlineDays: 7,
     prizeDrawItems: [
       { itemNumber: 1, title: "Test Prize — Grand", description: "Disposable test grand prize.", images: [seedExtMedia("https://picsum.photos/seed/prizedraw-item-1-20260101/600/600")], condition: "new", estimatedValue: 500, isWon: false },
       { itemNumber: 2, title: "Test Prize — Runner-up", description: "Disposable test runner-up prize.", images: [seedExtMedia("https://picsum.photos/seed/prizedraw-item-2-20260101/600/600")], condition: "new", estimatedValue: 150, isWon: false },
@@ -288,13 +300,14 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isPromoted: false,
     isOnSale: false,
     prizeDrawMode: "reveal" as const,
+    prizeRevealMode: "scheduled" as const,
     pricePerEntry: 50,
     prizeMaxEntries: 3,
     prizeCurrentEntries: 3,
+    prizeDrawDurationDays: 13,
     prizeRevealWindowStart: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
     prizeRevealWindowEnd: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     prizeRevealStatus: "closed" as const,
-    prizeRevealDeadlineDays: 7,
     prizeDrawItems: [
       { itemNumber: 1, title: "Test Prize — Grand", description: "Disposable test grand prize.", images: [seedExtMedia("https://picsum.photos/seed/prizedraw-item-closed-1-20260101/600/600")], condition: "new", estimatedValue: 500, isWon: true },
       { itemNumber: 2, title: "Test Prize — Runner-up", description: "Disposable test runner-up prize.", images: [seedExtMedia("https://picsum.photos/seed/prizedraw-item-closed-2-20260101/600/600")], condition: "new", estimatedValue: 150, isWon: true },
@@ -458,8 +471,12 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
   withTokens({
     id: "group-tester-sandbox-bundle",
     slug: "group-tester-sandbox-bundle",
-    title: "Test Bundle — Standard #1 + Standard #2",
-    description: "Disposable test bundle bundling the two tester-sandbox standard products. Auto-expires in 7 days.",
+    // Product-group ("Set") parent — Tier GP, unrelated to the Bundles
+    // feature (categoryType:"bundle") despite the legacy "bundle" id/slug.
+    // Kept stable rather than renamed since nothing outside this file's
+    // internal group wiring depends on the "bundle" name.
+    title: "Test Product Set — Standard #1 + Standard #2",
+    description: "Disposable test product-group parent linking the two tester-sandbox standard products as a \"Set\". Auto-expires in 7 days.",
     categorySlugs: GADGETS_CATEGORY_SLUGS,
     categoryNames: GADGETS_CATEGORY_NAMES,
     brandSlug: "brand-tester-sandbox",

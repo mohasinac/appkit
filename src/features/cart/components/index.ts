@@ -10,8 +10,6 @@ export type {
   CheckoutAddressStepProps,
   CheckoutAddressStepLabels,
 } from "./CheckoutAddressStep";
-export { CheckoutOtpModal } from "./CheckoutOtpModal";
-export type { CheckoutOtpModalProps } from "./CheckoutOtpModal";
 export { CheckoutSuccessView } from "./CheckoutSuccessView";
 export type { CheckoutSuccessViewProps } from "./CheckoutSuccessView";
 export { ShippingPicker } from "./ShippingPicker";

@@ -6,4 +6,3 @@
  */
 
 export { authMeGET } from "../../../../features/auth/api/route";
-export * from "../../../../features/auth/consent-otp";

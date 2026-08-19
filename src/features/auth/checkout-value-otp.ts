@@ -1,22 +1,29 @@
 /**
  * Checkout Value OTP — Tier PP.
  *
- * A distinct OTP purpose from `consent-otp.ts` (which gates third-party
- * shipping consent): this one gates placing a checkout ≥ the site's
- * `payment.otpCheckoutThreshold` (skipped for COD — see
- * `createCheckoutOrderAction`). Deliberately a SEPARATE Firestore namespace
- * (`checkoutValueOtps` vs `consentOtps`) rather than reusing the shipping-
- * consent one — different purpose, different copy, independently tunable
- * rate limits. Reuses `generateOtpCode()`/`hashOtp()` from `consent-otp.ts`
- * rather than duplicating the crypto.
+ * Gates placing a checkout ≥ the site's `payment.otpCheckoutThreshold`
+ * (skipped for COD — see `createCheckoutOrderAction`).
  */
 
+import { createHmac, randomInt } from "crypto";
 import { AuthorizationError } from "../../errors";
 import { resolveDate } from "../../utils";
 import { USER_COLLECTION } from "./schemas";
-import { generateOtpCode, hashOtp } from "./consent-otp";
 
-export { generateOtpCode, hashOtp };
+const HMAC_KEY =
+  process.env.CONSENT_OTP_HMAC_KEY ||
+  process.env.HMAC_SECRET ||
+  "consent-otp-secret";
+
+/** HMAC-SHA256 hash of an OTP code. */
+export function hashOtp(code: string): string {
+  return createHmac("sha256", HMAC_KEY).update(code).digest("hex");
+}
+
+/** Generate a cryptographically-secure random 6-digit OTP string. */
+export function generateOtpCode(): string {
+  return String(randomInt(100000, 1000000));
+}
 
 /** OTP validity window (10 minutes) — matches consent-OTP's window; independently tunable if policy diverges later. */
 export const CHECKOUT_VALUE_OTP_EXPIRY_MS = 10 * 60 * 1000;

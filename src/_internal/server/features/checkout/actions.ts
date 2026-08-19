@@ -1,5 +1,4 @@
 import { normalizeError } from "../../../../errors/normalize";
-import { safeFireAndForget } from "../../../../utils/safe-fire-forget";
 import { roundRupees } from "../../../../utils/number.formatter";
 /**
  * Checkout server actions (appkit).
@@ -26,13 +25,8 @@ import { calculateGst } from "../../../shared/fees/calculator";
 import { computePreOrderDepositAmount } from "../../../shared/checkout/order-math";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
-import type {
-  FailedCheckoutReason,
-  FailedPaymentReason,
-} from "../../../../features/checkout/schemas/firestore";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
 import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
-import { resolveDate } from "../../../../utils";
 import {
   computeCodHandlingFee,
   type CodHandlingFeeRates,
@@ -60,11 +54,6 @@ import {
   type StockBucketResult,
 } from "./bundle-expansion";
 import {
-  consentOtpRef,
-  consentOtpRateLimitRef,
-  CONSENT_OTP_MAX_BYPASS_CREDITS,
-} from "../../../../features/auth/server";
-import {
   OrderStatusValues,
   PaymentStatusValues,
   PaymentMethodValues,
@@ -81,10 +70,7 @@ import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type Check
 import { checkEmiEligibility, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
-import {
-  enforceMaxPerUserForCart,
-  computePrizeRevealDeadline,
-} from "./prize-bundle-gates";
+import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
 import type { ListingType } from "../../../../features/products/types/index";
 import {
   getListingRule,
@@ -318,7 +304,6 @@ function buildStockUpdatePayload(
 interface StockResult {
   available: { item: CartItemDocument; product: ProductDocument }[];
   unavailable: NonNullable<CheckoutOrderResult["unavailableItems"]>;
-  emailOtpUsed: boolean;
 }
 
 type CouponAccumEntry = { couponId: string; code: string; orderIds: string[]; totalDiscount: number };
@@ -355,28 +340,6 @@ async function flushCouponUsageAccumulator(
     void normalizeError(err);
     serverLogger.error("Failed to record coupon usage:", { err: err instanceof Error ? err.message : String(err) });
   }
-}
-
-function grantConsentOtpBypassCredit(
-  db: FirebaseFirestore.Firestore,
-  uid: string,
-  emailOtpUsed: boolean,
-  unavailableCount: number,
-): void {
-  if (!emailOtpUsed || unavailableCount === 0) return;
-  const metaRef = consentOtpRateLimitRef(db, uid);
-  metaRef
-    .get()
-    .then((snap: FirebaseFirestore.DocumentSnapshot) => {
-      const cur = snap.exists ? ((snap.data()?.bypassCredits as number) ?? 0) : 0;
-      return metaRef.set(
-        { bypassCredits: Math.min(cur + 1, CONSENT_OTP_MAX_BYPASS_CREDITS) },
-        { merge: true },
-      );
-    })
-    .catch((err: unknown) =>
-      serverLogger.warn("Failed to grant consent OTP bypass credit", { err }),
-    );
 }
 
 function dispatchOrderConfirmationEmails(
@@ -642,9 +605,6 @@ async function createOrderForGroup(
   const groupRule = getListingRule(lt0);
   const extraOrderFields = {
     ...groupRule.decorateOrderDoc(group[0].item, group[0].product),
-    ...(orderType === "prize-draw"
-      ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
-      : {}),
   };
 
   // ── 15-minute payment window + seller UPI resolution (Tier PP) ──────────
@@ -891,7 +851,6 @@ export async function createCheckoutOrderAction(
   }
 
   const db = getAdminDb();
-  const otpRef = isDigitalCart ? null : consentOtpRef(db, uid, addressId!);
 
   // SB6-C — pre-tx fetch products so we can run the maxPerUser cap check
   // (count queries can't run inside a Firestore transaction). The same
@@ -935,33 +894,6 @@ export async function createCheckoutOrderAction(
   let stockResult: StockResult;
   try {
     stockResult = await db.runTransaction(async (tx): Promise<StockResult> => {
-      let emailOtpUsed = false;
-      if (!isDigitalCart && otpRef) {
-        const otpSnap = await tx.get(otpRef as FirebaseFirestore.DocumentReference);
-        const otpData = otpSnap.exists
-          ? (otpSnap.data() as {
-              verified?: boolean;
-              expiresAt?: FirebaseFirestore.Timestamp;
-              verifiedVia?: string;
-            })
-          : null;
-        const isConsentValid =
-          otpData?.verified === true &&
-          otpData.expiresAt &&
-          (resolveDate(otpData.expiresAt)?.getTime() ?? 0) > Date.now();
-        if (!isConsentValid) {
-          const reason = !otpData ? "otp_not_verified" : "consent_expired";
-          throw Object.assign(
-            new ApiError(
-              403,
-              "Order verification required. Please complete OTP verification before placing this order.",
-            ),
-            { _failReason: reason },
-          );
-        }
-        emailOtpUsed = otpData.verifiedVia !== "sms" && otpData.verifiedVia !== "admin_bypass";
-      }
-
       // SB-UNI-5 2026-05-13 — bundle-aware stock fan-out. Build the unique
       // product-id set across the whole cart (regular items + each bundle's
       // members) and fetch each one ONCE. Validation walks per cart-line and
@@ -1014,7 +946,7 @@ export async function createCheckoutOrderAction(
         // S-SBUNI-RULES 2026-05-13 — sync preflight (prize-pool cap, pre-order
         // quota) via rule registry. Bundles skip — they bypass the cart path.
         if (!item.bundleProductIds?.length) {
-          runSyncPreflight([{ item, product }]);
+          runSyncPreflight([{ item, product }], paymentMethod);
         }
         availableItems.push({ item, product });
       }
@@ -1047,30 +979,21 @@ export async function createCheckoutOrderAction(
           },
           { merge: true },
         );
-        if (otpRef) {
-          tx.delete(otpRef as FirebaseFirestore.DocumentReference);
-        }
       }
 
-      return { available: availableItems, unavailable: unavailableItems, emailOtpUsed };
+      return { available: availableItems, unavailable: unavailableItems };
     });
   } catch (err: unknown) {
     void normalizeError(err);
-    const reason =
-      (err as { _failReason?: string })?._failReason === "consent_expired"
-        ? "consent_expired"
-        : (err as { _failReason?: string })?._failReason === "otp_not_verified"
-          ? "otp_not_verified"
-          : "unknown";
     failedCheckoutRepository
-      .logCheckout(uid, reason as FailedCheckoutReason, err instanceof Error ? err.message : String(err), {
+      .logCheckout(uid, "unknown", err instanceof Error ? err.message : String(err), {
         addressId,
         paymentMethod,
       })
       .catch((logErr: unknown) => { void normalizeError(logErr); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: logErr instanceof Error ? logErr.message : String(logErr) }); });
     throw err;
   }
-  const { available, unavailable, emailOtpUsed } = stockResult;
+  const { available, unavailable } = stockResult;
 
   if (available.length === 0) {
     failedCheckoutRepository
@@ -1137,7 +1060,6 @@ export async function createCheckoutOrderAction(
   }
 
   await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
-  grantConsentOtpBypassCredit(db, uid, emailOtpUsed, unavailable.length);
   dispatchOrderConfirmationEmails(emailsToSend);
 
   serverLogger.info(
@@ -1510,9 +1432,6 @@ async function createRazorpayGroupOrder(
   const groupRuleRzp = getListingRule(lt0Rzp);
   const extraOrderFields = {
     ...groupRuleRzp.decorateOrderDoc(group[0].item, group[0].product!),
-    ...(orderType === "prize-draw" && group[0].product
-      ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
-      : {}),
   };
 
   const order = await unitOfWork.orders.create({
@@ -1681,41 +1600,6 @@ export async function verifyAndPlaceRazorpayOrderAction(
     shippingAddress = formatShippingAddress(resolvedAddressRzp);
   }
 
-  const db = getAdminDb();
-  if (!isDigitalCartRazorpay && addressId) {
-    const otpRef = consentOtpRef(db, uid, addressId);
-    const otpSnap = await otpRef.get();
-    const otpData = otpSnap.exists
-      ? (otpSnap.data() as {
-          verified?: boolean;
-          expiresAt?: FirebaseFirestore.Timestamp;
-        })
-      : null;
-    const isConsentValid =
-      otpData?.verified === true &&
-      otpData.expiresAt &&
-      (resolveDate(otpData.expiresAt)?.getTime() ?? 0) > Date.now();
-    if (!isConsentValid) {
-      const reason = !otpData ? "otp_not_verified" : "consent_expired";
-      failedCheckoutRepository
-        .logPayment(
-          uid,
-          reason as FailedPaymentReason,
-          "Consent OTP missing or expired at payment verify time",
-          {
-            gatewayOrderId: razorpay_order_id,
-            gatewayPaymentId: razorpay_payment_id,
-            addressId,
-          },
-        )
-        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: err instanceof Error ? err.message : String(err) }); });
-      throw new ApiError(
-        403,
-        "Order verification required. Please complete OTP verification and retry.",
-      );
-    }
-  }
-
   // SB-UNI-5 2026-05-13 — bundle-aware product fetch + validation. Each
   // cart line gets paired with a "representative" product (first member id
   // for bundles, productId for regular items). The full bundle-member
@@ -1755,7 +1639,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
     (p): p is { item: CartItemDocument; product: ProductDocument } =>
       p.product !== null && p.product !== undefined && !p.item.bundleProductIds?.length,
   );
-  runSyncPreflight(preflightPairs);
+  // This whole action is the Razorpay path — paymentMethod is always "online".
+  runSyncPreflight(preflightPairs, "online");
 
   // SB-UNI-O 2026-05-15 — Live-item jurisdiction guard.
   if (!isDigitalCartRazorpay && resolvedAddressRzp) {
@@ -1923,10 +1808,6 @@ export async function verifyAndPlaceRazorpayOrderAction(
       selectedItemIds: null,
     } as never);
   });
-  if (!isDigitalCartRazorpay && addressId) {
-    const otpRefForDelete = consentOtpRef(db, uid, addressId);
-    safeFireAndForget(otpRefForDelete.delete(), "checkout: delete OTP consent ref after Razorpay payment");
-  }
 
   // outOfStockPolicy: "skip_items" — auto-refund the dropped items' value.
   // Razorpay already captured payment for the FULL cart before this stock

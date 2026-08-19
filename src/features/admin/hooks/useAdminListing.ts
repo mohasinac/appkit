@@ -17,6 +17,10 @@ export interface AdminListingConfig<TResponse, TRow extends { id: string }> {
   getTotal?: (response: TResponse, rows: TRow[]) => number;
   buildFilters: (filterState: Record<string, string>) => string | undefined;
   initialView?: "grid" | "list" | "table";
+  /** Values used for filterKeys absent from the URL — lets a view default to
+   * a non-"All" filter state (e.g. hide inactive rows) on first load, while
+   * "Clear filters" (which writes an explicit "") still shows everything. */
+  filterDefaults?: Record<string, string>;
 }
 
 export function useAdminListing<TResponse, TRow extends { id: string }>(
@@ -31,6 +35,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     mapRows,
     getTotal,
     buildFilters,
+    filterDefaults = {},
   } = config;
 
   // Persisted, viewport-aware view-mode: below 768px defaults to "list"
@@ -38,7 +43,9 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
   // explicitly pins hideTableView (grid-only views like coupons); the user's
   // own explicit choice, once made, always wins and persists across visits.
   const { view, setView } = useDataViewMode(config.initialView ?? "table");
-  const table = useUrlTable({ defaults: { pageSize: String(defaultPageSize), sort: defaultSort } });
+  const table = useUrlTable({
+    defaults: { pageSize: String(defaultPageSize), sort: defaultSort, ...filterDefaults },
+  });
   // Reactive — table.getNumber reads the URL param, so a page-size selector
   // (Pagination's pageSize/onPageSizeChange) actually takes effect instead
   // of always falling back to the static config default.

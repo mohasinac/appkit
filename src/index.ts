@@ -3448,6 +3448,9 @@ export { TesterHubView } from "./features/tester/index";
 export type { TesterHubViewProps } from "./features/tester/index";
 // AdminTesterFeedbackView - Component for the admin Tester Feedback report/issues/submissions page.
 export { AdminTesterFeedbackView } from "./features/tester/index";
+// BugHunterLeaderboardView - Public component ranking testers by confirmed-bug count.
+export { BugHunterLeaderboardView } from "./features/tester/index";
+export type { BugHunterLeaderboardViewProps } from "./features/tester/index";
 // AdminNavEditorView - SideDrawer form for nav item create/edit.
 export { AdminNavEditorView } from "./features/admin/index";
 export type { AdminNavEditorViewProps, NavItemData } from "./features/admin/index";
@@ -4219,38 +4222,11 @@ export type { PlaceBidResult } from "./features/auctions/server";
 
 // ./features/auth/server
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_COOLDOWN_MS - Constant used across modules.
-export { CONSENT_OTP_COOLDOWN_MS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_EXPIRY_MINUTES - Constant used across modules.
-export { CONSENT_OTP_EXPIRY_MINUTES } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_EXPIRY_MS - Constant used across modules.
-export { CONSENT_OTP_EXPIRY_MS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_MAX_ATTEMPTS - Constant used across modules.
-export { CONSENT_OTP_MAX_ATTEMPTS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_MAX_BYPASS_CREDITS - Constant used across modules.
-export { CONSENT_OTP_MAX_BYPASS_CREDITS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
-export { CONSENT_OTP_VERIFY_RATE_LIMIT } from "./features/auth/server";
+// CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
+export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-value-otp";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // authMeGET - Shared export for auth me get.
 export { authMeGET } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildConsentOtpEmail - Helper for build consent otp email.
-export { buildConsentOtpEmail } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildConsentOtpWhatsApp - Helper for build consent otp whatsapp message body.
-export { buildConsentOtpWhatsApp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// consentOtpRateLimitRef - Shared export for consent otp rate limit ref.
-export { consentOtpRateLimitRef } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// consentOtpRef - Shared export for consent otp ref.
-export { consentOtpRef } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createPasswordResetToken - Helper for create password reset token.
 export { createPasswordResetToken } from "./features/auth/server";
@@ -4260,12 +4236,6 @@ export { createVerificationToken } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteToken - Helper for delete token.
 export { deleteToken } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// enforceConsentOtpRateLimit - Shared export for enforce consent otp rate limit.
-export { enforceConsentOtpRateLimit } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// generateOtpCode - Helper for generate otp code.
-export { generateOtpCode } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // generateToken - Helper for generate token.
 export { generateToken } from "./features/auth/server";
@@ -4285,23 +4255,11 @@ export { getUserProfile } from "./features/auth/server";
 // getUserSessions - Helper for get user sessions.
 export { getUserSessions } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// hashOtp - Shared export for hash otp.
-export { hashOtp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // issueRealtimeToken - Shared export for issue realtime token.
 export { issueRealtimeToken } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markPasswordResetTokenAsUsed - Shared export for mark password reset token as used.
 export { markPasswordResetTokenAsUsed } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// patchConsentOtp - Shared export for patch consent otp.
-export { patchConsentOtp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// readConsentOtp - Shared export for read consent otp.
-export { readConsentOtp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// saveConsentOtp - Shared export for save consent otp.
-export { saveConsentOtp } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateUserProfile - Helper for update user profile.
 export { updateUserProfile } from "./features/auth/server";
@@ -4311,9 +4269,6 @@ export { verifyEmailToken } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyPasswordResetToken - Shared export for verify password reset token.
 export { verifyPasswordResetToken } from "./features/auth/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ConsentOtpDoc - Type contract for consent otp doc.
-export type { ConsentOtpDoc } from "./features/auth/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PasswordResetTokenData - Type contract for password reset token data.
 export type { PasswordResetTokenData } from "./features/auth/server";
@@ -5083,16 +5038,7 @@ export { FailedCheckoutRepository } from "./features/checkout/server";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // failedCheckoutRepository - Shared export for failed checkout repository.
 export { failedCheckoutRepository } from "./features/checkout/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// grantCheckoutConsentViaSms - Shared export for grant checkout consent via sms.
-export { grantCheckoutConsentViaSms } from "./features/checkout/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendCheckoutConsentOtp - Shared export for send checkout consent otp.
-export { sendCheckoutConsentOtp } from "./features/checkout/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyCheckoutConsentOtp - Shared export for verify checkout consent otp.
-export { verifyCheckoutConsentOtp } from "./features/checkout/server";
-// [SERVER-ONLY] Tier PP — high-value checkout OTP gate (distinct from the shipping-consent OTP above).
+// [SERVER-ONLY] Tier PP — high-value checkout OTP gate.
 export {
   sendCheckoutValueOtp,
   verifyCheckoutValueOtp,
@@ -5432,6 +5378,9 @@ export { EventBanner } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventCard - Component for event card.
 export { EventCard } from "./features/events/index";
+// RelatedEventsCarousel - Component for related events carousel (tag overlap).
+export { RelatedEventsCarousel } from "./features/events/index";
+export type { RelatedEventItem } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventDetailView - Component for event detail view.
 export { EventDetailView } from "./features/events/index";
@@ -5458,6 +5407,12 @@ export type { EventRaffleWinnerViewProps } from "./features/events/index";
 // SpinWheelView - Spin-the-wheel client component for spin-wheel events.
 export { SpinWheelView } from "./features/events/index";
 export type { SpinWheelViewProps } from "./features/events/index";
+// EventRaffleEntryForm - Raffle entry form (prize hero + eligibility + optional message).
+export { EventRaffleEntryForm } from "./features/events/index";
+export type { EventRaffleEntryFormProps } from "./features/events/index";
+// EventOfferCard - Coupon code display + copy-to-clipboard for offer events.
+export { EventOfferCard } from "./features/events/index";
+export type { EventOfferCardProps } from "./features/events/index";
 // Lottery feature — client components
 export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
 export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
@@ -5675,11 +5630,17 @@ export { eventsGET } from "./features/events/server";
 // getEventLeaderboard - Helper for get event leaderboard.
 export { getEventLeaderboard } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getBugHunterLeaderboard - Ranks testers by confirmed-bug count.
+export { getBugHunterLeaderboard } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPublicEventById - Helper for get public event by id.
 export { getPublicEventById } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPublicEvents - Helper for list public events.
 export { listPublicEvents } from "./features/events/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getRelatedEvents - Helper for get related events (tag overlap).
+export { getRelatedEvents } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateEvent - Helper for update event.
 export { updateEvent } from "./features/events/server";
@@ -5741,6 +5702,8 @@ export type { TesterChecklistResponseDocument } from "./features/tester/index";
 export type { TesterAnswer } from "./features/tester/index";
 // TesterFeedbackStatus - Type contract for tester feedback status.
 export type { TesterFeedbackStatus } from "./features/tester/index";
+// BugHunterLeaderboardEntry - Type contract for a ranked bug-hunter leaderboard row.
+export type { BugHunterLeaderboardEntry } from "./features/tester/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // FAQS_PUBLIC_FIELDS - Constant used across modules.
 export { FAQS_PUBLIC_FIELDS } from "./features/faq/index";
@@ -7314,7 +7277,12 @@ export { PrizeDrawEntryActions } from "./features/products/index";
 export type { PrizeDrawEntryActionsProps } from "./features/products/index";
 // [CLIENT]-Theatrical reveal-mode prize-draw modal (SB4-I) — call POST /api/prize-draws/[id]/reveal and animate to the winning slot.
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
-export type { PrizeRevealModalProps, PrizeRevealResponse } from "./features/products/components/PrizeRevealModal";
+export type { PrizeRevealModalProps, PrizeRevealResult } from "./features/products/components/PrizeRevealModal";
+export { PrizeDrawWinnerMappingView } from "./features/products/components/PrizeDrawWinnerMappingView";
+export type {
+  PrizeDrawWinnerMappingViewProps,
+  PrizeDrawWinnerMappingRow,
+} from "./features/products/components/PrizeDrawWinnerMappingView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ProductCard - Component for product card.
 export { ProductCard } from "./features/products/index";
@@ -9255,7 +9223,7 @@ export type {
 // Missing cart and checkout feature components
 export { CartItemRow, CartDrawer, CartView, CartSummary, ShippingPicker } from "./features/cart/index";
 export type { ShippingPickerProps } from "./features/cart/index";
-export { CheckoutView, CheckoutAddressStep, CheckoutOtpModal, CheckoutSuccessView } from "./features/cart/index";
+export { CheckoutView, CheckoutAddressStep, CheckoutSuccessView } from "./features/cart/index";
 export { CheckoutStepper, useCheckout } from "./features/checkout/index";
 // PaymentGateway already exported from checkout types above
 

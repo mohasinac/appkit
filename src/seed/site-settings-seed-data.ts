@@ -101,8 +101,11 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     type: "text",
     text: "letitrip.in",
     imageUrl: "",
-    size: 30,
-    opacity: 20,
+    size: 10,
+    opacity: 10,
+    position: "center",
+    offsetX: 0,
+    offsetY: 0,
   },
   logo: {
     url: "",

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ROUTES } from "../../../next";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
 import type { ProductItem } from "../types";
@@ -30,7 +30,7 @@ export function RelatedProductsCarousel({
       renderItem={(item: ProductItem) => (
         <ProductCard
           product={item}
-          href={item.slug || item.id ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(item.slug || item.id)) : undefined}
+          href={item.slug || item.id ? pluginFor(item.listingType ?? "standard").detailRoute(item.slug || item.id) : undefined}
         />
       )}
     />

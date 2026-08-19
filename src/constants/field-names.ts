@@ -77,7 +77,11 @@ export const PRODUCT_FIELDS = {
   PRIZE_REVEAL_STATUS: "prizeRevealStatus",
   PRIZE_REVEAL_WINDOW_START: "prizeRevealWindowStart",
   PRIZE_REVEAL_WINDOW_END: "prizeRevealWindowEnd",
-  PRIZE_REVEAL_DEADLINE: "prizeRevealDeadline",
+  PRIZE_DRAW_DURATION_DAYS: "prizeDrawDurationDays",
+  PRIZE_REVEAL_MODE: "prizeRevealMode",
+  PRIZE_CURRENT_ENTRIES: "prizeCurrentEntries",
+  PRIZE_MAX_ENTRIES: "prizeMaxEntries",
+  PRIZE_DRAW_MODE: "prizeDrawMode",
   IS_PART_OF_BUNDLE: "isPartOfBundle",
   SEARCH_TOKENS: "searchTokens",
   CREATED_AT: "createdAt",
@@ -123,6 +127,16 @@ export const PRODUCT_FIELDS = {
     PENDING: "pending",
     OPEN: "open",
     CLOSED: "closed",
+  },
+
+  PRIZE_REVEAL_MODE_VALUES: {
+    INSTANT: "instant",
+    SCHEDULED: "scheduled",
+  },
+
+  PRIZE_DRAW_MODE_VALUES: {
+    REVEAL: "reveal",
+    LOTTERY: "lottery",
   },
 
   IS_ACTIVE: "isActive",
@@ -197,6 +211,9 @@ export const ORDER_FIELDS = {
   PAYMENT_PROOF_URL: "paymentProofUrl",
   PAYMENT_PROOF_UPLOADED_AT: "paymentProofUploadedAt",
   PAYMENT_REVIEW_OUTCOME: "paymentReviewOutcome",
+  PRIZE_WON: "prizeWon",
+  PRIZE_DRAW_PRODUCT_ID: "prizeDrawProductId",
+  PRIZE_REVEAL_MODE: "prizeRevealMode",
 
   STATUS_VALUES: {
     PENDING: "pending",
@@ -508,6 +525,7 @@ export const CATEGORY_FIELDS = {
   BUNDLE_ITEM_DETAILS: "bundleItemDetails",
   BUNDLE_STOCK_STATUS: "bundleStockStatus",
   BUNDLE_QUERY_RESOLVED_AT: "bundleQueryResolvedAt",
+  BUNDLE_ORIGINAL_TOTAL: "bundleOriginalTotal",
   DISPLAY: "display",
   VIEW_COUNT: "viewCount",
   CREATED_AT: "createdAt",

@@ -15,6 +15,23 @@ const APP_ID = () =>
 const CART_OPS_KEY = () => `${APP_ID()}_cart_ops`;
 const WL_OPS_KEY = () => `${APP_ID()}_wl_ops`;
 
+/** Fired whenever the pending cart/wishlist op queue changes, so a badge
+ *  reading server-authoritative counts (authenticated users) can layer the
+ *  not-yet-synced local delta on top instead of waiting for the next
+ *  useSyncManager interval (up to 30s) to reflect a just-added item. */
+export const CART_OPS_CHANGE_EVENT = "appkit/cart/ops-changed";
+export const WISHLIST_OPS_CHANGE_EVENT = "appkit/wishlist/ops-changed";
+
+function dispatchCartOpsChange(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(CART_OPS_CHANGE_EVENT));
+}
+
+function dispatchWishlistOpsChange(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(WISHLIST_OPS_CHANGE_EVENT));
+}
+
 export type CartOpKind = "add" | "remove";
 export type WishlistOpKind = "add" | "remove";
 
@@ -71,6 +88,16 @@ function write<T>(key: string, items: T[]): void {
   }
 }
 
+function writeCartOps(items: CartOp[]): void {
+  write(CART_OPS_KEY(), items);
+  dispatchCartOpsChange();
+}
+
+function writeWishlistOps(items: WishlistOp[]): void {
+  write(WL_OPS_KEY(), items);
+  dispatchWishlistOpsChange();
+}
+
 // ---------------------------------------------------------------------------
 // Cart ops
 // ---------------------------------------------------------------------------
@@ -86,7 +113,7 @@ export function pushCartOp(op: Omit<CartOp, "ts">): void {
     const withoutProduct = ops.filter((o) => o.productId !== op.productId);
     if (withoutProduct.length < ops.length) {
       // There was a pending add — cancelling
-      write(CART_OPS_KEY(), withoutProduct);
+      writeCartOps(withoutProduct);
       return;
     }
   }
@@ -101,16 +128,29 @@ export function pushCartOp(op: Omit<CartOp, "ts">): void {
           ? { ...o, quantity: Math.min((o.quantity ?? 1) + (op.quantity ?? 1), 99) }
           : o,
       );
-      write(CART_OPS_KEY(), merged);
+      writeCartOps(merged);
       return;
     }
   }
-  write(CART_OPS_KEY(), [...ops, { ...op, ts: Date.now() }]);
+  writeCartOps([...ops, { ...op, ts: Date.now() }]);
 }
 
 export function clearCartOps(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(CART_OPS_KEY());
+  dispatchCartOpsChange();
+}
+
+/** Net quantity of unsynced "add" ops — layered on top of the server's
+ *  authoritative itemCount so the header badge updates immediately instead
+ *  of waiting for the next useSyncManager interval. Cart never queues
+ *  "remove" ops (removal from an authenticated cart is always a synchronous
+ *  API call), so summing "add" quantities is exact, not an approximation. */
+export function getCartOpsDelta(): number {
+  return getCartOps().reduce(
+    (sum, op) => (op.op === "add" ? sum + (op.quantity ?? 1) : sum),
+    0,
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -128,7 +168,7 @@ export function pushWishlistOp(op: Omit<WishlistOp, "ts">): void {
   if (op.op === "remove") {
     const withoutItem = ops.filter((o) => key(o) !== key(op));
     if (withoutItem.length < ops.length) {
-      write(WL_OPS_KEY(), withoutItem);
+      writeWishlistOps(withoutItem);
       return;
     }
   }
@@ -136,10 +176,22 @@ export function pushWishlistOp(op: Omit<WishlistOp, "ts">): void {
   if (op.op === "add" && ops.some((o) => o.op === "add" && key(o) === key(op))) {
     return;
   }
-  write(WL_OPS_KEY(), [...ops, { ...op, ts: Date.now() }]);
+  writeWishlistOps([...ops, { ...op, ts: Date.now() }]);
+}
+
+/** Net count of unsynced wishlist ops — add/remove pairs for the same item
+ *  are already collapsed by `pushWishlistOp`, so this is exact: +1 per
+ *  queued "add", -1 per queued "remove" (an item already on the server
+ *  being removed before the next sync). */
+export function getWishlistOpsDelta(): number {
+  return getWishlistOps().reduce(
+    (sum, op) => sum + (op.op === "add" ? 1 : -1),
+    0,
+  );
 }
 
 export function clearWishlistOps(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(WL_OPS_KEY());
+  dispatchWishlistOpsChange();
 }

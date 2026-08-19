@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
-import { LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EVENT_FIELDS } from "../schemas";
@@ -66,7 +65,7 @@ export function EventCard({
   return (
     <Article border="default"
       rounded="xl" shadow="hover-md"
-      className={`group relative h-full ${LAYOUT.cardHeight.event} overflow-hidden bg-[var(--appkit-color-surface)] ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
+      className={`group relative flex h-full flex-col overflow-hidden bg-[var(--appkit-color-surface)] ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -84,10 +83,10 @@ export function EventCard({
         />
       )}
       <Link href={detailHref} className="block flex-shrink-0">
-        {event.coverImageUrl ? (
+        {event.coverImageUrl || event.coverImage?.url ? (
           <Div className={`relative aspect-video ${__O.hidden}`}>
             <MediaImage
-              src={event.coverImageUrl}
+              src={event.coverImageUrl || event.coverImage?.url || ""}
               alt={safeTitle}
               size="card"
               className="transition-transform duration-300 group-hover:scale-105"

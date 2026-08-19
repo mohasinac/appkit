@@ -16,12 +16,6 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
         ...(item.prizeRevealStatus
           ? { prizeRevealStatus: item.prizeRevealStatus }
           : {}),
-        ...(item.prizeRevealDeadline
-          ? { prizeRevealDeadline: item.prizeRevealDeadline }
-          : {}),
-        ...(item.revealedItemNumber != null
-          ? { revealedItemNumber: item.revealedItemNumber }
-          : {}),
         ...(item.cancelledQuantity != null
           ? { cancelledQuantity: item.cancelledQuantity }
           : {}),
@@ -89,15 +83,7 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
           },
         }
       : {}),
-    ...(doc.prizeRevealDeadline
-      ? {
-          prizeRevealDeadline:
-            doc.prizeRevealDeadline instanceof Date
-              ? doc.prizeRevealDeadline.toISOString()
-              : String(doc.prizeRevealDeadline),
-        }
-      : {}),
-    ...(doc.prizeRevealExpired !== undefined ? { prizeRevealExpired: doc.prizeRevealExpired } : {}),
     ...(doc.prizeDrawProductId ? { prizeDrawProductId: doc.prizeDrawProductId } : {}),
+    ...(doc.prizeRevealMode ? { prizeRevealMode: doc.prizeRevealMode } : {}),
   };
 }

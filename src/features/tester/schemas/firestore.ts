@@ -32,6 +32,19 @@ export interface TesterChecklistItemDocument extends BaseDocument {
   // true = only shown to isTester && canTestAdmin testers (or real admins) —
   // gates cases that exercise /admin/** areas.
   adminOnly?: boolean;
+  // --- Bug hunter rewards (confirm-bug + reopen-for-retest flow) ---
+  // Set once by confirmBug() and never touched again by reopenAsNewVersion() —
+  // credit is permanent regardless of how many times the case is later reopened.
+  bugConfirmed?: boolean;
+  bugHunterId?: string;
+  bugHunterName?: string;
+  bugConfirmedAt?: Date;
+  // Retest lifecycle: reopenAsNewVersion() creates a new item with version+1 and
+  // previousVersionId pointing back here; this (old, disabled) item then gets
+  // supersededByItemId pointing forward to the new one.
+  version?: number;
+  previousVersionId?: string;
+  supersededByItemId?: string;
 }
 
 export const TESTER_CHECKLIST_ITEM_COLLECTION = "testerChecklistItems" as const;
@@ -74,6 +87,13 @@ export type TesterChecklistItemUpdateInput = Partial<
     | "phase"
     | "isActive"
     | "adminOnly"
+    | "bugConfirmed"
+    | "bugHunterId"
+    | "bugHunterName"
+    | "bugConfirmedAt"
+    | "version"
+    | "previousVersionId"
+    | "supersededByItemId"
   >
 >;
 
@@ -81,7 +101,15 @@ export const testerChecklistItemQueryHelpers = {
   byGroup: (groupKey: string) => ["groupKey", "==", groupKey] as const,
   byPage: (pageKey: string) => ["pageKey", "==", pageKey] as const,
   active: () => ["isActive", "==", true] as const,
+  confirmedBugs: () => ["bugConfirmed", "==", true] as const,
 } as const;
+
+export interface BugHunterLeaderboardEntry {
+  rank: number;
+  hunterId: string;
+  hunterName: string;
+  bugCount: number;
+}
 
 export function slugifyChecklistLabel(label: string): string {
   return label
@@ -161,6 +189,13 @@ export const TESTER_CHECKLIST_ITEM_FIELDS = {
   IS_ACTIVE: "isActive",
   SEARCH_TOKENS: "searchTokens",
   ADMIN_ONLY: "adminOnly",
+  BUG_CONFIRMED: "bugConfirmed",
+  BUG_HUNTER_ID: "bugHunterId",
+  BUG_HUNTER_NAME: "bugHunterName",
+  BUG_CONFIRMED_AT: "bugConfirmedAt",
+  VERSION: "version",
+  PREVIOUS_VERSION_ID: "previousVersionId",
+  SUPERSEDED_BY_ITEM_ID: "supersededByItemId",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 } as const;

@@ -27,6 +27,10 @@ import type {
   ProductCreateInput,
   ProductDocument,
 } from "../../products";
+import {
+  assertPrizeDrawNotLocked,
+  assertPrizeDrawWonItemsImmutable,
+} from "../../../_internal/server/features/products/service";
 
 const ERR_UID_REQUIRED = "uid is required";
 
@@ -241,6 +245,10 @@ export async function adminUpdateProduct(
   if (!existing) {
     throw new NotFoundError("Product not found");
   }
+  if (input.status && input.status !== "published" && existing.status === "published") {
+    assertPrizeDrawNotLocked(existing, "unpublished or archived");
+  }
+  assertPrizeDrawWonItemsImmutable(existing, input.prizeDrawItems);
 
   const finalized = { ...input } as typeof input & {
     mainImage?: string;
@@ -302,6 +310,7 @@ export async function adminDeleteProduct(
   if (!existing) {
     throw new NotFoundError("Product not found");
   }
+  assertPrizeDrawNotLocked(existing, "deleted");
 
   await productRepository.delete(id);
 

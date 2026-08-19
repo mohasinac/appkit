@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { apiClient } from "../../../http";
@@ -11,6 +11,10 @@ import {
 } from "../utils/guest-wishlist";
 import { WISHLIST_MAX } from "../../../constants/limits";
 import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
+import {
+  WISHLIST_OPS_CHANGE_EVENT,
+  getWishlistOpsDelta,
+} from "../../cart/utils/pending-ops";
 import type { WishlistResponse } from "../types";
 
 /** Custom event fired when the server reports the wishlist is full during a merge. */
@@ -53,6 +57,19 @@ export function useWishlistCount(userId: string | null | undefined) {
     staleTime: 30_000,
   });
   const serverTotal = wishlistData?.total ?? wishlistData?.items?.length ?? 0;
+
+  // Listing-page heart toggles write local-first (see useSyncManager) and
+  // queue an unsynced op that only reaches the server on the next ~30s
+  // background sync. Layer that pending delta on top of the server count so
+  // the badge updates the instant the toggle fires instead of lagging behind.
+  const [pendingDelta, setPendingDelta] = useState(0);
+  useEffect(() => {
+    if (!userId) return;
+    const recompute = () => setPendingDelta(getWishlistOpsDelta());
+    recompute();
+    window.addEventListener(WISHLIST_OPS_CHANGE_EVENT, recompute);
+    return () => window.removeEventListener(WISHLIST_OPS_CHANGE_EVENT, recompute);
+  }, [userId]);
 
   // Merge on login: push guest items → server once, then clear local store.
   useEffect(() => {
@@ -104,7 +121,7 @@ export function useWishlistCount(userId: string | null | undefined) {
     }
   }, [pathname, userId, queryClient]);
 
-  if (userId) return serverTotal ?? 0;
+  if (userId) return Math.max(0, (serverTotal ?? 0) + pendingDelta);
   return guestCount;
 }
 

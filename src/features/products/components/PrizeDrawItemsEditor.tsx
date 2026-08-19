@@ -8,7 +8,7 @@
  * estimatedValue, 1–2 images per item, optional video, and a locked-overlay
  * for items already won during a previous reveal.
  *
- * Min 3 items, max 16 (mirrors PrizeDrawItem schema constraints).
+ * Min 2 items, max 16 (mirrors PrizeDrawItem schema constraints).
  */
 
 import { useCallback } from "react";
@@ -19,7 +19,7 @@ const CLS_WON_BADGE = "rounded bg-error-surface px-[var(--appkit-space-3)] py-[v
 import { ImageUpload } from "../../media";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
-const MIN_ITEMS = 3;
+const MIN_ITEMS = 2;
 const MAX_ITEMS = 16;
 const MAX_IMAGES_PER_ITEM = 2;
 

@@ -19,7 +19,7 @@ import {
   HISTORY_MAX,
 } from "../../../constants/limits";
 
-export type HistoryProductType = "product" | "auction" | "preorder";
+export type HistoryProductType = "product" | "auction" | "preorder" | "prize-draw";
 
 export interface HistoryItemSnapshot {
   title?: string;

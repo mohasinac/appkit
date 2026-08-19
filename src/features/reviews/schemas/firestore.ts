@@ -5,6 +5,7 @@
 import { generateReviewId } from "../../../utils/id-generators";
 import type { ReviewStatus } from "../types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { ListingType } from "../../products/types/index";
 
 /** Runtime-accessible review status values — use instead of bare string literals. */
 export const ReviewStatusValues = {
@@ -24,6 +25,8 @@ export interface ReviewVideoField {
 export interface ReviewDocument extends BaseDocument {
   productId: string;
   productTitle: string;
+  /** Denormalized from the product at review-creation time — drives the correct detail-page link (e.g. prize-draw items link to /prize-draws/[slug], not /products/[slug]). */
+  listingType?: ListingType;
   storeId?: string;
   storeName?: string;
   userId: string;

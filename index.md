@@ -66,7 +66,7 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `IconButton` | `IconButton.tsx` | Icon-only button with accessible label |
 | `Iframe` | `Iframe.tsx` | Typed `<iframe>` with `src`/`title`/`aspect`/`sandbox` — replaces raw `<iframe />` |
 | `ImageGallery` | `ImageGallery.tsx` | Thumbnail strip + main image viewer |
-| `ImageLightbox` | `ImageLightbox.tsx` | Full-screen image zoom overlay |
+| `ImageLightbox` | `ImageLightbox.tsx` | Full-screen image/video zoom overlay — `LightboxImage.kind: "image"\|"video"` |
 | `Kbd` | `Kbd.tsx` | `<kbd>` primitive with `size`/`tone` — replaces raw `<kbd>` |
 | `Input` | `Input.tsx` | Text/number/email/password input |
 | `ItemRow` | `ItemRow.tsx` | Single row item with label/value/action |
@@ -372,7 +372,7 @@ Import: `import { useX } from "@mohasinac/appkit/client"`
 | `useAuctions` | `features/auctions/hooks/useAuctions.ts` | Auctions listing data |
 | `useProducts` | `features/products/hooks/useProducts.ts` | Products listing data |
 | `useProductDetail` | `features/products/hooks/useProductDetail.ts` | Single product data |
-| `useRelatedProducts` | `features/products/hooks/useRelatedProducts.ts` | Related products for a product |
+| `useRelatedProducts` | `features/products/hooks/useRelatedProducts.ts` | **Dead code (verified 2026-08-19)** — zero callers anywhere in the codebase; also filters on the deprecated `category` field. `ProductDetailPageView.tsx` fetches related listings server-side instead (4 signals: category/brand/tags/store) — don't build on this hook |
 | `useBrands` | `features/products/hooks/useBrands.ts` | Brands list |
 | `usePreOrders` | `features/pre-orders/hooks/usePreOrders.ts` | Pre-orders listing data |
 | `useCategories` | `features/categories/hooks/useCategories.ts` | Categories list |
@@ -430,7 +430,7 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `userRepository` | singleton | `users` | Auth + profile reads/writes. Tier PP (2026-08-18): `getExpiredHardBans()` (`isDisabled==true AND hardBanExpiresAt<=now`, powers `hardBanReinstatement`) |
 | `sessionRepository` | singleton | `sessions` | User session management |
 | `addressRepository` | singleton | `addresses` | User shipping addresses |
-| `productRepository` | singleton | `products` | Standard + auction + pre-order products |
+| `productRepository` | singleton | `products` | Standard + auction + pre-order products. `findByTagsOverlap(tags, limit)` (2026-08-19) — `array-contains-any` on `tags`, published-only; powers the product detail page's "You might also like" related section |
 | `orderRepository` | singleton | `orders` | Orders. Tier PP (2026-08-18): `getExpiredPaymentDeadlines()` (15-min payment window sweep) + `getUnreviewedProofPastDeadline(hours)` (2h auto-approve sweep) |
 | `reviewRepository` | singleton | `reviews` | Product/store reviews |
 | `bidRepository` | singleton | `bids` | Auction bids |
@@ -445,13 +445,14 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `categoriesRepository` | singleton | `categories` | Product categories |
 | `couponsRepository` | singleton | `coupons` | Discount coupons |
 | `faqsRepository` | singleton | `faqs` | FAQs |
-| `blogRepository` | singleton | `blogPosts` | Blog posts |
+| `blogRepository` | singleton | `blogPosts` | Blog posts. `findByTagsOverlap(tags, excludeId, limit)` + `findByAuthor(authorId, excludeId, limit)` (2026-08-19) — power the blog post detail page's "You might also like" / "More from [author]" related sections alongside the pre-existing `findRelated()` (same category) |
 | `payoutRepository` | singleton | `payouts` | Seller payouts |
 | `offerRepository` | singleton | `offers` | Buyer offers |
 | `wishlistRepository` | singleton | `wishlists` | User wishlists |
-| `eventRepository` | singleton | `events` | Events |
+| `eventRepository` | singleton | `events` | Events. `findByTagsOverlap(tags, limit)` (2026-08-19) — `array-contains-any` on `tags`, active-status-only; powers `getRelatedEvents()` / `<RelatedEventsCarousel>` on the event detail Overview tab |
 | `eventEntryRepository` | singleton | `eventEntries` | Event registrations |
 | `newsletterRepository` | singleton | `newsletter` | Newsletter subscribers |
+| `scammerRepository` | singleton | `scammerProfiles` | Scam registry. `findManyById(ids)` — explicit `relatedScammerIds` cross-links ("Related Profiles", same person/different alias). `findBySameType(scamType, excludeId, limit)` (2026-08-19) — other verified profiles sharing scamType ("Similar Scam Reports", pattern-only, never implies same identity) |
 | `brandsRepository` | singleton | `brands` | Product brands |
 | `productTemplateRepository` | singleton | `product_templates` | Seller product templates (create, edit, delete, list by store) |
 | `productFeaturesRepository` | singleton | `productFeatures` | Reusable feature badges (FI1). `listPlatform()` / `listForStore(storeId)` / 20-per-store + delete-when-referenced guards. All thrown errors use `ERROR_MESSAGES.PRODUCT_FEATURES.*`. |

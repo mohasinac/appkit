@@ -17,6 +17,15 @@ export interface LightboxImage {
   sub?: string;
   /** Badge rendered top-left on the enlarged image (e.g. "#1"). */
   badge?: string;
+  /**
+   * `"video"` renders a native `<video controls>` element instead of
+   * `<MediaImage>` — `src` is used as-is (raw, unwrapped external URL; the
+   * ext-proxy is image-only, see Root Cause #27), never passed through
+   * `resolveMediaUrl()`. Defaults to `"image"`.
+   */
+  kind?: "image" | "video";
+  /** `kind === "video"` only: poster frame shown before playback (already-resolved URL). */
+  poster?: string;
 }
 
 export interface ImageLightboxProps {
@@ -197,22 +206,37 @@ export function ImageLightbox({
         </Button>
       )}
 
-      {/* Image */}
+      {/* Image / video */}
       <div
         className="appkit-lightbox__image-wrap"
         style={{ cursor: zoom > 100 ? "grab" : "default" }}
       >
-        <MediaImage
-          src={image.src}
-          alt={image.alt ?? ""}
-          size="hero"
-          objectFit="contain"
-          className="appkit-lightbox__img"
-          style={{
-            transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
-            transition: "transform 0.2s ease",
-          }}
-        />
+        {image.kind === "video" ? (
+          <video
+            src={image.src}
+            poster={image.poster}
+            controls
+            playsInline
+            aria-label={image.alt ?? "Video"}
+            className="appkit-lightbox__img"
+            style={{
+              transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
+              transition: "transform 0.2s ease",
+            }}
+          />
+        ) : (
+          <MediaImage
+            src={image.src}
+            alt={image.alt ?? ""}
+            size="hero"
+            objectFit="contain"
+            className="appkit-lightbox__img"
+            style={{
+              transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
+              transition: "transform 0.2s ease",
+            }}
+          />
+        )}
         {image.badge && (
           <Div className="absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white pointer-events-none">
             {image.badge}
@@ -261,7 +285,11 @@ export function ImageLightbox({
               ].join(" ")}
               aria-label={`Go to image ${i + 1}`}
             >
-              <MediaImage src={thumb.src} alt={thumb.alt ?? `Image ${i + 1}`} size="thumbnail" />
+              <MediaImage
+                src={thumb.kind === "video" ? thumb.poster : thumb.src}
+                alt={thumb.alt ?? `Image ${i + 1}`}
+                size="thumbnail"
+              />
             </button>
           ))}
         </div>

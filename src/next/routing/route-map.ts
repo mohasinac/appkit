@@ -17,6 +17,7 @@ export const DEFAULT_ROUTE_MAP = {
   PUBLIC: {
     FAQS: "/faqs",
     FAQ_CATEGORY: (category: string) => `/faqs/${category}`,
+    BUG_HUNTERS: "/bug-hunters",
     PROFILE: (userId: string) => `/profile/${userId}`,
     PRODUCTS: "/products",
     PRODUCT_DETAIL: (slugOrId: string) => `/products/${slugOrId}`,

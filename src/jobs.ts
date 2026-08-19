@@ -50,11 +50,10 @@ export {
   storeAnalyticsHandler,
   listingProcessorHandler,
   supportedListingCollections,
-  // SB1-L (S7-PrizeDraws)
-  prizeRevealOpenHandler,
-  prizeRevealCloseHandler,
-  prizeRevealExpiryHandler,
-  prizeRevealReminderHandler,
+  // SB1-L (S7-PrizeDraws) — prize-draw reveal redesigned to a fully-automatic model.
+  onPrizeDrawPaymentConfirmedHandler,
+  prizeDrawSoldOutRevealHandler,
+  prizeDrawExpiryRevealHandler,
   bundleStockSyncHandler,
   // SB-UNI-V — Firestore onWrite trigger for product stock changes.
   onProductStockChangeHandler,

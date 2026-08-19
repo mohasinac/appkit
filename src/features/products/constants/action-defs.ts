@@ -70,7 +70,6 @@ export const ACTION_ID = {
   // ── Checkout / navigation CTAs ───────────────────────────────────────────
   CHECKOUT:             "checkout",
   CONTINUE_TO_VERIFY:   "continue-to-verification",
-  SEND_OTP:             "send-otp",
   VERIFY_OTP:           "verify-otp",
   PAY_ONLINE:           "pay-online",
   PAY_COD:              "pay-cod",
@@ -149,7 +148,6 @@ export const ACTION_META: Record<ActionId, ActionMeta> = {
   // ── Checkout / navigation CTAs ────────────────────────────────────────────
   [ACTION_ID.CHECKOUT]:             { id: ACTION_ID.CHECKOUT,             label: regLabel("CART",        "checkout",                "Checkout"),             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
   [ACTION_ID.CONTINUE_TO_VERIFY]:   { id: ACTION_ID.CONTINUE_TO_VERIFY,   label: regLabel("CHECKOUT",    "continue-to-verification","Continue"),             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.SEND_OTP]:             { id: ACTION_ID.SEND_OTP,             label: regLabel("CHECKOUT",    "send-otp",                "Send Code"),            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
   [ACTION_ID.VERIFY_OTP]:           { id: ACTION_ID.VERIFY_OTP,           label: regLabel("CHECKOUT",    "verify-otp",              "Verify & Continue"),    variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
   [ACTION_ID.PAY_ONLINE]:           { id: ACTION_ID.PAY_ONLINE,           label: regLabel("CHECKOUT",    "pay-online",              "Pay Online"),           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
   [ACTION_ID.PAY_COD]:              { id: ACTION_ID.PAY_COD,              label: regLabel("CHECKOUT",    "pay-cod",                 "Cash on Delivery"),     variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },

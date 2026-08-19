@@ -15,5 +15,4 @@ export const classifiedRule: ListingCheckoutRule = {
   cartEligible: false,
   cartIneligibleHint: 'Use "Contact Seller" to arrange a meetup.',
   requiresShippingAddress: false,
-  requiresConsentOtp: false,
 };

@@ -396,7 +396,7 @@ function SidebarContent({
   };
 
   const navItemClass =
-    "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
+    "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] dark:hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
 
   const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
     ? (sidebarSections as AppLayoutShellSidebarSection[])

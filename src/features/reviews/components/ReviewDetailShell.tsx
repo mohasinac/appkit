@@ -26,6 +26,7 @@ import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { apiClient } from "../../../http";
 import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { Review } from "../types";
@@ -99,7 +100,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
   // ── Links ───────────────────────────────────────────────────────────────────
   const productHref = review.productId
-    ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
+    ? pluginFor(review.listingType ?? "standard").detailRoute(review.productId)
     : null;
   const sellerHref = storeHref ?? null;
   const reviewerProfileId = review.userSlug ?? review.userId;

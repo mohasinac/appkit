@@ -18,6 +18,8 @@ export interface BlogPost {
   coverImage?: MediaFieldInput;
   contentImages?: MediaField[];
   additionalImages?: MediaField[];
+  /** YouTube video ID (11 chars, e.g. "dQw4w9WgXcQ") embedded above the article content. */
+  youtubeId?: string;
   category: BlogPostCategory;
   tags?: string[];
   isFeatured?: boolean;

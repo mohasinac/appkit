@@ -27,6 +27,8 @@ import {
   onShipmentDeletedHandler,
   onCatalogueSubmittedForApprovalHandler,
   onJobCreatedHandler,
+  onPrizeDrawPaymentConfirmedHandler,
+  prizeDrawSoldOutRevealHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -69,6 +71,22 @@ export const onProductStockChange = defineFunction({
   description: "Recompute bundleStockStatus + groupedListing activeMemberCount when stock changes.",
   trigger: { kind: "documentWritten", pathPattern: "products/{productId}" },
   handler: onProductStockChangeHandler,
+  options: { region: REGION },
+});
+
+export const onPrizeDrawPaymentConfirmed = defineFunction({
+  name: "onPrizeDrawPaymentConfirmed",
+  description: "Instant-mode prize-draw winner assignment the moment an order's payment is confirmed.",
+  trigger: { kind: "documentUpdated", pathPattern: "orders/{orderId}" },
+  handler: onPrizeDrawPaymentConfirmedHandler,
+  options: { region: REGION },
+});
+
+export const prizeDrawSoldOutReveal = defineFunction({
+  name: "prizeDrawSoldOutReveal",
+  description: "Assign winners for all outstanding prize-draw orders the moment a scheduled-mode draw sells out.",
+  trigger: { kind: "documentWritten", pathPattern: "products/{productId}" },
+  handler: prizeDrawSoldOutRevealHandler,
   options: { region: REGION },
 });
 
@@ -197,6 +215,8 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onOrderStatusChange,
   onProductWrite,
   onProductStockChange,
+  onPrizeDrawPaymentConfirmed,
+  prizeDrawSoldOutReveal,
   onReviewWrite,
   onCategoryWrite,
   onStoreWrite,

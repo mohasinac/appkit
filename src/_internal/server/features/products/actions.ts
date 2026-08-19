@@ -5,7 +5,12 @@ import { productRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { isAdminUser } from "../../../../features/auth/role-predicates";
 import { productInputSchema, productUpdateSchema, auctionInputSchema, preOrderInputSchema, setFeaturedSchema, setStatusSchema } from "../../../shared/features/products/schema";
-import { assertProductOwnership, assertStatusTransition } from "./service";
+import {
+  assertProductOwnership,
+  assertStatusTransition,
+  assertPrizeDrawNotLocked,
+  assertPrizeDrawWonItemsImmutable,
+} from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 
 export async function createProductAction(input: unknown): Promise<ActionResult<unknown>> {
@@ -56,9 +61,10 @@ export async function createPreOrderAction(input: unknown): Promise<ActionResult
 export async function updateProductAction(productId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
-      await assertProductOwnership(productId, user.uid);
+      const product = await assertProductOwnership(productId, user.uid);
       const parsed = productUpdateSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
+      assertPrizeDrawWonItemsImmutable(product, (parsed.data as { prizeDrawItems?: unknown }).prizeDrawItems);
       return productRepository.update(productId, parsed.data as any);
   });
 }
@@ -66,7 +72,8 @@ export async function updateProductAction(productId: string, input: unknown): Pr
 export async function deleteProductAction(productId: string): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
-      await assertProductOwnership(productId, user.uid);
+      const product = await assertProductOwnership(productId, user.uid);
+      assertPrizeDrawNotLocked(product, "deleted");
       return productRepository.delete(productId);
   });
 }
@@ -78,7 +85,10 @@ export async function setProductStatusAction(input: unknown): Promise<ActionResu
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
       const product = await assertProductOwnership(parsed.data.productId, user.uid);
       assertStatusTransition(product.status, parsed.data.status);
-    
+      if (parsed.data.status !== "published") {
+        assertPrizeDrawNotLocked(product, "unpublished or archived");
+      }
+
       // SB-UNI-O — live listings must be admin-verified before a seller can publish them.
       if (
         parsed.data.status === "published" &&

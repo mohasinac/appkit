@@ -631,35 +631,11 @@ export { listBidsByProduct } from "./features/auctions/server";
 // placeBid - Shared export for place bid.
 export { placeBid } from "./features/auctions/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_COOLDOWN_MS - Constant used across modules.
-export { CONSENT_OTP_COOLDOWN_MS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_EXPIRY_MINUTES - Constant used across modules.
-export { CONSENT_OTP_EXPIRY_MINUTES } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_EXPIRY_MS - Constant used across modules.
-export { CONSENT_OTP_EXPIRY_MS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_MAX_ATTEMPTS - Constant used across modules.
-export { CONSENT_OTP_MAX_ATTEMPTS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_MAX_BYPASS_CREDITS - Constant used across modules.
-export { CONSENT_OTP_MAX_BYPASS_CREDITS } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// CONSENT_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
-export { CONSENT_OTP_VERIFY_RATE_LIMIT } from "./features/auth/server";
+// CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
+export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-value-otp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // authMeGET - Shared export for auth me get.
 export { authMeGET } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildConsentOtpEmail - Helper for build consent otp email.
-export { buildConsentOtpEmail } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// consentOtpRateLimitRef - Shared export for consent otp rate limit ref.
-export { consentOtpRateLimitRef } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// consentOtpRef - Shared export for consent otp ref.
-export { consentOtpRef } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createPasswordResetToken - Helper for create password reset token.
 export { createPasswordResetToken } from "./features/auth/server";
@@ -669,12 +645,6 @@ export { createVerificationToken } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteToken - Helper for delete token.
 export { deleteToken } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// enforceConsentOtpRateLimit - Shared export for enforce consent otp rate limit.
-export { enforceConsentOtpRateLimit } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// generateOtpCode - Helper for generate otp code.
-export { generateOtpCode } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // generateToken - Helper for generate token.
 export { generateToken } from "./features/auth/server";
@@ -694,23 +664,11 @@ export { getUserProfile } from "./features/auth/server";
 // getUserSessions - Helper for get user sessions.
 export { getUserSessions } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// hashOtp - Shared export for hash otp.
-export { hashOtp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // issueRealtimeToken - Shared export for issue realtime token.
 export { issueRealtimeToken } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markPasswordResetTokenAsUsed - Shared export for mark password reset token as used.
 export { markPasswordResetTokenAsUsed } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// patchConsentOtp - Shared export for patch consent otp.
-export { patchConsentOtp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// readConsentOtp - Shared export for read consent otp.
-export { readConsentOtp } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// saveConsentOtp - Shared export for save consent otp.
-export { saveConsentOtp } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateUserProfile - Helper for update user profile.
 export { updateUserProfile } from "./features/auth/server";
@@ -820,18 +778,7 @@ export { listTopLevelCategories } from "./features/categories/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateCategory - Helper for update category.
 export { updateCategory } from "./features/categories/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// grantCheckoutConsentViaSms - Shared export for grant checkout consent via sms.
-export { grantCheckoutConsentViaSms } from "./features/checkout/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendCheckoutConsentOtp - Shared export for send checkout consent otp.
-export { sendCheckoutConsentOtp } from "./features/checkout/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyCheckoutConsentOtp - Shared export for verify checkout consent otp.
-export { verifyCheckoutConsentOtp } from "./features/checkout/server";
-// grantAdminCheckoutBypass - Admin bypass that skips OTP + payment for admin-placed orders.
-export { grantAdminCheckoutBypass } from "./features/checkout/server";
-// [SERVER-ONLY] Tier PP — high-value checkout OTP gate (distinct from the shipping-consent OTP above).
+// [SERVER-ONLY] Tier PP — high-value checkout OTP gate.
 export {
   sendCheckoutValueOtp,
   verifyCheckoutValueOtp,
@@ -920,11 +867,17 @@ export { eventsGET } from "./features/events/server";
 // getEventLeaderboard - Helper for get event leaderboard.
 export { getEventLeaderboard } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getBugHunterLeaderboard - Ranks testers by confirmed-bug count.
+export { getBugHunterLeaderboard } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPublicEventById - Helper for get public event by id.
 export { getPublicEventById } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPublicEvents - Helper for list public events.
 export { listPublicEvents } from "./features/events/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getRelatedEvents - Helper for get related events (tag overlap).
+export { getRelatedEvents } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateEvent - Helper for update event.
 export { updateEvent } from "./features/events/server";
@@ -1548,6 +1501,8 @@ export {
   getBundleForDetail,
   listBundleMembers,
   listFeaturedBundles,
+  resolveBundleMemberIds,
+  resolveBundleOriginalTotal,
   buildBundleMetadata,
   renderBundleOg,
   renderBundleOgImage,

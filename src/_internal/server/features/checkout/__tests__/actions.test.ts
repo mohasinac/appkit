@@ -16,7 +16,6 @@ const {
   mockCouponsGetUsageCount,
   mockClaimedMarkUsed,
   mockRunTransaction,
-  mockOtpGet,
   mockFailedLogCheckout,
   mockSendEmail,
 } = vi.hoisted(() => ({
@@ -34,7 +33,6 @@ const {
   mockCouponsGetUsageCount: vi.fn(),
   mockClaimedMarkUsed: vi.fn(),
   mockRunTransaction: vi.fn(),
-  mockOtpGet: vi.fn(),
   mockFailedLogCheckout: vi.fn(),
   mockSendEmail: vi.fn(),
 }));
@@ -114,16 +112,6 @@ vi.mock("../../../../../providers/db-firebase/admin", () => ({
   getAdminAuth: vi.fn(),
 }));
 
-// consentOtpRef returns a DocumentReference whose .get() controls OTP behavior
-vi.mock("../../../../../features/auth/server", () => ({
-  consentOtpRef: vi.fn(() => ({ get: mockOtpGet })),
-  consentOtpRateLimitRef: vi.fn(() => ({
-    get: vi.fn().mockResolvedValue({ exists: false }),
-    set: vi.fn().mockResolvedValue(undefined),
-  })),
-  CONSENT_OTP_MAX_BYPASS_CREDITS: 3,
-}));
-
 vi.mock("../../../../shared/checkout/rules", () => ({
   getListingRule: vi.fn(() => ({
     decorateOrderItem: vi.fn((base: object) => base),
@@ -148,7 +136,6 @@ vi.mock("../bundle-expansion", () => ({
 
 vi.mock("../prize-bundle-gates", () => ({
   enforceMaxPerUserForCart: vi.fn(),
-  computePrizeRevealDeadline: vi.fn(() => new Date()),
 }));
 
 vi.mock("../data", () => ({
@@ -265,18 +252,6 @@ function makeInput(overrides: Record<string, unknown> = {}): CreateCheckoutOrder
   } as CreateCheckoutOrderInput;
 }
 
-// OTP snap helpers
-function makeValidOtp() {
-  return {
-    exists: true,
-    data: () => ({
-      verified: true,
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 mins from now
-      verifiedVia: "sms",
-    }),
-  };
-}
-
 // The runTransaction mock simulates the Firestore tx by calling the callback.
 // By default, make it succeed with the provided items.
 function setupTransactionSuccess(
@@ -284,28 +259,9 @@ function setupTransactionSuccess(
   unavailableItems: unknown[] = [],
 ) {
   mockRunTransaction.mockImplementation(async (_callback: (tx: unknown) => unknown) => {
-    const mockTx = {
-      get: vi.fn().mockResolvedValue(makeValidOtp()), // OTP valid by default
-      update: vi.fn(),
-      set: vi.fn(),
-      delete: vi.fn(),
-    };
-    // When the tx calls get() for product docs, return a valid product snap
-    const product = makeProduct();
-    mockTx.get.mockImplementation(async (ref: { id?: string } | undefined) => {
-      // OTP ref has no id; product refs do
-      if (ref && typeof ref === "object" && "id" in ref && ref.id) {
-        return {
-          exists: true,
-          data: () => product,
-        };
-      }
-      return makeValidOtp();
-    });
     return {
       available: availableItems.map((item) => ({ item, product: makeProduct() })),
       unavailable: unavailableItems,
-      emailOtpUsed: false,
     };
   });
 }
@@ -328,7 +284,6 @@ beforeEach(() => {
   mockClaimedMarkUsed.mockResolvedValue(undefined);
   mockSendEmail.mockResolvedValue(undefined);
   mockFailedLogCheckout.mockResolvedValue(undefined);
-  mockOtpGet.mockResolvedValue(makeValidOtp());
   setupTransactionSuccess();
   (cartIsDigitalOnly as ReturnType<typeof vi.fn>).mockReturnValue(false);
 });
@@ -546,99 +501,6 @@ describe("createCheckoutOrderAction — address validation", () => {
   });
 });
 
-// ── OTP gate ─────────────────────────────────────────────────────────────────
-
-describe("createCheckoutOrderAction — OTP gate (inside transaction)", () => {
-  function setupOtpInTransaction(otpSnap: object) {
-    mockRunTransaction.mockImplementation(async (_callback: (tx: unknown) => unknown) => {
-      const mockTx = {
-        get: vi.fn().mockResolvedValue(otpSnap),
-        update: vi.fn(),
-        set: vi.fn(),
-        delete: vi.fn(),
-      };
-      try {
-        return await callback(mockTx);
-      } catch (err) {
-        throw err;
-      }
-    });
-  }
-
-  it("no OTP record → 403 ApiError (otp_not_verified)", async () => {
-    setupOtpInTransaction({ exists: false, data: () => null });
-    await expect(createCheckoutOrderAction(makeInput())).rejects.toMatchObject({
-      statusCode: 403,
-    });
-  });
-
-  it("OTP exists but verified=false → 403 ApiError", async () => {
-    setupOtpInTransaction({
-      exists: true,
-      data: () => ({ verified: false, expiresAt: new Date(Date.now() + 60_000), verifiedVia: "sms" }),
-    });
-    await expect(createCheckoutOrderAction(makeInput())).rejects.toMatchObject({ statusCode: 403 });
-  });
-
-  it("OTP expired (expiresAt in past) → 403 ApiError", async () => {
-    setupOtpInTransaction({
-      exists: true,
-      data: () => ({
-        verified: true,
-        expiresAt: new Date(Date.now() - 1000),
-        verifiedVia: "sms",
-      }),
-    });
-    await expect(createCheckoutOrderAction(makeInput())).rejects.toMatchObject({ statusCode: 403 });
-  });
-
-  it("valid OTP → proceeds, no 403 thrown", async () => {
-    setupOtpInTransaction({
-      exists: true,
-      data: () => ({
-        verified: true,
-        expiresAt: new Date(Date.now() + 60_000),
-        verifiedVia: "sms",
-      }),
-    });
-    // Also provide product snap in transaction
-    mockRunTransaction.mockImplementation(async (_callback: (tx: unknown) => unknown) => {
-      return {
-        available: [{ item: makeCartItem(), product: makeProduct() }],
-        unavailable: [],
-        emailOtpUsed: false,
-      };
-    });
-    const result = await createCheckoutOrderAction(makeInput());
-    expect(result.orderIds).toHaveLength(1);
-  });
-
-  it("adminBypass=true → OTP gate is skipped entirely", async () => {
-    // runTransaction returns a result without OTP check being executed
-    mockRunTransaction.mockResolvedValue({
-      available: [{ item: makeCartItem(), product: makeProduct() }],
-      unavailable: [],
-      emailOtpUsed: false,
-    });
-    const result = await createCheckoutOrderAction(makeInput({ adminBypass: true }));
-    expect(result.orderIds).toHaveLength(1);
-  });
-
-  it("digital-only cart → OTP gate is skipped (otpRef is null)", async () => {
-    (cartIsDigitalOnly as ReturnType<typeof vi.fn>).mockReturnValue(true);
-    mockGetOrCreate.mockResolvedValue(makeCart({
-      items: [makeCartItem({ listingType: "digital-code" })],
-    }));
-    mockRunTransaction.mockResolvedValue({
-      available: [{ item: makeCartItem({ listingType: "digital-code" }), product: makeProduct({ listingType: "digital-code" }) }],
-      unavailable: [],
-      emailOtpUsed: false,
-    });
-    const result = await createCheckoutOrderAction(makeInput({ addressId: undefined }));
-    expect(result.orderIds).toHaveLength(1);
-  });
-});
-
 // ── Stock validation ──────────────────────────────────────────────────────────
 
 describe("createCheckoutOrderAction — stock results", () => {
@@ -646,7 +508,6 @@ describe("createCheckoutOrderAction — stock results", () => {
     mockRunTransaction.mockResolvedValue({
       available: [],
       unavailable: [{ productId: "product-hot-wheels", productTitle: "Hot Wheels", requestedQty: 1, availableQty: 0 }],
-      emailOtpUsed: false,
     });
     await expect(createCheckoutOrderAction(makeInput())).rejects.toThrow(/stock|unavailable/i);
   });
@@ -654,7 +515,7 @@ describe("createCheckoutOrderAction — stock results", () => {
   it("some items OOS → unavailableItems in result", async () => {
     const available = [{ item: makeCartItem({ productId: "prod-A" }), product: makeProduct({ id: "prod-A" }) }];
     const unavailable = [{ productId: "prod-B", productTitle: "B", requestedQty: 2, availableQty: 1 }];
-    mockRunTransaction.mockResolvedValue({ available, unavailable, emailOtpUsed: false });
+    mockRunTransaction.mockResolvedValue({ available, unavailable });
     const result = await createCheckoutOrderAction(makeInput());
     expect(result.unavailableItems).toHaveLength(1);
     expect(result.unavailableItems![0].productId).toBe("prod-B");
@@ -722,7 +583,6 @@ describe("createCheckoutOrderAction — order creation", () => {
     mockRunTransaction.mockResolvedValue({
       available: [{ item: makeCartItem({ listingType: "digital-code" }), product: makeProduct({ listingType: "digital-code" }) }],
       unavailable: [],
-      emailOtpUsed: false,
     });
     await createCheckoutOrderAction(makeInput({ addressId: undefined }));
     const call = mockOrdersCreate.mock.calls[0][0] as Record<string, unknown>;
@@ -796,29 +656,5 @@ describe("createCheckoutOrderAction — side effects", () => {
   it("no email dispatched when userEmail is empty", async () => {
     await createCheckoutOrderAction(makeInput({ userEmail: "" }));
     expect(mockSendEmail).not.toHaveBeenCalled();
-  });
-
-  it("emailOtpUsed=true + unavailableItems → bypass credit granted (consentOtpRateLimitRef called)", async () => {
-    mockRunTransaction.mockResolvedValue({
-      available: [{ item: makeCartItem({ productId: "prod-A" }), product: makeProduct() }],
-      unavailable: [{ productId: "prod-B", productTitle: "B", requestedQty: 1, availableQty: 0 }],
-      emailOtpUsed: true,
-    });
-    const { consentOtpRateLimitRef } = await import("../../../../../features/auth/server");
-    await createCheckoutOrderAction(makeInput());
-    // grantConsentOtpBypassCredit reads the meta ref when emailOtpUsed=true and unavailable>0
-    expect(consentOtpRateLimitRef).toHaveBeenCalled();
-  });
-
-  it("emailOtpUsed=false → bypass credit NOT granted", async () => {
-    mockRunTransaction.mockResolvedValue({
-      available: [{ item: makeCartItem(), product: makeProduct() }],
-      unavailable: [{ productId: "prod-B", productTitle: "B", requestedQty: 1, availableQty: 0 }],
-      emailOtpUsed: false,
-    });
-    const { consentOtpRateLimitRef } = await import("../../../../../features/auth/server");
-    vi.clearAllMocks();
-    await createCheckoutOrderAction(makeInput());
-    expect(consentOtpRateLimitRef).not.toHaveBeenCalled();
   });
 });

@@ -193,7 +193,7 @@ export async function PrizeDrawDetailPageView({
     <Main>
       <HistoryTracker
         productId={String(p.id ?? p.slug ?? "")}
-        productType="product"
+        productType="prize-draw"
         snapshot={{
           title,
           thumb,

@@ -1,6 +1,10 @@
 export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
+import {
+  PRIZE_DRAW_DURATION_DAYS_MIN,
+  PRIZE_DRAW_DURATION_DAYS_MAX,
+} from "../../../_internal/shared/checkout/rules/_limits";
 
 // --- Sub-schemas --------------------------------------------------------------
 
@@ -103,9 +107,10 @@ export const productItemSchema = z.object({
         condition: z.string(),
         estimatedValue: z.number().optional(),
         isWon: z.boolean(),
+        wonByOrderId: z.string().optional(),
       }),
     )
-    .min(3)
+    .min(2)
     .max(16)
     .optional(),
   pricePerEntry: z.number().positive().optional(),
@@ -114,7 +119,13 @@ export const productItemSchema = z.object({
   prizeRevealWindowStart: z.union([z.string(), z.date()]).optional(),
   prizeRevealWindowEnd: z.union([z.string(), z.date()]).optional(),
   prizeRevealStatus: z.enum(["pending", "open", "closed"]).optional(),
-  prizeRevealDeadlineDays: z.number().int().positive().optional(),
+  prizeDrawDurationDays: z
+    .number()
+    .int()
+    .min(PRIZE_DRAW_DURATION_DAYS_MIN)
+    .max(PRIZE_DRAW_DURATION_DAYS_MAX)
+    .optional(),
+  prizeRevealMode: z.enum(["instant", "scheduled"]).optional(),
   prizeGithubFileUrl: z.string().url().optional(),
   inStock: z.boolean().optional(),
   stockCount: z.number().optional(),

@@ -17,6 +17,7 @@ import type {
   CartItemProductPair,
 } from "./types";
 import type { OrderType } from "../../../../features/orders/utils/order-splitter";
+import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 import { standardRule } from "./standard.rule";
 import { auctionRule } from "./auction.rule";
 import { preOrderRule } from "./preorder.rule";
@@ -88,7 +89,10 @@ export function getSplitKey(item: CartItemDocument): string {
  * Note: the async maxPerUser cap check remains in the server-only
  * `enforceMaxPerUserForCart` (prize-bundle-gates.ts) and runs separately.
  */
-export function runSyncPreflight(pairs: CartItemProductPair[]): void {
+export function runSyncPreflight(
+  pairs: CartItemProductPair[],
+  paymentMethod?: CheckoutPaymentMethod,
+): void {
   const byType = new Map<ListingType, CartItemProductPair[]>();
   for (const pair of pairs) {
     if (pair.item.bundleProductIds?.length) continue; // bundles skip — direct checkout
@@ -99,6 +103,6 @@ export function runSyncPreflight(pairs: CartItemProductPair[]): void {
   }
   for (const [lt, ltPairs] of byType) {
     const rule = CHECKOUT_RULES[lt] ?? CHECKOUT_RULES.standard;
-    rule.preflightChecks(ltPairs);
+    rule.preflightChecks(ltPairs, paymentMethod);
   }
 }

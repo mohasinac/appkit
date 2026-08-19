@@ -1,10 +1,12 @@
 /**
- * maxPerUser gate + prize reveal deadline helper for the checkout pipeline
- * (SB6-C, SB8-A).
+ * maxPerUser gate for the checkout pipeline (SB6-C).
  *
  * `enforcePrizePoolCap` was removed in S-SBUNI-RULES (2026-05-13) — the
  * equivalent check now lives in `prizeDrawRule.preflightChecks` in the rule
- * registry and is invoked via `runSyncPreflight`.
+ * registry and is invoked via `runSyncPreflight`. `computePrizeRevealDeadline`
+ * (SB8-A) was removed with the buyer-claim-deadline mechanic — reveal is now
+ * fully automatic, there's nothing left for a buyer to "claim" before a
+ * deadline.
  */
 
 import { ValidationError } from "../../../../errors";
@@ -84,41 +86,5 @@ export async function enforceMaxPerUserForCart(args: {
       { code: "MAX_PER_USER", violations },
     );
   }
-}
-
-/**
- * SB8-A — compute the deadline by which the buyer must claim their prize
- * via the reveal API.
- *
- * Rules:
- *   - If the reveal window has not yet opened:
- *       deadline = min(revealWindowStart + revealDeadlineDays, revealWindowEnd)
- *   - If the window is already open:
- *       deadline = min(now + revealDeadlineDays, revealWindowEnd)
- *
- * Returns `undefined` if the product lacks the prize-draw fields.
- */
-export function computePrizeRevealDeadline(
-  product: Pick<
-    ProductDocument,
-    | "prizeRevealWindowStart"
-    | "prizeRevealWindowEnd"
-    | "prizeRevealDeadlineDays"
-  >,
-  now: Date = new Date(),
-): Date | undefined {
-  const windowStart = product.prizeRevealWindowStart
-    ? new Date(product.prizeRevealWindowStart)
-    : undefined;
-  const windowEnd = product.prizeRevealWindowEnd
-    ? new Date(product.prizeRevealWindowEnd)
-    : undefined;
-  if (!windowStart || !windowEnd) return undefined;
-
-  const days = product.prizeRevealDeadlineDays ?? 3;
-  const dayMs = 86_400_000;
-  const base = windowStart.getTime() > now.getTime() ? windowStart : now;
-  const candidate = new Date(base.getTime() + days * dayMs);
-  return candidate.getTime() < windowEnd.getTime() ? candidate : windowEnd;
 }
 

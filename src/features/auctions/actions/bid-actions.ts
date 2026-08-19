@@ -167,14 +167,16 @@ export async function placeBid(
   });
 
   const finalVisibleForRtdb = newBidWins ? visibleBid : (bumpedPreviousVisible ?? prevVisible);
+  const finalBidCountForRtdb = (product.bidCount ?? 0) + 1;
 
   try {
     const rtdb = getAdminRealtimeDb();
     await rtdb.ref(`/auction-bids/${productId}`).set({
       currentBid: finalVisibleForRtdb,
+      bidCount: finalBidCountForRtdb,
       lastBid: {
         amount: finalVisibleForRtdb,
-        bidderName: "Bidder",
+        bidderName: bid.userName,
         timestamp: Date.now(),
       },
       updatedAt: Date.now(),

@@ -170,6 +170,13 @@ export interface CategoryDocument extends BaseDocument {
   /** Hand-picked products list (mirror of bundleQueryRule for static rules); kept for index-friendly queries. */
   bundleProductIds?: string[];
   /**
+   * Sum of member products' individual prices (decimal rupees) — the "buy
+   * separately" total the discount badge is measured against. Denormalised
+   * at bundle create/update time and refreshed by the daily bundle stock
+   * sync job; undefined when a member price couldn't be resolved.
+   */
+  bundleOriginalTotal?: number;
+  /**
    * Per-member metadata parallel to `bundleProductIds`.
    * Carries `drawCount` for prize-draw members (how many raffle entries
    * the buyer receives). Flat `bundleProductIds` is kept for Firestore

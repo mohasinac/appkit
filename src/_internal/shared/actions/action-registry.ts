@@ -1458,6 +1458,36 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    "confirm-bug": {
+      id: "admin.confirm-bug",
+      label: "Mark as Bug",
+      ariaLabel: "Confirm this as a real bug and credit the reporting tester",
+      description:
+        "Confirms this reported issue as a real bug, credits the reporting tester as the bug hunter, and disables the case for all other testers.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Confirm this bug?",
+        body: "This credits the reporting tester as the bug hunter for this case and disables it so no other tester can answer it. This can't be undone from the UI.",
+        confirmLabel: "Mark as Bug",
+        confirmKind: "danger",
+      },
+    },
+    "reopen-checklist-item": {
+      id: "admin.reopen-checklist-item",
+      label: "Reopen as New Test Case",
+      ariaLabel: "Reopen this fixed case as a new version for retest",
+      description:
+        "Once a confirmed bug is fixed, reopen it as a new version (v+1) for testers to retest — the old disabled case stays in the database with its bug-hunter credit intact.",
+      kind: "secondary",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Reopen this case for retest?",
+        body: "This creates a new, active version of this test case for testers to answer again. The old case stays disabled in the database — its bug-hunter credit is not affected.",
+        confirmLabel: "Reopen",
+        confirmKind: "primary",
+      },
+    },
     "resend-notification": {
       id: "admin.resend-notification",
       label: "Resend",
@@ -2042,26 +2072,20 @@ export const ACTIONS: ActionTree = {
     },
     "continue-to-verification": {
       id: "checkout.continue-to-verification",
-      label: "Continue to Verification",
-      description: "Advance from address selection to identity verification step.",
-      kind: "primary",
-    },
-    "send-otp": {
-      id: "checkout.send-otp",
-      label: "Send verification code",
-      description: "Send a one-time code to the buyer's registered email to verify identity before checkout.",
+      label: "Continue",
+      description: "Advance from address selection to the payment step.",
       kind: "primary",
     },
     "verify-otp": {
       id: "checkout.verify-otp",
       label: "Verify & Continue",
-      description: "Submit the one-time code and proceed to payment selection.",
+      description: "Submit the high-value-order one-time code and proceed to payment.",
       kind: "primary",
     },
     "resend-otp": {
       id: "checkout.resend-otp",
       label: "Resend code",
-      description: "Re-send the verification code to the buyer's registered email.",
+      description: "Re-send the high-value-order verification code to the buyer's registered email.",
       kind: "ghost",
     },
     "pay-online": {

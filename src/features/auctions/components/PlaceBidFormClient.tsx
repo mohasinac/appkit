@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
 import { Button, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
@@ -8,6 +9,7 @@ import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { placeBidSchema } from "../schemas/bid-input";
+import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
 
 import { normalizeError } from "../../../errors/normalize";
 const __P = {
@@ -45,18 +47,24 @@ export interface PlaceBidFormClientProps {
 
 export function PlaceBidFormClient({
   productId,
-  currentBid,
+  currentBid: ssrCurrentBid,
   startingBid,
   minBidIncrement,
   currency,
   isEnded,
   buyNowPrice,
   bidsHaveStarted = false,
-  bidCount,
+  bidCount: ssrBidCount,
   tags = [],
   onPlaceBid,
   onBuyNow,
 }: PlaceBidFormClientProps) {
+  const router = useRouter();
+  // Live-updates while the bid card is open — reflects other bidders'
+  // activity on this auction, not just the bidder's own submission.
+  const live = useLiveAuctionBid(productId, ssrCurrentBid, ssrBidCount, { enabled: !isEnded });
+  const currentBid = live.currentBid;
+  const bidCount = live.bidCount;
   const minBid = currentBid + minBidIncrement;
   const [bidAmount, setBidAmount] = useState<string>(String(minBid));
   const [stepMul, setStepMul] = useState<1 | 5 | 10 | "custom">(1);
@@ -87,6 +95,12 @@ export function PlaceBidFormClient({
       setSuccess(true);
       setBidAmount(String(amount + minBidIncrement));
       setStepMul(1);
+      // The bid history list and any duplicated static current-bid/bid-count
+      // text elsewhere on this SSR'd page (info panel, page-level summary
+      // cards) are frozen server props — refresh so they reflect this bid
+      // immediately instead of waiting for the page's ISR window to roll
+      // over. The live price shown above already updated via SSE regardless.
+      router.refresh();
     } catch (err: unknown) {
       void normalizeError(err);
       if (isAuthError(err)) {
@@ -123,6 +137,7 @@ export function PlaceBidFormClient({
           return;
         }
         setSuccess(true);
+        router.refresh();
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) setShowLoginModal(true);

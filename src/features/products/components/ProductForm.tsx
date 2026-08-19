@@ -40,6 +40,15 @@ import {
 import { PrizeDrawItemsEditor } from "./PrizeDrawItemsEditor";
 import type { PrizeDrawItem } from "../schemas/firestore";
 import type { ListingType } from "../types";
+import {
+  PRIZE_DRAW_DURATION_DAYS_MIN,
+  PRIZE_DRAW_DURATION_DAYS_MAX,
+} from "../../../_internal/shared/checkout/rules/_limits";
+
+const PRIZE_REVEAL_MODE_OPTIONS: { value: "instant" | "scheduled"; label: string }[] = [
+  { value: "instant", label: "Reveal immediately on purchase" },
+  { value: "scheduled", label: "Reveal at expiry or sellout" },
+];
 
 // ListingType uses the canonical SB1-G spellings ("standard", "pre-order");
 // ProductFeatureProductType predates it with legacy spellings for 2 values.
@@ -815,8 +824,8 @@ export function ProductForm({
             </Alert>
           ) : null}
           <Alert variant="warning" title="Non-refundable">
-            Prize-draw entries are non-refundable once the reveal window opens.
-            Buyers see and must accept this notice before paying.
+            Prize-draw entries are non-refundable once purchased. Buyers see
+            and must accept this notice before paying.
           </Alert>
 
           <FormGroup columns={2}>
@@ -852,52 +861,31 @@ export function ProductForm({
 
           <FormGroup columns={2}>
             <FormField
-              name="prizeRevealWindowStart"
-              label="Reveal window start"
-              type="datetime-local"
-              value={(() => {
-                const d = resolveDate(
-                  product.prizeRevealWindowStart as Date | string | undefined,
-                );
-                if (!d) return "";
-                return d.toISOString().slice(0, 16);
-              })()}
+              name="prizeDrawDurationDays"
+              label="Draw duration (days)"
+              type="number"
+              value={String(product.prizeDrawDurationDays ?? "")}
               onChange={(value) =>
-                update({ prizeRevealWindowStart: value })
+                update({ prizeDrawDurationDays: Number(value) || undefined })
               }
               disabled={fieldDisabled}
+              placeholder="7"
+              helpText={`Draw runs this many days from publish, or until sold out — whichever comes first. ${PRIZE_DRAW_DURATION_DAYS_MIN}–${PRIZE_DRAW_DURATION_DAYS_MAX} days.`}
             />
             <FormField
-              name="prizeRevealWindowEnd"
-              label="Reveal window end"
-              type="datetime-local"
-              value={(() => {
-                const d = resolveDate(
-                  product.prizeRevealWindowEnd as Date | string | undefined,
-                );
-                if (!d) return "";
-                return d.toISOString().slice(0, 16);
-              })()}
-              onChange={(value) => update({ prizeRevealWindowEnd: value })}
+              name="prizeRevealMode"
+              label="Reveal mode"
+              type="select"
+              value={product.prizeRevealMode ?? "scheduled"}
+              onChange={(value) =>
+                update({ prizeRevealMode: value as "instant" | "scheduled" })
+              }
               disabled={fieldDisabled}
+              options={PRIZE_REVEAL_MODE_OPTIONS}
             />
           </FormGroup>
 
           <FormGroup columns={2}>
-            <FormField
-              name="prizeRevealDeadlineDays"
-              label="Reveal deadline (days)"
-              type="number"
-              value={String(product.prizeRevealDeadlineDays ?? 3)}
-              onChange={(value) =>
-                update({
-                  prizeRevealDeadlineDays: Number(value) || 3,
-                })
-              }
-              disabled={fieldDisabled}
-              placeholder="3"
-              helpText="After window opens, buyers have this many days to claim."
-            />
             <FormField
               name="maxPerUser"
               label="Max entries per customer (blank = unlimited)"
@@ -909,6 +897,7 @@ export function ProductForm({
               disabled={fieldDisabled}
               placeholder=""
             />
+            <Div />
           </FormGroup>
 
           {product.prizeGithubFileUrl ? (

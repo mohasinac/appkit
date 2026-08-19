@@ -3,6 +3,17 @@ const DEFAULT_GUEST_WISHLIST_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_wishlist`
   : "guest_wishlist";
 
+/** Fired whenever guest wishlist storage is written, so every
+ *  `useGuestWishlist()` instance in the tab (header badge, listing heart
+ *  toggle, wishlist page) can re-read storage and stay in sync without
+ *  waiting for a remount. */
+export const GUEST_WISHLIST_CHANGE_EVENT = "appkit/wishlist/guest-changed";
+
+function dispatchGuestWishlistChange(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(GUEST_WISHLIST_CHANGE_EVENT));
+}
+
 export interface GuestWishlistItem {
   itemId: string;
   type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live";
@@ -45,6 +56,7 @@ function writeItems(
 ): void {
   if (!storage) return;
   storage.setItem(key, JSON.stringify(items));
+  dispatchGuestWishlistChange();
 }
 
 export function getGuestWishlistItems(

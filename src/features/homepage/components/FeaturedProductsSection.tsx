@@ -2,7 +2,7 @@
 import { SectionCarousel } from "./SectionCarousel";
 import { useFeaturedProducts } from "../hooks/useFeaturedProducts";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
-import { ROUTES } from "../../../next";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 import type { ProductItem } from "../../products/types";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
@@ -64,7 +64,7 @@ export function FeaturedProductsSection({
       renderItem={(product: ProductItem) => (
         <InteractiveProductCard
           product={product}
-          href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(product.slug ?? product.id ?? ""))}
+          href={pluginFor(product.listingType ?? "standard").detailRoute(product.slug ?? product.id ?? "")}
         />
       )}
       className={className}

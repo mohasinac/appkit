@@ -37,6 +37,10 @@ export type CoverageIssue = TesterChecklistResponseDocument & {
   groupLabel: string;
   pageLabel: string;
   label: string;
+  bugConfirmed?: boolean;
+  bugHunterId?: string;
+  bugHunterName?: string;
+  supersededByItemId?: string;
 };
 
 export interface CoverageReport {
@@ -170,6 +174,10 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
           groupLabel,
           pageLabel,
           label: catalogItem?.label ?? doc.checklistItemId,
+          bugConfirmed: catalogItem?.bugConfirmed,
+          bugHunterId: catalogItem?.bugHunterId,
+          bugHunterName: catalogItem?.bugHunterName,
+          supersededByItemId: catalogItem?.supersededByItemId,
         });
       }
     }

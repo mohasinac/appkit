@@ -54,10 +54,6 @@ export interface OrderItem {
    * "X reveals pending" badge on user orders.
    */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
-  /** ISO timestamp — when the user must claim their reveal before forfeit. */
-  prizeRevealDeadline?: string;
-  /** Set after the reveal endpoint picks a winner — the prize item index. */
-  revealedItemNumber?: number;
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
   cancelledQuantity?: number;
   /**
@@ -105,15 +101,16 @@ export interface Order {
   disputeRaised?: boolean;
   disputeStatus?: "open" | "resolved";
   /**
-   * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the reveal
-   * endpoint has assigned a prize to this order; used to drive the
-   * "Reveal my prize" CTA on the order-detail page.
+   * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the winner has
+   * been automatically assigned to this order (on payment confirmation,
+   * draw expiry, or sellout — see assignPrizeDrawWinner); drives the
+   * PrizeRevealModal's "won" display on the order-detail page.
    */
   prizeWon?: { itemNumber: number; title: string; images: string[]; wonAt: string };
-  prizeRevealDeadline?: string;
-  prizeRevealExpired?: boolean;
   /** Source prize-draw product id, when this order came from one. */
   prizeDrawProductId?: string;
+  /** Denormalized from the product at order-creation time — drives PrizeRevealModal copy. */
+  prizeRevealMode?: "instant" | "scheduled";
 }
 
 export interface OrderListResponse {

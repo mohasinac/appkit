@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { Badge, Button, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Pagination } from "../../../ui/components/Pagination";
 import type { BidDocument } from "../schemas/firestore";
 
 const __O = {
@@ -46,6 +47,11 @@ export interface AuctionBidsTableProps {
   bids: BidDocument[];
   portal?: "buyer" | "store" | "admin";
   emptyLabel?: React.ReactNode;
+  /** Server-side pagination — the auction groups shown are already just the
+   *  current page's worth of bids grouped by auction, not the full history. */
+  totalPages?: number;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 function groupByAuction(bids: BidDocument[]): AuctionWithBids[] {
@@ -71,11 +77,14 @@ function AuctionRow({
   portal: "buyer" | "store" | "admin";
 }) {
   const [expanded, setExpanded] = useState(false);
+  // Most-recent bid first — matches the caller's own newest-first ordering
+  // (see UserBidsPage) instead of re-sorting by amount, which silently threw
+  // that ordering away for the expanded per-auction row list.
   const sorted = useMemo(
-    () => [...auction.bids].sort((a, b) => b.bidAmount - a.bidAmount),
+    () => [...auction.bids].sort((a, b) => +new Date(b.bidDate) - +new Date(a.bidDate)),
     [auction.bids],
   );
-  const highest = sorted[0]?.bidAmount ?? 0;
+  const highest = auction.bids.reduce((max, b) => Math.max(max, b.bidAmount), 0);
   const isWinning = auction.bids.some((b) => b.isWinning);
 
   return (
@@ -161,6 +170,9 @@ export function AuctionBidsTable({
   bids,
   portal = "buyer",
   emptyLabel = "No bids found.",
+  totalPages,
+  currentPage,
+  onPageChange,
 }: AuctionBidsTableProps) {
   const auctions = useMemo(() => groupByAuction(bids), [bids]);
 
@@ -177,6 +189,11 @@ export function AuctionBidsTable({
       {auctions.map((auction) => (
         <AuctionRow key={auction.productId} auction={auction} portal={portal} />
       ))}
+      {totalPages !== undefined && totalPages > 1 && currentPage !== undefined && onPageChange && (
+        <Row justify="center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+        </Row>
+      )}
     </Stack>
   );
 }

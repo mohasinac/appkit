@@ -1,21 +1,61 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Div, Span } from "../../../ui";
+import { Button, Div, Row, Span } from "../../../ui";
+import { Pagination } from "../../../ui/components/Pagination";
 import { BidHistory } from "../../products/components/BidHistory";
 import type { BidHistoryEntry } from "../../products/components/BidHistory";
+import { useBids, type BidListResponse } from "../hooks/useBids";
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-interface CollapsibleBidHistoryProps {
-  bids: BidHistoryEntry[];
-  currency: string;
+interface RawBidLike {
+  id?: unknown;
+  userId?: unknown;
+  bidderId?: unknown;
+  userName?: unknown;
+  bidderName?: unknown;
+  bidAmount?: unknown;
+  amount?: unknown;
+  bidDate?: unknown;
+  createdAt?: unknown;
+  bidAt?: unknown;
 }
 
-export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryProps) {
+/** Shared shape mapper — SSR's raw bid docs and useBids()'s client-fetched
+ *  pages both go through this so every page (SSR page 1, client pages 2+)
+ *  renders identically. */
+export function toBidHistoryEntry(b: RawBidLike): BidHistoryEntry {
+  return {
+    id: String(b.id ?? ""),
+    bidderId: String(b.userId ?? b.bidderId ?? ""),
+    bidderName: (b.bidderName ?? b.userName) as string | undefined,
+    amount: typeof b.bidAmount === "number" ? b.bidAmount : typeof b.amount === "number" ? b.amount : 0,
+    placedAt: (b.bidDate ?? b.createdAt ?? b.bidAt ?? "") as string,
+  };
+}
+
+interface CollapsibleBidHistoryProps {
+  productId: string;
+  /** SSR page-1 result — seeds `useBids()`'s cache so opening the section
+   *  doesn't trigger a redundant fetch for the page already rendered. */
+  initialData: BidListResponse;
+  currency: string;
+  pageSize?: number;
+}
+
+export function CollapsibleBidHistory({ productId, initialData, currency, pageSize = 5 }: CollapsibleBidHistoryProps) {
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const { bids: rawBids, totalPages, isLoading } = useBids(
+    { productId, page, pageSize },
+    { initialData, enabled: open },
+  );
+  const bids = rawBids.map(toBidHistoryEntry);
+  const total = initialData.total;
 
   return (
     <Div className={`mt-6 ${__O.hidden}`} border="subtle" rounded="xl">
@@ -31,9 +71,9 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
       >
         <Span size="sm" weight="semibold" className="tracking-wide" color="muted" transform="uppercase">
           Bid History
-          {bids.length > 0 && (
+          {total > 0 && (
             <Span size="xs" weight="medium" className="ml-2 normal-case tracking-normal" rounded="full" padding="pill-xs" surface="subtle" color="muted">
-              {bids.length}
+              {total}
             </Span>
           )}
         </Span>
@@ -52,9 +92,15 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
         <Div surface="default" padding="md">
           <BidHistory
             bids={bids}
-            isEmpty={bids.length === 0}
+            isLoading={isLoading && bids.length === 0}
+            isEmpty={!isLoading && bids.length === 0}
             currency={currency}
           />
+          {totalPages > 1 && (
+            <Row justify="center" className="mt-4">
+              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} size="sm" />
+            </Row>
+          )}
         </Div>
       )}
     </Div>

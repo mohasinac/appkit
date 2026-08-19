@@ -16,6 +16,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 import type { OrderType } from "../../../../features/orders/utils/order-splitter";
+import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 
 export interface CartItemProductPair {
   item: CartItemDocument;
@@ -61,8 +62,6 @@ export interface ListingCheckoutRule {
    * delivery) and classified (meetup-arranged locally).
    */
   requiresShippingAddress: boolean;
-  /** Does checkout require the consent-OTP gate? */
-  requiresConsentOtp: boolean;
   /**
    * Is this order non-refundable? Blocks the refund API for orders of this type.
    * Set true for prize-draw entries.
@@ -84,6 +83,13 @@ export interface ListingCheckoutRule {
   maxLinesPerOrder: number;
   /** Full/partial refund capabilities per type. */
   refundPolicy: RefundPolicy;
+  /**
+   * Payment methods this listing type cannot be paid with. Undefined/empty =
+   * all methods allowed. Prize-draw blocks cod/cash/emi — winner assignment
+   * depends on the order's payment actually being confirmed, which those
+   * deferred-payment methods don't guarantee.
+   */
+  blockedPaymentMethods?: CheckoutPaymentMethod[];
 
   /**
    * Return the grouping key used by the order splitter. Items with the same
@@ -103,10 +109,14 @@ export interface ListingCheckoutRule {
    * Throws ValidationError on violation; returns void on pass.
    * Receives only data already in memory (no IO needed).
    *
-   * Pre-order checks reservationCap. Prize-draw checks prizeMaxEntries.
-   * Future `live` checks jurisdiction from product + buyer state.
+   * Pre-order checks reservationCap. Prize-draw checks prizeMaxEntries +
+   * blockedPaymentMethods. Future `live` checks jurisdiction from product +
+   * buyer state.
+   *
+   * `paymentMethod` is optional so existing rules that don't need it (every
+   * type except prize-draw today) don't have to accept/ignore the param.
    */
-  preflightChecks(pairs: CartItemProductPair[]): void;
+  preflightChecks(pairs: CartItemProductPair[], paymentMethod?: CheckoutPaymentMethod): void;
 
   /**
    * Return extra Firestore field updates to merge alongside the standard
@@ -132,14 +142,14 @@ export interface ListingCheckoutRule {
   /**
    * Transform a raw order-line input (built from cart item data) before it
    * is written to the OrderDocument.  Adds type-specific fields such as
-   * prize-draw reveal status and deadline.
+   * prize-draw reveal status.
    */
   decorateOrderItem(line: OrderItemInput, product: ProductDocument): OrderItemInput;
 
   /**
    * Return extra fields to spread onto the created OrderDocument.
    * Used for prize-draw-specific fields (prizeDrawProductId, isNonRefundable,
-   * prizeRevealDeadline).
+   * prizeRevealMode).
    */
   decorateOrderDoc(
     groupFirstItem: CartItemDocument,

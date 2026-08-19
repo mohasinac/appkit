@@ -22,10 +22,7 @@ import {
   paymentReviewAutoApproveHandler,
   pendingOrderTimeoutHandler,
   positionsReconcileHandler,
-  prizeRevealCloseHandler,
-  prizeRevealExpiryHandler,
-  prizeRevealOpenHandler,
-  prizeRevealReminderHandler,
+  prizeDrawExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
   weeklyPayoutEligibilityHandler,
@@ -204,35 +201,11 @@ export const testerSandboxCleanup = defineFunction({
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
-export const prizeRevealOpen = defineFunction({
-  name: "prizeRevealOpen",
-  description: "Flip prize-draw reveals pending→open and send opening notifications.",
+export const prizeDrawExpiryReveal = defineFunction({
+  name: "prizeDrawExpiryReveal",
+  description: "Assign winners for outstanding paid orders on scheduled-mode prize draws past their expiry, then close them (every 5 minutes).",
   trigger: { kind: "schedule", cron: EVERY_5_MIN },
-  handler: prizeRevealOpenHandler,
-  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
-});
-
-export const prizeRevealClose = defineFunction({
-  name: "prizeRevealClose",
-  description: "Flip prize-draw reveals open→closed.",
-  trigger: { kind: "schedule", cron: EVERY_5_MIN },
-  handler: prizeRevealCloseHandler,
-  options: { region: REGION, timeoutSeconds: 60, memory: "256MiB", maxInstances: 1 },
-});
-
-export const prizeRevealExpiry = defineFunction({
-  name: "prizeRevealExpiry",
-  description: "Auto-refund unrevealed prize-draw entries past deadline (every 6 hours UTC).",
-  trigger: { kind: "schedule", cron: "0 */6 * * *", timeZone: "UTC" },
-  handler: prizeRevealExpiryHandler,
-  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
-});
-
-export const prizeRevealReminder = defineFunction({
-  name: "prizeRevealReminder",
-  description: "Nudge prize-draw buyers <24h to deadline (daily 10:00 IST).",
-  trigger: { kind: "schedule", cron: "0 10 * * *", timeZone: "Asia/Kolkata" },
-  handler: prizeRevealReminderHandler,
+  handler: prizeDrawExpiryRevealHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -282,10 +255,7 @@ export const SCHEDULED_FUNCTIONS = [
   mediaTmpCleanup,
   draftPrune,
   testerSandboxCleanup,
-  prizeRevealOpen,
-  prizeRevealClose,
-  prizeRevealExpiry,
-  prizeRevealReminder,
+  prizeDrawExpiryReveal,
   bundleStockSync,
   emiInstallmentReminder,
   catalogueImageStalenessReminder,

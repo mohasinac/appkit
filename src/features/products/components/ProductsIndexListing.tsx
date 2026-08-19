@@ -11,6 +11,7 @@ import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { CompareOverlay } from "./CompareOverlay";
 import { ROUTES } from "../../../next";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
@@ -364,7 +365,7 @@ export function ProductsIndexListing({
           <ProductGrid
             products={products as any[]}
             getProductHref={(p) =>
-              String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))
+              pluginFor((p as any).listingType ?? "standard").detailRoute((p as any).slug || p.id)
             }
             view={view === "grid" ? "card" : "list"}
             onWishlistToggle={handleWishlistToggle}

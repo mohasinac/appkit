@@ -163,12 +163,13 @@ export async function StoreDetailLayoutView({
     return lt ? isListingTypeEnabled(lt as Parameters<typeof isListingTypeEnabled>[0], settings) : true;
   });
 
+  const dropdownTabs = visibleStoreTabs.map((tab) => ({
+    value: tab.id,
+    label: tabLabel(tab.label, listingCounts[tab.id]),
+    href: STORE_LISTING_HREF[tab.id](storeSlug),
+  }));
+
   const tabs = [
-    ...visibleStoreTabs.map((tab) => ({
-      value: tab.id,
-      label: tabLabel(tab.label, listingCounts[tab.id]),
-      href: STORE_LISTING_HREF[tab.id](storeSlug),
-    })),
     { value: "coupons", label: tabLabel("Coupons", couponsCount), href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
     { value: "reviews", label: tabLabel("Reviews", reviewsCount), href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },
@@ -178,7 +179,12 @@ export async function StoreDetailLayoutView({
     <Main>
       <StoreHeader store={store as unknown as StoreDetail} trust={trust} />
       <Container size="xl" className="mt-6">
-        <StoreNavTabs tabs={tabs} activeValue={activeTab} />
+        <StoreNavTabs
+          dropdownTabs={dropdownTabs}
+          dropdownPlaceholder="Browse listings"
+          tabs={tabs}
+          activeValue={activeTab}
+        />
         <Section padding="t-lg">{children}</Section>
       </Container>
     </Main>

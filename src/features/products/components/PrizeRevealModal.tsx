@@ -1,47 +1,29 @@
 "use client";
 
 /**
- * PrizeRevealModal (SB4-I)
+ * PrizeRevealModal (SB4-I, redesigned for fully-automatic reveal)
  *
- * Theatrical reveal UI for prize-draw orders. When the buyer clicks "Reveal
- * my prize" we call the reveal API (which has already picked the winner via
- * crypto.randomInt server-side) and then run a 3-second highlight-cycling
- * animation across the collage — fast at first, decelerating, finally
- * landing on the winning tile. This is pure showmanship: the winner was
- * locked in by the server before the first frame rendered.
- *
- * A permanent disclaimer below the collage explains exactly that — the RNG
- * is `crypto.randomInt`, the source code is on GitHub, and neither the store
- * nor LetItRip admins can influence the outcome.
+ * Displays a prize-draw order's reveal state. Reveal is no longer a buyer
+ * action — the winner is assigned automatically by assignPrizeDrawWinner(),
+ * either the moment payment is confirmed ("instant" mode) or by a scheduled
+ * Firebase Function at draw expiry/sellout ("scheduled" mode). This modal is
+ * a pure display: "pending" (no result yet) or "won" (order.prizeWon is set).
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
-
-import { Anchor, Button, Div, Heading, LoginRequiredModal, Modal, Span, Stack, Text, useToast } from "../../../ui";
+import { Anchor, Div, Heading, Modal, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
-import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
-import { PRIZE_DRAW_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
-import { normalizeError } from "../../../errors/normalize";
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
 } as const;
 
-const CLS_REFUND_NOTE = "rounded border border-warning/40 bg-warning-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-warning dark:bg-warning-surface dark:text-warning";
-
-export interface PrizeRevealResponse {
-  prizeWon?: {
-    itemNumber: number;
-    title: string;
-    images: string[];
-    estimatedValue?: number;
-  };
-  alreadyRevealed?: boolean;
-  rngSourceUrl?: string;
-  refunded?: true;
-  reason?: string;
+export interface PrizeRevealResult {
+  itemNumber: number;
+  title: string;
+  images: string[];
+  estimatedValue?: number;
 }
 
 export interface PrizeRevealModalProps {
@@ -49,229 +31,44 @@ export interface PrizeRevealModalProps {
   onClose: () => void;
   /** Items to render in the collage (won state hidden — buyers don't see prior wins). */
   items: PrizeDrawItem[];
-  /** Order id used by the reveal endpoint. */
-  orderId: string;
-  /** Product id used in the reveal URL. */
-  productId: string;
-  /** Override the default `/api/prize-draws/[id]/reveal` POST call. */
-  onReveal?: (args: { orderId: string; productId: string }) => Promise<PrizeRevealResponse>;
-  /** Already-revealed prize, passed in if the order has `prizeWon` populated. */
-  initialPrizeWon?: PrizeRevealResponse["prizeWon"];
+  /** Already-assigned prize, from `order.prizeWon`. Undefined while still pending. */
+  initialPrizeWon?: PrizeRevealResult;
+  /** Drives the pending-state copy — "instant" vs "scheduled" draws explain differently. */
+  revealMode?: "instant" | "scheduled";
   /** Public proof-of-fairness URL — shown in the disclaimer. */
   rngSourceUrl?: string;
 }
 
-const REVEAL_DURATION_MS = 3200; // total animation length
-const CYCLE_INTERVAL_FAST = 80;
-const CYCLE_INTERVAL_SLOW = 360;
-
-function isUnauthenticatedResponse(status: number): boolean {
-  return status === 401 || status === 403;
-}
-
-async function fetchPrizeReveal(
-  productId: string,
-  orderId: string,
-): Promise<{ response: PrizeRevealResponse | null; unauthenticated: boolean }> {
-  const res = await fetch(PRIZE_DRAW_ENDPOINTS.REVEAL(productId), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ orderId }),
-  });
-  const json = (await res.json()) as { data?: PrizeRevealResponse };
-  if (!res.ok) {
-    if (isUnauthenticatedResponse(res.status)) {
-      return { response: null, unauthenticated: true };
-    }
-    throw new Error("Reveal request failed");
-  }
-  return { response: json.data ?? {}, unauthenticated: false };
-}
+const PENDING_COPY: Record<"instant" | "scheduled", string> = {
+  instant: "Your prize is being assigned now that payment is confirmed — refresh in a moment.",
+  scheduled: "This draw reveals automatically once it closes (at its expiry date) or sells out — check back here after.",
+};
 
 export function PrizeRevealModal({
   open,
   onClose,
   items,
-  orderId,
-  productId,
-  onReveal,
   initialPrizeWon,
+  revealMode = "scheduled",
   rngSourceUrl,
 }: PrizeRevealModalProps) {
-  const [phase, setPhase] = useState<
-    "idle" | "revealing" | "won" | "refunded" | "error"
-  >(initialPrizeWon ? "won" : "idle");
-  const [highlight, setHighlight] = useState<number | undefined>(undefined);
-  const [winner, setWinner] = useState<PrizeRevealResponse["prizeWon"] | undefined>(
-    initialPrizeWon,
-  );
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [effectiveRngUrl, setEffectiveRngUrl] = useState<string | undefined>(
-    rngSourceUrl,
-  );
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const { showToast } = useToast();
-
-  const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const endTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Clean up timers on close/unmount so we don't leak between sessions.
-  useEffect(() => {
-    if (!open) {
-      if (cycleTimerRef.current) clearTimeout(cycleTimerRef.current);
-      if (endTimerRef.current) clearTimeout(endTimerRef.current);
-      cycleTimerRef.current = null;
-      endTimerRef.current = null;
-    }
-    return () => {
-      if (cycleTimerRef.current) clearTimeout(cycleTimerRef.current);
-      if (endTimerRef.current) clearTimeout(endTimerRef.current);
-    };
-  }, [open]);
-
-  const startAnimation = useCallback(
-    (winningItemNumber: number) => {
-      const startedAt = Date.now();
-      const tile = (n: number) =>
-        items[n % items.length]?.itemNumber ?? winningItemNumber;
-      let step = 0;
-
-      const tick = () => {
-        const elapsed = Date.now() - startedAt;
-        const remaining = REVEAL_DURATION_MS - elapsed;
-        if (remaining <= 0) {
-          setHighlight(winningItemNumber);
-          return;
-        }
-        // Decelerate: as we approach the end, the interval stretches.
-        const progress = elapsed / REVEAL_DURATION_MS;
-        const interval =
-          CYCLE_INTERVAL_FAST +
-          (CYCLE_INTERVAL_SLOW - CYCLE_INTERVAL_FAST) * progress;
-        step += 1;
-        setHighlight(tile(step));
-        cycleTimerRef.current = setTimeout(tick, interval);
-      };
-      tick();
-    },
-    [items],
-  );
-
-  const handleRevealClick = useCallback(async () => {
-    if (phase !== "idle") return;
-    setPhase("revealing");
-    setErrorMessage("");
-
-    let response: PrizeRevealResponse;
-    try {
-      if (onReveal) {
-        response = await onReveal({ orderId, productId });
-      } else {
-        const result = await fetchPrizeReveal(productId, orderId);
-        if (result.unauthenticated) {
-          setPhase("idle");
-          setShowLoginModal(true);
-          return;
-        }
-        response = result.response ?? {};
-      }
-    } catch (err) {
-      void normalizeError(err);
-      if (isAuthError(err)) {
-        setPhase("idle");
-        setShowLoginModal(true);
-        return;
-      }
-      setPhase("error");
-      const msg = err instanceof Error ? err.message : "Reveal request failed";
-      setErrorMessage(msg);
-      showToast(msg, "error");
-      return;
-    }
-
-    if (response.refunded) {
-      setPhase("refunded");
-      return;
-    }
-    if (!response.prizeWon) {
-      setPhase("error");
-      setErrorMessage("Unexpected reveal response");
-      return;
-    }
-    if (response.rngSourceUrl) setEffectiveRngUrl(response.rngSourceUrl);
-    setWinner(response.prizeWon);
-
-    if (response.alreadyRevealed) {
-      // No theatrics for re-opens — just show the prize.
-      setHighlight(response.prizeWon.itemNumber);
-      setPhase("won");
-      return;
-    }
-
-    startAnimation(response.prizeWon.itemNumber);
-    endTimerRef.current = setTimeout(() => {
-      setPhase("won");
-    }, REVEAL_DURATION_MS);
-  }, [onReveal, orderId, phase, productId, startAnimation]);
-
+  const winner = initialPrizeWon;
   const winnerImg = winner?.images?.[0];
 
   return (
     <Modal isOpen={open} onClose={onClose} title="Prize Reveal" size="lg">
-      <LoginRequiredModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        message="You need to be signed in to reveal your prize. Please log in or create an account to continue."
-      />
       <Stack gap="md">
-        {phase === "refunded" ? (
-          <Div className={CLS_REFUND_NOTE}>
-            <Heading level={3} className="mb-1">
-              Pool exhausted — you've been refunded
-            </Heading>
-            <Text size="sm">
-              Every prize in this draw was already claimed by the time your
-              entry rolled. Your order has been marked refunded automatically.
-            </Text>
-          </Div>
-        ) : null}
+        <PrizeDrawCollage items={items} hideWonState />
 
-        {phase === "error" ? (
-          <Div className="border border-error/40" color="error" surface="danger-surface" padding="inline" rounded="default">
-            <Text size="sm" weight="semibold">Something went wrong</Text>
-            <Text size="sm">{errorMessage}</Text>
-          </Div>
-        ) : null}
-
-        <PrizeDrawCollage
-          items={items}
-          hideWonState
-          highlightItemNumber={highlight}
-        />
-
-        {phase === "idle" ? (
-          <Button
-            type="button"
-            variant="primary"
-            size="lg"
-            onClick={handleRevealClick}
-          >
-            ✨ Reveal my prize
-          </Button>
-        ) : null}
-
-        {phase === "revealing" ? (
-          // audit-content-alignment-ok: theatrical reveal-modal centerpiece, not marketing content
+        {!winner ? (
+          // audit-content-alignment-ok: informational reveal-status panel, not marketing content
           <Div className={`bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`} rounded="default">
-            <Text size="lg" weight="semibold">Rolling…</Text>
+            <Text size="lg" weight="semibold">Reveal pending</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-              The winner was locked by the server before this animation started.
-              Hang tight — we're just making it look pretty.
+              {PENDING_COPY[revealMode]}
             </Text>
           </Div>
-        ) : null}
-
-        {phase === "won" && winner ? (
+        ) : (
           // audit-content-alignment-ok: theatrical reveal-modal centerpiece, not marketing content
           <Div className={`border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`} rounded="lg">
             <Text className="tracking-wider text-[var(--appkit-color-text-muted)]" size="xs" transform="uppercase">
@@ -292,7 +89,7 @@ export function PrizeRevealModal({
               </Text>
             ) : null}
           </Div>
-        ) : null}
+        )}
 
         {/* Always-visible fairness disclaimer. */}
         <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] text-[var(--appkit-color-text-muted)]" padding="inlineSm" rounded="default">
@@ -300,11 +97,10 @@ export function PrizeRevealModal({
             Fairness guarantee:
           </Span>{" "}
           Winners are picked by <code>crypto.randomInt</code> running on
-          LetItRip's server before the animation starts. The animation is
-          theatrical — neither the store nor LetItRip staff can influence the
-          outcome.{" "}
-          {effectiveRngUrl ? (
-            <Anchor href={effectiveRngUrl} tone="none" underline="always">
+          LetItRip's server the moment your prize is assigned. Neither the
+          store nor LetItRip staff can influence the outcome.{" "}
+          {rngSourceUrl ? (
+            <Anchor href={rngSourceUrl} tone="none" underline="always">
               View RNG source code →
             </Anchor>
           ) : null}

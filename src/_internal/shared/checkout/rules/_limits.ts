@@ -17,6 +17,10 @@ export const CHECKOUT_MAX_ORDERS_PER_TX = 20;
  */
 export const PRIZE_DRAW_MAX_REVEALS_PER_ORDER = 3;
 
+/** Seller-facing prize-draw duration cap, in days — enforced by the Zod schema and the seller form. */
+export const PRIZE_DRAW_DURATION_DAYS_MIN = 1;
+export const PRIZE_DRAW_DURATION_DAYS_MAX = 15;
+
 /** Maximum qty per bundle purchase (bundles are always single-shot direct buys). */
 export const BUNDLE_MAX_QTY_PER_TX = 1;
 

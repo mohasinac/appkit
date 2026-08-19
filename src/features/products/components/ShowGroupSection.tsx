@@ -108,7 +108,7 @@ function GroupTableRow({ member }: { member: GroupMember }) {
           href={href}
           className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline"
         >
-          View â†’
+          View →
         </Link>
       </Td>
     </Tr>
@@ -171,7 +171,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           aria-expanded={open}
         >
           <Row align="center" gap="xs">
-            <Span size="xs" className="mr-1" color="faint">{open ? "â–¼" : "â–¶"}</Span>
+            <Span size="xs" className="mr-1" color="faint">{open ? "▼" : "▶"}</Span>
             <Text size="sm" weight="medium" color="primary">
               {parentLabel}
             </Text>
@@ -186,7 +186,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             onClick={(e) => { e.stopPropagation(); setShowAll(true); }}
             className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
-            View whole group â†’
+            View whole group →
           </Button>
         </Row>
 

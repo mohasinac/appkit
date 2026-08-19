@@ -152,7 +152,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
             onClick={(e) => e.stopPropagation()}
             className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
-            View all â†’
+            View all →
           </Link>
         )}
       </Row>

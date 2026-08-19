@@ -13,6 +13,8 @@ const CLS_STOCK_OK = "bg-success-surface text-white";
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-[var(--appkit-space-1-5)] text-center text-[length:var(--appkit-text-xs)] font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
 import { BaseListingCard, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
+import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
 export type MarketplaceBundleCardData = Pick<
   CategoryDocument,
@@ -22,6 +24,7 @@ export type MarketplaceBundleCardData = Pick<
   | "bundleItemDetails"
   | "bundleProductIds"
   | "bundlePrice"
+  | "bundleOriginalTotal"
   | "bundleStockStatus"
   | "display"
 >;
@@ -84,6 +87,7 @@ export function MarketplaceBundleCard({
   const stock = bundle.bundleStockStatus ?? "in_stock";
   const cover = bundle.display?.coverImage;
   const price = bundle.bundlePrice;
+  const discount = computeBundleDiscount(bundle.bundlePrice, bundle.bundleOriginalTotal);
 
   const collageTiles = (bundle.bundleItemDetails ?? [])
     .filter((d) => Boolean(d.imageURL))
@@ -148,6 +152,19 @@ export function MarketplaceBundleCard({
           )}
         </TextLink>
 
+        {discount && (
+          <Span
+            size="xs"
+            weight="bold"
+            color="inverse"
+            className="absolute left-2 top-2 bg-success-surface"
+            rounded="full"
+            padding="pill-xs"
+          >
+            {BUNDLE_COPY.detail.discountBadge(discount.percent)}
+          </Span>
+        )}
+
         <Stack className="absolute right-2 top-2" align="end" gap="xs">
           <Span size="xs" weight="medium" className={CLS_BUNDLE_PILL}>
             {mergedLabels.bundleBadge}
@@ -189,12 +206,19 @@ export function MarketplaceBundleCard({
             {bundle.name}
           </Text>
         </TextLink>
-        <Row justify="between" className="mt-1" gap="sm">
-          <Text size="sm" weight="semibold" color="primary">
-            {price
-              ? formatCurrency(price, getDefaultCurrency())
-              : "—"}
-          </Text>
+        <Row justify="between" className="mt-1" gap="sm" wrap>
+          <Row gap="xs" align="center">
+            <Text size="sm" weight="semibold" color="primary">
+              {price
+                ? formatCurrency(price, getDefaultCurrency())
+                : "—"}
+            </Text>
+            {discount && (
+              <Text size="xs" color="muted" className="line-through">
+                {formatCurrency(discount.originalTotal, getDefaultCurrency())}
+              </Text>
+            )}
+          </Row>
           <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
             {mergedLabels.itemsLabel(memberCount)}
           </Text>

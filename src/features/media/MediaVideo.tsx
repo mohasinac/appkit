@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect } from "react";
-import { Div, Row, Span, SiteMark } from "../../ui";
+import { Div, Row, Span } from "../../ui";
 import { resolveMediaUrl } from "../../utils/media-url";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 
@@ -11,6 +11,14 @@ import { useSiteSettings } from "../../core/hooks/useSiteSettings";
  * client-side overlay covers `<video>` playback because there is no
  * Vercel-Hobby-budget ffmpeg pipeline to bake the watermark into the frames.
  */
+export type MediaVideoWatermarkPosition =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "center"
+  | "custom";
+
 export interface MediaVideoWatermark {
   /** `"text"` renders a `<Span>` overlay; `"image"` renders a `<MediaImage>` (proxied). */
   type: "text" | "image";
@@ -22,6 +30,12 @@ export interface MediaVideoWatermark {
   size?: number;
   /** Percentage opacity (0–100). Default 20. */
   opacity?: number;
+  /** Anchor preset — mirrors the server-side Sharp pipeline. Default `"center"`. */
+  position?: MediaVideoWatermarkPosition;
+  /** `position === "custom"` only: % of container width, from center. +right / -left. */
+  offsetX?: number;
+  /** `position === "custom"` only: % of container height, from center. +down / -up. */
+  offsetY?: number;
 }
 
 export interface MediaVideoProps {
@@ -140,6 +154,40 @@ export function MediaVideo({
 }
 
 /**
+ * Mirrors the server-side Sharp pipeline's 5 anchor presets + `"custom"`
+ * %-offset-from-center (`resolveCompositePlacement` in
+ * `src/app/api/media/_watermark.ts`) as CSS insets, so a video's live
+ * overlay and its poster-frame-as-image watermark land in the same spot.
+ * Default `"center"`, 0/0 offset — matches the server-side default too.
+ */
+function resolveWatermarkPlacementStyle(config: MediaVideoWatermark): React.CSSProperties {
+  const position = config.position ?? "center";
+  const inset = "2%";
+  switch (position) {
+    case "top-left":
+      return { top: inset, left: inset };
+    case "top-right":
+      return { top: inset, right: inset };
+    case "bottom-left":
+      return { bottom: inset, left: inset };
+    case "bottom-right":
+      return { bottom: inset, right: inset };
+    case "custom": {
+      const offsetX = Math.max(-45, Math.min(45, config.offsetX ?? 0));
+      const offsetY = Math.max(-45, Math.min(45, config.offsetY ?? 0));
+      return {
+        top: `calc(50% + ${offsetY}%)`,
+        left: `calc(50% + ${offsetX}%)`,
+        transform: "translate(-50%, -50%)",
+      };
+    }
+    case "center":
+    default:
+      return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+  }
+}
+
+/**
  * Visual watermark overlay rendered on top of the playing `<video>`. Native
  * video controls render in a higher layer (the browser shadow DOM), so this
  * overlay sits below the controls but on top of the frames — visible enough
@@ -152,29 +200,16 @@ function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
   const widthPct = Math.max(0, Math.min(100, config.size ?? 30));
   const opacity = Math.max(0, Math.min(100, config.opacity ?? 20)) / 100;
   if (widthPct === 0 || opacity === 0) return null;
-  // Anchor: bottom-right, with a small inset matching the image watermark
-  // position. Width is a percentage of the container so the watermark scales
-  // with the video, just like the server-side Sharp pipeline scales images.
+  // Width is a percentage of the container so the watermark scales with the
+  // video, just like the server-side Sharp pipeline scales images.
   const containerStyle: React.CSSProperties = {
     position: "absolute",
-    right: "2%",
-    bottom: "2%",
     width: `${widthPct}%`,
     pointerEvents: "none",
     opacity,
+    ...resolveWatermarkPlacementStyle(config),
   };
   if (config.type === "image" && config.imageUrl) {
-    // The bundled brand marker renders via the live `<SiteMark>` primitive so
-    // it follows the active theme's gradient (same `--appkit-logo-stop-*`
-    // vars as everywhere else in the UI) instead of a static raster asset
-    // baked with fixed colors. Admin-uploaded overrides stay raw `<img>`.
-    if (config.imageUrl === "/logo.svg") {
-      return (
-        <Div className="z-10 [&_svg]:w-full [&_svg]:h-auto" style={containerStyle} aria-hidden="true">
-          <SiteMark size="sm" />
-        </Div>
-      );
-    }
     return (
       <Div
         className="z-10"

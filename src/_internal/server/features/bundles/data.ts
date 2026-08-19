@@ -33,17 +33,34 @@ export const getBundleForDetail = cache(
 );
 
 /**
- * Fetch the resolved product members of a bundle. Reads `bundleProductIds`
- * off the bundle document and hydrates each via `productRepository.findById`.
- * Returns an empty array when the bundle has no product mirror yet.
+ * Resolve the effective member product ids for a bundle. `bundleProductIds`
+ * is the index-friendly mirror and is normally authoritative, but a bundle
+ * can be written (e.g. by seed data or a partial API payload) with only its
+ * `bundleQueryRule` set and no mirror — falls back to the static rule's
+ * `productIds` in that case rather than silently rendering an empty bundle.
+ */
+export function resolveBundleMemberIds(
+  bundle: Pick<CategoryDocument, "bundleProductIds" | "bundleQueryRule">,
+): string[] {
+  if (bundle.bundleProductIds?.length) return bundle.bundleProductIds;
+  if (bundle.bundleQueryRule?.type === "static") {
+    return bundle.bundleQueryRule.productIds;
+  }
+  return [];
+}
+
+/**
+ * Fetch the resolved product members of a bundle. Hydrates each id from
+ * `resolveBundleMemberIds` via `productRepository.findById`. Returns an
+ * empty array when the bundle has no resolvable members yet.
  */
 export const listBundleMembers = cache(
   async (
-    bundle: Pick<CategoryDocument, "bundleProductIds">,
+    bundle: Pick<CategoryDocument, "bundleProductIds" | "bundleQueryRule">,
     _opts?: BundleDataOptions,
   ): Promise<ProductDocument[]> => {
     void _opts;
-    const ids = bundle.bundleProductIds ?? [];
+    const ids = resolveBundleMemberIds(bundle);
     if (ids.length === 0) return [];
     const results = await Promise.all(
       ids.map((id) => productRepository.findById(id).catch(() => null)),
@@ -51,6 +68,31 @@ export const listBundleMembers = cache(
     return results.filter((p): p is ProductDocument => p !== null);
   },
 );
+
+/**
+ * Sum the individual prices of a set of member products — the "buy
+ * separately" total a bundle's discount is measured against. Used at bundle
+ * create/update time (and by the daily `runBundleStockSync` sweep) to
+ * populate `bundleOriginalTotal`. Deliberately returns `undefined` (rather
+ * than a partial sum) when any member id fails to resolve, so a stale or
+ * broken reference never understates the "before" price and inflates the
+ * displayed discount.
+ */
+export async function resolveBundleOriginalTotal(
+  productIds: string[],
+): Promise<number | undefined> {
+  if (productIds.length === 0) return undefined;
+  const results = await Promise.all(
+    productIds.map((id) => productRepository.findById(id).catch(() => null)),
+  );
+  const prices: number[] = [];
+  for (const p of results) {
+    if (!p || typeof p.price !== "number") return undefined;
+    prices.push(p.price);
+  }
+  const total = prices.reduce((sum, p) => sum + p, 0);
+  return Math.round(total * 100) / 100;
+}
 
 /**
  * List the most recent active bundles for homepage placement. Bounded to

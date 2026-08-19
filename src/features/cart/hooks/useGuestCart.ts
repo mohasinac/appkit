@@ -6,6 +6,7 @@ import {
   clearGuestCart,
   removeFromGuestCart,
   updateGuestCartQuantity,
+  GUEST_CART_CHANGE_EVENT,
   type GuestCartItem,
 } from "../utils/guest-cart";
 
@@ -19,6 +20,16 @@ export function useGuestCart() {
 
   useEffect(() => {
     setItems(getGuestCartItems());
+    // Cross-instance sync within the same tab (e.g. a listing-page "Add to
+    // cart" quick action writing storage while the header badge's own
+    // useGuestCart() instance is mounted elsewhere) + cross-tab via "storage".
+    const onChange = () => setItems(getGuestCartItems());
+    window.addEventListener(GUEST_CART_CHANGE_EVENT, onChange);
+    window.addEventListener("storage", onChange);
+    return () => {
+      window.removeEventListener(GUEST_CART_CHANGE_EVENT, onChange);
+      window.removeEventListener("storage", onChange);
+    };
   }, []);
 
   const add = useCallback(
