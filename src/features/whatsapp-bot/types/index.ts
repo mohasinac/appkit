@@ -54,6 +54,26 @@ export interface WaBusinessSendInput {
   accessToken: string;
 }
 
+/**
+ * Input for sending a pre-approved Meta message TEMPLATE. Required for any
+ * business-initiated WhatsApp send outside the 24h customer-service window —
+ * Meta rejects free-form `type: "text"` sends in that case.
+ */
+export interface WaBusinessTemplateSendInput {
+  /** Digits-only phone number with country code, e.g. "919876543210" */
+  toPhone: string;
+  /** Meta Phone Number ID (from Meta for Developers > App > WhatsApp > API Setup) */
+  phoneNumberId: string;
+  /** Meta system user access token */
+  accessToken: string;
+  /** Exact approved template name from Meta WhatsApp Manager (not the display label). */
+  templateName: string;
+  /** BCP-47 language code the template was approved in, e.g. "en" or "en_US". */
+  languageCode: string;
+  /** Positional {{1}}, {{2}}… body parameters, in order. */
+  bodyParams?: string[];
+}
+
 /** A product mapped to the Meta Commerce API catalog item format. */
 export interface CatalogSyncProduct {
   /** Firestore product ID — used as Meta `retailer_id` */

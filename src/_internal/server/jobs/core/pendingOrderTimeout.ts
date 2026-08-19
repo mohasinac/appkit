@@ -56,6 +56,7 @@ export async function runPendingOrderTimeout(ctx: JobContext): Promise<void> {
         message: ORDER_MESSAGES.CANCELLED_TIMEOUT_MESSAGE(entry.data.productTitle, timeoutHours),
         relatedId: entry.id,
         relatedType: "order",
+        orderWhatsappAddonPaid: entry.data.whatsappNotifyAddon === true,
       }),
     ),
   );

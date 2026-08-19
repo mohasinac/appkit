@@ -13,6 +13,7 @@ import type {
   SendWhatsAppInput,
   StatusMessageInput,
   WaBusinessSendInput,
+  WaBusinessTemplateSendInput,
   CatalogSyncInput,
   CatalogSyncResult,
   PurchaseAnnouncementInput,
@@ -169,6 +170,54 @@ export async function sendWhatsAppBusinessMessage(
         to: cleanPhone,
         type: "text",
         text: { body: message },
+      }),
+    });
+    return res.ok;
+  } catch (_err) {
+    void normalizeError(_err);
+    return false;
+  }
+}
+
+/**
+ * Send a pre-approved Meta message TEMPLATE via WhatsApp Business Cloud API.
+ * Required for business-initiated sends outside the 24h customer-service
+ * window (proactive order/status notifications) — Meta rejects free-form
+ * `sendWhatsAppBusinessMessage` `type: "text"` sends in that case. Returns
+ * true on success, false on any failure (including a missing/unapproved
+ * template — Meta returns a 4xx with an error body, not a network failure).
+ */
+export async function sendWhatsAppTemplateMessage(
+  input: WaBusinessTemplateSendInput,
+): Promise<boolean> {
+  const { toPhone, phoneNumberId, accessToken, templateName, languageCode, bodyParams } = input;
+  const cleanPhone = toPhone.replace(/\D/g, "");
+  if (!cleanPhone || !phoneNumberId || !accessToken || !templateName) return false;
+  try {
+    const res = await fetch(`${META_GRAPH_BASE}/${phoneNumberId}/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: cleanPhone,
+        type: "template",
+        template: {
+          name: templateName,
+          language: { code: languageCode },
+          ...(bodyParams?.length
+            ? {
+                components: [
+                  {
+                    type: "body",
+                    parameters: bodyParams.map((text) => ({ type: "text", text })),
+                  },
+                ],
+              }
+            : {}),
+        },
       }),
     });
     return res.ok;

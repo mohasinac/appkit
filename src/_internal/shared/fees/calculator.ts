@@ -81,6 +81,57 @@ export function computeCodHandlingFee(subtotal: number, rates: CodHandlingFeeRat
   return Math.max(min, percentFee);
 }
 
+export interface WhatsAppNotifyFeeRates {
+  /** Admin master toggle — the addon isn't charged (even if the buyer selected it) unless this is true. */
+  whatsappNotifyFeeEnabled?: boolean;
+  /** Flat rupee fee charged when the buyer opts in. Falls back to ₹10. */
+  whatsappNotifyFee?: number;
+}
+
+const DEFAULT_WHATSAPP_NOTIFY_FEE = 10;
+
+/** Flat WhatsApp order-updates addon fee — charged only when the buyer opted in AND the admin has the addon enabled. */
+export function computeWhatsAppNotifyFee(addonSelected: boolean, rates: WhatsAppNotifyFeeRates): number {
+  if (!addonSelected || !rates.whatsappNotifyFeeEnabled) return 0;
+  return rates.whatsappNotifyFee ?? DEFAULT_WHATSAPP_NOTIFY_FEE;
+}
+
+export interface GiftWrapFeeRates {
+  /** Admin master toggle — the addon isn't charged (even if the buyer selected it) unless this is true. */
+  giftWrapFeeEnabled?: boolean;
+  /** Flat rupee fee charged when the buyer opts in. Falls back to ₹49. */
+  giftWrapFee?: number;
+}
+
+const DEFAULT_GIFT_WRAP_FEE = 49;
+
+/** Flat gift-wrap addon fee — charged only when the buyer opted in AND the admin has the addon enabled. */
+export function computeGiftWrapFee(addonSelected: boolean, rates: GiftWrapFeeRates): number {
+  if (!addonSelected || !rates.giftWrapFeeEnabled) return 0;
+  return rates.giftWrapFee ?? DEFAULT_GIFT_WRAP_FEE;
+}
+
+export interface ShipmentProtectionFeeRates {
+  /** Admin master toggle — the addon isn't charged (even if the buyer selected it) unless this is true. */
+  shipmentProtectionFeeEnabled?: boolean;
+  /** Percent of subtotal. Falls back to 2%. */
+  shipmentProtectionFeePercent?: number;
+  /** Rupee floor. Falls back to ₹30. */
+  shipmentProtectionFeeMin?: number;
+}
+
+const DEFAULT_SHIPMENT_PROTECTION_FEE_PERCENT = 2;
+const DEFAULT_SHIPMENT_PROTECTION_FEE_MIN = 30;
+
+/** Shipment-protection addon fee: max(fixed floor, subtotal × percent) — charged only when the buyer opted in AND the admin has the addon enabled. */
+export function computeShipmentProtectionFee(subtotal: number, addonSelected: boolean, rates: ShipmentProtectionFeeRates): number {
+  if (!addonSelected || !rates.shipmentProtectionFeeEnabled) return 0;
+  const percent = rates.shipmentProtectionFeePercent ?? DEFAULT_SHIPMENT_PROTECTION_FEE_PERCENT;
+  const min = rates.shipmentProtectionFeeMin ?? DEFAULT_SHIPMENT_PROTECTION_FEE_MIN;
+  const percentFee = roundRupees(subtotal * (percent / 100));
+  return Math.max(min, percentFee);
+}
+
 /**
  * P-8 GST — buyer-facing product tax, distinct from the platform-commission
  * GST above. Intra-state orders split the rate evenly between CGST + SGST;

@@ -404,7 +404,7 @@ export function AdminAdsView({
             weight="medium"
             layout="inline-flex"
             align="center"
-            className="h-9 bg-neutral-900 text-white bg-[var(--appkit-color-surface)] dark:text-[var(--appkit-color-text)]"
+            className="h-9 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)]"
           >
             New ad
           </TextLink>

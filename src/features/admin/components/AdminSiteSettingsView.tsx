@@ -4,7 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, BackgroundRenderer, Button, Div, Form, FormActions, Grid, Input, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
+import { Alert, BackgroundRenderer, Button, Div, Form, FormActions, Grid, Input, PaginatedSelect, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
@@ -13,6 +13,8 @@ import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
+import { FEATURE_FLAG_META, type FeatureFlagKey } from "../schemas/firestore";
+import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
 import {
   ThemeManagerView,
   type ThemeManagerValue,
@@ -212,6 +214,17 @@ export function AdminSiteSettingsView({
   const [preOrderListingFee, setPreOrderListingFee] = React.useState(0);
   const [featuredSlotFee, setFeaturedSlotFee] = React.useState(999);
   const [promotedSlotFee, setPromotedSlotFee] = React.useState(499);
+  const [whatsappNotifyFeeEnabled, setWhatsappNotifyFeeEnabled] = React.useState(false);
+  const [whatsappNotifyFee, setWhatsappNotifyFee] = React.useState(10);
+  const [giftWrapFeeEnabled, setGiftWrapFeeEnabled] = React.useState(false);
+  const [giftWrapFee, setGiftWrapFee] = React.useState(49);
+  const [shipmentProtectionFeeEnabled, setShipmentProtectionFeeEnabled] = React.useState(false);
+  const [shipmentProtectionFeePercent, setShipmentProtectionFeePercent] = React.useState(2);
+  const [shipmentProtectionFeeMin, setShipmentProtectionFeeMin] = React.useState(30);
+  const [codDepositPercent, setCodDepositPercent] = React.useState(10);
+  const [sellerShippingFixed, setSellerShippingFixed] = React.useState(0);
+  const [platformShippingPercent, setPlatformShippingPercent] = React.useState(10);
+  const [platformShippingFixedMin, setPlatformShippingFixedMin] = React.useState(0);
 
   // ⑧ Integrations
   const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
@@ -242,6 +255,16 @@ export function AdminSiteSettingsView({
   const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
   const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
   const [codEnabled, setCodEnabled] = React.useState(true);
+  const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
+
+  // Feature flags — generic, data-driven off FEATURE_FLAG_META (12 boolean platform flags).
+  const [featureFlags, setFeatureFlags] = React.useState<Record<string, boolean>>({});
+  // Per-listing-type / per-category-type visibility flags.
+  const [listingTypeFlags, setListingTypeFlags] = React.useState<Record<string, boolean>>({});
+  const [categoryTypeFlags, setCategoryTypeFlags] = React.useState<Record<string, boolean>>({});
+  // Per-channel notification-type allowlists — empty array means "all types".
+  const [notifEmailTypes, setNotifEmailTypes] = React.useState<string[]>([]);
+  const [notifWhatsappTypes, setNotifWhatsappTypes] = React.useState<string[]>([]);
 
   // ⑩ Auction
   const [minBidIncrement, setMinBidIncrement] = React.useState(50);
@@ -267,6 +290,13 @@ export function AdminSiteSettingsView({
   const [waPhoneNumberId, setWaPhoneNumberId] = React.useState("");
   const [waCloudApiToken, setWaCloudApiToken] = React.useState("");
   const [waAdminNotifyNumbers, setWaAdminNotifyNumbers] = React.useState("");
+  const [waTemplateLanguage, setWaTemplateLanguage] = React.useState("en");
+  const [waTemplateOrderPlaced, setWaTemplateOrderPlaced] = React.useState("");
+  const [waTemplateOrderConfirmed, setWaTemplateOrderConfirmed] = React.useState("");
+  const [waTemplateOrderShipped, setWaTemplateOrderShipped] = React.useState("");
+  const [waTemplateOrderDelivered, setWaTemplateOrderDelivered] = React.useState("");
+  const [waTemplateOrderCancelled, setWaTemplateOrderCancelled] = React.useState("");
+  const [waTemplateRefundInitiated, setWaTemplateRefundInitiated] = React.useState("");
 
   // ⓪ About
   const [aboutTitle, setAboutTitle] = React.useState("");
@@ -385,6 +415,17 @@ export function AdminSiteSettingsView({
     setPreOrderListingFee(s.commissions?.preOrderListingFee ?? 0);
     setFeaturedSlotFee(s.commissions?.featuredSlotFee ?? 999);
     setPromotedSlotFee(s.commissions?.promotedSlotFee ?? 499);
+    setWhatsappNotifyFeeEnabled(s.commissions?.whatsappNotifyFeeEnabled ?? false);
+    setWhatsappNotifyFee(s.commissions?.whatsappNotifyFee ?? 10);
+    setGiftWrapFeeEnabled(s.commissions?.giftWrapFeeEnabled ?? false);
+    setGiftWrapFee(s.commissions?.giftWrapFee ?? 49);
+    setShipmentProtectionFeeEnabled(s.commissions?.shipmentProtectionFeeEnabled ?? false);
+    setShipmentProtectionFeePercent(s.commissions?.shipmentProtectionFeePercent ?? 2);
+    setShipmentProtectionFeeMin(s.commissions?.shipmentProtectionFeeMin ?? 30);
+    setCodDepositPercent(s.commissions?.codDepositPercent ?? 10);
+    setSellerShippingFixed(s.commissions?.sellerShippingFixed ?? 0);
+    setPlatformShippingPercent(s.commissions?.platformShippingPercent ?? 10);
+    setPlatformShippingFixedMin(s.commissions?.platformShippingFixedMin ?? 0);
 
     setLaborHourlyRate(s.laborRate?.hourlyRate ?? 200);
     setLaborMaxHoursPerDay(s.laborRate?.maxHoursPerDay ?? 6);
@@ -427,6 +468,13 @@ export function AdminSiteSettingsView({
     setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
+    setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
+
+    setFeatureFlags((s.featureFlags as Record<string, boolean> | undefined) ?? {});
+    setListingTypeFlags((s.featureFlags?.listingTypes as Record<string, boolean> | undefined) ?? {});
+    setCategoryTypeFlags((s.featureFlags?.categoryTypes as Record<string, boolean> | undefined) ?? {});
+    setNotifEmailTypes(s.notificationChannels?.email?.types ?? []);
+    setNotifWhatsappTypes(s.notificationChannels?.whatsapp?.types ?? []);
 
     setMinBidIncrement(s.auctionConfig?.minBidIncrement ?? 50);
     setAutoExtendWindow(s.auctionConfig?.autoExtendWindowMinutes ?? 5);
@@ -465,6 +513,13 @@ export function AdminSiteSettingsView({
     setWaPhoneNumberId(s.credentialsMasked?.whatsappPhoneNumberId ?? "");
     setWaCloudApiToken(s.credentialsMasked?.whatsappCloudApiToken ?? "");
     setWaAdminNotifyNumbers(s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "");
+    setWaTemplateLanguage(s.credentialsMasked?.whatsappTemplateLanguage ?? "en");
+    setWaTemplateOrderPlaced(s.credentialsMasked?.whatsappTemplateOrderPlaced ?? "");
+    setWaTemplateOrderConfirmed(s.credentialsMasked?.whatsappTemplateOrderConfirmed ?? "");
+    setWaTemplateOrderShipped(s.credentialsMasked?.whatsappTemplateOrderShipped ?? "");
+    setWaTemplateOrderDelivered(s.credentialsMasked?.whatsappTemplateOrderDelivered ?? "");
+    setWaTemplateOrderCancelled(s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "");
+    setWaTemplateRefundInitiated(s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "");
 
     setNotifEmailEnabled(s.notificationChannels?.email?.enabled ?? false);
     setNotifEmailMinPriority(s.notificationChannels?.email?.minPriority ?? "normal");
@@ -491,6 +546,13 @@ export function AdminSiteSettingsView({
       whatsappPhoneNumberId: s.credentialsMasked?.whatsappPhoneNumberId ?? "",
       whatsappCloudApiToken: s.credentialsMasked?.whatsappCloudApiToken ?? "",
       whatsappAdminNotifyNumbers: s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "",
+      whatsappTemplateLanguage: s.credentialsMasked?.whatsappTemplateLanguage ?? "en",
+      whatsappTemplateOrderPlaced: s.credentialsMasked?.whatsappTemplateOrderPlaced ?? "",
+      whatsappTemplateOrderConfirmed: s.credentialsMasked?.whatsappTemplateOrderConfirmed ?? "",
+      whatsappTemplateOrderShipped: s.credentialsMasked?.whatsappTemplateOrderShipped ?? "",
+      whatsappTemplateOrderDelivered: s.credentialsMasked?.whatsappTemplateOrderDelivered ?? "",
+      whatsappTemplateOrderCancelled: s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "",
+      whatsappTemplateRefundInitiated: s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "",
       resendApiKey: s.credentialsMasked?.resendApiKey ?? "",
     };
   }, [data]);
@@ -542,7 +604,7 @@ export function AdminSiteSettingsView({
       contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp },
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
       watermark: { type: watermarkType, text: watermarkText, imageUrl: watermarkImageUrl, size: watermarkSize, opacity: watermarkOpacity },
-      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
+      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, whatsappNotifyFeeEnabled, whatsappNotifyFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
@@ -580,6 +642,13 @@ export function AdminSiteSettingsView({
         whatsappPhoneNumberId: maskedOrReal("whatsappPhoneNumberId", waPhoneNumberId),
         whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", waCloudApiToken),
         whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", waAdminNotifyNumbers),
+        whatsappTemplateLanguage: maskedOrReal("whatsappTemplateLanguage", waTemplateLanguage),
+        whatsappTemplateOrderPlaced: maskedOrReal("whatsappTemplateOrderPlaced", waTemplateOrderPlaced),
+        whatsappTemplateOrderConfirmed: maskedOrReal("whatsappTemplateOrderConfirmed", waTemplateOrderConfirmed),
+        whatsappTemplateOrderShipped: maskedOrReal("whatsappTemplateOrderShipped", waTemplateOrderShipped),
+        whatsappTemplateOrderDelivered: maskedOrReal("whatsappTemplateOrderDelivered", waTemplateOrderDelivered),
+        whatsappTemplateOrderCancelled: maskedOrReal("whatsappTemplateOrderCancelled", waTemplateOrderCancelled),
+        whatsappTemplateRefundInitiated: maskedOrReal("whatsappTemplateRefundInitiated", waTemplateRefundInitiated),
         resendApiKey: maskedOrReal("resendApiKey", resendApiKey),
       },
       emailSettings: {
@@ -588,14 +657,20 @@ export function AdminSiteSettingsView({
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
-      payment: { razorpayEnabled, upiManualEnabled, codEnabled },
+      payment: { razorpayEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { minBidIncrement, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
+      // Spreading the raw `featureFlags` object captured at load (not hand-picking keys)
+      // preserves `adminCheckoutBypass` through this save even though it's not editable
+      // here — Firestore's update() replaces nested maps wholesale, so omitting a key
+      // here would silently wipe it (it's edited exclusively via its own dedicated,
+      // audit-logged route — see the note above the Feature Flags tab).
+      featureFlags: { ...featureFlags, listingTypes: listingTypeFlags, categoryTypes: categoryTypeFlags },
       notificationChannels: {
         inApp: { enabled: true, readOnly: true },
-        email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority },
-        whatsapp: { enabled: notifWhatsappEnabled, minPriority: notifWhatsappMinPriority, otpEnabled: notifWhatsappOtpEnabled },
+        email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority, types: notifEmailTypes },
+        whatsapp: { enabled: notifWhatsappEnabled, minPriority: notifWhatsappMinPriority, otpEnabled: notifWhatsappOtpEnabled, types: notifWhatsappTypes },
         sms: { enabled: notifSmsEnabled, minPriority: notifSmsMinPriority },
       },
     };
@@ -629,6 +704,9 @@ export function AdminSiteSettingsView({
     { label: "Bluedart", value: "bluedart" },
     { label: "FedEx", value: "fedex" },
   ];
+  const LISTING_TYPE_KEYS = ["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live"] as const;
+  const CATEGORY_TYPE_KEYS = ["category", "sublisting", "brand", "bundle"] as const;
+  const NOTIF_TYPE_OPTIONS = NOTIFICATION_TYPE_TABS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label }));
 
   return (
     <StackedViewShell
@@ -668,6 +746,7 @@ export function AdminSiteSettingsView({
               ["procurement", "⑮ Procurement"],
               ["emi", "⑯ EMI"],
               ["gst", "⑰ GST"],
+              ["featureflags", "⑱ Feature Flags"],
             ].map(([value, label]) => (
               <TabsTrigger key={value} value={value}>
                 {label}
@@ -993,6 +1072,66 @@ export function AdminSiteSettingsView({
                 <Input label="Pre-order listing fee (₹)" value={String(preOrderListingFee)} onChange={(e) => setPreOrderListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Featured slot fee (₹)" value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Promoted slot fee (₹)" value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
+                <Input label="COD deposit (%)" helperText="% of order collected upfront on COD orders; remainder paid on delivery." value={String(codDepositPercent)} onChange={(e) => setCodDepositPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
+              </Grid>
+              <Toggle
+                checked={whatsappNotifyFeeEnabled}
+                onChange={setWhatsappNotifyFeeEnabled}
+                label="Offer the WhatsApp order-updates addon at checkout"
+              />
+              <Grid cols={2} gap="md">
+                <Input
+                  label="WhatsApp addon fee (₹)"
+                  helperText="Flat fee charged to the buyer when they opt in. Requires WhatsApp credentials + at least one approved template — see the WhatsApp tab."
+                  value={String(whatsappNotifyFee)}
+                  onChange={(e) => setWhatsappNotifyFee(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  disabled={!whatsappNotifyFeeEnabled}
+                />
+              </Grid>
+              <Toggle
+                checked={giftWrapFeeEnabled}
+                onChange={setGiftWrapFeeEnabled}
+                label="Offer the gift-wrap addon at checkout"
+              />
+              <Grid cols={2} gap="md">
+                <Input
+                  label="Gift wrap fee (₹)"
+                  helperText="Flat fee charged to the buyer when they opt in."
+                  value={String(giftWrapFee)}
+                  onChange={(e) => setGiftWrapFee(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  disabled={!giftWrapFeeEnabled}
+                />
+              </Grid>
+              <Toggle
+                checked={shipmentProtectionFeeEnabled}
+                onChange={setShipmentProtectionFeeEnabled}
+                label="Offer the shipment-protection addon at checkout"
+              />
+              <Grid cols={2} gap="md">
+                <Input
+                  label="Shipment protection (%)"
+                  helperText="% of order subtotal, charged when the buyer opts in."
+                  value={String(shipmentProtectionFeePercent)}
+                  onChange={(e) => setShipmentProtectionFeePercent(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={0.1}
+                  disabled={!shipmentProtectionFeeEnabled}
+                />
+                <Input
+                  label="Shipment protection minimum (₹)"
+                  helperText="Floor for the shipment-protection fee."
+                  value={String(shipmentProtectionFeeMin)}
+                  onChange={(e) => setShipmentProtectionFeeMin(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  disabled={!shipmentProtectionFeeEnabled}
+                />
               </Grid>
             </Form>
           </TabsContent>
@@ -1133,6 +1272,63 @@ export function AdminSiteSettingsView({
             </Form>
           </TabsContent>
 
+          {/* ⑱ Feature Flags */}
+          <TabsContent value="featureflags">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
+              <Text size="xs" color="muted">
+                Site-wide platform feature toggles. Disabling a flag hides that feature's nav entries
+                and pages — existing data is untouched, it just becomes unreachable until re-enabled.
+              </Text>
+              <Grid cols={2} gap="md">
+                {FEATURE_FLAG_META.map((flag) => (
+                  <Stack key={flag.key} gap="xs">
+                    <Toggle
+                      label={`${flag.icon} ${flag.labelKey}`}
+                      checked={featureFlags[flag.key] ?? false}
+                      onChange={(v) => setFeatureFlags((prev) => ({ ...prev, [flag.key]: v }))}
+                    />
+                    <Text size="xs" color="muted">{flag.descKey}</Text>
+                  </Stack>
+                ))}
+              </Grid>
+
+              {/* Admin checkout bypass is intentionally NOT editable here — it has its
+                  own dedicated, audit-logged toggle on the Admin Dashboard page (Quick
+                  Actions → Dev Settings), which calls a route that logs actorUid+reason
+                  on every use. audit-checkout-bypass.mjs enforces that flag exclusively
+                  through that route; a second write path here would violate it. */}
+
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">Listing types</Text>
+                <Text size="xs" color="muted">Disabled types are hidden from listings and reject create/add-to-cart.</Text>
+                <Grid cols={2} gap="sm">
+                  {LISTING_TYPE_KEYS.map((key) => (
+                    <Toggle
+                      key={key}
+                      label={key}
+                      checked={listingTypeFlags[key] ?? true}
+                      onChange={(v) => setListingTypeFlags((prev) => ({ ...prev, [key]: v }))}
+                    />
+                  ))}
+                </Grid>
+              </Stack>
+
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">Category types</Text>
+                <Grid cols={2} gap="sm">
+                  {CATEGORY_TYPE_KEYS.map((key) => (
+                    <Toggle
+                      key={key}
+                      label={key}
+                      checked={categoryTypeFlags[key] ?? true}
+                      onChange={(v) => setCategoryTypeFlags((prev) => ({ ...prev, [key]: v }))}
+                    />
+                  ))}
+                </Grid>
+              </Stack>
+            </Form>
+          </TabsContent>
+
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
             <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
@@ -1200,6 +1396,20 @@ export function AdminSiteSettingsView({
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
               <Select label="Default carrier" options={CARRIER_OPTIONS} value={defaultCarrier} onValueChange={setDefaultCarrier} />
               <Input label="Max delivery radius (km, 0 = no limit)" value={String(maxDeliveryRadius)} onChange={(e) => setMaxDeliveryRadius(parseInt(e.target.value) || 0)} type="number" min={0} />
+              <Input
+                label="High-value checkout OTP threshold (₹)"
+                helperText="Carts at or above this subtotal require an extra OTP verification step before payment (0 = disabled)."
+                value={String(otpCheckoutThreshold)}
+                onChange={(e) => setOtpCheckoutThreshold(parseInt(e.target.value) || 0)}
+                type="number"
+                min={0}
+              />
+              <Text size="sm" weight="medium" color="muted" className="pt-[var(--appkit-space-2)]">Seller shipping charge defaults</Text>
+              <Grid cols={2} gap="md">
+                <Input label="Seller shipping fixed (₹)" helperText="Flat shipping charge collected on the seller's behalf." value={String(sellerShippingFixed)} onChange={(e) => setSellerShippingFixed(parseFloat(e.target.value) || 0)} type="number" min={0} />
+                <Input label="Platform shipping (%)" helperText="Platform's own shipping markup, as a % of order value." value={String(platformShippingPercent)} onChange={(e) => setPlatformShippingPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
+                <Input label="Platform shipping minimum (₹)" helperText="Floor for the platform shipping markup." value={String(platformShippingFixedMin)} onChange={(e) => setPlatformShippingFixedMin(parseFloat(e.target.value) || 0)} type="number" min={0} />
+              </Grid>
             </Form>
           </TabsContent>
 
@@ -1255,6 +1465,28 @@ export function AdminSiteSettingsView({
                 placeholder="919876543210,918765432109"
                 helperText="Comma-separated, digits-only, include country code. These receive a WhatsApp message when any order is placed."
               />
+              <Text size="xs" color="muted">
+                Approved Meta message templates for the buyer-facing WhatsApp order-updates addon
+                (Fees tab). Meta rejects business-initiated free-text WhatsApp messages outside a 24h
+                customer-service window — a real template name here is required for that notification
+                type to actually deliver. Leave blank to skip WhatsApp for that type (in-app + email
+                still fire).
+              </Text>
+              <Input
+                label="Template language code"
+                value={waTemplateLanguage}
+                onChange={(e) => setWaTemplateLanguage(e.target.value)}
+                placeholder="en"
+                helperText="BCP-47 code the templates below were approved in, e.g. en or en_US."
+              />
+              <Grid cols={2} gap="md">
+                <Input label="Order placed template name" value={waTemplateOrderPlaced} onChange={(e) => setWaTemplateOrderPlaced(e.target.value)} placeholder="order_placed_update" />
+                <Input label="Order confirmed template name" value={waTemplateOrderConfirmed} onChange={(e) => setWaTemplateOrderConfirmed(e.target.value)} placeholder="order_confirmed_update" />
+                <Input label="Order shipped template name" value={waTemplateOrderShipped} onChange={(e) => setWaTemplateOrderShipped(e.target.value)} placeholder="order_shipped_update" />
+                <Input label="Order delivered template name" value={waTemplateOrderDelivered} onChange={(e) => setWaTemplateOrderDelivered(e.target.value)} placeholder="order_delivered_update" />
+                <Input label="Order cancelled template name" value={waTemplateOrderCancelled} onChange={(e) => setWaTemplateOrderCancelled(e.target.value)} placeholder="order_cancelled_update" />
+                <Input label="Refund initiated template name" value={waTemplateRefundInitiated} onChange={(e) => setWaTemplateRefundInitiated(e.target.value)} placeholder="refund_initiated_update" />
+              </Grid>
             </Form>
           </TabsContent>
 
@@ -1292,6 +1524,14 @@ export function AdminSiteSettingsView({
                       <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
                       <Input label="From name" value={notifFromName} onChange={(e) => setNotifFromName(e.target.value)} placeholder="LetItRip" />
                     </Grid>
+                    <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Notification types (leave empty to send all types)</Text>
+                    <PaginatedSelect<string>
+                      multiple
+                      options={NOTIF_TYPE_OPTIONS}
+                      value={notifEmailTypes}
+                      onChange={(values) => setNotifEmailTypes(values)}
+                      placeholder="All notification types"
+                    />
                   </Stack>
                 )}
               </Stack>
@@ -1315,6 +1555,14 @@ export function AdminSiteSettingsView({
                     <Text size="xs" color="muted">
                       WhatsApp credentials are configured in the WhatsApp tab (⑬). OTP messages use the same phone number.
                     </Text>
+                    <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Notification types (leave empty to send all types)</Text>
+                    <PaginatedSelect<string>
+                      multiple
+                      options={NOTIF_TYPE_OPTIONS}
+                      value={notifWhatsappTypes}
+                      onChange={(values) => setNotifWhatsappTypes(values)}
+                      placeholder="All notification types"
+                    />
                   </Stack>
                 )}
               </Stack>

@@ -59,6 +59,8 @@ export {
 // SB-UNI-A 2026-05-13 — storeAddressRepository deleted. Use addressesRepository
 // with ownerType:"store" instead.
 export { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
+export { analyticsRollupRepository } from "../features/admin/repository/analytics-rollup.repository";
+export type { AnalyticsRollupDocument } from "../features/admin/repository/analytics-rollup.repository";
 export { notificationRepository } from "../features/admin/repository/notification.repository";
 export { chatRepository } from "../features/admin/repository/chat.repository";
 export { carouselRepository } from "../features/homepage/repository/carousel.repository";

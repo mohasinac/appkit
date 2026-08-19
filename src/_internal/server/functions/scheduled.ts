@@ -27,6 +27,7 @@ import {
   prizeRevealOpenHandler,
   prizeRevealReminderHandler,
   productStatsSyncHandler,
+  revenueRollupHandler,
   weeklyPayoutEligibilityHandler,
   testerSandboxCleanupHandler,
 } from "../jobs/handlers";
@@ -97,6 +98,14 @@ export const productStatsSync = defineFunction({
   trigger: { kind: "schedule", cron: "0 1 * * *", timeZone: "UTC" },
   handler: productStatsSyncHandler,
   options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
+});
+
+export const revenueRollup = defineFunction({
+  name: "revenueRollup",
+  description: "Pre-compute total delivered-order revenue into analytics/dashboardRollup, replacing an unbounded per-request scan (daily 01:30 UTC).",
+  trigger: { kind: "schedule", cron: "30 1 * * *", timeZone: "UTC" },
+  handler: revenueRollupHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
 export const dailyDataCleanup = defineFunction({
@@ -260,6 +269,7 @@ export const SCHEDULED_FUNCTIONS = [
   couponExpiry,
   offerExpiry,
   productStatsSync,
+  revenueRollup,
   dailyDataCleanup,
   countersReconcile,
   positionsReconcile,

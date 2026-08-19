@@ -72,6 +72,24 @@ export async function FeesView({
       who: t("paidByBuyer"),
       note: t("codHandlingFeeNote"),
     },
+    {
+      category: t("whatsappNotifyFeeTitle"),
+      rate: t("whatsappNotifyFeeRate"),
+      who: t("paidByBuyer"),
+      note: t("whatsappNotifyFeeNote"),
+    },
+    {
+      category: t("giftWrapFeeTitle"),
+      rate: t("giftWrapFeeRate"),
+      who: t("paidByBuyer"),
+      note: t("giftWrapFeeNote"),
+    },
+    {
+      category: t("shipmentProtectionFeeTitle"),
+      rate: t("shipmentProtectionFeeRate"),
+      who: t("paidByBuyer"),
+      note: t("shipmentProtectionFeeNote"),
+    },
   ];
 
   const OFFER_PAYOUT_ROWS = [

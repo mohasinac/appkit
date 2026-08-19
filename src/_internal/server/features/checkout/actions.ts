@@ -19,7 +19,6 @@ import {
   userRepository,
   storeRepository,
   couponsRepository,
-  notificationRepository,
   claimedCouponsRepository,
   addressesRepository,
 } from "../../../../repositories";
@@ -34,7 +33,16 @@ import type {
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
 import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
 import { resolveDate } from "../../../../utils";
-import { computeCodHandlingFee, type CodHandlingFeeRates } from "../../../shared/fees/calculator";
+import {
+  computeCodHandlingFee,
+  type CodHandlingFeeRates,
+  computeWhatsAppNotifyFee,
+  type WhatsAppNotifyFeeRates,
+  computeGiftWrapFee,
+  type GiftWrapFeeRates,
+  computeShipmentProtectionFee,
+  type ShipmentProtectionFeeRates,
+} from "../../../shared/fees/calculator";
 import {
   getAdminDb,
   getAdminRealtimeDb,
@@ -182,45 +190,44 @@ function emitOrderPlacedNotifications(args: {
   storeOwnerId: string | undefined;
   productLabel: string;
   paid: boolean;
+  /** Buyer paid the ₹10 WhatsApp order-updates addon on this order — only this order's buyer-facing sends get the WhatsApp channel. */
+  whatsappNotifyAddon: boolean;
 }): void {
-  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid } = args;
-  const buyerNotif = notificationRepository
-    .create({
-      userId: buyerUid,
-      type: "order_placed",
-      priority: "normal",
-      title: "Order placed",
-      message: `Your order for ${productLabel} has been placed.`,
-      relatedId: orderId,
-      relatedType: "order",
-      actionUrl: `/user/orders/view/${orderId}`,
-    } as never)
-    .catch((err: unknown) =>
-      serverLogger.warn("Failed to create buyer order_placed notification", {
-        err: err instanceof Error ? err.message : String(err),
-        orderId,
-      }),
-    );
+  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid, whatsappNotifyAddon } = args;
+  const buyerNotif = sendNotification({
+    userId: buyerUid,
+    type: "order_placed",
+    priority: "normal",
+    title: "Order placed",
+    message: `Your order for ${productLabel} has been placed.`,
+    relatedId: orderId,
+    relatedType: "order",
+    actionUrl: `/user/orders/view/${orderId}`,
+    orderWhatsappAddonPaid: whatsappNotifyAddon,
+  }).catch((err: unknown) =>
+    serverLogger.warn("Failed to send buyer order_placed notification", {
+      err: err instanceof Error ? err.message : String(err),
+      orderId,
+    }),
+  );
   const sellerNotif = storeOwnerId
-    ? notificationRepository
-        .create({
-          userId: storeOwnerId,
-          type: "order_placed",
-          priority: "high",
-          title: "New order received",
-          message: `${paid ? "New paid order" : "New order"} from ${
+    ? sendNotification({
+        userId: storeOwnerId,
+        type: "order_placed",
+        priority: "high",
+        title: "New order received",
+        message: `${paid ? "New paid order" : "New order"} from ${
  buyerName || "a buyer"
  } for ${productLabel}.`,
-          relatedId: orderId,
-          relatedType: "order",
-          actionUrl: `/store/orders/${orderId}/view`,
-        } as never)
-        .catch((err: unknown) =>
-          serverLogger.warn("Failed to create seller order_placed notification", {
-            err: err instanceof Error ? err.message : String(err),
-            orderId,
-          }),
-        )
+        relatedId: orderId,
+        relatedType: "order",
+        actionUrl: `/store/orders/${orderId}/view`,
+      }).catch((err: unknown) =>
+        serverLogger.warn("Failed to send seller order_placed notification", {
+          err: err instanceof Error ? err.message : String(err),
+          orderId,
+        }),
+      )
     : Promise.resolve();
   void Promise.all([buyerNotif, sellerNotif]);
 }
@@ -247,6 +254,14 @@ export interface CreateCheckoutOrderInput {
    * omits the field.
    */
   outOfStockPolicy?: OutOfStockPolicy;
+  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout. Defaults false (unchecked). Only actually charged/honored when siteSettings.commissions.whatsappNotifyFeeEnabled is also true. */
+  whatsappNotifyAddon?: boolean;
+  /** Buyer opted into gift wrap at checkout. Defaults false (unchecked). Only actually charged/honored when siteSettings.commissions.giftWrapFeeEnabled is also true. */
+  giftWrapAddon?: boolean;
+  /** Optional gift message, only meaningful when giftWrapAddon is true. */
+  giftWrapMessage?: string;
+  /** Buyer opted into shipment protection at checkout. Defaults false (unchecked). Only actually charged/honored when siteSettings.commissions.shipmentProtectionFeeEnabled is also true. */
+  shipmentProtectionAddon?: boolean;
 }
 
 function accumulateCouponUsage(
@@ -386,13 +401,20 @@ interface OrderGroupContext {
   paymentMethod: CheckoutPaymentMethod;
   emiTenureMonths?: number;
   emiSettings: EmiSettings;
-  commissions: CodHandlingFeeRates & { codDepositPercent: number };
+  commissions: CodHandlingFeeRates & WhatsAppNotifyFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & { codDepositPercent: number };
   appliedCoupons: CartAppliedCoupon[];
   cartSubtotal: number;
   couponUsageAccumulator: Map<string, CouponAccumEntry>;
   uid: string;
   userName: string;
   userEmail: string;
+  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout. */
+  whatsappNotifyAddon: boolean;
+  /** Buyer opted into gift wrap at checkout. */
+  giftWrapAddon: boolean;
+  giftWrapMessage?: string;
+  /** Buyer opted into shipment protection at checkout. */
+  shipmentProtectionAddon: boolean;
   shippingAddress?: string;
   notes?: string;
   adminBypass: boolean;
@@ -447,6 +469,10 @@ async function createOrderForGroup(
     buyerState,
     gstSettings,
     siteContactUpiVpa,
+    whatsappNotifyAddon,
+    giftWrapAddon,
+    giftWrapMessage,
+    shipmentProtectionAddon,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -539,6 +565,9 @@ async function createOrderForGroup(
   // total — not deducted from the deposit/remaining split above.
   const codHandlingFee =
     paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+  const whatsappNotifyFee = computeWhatsAppNotifyFee(whatsappNotifyAddon, commissions);
+  const giftWrapFee = computeGiftWrapFee(giftWrapAddon, commissions);
+  const shipmentProtectionFee = computeShipmentProtectionFee(groupTotal, shipmentProtectionAddon, commissions);
 
   let couponDiscount = 0;
   const appliedDiscounts: {
@@ -598,7 +627,7 @@ async function createOrderForGroup(
 
   couponDiscount = Math.min(couponDiscount, groupTotal);
   const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
 
   const imageUrls = [
     ...new Set(
@@ -662,6 +691,13 @@ async function createOrderForGroup(
     depositAmount: adminBypass ? undefined : depositAmount,
     codRemainingAmount: adminBypass ? undefined : codRemainingAmount,
     codHandlingFee: !adminBypass && codHandlingFee > 0 ? codHandlingFee : undefined,
+    whatsappNotifyAddon: !adminBypass && whatsappNotifyFee > 0 ? true : undefined,
+    whatsappNotifyFee: !adminBypass && whatsappNotifyFee > 0 ? whatsappNotifyFee : undefined,
+    giftWrapAddon: !adminBypass && giftWrapFee > 0 ? true : undefined,
+    giftWrapFee: !adminBypass && giftWrapFee > 0 ? giftWrapFee : undefined,
+    giftWrapMessage: !adminBypass && giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
+    shipmentProtectionAddon: !adminBypass && shipmentProtectionFee > 0 ? true : undefined,
+    shipmentProtectionFee: !adminBypass && shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
     taxableAmount: gstBreakdown?.taxableAmount,
     gstAmount: gstBreakdown?.gstAmount,
     cgst: gstBreakdown?.cgst || undefined,
@@ -725,6 +761,7 @@ async function createOrderForGroup(
     productLabel:
       orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: adminBypass,
+    whatsappNotifyAddon: !adminBypass && whatsappNotifyFee > 0,
   });
 
   return groupTotal;
@@ -751,6 +788,10 @@ export async function createCheckoutOrderAction(
     adminBypass = false,
     adminBypassBy,
     outOfStockPolicy = OutOfStockPolicyValues.SKIP_ITEMS,
+    whatsappNotifyAddon = false,
+    giftWrapAddon = false,
+    giftWrapMessage,
+    shipmentProtectionAddon = false,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -1086,6 +1127,10 @@ export async function createCheckoutOrderAction(
     buyerState: resolvedAddress?.state,
     gstSettings: siteSettings?.gst,
     siteContactUpiVpa: siteSettings?.contact?.upiVpa,
+    whatsappNotifyAddon,
+    giftWrapAddon,
+    giftWrapMessage,
+    shipmentProtectionAddon,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -1150,6 +1195,13 @@ export interface VerifyAndPlaceRazorpayOrderInput {
    * on the Razorpay path.
    */
   outOfStockPolicy?: OutOfStockPolicy;
+  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout — must match the value sent to /api/payment/create-order so the pre-charged amount and the placed order agree. */
+  whatsappNotifyAddon?: boolean;
+  /** Buyer opted into gift wrap at checkout — must match the value sent to /api/payment/create-order. */
+  giftWrapAddon?: boolean;
+  giftWrapMessage?: string;
+  /** Buyer opted into shipment protection at checkout — must match the value sent to /api/payment/create-order. */
+  shipmentProtectionAddon?: boolean;
 }
 
 /**
@@ -1269,6 +1321,294 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
   }
 }
 
+/**
+ * Places one order for one seller-group within `verifyAndPlaceRazorpayOrderAction`
+ * — mirrors `createOrderForGroup`'s role on the COD/cash/EMI path (same
+ * per-group fee/coupon/order-doc/notification shape), extracted into its own
+ * function purely to keep the parent function under the LARGE_COMPONENT
+ * audit threshold (`scripts/audit-code-quality.mjs`). No behavior change
+ * from the inline version this replaced.
+ */
+async function createRazorpayGroupOrder(
+  group: Array<{ item: CartItemDocument; product: ProductDocument | null }>,
+  orderType: OrderType,
+  ctx: {
+    appliedCoupons: CartAppliedCoupon[];
+    cartSubtotal: number;
+    platformFeePercent: number;
+    gstPercent: number;
+    whatsappNotifyFee: number;
+    giftWrapFee: number;
+    giftWrapMessage?: string;
+    shipmentProtectionAddon: boolean;
+    siteSettings: Awaited<ReturnType<typeof siteSettingsRepository.getSingleton>> | null;
+    uid: string;
+    userName: string;
+    userEmail: string;
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+    shippingAddress?: string;
+    notes?: string;
+    outOfStockPolicy: OutOfStockPolicy;
+    unavailablePaid: StockBucketResult["unavailable"];
+    orderIds: string[];
+    emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][];
+  },
+): Promise<number> {
+  const {
+    appliedCoupons,
+    cartSubtotal,
+    platformFeePercent,
+    gstPercent,
+    whatsappNotifyFee,
+    giftWrapFee,
+    giftWrapMessage,
+    shipmentProtectionAddon,
+    siteSettings,
+    uid,
+    userName,
+    userEmail,
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    shippingAddress,
+    notes,
+    outOfStockPolicy,
+    unavailablePaid,
+    orderIds,
+    emailsToSend,
+  } = ctx;
+
+  // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle
+  // price); regular lines use product.price. The helper keeps the math
+  // local to this block.
+  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
+    item.bundleCategorySlug && item.bundleProductIds?.length
+      ? item.price
+      : (product as ProductDocument).price;
+
+  const firstItem = group[0].item;
+  const groupTotal = group.reduce(
+    (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
+    0,
+  );
+
+  // Reuses the same store/seller lookup as the COD/UPI path above instead
+  // of re-implementing it inline — was two sequential findById calls per
+  // seller group here, duplicated from resolveShippingCost.
+  const { shippingFee, storeOwnerId } = await resolveShippingCost(firstItem.storeId);
+
+  let couponDiscount = 0;
+  const appliedDiscounts: {
+    code: string;
+    couponId?: string;
+    type: "coupon" | "deal" | "auto";
+    discountAmount: number;
+    scope?: "admin" | "seller";
+    storeId?: string;
+  }[] = [];
+
+  for (const coupon of appliedCoupons) {
+    let couponGroupDiscount = 0;
+    const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
+    if (isSellerScoped) {
+      if (coupon.storeId !== firstItem.storeId) continue;
+      if (coupon.applicableItemIds?.length) {
+        const eligibleTotal = group
+          .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
+          .reduce((s, { item, product }) => s + unitPriceFor(item, product) * item.quantity, 0);
+        couponGroupDiscount =
+          eligibleTotal > 0
+            ? Math.min(
+                roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
+                eligibleTotal,
+              )
+            : 0;
+      } else {
+        couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
+      }
+    } else if (cartSubtotal > 0) {
+      couponGroupDiscount = Math.min(
+        roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
+        groupTotal,
+      );
+    }
+
+    if (couponGroupDiscount > 0) {
+      couponDiscount += couponGroupDiscount;
+      appliedDiscounts.push({
+        code: coupon.code,
+        couponId: coupon.couponId,
+        type: "coupon",
+        discountAmount: couponGroupDiscount,
+        scope: coupon.scope,
+        storeId: coupon.storeId,
+      });
+    }
+  }
+
+  couponDiscount = Math.min(couponDiscount, groupTotal);
+  const rawPlatformFee = roundRupees(groupTotal * (platformFeePercent / 100));
+  const gstOnFee = roundRupees(rawPlatformFee * (gstPercent / 100));
+  const platformFee = rawPlatformFee + gstOnFee;
+  const shipmentProtectionFee = computeShipmentProtectionFee(
+    groupTotal,
+    shipmentProtectionAddon,
+    siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
+  );
+  const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee;
+  // P-8 GST — deliberately NOT wired into this Razorpay-verify path. The
+  // amount-mismatch check above (expectedPaymentAmountRs) compares against
+  // what the buyer already paid via the Razorpay order created earlier in
+  // the flow; adding product GST here without also adding it to that
+  // upstream pre-payment amount calculation would either fail the mismatch
+  // check or silently under/over-charge. Wiring GST through the full
+  // Razorpay create→verify round-trip is separate follow-up work, tracked
+  // alongside P-13 (Razorpay is disabled by default today, so this order
+  // type doesn't currently carry a GST breakdown).
+
+  // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
+  const orderItems = group.map(({ item, product }) => {
+    const lt = (product?.listingType ?? "standard") as ListingType;
+    const itemRule = getListingRule(lt);
+    // SB-UNI-5 2026-05-13 — bundle cart-lines surface the locked
+    // bundlePrice (item.price), not the representative member's
+    // product.price. Stock decrement still runs per member elsewhere.
+    const isBundle = Boolean(
+      item.bundleCategorySlug && item.bundleProductIds?.length,
+    );
+    const unitPrice = isBundle ? item.price : product!.price;
+    const bundleFields = isBundle
+      ? {
+          bundleCategorySlug: item.bundleCategorySlug as string,
+          bundleProductIds: item.bundleProductIds as string[],
+        }
+      : {};
+    const baseLine = {
+      productId: item.productId,
+      productTitle: item.productTitle,
+      quantity: item.quantity,
+      unitPrice,
+      totalPrice: unitPrice * item.quantity,
+      ...bundleFields,
+    };
+    return itemRule.decorateOrderItem(baseLine, product!);
+  });
+  const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
+
+  const imageUrls = [
+    ...new Set(
+      group
+        .map(({ product }) => product?.mainImage)
+        .filter((url): url is string => typeof url === "string" && url.length > 0),
+    ),
+  ];
+
+  // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
+  const lt0Rzp = (group[0].product?.listingType ?? "standard") as ListingType;
+  const groupRuleRzp = getListingRule(lt0Rzp);
+  const extraOrderFields = {
+    ...groupRuleRzp.decorateOrderDoc(group[0].item, group[0].product!),
+    ...(orderType === "prize-draw" && group[0].product
+      ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
+      : {}),
+  };
+
+  const order = await unitOfWork.orders.create({
+    productId: firstItem.productId,
+    productTitle: firstItem.productTitle,
+    userId: uid,
+    userName,
+    userEmail,
+    quantity: totalQuantity,
+    unitPrice: group[0].product!.price,
+    totalPrice: orderTotal,
+    currency: firstItem.currency ?? getDefaultCurrency(),
+    storeId: firstItem.storeId || undefined,
+    storeName: firstItem.storeName || undefined,
+    items: orderItems,
+    orderType,
+    offerId: firstItem.offerId ?? undefined,
+    status: OrderStatusValues.CONFIRMED,
+    paymentStatus: PaymentStatusValues.PAID,
+    paymentMethod: PaymentMethodValues.ONLINE,
+    paymentId: razorpay_payment_id,
+    paymentRecord: {
+      method: "razorpay",
+      transactionId: razorpay_payment_id,
+      amount: orderTotal,
+      paidAt: new Date(),
+      verifiedBy: "razorpay-webhook",
+      verificationMethod: "webhook",
+      gatewayRef: {
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        signature: razorpay_signature,
+      },
+    },
+    shippingAddress,
+    notes,
+    platformFee,
+    shippingFee: shippingFee > 0 ? shippingFee : undefined,
+    whatsappNotifyAddon: whatsappNotifyFee > 0 ? true : undefined,
+    whatsappNotifyFee: whatsappNotifyFee > 0 ? whatsappNotifyFee : undefined,
+    giftWrapAddon: giftWrapFee > 0 ? true : undefined,
+    giftWrapFee: giftWrapFee > 0 ? giftWrapFee : undefined,
+    giftWrapMessage: giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
+    shipmentProtectionAddon: shipmentProtectionFee > 0 ? true : undefined,
+    shipmentProtectionFee: shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
+    couponCode: appliedDiscounts[0]?.code,
+    couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
+    appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
+    imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+    outOfStockPolicy,
+    droppedItems: unavailablePaid.length > 0 ? unavailablePaid : undefined,
+    ...extraOrderFields,
+  } as never);
+
+  orderIds.push(order.id);
+
+  // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
+  // order is already persisted so a claim failure is logged, not thrown).
+  if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
+    claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
+      userEmail: userEmail || undefined,
+      userName,
+      productTitle: firstItem.productTitle,
+    }).catch((e) => serverLogger.error("claimDigitalCode", e));
+  }
+
+  if (userEmail) {
+    emailsToSend.push({
+      to: userEmail,
+      userName,
+      orderId: order.id,
+      productTitle:
+        orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+      quantity: totalQuantity,
+      totalPrice: orderTotal,
+      currency: firstItem.currency ?? getDefaultCurrency(),
+      shippingAddress,
+      paymentMethod: PaymentMethodValues.ONLINE,
+      items: orderItems,
+    });
+  }
+
+  emitOrderPlacedNotifications({
+    orderId: order.id,
+    buyerUid: uid,
+    buyerName: userName,
+    storeOwnerId,
+    productLabel:
+      orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+    paid: true,
+    whatsappNotifyAddon: whatsappNotifyFee > 0,
+  });
+
+  return orderTotal;
+}
+
 export async function verifyAndPlaceRazorpayOrderAction(
   input: VerifyAndPlaceRazorpayOrderInput,
 ): Promise<CheckoutOrderResult> {
@@ -1282,11 +1622,23 @@ export async function verifyAndPlaceRazorpayOrderAction(
     addressId,
     notes,
     outOfStockPolicy = OutOfStockPolicyValues.CANCEL_ORDER,
+    whatsappNotifyAddon = false,
+    giftWrapAddon = false,
+    giftWrapMessage,
+    shipmentProtectionAddon = false,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
   const platformFeePercent = siteSettings?.commissions?.platformFeePercent ?? 5;
   const gstPercent = siteSettings?.commissions?.gstPercent ?? 18;
+  const whatsappNotifyFee = computeWhatsAppNotifyFee(
+    whatsappNotifyAddon,
+    siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
+  );
+  const giftWrapFee = computeGiftWrapFee(
+    giftWrapAddon,
+    siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
+  );
 
   const isValid = await verifyPaymentSignatureWithKeys({
     razorpay_order_id,
@@ -1525,210 +1877,28 @@ export async function verifyAndPlaceRazorpayOrderAction(
   );
 
   for (const { items: group, orderType } of orderGroups) {
-    const firstItem = group[0].item;
-    const groupTotal = group.reduce(
-      (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
-      0,
-    );
-
-    // Reuses the same store/seller lookup as the COD/UPI path above instead
-    // of re-implementing it inline — was two sequential findById calls per
-    // seller group here, duplicated from resolveShippingCost.
-    const { shippingFee, storeOwnerId } = await resolveShippingCost(firstItem.storeId);
-
-    let couponDiscount = 0;
-    const appliedDiscounts: {
-      code: string;
-      couponId?: string;
-      type: "coupon" | "deal" | "auto";
-      discountAmount: number;
-      scope?: "admin" | "seller";
-      storeId?: string;
-    }[] = [];
-
-    for (const coupon of appliedCoupons) {
-      let couponGroupDiscount = 0;
-      const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
-      if (isSellerScoped) {
-        if (coupon.storeId !== firstItem.storeId) continue;
-        if (coupon.applicableItemIds?.length) {
-          const eligibleTotal = group
-            .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
-            .reduce((s, { item, product }) => s + unitPriceFor(item, product) * item.quantity, 0);
-          couponGroupDiscount =
-            eligibleTotal > 0
-              ? Math.min(
-                  roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
-                  eligibleTotal,
-                )
-              : 0;
-        } else {
-          couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
-        }
-      } else if (cartSubtotal > 0) {
-        couponGroupDiscount = Math.min(
-          roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
-          groupTotal,
-        );
-      }
-
-      if (couponGroupDiscount > 0) {
-        couponDiscount += couponGroupDiscount;
-        appliedDiscounts.push({
-          code: coupon.code,
-          couponId: coupon.couponId,
-          type: "coupon",
-          discountAmount: couponGroupDiscount,
-          scope: coupon.scope,
-          storeId: coupon.storeId,
-        });
-      }
-    }
-
-    couponDiscount = Math.min(couponDiscount, groupTotal);
-    const rawPlatformFee = roundRupees(groupTotal * (platformFeePercent / 100));
-    const gstOnFee = roundRupees(rawPlatformFee * (gstPercent / 100));
-    const platformFee = rawPlatformFee + gstOnFee;
-    const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
-    total += orderTotal;
-    // P-8 GST — deliberately NOT wired into this Razorpay-verify path. The
-    // amount-mismatch check above (expectedPaymentAmountRs) compares against
-    // what the buyer already paid via the Razorpay order created earlier in
-    // the flow; adding product GST here without also adding it to that
-    // upstream pre-payment amount calculation would either fail the mismatch
-    // check or silently under/over-charge. Wiring GST through the full
-    // Razorpay create→verify round-trip is separate follow-up work, tracked
-    // alongside P-13 (Razorpay is disabled by default today, so this order
-    // type doesn't currently carry a GST breakdown).
-
-    // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
-    const orderItems = group.map(({ item, product }) => {
-      const lt = (product?.listingType ?? "standard") as ListingType;
-      const itemRule = getListingRule(lt);
-      // SB-UNI-5 2026-05-13 — bundle cart-lines surface the locked
-      // bundlePrice (item.price), not the representative member's
-      // product.price. Stock decrement still runs per member elsewhere.
-      const isBundle = Boolean(
-        item.bundleCategorySlug && item.bundleProductIds?.length,
-      );
-      const unitPrice = isBundle ? item.price : product!.price;
-      const bundleFields = isBundle
-        ? {
-            bundleCategorySlug: item.bundleCategorySlug as string,
-            bundleProductIds: item.bundleProductIds as string[],
-          }
-        : {};
-      const baseLine = {
-        productId: item.productId,
-        productTitle: item.productTitle,
-        quantity: item.quantity,
-        unitPrice,
-        totalPrice: unitPrice * item.quantity,
-        ...bundleFields,
-      };
-      return itemRule.decorateOrderItem(baseLine, product!);
-    });
-    const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
-
-    const imageUrls = [
-      ...new Set(
-        group
-          .map(({ product }) => product?.mainImage)
-          .filter((url): url is string => typeof url === "string" && url.length > 0),
-      ),
-    ];
-
-    // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
-    const lt0Rzp = (group[0].product?.listingType ?? "standard") as ListingType;
-    const groupRuleRzp = getListingRule(lt0Rzp);
-    const extraOrderFields = {
-      ...groupRuleRzp.decorateOrderDoc(group[0].item, group[0].product!),
-      ...(orderType === "prize-draw" && group[0].product
-        ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
-        : {}),
-    };
-
-    const order = await unitOfWork.orders.create({
-      productId: firstItem.productId,
-      productTitle: firstItem.productTitle,
-      userId: uid,
+    total += await createRazorpayGroupOrder(group, orderType, {
+      appliedCoupons,
+      cartSubtotal,
+      platformFeePercent,
+      gstPercent,
+      whatsappNotifyFee,
+      giftWrapFee,
+      giftWrapMessage,
+      shipmentProtectionAddon,
+      siteSettings,
+      uid,
       userName,
       userEmail,
-      quantity: totalQuantity,
-      unitPrice: group[0].product!.price,
-      totalPrice: orderTotal,
-      currency: firstItem.currency ?? getDefaultCurrency(),
-      storeId: firstItem.storeId || undefined,
-      storeName: firstItem.storeName || undefined,
-      items: orderItems,
-      orderType,
-      offerId: firstItem.offerId ?? undefined,
-      status: OrderStatusValues.CONFIRMED,
-      paymentStatus: PaymentStatusValues.PAID,
-      paymentMethod: PaymentMethodValues.ONLINE,
-      paymentId: razorpay_payment_id,
-      paymentRecord: {
-        method: "razorpay",
-        transactionId: razorpay_payment_id,
-        amount: orderTotal,
-        paidAt: new Date(),
-        verifiedBy: "razorpay-webhook",
-        verificationMethod: "webhook",
-        gatewayRef: {
-          orderId: razorpay_order_id,
-          paymentId: razorpay_payment_id,
-          signature: razorpay_signature,
-        },
-      },
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
       shippingAddress,
       notes,
-      platformFee,
-      shippingFee: shippingFee > 0 ? shippingFee : undefined,
-      couponCode: appliedDiscounts[0]?.code,
-      couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
-      appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
-      imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
       outOfStockPolicy,
-      droppedItems: unavailablePaid.length > 0 ? unavailablePaid : undefined,
-      ...extraOrderFields,
-    } as never);
-
-    orderIds.push(order.id);
-
-    // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
-    // order is already persisted so a claim failure is logged, not thrown).
-    if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
-      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
-        userEmail: userEmail || undefined,
-        userName,
-        productTitle: firstItem.productTitle,
-      }).catch((e) => serverLogger.error("claimDigitalCode", e));
-    }
-
-    if (userEmail) {
-      emailsToSend.push({
-        to: userEmail,
-        userName,
-        orderId: order.id,
-        productTitle:
-          orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-        quantity: totalQuantity,
-        totalPrice: orderTotal,
-        currency: firstItem.currency ?? getDefaultCurrency(),
-        shippingAddress,
-        paymentMethod: PaymentMethodValues.ONLINE,
-        items: orderItems,
-      });
-    }
-
-    emitOrderPlacedNotifications({
-      orderId: order.id,
-      buyerUid: uid,
-      buyerName: userName,
-      storeOwnerId,
-      productLabel:
-        orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-      paid: true,
+      unavailablePaid,
+      orderIds,
+      emailsToSend,
     });
   }
 

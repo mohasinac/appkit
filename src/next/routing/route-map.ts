@@ -261,6 +261,7 @@ export const DEFAULT_ROUTE_MAP = {
     CATALOGUE_APPROVALS: "/admin/catalogue-approvals",
     USERS: "/admin/users",
     SITE: "/admin/site",
+    INTEGRATION_GUIDES: "/admin/integration-guides",
     CAROUSEL: "/admin/carousel",
     CAROUSEL_NEW: "/admin/carousel/new",
     CAROUSEL_EDIT: (id: string) => `/admin/carousel/${id}/edit`,

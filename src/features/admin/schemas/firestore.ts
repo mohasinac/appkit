@@ -66,6 +66,10 @@ export interface NotificationDocument extends BaseDocument {
     | "offer"
     | "support_ticket"
     | "scammer";
+  /** Outcome of the async whatsappNotify job for this notification's WhatsApp send, if one was enqueued. */
+  whatsappStatus?: "queued" | "sent" | "failed" | "skipped";
+  /** jobs/{id} doc that ran (or is running) the WhatsApp send for this notification. */
+  whatsappJobId?: string;
 }
 
 export const NOTIFICATIONS_COLLECTION = "notifications" as const;
@@ -300,6 +304,23 @@ export interface SiteSettingsCredentials {
   whatsappCloudApiToken?: string;
   /** Comma-separated digits-only phone numbers that receive order announcements */
   whatsappAdminNotifyNumbers?: string;
+  /**
+   * Approved Meta message-template names, one flat string field per
+   * order-lifecycle notification type — every `SiteSettingsCredentials`
+   * field is stored as an individually-encrypted string (see
+   * `getDecryptedCredentials`/`getCredentialsMasked`, which iterate + mask
+   * every field as a string), so this can't be a `Record<string,string>`
+   * map. Business-initiated WhatsApp sends outside the 24h customer-service
+   * window require a pre-approved template.
+   */
+  whatsappTemplateOrderPlaced?: string;
+  whatsappTemplateOrderConfirmed?: string;
+  whatsappTemplateOrderShipped?: string;
+  whatsappTemplateOrderDelivered?: string;
+  whatsappTemplateOrderCancelled?: string;
+  whatsappTemplateRefundInitiated?: string;
+  /** BCP-47 language code the templates above were approved in, e.g. "en" or "en_US". */
+  whatsappTemplateLanguage?: string;
 }
 
 export interface SiteSettingsCredentialsMasked {
@@ -322,6 +343,13 @@ export interface SiteSettingsCredentialsMasked {
   whatsappPhoneNumberId?: string;
   whatsappCloudApiToken?: string;
   whatsappAdminNotifyNumbers?: string;
+  whatsappTemplateOrderPlaced?: string;
+  whatsappTemplateOrderConfirmed?: string;
+  whatsappTemplateOrderShipped?: string;
+  whatsappTemplateOrderDelivered?: string;
+  whatsappTemplateOrderCancelled?: string;
+  whatsappTemplateRefundInitiated?: string;
+  whatsappTemplateLanguage?: string;
 }
 
 export interface NotificationChannelConfig {
@@ -472,6 +500,19 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). */
     codHandlingFeeMin: number;
     codHandlingFeePercent: number;
+    /** Admin master toggle — whether the WhatsApp order-updates addon is offered at checkout at all. */
+    whatsappNotifyFeeEnabled: boolean;
+    /** Flat rupee fee charged to the buyer when they opt into the WhatsApp order-updates addon. */
+    whatsappNotifyFee: number;
+    /** Admin master toggle — whether the gift-wrap addon is offered at checkout at all. */
+    giftWrapFeeEnabled: boolean;
+    /** Flat rupee fee charged to the buyer when they opt into gift wrap. */
+    giftWrapFee: number;
+    /** Admin master toggle — whether the shipment-protection addon is offered at checkout at all. */
+    shipmentProtectionFeeEnabled: boolean;
+    /** Shipment protection fee: max(shipmentProtectionFeeMin, subtotal × shipmentProtectionFeePercent / 100). */
+    shipmentProtectionFeePercent: number;
+    shipmentProtectionFeeMin: number;
     sellerShippingFixed: number;
     platformShippingPercent: number;
     platformShippingFixedMin: number;
@@ -710,6 +751,13 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     codDepositPercent: 10,
     codHandlingFeeMin: 200,
     codHandlingFeePercent: 10,
+    whatsappNotifyFeeEnabled: false,
+    whatsappNotifyFee: 10,
+    giftWrapFeeEnabled: false,
+    giftWrapFee: 49,
+    shipmentProtectionFeeEnabled: false,
+    shipmentProtectionFeePercent: 2,
+    shipmentProtectionFeeMin: 30,
     sellerShippingFixed: 0,
     platformShippingPercent: 10,
     platformShippingFixedMin: 0,
@@ -812,61 +860,92 @@ export const DEFAULT_TRUST_BAR_ITEMS: TrustBarItem[] = [
   { icon: "?", label: "Authentic Sellers", visible: true },
 ];
 
+// NOTE: labelKey/descKey hold plain display text (not i18n message keys) —
+// this feature-flag list has no matching next-intl namespace, so the admin
+// UI reads these two fields directly rather than through getTranslations().
 export const FEATURE_FLAG_META: FeatureFlagMeta[] = [
   {
     key: "chats",
-    labelKey: "chats",
-    descKey: "chatsDesc",
-    icon: "??",
+    labelKey: "In-app chats",
+    descKey: "Buyer/seller direct messaging.",
+    icon: "\u{1F4AC}",
     category: "platform",
   },
   {
     key: "smsVerification",
-    labelKey: "smsVerification",
-    descKey: "smsVerificationDesc",
-    icon: "??",
+    labelKey: "SMS verification",
+    descKey: "Phone-number OTP verification during signup/checkout.",
+    icon: "\u{1F4F1}",
     category: "platform",
   },
   {
     key: "translations",
-    labelKey: "translations",
-    descKey: "translationsDesc",
-    icon: "??",
+    labelKey: "Translations",
+    descKey: "Locale switcher and translated UI strings.",
+    icon: "\u{1F310}",
     category: "platform",
   },
   {
     key: "auctions",
-    labelKey: "auctions",
-    descKey: "auctionsDesc",
-    icon: "??",
+    labelKey: "Auctions",
+    descKey: "Auction listings and bidding.",
+    icon: "\u{1F528}",
     category: "platform",
   },
   {
     key: "reviews",
-    labelKey: "reviews",
-    descKey: "reviewsDesc",
-    icon: "?",
+    labelKey: "Reviews",
+    descKey: "Product and store reviews.",
+    icon: "⭐",
     category: "platform",
   },
   {
     key: "notifications",
-    labelKey: "notifications",
-    descKey: "notificationsDesc",
-    icon: "??",
+    labelKey: "Notifications",
+    descKey: "In-app notification bell and inbox.",
+    icon: "\u{1F514}",
     category: "platform",
   },
   {
     key: "sellerRegistration",
-    labelKey: "sellerRegistration",
-    descKey: "sellerRegistrationDesc",
-    icon: "??",
+    labelKey: "Seller registration",
+    descKey: "\"Become a seller\" signup flow.",
+    icon: "\u{1F3EA}",
     category: "platform",
   },
   {
     key: "preOrders",
-    labelKey: "preOrders",
-    descKey: "preOrdersDesc",
-    icon: "??",
+    labelKey: "Pre-orders",
+    descKey: "Pre-order listings and deposit checkout.",
+    icon: "\u{1F4E6}",
+    category: "platform",
+  },
+  {
+    key: "wishlists",
+    labelKey: "Wishlists",
+    descKey: "Save-for-later wishlist feature.",
+    icon: "❤️",
+    category: "platform",
+  },
+  {
+    key: "events",
+    labelKey: "Events",
+    descKey: "Sales, raffles, spin-wheel, and lottery events.",
+    icon: "\u{1F389}",
+    category: "platform",
+  },
+  {
+    key: "blog",
+    labelKey: "Blog",
+    descKey: "Blog posts section.",
+    icon: "\u{1F4DD}",
+    category: "platform",
+  },
+  {
+    key: "coupons",
+    labelKey: "Coupons",
+    descKey: "Coupon codes and discounts.",
+    icon: "\u{1F3AB}",
     category: "platform",
   },
 ] as const;

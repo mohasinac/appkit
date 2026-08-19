@@ -938,17 +938,23 @@ export {
   processRefundAction,
   type ProcessRefundInput,
 } from "./_internal/server/features/refunds/actions";
-// [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling fee math.
+// [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling/WhatsApp-addon fee math.
 export {
   computeCheckoutFees,
   computePayoutDeduction,
   computeCodHandlingFee,
+  computeWhatsAppNotifyFee,
+  computeGiftWrapFee,
+  computeShipmentProtectionFee,
 } from "./_internal/shared/fees/calculator";
 export type {
   FeeCommissionRates,
   CheckoutFees,
   PayoutDeduction,
   CodHandlingFeeRates,
+  WhatsAppNotifyFeeRates,
+  GiftWrapFeeRates,
+  ShipmentProtectionFeeRates,
 } from "./_internal/shared/fees/calculator";
 // [SERVER-ONLY] Payout refund deduction action
 export {

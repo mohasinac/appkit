@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronUp, X } from "lucide-react";
 import { Button, Div } from "../../ui";
-import { normalizeError } from "../../errors/normalize";
 
 export interface BackToTopProps {
   /** Scroll distance (px) before the button appears. Defaults to 400. */
@@ -13,47 +13,45 @@ export interface BackToTopProps {
   className?: string;
 }
 
-const DISMISSED_KEY = "appkit:back-to-top-dismissed";
-
 /**
  * BackToTop — floating scroll-to-top button.
  * Appears after the page has scrolled past `threshold` pixels. A small
- * dismiss control lets the user hide it for the rest of the browser
- * session (sessionStorage) — on narrow viewports it can sit close enough
- * to the bottom nav / other floating controls to feel like clutter, so it
- * needs the same "get out of my way" escape hatch as StickyToolbar.
- * Re-appears on the next page load.
+ * dismiss control hides it for the current page view only — dismissal is
+ * plain in-memory component state, reset on every route change (via
+ * `usePathname()`) so navigating anywhere brings it back. Deliberately NOT
+ * persisted to storage: an earlier version wrote the dismissal to
+ * `sessionStorage`, and because this component is mounted once inside the
+ * persistent `AppLayoutShell` (it never remounts on client-side navigation),
+ * that meant one click hid the button for the rest of the browser tab
+ * session with no way to bring it back — reported as "the button is gone
+ * forever." See CLAUDE.md Recurrent Root Cause Patterns.
  */
 export function BackToTop({
   threshold = 400,
   ariaLabel = "Back to top",
   className = "",
 }: BackToTopProps) {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    try {
-      setDismissed(window.sessionStorage.getItem(DISMISSED_KEY) === "1");
-    } catch (_err) {
-      void normalizeError(_err);
-      // sessionStorage unavailable — never dismissed for this render.
-    }
     const handleScroll = () => setVisible(window.scrollY > threshold);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [threshold]);
 
+  // Reset dismissal on every route change — the component itself never
+  // unmounts (it lives inside the persistent app shell), so without this
+  // a single dismiss would otherwise hide the button for the whole session.
+  useEffect(() => {
+    setDismissed(false);
+  }, [pathname]);
+
   if (!visible || dismissed) return null;
 
   const handleDismiss = () => {
     setDismissed(true);
-    try {
-      window.sessionStorage.setItem(DISMISSED_KEY, "1");
-    } catch (_err) {
-      void normalizeError(_err);
-      // sessionStorage unavailable — dismissal still applies for this render.
-    }
   };
 
   return (

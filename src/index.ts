@@ -1786,6 +1786,9 @@ export { sessionRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // siteSettingsRepository - Shared export for site settings repository.
 export { siteSettingsRepository } from "./repositories/index";
+// analyticsRollupRepository - reads the pre-computed admin-dashboard revenue rollup.
+export { analyticsRollupRepository } from "./repositories/index";
+export type { AnalyticsRollupDocument } from "./repositories/index";
 // ADMIN_CHECKOUT_BYPASS_FLAG_KEY - field name for the admin checkout bypass flag.
 export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -7423,11 +7426,14 @@ export {
  type ActionConfirmation,
 } from "./_internal/shared/actions/action-registry";
 export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
-// Shared fee calculator — platform/gateway/GST/COD handling fee math (pure, client-safe).
+// Shared fee calculator — platform/gateway/GST/COD handling/WhatsApp-addon fee math (pure, client-safe).
 export {
   computeCheckoutFees,
   computePayoutDeduction,
   computeCodHandlingFee,
+  computeWhatsAppNotifyFee,
+  computeGiftWrapFee,
+  computeShipmentProtectionFee,
   calculateGst,
 } from "./_internal/shared/fees/calculator";
 export type {
@@ -7435,6 +7441,9 @@ export type {
   CheckoutFees,
   PayoutDeduction,
   CodHandlingFeeRates,
+  WhatsAppNotifyFeeRates,
+  GiftWrapFeeRates,
+  ShipmentProtectionFeeRates,
   GstBreakdown,
 } from "./_internal/shared/fees/calculator";
 // EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).

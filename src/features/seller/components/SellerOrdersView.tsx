@@ -102,6 +102,8 @@ interface OrderDetail {
   trackingUrl?: string;
   paymentMethod?: string;
   createdAt?: JsonValue;
+  giftWrapAddon?: boolean;
+  giftWrapMessage?: string;
   emiEnabled?: boolean;
   emiTenureMonths?: number;
   emiTokenAmount?: number;
@@ -268,6 +270,18 @@ function OrderDetailDrawer({
                     </Row>
                   ))}
                 </Div>
+              </Div>
+            )}
+
+            {/* Gift wrap — surfaces the buyer's addon selection + message so it actually drives fulfilment, not just revenue */}
+            {order.giftWrapAddon && (
+              <Div className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)]" surface="subtle" padding="inline" rounded="lg">
+                <Text size="sm" weight="semibold">🎁 Gift wrap requested</Text>
+                {order.giftWrapMessage && (
+                  <Text size="sm" className="mt-1 text-[var(--appkit-color-text-secondary)]">
+                    &ldquo;{order.giftWrapMessage}&rdquo;
+                  </Text>
+                )}
               </Div>
             )}
 

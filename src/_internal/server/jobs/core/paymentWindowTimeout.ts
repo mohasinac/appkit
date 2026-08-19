@@ -57,6 +57,7 @@ export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
         message: ORDER_MESSAGES.CANCELLED_PAYMENT_WINDOW_MESSAGE(entry.data.productTitle),
         relatedId: entry.id,
         relatedType: "order",
+        orderWhatsappAddonPaid: entry.data.whatsappNotifyAddon === true,
       }),
     ),
   );

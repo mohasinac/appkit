@@ -104,10 +104,16 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
     const encrypted: SiteSettingsCredentials = { ...existing };
     for (const [key, value] of Object.entries(updates) as [
       keyof SiteSettingsCredentials,
-      string | undefined,
+      string | Record<string, string> | undefined,
     ][]) {
-      if (value && value.trim()) {
-        encrypted[key] = encryptSecret(value.trim());
+      if (typeof value === "string" && value.trim()) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (encrypted as any)[key] = encryptSecret(value.trim());
+      } else if (value !== undefined && typeof value !== "string") {
+        // Non-string credential fields (e.g. whatsappTemplates: Record<string,string>)
+        // are stored as-is — they are not secret values to encrypt.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (encrypted as any)[key] = value;
       }
       // Empty / undefined → keep whatever was already stored
     }

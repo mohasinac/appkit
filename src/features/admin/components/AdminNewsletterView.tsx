@@ -1,11 +1,11 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
+import { useApiMutation, useBulkEvent, RTDB_PATHS, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
@@ -64,22 +64,51 @@ export function AdminNewsletterView({
     },
   });
 
+  // Export runs as an async `newsletterExport` job (Async Job Primitive) —
+  // the route only enqueues; this subscribes to the same RTDB bulk-event
+  // channel every other async job in the admin panel uses.
+  const [exporting, setExporting] = useState(false);
+  const exportEvent = useBulkEvent<{ csv?: string }>({ rtdbPath: RTDB_PATHS.BULK_EVENTS });
   const handleExportCsv = useCallback(async () => {
+    setExporting(true);
     try {
       const response = await fetch(ADMIN_ENDPOINTS.NEWSLETTER_EXPORT);
       if (!response.ok) throw new Error("Export failed");
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "newsletter-subscribers.csv";
-      a.click();
-      URL.revokeObjectURL(url);
+      const body = (await response.json()) as { data?: { jobId?: string; customToken?: string } };
+      const { jobId, customToken } = body.data ?? {};
+      if (jobId && customToken) {
+        exportEvent.subscribe(jobId, customToken);
+      } else {
+        throw new Error("Export failed to start");
+      }
     } catch (_err) {
       void normalizeError(_err);
+      setExporting(false);
       showToast("Failed to export CSV.", "error");
     }
-  }, [showToast]);
+  }, [showToast, exportEvent]);
+
+  useEffect(() => {
+    if (exportEvent.status === "success") {
+      setExporting(false);
+      const csv = exportEvent.result?.data?.csv;
+      if (csv) {
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `newsletter-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        showToast("Export finished with no data.", "error");
+      }
+    } else if (exportEvent.status === "failed" || exportEvent.status === "timeout") {
+      setExporting(false);
+      showToast(exportEvent.error ?? "Failed to export CSV.", "error");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exportEvent.status]);
 
   if (React.Children.count(children) > 0) {
     return (
@@ -124,7 +153,7 @@ export function AdminNewsletterView({
     buildFilters: (state) =>
       state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     toolbarExtra: (
-      <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
+      <Button type="button" variant="outline" size="sm" onClick={handleExportCsv} isLoading={exporting} disabled={exporting}>
         {ACTIONS.ADMIN["export-csv"].label}
       </Button>
     ),

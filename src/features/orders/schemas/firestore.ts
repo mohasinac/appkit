@@ -199,6 +199,20 @@ export interface OrderDocument extends BaseDocument {
   codRemainingAmount?: number;
   /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
   codHandlingFee?: number;
+  /** Buyer opted into WhatsApp order-update messages at checkout (unchecked by default). */
+  whatsappNotifyAddon?: boolean;
+  /** Fee charged for the WhatsApp addon, decimal rupees — snapshot of siteSettings.commissions.whatsappNotifyFee at order time. */
+  whatsappNotifyFee?: number;
+  /** Buyer opted into gift wrapping at checkout (unchecked by default). */
+  giftWrapAddon?: boolean;
+  /** Fee charged for gift wrap, decimal rupees — snapshot of siteSettings.commissions.giftWrapFee at order time. */
+  giftWrapFee?: number;
+  /** Optional buyer-written gift message, shown to the seller for fulfilment. Capped length. */
+  giftWrapMessage?: string;
+  /** Buyer opted into shipment protection (loss/damage insurance) at checkout (unchecked by default). */
+  shipmentProtectionAddon?: boolean;
+  /** Fee charged for shipment protection, decimal rupees — snapshot of siteSettings.commissions.shipmentProtectionFeePercent/Min at order time. */
+  shipmentProtectionFee?: number;
 
   // ── P-8 GST — buyer-facing tax breakdown, all decimal rupees, set when siteSettings.gst.enabled ──
   /** Order subtotal before GST — the amount GST is computed on. */
