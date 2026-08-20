@@ -2,6 +2,7 @@ export {
   getBundleForDetail,
   listBundleMembers,
   listFeaturedBundles,
+  getRelatedBundles,
   resolveBundleMemberIds,
   resolveBundleOriginalTotal,
   type BundleDataOptions,

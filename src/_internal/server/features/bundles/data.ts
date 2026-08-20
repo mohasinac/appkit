@@ -110,3 +110,20 @@ export const listFeaturedBundles = cache(
     return all;
   },
 );
+
+/**
+ * "Related Bundles" for the bundle detail page — every other active bundle,
+ * excluding the current one. Bundles are a CategoryDocument, not a
+ * ProductDocument, so this mirrors BrandDetailPageView's "Related Brands"
+ * pattern (all active siblings of the same categoryType) rather than the
+ * product-based 4-signal computeRelatedItems() used elsewhere — bundle
+ * detail pages had no related section at all before this.
+ */
+export const getRelatedBundles = cache(
+  async (bundle: Pick<CategoryDocument, "id">, limit = 8): Promise<CategoryDocument[]> => {
+    const all = await categoriesRepository
+      .listByType("bundle", { activeOnly: true, limit: limit + 1 })
+      .catch(() => []);
+    return all.filter((b) => b.id !== bundle.id).slice(0, limit);
+  },
+);

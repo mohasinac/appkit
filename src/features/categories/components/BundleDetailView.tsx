@@ -38,6 +38,8 @@ import { BundleCollage } from "./BundleCollage";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
+import { CategoryGrid } from "./CategoryGrid";
+import type { CategoryItem } from "../types";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -57,12 +59,15 @@ export interface BundleDetailViewProps {
   members?: ProductDocument[];
   /** Direct-checkout callback (S-SBUNI-RULES). When supplied, renders the "Buy now" CTA. */
   onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
+  /** Other active bundles, excluding this one — renders a "Related Bundles" section when non-empty. */
+  relatedBundles?: CategoryDocument[];
 }
 
 export function BundleDetailView({
   bundle,
   members = [],
   onBuyNow,
+  relatedBundles = [],
 }: BundleDetailViewProps) {
   const memberCount = members.length || bundle.bundleProductIds?.length || 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
@@ -186,6 +191,20 @@ export function BundleDetailView({
           </Stack>
         </Container>
       </Section>
+
+      {relatedBundles.length > 0 && (
+        <Section border="subtle" surface="default" className="border-t" padding="y-lg">
+          <Container size="xl">
+            <Heading level={2} className="mb-4" size="xl" weight="semibold">
+              Related Bundles
+            </Heading>
+            <CategoryGrid
+              categories={relatedBundles as unknown as CategoryItem[]}
+              getHref={(c) => String(ROUTES.PUBLIC.BUNDLE_DETAIL(c.slug))}
+            />
+          </Container>
+        </Section>
+      )}
     </Main>
   );
 }
