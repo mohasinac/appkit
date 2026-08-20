@@ -33,6 +33,7 @@ interface AuctionRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
 }
 
 export interface SellerAuctionsViewProps extends ListingLayoutProps {
@@ -112,6 +113,7 @@ export function SellerAuctionsView({
         ].join(" · "),
         status: toStringValue(item.status, "Unknown"),
         updatedAt: toRelativeDate(item.endsAt ?? item.updatedAt ?? item.createdAt),
+        image: toStringValue(item.mainImage, "") || undefined,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number"

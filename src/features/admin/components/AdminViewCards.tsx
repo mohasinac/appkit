@@ -3,6 +3,8 @@
 import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
 import { Checkbox, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
+import { getStatusTone } from "../../../ui/columns/column-renderers";
+import { MediaImage } from "../../media/MediaImage";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -22,6 +24,25 @@ interface AdminViewCardsProps {
   onToggleSelect?: (id: string) => void;
   /** Same row-actions menu DataTable renders in its table view — mirrored here so cards carry the same quick actions, not just navigation. */
   renderRowActions?: (row: AdminListingScaffoldRow) => React.ReactNode;
+  /** Resource-type emoji fallback for rows without their own `image` (e.g. 👤 for users, 🏪 for stores). */
+  resourceIcon?: string;
+}
+
+const STATUS_TONE_CLASSES: Record<string, string> = {
+  success: "bg-success-surface text-success",
+  warning: "bg-warning-surface text-warning",
+  error: "bg-error-surface text-error",
+  info: "bg-info-surface text-info",
+  neutral: "bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300",
+};
+
+function RowAvatar({ image, alt, icon, size = "9" }: { image?: string; alt: string; icon?: string; size?: "9" | "12" }) {
+  const dims = size === "12" ? "h-12 w-12" : "h-9 w-9";
+  return (
+    <Div className={`relative ${dims} shrink-0 overflow-hidden`} rounded="full">
+      <MediaImage src={image} alt={alt} size="avatar" fallback={icon} />
+    </Div>
+  );
 }
 
 const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; color: string }> = [
@@ -32,8 +53,9 @@ const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; co
 ];
 
 function StatusBadge({ status }: { status: string }) {
+  const tone = getStatusTone(status);
   return (
-    <Span size="xs" weight="medium" className="inline-flex bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]" rounded="full" padding="pill-xs">
+    <Span size="xs" weight="medium" className={`inline-flex truncate max-w-[120px] ${STATUS_TONE_CLASSES[tone]}`} rounded="full" padding="pill-xs">
       {status}
     </Span>
   );
@@ -72,6 +94,7 @@ function AdminCardItem({
   onToggleSelect,
   onRowClick,
   renderRowActions,
+  resourceIcon,
 }: {
   row: AdminListingScaffoldRow;
   view: "grid" | "list";
@@ -79,6 +102,7 @@ function AdminCardItem({
   onToggleSelect?: (id: string) => void;
   onRowClick?: (row: AdminListingScaffoldRow) => void;
   renderRowActions?: (row: AdminListingScaffoldRow) => React.ReactNode;
+  resourceIcon?: string;
 }) {
   const flags = FLAG_BADGES.filter(({ key }) => Boolean(row[key]));
 
@@ -109,6 +133,7 @@ function AdminCardItem({
             />
           </Div>
         )}
+        <RowAvatar image={row.image} alt={row.primary} icon={resourceIcon} />
         <Stack gap="none" className="flex-1 min-w-0">
           <Text size="sm" weight="semibold" className="truncate" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
@@ -170,13 +195,16 @@ function AdminCardItem({
         </Row>
       )}
       <Stack gap="xs" className={`${__P.p3}.5`}>
-        <Stack gap="none">
-          <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug" color="primary">{row.primary}</Text>
-          <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
-          {row.barcodeId && (
-            <Text size="xs" color="faint" className="truncate font-mono">{row.barcodeId}</Text>
-          )}
-        </Stack>
+        <Row gap="sm" align="center">
+          <RowAvatar image={row.image} alt={row.primary} icon={resourceIcon} size="12" />
+          <Stack gap="none" className="min-w-0 flex-1">
+            <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug" color="primary">{row.primary}</Text>
+            <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
+          </Stack>
+        </Row>
+        {row.barcodeId && (
+          <Text size="xs" color="faint" className="truncate font-mono">{row.barcodeId}</Text>
+        )}
         <Row justify="between" gap="xs">
           <StatusBadge status={row.status} />
           <Span color="muted" className="text-[11px] shrink-0">{row.updatedAt}</Span>
@@ -206,6 +234,7 @@ export function AdminViewCards({
   selectedIdSet,
   onToggleSelect,
   renderRowActions,
+  resourceIcon,
 }: AdminViewCardsProps) {
   if (isLoading) {
     const count = view === "grid" ? 12 : 8;
@@ -241,6 +270,7 @@ export function AdminViewCards({
             onToggleSelect={onToggleSelect}
             onRowClick={onRowClick}
             renderRowActions={renderRowActions}
+            resourceIcon={resourceIcon}
           />
         ))}
       </Div>
@@ -258,6 +288,7 @@ export function AdminViewCards({
           onToggleSelect={onToggleSelect}
           onRowClick={onRowClick}
           renderRowActions={renderRowActions}
+          resourceIcon={resourceIcon}
         />
       ))}
     </Grid>

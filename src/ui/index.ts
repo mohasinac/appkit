@@ -29,11 +29,14 @@ export {
   renderCount,
   renderNullable,
   renderRating,
+  getStatusTone,
+  getResourceIcon,
 } from "./columns";
 export type {
   BooleanRenderOpts,
   RatingMode,
   RatingRenderOpts,
+  StatusTone,
 } from "./columns";
 
 // --- Semantic HTML wrappers ---------------------------------------------------

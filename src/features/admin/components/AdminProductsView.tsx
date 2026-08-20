@@ -227,6 +227,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           isOnSale: Boolean(item.isOnSale),
           isSold: Boolean(item.isSold),
           barcodeId: typeof item.barcodeId === "string" ? item.barcodeId : undefined,
+          image: toStringValue(item.mainImage, "") || undefined,
         };
         return overrides[id] ? { ...base, ...overrides[id] } : base;
       }),

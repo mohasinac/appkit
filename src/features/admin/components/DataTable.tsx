@@ -4,6 +4,8 @@ import React from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import type { AdminTableColumn } from "../types";
 import { BaseListingCard, Button, Checkbox, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { getStatusTone } from "../../../ui/columns/column-renderers";
+import { MediaImage } from "../../media/MediaImage";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __O = {
@@ -11,34 +13,58 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const DEFAULT_COLUMNS: AdminTableColumn<Record<string, JsonValue>>[] = [
-  {
-    key: "primary",
-    header: "Name",
-    render: (row) => (
-      <Stack gap="none" className="">
-        <Text weight="medium" color="primary">{String(row.primary ?? "")}</Text>
-        {row.secondary ? <Text size="xs" color="muted">{String(row.secondary)}</Text> : null}
-      </Stack>
-    ),
-  },
-  {
-    key: "status",
-    header: "Status",
-    className: "w-32",
-    render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300" rounded="full" padding="pill-sm-tall">
-        {String(row.status ?? "—")}
-      </Span>
-    ),
-  },
-  {
-    key: "updatedAt",
-    header: "Updated",
-    className: "w-32",
-    render: (row) => <Span size="sm" color="muted">{String(row.updatedAt ?? "")}</Span>,
-  },
-];
+const STATUS_TONE_CLASSES: Record<string, string> = {
+  success: "bg-success-surface text-success",
+  warning: "bg-warning-surface text-warning",
+  error: "bg-error-surface text-error",
+  info: "bg-info-surface text-info",
+  neutral: "bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300",
+};
+
+function buildDefaultColumns(resourceIcon?: string): AdminTableColumn<Record<string, JsonValue>>[] {
+  return [
+    {
+      key: "primary",
+      header: "Name",
+      render: (row) => (
+        <Row gap="sm" align="center">
+          <Div className="relative h-8 w-8 shrink-0 overflow-hidden" rounded="full">
+            <MediaImage
+              src={typeof row.image === "string" ? row.image : undefined}
+              alt={String(row.primary ?? "")}
+              size="avatar"
+              fallback={resourceIcon}
+            />
+          </Div>
+          <Stack gap="none" className="min-w-0">
+            <Text weight="medium" color="primary" className="truncate">{String(row.primary ?? "")}</Text>
+            {row.secondary ? <Text size="xs" color="muted" className="truncate">{String(row.secondary)}</Text> : null}
+          </Stack>
+        </Row>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "w-32",
+      render: (row) => {
+        const status = String(row.status ?? "—");
+        const tone = getStatusTone(status);
+        return (
+          <Span size="xs" weight="medium" className={`inline-flex ${STATUS_TONE_CLASSES[tone]}`} rounded="full" padding="pill-sm-tall">
+            {status}
+          </Span>
+        );
+      },
+    },
+    {
+      key: "updatedAt",
+      header: "Updated",
+      className: "w-32",
+      render: (row) => <Span size="sm" color="muted">{String(row.updatedAt ?? "")}</Span>,
+    },
+  ];
+}
 
 interface DataTableProps<T extends { id: string }> {
   columns?: AdminTableColumn<T>[];
@@ -66,6 +92,8 @@ interface DataTableProps<T extends { id: string }> {
   selectedIds?: Set<string>;
   onToggleSelect?: (id: string, selected: boolean) => void;
   onToggleSelectAll?: (nextAllSelected: boolean) => void;
+  /** Resource-type emoji fallback for the default "Name" column's avatar when a row has no `image` and no custom `columns` were supplied. */
+  resourceIcon?: string;
 }
 
 function SelectableRow<T extends { id: string }>({
@@ -161,8 +189,9 @@ export function DataTable<T extends { id: string }>({
   selectedIds,
   onToggleSelect,
   onToggleSelectAll,
+  resourceIcon,
 }: DataTableProps<T>) {
-  const columns = (columnsProp ?? DEFAULT_COLUMNS) as AdminTableColumn<T>[];
+  const columns = (columnsProp ?? buildDefaultColumns(resourceIcon)) as AdminTableColumn<T>[];
   const selectionEnabled = Boolean(onToggleSelect);
   const allRowsSelected =
     selectionEnabled && rows.length > 0 && rows.every((r) => selectedIds?.has(r.id));

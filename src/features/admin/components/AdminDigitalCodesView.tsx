@@ -31,6 +31,7 @@ interface DigitalCodeRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
 }
 
 const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, DigitalCodeRow> = {
@@ -64,6 +65,7 @@ const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, Digit
           .join(" · "),
         status: toStringValue(item.status, "draft"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        image: toStringValue(item.mainImage, "") || undefined,
       };
     }),
   getTotal: (response, mappedRows) =>

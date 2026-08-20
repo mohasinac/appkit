@@ -70,6 +70,8 @@ interface ProductRow {
   status: string;
   updatedAt: string;
   imageUrl?: string;
+  /** Alias of `imageUrl` under the generic `AdminListingScaffoldRow.image` field name — consumed by AdminViewCards' list/grid avatar when this view isn't rendering its own PRODUCT_COLUMNS table. */
+  image?: string;
   listingKind: ListingKind;
   price: string;
   physicalLocation?: { zone: string; shelf: string; bin: string };
@@ -345,6 +347,7 @@ export function SellerProductsView({
           status: toStringValue(item.status, "draft"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
+          image: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
           listingKind: kind,
           price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
           physicalLocation:

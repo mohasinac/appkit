@@ -30,6 +30,7 @@ import { useBottomActions } from "../../layout";
 import { useAdminListing } from "../hooks/useAdminListing";
 import type { AdminListingConfig } from "../hooks/useAdminListing";
 import type { AdminTableColumn } from "../types";
+import { getResourceIcon } from "../../../ui/columns/column-renderers";
 import { AdminViewCards } from "./AdminViewCards";
 import { DataTable } from "./DataTable";
 
@@ -49,6 +50,8 @@ export interface AdminListingScaffoldRow {
   isOnSale?: boolean;
   isSold?: boolean;
   barcodeId?: string;
+  /** Row photo/thumbnail (avatar, product image, store logo, cover image, etc). Falls back to the table's resource icon when omitted. */
+  image?: string;
 }
 
 export interface ListingSortOption {
@@ -214,6 +217,10 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
     openEditPanel: panel.openEditPanel,
   };
 
+  const resourceIcon = getResourceIcon(
+    typeof config.queryKey[1] === "string" ? config.queryKey[1] : undefined,
+  );
+
   const bulkActionItems = config.buildBulkActions?.(selectionContext);
 
   // Mobile bulk bar
@@ -341,6 +348,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           <DataTable
             columns={config.columns}
             rows={rows}
+            resourceIcon={resourceIcon}
             isLoading={isLoading}
             emptyLabel={config.emptyLabel ?? `No ${config.title.toLowerCase()} found`}
             selectedIds={selection.selectedIdSet}
@@ -377,6 +385,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           <AdminViewCards
             rows={rows as unknown as Parameters<typeof AdminViewCards>[0]["rows"]}
             view={view === "table" ? "grid" : view}
+            resourceIcon={resourceIcon}
             isLoading={isLoading}
             emptyLabel={config.emptyLabel ?? `No ${config.title.toLowerCase()} found`}
             onRowClick={

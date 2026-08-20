@@ -31,6 +31,7 @@ interface ArtRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
 }
 
 const ADMIN_ART_CONFIG: ListingViewConfig<AdminProductsResponse, ArtRow> = {
@@ -57,6 +58,7 @@ const ADMIN_ART_CONFIG: ListingViewConfig<AdminProductsResponse, ArtRow> = {
       ].join(" · "),
       status: toStringValue(item.status, "draft"),
       updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+      image: toStringValue(item.mainImage, "") || undefined,
     })),
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,

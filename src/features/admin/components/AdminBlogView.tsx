@@ -33,6 +33,7 @@ interface BlogRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
 }
 
 export type AdminBlogViewProps = ListingLayoutProps;
@@ -71,6 +72,7 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
         ].join(" · "),
         status: toStringValue(item.status, "Draft"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        image: toStringValue(item.coverImage, "") || undefined,
       })),
     getTotal: (response, mappedRows) => {
       if (typeof response.meta?.filteredTotal === "number") return response.meta.filteredTotal;

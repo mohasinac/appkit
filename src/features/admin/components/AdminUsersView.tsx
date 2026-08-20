@@ -49,6 +49,7 @@ interface UserRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
   _raw?: Record<string, JsonValue>;
 }
 
@@ -189,6 +190,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
           ].join(" · "),
           status,
           updatedAt: toRelativeDate(item.lastLoginAt ?? item.createdAt),
+          image: toStringValue(item.photoURL, "") || undefined,
           _raw: item,
         };
       }),

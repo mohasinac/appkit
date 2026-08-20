@@ -31,6 +31,7 @@ interface LiveRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
 }
 
 const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
@@ -63,6 +64,7 @@ const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
           .join(" · "),
         status: toStringValue(item.status, "draft"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        image: toStringValue(item.mainImage, "") || undefined,
       };
     }),
   getTotal: (response, mappedRows) =>

@@ -31,6 +31,7 @@ interface StickersRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
 }
 
 const ADMIN_STICKERS_CONFIG: ListingViewConfig<AdminProductsResponse, StickersRow> = {
@@ -57,6 +58,7 @@ const ADMIN_STICKERS_CONFIG: ListingViewConfig<AdminProductsResponse, StickersRo
       ].join(" · "),
       status: toStringValue(item.status, "draft"),
       updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+      image: toStringValue(item.mainImage, "") || undefined,
     })),
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,

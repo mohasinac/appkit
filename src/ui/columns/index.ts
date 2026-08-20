@@ -9,9 +9,12 @@ export {
   renderCount,
   renderNullable,
   renderRating,
+  getStatusTone,
+  getResourceIcon,
 } from "./column-renderers";
 export type {
   BooleanRenderOpts,
   RatingMode,
   RatingRenderOpts,
+  StatusTone,
 } from "./column-renderers";

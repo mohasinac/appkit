@@ -132,6 +132,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
           drawDate: item.prizeRevealWindowEnd
             ? toRelativeDate(item.prizeRevealWindowEnd as string)
             : "TBA",
+          image: toStringValue(item.mainImage, "") || undefined,
         };
       }),
     getTotal: (response, mappedRows) =>

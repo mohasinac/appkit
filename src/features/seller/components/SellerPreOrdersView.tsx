@@ -31,6 +31,8 @@ interface PreOrderRow {
   deliveryDate: string;
   updatedAt: string;
   imageUrl?: string;
+  /** Alias of `imageUrl` for AdminViewCards' list/grid avatar (generic `AdminListingScaffoldRow.image` field name). */
+  image?: string;
 }
 
 interface SellerProductsResponse {
@@ -166,6 +168,7 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
             : "TBA",
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
+          image: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
         };
       }),
     getTotal: (response, mappedRows) =>

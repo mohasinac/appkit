@@ -33,6 +33,7 @@ interface StoreRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
   _raw?: Record<string, JsonValue>;
 }
 
@@ -99,6 +100,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         ].join(" · "),
         status: toStringValue(item.status, "Pending"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        image: toStringValue(item.storeLogoURL, "") || undefined,
         _raw: item,
       })),
     getTotal: (response, mappedRows) =>

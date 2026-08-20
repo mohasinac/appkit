@@ -290,7 +290,11 @@ export function DashboardLayoutClient({
           My Profile
         </Link>
       )}
-      <button type="button" onClick={() => { closeMobile(); void handleLogout(); }} className={logoutBtnClass}>
+      <button
+        type="button"
+        onClick={() => { closeMobile(); void handleLogout(); }}
+        className={logoutBtnClass}
+      >
         Log out
       </button>
     </Nav>

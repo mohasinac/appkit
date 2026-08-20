@@ -33,6 +33,7 @@ interface PrizeDrawRow {
   drawDate: string;
   updatedAt: string;
   imageUrl?: string;
+  image?: string;
 }
 
 interface SellerProductsResponse {
@@ -173,6 +174,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
             : "TBA",
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
+          image: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
         };
       }),
     getTotal: (response, mappedRows) =>
