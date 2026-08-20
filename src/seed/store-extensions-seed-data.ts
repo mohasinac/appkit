@@ -65,7 +65,7 @@ export const payoutMethodsSeedData: Partial<PayoutMethodDocument>[] = [
     storeId: "store-letitrip-official",
     type: "upi",
     label: "LetItRip UPI",
-    upiVpa: "letitrip@upi",
+    upiVpa: "mohsin0502@okicici",
     isDefault: true,
     isActive: true,
   },

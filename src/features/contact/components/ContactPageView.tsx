@@ -62,8 +62,14 @@ export function ContactPageView() {
                   {
                     icon: "💬",
                     label: "WhatsApp",
-                    value: "+91 70000 00000",
-                    href: "https://wa.me/917000000000",
+                    value: "+91 89196 65811",
+                    href: "https://wa.me/918919665811",
+                  },
+                  {
+                    icon: "👥",
+                    label: "WhatsApp Community",
+                    value: "Join the group",
+                    href: "https://chat.whatsapp.com/JOlbdSwhVWYDKujolcBZDr",
                   },
                 ]}
                 labels={{
