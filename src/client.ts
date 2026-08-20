@@ -383,6 +383,8 @@ export type {
 export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangePassword, useRequestPasswordChangeOtp, useVerifyPasswordChangeOtp, useChangeEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangePasswordData, ChangeEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
+export { getCartOps, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
+export type { CartOp } from "./features/cart/utils/pending-ops";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
 export { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress, useSetDefaultAddress, useAddress } from "./features/account/index";
 export type { Address, AddressFormData } from "./features/account/index";
@@ -417,6 +419,7 @@ export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-
 export { WishlistView, useGuestWishlist, useWishlistWithGuest } from "./features/wishlist/index";
 export type { WishlistViewProps, GuestWishlistItem, WishlistItem, WishlistResponse, WishlistProductData, EnrichedWishlistItem } from "./features/wishlist/index";
 export { WishlistCapWatcher } from "./features/wishlist/components/WishlistCapWatcher";
+export { SyncManagerMount } from "./core/components/SyncManagerMount";
 export { useWishlistCount, useWishlistCountWithLimit, WISHLIST_CAP_EVENT } from "./features/wishlist/hooks/useWishlistCount";
 export type { WishlistCapEventDetail } from "./features/wishlist/hooks/useWishlistCount";
 export {
