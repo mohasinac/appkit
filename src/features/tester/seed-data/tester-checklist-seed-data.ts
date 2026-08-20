@@ -72,7 +72,29 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "email-signup", label: "Sign up with email works", href: "/auth/register" },
         { key: "google-oauth", label: "Sign up / log in with Google works", href: "/auth/login" },
-        { key: "google-link-existing", label: "Linking Google sign-in to an existing email/password account works" },
+        {
+          key: "google-link-existing",
+          label: "Signing in with Google using the SAME email as an existing password account logs into that same account automatically — no duplicate account, no explicit linking needed",
+          description: "This is the auto-merge path: register with email/password (email A), log out, then \"Sign in with Google\" using a Google account whose email is also A. You should land back in the same account (same orders/wishlist/etc.), and Settings > Account tab should now show Google as Connected.",
+          href: "/auth/login",
+        },
+        {
+          key: "google-link-different-email",
+          label: "Linking a Google account whose email differs from your original signup email requires the explicit \"Connect Google\" button (My Account dashboard or Settings > Account tab) — it does not happen automatically just by signing in with Google",
+          description: "Sign up/log in normally with email A (password). While logged in as A, use the \"Connect Google\" button and complete the popup with a Google account using a DIFFERENT email B. Afterward, Settings > Account tab should show Google as Connected with email B, while your account's primary login email is still A — the account now has two associated emails, not a second account.",
+          href: "/user/settings",
+        },
+        {
+          key: "google-link-confirmation-shown",
+          label: "After Google is connected, the My Account dashboard shows a \"Google account connected\" confirmation with a Connected badge and your linked email — it does not just silently stop showing the \"Connect Google\" prompt",
+          description: "Fixed 2026-08-20 — the /user dashboard only ever handled the unlinked case; once linked, the whole alert block disappeared with no confirmation, unlike Settings > Account tab which already showed a Connected badge. Link a Google account (or use an already-linked test account) and confirm the green confirmation alert appears on /user, not just an absence of the blue prompt.",
+          href: "/user",
+        },
+        {
+          key: "google-link-conflict-rejected",
+          label: "Trying to link a Google account whose email is already used by a DIFFERENT existing account is rejected with a clear error — it does not silently merge the two accounts or move the email over",
+          href: "/user/settings",
+        },
         { key: "google-popup-blocked-fallback", label: "If the Google sign-in popup is blocked, the fallback (RTDB signal + postMessage) still completes sign-in" },
         { key: "login", label: "Log in with email + password works", href: "/auth/login" },
         { key: "logout", label: "Log out works and clears the session" },
