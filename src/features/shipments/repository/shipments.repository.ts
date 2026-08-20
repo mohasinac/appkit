@@ -6,6 +6,7 @@
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
@@ -93,8 +94,8 @@ export class ShipmentsRepository extends BaseRepository<ShipmentDocument> {
     shipmentNumber: { canFilter: true, canSort: true },
     supplierName: { canFilter: true, canSort: true },
     status: { canFilter: true, canSort: true },
-    etaDate: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    etaDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   async list(model: SieveModel): Promise<FirebaseSieveResult<ShipmentDocument>> {

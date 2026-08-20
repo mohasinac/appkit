@@ -9,6 +9,7 @@ import {
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
+  parseSieveDateValue,
   type SieveModel,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
@@ -43,8 +44,8 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
     active: { canFilter: true, canSort: false },
     order: { canFilter: true, canSort: true },
     createdBy: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
-    updatedAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   /**

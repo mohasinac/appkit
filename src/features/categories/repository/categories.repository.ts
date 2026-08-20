@@ -8,6 +8,7 @@ import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
   type SieveModel,
@@ -58,7 +59,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     },
     id: { canFilter: true, canSort: false },
     isLeaf: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   constructor() {

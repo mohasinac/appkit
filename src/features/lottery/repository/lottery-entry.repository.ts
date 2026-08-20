@@ -9,6 +9,7 @@ import type {
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   decryptPiiFields,
@@ -28,7 +29,7 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     productId: { canFilter: true, canSort: false },
     userId: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: false },
-    submittedAt: { canFilter: true, canSort: true },
+    submittedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     userLotteryNumber: { canFilter: false, canSort: true },
   };
 

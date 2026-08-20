@@ -149,9 +149,32 @@ export type SieveFieldConfig = {
   path?: string;
   canFilter?: boolean;
   canSort?: boolean;
+  /**
+   * Convert the raw string filter value before it reaches the Firestore
+   * adapter. Required for any field stored as a Firestore Timestamp — without
+   * it, sievejs's default `convertValue` (`processor.js`) leaves date-like
+   * filter values as plain strings, and a Firestore inequality (`>`, `<`,
+   * `>=`, `<=`) comparing a Timestamp field against a string value matches
+   * ZERO documents (Firestore requires the query value's type to match the
+   * field's stored type for range comparisons) — silently, with no error.
+   * Use `parseSieveDateValue` below for Timestamp fields.
+   */
+  parseValue?: (raw: string) => unknown;
 };
 
 export type SieveFields = Record<string, SieveFieldConfig>;
+
+/**
+ * `SieveFieldConfig.parseValue` for any field stored as a Firestore
+ * Timestamp. Converts an ISO date string (or any `Date`-parseable value) into
+ * a real `Date`, which the Admin SDK compares correctly against a Timestamp
+ * field. Falls back to the raw string on an unparseable value rather than
+ * throwing, so a malformed filter degrades to "no match" instead of a 500.
+ */
+export function parseSieveDateValue(raw: string): Date | string {
+  const parsed = new Date(raw);
+  return Number.isNaN(parsed.getTime()) ? raw : parsed;
+}
 
 export interface SieveModel {
   /** Comma-delimited filter expressions, e.g. `status==published,price>=100` */

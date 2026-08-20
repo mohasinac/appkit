@@ -1,6 +1,6 @@
 import type { FirebaseSieveFields, FirebaseSieveResult, SieveModel } from "../../../providers/db-firebase";
 import { BaseRepository } from "../../../providers/db-firebase";
-import { applySieveToFirestore } from "../../../providers/db-firebase";
+import { applySieveToFirestore, parseSieveDateValue } from "../../../providers/db-firebase";
 import {
   SERVER_ERRORS_COLLECTION,
   SERVER_ERROR_STACK_MAX_BYTES,
@@ -18,7 +18,7 @@ function truncateStack(stack?: string): string | undefined {
 
 export class ServerErrorsRepository extends BaseRepository<ServerErrorDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
-    occurredAt: { canFilter: true, canSort: true },
+    occurredAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     source: { canFilter: true, canSort: false },
     route: { canFilter: true, canSort: false },
     method: { canFilter: true, canSort: false },

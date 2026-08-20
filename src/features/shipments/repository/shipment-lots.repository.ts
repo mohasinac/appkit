@@ -4,6 +4,7 @@
 
 import {
   BaseRepository,
+  parseSieveDateValue,
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
@@ -66,7 +67,7 @@ export class ShipmentLotsRepository extends BaseRepository<ShipmentLot> {
     lotName: { canFilter: true, canSort: true },
     projectedProfit: { canFilter: true, canSort: true },
     projectedRevenue: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 }
 

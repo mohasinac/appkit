@@ -4,6 +4,7 @@ import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
   BaseRepository,
+  parseSieveDateValue,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
   type SieveModel,
@@ -33,9 +34,9 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
       canFilter: true,
       canSort: false,
     },
-    lastActivity: { canFilter: true, canSort: true },
-    expiresAt: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    lastActivity: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    expiresAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   constructor() {

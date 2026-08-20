@@ -6,6 +6,7 @@ import {
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
+  parseSieveDateValue,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
   type SieveModel,
@@ -37,8 +38,8 @@ export class UserRepository extends BaseRepository<UserDocument> {
     emailVerified: { canFilter: true, canSort: false },
     disabled: { canFilter: true, canSort: true },
     storeStatus: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
-    updatedAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   constructor() {

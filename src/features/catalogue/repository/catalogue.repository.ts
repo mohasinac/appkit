@@ -5,6 +5,7 @@
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
@@ -74,7 +75,7 @@ export class CatalogueRepository extends BaseRepository<CatalogueItemDocument> {
     ownerId: { canFilter: true, canSort: false },
     visibility: { canFilter: true, canSort: false },
     listingStatus: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   /** Bounded scan for the staleness-reminder Function — images older than N days, not yet reminded for this update. */

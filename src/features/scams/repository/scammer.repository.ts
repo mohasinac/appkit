@@ -2,6 +2,7 @@ import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
@@ -37,7 +38,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
     isContested:   { canFilter: true,  canSort: false },
     views:         { canFilter: false, canSort: true  },
     incidentCount: { canFilter: false, canSort: true  },
-    createdAt:     { canFilter: true,  canSort: true  },
+    createdAt:     { canFilter: true,  canSort: true, parseValue: parseSieveDateValue },
     updatedAt:     { canFilter: false, canSort: true  },
   };
 

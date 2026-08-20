@@ -9,6 +9,7 @@ import type {
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   decryptPiiFields,
@@ -314,8 +315,8 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     paymentStatus: { canFilter: true, canSort: true },
     paymentMethod: { canFilter: true, canSort: true },
     totalPrice: { canFilter: true, canSort: true },
-    orderDate: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    orderDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     contestable: { canFilter: true, canSort: false },
   };
 
@@ -386,8 +387,8 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     shippingMethod: { canFilter: true, canSort: true },
     payoutStatus: { canFilter: true, canSort: false },
     totalPrice: { canFilter: true, canSort: true },
-    orderDate: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    orderDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     // S-SBUNI-RULES 2026-05-13 — refund + batch fields
     paymentBatchId: { canFilter: true, canSort: false },
     contestable: { canFilter: true, canSort: false },

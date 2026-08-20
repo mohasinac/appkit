@@ -10,6 +10,7 @@ import { HOMEPAGE_SECTION_FIELDS } from "../../../constants/field-names";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
   type SieveModel,
@@ -32,8 +33,8 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     type: { canFilter: true, canSort: false },
     enabled: { canFilter: true, canSort: false },
     order: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
-    updatedAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   async list(

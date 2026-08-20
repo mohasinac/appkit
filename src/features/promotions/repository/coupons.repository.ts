@@ -10,6 +10,7 @@ import type { ListingType } from "../../products/types";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import type {
   SieveModel,
@@ -598,11 +599,13 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       path: "validity.endDate",
       canFilter: true,
       canSort: true,
+      parseValue: parseSieveDateValue,
     },
     "validity.startDate": {
       path: "validity.startDate",
       canFilter: true,
       canSort: true,
+      parseValue: parseSieveDateValue,
     },
     "discount.value": {
       path: "discount.value",
@@ -619,7 +622,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       canFilter: true,
       canSort: true,
     },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   storeId: { canFilter: true, canSort: false },
   scope: { canFilter: true, canSort: false },
   };

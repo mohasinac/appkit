@@ -2,6 +2,7 @@ import type { IRepository, PagedResult, SieveQuery } from "../../../contracts";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import type {
   FirebaseSieveFields,
@@ -89,7 +90,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
     tags: { canFilter: true, canSort: false },
     searchTokens: { canFilter: true, canSort: false },
     "stats.helpful": { canFilter: false, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   constructor() {

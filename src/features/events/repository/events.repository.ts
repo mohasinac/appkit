@@ -10,6 +10,7 @@ import { normalizeError } from "../../../errors/normalize";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   EVENT_FIELDS,
@@ -26,8 +27,8 @@ class EventRepository extends BaseRepository<EventDocument> {
     status: { canFilter: true, canSort: true },
     title: { canFilter: true, canSort: true },
     createdBy: { canFilter: true, canSort: false },
-    startsAt: { canFilter: true, canSort: true },
-    endsAt: { canFilter: true, canSort: true },
+    startsAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    endsAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     "stats.totalEntries": {
       path: "stats.totalEntries",
       canFilter: true,
@@ -44,7 +45,7 @@ class EventRepository extends BaseRepository<EventDocument> {
       canSort: true,
     },
     id: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   constructor() {

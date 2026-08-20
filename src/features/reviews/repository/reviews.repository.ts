@@ -5,6 +5,7 @@ import type {
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   addPiiIndices,
@@ -332,8 +333,8 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     helpfulCount: { canFilter: true, canSort: true },
     featured: { canFilter: true, canSort: false },
     reportCount: { canFilter: true, canSort: true },
-    updatedAt: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   async listForProduct(

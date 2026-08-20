@@ -8,6 +8,7 @@
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
@@ -320,9 +321,9 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     paymentMethod: { canFilter: true, canSort: false },
     amount: { canFilter: true, canSort: true },
     netAmount: { canFilter: true, canSort: true },
-    requestedAt: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
-    processedAt: { canFilter: true, canSort: true },
+    requestedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    processedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   /**

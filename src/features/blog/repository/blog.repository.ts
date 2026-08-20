@@ -7,6 +7,7 @@ import { normalizeError } from "../../../errors/normalize";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   BLOG_POST_FIELDS,
@@ -201,10 +202,10 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     isFeatured: { canFilter: true, canSort: false },
     readTimeMinutes: { canFilter: true, canSort: true },
     views: { canFilter: true, canSort: true },
-    publishedAt: { canFilter: true, canSort: true },
-    updatedAt: { canFilter: true, canSort: true },
+    publishedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     tags: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   async listPublished(

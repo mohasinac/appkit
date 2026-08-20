@@ -9,6 +9,7 @@ import type {
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   decryptPiiFields,
@@ -52,7 +53,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     userDisplayName: { canFilter: false, canSort: false },
     reviewStatus: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: false },
-    submittedAt: { canFilter: true, canSort: true },
+    submittedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     points: { canFilter: true, canSort: true },
   };
 

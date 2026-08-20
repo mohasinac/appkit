@@ -12,6 +12,7 @@ const ERR_CART_ITEM_LOCKED = "This item requires payment and cannot be removed o
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
   type FirebaseSieveResult,
   type SieveModel,
   type SieveFieldConfig,
@@ -32,8 +33,8 @@ export class CartRepository extends BaseRepository<CartDocument> {
   private static readonly SIEVE_FIELDS: Record<string, SieveFieldConfig> = {
     userId: { canFilter: true, canSort: false },
     sessionId: { canFilter: true, canSort: false },
-    updatedAt: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   constructor() {

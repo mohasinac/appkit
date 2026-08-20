@@ -1,4 +1,4 @@
-import { BaseRepository } from "../../../providers/db-firebase";
+import { BaseRepository, parseSieveDateValue } from "../../../providers/db-firebase";
 import type { FirebaseSieveFields, FirebaseSieveResult, SieveModel } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
@@ -20,7 +20,7 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     phase: { canFilter: true, canSort: true },
     isActive: { canFilter: true, canSort: false },
     searchTokens: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     bugConfirmed: { canFilter: true, canSort: false },
   };
 

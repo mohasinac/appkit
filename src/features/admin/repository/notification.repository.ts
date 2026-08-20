@@ -11,6 +11,7 @@ import {
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
   NotificationDocument,
@@ -40,7 +41,7 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
     priority: { canFilter: true, canSort: true },
     isRead: { canFilter: true, canSort: false },
     relatedType: { canFilter: true, canSort: false },
-    createdAt: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   /**

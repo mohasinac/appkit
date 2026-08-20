@@ -85,4 +85,4 @@ export type {
   FirebaseSieveOptions,
   FirebaseSieveResult,
 } from "./sieve";
-export { applySieveToFirestore, expandFilterAliases } from "./sieve";
+export { applySieveToFirestore, expandFilterAliases, parseSieveDateValue } from "./sieve";

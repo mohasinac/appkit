@@ -2,6 +2,7 @@ import { firebaseFieldOps } from "../../../providers/db-firebase";
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
 import type {
@@ -30,8 +31,8 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     priority:   { canFilter: true,  canSort: false },
     assignedTo: { canFilter: true,  canSort: false },
     orderId:    { canFilter: true,  canSort: false },
-    createdAt:  { canFilter: true,  canSort: true  },
-    updatedAt:  { canFilter: true,  canSort: true  },
+    createdAt:  { canFilter: true,  canSort: true, parseValue: parseSieveDateValue  },
+    updatedAt:  { canFilter: true,  canSort: true, parseValue: parseSieveDateValue  },
   };
 
   constructor() {

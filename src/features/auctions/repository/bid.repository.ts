@@ -10,6 +10,7 @@ import {
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
@@ -477,8 +478,8 @@ export class BidRepository extends BaseRepository<BidDocument> {
     bidAmount: { canFilter: true, canSort: true },
     status: { canFilter: true, canSort: true },
     isWinning: { canFilter: true, canSort: false },
-    bidDate: { canFilter: true, canSort: true },
-    createdAt: { canFilter: true, canSort: true },
+    bidDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
   /**
