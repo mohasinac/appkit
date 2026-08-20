@@ -266,6 +266,29 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     }
   }
 
+  /**
+   * IDs of every descendant category at any depth (not just direct
+   * children) — `parentIds` stores the full ancestor chain, so a single
+   * array-contains query on that field already returns the whole subtree
+   * with no recursion needed. Used to expand a parent category's product
+   * listing/count to include products filed under any of its children.
+   */
+  async getDescendantIds(categoryId: string): Promise<string[]> {
+    try {
+      const snapshot = await this.db
+        .collection(this.collection)
+        .where("parentIds", "array-contains", categoryId)
+        .limit(100)
+        .get();
+      return snapshot.docs.map((doc) => doc.id);
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to retrieve descendant categories: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
   async getFeaturedCategories(): Promise<CategoryDocument[]> {
     try {
       const snapshot = await this.db

@@ -32,8 +32,12 @@ export function CategoryCard({
   onClick,
   className = "",
 }: CategoryCardProps) {
+  // totalProductCount is the rollup (self + all descendant categories),
+  // maintained incrementally by onProductWrite — prefer it over the
+  // own-node-only productCount so a parent category's card shows the same
+  // "N products" a visitor actually sees once they open the page.
   const productCount =
-    category.metrics?.productCount ?? (category as any).productCount ?? 0;
+    category.metrics?.totalProductCount ?? category.metrics?.productCount ?? (category as any).productCount ?? 0;
 
   const inner = (
     <Stack className="h-full">

@@ -28,54 +28,72 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     .getCategoryBySlug(slug)
     .catch(() => undefined) as CategoryItem | undefined;
 
-  // Use categorySlugs@=<id> (array-contains) — products store category FK in
-  // the categorySlugs[] array, not the legacy `category` string field.
-  const catFilter = category?.id ? sieveFilter("categorySlugs", SIEVE_OP.CONTAINS, category.id) : null;
+  // Roll up descendant categories so a parent category page shows products
+  // filed under any of its children too, not just products tagged with the
+  // parent's own id — parentIds stores the full ancestor chain, so a single
+  // array-contains query already returns the whole subtree (see
+  // categoriesRepository.getDescendantIds).
+  const descendantIds = category?.id
+    ? await categoriesRepository.getDescendantIds(category.id).catch(() => [])
+    : [];
+  const categoriesIn = category?.id ? [category.id, ...descendantIds] : null;
 
   const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories, rootSiblingCategories] = await Promise.all([
-    catFilter
+    categoriesIn
       ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 24,
-          })
+          .list(
+            {
+              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
+              sorts: sortBy("createdAt", "DESC"),
+              page: 1,
+              pageSize: 24,
+            },
+            { categoriesIn },
+          )
           .catch(() => null)
       : Promise.resolve(null),
-    catFilter
+    categoriesIn
       ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "auction")),
-            sorts: sortBy("auctionEndDate", "ASC"),
-            page: 1,
-            pageSize: 1,
-          })
+          .list(
+            {
+              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "auction")),
+              sorts: sortBy("auctionEndDate", "ASC"),
+              page: 1,
+              pageSize: 1,
+            },
+            { categoriesIn },
+          )
           .catch(() => null)
       : Promise.resolve(null),
-    catFilter
+    categoriesIn
       ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 1,
-          })
+          .list(
+            {
+              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")),
+              sorts: sortBy("createdAt", "DESC"),
+              page: 1,
+              pageSize: 1,
+            },
+            { categoriesIn },
+          )
           .catch(() => null)
       : Promise.resolve(null),
-    catFilter
+    categoriesIn
       ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 1,
-          })
+          .list(
+            {
+              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
+              sorts: sortBy("createdAt", "DESC"),
+              page: 1,
+              pageSize: 1,
+            },
+            { categoriesIn },
+          )
           .catch(() => null)
       : Promise.resolve(null),
     // SB-UNI-D — bundles fetched from the categories collection. We pull
     // all active bundle rows; the carousel filters by category affinity.
-    catFilter
+    categoriesIn
       ? categoriesRepository
           .listByType("bundle", { activeOnly: true, limit: 50 })
           .catch(() => [])
@@ -133,8 +151,8 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       createdAt: s.createdAt as unknown as string,
     }));
 
-  const productCount = productsResult?.total ?? category?.metrics?.productCount ?? 0;
-  const auctionCount = auctionsCountResult?.total ?? category?.metrics?.auctionCount ?? 0;
+  const productCount = productsResult?.total ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
+  const auctionCount = auctionsCountResult?.total ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
   const preOrderCount = preOrdersCountResult?.total ?? 0;
   const prizeDrawCount = prizeDrawsCountResult?.total ?? 0;
   const bundleCount = bundlesResult?.length ?? 0;

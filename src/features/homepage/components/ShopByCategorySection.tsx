@@ -46,7 +46,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
   const iconSrc = category.display?.icon;
   const coverImage = category.display?.coverImage;
   const initial = category.name[0]?.toUpperCase() ?? "?";
-  const productCount = category.metrics?.productCount ?? 0;
+  const productCount = category.metrics?.totalProductCount ?? category.metrics?.productCount ?? 0;
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
