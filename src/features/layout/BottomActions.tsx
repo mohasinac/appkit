@@ -179,14 +179,15 @@ export default function BottomActions() {
 
   useClickOutside(containerRef, () => setPickerOpen(false));
 
-  const { actions, bulk, infoLabel } = state;
+  const { actions, bulk, infoLabel, secondaryLabel } = state;
 
   const isBulkMode = !!(bulk && bulk.selectedCount > 0);
   const bulkActions = bulk?.actions ?? [];
   const pageActions = actions;
   const isVisible =
     (isBulkMode ? bulkActions.length > 0 || !!bulk : pageActions.length > 0) ||
-    !!infoLabel;
+    !!infoLabel ||
+    !!secondaryLabel;
 
   // Keep selectedActionId in sync with available bulk actions
   useEffect(() => {
@@ -248,6 +249,15 @@ export default function BottomActions() {
       {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
       {isBulkMode && (
         <Div className="h-[3px] w-full bg-[image:var(--appkit-gradient-brand-tri)]" />
+      )}
+
+      {/* -- Secondary label row (page mode only) — stacked ABOVE infoLabel -- */}
+      {secondaryLabel && !isBulkMode && (
+        <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
+          <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
+            {secondaryLabel}
+          </Text>
+        </Div>
       )}
 
       {/* -- Info label row (page mode only) --------------------------------- */}

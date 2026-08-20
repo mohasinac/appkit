@@ -444,6 +444,7 @@ function StepAuctionSettings({
         value={toRupeesString(values.minBidIncrement)}
         onChange={(v) => onChange({ minBidIncrement: fromRupeesString(v) })}
         placeholder="50"
+        helpText="Optional — can only raise the platform's tiered minimum for this listing, never lower it. Leave blank to use the tier as-is."
       />
       <FormField
         name="auctionShippingPaidBy"

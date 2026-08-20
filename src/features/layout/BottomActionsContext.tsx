@@ -94,6 +94,14 @@ export interface BottomActionsState {
    * Useful for contextual data like "Current bid: ₹1,200" on auction pages.
    */
   infoLabel?: string;
+  /**
+   * Optional single-line label rendered as its own row ABOVE `infoLabel`
+   * (i.e. topmost of the three stacked rows: secondaryLabel, infoLabel,
+   * action row). Purely additive — no existing caller sets this, so every
+   * bar that doesn't pass it renders identically to before. Introduced for
+   * the auction detail page's live countdown ("Ends in 2d 5h").
+   */
+  secondaryLabel?: string;
 }
 
 // --- Context ------------------------------------------------------------------
@@ -115,6 +123,8 @@ interface BottomActionsContextValue {
   bulkClearRef: React.MutableRefObject<(() => void) | undefined>;
   /** Set or clear the contextual info label. */
   setInfoLabel: (label: string | undefined) => void;
+  /** Set or clear the secondary label (rendered above infoLabel). */
+  setSecondaryLabel: (label: string | undefined) => void;
   /** Clear all state (called on feature unmount). */
   clearAll: () => void;
 }
@@ -181,6 +191,10 @@ export function BottomActionsProvider({
     setState((prev) => ({ ...prev, infoLabel }));
   }, []);
 
+  const setSecondaryLabel = useCallback((secondaryLabel: string | undefined) => {
+    setState((prev) => ({ ...prev, secondaryLabel }));
+  }, []);
+
   const clearAll = useCallback(() => {
     actionCallbacksRef.current = new Map();
     bulkCallbacksRef.current = new Map();
@@ -197,10 +211,11 @@ export function BottomActionsProvider({
       bulkCallbacksRef,
       bulkClearRef,
       setInfoLabel,
+      setSecondaryLabel,
       clearAll,
     }),
-     
-    [state, setActions, setBulkConfig, setInfoLabel, clearAll],
+
+    [state, setActions, setBulkConfig, setInfoLabel, setSecondaryLabel, clearAll],
   );
 
   return (

@@ -10,10 +10,12 @@ export interface UseBottomActionsOptions {
   actions?: BottomAction[];
   bulk?: BottomBulkConfig;
   infoLabel?: string;
+  /** Rendered as its own row above infoLabel. See BottomActionsState.secondaryLabel. */
+  secondaryLabel?: string;
 }
 
 export function useBottomActions(options: UseBottomActionsOptions = {}) {
-  const { setActions, setBulkConfig, setInfoLabel, clearAll } =
+  const { setActions, setBulkConfig, setInfoLabel, setSecondaryLabel, clearAll } =
     useBottomActionsContext();
 
   const actionsRef = useRef(options.actions ?? []);
@@ -44,6 +46,10 @@ export function useBottomActions(options: UseBottomActionsOptions = {}) {
   useEffect(() => {
     setInfoLabel(options.infoLabel);
   }, [setInfoLabel, options.infoLabel]);
+
+  useEffect(() => {
+    setSecondaryLabel(options.secondaryLabel);
+  }, [setSecondaryLabel, options.secondaryLabel]);
 
   useEffect(() => {
     return () => clearAll();
