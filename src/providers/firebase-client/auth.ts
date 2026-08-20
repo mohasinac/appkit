@@ -11,6 +11,8 @@ import {
 } from "firebase/auth";
 import type { IClientAuthProvider } from "../../contracts/client-auth";
 
+const NO_AUTHENTICATED_USER_MESSAGE = "No authenticated user.";
+
 /**
  * Firebase Auth client SDK implementation of IClientAuthProvider.
  *
@@ -40,38 +42,32 @@ export class FirebaseClientAuthProvider implements IClientAuthProvider {
     await fbConfirmPasswordReset(this._auth, code, newPassword);
   }
 
+  /** Re-authenticates the current user against `currentPassword`, returning the now-fresh user. Throws if no user is signed in. */
+  private async _reauthenticate(currentPassword: string) {
+    const user = this._auth.currentUser;
+    if (!user?.email) throw new Error(NO_AUTHENTICATED_USER_MESSAGE);
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+    return user;
+  }
+
   async reauthenticateAndChangePassword(
     currentPassword: string,
     newPassword: string,
   ): Promise<void> {
-    const user = this._auth.currentUser;
-    if (!user?.email) throw new Error("No authenticated user.");
-    const credential = EmailAuthProvider.credential(
-      user.email,
-      currentPassword,
-    );
-    await reauthenticateWithCredential(user, credential);
+    const user = await this._reauthenticate(currentPassword);
     await updatePassword(user, newPassword);
   }
 
   async reauthenticateOnly(currentPassword: string): Promise<void> {
-    const user = this._auth.currentUser;
-    if (!user?.email) throw new Error("No authenticated user.");
-    const credential = EmailAuthProvider.credential(
-      user.email,
-      currentPassword,
-    );
-    await reauthenticateWithCredential(user, credential);
+    await this._reauthenticate(currentPassword);
   }
 
   async reauthenticateAndSendEmailUpdateVerification(
     currentPassword: string,
     newEmail: string,
   ): Promise<void> {
-    const user = this._auth.currentUser;
-    if (!user?.email) throw new Error("No authenticated user.");
-    const credential = EmailAuthProvider.credential(user.email, currentPassword);
-    await reauthenticateWithCredential(user, credential);
+    const user = await this._reauthenticate(currentPassword);
     await verifyBeforeUpdateEmail(user, newEmail);
   }
 
