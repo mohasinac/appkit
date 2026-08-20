@@ -94,6 +94,7 @@ export const ACCOUNT_ENDPOINTS = {
   CATALOGUE_LIST: (id: string) => `/api/user/catalogue/${id}/list`,
   CATALOGUE_SUBMIT: (id: string) => `/api/user/catalogue/${id}/submit`,
   PUBLIC_CATALOGUE: (ownerSlug: string) => `/api/catalogue/${ownerSlug}`,
+  PUBLIC_CATALOGUE_ITEM: (ownerSlug: string, itemId: string) => `/api/catalogue/${ownerSlug}/${itemId}`,
   /** Tester Hub — GET active checklist items joined with the tester's own responses; PUT upserts one item's answer/comment/screenshot. */
   TESTER_CHECKLIST: "/api/user/tester-checklist",
   TESTER_CHECKLIST_ITEM_BY_ID: (checklistItemId: string) =>

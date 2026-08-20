@@ -1516,12 +1516,20 @@ export type { GoogleReviewsSectionProps } from "./features/homepage/components/G
 // ---------------------------------------------------------------------------
 
 // Data layers — each wrapped in React.cache for request-scoped dedup
-export { getProductForDetail, listSitemapProducts, type SitemapProduct } from "./_internal/server/features/products/index";
+export {
+  getProductForDetail,
+  listSitemapProducts,
+  computeRelatedItems,
+  toProductItem,
+  type SitemapProduct,
+  type RelatedItemsResult,
+} from "./_internal/server/features/products/index";
 // S-SBUNI-3/4 2026-05-13 — bundle data/metadata/og layer.
 export {
   getBundleForDetail,
   listBundleMembers,
   listFeaturedBundles,
+  getRelatedBundles,
   resolveBundleMemberIds,
   resolveBundleOriginalTotal,
   buildBundleMetadata,
@@ -1532,6 +1540,7 @@ export {
   type BundleMetadataOptions,
   type BundleOgData,
 } from "./_internal/server/features/bundles/index";
+export { getGroupsForProduct, getGroupsWithItemsForProduct } from "./_internal/server/features/grouped/index";
 export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
 export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";
@@ -1671,6 +1680,7 @@ export {
 export { toClientClassified, type ClassifiedClientShape } from "./_internal/server/features/classified/adapters";
 export { buildClassifiedMetadata, type ClassifiedMetadataOptions } from "./_internal/server/features/classified/metadata";
 export { renderClassifiedOg, renderClassifiedOgImage, renderClassifiedOgFromDoc, type ClassifiedOgData } from "./_internal/server/features/classified/og";
+export { renderCatalogueItemOg, renderCatalogueItemOgImage, type CatalogueItemOgData } from "./_internal/server/features/catalogue/og";
 
 // ── Digital-code listing — data + adapters + metadata + OG ───────────────────
 export { getDigitalCodeForDetail } from "./_internal/server/features/digital-code/data";

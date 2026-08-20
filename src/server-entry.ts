@@ -35,6 +35,9 @@ export { PrizeDrawsListingView } from "./features/products/components/PrizeDraws
 export { PrizeDrawDetailPageView } from "./features/products/components/PrizeDrawDetailPageView";
 export { ProductDetailPageView } from "./features/products/components/ProductDetailPageView";
 export { ProductsIndexPageView } from "./features/products/components/ProductsIndexPageView";
+export { ClassifiedDetailPageView } from "./features/classified/components/ClassifiedDetailPageView";
+export { DigitalCodeDetailPageView } from "./features/digital-codes/components/DigitalCodeDetailPageView";
+export { LiveItemDetailPageView } from "./features/live/components/LiveItemDetailPageView";
 export { ArtStickersListView } from "./features/products/components/ArtStickersListView";
 export { ReviewsIndexPageView } from "./features/reviews/components/ReviewsIndexPageView";
 export { ReviewDetailPageView } from "./features/reviews/components/ReviewDetailPageView";
@@ -235,6 +238,8 @@ export {
   listGroupedListings,
   listFeaturedGroupedListings,
   listSitemapGroupedListings,
+  getGroupsForProduct,
+  getGroupsWithItemsForProduct,
   GROUPED_LISTINGS_PAGE_SIZE,
   GROUPED_LISTINGS_FEATURED_LIMIT,
   GROUPED_LISTINGS_SITEMAP_LIMIT,

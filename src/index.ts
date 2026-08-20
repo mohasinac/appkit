@@ -7015,6 +7015,8 @@ export { CatalogueItemEditorView } from "./features/catalogue/index";
 export type { CatalogueItemEditorViewProps } from "./features/catalogue/index";
 export { PublicCatalogueView } from "./features/catalogue/index";
 export type { PublicCatalogueViewProps } from "./features/catalogue/index";
+export { PublicCatalogueItemDetailView } from "./features/catalogue/index";
+export type { PublicCatalogueItemDetailViewProps } from "./features/catalogue/index";
 export { AdminCatalogueApprovalsView } from "./features/catalogue/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // PAYOUT_FIELDS - Constant used across modules.
