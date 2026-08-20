@@ -244,11 +244,27 @@ const TOKEN_TO_OP: Record<string, FirebaseFirestore.WhereFilterOp> = {
   "@=": "array-contains",
 };
 
-/** Best-effort scalar coercion for sieve filter values. */
+/** Matches a bare `YYYY-MM-DD` date or a full ISO-8601 timestamp. */
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?$/;
+
+/**
+ * Best-effort scalar coercion for sieve filter values, used by the legacy
+ * `findAll()` query path (no `SieveFieldConfig`/`parseValue` mechanism
+ * exists here — see `./sieve.ts`'s `sieveQuery`/`applySieveToFirestore` for
+ * that). An ISO-date-shaped string is converted to a real `Date` so a range
+ * filter (`>`/`<`/`>=`/`<=`) on a Firestore Timestamp field compares
+ * correctly — without this, the string reaches `.where(field, op, value)`
+ * unchanged and Firestore's type-ordering silently matches ZERO documents
+ * (CLAUDE.md Recurrent Root Cause Pattern #47).
+ */
 function coerceValue(raw: string): unknown {
   if (raw === "true") return true;
   if (raw === "false") return false;
   if (raw === "null") return null;
+  if (ISO_DATE_RE.test(raw)) {
+    const d = new Date(raw);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
   const n = Number(raw);
   if (!Number.isNaN(n) && raw !== "") return n;
   return raw;
