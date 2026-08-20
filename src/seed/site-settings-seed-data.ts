@@ -13,11 +13,6 @@
  * @tag sideEffects:none
  */
 
-import { getDefaultPhonePrefix, getSeedLocale } from "./seed-market-config";
-
-const _phonePrefix = getDefaultPhonePrefix();
-const _locale = getSeedLocale();
-
 import type { SiteSettingsDocument } from "../features/admin/schemas";
 import { seedExtMedia } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
@@ -165,7 +160,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
       { year: "2026", text: "Pre-orders, events, raffles, and a mobile-first redesign — built for the community that showed up, bid, sold, and kept coming back." },
     ],
     teamTitle: "Who's Behind LetItRip",
-    teamSubtitle: "A small team obsessed with the same thing you are — the hunt for the next piece of the collection.",
+    teamSubtitle: "One collector obsessed with the same thing you are — the hunt for the next piece of the collection.",
     teamMembers: [
       {
         name: "Mohasin Chinnapattan",
@@ -175,22 +170,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
         isFounder: true,
         isDeveloper: true,
         githubUrl: "https://github.com/mohasinac",
-      },
-      {
-        name: "Ananya Rao",
-        role: "Community & Trust",
-        bio: "Keeps the marketplace honest — seller verification, dispute resolution, and the reason LetItRip's escrow system actually works the way it's supposed to. Collects vintage diecast when she isn't reviewing seller applications.",
-        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-ananya-rao-20260819/400/400"),
-        isFounder: false,
-        isDeveloper: false,
-      },
-      {
-        name: "Devansh Mehta",
-        role: "Seller Success",
-        bio: "Helps new stores go from zero listings to their first sale — onboarding, storefront setup, and the occasional 2 a.m. \"why isn't my auction showing up\" message. Runs a Beyblade collection that has outgrown two apartments.",
-        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-devansh-mehta-20260819/400/400"),
-        isFounder: false,
-        isDeveloper: false,
       },
     ],
     ctaTitle: "Ready to Let It Rip?",
@@ -219,10 +198,10 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
   },
   contact: {
     email: "support@letitrip.in",
-    phone: `${_phonePrefix}-9876543210`,
-    address: `123, Marketplace Street, ${_locale.cities[0][0]}, ${_locale.cities[0][1]} - ${_locale.cities[0][2]}, ${_locale.countryName}`,
-    upiVpa: "letitrip@upi",
-    whatsappNumber: `${_phonePrefix.replace(/[^+\d]/g, "")}9876543210`,
+    phone: "+91-8919665811",
+    address: "Siddeshwar Peth, Solapur, Maharashtra 413001",
+    upiVpa: "mohsin0502@okicici",
+    whatsappNumber: "918919665811",
   },
   payment: {
     razorpayEnabled: false,
@@ -240,10 +219,10 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     surchargeSellerSharePercent: 50,
   },
   socialLinks: {
-    facebook: "https://facebook.com/letitrip",
-    twitter: "https://twitter.com/letitrip",
-    instagram: "https://instagram.com/letitrip",
-    linkedin: "https://linkedin.com/company/letitrip",
+    facebook: "",
+    twitter: "",
+    instagram: "",
+    linkedin: "",
   },
   emailSettings: {
     fromName: "LetItRip",
@@ -404,7 +383,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
       minOrderValue: 999,
       returnWindow: 7,
       supportEmail: "support@letitrip.in",
-      supportPhone: `${_phonePrefix}-9876543210`,
+      supportPhone: "+91-8919665811",
       codDeposit: 0.1,
     },
   },
