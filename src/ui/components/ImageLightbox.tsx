@@ -1,13 +1,23 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "./Button";
 import { Div } from "./Div";
 import { Text, Span } from "./Typography";
 import { MediaImage } from "../../features/media/MediaImage";
+import { getYouTubeVideoId } from "../../utils/media-url";
 
 const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-error-surface text-white flex items-center justify-center";
+
+/** Safari (desktop) only implements the pre-standard webkit-prefixed Fullscreen API. */
+interface WebkitFullscreenElement extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+}
+interface WebkitFullscreenDocument extends Document {
+  webkitExitFullscreen?: () => Promise<void> | void;
+  webkitFullscreenElement?: Element | null;
+}
 
 export interface LightboxImage {
   src: string;
@@ -52,6 +62,7 @@ export function ImageLightbox({
   const [currentIndex, setCurrentIndex] = useState(activeIndex ?? 0);
   const [zoom, setZoom] = useState(100);
   const [rotation, setRotation] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Sync external activeIndex and reset transforms
@@ -72,6 +83,40 @@ export function ImageLightbox({
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = prev; };
   }, [isOpen]);
+
+  // Track native Fullscreen API state so the toggle button + icon stay in sync
+  // even when the user exits via Esc/browser chrome rather than our button.
+  useEffect(() => {
+    const onFsChange = () => {
+      const doc = document as WebkitFullscreenDocument;
+      const fsEl = document.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+      setIsFullscreen(fsEl === overlayRef.current);
+    };
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFsChange);
+      document.removeEventListener("webkitfullscreenchange", onFsChange);
+    };
+  }, []);
+
+  // Exit native fullscreen when the lightbox itself closes.
+  useEffect(() => {
+    const doc = document as WebkitFullscreenDocument;
+    if (!isOpen && (document.fullscreenElement || doc.webkitFullscreenElement)) {
+      (document.exitFullscreen?.() ?? doc.webkitExitFullscreen?.())?.catch?.(() => {});
+    }
+  }, [isOpen]);
+
+  const toggleFullscreen = useCallback(() => {
+    const doc = document as WebkitFullscreenDocument;
+    if (document.fullscreenElement || doc.webkitFullscreenElement) {
+      (document.exitFullscreen?.() ?? doc.webkitExitFullscreen?.())?.catch?.(() => {});
+      return;
+    }
+    const el = overlayRef.current as WebkitFullscreenElement | null;
+    (el?.requestFullscreen?.() ?? el?.webkitRequestFullscreen?.())?.catch?.(() => {});
+  }, []);
 
   const navigate = useCallback(
     (dir: 1 | -1) => {
@@ -117,6 +162,7 @@ export function ImageLightbox({
 
   const image = images[currentIndex];
   const hasMultiple = images.length > 1;
+  const youtubeId = image.kind === "video" ? getYouTubeVideoId(image.src) : null;
 
   const iconBtnClass =
     "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center";
@@ -177,11 +223,11 @@ export function ImageLightbox({
           </Button>
           <Button
             variant="ghost" size="sm" type="button"
-            onClick={() => { setZoom(100); setRotation(0); }}
+            onClick={toggleFullscreen}
             className={iconBtnClass}
-            aria-label="Reset"
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
           >
-            <Maximize2 className="w-4 h-4" />
+            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </Button>
           <Button
             variant="ghost" size="sm" type="button"
@@ -212,18 +258,28 @@ export function ImageLightbox({
         style={{ cursor: zoom > 100 ? "grab" : "default" }}
       >
         {image.kind === "video" ? (
-          <video
-            src={image.src}
-            poster={image.poster}
-            controls
-            playsInline
-            aria-label={image.alt ?? "Video"}
-            className="appkit-lightbox__img"
-            style={{
-              transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
-              transition: "transform 0.2s ease",
-            }}
-          />
+          youtubeId ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${youtubeId}?playsinline=1&rel=0`}
+              title={image.alt ?? "Video"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="appkit-lightbox__img appkit-lightbox__video border-0"
+            />
+          ) : (
+            <video
+              src={image.src}
+              poster={image.poster}
+              controls
+              playsInline
+              aria-label={image.alt ?? "Video"}
+              className="appkit-lightbox__img appkit-lightbox__video"
+              style={{
+                transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
+                transition: "transform 0.2s ease",
+              }}
+            />
+          )
         ) : (
           <MediaImage
             src={image.src}

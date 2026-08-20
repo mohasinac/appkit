@@ -35,3 +35,39 @@ export function resolveMediaUrl(url: string | null | undefined): string | undefi
     return url;
   }
 }
+
+const YOUTUBE_HOSTS = new Set([
+  "youtube.com",
+  "m.youtube.com",
+  "youtu.be",
+  "youtube-nocookie.com",
+]);
+
+/**
+ * Extracts the 11-char YouTube video ID from a watch/share/embed URL, or
+ * `null` when `url` isn't a recognized YouTube URL. A video field can be
+ * sourced via `MediaUploadField`'s "YouTube" tab (see `showYoutube` there),
+ * which stores a `youtube.com/watch?v=...` URL — that URL is never a raw
+ * playable media file, so every `<video src>` renderer (`MediaVideo`,
+ * `ImageLightbox`) must check this first and fall back to an iframe embed.
+ */
+export function getYouTubeVideoId(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    if (!YOUTUBE_HOSTS.has(host)) return null;
+    if (host === "youtu.be") {
+      const id = parsed.pathname.slice(1);
+      return /^[\w-]{11}$/.test(id) ? id : null;
+    }
+    const fromQuery = parsed.searchParams.get("v");
+    if (fromQuery && /^[\w-]{11}$/.test(fromQuery)) return fromQuery;
+    const embedMatch = parsed.pathname.match(/\/embed\/([\w-]{11})/);
+    if (embedMatch) return embedMatch[1];
+    return null;
+  } catch (_err) {
+    void normalizeError(_err);
+    return null;
+  }
+}

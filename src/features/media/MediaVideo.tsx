@@ -1,7 +1,7 @@
 "use client"
 import { useRef, useEffect } from "react";
 import { Div, Row, Span } from "../../ui";
-import { resolveMediaUrl } from "../../utils/media-url";
+import { resolveMediaUrl, getYouTubeVideoId } from "../../utils/media-url";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 
 /**
@@ -88,6 +88,7 @@ export function MediaVideo({
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
   const resolvedSrc = resolveMediaUrl(src);
   const resolvedPoster = resolveMediaUrl(thumbnailUrl);
+  const youtubeId = getYouTubeVideoId(src);
 
   // Apply trimStart on load
   useEffect(() => {
@@ -131,6 +132,24 @@ export function MediaVideo({
       >
         <Span aria-hidden="true">🎬</Span>
       </Row>
+    );
+  }
+
+  // A YouTube watch/share URL (MediaUploadField's "YouTube" tab writes one)
+  // is never a raw playable file — <video src> fails with "no supported
+  // format" for it. Render the iframe embed instead of the native player.
+  if (youtubeId) {
+    const embedParams = new URLSearchParams({ playsinline: "1", rel: "0" });
+    if (autoPlayMuted) { embedParams.set("autoplay", "1"); embedParams.set("mute", "1"); }
+    if (loop) { embedParams.set("loop", "1"); embedParams.set("playlist", youtubeId); }
+    return (
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${youtubeId}?${embedParams.toString()}`}
+        title={alt}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        className="absolute inset-0 w-full h-full border-0"
+      />
     );
   }
 
