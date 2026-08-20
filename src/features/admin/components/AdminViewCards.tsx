@@ -39,7 +39,7 @@ const STATUS_TONE_CLASSES: Record<string, string> = {
 function RowAvatar({ image, alt, icon, size = "9" }: { image?: string; alt: string; icon?: string; size?: "9" | "12" }) {
   const dims = size === "12" ? "h-12 w-12" : "h-9 w-9";
   return (
-    <Div className={`relative ${dims} shrink-0 overflow-hidden`} rounded="full">
+    <Div className={`relative ${dims} shrink-0`} overflow="hidden" rounded="full">
       <MediaImage src={image} alt={alt} size="avatar" fallback={icon} />
     </Div>
   );

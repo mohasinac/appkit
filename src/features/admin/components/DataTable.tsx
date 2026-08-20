@@ -28,7 +28,7 @@ function buildDefaultColumns(resourceIcon?: string): AdminTableColumn<Record<str
       header: "Name",
       render: (row) => (
         <Row gap="sm" align="center">
-          <Div className="relative h-8 w-8 shrink-0 overflow-hidden" rounded="full">
+          <Div className="relative h-8 w-8 shrink-0" overflow="hidden" rounded="full">
             <MediaImage
               src={typeof row.image === "string" ? row.image : undefined}
               alt={String(row.primary ?? "")}
