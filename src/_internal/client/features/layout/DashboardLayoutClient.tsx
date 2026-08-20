@@ -23,8 +23,9 @@ import { normalizeError } from "../../../../errors/normalize";
  */
 
 import { useCallback, useEffect, useState, startTransition, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDashboardNav } from "../../../../features/layout/DashboardNavContext";
 import { AdminSidebar, type AdminNavGroup } from "../../../../features/admin/components/AdminSidebar";
 import { StoreSidebar, type StoreNavGroup } from "../../../../features/seller/components/SellerSidebar";
@@ -35,7 +36,10 @@ import { filterNavItems } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
 import { BackgroundRenderer, Div, Nav, Span, type BackgroundConfig } from "../../../../ui";
+import { useToast } from "../../../../ui/components/Toast";
 import { useVisualViewportInset } from "../../../../react/hooks/useVisualViewportInset";
+import { useSession } from "../../../../react/contexts/SessionContext";
+import { ROUTES } from "../../../../next/routing/route-map";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -230,6 +234,23 @@ export function DashboardLayoutClient({
   const storageKey = `appkit:sidebar-open:${variant}`;
   const { desktopOpen, mobileOpen, close, closeMobile, toggle } = useResponsiveDrawer(storageKey);
   useEffect(() => { closeMobile(); }, [pathname, closeMobile]);
+  const router = useRouter();
+  const { signOut } = useSession();
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut();
+      void queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+      void queryClient.invalidateQueries({ queryKey: ["cart"] });
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      showToast("Signed out successfully", "info");
+    } catch (_err) {
+      void normalizeError(_err);
+      showToast("Signed out", "info");
+    }
+    router.push(String(ROUTES.AUTH.LOGIN));
+  }, [signOut, queryClient, router, showToast]);
   const { data: settings } = useSiteSettings<{
     navConfig?: Record<string, { enabled: boolean }>;
     background?: { light?: BackgroundConfig; dark?: BackgroundConfig };
@@ -250,28 +271,30 @@ export function DashboardLayoutClient({
 
   const crossNavLinkClass =
     "flex items-center gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]/60 hover:text-[var(--appkit-color-text)] transition-colors";
-  const hasCrossNav = Boolean(crossNav?.profileHref || crossNav?.storeHref || crossNav?.adminHref);
-  const renderCrossNavFooter = hasCrossNav
-    ? () => (
-        <Nav aria-label="Cross-dashboard links" padding="y-xs">
-          {crossNav?.storeHref && (
-            <Link href={crossNav.storeHref} onClick={closeMobile} className={crossNavLinkClass}>
-              Go to my Store
-            </Link>
-          )}
-          {crossNav?.adminHref && (
-            <Link href={crossNav.adminHref} onClick={closeMobile} className={crossNavLinkClass}>
-              Back to Admin
-            </Link>
-          )}
-          {crossNav?.profileHref && (
-            <Link href={crossNav.profileHref} onClick={closeMobile} className={crossNavLinkClass}>
-              My Profile
-            </Link>
-          )}
-        </Nav>
-      )
-    : undefined;
+  const logoutBtnClass =
+    "flex w-full items-center gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium text-error transition-colors hover:bg-error-surface hover:text-error";
+  const renderCrossNavFooter = () => (
+    <Nav aria-label="Cross-dashboard links" padding="y-xs">
+      {crossNav?.storeHref && (
+        <Link href={crossNav.storeHref} onClick={closeMobile} className={crossNavLinkClass}>
+          Go to my Store
+        </Link>
+      )}
+      {crossNav?.adminHref && (
+        <Link href={crossNav.adminHref} onClick={closeMobile} className={crossNavLinkClass}>
+          Back to Admin
+        </Link>
+      )}
+      {crossNav?.profileHref && (
+        <Link href={crossNav.profileHref} onClick={closeMobile} className={crossNavLinkClass}>
+          My Profile
+        </Link>
+      )}
+      <button type="button" onClick={() => { closeMobile(); void handleLogout(); }} className={logoutBtnClass}>
+        Log out
+      </button>
+    </Nav>
+  );
 
   return (
     <>
