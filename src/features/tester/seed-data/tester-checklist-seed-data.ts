@@ -228,7 +228,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Product / Auction / Pre-order Detail",
       cases: [
         { key: "standard-detail", label: "Standard product detail page loads correctly" },
-        { key: "auction-detail", label: "Auction detail page shows current bid + countdown correctly" },
+        {
+          key: "auction-detail",
+          label: "Auction detail page shows current bid + a live, ticking countdown correctly",
+          description: "The countdown (\"Ends in 2d 5h 30m\", ticking every second — not a static date) must appear directly above every \"Place a bid\" button: the info panel, the desktop and mobile compact bid-summary cards, inside the \"Place your bid\" modal above the submit button, and in the mobile sticky bottom bar (as a row above the current-bid/bid-count line). It should switch to \"Ended\" once the end time passes.",
+        },
         { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly" },
         {
           key: "image-gallery",
@@ -307,6 +311,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Choosing manual payment (UPI/Cash) at checkout shows a how-it-works guide (payment steps, refund summary, what happens if an item sells out) and requires a consent checkbox before the \"Pay via UPI / Cash\" button becomes clickable",
           href: "/checkout",
         },
+        {
+          key: "checkout-cash-payment-no-validation-error",
+          label: "Checking the consent box and clicking \"Pay via UPI / Cash\" places the order successfully — no red \"Validation failed\" error appears",
+          description: "Fixed 2026-08-20 — the checkout API's schema only accepted paymentMethod \"cod\"/\"online\"/\"upi_manual\"/\"emi\"; the manual-payment button has always sent \"cash\", which was never in that list, so every attempt was rejected with a generic \"Validation failed\" message even with the out-of-stock policy and consent checkbox correctly filled in. Add items to cart, reach the payment step, check the consent box, and click \"Pay via UPI / Cash\" — confirm it succeeds and lands on the order confirmation / payment-proof page.",
+          href: "/checkout",
+        },
+        {
+          key: "checkout-order-summary-full-breakdown",
+          label: "The checkout Order Summary panel shows Shipping, COD handling fee (when COD is the likely method), the selected add-on fees (WhatsApp updates / gift wrap / shipment protection — only the ones checked), GST (when enabled), and Coupon discount as separate line items with icons before you pay — not just Subtotal and Total",
+          description: "Fixed 2026-08-20 — the Order Summary previously showed Total = Subtotal − coupon discount only; shipping and every fee were computed and charged server-side but never shown to the buyer beforehand. Reach the payment step with an address selected, toggle an add-on checkbox, and confirm the matching line appears in the summary a moment later and the Total updates to match — then confirm the same Total appears on the order confirmation page afterward.",
+          href: "/checkout",
+        },
+        {
+          key: "checkout-razorpay-charge-includes-shipping",
+          label: "When Razorpay online payment is enabled, the amount charged in the Razorpay checkout modal matches the order's recorded Total exactly, including shipping fee",
+          description: "Fixed 2026-08-20 — the Razorpay pre-charge amount (computed before opening the payment modal) omitted the seller's shipping fee entirely, while the order created afterward recorded a higher total that included it, so the buyer was silently charged less via the gateway than what got recorded as owed. Only testable when Site Settings → Payments → Razorpay is enabled and the seller has a configured shipping fee. Compare the amount shown in the Razorpay modal against the order's Total on the confirmation page — they should match exactly.",
+          href: "/checkout",
+        },
       ],
     },
     {
@@ -348,6 +370,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "win-auction", label: "Winning an auction creates a payable order correctly" },
         { key: "bid-history", label: "My Bids page shows accurate bid history, paginated with the most recent bid first", href: "/user/bids" },
         { key: "bid-history-auction-detail-pagination", label: "An auction detail page's Bid History section shows the most recent bid first and paginates once there are more bids than fit on one page (try the L-Drago auction — 13 seeded bids)" },
+        {
+          key: "bid-increment-tiered",
+          label: "The \"min increment\" shown on an auction matches the admin-configured tier for the current bid amount, not a flat ₹1 — and a bid below that increment is rejected",
+          description: "Default tiers: current bid ≤₹100 → ₹10 increment, ≤₹1,000 → ₹100, ≤₹5,000 → ₹200, ≤₹10,000 → ₹500, above that → ₹1,000. On an auction with no per-listing \"Minimum Bid Increment\" set, confirm the displayed \"min increment\" matches the tier for its current bid, and that trying to bid only current+1 (below the tier) is rejected with a minimum-increment error, while current+tier (or more) is accepted.",
+        },
+        {
+          key: "bid-increment-override-floor-raising",
+          label: "A seller's per-listing \"Minimum Bid Increment\" can require MORE than the admin tier, but can never let a bid undercut the tier",
+          description: "Set a listing's \"Minimum Bid Increment\" below the current tier's value (e.g. 1) and confirm the effective minimum bid still enforces the tier, not the smaller override. Then set it above the tier (e.g. 500 when the tier is 100) and confirm the higher override is now enforced instead.",
+        },
+        {
+          key: "bid-increment-live-tier-change",
+          label: "The displayed \"min increment\" on an open auction updates live (without a page refresh) if another bidder's bid pushes the current bid across a tier boundary",
+        },
       ],
     },
     {
@@ -814,6 +850,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Footer & Dark Mode",
       cases: [
         { key: "footer-dark-mode", label: "Footer background and all link/text colors switch correctly between light and dark mode", href: "/" },
+        {
+          key: "footer-github-icon",
+          label: "The footer's social icon row (brand column, bottom-left) shows a GitHub icon alongside Instagram/Twitter/WhatsApp, and clicking it opens the developer's real GitHub profile in a new tab",
+          description: "Added 2026-08-20 — GITHUB was a new socialUrls key with no footer icon before this. Confirm the icon renders (not a broken/missing glyph) and the link target is a real, working github.com profile, not a placeholder or dead link.",
+          href: "/",
+        },
       ],
     },
     {
@@ -852,7 +894,17 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "homepage-loads", label: "The homepage loads without errors on both desktop and mobile", href: "/" },
         { key: "about-us-in-main-nav", label: "\"About Us\" appears as an item in the main public top navigation, not just the footer", href: "/about" },
-        { key: "developer-page-loads", label: "The Developer page loads correctly and is linked from the footer's Support column next to About Us", href: "/developer" },
+        {
+          key: "about-team-real-founder",
+          label: "The About page's \"Who's Behind LetItRip\" team section shows the real founder's name (not a placeholder persona) and a working \"GitHub ↗\" link on their card",
+          description: "Updated 2026-08-20 — the founder card previously used a fictional placeholder name with no GitHub link. Confirm the founder card's name matches the real developer and the GitHub link opens their actual profile.",
+          href: "/about",
+        },
+        {
+          key: "developer-page-loads",
+          label: "The Developer page loads correctly, is linked from the footer's Support column next to About Us, shows the real developer's name, and its \"GitHub ↗\" link opens their actual GitHub profile",
+          href: "/developer",
+        },
         { key: "products-listing-page", label: "The products listing page loads and paginates correctly", href: "/products" },
         { key: "auctions-listing-page", label: "The auctions listing page loads correctly", href: "/auctions" },
         { key: "preorders-listing-page", label: "The pre-orders listing page loads correctly", href: "/pre-orders" },
@@ -1097,6 +1149,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Site & System",
         cases: [
           { key: "site-settings-admin", label: "Admin site settings page saves correctly", href: "/admin/site" },
+          {
+            key: "auction-bid-tiers-admin",
+            label: "Admin can add, edit, and remove bid-increment tiers in Site Settings → Auction Config, and the changes persist after saving and reloading the page",
+            description: "Each tier row has an editable \"up to (₹)\" amount and \"increment (₹)\" amount; the last row is fixed as \"and above\" (open-ended) and can't have its threshold edited. Add a new tier, edit an existing increment, remove a tier, save, then reload the Site Settings page and confirm the tier list matches what was saved — not reverted to the old defaults.",
+            href: "/admin/site",
+          },
           { key: "admin-dashboard-widgets", label: "Admin dashboard widgets show accurate data", href: "/admin/dashboard" },
           { key: "analytics-admin", label: "Admin analytics dashboard shows accurate data", href: "/admin/analytics" },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
