@@ -100,6 +100,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Each of the three links should open your own public-facing profile page (/profile/[your uid]) — not the edit-profile page. If your profile visibility is set to Private, confirm the page still loads for you (the owner) even though other users would get a 404.",
           href: "/user",
         },
+        {
+          key: "hand-mode-toggle-exists",
+          label: "A \"Left-hand mode\" toggle is visible on the Appearance tab of Settings, and also on the /user/profile page, and switching it saves without a page reload",
+          href: "/user/settings",
+        },
+        {
+          key: "hand-mode-persists-reload",
+          label: "After turning on Left-hand mode, reloading the page (and logging out/back in) keeps the setting on",
+          href: "/user/settings",
+        },
       ],
     },
     {
@@ -172,6 +182,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "filter-drawer-combines-correctly",
           label: "Applying multiple filters together (price range + brand + category + condition) narrows results correctly, and clearing filters restores the full list — on Products, Auctions, and Pre-Orders",
+          href: "/products",
+        },
+        {
+          key: "filter-drawer-flips-hand-mode",
+          label: "With Left-hand mode ON, the product/auction filter drawer opens from the left instead of the right",
           href: "/products",
         },
         {
@@ -466,6 +481,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "list-preorder", label: "Listing a pre-order works" },
         { key: "edit-listing", label: "Editing an existing listing works" },
         { key: "media-upload", label: "Uploading product images/video during listing works" },
+        { key: "seller-quick-add-drawer-flips", label: "With Left-hand mode ON, the seller's quick-add-listing side drawer opens from the left instead of the right" },
       ],
     },
     {
@@ -754,6 +770,21 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Row-level action buttons (the same ones in the table's overflow menu — edit, approve, delete, etc.) also appear directly on each list/grid card, not just in the table view",
           href: "/admin/orders",
         },
+      ],
+    },
+    {
+      pageKey: "hand-mode-layout",
+      pageLabel: "Left-Hand Mode",
+      cases: [
+        { key: "sidebar-flips", label: "With Left-hand mode ON, the admin/store/user dashboard's persistent left navigation sidebar (and its collapse handle) moves to the right side of the screen; with it OFF (default), the sidebar stays on the left", href: "/admin/dashboard" },
+        { key: "drawers-flip", label: "With Left-hand mode ON, side drawers/panels (filters, quick-add forms, cart, edit/create panels) that normally slide in from the right now slide in from the left", href: "/products" },
+        { key: "close-buttons-flip", label: "With Left-hand mode ON, the X close button on drawers/panels/modals sits on the left edge of its header; with it OFF (default), it sits on the right edge" },
+        { key: "back-to-top-cta-flips", label: "With Left-hand mode ON, the floating \"back to top\" button appears in the bottom-left corner instead of bottom-right after scrolling down a long listing page", href: "/products" },
+        { key: "quick-links-unaffected", label: "Turning on Left-hand mode does not reorder or mirror the My Account / Admin dashboard quick-links tile grid — only its surrounding column shifts with the sidebar", href: "/user" },
+        { key: "hero-carousel-arrows-flip", label: "With Left-hand mode ON, the homepage hero carousel's Prev/Next arrow pair appears in the bottom-left corner instead of bottom-right; the dots stay centered either way", href: "/" },
+        { key: "gallery-arrows-unaffected", label: "Left-hand mode does NOT change a product image gallery/lightbox's Prev/Next arrows — Prev stays on the left edge and Next stays on the right edge in both modes" },
+        { key: "homepage-section-buttons-mirror", label: "With Left-hand mode ON, homepage section header rows (e.g. Brands, Featured Bundles, Google Reviews) have their \"View All\" button on the opposite side from default — title and button swap sides", href: "/" },
+        { key: "hand-mode-no-fouc", label: "On a hard page reload with Left-hand mode already ON, panels/sidebars render on the left immediately — there is no visible flash of them briefly appearing on the right before snapping left" },
       ],
     },
     {

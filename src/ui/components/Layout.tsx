@@ -407,6 +407,10 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   color?: TextColorKey;
   /** Allow children to wrap onto multiple lines. */
   wrap?: boolean;
+  /** Reverse the visual order of children (`flex-direction: row-reverse`) without
+   * touching DOM/source order. Used for hand-mode-aware layouts (e.g. moving a
+   * close button to the opposite header edge) — replaces raw `flex-row-reverse`. */
+  reverse?: boolean;
   /** Zebra-stripe pattern when this Row is a repeating list element (rendered with `even:bg-*`). */
   oddEven?: "none" | "zebra";
   /**
@@ -473,6 +477,7 @@ export function Row({
   textWeight,
   color,
   wrap = false,
+  reverse = false,
   oddEven,
   divide,
   as,
@@ -493,6 +498,7 @@ export function Row({
   const Tag = (as ?? "div") as React.ElementType;
   const classes = [
     "appkit-row",
+    reverse ? "appkit-row--reverse" : "",
     centered ? "appkit-row--centered" : align !== "center" ? ITEMS_MAP[align] : "",
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],

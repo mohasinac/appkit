@@ -8,6 +8,7 @@ import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
 import { Div, Form, Row, Stack, Text } from "../../ui";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
+import { useHandMode } from "../../_internal/client/hand-mode";
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
 export interface QuickFieldDef {
@@ -75,6 +76,7 @@ export function QuickFormDrawer({
   schema,
   renderExtra,
 }: QuickFormDrawerProps) {
+  const { hand } = useHandMode();
   const drawerRef = useRef<HTMLDivElement>(null);
   const [values, setValues] = useState<FormValues>(() =>
     initValues(fields, defaultValues),
@@ -188,10 +190,10 @@ export function QuickFormDrawer({
         aria-label={title}
         layout="flex-col"
         shadow="2xl"
-        className="fixed inset-y-0 right-0 bg-[var(--appkit-color-surface)] w-full lg:w-[40%] [z-index:calc(var(--appkit-z-modal)+2)]"
+        className={`fixed inset-y-0 ${hand === "left" ? "left-0" : "right-0"} bg-[var(--appkit-color-surface)] w-full lg:w-[40%] [z-index:calc(var(--appkit-z-modal)+2)]`}
       >
         {/* Header */}
-        <Row className="flex-shrink-0 border-b border-[var(--appkit-color-border)]" padding="md" align="center" gap="3">
+        <Row className="flex-shrink-0 border-b border-[var(--appkit-color-border)]" padding="md" align="center" gap="3" reverse={hand === "left"}>
           <Text className="flex-1 text-[var(--appkit-color-text)]" size="base" weight="semibold">{title}</Text>
           <IconButton
             type="button"

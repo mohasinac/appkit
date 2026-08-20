@@ -1,8 +1,11 @@
+"use client";
+
 import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -146,18 +149,19 @@ export function CartDrawer({
   onCheckout,
   labels = {},
 }: CartDrawerProps) {
+  const { hand } = useHandMode();
   if (!isOpen) return null;
 
   return (
     <>
-      <Div surface="overlay-xs" 
+      <Div surface="overlay-xs"
         role="presentation"
         className="fixed inset-0 z-40"
         onClick={onClose}
       />
-      <Aside surface="sidePanel" shadow="xl" className="fixed inset-y-0 right-0 z-50 w-full max-w-sm">
+      <Aside surface="sidePanel" shadow="xl" className={`fixed inset-y-0 ${hand === "left" ? "left-0" : "right-0"} z-50 w-full max-w-sm`}>
         <Stack className="h-full">
-        <Row justify="between" border="bottom" className={__P.p4}>
+        <Row justify="between" border="bottom" className={__P.p4} reverse={hand === "left"}>
           <Heading level={2} size="lg" weight="semibold">
             {labels.title ?? "Cart"}
           </Heading>

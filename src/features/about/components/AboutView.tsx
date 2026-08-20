@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Badge, Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Avatar, Badge, Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
 
 export type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
@@ -136,6 +136,11 @@ export function AboutView({
                   <Text size="sm" variant="secondary" className="leading-relaxed">
                     {member.bio}
                   </Text>
+                  {member.githubUrl && (
+                    <Anchor href={member.githubUrl} tone="muted" size="sm" underline="hover">
+                      GitHub ↗
+                    </Anchor>
+                  )}
                 </Stack>
               ))}
             </Div>

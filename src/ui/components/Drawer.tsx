@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 /**
  * Drawer — slide-in panel from left, right, or bottom.
@@ -56,11 +57,13 @@ export function Drawer({
   title,
   children,
   footer,
-  side = "right",
+  side,
   size = "md",
   showCloseButton = true,
   className = "",
 }: DrawerProps) {
+  const { hand } = useHandMode();
+  const resolvedSide = side ?? hand;
   const panelRef = useRef<HTMLDivElement>(null);
   const prevFocusRef = useRef<HTMLElement | null>(null);
 
@@ -91,8 +94,8 @@ export function Drawer({
     [onClose],
   );
 
-  const { closed, open, base } = SIDE_TRANSLATE[side];
-  const isBottom = side === "bottom";
+  const { closed, open, base } = SIDE_TRANSLATE[resolvedSide];
+  const isBottom = resolvedSide === "bottom";
 
   if (typeof document === "undefined") return null;
 
@@ -133,7 +136,10 @@ export function Drawer({
 
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="appkit-drawer__header" data-section="drawer-div-483">
+          <div
+            className={hand === "left" ? "appkit-drawer__header flex-row-reverse" : "appkit-drawer__header"}
+            data-section="drawer-div-483"
+          >
             {title && (
               <Heading level={2} className="appkit-drawer__title">
                 {title}

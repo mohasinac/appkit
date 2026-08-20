@@ -29,6 +29,7 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.PRODUCTS), "hourly", 0.9),
     page(String(ROUTES.PUBLIC.AUCTIONS), "hourly", 0.9),
     page(String(ROUTES.PUBLIC.CATEGORIES), "weekly", 0.8),
+    page(String(ROUTES.PUBLIC.BRANDS), "weekly", 0.7),
     page(String(ROUTES.PUBLIC.BLOG), "daily", 0.7),
     page(String(ROUTES.PUBLIC.EVENTS), "daily", 0.7),
     page(String(ROUTES.PUBLIC.SELLERS), "weekly", 0.6),
@@ -47,6 +48,12 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.REFUND_POLICY), "yearly", 0.3),
     page(String(ROUTES.PUBLIC.SHIPPING_POLICY), "yearly", 0.3),
     page(String(ROUTES.PUBLIC.PRE_ORDERS), "daily", 0.7),
+    page(String(ROUTES.PUBLIC.BUNDLES), "weekly", 0.6),
+    page(String(ROUTES.PUBLIC.PRIZE_DRAWS), "daily", 0.7),
+    page(String(ROUTES.PUBLIC.CLASSIFIED), "daily", 0.6),
+    page(String(ROUTES.PUBLIC.DIGITAL_CODES), "daily", 0.6),
+    page(String(ROUTES.PUBLIC.LIVE), "hourly", 0.7),
+    page(String(ROUTES.PUBLIC.ART), "weekly", 0.6),
     page(String(ROUTES.PUBLIC.FEES), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_PRE_ORDERS_WORK), "monthly", 0.4),
@@ -62,13 +69,17 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
   ];
 }
 
+// "art" and "stickers" listing types render at the same PRODUCT_DETAIL route
+// as "standard" (see route-map.ts's ART comment) — no dedicated detail page.
+const PRODUCT_DETAIL_LISTING_TYPES = ["standard", "art", "stickers"];
+
 async function fetchProductUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
     const snap = await db
       .collection(PRODUCT_COLLECTION)
       .where(PRODUCT_STATUS, "==", PRODUCT_STATUS_PUBLISHED)
-      .where("listingType", "==", "standard")
+      .where("listingType", "in", PRODUCT_DETAIL_LISTING_TYPES)
       .select(PRODUCT_SLUG, PRODUCT_UPDATED_AT)
       .limit(5000)
       .get();
@@ -88,6 +99,53 @@ async function fetchProductUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
     return [];
   }
 }
+
+async function fetchListingTypeUrls(
+  baseUrl: string,
+  listingType: string,
+  buildUrl: (slug: string) => string,
+  label: string,
+): Promise<MetadataRoute.Sitemap> {
+  try {
+    const db = getAdminDb();
+    const snap = await db
+      .collection(PRODUCT_COLLECTION)
+      .where(PRODUCT_STATUS, "==", PRODUCT_STATUS_PUBLISHED)
+      .where("listingType", "==", listingType)
+      .select(PRODUCT_SLUG, PRODUCT_UPDATED_AT)
+      .limit(2000)
+      .get();
+    return snap.docs.map((doc) => {
+      const data = doc.data();
+      const slug = (data[PRODUCT_SLUG] as string | undefined) ?? doc.id;
+      return {
+        url: `${baseUrl}${buildUrl(slug)}`,
+        lastModified: (data[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ?? new Date(),
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+      };
+    });
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn(`sitemap: failed to fetch ${label} URLs`, { error: err });
+    return [];
+  }
+}
+
+const fetchPreOrderUrls = (baseUrl: string) =>
+  fetchListingTypeUrls(baseUrl, "pre-order", (slug) => ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug), "pre-order");
+
+const fetchPrizeDrawUrls = (baseUrl: string) =>
+  fetchListingTypeUrls(baseUrl, "prize-draw", (slug) => ROUTES.PUBLIC.PRIZE_DRAW_DETAIL(slug), "prize-draw");
+
+const fetchClassifiedUrls = (baseUrl: string) =>
+  fetchListingTypeUrls(baseUrl, "classified", (slug) => ROUTES.PUBLIC.CLASSIFIED_DETAIL(slug), "classified");
+
+const fetchDigitalCodeUrls = (baseUrl: string) =>
+  fetchListingTypeUrls(baseUrl, "digital-code", (slug) => ROUTES.PUBLIC.DIGITAL_CODE_DETAIL(slug), "digital-code");
+
+const fetchLiveUrls = (baseUrl: string) =>
+  fetchListingTypeUrls(baseUrl, "live", (slug) => ROUTES.PUBLIC.LIVE_DETAIL(slug), "live");
 
 async function fetchAuctionUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
@@ -142,11 +200,22 @@ async function fetchEventUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   }
 }
 
-async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+// categories is a discriminated-union collection (categoryType: "listing" |
+// "brand" | "bundle" — see CLAUDE.md's SB-UNI-C/SB-UNI-D). Each discriminator
+// renders at a different public route, so each needs its own filtered query;
+// querying the collection without a categoryType filter (the prior bug here)
+// mapped brand/bundle rows onto the wrong /categories/{slug} URL.
+async function fetchCategoryTypeUrls(
+  baseUrl: string,
+  categoryType: string,
+  buildUrl: (slug: string) => string,
+  label: string,
+): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
     const snap = await db
       .collection(CATEGORIES_COLLECTION)
+      .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", categoryType)
       .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
       .select(CATEGORY_FIELDS.SLUG, CATEGORY_FIELDS.UPDATED_AT)
       .limit(500)
@@ -155,7 +224,7 @@ async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap
       const data = doc.data();
       const slug = (data[CATEGORY_FIELDS.SLUG] as string | undefined) ?? doc.id;
       return {
-        url: `${baseUrl}/categories/${slug}`,
+        url: `${baseUrl}${buildUrl(slug)}`,
         lastModified: (data[CATEGORY_FIELDS.UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ?? new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
@@ -163,10 +232,19 @@ async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap
     });
   } catch (err) {
     void normalizeError(err);
-    serverLogger.warn("sitemap: failed to fetch category URLs", { error: err });
+    serverLogger.warn(`sitemap: failed to fetch ${label} URLs`, { error: err });
     return [];
   }
 }
+
+const fetchCategoryUrls = (baseUrl: string) =>
+  fetchCategoryTypeUrls(baseUrl, "listing", (slug) => ROUTES.PUBLIC.CATEGORY_DETAIL(slug), "category");
+
+const fetchBrandUrls = (baseUrl: string) =>
+  fetchCategoryTypeUrls(baseUrl, "brand", (slug) => ROUTES.PUBLIC.BRAND_DETAIL(slug), "brand");
+
+const fetchBundleUrls = (baseUrl: string) =>
+  fetchCategoryTypeUrls(baseUrl, "bundle", (slug) => ROUTES.PUBLIC.BUNDLE_DETAIL(slug), "bundle");
 
 async function fetchBlogPostUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
@@ -252,22 +330,50 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
 }
 
 export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
-  const [productUrls, categoryUrls, eventUrls, blogUrls, auctionUrls, storeUrls, scammerUrls] =
-    await Promise.all([
-      fetchProductUrls(baseUrl),
-      fetchCategoryUrls(baseUrl),
-      fetchEventUrls(baseUrl),
-      fetchBlogPostUrls(baseUrl),
-      fetchAuctionUrls(baseUrl),
-      fetchStoreUrls(baseUrl),
-      fetchScammerUrls(baseUrl),
-    ]);
+  const [
+    productUrls,
+    categoryUrls,
+    brandUrls,
+    bundleUrls,
+    eventUrls,
+    blogUrls,
+    auctionUrls,
+    preOrderUrls,
+    prizeDrawUrls,
+    classifiedUrls,
+    digitalCodeUrls,
+    liveUrls,
+    storeUrls,
+    scammerUrls,
+  ] = await Promise.all([
+    fetchProductUrls(baseUrl),
+    fetchCategoryUrls(baseUrl),
+    fetchBrandUrls(baseUrl),
+    fetchBundleUrls(baseUrl),
+    fetchEventUrls(baseUrl),
+    fetchBlogPostUrls(baseUrl),
+    fetchAuctionUrls(baseUrl),
+    fetchPreOrderUrls(baseUrl),
+    fetchPrizeDrawUrls(baseUrl),
+    fetchClassifiedUrls(baseUrl),
+    fetchDigitalCodeUrls(baseUrl),
+    fetchLiveUrls(baseUrl),
+    fetchStoreUrls(baseUrl),
+    fetchScammerUrls(baseUrl),
+  ]);
   return [
     ...staticPages(baseUrl),
     ...categoryUrls,
+    ...brandUrls,
+    ...bundleUrls,
     ...blogUrls,
     ...productUrls,
     ...auctionUrls,
+    ...preOrderUrls,
+    ...prizeDrawUrls,
+    ...classifiedUrls,
+    ...digitalCodeUrls,
+    ...liveUrls,
     ...eventUrls,
     ...storeUrls,
     ...scammerUrls,

@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
 import { SPRING_GENTLE } from "../../tokens/motion";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -38,6 +39,7 @@ export function Modal({
   className = "",
 }: ModalProps) {
   const visible = open ?? isOpen ?? false;
+  const { hand } = useHandMode();
   const titleId = React.useId();
   const panelRef = React.useRef<HTMLDivElement>(null);
   const previousFocusRef = React.useRef<HTMLElement | null>(null);
@@ -139,7 +141,10 @@ export function Modal({
             data-section="modal-div-562"
           >
             {(title || showCloseButton) && (
-              <div className="appkit-modal__header" data-section="modal-div-563">
+              <div
+                className={hand === "left" ? "appkit-modal__header flex-row-reverse" : "appkit-modal__header"}
+                data-section="modal-div-563"
+              >
                 {title ? (
                   <Heading level={2} id={titleId} className="appkit-modal__title">
                     {title}

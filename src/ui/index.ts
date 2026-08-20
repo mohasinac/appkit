@@ -455,6 +455,7 @@ export type {
   GridProps,
 } from "./components/Layout";
 export { Container, Stack, Row, Grid, GRID_MAP } from "./components/Layout";
+export { HandModeRow } from "./components/HandModeRow";
 
 // --- UI Helpers ---------------------------------------------------------------
 export { classNames, mergeTailwindClasses } from "./style.helper";

@@ -252,6 +252,8 @@ export {
   createCheckoutOrderAction,
   attachPaymentAction,
   verifyAndPlaceRazorpayOrderAction,
+  previewCheckoutPricing,
+  resolveShippingCost,
   formatShippingAddress,
   CHECKOUT_DEFAULT_COMMISSIONS,
   CHECKOUT_PAYMENT_METHODS,
@@ -259,6 +261,8 @@ export {
   type VerifyAndPlaceRazorpayOrderInput,
   type CheckoutOrderResult,
   type CheckoutPaymentMethod,
+  type CheckoutPricingPreviewInput,
+  type CheckoutPricingPreview,
 } from "./_internal/server/features/checkout/index";
 
 // S-SBUNI-RULES: refund action

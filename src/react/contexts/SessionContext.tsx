@@ -78,6 +78,8 @@ export interface SessionUser {
   permissions?: string[];
   /** Hash of the last dismissed announcement banner. */
   dismissedBannerHash?: string;
+  /** Persisted UI layout preferences (collapsed sections, left-hand mode, ...). */
+  uiPreferences?: { collapsedSections?: string[]; handMode?: "left" | "right" };
 }
 
 export interface SessionContextValue {
@@ -218,6 +220,7 @@ function buildSessionUser(
       ? new Date(serverData.scamAwarenessAcknowledgedAt)
       : null,
     dismissedBannerHash: serverData.dismissedBannerHash,
+    uiPreferences: serverData.uiPreferences,
   };
 }
 
@@ -312,6 +315,7 @@ export function SessionProvider({
             ? new Date(data.scamAwarenessAcknowledgedAt as unknown as string)
             : null,
           dismissedBannerHash: data.dismissedBannerHash,
+          uiPreferences: data.uiPreferences,
         };
       } catch (_err) {
         void normalizeError(_err);

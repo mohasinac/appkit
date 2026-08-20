@@ -39,7 +39,7 @@ export function FilterDrawer({
   triggerLabel = "Filters",
   triggerClassName = "",
   hideTrigger = false,
-  side = "right",
+  side,
   size = "md",
   background,
 }: FilterDrawerProps) {

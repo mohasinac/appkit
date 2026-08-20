@@ -13,12 +13,13 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
         disallow: [
           "/admin/",
           "/api/", // audit-hardcoded-api-routes-ok: robots.txt disallow prefix, not an endpoint reference
-          "/seller/",
+          "/store/",
           "/user/",
           "/auth/",
           "/checkout/",
           "/cart/",
-          "/demo/",
+          "/wishlist",
+          "/preview/",
           "/track/",
           "/unauthorized/",
           "/_next/",

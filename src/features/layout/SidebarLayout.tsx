@@ -1,5 +1,8 @@
+"use client";
+
 import React, { forwardRef } from "react";
 import { Aside, Div, Section, type SectionBackgroundConfig } from "../../ui";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -35,6 +38,10 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
     { isOpen, ariaLabel, onClose, header, children, id = "secondary-sidebar", background },
     ref,
   ) {
+    const { hand } = useHandMode();
+    const edgeClass = hand === "left" ? "left-0" : "right-0";
+    const borderClass = hand === "left" ? "border-r" : "border-l";
+    const closedTransform = hand === "left" ? "-translate-x-full" : "translate-x-full";
     return (
       <>
         {/* Backdrop overlay */}
@@ -50,7 +57,7 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           ref={ref as React.RefObject<HTMLElement>}
           id={id}
           aria-label={ariaLabel}
-          className={`fixed inset-y-0 right-0 w-80 bg-[var(--appkit-color-surface)] border-l border-[var(--appkit-color-border-subtle)] shadow-2xl transform duration-300 ease-in-out z-50 ${isOpen ? "translate-x-0" : "translate-x-full"} flex flex-col`}
+          className={`fixed inset-y-0 ${edgeClass} w-80 bg-[var(--appkit-color-surface)] ${borderClass} border-[var(--appkit-color-border-subtle)] shadow-2xl transform duration-300 ease-in-out z-50 ${isOpen ? "translate-x-0" : closedTransform} flex flex-col`}
         >
           <Section tone="plain" background={background} className="flex flex-col flex-1 min-h-0">
             {/* Fixed (non-scrolling) header strip */}

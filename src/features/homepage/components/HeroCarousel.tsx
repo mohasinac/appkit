@@ -6,6 +6,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";
 import { HERO_CAROUSEL_ARROW, HERO_CAROUSEL_DOT_ACTIVE, HERO_CAROUSEL_DOT_INACTIVE, POSITION_FILL, FLEX_CENTER, HERO_PLACEHOLDER_BG } from "../constants/hero-carousel-styles";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 import type {
   CarouselBackground,
   CarouselSlide,
@@ -282,6 +283,7 @@ function CarouselCardRenderer({
 }
 
 export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
+  const { hand } = useHandMode();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -500,7 +502,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
       {/* Navigation Arrows */}
       {slides.length > 1 && (
-        <Row gap="sm" className="absolute bottom-4 right-4 z-20">
+        <Row gap="sm" className={`absolute bottom-4 ${hand === "left" ? "left-4" : "right-4"} z-20`}>
           <Button
             variant="ghost"
             className={`p-[0] ${HERO_CAROUSEL_ARROW}`}

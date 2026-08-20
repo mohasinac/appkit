@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronUp, X } from "lucide-react";
 import { Button, Div } from "../../ui";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 export interface BackToTopProps {
   /** Scroll distance (px) before the button appears. Defaults to 400. */
@@ -32,6 +33,7 @@ export function BackToTop({
   className = "",
 }: BackToTopProps) {
   const pathname = usePathname();
+  const { hand } = useHandMode();
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -55,7 +57,7 @@ export function BackToTop({
   };
 
   return (
-    <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))] right-4 z-[var(--appkit-z-bottom-nav)] ${className}`}>
+    <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--appkit-space-4))] ${hand === "left" ? "left-4" : "right-4"} z-[var(--appkit-z-bottom-nav)] ${className}`}>
       <Button
         type="button"
         variant="outline"

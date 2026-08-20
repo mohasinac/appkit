@@ -20,6 +20,7 @@ import {
   couponsRepository,
   claimedCouponsRepository,
   addressesRepository,
+  productRepository,
 } from "../../../../repositories";
 import { calculateGst } from "../../../shared/fees/calculator";
 import { computePreOrderDepositAmount } from "../../../shared/checkout/order-math";
@@ -266,7 +267,13 @@ function accumulateCouponUsage(
   accumulator.set(couponCode, entry);
 }
 
-async function resolveShippingCost(
+/**
+ * Exported so `/api/payment/create-order` (pre-charge amount) and the
+ * read-only `previewCheckoutPricing` (Order Summary display) can compute the
+ * exact same per-seller shipping fee that order creation charges/records —
+ * a single source of truth instead of a third re-implementation.
+ */
+export async function resolveShippingCost(
   storeId: string | undefined,
 ): Promise<{ shippingFee: number; storeOwnerId: string | undefined; storeEmiEnabled: boolean; storeState: string | undefined }> {
   if (!storeId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled: false, storeState: undefined };
@@ -286,6 +293,80 @@ async function resolveStoreState(storeId: string): Promise<string | undefined> {
   const addresses = await addressesRepository.listByOwner("store", storeId);
   const pickup = addresses.find((a) => a.isDefault) ?? addresses[0];
   return pickup?.state;
+}
+
+interface GroupCouponDiscountResult {
+  couponDiscount: number;
+  appliedDiscounts: {
+    code: string;
+    couponId?: string;
+    type: "coupon" | "deal" | "auto";
+    discountAmount: number;
+    scope?: "admin" | "seller";
+    storeId?: string;
+  }[];
+}
+
+/**
+ * Prorates every buyer-applied coupon against one seller-group's total. Pure
+ * — no side effects (usage-accumulator bookkeeping is layered on by callers
+ * that actually place an order). Shared by createOrderForGroup,
+ * createRazorpayGroupOrder, and the read-only previewCheckoutPricing so the
+ * three can never drift on how a coupon splits across sellers (was three
+ * near-identical copies before this extraction — Duplication Decision
+ * Framework's Rule of Three).
+ */
+function computeGroupCouponDiscount(
+  appliedCoupons: CartAppliedCoupon[],
+  groupLines: { itemId: string; lineTotal: number }[],
+  groupTotal: number,
+  cartSubtotal: number,
+  storeId: string | undefined,
+): GroupCouponDiscountResult {
+  let couponDiscount = 0;
+  const appliedDiscounts: GroupCouponDiscountResult["appliedDiscounts"] = [];
+
+  for (const coupon of appliedCoupons) {
+    let couponGroupDiscount = 0;
+    const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
+    if (isSellerScoped) {
+      if (coupon.storeId !== storeId) continue;
+      if (coupon.applicableItemIds?.length) {
+        const eligibleTotal = groupLines
+          .filter((l) => coupon.applicableItemIds!.includes(l.itemId))
+          .reduce((s, l) => s + l.lineTotal, 0);
+        couponGroupDiscount =
+          eligibleTotal > 0
+            ? Math.min(
+                roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
+                eligibleTotal,
+              )
+            : 0;
+      } else {
+        couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
+      }
+    } else if (cartSubtotal > 0) {
+      couponGroupDiscount = Math.min(
+        roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
+        groupTotal,
+      );
+    }
+
+    if (couponGroupDiscount > 0) {
+      couponDiscount += couponGroupDiscount;
+      appliedDiscounts.push({
+        code: coupon.code,
+        couponId: coupon.couponId,
+        type: "coupon",
+        discountAmount: couponGroupDiscount,
+        scope: coupon.scope,
+        storeId: coupon.storeId,
+      });
+    }
+  }
+
+  couponDiscount = Math.min(couponDiscount, groupTotal);
+  return { couponDiscount, appliedDiscounts };
 }
 
 function buildStockUpdatePayload(
@@ -533,63 +614,22 @@ async function createOrderForGroup(
   const giftWrapFee = computeGiftWrapFee(giftWrapAddon, commissions);
   const shipmentProtectionFee = computeShipmentProtectionFee(groupTotal, shipmentProtectionAddon, commissions);
 
-  let couponDiscount = 0;
-  const appliedDiscounts: {
-    code: string;
-    couponId?: string;
-    type: "coupon" | "deal" | "auto";
-    discountAmount: number;
-    scope?: "admin" | "seller";
-    storeId?: string;
-  }[] = [];
   const groupCouponCodes = new Set<string>();
-
-  for (const coupon of appliedCoupons) {
-    let couponGroupDiscount = 0;
-    const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
-    if (isSellerScoped) {
-      if (coupon.storeId !== firstItem.storeId) continue;
-      if (coupon.applicableItemIds?.length) {
-        const eligibleTotal = group
-          .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
-          .reduce((s, { item }) => s + item.price * item.quantity, 0);
-        couponGroupDiscount =
-          eligibleTotal > 0
-            ? Math.min(
-                roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
-                eligibleTotal,
-              )
-            : 0;
-      } else {
-        couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
-      }
-    } else {
-      if (cartSubtotal > 0) {
-        couponGroupDiscount = Math.min(
-          roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
-          groupTotal,
-        );
-      }
-    }
-
-    if (couponGroupDiscount > 0) {
-      couponDiscount += couponGroupDiscount;
-      appliedDiscounts.push({
-        code: coupon.code,
-        couponId: coupon.couponId,
-        type: "coupon",
-        discountAmount: couponGroupDiscount,
-        scope: coupon.scope,
-        storeId: coupon.storeId,
-      });
-      if (coupon.couponId) {
-        accumulateCouponUsage(couponUsageAccumulator, coupon.code, coupon.couponId, couponGroupDiscount);
-        groupCouponCodes.add(coupon.code);
-      }
+  const groupLines = group.map(({ item }) => ({ itemId: item.itemId, lineTotal: item.price * item.quantity }));
+  const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
+    appliedCoupons,
+    groupLines,
+    groupTotal,
+    cartSubtotal,
+    firstItem.storeId,
+  );
+  for (const discount of appliedDiscounts) {
+    if (discount.couponId) {
+      accumulateCouponUsage(couponUsageAccumulator, discount.code, discount.couponId, discount.discountAmount);
+      groupCouponCodes.add(discount.code);
     }
   }
 
-  couponDiscount = Math.min(couponDiscount, groupTotal);
   const orderTotal =
     Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
 
@@ -1076,6 +1116,166 @@ export async function createCheckoutOrderAction(
   };
 }
 
+export interface CheckoutPricingPreviewInput {
+  userId: string;
+  /** Omitted for digital-only carts — GST can't be computed without a buyer state. */
+  addressId?: string;
+  paymentMethod: CheckoutPaymentMethod;
+  excludedProductIds?: string[];
+  whatsappNotifyAddon?: boolean;
+  giftWrapAddon?: boolean;
+  shipmentProtectionAddon?: boolean;
+}
+
+export interface CheckoutPricingPreview {
+  subtotal: number;
+  shippingFee: number;
+  codHandlingFee: number;
+  whatsappNotifyFee: number;
+  giftWrapFee: number;
+  shipmentProtectionFee: number;
+  gstAmount: number;
+  couponDiscount: number;
+  total: number;
+}
+
+const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
+  subtotal: 0,
+  shippingFee: 0,
+  codHandlingFee: 0,
+  whatsappNotifyFee: 0,
+  giftWrapFee: 0,
+  shipmentProtectionFee: 0,
+  gstAmount: 0,
+  couponDiscount: 0,
+  total: 0,
+};
+
+/**
+ * Read-only "what will I actually be charged" preview for the checkout
+ * Order Summary. Reuses the exact same building blocks
+ * createCheckoutOrderAction / verifyAndPlaceRazorpayOrderAction use when an
+ * order is actually placed — resolveShippingCost, the compute*Fee helpers,
+ * computeGroupCouponDiscount, and the GST calc — so the number shown to the
+ * buyer can never diverge from what gets charged/recorded. Never decrements
+ * stock, creates an order, or writes coupon usage.
+ */
+export async function previewCheckoutPricing(
+  input: CheckoutPricingPreviewInput,
+): Promise<CheckoutPricingPreview> {
+  const {
+    userId: uid,
+    addressId,
+    paymentMethod,
+    excludedProductIds = [],
+    whatsappNotifyAddon = false,
+    giftWrapAddon = false,
+    shipmentProtectionAddon = false,
+  } = input;
+
+  const siteSettings = await siteSettingsRepository.getSingleton();
+  const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+
+  const cart = await unitOfWork.carts.getOrCreate(uid);
+  const excludedSet = new Set(excludedProductIds);
+  const selectedSet = cart.selectedItemIds?.length ? new Set(cart.selectedItemIds) : null;
+  const cartItems = (cart.items ?? []).filter(
+    (item) => !excludedSet.has(item.productId) && (!selectedSet || selectedSet.has(item.itemId)),
+  );
+  if (cartItems.length === 0) return EMPTY_PRICING_PREVIEW;
+
+  // Best-effort product lookup — a preview never throws on a since-unpublished
+  // product, it just falls back to the item's cart-snapshot price for that
+  // line (same fallback cartRepository.getSubtotal() implicitly relies on).
+  const uniqueProductIds = [...new Set(cartItems.map((item) => item.productId))];
+  const productDocs = await Promise.all(uniqueProductIds.map((pid) => productRepository.findById(pid)));
+  const productById = new Map(uniqueProductIds.map((pid, i) => [pid, productDocs[i]]));
+
+  let resolvedAddress: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
+  if (addressId) {
+    const addressDoc = await unitOfWork.addresses.findById(addressId);
+    resolvedAddress =
+      addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid ? addressDoc : null;
+  }
+
+  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
+    item.bundleCategorySlug && item.bundleProductIds?.length ? item.price : (product?.price ?? item.price);
+
+  const checks = cartItems.map((item) => ({ item, product: productById.get(item.productId) ?? null }));
+  const orderGroups = splitCartIntoOrderGroups(checks);
+
+  const cartSubtotal = orderGroups.reduce(
+    (s, { items: g }) => s + g.reduce((gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity, 0),
+    0,
+  );
+
+  const appliedCoupons = cart.appliedCoupons ?? [];
+
+  let shippingFee = 0;
+  let codHandlingFee = 0;
+  let whatsappNotifyFeeTotal = 0;
+  let giftWrapFeeTotal = 0;
+  let shipmentProtectionFeeTotal = 0;
+  let gstAmount = 0;
+  let couponDiscount = 0;
+
+  for (const { items: group } of orderGroups) {
+    const firstItem = group[0].item;
+    const groupTotal = group.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0);
+
+    const { shippingFee: groupShippingFee, storeState } = await resolveShippingCost(firstItem.storeId);
+    shippingFee += groupShippingFee;
+
+    // Mirrors createOrderForGroup exactly — the COD handling fee is only
+    // ever charged for literal "cod" (pay the courier), never upi_manual or
+    // cash (both pre-paid via UPI/bank transfer before dispatch).
+    if (paymentMethod === "cod") codHandlingFee += computeCodHandlingFee(groupTotal, commissions);
+    whatsappNotifyFeeTotal += computeWhatsAppNotifyFee(whatsappNotifyAddon, commissions);
+    giftWrapFeeTotal += computeGiftWrapFee(giftWrapAddon, commissions);
+    shipmentProtectionFeeTotal += computeShipmentProtectionFee(groupTotal, shipmentProtectionAddon, commissions);
+
+    if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
+      const intraState = !!storeState && storeState === resolvedAddress.state;
+      for (const { item, product } of group) {
+        const lineTotal = unitPriceFor(item, product) * item.quantity;
+        const rate = product?.gstRate ?? 0;
+        if (rate > 0) gstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
+      }
+    }
+
+    const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: unitPriceFor(item, product) * item.quantity }));
+    const { couponDiscount: groupCouponDiscount } = computeGroupCouponDiscount(
+      appliedCoupons,
+      groupLines,
+      groupTotal,
+      cartSubtotal,
+      firstItem.storeId,
+    );
+    couponDiscount += groupCouponDiscount;
+  }
+
+  const total =
+    Math.max(0, cartSubtotal - couponDiscount) +
+    shippingFee +
+    codHandlingFee +
+    whatsappNotifyFeeTotal +
+    giftWrapFeeTotal +
+    shipmentProtectionFeeTotal +
+    gstAmount;
+
+  return {
+    subtotal: cartSubtotal,
+    shippingFee,
+    codHandlingFee,
+    whatsappNotifyFee: whatsappNotifyFeeTotal,
+    giftWrapFee: giftWrapFeeTotal,
+    shipmentProtectionFee: shipmentProtectionFeeTotal,
+    gstAmount,
+    couponDiscount,
+    total,
+  };
+}
+
 /**
  * Mark an order as paid after a payment provider verifies the transaction.
  * Consumers call this from /api/payment/verify or a payment webhook.
@@ -1322,56 +1522,15 @@ async function createRazorpayGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   const { shippingFee, storeOwnerId } = await resolveShippingCost(firstItem.storeId);
 
-  let couponDiscount = 0;
-  const appliedDiscounts: {
-    code: string;
-    couponId?: string;
-    type: "coupon" | "deal" | "auto";
-    discountAmount: number;
-    scope?: "admin" | "seller";
-    storeId?: string;
-  }[] = [];
+  const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: unitPriceFor(item, product) * item.quantity }));
+  const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
+    appliedCoupons,
+    groupLines,
+    groupTotal,
+    cartSubtotal,
+    firstItem.storeId,
+  );
 
-  for (const coupon of appliedCoupons) {
-    let couponGroupDiscount = 0;
-    const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
-    if (isSellerScoped) {
-      if (coupon.storeId !== firstItem.storeId) continue;
-      if (coupon.applicableItemIds?.length) {
-        const eligibleTotal = group
-          .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
-          .reduce((s, { item, product }) => s + unitPriceFor(item, product) * item.quantity, 0);
-        couponGroupDiscount =
-          eligibleTotal > 0
-            ? Math.min(
-                roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
-                eligibleTotal,
-              )
-            : 0;
-      } else {
-        couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
-      }
-    } else if (cartSubtotal > 0) {
-      couponGroupDiscount = Math.min(
-        roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
-        groupTotal,
-      );
-    }
-
-    if (couponGroupDiscount > 0) {
-      couponDiscount += couponGroupDiscount;
-      appliedDiscounts.push({
-        code: coupon.code,
-        couponId: coupon.couponId,
-        type: "coupon",
-        discountAmount: couponGroupDiscount,
-        scope: coupon.scope,
-        storeId: coupon.storeId,
-      });
-    }
-  }
-
-  couponDiscount = Math.min(couponDiscount, groupTotal);
   const rawPlatformFee = roundRupees(groupTotal * (platformFeePercent / 100));
   const gstOnFee = roundRupees(rawPlatformFee * (gstPercent / 100));
   const platformFee = rawPlatformFee + gstOnFee;
@@ -1711,7 +1870,16 @@ export async function verifyAndPlaceRazorpayOrderAction(
     const expectedPlatformFee =
       roundRupees(cartSubtotalRs * (platformFeePercent / 100));
     const expectedGstOnFee = roundRupees(expectedPlatformFee * (gstPercent / 100));
-    const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee + expectedGstOnFee;
+    // Same per-seller-group shipping sum /api/payment/create-order charged
+    // upfront (and the same resolveShippingCost createRazorpayGroupOrder
+    // below will use to build each order's recorded totalPrice) — keeps this
+    // floor check from passing an amount that's short by the shipping fee.
+    const expectedShippingGroups = splitCartIntoOrderGroups(bucketedPaid.available);
+    const expectedShippingFees = await Promise.all(
+      expectedShippingGroups.map((g) => resolveShippingCost(g.items[0].item.storeId)),
+    );
+    const expectedShippingFee = expectedShippingFees.reduce((sum, r) => sum + r.shippingFee, 0);
+    const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedShippingFee;
     const rzpOrderRecord = await fetchRazorpayOrder(razorpay_order_id);
     const paidAmountRs = paiseToRupees(rzpOrderRecord.amount);
     if (paidAmountRs < expectedPaymentAmountRs - 1) {

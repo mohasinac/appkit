@@ -9,6 +9,7 @@ import { resolveMediaUrl } from "../../../utils/media-url";
 import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -113,6 +114,7 @@ export function BrandsSection({
   loop = true,
 }: BrandsSectionProps) {
 const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+  const { hand } = useHandMode();
 const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
@@ -129,7 +131,7 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
   return (
     <Section className={`${className}`} surface="subtle" paddingY="y-3xl" paddingX="x-md">
       <Div className="mx-auto max-w-7xl">
-        <Row className="mb-6" align="center" justify="between">
+        <Row className="mb-6" align="center" justify="between" reverse={hand === "left"}>
           <>
             <Heading level={2} className={themed.textPrimary} size="2xl" mdSize="3xl" weight="bold">
               {title}

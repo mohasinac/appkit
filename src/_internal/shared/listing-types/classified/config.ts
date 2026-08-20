@@ -7,7 +7,7 @@ export const config = {
   listingType: LISTING_TYPE,
   slugPrefix: "classified-",
   cartLine: "blocked" as const,
-  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRODUCT_DETAIL(idOrSlug)),
+  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.CLASSIFIED_DETAIL(idOrSlug)),
   badge: undefined as { label: string; className: string } | undefined,
   priceLabel: "Asking Price (₹)",
   typeLabel: "Classified",

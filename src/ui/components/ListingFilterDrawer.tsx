@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Button } from "./Button";
 import { Span } from "./Typography";
 import { sectionBackgroundStyle, type SectionBackgroundConfig } from "./Semantic";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 const CLS_CLEAR_BTN = "text-xs text-[var(--appkit-color-text-muted)] hover:text-error text-[var(--appkit-color-text-muted)] transition-colors min-h-0 h-auto p-0";
 
@@ -28,11 +29,12 @@ export function ListingFilterDrawer({
   children,
   background,
 }: ListingFilterDrawerProps) {
+  const { hand } = useHandMode();
   if (!open) return null;
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={onClose} />
-      <div className={`fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl${background?.value ? " relative overflow-hidden" : ""}`}>
+      <div className={`fixed inset-y-0 ${hand === "left" ? "left-0" : "right-0"} z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl${background?.value ? " relative overflow-hidden" : ""}`}>
         {background?.value && (
           <>
             <Span aria-hidden className="absolute inset-0 -z-10" style={sectionBackgroundStyle(background)} />
@@ -45,7 +47,7 @@ export function ListingFilterDrawer({
             )}
           </>
         )}
-        <div className="flex items-center justify-between border-b border-[var(--appkit-color-border)] px-4 py-3.5">
+        <div className={`flex items-center justify-between border-b border-[var(--appkit-color-border)] px-4 py-3.5${hand === "left" ? " flex-row-reverse" : ""}`}>
           <Span size="base" weight="semibold" className="text-[var(--appkit-color-text)]">Filters</Span>
           <div className="flex items-center gap-2">
             {activeCount > 0 && (

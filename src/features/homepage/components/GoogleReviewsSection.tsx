@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import React from "react";
-import { Anchor, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, HandModeRow, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
@@ -206,7 +206,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
   return (
     <Section padding="y-3xl" surface="muted">
       <Div className="w-full max-w-7xl mx-auto" padding="x-md">
-        <Row className="mb-8" align="end" justify="between" gap="md">
+        <HandModeRow className="mb-8" align="end" justify="between" gap="md">
           <>
             <Heading level={2}>What Our Customers Say</Heading>
             {aggregateRating > 0 && (
@@ -223,7 +223,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
               View on Google →
             </Anchor>
           )}
-        </Row>
+        </HandModeRow>
 
         {reviews.length === 0 ? (
           <EmptyState />

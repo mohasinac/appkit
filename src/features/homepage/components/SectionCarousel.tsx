@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import { THEMED_BG_SECONDARY, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { SKELETON as skeleton } from "../../../_internal/shared/styles/skeleton";
 import { Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -152,6 +155,7 @@ export function SectionCarousel<T = unknown>({
   showPeek: _showPeek = false,
   minItemWidth = 220,
 }: SectionCarouselProps<T>) {
+  const { hand } = useHandMode();
   if (!isLoading && items.length === 0) return null;
 
   const hasBg = Boolean(backgroundImage);
@@ -196,7 +200,7 @@ const headingGradient: "none" | "brand" =
       {/* Content — sits above the background */}
       <Div className="relative z-10 w-full max-w-7xl mx-auto">
         {/* Header */}
-        <Div className="text-left mb-6">
+        <Div className={hand === "left" ? "text-right mb-6" : "text-left mb-6"}>
           {/* Editorial pill */}
           {headingVariant === "editorial" && pillLabel && (
             <Div className="mb-4">
@@ -279,7 +283,7 @@ const headingGradient: "none" | "brand" =
         {/* View More button — solid primary fill so it reads as the section's
             CTA rather than blending into the (often white) page background. */}
         {viewMoreHref && !isLoading && (
-          <Row className="mt-6" justify="start">
+          <Row className="mt-6" justify={hand === "left" ? "end" : "start"}>
             <TextLink rounded="lg" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
               shadow={useLightText ? "lg" : "none"}

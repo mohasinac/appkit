@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import { Anchor, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, HandModeRow, Row, Section, Stack, Text } from "../../../ui";
 import { SocialPostCard } from "./SocialPostCard";
 import {
   fetchInstagramPosts,
@@ -130,7 +130,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
   return (
     <Section padding="y-3xl" surface="muted">
       <Div className="w-full max-w-7xl mx-auto" padding="x-md">
-        <Row className="mb-8" align="end" justify="between" gap="md">
+        <HandModeRow className="mb-8" align="end" justify="between" gap="md">
           <>
             <Heading level={2} className="mb-1">
               {title || `${PLATFORM_LABELS[platform]} Feed`}
@@ -153,7 +153,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
               Follow on {PLATFORM_LABELS[platform]} →
             </Anchor>
           )}
-        </Row>
+        </HandModeRow>
 
         {error ? (
           <Div textSize="sm" className="text-left" color="faint" padding="y-3xl">{error}</Div>

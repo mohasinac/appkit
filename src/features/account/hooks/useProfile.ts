@@ -18,6 +18,7 @@ export interface UserProfile {
   uiPreferences?: {
     collapsedSections?: string[];
     dataViewMode?: "table" | "grid" | "list";
+    handMode?: "left" | "right";
   };
 }
 
@@ -35,6 +36,7 @@ export interface UpdateCurrentProfileInput {
   uiPreferences?: {
     collapsedSections?: string[];
     dataViewMode?: "table" | "grid" | "list";
+    handMode?: "left" | "right";
   };
 }
 

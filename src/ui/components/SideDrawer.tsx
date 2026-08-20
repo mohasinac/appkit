@@ -8,6 +8,7 @@ import { Heading, Span } from "./Typography";
 import { useSwipe } from "../../react";
 import { Text } from "./Typography";
 import { SPRING_SNAPPY } from "../../tokens/motion";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 export type DrawerMode = "create" | "edit" | "delete" | "view";
 
@@ -96,8 +97,10 @@ export function SideDrawer({
   footer,
   mode = "view",
   isDirty = false,
-  side = "right",
+  side,
 }: SideDrawerProps) {
+  const { hand } = useHandMode();
+  const resolvedSide = side ?? hand;
   const drawerRef = useRef<HTMLDivElement>(null);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const tActions = useTranslations("actions");
@@ -179,7 +182,7 @@ export function SideDrawer({
   }, [isOpen]);
 
   useSwipe(drawerRef, {
-    ...(side === "left"
+    ...(resolvedSide === "left"
       ? { onSwipeLeft: () => attemptClose() }
       : { onSwipeRight: () => attemptClose() }),
     minSwipeDistance: 60,
@@ -187,8 +190,8 @@ export function SideDrawer({
 
   const reduced = useReducedMotion();
   const positionClass =
-    side === "left" ? UI_SIDE_DRAWER.left : UI_SIDE_DRAWER.right;
-  const slideX = side === "left" ? "-100%" : "100%";
+    resolvedSide === "left" ? UI_SIDE_DRAWER.left : UI_SIDE_DRAWER.right;
+  const slideX = resolvedSide === "left" ? "-100%" : "100%";
 
   return (
     <AnimatePresence>
@@ -218,7 +221,10 @@ export function SideDrawer({
             transition={SPRING_SNAPPY}
             data-section="sidedrawer-div-598"
           >
-            {/* Header */}
+            {/* Header — close button sits at the leading edge in right-hand
+                mode (default) and the trailing edge in left-hand mode, so it
+                stays nearest the free/open edge regardless of which side the
+                panel itself docks to. */}
             <Row
               justify="between"
               gap="none"
@@ -227,7 +233,7 @@ export function SideDrawer({
                 UI_SIDE_DRAWER.headerMode[mode],
               ].join(" ")}
             >
-              <Row gap="3" className="min-w-0">
+              <Row gap="3" className="min-w-0" reverse={hand === "left"}>
                 <Button
                   variant="ghost"
                   onClick={attemptClose}

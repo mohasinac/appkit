@@ -8,6 +8,8 @@ import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";
 import { findActiveNavGroup, findActiveNavItem } from "../../../_internal/client/features/layout/navActive";
+import { getSidebarRailClasses, getSidebarOverlayClasses } from "../../../_internal/client/features/layout/sidebarPositionClasses";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -230,6 +232,8 @@ function GroupsContent({
 }
 
 function DrawerPanel({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+  const { hand } = useHandMode();
+  const { edgeClass, borderClass } = getSidebarOverlayClasses(hand);
   return (
     <Div className="hidden lg:block">
       <Div surface="overlay-xs" className="fixed inset-0 z-40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
@@ -237,7 +241,7 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 right-0 z-50 h-full w-64 border-l" surface="default"
+        className={`fixed top-0 ${edgeClass} z-50 h-full w-64 ${borderClass}`} surface="default"
       >
         <Row border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
@@ -273,6 +277,8 @@ export function StoreSidebar({
   renderFooter,
 }: StoreSidebarProps) {
   const close = onCloseMobile ?? (() => {});
+  const { hand } = useHandMode();
+  const rail = getSidebarRailClasses(hand);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
@@ -303,12 +309,12 @@ export function StoreSidebar({
           />
         )}
 
-        {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
+        {/* Desktop: slide-over panel + always-visible primary toggle tab */}
         <Div
-          className={`hidden lg:flex fixed left-0 z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : "-translate-x-[calc(100%-1.25rem)]"}`}
+          className={`hidden lg:flex fixed ${rail.edgeClass} z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : rail.collapsedTranslateClass}`}
         >
           {/* Nav panel */}
-          <Stack border="default" surface="sidePanel" className={`flex-1 border-r ${__O.hidden}`} shadow="xl">
+          <Stack border="default" surface="sidePanel" className={`flex-1 ${rail.borderClass} ${__O.hidden}`} shadow="xl">
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
@@ -327,7 +333,7 @@ export function StoreSidebar({
             {renderFooter && <Div border="top" padding="inline">{renderFooter()}</Div>}
           </Stack>
 
-          <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
+          <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} edge={hand} />
         </Div>
 
         {/* Mobile: bottom sheet */}

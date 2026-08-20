@@ -334,6 +334,7 @@ export const CATEGORY_ENDPOINTS = {
 export const CHECKOUT_ENDPOINTS = {
   PREFLIGHT: "/api/checkout/preflight",
   PLACE_ORDER: "/api/checkout",
+  PRICING_PREVIEW: "/api/checkout/pricing-preview",
 } as const;
 
 // ---------------------------------------------------------------------------

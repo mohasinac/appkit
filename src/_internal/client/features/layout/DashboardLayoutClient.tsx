@@ -35,6 +35,7 @@ import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/c
 import { filterNavItems } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
+import { useHandMode } from "../../hand-mode";
 import { BackgroundRenderer, Div, Nav, Span, type BackgroundConfig } from "../../../../ui";
 import { useToast } from "../../../../ui/components/Toast";
 import { useVisualViewportInset } from "../../../../react/hooks/useVisualViewportInset";
@@ -211,7 +212,10 @@ function DashboardBottomNav({ items, activeHref }: { items: SidebarNavItem[]; ac
   );
 }
 
-const DEFAULT_CONTENT_PADDING = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10";
+// Asymmetric padding clears the persistent sidebar rail — right-heavy by
+// default (rail docks left), left-heavy in left-hand mode (rail docks right).
+const DEFAULT_CONTENT_PADDING_RIGHT = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10";
+const DEFAULT_CONTENT_PADDING_LEFT = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pr-14 lg:pl-6 xl:pr-16 xl:pl-10";
 const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
 
 export function DashboardLayoutClient({
@@ -257,6 +261,7 @@ export function DashboardLayoutClient({
   }>();
   const navConfig = settings?.navConfig;
   const { theme } = useTheme();
+  const { hand } = useHandMode();
   // Explicit props win; otherwise fall back to the same siteSettings.background
   // the public shell reads, so admin/store/user dashboards match it by default.
   const resolvedLightBackground = lightBackground ?? settings?.background?.light;
@@ -355,7 +360,7 @@ export function DashboardLayoutClient({
       <Div className={[
         "w-full flex-1 flex flex-col min-h-[calc(100dvh-var(--header-height,3.5rem))]",
         "pb-[var(--appkit-space-16)] lg:pb-[0]", // clears the fixed mobile bottom-nav
-        contentPadding ?? DEFAULT_CONTENT_PADDING,
+        contentPadding ?? (hand === "left" ? DEFAULT_CONTENT_PADDING_LEFT : DEFAULT_CONTENT_PADDING_RIGHT),
         contentSurface,
       ].filter(Boolean).join(" ")}>
         <Div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</Div>

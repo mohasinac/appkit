@@ -173,6 +173,9 @@ export interface UserDocument extends BaseDocument {
      * stay unique). Absent/missing IDs default to collapsed for a section the
      * user has never interacted with. See useCollapsedSections. */
     collapsedSections?: string[];
+    /** Which side CTA panels/drawers/sidebars dock to and where close buttons
+     * sit. Absent/"right" = default (right-docked). "left" = left-hand mode. */
+    handMode?: "left" | "right";
   };
 }
 

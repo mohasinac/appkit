@@ -108,6 +108,7 @@ export interface AppkitBrandConfig {
     youtube?: string;
     facebook?: string;
     linkedin?: string;
+    github?: string;
   };
 }
 

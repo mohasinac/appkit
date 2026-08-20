@@ -4,6 +4,7 @@ import React from "react";
 import { Blockquote, Button, Div, Heading, RichText, Row, Section, Span, Text } from "../../../ui";
 import { Users } from "lucide-react";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 
 // --- Types -------------------------------------------------------------------
 
@@ -34,6 +35,7 @@ export function WhatsAppCommunitySection({
   isLoading = false,
   className = "",
 }: WhatsAppCommunitySectionProps) {
+  const { hand } = useHandMode();
   if (isLoading) {
     return (
       <Section paddingX="x-md-2xl" className={className} surface="subtle" paddingY="y-4xl">
@@ -70,7 +72,7 @@ export function WhatsAppCommunitySection({
           <Div className="relative z-10 px-[1.5rem] sm:px-[2.5rem] sm:py-[3rem]" padding="y-2xl">
 
             {/* Top row — WhatsApp icon + member pill */}
-            <Row align="center" justify="between" gap="md" wrap className={`mb-8`}>
+            <Row align="center" justify="between" gap="md" wrap className="mb-8" reverse={hand === "left"}>
               {/* WhatsApp branded icon */}
               <Row align="center" gap="3">
                 <Row className="w-12 h-12 bg-[var(--appkit-color-whatsapp)] flex-shrink-0" align="center" justify="center" rounded="xl" shadow="lg">

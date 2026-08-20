@@ -58,6 +58,7 @@
 }
 
 .appkit-row--wrap { flex-wrap: wrap; }
+.appkit-row--reverse { flex-direction: row-reverse; }
 .appkit-stack--centered,
 .appkit-row--centered {
   align-items: center;

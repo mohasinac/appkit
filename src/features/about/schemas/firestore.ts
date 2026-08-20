@@ -30,6 +30,7 @@ export interface AboutTeamMember {
   photoUrl?: string;
   isFounder?: boolean;
   isDeveloper?: boolean;
+  githubUrl?: string;
 }
 
 export interface AboutContentDocument {

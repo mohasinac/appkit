@@ -7,6 +7,8 @@
  * items from `MarketplaceHomepageView.sectionData.bundles`.
  */
 
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Badge, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
@@ -18,6 +20,7 @@ import {
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
+import { useHandMode } from "../../../_internal/client/hand-mode";
 import type { CategoryDocument } from "../../categories/schemas";
 import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 
@@ -46,13 +49,14 @@ export function FeaturedBundlesSection({
   className = "",
   onBuyNow,
 }: FeaturedBundlesSectionProps) {
+  const { hand } = useHandMode();
   const items = initialItems.filter((c) => c.categoryType === "bundle");
   if (items.length === 0) return null;
 
   return (
     <Section className={`${className}`} padding="y-2xl">
       <Stack gap="md">
-        <Row gap="sm" align="center" justify="between" wrap>
+        <Row gap="sm" align="center" justify="between" wrap reverse={hand === "left"}>
           <Stack gap="xs">
             <Heading
               level={2} size="2xl" weight="semibold" color="primary">

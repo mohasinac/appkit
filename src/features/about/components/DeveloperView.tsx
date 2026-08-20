@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import { Avatar, Badge, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { Anchor, Avatar, Badge, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { siteSettingsRepository } from "../../../repositories";
@@ -74,6 +74,11 @@ export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
                 <Text variant="secondary" className="leading-relaxed">
                   {dev.bio}
                 </Text>
+                {dev.githubUrl && (
+                  <Anchor href={dev.githubUrl} tone="brand" size="sm" underline="hover">
+                    GitHub ↗
+                  </Anchor>
+                )}
               </Stack>
             ))}
           </Stack>

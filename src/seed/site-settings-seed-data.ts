@@ -168,12 +168,13 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     teamSubtitle: "A small team obsessed with the same thing you are — the hunt for the next piece of the collection.",
     teamMembers: [
       {
-        name: "Arjun Verma",
+        name: "Mohasin Chinnapattan",
         role: "Founder & Developer",
         bio: "Started LetItRip after one too many afternoons hunting for a specific 1st-edition card across a dozen disconnected forums and marketplaces. Built the entire platform — Next.js front end, Firebase backend, the auction engine, the whole thing — the same way most great collections start: one late night at a time. Still personally answers the support inbox.",
-        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-arjun-verma-20260819/400/400"),
+        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-mohasin-chinnapattan-20260820/400/400"),
         isFounder: true,
         isDeveloper: true,
+        githubUrl: "https://github.com/mohasinac",
       },
       {
         name: "Ananya Rao",

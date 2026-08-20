@@ -91,6 +91,18 @@ export type {
   ThemeProviderProps,
   ThemeRegistry,
 } from "./theme";
+
+// [CLIENT-ONLY] HandModeProvider — applies the "left-hand mode" layout
+// preference to `<html>` via a `data-hand` attribute so drawers/sidebars/
+// close-buttons/floating CTAs flip which screen edge they dock to.
+// Re-exported through the public `./hand-mode` barrel to keep
+// audit-appkit-reexports clean (no `_internal/` symbols in public barrels).
+export { HandModeProvider, useHandMode } from "./hand-mode";
+export type {
+  HandMode,
+  HandModeContextValue,
+  HandModeProviderProps,
+} from "./hand-mode";
 export {
   BUILT_IN_THEMES,
   DEFAULT_DARK_THEME,
@@ -112,6 +124,15 @@ export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
 // S-STORE — pure-UI primitives + Seller view consumed by new dashboard pages
 export { EmptyState } from "./ui/components/EmptyState";
 export { Skeleton } from "./ui/components/Skeleton";
+// IconBox — square-icon container primitive; was exported from index.ts only,
+// missing here even though CLAUDE.md documents it as a client-usable pattern.
+export { IconBox } from "./ui/components/IconBox";
+export type {
+  IconBoxProps,
+  IconBoxRounded,
+  IconBoxSize,
+  IconBoxTone,
+} from "./ui/components/IconBox";
 export { Alert } from "./ui/components/Alert";
 export type { SkeletonProps } from "./ui/components/Skeleton";
 export { Divider } from "./ui/components/Divider";

@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button, Div, Heading } from "..";
 import { SPRING_SNAPPY } from "../../tokens/motion";
+import { useHandMode } from "../../_internal/client/hand-mode";
 
 // --- SideModal -----------------------------------------------------------------
 
@@ -33,10 +34,12 @@ export function SideModal({
   isOpen,
   onClose,
   title,
-  side = "right",
+  side,
   children,
   className = "",
 }: SideModalProps) {
+  const { hand } = useHandMode();
+  const resolvedSide = side ?? hand;
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useRef(
     `side-modal-title-${Math.random().toString(36).slice(2, 8)}`,
@@ -80,7 +83,7 @@ export function SideModal({
   }, [isOpen]);
 
   const reduced = useReducedMotion();
-  const slideX = side === "left" ? "-100%" : "100%";
+  const slideX = resolvedSide === "left" ? "-100%" : "100%";
 
   return (
     <AnimatePresence>
@@ -105,7 +108,7 @@ export function SideModal({
             aria-labelledby={title ? titleId.current : undefined}
             className={[
               "appkit-side-modal__panel",
-              `appkit-side-modal__panel--${side}`,
+              `appkit-side-modal__panel--${resolvedSide}`,
               className,
             ]
               .filter(Boolean)
@@ -117,7 +120,7 @@ export function SideModal({
           >
             {/* Header */}
             {title && (
-              <Div className="appkit-side-modal__header">
+              <Div className={hand === "left" ? "appkit-side-modal__header flex-row-reverse" : "appkit-side-modal__header"}>
                 <Heading
                   level={2}
                   id={titleId.current}
@@ -130,7 +133,7 @@ export function SideModal({
                   size="sm"
                   onClick={onClose}
                   aria-label="Close panel"
-                  className="ml-2 flex-shrink-0"
+                  className={hand === "left" ? "mr-2 flex-shrink-0" : "ml-2 flex-shrink-0"}
                 >
                   ✕
                 </Button>
