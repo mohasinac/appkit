@@ -146,6 +146,38 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Verify against the seeded fixtures: \"Test Collectible — Sold Out\" (standard, hidden until \"Show sold\" is on), \"Test Auction — Already Won\" (hidden until \"Show ended\" is on), \"Test Prize Draw — Already Closed\" (hidden until \"Show closed\" is on). All three should be genuinely absent by default, not just from an unrelated broken query.",
           href: "/products",
         },
+        {
+          key: "auctions-show-ended-off-shows-live",
+          label: "With \"Show ended\" off (the default), the Auctions listing shows LIVE auctions — not empty, and not requiring the toggle to see anything",
+          description: "Fixed 2026-08-20 — the bounded fetch behind the \"unsafe filter\" workaround used to be sorted by the same field the date filter was about to reject on (auctionEndDate ASC = oldest/most-ended first), so once a store accumulated enough already-ended auctions the entire batch could be all-ended and live ones never got fetched at all — you had to turn \"Show ended\" ON to see anything, including live auctions. Load /products?listingType=auction fresh with the toggle off and confirm live auctions appear without touching the toggle.",
+          href: "/products",
+        },
+        {
+          key: "auctions-show-ended-with-nondefault-sort",
+          label: "Switching the Auctions sort to something other than \"Ending Soon\" (e.g. \"Highest Current Bid\") while \"Show ended\" stays off still shows live auctions, correctly sorted by the chosen field",
+          description: "Same root cause as auctions-show-ended-off-shows-live, but for the case where the sort field doesn't match the date field being filtered on — a separate code path (in-memory re-sort after filtering) that needs its own check.",
+          href: "/products",
+        },
+        {
+          key: "sort-options-per-listing-type",
+          label: "Every sort dropdown option (Price, Newest, Ending Soon, Highest/Lowest Bid, Most Bids, Delivery Date, etc.) actually reorders the results on Products, Auctions, and Pre-Orders listing pages",
+          href: "/products",
+        },
+        {
+          key: "filter-drawer-combines-correctly",
+          label: "Applying multiple filters together (price range + brand + category + condition) narrows results correctly, and clearing filters restores the full list — on Products, Auctions, and Pre-Orders",
+          href: "/products",
+        },
+        {
+          key: "search-filter-sort-combo",
+          label: "Typing a search query, then applying a filter, then changing sort — all three stay applied together and pagination reflects the combined result count (not just the last action applied)",
+          href: "/products",
+        },
+        {
+          key: "listing-toggles-persist-across-pagination",
+          label: "Toggling \"Show sold\"/\"Show ended\"/\"Show closed\" and then navigating to page 2 keeps the toggle state — page 2 doesn't silently reset back to hiding those items",
+          href: "/products",
+        },
       ],
     },
     {
@@ -751,6 +783,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "store-directory", label: "The store directory page loads correctly", href: "/stores" },
         { key: "store-detail-tabs", label: "A store detail page's listing-type dropdown (Products/Auctions/Pre-Orders/Prize Draws/Bundles/Classifieds/Digital Codes/Live Items/Art & Stickers) switches correctly between listing types, and the separate Coupons/Reviews/About tabs next to it all load correctly", description: "The listing-type dropdown is always a dropdown (not just on narrow/mobile widths, unlike category/brand/product/event tabs) since a store can have up to 9 listing types — Coupons, Reviews, and About stay as standalone tabs beside it, never folded into the dropdown." },
+        {
+          key: "empty-tabs-hidden",
+          label: "A store/category/brand detail page never shows a tab for a listing type it has zero items of — e.g. a store with no products doesn't show a \"Products\" tab at all, not an empty products page",
+          description: "Fixed 2026-08-20 — tab visibility now checks the already-fetched per-type count and omits the tab entirely when it's zero, instead of always rendering all tabs regardless of whether they'd show anything. \"About\" always stays visible on store pages (no item-count concept). Verify on a real store/category/brand that's genuinely missing at least one listing type.",
+          href: "/stores",
+        },
         { key: "sellers-directory", label: "The sellers directory page loads correctly", href: "/sellers" },
         { key: "seller-detail-page", label: "An individual seller's public detail page loads correctly" },
         { key: "scams-registry", label: "The scams registry page and an individual scam detail page load correctly", href: "/scams" },

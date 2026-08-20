@@ -51,22 +51,6 @@ export function CategoryDetailTabs({
   enabledListingTypes,
   enabledCategoryTypes,
 }: CategoryDetailTabsProps) {
-  const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
-    const mapping = TAB_TYPE_MAP[t.id];
-    if (!mapping) return true;
-    if (mapping.kind === "listing" && enabledListingTypes) {
-      return enabledListingTypes.includes(mapping.type);
-    }
-    if (mapping.kind === "category" && enabledCategoryTypes) {
-      return enabledCategoryTypes.includes(mapping.type);
-    }
-    if (mapping.kind === "entity") return true;
-    return true;
-  });
-
-  const firstTabId = (visibleTabs[0]?.id ?? "products") as CategoryTabId;
-  const [activeTab, setActiveTab] = useState<CategoryTabId>(firstTabId);
-
   const countFor = (id: CategoryTabId): number | undefined => {
     switch (id) {
       case "products": return counts?.products;
@@ -78,6 +62,27 @@ export function CategoryDetailTabs({
       default: return undefined;
     }
   };
+
+  const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
+    const mapping = TAB_TYPE_MAP[t.id];
+    if (mapping) {
+      if (mapping.kind === "listing" && enabledListingTypes) {
+        if (!enabledListingTypes.includes(mapping.type)) return false;
+      }
+      if (mapping.kind === "category" && enabledCategoryTypes) {
+        if (!enabledCategoryTypes.includes(mapping.type)) return false;
+      }
+    }
+    // Hide a tab only when its count is known and explicitly zero — a tab
+    // whose count was never fetched (undefined) stays visible so we don't
+    // silently hide a listing type this page hasn't wired count-tracking
+    // for yet.
+    const count = countFor(t.id as CategoryTabId);
+    return count === undefined || count > 0;
+  });
+
+  const firstTabId = (visibleTabs[0]?.id ?? "products") as CategoryTabId;
+  const [activeTab, setActiveTab] = useState<CategoryTabId>(firstTabId);
 
   return (
     <>

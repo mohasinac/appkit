@@ -42,21 +42,6 @@ export function BrandDetailTabs({
   enabledListingTypes,
   enabledCategoryTypes,
 }: BrandDetailTabsProps) {
-  const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
-    const mapping = TAB_TYPE_MAP[t.id];
-    if (!mapping) return true;
-    if (mapping.kind === "listing" && enabledListingTypes) {
-      return enabledListingTypes.includes(mapping.type);
-    }
-    if (mapping.kind === "category" && enabledCategoryTypes) {
-      return enabledCategoryTypes.includes(mapping.type);
-    }
-    return true;
-  });
-
-  const firstTabId = (visibleTabs[0]?.id ?? "products") as CategoryTabId;
-  const [activeTab, setActiveTab] = useState<CategoryTabId>(firstTabId);
-
   const countFor = (id: CategoryTabId): number | undefined => {
     switch (id) {
       case "products": return counts?.products;
@@ -67,6 +52,28 @@ export function BrandDetailTabs({
       default: return undefined;
     }
   };
+
+  const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
+    const mapping = TAB_TYPE_MAP[t.id];
+    // This view only has content renderers for the 5 tab ids in
+    // TAB_TYPE_MAP (products/auctions/pre-orders/prize-draws/bundles) — any
+    // other CATEGORY_PAGE_TABS id (stores, classifieds, etc.) has no case in
+    // the render switch below and would show a blank tab, so exclude those
+    // here rather than rely on downstream JSX to silently render nothing.
+    if (!mapping) return false;
+    if (mapping.kind === "listing" && enabledListingTypes) {
+      if (!enabledListingTypes.includes(mapping.type)) return false;
+    }
+    if (mapping.kind === "category" && enabledCategoryTypes) {
+      if (!enabledCategoryTypes.includes(mapping.type)) return false;
+    }
+    // Hide a tab only when its count is known and explicitly zero.
+    const count = countFor(t.id as CategoryTabId);
+    return count === undefined || count > 0;
+  });
+
+  const firstTabId = (visibleTabs[0]?.id ?? "products") as CategoryTabId;
+  const [activeTab, setActiveTab] = useState<CategoryTabId>(firstTabId);
 
   return (
     <>

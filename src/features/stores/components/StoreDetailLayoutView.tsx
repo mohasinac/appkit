@@ -154,13 +154,21 @@ export async function StoreDetailLayoutView({
   };
 
   const visibleStoreTabs = STORE_PAGE_TABS.filter((tab) => {
-    if (tab.id === "bundles") return isCategoryTypeEnabled("bundle", settings);
+    if (tab.id === "bundles") {
+      if (!isCategoryTypeEnabled("bundle", settings)) return false;
+      return listingCounts[tab.id] > 0;
+    }
     // Combined tab — visible if either underlying listing type is enabled.
     if (tab.id === "art") {
-      return isListingTypeEnabled("art", settings) || isListingTypeEnabled("stickers", settings);
+      if (!(isListingTypeEnabled("art", settings) || isListingTypeEnabled("stickers", settings))) return false;
+      return listingCounts[tab.id] > 0;
     }
     const lt = TAB_LISTING_TYPE[tab.id];
-    return lt ? isListingTypeEnabled(lt as Parameters<typeof isListingTypeEnabled>[0], settings) : true;
+    if (lt && !isListingTypeEnabled(lt as Parameters<typeof isListingTypeEnabled>[0], settings)) return false;
+    // A store with zero items of a given listing type shouldn't offer a tab
+    // that leads to an empty page — matches the "hide empty tab" rule below
+    // for coupons/reviews.
+    return listingCounts[tab.id] > 0;
   });
 
   const dropdownTabs = visibleStoreTabs.map((tab) => ({
@@ -170,8 +178,12 @@ export async function StoreDetailLayoutView({
   }));
 
   const tabs = [
-    { value: "coupons", label: tabLabel("Coupons", couponsCount), href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
-    { value: "reviews", label: tabLabel("Reviews", reviewsCount), href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
+    ...(couponsCount > 0
+      ? [{ value: "coupons", label: tabLabel("Coupons", couponsCount), href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) }]
+      : []),
+    ...(reviewsCount > 0
+      ? [{ value: "reviews", label: tabLabel("Reviews", reviewsCount), href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) }]
+      : []),
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },
   ];
 
