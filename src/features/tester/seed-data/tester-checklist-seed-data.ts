@@ -89,6 +89,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "notification-prefs", label: "Notification preferences save correctly" },
         { key: "public-profile-toggle", label: "Public profile visibility toggle works" },
         {
+          key: "password-change-otp-required",
+          label: "Changing your password from Settings requires entering an emailed 6-digit code before it actually takes effect — the password does not change just from submitting the current/new password form",
+          description: "Fixed 2026-08-20 — the password-change API previously trusted the session cookie alone, with no server-side check of the current password at all. Submit the Change Password form with a correct current password; confirm you land on a \"we sent a code to your email\" step, and the password only actually updates after entering the correct code. Also verify: an expired/wrong code is rejected with a clear error, and \"Resend code\" works.",
+          href: "/user/settings",
+        },
+        {
           key: "own-public-profile-quick-links",
           label: "\"View public profile\" is easy to find and works from three places: the My Account dashboard header, the My Account quick-links grid (\"My Public Profile\" tile), and the /user/profile page (next to \"Manage Addresses\")",
           description: "Each of the three links should open your own public-facing profile page (/profile/[your uid]) — not the edit-profile page. If your profile visibility is set to Private, confirm the page still loads for you (the owner) even though other users would get a 404.",
