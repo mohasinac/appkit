@@ -4,12 +4,16 @@ import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
-import { Button, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
+import { Button, CountdownDisplay, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { placeBidSchema } from "../schemas/bid-input";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
+import {
+  resolveMinBidIncrement,
+  type BidIncrementTier,
+} from "../../../_internal/shared/features/auctions/config";
 
 import { normalizeError } from "../../../errors/normalize";
 const __P = {
@@ -34,9 +38,11 @@ export interface PlaceBidFormClientProps {
   productId: string;
   currentBid: number;
   startingBid: number;
-  minBidIncrement: number;
+  tiers: BidIncrementTier[];
+  minBidIncrementOverride?: number;
   currency: string;
   isEnded: boolean;
+  auctionEndDate: Date | null;
   buyNowPrice: number | null;
   bidsHaveStarted?: boolean;
   bidCount: number;
@@ -49,9 +55,11 @@ export function PlaceBidFormClient({
   productId,
   currentBid: ssrCurrentBid,
   startingBid,
-  minBidIncrement,
+  tiers,
+  minBidIncrementOverride,
   currency,
   isEnded,
+  auctionEndDate,
   buyNowPrice,
   bidsHaveStarted = false,
   bidCount: ssrBidCount,
@@ -65,6 +73,9 @@ export function PlaceBidFormClient({
   const live = useLiveAuctionBid(productId, ssrCurrentBid, ssrBidCount, { enabled: !isEnded });
   const currentBid = live.currentBid;
   const bidCount = live.bidCount;
+  // Tiered, floor-raising: resolves fresh whenever the live current bid
+  // crosses a tier boundary while this modal is open.
+  const minBidIncrement = resolveMinBidIncrement(currentBid, tiers, minBidIncrementOverride);
   const minBid = currentBid + minBidIncrement;
   const [bidAmount, setBidAmount] = useState<string>(String(minBid));
   const [stepMul, setStepMul] = useState<1 | 5 | 10 | "custom">(1);
@@ -235,6 +246,12 @@ export function PlaceBidFormClient({
             {success && (
               <Text className="text-success" size="xs">
                 ✓ Bid placed successfully!
+              </Text>
+            )}
+
+            {!isEnded && auctionEndDate && (
+              <Text align="center" size="xs" color="muted">
+                Ends in <CountdownDisplay targetDate={auctionEndDate} format="auto" expiredLabel="Ended" />
               </Text>
             )}
 

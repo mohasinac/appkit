@@ -1,7 +1,7 @@
 "use server";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
-import { bidRepository, productRepository, userRepository } from "../../../../repositories";
+import { bidRepository, productRepository, userRepository, siteSettingsRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { placeBidSchema } from "../../../shared/features/auctions/schema";
 import {
@@ -23,7 +23,8 @@ export async function placeBidAction(input: unknown): Promise<ActionResult<unkno
       const { auctionId, amount } = parsed.data;
       const product = await assertAuctionActive(auctionId);
       assertNotAuctionOwner(product, user.uid);
-      assertBidAmount(product, amount);
+      const settings = await siteSettingsRepository.getSingleton();
+      assertBidAmount(product, amount, settings.auctionConfig?.bidIncrementTiers ?? []);
     
       const profile = await userRepository.findById(user.uid).catch(() => null);
       const userName = profile?.displayName ?? user.name ?? "Anonymous";

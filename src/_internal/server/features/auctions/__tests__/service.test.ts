@@ -46,47 +46,66 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
+const NO_TIERS: import("../../../../shared/features/auctions/config").BidIncrementTier[] = [];
+const TEST_TIERS: import("../../../../shared/features/auctions/config").BidIncrementTier[] = [
+  { upTo: 100, increment: 10 },
+  { upTo: 1000, increment: 100 },
+  { upTo: 5000, increment: 200 },
+  { upTo: 10000, increment: 500 },
+  { upTo: null, increment: 1000 },
+];
+
 describe("computeMinBid", () => {
-  it("no current bid → returns startingBid + default increment", () => {
+  it("no current bid → returns startingBid + default increment (empty tiers falls back)", () => {
     const product = makeAuction({ startingBid: 10000, currentBid: undefined });
-    expect(computeMinBid(product)).toBe(10000 + AUCTION_MIN_BID_INCREMENT);
+    expect(computeMinBid(product, NO_TIERS)).toBe(10000 + AUCTION_MIN_BID_INCREMENT);
   });
 
-  it("currentBid set → returns currentBid + default increment", () => {
+  it("currentBid set → returns currentBid + default increment (empty tiers falls back)", () => {
     const product = makeAuction({ currentBid: 50000 });
-    expect(computeMinBid(product)).toBe(50000 + AUCTION_MIN_BID_INCREMENT);
+    expect(computeMinBid(product, NO_TIERS)).toBe(50000 + AUCTION_MIN_BID_INCREMENT);
   });
 
-  it("uses the product's configured minBidIncrement when present", () => {
-    const product = makeAuction({ currentBid: 10000, minBidIncrement: 500 });
-    expect(computeMinBid(product)).toBe(10500);
+  it("uses the product's configured minBidIncrement when it exceeds the tier (floor-raising override)", () => {
+    const product = makeAuction({ currentBid: 10000, minBidIncrement: 5000 });
+    expect(computeMinBid(product, TEST_TIERS)).toBe(15000);
   });
 
-  it("no currentBid and no startingBid → 0 + increment", () => {
+  it("ignores the product's configured minBidIncrement when it's below the tier floor", () => {
+    const product = makeAuction({ currentBid: 10000, minBidIncrement: 1 });
+    expect(computeMinBid(product, TEST_TIERS)).toBe(10000 + 500);
+  });
+
+  it("no currentBid and no startingBid → 0 + increment (empty tiers falls back)", () => {
     const product = makeAuction({ currentBid: undefined, startingBid: undefined });
-    expect(computeMinBid(product)).toBe(AUCTION_MIN_BID_INCREMENT);
+    expect(computeMinBid(product, NO_TIERS)).toBe(AUCTION_MIN_BID_INCREMENT);
+  });
+
+  it("current bid at an exact tier boundary resolves to the lower tier (inclusive upper bound)", () => {
+    const product = makeAuction({ currentBid: 1000, minBidIncrement: undefined });
+    expect(computeMinBid(product, TEST_TIERS)).toBe(1000 + 100);
   });
 });
 
 describe("assertBidAmount", () => {
   it("bidAmount >= computeMinBid → no throw", () => {
     const product = makeAuction({ currentBid: 10000 });
-    const min = computeMinBid(product);
-    expect(() => assertBidAmount(product, min)).not.toThrow();
-    expect(() => assertBidAmount(product, min + 100)).not.toThrow();
+    const min = computeMinBid(product, NO_TIERS);
+    expect(() => assertBidAmount(product, min, NO_TIERS)).not.toThrow();
+    expect(() => assertBidAmount(product, min + 100, NO_TIERS)).not.toThrow();
   });
 
   it("bidAmount < computeMinBid → throws BidTooLowError", () => {
     const product = makeAuction({ currentBid: 10000 });
-    const min = computeMinBid(product);
-    expect(() => assertBidAmount(product, min - 1)).toThrow(BidTooLowError);
+    const min = computeMinBid(product, NO_TIERS);
+    expect(() => assertBidAmount(product, min - 1, NO_TIERS)).toThrow(BidTooLowError);
   });
 
   it("BidTooLowError contains the expected minimum", () => {
     const product = makeAuction({ currentBid: 10000 });
-    const min = computeMinBid(product);
+    const min = computeMinBid(product, NO_TIERS);
     let caught: BidTooLowError | undefined;
-    try { assertBidAmount(product, 0); } catch (e) { caught = e as BidTooLowError; }
+    try { assertBidAmount(product, 0, NO_TIERS); } catch (e) { caught = e as BidTooLowError; }
     expect(caught).toBeInstanceOf(BidTooLowError);
     expect(caught?.message).toContain(String(min));
   });

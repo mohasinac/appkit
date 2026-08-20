@@ -15,8 +15,10 @@ import { isAuctionListing } from "../../products/utils/listing-type";
 import { userRepository } from "../../auth/repository/user.repository";
 import { unitOfWork } from "../../../core/unit-of-work";
 import { storeRepository } from "../../stores/repository/store.repository";
+import { siteSettingsRepository } from "../../../repositories";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
+import { resolveMinBidIncrement } from "../../../_internal/shared/features/auctions/config";
 import {
   ERROR_MESSAGES,
   AuthorizationError,
@@ -77,7 +79,12 @@ export async function placeBid(
       ? product.currentBid!
       : (product.startingBid ?? product.price);
 
-  const minIncrement = product.minBidIncrement ?? 1;
+  const settings = await siteSettingsRepository.getSingleton();
+  const minIncrement = resolveMinBidIncrement(
+    baseBid,
+    settings.auctionConfig?.bidIncrementTiers ?? [],
+    product.minBidIncrement,
+  );
 
   // Proxy-bid semantics (eBay style): the buyer's `bidAmount` is treated as
   // their **maximum** they're willing to pay; the visible price only steps up

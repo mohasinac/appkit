@@ -8,9 +8,10 @@ import {
   BidOnOwnAuctionError,
 } from "../../../shared/features/auctions/errors";
 import {
-  AUCTION_MIN_BID_INCREMENT,
   AUCTION_SNIPING_WINDOW_SECONDS,
   AUCTION_DEFAULT_EXTENSION_MINUTES,
+  resolveMinBidIncrement,
+  type BidIncrementTier,
 } from "../../../shared/features/auctions/config";
 import type { ProductDocument } from "../../../shared/features/products/types";
 
@@ -29,16 +30,16 @@ export async function assertAuctionActive(auctionId: string): Promise<ProductDoc
   return product as unknown as ProductDocument;
 }
 
-/** Compute the minimum valid bid given the current state. */
-export function computeMinBid(product: ProductDocument): number {
+/** Compute the minimum valid bid given the current state and the admin's tier table. */
+export function computeMinBid(product: ProductDocument, tiers: BidIncrementTier[]): number {
   const current = (product as any).currentBid ?? (product as any).startingBid ?? 0;
-  const increment = (product as any).minBidIncrement ?? AUCTION_MIN_BID_INCREMENT;
+  const increment = resolveMinBidIncrement(current, tiers, (product as any).minBidIncrement);
   return current + increment;
 }
 
 /** Assert a bid amount is valid against the current auction state. */
-export function assertBidAmount(product: ProductDocument, amount: number): void {
-  const minBid = computeMinBid(product);
+export function assertBidAmount(product: ProductDocument, amount: number, tiers: BidIncrementTier[]): void {
+  const minBid = computeMinBid(product, tiers);
   if (amount < minBid) throw new BidTooLowError(minBid);
 }
 

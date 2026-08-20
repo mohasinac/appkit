@@ -4,6 +4,7 @@
  */
 
 import type { AboutContentDocument } from "../../about/schemas/firestore";
+import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../../../_internal/shared/features/auctions/config";
 
 // Flag-key constants. Consumers MUST reference the bypass flag via this
 // constant so audit-checkout-bypass rule 1 (substring scan) only sees a
@@ -539,6 +540,12 @@ export interface SiteSettingsDocument extends BaseDocument {
     legalName: string;
     address: string;
   };
+  auctionConfig: {
+    /** Ordered ascending by upTo; the last tier's upTo MUST be null (open-ended, "and above"). Drives the tiered minimum bid increment — see resolveMinBidIncrement in _internal/shared/features/auctions/config.ts. */
+    bidIncrementTiers: { upTo: number | null; increment: number }[];
+    autoExtendWindowMinutes: number;
+    settlementGracePeriodHours: number;
+  };
   socialLinks: {
     facebook?: string;
     twitter?: string;
@@ -785,6 +792,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     gstin: "",
     legalName: "",
     address: "",
+  },
+  auctionConfig: {
+    bidIncrementTiers: DEFAULT_AUCTION_BID_INCREMENT_TIERS,
+    autoExtendWindowMinutes: 5,
+    settlementGracePeriodHours: 24,
   },
   featureFlags: {
     chats: true,

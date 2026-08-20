@@ -20,6 +20,10 @@ import {
   type ThemeManagerValue,
 } from "../../site-settings/components/ThemeManagerView";
 import { DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from "../../../tokens/themes";
+import {
+  DEFAULT_AUCTION_BID_INCREMENT_TIERS,
+  type BidIncrementTier,
+} from "../../../_internal/shared/features/auctions/config";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
 
 const __O = {
@@ -276,7 +280,7 @@ export function AdminSiteSettingsView({
   const [notifWhatsappTypes, setNotifWhatsappTypes] = React.useState<string[]>([]);
 
   // ⑩ Auction
-  const [minBidIncrement, setMinBidIncrement] = React.useState(50);
+  const [bidIncrementTiers, setBidIncrementTiers] = React.useState<BidIncrementTier[]>(DEFAULT_AUCTION_BID_INCREMENT_TIERS);
   const [autoExtendWindow, setAutoExtendWindow] = React.useState(5);
   const [settlementGrace, setSettlementGrace] = React.useState(24);
 
@@ -490,7 +494,7 @@ export function AdminSiteSettingsView({
     setNotifEmailTypes(s.notificationChannels?.email?.types ?? []);
     setNotifWhatsappTypes(s.notificationChannels?.whatsapp?.types ?? []);
 
-    setMinBidIncrement(s.auctionConfig?.minBidIncrement ?? 50);
+    setBidIncrementTiers(s.auctionConfig?.bidIncrementTiers ?? DEFAULT_AUCTION_BID_INCREMENT_TIERS);
     setAutoExtendWindow(s.auctionConfig?.autoExtendWindowMinutes ?? 5);
     setSettlementGrace(s.auctionConfig?.settlementGracePeriodHours ?? 24);
 
@@ -681,7 +685,7 @@ export function AdminSiteSettingsView({
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
       payment: { razorpayEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
-      auctionConfig: { minBidIncrement, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
+      auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
       // Spreading the raw `featureFlags` object captured at load (not hand-picking keys)
@@ -1477,7 +1481,67 @@ export function AdminSiteSettingsView({
           {/* ⑩ Auction Config */}
           <TabsContent value="auction">
             <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
-              <Input label="Minimum bid increment (₹)" value={String(minBidIncrement)} onChange={(e) => setMinBidIncrement(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Global default — individual auctions may override." />
+              <Stack gap="sm" rounded="lg" border="default" padding="sm">
+                <Text size="xs" weight="medium" color="muted">Bid increment tiers</Text>
+                <Text size="xs" color="muted">
+                  The minimum jump a new bid must clear, based on the current bid amount. A seller's per-listing override can require more than the matching tier, but can never undercut it.
+                </Text>
+                {bidIncrementTiers.map((tier, i) => {
+                  const isLast = i === bidIncrementTiers.length - 1;
+                  return (
+                    <Grid align="end" key={i} gap="xs" className="grid-cols-12">
+                      <Div className="col-span-5">
+                        {isLast ? (
+                          <>
+                            <Text size="xs" weight="medium" className="mb-1">Up to (₹)</Text>
+                            <Text size="sm" color="muted">and above</Text>
+                          </>
+                        ) : (
+                          <Input
+                            label="Up to (₹)"
+                            type="number"
+                            min={1}
+                            value={String(tier.upTo ?? "")}
+                            onChange={(e) => setBidIncrementTiers(bidIncrementTiers.map((t, j) => j === i ? { ...t, upTo: parseInt(e.target.value) || 0 } : t))}
+                          />
+                        )}
+                      </Div>
+                      <Div className="col-span-5">
+                        <Input
+                          label="Increment (₹)"
+                          type="number"
+                          min={1}
+                          value={String(tier.increment)}
+                          onChange={(e) => setBidIncrementTiers(bidIncrementTiers.map((t, j) => j === i ? { ...t, increment: parseInt(e.target.value) || 0 } : t))}
+                        />
+                      </Div>
+                      <Row centered className="col-span-2" padding="b-xs">
+                        <Button
+                          variant="ghost"
+                          type="button"
+                          disabled={bidIncrementTiers.length <= 1}
+                          onClick={() => setBidIncrementTiers(bidIncrementTiers.filter((_, j) => j !== i))}
+                          aria-label="Remove tier"
+                        >
+                          ×
+                        </Button>
+                      </Row>
+                    </Grid>
+                  );
+                })}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setBidIncrementTiers([
+                    ...bidIncrementTiers.slice(0, -1),
+                    { upTo: 100, increment: 10 },
+                    bidIncrementTiers[bidIncrementTiers.length - 1] ?? { upTo: null, increment: 1000 },
+                  ])}
+                >
+                  + Add tier
+                </Button>
+              </Stack>
               <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend auction end time if a bid arrives within this window." />
               <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the auction is re-listed." />
             </Form>

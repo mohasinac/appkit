@@ -18,9 +18,15 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
+import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import {
+  resolveMinBidIncrement,
+  type BidIncrementTier,
+} from "../../../_internal/shared/features/auctions/config";
 import {
   Button,
   Container,
+  CountdownDisplay,
   Div,
   Heading,
   Input,
@@ -58,6 +64,11 @@ import { PlaceBidModalButton } from "./PlaceBidFormClient";
 import type { PlaceBidInput } from "./PlaceBidFormClient";
 import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
 import { LiveBidPrice } from "./LiveBidPrice";
+import { LiveMinIncrement } from "./LiveMinIncrement";
+import { RelatedItemsSection } from "../../products/components/RelatedItemsSection";
+import { computeRelatedItems } from "../../../_internal/server/features/products/data";
+import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 
 export interface AuctionDetailPageViewProps {
@@ -119,7 +130,12 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           priceSize="2xl"
           badgeSize="sm"
         />
-        {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
+        {endDate && !isEnded && (
+          <Text className="mt-1.5" color="muted" size="sm">
+            Ends in <Span weight="medium" color="muted"><CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" /></Span>
+          </Text>
+        )}
+        {endDate && <Text className="mt-0.5" color="faint" size="xs">{isEnded ? "Ended" : "Ends"} {endDate.toLocaleString()}</Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
         <Row align="center" gap="sm" className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)] bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
@@ -246,8 +262,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
       : typeof p.price === "number"
         ? p.price
         : 0;
-  const minBidIncrement =
-    typeof p.minBidIncrement === "number" ? p.minBidIncrement : 1;
+  const minBidIncrementOverride =
+    typeof p.minBidIncrement === "number" ? p.minBidIncrement : undefined;
 
   const images: string[] = Array.isArray(p.images)
     ? (p.images as string[])
@@ -293,6 +309,14 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
   const relatedDocs: FirestoreDocument[] = await productRepository
     .findByCategory(String(p.category ?? ""))
     .catch(() => []) as FirestoreDocument[];
+
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
+    computeRelatedItems(product),
+    getGroupsWithItemsForProduct(product.id),
+    getSiteSettingsGlobal(),
+  ]);
+  const bidIncrementTiers: BidIncrementTier[] = siteSettings.auctionConfig?.bidIncrementTiers ?? [];
+  const initialMinBidIncrement = resolveMinBidIncrement(currentBid, bidIncrementTiers, minBidIncrementOverride);
 
   return (
     <Main>
@@ -354,18 +378,31 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                       badgeSize="xs"
                     />
                     {!isEnded && (
-                      <Span size="xs" color="muted">
-                        min increment {formatCurrency(minBidIncrement, currency)}
-                      </Span>
+                      <LiveMinIncrement
+                        productId={String(product.id)}
+                        currentBid={currentBid}
+                        bidCount={bidCount}
+                        currency={currency}
+                        isEnded={isEnded}
+                        tiers={bidIncrementTiers}
+                        minBidIncrementOverride={minBidIncrementOverride}
+                      />
                     )}
                   </Row>
+                  {!isEnded && endDate && (
+                    <Text align="center" size="xs" color="muted">
+                      Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+                    </Text>
+                  )}
                   <PlaceBidModalButton
                     productId={String(product.id)}
                     currentBid={currentBid}
                     startingBid={startingBid}
-                    minBidIncrement={minBidIncrement}
+                    tiers={bidIncrementTiers}
+                    minBidIncrementOverride={minBidIncrementOverride}
                     currency={currency}
                     isEnded={isEnded}
+                    auctionEndDate={endDate}
                     buyNowPrice={buyNowPrice}
                     bidsHaveStarted={bidsHaveStarted}
                     bidCount={bidCount}
@@ -382,17 +419,22 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 <Stack gap="xs">
                   <Text size="xs" color="muted">
                     Starting bid: {formatCurrency(startingBid, currency)}
-                    {!isEnded && <> · min increment {formatCurrency(minBidIncrement, currency)}</>}
+                    {!isEnded && <> · min increment {formatCurrency(initialMinBidIncrement, currency)}</>}
                   </Text>
                 </Stack>
                 <Stack gap="sm">
                   <Input
                     type="number"
-                    placeholder={`At least ${formatCurrency(currentBid + minBidIncrement, currency)}`}
-                    min={currentBid + minBidIncrement}
+                    placeholder={`At least ${formatCurrency(currentBid + initialMinBidIncrement, currency)}`}
+                    min={currentBid + initialMinBidIncrement}
                     aria-label="Your bid amount"
                     disabled={isEnded}
                   />
+                  {!isEnded && endDate && (
+                    <Text align="center" size="xs" color="muted">
+                      Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+                    </Text>
+                  )}
                   <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
                     {isEnded ? "Auction Ended" : "Place Bid"}
                   </Button>
@@ -428,13 +470,20 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   priceSize="base"
                   badgeSize="xs"
                 />
+                {endDate && (
+                  <Text align="center" size="xs" color="muted">
+                    Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+                  </Text>
+                )}
                 <PlaceBidModalButton
                   productId={String(product.id)}
                   currentBid={currentBid}
                   startingBid={startingBid}
-                  minBidIncrement={minBidIncrement}
+                  tiers={bidIncrementTiers}
+                  minBidIncrementOverride={minBidIncrementOverride}
                   currency={currency}
                   isEnded={isEnded}
+                  auctionEndDate={endDate}
                   buyNowPrice={buyNowPrice}
                   bidsHaveStarted={bidsHaveStarted}
                   bidCount={bidCount}
@@ -452,6 +501,11 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   </Span>
                   <Span size="xs" color="muted">{bidCount} bids</Span>
                 </Row>
+                {endDate && (
+                  <Text align="center" className="mb-3" size="xs" color="muted">
+                    Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+                  </Text>
+                )}
                 <Button variant="primary" size="md" className="w-full">
                   Place Bid
                 </Button>
@@ -548,17 +602,30 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 bidCount: typeof r.bidCount === "number" ? r.bidCount : undefined,
                 slug: typeof r.slug === "string" ? r.slug : undefined,
               }));
-            if (related.length === 0) return null;
             return (
-              <RelatedProducts
-                labels={{ title: "Similar Auctions" }}
-                renderGrid={() => (
-                  <MarketplaceAuctionGrid
-                    auctions={related}
-                    gridClassName="grid grid-cols-2 gap-[var(--appkit-space-4)] sm:grid-cols-3 lg:grid-cols-4"
+              <Stack gap="xl">
+                {related.length > 0 && (
+                  <RelatedProducts
+                    labels={{ title: "Similar Auctions" }}
+                    renderGrid={() => (
+                      <MarketplaceAuctionGrid
+                        auctions={related}
+                        gridClassName="grid grid-cols-2 gap-[var(--appkit-space-4)] sm:grid-cols-3 lg:grid-cols-4"
+                      />
+                    )}
                   />
                 )}
-              />
+                <GroupedListingsCarousel groups={groups} />
+                <RelatedItemsSection
+                  relatedItems={relatedItems}
+                  relatedByBrand={relatedByBrand}
+                  relatedByTags={relatedByTags}
+                  relatedByStore={relatedByStore}
+                  categoryLabel={categoryName || category || undefined}
+                  brandLabel={brand || undefined}
+                  storeLabel={storeName || undefined}
+                />
+              </Stack>
             );
           }}
         />
@@ -572,6 +639,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           currency={currency}
           bidCount={bidCount}
           isEnded={isEnded}
+          auctionEndDate={endDate}
         />
       </Container>
     </Main>

@@ -6,6 +6,7 @@ const {
   mockBidSetWinningBid,
   mockProductUpdate,
   mockUserFindById,
+  mockSiteSettingsGetSingleton,
   mockAssertAuctionActive,
   mockAssertBidAmount,
   mockAssertNotAuctionOwner,
@@ -17,6 +18,7 @@ const {
   mockBidSetWinningBid: vi.fn(),
   mockProductUpdate: vi.fn(),
   mockUserFindById: vi.fn(),
+  mockSiteSettingsGetSingleton: vi.fn(),
   mockAssertAuctionActive: vi.fn(),
   mockAssertBidAmount: vi.fn(),
   mockAssertNotAuctionOwner: vi.fn(),
@@ -44,6 +46,9 @@ vi.mock("../../../../repositories", () => ({
   },
   userRepository: {
     findById: mockUserFindById,
+  },
+  siteSettingsRepository: {
+    getSingleton: mockSiteSettingsGetSingleton,
   },
 }));
 
@@ -101,6 +106,7 @@ describe("placeBidAction — validation", () => {
     mockAssertNotAuctionOwner.mockReturnValue(undefined);
     mockAssertBidAmount.mockReturnValue(undefined);
     mockUserFindById.mockResolvedValue({ displayName: "Buyer One" });
+    mockSiteSettingsGetSingleton.mockResolvedValue({ auctionConfig: { bidIncrementTiers: [] } });
     mockBidSetWinningBid.mockResolvedValue(undefined);
     mockBidCreate.mockResolvedValue(makeBid());
     mockProductUpdate.mockResolvedValue(undefined);
@@ -163,6 +169,7 @@ describe("placeBidAction — success path", () => {
     mockAssertNotAuctionOwner.mockReturnValue(undefined);
     mockAssertBidAmount.mockReturnValue(undefined);
     mockUserFindById.mockResolvedValue({ displayName: "Buyer One" });
+    mockSiteSettingsGetSingleton.mockResolvedValue({ auctionConfig: { bidIncrementTiers: [] } });
     mockBidSetWinningBid.mockResolvedValue(undefined);
     mockBidCreate.mockResolvedValue(makeBid());
     mockProductUpdate.mockResolvedValue(undefined);
