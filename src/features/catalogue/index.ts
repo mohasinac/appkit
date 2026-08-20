@@ -12,4 +12,6 @@ export { CatalogueItemEditorView } from "./components/CatalogueItemEditorView";
 export type { CatalogueItemEditorViewProps } from "./components/CatalogueItemEditorView";
 export { PublicCatalogueView } from "./components/PublicCatalogueView";
 export type { PublicCatalogueViewProps } from "./components/PublicCatalogueView";
+export { PublicCatalogueItemDetailView } from "./components/PublicCatalogueItemDetailView";
+export type { PublicCatalogueItemDetailViewProps } from "./components/PublicCatalogueItemDetailView";
 export { AdminCatalogueApprovalsView } from "./components/AdminCatalogueApprovalsView";
