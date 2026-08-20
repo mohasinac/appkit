@@ -1,5 +1,5 @@
 "use client";
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit/client";
 import React, { useState, useCallback, useMemo } from "react";
 
 

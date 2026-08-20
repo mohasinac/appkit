@@ -1,8 +1,8 @@
 "use client";
 
 import { normalizeError } from "../../../errors/normalize";
-import { Badge, Row, Span, Stack, sortBy, type JsonArray } from "@mohasinac/appkit";
-import type { JsonValue } from "@mohasinac/appkit";
+import { Badge, Row, Span, Stack, sortBy, type JsonArray } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";

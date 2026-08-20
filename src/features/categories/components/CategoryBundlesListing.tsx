@@ -9,7 +9,7 @@
  * sort/search/filter/pagination on top of the initial snapshot.
  */
 
-import { Row, Stack, sortBy } from "@mohasinac/appkit";
+import { Row, Stack, sortBy } from "@mohasinac/appkit/client";
 import React, { useMemo, useCallback, useState } from "react";
 import { Div, Label, Span, Text, Toggle, StickyToolbar } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";

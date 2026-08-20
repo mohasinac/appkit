@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Anchor, Div, Heading, Li, Nav, Section, Span, Text, Ul } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Li, Nav, Section, Span, Text, Ul } from "@mohasinac/appkit/client";
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
 
 export interface MaintenanceDashboardViewProps {

@@ -4,8 +4,8 @@
  * AdminDigitalCodesView — admin browse of digital-code listings (W1-29).
  */
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit";
-import type { JsonValue } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Stack } from "@mohasinac/appkit";
+import { Stack } from "@mohasinac/appkit/client";
 export interface PlaceBidFormProps {
   currentBid?: number;
   minBidIncrement?: number;

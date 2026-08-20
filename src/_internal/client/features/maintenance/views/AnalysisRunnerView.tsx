@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../../../errors/normalize";
 
 import * as React from "react";
-import { Button, Div, Heading, Input, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit";
+import { Button, Div, Heading, Input, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit/client";
 import { Select } from "@mohasinac/appkit/ui";
 import type { AnalyzeReport } from "../../../../server/features/maintenance/analyze";
 import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";

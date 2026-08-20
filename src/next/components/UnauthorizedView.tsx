@@ -17,7 +17,7 @@ import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
 
-import { Stack } from "@mohasinac/appkit";
+import { Stack } from "@mohasinac/appkit/client";
 export interface UnauthorizedViewProps {
   /** Override the heading text. */
   heading?: string;

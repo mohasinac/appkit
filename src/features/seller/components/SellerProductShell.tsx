@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";

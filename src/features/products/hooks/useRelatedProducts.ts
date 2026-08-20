@@ -1,4 +1,4 @@
-import { sieveAnd, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit";
+import { sieveAnd, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit/client";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { ProductListResponse } from "../types";

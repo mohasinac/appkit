@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";

@@ -17,7 +17,6 @@ import type {
   CatalogSyncInput,
   CatalogSyncResult,
   PurchaseAnnouncementInput,
-  PaymentProofReviewMessageInput,
 } from "../types";
 
 const META_GRAPH_BASE = "https://graph.facebook.com/v20.0";
@@ -314,19 +313,10 @@ export function buildGroupShareLink(message: string): string {
   return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }
 
-/**
- * Tier PP — message for the payment-proof fast-review WhatsApp push (sent
- * to every `whatsappAdminNotifyNumbers` number when a buyer uploads proof)
- * and for the buyer/seller "share for review" wa.me link (same message,
- * routed through `buildGroupShareLink` instead of the Cloud API push).
- */
-export function buildPaymentProofReviewMessage(
-  input: PaymentProofReviewMessageInput,
-): string {
-  const { orderId, buyerName, productTitle, totalAmount, reviewUrl } = input;
-  const amount = totalAmount.toLocaleString("en-IN");
-  return `💳 Payment proof submitted! ${buyerName} uploaded proof for "${productTitle}" (₹${amount}). Order #${orderId}. Please review within 2 hours or it auto-confirms: ${reviewUrl}`;
-}
+// buildPaymentProofReviewMessage moved to ./payment-proof-message.ts (pure,
+// no crypto import) so it can be exported client-safe. Re-exported here for
+// backward compatibility with existing server-side importers of this file.
+export { buildPaymentProofReviewMessage } from "./payment-proof-message";
 
 /**
  * Send an outbound WhatsApp message via Twilio REST API.

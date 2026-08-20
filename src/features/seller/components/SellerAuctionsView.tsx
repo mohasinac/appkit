@@ -1,7 +1,7 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";

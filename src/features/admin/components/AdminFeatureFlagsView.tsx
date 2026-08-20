@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Div, Form, FormActions, Input, Row, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";

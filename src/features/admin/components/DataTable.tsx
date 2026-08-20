@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import type { AdminTableColumn } from "../types";
 import { BaseListingCard, Button, Checkbox, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";

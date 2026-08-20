@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Anchor, Div, Heading, Input, Label, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Input, Label, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit/client";
 import type { ServerErrorDocument, ServerErrorSource } from "../../../../../features/server-errors/schemas/firestore";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";

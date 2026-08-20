@@ -5,7 +5,7 @@
  * Mirrors AdminClassifiedView's thin config-driven pattern.
  */
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";

@@ -1,5 +1,5 @@
 "use client"
-import { Row } from "@mohasinac/appkit";
+import { Row } from "@mohasinac/appkit/client";
 import { useState } from "react";
 import { Div, Span, Text } from "../../../ui";
 import type { CategoryItem } from "../types";

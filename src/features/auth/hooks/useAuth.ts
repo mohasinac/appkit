@@ -1,6 +1,6 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientAuthProvider } from "../../../contracts/client-auth";

@@ -1,5 +1,5 @@
 "use client";
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy } from "@mohasinac/appkit/client";
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";

@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
-import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import {
   Container,
   Div,

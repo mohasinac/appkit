@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge, sortBy, type JsonArray } from "@mohasinac/appkit";
-import type { JsonValue } from "@mohasinac/appkit";
+import { Badge, sortBy, type JsonArray } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { ROUTES } from "../../..";
+import { ROUTES } from "../../../constants/index";
 import {
   toRecordArray,
   toRelativeDate,

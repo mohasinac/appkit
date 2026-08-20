@@ -1,7 +1,7 @@
 "use client";
 
-import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";

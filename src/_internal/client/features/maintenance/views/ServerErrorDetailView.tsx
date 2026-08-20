@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Anchor, Div, Heading, Li, Pre, Section, Text, Ul } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Li, Pre, Section, Text, Ul } from "@mohasinac/appkit/client";
 import type { ServerErrorDocument } from "../../../../../features/server-errors/schemas/firestore";
 
 export interface ServerErrorDetailViewProps {

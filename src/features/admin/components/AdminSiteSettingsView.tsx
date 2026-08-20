@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, BackgroundRenderer, Button, Div, Form, FormActions, Grid, Input, PaginatedSelect, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";

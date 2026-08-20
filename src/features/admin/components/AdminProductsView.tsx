@@ -1,8 +1,8 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { SIEVE_OP, Stack, sieveFilter, type JsonArray, Row } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray, Row } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";

@@ -1,8 +1,8 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";

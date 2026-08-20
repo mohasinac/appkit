@@ -78,3 +78,75 @@ export {
   WISHLIST_COLLECTION,
   HISTORY_COLLECTION,
 } from "./limits";
+
+// Firestore field-name maps — pure constants, no imports. Exposed here (not
+// just via "@mohasinac/appkit/client") because several consumers build
+// derived objects (e.g. Object.values(...) for a Zod enum) at module-eval
+// time, which needs a small, synchronously-resolvable subpath rather than
+// the much larger client.ts barrel.
+export {
+  PRODUCT_FIELDS,
+  PRODUCT_STATUS_TRANSITIONS,
+  ORDER_FIELDS,
+  REVIEW_FIELDS,
+  BID_FIELDS,
+  AD_FIELDS,
+  EVENT_FIELDS,
+  EVENT_ENTRY_FIELDS,
+  PAYOUT_FIELDS,
+  STORE_FIELDS,
+  CATEGORY_FIELDS,
+  BLOG_FIELDS,
+  USER_FIELDS,
+  ADDRESS_FIELDS,
+  BRAND_FIELDS,
+  CART_FIELDS,
+  WISHLIST_FIELDS,
+  HISTORY_FIELDS,
+  NOTIFICATION_FIELDS,
+  SESSION_FIELDS,
+  COUPON_USAGE_FIELDS,
+  CONVERSATION_FIELDS,
+  SCAMMER_FIELDS,
+  SUPPORT_TICKET_FIELDS,
+  CAROUSEL_FIELDS,
+  COUPON_FIELDS,
+  FAQ_FIELDS,
+  HOMEPAGE_SECTION_FIELDS,
+  SITE_SETTINGS_FIELDS,
+  COMMON_FIELDS,
+  OAUTH_STATE_VALUES,
+  SCHEMA_DEFAULTS,
+} from "./field-names";
+
+// Dashboard filter-tab sets — same rationale as the field-name maps above.
+export {
+  SELLER_LISTING_TABS,
+  type SellerListingTabId,
+} from "../features/products/constants/listing-tabs";
+export {
+  ALL_TAB,
+  EMPTY_TAB,
+  ADMIN_PRODUCT_STATUS_TABS,
+  ADMIN_PRODUCT_LISTING_TYPE_TABS,
+  ADMIN_BLOG_STATUS_TABS,
+  ADMIN_USER_STATUS_TABS,
+  ADMIN_USER_ROLE_TABS,
+  ADMIN_STORE_STATUS_TABS,
+  ADMIN_PAYOUT_STATUS_TABS,
+  ADMIN_ORDER_STATUS_TABS,
+  ADMIN_REVIEW_STATUS_TABS,
+  ADMIN_REVIEW_RATING_TABS,
+  ADMIN_BID_STATUS_TABS,
+  ADMIN_CONTACT_STATUS_TABS,
+  ADMIN_NEWSLETTER_STATUS_TABS,
+  ADMIN_EVENT_ENTRY_STATUS_TABS,
+  ADMIN_EVENT_STATUS_TABS,
+  ADMIN_CART_OWNERSHIP_TABS,
+  ADMIN_COUPON_TYPE_TABS,
+  SELLER_PRODUCT_STATUS_TABS,
+  SELLER_AUCTION_STATUS_TABS,
+  SELLER_ORDER_STATUS_TABS,
+  SELLER_OFFER_STATUS_TABS,
+  SELLER_BID_STATUS_TABS,
+} from "../features/admin/constants/filter-tabs";

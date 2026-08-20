@@ -5,7 +5,7 @@ import { apiClient } from "../../../http";
 import { useGuestCart } from "./useGuestCart";
 import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CART_OPS_CHANGE_EVENT, getCartOpsDelta } from "../utils/pending-ops";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 
 interface CartCountResponse {
   itemCount: number;

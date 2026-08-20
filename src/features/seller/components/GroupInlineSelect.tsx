@@ -8,7 +8,7 @@ import type {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { Text } from "../../../ui";
-import type { FormValues } from "@mohasinac/appkit";
+import type { FormValues } from "@mohasinac/appkit/client";
 
 interface GroupItem {
   id?: string;

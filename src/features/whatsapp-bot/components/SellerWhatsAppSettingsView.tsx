@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 
 const __P = {

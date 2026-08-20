@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import { apiClient, ApiClientError } from "../../../http";
 import { formatCurrency } from "../../../utils/number.formatter";
 

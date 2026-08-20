@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import type { JsonObjectWithUndefined, JsonValue } from "@mohasinac/appkit";
+import type { JsonObjectWithUndefined, JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";

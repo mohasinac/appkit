@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";

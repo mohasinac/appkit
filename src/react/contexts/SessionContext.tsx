@@ -1,6 +1,6 @@
 "use client"
 import { normalizeError } from "../../errors/normalize";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit/client";
 import React, {
   createContext,
   useContext,

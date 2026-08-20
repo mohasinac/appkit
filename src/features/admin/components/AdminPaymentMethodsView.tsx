@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit";
+import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Div, FilterChipGroup, Span, Stack, Text, useToast } from "../../../ui";

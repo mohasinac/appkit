@@ -1,8 +1,8 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue, JsonArray } from "@mohasinac/appkit";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
-import { Row, Stack, sortBy } from "@mohasinac/appkit";
+import { Row, Stack, sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
@@ -20,7 +20,7 @@ import {
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const CLS_TYPE_PILL = "inline-flex items-center rounded-full px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-semibold uppercase tracking-wide bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300";
-import { ROUTES } from "../../..";
+import { ROUTES } from "../../../constants/index";
 import {
   toRecordArray,
   toStringValue,

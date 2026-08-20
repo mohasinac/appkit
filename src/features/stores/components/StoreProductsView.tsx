@@ -1,5 +1,5 @@
 "use client"
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy } from "@mohasinac/appkit/client";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { Div, Heading, Input, Select, SlottedListingView } from "../../../ui";

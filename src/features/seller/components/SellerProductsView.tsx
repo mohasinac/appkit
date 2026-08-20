@@ -1,9 +1,9 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue, JsonArray } from "@mohasinac/appkit";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";

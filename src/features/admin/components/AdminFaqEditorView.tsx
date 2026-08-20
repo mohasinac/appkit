@@ -1,7 +1,7 @@
 "use client";
 
 import { Row } from "@mohasinac/appkit/ui";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";

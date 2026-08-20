@@ -15,7 +15,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import { Badge, Button, Checkbox, Div, Input, Row, Stack, Text } from "../../../ui";
 import {
   BUNDLE_MAX_ITEMS,

@@ -1,6 +1,6 @@
 "use client";
 import { normalizeError } from "../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Div, Heading, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit";
+import { Button, Div, Heading, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit/client";
 import type { CloudLogEntry } from "../../../../server/features/maintenance/cloud-logs-data";
 import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";
 import { normalizeError } from "../../../../../errors/normalize";

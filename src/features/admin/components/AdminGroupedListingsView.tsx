@@ -6,7 +6,7 @@ import { normalizeError } from "../../../errors/normalize";
  * W1-29 — pairs with the new GET /api/admin/grouped-listings endpoint.
  */
 
-import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit";
+import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";

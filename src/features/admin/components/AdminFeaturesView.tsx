@@ -1,7 +1,7 @@
 "use client";
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit";
-import type { JsonValue } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { FilterChipGroup, ListingLayout } from "../../../ui";

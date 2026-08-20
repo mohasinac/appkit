@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

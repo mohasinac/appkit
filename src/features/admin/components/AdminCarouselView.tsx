@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text, StickyToolbar } from "../../../ui";

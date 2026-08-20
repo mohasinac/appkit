@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, sieveFilter, sortBy, type JsonArray } from "@mohasinac/appkit";
+import { SIEVE_OP, sieveFilter, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import { Badge, Button, FilterChipGroup, Stack, Text, TextLink } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";

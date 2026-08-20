@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { type JsonArray } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
+import { type JsonArray } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { Button, Modal, Row, Stack, Text, Textarea } from "../../../ui";

@@ -15,7 +15,7 @@
  * adds an emphasis ring to the cell that just won.
  */
 
-import { Row } from "@mohasinac/appkit";
+import { Row } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { Button, Div, Scrim, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";

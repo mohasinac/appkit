@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 
 /**
  * useCountdown — tracks time remaining until a future date.

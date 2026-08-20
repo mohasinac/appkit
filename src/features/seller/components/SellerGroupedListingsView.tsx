@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, sortBy, type JsonArray } from "@mohasinac/appkit";
+import { Row, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import { Badge, Button, Span } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";

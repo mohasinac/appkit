@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../errors/normalize";
 import { useEffect, useRef, useCallback } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit/client";
 
 export interface FormStatePreservationOptions<TValues> {
   /** Current form values to persist. */

@@ -1,8 +1,8 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
-import { sortBy } from "@mohasinac/appkit";
-import type { JsonValue } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Div, FilterChipGroup, ListingLayout, useToast } from "../../../ui";

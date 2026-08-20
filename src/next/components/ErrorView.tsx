@@ -20,7 +20,7 @@ import { useEffect } from "react";
 
 import { Heading, Text } from "../../ui/components/Typography";
 import { Button } from "../../ui/components/Button";
-import { Stack } from "@mohasinac/appkit";
+import { Stack } from "@mohasinac/appkit/client";
 import {
   trackError,
   ErrorCategory,

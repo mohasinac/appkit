@@ -1,5 +1,5 @@
 "use client";
-import { sortBy, type FormValues } from "@mohasinac/appkit";
+import { sortBy, type FormValues } from "@mohasinac/appkit/client";
 import React from "react";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import type {
