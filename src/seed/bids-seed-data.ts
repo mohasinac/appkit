@@ -53,20 +53,26 @@ function withBidDefaults(b: FirestoreDocument): Partial<BidDocument> {
   } as Partial<BidDocument>;
 }
 
-/** One ascending bid ladder per auction — last entry is "active", the rest "outbid". */
+/**
+ * One ascending bid ladder per auction. By default the last entry is "active"
+ * and the rest "outbid" (a live auction). Pass `closed:true` for an ended
+ * auction — the last entry becomes "won" and the rest "lost".
+ */
 function buildLadder(params: {
   productId: string;
   productTitle: string;
   startingBid: number;
   currentBid: number;
   bidderIds: string[];
+  closed?: boolean;
 }): Partial<BidDocument>[] {
-  const { productId, productTitle, startingBid, currentBid, bidderIds } = params;
+  const { productId, productTitle, startingBid, currentBid, bidderIds, closed = false } = params;
   const steps = bidderIds.length;
   const range = currentBid - startingBid;
   return bidderIds.map((userId, i) => {
     const amount = i === steps - 1 ? currentBid : Math.round(startingBid + (range * (i + 1)) / (steps + 1));
     const daysBack = steps - i;
+    const isFinal = i === steps - 1;
     return {
       id: `bid-${productId.replace(/^auction-/, "")}-${userId.replace(/^user-/, "")}-20260601-${String(i).padStart(3, "0")}`,
       productId,
@@ -74,7 +80,7 @@ function buildLadder(params: {
       userId,
       userName: BIDDER_NAMES[userId] ?? userId,
       bidAmount: amount,
-      status: i === steps - 1 ? "active" : "outbid",
+      status: isFinal ? (closed ? "won" : "active") : (closed ? "lost" : "outbid"),
       bidDate: daysAgo(daysBack),
       createdAt: daysAgo(daysBack),
     };
@@ -113,6 +119,50 @@ const _rawBidsSeedData: Partial<BidDocument>[] = [
       "user-ananya-collector",
       "user-rohit-collector",
     ],
+  }),
+
+  // auction-beyblade-original-seaborg — bidCount: 4, currentBid: 2200 (reserve 4000 not met)
+  ...buildLadder({
+    productId: "auction-beyblade-original-seaborg",
+    productTitle: "Beyblade Original — Seaborg 2000 (Reserve Auction)",
+    startingBid: 1499,
+    currentBid: 2200,
+    bidderIds: ["user-ananya-collector", "user-meera-bey", "user-rohit-collector", "user-ananya-collector"],
+  }),
+
+  // auction-beyblade-metal-diablo-nemesis — bidCount: 6, currentBid: 6200, CLOSED (won by user-rohit-collector)
+  ...buildLadder({
+    productId: "auction-beyblade-metal-diablo-nemesis",
+    productTitle: "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
+    startingBid: 3499,
+    currentBid: 6200,
+    bidderIds: [
+      "user-meera-bey",
+      "user-ananya-collector",
+      "user-meera-bey",
+      "user-ananya-collector",
+      "user-meera-bey",
+      "user-rohit-collector",
+    ],
+    closed: true,
+  }),
+
+  // auction-beyblade-burst-cho-z-achilles — bidCount: 2, currentBid: 1650
+  ...buildLadder({
+    productId: "auction-beyblade-burst-cho-z-achilles",
+    productTitle: "Beyblade Burst B-100 Cho-Z Achilles",
+    startingBid: 1199,
+    currentBid: 1650,
+    bidderIds: ["user-rohit-collector", "user-meera-bey"],
+  }),
+
+  // auction-beyblade-x-wizard-fafnir — bidCount: 3, currentBid: 1450
+  ...buildLadder({
+    productId: "auction-beyblade-x-wizard-fafnir",
+    productTitle: "Beyblade X BX-06 Wizard Fafnir (Long-Running Auction)",
+    startingBid: 999,
+    currentBid: 1450,
+    bidderIds: ["user-ananya-collector", "user-rohit-collector", "user-meera-bey"],
   }),
 ];
 

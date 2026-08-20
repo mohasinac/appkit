@@ -17,10 +17,154 @@
  * @tag sideEffects:none
  */
 
-import { ProductDocument } from "../features/products/schemas/firestore";
+import { ProductDocument, ProductSpecification, CustomField, CustomSection } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
 import { seedExtMedia } from "./_helpers/media";
+
+/*
+ * Real Beyblade attributes per fixture — Root Cause #6 (standard was the
+ * "richest" seed file by fixture count but never exercised customFields/
+ * customSections/specifications, the actual product-spec render pipeline).
+ * Keyed by product id, merged into each fixture below.
+ */
+const SPEC_OVERRIDES: Record<
+  string,
+  { specifications?: ProductSpecification[]; customFields?: CustomField[]; customSections?: CustomSection[] }
+> = {
+  "product-beyblade-original-dranzer-s": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "31.8", unit: "g" },
+      { name: "Stamina Rating", value: "5", unit: "/10" },
+      { name: "Attack Rating", value: "8", unit: "/10" },
+    ],
+    customFields: [
+      { key: "Launcher Included", type: "boolean", value: "true" },
+      { key: "Ripcord Length", type: "text", value: "Standard (short-pull)" },
+    ],
+  },
+  "product-beyblade-original-driger-v": {
+    specifications: [
+      { name: "Spin Direction", value: "Left (Left-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "33.1", unit: "g" },
+      { name: "Stamina Rating", value: "6", unit: "/10" },
+      { name: "Attack Rating", value: "7", unit: "/10" },
+    ],
+    customFields: [{ key: "Launcher Included", type: "boolean", value: "false" }],
+    customSections: [
+      {
+        id: "battle-tips",
+        title: "Battle Tips",
+        text: "Driger V's left-spin makes it a strong counter-pick against right-spin attack types — pair with a wide-angle stadium for maximum recoil advantage.",
+      },
+    ],
+  },
+  "product-beyblade-metal-storm-pegasus": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "50.2", unit: "g" },
+      { name: "Stamina Rating", value: "4", unit: "/10" },
+      { name: "Attack Rating", value: "9", unit: "/10" },
+      { name: "Track & Bottom", value: "105 / RF (Rubber Flat)" },
+    ],
+    customFields: [{ key: "Launcher Included", type: "boolean", value: "true" }],
+  },
+  "product-beyblade-metal-flame-sagittario": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "56.8", unit: "g" },
+      { name: "Stamina Rating", value: "7", unit: "/10" },
+      { name: "Defense Rating", value: "6", unit: "/10" },
+      { name: "Track & Bottom", value: "C145 / S (Spike)" },
+    ],
+    customFields: [{ key: "Tournament Legal", type: "boolean", value: "true" }],
+  },
+  "product-beyblade-burst-valkyrie": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "28.6", unit: "g" },
+      { name: "Stamina Rating", value: "5", unit: "/10" },
+      { name: "Attack Rating", value: "9", unit: "/10" },
+      { name: "Layer / Disc / Driver", value: "Valkyrie / Wing / Accel" },
+    ],
+    customFields: [
+      { key: "Launcher Included", type: "boolean", value: "true" },
+      { key: "Burst Resistance", type: "text", value: "Medium — tighten disc lock before battle" },
+    ],
+    customSections: [
+      {
+        id: "battle-tips",
+        title: "Battle Tips",
+        text: "Accel driver gives Valkyrie an aggressive early-game charge — best used in Attack vs. Stamina matchups where a fast KO matters more than late-game endurance.",
+      },
+    ],
+  },
+  "product-beyblade-burst-regalia-genesis": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "32.4", unit: "g" },
+      { name: "Stamina Rating", value: "4", unit: "/10" },
+      { name: "Attack Rating", value: "8", unit: "/10" },
+      { name: "Layer / Disc / Driver", value: "Regalia Genesis / .Zt" },
+    ],
+    customFields: [{ key: "Switch Launcher Compatible", type: "boolean", value: "true" }],
+  },
+  "product-beyblade-x-wizard-arrow": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "34.9", unit: "g" },
+      { name: "Stamina Rating", value: "6", unit: "/10" },
+      { name: "Attack Rating", value: "6", unit: "/10" },
+      { name: "Blade / Ratchet / Bit", value: "Wizard / 4-60 / Flat" },
+    ],
+    customFields: [{ key: "Launcher Included", type: "boolean", value: "true" }],
+  },
+  "product-beyblade-x-knife-shinobi": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "36.1", unit: "g" },
+      { name: "Stamina Rating", value: "8", unit: "/10" },
+      { name: "Defense Rating", value: "6", unit: "/10" },
+      { name: "Blade / Ratchet / Bit", value: "Knife Shinobi / 3-60 / Glide Flat" },
+    ],
+    customFields: [{ key: "Tournament Legal", type: "boolean", value: "true" }],
+    customSections: [
+      {
+        id: "battle-tips",
+        title: "Battle Tips",
+        text: "Glide Flat bit gives Knife Shinobi excellent late-game stamina in X-format stadiums with a ring — hold back and let opponents burn attack power first.",
+      },
+    ],
+  },
+  "product-beyblade-original-dragoon-f-video-demo": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "30.5", unit: "g" },
+      { name: "Attack Rating", value: "8", unit: "/10" },
+    ],
+    customFields: [{ key: "Launcher Included", type: "boolean", value: "true" }],
+  },
+  "product-beyblade-x-dran-sword-video-demo": {
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "35.7", unit: "g" },
+      { name: "Attack Rating", value: "9", unit: "/10" },
+      { name: "Blade / Ratchet / Bit", value: "Dran Sword / 3-60 / Flat" },
+    ],
+    customFields: [{ key: "Tournament Legal", type: "boolean", value: "true" }],
+  },
+};
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -352,6 +496,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
 export const productsStandardSeedData: Partial<ProductDocument>[] = [
   ..._rawProductsStandardSeedData.map((p) => withTokens({
     ...p,
+    ...(p.id ? SPEC_OVERRIDES[p.id] : undefined),
     listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.STANDARD,
   })),
 ];
