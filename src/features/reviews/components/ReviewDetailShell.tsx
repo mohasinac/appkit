@@ -210,7 +210,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                     size="card"
                     className="transition-transform duration-300 group-hover:scale-105"
                   />
-                  <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[rgba(0,0,0,0.3)]">
+                  <Row centered className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-[rgba(0,0,0,0.3)]">
                     <Span color="inverse" size="xl">🔍</Span>
                   </Row>
                 </Button>

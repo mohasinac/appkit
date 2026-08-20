@@ -258,7 +258,7 @@ export function CouponCard({
           onSelect={(e) => { e.preventDefault(); onSelect(n.id, !isSelected); }}
           label={isSelected ? "Deselect coupon" : "Select coupon"}
           position="top-2 right-2"
-          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"}
         />
       )}
 

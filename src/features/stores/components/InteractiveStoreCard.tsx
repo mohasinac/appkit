@@ -69,7 +69,7 @@ export function InteractiveStoreCard({
           }}
           label={isSelected ? "Deselect store" : "Select store"}
           position="top-2 left-2"
-          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"}
         />
       )}
 

@@ -79,7 +79,7 @@ export function PromoGrid({
                 className={`absolute inset-0 ${i === 0 ? "[background:linear-gradient(to_top,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.3)_50%,transparent_100%)]" : "[background:linear-gradient(to_top,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.15)_100%)]"}`}
               />
               {/* Yellow inset border on hover */}
-              <Div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ring-2 ring-[var(--color-yellow)] ring-inset" />
+              <Div className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100 ring-2 ring-[var(--color-yellow)] ring-inset" />
               <Div className={`absolute bottom-0 left-0 right-0 ${__P.p4}`}>
                 <Text
                   className={`leading-tight [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.06em] text-white ${i === 0 ? "text-[1.35rem]" : "text-[1rem]"}`}

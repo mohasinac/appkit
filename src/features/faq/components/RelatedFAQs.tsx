@@ -51,7 +51,7 @@ export function RelatedFAQs({
               </Text>
 
               <svg
-                className="ml-auto mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--appkit-color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100 text-[var(--appkit-color-text-muted)]"
+                className="ml-auto mt-0.5 h-4 w-4 flex-shrink-0 pointer-events-none text-[var(--appkit-color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100 text-[var(--appkit-color-text-muted)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

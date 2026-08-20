@@ -112,7 +112,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
-        <Stack justify="end" surface="overlay-lg" className={`absolute inset-0 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
+        <Stack justify="end" surface="overlay-lg" className={`pointer-events-none absolute inset-0 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
           <Text color="inverse" className="line-clamp-2" size="xs">{post.caption}</Text>
         </Stack>
       )}
