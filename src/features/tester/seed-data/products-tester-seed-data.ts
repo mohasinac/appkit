@@ -384,8 +384,8 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
   withTokens({
     id: "live-tester-sandbox-1",
     slug: "live-tester-sandbox-1",
-    title: "Test Live Item — Watch Me!",
-    description: "Disposable test live-item listing for the tester QA program. Auto-expires in 7 days.",
+    title: "Test Live Item — Golden Retriever Puppy",
+    description: "Disposable test live-item listing for the tester QA program (verifies the mandatory-video rule, gallery video slide, and watermark on a real animal listing). Auto-expires in 7 days.",
     categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
     categoryNames: COLLECTIBLES_CATEGORY_NAMES,
     brandSlug: "brand-tester-sandbox",
@@ -397,7 +397,16 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     listingType: "live" as const,
     images: [seedExtMedia("https://picsum.photos/seed/live-image-tester-sandbox-1-20260101/900/900")],
     mainImage: seedExtMedia("https://picsum.photos/seed/live-image-tester-sandbox-1-20260101/900/900"),
-    video: { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" } as unknown as ProductDocument["video"],
+    // Real, directly-playable dog video (a raw <video> element, not routed through
+    // /api/media/ext which is image-only — Root Cause #27) — Wikimedia Commons,
+    // CC-BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Slow_motion_of_running_greyhound.webm.
+    // Exercises the mandatory-video-for-live rule + gallery video slide + watermark
+    // on a genuine "animal actually moving" clip instead of a broken YouTube watch-page URL.
+    video: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/4/42/Slow_motion_of_running_greyhound.webm", // audit-seed-external-url-ok: raw <video> src, CC-BY-SA 4.0 (Wikimedia Commons)
+      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/live-video-thumb-tester-sandbox-1-20260101/800/450"),
+      duration: 14,
+    },
     isSold: false,
     stockQuantity: 1,
     availableQuantity: 1,
@@ -406,9 +415,9 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isPromoted: false,
     isOnSale: false,
     liveItem: {
-      species: "Test Species",
+      species: "Dog (Golden Retriever)",
       ageMonths: 6,
-      sex: "n/a" as const,
+      sex: "male" as const,
       careInfo: "Disposable test care info for the tester QA program.",
       transport: { method: "courier" as const, handlingFee: 100, insuranceIncluded: true },
       jurisdictionAllowed: ["IN-KA", "IN-MH"],

@@ -436,7 +436,7 @@ export function ProductForm({
 
       {!isReadonly && (
         <MediaUploadField
-          label={t("formVideo")}
+          label={product.listingType === "live" ? `${t("formVideo")} *` : t("formVideo")}
           value={product.video?.url || ""}
           onChange={(url) =>
             update({
@@ -470,7 +470,11 @@ export function ProductForm({
           onUpload={handleVideoUpload}
           accept="video/*"
           maxSizeMB={50}
-          helperText={t("formVideoHelper")}
+          helperText={
+            product.listingType === "live"
+              ? "Required for live listings — buyers must see the actual animal/plant moving before purchase."
+              : t("formVideoHelper")
+          }
           onAbort={onMediaAbort}
         />
       )}
