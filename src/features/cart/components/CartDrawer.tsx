@@ -33,7 +33,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           <MediaImage src={item.meta.image} alt={item.meta.title} size="thumbnail" />
         )}
       </Div>
-      <Stack justify="between" className="flex-1">
+      <Stack justify="between" className="flex-1 min-w-0">
         <Row gap="xs" className="" align="start">
           {href ? (
             <TextLink
@@ -58,7 +58,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
         </Row>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
-            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="xs" truncate={1}>
               {Object.entries(item.meta.attributes)
                 .map(([k, v]) => `${k}: ${v}`)
                 .join(", ")}

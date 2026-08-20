@@ -49,7 +49,7 @@ export async function sendCheckoutValueOtp(
     ? `${local.length <= 2 ? "*".repeat(local.length) : local[0] + "*".repeat(local.length - 2) + local[local.length - 1]}@${domain}`
     : "***";
 
-  await sendEmail({
+  const { error } = await sendEmail({
     to: userEmail,
     subject: `${siteName}: Verify your order`,
     html: `
@@ -61,6 +61,20 @@ export async function sendCheckoutValueOtp(
       </div>
     `,
   });
+
+  if (error) {
+    // Root-caused 2026-08-20: this used to be fire-and-forget — the
+    // Firestore OTP doc was written and the caller always got back a
+    // success response ("code sent") regardless of whether the email
+    // actually went out. Any Resend-side failure (bad API key,
+    // unverified sending domain, outage) silently stranded the buyer
+    // with a checkout they could never complete, since the OTP gate
+    // gave no indication anything had gone wrong.
+    serverLogger.error("Failed to send checkout value OTP email", { uid: userId, error });
+    throw new ValidationError(
+      "We couldn't send the verification code — please try again in a moment, or contact support if this keeps happening.",
+    );
+  }
 
   serverLogger.info(`Checkout value OTP sent: uid=${userId}`);
   return { maskedEmail };

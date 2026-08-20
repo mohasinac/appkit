@@ -72,7 +72,13 @@ export interface CheckoutValueOtpDoc {
 
 /**
  * Enforce the per-user send rate-limit.
- * Throws AuthorizationError("checkoutValueOtpRateLimit") when throttled.
+ * Throws AuthorizationError with a user-facing "already sent, retry in N
+ * minutes" message when throttled — root-caused 2026-08-20: this used to
+ * throw the bare internal string "checkoutValueOtpRateLimit", which the
+ * client showed verbatim in a toast. A buyer who retried "Send code"
+ * within the cooldown (e.g. after not seeing the first email land) saw a
+ * cryptic error instead of being told a code was already on its way,
+ * making the whole feature look broken.
  */
 export async function enforceCheckoutValueOtpRateLimit(
   db: Db,
@@ -90,7 +96,10 @@ export async function enforceCheckoutValueOtpRateLimit(
     const elapsed = Date.now() - lastSentMs;
 
     if (elapsed < CHECKOUT_VALUE_OTP_COOLDOWN_MS) {
-      throw new AuthorizationError("checkoutValueOtpRateLimit");
+      const remainingMinutes = Math.max(1, Math.ceil((CHECKOUT_VALUE_OTP_COOLDOWN_MS - elapsed) / 60_000));
+      throw new AuthorizationError(
+        `We already sent a code — check your inbox (and spam folder). You can request a new one in ${remainingMinutes} minute${remainingMinutes === 1 ? "" : "s"}.`,
+      );
     }
     tx.set(metaRef, { lastSentAt: new Date() }, { merge: true });
   });
