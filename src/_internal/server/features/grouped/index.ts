@@ -4,6 +4,8 @@ export {
   listGroupedListings,
   listFeaturedGroupedListings,
   listSitemapGroupedListings,
+  getGroupsForProduct,
+  getGroupsWithItemsForProduct,
   type GroupedListingWithItems,
   type ListGroupedListingsParams,
   type SitemapGroupedListing,

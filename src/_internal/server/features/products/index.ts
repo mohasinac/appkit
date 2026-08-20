@@ -3,6 +3,11 @@ export {
   getReviewsForProduct,
   listSitemapProducts,
   type SitemapProduct,
+  computeRelatedItems,
+  toProductItem,
+  toReview,
+  getReviewItemsForProduct,
+  type RelatedItemsResult,
 } from "./data";
 export {
   assertProductOwnership,

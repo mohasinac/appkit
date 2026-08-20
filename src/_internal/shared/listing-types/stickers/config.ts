@@ -8,7 +8,7 @@ export const config = {
   slugPrefix: "sticker-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRODUCT_DETAIL(idOrSlug)),
-  badge: undefined as { label: string; className: string } | undefined,
+  badge: { label: "Sticker Sheet", className: "bg-primary-700 text-white" },
   priceLabel: "Price (₹)",
   typeLabel: "Stickers",
   showsStockQuantity: true,

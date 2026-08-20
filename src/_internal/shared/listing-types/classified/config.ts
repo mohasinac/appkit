@@ -8,7 +8,7 @@ export const config = {
   slugPrefix: "classified-",
   cartLine: "blocked" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.CLASSIFIED_DETAIL(idOrSlug)),
-  badge: undefined as { label: string; className: string } | undefined,
+  badge: { label: "Classified", className: "bg-secondary text-white" },
   priceLabel: "Asking Price (₹)",
   typeLabel: "Classified",
   showsStockQuantity: true,

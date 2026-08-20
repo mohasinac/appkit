@@ -8,7 +8,7 @@ export const config = {
   slugPrefix: "digitalcode-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.DIGITAL_CODE_DETAIL(idOrSlug)),
-  badge: undefined as { label: string; className: string } | undefined,
+  badge: { label: "Digital Code", className: "bg-success-surface text-success" },
   priceLabel: "Price per Code (₹)",
   typeLabel: "Digital Code",
   showsStockQuantity: false,

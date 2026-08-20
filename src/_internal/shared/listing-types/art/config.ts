@@ -8,7 +8,7 @@ export const config = {
   slugPrefix: "art-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRODUCT_DETAIL(idOrSlug)),
-  badge: undefined as { label: string; className: string } | undefined,
+  badge: { label: "Art Print", className: "bg-primary-700 text-white" },
   priceLabel: "Price (₹)",
   typeLabel: "Art Print",
   showsStockQuantity: true,

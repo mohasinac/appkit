@@ -7,7 +7,7 @@ import {
   GROUPED_LISTINGS_COLLECTION,
   type GroupedListingDocument,
 } from "../../../../features/grouped/schemas/firestore";
-import { productRepository } from "../../../../repositories";
+import { productRepository, groupedListingsRepository } from "../../../../repositories";
 import { PRODUCT_FIELDS, CATEGORY_FIELDS } from "../../../../constants/field-names";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import {
@@ -139,6 +139,41 @@ export async function listGroupedListings(
 export const listFeaturedGroupedListings = cache(
   async (limit = GROUPED_LISTINGS_FEATURED_LIMIT): Promise<GroupedListingDocument[]> => {
     return listGroupedListings({ featuredOnly: true, limit });
+  },
+);
+
+/**
+ * Groups a product belongs to that are eligible to render publicly —
+ * powers the "You might also like" / "Same character" / etc. carousel
+ * on product-based listing detail pages. Deduped per request.
+ */
+export const getGroupsForProduct = cache(
+  async (productId: string): Promise<GroupedListingDocument[]> => {
+    return groupedListingsRepository.findByProductId(productId).catch((err) => {
+      void normalizeError(err);
+      serverLogger.warn("grouped-data: getGroupsForProduct failed — returning empty", { productId, error: err instanceof Error ? err.message : String(err) });
+      return [];
+    });
+  },
+);
+
+/**
+ * Groups a product belongs to, each hydrated with its OTHER member products
+ * (the current product is excluded from its own group's item list) — ready
+ * to render directly as a public GroupedListingsCarousel section.
+ */
+export const getGroupsWithItemsForProduct = cache(
+  async (productId: string): Promise<GroupedListingWithItems[]> => {
+    const groups = await getGroupsForProduct(productId);
+    return Promise.all(
+      groups.map(async (group) => {
+        const otherIds = group.productIds.filter((id) => id !== productId);
+        const items = await Promise.all(
+          otherIds.map((id) => productRepository.findByIdOrSlug(id).catch(() => null)),
+        );
+        return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
+      }),
+    );
   },
 );
 

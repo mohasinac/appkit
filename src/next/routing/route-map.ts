@@ -113,6 +113,13 @@ export const DEFAULT_ROUTE_MAP = {
     // detail page stays PRODUCT_DETAIL (`/products/{slug}`), already wired in
     // `_internal/shared/listing-types/{art,stickers}/config.ts`.
     ART: "/art",
+    // Personal catalogue (Feature B) — a user's own photo inventory of owned
+    // items, distinct from marketplace listings. Public when the owner sets
+    // an item's visibility to "public". The owner's full catalogue listing
+    // already exists at PROFILE(userId)/catalogue (PublicProfileView's
+    // "Catalogue" tab) — this is only the per-item detail route, which had
+    // no page at all before this.
+    CATALOGUE_ITEM_DETAIL: (ownerSlug: string, itemId: string) => `/catalogue/${ownerSlug}/${itemId}`,
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",
