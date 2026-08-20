@@ -53,6 +53,10 @@ import { SublistingCarouselSection } from "../../products/components/SublistingC
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { ShowGroupSection } from "../../products/components/ShowGroupSection";
 import type { CustomSection } from "../../products/schemas/firestore";
+import { RelatedItemsSection } from "../../products/components/RelatedItemsSection";
+import { computeRelatedItems } from "../../../_internal/server/features/products/data";
+import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
@@ -483,6 +487,11 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
   const isGroupParent = p.isGroupParent === true;
   const groupTitle = typeof p.groupTitle === "string" ? p.groupTitle : undefined;
 
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups] = await Promise.all([
+    computeRelatedItems(product),
+    getGroupsWithItemsForProduct(product.id),
+  ]);
+
   return (
     <Main>
       <HistoryTracker
@@ -620,6 +629,20 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               tags={tags}
               onReserveNow={onReserveNow}
             />
+          )}
+          renderRelated={() => (
+            <Stack gap="xl">
+              <GroupedListingsCarousel groups={groups} />
+              <RelatedItemsSection
+                relatedItems={relatedItems}
+                relatedByBrand={relatedByBrand}
+                relatedByTags={relatedByTags}
+                relatedByStore={relatedByStore}
+                categoryLabel={categoryName || category || undefined}
+                brandLabel={brand || undefined}
+                storeLabel={storeName || undefined}
+              />
+            </Stack>
           )}
         />
 

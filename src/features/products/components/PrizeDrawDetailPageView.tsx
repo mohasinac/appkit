@@ -35,6 +35,10 @@ import type {
 } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import { RelatedItemsSection } from "./RelatedItemsSection";
+import { computeRelatedItems } from "../../../_internal/server/features/products/data";
+import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 
 export interface PrizeDrawDetailPageViewProps {
   id: string;
@@ -188,6 +192,13 @@ export async function PrizeDrawDetailPageView({
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
     : null;
   const descriptionHtml = toDescriptionHtml(p.description);
+  const categoryName = Array.isArray(p.categoryNames) && p.categoryNames.length > 0 ? String(p.categoryNames[0]) : undefined;
+  const brand = typeof p.brand === "string" ? p.brand : undefined;
+
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups] = await Promise.all([
+    computeRelatedItems(product),
+    getGroupsWithItemsForProduct(product.id),
+  ]);
 
   return (
     <Main>
@@ -360,6 +371,20 @@ export async function PrizeDrawDetailPageView({
                 storeName={storeName ?? undefined}
               />
             </Div>
+          )}
+          renderRelated={() => (
+            <Stack gap="xl">
+              <GroupedListingsCarousel groups={groups} />
+              <RelatedItemsSection
+                relatedItems={relatedItems}
+                relatedByBrand={relatedByBrand}
+                relatedByTags={relatedByTags}
+                relatedByStore={relatedByStore}
+                categoryLabel={categoryName}
+                brandLabel={brand}
+                storeLabel={storeName ?? undefined}
+              />
+            </Stack>
           )}
         />
 

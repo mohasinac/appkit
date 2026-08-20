@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SIEVE_OP, sieveAnd, sieveFilter, sortBy, type FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository, reviewRepository } from "../../../repositories";
 
 const __P = {
@@ -48,7 +48,6 @@ import {
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
-import type { ProductItem } from "../types";
 import type { Review } from "../../reviews/types";
 import { ReviewsList } from "../../reviews/components/ReviewsList";
 import { ProductDetailView } from "./ProductDetailView";
@@ -57,13 +56,16 @@ import { ProductTabsShell } from "./ProductTabsShell";
 import { ProductFeatureBadges } from "./ProductFeatureBadges";
 import { FeatureBadgeList } from "./FeatureBadge";
 import type { ProductFeatureDocument } from "../schemas/product-features";
-import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 import { ShareButton } from "./ShareButton";
 import { CustomSectionTabContent } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
 import { ShowGroupSection } from "./ShowGroupSection";
 import type { CustomSection } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
+import { RelatedItemsSection } from "./RelatedItemsSection";
+import { computeRelatedItems, toReview } from "../../../_internal/server/features/products/data";
+import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -123,63 +125,6 @@ export interface ProductDetailPageViewProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function toProductItem(doc: FirestoreDocument): ProductItem {
-  return {
-    id: String(doc.id ?? ""),
-    title: String(doc.title ?? doc.name ?? ""),
-    price: typeof doc.price === "number" ? doc.price : 0,
-    originalPrice:
-      typeof doc.originalPrice === "number" ? doc.originalPrice : undefined,
-    mainImage: Array.isArray(doc.images)
-      ? (doc.images[0] as string | undefined)
-      : typeof doc.mainImage === "string"
-        ? doc.mainImage
-        : undefined,
-    status: (doc.status as ProductItem["status"]) ?? "published",
-    slug: typeof doc.slug === "string" ? doc.slug : undefined,
-    storeName: typeof doc.storeName === "string" ? doc.storeName : undefined,
-    rating: typeof doc.rating === "number" ? doc.rating : undefined,
-    reviewCount:
-      typeof doc.reviewCount === "number" ? doc.reviewCount : undefined,
-  };
-}
-
-function toReview(doc: FirestoreDocument): Review {
-  const images = Array.isArray(doc.images) ? (doc.images as string[]) : undefined;
-  const createdAt =
-    doc.createdAt instanceof Date
-      ? doc.createdAt.toISOString()
-      : typeof doc.createdAt === "string"
-        ? doc.createdAt
-        : undefined;
-  const rawRating = typeof doc.rating === "number" ? doc.rating : 3;
-  const rating = Math.min(5, Math.max(1, Math.round(rawRating))) as
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5;
-
-  return {
-    id: String(doc.id ?? ""),
-    productId: String(doc.productId ?? ""),
-    userId: String(doc.userId ?? ""),
-    userName: String(doc.userName ?? "Anonymous"),
-    userAvatar:
-      typeof doc.userAvatar === "string" ? doc.userAvatar : undefined,
-    rating,
-    title: typeof doc.title === "string" ? doc.title : undefined,
-    comment: typeof doc.comment === "string" ? doc.comment : undefined,
-    images,
-    status: (doc.status as Review["status"]) ?? "approved",
-    helpfulCount:
-      typeof doc.helpfulCount === "number" ? doc.helpfulCount : undefined,
-    verified: doc.verified === true,
-    featured: doc.featured === true,
-    createdAt,
-  };
-}
 
 function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
@@ -385,72 +330,17 @@ export async function ProductDetailPageView({
 
   const storeId = typeof p.storeId === "string" ? (p.storeId as string) : null;
 
-  // -- Fetch reviews + 4 related-listing signals in parallel ------------------
-  const [reviewDocs, sameCategoryDocs, sameBrandDocs, tagOverlapDocs, sameStoreDocs] = await Promise.all([
-    reviewRepository
-      .findApprovedByProduct(product.id)
-      .catch(() => [] as unknown[]),
-    primaryCategorySlug
-      ? productRepository.findByCategory(primaryCategorySlug).catch(() => [] as unknown[])
-      : Promise.resolve([] as unknown[]),
-    brand
-      ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brand)),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 9,
-          })
-          .then((r) => r.items)
-          .catch(() => [] as unknown[])
-      : Promise.resolve([] as unknown[]),
-    tags.length > 0
-      ? productRepository.findByTagsOverlap(tags, 9).catch(() => [] as unknown[])
-      : Promise.resolve([] as unknown[]),
-    storeId
-      ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("storeId", SIEVE_OP.EQ, storeId)),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 9,
-          })
-          .then((r) => r.items)
-          .catch(() => [] as unknown[])
-      : Promise.resolve([] as unknown[]),
+  // -- Fetch reviews + the shared 4-signal related-items computation + grouped listings in parallel --
+  const [reviewDocs, related, groups] = await Promise.all([
+    reviewRepository.findApprovedByProduct(product.id).catch(() => [] as unknown[]),
+    computeRelatedItems(product),
+    getGroupsWithItemsForProduct(product.id),
   ]);
 
   const reviews: Review[] = (reviewDocs as FirestoreDocument[]).map(
     toReview,
   );
-  const _now = new Date();
-  const currentProductId = product.id;
-  function toRelatedItems(docs: unknown[]): ProductItem[] {
-    return (docs as FirestoreDocument[])
-      .filter((r) => {
-        if (r.id === currentProductId) return false;
-        const s = r.status as string | undefined;
-        if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
-        if (r.isSold === true) return false;
-        if (r.availableQuantity === 0) return false;
-        if (r.listingType === "auction" && r.auctionEndDate) {
-          const end = r.auctionEndDate;
-          const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-            ? (end as unknown as { toDate: () => Date }).toDate()
-            : end instanceof Date ? end : new Date(String(end));
-          if (endDate <= _now) return false;
-        }
-        if (r.listingType === "prize-draw" && r.prizeRevealStatus === "closed") return false;
-        return true;
-      })
-      .slice(0, 8)
-      .map(toProductItem);
-  }
-
-  const relatedItems = toRelatedItems(sameCategoryDocs);
-  const relatedByBrand = toRelatedItems(sameBrandDocs);
-  const relatedByTags = toRelatedItems(tagOverlapDocs);
-  const relatedByStore = toRelatedItems(sameStoreDocs);
+  const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
 
   return (
     <Main>
@@ -974,30 +864,20 @@ export async function ProductDetailPageView({
                 )
               : undefined
           }
-          renderRelated={() =>
-            relatedItems.length > 0 ||
-            relatedByBrand.length > 0 ||
-            relatedByTags.length > 0 ||
-            relatedByStore.length > 0 ? (
-              <Stack gap="xl">
-                {relatedItems.length > 0 && (
-                  <RelatedProductsCarousel
-                    items={relatedItems}
-                    title={categoryName || category ? `More in ${categoryName || category}` : "More in this category"}
-                  />
-                )}
-                {relatedByBrand.length > 0 && (
-                  <RelatedProductsCarousel items={relatedByBrand} title={brand ? `More by ${brand}` : "More by this brand"} />
-                )}
-                {relatedByTags.length > 0 && (
-                  <RelatedProductsCarousel items={relatedByTags} title="You might also like" />
-                )}
-                {relatedByStore.length > 0 && (
-                  <RelatedProductsCarousel items={relatedByStore} title={storeName ? `More from ${storeName}` : "More from this seller"} />
-                )}
-              </Stack>
-            ) : null
-          }
+          renderRelated={() => (
+            <Stack gap="xl">
+              <GroupedListingsCarousel groups={groups} />
+              <RelatedItemsSection
+                relatedItems={relatedItems}
+                relatedByBrand={relatedByBrand}
+                relatedByTags={relatedByTags}
+                relatedByStore={relatedByStore}
+                categoryLabel={categoryName || category || undefined}
+                brandLabel={brand || undefined}
+                storeLabel={storeName || undefined}
+              />
+            </Stack>
+          )}
         />
 
         {/* Mobile actions registered via useBottomActions() in ProductDetailActions variant="mobile" */}
