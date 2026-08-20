@@ -785,6 +785,13 @@ export {
   isCheckoutValueOtpVerified,
 } from "./features/checkout/server";
 export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/server";
+// [SERVER-ONLY] Password-change OTP gate — see features/auth/password-change-otp.ts.
+export {
+  sendPasswordChangeOtp,
+  verifyPasswordChangeOtp,
+  isPasswordChangeOtpVerified,
+  consumePasswordChangeOtp,
+} from "./features/auth/server";
 export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components
 // that render email-client-compatible HTML via renderToStaticMarkup. Use

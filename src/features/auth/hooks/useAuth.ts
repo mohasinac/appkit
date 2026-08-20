@@ -513,18 +513,51 @@ export function useResetPassword(options?: {
   });
 }
 
+/**
+ * Password change is now a 3-step flow (root-caused 2026-08-20 — see
+ * appkit/src/features/auth/password-change-otp.ts): the old single-step
+ * reauthenticateAndChangePassword() applied the new password immediately
+ * client-side, before any server-verified identity check beyond the
+ * session cookie. Step order:
+ *   1. useRequestPasswordChangeOtp — verifies currentPassword via Firebase
+ *      reauth (proves the caller actually knows it, without changing
+ *      anything yet), then emails a 6-digit code.
+ *   2. useVerifyPasswordChangeOtp — verifies the code server-side.
+ *   3. useChangePassword — only now actually applies newPassword; the API
+ *      route rejects this call unless step 2 already succeeded.
+ */
+export function useRequestPasswordChangeOtp(options?: {
+  onSuccess?: (data: { maskedEmail: string }) => void;
+  onError?: (error: Error) => void;
+}) {
+  return useMutation<{ maskedEmail: string }, Error, { currentPassword: string }>({
+    mutationFn: async ({ currentPassword }) => {
+      await getClientAuthProvider().reauthenticateOnly(currentPassword);
+      return apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD_OTP_REQUEST, {});
+    },
+    onSuccess: options?.onSuccess,
+    onError: options?.onError,
+  });
+}
+
+export function useVerifyPasswordChangeOtp(options?: {
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
+}) {
+  return useMutation<JsonValue, Error, { code: string }>({
+    mutationFn: async ({ code }) =>
+      apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD_OTP_VERIFY, { code }),
+    onSuccess: options?.onSuccess,
+    onError: options?.onError,
+  });
+}
+
 export function useChangePassword(options?: {
   onSuccess?: (data: JsonValue) => void;
   onError?: (error: Error) => void;
 }) {
-  return useMutation<JsonValue, Error,ChangePasswordData>({
-    mutationFn: async (data) => {
-      await getClientAuthProvider().reauthenticateAndChangePassword(
-        data.currentPassword,
-        data.newPassword,
-      );
-      return apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD, data);
-    },
+  return useMutation<JsonValue, Error, ChangePasswordData>({
+    mutationFn: async (data) => apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD, data),
     onSuccess: options?.onSuccess,
     onError: options?.onError,
   });

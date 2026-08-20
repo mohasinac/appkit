@@ -54,6 +54,16 @@ export class FirebaseClientAuthProvider implements IClientAuthProvider {
     await updatePassword(user, newPassword);
   }
 
+  async reauthenticateOnly(currentPassword: string): Promise<void> {
+    const user = this._auth.currentUser;
+    if (!user?.email) throw new Error("No authenticated user.");
+    const credential = EmailAuthProvider.credential(
+      user.email,
+      currentPassword,
+    );
+    await reauthenticateWithCredential(user, credential);
+  }
+
   async reauthenticateAndSendEmailUpdateVerification(
     currentPassword: string,
     newEmail: string,

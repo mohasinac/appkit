@@ -380,7 +380,7 @@ export type {
 	ResetPasswordViewProps,
 	VerifyEmailViewProps,
 } from "./features/auth/index";
-export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangePassword, useChangeEmail } from "./features/auth/index";
+export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangePassword, useRequestPasswordChangeOtp, useVerifyPasswordChangeOtp, useChangeEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangePasswordData, ChangeEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
