@@ -5550,6 +5550,8 @@ export type { LeaderboardEntry } from "./features/events/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PollResultEntry - Type contract for a tallied poll-option result.
 export type { PollResultEntry } from "./features/events/index";
+// SpinResultEntry - Type contract for a spin_wheel event's winning-spin history row.
+export type { SpinResultEntry } from "./features/events/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // OfferConfig - Type contract for offer config.
 export type { OfferConfig } from "./features/events/index";

@@ -879,6 +879,10 @@ export { getEventLeaderboard } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventPollResults - Helper for get event poll results (per-option vote tally).
 export { getEventPollResults } from "./features/events/server";
+export type { PollResultEntry, SpinResultEntry } from "./features/events/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getEventSpinResults - Last N winning spins for a spin_wheel event, most recent first.
+export { getEventSpinResults } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBugHunterLeaderboard - Ranks testers by confirmed-bug count.
 export { getBugHunterLeaderboard } from "./features/tester/server";
