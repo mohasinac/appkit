@@ -7,7 +7,6 @@ import { apiClient } from "../../../http";
 import { useApiMutation } from "../../../client";
 import { useSession } from "../../../react";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
-import { isAdminUser } from "../../auth/role-predicates";
 import { TesterChecklistStepRow } from "./TesterChecklistStepRow";
 import type { TesterAnswer } from "../schemas/firestore";
 import type { JsonValue } from "../../../schemas/types";
@@ -95,6 +94,11 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
       const res = await apiClient.get<TesterChecklistResponse>(ACCOUNT_ENDPOINTS.TESTER_CHECKLIST);
       return (res as any)?.data ?? res;
     },
+    // The API route resolves isTester/canTestAdmin fresh from Firestore on
+    // every request, so retrying a 403 (a role that genuinely lacks access)
+    // wastes calls for no benefit — but a real access grant should still be
+    // visible on the very next request, not cached as a permanent failure.
+    retry: false,
   });
 
   const upsertMutation = useApiMutation({
@@ -105,12 +109,25 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
     },
   });
 
-  if (!user?.isTester && !isAdminUser(user)) {
+  // Gate on the live API response, not the client-cached session snapshot.
+  // SessionContext only refreshes role/isTester/canTestAdmin periodically
+  // (every 5 minutes) or on a hard reload/re-login — never on ordinary
+  // client-side navigation — so a flag an admin just granted would
+  // otherwise still read as "Testers only" here for up to 5 minutes even
+  // though the same request already succeeds server-side. The tester-
+  // checklist API resolves these fields fresh from Firestore on every call,
+  // so trusting its actual response is both more accurate and immediate.
+  const isForbidden =
+    query.isError && (query.error as { status?: number } | undefined)?.status === 403;
+  if (isForbidden) {
     return (
       <Alert variant="warning" title="Testers only">
         This page is only available to accounts flagged as testers (and admins). Contact an admin if you believe this is a mistake.
       </Alert>
     );
+  }
+  if (query.isLoading) {
+    return <Text color="muted">Loading checklist…</Text>;
   }
 
   // Items arrive pre-sorted by catalog `order` (listActive() orders by it).
@@ -160,8 +177,6 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
         onChange={setSearch}
         placeholder="Search by title or route, e.g. checkout, /store/payouts..."
       />
-
-      {query.isLoading && <Text color="muted">Loading checklist…</Text>}
 
       {sortedPhaseNumbers.map((phaseNumber) => {
         const groups = phases.get(phaseNumber)!;
