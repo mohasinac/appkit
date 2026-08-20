@@ -103,7 +103,22 @@ export function useSyncManager(userId: string | null | undefined): void {
     // Sync once immediately on login so the server is updated right away
     sync();
 
+    // Mobile browsers throttle/suspend JS timers in a backgrounded tab, so
+    // the 30s interval alone can strand pending ops indefinitely if the user
+    // backgrounds the app (switches apps, locks the screen) before it next
+    // fires — the classic "added on mobile, desktop never sees it" report.
+    // Flush immediately whenever the tab is about to go away or hide.
+    const flushOnHide = () => {
+      if (document.visibilityState === "hidden") void sync();
+    };
+    document.addEventListener("visibilitychange", flushOnHide);
+    window.addEventListener("pagehide", flushOnHide);
+
     const id = setInterval(sync, SYNC_INTERVAL_MS);
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", flushOnHide);
+      window.removeEventListener("pagehide", flushOnHide);
+    };
   }, [userId, queryClient]);
 }

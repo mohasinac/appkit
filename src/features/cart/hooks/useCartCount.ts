@@ -26,6 +26,9 @@ export function useCartCount(enabled = false) {
     queryKey: ["cart"],
     queryFn: () => apiClient.get<CartCountResponse | null>(CART_ENDPOINTS.GET),
     enabled,
+    // See useCartQuery — cart is cross-device-synced, so an already-open tab
+    // must refetch on refocus instead of showing a pre-sync cached count.
+    refetchOnWindowFocus: true,
   });
 
   // "Add to cart" quick actions (listing grid, product cards) write local-

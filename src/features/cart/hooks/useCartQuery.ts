@@ -17,5 +17,11 @@ export function useCartQuery<TData = unknown>(
     queryFn: () => apiClient.get<TData>(options.endpoint),
     enabled: options.enabled,
     initialData: options.initialData,
+    // Override the app-wide refetchOnWindowFocus:false default — the cart is
+    // explicitly meant to be cross-device-synced (mobile add -> desktop
+    // sees it), so an already-open desktop tab must refetch when refocused
+    // rather than keep showing whatever it had cached before the mobile
+    // sync landed on the server.
+    refetchOnWindowFocus: true,
   });
 }
