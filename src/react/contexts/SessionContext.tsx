@@ -334,7 +334,30 @@ export function SessionProvider({
       void normalizeError(error);
       logger.debug("Session activity update failed", { error });
     }
-  }, [user, ep.sessionActivity]);
+
+    // Piggyback a fresh RBAC-relevant profile re-fetch on the same 5-minute
+    // tick. onAuthStateChanged only fires on login/logout/full-page-reload —
+    // never on client-side soft navigation — so a role/isTester/canTestAdmin
+    // flag flipped by an admin while the user already has the app open in a
+    // tab stays invisible to them indefinitely until they hard-reload or
+    // re-login. Root-caused 2026-08-20: a tester granted canTestAdmin
+    // couldn't see the Tester Hub because their SessionContext was still
+    // holding the flags from whenever they first loaded the app.
+    try {
+      const fresh = await fetchUserProfileFromServer();
+      if (!fresh || fresh.uid !== user.uid) return;
+      const rbacFieldsChanged =
+        fresh.role !== user.role ||
+        fresh.isTester !== user.isTester ||
+        fresh.canTestAdmin !== user.canTestAdmin ||
+        fresh.disabled !== user.disabled ||
+        fresh.storeId !== user.storeId;
+      if (rbacFieldsChanged) setUser(fresh);
+    } catch (error) {
+      void normalizeError(error);
+      logger.debug("Periodic profile refresh failed", { error });
+    }
+  }, [user, ep.sessionActivity, fetchUserProfileFromServer]);
 
   useEffect(() => {
     updateSessionActivityRef.current = updateSessionActivity;
