@@ -13,6 +13,7 @@ import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { QuickEditMenu } from "./QuickEditMenu";
+import { ROUTES } from "../../../next/routing/route-map";
 
 const BAN_STATUS_TABS = [
   { id: "", label: "All" },
@@ -107,6 +108,10 @@ function buildAddressConfig(
     getTotal: (response, rows) =>
       typeof response.total === "number" ? response.total : rows.length,
     buildFilters: () => undefined,
+    // The full address record (owner, ban reason/history) lives on the
+    // existing admin address edit page — reuse it instead of leaving a
+    // banned-address row with no detail destination.
+    rowHrefTemplate: String(ROUTES.ADMIN.ADDRESSES_EDIT("{id}")),
     renderRowActions: (row) => {
       const actions = [];
       if (row.status !== "banned") {

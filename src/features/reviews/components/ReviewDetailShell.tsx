@@ -205,7 +205,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   className="group relative aspect-square overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <MediaImage
-                    src={img.thumbnailUrl ?? img.url}
+                    src={img}
                     alt={`Review image ${i + 1}`}
                     size="card"
                     className="transition-transform duration-300 group-hover:scale-105"
@@ -384,7 +384,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             onClick={(e) => e.stopPropagation()}
           >
             <MediaImage
-              src={currentImage.url}
+              src={currentImage}
               alt={`Review photo ${lightboxIdx + 1}`}
               size="hero"
               objectFit="contain"
@@ -426,7 +426,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
  : "border-transparent opacity-60 hover:opacity-100"
  }`}
                 >
-                  <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Thumbnail ${i + 1}`} size="thumbnail" />
+                  <MediaImage src={img} alt={`Thumbnail ${i + 1}`} size="thumbnail" />
                 </Button>
               ))}
             </Row>

@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   toRecordArray,
   toRelativeDate,
@@ -100,6 +101,10 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: () => undefined,
+    // Return requests are orders (endpoint filters status==return_requested)
+    // — reuse the real admin order detail page rather than leaving rows
+    // non-navigable.
+    rowHrefTemplate: String(ROUTES.ADMIN.ORDER_DETAIL("{id}")),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

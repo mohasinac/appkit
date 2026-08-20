@@ -218,7 +218,7 @@ export function SellerProductsView({
   ...props
 }: SellerProductsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const { view, setView } = useDataViewMode("table");
+  const { view, setView } = useDataViewMode("list");
   const dispatch = useActionDispatch();
   const { showToast } = useToast();
 
@@ -319,10 +319,29 @@ export function SellerProductsView({
                 ? "prize-draw"
                 : "standard";
         const priceRaw = typeof item.price === "number" ? item.price : 0;
+        // Auction listings lost their reserve/bid/end-date summary when this
+        // view was consolidated from the old dedicated SellerAuctionsView —
+        // restore it into `secondary` (the one line every row/card renders)
+        // instead of the generic condition string, which auction sellers
+        // care about far less than bid activity.
+        const auctionSecondary =
+          kind === "auction"
+            ? [
+                typeof item.reservePrice === "number"
+                  ? `Reserve ₹${item.reservePrice.toLocaleString("en-IN")}`
+                  : null,
+                `${typeof item.bidCount === "number" ? item.bidCount : 0} bids`,
+                item.auctionEndDate
+                  ? `Ends ${new Date(item.auctionEndDate as string).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")
+            : "";
         return {
           id: toStringValue(item.id, `product-${index}`),
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
-          secondary: toStringValue(item.condition, ""),
+          secondary: auctionSecondary || toStringValue(item.condition, ""),
           status: toStringValue(item.status, "draft"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),

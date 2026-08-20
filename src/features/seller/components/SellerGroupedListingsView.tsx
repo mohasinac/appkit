@@ -138,6 +138,8 @@ export function SellerGroupedListingsView({
           }),
         ]
       : undefined,
+    // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
+    onRowClick: onEditClick ? (row) => onEditClick(row.id) : undefined,
     renderRowActions: (row) => (
       <Row gap="xs" >
         <Button size="sm" variant="ghost" onClick={() => onEditClick?.(row.id)}>

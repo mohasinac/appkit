@@ -98,6 +98,8 @@ export const RefundStatusValues = {
 export interface OrderDocumentItem {
   productId: string;
   productTitle: string;
+  /** Snapshotted from the product/cart-item at order time so the order-detail UI can render a thumbnail without an extra product fetch. */
+  image?: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;

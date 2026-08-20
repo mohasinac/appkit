@@ -137,6 +137,8 @@ export function SellerStickersView({
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: () => "listingType==stickers",
     primaryAction: { label: "New Sticker Listing", onClick: () => handleCreate() },
+    // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
+    onRowClick: (row) => handleEdit(row.id),
     // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] =>

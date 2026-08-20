@@ -193,13 +193,33 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       toRecordArray(response.items).map((item, index) => {
         const id = toStringValue(item.id, `product-${index}`);
         rawByIdRef.current[id] = item;
+        // Auction listings lost their reserve/bid/end-date summary when this
+        // view was consolidated onto the shared Products listing — restore
+        // it into `secondary` instead of seller/SKU, which admins reviewing
+        // an auction care about far less than bid activity.
+        const auctionSecondary =
+          item.listingType === "auction"
+            ? [
+                typeof item.reservePrice === "number"
+                  ? `Reserve ₹${item.reservePrice.toLocaleString("en-IN")}`
+                  : null,
+                `${typeof item.bidCount === "number" ? item.bidCount : 0} bids`,
+                item.auctionEndDate
+                  ? `Ends ${new Date(item.auctionEndDate as string).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")
+            : "";
         const base: ProductRow = {
           id,
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
-          secondary: [
-            toStringValue(item.sellerName, "Unknown seller"),
-            toStringValue(item.sku, "No SKU"),
-          ].join(" · "),
+          secondary:
+            auctionSecondary ||
+            [
+              toStringValue(item.sellerName, "Unknown seller"),
+              toStringValue(item.sku, "No SKU"),
+            ].join(" · "),
           status: toStringValue(item.status, "Unknown"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           featured: Boolean(item.featured),

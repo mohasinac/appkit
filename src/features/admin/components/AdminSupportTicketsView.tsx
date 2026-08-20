@@ -165,6 +165,12 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
       if (f.priority && f.priority !== "All") parts.push(sieveFilter("priority", SIEVE_OP.EQ, f.priority));
       return parts.join(",") || undefined;
     },
+    // Mirrors the row action's "View" entry so the row itself is clickable,
+    // not just the overflow menu.
+    onRowClick: (row) => {
+      setSelectedRow(row);
+      setDrawerOpen(true);
+    },
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

@@ -112,6 +112,16 @@ export function AdminGroupedListingsView({
   const [reassign, setReassign] = useState<ReassignDrawerState | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  const openReassign = React.useCallback((row: GroupedListingRow) => {
+    setReassign({
+      groupId: row.id,
+      groupTitle: row.primary,
+      currentProductIds: Array.isArray((row as { _raw?: { productIds?: JsonValue } })._raw?.productIds)
+        ? ((row as { _raw?: { productIds?: JsonArray } })._raw?.productIds ?? []).map(String)
+        : [],
+    });
+  }, []);
+
   const config: ListingViewConfig<AdminGroupedListingsResponse, GroupedListingRow> =
     React.useMemo(
       () => ({
@@ -143,25 +153,16 @@ export function AdminGroupedListingsView({
         getTotal: (response, mappedRows) =>
           typeof response.total === "number" ? response.total : mappedRows.length,
         buildFilters: () => "",
+        // Mirrors the row action button's "Reassign products" drawer so the
+        // row itself is clickable, not just the button.
+        onRowClick: (row) => openReassign(row),
         renderRowActions: (row) => (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() =>
-              setReassign({
-                groupId: row.id,
-                groupTitle: row.primary,
-                currentProductIds: Array.isArray((row as { _raw?: { productIds?: JsonValue } })._raw?.productIds)
-                  ? ((row as { _raw?: { productIds?: JsonArray } })._raw?.productIds ?? []).map(String)
-                  : [],
-              })
-            }
-          >
+          <Button size="sm" variant="outline" onClick={() => openReassign(row)}>
             Reassign products
           </Button>
         ),
       }),
-      [refreshKey],
+      [refreshKey, openReassign],
     );
 
   if (React.Children.count(children) > 0) {

@@ -20,6 +20,8 @@ interface AdminViewCardsProps {
   onRowClick?: (row: AdminListingScaffoldRow) => void;
   selectedIdSet?: Set<string>;
   onToggleSelect?: (id: string) => void;
+  /** Same row-actions menu DataTable renders in its table view — mirrored here so cards carry the same quick actions, not just navigation. */
+  renderRowActions?: (row: AdminListingScaffoldRow) => React.ReactNode;
 }
 
 const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; color: string }> = [
@@ -69,17 +71,19 @@ function AdminCardItem({
   selected,
   onToggleSelect,
   onRowClick,
+  renderRowActions,
 }: {
   row: AdminListingScaffoldRow;
   view: "grid" | "list";
   selected: boolean;
   onToggleSelect?: (id: string) => void;
   onRowClick?: (row: AdminListingScaffoldRow) => void;
+  renderRowActions?: (row: AdminListingScaffoldRow) => React.ReactNode;
 }) {
   const flags = FLAG_BADGES.filter(({ key }) => Boolean(row[key]));
 
   const handleClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest('[data-checkbox]')) return;
+    if ((e.target as HTMLElement).closest('[data-no-row-click]')) return;
     onRowClick?.(row);
   };
 
@@ -95,7 +99,7 @@ function AdminCardItem({
         role={onRowClick ? "button" : undefined}
       >
         {onToggleSelect && (
-          <Div data-checkbox className="shrink-0" onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}>
+          <Div data-no-row-click className="shrink-0" onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}>
             <Checkbox
               bare
               checked={selected}
@@ -108,6 +112,9 @@ function AdminCardItem({
         <Stack gap="none" className="flex-1 min-w-0">
           <Text size="sm" weight="semibold" className="truncate" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
+          {row.barcodeId && (
+            <Text size="xs" color="faint" className="truncate font-mono">{row.barcodeId}</Text>
+          )}
         </Stack>
         {flags.length > 0 && (
           <Row gap="xs" className="hidden sm:flex shrink-0">
@@ -118,6 +125,11 @@ function AdminCardItem({
         )}
         <StatusBadge status={row.status} />
         <Span size="xs" color="muted" className="hidden sm:block shrink-0 w-24" align="end">{row.updatedAt}</Span>
+        {renderRowActions && (
+          <Div data-no-row-click className="shrink-0" onClick={(e) => e.stopPropagation()}>
+            {renderRowActions(row)}
+          </Div>
+        )}
       </Row>
     );
   }
@@ -137,7 +149,7 @@ function AdminCardItem({
       {onToggleSelect && (
         <Row
           gap="xs"
-          data-checkbox
+          data-no-row-click
           paddingY="t-sm" padding="x-sm"
           onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}
         >
@@ -161,11 +173,25 @@ function AdminCardItem({
         <Stack gap="none">
           <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
+          {row.barcodeId && (
+            <Text size="xs" color="faint" className="truncate font-mono">{row.barcodeId}</Text>
+          )}
         </Stack>
         <Row justify="between" gap="xs">
           <StatusBadge status={row.status} />
           <Span color="muted" className="text-[11px] shrink-0">{row.updatedAt}</Span>
         </Row>
+        {renderRowActions && (
+          <Row
+            data-no-row-click
+            justify="end"
+            gap="xs"
+            className="border-t border-[var(--appkit-color-border)] -mx-[var(--appkit-space-3)] -mb-[var(--appkit-space-3)] mt-[var(--appkit-space-1)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {renderRowActions(row)}
+          </Row>
+        )}
       </Stack>
     </Div>
   );
@@ -179,6 +205,7 @@ export function AdminViewCards({
   onRowClick,
   selectedIdSet,
   onToggleSelect,
+  renderRowActions,
 }: AdminViewCardsProps) {
   if (isLoading) {
     const count = view === "grid" ? 12 : 8;
@@ -213,6 +240,7 @@ export function AdminViewCards({
             selected={selectedIdSet?.has(row.id) ?? false}
             onToggleSelect={onToggleSelect}
             onRowClick={onRowClick}
+            renderRowActions={renderRowActions}
           />
         ))}
       </Div>
@@ -229,6 +257,7 @@ export function AdminViewCards({
           selected={selectedIdSet?.has(row.id) ?? false}
           onToggleSelect={onToggleSelect}
           onRowClick={onRowClick}
+          renderRowActions={renderRowActions}
         />
       ))}
     </Grid>

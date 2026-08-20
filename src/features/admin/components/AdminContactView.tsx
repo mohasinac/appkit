@@ -123,6 +123,12 @@ export function AdminContactView({
       return mappedRows.length;
     },
     buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
+    // Mirrors the row action's "View" entry so the row itself is clickable,
+    // not just the overflow menu.
+    onRowClick: (row) => {
+      setSelectedRow(row);
+      setDrawerOpen(true);
+    },
     buildBulkActions: (selection): BulkActionItem[] => [
       ...(onBulkMarkRead
         ? [

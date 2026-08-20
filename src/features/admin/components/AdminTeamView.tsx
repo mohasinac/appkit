@@ -132,6 +132,9 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
     },
     buildFilters: (state) =>
       state.group && state.group !== "All" ? sieveFilter("permissionGroup", SIEVE_OP.EQ, state.group) : undefined,
+    // Mirrors the row action's "edit-team-member" entry so the row itself
+    // is clickable, not just the overflow menu.
+    onRowClick: (row) => openEdit(row),
     toolbarExtra: (
       <Button gap="sm" 
         type="button"

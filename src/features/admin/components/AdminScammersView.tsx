@@ -133,6 +133,12 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
       return mappedRows.length;
     },
     buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
+    // Mirrors the row action's "review-scammer" entry so the row itself is
+    // clickable, not just the overflow menu.
+    onRowClick: (row) => {
+      setSelectedRow(row);
+      setDrawerOpen(true);
+    },
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

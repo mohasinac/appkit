@@ -18,6 +18,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { ROUTES } from "../../../next/routing/route-map";
 
 interface AdminProductsResponse {
   items?: JsonArray;
@@ -68,6 +69,9 @@ const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, Digit
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,
   buildFilters: () => "listingType==digital-code",
+  // Digital-code listings are products (filtered by listingType) — reuse
+  // the real admin product edit page rather than leaving rows non-navigable.
+  rowHrefTemplate: String(ROUTES.ADMIN.PRODUCTS_EDIT("{id}")),
 };
 
 export type AdminDigitalCodesViewProps = ListingLayoutProps;

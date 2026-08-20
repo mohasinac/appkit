@@ -160,7 +160,7 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
   /** Hide the table toggle in the toolbar; views with no table column set should use this. */
   hideTableView?: boolean;
 
-  /** Initial view mode (defaults to "table" when not hidden, "grid" when hidden). */
+  /** Initial view mode (defaults to "list" — the row-style card view). */
   initialView?: "grid" | "list" | "table";
 
   // -- Optional CSS class on root container
@@ -172,8 +172,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
 }: {
   config: ListingViewConfig<TResponse, TRow>;
 }) {
-  const effectiveInitialView =
-    config.initialView ?? (config.hideTableView ? "grid" : "table");
+  const effectiveInitialView = config.initialView ?? "list";
   const listing = useAdminListing<TResponse, TRow>({
     ...config,
     initialView: effectiveInitialView,
@@ -241,6 +240,28 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
       : `Edit ${config.title.replace(/s$/, "")}`;
 
   const isEditorOpen = panel.isCreateOpen || panel.isEditOpen;
+
+  // Shared row-navigation resolver — the table branch and the default
+  // AdminViewCards branch must agree on when a row is actually clickable.
+  // Previously AdminViewCards unconditionally wired onRowClick to
+  // openEditPanel even when the config had no renderEditor/onRowClick/
+  // rowHrefTemplate, so cards always looked clickable (cursor-pointer,
+  // hover state) but silently did nothing (or mutated the URL with no
+  // visible drawer) while the table for the same config correctly showed
+  // no click affordance at all — read as "table isn't clickable" by users.
+  const resolvedRowClick = config.onRowClick
+    ? (row: TRow) => config.onRowClick!(row, { openEditPanel: panel.openEditPanel })
+    : config.renderEditor
+      ? (row: TRow) => panel.openEditPanel(row.id)
+      : config.rowHrefTemplate
+        ? (row: TRow) => {
+            const href =
+              typeof config.rowHrefTemplate === "function"
+                ? config.rowHrefTemplate(row)
+                : config.rowHrefTemplate!.replace("{id}", encodeURIComponent(row.id));
+            window.location.href = href;
+          }
+        : undefined;
 
   return (
     <Div className={config.className ?? "min-h-screen"}>
@@ -341,6 +362,11 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
                   : undefined
             }
             renderRowActions={config.renderRowActions}
+            // Note: rowHrefTemplate above already gives DataTable's own rows
+            // `cursor-pointer`/navigate-on-click even when onRowClick is
+            // undefined — resolvedRowClick (used by the card branch below)
+            // additionally covers that same rowHrefTemplate-only case so the
+            // two view modes never disagree on whether a row is clickable.
           />
         ) : config.renderCards ? (
           // The persisted view-mode preference is global, so a "table"
@@ -353,9 +379,18 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             view={view === "table" ? "grid" : view}
             isLoading={isLoading}
             emptyLabel={config.emptyLabel ?? `No ${config.title.toLowerCase()} found`}
-            onRowClick={(row) => panel.openEditPanel(row.id)}
+            onRowClick={
+              resolvedRowClick
+                ? (row) => resolvedRowClick(row as unknown as TRow)
+                : undefined
+            }
             selectedIdSet={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
+            renderRowActions={
+              config.renderRowActions
+                ? (row) => config.renderRowActions!(row as unknown as TRow)
+                : undefined
+            }
           />
         )}
       </Div>

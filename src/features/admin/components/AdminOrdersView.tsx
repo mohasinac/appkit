@@ -109,6 +109,12 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
+    // Mirrors the row action's "View full details" entry so the row itself
+    // is clickable, not just the overflow menu.
+    onRowClick: (row) => {
+      setSelectedRow(row);
+      setDrawerOpen(true);
+    },
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] => {
       const statusByAction: Record<(typeof ADMIN_BULK_ACTIONS.orders)[number], string> = {

@@ -146,9 +146,7 @@ function toProductItem(doc: FirestoreDocument): ProductItem {
 }
 
 function toReview(doc: FirestoreDocument): Review {
-  const images = Array.isArray(doc.images)
-    ? (doc.images as string[]).map((url) => ({ url }))
-    : undefined;
+  const images = Array.isArray(doc.images) ? (doc.images as string[]) : undefined;
   const createdAt =
     doc.createdAt instanceof Date
       ? doc.createdAt.toISOString()

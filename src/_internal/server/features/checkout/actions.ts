@@ -466,6 +466,7 @@ async function createOrderForGroup(
     const baseLine = {
       productId: item.productId,
       productTitle: item.productTitle,
+      image: item.productImage,
       quantity: item.quantity,
       unitPrice,
       totalPrice: unitPrice * item.quantity,
@@ -1410,6 +1411,7 @@ async function createRazorpayGroupOrder(
     const baseLine = {
       productId: item.productId,
       productTitle: item.productTitle,
+      image: item.productImage,
       quantity: item.quantity,
       unitPrice,
       totalPrice: unitPrice * item.quantity,

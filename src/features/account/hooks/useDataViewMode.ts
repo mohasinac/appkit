@@ -19,7 +19,7 @@ export type DataViewMode = "table" | "grid" | "list";
  * pagination already live in the URL via useUrlTable() and must never be
  * added to this hook — see CLAUDE.md Phase 3 / user directive 2026-08-18.
  */
-export function useDataViewMode(fallback: DataViewMode = "table") {
+export function useDataViewMode(fallback: DataViewMode = "list") {
   const { data: profile } = useCurrentProfile();
   const updateProfile = useUpdateCurrentProfile();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);

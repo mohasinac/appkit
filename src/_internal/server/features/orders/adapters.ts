@@ -6,6 +6,7 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     ? doc.items.map((item) => ({
         productId: item.productId,
         title: item.productTitle,
+        image: item.image,
         price: item.unitPrice,
         quantity: item.quantity,
         currency: doc.currency,

@@ -171,6 +171,9 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
           selection.clearSelection();
         },
       })),
+    // Mirrors the "View" row action below so table rows and cards both open
+    // the payout detail drawer on click.
+    onRowClick: (row) => setSelectedPayout(rawByIdRef.current[row.id] ?? { id: row.id }),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

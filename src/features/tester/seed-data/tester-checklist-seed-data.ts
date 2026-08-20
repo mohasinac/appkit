@@ -105,6 +105,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "tester-hub-answer-saves", label: "Answering Yes/No and adding a comment on a test case saves without reloading" },
         { key: "admin-tester-access", label: "Signed-in admin accounts can open the Tester Hub and see the same checklist as testers", href: "/user/tester" },
         { key: "admin-testing-section", label: "Admin dashboard's Testing section shows both the Tester Checklist and Tester Feedback (results) links", href: "/admin/tester-feedback" },
+        {
+          key: "tester-flag-live-refresh",
+          label: "A tester whose isTester/canTestAdmin flag is granted by an admin gets Tester Hub access without needing to log out and back in — within a few minutes of the change, on a tab that's stayed open",
+          description: "Fixed 2026-08-20 — the client session only refreshed role/isTester/canTestAdmin/disabled/storeId on login or a full page reload, never on ordinary client-side navigation, so a flag flip by an admin was invisible until the user manually re-authenticated. Now piggybacked onto the existing 5-minute session-activity ping. To test: as admin, grant isTester to a second test account that's already logged in elsewhere with the app open; within ~5 minutes (no reload) it should gain access to /user/tester.",
+          href: "/user/tester",
+        },
       ],
     },
   ]),
@@ -238,6 +244,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "The My Account dashboard's \"Recent Orders\" widget rows are clickable and each shows a \"View Details\" button linking to the correct order — not a dead, non-interactive preview",
           href: "/user",
         },
+        {
+          key: "order-item-thumbnails-render",
+          label: "Line-item thumbnails actually render on both the My Orders list and an individual order's detail page — not a blank/missing image slot",
+          description: "A 2026-08-19 bug meant real checkout orders never carried a per-item image at all (the field didn't exist on the order document, so the detail page's image block was silently skipped rather than showing a broken-image icon). Place a fresh order through checkout and confirm its item thumbnail shows up both in the My Orders list and on the order-detail page.",
+          href: "/user/orders",
+        },
       ],
     },
     {
@@ -315,6 +327,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "review-detail-related-sections",
           label: "An individual review's permalink page (/reviews/[id]) shows \"More reviews for [product]\" and \"More reviews for [store]\" sections with real reviews, not empty",
           description: "Verify against review-7 (the first review on \"Beyblade Original — Dranzer S\"), reachable via My Reviews or a store's Reviews tab.",
+          href: "/reviews",
+        },
+        {
+          key: "review-photos-render",
+          label: "A review's uploaded photos actually render — on the review-detail permalink page, the reviews list on a product/store page, and the admin \"View review\" modal — not a fallback icon",
+          description: "A 2026-08-19 type mismatch (review images stored as plain URL strings but read as {url,thumbnailUrl} objects) meant every review photo silently fell back to a placeholder icon everywhere. Leave a review with a photo, then confirm it renders on all three surfaces.",
           href: "/reviews",
         },
       ],
@@ -434,6 +452,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "seller-products-auctions-default-load",
           label: "The seller Products, Auctions, and Prize Draws dashboards each show real listings by default (not empty), and their \"Show sold\"/\"Show ended\"/\"Show closed\" toggles work",
           description: "A 2026-08-19 index-shape bug broke the default storeId-scoped queries on these three seller dashboards. Confirm each loads populated on first visit and its toggle reveals the corresponding hidden fixture.",
+          href: "/store/products",
+        },
+        {
+          key: "auction-row-shows-bid-info",
+          label: "An auction's row/card in the seller Products listing (filtered to Auctions) shows its reserve price, bid count, and end date — not just condition/SKU like a standard product",
+          description: "Restored 2026-08-20 — this info was dropped when the dedicated Auctions dashboard was consolidated into the shared Products listing. Filter to \"Auctions\" on /store/products (or the admin equivalent) and confirm each row's second line reads something like \"Reserve ₹X · N bids · Ends <date>\".",
           href: "/store/products",
         },
       ],
@@ -640,6 +664,21 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "collapsible-user", label: "User profile dashboard sections expand/collapse and remember their state on reload", href: "/user/profile" },
         { key: "mobile-table-cards", label: "Admin/seller listing tables show full-row cards by default on mobile, with a working switch back to table view" },
         { key: "view-mode-persist", label: "Switching the dashboard table/card view mode is remembered on your next visit (filters/search/sort are not)" },
+        {
+          key: "list-view-default",
+          label: "A dashboard listing you haven't set a view preference for opens in list (row-card) view by default, not table view",
+          description: "The default view mode across every admin/store listing page changed from table to list on 2026-08-20. If you've already picked a view before, your saved preference still wins — check on a listing you haven't visited before, or clear the preference in your profile.",
+        },
+        {
+          key: "row-table-click-consistency",
+          label: "For any given dashboard listing, table rows, grid cards, and list cards all agree on whether clicking navigates somewhere — a card never looks clickable (hover/press styling) while doing nothing, and the table view never lacks a click affordance that the card view has",
+          description: "Fixed 2026-08-20 — previously the default card renderer always looked clickable (cursor-pointer, hover state) even when the underlying listing had no real destination wired, while its table view correctly showed no affordance for the exact same config, reading as \"the table isn't clickable.\" Spot-check a few dashboard listings in both table and list/grid view.",
+        },
+        {
+          key: "list-card-row-actions",
+          label: "Row-level action buttons (the same ones in the table's overflow menu — edit, approve, delete, etc.) also appear directly on each list/grid card, not just in the table view",
+          href: "/admin/orders",
+        },
       ],
     },
     {

@@ -7928,9 +7928,6 @@ export type { ReviewFilterVariant } from "./features/reviews/index";
 // ReviewFiltersProps - Type contract for review filters props.
 export type { ReviewFiltersProps } from "./features/reviews/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ReviewImage - Type contract for review image.
-export type { ReviewImage } from "./features/reviews/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ReviewListParams - Type contract for review list params.
 export type { ReviewListParams } from "./features/reviews/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.

@@ -167,6 +167,8 @@ export function SellerLiveView({
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: () => "listingType==live",
     primaryAction: { label: "New Live Item", onClick: () => handleCreate() },
+    // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
+    onRowClick: (row) => handleEdit(row.id),
     // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] =>

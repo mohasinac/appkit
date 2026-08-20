@@ -29,9 +29,17 @@
  */
 
 import type { OrderDocument } from "../../orders/schemas/firestore";
+import { seedExtMedia } from "../../../seed/_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+// Deterministic per-product thumbnail — see the identical helper's comment
+// in appkit/src/seed/orders-seed-data.ts for why this doesn't need to match
+// the real product's own seeded image.
+function orderItemImage(productId: string): string {
+  return seedExtMedia(`https://picsum.photos/seed/order-item-${productId}/300/300`);
+}
 
 const BUYER_ID = "user-tester-qa";
 const BUYER_NAME = "QA Tester";
@@ -80,7 +88,7 @@ function standardOrder({ key, status, paymentStatus, extra }: StatusOrderInput):
   } as Partial<OrderDocument>;
 }
 
-export const ordersTesterSeedData: Partial<OrderDocument>[] = [
+const _rawOrdersTesterSeedData: Partial<OrderDocument>[] = [
   // ── One order per OrderStatus value (9) ──────────────────────────────────────
   standardOrder({ key: "pending", status: "pending", paymentStatus: "pending" }),
   standardOrder({ key: "confirmed", status: "confirmed", paymentStatus: "paid" }),
@@ -320,3 +328,15 @@ export const ordersTesterSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(1),
   } as Partial<OrderDocument>,
 ];
+
+// Backfills image/imageUrls the same way appkit/src/seed/orders-seed-data.ts
+// does, so tester-sandbox order fixtures also show a thumbnail on My Orders
+// and order-detail like real post-2026-08-20 orders do.
+export const ordersTesterSeedData: Partial<OrderDocument>[] = _rawOrdersTesterSeedData.map((order) => ({
+  ...order,
+  imageUrls: order.imageUrls ?? (order.productId ? [orderItemImage(order.productId)] : undefined),
+  items: order.items?.map((item) => ({
+    ...item,
+    image: item.image ?? orderItemImage(item.productId),
+  })),
+}));

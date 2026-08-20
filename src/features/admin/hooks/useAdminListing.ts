@@ -42,7 +42,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
   // (AdminViewCards' one-full-width-card-per-row layout) unless the caller
   // explicitly pins hideTableView (grid-only views like coupons); the user's
   // own explicit choice, once made, always wins and persists across visits.
-  const { view, setView } = useDataViewMode(config.initialView ?? "table");
+  const { view, setView } = useDataViewMode(config.initialView ?? "list");
   const table = useUrlTable({
     defaults: { pageSize: String(defaultPageSize), sort: defaultSort, ...filterDefaults },
   });

@@ -2,11 +2,6 @@ import type { ListingType } from "../../products/types/index";
 
 export type ReviewStatus = "pending" | "approved" | "rejected";
 
-export interface ReviewImage {
-  url: string;
-  thumbnailUrl?: string;
-}
-
 export interface ReviewVideo {
   url: string;
   thumbnailUrl?: string;
@@ -31,7 +26,7 @@ export interface Review {
   rating: 1 | 2 | 3 | 4 | 5;
   title?: string;
   comment?: string;
-  images?: ReviewImage[];
+  images?: string[];
   video?: ReviewVideo;
   status: ReviewStatus;
   helpfulCount?: number;
@@ -77,6 +72,6 @@ export interface CreateReviewInput {
   rating: number;
   title?: string;
   comment?: string;
-  images?: ReviewImage[];
+  images?: string[];
   video?: ReviewVideo;
 }

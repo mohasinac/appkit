@@ -6,6 +6,7 @@ import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   toRecordArray,
   toRelativeDate,
@@ -67,6 +68,7 @@ export function AdminSublistingCategoriesView({
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: () => undefined,
+    rowHrefTemplate: String(ROUTES.ADMIN.SUBLISTING_CATEGORIES_EDIT("{id}")),
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] => [
           buildBulkAction(ACTIONS.ADMIN["delete-sublisting-category"], async () => {

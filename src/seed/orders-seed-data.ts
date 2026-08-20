@@ -14,9 +14,20 @@
  */
 
 import type { OrderDocument } from "../features/orders/schemas/firestore";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+// Deterministic per-product thumbnail — picsum.photos returns a stable image
+// for any seed string, so this doesn't need to match the real product seed's
+// own image, just be present and consistent across reseeds. Backfills the
+// `image`/`imageUrls` fields real checkout orders only started carrying
+// 2026-08-20 (see OrderDocumentItem.image), so seeded order fixtures show a
+// thumbnail on My Orders / order-detail like real orders do.
+function orderItemImage(productId: string): string {
+  return seedExtMedia(`https://picsum.photos/seed/order-item-${productId}/300/300`);
+}
 
 // Deterministic 6-char base36 suffix derived from a seed string — replaces the
 // previous Math.random() suffix, which regenerated a fresh id on every module
@@ -380,8 +391,23 @@ const cashOrderVerified: Partial<OrderDocument> = {
   updatedAt: daysAgo(2),
 };
 
+// Backfills image/imageUrls (see orderItemImage() above) on every fixture
+// regardless of which shape it uses (multi-item `items[]` vs the legacy
+// single-item top-level fields), so no seeded order silently renders without
+// a thumbnail the way real pre-2026-08-20 orders do.
+function withOrderImages(order: Partial<OrderDocument>): Partial<OrderDocument> {
+  return {
+    ...order,
+    imageUrls: order.imageUrls ?? (order.productId ? [orderItemImage(order.productId)] : undefined),
+    items: order.items?.map((item) => ({
+      ...item,
+      image: item.image ?? orderItemImage(item.productId),
+    })),
+  };
+}
+
 export const ordersSeedData = [
   cashOrderPendingProof,
   cashOrderVerified,
   ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 48),
-] as OrderDocument[];
+].map(withOrderImages) as OrderDocument[];

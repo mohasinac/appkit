@@ -91,9 +91,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       userName: toStringValue(raw.userName ?? raw.sellerName, "Unknown"),
       userAvatar: toStringValue(raw.userAvatar, "") || undefined,
       verified: Boolean(raw.verified),
-      images: Array.isArray(raw.images)
-        ? (raw.images as Array<{ url: string; thumbnailUrl?: string }>)
-        : [],
+      images: Array.isArray(raw.images) ? (raw.images as string[]) : [],
       helpfulCount: Number(raw.helpfulCount ?? 0),
       createdAt: toStringValue(raw.createdAt, "") || undefined,
     });
@@ -153,6 +151,9 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       if (f.rating && f.rating !== "All") parts.push(sieveFilter("rating", SIEVE_OP.EQ, f.rating));
       return parts.join(",") || undefined;
     },
+    // Mirrors the row action's "View" entry so the row itself is clickable,
+    // not just the overflow menu.
+    onRowClick: (row) => handleViewReview(row),
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     // DELETE has no wired handler yet (pre-existing — approve/reject were
     // already no-op placeholders too), so it's left out until one exists.

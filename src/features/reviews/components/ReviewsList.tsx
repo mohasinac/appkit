@@ -115,7 +115,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           <Row wrap gap="sm" className="mt-3">
             {review.images.map((img, i) => (
               <Div key={i} className="relative h-16 w-16 flex-shrink-0 border border-neutral-100" rounded="lg" overflow="hidden">
-                <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Review image ${i + 1}`} size="thumbnail" />
+                <MediaImage src={img} alt={`Review image ${i + 1}`} size="thumbnail" />
               </Div>
             ))}
           </Row>
