@@ -225,6 +225,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button" },
         { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase" },
         { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly" },
+        {
+          key: "live-item-video-mandatory",
+          label: "Creating a live-item listing (species: animals/plants) without a video is rejected with a clear error; a live listing WITH a video plays correctly in the gallery's video slide and its poster thumbnail is watermarked",
+          description: "Verify the block on both the admin product editor and the seller \"List a live item\" form. Then verify playback against the tester-sandbox fixture \"Test Live Item — Golden Retriever Puppy\" (live-tester-sandbox-1) — its video is a real dog clip (previously a broken YouTube link that never played); confirm it actually plays in theater mode and the thumbnail carries the site watermark.",
+          href: "/store/live/new",
+        },
       ],
     },
     {
@@ -242,7 +248,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "shipping-address-edit", label: "Editing an existing shipping address from checkout works" },
         { key: "shipping-method-selection", label: "Selecting a shipping method/provider at checkout recalculates the shipping fee correctly" },
         { key: "gst-breakdown-display", label: "When GST is enabled in Site Settings, checkout shows the correct CGST/SGST or IGST breakdown based on buyer vs seller state" },
-        { key: "checkout-otp-highvalue", label: "Carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\") prompt a \"Verify this order\" email OTP right before payment (except COD)" },
+        {
+          key: "checkout-otp-highvalue",
+          label: "Carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\", default ₹5,000) prompt a \"Verify this order\" email OTP right before payment (except COD); carts below the threshold check out directly with no OTP step at all",
+          description: "Root-caused 2026-08-20 — the OTP email send used to be fire-and-forget, so a Resend/API failure silently left the buyer stuck with no code and no error. Sending now surfaces a real error if the email genuinely fails to send, and the \"already sent, retry in N minutes\" rate-limit message is a clear sentence instead of a raw error code. Place a real order ≥ the threshold and confirm the code actually arrives by email (check spam too) — report the exact error text if it still doesn't.",
+        },
         { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and Razorpay (when enabled) at checkout works" },
         { key: "payment-window-countdown", label: "Manual-payment orders show a 15-minute countdown timer on the payment page" },
         { key: "payment-proof-upload", label: "Uploading manual payment proof (screenshot, UTR, mark-as-paid + agreement checkboxes) works" },
@@ -352,6 +362,17 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "The mobile bottom navigation bar shows a Cart tab with a live item-count badge; Wishlist is no longer a bottom-tab slot but is still reachable from the header",
           description: "Wishlist was intentionally removed only from the bottom tab bar, not from the header/app-bar or main navigation — confirm the header wishlist icon is unaffected.",
         },
+        {
+          key: "cart-badge-matches-cart-page",
+          label: "After adding an item to the cart, the item actually appears when you open the cart page — not just an updated badge count with an empty cart",
+          description: "Root-caused 2026-08-20 — a background sync manager that replays queued cart/wishlist writes to the server was built but never mounted anywhere in the app, so the cart badge (read from a local queue) updated instantly while the server-backed cart page (read from Firestore) never received the write and showed empty. Add an item, then navigate to /cart (not just glance at the badge) and confirm it's really there — check on both a fresh session and after a page reload.",
+          href: "/cart",
+        },
+        {
+          key: "cart-mobile-no-overflow",
+          label: "On mobile, cart item cards stay fully within the screen width per seller group — no horizontal overflow/clipping — and a floating checkout bar (styled like the bulk-action bar, sitting above the bottom nav) shows the total and a Checkout button, with enough bottom margin that the last cart item is never hidden behind it",
+          href: "/cart",
+        },
       ],
     },
     {
@@ -416,6 +437,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "browser-back-forward", label: "Browser back/forward buttons move correctly between dashboard sub-pages without breaking the layout" },
         { key: "logged-out-redirect", label: "Opening a user dashboard URL while logged out redirects to login, then returns to the originally requested page after signing in" },
         { key: "breadcrumbs-accurate", label: "Breadcrumbs (where present) on nested user dashboard pages accurately reflect the current location" },
+        {
+          key: "sidebar-logout-button",
+          label: "The user dashboard sidebar itself (not just the header profile dropdown) has a visible \"Log out\" action at the bottom, and clicking it signs out and redirects to login",
+          description: "Previously the only logout affordance while on a dashboard page was the header profile dropdown — the sidebar had none. Check on both mobile (drawer) and desktop (persistent rail).",
+          href: "/user",
+        },
       ],
     },
   ]),
@@ -555,6 +582,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "store-browser-back-forward", label: "Browser back/forward buttons move correctly between store dashboard sub-pages without breaking the layout" },
         { key: "store-logged-out-redirect", label: "Opening a store dashboard URL while logged out (or as a non-seller) redirects appropriately instead of erroring" },
         { key: "store-nav-listing-type-groups", label: "The seller nav correctly groups/labels each listing-type management area (standard, auctions, pre-orders, prize draws, bundles, classifieds, digital codes, live, art, stickers)" },
+        {
+          key: "store-sidebar-logout-button",
+          label: "The store dashboard sidebar has a visible \"Log out\" action at the bottom (not just the header profile dropdown), and clicking it signs out and redirects to login",
+          href: "/store",
+        },
       ],
     },
   ]),
@@ -691,6 +723,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "card-row-heights-aligned", label: "Product/auction/pre-order/event cards in the same row are the same height, with their action button (Reserve now, Place bid, View details, etc.) aligned along a common bottom edge even when one card's description is longer than another's" },
         { key: "image-watermark-subtle", label: "Product and listing images show a small, subtle watermark (not oversized or fully opaque, doesn't obscure the image)" },
         { key: "section-cta-buttons-visible", label: "Homepage section \"View all →\" / \"Go to…\" buttons use a solid primary-colored fill so they're clearly identifiable as clickable CTAs, not a plain white/outline box that blends into the page" },
+        {
+          key: "mobile-search-bar-proportions",
+          label: "On mobile, the global header search bar's resource-type dropdown (Products/Auctions/etc.) is a compact, capped width and the text input takes up most of the remaining space — not an oversized dropdown squeezing the input down to a sliver",
+          href: "/",
+        },
       ],
     },
     {
@@ -773,6 +810,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "category-item-counts-accurate",
           label: "Category cards on the categories index page show an accurate, non-zero item count matching what's actually inside each category",
           description: "Verify \"Beyblade Burst\" shows 2 items (matching the 2 real products inside it when browsed), not \"0 items\". If any category shows 0 despite having published products, run `npm run categories:backfill-metrics` to recompute the counters.",
+          href: "/categories",
+        },
+        {
+          key: "parent-category-includes-children",
+          label: "Visiting a PARENT category's page shows products filed under its child categories too (not just products tagged with the parent's own id), and its \"N products\" count is the sum of its own products plus every child category's",
+          description: "Verify against \"Spinning Tops\" (category-spinning-tops, the root over Original/Metal Fight/Burst/X) — its product listing and count should include every Beyblade product across all 4 generations, not show empty or only the root's own (normally zero) direct products. Note: this rollup applies to page 1 / default sort only — changing sort or paging within the tab may still narrow back to the parent's own products (a known follow-up, not yet fixed).",
           href: "/categories",
         },
         {
@@ -964,6 +1007,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Users & Trust",
         cases: [
           { key: "users-role-change", label: "Admin can change a user's role and toggle isTester/canTestAdmin", href: "/admin/users" },
+          {
+            key: "admin-delete-user-complete",
+            label: "Deleting a user from the admin Users editor removes their Firestore profile, their active sessions, AND their Firebase Auth record — not just the Firestore doc",
+            description: "Verify the deleted account can no longer log in at all (Auth record gone), not just that it's missing from the admin list.",
+            href: "/admin/users",
+          },
           { key: "roles-crud", label: "Admin can create and edit custom roles", href: "/admin/roles" },
           { key: "sessions-revoke", label: "Admin can revoke a user's active sessions", href: "/admin/sessions" },
           { key: "scammers-registry-admin", label: "Admin can manage the scammer registry", href: "/admin/scammers" },
@@ -1003,6 +1052,17 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "guide-pages-admin", label: "The 8 admin guide pages all load correctly", href: "/admin/guide" },
           { key: "tester-checklist-crud-admin", label: "Admin can create, edit, and toggle adminOnly on tester checklist items", href: "/admin/tester-checklist" },
           { key: "tester-feedback-report-export", label: "Admin tester-feedback report shows Yes/No analytics grouped correctly and the Download Report export works", href: "/admin/tester-feedback" },
+          {
+            key: "admin-sidebar-logout-button",
+            label: "The admin dashboard sidebar has a visible \"Log out\" action at the bottom (not just the header profile dropdown), and clicking it signs out and redirects to login",
+            href: "/admin/dashboard",
+          },
+          {
+            key: "dashboard-tables-colors-avatars-icons",
+            label: "Admin/store/user dashboard tables and list/grid cards show color-coded status badges (green/amber/red/blue by meaning, not one flat color for every status) and a circular avatar/icon per row (a real photo when the item has one — user avatar, store logo, product image — otherwise a resource-type icon), instead of plain black-on-white text rows",
+            description: "Spot-check a few different dashboards — Users (avatar photos), Stores (logos), Products (thumbnails), and a resource with no natural photo like Orders/Payouts/Coupons (should still show a resource icon, not a blank row).",
+            href: "/admin/users",
+          },
         ],
       },
       {
