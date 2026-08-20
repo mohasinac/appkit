@@ -251,11 +251,18 @@ export function BottomNavbar({
           className={`${slotClassName} ${
  pathname === cartHref ? activeClassName : inactiveClassName
  }`}
-          aria-label={labels.cart}
+          aria-label={cartCount > 0 ? `${labels.cart}, ${cartCount} items` : labels.cart}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
+          <Span className="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            {cartCount > 0 && (
+              <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-[var(--appkit-space-1)] leading-none text-[var(--appkit-color-text-on-primary)]">
+                {cartCount > 9 ? "9+" : cartCount}
+              </Span>
+            )}
+          </Span>
           <Span className={labelClassName}>{labels.cart}</Span>
         </TextLink>
       </Li>

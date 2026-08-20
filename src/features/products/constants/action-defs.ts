@@ -522,7 +522,7 @@ export const DASHBOARD_QUICK_ACTION_META: Record<DashboardQuickActionId, Dashboa
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT]:  { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT,  label: "Add Product",    variant: "primary",  iconName: "Plus",         requiresAuth: true, requiredRole: "admin",  requiredPermission: "products.create" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER,     label: "Add User",       variant: "outline",  iconName: "UserPlus",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "admin.users.create" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE]:    { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE,    label: "Add Store",      variant: "outline",  iconName: "Store",        requiresAuth: true, requiredRole: "admin",  requiredPermission: "admin.stores.create" },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON]:   { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON,   label: "Add Coupon",     variant: "outline",  iconName: "Tag",          requiresAuth: true, requiredRole: "admin",  requiredPermission: "coupons.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON]:   { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON,   label: "Manage Coupons", variant: "outline",  iconName: "Tag",          requiresAuth: true, requiredRole: "admin",  requiredPermission: "coupons.create" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT]:    { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT,    label: "Add Event",      variant: "outline",  iconName: "Calendar",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "events.create" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG,     label: "New Post",       variant: "outline",  iconName: "FileText",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "blog.create" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_FAQ]:      { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_FAQ,      label: "Add FAQ",        variant: "outline",  iconName: "HelpCircle",   requiresAuth: true, requiredRole: "admin",  requiredPermission: "faqs.create" },
@@ -577,11 +577,7 @@ export const DASHBOARD_QUICK_ACTION_META: Record<DashboardQuickActionId, Dashboa
 export const DASHBOARD_QUICK_ACTIONS = {
   admin: [
     DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT,
-    DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER,
-    DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON,
-    DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT,
-    DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_USERS,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_STORES,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_ORDERS,

@@ -19,6 +19,8 @@ import {
   finalizeStagedMediaArray,
 } from "../../media/finalize";
 import { getProviders } from "../../../contracts";
+import { getAdminAuth } from "../../../providers/db-firebase";
+import { isAdminUser } from "../../auth/role-predicates";
 import type { OrderAdminUpdateInput, OrderDocument } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";
 import type { UserAdminUpdateInput, UserDocument } from "../../auth";
@@ -183,6 +185,17 @@ export async function adminUpdateUser(
   return updated;
 }
 
+/**
+ * Permanently deletes a user's Firestore record, all of their session
+ * records, and their Firebase Auth account — a genuine, irreversible
+ * delete (unlike hard-ban, which only disables/marks the account and
+ * stays recoverable). Deliberately narrow: only these 3 records are
+ * removed. Orders, reviews, addresses, payouts, etc. are left untouched —
+ * they're business/audit records that reference this uid and deleting
+ * them would corrupt other parties' (sellers', buyers') own history, the
+ * same reasoning testerSandboxCleanup already documents for why it leaves
+ * orders/reviews/wishlists/history alone when a test product disappears.
+ */
 export async function adminDeleteUser(
   adminId: string,
   uid: string,
@@ -200,6 +213,35 @@ export async function adminDeleteUser(
     throw new NotFoundError("User not found");
   }
 
+  if (isAdminUser(existing)) {
+    throw new ValidationError("Cannot delete an admin account");
+  }
+
+  // 1. Delete all session records for this user.
+  try {
+    const sessions = await sessionRepository.findAllByUser(uid, 1000);
+    await Promise.all(sessions.map((s) => sessionRepository.delete(s.id)));
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn("adminDeleteUser: session cleanup failed (non-fatal)", {
+      adminId,
+      uid,
+    });
+  }
+
+  // 2. Delete the Firebase Auth record.
+  try {
+    await getAdminAuth().deleteUser(uid);
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn("adminDeleteUser: Auth delete failed (user may lack Auth record)", {
+      adminId,
+      uid,
+    });
+  }
+
+  // 3. Delete the Firestore user document — the one write that must
+  // succeed for the delete to take effect.
   await userRepository.delete(uid);
 
   serverLogger.info("adminDeleteUser", {

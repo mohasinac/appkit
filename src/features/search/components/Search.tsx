@@ -449,7 +449,7 @@ export function Search({
             value={selectedType}
             onValueChange={handleTypeChange}
             aria-label={labels.resourceTypeLabel ?? "Search in"}
-            wrapperClassName="flex-shrink-0"
+            wrapperClassName="flex-shrink-0 max-w-[92px] sm:max-w-[150px]"
           />
         )}
         {deferred && (
@@ -669,7 +669,7 @@ export function Search({
               value={selectedType}
               onValueChange={handleTypeChange}
               aria-label={labels.resourceTypeLabel ?? "Search in"}
-              wrapperClassName="flex-shrink-0"
+              wrapperClassName="flex-shrink-0 max-w-[92px] sm:max-w-[150px]"
             />
           )}
           <Button gap="md" 
