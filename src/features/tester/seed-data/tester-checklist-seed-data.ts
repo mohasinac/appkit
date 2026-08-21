@@ -116,6 +116,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Changed 2026-08-21 — this flow now calls Firebase directly from the browser instead of going through a server route, so the client must swallow Firebase's auth/user-not-found error. Submit a made-up address like nobody-here-12345@example.com and confirm you see \"If an account exists for that email, a reset link is on its way.\" — the same wording a real address produces, with no error toast and nothing in the UI distinguishing the two cases.",
           href: "/auth/forgot-password",
         },
+        {
+          key: "auth-emails-sender-identity-and-inbox",
+          label: "Signup-verification and password-reset emails arrive in the real inbox, from the site's own sender identity — not spam, not a stranger's domain",
+          description: "Added 2026-08-21. Register with an address you can actually open, and separately request a password reset. For BOTH emails confirm: (a) it arrives within a few minutes; (b) the From name and address are the site's configured sender, and the display name is spelled \"LetItRip\" exactly — not \"Letitrip\" or \"LetiTrip\"; (c) it landed in the inbox rather than spam or promotions; (d) the button/link inside opens the live site and completes the flow. Try it once with a Gmail address and once with a non-Gmail address if you can — deliverability often differs between providers.",
+          href: "/auth/register",
+        },
+        {
+          key: "auth-email-links-single-use",
+          label: "A used or expired verification / password-reset link fails cleanly with a readable message — it never silently succeeds twice",
+          description: "Added 2026-08-21. Complete a password reset, then click the SAME link in that email a second time. Confirm you get a clear, human-readable \"this link has already been used or has expired\" style message with a way to request a fresh one — not a blank page, not a raw Firebase error code, and definitely not a second successful password change. Repeat the same double-click test with a signup verification link.",
+          href: "/auth/forgot-password",
+        },
       ],
     },
     {
@@ -454,6 +466,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Pair with the admin-side case `admin-orders-reject-fraud`. Use a throwaway buyer account — this really does ban it for 7 days.",
           href: "/user/orders",
         },
+        {
+          key: "order-lifecycle-emails-arrive",
+          label: "As a buyer you get an email at each real order milestone — placed, shipped, delivered, cancelled/refunded — and each one names the right item and order",
+          description: "Added 2026-08-21. Walk one throwaway order through its whole life with a seller account driving the status changes, keeping the buyer's real inbox open. At each transition confirm an email arrives and that it names the actual product (not a bare order id / GUID), shows the correct status, and links to that specific order. Note which transitions produce NO email — a missing \"delivered\" or \"refunded\" email is exactly the kind of gap this case exists to surface, so record it in the comment rather than passing the case.",
+          href: "/user/orders",
+        },
       ],
     },
     {
@@ -701,6 +719,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Added 2026-08-21 — sellers previously had no dedicated order-detail page, only a drawer, unlike buyer/admin. The drawer and the new page now share one content component (SellerOrderDetailPanel) so they can't drift.",
           href: "/store/orders",
         },
+        {
+          key: "seller-new-order-notification-reaches-seller",
+          label: "A seller is actually told when an order lands — in-app AND by email — without having to sit refreshing the orders page",
+          description: "Added 2026-08-21. Place an order against your store from a separate buyer account, then check the seller side WITHOUT opening /store/orders first: does the notification bell update, and does an email reach the seller account's inbox? A marketplace where sellers only discover orders by polling the dashboard is a real (and easily-missed) failure. Also confirm the notification/email names the buyer's item and links straight to that order.",
+          href: "/store/orders",
+        },
       ],
     },
     {
@@ -929,6 +953,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "notification-channel-prefs", label: "Per-channel notification preferences (in-app / email / WhatsApp) save and are respected" },
         { key: "notification-type-sample", label: "A sample of notification types (order status change, bid outbid, message received, payout) each trigger correctly end-to-end" },
         { key: "notification-tab-filters", label: "Notification tab filters correctly narrow the list", href: "/user/notifications" },
+        {
+          key: "notification-email-actually-arrives",
+          label: "With email enabled for a notification type, the email really lands in your inbox — and comes from the site's configured sender name and address",
+          description: "Added 2026-08-21. Existing cases only checked that the preference SAVES and that the in-app notification appears; nobody ever checked the email itself leaves the building. Turn email on for one notification type, trigger that event for real (e.g. have a seller mark your order shipped), then open the actual inbox for the address on your account. Confirm: (a) an email arrives within a few minutes; (b) the From name and address match what Site Settings → Notifications is configured with, not a stranger's domain or a bare no-reply; (c) it landed in the inbox, not spam; (d) the links inside it open the right page on the live site and don't 404.",
+          href: "/user/notifications",
+        },
+        {
+          key: "notification-email-opt-out-respected",
+          label: "Turning email OFF for a notification type stops the emails but still shows the in-app notification",
+          description: "Added 2026-08-21. The two channels are meant to be independent — opting out of email must never silently opt you out of the in-app bell too. Turn email off for a type you can trigger on demand, trigger it, then confirm: no new email arrives, but the notification still appears in /user/notifications. Then turn it back on, trigger again, and confirm the email resumes — an opt-out that can't be reversed is just as much a bug.",
+          href: "/user/notifications",
+        },
+        {
+          key: "notification-links-to-right-entity",
+          label: "Clicking a notification opens the exact order / bid / message it refers to — not a generic list page",
+          description: "Added 2026-08-21. Click through several different notification types and confirm each one lands on the specific record it names. A notification that says \"Your order was shipped\" must open THAT order, not /user/orders. Also confirm nothing dead-ends on a 404 or an \"unauthorized\" page.",
+          href: "/user/notifications",
+        },
       ],
     },
     {
