@@ -922,6 +922,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Repeat on COD, UPI-manual and Razorpay. Acceptance test for the whole pricing change — if any two of those four disagree, something is reading a different source than it charges from.",
           href: "/checkout",
         },
+        {
+          key: "addons-follow-cart-not-checkout-request",
+          label: "Add-on fees are charged strictly according to the per-store checkboxes on the cart page — leaving the cart and returning, or re-entering checkout, never adds or drops an add-on on its own",
+          description: "Hardened 2026-08-21. The add-on booleans used to be accepted in the checkout request body as well as being stored per-store on the cart, so two sources could disagree about what the buyer had actually selected — and the cart's selection is the only one the buyer ever saw. The request body no longer carries them at all. To test: tick gift wrap for seller A only, go to checkout and note the Total, press Back to the cart, then return to checkout — the same single gift-wrap fee must still be there, for seller A only, with an unchanged Total. Repeat having ticked nothing and confirm no add-on line ever appears.",
+          href: "/cart",
+        },
       ],
     },
     {
@@ -2509,8 +2515,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           },
           {
             key: "admin-decided-order-no-live-buttons",
-            label: "An order already rejected as fraud, or already sent back for re-upload, shows that state instead of offering live Verify / Reject buttons again",
-            description: "Previously only the payment status was consulted, so a decided order still rendered as a fresh \"please verify\" and could be actioned a second time. Reject one order as fraud, reopen it, and confirm it now reads as rejected with no action buttons.",
+            label: "An order already rejected as fraud, or already sent back for re-upload, shows that state instead of offering live Verify / Reject buttons again — on BOTH the row drawer and the full /admin/orders/[id]/view page",
+            description: "Previously only the payment status was consulted, so a decided order still rendered as a fresh \"please verify\" and could be actioned a second time. Reject one order as fraud, reopen it, and confirm it now reads as rejected with no action buttons. Check both surfaces separately: as of 2026-08-21 the full-page variant did not receive paymentReviewOutcome at all, so it kept offering live Verify/Reject on an already-decided order even once the drawer had been fixed — a double-action risk visible only if you open the standalone page rather than the drawer.",
             href: "/admin/orders",
           },
           {
