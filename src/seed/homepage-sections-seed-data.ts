@@ -298,7 +298,11 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     config: {
       title: "Join the LetItRip Collectors Community",
       description: "Connect with Indian collectors on WhatsApp. Share pulls, get authentication help, and be first to know about new drops.",
-      groupLink: "https://chat.whatsapp.com/letitrip-collectors",
+      // Real invite. The previous value ("…/letitrip-collectors") was not a valid
+      // WhatsApp invite code, so the homepage CTA opened a dead link. Stored
+      // canonical — the ?s=/&p=/&mlu= params on a shared link are share-sheet
+      // attribution from the copying device, not part of the invite.
+      groupLink: "https://chat.whatsapp.com/JOlbdSwhVWYDKujolcBZDr",
       memberCount: 1200,
       benefits: [
         "First look at rare listings before they go live",

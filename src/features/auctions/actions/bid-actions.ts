@@ -18,7 +18,9 @@ import { storeRepository } from "../../stores/repository/store.repository";
 import { siteSettingsRepository } from "../../../repositories";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
-import { resolveMinBidIncrement } from "../../../_internal/shared/features/auctions/config";
+import { resolveMinBid, resolveMinBidIncrement } from "../../../_internal/shared/features/auctions/config";
+import { sendNotification } from "../../admin/actions/notification-actions";
+import { BID_MESSAGES } from "../../../_internal/server/jobs/handlers/messages";
 import {
   ERROR_MESSAGES,
   AuthorizationError,
@@ -83,17 +85,20 @@ export async function placeBid(
     }
   }
 
-  const baseBid =
-    (product.currentBid ?? 0) > 0
-      ? product.currentBid!
-      : (product.startingBid ?? product.price);
+  // An auction with no bids yet prices off its starting bid, and that starting
+  // bid is itself acceptable — see ResolveMinBidOptions.hasBids.
+  const hasBids = (product.currentBid ?? 0) > 0 || (product.bidCount ?? 0) > 0;
+  const baseBid = hasBids
+    ? (product.currentBid ?? product.startingBid ?? product.price)
+    : (product.startingBid ?? product.price);
 
   const settings = await siteSettingsRepository.getSingleton();
-  const minIncrement = resolveMinBidIncrement(
-    baseBid,
-    settings.auctionConfig?.bidIncrementTiers ?? [],
-    product.minBidIncrement,
-  );
+  const tiers = settings.auctionConfig?.bidIncrementTiers ?? [];
+  const minIncrement = resolveMinBidIncrement(baseBid, tiers, product.minBidIncrement);
+  // Identical derivation to the bid form's, via the one shared helper — the
+  // form seeds `resolveMinBid(...)` and this rejects below it, so the two can
+  // never disagree about what the auction will accept.
+  const minAcceptableBid = resolveMinBid(baseBid, tiers, product.minBidIncrement, { hasBids });
 
   // Proxy-bid semantics (eBay style): the buyer's `bidAmount` is treated as
   // their **maximum** they're willing to pay; the visible price only steps up
@@ -102,11 +107,22 @@ export async function placeBid(
   // as the cap (lets clients separate desired-step from secret-cap).
   const newCap = Math.max(bidAmount, autoMaxBid ?? bidAmount);
 
-  if (newCap <= baseBid) {
-    throw new ValidationError(ERROR_MESSAGES.BID.BID_TOO_LOW, { code: BID_ERROR_CODES.TOO_LOW });
-  }
-  if (newCap < baseBid + minIncrement) {
-    throw new ValidationError(ERROR_MESSAGES.BID.INCREMENT_TOO_LOW, { code: BID_ERROR_CODES.INCREMENT_VIOLATED });
+  if (newCap < minAcceptableBid) {
+    // Both rejections stay distinguishable: "below the standing price" and
+    // "above it but short of the increment" are different mistakes and the
+    // form maps their codes to different copy. With no bids yet only the
+    // former is reachable, since the minimum IS the starting bid.
+    const isIncrementViolation = hasBids && newCap > baseBid;
+    throw new ValidationError(
+      isIncrementViolation
+        ? ERROR_MESSAGES.BID.INCREMENT_TOO_LOW
+        : ERROR_MESSAGES.BID.BID_TOO_LOW,
+      {
+        code: isIncrementViolation
+          ? BID_ERROR_CODES.INCREMENT_VIOLATED
+          : BID_ERROR_CODES.TOO_LOW,
+      },
+    );
   }
 
   const previousWinner = await bidRepository
@@ -129,6 +145,13 @@ export async function placeBid(
     // Raising your own cap. You stay winning; visible stays put.
     newBidWins = true;
     visibleBid = prevVisible;
+  } else if (!hasBids) {
+    // Opening bid: the price displays at the seller's starting bid, not at
+    // `startingBid + increment`, because there is nobody to outpace yet. Under
+    // proxy semantics the submission is a maximum, so without this an opening
+    // max of ₹500 on a ₹100 auction would be recorded at ₹200 for no reason.
+    newBidWins = true;
+    visibleBid = baseBid;
   } else if (!previousWinner || newCap > prevCap) {
     newBidWins = true;
     const target = Math.max(prevCap + minIncrement, baseBid + minIncrement);
@@ -205,6 +228,47 @@ export async function placeBid(
     });
   }
 
+  // Outbid notification.
+  //
+  // This used to live in the `onBidPlaced` Firestore trigger, which derived the
+  // outbid user by re-reading `getWinningBid()` AFTER the fact. That read raced
+  // the batch above (the bid doc is created before the batch commits, so the
+  // trigger could observe either side of it) and so notified the wrong user, or
+  // nobody, non-deterministically. Here the outcome is already known exactly:
+  // `previousWinner` plus `newBidWins` say who lost the lead and who kept it.
+  //
+  // Best-effort, like the RTDB mirror above — a failed notification must never
+  // fail a bid that has already been committed.
+  const outbidUserId =
+    newBidWins && previousWinner && previousWinner.data.userId !== userId
+      ? previousWinner.data.userId
+      : null;
+
+  if (outbidUserId) {
+    try {
+      await sendNotification({
+        userId: outbidUserId,
+        type: "bid_outbid",
+        priority: "high",
+        title: BID_MESSAGES.OUTBID_TITLE,
+        message: BID_MESSAGES.OUTBID_MESSAGE(
+          product.title,
+          product.currency || getDefaultCurrency(),
+          finalVisibleForRtdb,
+        ),
+        relatedId: productId,
+        relatedType: "product",
+      });
+    } catch (notifyErr) {
+      void normalizeError(notifyErr);
+      serverLogger.warn("placeBid: outbid notification failed", {
+        error: notifyErr,
+        productId,
+        outbidUserId,
+      });
+    }
+  }
+
   serverLogger.info("placeBid", {
     bidId: bid.id,
     productId,
@@ -212,6 +276,7 @@ export async function placeBid(
     bidAmount: visibleBid,
     maxProxyBid: newCap,
     winning: newBidWins,
+    outbidUserId,
   });
   return { bid };
 }

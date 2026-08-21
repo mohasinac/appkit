@@ -8,7 +8,6 @@
  */
 
 import {
-  onBidPlacedHandler,
   onCategoryWriteHandler,
   onOrderCreateHandler,
   onOrderStatusChangeHandler,
@@ -33,14 +32,6 @@ import {
 import { defineFunction } from "./define";
 
 const REGION = "asia-south1";
-
-export const onBidPlaced = defineFunction({
-  name: "onBidPlaced",
-  description: "Side-effects on bid creation (notifications, outbid emails).",
-  trigger: { kind: "documentCreated", pathPattern: "bids/{bidId}" },
-  handler: onBidPlacedHandler,
-  options: { region: REGION },
-});
 
 export const onOrderCreate = defineFunction({
   name: "onOrderCreate",
@@ -210,7 +201,6 @@ export const onJobCreated = defineFunction({
 });
 
 export const FIRESTORE_TRIGGER_FUNCTIONS = [
-  onBidPlaced,
   onOrderCreate,
   onOrderStatusChange,
   onProductWrite,

@@ -43,7 +43,7 @@ const BOTTOM_NAV_BG =
 const Z_BOTTOM_ACTIONS = "z-[var(--appkit-z-bottom-nav)]";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
-const CLS_COUNT_BADGE = "bg-error-surface text-white";
+const CLS_COUNT_BADGE = "bg-error-solid text-error-on-solid";
 /** How far the user must scroll before the desktop bar reveals itself. */
 const DESKTOP_REVEAL_SCROLL_PX = 400;
 

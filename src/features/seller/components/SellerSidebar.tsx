@@ -20,7 +20,7 @@ const CLS_STORE_AVATAR = "relative h-8 w-8 overflow-hidden rounded-md bg-cover b
 const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-[length:var(--appkit-text-sm)] font-bold text-primary";
 const CLS_STORE_NAME = "text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] truncate";
 const CLS_NAV_ACTIVE = "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning";
-const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-surface px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)] text-[10px] text-white leading-none";
+const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-solid px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)] text-[10px] text-warning-on-solid leading-none";
 const CLS_NAV_ICON_ACTIVE = "text-warning dark:text-warning";
 
 export interface StoreNavItem {

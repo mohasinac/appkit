@@ -83,6 +83,7 @@ export const SURFACE_TEXT_PAIR_MAP: Record<SurfaceKey, SurfaceTextPair> = {
     textMutedVar: "var(--appkit-color-info)",
     textFaintVar: "var(--appkit-color-text-muted)",
   },
+  frost: ON_PRIMARY_PAIR,
   "overlay-xs": ON_PRIMARY_PAIR,
   "overlay-sm": ON_PRIMARY_PAIR,
   "overlay-md": ON_PRIMARY_PAIR,

@@ -250,14 +250,11 @@ export interface CreateCheckoutOrderInput {
    * omits the field.
    */
   outOfStockPolicy?: OutOfStockPolicy;
-  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout. Defaults false (unchecked). Only actually charged/honored when siteSettings.commissions.whatsappNotifyFeeEnabled is also true. */
-  whatsappNotifyAddon?: boolean;
-  /** Buyer opted into gift wrap at checkout. Defaults false (unchecked). Only actually charged/honored when siteSettings.commissions.giftWrapFeeEnabled is also true. */
-  giftWrapAddon?: boolean;
-  /** Optional gift message, only meaningful when giftWrapAddon is true. */
-  giftWrapMessage?: string;
-  /** Buyer opted into shipment protection at checkout. Defaults false (unchecked). Only actually charged/honored when siteSettings.commissions.shipmentProtectionFeeEnabled is also true. */
-  shipmentProtectionAddon?: boolean;
+  // Add-ons are intentionally absent: they are per-store and read from
+  // `CartDocument.storeAddons`, which is the same key the cart splits on and
+  // therefore the granularity they are billed at. This action already ignored
+  // these fields — they are removed so a caller cannot pass one and be silently
+  // overruled (Root Cause #65).
 }
 
 function accumulateCouponUsage(
@@ -1562,13 +1559,9 @@ export interface VerifyAndPlaceRazorpayOrderInput {
    * on the Razorpay path.
    */
   outOfStockPolicy?: OutOfStockPolicy;
-  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout — must match the value sent to /api/payment/create-order so the pre-charged amount and the placed order agree. */
-  whatsappNotifyAddon?: boolean;
-  /** Buyer opted into gift wrap at checkout — must match the value sent to /api/payment/create-order. */
-  giftWrapAddon?: boolean;
-  giftWrapMessage?: string;
-  /** Buyer opted into shipment protection at checkout — must match the value sent to /api/payment/create-order. */
-  shipmentProtectionAddon?: boolean;
+  // Same as CreateCheckoutOrderInput: add-ons come from `CartDocument.storeAddons`,
+  // not the request. The old "must match the value sent to /api/payment/create-order"
+  // contract no longer exists because neither side takes a client-supplied value.
 }
 
 /**
@@ -1779,9 +1772,13 @@ async function createRazorpayGroupOrder(
   // here — the only path that charged the commission at all, and it charged a
   // different (larger, multiplied-per-store) number than the cap now allows.
   // Both the amount and its allocation are now decided once for the checkout.
-  const { platformFee: rawPlatformFee = 0, gstOnFee = 0 } =
+  // Kept as two separate values, exactly as the COD/manual path does. Folding the
+  // GST into `platformFee` made `OrderDocument.platformFee` mean "fee" on one path
+  // and "fee + GST" on the other, so no revenue rollup could read it without
+  // knowing which path created the row. The buyer pays the same either way —
+  // both components are still added to orderTotal below.
+  const { platformFee = 0, gstOnFee: platformFeeGst = 0 } =
     platformFeeByStore.get(firstItem.storeId) ?? {};
-  const platformFee = rawPlatformFee + gstOnFee;
 
   // Add-ons are this store's choice, read off the cart doc — previously one
   // cart-wide fee was passed in and billed against every group.
@@ -1795,7 +1792,7 @@ async function createRazorpayGroupOrder(
     addons.shipmentProtectionAddon ?? false,
     commissionRates,
   );
-  const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee;
+  const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst;
   // P-8 GST — deliberately NOT wired into this Razorpay-verify path. The
   // amount-mismatch check above (expectedPaymentAmountRs) compares against
   // what the buyer already paid via the Razorpay order created earlier in

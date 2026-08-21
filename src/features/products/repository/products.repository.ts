@@ -803,27 +803,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   /**
-   * Cloud Functions: stage an atomic bid-count increment into a caller-owned WriteBatch.
-   */
-  incrementBidCountInBatch(
-    batch: WriteBatch,
-    productId: string,
-    currentBid: number,
-    leadingBidderId?: string,
-  ): void {
-    batch.update(this.db.collection(this.collection).doc(productId), {
-      currentBid,
-      bidCount: increment(1),
-      ...(leadingBidderId && { leadingBidderId }),
-      // SB-UNI-H 2026-05-13 — flip `bidsHaveStarted` when any bid lands.
-      // Idempotent on subsequent bids; the BIN button is hidden by the PDP
-      // as soon as this is true (eBay-style hybrid auction rule).
-      bidsHaveStarted: true,
-      updatedAt: serverTimestamp(),
-    });
-  }
-
-  /**
    * SB6-C / SB4-H — atomically bump `prizeCurrentEntries` by `count`. The
    * checkout transaction calls this after pool-cap validation; the reveal
    * code-path uses it as a defence-in-depth check (already incremented at

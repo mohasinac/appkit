@@ -92,7 +92,7 @@ export function FooterLayout({
                         {item.label}
                       </Span>
                       {item.subtitle && (
-                        <Span size="xs" className="block" color="muted">
+                        <Span size="xs" className="block" color="muted" weight="medium">
                           {item.subtitle}
                         </Span>
                       )}
@@ -112,7 +112,7 @@ export function FooterLayout({
             <Heading level={5} size="xl" weight="bold" color="primary">
               {brandName}
             </Heading>
-            <Text className="leading-relaxed max-w-sm" color="muted" size="sm">
+            <Text className="leading-relaxed max-w-sm" color="muted" size="sm" weight="medium">
               {brandDescription}
             </Text>
 
@@ -171,7 +171,7 @@ export function FooterLayout({
                     <Li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
+                        className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -181,7 +181,7 @@ export function FooterLayout({
 
                 {/* Desktop column */}
                 <Div className="hidden lg:block">
-                  <Text className="tracking-wider mb-3" color="muted" size="xs" weight="semibold" transform="uppercase">
+                  <Text className="tracking-wider mb-3" color="muted" size="xs" weight="bold" transform="uppercase">
                     {group.heading}
                   </Text>
                   <Ul className="space-y-2.5">
@@ -189,7 +189,7 @@ export function FooterLayout({
                       <Li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
+                          className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
                         >
                           {link.label}
                         </Link>
@@ -204,7 +204,7 @@ export function FooterLayout({
 
         {/* Bottom bar */}
         <Stack direction="sm-row" color="muted" textSize="xs" justify="between" border="default" className="mt-10 border-t border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text-muted)]" padding="t-lg" align="center" gap="3">
-          <Text size="xs" color="muted">
+          <Text size="xs" color="muted" weight="medium">
             {copyrightText}
           </Text>
           {bottomLinks.length > 0 && (
@@ -214,7 +214,7 @@ export function FooterLayout({
                   <Li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
+                      className="text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
                     >
                       {link.label}
                     </Link>
@@ -224,7 +224,7 @@ export function FooterLayout({
             </Nav>
           )}
           {madeInText && (
-            <Text size="xs" color="muted">
+            <Text size="xs" color="muted" weight="medium">
               {madeInText}
             </Text>
           )}

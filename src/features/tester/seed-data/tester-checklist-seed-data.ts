@@ -355,6 +355,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "The thumbnail strip occasionally showed a broken-image icon instead of the photo (transient 3rd-party fetch failures with no retry, fixed 2026-08-19). Reload an auction or product detail page a few times and confirm every thumbnail — not just the main image — renders correctly each time.",
         },
         {
+          key: "image-gallery-thumbnails-not-blank",
+          label: "The mini thumbnail strip under the main gallery image shows the ACTUAL photos — not empty/blank boxes",
+          description: "Fixed 2026-08-21 — the thumbnails rendered as blank bordered squares while the large main image above them was fine. Cause: a wrapper element inside the appkit <Button> primitive collapsed to zero size, so every image inside a button-shaped image tile had nothing to fill. Open \"Beyblade Burst B-01 Valkyrie\" (product-beyblade-burst-valkyrie) or any product with 2-3 photos and confirm each mini thumbnail below the main image shows its own picture, that the active one is outlined, and that clicking one swaps the large image.",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
           key: "video-playback",
           label: "A product's video slide opens in theater mode with playback, zoom, and rotate controls",
           description: "When a product has a video, it appears as a trailing gallery slide (poster image + play badge) alongside the photos. Clicking it opens the full-screen lightbox in theater mode. For a raw-file video (native <video> element) the zoom (+/-) and rotate (R) buttons in the top bar apply; for a YouTube-sourced video (see \"video-playback-youtube\" below) they don't — the embed has its own player chrome. Test on the raw-file fixtures: \"Beyblade Original — Dragoon F (Video Demo)\" and \"Beyblade X BX-02 Dran Sword (Video Demo)\".",
@@ -497,6 +503,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/user/orders",
         },
         {
+          key: "orders-type-tabs-actually-filter",
+          label: "The Type filter (All / Normal / Auction wins / Offer wins) on My Orders actually narrows the list — picking \"Auction wins\" must show only auction-won orders, not the full list",
+          description: "Fixed 2026-08-21. The tabs rendered and were clickable but the server never read the orderType filter, so every tab returned the complete unfiltered list with no error. Pick each tab in turn and confirm the row count and contents genuinely change. Against the tester sandbox, \"Auction wins\" should surface the won-auction order and \"Normal\" should not.",
+          href: "/user/orders",
+        },
+        {
+          key: "orders-normal-tab-includes-legacy",
+          label: "The \"Normal\" Type tab also lists older orders placed before order types existed — it must not silently drop them",
+          description: "Legacy orders carry no orderType value at all, so a strict database match would exclude every one of them. \"Normal\" is deliberately resolved differently for that reason. Confirm your oldest seeded orders still appear under \"Normal\", not only under \"All\".",
+          href: "/user/orders",
+        },
+        {
           key: "dashboard-recent-orders-linked",
           label: "The My Account dashboard's \"Recent Orders\" widget rows are clickable and each shows a \"View Details\" button linking to the correct order — not a dead, non-interactive preview",
           href: "/user",
@@ -601,6 +619,51 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "bid-increment-live-tier-change",
           label: "The displayed \"min increment\" on an open auction updates live (without a page refresh) if another bidder's bid pushes the current bid across a tier boundary",
+        },
+        {
+          key: "bid-presets-are-increment-multiples",
+          label: "The quick-bid buttons above the amount field are multiples of the auction's OWN minimum increment — never a flat +₹1 / +₹5 / +₹10",
+          description: "Fixed 2026-08-21 — the presets were always 1x/5x/10x of the effective increment, but `resolveTieredBidIncrement` treated an empty `auctionConfig.bidIncrementTiers` array as \"no rule\" and fell through to the ₹1 last-resort constant, so every auction on the site rendered +₹1 / +₹5 / +₹10. On an auction whose current bid is in the ₹100-₹1,000 band (₹100 increment) the three buttons must read +₹100 / +₹500 / +₹1,000; on one above ₹10,000 (₹1,000 increment) they must read +₹1,000 / +₹5,000 / +₹10,000. Each button also shows the resulting bid amount underneath the step.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
+        },
+        {
+          key: "bid-preset-follows-live-price",
+          label: "With a quick-bid preset selected, another bidder raising the price updates the amount in the field too — it does not leave a now-too-low number behind",
+          description: "Fixed 2026-08-21 — the amount was only ever written on mount or on button click, while the current bid keeps updating over SSE. Open the auction in two tabs, select the +1x preset in tab A, place a higher bid from tab B, then watch tab A: the preset button labels, the \"minimum next bid\" helper text AND the number in the field must all move up together. Before the fix the buttons relabelled but the field kept its stale value, so pressing Place Bid was a guaranteed \"bid must exceed the current winning bid\" rejection.",
+          href: "/auctions/auction-tester-sandbox-cycle-2",
+        },
+        {
+          key: "bid-below-current-plus-increment-rejected",
+          label: "A bid below current bid + minimum increment is rejected with a clear inline error on the amount field — and the rejection is identical whether it is typed in Custom mode or forced through the API",
+          description: "Switch the preset row to \"Custom\", type an amount between the current bid and current+increment, and submit. Expect an inline error on the field (not a toast, not a silent no-op). Also confirm an amount BELOW the current bid gives the distinct \"must exceed the current winning bid\" message rather than the increment one.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
+        },
+        {
+          key: "bid-custom-need-not-be-exact-multiple",
+          label: "In Custom mode any amount at or above the minimum is accepted — it does NOT have to be an exact multiple of the increment",
+          description: "With a ₹100 increment and a ₹1,000 current bid, ₹1,137 must be accepted (it is above the ₹1,100 minimum). The helper text under the field states this explicitly. A client-side rule claiming to enforce exact multiples existed but was a no-op; it was removed rather than made real, because the server never enforced multiples and a real client rule would have rejected bids the server accepts.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
+        },
+        {
+          key: "first-bid-can-equal-starting-bid",
+          label: "On an auction with NO bids yet, the seller's starting bid is itself an acceptable opening bid — you are not forced to bid starting bid + increment",
+          description: "Changed 2026-08-21. On a bid-free auction the card's big number is labelled \"Starting bid\" (not \"Current bid\" beside an identical \"Starting bid\"), the first quick-bid button reads \"Minimum\" rather than \"+₹0\", and bidding exactly the starting bid succeeds. Previously a ₹100 auction could only be opened at ₹110, contradicting the \"Starting bid ₹100\" label right next to the field. The increment applies from the second bid onward — confirm the second bidder IS held to current + increment.",
+        },
+        {
+          key: "first-bid-displays-at-starting-price",
+          label: "The opening bid displays at the starting price, even when the opening bidder's maximum is much higher",
+          description: "Proxy-bid semantics: the amount submitted is a MAXIMUM, and with no competition the visible price should sit at the seller's starting price. On a bid-free ₹100 auction with a ₹100 increment, bid ₹500 — the auction's current bid must then read ₹100, not ₹200. Place a second, competing bid from another account and confirm the price then steps up in increments against that ₹500 proxy maximum as expected.",
+        },
+        {
+          key: "bid-count-increments-by-one",
+          label: "Placing one bid increases the auction's bid count by exactly ONE, and the current bid never moves backwards",
+          description: "Fixed 2026-08-21 — the `onBidPlaced` Firestore trigger duplicated work `placeBid` already did atomically: it incremented the bid count a second time (so one bid read as two), force-marked every new bid as winning, and overwrote the current bid with the new bid's amount. On the proxy path where a new bid LOSES to a standing higher maximum, that last part actually lowered the current bid to the loser's amount and named the loser as the leading bidder. Place a single bid and confirm the count goes up by 1, not 2. Then, from a second account, bid BELOW the standing proxy maximum: your bid must be recorded as outbid, and the auction's current bid must go UP (or hold), never down.",
+          href: "/auctions/auction-tester-sandbox-cycle-3",
+        },
+        {
+          key: "outbid-notification-goes-to-outbid-user",
+          label: "The outbid notification goes to the bidder who actually lost the lead — and only when someone genuinely takes the lead from them",
+          description: "Fixed 2026-08-21 alongside bid-count-increments-by-one — the notification used to be sent from a Firestore trigger that re-read \"who is winning\" AFTER the fact, racing the write that had just changed it, so it could notify the wrong account or nobody. It now fires from the same code path that decides the outcome. Check both directions: (a) outbid the leader and confirm THEY get the notification; (b) place a bid that loses to a standing proxy maximum and confirm the existing leader is NOT sent an \"outbid\" notification, since they never lost the lead.",
         },
       ],
     },
@@ -1231,11 +1294,48 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "seller-bids-bundles-filters",
+      pageLabel: "Seller — Bids & Bundles Filtering",
+      href: "/store/bids",
+      cases: [
+        {
+          key: "seller-bids-status-filter",
+          label: "The status filter on the seller Bids page actually narrows the list",
+          description: "Fixed 2026-08-21. The status chips, the sort dropdown AND the bidder search box on this page were all inert — the server read none of the three, so every control silently returned the same unfiltered list. Pick a status and confirm the rows genuinely change.",
+          href: "/store/bids",
+        },
+        {
+          key: "seller-bids-sort-dropdown",
+          label: "Changing the Sort dropdown on the seller Bids page reorders the rows",
+          description: "The sort was hardcoded to bid date server-side regardless of what the dropdown said. Switch to a different sort (e.g. bid amount) and confirm the ordering visibly changes.",
+          href: "/store/bids",
+        },
+        {
+          key: "seller-bids-bidder-search",
+          label: "Typing a bidder's name into the search box on the seller Bids page and pressing Enter narrows the list to that bidder",
+          description: "Search matches from the START of the bidder name (a database limitation — mid-name fragments will not match), so type the first part of the name rather than a middle fragment.",
+          href: "/store/bids",
+        },
+        {
+          key: "seller-bundles-active-filter",
+          label: "The Active / Inactive and \"Sold out\" chips on the seller Bundles page actually narrow the list",
+          description: "Fixed 2026-08-21 — these chips existed and were clickable but the seller endpoint ignored them entirely, unlike the admin Bundles page which honoured the same chips. Compare the two pages: they should now behave identically.",
+          href: "/store/bundles",
+        },
+      ],
+    },
+    {
       pageKey: "seller-orders",
       pageLabel: "Seller Order Management & Shipping/Tracking",
       href: "/store/orders",
       cases: [
         { key: "view-orders", label: "Seller order list shows accurate incoming orders", href: "/store/orders" },
+        {
+          key: "seller-auction-forfeit-notification",
+          label: "When a winning bidder fails to pay by the deadline, the SELLER also receives a notification that the win was forfeited and the item is unsold",
+          description: "Added 2026-08-21. Only the buyer was told, so to a seller a forfeited win looked like a completed sale that simply never paid out. Check the seller's notification bell after an auction win lapses — the message should say the item can be relisted or offered to the next highest bidder.",
+          href: "/store/orders",
+        },
         {
           key: "seller-order-manual-payment-badge",
           label: "A manual-payment (UPI/Cash) order's seller detail shows a payment badge — Awaiting payment / Awaiting verification / Verified / Re-upload requested / Rejected — next to the Payment heading, plus the UTR once the buyer submits one",
@@ -1597,6 +1697,17 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "error-states", label: "Error states (404, form validation) look correct" },
         { key: "card-row-heights-aligned", label: "Product/auction/pre-order/event cards in the same row are the same height, with their action button (Reserve now, Place bid, View details, etc.) aligned along a common bottom edge even when one card's description is longer than another's" },
         { key: "image-watermark-subtle", label: "Product and listing images show a small, subtle watermark (not oversized or fully opaque, doesn't obscure the image)" },
+        {
+          key: "clickable-image-tiles-not-blank",
+          label: "Every CLICKABLE image tile across the site shows its picture, not an empty box — check all six surfaces listed below",
+          description: "Fixed 2026-08-21. All of these are the same shape (a small image inside a clickable tile) and all broke together, so they must be re-checked together: (1) the mini thumbnail strip under a product's main gallery image; (2) the \"Photos (N)\" grid on a review detail page, AND the thumbnail strip along the bottom of that page's photo lightbox; (3) the image thumbnails inside a review popup/modal; (4) the tile grid on a prize-draw's collage of prizes; (5) the tile grid on a bundle's collage of included items; (6) the \"choose an existing file\" grid in the media picker when adding an image as a seller/admin. In every case the picture itself must be visible — a bordered but empty square is a fail.",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
+          key: "icon-button-label-spacing",
+          label: "Buttons that show an icon next to their text have a normal gap between the icon and the word — the two are not jammed together",
+          description: "Same 2026-08-21 fix as the blank image tiles: the button's spacing setting had stopped reaching its contents, so icon+label buttons were rendering with no gap at all. Scan a few pages with icon buttons (product detail actions, dashboard toolbars, the cart) and confirm the spacing looks deliberate rather than cramped.",
+        },
         { key: "section-cta-buttons-visible", label: "Homepage section \"View all →\" / \"Go to…\" buttons use a solid primary-colored fill so they're clearly identifiable as clickable CTAs, not a plain white/outline box that blends into the page" },
         {
           key: "mobile-search-bar-proportions",
@@ -1698,6 +1809,105 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "status-badge-legibility",
+      pageLabel: "Listing Tags & Status Chips — Light vs Dark Mode",
+      href: "/products",
+      cases: [
+        {
+          key: "listing-type-tags-readable-light",
+          label: "IN LIGHT MODE: on the main Products grid, every listing-type tag on a card — Auction, Pre-Order, Live Item, Digital Code, Prize Draw, Classified, Art Print, Sticker Sheet — is clearly readable, with a solid colored pill behind dark-enough text",
+          description: "This is the headline fix for 2026-08-21. Reported as \"the auction tag / live tag is white text on a white pill, or a faint grey you cannot read.\" Switch the site to LIGHT mode first (theme toggle in the header) — the bug only appeared there. Read every tag out loud; a tag you have to squint at, tilt the screen for, or that shows text with no pill behind it at all, is still a bug.",
+          href: "/products",
+        },
+        {
+          key: "listing-type-tags-readable-dark",
+          label: "IN DARK MODE: the same listing-type tags on the Products grid are still clearly readable — fixing light mode must not have broken dark mode",
+          description: "Regression check, and a real risk here: the two modes use inverted color tokens, so it is genuinely possible to fix one and break the other. Toggle between light and dark a few times on the same page and confirm every tag survives both.",
+          href: "/products",
+        },
+        {
+          key: "live-item-tag-has-background",
+          label: "The \"Live Item\" tag has an actual colored pill behind it — not bare red text floating directly on the product photo with no background",
+          description: "This tag was a separate bug from the others: its background color name did not exist at all, so the browser threw the style away and rendered nothing behind the text. Easiest to spot on a card whose photo is busy or light-colored.",
+          href: "/live",
+        },
+        {
+          key: "promo-badges-readable",
+          label: "IN LIGHT MODE: the small promotional badges on product cards — NEW, SALE, LIMITED, the bundle discount percentage, an auction's \"Ending soon\" / \"Reserve\" pill — are all readable against their colored background",
+          href: "/products",
+        },
+        {
+          key: "notification-count-bubbles-readable",
+          label: "The unread-count bubbles (the small number circles on the header bell icon, the Messages nav item, and the cart/bottom action bar) show a readable number in BOTH light and dark mode — not a colored blob with an invisible digit",
+          description: "You need at least one unread notification or message for the bubble to appear. Check both themes.",
+          href: "/user/messages",
+        },
+        {
+          key: "admin-status-chips-colored",
+          label: "Admin and seller listing pages show status chips (Pending / Verified / Resolved / High priority / Featured / Sale, etc.) as genuinely COLORED pills — amber for pending, green for success, red for problems — not plain uncolored text",
+          description: "Found 2026-08-21: a configuration gap meant every one of these colored chips authored inside the shared component library compiled to no CSS at all, so they had silently always rendered as plain unstyled text. Spot-check across a few pages: /admin/support-tickets, /admin/scammers, /admin/orders, /store/orders.",
+          href: "/admin/support-tickets",
+        },
+        {
+          key: "faq-helpful-buttons-readable",
+          label: "On a FAQ, after clicking Yes or No on \"Was this helpful?\", the button you picked stays readable in BOTH light and dark mode — the selected button is a solid color with legible text, not white-on-pale",
+          href: "/faqs",
+        },
+        {
+          key: "detail-page-tags-readable",
+          label: "Opening an individual auction, pre-order, prize draw, classified, digital code and live-item page, each one's type tag and status chips are readable in light mode",
+          description: "Card grids and detail pages don't always share the same component, so check both. Use the sandbox listings linked from the Tester Hub if you need one of each type.",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
+        },
+        {
+          key: "whatsapp-community-member-pill",
+          label: "IN LIGHT MODE: on the homepage's green WhatsApp community card, the member-count pill in its top-right corner (e.g. \"5,000+ members\") is readable — white text on a translucent darker pill, not white text on a white pill",
+          description: "Reported alongside the tag bug: this pill was invisible in light mode. The people icon next to the number should be visible too.",
+          href: "/",
+        },
+        {
+          key: "image-lightbox-close-hover",
+          label: "Opening a product image in the full-screen lightbox and hovering the X close button, the X stays visible as the button turns red — it does not vanish on hover",
+          href: "/products/product-beyblade-original-dranzer-s",
+        },
+      ],
+    },
+    {
+      pageKey: "back-to-top-button",
+      pageLabel: "Back-to-Top Button",
+      href: "/products",
+      cases: [
+        {
+          key: "appears-and-clickable-on-long-page",
+          label: "Scrolling down a long listing page, the floating back-to-top arrow appears in the bottom corner AND actually responds to a click — it is not sitting behind the bottom navigation bar, a sticky toolbar, or a buy bar",
+          description: "Fixed 2026-08-21 — it previously shared a stacking level with the bottom navigation bar, so on many pages it was either partly covered or completely unclickable. Try it on a page that also has a sticky bottom bar (a product page scrolled down) — that is where it used to fail.",
+          href: "/products",
+        },
+        {
+          key: "above-sticky-buy-bar",
+          label: "On a product page scrolled far enough for BOTH the sticky buy bar and the back-to-top arrow to be showing, the arrow sits above/clear of the buy bar rather than being hidden underneath it",
+          href: "/products/product-beyblade-original-dranzer-s",
+        },
+        {
+          key: "scrolls-to-top",
+          label: "Clicking the back-to-top arrow smoothly scrolls the page back to the very top",
+          href: "/products",
+        },
+        {
+          key: "dismiss-returns-on-navigation",
+          label: "Clicking the small X next to the back-to-top arrow hides it for the current page, and navigating to a different page brings it back",
+          description: "Regression check on an older fix — dismissing it must not hide it for the rest of the browsing session.",
+          href: "/products",
+        },
+        {
+          key: "not-covering-toast-or-modal-actions",
+          label: "The back-to-top arrow does not cover anything you need to click — check that a toast message, an open confirmation dialog's buttons, and the footer's bottom-right links are all still fully clickable while it is on screen",
+          description: "It was deliberately raised to the frontmost layer, so this is the specific risk that change introduces. It should only ever float in the empty corner gutter.",
+          href: "/products",
+        },
+      ],
+    },
+    {
       pageKey: "form-validation-errors",
       pageLabel: "Form Validation & Error Summary",
       href: "/store/products/new",
@@ -1784,6 +1994,27 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "footer-github-icon",
           label: "The footer's social icon row (brand column, bottom-left) shows a GitHub icon alongside Instagram/Twitter/WhatsApp, and clicking it opens the developer's real GitHub profile in a new tab",
           description: "Added 2026-08-20 — GITHUB was a new socialUrls key with no footer icon before this. Confirm the icon renders (not a broken/missing glyph) and the link target is a real, working github.com profile, not a placeholder or dead link.",
+          href: "/",
+        },
+        {
+          key: "footer-text-weight-readable",
+          label: "Footer text is comfortably readable, not thin and washed out — the link lists, the brand description paragraph, the copyright line and the small sitemap/legal links at the very bottom all render in a slightly heavier weight than plain body text",
+          description: "Changed 2026-08-21 — the footer's greyed text was previously at the lightest weight, which made it hard to read against the page background, especially on a laptop screen at an angle. Compare the footer against the same grey text elsewhere on the page; the footer should read as more solid, without looking bold.",
+          href: "/",
+        },
+        {
+          key: "footer-column-headings-stand-out",
+          label: "On DESKTOP, each footer link column's heading (Shop, Company, Support, etc.) clearly stands out as a heading above its list of links, rather than looking like just another link in the list",
+          href: "/",
+        },
+        {
+          key: "footer-weight-both-themes",
+          label: "The footer text weight change looks right in BOTH light and dark mode — heavier but not bold, and it never turns into an unreadable smudge in dark mode",
+          href: "/",
+        },
+        {
+          key: "footer-mobile-accordions",
+          label: "ON MOBILE, the footer's collapsible link sections still open and close correctly, and their links are as readable as the desktop columns",
           href: "/",
         },
       ],
@@ -1906,6 +2137,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/",
       cases: [
         { key: "homepage-loads", label: "The homepage loads without errors on both desktop and mobile", href: "/" },
+        {
+          key: "whatsapp-community-link-real",
+          label: "The \"Join the Community\" WhatsApp button on the homepage opens the real LetItRip WhatsApp group, not a dead link",
+          description: "Fixed 2026-08-21 — the seeded link was a placeholder that was never a valid WhatsApp invite code, so the button opened a page that could not resolve to any group. Tap it on a device with WhatsApp installed and confirm it offers to join an actual group. The Contact page's WhatsApp link must open the same group.",
+          href: "/",
+        },
         { key: "about-us-in-main-nav", label: "\"About Us\" appears as an item in the main public top navigation, not just the footer", href: "/about" },
         {
           key: "about-team-real-founder",
@@ -2265,6 +2502,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         cases: [
           { key: "orders-status-change", label: "Admin orders list shows accurate orders and status changes save correctly", href: "/admin/orders" },
           {
+            key: "admin-emi-order-reviewable",
+            label: "Opening an EMI order in admin shows the full Payment Proof panel — screenshot, UTR, expected-vs-reported UPI, and the Verify / Request re-upload / Reject-as-fraud buttons",
+            description: "Fixed 2026-08-21. The panel used to check only for cash and UPI orders and omitted EMI entirely, so an admin could see an EMI order sitting in the queue labelled \"Awaiting verification\" and have literally no way to action it. Check BOTH the row drawer and the full /admin/orders/[id]/view page — they must behave identically.",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-decided-order-no-live-buttons",
+            label: "An order already rejected as fraud, or already sent back for re-upload, shows that state instead of offering live Verify / Reject buttons again",
+            description: "Previously only the payment status was consulted, so a decided order still rendered as a fresh \"please verify\" and could be actioned a second time. Reject one order as fraud, reopen it, and confirm it now reads as rejected with no action buttons.",
+            href: "/admin/orders",
+          },
+          {
             key: "admin-orders-payment-review-filters",
             label: "The Admin Orders filter drawer has a \"Manual payment\" chip group with \"Awaiting payment\" and \"Awaiting verification\" — and each one actually returns the right orders",
             description: "Added 2026-08-21 — before this there was no way to find manual-payment orders needing action; they were indistinguishable from any other pending order. \"Awaiting payment\" = buyer hasn't uploaded a screenshot yet. \"Awaiting verification\" = proof submitted, nobody has approved/rejected it. Place a UPI/Cash order and check it appears under \"Awaiting payment\"; upload proof and confirm it moves to \"Awaiting verification\". Picking a Manual-payment chip clears the Status chip (and vice versa) on purpose — the queue is always status=pending, so combining them could only ever return nothing.",
@@ -2452,6 +2701,30 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
           { key: "copilot-admin", label: "Admin copilot page works correctly", href: "/admin/copilot" },
           { key: "team-admin", label: "Admin team page works correctly", href: "/admin/team" },
+          {
+            key: "team-permission-group-filter",
+            label: "The permission-group filter on /admin/team actually narrows the employee list",
+            description: "Fixed 2026-08-21. The filter emitted a field the database layer was never told to accept, so the clause was discarded silently and every group showed the complete employee list. Pick a group and confirm the rows genuinely change.",
+            href: "/admin/team",
+          },
+          {
+            key: "audit-log-actor-search",
+            label: "The \"Search by actor uid\" box on /admin/audit-log narrows results to that actor",
+            description: "Fixed 2026-08-21 — the box was inert, the endpoint never read it. Paste a full actor uid from a visible row and confirm only that actor's entries remain.",
+            href: "/admin/audit-log",
+          },
+          {
+            key: "notifications-user-search",
+            label: "The search box on /admin/notifications narrows results to one user, and its placeholder reads \"Search by user ID\"",
+            description: "Fixed 2026-08-21 — the box was inert. Its placeholder also used to promise title search, which is not possible against this collection, so the wording was corrected rather than left as a promise the search cannot keep. Paste a user ID from a visible row and confirm only that user's notifications remain.",
+            href: "/admin/notifications",
+          },
+          {
+            key: "carousel-edit-and-delete",
+            label: "A named carousel can be renamed, switched between draft and active, and deleted after it has been created",
+            description: "Fixed 2026-08-21 — the editor could only CREATE. There was no way to load an existing carousel back, so a typo'd or draft carousel was stuck permanently. Create one, reopen it, rename it, publish it, then delete it.",
+            href: "/admin/carousels",
+          },
           { key: "guide-pages-admin", label: "The 8 admin guide pages all load correctly", href: "/admin/guide" },
           { key: "tester-checklist-crud-admin", label: "Admin can create, edit, and toggle adminOnly on tester checklist items", href: "/admin/tester-checklist" },
           { key: "tester-feedback-report-export", label: "Admin tester-feedback report shows Yes/No analytics grouped correctly and the Download Report export works", href: "/admin/tester-feedback" },

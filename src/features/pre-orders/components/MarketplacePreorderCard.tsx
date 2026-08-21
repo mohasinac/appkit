@@ -11,10 +11,10 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
-const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
-const CLS_SALE_BADGE = "rounded-full bg-success-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
+const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-warning-on-solid";
+const CLS_SALE_BADGE = "rounded-full bg-success-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-success-on-solid";
 const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
-const CLS_LIMITED_BADGE = "rounded-full bg-info-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
+const CLS_LIMITED_BADGE = "rounded-full bg-info-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-info-on-solid";
 import { BaseListingCard, Button, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";

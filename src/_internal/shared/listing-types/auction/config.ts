@@ -13,7 +13,7 @@ export const config = {
   slugPrefix: "auction-",
   cartLine: "blocked" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.AUCTION_DETAIL(idOrSlug)),
-  badge: { label: "Auction", className: "bg-warning-surface text-white" },
+  badge: { label: "Auction", className: "bg-warning-solid text-warning-on-solid" },
   priceLabel: "Suggested Retail Price (₹)",
   typeLabel: "Auction",
   showsStockQuantity: false,

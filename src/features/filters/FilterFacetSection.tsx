@@ -9,7 +9,7 @@ const __O = {
 } as const;
 
 const CLS_OPTION_SELECTED = "border-success bg-success-surface text-success dark:border-success/60 dark:bg-success-surface dark:text-success";
-const CLS_OPTION_DOT = "inline-flex h-4 w-4 items-center justify-center rounded-full bg-success-surface text-[10px] text-white";
+const CLS_OPTION_DOT = "inline-flex h-4 w-4 items-center justify-center rounded-full bg-success-solid text-[10px] text-success-on-solid";
 const CLS_CLEAR_BTN = "w-full py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] text-zinc-400 transition-colors hover:text-error";
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
 const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-[var(--appkit-space-0)] text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors rounded-full";

@@ -14,9 +14,9 @@ import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink
 import type { ListingType } from "../../products/types/index";
 
 const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
-const CLS_LIVE_BADGE = "rounded-full bg-error-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
-const CLS_ENDING_BADGE = "rounded-full bg-warning-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
-const CLS_RESERVE_BADGE = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
+const CLS_LIVE_BADGE = "rounded-full bg-error-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-error-on-solid";
+const CLS_ENDING_BADGE = "rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-warning-on-solid";
+const CLS_RESERVE_BADGE = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-warning-on-solid";
 const CLS_HEART_ON = "fill-error text-error";
 const CLS_HEART_OFF = "text-zinc-400";
 

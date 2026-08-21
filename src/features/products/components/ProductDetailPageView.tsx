@@ -22,7 +22,7 @@ const CLS_BUNDLE_ICON = "text-success dark:text-success";
 const CLS_BUNDLE_TITLE = "text-[length:var(--appkit-text-sm)] font-semibold text-success dark:text-success";
 const CLS_BUNDLE_ROW = "flex items-center justify-between gap-[var(--appkit-space-4)] rounded-lg border border-success dark:border-success/50 bg-white dark:bg-success-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-3)]";
 const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
-const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-surface hover:bg-success-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-white transition-colors";
+const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {

@@ -66,6 +66,50 @@ module.exports = {
           900: "#18318e",
           950: "#111e58",
         },
+        // Semantic state colours. These live in `configs/tailwind.cjs` too (the
+        // factory the CONSUMER uses), but that config does not participate in
+        // appkit's own CSS build — this file does. Until 2026-08-21 they were
+        // missing here, so every `bg-{status}-surface` / `text-{status}` class
+        // authored inside appkit/src compiled to NOTHING: appkit's build had no
+        // such colour, and the consumer's build is explicitly told
+        // `@source not "../../appkit"` (globals.css), so it never sees appkit
+        // source either. The classes were dead in both directions and the
+        // badges using them rendered unstyled. Keep the two configs in sync.
+        //
+        //   chip    -> bg-{status}-surface + text-{status}
+        //   overlay -> bg-{status}-solid   + text-{status}-on-solid
+        //
+        // Enforced by scripts/audit-status-color-pairs.mjs.
+        success: {
+          DEFAULT: "var(--appkit-color-success)",
+          surface: "var(--appkit-color-success-surface)",
+          solid: "var(--appkit-color-success-solid)",
+          "on-solid": "var(--appkit-color-success-on-solid)",
+        },
+        warning: {
+          DEFAULT: "var(--appkit-color-warning)",
+          surface: "var(--appkit-color-warning-surface)",
+          solid: "var(--appkit-color-warning-solid)",
+          "on-solid": "var(--appkit-color-warning-on-solid)",
+        },
+        error: {
+          DEFAULT: "var(--appkit-color-error)",
+          surface: "var(--appkit-color-error-surface)",
+          solid: "var(--appkit-color-error-solid)",
+          "on-solid": "var(--appkit-color-error-on-solid)",
+        },
+        info: {
+          DEFAULT: "var(--appkit-color-info)",
+          surface: "var(--appkit-color-info-surface)",
+          solid: "var(--appkit-color-info-solid)",
+          "on-solid": "var(--appkit-color-info-on-solid)",
+        },
+        star: "var(--appkit-color-star)",
+        surface: {
+          DEFAULT: "var(--appkit-color-surface)",
+          elevated: "var(--appkit-color-surface-elevated)",
+          input: "var(--appkit-color-surface-input)",
+        },
         accent: {
           DEFAULT: "#8393b2",
           50: "#f5f7fa",
@@ -114,6 +158,7 @@ module.exports = {
         toast: "var(--appkit-z-toast)",
         tooltip: "var(--appkit-z-tooltip)",
         confirm: "var(--appkit-z-confirm)",
+        "back-to-top": "var(--appkit-z-back-to-top)",
       },
       fontSize: {
         "2xs": ["0.625rem", { lineHeight: "0.75rem" }],

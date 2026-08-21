@@ -50,12 +50,12 @@ const DEFAULT_LABELS: Required<MarketplacePrizeDrawCardLabels> = {
 function statusVariant(status?: "pending" | "open" | "closed") {
   switch (status) {
     case "open":
-      return "bg-success-surface text-white";
+      return "bg-success-solid text-success-on-solid";
     case "closed":
       return "bg-zinc-500 text-white";
     case "pending":
     default:
-      return "bg-warning-surface text-white";
+      return "bg-warning-solid text-warning-on-solid";
   }
 }
 

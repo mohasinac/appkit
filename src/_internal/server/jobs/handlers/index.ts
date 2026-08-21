@@ -4,7 +4,7 @@
  *
  * S4 batch 1: promotions, onOrderCreate, onOrderStatusChange,
  *             auctionSettlement, autoPayoutEligibility, couponExpiry, offerExpiry
- * S5 batch 2: onReviewWrite, onBidPlaced, cartPrune, notificationPrune,
+ * S5 batch 2: onReviewWrite, cartPrune, notificationPrune,
  *             dailyDataCleanup, countersReconcile, cleanupRtdbEvents
  */
 
@@ -19,7 +19,6 @@ export { autoPayoutEligibilityHandler } from "./autoPayoutEligibility";
 export { countersReconcileHandler } from "./countersReconcile";
 export { onOrderCreateHandler } from "./onOrderCreate";
 export { onOrderStatusChangeHandler } from "./onOrderStatusChange";
-export { onBidPlacedHandler } from "./onBidPlaced";
 export { onJobCreatedHandler } from "./onJobCreated";
 export { onReviewWriteHandler } from "./onReviewWrite";
 export { promotionsHandler, type PromotionsCallableResult } from "./promotions";

@@ -18,6 +18,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import {
+  resolveMinBid,
   resolveMinBidIncrement,
   type BidIncrementTier,
 } from "../../../_internal/shared/features/auctions/config";
@@ -302,6 +303,12 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
   ]);
   const bidIncrementTiers: BidIncrementTier[] = siteSettings.auctionConfig?.bidIncrementTiers ?? [];
   const initialMinBidIncrement = resolveMinBidIncrement(currentBid, bidIncrementTiers, minBidIncrementOverride);
+  // Mirrors placeBid's own hasBids — with no bids the starting bid is itself
+  // the minimum, so this preview must not advertise startingBid + increment.
+  const initialHasBids = bidCount > 0 || currentBid > startingBid;
+  const initialMinBid = resolveMinBid(currentBid, bidIncrementTiers, minBidIncrementOverride, {
+    hasBids: initialHasBids,
+  });
 
   return (
     <Main>
@@ -410,8 +417,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 <Stack gap="sm">
                   <Input
                     type="number"
-                    placeholder={`At least ${formatCurrency(currentBid + initialMinBidIncrement, currency)}`}
-                    min={currentBid + initialMinBidIncrement}
+                    placeholder={`At least ${formatCurrency(initialMinBid, currency)}`}
+                    min={initialMinBid}
                     aria-label="Your bid amount"
                     disabled={isEnded}
                   />

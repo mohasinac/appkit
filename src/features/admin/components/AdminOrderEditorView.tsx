@@ -1,6 +1,7 @@
 "use client";
 
 import { OrderAddonBadges, type OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
+import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
@@ -39,6 +40,12 @@ export interface AdminOrderEditorViewProps {
   paymentUpiMismatch?: boolean;
   buyerMarkedPaid?: boolean;
   buyerFraudAgreementAccepted?: boolean;
+  /**
+   * Which way a prior review went, if any. Without this the panel cannot tell
+   * "awaiting verification" from "already rejected" and re-offers live
+   * Verify/Reject buttons on a decided order.
+   */
+  paymentReviewOutcome?: string;
   /**
    * Paid add-ons + applied coupon for this order. Operational, not decorative:
    * `whatsappNotifyAddon` is who a status change should message, and the
@@ -85,6 +92,7 @@ export function AdminOrderEditorView({
   paymentUpiMismatch,
   buyerMarkedPaid,
   buyerFraudAgreementAccepted,
+  paymentReviewOutcome,
   addons,
 }: AdminOrderEditorViewProps) {
   const queryClient = useQueryClient();
@@ -100,8 +108,20 @@ export function AdminOrderEditorView({
   const [isRequestingReupload, setIsRequestingReupload] = useState(false);
   const [isRejectingFraud, setIsRejectingFraud] = useState(false);
 
-  const isCashOrUpi = paymentMethod === "cash" || paymentMethod === "upi_manual";
-  const needsVerification = isCashOrUpi && paymentStatus === "pending";
+  // This used to inline `paymentMethod === "cash" || === "upi_manual"`, which
+  // omitted `emi` — so the whole proof panel never rendered for an EMI order and
+  // an admin had no way to verify one, even though the list row said "Awaiting
+  // verification". Use the shared predicate, which is the single source of truth
+  // for the manual-payment set.
+  const isManualPayment = isManualPaymentMethod(paymentMethod ?? "");
+  const isVerified = paymentStatus === "paid";
+  const isRejected = paymentReviewOutcome === "rejected_fraud";
+  const isReuploadRequested = paymentReviewOutcome === "reupload_requested";
+  // Only an undecided, unpaid manual order is actionable. Gating on
+  // `paymentStatus === "pending"` alone re-offered live Verify/Reject buttons on
+  // an order that had already been rejected or sent back for re-upload.
+  const needsVerification =
+    isManualPayment && !isVerified && !isRejected && Boolean(paymentProofUrl);
 
   React.useEffect(() => {
     if (open) {
@@ -265,9 +285,19 @@ export function AdminOrderEditorView({
           />
         )}
 
-        {isCashOrUpi && (
+        {isManualPayment && (
           <Stack gap="xs">
             <Label size="sm" weight="medium" color="primary">Payment Proof</Label>
+            {isRejected && (
+              <Text size="xs" className="text-error" weight="medium">
+                Payment rejected as fraud — no further action available here.
+              </Text>
+            )}
+            {isReuploadRequested && !isVerified && (
+              <Text size="xs" className="text-warning" weight="medium">
+                Re-upload requested — waiting for the buyer to submit a new proof.
+              </Text>
+            )}
             {paymentProofUrl ? (
               <Stack gap="xs">
                 <Div border="default" rounded="lg" overflow="hidden">
@@ -341,7 +371,7 @@ export function AdminOrderEditorView({
                     />
                   </Stack>
                 )}
-                {!needsVerification && paymentStatus === "paid" && (
+                {isVerified && (
                   <Div rounded="lg" padding="inlineSm" className="border border-success/20" surface="success-surface">
                     <Text size="xs" className="text-success" weight="medium">Payment verified</Text>
                   </Div>

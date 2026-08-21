@@ -21,6 +21,26 @@ export const DEFAULT_AUCTION_BID_INCREMENT_TIERS: BidIncrementTier[] = [
 ];
 
 /**
+ * Drop malformed rows and fall back to the seed table when nothing usable is
+ * left.
+ *
+ * An empty/missing tier array does NOT mean "this auction has no increment
+ * rule" — it means the `siteSettings/global` singleton predates
+ * `auctionConfig.bidIncrementTiers`, or an admin cleared every row. Every
+ * caller reaches this via `settings.auctionConfig?.bidIncrementTiers ?? []`,
+ * so before this guard existed that case fell through to the ₹1
+ * `AUCTION_MIN_BID_INCREMENT` last-resort constant, which made the effective
+ * minimum step ₹1 on every auction on the site — that is what rendered the
+ * bid presets as "+₹1 / +₹5 / +₹10" instead of tier-derived steps.
+ */
+function usableTiers(tiers: BidIncrementTier[]): BidIncrementTier[] {
+  const valid = (tiers ?? []).filter(
+    (t) => t && Number.isFinite(t.increment) && t.increment > 0,
+  );
+  return valid.length > 0 ? valid : DEFAULT_AUCTION_BID_INCREMENT_TIERS;
+}
+
+/**
  * Resolve the tiered minimum bid increment for a given current bid amount.
  * Tier lookup is inclusive of each band's upper bound — e.g. with the
  * default tiers, a current bid of exactly 1000 resolves to the 100
@@ -30,10 +50,11 @@ export function resolveTieredBidIncrement(
   currentBidAmount: number,
   tiers: BidIncrementTier[],
 ): number {
-  for (const tier of tiers) {
+  const table = usableTiers(tiers);
+  for (const tier of table) {
     if (tier.upTo === null || currentBidAmount <= tier.upTo) return tier.increment;
   }
-  return tiers[tiers.length - 1]?.increment ?? AUCTION_MIN_BID_INCREMENT;
+  return table[table.length - 1]?.increment ?? AUCTION_MIN_BID_INCREMENT;
 }
 
 /**
@@ -47,5 +68,52 @@ export function resolveMinBidIncrement(
   override?: number | null,
 ): number {
   const tierValue = resolveTieredBidIncrement(currentBidAmount, tiers);
-  return typeof override === "number" && override > tierValue ? override : tierValue;
+  return typeof override === "number" && Number.isFinite(override) && override > tierValue
+    ? override
+    : tierValue;
 }
+
+export interface ResolveMinBidOptions {
+  /**
+   * Whether the auction already has at least one bid. Defaults to `true`.
+   *
+   * When `false` the starting bid is itself acceptable — a seller's opening
+   * price is a price, not a floor that must be beaten. Requiring
+   * `startingBid + increment` for the very first bid (which is what this
+   * function did unconditionally before) meant a ₹100 auction could never be
+   * opened at ₹100, only at ₹110, contradicting both the "Starting bid ₹100"
+   * label shown next to the field and the eBay convention buyers expect.
+   */
+  hasBids?: boolean;
+}
+
+/**
+ * The single definition of "the lowest amount this auction will accept next".
+ *
+ * Both the bid form and `placeBid` must agree on this exactly, or the form
+ * seeds an amount the server then rejects. Deriving it in two places is the
+ * drift shape Root Cause #30 describes, so both call this instead.
+ *
+ * `currentBidAmount` is the auction's live visible price — for an auction with
+ * no bids yet, callers pass `startingBid` (mirroring `placeBid`'s `baseBid`)
+ * together with `{ hasBids: false }`.
+ */
+export function resolveMinBid(
+  currentBidAmount: number,
+  tiers: BidIncrementTier[],
+  override?: number | null,
+  opts?: ResolveMinBidOptions,
+): number {
+  if (opts?.hasBids === false) return currentBidAmount;
+  return currentBidAmount + resolveMinBidIncrement(currentBidAmount, tiers, override);
+}
+
+/**
+ * Preset step multipliers offered by the bid form, as multiples of the
+ * effective minimum increment. With a ₹100 increment this renders
+ * +₹100 / +₹500 / +₹1,000; with a ₹1,000 increment, +₹1,000 / +₹5,000 /
+ * +₹10,000. Never hardcode the rupee amounts at the call site — the whole
+ * point is that the steps track the tier.
+ */
+export const BID_PRESET_MULTIPLIERS = [1, 5, 10] as const;
+export type BidPresetMultiplier = (typeof BID_PRESET_MULTIPLIERS)[number];

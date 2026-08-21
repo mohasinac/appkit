@@ -10,7 +10,7 @@ import {
 import {
   AUCTION_SNIPING_WINDOW_SECONDS,
   AUCTION_DEFAULT_EXTENSION_MINUTES,
-  resolveMinBidIncrement,
+  resolveMinBid,
   type BidIncrementTier,
 } from "../../../shared/features/auctions/config";
 import type { ProductDocument } from "../../../shared/features/products/types";
@@ -30,11 +30,20 @@ export async function assertAuctionActive(auctionId: string): Promise<ProductDoc
   return product as unknown as ProductDocument;
 }
 
-/** Compute the minimum valid bid given the current state and the admin's tier table. */
+/**
+ * Compute the minimum valid bid given the current state and the admin's tier table.
+ *
+ * Delegates to the shared `resolveMinBid` so this path can't drift from
+ * `placeBid`'s — including the no-bids case, where the starting bid is itself
+ * acceptable rather than needing to be beaten by an increment.
+ */
 export function computeMinBid(product: ProductDocument, tiers: BidIncrementTier[]): number {
-  const current = (product as any).currentBid ?? (product as any).startingBid ?? 0;
-  const increment = resolveMinBidIncrement(current, tiers, (product as any).minBidIncrement);
-  return current + increment;
+  const hasBids =
+    ((product as any).currentBid ?? 0) > 0 || ((product as any).bidCount ?? 0) > 0;
+  const current = hasBids
+    ? ((product as any).currentBid ?? (product as any).startingBid ?? 0)
+    : ((product as any).startingBid ?? 0);
+  return resolveMinBid(current, tiers, (product as any).minBidIncrement, { hasBids });
 }
 
 /** Assert a bid amount is valid against the current auction state. */

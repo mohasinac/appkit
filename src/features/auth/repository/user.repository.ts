@@ -38,6 +38,12 @@ export class UserRepository extends BaseRepository<UserDocument> {
     emailVerified: { canFilter: true, canSort: false },
     disabled: { canFilter: true, canSort: true },
     storeStatus: { canFilter: true, canSort: false },
+    // AdminTeamView's permission-group filter emits `permissionGroup==X` and
+    // /api/admin/team merges it into `role==employee,permissionGroup==X`. Without
+    // this entry Sieve (throwExceptions:false) dropped the clause silently and the
+    // filter matched every employee. The composite indexes it needs are already
+    // declared and deployed — (permissionGroup, role, createdAt|displayName).
+    permissionGroup: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };

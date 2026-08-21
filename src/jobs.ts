@@ -34,7 +34,6 @@ export {
   countersReconcileHandler,
   onOrderCreateHandler,
   onOrderStatusChangeHandler,
-  onBidPlacedHandler,
   onReviewWriteHandler,
   promotionsHandler,
   mediaTmpCleanupHandler,

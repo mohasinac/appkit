@@ -93,6 +93,9 @@ interface OrderRow {
   paymentUpiMismatch?: boolean;
   buyerMarkedPaid?: boolean;
   buyerFraudAgreementAccepted?: boolean;
+  /** Prior review outcome — the row already derives its label from this; the
+   *  editor needs it too so a decided order stops offering Verify/Reject. */
+  paymentReviewOutcome?: string;
   /** Paid add-ons + coupon, surfaced as icon chips in the editor. */
   addons?: OrderAddonBadgesOrder;
 }
@@ -169,6 +172,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           paymentUpiMismatch: Boolean(item.paymentUpiMismatch),
           buyerMarkedPaid: Boolean(item.buyerMarkedPaid),
           buyerFraudAgreementAccepted: Boolean(item.buyerFraudAgreementAccepted),
+          paymentReviewOutcome: toStringValue(item.paymentReviewOutcome, "") || undefined,
           // Straight off the order document — the admin list route returns
           // raw docs, so these need no serializer entry (cf. Root Cause #38).
           addons: {
@@ -297,6 +301,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         paymentUpiMismatch={selectedRow?.paymentUpiMismatch}
         buyerMarkedPaid={selectedRow?.buyerMarkedPaid}
         buyerFraudAgreementAccepted={selectedRow?.buyerFraudAgreementAccepted}
+        paymentReviewOutcome={selectedRow?.paymentReviewOutcome}
         addons={selectedRow?.addons}
       />
     </>

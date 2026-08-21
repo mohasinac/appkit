@@ -16,6 +16,7 @@
 import type { SiteSettingsDocument } from "../features/admin/schemas";
 import { seedExtMedia } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
+import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../_internal/shared/features/auctions/config";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -485,6 +486,23 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
         },
       },
     ],
+  },
+  // This block was missing entirely until 2026-08-21, and it is the data-layer
+  // half of the "+₹1 / +₹5 / +₹10 quick-bid buttons" bug. `DEFAULT_SITE_SETTINGS_DATA`
+  // (features/admin/schemas/firestore.ts) has always carried an `auctionConfig`,
+  // but that object is not what writes Firestore — this seed file is, and it
+  // declared no `auctionConfig` at all. The seed CLI runs the payload through
+  // `stripUndefined()` and writes with `{ merge: true }`, so an absent key is
+  // simply skipped: no `appkit-seed load`, however many times it ran, could ever
+  // create `auctionConfig.bidIncrementTiers`. Every caller then read
+  // `settings.auctionConfig?.bidIncrementTiers ?? []` and resolved the ₹1
+  // last-resort increment. Sourced from the shared constant so the seed, the
+  // schema default and the admin editor's initial state cannot drift apart —
+  // which is exactly what that constant's docstring already claimed.
+  auctionConfig: {
+    bidIncrementTiers: DEFAULT_AUCTION_BID_INCREMENT_TIERS,
+    autoExtendWindowMinutes: 5,
+    settlementGracePeriodHours: 24,
   },
   commissions: {
     platformFeePercent: 5,

@@ -121,7 +121,10 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
   const config: ListingViewConfig<AdminNotificationsResponse, NotifRow> = {
     portal: "admin",
     title: "Notifications",
-    searchPlaceholder: "Search by title or user ID",
+    // Title search is not expressible here — `title` is not in the repository's
+    // SIEVE_FIELDS and Sieve→Firestore cannot OR across two fields. The route
+    // treats `q` as an exact userId lookup, so the placeholder says exactly that.
+    searchPlaceholder: "Search by user ID",
     emptyLabel: "No notifications found",
     filterKeys: ["type", "readState"],
     defaultSort: sortBy("createdAt", "DESC"),

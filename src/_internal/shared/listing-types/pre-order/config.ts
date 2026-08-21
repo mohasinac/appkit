@@ -13,7 +13,7 @@ export const config = {
   slugPrefix: "preorder-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(idOrSlug)),
-  badge: { label: "Pre-Order", className: "bg-info-surface text-white" },
+  badge: { label: "Pre-Order", className: "bg-info-solid text-info-on-solid" },
   priceLabel: "Pre-Order Price (₹)",
   typeLabel: "Pre-Order",
   showsStockQuantity: false,

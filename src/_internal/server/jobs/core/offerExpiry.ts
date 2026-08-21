@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
-import { bidRepository, cartRepository, offerRepository } from "../../../../repositories";
+import { bidRepository, cartRepository, offerRepository, storeRepository } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
@@ -146,6 +146,39 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
   if (auctionLines.length === 0) return;
   ctx.logger.info(`Found ${auctionLines.length} unpaid auction win(s) past deadline`);
 
+  /**
+   * Tell the seller their item is unsold again so they can relist it or approach
+   * the runner-up. Only the buyer was ever notified, so to a seller a forfeited
+   * win looked like a completed sale that simply never paid out.
+   *
+   * Best-effort by design: the forfeiture itself (cart line cleared, bid marked
+   * forfeited) is already committed by the time this runs, and a missing store or
+   * a notification failure must not roll that back or abort the sweep.
+   */
+  async function notifySellerOfForfeitedWin(
+    item: (typeof auctionLines)[number]["item"],
+    jobCtx: JobContext,
+  ): Promise<void> {
+    try {
+      const store = item.storeId ? await storeRepository.findById(item.storeId) : null;
+      if (!store?.ownerId) return;
+      await sendNotification({
+        userId: store.ownerId,
+        type: "auction_ended",
+        priority: "normal",
+        title: "Auction win forfeited — item unsold",
+        message: `The winning bidder for "${item.productTitle}" did not pay within the deadline, so the win was forfeited. You can relist the item or approach the next highest bidder.`,
+        relatedId: item.auctionId ?? item.productId,
+        relatedType: "product",
+      });
+    } catch (sellerErr) {
+      void normalizeError(sellerErr);
+      jobCtx.logger.warn(`Failed to notify seller of forfeited win ${item.bidId}`, {
+        error: sellerErr instanceof Error ? sellerErr.message : String(sellerErr),
+      });
+    }
+  }
+
   for (const { userId, item } of auctionLines) {
     try {
       await cartRepository.removeItemsByBidId(userId, item.bidId!);
@@ -159,6 +192,8 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
         relatedId: item.auctionId ?? item.productId,
         relatedType: "product",
       });
+
+      await notifySellerOfForfeitedWin(item, ctx);
     } catch (err) {
       void normalizeError(err);
       ctx.logger.warn(`Failed to lapse auction win ${item.bidId}`, {

@@ -8,7 +8,7 @@ import { Text, Span } from "./Typography";
 import { MediaImage } from "../../features/media/MediaImage";
 import { getYouTubeVideoId } from "../../utils/media-url";
 
-const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-error-surface text-white flex items-center justify-center";
+const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-error-solid text-error-on-solid flex items-center justify-center";
 
 /** Safari (desktop) only implements the pre-standard webkit-prefixed Fullscreen API. */
 interface WebkitFullscreenElement extends HTMLElement {
@@ -196,14 +196,14 @@ export function ImageLightbox({
           >
             <ZoomOut className="w-4 h-4" />
           </Button>
-          <button
-            type="button"
+          <Button
+            variant="ghost" size="sm" type="button"
             onClick={() => { setZoom(100); setRotation(0); }}
-            className="text-white/70 hover:text-white text-xs font-mono min-w-[3rem] text-center"
+            className="text-white/70 hover:text-white text-xs font-mono min-w-[3rem] text-center p-0 !min-h-0"
             aria-label="Reset zoom"
           >
             {zoom}%
-          </button>
+          </Button>
           <Button
             variant="ghost" size="sm" type="button"
             onClick={() => adjustZoom(ZOOM_STEP)}
@@ -324,9 +324,9 @@ export function ImageLightbox({
       {showThumbnails && images.length > 1 && (
         <div className="flex-shrink-0 flex gap-2 overflow-x-auto px-4 pb-3 justify-center">
           {images.map((thumb, i) => (
-            <button
+            <Button
               key={i}
-              type="button"
+              variant="ghost" size="sm" type="button"
               onClick={() => {
                 setCurrentIndex(i);
                 setZoom(100);
@@ -334,7 +334,10 @@ export function ImageLightbox({
                 onNavigate?.(i);
               }}
               className={[
-                "h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
+                // p-0/!min-h-0 neutralise the Button's own padding and min-height —
+                // this is a 56px image tile, and without them the primitive's
+                // internal spacing stretches the thumbnail strip (Root Cause #15).
+                "h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all p-0 !min-h-0",
                 i === currentIndex
                   ? "scale-110 border-white"
                   : "border-transparent opacity-50 hover:opacity-90",
@@ -346,7 +349,7 @@ export function ImageLightbox({
                 alt={thumb.alt ?? `Image ${i + 1}`}
                 size="thumbnail"
               />
-            </button>
+            </Button>
           ))}
         </div>
       )}

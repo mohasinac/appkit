@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
@@ -11,8 +11,11 @@ import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { placeBidSchema } from "../schemas/bid-input";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
 import {
+  BID_PRESET_MULTIPLIERS,
+  resolveMinBid,
   resolveMinBidIncrement,
   type BidIncrementTier,
+  type BidPresetMultiplier,
 } from "../../../_internal/shared/features/auctions/config";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -76,21 +79,75 @@ export function PlaceBidFormClient({
   // Tiered, floor-raising: resolves fresh whenever the live current bid
   // crosses a tier boundary while this modal is open.
   const minBidIncrement = resolveMinBidIncrement(currentBid, tiers, minBidIncrementOverride);
-  const minBid = currentBid + minBidIncrement;
+  // Mirrors `placeBid`'s own `hasBids`. The `currentBid` prop already falls
+  // back to `startingBid` when the auction has no bids, so it can't be tested
+  // for `> 0` the way the server tests the raw document field — `bidCount`, or
+  // a price that has moved past the opening one, is the equivalent signal.
+  const hasBids = bidCount > 0 || currentBid > startingBid;
+  // Same helper `placeBid` uses server-side, so the seeded amount below can
+  // never be one the server rejects.
+  const minBid = resolveMinBid(currentBid, tiers, minBidIncrementOverride, { hasBids });
   const [bidAmount, setBidAmount] = useState<string>(String(minBid));
-  const [stepMul, setStepMul] = useState<1 | 5 | 10 | "custom">(1);
+  const [stepMul, setStepMul] = useState<BidPresetMultiplier | "custom">(BID_PRESET_MULTIPLIERS[0]);
   const [isPending, startTransition] = useTransition();
   const [isBuyNowPending, startBuyNowTransition] = useTransition();
   const [success, setSuccess] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  /** Last amount the form itself wrote — see `seedAmount` below. */
+  const lastSeeded = useRef(minBid);
 
-  function applyPreset(n: 1 | 5 | 10) {
-    setStepMul(n);
-    setBidAmount(String(currentBid + minBidIncrement * n));
+  /**
+   * The bid a given preset multiplier resolves to at the live price.
+   *
+   * Anchored on `minBid` rather than `currentBid` so the first preset is always
+   * exactly the minimum acceptable bid. With bids present that is identical to
+   * the old `currentBid + increment * n`; with none it makes the opening preset
+   * the starting bid itself instead of an amount the seller never asked for.
+   */
+  function presetAmount(n: BidPresetMultiplier) {
+    return minBid + minBidIncrement * (n - 1);
   }
 
+  /**
+   * Write an amount the FORM chose (not the buyer). Tracking these separately
+   * from buyer keystrokes is what lets the live-price effect below tell "this
+   * value is still ours to update" from "the buyer typed this".
+   */
+  function seedAmount(value: number) {
+    lastSeeded.current = value;
+    setBidAmount(String(value));
+  }
+
+  function applyPreset(n: BidPresetMultiplier) {
+    setStepMul(n);
+    seedAmount(presetAmount(n));
+  }
+
+  // Re-seed the amount whenever the live price moves under a preset selection.
+  //
+  // `bidAmount` was previously only ever written on mount or on click, but
+  // `currentBid` keeps updating from the `/auction-bids/{id}` SSE channel while
+  // this form is open. A buyer who opened the modal, sat on it while another
+  // bidder moved the price, then hit "Place Bid" was submitting an amount now
+  // below the minimum — a guaranteed BID_AMOUNT_TOO_LOW rejection, with the
+  // preset buttons above already relabelled to the new tier so the number in
+  // the field visibly disagreed with the button that was highlighted.
+  //
+  // Custom is deliberately left alone: a typed amount is the buyer's own, and
+  // the schema + `min` attribute already surface it if the price outran them.
+  useEffect(() => {
+    if (stepMul === "custom") return;
+    const next = presetAmount(stepMul);
+    if (String(next) === bidAmount) return;
+    // Only follow the live price, never fight the buyer's own edits.
+    if (bidAmount !== String(lastSeeded.current)) return;
+    seedAmount(next);
+    // presetAmount is derived from currentBid/minBidIncrement, both in deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentBid, minBidIncrement, stepMul]);
+
   const buyNowAvailable = buyNowPrice !== null && !isEnded && !bidsHaveStarted && !!onBuyNow;
-  const schema = placeBidSchema(minBid, minBidIncrement);
+  const schema = placeBidSchema(minBid, formatCurrency(minBid, currency));
 
   async function submitBid(
     amount: number,
@@ -104,8 +161,15 @@ export function PlaceBidFormClient({
         return;
       }
       setSuccess(true);
-      setBidAmount(String(amount + minBidIncrement));
-      setStepMul(1);
+      // Provisional next-bid seed, corrected by the live-price effect above as
+      // soon as the SSE tick for this bid lands. It is only provisional because
+      // under proxy-bid semantics `placeBid` treats the submission as a MAXIMUM
+      // — the resulting visible price is usually lower than `amount`, and if the
+      // bid lost to a higher standing proxy cap it is higher. The old
+      // `amount + increment` was therefore rarely the next valid bid; taking the
+      // max against the live price keeps this from ever seeding below minimum.
+      setStepMul(BID_PRESET_MULTIPLIERS[0]);
+      seedAmount(resolveMinBid(Math.max(currentBid, amount), tiers, minBidIncrementOverride));
       // The bid history list and any duplicated static current-bid/bid-count
       // text elsewhere on this SSR'd page (info panel, page-level summary
       // cards) are frozen server props — refresh so they reflect this bid
@@ -168,15 +232,17 @@ export function PlaceBidFormClient({
       {/* Current / starting bid summary */}
       <Stack gap="xs">
         <Row justify="between" align="center">
-          <Text size="xs" color="muted">Current bid</Text>
-          <Text size="xs" color="muted">Starting bid</Text>
+          {/* With no bids the big number IS the starting bid, so calling it
+              "Current bid" next to an identical "Starting bid" read as a bug. */}
+          <Text size="xs" color="muted">{hasBids ? "Current bid" : "Starting bid"}</Text>
+          <Text size="xs" color="muted">{hasBids ? "Starting bid" : "Minimum bid"}</Text>
         </Row>
         <Row justify="between" align="baseline">
           <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
             {formatCurrency(currentBid, currency)}
           </Span>
           <Span size="sm" color="muted">
-            {formatCurrency(startingBid, currency)}
+            {formatCurrency(hasBids ? startingBid : minBid, currency)}
           </Span>
         </Row>
         <Text size="xs" color="faint">
@@ -199,24 +265,51 @@ export function PlaceBidFormClient({
       >
         {({ setFieldError, clearErrors }) => (
           <Stack gap="sm">
+            {/*
+              Steps are multiples of the EFFECTIVE minimum increment, never
+              fixed rupee amounts — a ₹100 increment renders +₹100/+₹500/+₹1,000
+              and a ₹1,000 increment renders +₹1,000/+₹5,000/+₹10,000. Each
+              button also states the bid it produces so the step and the
+              resulting amount can't be misread for one another.
+            */}
             <Row gap="xs" wrap role="radiogroup" aria-label="Bid amount preset">
-              {([1, 5, 10] as const).map((n) => (
-                <Button
-                  key={n}
-                  type="button"
-                  variant={stepMul === n ? "primary" : "secondary"}
-                  size="sm"
-                  role="radio"
-                  aria-checked={stepMul === n}
-                  disabled={isEnded || isPending}
-                  onClick={() => {
-                    clearErrors();
-                    applyPreset(n);
-                  }}
-                >
-                  +{formatCurrency(minBidIncrement * n, currency)}
-                </Button>
-              ))}
+              {BID_PRESET_MULTIPLIERS.map((n) => {
+                const amount = presetAmount(n);
+                const delta = amount - currentBid;
+                // `delta` is 0 only for the opening preset on a bid-free
+                // auction, where the minimum IS the starting bid — "+₹0" would
+                // read as a broken button, so name what it actually is.
+                const stepLabel = delta > 0 ? `+${formatCurrency(delta, currency)}` : "Minimum";
+                return (
+                  <Button
+                    key={n}
+                    type="button"
+                    variant={stepMul === n ? "primary" : "secondary"}
+                    size="sm"
+                    role="radio"
+                    aria-checked={stepMul === n}
+                    disabled={isEnded || isPending}
+                    aria-label={
+                      delta > 0
+                        ? `Bid ${formatCurrency(amount, currency)} — ${formatCurrency(delta, currency)} above the current bid`
+                        : `Bid ${formatCurrency(amount, currency)} — the minimum accepted bid`
+                    }
+                    onClick={() => {
+                      clearErrors();
+                      applyPreset(n);
+                    }}
+                  >
+                    <Stack gap="none" align="center">
+                      <Span size="xs" weight="semibold">
+                        {stepLabel}
+                      </Span>
+                      <Span size="xs" color="muted">
+                        {formatCurrency(amount, currency)}
+                      </Span>
+                    </Stack>
+                  </Button>
+                );
+              })}
               <Button
                 type="button"
                 variant={stepMul === "custom" ? "primary" : "ghost"}
@@ -244,11 +337,13 @@ export function PlaceBidFormClient({
               aria-label="Your bid amount"
               disabled={isEnded || isPending}
             />
-            {stepMul === "custom" && (
-              <Text size="xs" color="muted" aria-live="polite">
-                Any amount ≥ {formatCurrency(minBid, currency)} is accepted.
-              </Text>
-            )}
+            <Text size="xs" color="muted" aria-live="polite">
+              {stepMul === "custom"
+                ? `Any amount from ${formatCurrency(minBid, currency)} up is accepted — it need not be an exact multiple of the increment.`
+                : hasBids
+                  ? `Minimum next bid ${formatCurrency(minBid, currency)} (current bid + ${formatCurrency(minBidIncrement, currency)} increment).`
+                  : `Minimum opening bid ${formatCurrency(minBid, currency)} — the seller's starting bid. The ${formatCurrency(minBidIncrement, currency)} increment applies from the second bid on.`}
+            </Text>
 
             {success && (
               <Text className="text-success" size="xs">

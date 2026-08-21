@@ -28,6 +28,13 @@ export const SURFACE_MAP = {
   // Dark overlay scrim presets — used for image dimming, modal backdrops,
   // hover overlays. Backdrop-blur should be paired separately via className
   // when needed (backdrop-blur is not a colour utility, not in audit scope).
+  /** Translucent WHITE chip on a dark/branded backdrop (hero banner, gradient
+   *  card, media overlay). The light counterpart to the `overlay-*` scrims:
+   *  those darken, this lightens. Deliberately not theme-tinted — it exists
+   *  precisely for surfaces that stay dark in every theme, where a
+   *  theme-relative surface token would resolve to white and give
+   *  white-on-white. Pairs with on-primary (white) text. */
+  frost: "bg-white/15",
   "overlay-xs": "bg-black/40",
   "overlay-sm": "bg-black/50",
   "overlay-md": "bg-black/55",

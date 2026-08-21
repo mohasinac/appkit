@@ -13,7 +13,7 @@ export const config = {
   slugPrefix: "digitalcode-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.DIGITAL_CODE_DETAIL(idOrSlug)),
-  badge: { label: "Digital Code", className: "bg-success-surface text-success" },
+  badge: { label: "Digital Code", className: "bg-success-solid text-success-on-solid" },
   priceLabel: "Price per Code (₹)",
   typeLabel: "Digital Code",
   showsStockQuantity: false,

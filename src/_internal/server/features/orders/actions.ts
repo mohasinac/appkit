@@ -16,7 +16,7 @@ import { sendNotification } from "../../../../features/admin/actions/notificatio
 import { restoreStockForOrder } from "../checkout/stock-restore";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { enqueueJob } from "../../../../features/jobs/actions/enqueue-job";
-import { PAYMENT_WINDOW_MS, PAYMENT_FRAUD_REJECTED_REASON } from "../../../../features/orders/constants/payment-window";
+import { PAYMENT_WINDOW_MS, PAYMENT_FRAUD_REJECTED_REASON, isManualPaymentMethod } from "../../../../features/orders/constants/payment-window";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 
@@ -151,8 +151,10 @@ export async function attachPaymentProofAction(
     const order = await orderRepository.findById(orderId).catch(() => null);
     if (!order) throw new OrderNotFoundError(orderId);
     if (!isAdminUser(user) && order.userId !== user.uid) throw new OrderOwnershipError(orderId);
-    const pm = order.paymentMethod ?? "";
-    if (pm !== "cash" && pm !== "upi_manual" && pm !== "emi") {
+    // Use the shared predicate rather than re-inlining the method list — this
+    // was the second of the two sites that had drifted from it (the other being
+    // AdminOrderEditorView, which was missing `emi` outright).
+    if (!isManualPaymentMethod(order.paymentMethod ?? "")) {
       throw new ValidationError("Payment proof can only be attached to cash, UPI, or EMI orders");
     }
     if (order.paymentProofUrl) {

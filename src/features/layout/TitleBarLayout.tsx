@@ -68,7 +68,7 @@ const iconBtn =
 
 /** Badge counter class for wishlist/cart counts. */
 const countBadge =
-  "absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-error-surface text-white text-[10px] font-bold leading-none";
+  "absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-error-solid text-error-on-solid text-[10px] font-bold leading-none";
 
 /**
  * TitleBarLayout — generic top sticky title-bar shell.

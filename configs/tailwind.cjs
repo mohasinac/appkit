@@ -44,22 +44,42 @@ function defineTailwindConfig(override = {}) {
           "text-inverse": "var(--appkit-color-textInverse)",
           link: "var(--appkit-color-link)",
           "link-hover": "var(--appkit-color-linkHover)",
+          // Two pairings per status, and they are NOT interchangeable:
+          //   chip    -> bg-{status}-surface + text-{status}
+          //   overlay -> bg-{status}-solid   + text-{status}-on-solid
+          // `surface`/DEFAULT invert with the theme; `solid`/`on-solid` do
+          // not. Mixing a `surface`/DEFAULT background with a literal
+          // `text-white` is invisible in exactly one theme — enforced by
+          // scripts/audit-status-color-pairs.mjs.
           success: {
             DEFAULT: "var(--appkit-color-success)",
             surface: "var(--appkit-color-success-surface)",
+            solid: "var(--appkit-color-success-solid)",
+            "on-solid": "var(--appkit-color-success-on-solid)",
           },
           warning: {
             DEFAULT: "var(--appkit-color-warning)",
             surface: "var(--appkit-color-warning-surface)",
+            solid: "var(--appkit-color-warning-solid)",
+            "on-solid": "var(--appkit-color-warning-on-solid)",
           },
           error: {
             DEFAULT: "var(--appkit-color-error)",
             surface: "var(--appkit-color-error-surface)",
+            solid: "var(--appkit-color-error-solid)",
+            "on-solid": "var(--appkit-color-error-on-solid)",
           },
+          // `danger` is a bare alias of `error` and therefore has NO
+          // `-surface`/`-solid` sub-keys. It also does not survive into the
+          // consumer build at all (the consumer's `extend.colors` replaces
+          // this whole object), so `bg-danger-surface` / `text-danger` are
+          // dead classes in the app — the audit blocks them; use `error-*`.
           danger: "var(--appkit-color-error)",
           info: {
             DEFAULT: "var(--appkit-color-info)",
             surface: "var(--appkit-color-info-surface)",
+            solid: "var(--appkit-color-info-solid)",
+            "on-solid": "var(--appkit-color-info-on-solid)",
           },
         },
         ...((consumerTheme.extend) ?? {}),

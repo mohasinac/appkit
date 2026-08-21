@@ -246,6 +246,18 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
   /**
    * Validate coupon against a flat order total (no cart breakdown).
+   *
+   * NOT the authoritative check. `minPurchase` here is measured against the whole
+   * amount passed in, whereas `validateCouponForCart` measures it against the
+   * subtotal of the items the coupon is actually *eligible* for — so on a mixed
+   * cart the two can disagree, and the cart one wins because it is what
+   * `/api/cart/coupon` and checkout run. It also cannot enforce
+   * `applicableProducts` / `excludeCategories`, having no items to test.
+   *
+   * Verified 2026-08-21: no UI calls this path, so the disagreement is currently
+   * unreachable. Do not wire it into a buyer-facing surface — use
+   * `validateCouponForCart` there, or a buyer will be promised a discount that
+   * checkout then refuses.
    */
   async validateCoupon(
     code: string,

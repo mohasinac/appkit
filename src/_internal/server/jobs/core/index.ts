@@ -66,7 +66,6 @@ export {
 } from "./assignSpinPrize";
 
 // Trigger reactors — call with the meaningful payload, no Firestore event needed
-export { handleBidPlaced, type HandleBidPlacedInput, type NewBid } from "./onBidPlaced";
 export {
   handleOrderCreate,
   type HandleOrderCreateInput,

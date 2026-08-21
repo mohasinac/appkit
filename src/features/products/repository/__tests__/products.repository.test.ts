@@ -507,54 +507,6 @@ describe("ProductRepository.updateStatusInBatch", () => {
 });
 
 // ---------------------------------------------------------------------------
-// incrementBidCountInBatch
-// ---------------------------------------------------------------------------
-describe("ProductRepository.incrementBidCountInBatch", () => {
-  it("stages bid count update without committing", () => {
-    const callerBatch = { update: vi.fn(), commit: vi.fn() };
-    repo.incrementBidCountInBatch(callerBatch as never, "auction-1", 5000);
-    expect(callerBatch.update).toHaveBeenCalledOnce();
-    expect(callerBatch.commit).not.toHaveBeenCalled();
-  });
-
-  it("sets currentBid to the provided amount", () => {
-    const callerBatch = { update: vi.fn(), commit: vi.fn() };
-    repo.incrementBidCountInBatch(callerBatch as never, "auction-1", 7500);
-    expect(callerBatch.update).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({ currentBid: 7500 }),
-    );
-  });
-
-  it("sets bidsHaveStarted: true on first bid", () => {
-    const callerBatch = { update: vi.fn(), commit: vi.fn() };
-    repo.incrementBidCountInBatch(callerBatch as never, "auction-1", 1000);
-    expect(callerBatch.update).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({ bidsHaveStarted: true }),
-    );
-  });
-
-  it("includes leadingBidderId when provided", () => {
-    const callerBatch = { update: vi.fn(), commit: vi.fn() };
-    repo.incrementBidCountInBatch(callerBatch as never, "auction-1", 5000, "user-ravi");
-    expect(callerBatch.update).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({ leadingBidderId: "user-ravi" }),
-    );
-  });
-
-  it("does NOT include leadingBidderId when not provided", () => {
-    const callerBatch = { update: vi.fn(), commit: vi.fn() };
-    repo.incrementBidCountInBatch(callerBatch as never, "auction-1", 5000);
-    const updateArg = callerBatch.update.mock.calls[0][1] as Record<string, unknown>;
-    expect(updateArg).not.toHaveProperty("leadingBidderId");
-  });
-});
-
-// ---------------------------------------------------------------------------
-// FILTER_ALIASES — pure function tests
-// ---------------------------------------------------------------------------
 describe("ProductRepository.FILTER_ALIASES — listingType", () => {
   const aliases = ProductRepository.FILTER_ALIASES;
 

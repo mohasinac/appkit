@@ -284,6 +284,31 @@
   --appkit-color-info-surface:     #f0f9ff;    /* sky-50 */
   --appkit-color-star:             #facc15;    /* yellow-400 — star ratings (decorative convention) */
 
+  /* Solid status fills — the OVERLAY counterpart to the `-surface` tints above.
+     `-surface` is a light tint in light themes and a dark tint in dark themes,
+     so it must pair with the matching `--appkit-color-STATUS` ink (which flips
+     the opposite way) to stay readable. That pairing is correct for an inline
+     chip, but too pale for a badge sitting on a product photo. These `-solid`
+     values are deliberately NOT theme-inverted: they stay a dark, saturated
+     fill in every theme so `-on-solid` can stay white in every theme.
+     Pairing rule, using `warning` as the worked example:
+       chip    -> bg-warning-surface + text-warning
+       overlay -> bg-warning-solid   + text-warning-on-solid
+     NB: never write a curly brace in a comment in this file. audit-theme-drift
+     matches each rule block with a non-greedy `:root ... ` regex, so a stray
+     closing brace inside a comment truncates the block and silently hides
+     every token declared below it from the drift check.
+     Both naive spellings are broken in exactly one theme, which is why
+     `audit-status-color-pairs.mjs` blocks them. */
+  --appkit-color-success-solid:    #15803d;    /* green-700 */
+  --appkit-color-success-on-solid: #ffffff;
+  --appkit-color-warning-solid:    #b45309;    /* amber-700 */
+  --appkit-color-warning-on-solid: #ffffff;
+  --appkit-color-error-solid:      #b91c1c;    /* red-700 */
+  --appkit-color-error-on-solid:   #ffffff;
+  --appkit-color-info-solid:       #0369a1;    /* sky-700 */
+  --appkit-color-info-on-solid:    #ffffff;
+
   --appkit-color-focus-ring:       #0d9488;    /* primary-600 = teal */
 }
 
@@ -616,6 +641,14 @@
      etc. — the highest of those is 65). Set above tooltip so it's the
      unconditional top of the interactive-overlay stack. */
   --appkit-z-confirm:        90;
+  /* Back-to-top floating control — the frontmost layer. It previously shared
+     `--appkit-z-bottom-nav` (40), so it tied with the bottom navbar and lost
+     to every sticky toolbar, drawer and toast on the page: the button was
+     scrolled to but unclickable (or entirely hidden) on most long pages,
+     which is exactly the surface it exists for. It is a small, dismissible,
+     non-blocking affordance, so sitting above the overlay stack costs
+     nothing — it never covers content, only floats in the corner gutter. */
+  --appkit-z-back-to-top:    95;
 
   /* Layout dimensions */
   --appkit-navbar-height:     2.5rem;  /* h-10 = 40px (mobile), h-12 = 48px (md) */

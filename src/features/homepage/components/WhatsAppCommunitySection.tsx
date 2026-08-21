@@ -86,8 +86,14 @@ export function WhatsAppCommunitySection({
               </Row>
 
               {/* Member count pill */}
+              {/* This pill sits on the dark `accent-banner` gradient card, so its
+                  text is `color="inverse"` (white). It previously used
+                  `surface="default"`, which is the theme's page surface — white
+                  in every light theme — giving white-on-white. `frost` is the
+                  translucent-white-on-dark surface this always wanted, and it
+                  pairs with on-primary text in SURFACE_TEXT_PAIR_MAP. */}
               {memberCount && (
-                <Row paddingY="y-2xs-tall" className="backdrop-blur-sm" surface="default" padding="x-md" align="center" gap="sm" rounded="full">
+                <Row paddingY="y-2xs-tall" className="backdrop-blur-sm" surface="frost" padding="x-md" align="center" gap="sm" rounded="full">
                   <Users className="w-4 h-4 text-white/80" />
                   <Span color="inverse" size="sm" weight="semibold">
                     {memberCount.toLocaleString(getDefaultLocale())}+ {memberCountLabel}

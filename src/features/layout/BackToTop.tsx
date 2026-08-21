@@ -57,7 +57,7 @@ export function BackToTop({
   };
 
   return (
-    <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--appkit-space-4))] ${hand === "left" ? "left-4" : "right-4"} z-[var(--appkit-z-bottom-nav)] ${className}`}>
+    <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--appkit-space-4))] ${hand === "left" ? "left-4" : "right-4"} z-[var(--appkit-z-back-to-top)] ${className}`}>
       <Button
         type="button"
         variant="outline"

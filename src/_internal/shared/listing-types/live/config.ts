@@ -13,7 +13,7 @@ export const config = {
   slugPrefix: "live-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.LIVE_DETAIL(idOrSlug)),
-  badge: { label: "Live Item", className: "bg-danger-surface text-error" },
+  badge: { label: "Live Item", className: "bg-error-solid text-error-on-solid" },
   priceLabel: "Price (₹)",
   typeLabel: "Live Item",
   showsStockQuantity: true,

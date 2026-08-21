@@ -28,10 +28,10 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_BADGE_NEW = "rounded-full bg-error-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] text-white shadow-sm";
-const CLS_BADGE_SALE = "rounded-full bg-success-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_NEW = "rounded-full bg-error-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] text-error-on-solid shadow-sm";
+const CLS_BADGE_SALE = "rounded-full bg-success-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-success-on-solid shadow-sm";
 const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
-const CLS_BADGE_LIMITED = "rounded-full bg-info-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_LIMITED = "rounded-full bg-info-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-info-on-solid shadow-sm";
 const CLS_HEART_ACTIVE = "bg-[var(--appkit-color-surface-elevated)]/90 text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_HEART_IDLE = "bg-[var(--appkit-color-surface-elevated)]/90 text-[var(--appkit-color-text-muted)] hover:text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_STAR = "text-[11px] text-warning";

@@ -56,7 +56,7 @@ export interface NotificationBellProps {
   hideOnMobile?: boolean;
 }
 
-const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-error-surface text-white min-w-[20px] h-5 px-[var(--appkit-space-1-5)] flex items-center justify-center rounded-full shadow-md";
+const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-error-solid text-error-on-solid min-w-[20px] h-5 px-[var(--appkit-space-1-5)] flex items-center justify-center rounded-full shadow-md";
 const CLS_UNREAD_PILL = "ml-2 bg-error-surface text-error dark:bg-error-surface dark:text-error px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] rounded-full";
 
 const DEFAULT_ICONS: Record<string, string> = {
