@@ -13,14 +13,11 @@ export interface PrizeDrawEntryActionsProps {
   productId: string;
   productSlug?: string;
   title: string;
-  thumb?: string;
   pricePerEntry: number;
   currency: string;
   remainingEntries: number;
   revealStatus: "pending" | "open" | "closed" | undefined;
   prizeGithubFileUrl?: string;
-  storeId?: string;
-  storeName?: string;
 }
 
 /**
@@ -34,14 +31,11 @@ export function PrizeDrawEntryActions({
   productId,
   productSlug,
   title,
-  thumb: _thumb,
   pricePerEntry,
   currency,
   remainingEntries,
   revealStatus,
   prizeGithubFileUrl,
-  storeId: _storeId,
-  storeName: _storeName,
 }: PrizeDrawEntryActionsProps) {
   const router = useRouter();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();

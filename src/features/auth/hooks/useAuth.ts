@@ -442,10 +442,17 @@ export function useRegister(options?: {
       // `auth.currentUser` is populated for client-side Firebase usage
       // (RTDB presence, etc) — do NOT call /api/auth/session again here,
       // that would create a second, orphaned session document.
-      await getClientAuthProvider().signInWithEmailAndPassword(
+      const authProvider = getClientAuthProvider();
+      await authProvider.signInWithEmailAndPassword(
         data.email.trim(),
         data.password,
       );
+
+      // Verification email is Firebase-native only (no Resend) — see project
+      // policy on "profile related auth changes". Best-effort: a failure
+      // here shouldn't fail registration itself, since the account was
+      // already created successfully.
+      await authProvider.sendEmailVerification().catch(() => {});
 
       return { success: true, ...response };
     },

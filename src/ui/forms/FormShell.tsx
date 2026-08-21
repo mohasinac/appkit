@@ -44,6 +44,14 @@ export interface FormShellContextValue {
   isDirty: boolean;
   isSubmitting: boolean;
   stepErrorCounts: number[];
+  /**
+   * Maps an error key (same key shape `errors` uses) to the index into
+   * `steps` that owns it. Populated only by step-aware producers (the
+   * `features/shell` wizard chrome/step engine) — undefined for single-step
+   * forms (`<Form>`, `useFormShellState` with no steps). `<FormErrorSummary>`
+   * treats undefined as "no step context" and renders a flat list.
+   */
+  fieldToStepIndex?: Record<string, number>;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -76,22 +84,32 @@ export interface UseFormShellStateResult {
    * supplied values, write inline errors via `setFieldError`, and return the
    * parsed value on success or null on failure.
    */
-  validate: <T = unknown>(values: FormValues) => T | null;
+  validate: <T = unknown>(values: unknown) => T | null;
 }
 
 /**
  * `applyZodIssues` — pipe every issue from a Zod safeParse failure into the
  * FormShellContext error map. Use after `schema.safeParse(values)` returns
  * `success: false` to surface inline errors on `<FieldInput>` etc.
+ *
+ * Keys are the full dotted/indexed path (`"video.duration"`, `"images.2"`),
+ * not just the top-level segment — a plain `issue.path[0]` key would collapse
+ * every nested issue under one object onto the same map entry, silently
+ * dropping all but the last. Top-level-only fields (the common case) are
+ * unaffected: a single-segment path joins to the same string as before.
+ *
+ * Root-level `.refine()` issues (empty `path: []`, no owning field) are still
+ * skipped — there is no field to attach them to, and no schema in this
+ * codebase currently relies on one being surfaced this way.
  */
 export function applyZodIssues(
   issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>; message: string }>,
   setFieldError: (name: string, error: string | null) => void,
 ): void {
   for (const issue of issues) {
-    const key = issue.path[0];
-    if (key == null) continue;
-    setFieldError(String(key), issue.message);
+    if (!issue.path || issue.path.length === 0) continue;
+    const key = issue.path.map(String).join(".");
+    setFieldError(key, issue.message);
   }
 }
 
@@ -117,7 +135,7 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
   const clearErrors = useCallback(() => setErrors({}), []);
 
   const validate = useCallback(
-    <T = unknown,>(values: FormValues): T | null => {
+    <T = unknown,>(values: unknown): T | null => {
       if (!schema) return values as T;
       const parsed = schema.safeParse(values);
       if (parsed.success) {
@@ -165,6 +183,23 @@ export interface FormShellProviderProps {
   autoSaveDelayMs?: number;
   /** Current form values — passed into onSaveDraft on auto-save */
   values?: FormValues;
+  /**
+   * Optional Zod schema — when supplied, the provider runs `.safeParse(values)`
+   * live (every time `values` changes, not just on submit) and populates its
+   * own `errors` map from the issues, so `<FieldInput>`/`<FormField>`/
+   * `<FormErrorSummary>` descendants get real validation without the parent
+   * component having to reach into the provider's internal state itself.
+   */
+  schema?: import("zod").ZodTypeAny;
+  /**
+   * Maps an error key to the index of the step that owns it — forwarded
+   * as-is into the context value for `<FormErrorSummary>` to consume. The
+   * provider itself has no concept of "steps"; the caller (typically a
+   * step-wizard shell) computes this from its own step definitions.
+   */
+  fieldToStepIndex?: Record<string, number>;
+  /** Wired into `FormShellContextValue.goToStep` when the caller has real step navigation to drive (e.g. a step-wizard's `setCurrentStep`). */
+  onGoToStep?: (n: number) => void;
 }
 
 export function FormShellProvider({
@@ -173,6 +208,9 @@ export function FormShellProvider({
   isDirty = false,
   autoSaveDelayMs = 2000,
   values = {},
+  schema,
+  fieldToStepIndex,
+  onGoToStep,
 }: FormShellProviderProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -189,6 +227,21 @@ export function FormShellProvider({
     }, autoSaveDelayMs);
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
   }, [values, isDirty, onSaveDraft, autoSaveDelayMs]);
+
+  useEffect(() => {
+    if (!schema) return;
+    // audit-unvalidated-safeparse-ok: bulk-replaces the whole errors map from
+    // the full parse result (so a field that just became valid is cleared),
+    // which applyZodIssues (incremental setFieldError-per-issue) can't do.
+    const parsed = schema.safeParse(values);
+    if (parsed.success) { setErrors({}); return; }
+    const next: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      if (!issue.path || issue.path.length === 0) continue;
+      next[issue.path.map(String).join(".")] = issue.message;
+    }
+    setErrors(next);
+  }, [schema, values]);
 
   const setFieldError = useCallback((name: string, error: string | null) => {
     setErrors((prev) => {
@@ -217,14 +270,15 @@ export function FormShellProvider({
     clearFieldError,
     steps: [],
     currentStep: 0,
-    goToStep: () => {},
+    goToStep: onGoToStep ?? (() => {}),
     nextStep: () => {},
     prevStep: () => {},
-    isPublishReady: true,
+    isPublishReady: Object.keys(errors).length === 0,
     isDirty,
     isSubmitting: false,
     stepErrorCounts: [],
-  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty]);
+    fieldToStepIndex,
+  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty, onGoToStep, fieldToStepIndex]);
 
   return <FormShellContext.Provider value={ctx}>{children}</FormShellContext.Provider>;
 }

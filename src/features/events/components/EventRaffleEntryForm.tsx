@@ -11,8 +11,6 @@ const __P = {
 } as const;
 
 export interface EventRaffleEntryFormProps {
-  /** Event id used for the entry POST. */
-  eventId: string;
   /** Raffle prize label rendered prominently above the form. */
   prizeLabel?: string;
   /** Raffle type — drives the helper copy. */
@@ -36,7 +34,6 @@ export interface EventRaffleEntryFormProps {
  * action wiring stays with the caller via the `onSubmit` prop.
  */
 export function EventRaffleEntryForm({
-  eventId: _eventId,
   prizeLabel,
   raffleType = "open_raffle",
   topN,

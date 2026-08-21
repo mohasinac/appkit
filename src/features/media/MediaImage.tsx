@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Div, Row, Span } from "../../ui";
 import { ROUNDED_MAP, SHADOW_MAP, type RoundedKey, type ShadowKey } from "../../ui/components/surface-tokens";
 import { resolveMediaUrl } from "../../utils/media-url";
@@ -36,6 +36,14 @@ const FALLBACK_ICONS: Record<MediaImageSize, string> = {
   gallery: "📦",
   avatar: "👤",
 };
+
+// A freshly-uploaded media slug can legitimately 404 for a brief window
+// right after upload — the Firestore doc write and the Storage object write
+// don't land atomically (see src/app/api/media/[...slug]/route.ts's own
+// comment on this race). Retry with backoff before latching the fallback
+// icon, instead of failing permanently on the very first request.
+const MAX_LOAD_RETRIES = 3;
+const RETRY_BACKOFF_MS = [600, 1200, 2400];
 
 // --- MediaImageProps ----------------------------------------------------------
 
@@ -138,9 +146,29 @@ export function MediaImage({
 }: MediaImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const icon = fallback ?? FALLBACK_ICONS[size];
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
   const resolvedSrc = resolveMediaUrl(src);
+
+  // Reset error/load/retry state whenever the resolved src actually changes.
+  // Without this, a component instance that hit a load failure once (e.g.
+  // lost the post-upload propagation race above) latches hasError forever,
+  // even across a later prop change to a src that would now succeed.
+  useEffect(() => {
+    setHasError(false);
+    setIsLoaded(false);
+    setRetryCount(0);
+    return () => {
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedSrc]);
+
   const wrapperExtra = [
     rounded ? ROUNDED_MAP[rounded] : "",
     shadow ? SHADOW_MAP[shadow] : "",
@@ -148,6 +176,12 @@ export function MediaImage({
   ].filter(Boolean).join(" ");
 
   const handleError = () => {
+    if (retryCount < MAX_LOAD_RETRIES) {
+      retryTimeoutRef.current = setTimeout(() => {
+        setRetryCount((count) => count + 1);
+      }, RETRY_BACKOFF_MS[retryCount]);
+      return;
+    }
     setHasError(true);
     onError?.();
   };
@@ -168,6 +202,13 @@ export function MediaImage({
     resolvedSrc.toLowerCase().endsWith(".svg") ||
     resolvedSrc.includes("image/svg") ||
     /[./]svg(\?|$)/i.test(resolvedSrc);
+
+  // Cache-bust the retried request so a browser-cached 404 response isn't
+  // silently re-served — the underlying URL is otherwise byte-identical.
+  const requestSrc =
+    retryCount > 0
+      ? `${resolvedSrc}${resolvedSrc.includes("?") ? "&" : "?"}retry=${retryCount}`
+      : resolvedSrc;
 
   // Art-directed `<picture>` path — bypasses Next.js `<Image>` because the
   // browser must pick the matching `<source>` itself. Loading + decoding hints
@@ -195,7 +236,7 @@ export function MediaImage({
           ))}
           { }
           <img
-            src={resolvedSrc}
+            src={requestSrc}
             alt={alt}
             loading={loading ?? (priority ? "eager" : "lazy")}
             decoding="async"
@@ -222,7 +263,7 @@ export function MediaImage({
         />
       )}
       <Image
-        src={resolvedSrc}
+        src={requestSrc}
         alt={alt}
         fill
         priority={priority}
@@ -230,7 +271,7 @@ export function MediaImage({
         className={fitClass}
         sizes={SIZE_HINTS[size]}
         onLoad={() => setIsLoaded(true)}
-        onError={() => setHasError(true)}
+        onError={handleError}
         unoptimized={isSvg}
       />
     </Div>

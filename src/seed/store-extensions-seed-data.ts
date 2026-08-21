@@ -77,7 +77,7 @@ export const payoutMethodsSeedData: Partial<PayoutMethodDocument>[] = [
     label: "SBI Current Account",
     accountNumber: "00112233445566",
     ifscCode: "SBIN0001234",
-    accountHolderName: "Mock User 1",
+    accountHolderName: "Mohasin Chinnapattan",
     bankName: "State Bank of India",
     isDefault: false,
     isActive: true,

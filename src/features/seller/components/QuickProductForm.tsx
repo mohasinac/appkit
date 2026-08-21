@@ -2,6 +2,7 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React, { useState } from "react";
 import { Alert, Button, Div, FormField, Stack, Text } from "../../../ui";
+import { FormErrorSummary } from "../../../ui/forms";
 import type { SellerProductDraft, SellerProductShellProps } from "./SellerProductShell";
 
 const __P = {
@@ -173,6 +174,7 @@ export function QuickProductForm({
       />
 
       <Stack gap="3" padding="t-xs">
+        <FormErrorSummary />
         <Row gap="3" >
           <Button
             variant="primary"

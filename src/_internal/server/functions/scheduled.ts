@@ -27,6 +27,7 @@ import {
   revenueRollupHandler,
   weeklyPayoutEligibilityHandler,
   testerSandboxCleanupHandler,
+  testerSandboxRefreshHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -201,6 +202,14 @@ export const testerSandboxCleanup = defineFunction({
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
+export const testerSandboxRefresh = defineFunction({
+  name: "testerSandboxRefresh",
+  description: "Revert live tester QA sandbox fixtures to their canonical seed shape and prune tester-created extras (every 4 hours).",
+  trigger: { kind: "schedule", cron: "0 */4 * * *", timeZone: "UTC" },
+  handler: testerSandboxRefreshHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
 export const prizeDrawExpiryReveal = defineFunction({
   name: "prizeDrawExpiryReveal",
   description: "Assign winners for outstanding paid orders on scheduled-mode prize draws past their expiry, then close them (every 5 minutes).",
@@ -255,6 +264,7 @@ export const SCHEDULED_FUNCTIONS = [
   mediaTmpCleanup,
   draftPrune,
   testerSandboxCleanup,
+  testerSandboxRefresh,
   prizeDrawExpiryReveal,
   bundleStockSync,
   emiInstallmentReminder,

@@ -56,7 +56,12 @@ export interface DashboardLayoutClientProps {
   permissions?: string[] | null;
   /** Override active-link highlight. Defaults to usePathname(). */
   activeHref?: string;
-  /** Responsive controls — currently only hideAt is honoured. */
+  /**
+   * Responsive controls — accepted for interface parity with the generic
+   * `SectionResponsive` shape used elsewhere, but not currently honoured by
+   * this component (no caller passes it today). Wire `hideAt`/`showAt`/
+   * `compactAt` to real chrome behaviour before relying on this prop.
+   */
   responsive?: SectionResponsive;
   /**
    * Cross-dashboard nav links shown in the sidebar footer. Plain hrefs
@@ -223,6 +228,8 @@ export function DashboardLayoutClient({
   groups,
   permissions,
   activeHref: explicitActiveHref,
+  // audit-dead-underscore-prop-ok: accepted for interface parity, not yet
+  // wired — see the doc comment on `responsive` above; no caller passes it.
   responsive: _responsive,
   crossNav,
   className,

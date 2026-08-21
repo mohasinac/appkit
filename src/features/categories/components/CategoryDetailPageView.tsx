@@ -12,6 +12,9 @@ import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../.
 import { MediaImage } from "../../media/MediaImage";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
+import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
+import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { getGroupsForCategory } from "../../../_internal/server/features/grouped/data";
 import type { CategoryItem } from "../types";
 
 const __O = {
@@ -38,7 +41,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     : [];
   const categoriesIn = category?.id ? [category.id, ...descendantIds] : null;
 
-  const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories, rootSiblingCategories] = await Promise.all([
+  const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories, rootSiblingCategories, groupedListings] = await Promise.all([
     categoriesIn
       ? productRepository
           .list(
@@ -107,6 +110,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     category?.rootId
       ? categoriesRepository.getCategoriesByRootId(category.rootId).catch(() => []) as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
+    category?.slug ? getGroupsForCategory(category.slug).catch(() => []) : Promise.resolve([]),
   ]);
 
   const relatedCategories = rootSiblingCategories.filter(
@@ -231,6 +235,8 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         </Div>
       </Section>
 
+      <CategoryHighlightsAndFaqSection highlights={category?.highlights} faqs={category?.faqs} />
+
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
@@ -281,6 +287,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           />
         </Container>
       </Section>
+
+      {groupedListings.length > 0 && (
+        <Section padding="y-lg">
+          <Container size="xl">
+            <GroupedListingsCarousel groups={groupedListings} />
+          </Container>
+        </Section>
+      )}
 
       {/* ── Related categories ───────────────────────────────────────────── */}
       {relatedCategories.length > 0 && (

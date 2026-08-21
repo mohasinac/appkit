@@ -4,9 +4,11 @@ import { normalizeError } from "../../../errors/normalize";
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge, Div, FilterChipGroup, ListingLayout, Row, RowActionMenu, SideDrawer, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
@@ -66,9 +68,149 @@ function StatusProgress({ status }: { status: string }) {
   );
 }
 
+/**
+ * SellerPayoutDetailContent — the payout detail body (status progress,
+ * amount breakdown, refund deductions, dates, orders, reminder toggle).
+ * Shared by the seller payouts list's SideDrawer and the standalone
+ * `/store/payouts/[id]/view` page so the two surfaces can't drift — same
+ * pattern as SellerOrderDetailPanel for orders.
+ */
+export function SellerPayoutDetailContent({
+  payout,
+  onToggleReminder,
+  reminderPending,
+}: {
+  payout: Record<string, unknown>;
+  onToggleReminder: (next: boolean) => void;
+  reminderPending: boolean;
+}) {
+  const expectedByDate = payout.requestedAt
+    ? new Date(new Date(payout.requestedAt as string).getTime() + PAYOUT_CYCLE_DAYS * 24 * 60 * 60 * 1000)
+    : null;
+  const orderIds = Array.isArray(payout.orderIds) ? (payout.orderIds as string[]) : [];
+  const refundDeductions = Array.isArray(payout.refundDeductions)
+    ? (payout.refundDeductions as Record<string, unknown>[])
+    : [];
+
+  return (
+    <Stack gap="lg">
+      <StatusProgress status={toStringValue(payout.status, "pending")} />
+
+      <Stack gap="xs">
+        <Text size="xs" color="muted">Amount</Text>
+        <Text size="xl" weight="bold">
+          {toCurrency(payout.netAmount ?? payout.amount ?? payout.totalAmount)}
+        </Text>
+      </Stack>
+
+      {(payout.grossAmount != null || payout.platformFee != null) && (
+        <Stack gap="xs">
+          <Text size="xs" color="muted">Breakdown</Text>
+          <Stack gap="none">
+            {payout.grossAmount != null && (
+              <Row justify="between">
+                <Text size="xs" color="muted">Gross amount</Text>
+                <Text size="xs">{toCurrency(payout.grossAmount)}</Text>
+              </Row>
+            )}
+            {payout.platformFee != null && (
+              <Row justify="between">
+                <Text size="xs" color="muted">Platform fee</Text>
+                <Text size="xs">-{toCurrency(payout.platformFee)}</Text>
+              </Row>
+            )}
+            {refundDeductions.length > 0 && (
+              <Row justify="between">
+                <Text size="xs" color="muted">Refund deductions</Text>
+                <Text size="xs" className="text-error">
+                  -{toCurrency(refundDeductions.reduce((sum, d) => sum + Number(d.deductedAmount ?? 0), 0))}
+                </Text>
+              </Row>
+            )}
+          </Stack>
+        </Stack>
+      )}
+
+      {refundDeductions.length > 0 && (
+        <Stack gap="xs">
+          <Text size="xs" color="muted">Refund deductions ({refundDeductions.length})</Text>
+          <Stack gap="xs">
+            {refundDeductions.map((d, i) => (
+              <Div key={`${d.orderId as string}-${i}`} rounded="lg" padding="inlineSm" surface="muted" border="default">
+                <Row justify="between">
+                  <Text size="xs" className="font-mono">{d.orderId as string}</Text>
+                  <Text size="xs" className="text-error">-{toCurrency(d.deductedAmount)}</Text>
+                </Row>
+                <Text size="xs" color="muted">{d.reason as string}</Text>
+              </Div>
+            ))}
+          </Stack>
+        </Stack>
+      )}
+
+      {payout.transactionId ? (
+        <Stack gap="xs">
+          <Text size="xs" color="muted">Transaction / reference ID</Text>
+          <Text size="sm" className="font-mono">{String(payout.transactionId)}</Text>
+        </Stack>
+      ) : null}
+
+      <Row gap="lg" wrap>
+        <Stack gap="xs">
+          <Text size="xs" color="muted">Requested</Text>
+          <Text size="sm">{formatDate(payout.requestedAt ?? payout.createdAt)}</Text>
+        </Stack>
+        {payout.status === "paid" ? (
+          <Stack gap="xs">
+            <Text size="xs" color="muted">Paid on</Text>
+            <Text size="sm">{formatDate(payout.processedAt)}</Text>
+          </Stack>
+        ) : (
+          <Stack gap="xs">
+            <Text size="xs" color="muted">Expected by</Text>
+            <Text size="sm">{expectedByDate ? formatDate(expectedByDate.toISOString()) : "—"}</Text>
+          </Stack>
+        )}
+        <Stack gap="xs">
+          <Text size="xs" color="muted">Payment method</Text>
+          <Text size="sm" className="capitalize">{toStringValue(payout.paymentMethod, "—").replace("_", " ")}</Text>
+        </Stack>
+      </Row>
+
+      {orderIds.length > 0 && (
+        <Stack gap="xs">
+          <Text size="xs" color="muted">Orders included ({orderIds.length})</Text>
+          <Div className="max-h-40" overflow="y-auto">
+            <Stack gap="xs">
+              {orderIds.map((oid) => (
+                <Text key={oid} size="xs" className="font-mono" color="muted">{oid}</Text>
+              ))}
+            </Stack>
+          </Div>
+        </Stack>
+      )}
+
+      <Row align="center" justify="between" border="default" rounded="lg" padding="inline">
+        <Stack gap="none">
+          <Text size="sm" weight="medium">Remind me</Text>
+          <Text size="xs" color="muted">Flag this payout for a personal follow-up</Text>
+        </Stack>
+        <Toggle
+          checked={Boolean(payout.sellerReminderFlag)}
+          onChange={onToggleReminder}
+          disabled={reminderPending}
+          size="md"
+          aria-label={ACTIONS.STORE["set-payout-reminder"].ariaLabel}
+        />
+      </Row>
+    </Stack>
+  );
+}
+
 export type SellerPayoutsViewProps = ListingLayoutProps;
 
 export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps) {
+  const router = useRouter();
   const { showToast } = useToast();
   const [selectedPayout, setSelectedPayout] = useState<Record<string, unknown> | null>(null);
   const [reminderPending, setReminderPending] = useState(false);
@@ -182,6 +324,10 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
             onClick: () => setSelectedPayout(rawByIdRef.current[row.id] ?? { id: row.id }),
           },
           {
+            label: "Open full page",
+            onClick: () => router.push(String(ROUTES.STORE.PAYOUT_DETAIL(row.id))),
+          },
+          {
             label: ACTIONS.STORE["export-payout"].label,
             onClick: () => handleExport([rawByIdRef.current[row.id] ?? { id: row.id }]),
           },
@@ -210,11 +356,6 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
     ),
   };
 
-  const expectedByDate = selectedPayout?.requestedAt
-    ? new Date(new Date(selectedPayout.requestedAt as string).getTime() + PAYOUT_CYCLE_DAYS * 24 * 60 * 60 * 1000)
-    : null;
-  const orderIds = Array.isArray(selectedPayout?.orderIds) ? (selectedPayout!.orderIds as string[]) : [];
-
   return (
     <>
       <DataListingView config={config} />
@@ -225,70 +366,11 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
         mode="view"
       >
         {selectedPayout && (
-          <Stack gap="lg">
-            <StatusProgress status={toStringValue(selectedPayout.status, "pending")} />
-
-            <Stack gap="xs">
-              <Text size="xs" color="muted">Amount</Text>
-              <Text size="xl" weight="bold">{toCurrency(selectedPayout.amount ?? selectedPayout.totalAmount)}</Text>
-            </Stack>
-
-            {selectedPayout.transactionId ? (
-              <Stack gap="xs">
-                <Text size="xs" color="muted">Transaction / reference ID</Text>
-                <Text size="sm" className="font-mono">{String(selectedPayout.transactionId)}</Text>
-              </Stack>
-            ) : null}
-
-            <Row gap="lg" wrap>
-              <Stack gap="xs">
-                <Text size="xs" color="muted">Requested</Text>
-                <Text size="sm">{formatDate(selectedPayout.requestedAt ?? selectedPayout.createdAt)}</Text>
-              </Stack>
-              {selectedPayout.status === "paid" ? (
-                <Stack gap="xs">
-                  <Text size="xs" color="muted">Paid on</Text>
-                  <Text size="sm">{formatDate(selectedPayout.processedAt)}</Text>
-                </Stack>
-              ) : (
-                <Stack gap="xs">
-                  <Text size="xs" color="muted">Expected by</Text>
-                  <Text size="sm">{expectedByDate ? formatDate(expectedByDate.toISOString()) : "—"}</Text>
-                </Stack>
-              )}
-              <Stack gap="xs">
-                <Text size="xs" color="muted">Payment method</Text>
-                <Text size="sm" className="capitalize">{toStringValue(selectedPayout.paymentMethod, "—").replace("_", " ")}</Text>
-              </Stack>
-            </Row>
-
-            {orderIds.length > 0 && (
-              <Stack gap="xs">
-                <Text size="xs" color="muted">Orders included ({orderIds.length})</Text>
-                <Div className="max-h-40" overflow="y-auto">
-                  <Stack gap="xs">
-                    {orderIds.map((oid) => (
-                      <Text key={oid} size="xs" className="font-mono" color="muted">{oid}</Text>
-                    ))}
-                  </Stack>
-                </Div>
-              </Stack>
-            )}
-
-            <Row align="center" justify="between" border="default" rounded="lg" padding="inline">
-              <Stack gap="none">
-                <Text size="sm" weight="medium">Remind me</Text>
-                <Text size="xs" color="muted">Flag this payout for a personal follow-up</Text>
-              </Stack>
-              <Toggle
-                checked={Boolean(selectedPayout.sellerReminderFlag)}
-                onChange={handleToggleReminder}
-                disabled={reminderPending}
-                size="md"
-                aria-label={ACTIONS.STORE["set-payout-reminder"].ariaLabel}
-              />
-            </Row>
-          </Stack>
+          <SellerPayoutDetailContent
+            payout={selectedPayout}
+            onToggleReminder={handleToggleReminder}
+            reminderPending={reminderPending}
+          />
         )}
       </SideDrawer>
     </>

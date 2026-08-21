@@ -88,7 +88,6 @@ export interface ListingLayoutProps {
   /** Count of filter changes staged but not yet committed. Shows in Apply button. */
   filterPendingCount?: number;
   className?: string;
-  loading?: boolean;
   errorSlot?: ReactNode;
 
   // -- i18n labels ----------------------------------------------------------
@@ -137,7 +136,6 @@ export function ListingLayout({
   defaultSidebarOpen = false,
   filterPendingCount,
   className = "",
-  loading: _loading = false,
   errorSlot,
   labels,
   portal,

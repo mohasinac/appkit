@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button, ConfirmDeleteModal, Div, Form, IconButton, Input, Label, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { CouponType } from "../../promotions/types";
@@ -534,6 +534,7 @@ export function AdminCouponEditorView({
           </Stack>
 
           {/* Actions */}
+          <FormErrorSummary />
           <Row gap="3" padding="t-xs">
             <Button
               type="submit"

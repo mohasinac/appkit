@@ -1,11 +1,22 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { z } from "zod";
 import Image from "next/image";
 import { Button, Details, Div, Heading, Input, Label, Li, Row, Span, Stack, Summary, Text, Textarea, Ul } from "../../../ui";
+import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
 import { resolveMediaUrl } from "../../../utils/media-url";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 import { DEFAULT_ACCENT_HEX } from "../lib/franchise-colors";
+
+// Validates the "Pin Details" step's draft fields — mirrors the existing
+// `disabled={!draftName || !draftHref}` gates on that step's Save buttons.
+const pinDetailsSchema = z.object({
+  draftName: z.string().min(1, "Name is required"),
+  draftUniverse: z.string().min(1, "Universe/Category is required"),
+  draftDescription: z.string().min(1, "Description is required"),
+  draftHref: z.string().min(1, "Link (href) is required"),
+});
 
 type WizardStep = "image" | "place" | "details" | "review";
 
@@ -83,6 +94,13 @@ export function CharacterHotspotForm({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const { shellCtx, validate: validatePinDetails } = useFormShellState(pinDetailsSchema);
+
+  useEffect(() => {
+    validatePinDetails({ draftName, draftUniverse, draftDescription, draftHref });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftName, draftUniverse, draftDescription, draftHref]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -179,6 +197,7 @@ export function CharacterHotspotForm({
   const stepIndex = STEPS.findIndex((s) => s.key === step);
 
   return (
+    <FormShellContext.Provider value={shellCtx}>
     <Stack className="mx-auto max-w-3xl" gap="lg">
       {error && (
         <Text className={CLS_ERROR_BANNER}>
@@ -739,6 +758,8 @@ export function CharacterHotspotForm({
             />
           </Row>
 
+          <FormErrorSummary />
+
           <Row
             justify="between"
             className="border-t" padding="t-md"
@@ -1003,5 +1024,6 @@ export function CharacterHotspotForm({
         </Div>
       )}
     </Stack>
+    </FormShellContext.Provider>
   );
 }

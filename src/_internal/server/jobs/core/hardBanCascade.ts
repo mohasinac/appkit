@@ -31,6 +31,8 @@ import {
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { isSellerUser } from "../../../../features/auth/role-predicates";
 import { getAdminAuth } from "../../../../providers/db-firebase";
+import { recordAdminAction } from "../../features/audit-log/actions";
+import { AdminAuditActionValues } from "../../../../features/audit-log/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 import type { JobRunResult } from "./jobRunners";
 
@@ -116,6 +118,16 @@ export async function runHardBanCascade(
     hardBanExpiresAt: expiresAt ?? null,
     ...(fraudOrderId ? { hardBanFraudOrderId: fraudOrderId } : {}),
   } as never);
+
+  void recordAdminAction({
+    actorUid: bannedBy,
+    action: AdminAuditActionValues.USER_HARD_BAN,
+    targetType: "user",
+    targetId: uid,
+    targetLabel: target.displayName ?? uid,
+    reason,
+    metadata: { expiresAt: expiresAt?.toISOString() ?? null, fraudOrderId: fraudOrderId ?? null },
+  });
 
   // 3. Delete active sessions
   try {

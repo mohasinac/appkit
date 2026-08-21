@@ -83,9 +83,9 @@ export function TitleBarLayout({
   onToggleSidebar,
   sidebarOpen,
   onSearchToggle,
-  searchOpen: _searchOpen,
+  searchOpen,
   brandName,
-  brandShortName: _brandShortName,
+  brandShortName,
   siteLogoUrl,
   logoHref,
   promotionsHref,
@@ -102,7 +102,7 @@ export function TitleBarLayout({
   user,
   notificationSlot,
   devSlot,
-  navSlot: _navSlot,
+  navSlot,
   promoStripText,
   isDark = false,
   onToggleTheme,
@@ -204,6 +204,7 @@ export function TitleBarLayout({
       variant="ghost"
       size="sm"
       aria-label="Search"
+      aria-pressed={searchOpen}
       onClick={onSearchToggle}
       className={iconBtn}
       data-tour="nav-search"
@@ -332,7 +333,7 @@ export function TitleBarLayout({
               className="flex items-center gap-[var(--appkit-space-2)] transition-opacity hover:opacity-80"
             >
               <Div className="flex md:hidden">
-                <SiteMark title={brandName} size="sm" />
+                <SiteMark title={brandShortName ?? brandName} size="sm" />
               </Div>
               <SiteLogo title={brandName} size="md" />
             </Link>
@@ -355,6 +356,7 @@ export function TitleBarLayout({
               wishlist/cart/profile shown only on lg+ here — TB2 carries them on mobile. */}
           <Row gap="xs">
             {devSlot}
+            {navSlot}
             {compareEl}
             {notificationSlot}
             {notificationsEl && <Div className="hidden lg:flex">{notificationsEl}</Div>}

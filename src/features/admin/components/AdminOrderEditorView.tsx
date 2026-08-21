@@ -9,8 +9,18 @@ import { MediaImage } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { toCurrency } from "../hooks/useAdminListingData";
 
 // --- Types -------------------------------------------------------------------
+
+export interface AdminOrderItemRow {
+  productId: string;
+  title: string;
+  image?: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
 
 export interface AdminOrderEditorViewProps {
   open: boolean;
@@ -18,6 +28,7 @@ export interface AdminOrderEditorViewProps {
   orderId?: string;
   orderLabel?: string;
   currentStatus?: string;
+  items?: AdminOrderItemRow[];
   paymentProofUrl?: string;
   paymentTransactionId?: string;
   paymentMethod?: string;
@@ -57,6 +68,7 @@ export function AdminOrderEditorView({
   orderId,
   orderLabel,
   currentStatus,
+  items,
   paymentProofUrl,
   paymentTransactionId,
   paymentMethod,
@@ -177,6 +189,28 @@ export function AdminOrderEditorView({
           e.preventDefault();
           saveMutation.mutate();
         }} spacing="md" padding="md">
+        {items && items.length > 0 && (
+          <Stack gap="xs">
+            <Label size="sm" weight="medium" color="primary">
+              Items ({items.length})
+            </Label>
+            <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
+              {items.map((item, i) => (
+                <Div key={item.productId || i} layout="flex" align="center" gap="3" padding="sm">
+                  <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
+                    <MediaImage src={item.image} alt={item.title} size="thumbnail" />
+                  </Div>
+                  <Div className="min-w-0 flex-1">
+                    <Text size="sm" className="truncate" weight="medium">{item.title}</Text>
+                    <Text size="xs" color="muted">Qty: {item.quantity} × {toCurrency(item.unitPrice)}</Text>
+                  </Div>
+                  <Text size="sm" className="shrink-0" weight="semibold">{toCurrency(item.totalPrice)}</Text>
+                </Div>
+              ))}
+            </Div>
+          </Stack>
+        )}
+
         <Select
           label="Order status"
           options={STATUS_OPTIONS}

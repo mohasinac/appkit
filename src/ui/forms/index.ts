@@ -20,3 +20,6 @@ export { FieldTextarea } from "./FieldTextarea";
 
 export type { ColorPickerFieldProps } from "./ColorPickerField";
 export { ColorPickerField } from "./ColorPickerField";
+
+export type { FormErrorSummaryProps } from "./FormErrorSummary";
+export { FormErrorSummary } from "./FormErrorSummary";

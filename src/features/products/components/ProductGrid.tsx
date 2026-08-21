@@ -2,6 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "../../../next";
 import type { LayoutSlots } from "../../../contracts";
 import { BaseListingCard, Button, Div, Grid, PriceDisplay, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
@@ -79,6 +81,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )
       : null;
 
+  const router = useRouter();
   const listingPlugin = pluginFor(normalizeListingType(product));
   const typeBadge = listingPlugin.badge
     ? { label: listingPlugin.badge.label, cls: listingPlugin.badge.className }
@@ -284,7 +287,23 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {product.brand && (
-                <Span padding="pill-2xs" layout="inline-flex" gap="2xs" className="text-[10px]" rounded="full" surface="subtle" color="muted">
+                <Span
+                  padding="pill-2xs" layout="inline-flex" gap="2xs"
+                  className={`text-[10px] ${product.brandSlug ? "cursor-pointer hover:underline" : ""}`}
+                  rounded="full" surface="subtle" color="muted"
+                  {...(product.brandSlug
+                    ? {
+                        onClick: (e: React.MouseEvent) => {
+                          // The whole card is already wrapped in a <Link> — a nested
+                          // <a> here would be invalid HTML, so this navigates via
+                          // stopPropagation + router.push instead of a real Link.
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router.push(String(ROUTES.PUBLIC.BRAND_DETAIL(product.brandSlug!)));
+                        },
+                      }
+                    : {})}
+                >
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                   </svg>

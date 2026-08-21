@@ -34,7 +34,7 @@ interface CaseInput {
 function group(
   groupKey: string,
   groupLabel: string,
-  pages: { pageKey: string; pageLabel: string; cases: CaseInput[] }[],
+  pages: { pageKey: string; pageLabel: string; href?: string; cases: CaseInput[] }[],
   opts?: { adminOnly?: boolean; orderOffset?: number },
 ): Partial<TesterChecklistItemDocument>[] {
   const items: Partial<TesterChecklistItemDocument>[] = [];
@@ -48,7 +48,10 @@ function group(
         pageLabel: page.pageLabel,
         label: c.label,
         description: c.description,
-        href: c.href,
+        // Every case gets a link: its own href, or the page's default —
+        // guarantees "Go test this ->" always has somewhere real to send
+        // the tester, even for cases nobody bothered to link individually.
+        href: c.href ?? page.href,
         order: (opts?.orderOffset ?? 0) + pageIdx * 10 + caseIdx,
         isActive: true,
         adminOnly: opts?.adminOnly ?? false,
@@ -69,6 +72,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "signup-login",
       pageLabel: "Signup & Login",
+      href: "/auth/login",
       cases: [
         { key: "email-signup", label: "Sign up with email works", href: "/auth/register" },
         { key: "google-oauth", label: "Sign up / log in with Google works", href: "/auth/login" },
@@ -105,6 +109,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "profile-settings",
       pageLabel: "Profile & Settings",
+      href: "/user/settings",
       cases: [
         { key: "edit-profile", label: "Editing display name / bio saves correctly", href: "/user/profile" },
         { key: "avatar-upload", label: "Uploading a profile avatar works" },
@@ -137,6 +142,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "testing-program",
       pageLabel: "Tester Hub",
+      href: "/user/tester",
       cases: [
         { key: "tester-hub-loads", label: "Tester Hub loads the full checklist grouped by section", href: "/user/tester" },
         { key: "tester-hub-search", label: "Tester Hub search finds test cases by typing part of the title or the route (e.g. \"/store/payouts\")", href: "/user/tester" },
@@ -157,6 +163,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "browsing-search",
       pageLabel: "Browsing & Search",
+      href: "/products",
       cases: [
         { key: "browse-categories", label: "Browsing categories shows relevant products", href: "/categories" },
         { key: "search", label: "Search returns relevant results", href: "/search" },
@@ -226,14 +233,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "product-detail",
       pageLabel: "Product / Auction / Pre-order Detail",
+      href: "/products",
       cases: [
-        { key: "standard-detail", label: "Standard product detail page loads correctly" },
+        { key: "standard-detail", label: "Standard product detail page loads correctly", href: "/products/product-tester-standard-1" },
         {
           key: "auction-detail",
           label: "Auction detail page shows current bid + a live, ticking countdown correctly",
           description: "The countdown (\"Ends in 2d 5h 30m\", ticking every second — not a static date) must appear directly above every \"Place a bid\" button: the info panel, the desktop and mobile compact bid-summary cards, inside the \"Place your bid\" modal above the submit button, and in the mobile sticky bottom bar (as a row above the current-bid/bid-count line). It should switch to \"Ended\" once the end time passes.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
         },
-        { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly" },
+        { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly", href: "/pre-orders/preorder-tester-sandbox-1" },
         {
           key: "image-gallery",
           label: "Product image gallery thumbnails load reliably (no broken-image icons) and click-to-zoom/rotate works in the lightbox",
@@ -242,7 +251,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "video-playback",
           label: "A product's video slide opens in theater mode with playback, zoom, and rotate controls",
-          description: "Product video is no longer a YouTube embed — when a product has a video, it appears as a trailing gallery slide (poster image + play badge) alongside the photos. Clicking it opens the full-screen lightbox in theater mode, plays the video with native controls, and the zoom (+/-) and rotate (R) buttons in the top bar still apply. Test on the two seeded fixtures: \"Beyblade Original — Dragoon F (Video Demo)\" and \"Beyblade X BX-02 Dran Sword (Video Demo)\".",
+          description: "When a product has a video, it appears as a trailing gallery slide (poster image + play badge) alongside the photos. Clicking it opens the full-screen lightbox in theater mode. For a raw-file video (native <video> element) the zoom (+/-) and rotate (R) buttons in the top bar apply; for a YouTube-sourced video (see \"video-playback-youtube\" below) they don't — the embed has its own player chrome. Test on the raw-file fixtures: \"Beyblade Original — Dragoon F (Video Demo)\" and \"Beyblade X BX-02 Dran Sword (Video Demo)\".",
+        },
+        {
+          key: "video-playback-youtube",
+          label: "A product whose video is sourced from YouTube (via MediaUploadField's \"YouTube\" tab) actually plays — not \"No video with supported format\"",
+          description: "Fixed 2026-08-21 — a YouTube-sourced video.url (e.g. youtube.com/watch?v=...) was always rendered as a raw <video src>, which can't play a YouTube watch-page URL. getYouTubeVideoId() now detects this and renders a youtube-nocookie.com iframe embed instead, in both the gallery lightbox and the standalone MediaVideo preview (used by the upload form's own \"YouTube\" tab preview). Verify on \"Metal Fight Beyblade BB-118 Dark Bull (Video Demo, YouTube)\" (standard product) and \"Beyblade Original — Dragoon Storm (Rare Sealed)\" (auction) — the video slide should open and actually play the embedded YouTube video, not show an error.",
+          href: "/products",
+        },
+        {
+          key: "video-lightbox-fullscreen-sizing",
+          label: "The video/YouTube-embed lightbox has a real minimum size on both mobile and desktop, and the top-bar \"expand\" button toggles real browser fullscreen",
+          description: "Fixed 2026-08-21 — the lightbox's \"Maximize2\" button used to just duplicate the zoom-reset button (no real fullscreen). It now toggles the native Fullscreen API (icon swaps to a \"shrink\" glyph while active) and syncs correctly if you exit via Esc instead of the button. Separately, the video/embed area now has a minimum width/height (bigger on desktop than mobile) so it never collapses to a tiny box while loading or on a low-resolution video. Test on a narrow (mobile-width) browser window and a full desktop window against \"Beyblade Burst B-97 Spryzen S2 (Video Demo, Wikimedia)\".",
+        },
+        {
+          key: "video-real-file-upload",
+          label: "Uploading a real video file via the product form's \"Upload\" tab (not YouTube or External URL) plays back correctly with an auto-captured poster frame",
+          description: "This path can't be covered by a permanent seed fixture — there's no real Storage object for a seeded URL to point at, so it has to be tested by hand. As a seller/admin, edit any product's Video field, use the default \"Upload\" tab (not the YouTube or External URL tab) to upload a real .mp4/.webm/.mov file, and confirm: (1) a poster/thumbnail frame is auto-captured and shown once upload finishes, (2) the video plays correctly in both the product form's own preview panel and the public product detail page's gallery lightbox, (3) it opens the trim modal if enabled, and (4) removing it and re-uploading works without leaving orphaned files (no error toast).",
+          href: "/store/products",
         },
         {
           key: "related-listings-sections",
@@ -250,22 +276,22 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Verify against \"Beyblade Burst B-01 Valkyrie\" (product-beyblade-burst-valkyrie) — all 4 sections should show real items: other Beyblade Burst products, other \"Beyblade\"-brand products, other attack-type/starter-set tagged products, and other Beyblade Arena store listings.",
           href: "/products",
         },
-        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry correctly assigns a prize once payment is confirmed (instant mode) or shows a pending state until the draw closes (scheduled mode)" },
+        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry correctly assigns a prize once payment is confirmed (instant mode) or shows a pending state until the draw closes (scheduled mode)", href: "/prize-draws/prizedraw-tester-sandbox-1" },
         {
           key: "bundle-purchase",
           label: "Purchasing a bundle works and shows all included items in the order",
           description: "Verify against \"Test Bundle\" (bundle-tester-sandbox, findable from the bundles listing page) — after checkout, the order should show a single \"Test Bundle\" line item, not two separate product lines.",
-          href: "/bundles",
+          href: "/bundles/bundle-tester-sandbox",
         },
         {
           key: "product-group-set-widget",
           label: "A product's detail page shows a collapsible \"Part of / Parts in this group\" panel with a working thumbnail strip and a \"View whole group\" table when the product belongs to a product-group (\"Set\")",
           description: "Verify against \"Test Product Set — Standard #1 + Standard #2\" (group-tester-sandbox-bundle) and either of its two children (product-tester-standard-1 / product-tester-standard-2), findable from the products listing page — all three should show the panel with each other listed, the arrow/triangle expand icons should render as real glyphs (not garbled text), and \"View whole group\" should open a working modal/drawer.",
-          href: "/products",
+          href: "/products/group-tester-sandbox-bundle",
         },
-        { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button" },
-        { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase" },
-        { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly" },
+        { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button", href: "/classified/classified-tester-sandbox-1" },
+        { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase", href: "/digital-codes/digitalcode-tester-sandbox-1" },
+        { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly", href: "/live/live-tester-sandbox-1" },
         {
           key: "live-item-video-mandatory",
           label: "Creating a live-item listing (species: animals/plants) without a video is rejected with a clear error; a live listing WITH a video plays correctly in the gallery's video slide and its poster thumbnail is watermarked",
@@ -277,6 +303,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "buying-checkout",
       pageLabel: "Buying & Checkout",
+      href: "/checkout",
       cases: [
         { key: "add-to-cart", label: "Add to cart works from the product page" },
         { key: "add-to-cart-out-of-stock", label: "Add to cart is disabled/blocked once a listing's stock reaches zero" },
@@ -334,6 +361,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "my-orders",
       pageLabel: "My Orders — List & Dashboard",
+      href: "/user/orders",
       cases: [
         {
           key: "orders-item-summary",
@@ -357,19 +385,37 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "A 2026-08-19 bug meant real checkout orders never carried a per-item image at all (the field didn't exist on the order document, so the detail page's image block was silently skipped rather than showing a broken-image icon). Place a fresh order through checkout and confirm its item thumbnail shows up both in the My Orders list and on the order-detail page.",
           href: "/user/orders",
         },
+        {
+          key: "my-orders-search-filter-sort",
+          label: "My Orders has a working search box (by order id), a status filter (drawer), and a sort dropdown (Newest/Oldest/Highest total/Lowest total) — the same toolbar pattern as every other dashboard listing",
+          description: "Converted 2026-08-21 off a page-specific hand-wired toolbar onto the standard DataListingView scaffold. Type part of a real order id into search and confirm it narrows the list, open the filter drawer and pick a status, and confirm changing sort actually reorders the cards.",
+          href: "/user/orders",
+        },
+        {
+          key: "order-tracking-timeline",
+          label: "\"Track Shipment\" opens a real page with a status timeline (Order placed → Shipped, each with a real date) and, when a tracking URL is set, a \"Track with carrier\" link that opens in a new tab — not a blank page",
+          description: "Fixed 2026-08-21 — /user/orders/[id]/track previously rendered <UserOrderTrackView /> with zero render-props (a Root Cause #8 blank slot-shell), and the underlying adapter dropped orderDate/shippingDate/deliveryDate/cancellationDate/trackingUrl entirely, so even a fixed page would have had nothing to show. From My Orders, open the seeded \"order-tester-sandbox-standard-shipped\" order and click \"Track Shipment\" — confirm both timeline steps show real dates and the tracking link opens www.example.com/track/TEST-TRACK-001 in a new tab.",
+          href: "/user/orders",
+        },
       ],
     },
     {
       pageKey: "bidding",
       pageLabel: "Bidding",
+      href: "/user/bids",
       cases: [
-        { key: "place-bid", label: "Placing a bid on an auction works", href: "/user/bids" },
+        { key: "place-bid", label: "Placing a bid on an auction works", href: "/auctions/auction-tester-sandbox-cycle-1" },
         { key: "place-bid-live-self", label: "After placing a bid, the current bid amount and bid count update immediately on the auction page for the bidder — no manual page refresh needed" },
         { key: "place-bid-live-other-viewer", label: "Opening the same auction in two browser tabs (or two accounts) and placing a bid in one updates the current bid and bid count in the other within a few seconds, without a manual refresh (realtime SSE)" },
         { key: "outbid-notification", label: "Getting outbid triggers a notification" },
-        { key: "win-auction", label: "Winning an auction creates a payable order correctly" },
+        { key: "win-auction", label: "Winning an auction creates a payable order correctly", href: "/auctions/auction-tester-sandbox-won" },
         { key: "bid-history", label: "My Bids page shows accurate bid history, paginated with the most recent bid first", href: "/user/bids" },
         { key: "bid-history-auction-detail-pagination", label: "An auction detail page's Bid History section shows the most recent bid first and paginates once there are more bids than fit on one page (try the L-Drago auction — 13 seeded bids)" },
+        {
+          key: "bid-history-shows-date-time-and-masked-name",
+          label: "Each row in an auction detail page's Bid History section shows the bid amount, the exact date AND time the bid was placed (e.g. \"Aug 21, 3:45 PM\"), and the bidder's identity as a masked name (e.g. \"R*** K***\") or a partial bidder id — never a bidder's real, unmasked full name",
+          description: "Fixed 2026-08-21 — `maskPublicBid()` (the helper meant to mask a bidder's display name before it reaches the public product page) was a silent no-op that returned the bid document unchanged, so a real bidder's full name was being sent to every visitor; separately, the Bid History row never displayed any bidder identity at all (only amount + date), so the leak had no visible symptom. Open the L-Drago auction (or any auction with bids) as a DIFFERENT, non-bidder account and expand Bid History — every row should show a masked name, not a bidder's real full name.",
+        },
         {
           key: "bid-increment-tiered",
           label: "The \"min increment\" shown on an auction matches the admin-configured tier for the current bid amount, not a flat ₹1 — and a bid below that increment is rejected",
@@ -389,6 +435,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "wishlist-history",
       pageLabel: "Wishlist & History",
+      href: "/wishlist",
       cases: [
         { key: "add-wishlist-pdp", label: "Adding a product to the wishlist from the product detail page works", href: "/wishlist" },
         { key: "add-wishlist-card", label: "Adding a product to the wishlist from a listing card (checkbox/long-press) works on both listing and search pages" },
@@ -415,6 +462,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "cart",
       pageLabel: "Cart",
+      href: "/cart",
       cases: [
         { key: "update-qty", label: "Updating item quantity in cart recalculates the total" },
         { key: "apply-coupon", label: "Applying a coupon code at checkout works" },
@@ -451,6 +499,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "reviews",
       pageLabel: "Reviews",
+      href: "/reviews",
       cases: [
         { key: "leave-review", label: "Leaving a review with rating + photo works" },
         { key: "view-seller-reviews", label: "Viewing a seller's reviews on their store page works" },
@@ -472,6 +521,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "messaging",
       pageLabel: "Messaging a Seller",
+      href: "/user/messages",
       cases: [
         { key: "start-conversation", label: "Starting a conversation with a seller works" },
         { key: "receive-reply", label: "Receiving and reading a seller's reply works" },
@@ -482,6 +532,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "user-dashboard-extras",
       pageLabel: "User Dashboard — Addresses, Catalogue, Settings, My Orders-by-Type",
+      href: "/user",
       cases: [
         { key: "addresses-crud", label: "Adding, editing, and listing delivery addresses works", href: "/user/addresses" },
         { key: "catalogue-crud", label: "Adding, editing, and deleting a personal catalogue item works", href: "/user/catalogue" },
@@ -496,11 +547,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/user/returns",
         },
         { key: "my-reviews", label: "\"My Reviews\" shows reviews the user has left", href: "/user/reviews" },
+        {
+          key: "user-personal-listings-search-sort",
+          label: "My Digital Codes, My Pre-Orders, My Prize Draws, and My Reviews each now have a working search box and sort dropdown (Newest/Oldest, plus a rating sort on Reviews) using the standard listing toolbar — not a bare unsearchable list",
+          description: "Converted 2026-08-21 off page-specific hand-wired toolbars onto the standard DataListingView scaffold. Spot-check at least two of the four: type a product name into search and confirm it narrows the list, and change the sort dropdown and confirm the order changes.",
+          href: "/user/digital-codes",
+        },
       ],
     },
     {
       pageKey: "user-dashboard-navigation",
       pageLabel: "User Dashboard Navigation",
+      href: "/user",
       cases: [
         { key: "sidebar-all-links-work", label: "Every item in the user dashboard sidebar navigates to its page without a 404 or broken layout", href: "/user" },
         { key: "sidebar-active-highlight", label: "The sidebar correctly highlights the currently active section as you navigate between pages" },
@@ -524,6 +582,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "become-seller",
       pageLabel: "Become a Seller & Store Setup",
+      href: "/user/become-seller",
       cases: [
         { key: "apply-seller", label: "Applying to become a seller works", href: "/user/become-seller" },
         { key: "store-setup", label: "Setting up store name/description/logo works" },
@@ -533,18 +592,38 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "listing-a-product",
       pageLabel: "Listing a Product",
+      href: "/store/products",
       cases: [
         { key: "list-standard", label: "Listing a standard product works" },
         { key: "list-auction", label: "Listing an auction works" },
         { key: "list-preorder", label: "Listing a pre-order works" },
         { key: "edit-listing", label: "Editing an existing listing works" },
         { key: "media-upload", label: "Uploading product images/video during listing works" },
+        {
+          key: "media-upload-preview-no-white-box",
+          label: "A freshly-uploaded image's thumbnail renders as a real preview within a couple seconds — it never gets stuck as a blank/white box",
+          description: "Fixed 2026-08-21 — a fresh upload can briefly 404 while the Firestore doc and Storage object finish propagating; the thumbnail now retries with backoff instead of latching a permanent broken-image placeholder. Try uploading 2-3 images back-to-back on a slower connection to see the retry in action.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-upload-images-capped-at-5",
+          label: "The product gallery upload UI caps at 5 images (not 10) and its label reads \"up to 5\"",
+          description: "Fixed 2026-08-21 — the UI previously advertised/allowed up to 10 images while the server schema only ever accepted 5, so a 6th+ image silently failed validation with no clear reason.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-upload-video-duration",
+          label: "Attaching a directly-uploaded video file during listing captures its duration automatically and saves without a validation error; attaching a YouTube or external video URL also saves fine without needing a duration",
+          description: "Fixed 2026-08-21 — the video schema always required a duration the UI never collected, so ANY product with a directly-uploaded video previously failed server validation invisibly. Duration is now captured client-side for file uploads; YouTube/external sources are exempt since their duration can't be read client-side.",
+          href: "/store/products/new",
+        },
         { key: "seller-quick-add-drawer-flips", label: "With Left-hand mode ON, the seller's quick-add-listing side drawer opens from the left instead of the right" },
       ],
     },
     {
       pageKey: "seller-orders",
       pageLabel: "Seller Order Management & Shipping/Tracking",
+      href: "/store/orders",
       cases: [
         { key: "view-orders", label: "Seller order list shows accurate incoming orders", href: "/store/orders" },
         { key: "confirm-payment", label: "Approving a buyer's manual payment proof works" },
@@ -553,22 +632,36 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "whatsapp-admin-share", label: "Uploading payment proof pings the admin WhatsApp numbers, and the buyer's \"Share for review\" link opens with a pre-filled message" },
         { key: "mark-shipped", label: "Marking an order shipped with tracking info works" },
         { key: "tracking-visible", label: "Buyer sees updated tracking status after seller ships" },
+        {
+          key: "seller-order-detail-full-page",
+          label: "Every seller order row has an \"Open full page\" action landing on a real bookmarkable /store/orders/[id]/view page showing the same items (with thumbnails)/address/payment/EMI/status content as the drawer",
+          description: "Added 2026-08-21 — sellers previously had no dedicated order-detail page, only a drawer, unlike buyer/admin. The drawer and the new page now share one content component (SellerOrderDetailPanel) so they can't drift.",
+          href: "/store/orders",
+        },
       ],
     },
     {
       pageKey: "seller-analytics-payouts",
       pageLabel: "Seller Analytics & Payouts",
+      href: "/store/analytics",
       cases: [
         { key: "view-analytics", label: "Seller analytics dashboard shows accurate sales data", href: "/store/analytics" },
         { key: "view-payouts", label: "Seller payouts list shows accurate payout history", href: "/store/payouts" },
         { key: "payouts-checkbox-select", label: "Selecting payouts with the row checkboxes shows a working bulk action bar (Export Selected)", href: "/store/payouts" },
         { key: "payouts-detail-panel", label: "Opening \"View Details\" on a payout shows a side panel with status progress, transaction ID, and expected payout date" },
         { key: "payouts-reminder-toggle", label: "Toggling the payout reminder flag in the detail panel saves correctly" },
+        {
+          key: "seller-payout-detail-full-page",
+          label: "Every payout row has an \"Open full page\" action landing on a real /store/payouts/[id]/view page showing a gross/platform-fee/refund-deduction/net breakdown, not just the drawer's flat amount",
+          description: "Added 2026-08-21 — the drawer previously showed only a flat amount with orderIds as plain unlinked monospace text. Both the drawer and the new page now render from one shared SellerPayoutDetailContent component.",
+          href: "/store/payouts",
+        },
       ],
     },
     {
       pageKey: "seller-shipping-payouts-setup",
       pageLabel: "Seller Shipping & Payout Setup",
+      href: "/store/shipping",
       cases: [
         { key: "shipping-page", label: "Store shipping settings page saves correctly", href: "/store/shipping" },
         { key: "shipping-configs-crud", label: "Creating, editing, and listing shipping configs works", href: "/store/shipping-configs" },
@@ -579,6 +672,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "seller-listing-types",
       pageLabel: "Seller — All Listing Types (Coupons, Bundles, Classifieds, Digital Codes, Live, Prize Draws, Art, Stickers)",
+      href: "/store/products",
       cases: [
         { key: "seller-coupons-crud", label: "Seller can create, edit, and list their own coupons", href: "/store/coupons" },
         { key: "seller-bundles-crud", label: "Seller can create, edit, and list bundles/grouped listings", href: "/store/bundles" },
@@ -604,15 +698,23 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "seller-catalog-org",
       pageLabel: "Seller Categories, Sublisting Categories & Listing Templates",
+      href: "/store/categories",
       cases: [
         { key: "seller-categories-crud", label: "Seller can create and edit their own categories", href: "/store/categories" },
         { key: "seller-sublisting-categories-crud", label: "Seller can create and edit sublisting categories", href: "/store/sublisting-categories" },
+        {
+          key: "sublisting-categories-standard-toolbar",
+          label: "Seller Sublisting Categories now uses the same search+sort+pagination toolbar and \"New Category\" button placement as every other dashboard listing, instead of its own bespoke layout",
+          description: "Converted 2026-08-21 off a fully custom self-contained page onto the standard DataListingView scaffold. Confirm search, sort, and pagination all still work, and the row-level View/Edit/Delete buttons are unchanged.",
+          href: "/store/sublisting-categories",
+        },
         { key: "seller-listing-templates-crud", label: "Seller can create, edit, and reuse listing templates when creating a new product", href: "/store/listing-templates" },
       ],
     },
     {
       pageKey: "seller-ops-comms",
       pageLabel: "Seller Addresses, Messages, Fulfillment & Print",
+      href: "/store/addresses",
       cases: [
         { key: "seller-addresses-crud", label: "Seller can add and edit store addresses", href: "/store/addresses" },
         { key: "seller-messages", label: "Seller messages list and thread view both work", href: "/store/messages" },
@@ -624,6 +726,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "seller-marketing-extras",
       pageLabel: "Seller Offers, Features, Google Reviews & WhatsApp Catalog",
+      href: "/store/offers",
       cases: [
         {
           key: "seller-offers-list",
@@ -640,6 +743,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "seller-guide",
       pageLabel: "Seller Guide Pages",
+      href: "/store/guide",
       cases: [
         { key: "seller-guide-pages", label: "The 5 seller guide pages (overview, capabilities, finance, listings, orders, settings) all load correctly", href: "/store/guide" },
       ],
@@ -647,6 +751,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "store-dashboard-navigation",
       pageLabel: "Store Dashboard Navigation",
+      href: "/store",
       cases: [
         { key: "store-sidebar-all-links-work", label: "Every item in the store/seller dashboard sidebar navigates to its page without a 404 or broken layout", href: "/store" },
         { key: "store-sidebar-active-highlight", label: "The store sidebar correctly highlights the currently active section as you navigate between pages" },
@@ -669,6 +774,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "blog",
       pageLabel: "Blog",
+      href: "/blog",
       cases: [
         { key: "read-post", label: "Reading a blog post renders correctly (images, formatting)" },
         { key: "blog-listing", label: "Blog listing page shows all published posts" },
@@ -685,6 +791,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "events",
       pageLabel: "Events, Raffles & Spin Wheel",
+      href: "/events",
       cases: [
         { key: "view-event", label: "Viewing an event detail page works", href: "/user/events" },
         { key: "events-listing-cards-images", label: "The events listing page shows each event's real cover image (not a generic icon placeholder) when one is set, and all cards in a row are the same height", href: "/events" },
@@ -733,6 +840,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "coupons",
       pageLabel: "Coupons",
+      href: "/user/coupons",
       cases: [
         { key: "view-claimed-coupons", label: "Claimed coupons list shows accurate coupons", href: "/user/coupons" },
         { key: "coupon-discount-applied", label: "Coupon discount is correctly reflected in the order total" },
@@ -745,6 +853,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "notifications",
       pageLabel: "Notifications",
+      href: "/user/notifications",
       cases: [
         { key: "receive-notification", label: "In-app notifications appear for order/bid/message events", href: "/user/notifications" },
         { key: "mark-read", label: "Marking a notification as read works" },
@@ -756,6 +865,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "faq-help",
       pageLabel: "FAQ & Help",
+      href: "/faqs",
       cases: [
         { key: "faq-bottom-borders", label: "FAQ question rows show a clear bottom-border divider on the homepage and the FAQs page", href: "/faqs" },
         { key: "faq-mobile-count", label: "Homepage FAQ section shows a good number of questions on mobile, not just 1-2", href: "/" },
@@ -768,14 +878,22 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "support-tickets",
       pageLabel: "Support Tickets",
+      href: "/user/support",
       cases: [
         { key: "create-ticket", label: "Creating a support ticket works", href: "/user/support" },
         { key: "reply-ticket", label: "Replying to an open support ticket works" },
+        {
+          key: "support-tickets-search-box",
+          label: "The support tickets list now has a working search box (by subject, id, or category) — it did not have one at all before",
+          description: "Converted 2026-08-21 off a hand-wired toolbar (which had status filter + \"hide resolved/closed\" toggle + sort, but no search input) onto the standard DataListingView scaffold, which adds search for free. Confirm typing part of a ticket's subject narrows the list, and the existing status filter + \"Hide resolved/closed\" toggle still work.",
+          href: "/user/support",
+        },
       ],
     },
     {
       pageKey: "public-profile",
       pageLabel: "Public Profiles & Stores",
+      href: "/stores",
       cases: [
         { key: "view-seller-store", label: "Viewing a seller's public store page works" },
         { key: "view-public-profile", label: "Viewing another user's public profile works" },
@@ -787,6 +905,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "general-design",
       pageLabel: "Colors, Styles, Readability, Mobile",
+      href: "/",
       cases: [
         { key: "contrast-readability", label: "Text contrast/readability is good on product cards" },
         { key: "mobile-nav", label: "Mobile navigation (bottom bar, menu) works and looks correct" },
@@ -805,8 +924,37 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "form-validation-errors",
+      pageLabel: "Form Validation & Error Summary",
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "error-summary-shows-beside-submit",
+          label: "Submitting an admin/seller form (e.g. new product, new blog post, new event) with missing/invalid required fields shows a clearly-visible list of every problem right beside the Publish/Save button — not a generic \"something went wrong\" message",
+          description: "Fixed 2026-08-21 — validation failures previously surfaced as an opaque, unhelpful production error with no indication of which field failed. A new shared FormErrorSummary component now lists every simultaneous issue live.",
+          href: "/store/products/new",
+        },
+        {
+          key: "error-summary-live-on-change",
+          label: "The error summary beside Publish/Save updates live as you fix a field (the error disappears from the list immediately), not only after you click Submit again",
+          href: "/store/products/new",
+        },
+        {
+          key: "error-summary-step-tagged",
+          label: "On a multi-step form (e.g. new product wizard), an error for a field on a step you're not currently viewing is labeled with that step's name in the summary, and clicking it jumps you to the correct step",
+          href: "/store/products/new",
+        },
+        {
+          key: "error-summary-supplements-inline",
+          label: "Field-level inline error messages (shown directly under/beside the input) still appear as before — the new summary is in addition to them, not a replacement",
+          href: "/store/products/new",
+        },
+      ],
+    },
+    {
       pageKey: "dashboard-layout",
       pageLabel: "Dashboards — Collapsible Sections & Mobile Tables",
+      href: "/admin/dashboard",
       cases: [
         { key: "collapsible-admin", label: "Admin dashboard sections expand/collapse and remember their state on reload", href: "/admin/dashboard" },
         { key: "collapsible-store", label: "Store dashboard sections expand/collapse and remember their state on reload", href: "/store" },
@@ -828,11 +976,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Row-level action buttons (the same ones in the table's overflow menu — edit, approve, delete, etc.) also appear directly on each list/grid card, not just in the table view",
           href: "/admin/orders",
         },
+        {
+          key: "listing-toolbar-consistency",
+          label: "Every admin/seller/user dashboard listing page uses the exact same search+filter-drawer+sort-dropdown+pagination toolbar layout — no page has a bespoke, differently-laid-out search/filter UI of its own",
+          description: "A 2026-08-21 sweep found 22 dashboard listings (admin Page Views/Ads/Carousel-adjacent/Event Entries, seller Bids/Orders/Products/Shipping Configs/Payout Methods/Store Categories/Reviews, and 10 user pages — Orders, Returns, Bids, Digital Codes, Events, Pre-Orders, Prize Draws, Reviews, Support, Notifications, plus seller Sublisting Categories) that had each hand-rolled their own toolbar with inconsistent capabilities (some had no search at all, some had no filter drawer). All were migrated onto the shared DataListingView scaffold, and a new strict-zero audit (audit-listing-view-standard.mjs) now blocks any future page from reintroducing a bespoke one. Spot-check 2-3 pages across different portals (e.g. /admin/analytics, /store/payout-methods, /user/support) and confirm they all look and behave identically in toolbar layout.",
+          href: "/admin/analytics",
+        },
       ],
     },
     {
       pageKey: "hand-mode-layout",
       pageLabel: "Left-Hand Mode",
+      href: "/user/settings",
       cases: [
         { key: "sidebar-flips", label: "With Left-hand mode ON, the admin/store/user dashboard's persistent left navigation sidebar (and its collapse handle) moves to the right side of the screen; with it OFF (default), the sidebar stays on the left", href: "/admin/dashboard" },
         { key: "drawers-flip", label: "With Left-hand mode ON, side drawers/panels (filters, quick-add forms, cart, edit/create panels) that normally slide in from the right now slide in from the left", href: "/products" },
@@ -848,6 +1003,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "footer-theme",
       pageLabel: "Footer & Dark Mode",
+      href: "/",
       cases: [
         { key: "footer-dark-mode", label: "Footer background and all link/text colors switch correctly between light and dark mode", href: "/" },
         {
@@ -861,6 +1017,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "homepage-carousels",
       pageLabel: "Homepage Carousels",
+      href: "/",
       cases: [
         { key: "carousel-loops", label: "Homepage carousels (Shop by Category, Top Brands, Featured Products, Live Auctions, Reserve Before It Ships, Verified Stores, Tournaments & Events, Collector Reviews) loop back to the first item after reaching the last instead of getting stuck at the end", href: "/" },
         { key: "carousel-no-flicker", label: "Homepage carousel auto-scroll does not flash/flicker when looping back to the first item" },
@@ -891,6 +1048,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "core-listing-pages",
       pageLabel: "Homepage & Core Listing Pages",
+      href: "/",
       cases: [
         { key: "homepage-loads", label: "The homepage loads without errors on both desktop and mobile", href: "/" },
         { key: "about-us-in-main-nav", label: "\"About Us\" appears as an item in the main public top navigation, not just the footer", href: "/about" },
@@ -929,11 +1087,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Verify against \"Beyblade Burst\" (category-beyblade-burst) — Related Categories should show Beyblade Original, Metal Fight, and Beyblade X (siblings under the \"Spinning Tops\" root).",
           href: "/categories",
         },
+        {
+          key: "category-brand-highlights-faq-grouped-listings",
+          label: "A category detail page shows a highlights list + FAQ accordion right after the hero, a brand detail page shows the same plus an \"About this brand\" panel (website/country/founded), and both show a \"Grouped listings\" carousel populated with real items",
+          description: "Added 2026-08-21 — CategoryDocument previously had no schema field at all for editorial content (highlights/FAQ), and GroupedListingsCarousel had zero public consumers on category/brand pages. Verify against \"Beyblade Burst\" (category-beyblade-burst, /categories/category-beyblade-burst) and \"Takara-Tomy\" (brand-takara-tomy, /brands/brand-takara-tomy) — both should show 3-5 highlight bullets, 2-4 FAQ entries, and (brand only) a working website link + country + founded year.",
+          href: "/categories/category-beyblade-burst",
+        },
       ],
     },
     {
       pageKey: "stores-sellers-directories",
       pageLabel: "Store & Seller Directories",
+      href: "/stores",
       cases: [
         { key: "store-directory", label: "The store directory page loads correctly", href: "/stores" },
         { key: "store-detail-tabs", label: "A store detail page's listing-type dropdown (Products/Auctions/Pre-Orders/Prize Draws/Bundles/Classifieds/Digital Codes/Live Items/Art & Stickers) switches correctly between listing types, and the separate Coupons/Reviews/About tabs next to it all load correctly", description: "The listing-type dropdown is always a dropdown (not just on narrow/mobile widths, unlike category/brand/product/event tabs) since a store can have up to 9 listing types — Coupons, Reviews, and About stay as standalone tabs beside it, never folded into the dropdown." },
@@ -957,6 +1122,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "help-how-it-works",
       pageLabel: "Help & How-It-Works Pages",
+      href: "/help",
       cases: [
         { key: "contact-page", label: "The contact page loads and the form submits correctly", href: "/contact" },
         { key: "help-page", label: "The help page loads correctly", href: "/help" },
@@ -967,6 +1133,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "legal-policy-pages",
       pageLabel: "Legal & Policy Pages",
+      href: "/help",
       cases: [
         { key: "shipping-refund-policy", label: "Shipping-policy and refund-policy pages load correctly" },
         { key: "privacy-cookies-security", label: "Privacy, cookies, and security pages load correctly" },
@@ -975,6 +1142,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "auth-error-pages",
       pageLabel: "Remaining Auth & Error Pages",
+      href: "/auth/login",
       cases: [
         { key: "register-page", label: "The register page loads and account creation works", href: "/auth/register" },
         { key: "forgot-reset-password-pages", label: "Forgot-password and reset-password pages both work" },
@@ -987,6 +1155,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     {
       pageKey: "bug-hunters",
       pageLabel: "Bug Hunters Leaderboard",
+      href: "/bug-hunters",
       cases: [
         {
           key: "leaderboard-loads",
@@ -1007,6 +1176,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "catalog-listings",
         pageLabel: "Catalog & Listings",
+        href: "/admin/products",
         cases: [
           { key: "brands-crud", label: "Admin can create, edit, and list brands", href: "/admin/brands" },
           { key: "categories-crud", label: "Admin can create, edit, and list categories", href: "/admin/categories" },
@@ -1033,6 +1203,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "coupons",
         pageLabel: "Coupons",
+        href: "/admin/coupons",
         cases: [
           { key: "coupon-create-percentage", label: "Admin can create a percentage-type coupon", href: "/admin/coupons/new" },
           { key: "coupon-create-fixed-freeship-bxgy", label: "Admin can create fixed, free_shipping, and buy_x_get_y coupon types" },
@@ -1045,6 +1216,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "events-raffles-spin",
         pageLabel: "Events, Raffles & Spin Wheel",
+        href: "/admin/events",
         cases: [
           { key: "raffle-create-open", label: "Admin can create an open_raffle event", href: "/admin/events/new" },
           { key: "raffle-create-top-n-scorers", label: "Admin can create a top_n_scorers raffle event" },
@@ -1058,6 +1230,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "prize-draws-lotteries",
         pageLabel: "Prize Draws / Lotteries",
+        href: "/admin/prize-draws",
         cases: [
           { key: "prizedraw-create", label: "Admin can create a prize-draw listing, choosing instant or scheduled reveal mode and a 1–15 day duration", href: "/admin/prize-draws" },
           { key: "prizedraw-reveal-winner", label: "Winners are assigned automatically via crypto.randomInt (on payment confirmation for instant mode, or at expiry/sellout for scheduled mode) — never by a manual admin click" },
@@ -1069,15 +1242,23 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "bundles",
         pageLabel: "Bundles / Grouped Listings",
+        href: "/admin/bundles",
         cases: [
           { key: "bundle-create", label: "Admin can create a bundle from existing products", href: "/admin/bundles" },
           { key: "bundle-stock-sync", label: "Bundle stock correctly syncs when a component product's stock changes" },
           { key: "bundle-edit-delete", label: "Admin can edit and delete a bundle" },
+          {
+            key: "bundle-brand-picker",
+            label: "The bundle editor has a \"Brand\" select (Takara-Tomy / Beyblade / No specific brand) that saves to the bundle's own brandSlug field, and that bundle then appears under the matching brand's page",
+            description: "Added 2026-08-21 — bundle→brand association used to be a fragile heuristic (checking the brand name against seo.keywords), replaced with a real brandSlug field. Edit an existing bundle (e.g. \"Original Series Collector's Set\"), confirm the Brand select shows its current brand, change it, save, and verify it now appears on the new brand's page instead of the old one.",
+            href: "/admin/bundles",
+          },
         ],
       },
       {
         pageKey: "classifieds-digitalcodes-live",
         pageLabel: "Classifieds, Digital Codes & Live Listings",
+        href: "/admin/classified",
         cases: [
           { key: "classified-create-moderate", label: "Admin can create and moderate classified listings", href: "/admin/classified" },
           { key: "digitalcode-create-moderate", label: "Admin can create and moderate digital-code listings", href: "/admin/digital-codes" },
@@ -1087,6 +1268,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "blog-faqs",
         pageLabel: "Blog & FAQs",
+        href: "/admin/blog",
         cases: [
           { key: "blog-create-edit-publish", label: "Admin can create, edit, and publish a blog post", href: "/admin/blog" },
           { key: "blog-media-step-save", label: "On the blog editor's Media step, setting a Cover Image and/or a YouTube Video ID and saving succeeds (no validation error) and both persist correctly when reopening the post for edit" },
@@ -1096,6 +1278,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "orders-fulfillment",
         pageLabel: "Orders & Fulfillment",
+        href: "/admin/orders",
         cases: [
           { key: "orders-status-change", label: "Admin orders list shows accurate orders and status changes save correctly", href: "/admin/orders" },
           { key: "bids-admin-view", label: "Admin bids view shows accurate bid data", href: "/admin/bids" },
@@ -1105,13 +1288,32 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "print-center-admin", label: "Admin print-center generates labels/invoices correctly", href: "/admin/print-center" },
           { key: "payouts-export-admin", label: "Admin can export payouts", href: "/admin/payouts" },
           { key: "bulk-action-realtime-progress", label: "A bulk admin action (e.g. bulk order status update) shows live progress via the bulk_events realtime channel and resolves without polling" },
+          {
+            key: "admin-order-list-item-and-detail",
+            label: "Admin order list rows show the order's item (thumbnail + title), not a raw order id, and clicking through (or \"Open full page\") shows the full items list on the order detail",
+            description: "Fixed 2026-08-21 — AdminOrdersView.mapRows built \"Order {id}\" from a nonexistent orderNumber field, and AdminOrderEditorView showed zero items even when opened. Both now read the order's already-denormalized items[] (Root Cause #52).",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-payout-detail-view",
+            label: "Every admin payout row has an \"Open full page\" action + a working \"Mark as paid\" action, landing on a real /admin/payouts/[id]/view page with a full gross/platform-fee/gateway-fee/GST/refund-deduction/net breakdown and linked order ids — not just a bare \"transaction ID\" modal",
+            description: "Added 2026-08-21 — admin payouts previously had no detail view of any kind. Open any payout from /admin/payouts and confirm the breakdown numbers add up (gross − fees − deductions = net).",
+            href: "/admin/payouts",
+          },
         ],
       },
       {
         pageKey: "users-trust",
         pageLabel: "Users & Trust",
+        href: "/admin/users",
         cases: [
           { key: "users-role-change", label: "Admin can change a user's role and toggle isTester/canTestAdmin", href: "/admin/users" },
+          {
+            key: "admin-user-detail-enriched",
+            label: "An admin user's own detail page (/admin/users/[id]) shows an avatar, stat tiles (orders/auctions won/items sold/reviews/rating), the user's public profile (bio/location/website/social links), last-sign-in + login count, and a small inline address list — not just 3 plain text lines",
+            description: "Fixed 2026-08-21 — the page fetched the full UserDocument but rendered almost none of it. Open any real user (e.g. a tester or seller persona) from /admin/users and confirm the header/stats/profile/addresses sections are populated, not blank.",
+            href: "/admin/users",
+          },
           {
             key: "admin-delete-user-complete",
             label: "Deleting a user from the admin Users editor removes their Firestore profile, their active sessions, AND their Firebase Auth record — not just the Firestore doc",
@@ -1134,6 +1336,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "content-marketing",
         pageLabel: "Content & Marketing",
+        href: "/admin/ads",
         cases: [
           { key: "ads-crud-preview", label: "Admin can create, edit, and preview ads", href: "/admin/ads" },
           { key: "newsletter-export-admin", label: "Admin can export the newsletter subscriber list", href: "/admin/newsletter" },
@@ -1147,6 +1350,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "site-system",
         pageLabel: "Site & System",
+        href: "/admin/site",
         cases: [
           { key: "site-settings-admin", label: "Admin site settings page saves correctly", href: "/admin/site" },
           {
@@ -1157,12 +1361,36 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           },
           { key: "admin-dashboard-widgets", label: "Admin dashboard widgets show accurate data", href: "/admin/dashboard" },
           { key: "analytics-admin", label: "Admin analytics dashboard shows accurate data", href: "/admin/analytics" },
+          {
+            key: "pageviews-report-listing-standard",
+            label: "The \"Page Views\" tab in Admin Analytics is a full standard listing — a search box (by entity id or URL), an entity-type filter drawer, a \"Most views\"/\"Fewest views\" sort dropdown, and real pagination — not a bare unsearchable table",
+            description: "Converted 2026-08-21 off a hand-rolled two-table layout onto the standard DataListingView scaffold. Switch to the Page Views tab, confirm the search box and filter drawer are present and actually narrow the rows, the sort dropdown reorders by view count, and clicking a row's entity/URL navigates to that real page.",
+            href: "/admin/analytics",
+          },
+          {
+            key: "pageviews-tracks-all-listing-types",
+            label: "Visiting a blog post, event, pre-order, prize draw, classified, digital-code, live item, or bundle detail page records a page view that shows up in Admin Analytics → Page Views, filtered to that entity type",
+            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), /events/event-original-series-clearance (event), /pre-orders/preorder-tester-sandbox-1 (pre-order), /prize-draws/prizedraw-tester-sandbox-1 (prize-draw), /classified/classified-tester-sandbox-1 (classified), /digital-codes/digitalcode-tester-sandbox-1 (digital-code), /live/live-tester-sandbox-1 (live), /bundles/bundle-tester-sandbox (bundle).",
+            href: "/blog/spot-genuine-takara-tomy-beyblade",
+          },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
           { key: "copilot-admin", label: "Admin copilot page works correctly", href: "/admin/copilot" },
           { key: "team-admin", label: "Admin team page works correctly", href: "/admin/team" },
           { key: "guide-pages-admin", label: "The 8 admin guide pages all load correctly", href: "/admin/guide" },
           { key: "tester-checklist-crud-admin", label: "Admin can create, edit, and toggle adminOnly on tester checklist items", href: "/admin/tester-checklist" },
           { key: "tester-feedback-report-export", label: "Admin tester-feedback report shows Yes/No analytics grouped correctly and the Download Report export works", href: "/admin/tester-feedback" },
+          {
+            key: "admin-audit-log-page",
+            label: "The new /admin/audit-log page (Finance nav group) lists real entries — actor, action, target, date — with working Action and Actor UID filters, and clicking a row opens a detail modal with the full reason + metadata payload",
+            description: "Added 2026-08-21 — no admin action audit trail existed anywhere before this (the only prior \"logs\" surface was raw Cloud Logging infra output, not actor/action semantics). Perform any instrumented action — hard-ban/soft-ban/unban a test user, mark a payout paid, edit a coupon, change a store's status, change a user's role, or use admin checkout bypass — then confirm a matching entry appears here within a few seconds.",
+            href: "/admin/audit-log",
+          },
+          {
+            key: "admin-notification-detail-modal",
+            label: "Admin Notifications rows have a \"View details\" action (and the row itself is clickable) opening a modal with the full title/message/image/related-entity/action-link — not list-only with just Resend/Delete",
+            description: "Added 2026-08-21 — admin/notifications was list-only before, with no way to see a notification's full body/payload/link.",
+            href: "/admin/notifications",
+          },
           {
             key: "admin-sidebar-logout-button",
             label: "The admin dashboard sidebar has a visible \"Log out\" action at the bottom (not just the header profile dropdown), and clicking it signs out and redirects to login",
@@ -1179,6 +1407,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "buyer-data-admin",
         pageLabel: "Buyer-Data Admin Views",
+        href: "/admin/carts",
         cases: [
           { key: "carts-admin-view", label: "Admin carts view shows accurate data", href: "/admin/carts" },
           { key: "wishlists-admin-view", label: "Admin wishlists view shows accurate data", href: "/admin/wishlists" },
@@ -1188,11 +1417,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "store-addresses-admin", label: "Admin store-addresses view shows accurate data", href: "/admin/store-addresses" },
           { key: "addresses-crud-admin", label: "Admin can create and edit addresses", href: "/admin/addresses" },
           { key: "stores-admin-view", label: "Admin stores view shows accurate data", href: "/admin/stores" },
+          {
+            key: "admin-store-detail-page",
+            label: "Every admin store row's row menu has a \"View full page\" action landing on a real dedicated /admin/stores/[id]/view page — logo, status/verified/featured badges, an owner link to that owner's (now-enriched) user page, stats (products/items sold/reviews/rating), capabilities, and a \"Manage\" button opening the existing edit drawer",
+            description: "Added 2026-08-21 — admin previously had no dedicated store detail page at all, only the edit drawer (no logo, no owner link, no stats). From /admin/stores, open the seeded \"Tester Sandbox Store\" (store-tester-sandbox) and confirm every section renders real data, and the owner link lands on that seller's admin user page.",
+            href: "/admin/stores",
+          },
         ],
       },
       {
         pageKey: "media-watermark",
         pageLabel: "Media Watermark Settings",
+        href: "/admin/site",
         cases: [
           { key: "watermark-size-opacity-controls", label: "Adjusting the watermark Size and Opacity sliders in Site Settings → Watermark visibly changes how prominent the watermark is on newly-loaded product images", href: "/admin/site" },
           { key: "watermark-position-presets", label: "Each of the 5 watermark Position presets (Center, Top left, Top right, Bottom left, Bottom right) correctly repositions the watermark on newly-loaded images" },
@@ -1204,6 +1440,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "bug-hunter-rewards",
         pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
+        href: "/admin/tester-feedback",
         cases: [
           {
             key: "confirm-bug",
@@ -1246,6 +1483,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
     label: "Demo fixture — reported bug, already confirmed and reopened (v1, disabled)",
     description: "Seed-only fixture demonstrating a confirmed bug: this v1 case is disabled (isActive:false) and credited to \"Mock User 18\". Its retest is \"Demo fixture — reported bug, already confirmed and reopened (v2, active)\" in this same page.",
+    href: "/admin/tester-checklist",
     order: 100,
     isActive: false,
     adminOnly: true,
@@ -1264,6 +1502,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
     label: "Demo fixture — reported bug, already confirmed and reopened (v2, active)",
     description: "Seed-only fixture — the retest version reopened from the disabled v1 case in this same page. Active and answerable again; a fresh \"No\" answer here can be used to try Mark as Bug end-to-end.",
+    href: "/admin/tester-checklist",
     order: 101,
     isActive: true,
     adminOnly: true,

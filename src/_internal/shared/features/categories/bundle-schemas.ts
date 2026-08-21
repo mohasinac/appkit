@@ -63,6 +63,8 @@ export const bundleCreateSchema = z.object({
    * "brand" — brand discovery collection; does not touch product reverse pointers.
    */
   bundleKind: z.enum([BUNDLE_KIND_SPECIAL, BUNDLE_KIND_BRAND]),
+  /** Which brand this bundle belongs to, for the brand page's bundle tab — distinct from bundleQueryRule.filter.brandSlug (a dynamic-rule query filter). */
+  brandSlug: z.string().optional(),
   bundlePrice: z.number().min(1),
   bundleQueryRule: bundleQueryRuleSchema,
   bundleProductIds: productIdsSchema,
@@ -76,6 +78,7 @@ export const bundleUpdateSchema = z.object({
   name: z.string().min(2).max(120).optional(),
   description: z.string().max(2000).optional(),
   bundleKind: z.enum([BUNDLE_KIND_SPECIAL, BUNDLE_KIND_BRAND]).optional(),
+  brandSlug: z.string().optional(),
   bundlePrice: z.number().min(1).optional(),
   bundleQueryRule: bundleQueryRuleSchema.optional(),
   bundleProductIds: productIdsSchema.optional(),

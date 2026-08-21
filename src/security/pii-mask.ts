@@ -71,7 +71,7 @@ export function maskPublicReview<T extends { userName: string }>(review: T): T {
  * (auction product page).
  */
 export function maskPublicBid<T extends { userName: string }>(bid: T): T {
-  return { ...bid };
+  return { ...bid, userName: maskName(bid.userName) };
 }
 
 /**

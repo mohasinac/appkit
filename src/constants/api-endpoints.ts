@@ -183,6 +183,8 @@ export const ADMIN_ENDPOINTS = {
   PAYOUT_BY_ID: (id: string) => `/api/admin/payouts/${id}`,
   PAYOUTS_WEEKLY: "/api/admin/payouts/weekly",
   PAYOUTS_EXPORT: "/api/admin/payouts/export",
+  AUDIT_LOG: "/api/admin/audit-log",
+  AUDIT_LOG_BY_ID: (id: string) => `/api/admin/audit-log/${id}`,
   SHIPMENTS: "/api/admin/shipments",
   SHIPMENT_BY_ID: (id: string) => `/api/admin/shipments/${id}`,
   SHIPMENT_LOTS: (id: string) => `/api/admin/shipments/${id}/lots`,

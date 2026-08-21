@@ -18,6 +18,8 @@ export type { FieldCheckboxProps } from "./forms";
 export { FieldCheckbox } from "./forms";
 export type { FieldTextareaProps } from "./forms";
 export { FieldTextarea } from "./forms";
+export type { FormErrorSummaryProps } from "./forms";
+export { FormErrorSummary } from "./forms";
 
 // --- Column utilities ---------------------------------------------------------
 export {

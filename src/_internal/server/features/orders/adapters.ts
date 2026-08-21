@@ -1,6 +1,10 @@
 import type { Order } from "../../../../features/orders/types";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 
+function toIsoOrUndefined(value: Date | undefined): string | undefined {
+  return value instanceof Date ? value.toISOString() : undefined;
+}
+
 export function orderDocumentToOrder(doc: OrderDocument): Order {
   const items: Order["items"] = doc.items?.length
     ? doc.items.map((item) => ({
@@ -61,7 +65,12 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     couponCode: doc.couponCode,
     trackingNumber: doc.trackingNumber,
     shippingCarrier: doc.shippingCarrier,
+    trackingUrl: doc.trackingUrl,
     notes: doc.notes,
+    orderDate: toIsoOrUndefined(doc.orderDate),
+    shippingDate: toIsoOrUndefined(doc.shippingDate),
+    deliveryDate: toIsoOrUndefined(doc.deliveryDate),
+    cancellationDate: toIsoOrUndefined(doc.cancellationDate),
     autoApproved: doc.autoApproved,
     disputeRaised: doc.disputeRaised,
     disputeStatus: doc.disputeStatus,

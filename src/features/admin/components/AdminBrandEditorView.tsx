@@ -16,7 +16,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -27,8 +27,9 @@ const brandFormSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/i).optional().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
   logoURL: z.string().url().optional().or(z.literal("")),
-  bannerURL: z.string().url().optional().or(z.literal("")),
   website: z.string().url().optional().or(z.literal("")),
+  country: z.string().max(80).optional().or(z.literal("")),
+  founded: z.number().int().min(1800).max(new Date().getFullYear()).optional(),
   isActive: z.boolean(),
   displayOrder: z.number().int().min(0).optional(),
 });
@@ -56,8 +57,9 @@ interface BrandPayload {
   slug?: string;
   description?: string;
   logoURL?: string;
-  bannerURL?: string;
   website?: string;
+  country?: string;
+  founded?: number;
   isActive: boolean;
   displayOrder?: number;
 }
@@ -81,8 +83,9 @@ export function AdminBrandEditorView({
   const [slugManual, setSlugManual] = React.useState(false);
   const [description, setDescription] = React.useState("");
   const [logoURL, setLogoURL] = React.useState("");
-  const [bannerURL, setBannerURL] = React.useState("");
   const [website, setWebsite] = React.useState("");
+  const [country, setCountry] = React.useState("");
+  const [founded, setFounded] = React.useState<string>("");
   const [isActive, setIsActive] = React.useState(true);
   const [displayOrder, setDisplayOrder] = React.useState<string>("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
@@ -105,8 +108,9 @@ export function AdminBrandEditorView({
     setSlugManual(true);
     setDescription(brand.description ?? "");
     setLogoURL(brand.logoURL ?? "");
-    setBannerURL(brand.bannerURL ?? "");
     setWebsite(brand.website ?? "");
+    setCountry(brand.country ?? "");
+    setFounded(brand.founded !== undefined ? String(brand.founded) : "");
     setIsActive(brand.isActive ?? true);
     setDisplayOrder(brand.displayOrder !== undefined ? String(brand.displayOrder) : "");
   }, [brandQuery.data]);
@@ -123,8 +127,9 @@ export function AdminBrandEditorView({
         slug: slug || toBrandSlug(name),
         description: description || undefined,
         logoURL: logoURL || undefined,
-        bannerURL: bannerURL || undefined,
         website: website || undefined,
+        country: country || undefined,
+        founded: founded !== "" ? Number(founded) : undefined,
         isActive,
         displayOrder: displayOrder !== "" ? Number(displayOrder) : undefined,
       };
@@ -194,21 +199,13 @@ export function AdminBrandEditorView({
             placeholder="Brief description of the brand"
           />
 
-          <Div layout="grid" gap="4" className="sm:grid-cols-2">
-            <ImageUpload
-              label="Logo"
-              currentImage={logoURL}
-              onUpload={(file) => upload(file, "brands", true, { type: "brand-logo", brand: name || slug })}
-              onChange={setLogoURL}
-            />
-
-            <ImageUpload
-              label="Banner"
-              currentImage={bannerURL}
-              onUpload={(file) => upload(file, "brands", true, { type: "brand-banner", brand: name || slug })}
-              onChange={setBannerURL}
-            />
-          </Div>
+          {/* "Cover Image" — this is what renders as the brand page's full-bleed hero banner (display.coverImage). There is no separate banner field. */}
+          <ImageUpload
+            label="Cover Image"
+            currentImage={logoURL}
+            onUpload={(file) => upload(file, "brands", true, { type: "brand-logo", brand: name || slug })}
+            onChange={setLogoURL}
+          />
 
           <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <Input
@@ -229,12 +226,32 @@ export function AdminBrandEditorView({
             />
           </Div>
 
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
+            <Input
+              label="Country of origin"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              placeholder="e.g. Japan"
+            />
+
+            <Input
+              label="Founded year"
+              value={founded}
+              onChange={(e) => setFounded(e.target.value)}
+              type="number"
+              min={1800}
+              max={new Date().getFullYear()}
+              placeholder="e.g. 1999"
+            />
+          </Div>
+
           <Toggle
             label="Active"
             checked={isActive}
             onChange={setIsActive}
           />
 
+          <FormErrorSummary />
           <Row gap="3" padding="t-xs">
             <Button
               type="submit"

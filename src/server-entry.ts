@@ -328,16 +328,31 @@ export * as authServer from "./_internal/server/features/auth/index";
 export * as messagesServer from "./_internal/server/features/messages/index";
 export * as scamsServer from "./_internal/server/features/scams/index";
 
-// Shared domain errors
+// Shared domain errors.
+//
+// ValidationError/NotFoundError/ConflictError are sourced from `./errors/index`
+// (the real, `mapToHttpError`/`handleApiError`-integrated classes) — NOT from
+// `_internal/shared/errors/index`, which defines same-named but structurally
+// unrelated classes (extends `AppkitError extends Error`, not `AppError`) used
+// internally by a handful of `_internal/shared/features/*` error subclasses
+// (AuctionEndedError, EventEndedError, CouponExpiredError, WishlistCapError).
+// Re-exporting the _internal set here as the package's public "." names meant
+// every `throw new ValidationError(...)` at a consumer call site (importing
+// from bare `@mohasinac/appkit`) constructed an instance `mapToHttpError`'s
+// `err instanceof ValidationError` check (against the *real* class) could
+// never match — the error silently fell through every classified branch to
+// the generic 500 "An internal error occurred" fallback, which is the exact
+// shape of the "generic/minified-React error" bug this session's plan set
+// out to fix. AppkitError/UnauthorizedError/CapacityError/ExpiredError have
+// no real-module counterpart and no confirmed instanceof-mismatch bug, so
+// they stay sourced from `_internal/shared/errors` unchanged.
 export {
   AppkitError,
-  NotFoundError,
-  ValidationError,
   UnauthorizedError,
-  ConflictError,
   CapacityError,
   ExpiredError,
 } from "./_internal/shared/errors/index";
+export { NotFoundError, ValidationError, ConflictError } from "./errors/index";
 
 // New shared tokens and config types
 export type { AppkitConfig } from "./_internal/shared/config/schema";

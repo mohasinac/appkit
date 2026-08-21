@@ -1,14 +1,14 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Checkbox, Div, Input, Label, Row, Select, Stack, StackedViewShell, Text, TextLink } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { Alert, Button, Checkbox, Div, Input, Label, PaginatedSelect, Row, Select, Stack, Text, TextLink } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { DataTable } from "./DataTable";
+import { DataListingView } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
 
 const __P = {
@@ -34,10 +34,6 @@ export interface AdminAdItem {
 interface AdminAdsListResponse {
   items: AdminAdItem[];
   total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-  hasMore: boolean;
   placements: Array<{ id: string; label: string; enabled: boolean; reservedHeight?: number }>;
   consentRequired: boolean;
   providerCredentialsMasked: {
@@ -64,7 +60,7 @@ type AdminAdItemWithValidation = AdminAdItem & {
   publishIssues?: string[];
 };
 
-export interface AdminAdsViewProps extends Omit<StackedViewShellProps, "sections"> {
+export interface AdminAdsViewProps {
   endpoint?: string;
   labels?: { title?: string };
   createHref?: string;
@@ -155,96 +151,23 @@ function AdsSettingsPanel({
   );
 }
 
-interface AdsFilterRowProps {
-  q: string;
-  setQ: (v: string) => void;
-  status: string;
-  setStatus: (v: string) => void;
-  provider: string;
-  setProvider: (v: string) => void;
-  placement: string;
-  setPlacement: (v: string) => void;
-  placements: Array<{ id: string; label: string }>;
-  onPageReset: () => void;
-}
-
-function AdsFilterRow({ q, setQ, status, setStatus, provider, setProvider, placement, setPlacement, placements, onPageReset }: AdsFilterRowProps) {
-  return (
-    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-4">
-      <Input
-        label="Search"
-        value={q}
-        onChange={(event) => { onPageReset(); setQ(event.target.value); }}
-        placeholder="Search ads"
-      />
-      <Select
-        label="Status"
-        value={status}
-        options={[
-          { label: "All", value: "all" },
-          { label: "Draft", value: "draft" },
-          { label: "Active", value: "active" },
-          { label: "Scheduled", value: "scheduled" },
-          { label: "Paused", value: "paused" },
-        ]}
-        onChange={(event) => { onPageReset(); setStatus(event.target.value); }}
-      />
-      <Select
-        label="Provider"
-        value={provider}
-        options={[
-          { label: "All", value: "all" },
-          { label: "Manual", value: "manual" },
-          { label: "AdSense", value: "adsense" },
-          { label: "Third Party", value: "thirdParty" },
-        ]}
-        onChange={(event) => { onPageReset(); setProvider(event.target.value); }}
-      />
-      <Select
-        label="Placement"
-        value={placement}
-        options={[
-          { label: "All", value: "all" },
-          ...placements.map((item) => ({ label: item.label, value: item.id })),
-        ]}
-        onChange={(event) => { onPageReset(); setPlacement(event.target.value); }}
-      />
-    </Div>
-  );
-}
-
 export function AdminAdsView({
   endpoint = ADMIN_ENDPOINTS.ADS,
   labels = {},
   createHref = "/admin/ads/new",
   renderEditLink,
-  ...rest
 }: AdminAdsViewProps) {
   const queryClient = useQueryClient();
-  const [page, setPage] = React.useState(1);
-  const [pageSize] = React.useState(20);
-  const [q, setQ] = React.useState("");
-  const [status, setStatus] = React.useState("all");
-  const [provider, setProvider] = React.useState("all");
-  const [placement, setPlacement] = React.useState("all");
   const [consentRequired, setConsentRequired] = React.useState(false);
   const [adsenseClientId, setAdsenseClientId] = React.useState("");
   const [thirdPartyScriptUrl, setThirdPartyScriptUrl] = React.useState("");
   const [settingsMessage, setSettingsMessage] = React.useState<string | null>(null);
 
-  const queryKey = ["admin-ads", endpoint, page, pageSize, q, status, provider, placement] as const;
-  const adsQuery = useQuery<AdminAdsListResponse>({
-    queryKey,
-    queryFn: () => {
-      const sp = new URLSearchParams();
-      sp.set("page", String(page));
-      sp.set("pageSize", String(pageSize));
-      if (q.trim()) sp.set("q", q.trim());
-      if (status !== "all") sp.set("status", status);
-      if (provider !== "all") sp.set("provider", provider);
-      if (placement !== "all") sp.set("placement", placement);
-      return apiClient.get<AdminAdsListResponse>(`${endpoint}?${sp.toString()}`);
-    },
+  // Lightweight metadata-only fetch (placements, consent, credential status) —
+  // decoupled from the paginated listing query DataListingView owns internally.
+  const metaQuery = useQuery<AdminAdsListResponse>({
+    queryKey: ["admin-ads-meta", endpoint],
+    queryFn: () => apiClient.get<AdminAdsListResponse>(`${endpoint}?page=1&pageSize=1`),
     staleTime: 10_000,
   });
 
@@ -254,13 +177,14 @@ export function AdminAdsView({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin-ads"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin-ads-meta"] });
     },
   });
 
   React.useEffect(() => {
-    if (!adsQuery.data) return;
-    setConsentRequired(Boolean(adsQuery.data.consentRequired));
-  }, [adsQuery.data]);
+    if (!metaQuery.data) return;
+    setConsentRequired(Boolean(metaQuery.data.consentRequired));
+  }, [metaQuery.data]);
 
   const settingsMutation = useApiMutation({
     mutationFn: async (payload: AdsConfigPatchPayload) => {
@@ -270,15 +194,52 @@ export function AdminAdsView({
       setSettingsMessage("Ad settings saved.");
       setAdsenseClientId("");
       setThirdPartyScriptUrl("");
-      await queryClient.invalidateQueries({ queryKey: ["admin-ads"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin-ads-meta"] });
     },
     onError: (error) => {
       setSettingsMessage(error instanceof Error ? error.message : "Failed to save ad settings");
     },
   });
 
-  const rows = (adsQuery.data?.items ?? []) as AdminAdItemWithValidation[];
-  const columns = React.useMemo<AdminTableColumn<AdminAdItemWithValidation>[]>(() => [
+  const placements = metaQuery.data?.placements ?? [];
+  const credentialStatus = metaQuery.data?.providerCredentialStatus;
+  const serverCredentialIssues = credentialStatus?.issues ?? [];
+
+  const localCredentialIssues = React.useMemo(() => {
+    const issues: string[] = [];
+    if (adsenseClientId.trim() && !/^ca-pub-[0-9]{10,20}$/.test(adsenseClientId.trim())) {
+      issues.push("AdSense client id must match format ca-pub-XXXXXXXXXX");
+    }
+    if (thirdPartyScriptUrl.trim()) {
+      try {
+        const parsed = new URL(thirdPartyScriptUrl.trim());
+        if (parsed.protocol !== "https:") {
+          issues.push("Third-party script URL must be https");
+        }
+      } catch (_err) {
+        void normalizeError(_err);
+        issues.push("Third-party script URL must be a valid URL");
+      }
+    }
+    return issues;
+  }, [adsenseClientId, thirdPartyScriptUrl]);
+
+  const hasPendingCredentialInput =
+    adsenseClientId.trim().length > 0 || thirdPartyScriptUrl.trim().length > 0;
+
+  const saveSettings = () => {
+    setSettingsMessage(null);
+    const payload: AdsConfigPatchPayload = {
+      consentRequired,
+      providerCredentials: {
+        adsenseClientId: adsenseClientId.trim() || undefined,
+        thirdPartyScriptUrl: thirdPartyScriptUrl.trim() || undefined,
+      },
+    };
+    settingsMutation.mutate(payload);
+  };
+
+  const columns: AdminTableColumn<AdminAdItemWithValidation>[] = [
     {
       key: "name",
       header: "Ad",
@@ -347,73 +308,83 @@ export function AdminAdsView({
         );
       },
     },
-  ], [renderEditLink, statusMutation]);
+  ];
 
-  const placements = adsQuery.data?.placements ?? [];
-  const credentialStatus = adsQuery.data?.providerCredentialStatus;
-  const serverCredentialIssues = credentialStatus?.issues ?? [];
-
-  const localCredentialIssues = React.useMemo(() => {
-    const issues: string[] = [];
-    if (adsenseClientId.trim() && !/^ca-pub-[0-9]{10,20}$/.test(adsenseClientId.trim())) {
-      issues.push("AdSense client id must match format ca-pub-XXXXXXXXXX");
-    }
-    if (thirdPartyScriptUrl.trim()) {
-      try {
-        const parsed = new URL(thirdPartyScriptUrl.trim());
-        if (parsed.protocol !== "https:") {
-          issues.push("Third-party script URL must be https");
-        }
-      } catch (_err) {
-        void normalizeError(_err);
-        issues.push("Third-party script URL must be a valid URL");
-      }
-    }
-    return issues;
-  }, [adsenseClientId, thirdPartyScriptUrl]);
-
-  const hasPendingCredentialInput =
-    adsenseClientId.trim().length > 0 || thirdPartyScriptUrl.trim().length > 0;
-
-  const saveSettings = () => {
-    setSettingsMessage(null);
-    const payload: AdsConfigPatchPayload = {
-      consentRequired,
-      providerCredentials: {
-        adsenseClientId: adsenseClientId.trim() || undefined,
-        thirdPartyScriptUrl: thirdPartyScriptUrl.trim() || undefined,
-      },
-    };
-    settingsMutation.mutate(payload);
-  };
-
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={labels.title ?? "Ad Inventory"}
-      sections={[
-        <Row align="center" justify="between" gap="3">
-          <Text variant="secondary">Manage ad inventory, placement mapping, and publishing state.</Text>
-          <TextLink
-            variant="bare"
-            href={createHref}
-            rounded="md"
-            paddingX="sm"
-            size="sm"
-            weight="medium"
-            layout="inline-flex"
-            align="center"
-            className="h-9 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)]"
-          >
-            New ad
-          </TextLink>
-        </Row>,
-        adsQuery.error ? (
+  const config: ListingViewConfig<AdminAdsListResponse, AdminAdItemWithValidation> = {
+    portal: "admin",
+    title: labels.title ?? "Ad Inventory",
+    searchPlaceholder: "Search ads",
+    emptyLabel: "No ads found",
+    filterKeys: ["status", "provider", "placement"],
+    defaultSort: sortBy("updatedAt", "DESC"),
+    queryKey: ["admin-ads", endpoint],
+    endpoint,
+    sortOptions: [{ value: sortBy("updatedAt", "DESC"), label: "Recently updated" }],
+    columns,
+    mapRows: (response) => response.items as AdminAdItemWithValidation[],
+    getTotal: (response) => response.total,
+    buildFilters: (state) => {
+      const clauses: string[] = [];
+      if (state.status) clauses.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
+      if (state.provider) clauses.push(sieveFilter("provider", SIEVE_OP.EQ, state.provider));
+      if (state.placement) clauses.push(sieveFilter("placement", SIEVE_OP.EQ, state.placement));
+      return clauses.length ? clauses.join(",") : undefined;
+    },
+    toolbarExtra: (
+      <TextLink
+        variant="bare"
+        href={createHref}
+        rounded="md"
+        paddingX="sm"
+        size="sm"
+        weight="medium"
+        layout="inline-flex"
+        align="center"
+        className="h-9 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)]"
+      >
+        New ad
+      </TextLink>
+    ),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <Stack gap="md">
+        <Select
+          label="Status"
+          value={pendingFilters.status || "all"}
+          options={[
+            { label: "All", value: "all" },
+            { label: "Draft", value: "draft" },
+            { label: "Active", value: "active" },
+            { label: "Scheduled", value: "scheduled" },
+            { label: "Paused", value: "paused" },
+          ]}
+          onChange={(e) => setPendingFilters((p) => ({ ...p, status: e.target.value === "all" ? "" : e.target.value }))}
+        />
+        <Select
+          label="Provider"
+          value={pendingFilters.provider || "all"}
+          options={[
+            { label: "All", value: "all" },
+            { label: "Manual", value: "manual" },
+            { label: "AdSense", value: "adsense" },
+            { label: "Third Party", value: "thirdParty" },
+          ]}
+          onChange={(e) => setPendingFilters((p) => ({ ...p, provider: e.target.value === "all" ? "" : e.target.value }))}
+        />
+        <Label size="sm" color="muted">Placement</Label>
+        <PaginatedSelect
+          value={pendingFilters.placement || undefined}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, placement: (v as string) ?? "" }))}
+          options={placements.map((item) => ({ value: item.id, label: item.label }))}
+        />
+      </Stack>
+    ),
+    renderAboveContent: () => (
+      <Stack gap="md" className={__P.p3}>
+        {metaQuery.error ? (
           <Alert variant="error" title="Could not load ads">
-            {adsQuery.error instanceof Error ? adsQuery.error.message : "Unknown error"}
+            {metaQuery.error instanceof Error ? metaQuery.error.message : "Unknown error"}
           </Alert>
-        ) : null,
+        ) : null}
         <AdsSettingsPanel
           adsenseClientId={adsenseClientId}
           setAdsenseClientId={setAdsenseClientId}
@@ -424,35 +395,16 @@ export function AdminAdsView({
           serverCredentialIssues={serverCredentialIssues}
           localCredentialIssues={localCredentialIssues}
           credentialStatus={credentialStatus}
-          providerCredentialsMasked={adsQuery.data?.providerCredentialsMasked}
+          providerCredentialsMasked={metaQuery.data?.providerCredentialsMasked}
           settingsMutation={settingsMutation}
           hasPendingCredentialInput={hasPendingCredentialInput}
-          currentConsentRequired={Boolean(adsQuery.data?.consentRequired)}
+          currentConsentRequired={Boolean(metaQuery.data?.consentRequired)}
           settingsMessage={settingsMessage}
           onSave={saveSettings}
-        />,
-        <AdsFilterRow
-          q={q}
-          setQ={setQ}
-          status={status}
-          setStatus={setStatus}
-          provider={provider}
-          setProvider={setProvider}
-          placement={placement}
-          setPlacement={setPlacement}
-          placements={placements}
-          onPageReset={() => setPage(1)}
-        />,
-        <DataTable
-          columns={columns}
-          rows={rows}
-          isLoading={adsQuery.isLoading}
-          currentPage={adsQuery.data?.page ?? page}
-          totalPages={adsQuery.data?.totalPages ?? 1}
-          onPageChange={setPage}
-          emptyLabel="No ads found"
-        />,
-      ]}
-    />
-  );
+        />
+      </Stack>
+    ),
+  };
+
+  return <DataListingView config={config} />;
 }

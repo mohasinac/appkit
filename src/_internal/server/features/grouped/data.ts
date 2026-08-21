@@ -177,6 +177,44 @@ export const getGroupsWithItemsForProduct = cache(
   },
 );
 
+/** Groups tagged to a category, hydrated with all member products — for the category detail page's GroupedListingsCarousel. */
+export const getGroupsForCategory = cache(
+  async (categorySlug: string): Promise<GroupedListingWithItems[]> => {
+    const groups = await groupedListingsRepository.findByCategorySlug(categorySlug).catch((err) => {
+      void normalizeError(err);
+      serverLogger.warn("grouped-data: getGroupsForCategory failed — returning empty", { categorySlug, error: err instanceof Error ? err.message : String(err) });
+      return [];
+    });
+    return Promise.all(
+      groups.map(async (group) => {
+        const items = await Promise.all(
+          group.productIds.map((id) => productRepository.findByIdOrSlug(id).catch(() => null)),
+        );
+        return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
+      }),
+    );
+  },
+);
+
+/** Groups tagged to a brand, hydrated with all member products — for the brand detail page's GroupedListingsCarousel. */
+export const getGroupsForBrand = cache(
+  async (brandSlug: string): Promise<GroupedListingWithItems[]> => {
+    const groups = await groupedListingsRepository.findByBrandSlug(brandSlug).catch((err) => {
+      void normalizeError(err);
+      serverLogger.warn("grouped-data: getGroupsForBrand failed — returning empty", { brandSlug, error: err instanceof Error ? err.message : String(err) });
+      return [];
+    });
+    return Promise.all(
+      groups.map(async (group) => {
+        const items = await Promise.all(
+          group.productIds.map((id) => productRepository.findByIdOrSlug(id).catch(() => null)),
+        );
+        return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
+      }),
+    );
+  },
+);
+
 export interface SitemapGroupedListing {
   slug: string;
   updatedAt: Date;

@@ -61,6 +61,15 @@ const rawCategories: Partial<CategoryDocument>[] = [
     isFeatured: true,
     featuredPriority: 1,
     isBrand: false,
+    highlights: [
+      "Every era of Beyblade in one place — Original, Metal Fight, Burst, and X",
+      "Verified sellers with condition-graded listings",
+      "Auctions, pre-orders, and prize draws alongside straightforward buy-now listings",
+    ],
+    faqs: [
+      { question: "What's the difference between the four Beyblade generations?", answer: "Original (1999-2003) started the franchise with ripcord launchers; Metal Fight (2008-2013) added metal-weighted tops; Burst (2015-present) introduced tops that burst apart on hard hits; X (2023-present) uses the new Xtreme Gear system with clip-on parts." },
+      { question: "Are used tops sold here safe to battle with?", answer: "Every listing shows a condition rating (New/Like New/Good/Used) and sellers are expected to disclose any chips or cracks — check the condition badge and item photos before buying." },
+    ],
     seo: { title: "Spinning Tops | LetItRip", description: "Buy Beyblade and spinning tops — Original, Metal Fight, Burst, X, and accessories.", keywords: ["beyblade", "spinning tops", "beyblade x", "beyblade burst"] },
     display: { icon: "🌀", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-spinning-tops-20260101/1200/600"), color: "#0891b2", showInMenu: true, showInFooter: true },
     isActive: true,
@@ -87,6 +96,15 @@ const rawCategories: Partial<CategoryDocument>[] = [
     metrics: emptyMetrics,
     isFeatured: false,
     isBrand: false,
+    highlights: [
+      "The tops that started it all in 1999",
+      "Ripcord launcher compatible with the full original-series lineup",
+      "A favorite among vintage collectors — sealed pieces command a premium",
+    ],
+    faqs: [
+      { question: "Will an original-series top work with a Burst or X launcher?", answer: "No — each generation uses its own launcher and ripcord system. Original-series tops need an original-series launcher." },
+      { question: "How do I tell if an original top is a genuine Takara release vs. a reprint?", answer: "Check the sticker finish and base stamp under good lighting — sellers with vintage-collectible tagged listings usually note authentication details in the description." },
+    ],
     seo: { title: "Beyblade Original | LetItRip", description: "Buy original-series Beyblade tops and launchers — Plastic Generation, 1999-2003.", keywords: ["beyblade original", "plastic generation", "vintage beyblade", "beyblade 1999"] },
     display: { icon: "🪀", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-original-20260101/1200/600"), color: "#b45309", showInMenu: true, showInFooter: false },
     isActive: true,
@@ -113,6 +131,15 @@ const rawCategories: Partial<CategoryDocument>[] = [
     metrics: emptyMetrics,
     isFeatured: false,
     isBrand: false,
+    highlights: [
+      "Metal-weighted tops for serious attack and defense power",
+      "Covers all four Metal Fight sub-generations: Fusion, Masters, Fury, Zero-G",
+      "Popular with tournament players for their heavier base weight",
+    ],
+    faqs: [
+      { question: "What does the number/letter code after a top's name mean (e.g. \"105RF\")?", answer: "It's the track height and bottom type — e.g. 105RF means a 105-height track with a Rubber Flat bottom. Swapping tracks and bottoms lets you tune stamina vs. attack." },
+      { question: "Can Metal Fight tops battle Burst tops in the same stadium?", answer: "Physically yes if the stadium size matches, but they don't burst apart on impact the way Burst tops do — most local groups keep the generations separate for fair play." },
+    ],
     seo: { title: "Beyblade Metal Fight | LetItRip", description: "Buy vintage Beyblade Metal Fight tops — Fusion, Masters, Fury.", keywords: ["beyblade metal fight", "metal fusion", "metal masters", "vintage beyblade"] },
     display: { icon: "⚙️", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-metal-20260101/1200/600"), color: "#64748b", showInMenu: true, showInFooter: false },
     isActive: true,
@@ -139,6 +166,15 @@ const rawCategories: Partial<CategoryDocument>[] = [
     metrics: emptyMetrics,
     isFeatured: false,
     isBrand: false,
+    highlights: [
+      "Tops that burst apart on a hard enough hit — a whole new battle mechanic",
+      "Swappable Layer / Disc / Driver parts for build customization",
+      "The most actively traded generation on the platform",
+    ],
+    faqs: [
+      { question: "What's the difference between a Layer, Disc, and Driver?", answer: "Layer is the top piece (attack profile), Disc sits underneath it (weight/stamina), Driver is the tip that touches the stadium floor (spin behavior). Mixing and matching lets you build custom combos." },
+      { question: "Is a burst during battle bad for the top?", answer: "No — Burst tops are designed to separate on hard impacts as the game's core mechanic, then click back together for the next battle." },
+    ],
     seo: { title: "Beyblade Burst | LetItRip", description: "Buy Beyblade Burst tops, launchers, and stadiums.", keywords: ["beyblade burst", "burst system", "beyblade burst pro"] },
     display: { icon: "💥", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-burst-20260101/1200/600"), color: "#059669", showInMenu: true, showInFooter: false },
     isActive: true,
@@ -165,6 +201,15 @@ const rawCategories: Partial<CategoryDocument>[] = [
     metrics: emptyMetrics,
     isFeatured: true,
     isBrand: false,
+    highlights: [
+      "The newest generation — Xtreme Gear system launched in 2023",
+      "Faster clip-on part swaps than any previous generation",
+      "Actively growing tournament scene with new waves releasing regularly",
+    ],
+    faqs: [
+      { question: "Do I need new stadiums for Beyblade X?", answer: "X-format tops battle best in the wider X-format stadiums, though many X tops still spin in older round stadiums — check a listing's description for stadium compatibility notes." },
+      { question: "What does the Blade / Ratchet / Bit naming mean?", answer: "Beyblade X renamed the part system — Blade (top piece), Ratchet (middle, sets height), Bit (bottom tip) — functionally similar to Burst's Layer/Disc/Driver but not physically interchangeable with them." },
+    ],
     seo: { title: "Beyblade X | LetItRip", description: "Buy Beyblade X tops and stadiums by Takara-Tomy.", keywords: ["beyblade x", "xtreme gear", "beyblade x starter", "takara tomy beyblade"] },
     display: { icon: "💫", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-x-20260101/1200/600"), color: "#0d9488", showInMenu: true, showInFooter: false },
     isActive: true,
@@ -193,6 +238,15 @@ const brandRows: Partial<CategoryDocument>[] = [
     brandWebsite: "https://www.takaratomy.co.jp",
     brandCountry: "Japan",
     brandFounded: 2006,
+    highlights: [
+      "The Japanese toy company that manufactures every Beyblade generation",
+      "Also behind Tomica, Transformers (Japan region), and Duel Masters",
+      "Known for Japan-exclusive releases and premium tooling quality",
+    ],
+    faqs: [
+      { question: "Is Takara-Tomy the same company as Hasbro's Beyblade line?", answer: "No — Takara-Tomy manufactures and sells Beyblade in Japan and most of Asia; Hasbro licenses and distributes a separate (sometimes different) product line internationally, primarily in North America." },
+      { question: "Are Takara-Tomy imports compatible with Hasbro Beyblade parts?", answer: "Within the same generation (e.g. Burst-to-Burst), yes, in most cases — cross-generation compatibility is not guaranteed." },
+    ],
     rootId: "brand-takara-tomy",
     parentIds: [],
     tier: 0,
@@ -218,6 +272,15 @@ const brandRows: Partial<CategoryDocument>[] = [
     brandWebsite: "https://beyblade.takaratomy.co.jp",
     brandCountry: "Japan",
     brandFounded: 1999,
+    highlights: [
+      "The franchise itself — spanning four generations since 1999",
+      "One of the best-selling spinning-top toy lines in the world",
+      "A competitive tournament scene alongside casual collecting",
+    ],
+    faqs: [
+      { question: "What age range is Beyblade designed for?", answer: "Most sets are labeled for ages 8+ due to small parts and launcher spring mechanisms — always check the age rating on the listing before buying for a young child." },
+      { question: "Where can I find official tournament rules?", answer: "Takara-Tomy and Hasbro both publish official battle rules for their respective regions — check the manufacturer's site linked from this page's \"Website\" field for the current rulebook." },
+    ],
     rootId: "brand-beyblade",
     parentIds: [],
     tier: 0,
@@ -248,6 +311,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Both original-generation Beyblades — Dranzer S and Driger V — bundled at a discount.",
     categoryType: "bundle",
     bundleKind: "special",
+    brandSlug: "brand-beyblade",
     bundlePrice: 2999,
     bundleQueryRule: {
       type: "static",
@@ -281,6 +345,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Storm Pegasus and Flame Sagittario — the classic Metal Fight rivalry, together.",
     categoryType: "bundle",
     bundleKind: "special",
+    brandSlug: "brand-takara-tomy",
     bundlePrice: 3499,
     bundleQueryRule: {
       type: "static",
@@ -314,6 +379,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Valkyrie and Regalia Genesis — top-tier Burst-era attackers in one set.",
     categoryType: "bundle",
     bundleKind: "special",
+    brandSlug: "brand-beyblade",
     // Was 3799 — priced ABOVE the 999+1399+1199=3597 member total (no real
     // discount, contradicted the bundle's whole purpose). Corrected 2026-08-19.
     bundlePrice: 2899,
@@ -349,6 +415,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Wizard Arrow and Knife Shinobi — the newest X-series tops for new battlers.",
     categoryType: "bundle",
     bundleKind: "special",
+    brandSlug: "brand-takara-tomy",
     bundlePrice: 2499,
     bundleQueryRule: {
       type: "static",
@@ -382,6 +449,8 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "One top from every Beyblade generation — Original, Metal Fight, Burst, and X — the ultimate collector's starter pack.",
     categoryType: "bundle",
     bundleKind: "special",
+    // Deliberately no brandSlug — genuinely cross-brand (2 Beyblade + 2
+    // Takara-Tomy member products), a real "no specific brand" test case.
     // Was 5999 — priced ABOVE the 1799+1299+999+899=4996 member total (no
     // real discount, contradicted the bundle's whole purpose). Corrected 2026-08-19.
     bundlePrice: 3999,

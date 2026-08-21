@@ -15,6 +15,7 @@ import { normalizeError } from "../../../errors/normalize";
  */
 
 import React, { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   Button,
@@ -32,7 +33,7 @@ import {
   Textarea,
   useToast,
 } from "../../../ui";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import type { UseFormShellStateResult } from "../../../ui/forms/FormShell";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -88,6 +89,7 @@ interface FormState {
   dynamicRule: DynamicRule;
   isActive: boolean;
   coverImage: string;
+  brandSlug: string;
 }
 
 const EMPTY_FORM: FormState = {
@@ -99,7 +101,10 @@ const EMPTY_FORM: FormState = {
   dynamicRule: DEFAULT_DYNAMIC_RULE,
   isActive: true,
   coverImage: "",
+  brandSlug: "",
 };
+
+const NO_BRAND_OPTION_VALUE = "";
 
 const bundleFormSchema = z.object({
   name: z.string().min(1, "Bundle name is required").max(150),
@@ -129,6 +134,7 @@ function bundleToForm(bundle: CategoryDocument | null): FormState {
     dynamicRule: isDynamic ? (rule as DynamicRule) : DEFAULT_DYNAMIC_RULE,
     isActive: bundle.isActive !== false,
     coverImage: bundle.display?.coverImage ?? "",
+    brandSlug: bundle.brandSlug ?? "",
   };
 }
 
@@ -166,6 +172,18 @@ export function AdminBundleEditorView({
     formHelpersRef.current?.setFieldError(path, message);
   const clearErrors = () => formHelpersRef.current?.clearErrors();
   const { showToast } = useToast();
+
+  const brandsQuery = useQuery({
+    queryKey: ["admin", "brands", "picker"],
+    queryFn: async () => {
+      const res = (await apiClient.get(ADMIN_ENDPOINTS.BRANDS)) as { data?: { items?: CategoryDocument[] } };
+      return res?.data?.items ?? [];
+    },
+  });
+  const brandOptions = [
+    { label: "No specific brand", value: NO_BRAND_OPTION_VALUE },
+    ...(brandsQuery.data ?? []).map((b) => ({ label: b.name, value: b.slug ?? b.id })),
+  ];
 
   // Load existing bundle on mount when editing
   useEffect(() => {
@@ -239,6 +257,7 @@ export function AdminBundleEditorView({
           ? { coverImage: form.coverImage.trim() }
           : undefined,
         isActive: form.isActive,
+        brandSlug: form.brandSlug || undefined,
       };
 
       if (isEdit && bundleId) {
@@ -397,6 +416,19 @@ export function AdminBundleEditorView({
                 />
               </Stack>
 
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">
+                  Brand
+                </Text>
+                <Select<string>
+                  options={brandOptions}
+                  value={form.brandSlug}
+                  onValueChange={(next) => setForm((f) => ({ ...f, brandSlug: next }))}
+                  disabled={saving || brandsQuery.isLoading}
+                  aria-label="Brand"
+                />
+              </Stack>
+
               <Checkbox
                 checked={form.isActive}
                 onChange={(e) =>
@@ -456,6 +488,7 @@ export function AdminBundleEditorView({
               )}
             </Stack>
 
+            <FormErrorSummary />
             <Row gap="sm" align="center" justify="end">
               <Button
                 variant="primary"

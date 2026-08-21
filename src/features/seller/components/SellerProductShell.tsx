@@ -1,11 +1,10 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { JsonValue } from "@mohasinac/appkit/client";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
-import { FormShellProvider } from "../../../ui/forms";
+import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, TagInput, Text, Toggle, useToast } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
@@ -54,7 +53,7 @@ export interface SellerProductDraft {
   // Media
   mainImage?: string;
   images?: string[];
-  video?: string;
+  video?: MediaField;
   youtubeId?: string;
   // Pricing
   price?: number;
@@ -125,6 +124,22 @@ export interface SellerProductDraft {
   printEditionSize?: number;
 }
 
+// Video duration is required for a directly-uploaded file (captured
+// automatically off the video element — see video-poster.ts) but can't be
+// obtained client-side for a YouTube/External-URL-sourced video without a
+// server round-trip, so it's optional for those two sources only.
+const productVideoSchema = z.object({
+  url: z.string().min(1),
+  type: z.literal("video").optional(),
+  thumbnailUrl: z.string().optional(),
+  source: z.enum(["upload", "youtube", "external"]).optional(),
+  youtubeId: z.string().optional(),
+  duration: z.number().positive().max(600).optional(),
+}).refine(
+  (v) => v.source === "youtube" || v.source === "external" || (v.duration != null && v.duration > 0),
+  { message: "Video duration could not be detected — try re-uploading the file.", path: ["duration"] },
+);
+
 const sellerProductSchema = z.object({
   title: z.string().min(1, "Product title is required").max(200),
   description: z.string().max(10000).optional().or(z.literal("")),
@@ -132,15 +147,24 @@ const sellerProductSchema = z.object({
   category: z.string().optional(),
   brand: z.string().optional(),
   isActive: z.boolean().optional(),
+  images: z.array(z.string()).max(5, "Up to 5 gallery images allowed").optional(),
+  video: productVideoSchema.optional(),
 }).passthrough();
+
+/** Shape returned by `onSave`/`onPublish` — structurally compatible with appkit's `ActionResult<T>` failure/success arms, without importing the server-only type into this client component. */
+export interface ProductActionResult {
+  ok: boolean;
+  error?: string;
+  issues?: unknown[];
+}
 
 export interface SellerProductShellProps {
   mode: "create" | "edit";
   listingType?: ProductListingMode;
   initialValues?: SellerProductDraft;
   productId?: string;
-  onSave: (draft: SellerProductDraft) => void | Promise<void>;
-  onPublish: (draft: SellerProductDraft) => void | Promise<void>;
+  onSave: (draft: SellerProductDraft) => Promise<ProductActionResult>;
+  onPublish: (draft: SellerProductDraft) => Promise<ProductActionResult>;
   onDiscard?: () => void;
   isLoading?: boolean;
   storeSlug?: string;
@@ -326,7 +350,7 @@ function StepMedia({
         cropAspectRatio={1}
       />
       <MediaUploadList
-        label="Gallery Images (up to 10)"
+        label="Gallery Images (up to 5)"
         value={galleryFields}
         onChange={(fields) => onChange({ images: fields.map((f) => f.url) })}
         onUpload={(file) => {
@@ -340,14 +364,27 @@ function StepMedia({
           });
         }}
         accept="image/*,video/*"
-        maxItems={10}
+        maxItems={5}
         maxSizeMB={10}
         helperText="Show multiple angles, grading details, or box contents."
       />
       <MediaUploadField
         label="Product Video (optional)"
-        value={values.video ?? ""}
-        onChange={(url) => onChange({ video: url })}
+        value={values.video?.url ?? ""}
+        onChange={(url) =>
+          onChange({
+            video: url
+              ? { ...(values.video ?? { type: "video" as const, source: "upload" as const }), url }
+              : undefined,
+          })
+        }
+        onChangeField={(media) => onChange({ video: media ?? undefined })}
+        onThumbnailChange={(thumbnailUrl) =>
+          onChange({ video: values.video ? { ...values.video, thumbnailUrl } : undefined })
+        }
+        onDurationChange={(duration) =>
+          onChange({ video: values.video ? { ...values.video, duration } : undefined })
+        }
         onUpload={(file) =>
           upload(file, "products", true, {
             type: "product-video",
@@ -1135,23 +1172,7 @@ export function SellerProductShell({
   const router = useRouter();
   const { showToast } = useToast();
   const { upload: shellUpload } = useMediaUpload();
-
-  // Auto-save in create mode — debounce 2s on any draft change
-  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const draftRef = useRef(draft);
-  draftRef.current = draft;
-  const onSaveRef = useRef(onSave);
-  onSaveRef.current = onSave;
-
-  useEffect(() => {
-    if (mode !== "create" || !isDirty) return;
-    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
-    autoSaveTimer.current = setTimeout(() => {
-      const result = onSaveRef.current(draftRef.current);
-      if (result && typeof (result as Promise<void>).catch === "function") (result as Promise<void>).catch(console.error);
-    }, 2000);
-    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
-  }, [draft, isDirty, mode]);
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(sellerProductSchema);
 
   const update = useCallback((partial: Partial<SellerProductDraft>) => {
     setDraft((prev) => {
@@ -1184,19 +1205,34 @@ export function SellerProductShell({
   }, [onDiscard, router]);
 
   // `silent` suppresses the success toast — used by the debounced auto-save
-  // path (FormShellProvider's onSaveDraft) so it doesn't pop a "Saved." toast
-  // every couple of seconds while the seller is still typing. The manual
-  // "Save Draft"/"Save Changes" button click stays loud (silent=false).
+  // effect above so it doesn't pop a "Saved." toast every couple of seconds
+  // while the seller is still typing. The manual "Save Draft"/"Save Changes"
+  // button click stays loud (silent=false).
+  //
+  // `onSave`/`onPublish` never throw in normal operation (backed by
+  // `wrapAction`-wrapped server actions, which always resolve to a
+  // `{ok, ...}` envelope) — the try/catch here is a defensive fallback for
+  // a genuinely unexpected rejection (e.g. a network failure during the RSC
+  // round-trip itself), not the primary error path.
   const handleSave = useCallback(async (silent = false) => {
     try {
-      await onSave(draft);
-      markClean();
-      if (!silent) showToast("Saved.", "success");
+      const result = await onSave(draft);
+      if (result.ok) {
+        markClean();
+        clearErrors();
+        if (!silent) showToast("Saved.", "success");
+        return;
+      }
+      applyZodIssues(
+        (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
+        setFieldError,
+      );
+      if (!silent) showToast(result.error || "Fix the highlighted errors and try again.", "error");
     } catch (err) {
       void normalizeError(err);
       if (!silent) showToast(err instanceof Error ? err.message : "Failed to save.", "error");
     }
-  }, [draft, onSave, markClean, showToast]);
+  }, [draft, onSave, markClean, clearErrors, setFieldError, showToast]);
   const handleAutoSave = useCallback(async () => {
     try {
       await handleSave(true);
@@ -1205,16 +1241,35 @@ export function SellerProductShell({
     }
   }, [handleSave]);
 
+  // Auto-save in create mode — debounce 2s on any draft change. Routed
+  // through handleAutoSave/handleSave (not a direct onSave call) so a
+  // validation failure during auto-save applies field errors + populates
+  // FormErrorSummary the same way a manual save does.
+  useEffect(() => {
+    if (mode !== "create" || !isDirty) return;
+    const timer = setTimeout(() => { void handleAutoSave(); }, 2000);
+    return () => clearTimeout(timer);
+  }, [draft, isDirty, mode, handleAutoSave]);
+
   const handlePublish = useCallback(async () => {
     try {
-      await onPublish({ ...draft, status: "published" });
-      markClean();
-      showToast("Published.", "success");
+      const result = await onPublish({ ...draft, status: "published" });
+      if (result.ok) {
+        markClean();
+        clearErrors();
+        showToast("Published.", "success");
+        return;
+      }
+      applyZodIssues(
+        (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
+        setFieldError,
+      );
+      showToast(result.error || "Fix the highlighted errors and try again.", "error");
     } catch (err) {
       void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to publish.", "error");
     }
-  }, [draft, onPublish, markClean, showToast]);
+  }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast]);
 
   const listingTypeLabel = pluginForMode(listingType).typeLabel;
   const typeSpecificStep: TypeSpecificStepDef | null = TYPE_SPECIFIC_STEPS[listingType] ?? null;
@@ -1222,6 +1277,7 @@ export function SellerProductShell({
   const steps: StepDef<SellerProductDraft>[] = [
     {
       label: "Basic",
+      fields: ["title", "description", "category", "brand", "condition", "tags", "barcodeId"],
       render: ({ values, onChange }) => (
         <StepBasic
           values={values}
@@ -1239,6 +1295,7 @@ export function SellerProductShell({
     },
     {
       label: "Media",
+      fields: ["mainImage", "images", "video", "video.url", "video.duration", "video.thumbnailUrl", "youtubeId", "externalVideoUrl"],
       render: ({ values, onChange }) => (
         <StepMedia values={values} onChange={onChange} storeSlug={storeSlug} />
       ),
@@ -1247,6 +1304,7 @@ export function SellerProductShell({
     ...(typeSpecificStep ? [typeSpecificStep] : []),
     {
       label: "Pricing",
+      fields: ["price", "compareAtPrice", "stockQuantity", "allowOffers", "minOfferPercent", "gstRate", "hsnCode"],
       render: ({ values, onChange }) => (
         <StepPricing values={values} onChange={onChange} listingType={listingType} />
       ),
@@ -1263,17 +1321,44 @@ export function SellerProductShell({
     },
     {
       label: "Shipping",
+      fields: ["shippingPaidBy", "pickupAddressId", "insurance", "insuranceCost"],
       render: ({ values, onChange }) => (
         <StepShipping values={values} onChange={onChange} renderAddressSelector={renderAddressSelector} />
       ),
     },
     {
       label: "Publish",
+      fields: ["seoTitle", "seoDescription", "isOnSale", "status"],
       render: ({ values, onChange }) => (
         <StepPublish values={values} onChange={onChange} />
       ),
     },
   ];
+
+  // Field-name → owning-step-index map for FormErrorSummary's step
+  // attribution/jump-to-step links (full-wizard create mode only — quick
+  // and edit modes don't have step navigation).
+  const fieldToStepIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    steps.forEach((step, i) => {
+      step.fields?.forEach((field) => { map[field] = i; });
+    });
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [steps.length, typeSpecificStep]);
+
+  // Live validation — re-run on every draft change, not just on submit, so
+  // FormErrorSummary and inline field errors both stay current as the
+  // seller types (per the "even on-change errors must be shown" requirement).
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
+
+  const wizardShellCtx = useMemo(
+    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
+    [shellCtx, fieldToStepIndex, setCurrentStep],
+  );
 
   const handleNext = useCallback(async () => {
     const step = steps[currentStep];
@@ -1310,7 +1395,7 @@ export function SellerProductShell({
 
   if (mode === "create" && formMode === "quick") {
     return (
-      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>} onSaveDraft={handleAutoSave}>
+      <FormShellContext.Provider value={shellCtx}>
         <FormShell
           isOpen
           onClose={handleDiscard}
@@ -1340,7 +1425,7 @@ export function SellerProductShell({
             }
           />
         </FormShell>
-      </FormShellProvider>
+      </FormShellContext.Provider>
     );
   }
 
@@ -1384,10 +1469,15 @@ export function SellerProductShell({
             {stepError && (
               <Text className="text-[var(--appkit-color-error)] px-[1.25rem] pb-[0.75rem]" size="sm">{stepError}</Text>
             )}
+            <FormShellContext.Provider value={wizardShellCtx}>
+              <Div paddingX="x-5" padding="b-sm">
+                <FormErrorSummary />
+              </Div>
+            </FormShellContext.Provider>
           </Div>
         )}
       >
-        <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>} onSaveDraft={handleAutoSave}>
+        <FormShellContext.Provider value={wizardShellCtx}>
           <StepForm<SellerProductDraft>
             steps={steps}
             values={draft}
@@ -1400,7 +1490,7 @@ export function SellerProductShell({
             hideActions
             stepErrors={stepValidationErrors}
           />
-        </FormShellProvider>
+        </FormShellContext.Provider>
       </FormShell>
     );
   }
@@ -1425,8 +1515,13 @@ export function SellerProductShell({
       saveLabel="Save Changes"
       publishLabel="Update"
       previewSlot={previewSlot}
+      footerTopSlot={
+        <FormShellContext.Provider value={shellCtx}>
+          <FormErrorSummary />
+        </FormShellContext.Provider>
+      }
     >
-      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>} onSaveDraft={handleAutoSave}>
+      <FormShellContext.Provider value={shellCtx}>
       <Stack gap="lg">
         <Section id="basic">
           <Heading level={3} className="mb-4">Basic Info</Heading>
@@ -1476,7 +1571,7 @@ export function SellerProductShell({
           )}
         </Section>
       </Stack>
-      </FormShellProvider>
+      </FormShellContext.Provider>
     </FormShell>
   );
 }

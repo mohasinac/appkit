@@ -97,7 +97,15 @@ const _rawOrdersTesterSeedData: Partial<OrderDocument>[] = [
     key: "shipped",
     status: "shipped",
     paymentStatus: "paid",
-    extra: { trackingNumber: "TEST-TRACK-001", shippingCarrier: "Test Carrier", shippingDate: daysAgo(1) },
+    extra: {
+      trackingNumber: "TEST-TRACK-001",
+      shippingCarrier: "Test Carrier",
+      shippingDate: daysAgo(1),
+      // Real-looking passthrough URL — exercises the "opens in new tab"
+      // tracking-link case on /user/orders/[id]/track (no live courier
+      // API integration; this is exactly what a seller/admin would type in).
+      trackingUrl: "https://www.example.com/track/TEST-TRACK-001",
+    },
   }),
   standardOrder({
     key: "delivered",

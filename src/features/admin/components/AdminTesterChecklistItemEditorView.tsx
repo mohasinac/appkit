@@ -19,7 +19,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FieldTextarea } from "../../../ui/forms";
+import { FieldInput, FieldTextarea, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -261,6 +261,7 @@ export function AdminTesterChecklistItemEditorView({
               />
             </Stack>
 
+            <FormErrorSummary />
             <Row gap="3" padding="t-xs">
               <Button
                 type="submit"

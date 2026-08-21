@@ -10,7 +10,8 @@ export interface BrandOgData {
 interface BrandDocLike {
   name?: string | null;
   description?: string | null;
-  logoURL?: string | null;
+  /** CategoryDocument has no `logoURL` field — the brand's image lives at `display.coverImage`, the same field the hero banner and generateMetadata's OG meta tag already use. */
+  display?: { coverImage?: string | null } | null;
 }
 
 /** High-level OG renderer — accepts the raw brand document from `getBrandForDetail`. */
@@ -25,7 +26,7 @@ export function renderBrandOg(
       description:
         doc?.description?.slice(0, 120) ??
         `Shop authentic ${name} collectibles on ${opts.siteName}.`,
-      logoUrl: resolveOgImageUrl(doc?.logoURL ?? null, opts.baseUrl),
+      logoUrl: resolveOgImageUrl(doc?.display?.coverImage ?? null, opts.baseUrl),
     },
     opts.siteName,
   );

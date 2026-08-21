@@ -1,9 +1,12 @@
 "use client";
-// S-STORE — Filter drawer for SellerProductsView. Extracted so the main
-// component stays under the 150-line code-quality threshold.
+// S-STORE — Filter fields for SellerProductsView. Extracted so the main
+// component stays under the 150-line code-quality threshold. Rendered as
+// DataListingView's `renderFilterPanel` content — DataListingView already
+// owns the surrounding <ListingFilterDrawer>, so this only renders the
+// inner fields.
 
 import React from "react";
-import { Div, FilterChipGroup, ListingFilterDrawer, Row, Stack, Text } from "../../../ui";
+import { Div, FilterChipGroup, Row, Stack, Text } from "../../../ui";
 import { FieldInput, FieldSelect } from "../../../ui/forms";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 import { BrandInlineSelect } from "./BrandInlineSelect";
@@ -17,30 +20,20 @@ const CONDITION_OPTIONS = [
   { value: "for-parts", label: "For parts" },
 ];
 
-export interface SellerProductsFilterDrawerProps {
-  isOpen: boolean;
+export interface SellerProductsFilterFieldsProps {
   pendingFilters: Record<string, string>;
   statusOptions: ReadonlyArray<{ id: string; label: string }>;
-  activeFilterCount: number;
   onChange: (next: Record<string, string>) => void;
-  onClear: () => void;
-  onApply: () => void;
-  onClose: () => void;
 }
 
-export function SellerProductsFilterDrawer({
-  isOpen,
+export function SellerProductsFilterFields({
   pendingFilters,
   statusOptions,
-  activeFilterCount,
   onChange,
-  onClear,
-  onApply,
-  onClose,
-}: SellerProductsFilterDrawerProps) {
+}: SellerProductsFilterFieldsProps) {
   const patch = (k: string, v: string) => onChange({ ...pendingFilters, [k]: v });
   return (
-    <ListingFilterDrawer open={isOpen} onClose={onClose} onApply={onApply} onClear={onClear} activeCount={activeFilterCount}>
+    <>
       <FilterChipGroup
         label="Status"
         tabs={statusOptions}
@@ -112,6 +105,6 @@ export function SellerProductsFilterDrawer({
         onChange={(v) => patch("badges", v)}
         placeholder="feature-free-shipping, feature-verified"
       />
-    </ListingFilterDrawer>
+    </>
   );
 }

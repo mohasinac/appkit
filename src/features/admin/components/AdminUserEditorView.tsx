@@ -4,7 +4,7 @@ import { Code, useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
+import { Avatar, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -23,8 +23,8 @@ export interface AdminUserEditorViewProps {
   onClose: () => void;
   userId?: string;
   displayName?: string;
+  photoURL?: string | null;
   currentRole?: string;
-  currentIsDisabled?: boolean;
   currentEmailVerified?: boolean;
   /** Tester program flag — orthogonal to role. Grants access to the Tester Hub and auto-approves the user's store. */
   currentIsTester?: boolean;
@@ -232,8 +232,8 @@ export function AdminUserEditorView({
   onClose,
   userId,
   displayName,
+  photoURL,
   currentRole,
-  currentIsDisabled: _currentIsDisabled,
   currentEmailVerified,
   currentIsTester,
   currentCanTestAdmin,
@@ -438,6 +438,14 @@ export function AdminUserEditorView({
 
   const isHardBanned = currentIsHardBanned ?? false;
   const softBans = currentSoftBans ?? [];
+
+  const renderAvatarHeader = () =>
+    userId ? (
+      <Row gap="sm" align="center">
+        <Avatar src={photoURL ?? null} name={displayName ?? userId} size="md" />
+        <Text size="sm" weight="semibold">{displayName ?? userId}</Text>
+      </Row>
+    ) : null;
 
   const renderInfoCard = () =>
     userId ? (
@@ -650,6 +658,7 @@ export function AdminUserEditorView({
             portal="admin"
             className="space-y-4"
             sections={[
+              renderAvatarHeader,
               renderInfoCard,
               renderRoleSection,
               renderEmailVerifiedSection,

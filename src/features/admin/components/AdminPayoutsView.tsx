@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { useApiMutation, useBulkEvent, RTDB_PATHS, type JsonArray } from "@mohasinac/appkit/client";
+import { useBulkEvent, RTDB_PATHS, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
@@ -10,16 +10,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   FilterChipGroup,
-  Form,
-  FormActions,
-  Input,
   ListingLayout,
-  Modal,
   RowActionMenu,
   useToast,
 } from "../../../ui";
+import { AdminPayoutMarkPaidModal } from "./AdminPayoutMarkPaidModal";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { useRouter } from "next/navigation";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
@@ -49,9 +48,9 @@ interface PayoutRow {
 export type AdminPayoutsViewProps = ListingLayoutProps;
 
 export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) {
+  const router = useRouter();
   const [markPaidOpen, setMarkPaidOpen] = useState(false);
   const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);
-  const [transactionId, setTransactionId] = useState("");
   const [calculating, setCalculating] = useState(false);
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -95,26 +94,6 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bulkEvent.status]);
 
-  const markPaid = useApiMutation({
-    mutationFn: () => {
-      if (!selectedPayoutId) throw new Error("No payout selected");
-      return apiClient.patch(ADMIN_ENDPOINTS.PAYOUT_BY_ID(selectedPayoutId), {
-        status: "paid",
-        transactionId: transactionId.trim() || undefined,
-      });
-    },
-    onSuccess: () => {
-      toast.showToast("Payout marked as paid.", "success");
-      setMarkPaidOpen(false);
-      setSelectedPayoutId(null);
-      setTransactionId("");
-      void queryClient.invalidateQueries({ queryKey: ["admin", "payouts", "listing"] });
-    },
-    onError: () => {
-      toast.showToast("Failed to update payout.", "error");
-    },
-  });
-
   const handleExportCsv = async () => {
     try {
       const blob = await apiClient.blob(ADMIN_ENDPOINTS.PAYOUTS_EXPORT);
@@ -128,11 +107,6 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       void normalizeError(_err);
       toast.showToast("CSV export failed.", "error");
     }
-  };
-
-  const closePaidModal = () => {
-    setMarkPaidOpen(false);
-    setTransactionId("");
   };
 
   if (React.Children.count(children) > 0) {
@@ -172,6 +146,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
+    onRowClick: (row) => router.push(String(ROUTES.ADMIN.PAYOUT_DETAIL(row.id))),
     buildFilters: (state) => {
       // An explicit status chip always wins. Otherwise, hide the noise
       // (already-paid payouts) by default — mirrors the isSold-hide-by-
@@ -211,6 +186,10 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       <RowActionMenu
         actions={[
           {
+            label: "View full page",
+            onClick: () => router.push(String(ROUTES.ADMIN.PAYOUT_DETAIL(row.id))),
+          },
+          {
             label: ACTIONS.ADMIN["grant-payout"].label,
             onClick: () => {
               setSelectedPayoutId(row.id);
@@ -247,28 +226,14 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
   return (
     <>
       <DataListingView config={config} />
-      <Modal isOpen={markPaidOpen} onClose={closePaidModal} title="Mark payout as paid">
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            markPaid.mutate();
-          }} spacing="md">
-          <Input
-            label="Transaction / reference ID"
-            value={transactionId}
-            onChange={(e) => setTransactionId(e.target.value)}
-            placeholder="UTR, UPI ref, or bank transfer ID (optional)"
-          />
-          <FormActions align="right">
-            <Button type="button" variant="outline" onClick={closePaidModal}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" disabled={markPaid.isPending}>
-              {markPaid.isPending ? "Saving..." : "Confirm paid"}
-            </Button>
-          </FormActions>
-        </Form>
-      </Modal>
+      <AdminPayoutMarkPaidModal
+        isOpen={markPaidOpen}
+        payoutId={selectedPayoutId}
+        onClose={() => {
+          setMarkPaidOpen(false);
+          setSelectedPayoutId(null);
+        }}
+      />
     </>
   );
 }

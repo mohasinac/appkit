@@ -2,11 +2,12 @@
 
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Details, Div, FieldInput, Heading, Stack, Summary, Text } from "../../../ui";
+import { Alert, Details, Div, FieldInput, Heading, Stack, Summary, Text, TextLink } from "../../../ui";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "../../../client";
 import { useSession } from "../../../react";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { TesterChecklistStepRow } from "./TesterChecklistStepRow";
 import type { TesterAnswer } from "../schemas/firestore";
 import type { JsonValue } from "../../../schemas/types";
@@ -163,6 +164,10 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
         Work through the checklist below and answer Yes/No for each test case. Add a comment and screenshot
         wherever something looks off — colors, styles, readability, bugs. Your answers save automatically.
       </Text>
+
+      <TextLink href={String(ROUTES.PUBLIC.BUG_HUNTERS)} variant="underline" weight="medium">
+        View Bug Hunters Leaderboard →
+      </TextLink>
 
       {sandboxExpiresAt && (
         <Alert variant="info" title="Shared test sandbox">

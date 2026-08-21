@@ -3,6 +3,7 @@ import {
   confirmPasswordReset as fbConfirmPasswordReset,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  sendEmailVerification as fbSendEmailVerification,
   sendPasswordResetEmail as fbSendPasswordResetEmail,
   signInWithEmailAndPassword as fbSignInWithEmailAndPassword,
   updatePassword,
@@ -32,6 +33,12 @@ export class FirebaseClientAuthProvider implements IClientAuthProvider {
 
   async applyActionCode(code: string): Promise<void> {
     await fbApplyActionCode(this._auth, code);
+  }
+
+  async sendEmailVerification(): Promise<void> {
+    const user = this._auth.currentUser;
+    if (!user) throw new Error(NO_AUTHENTICATED_USER_MESSAGE);
+    await fbSendEmailVerification(user);
   }
 
   async sendPasswordResetEmail(email: string): Promise<void> {

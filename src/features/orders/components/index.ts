@@ -20,6 +20,8 @@ export { OrderSiblingPayments } from "./OrderSiblingPayments";
 export type { OrderSiblingPaymentsProps } from "./OrderSiblingPayments";
 export { OrderPaymentSummary } from "./OrderPaymentSummary";
 export type { OrderPaymentSummaryProps } from "./OrderPaymentSummary";
+export { OrderStatusTimeline } from "./OrderStatusTimeline";
+export type { OrderStatusTimelineProps } from "./OrderStatusTimeline";
 export { RefundHistoryTable } from "./RefundHistoryTable";
 export type { RefundHistoryTableProps } from "./RefundHistoryTable";
 export { RefundRequestView } from "./RefundRequestView";

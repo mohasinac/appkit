@@ -7,11 +7,14 @@ import {
   productRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
+import { Anchor, Container, Div, Dl, Dt, Dd, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
+import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
+import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { getGroupsForBrand } from "../../../_internal/server/features/grouped/data";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
 
@@ -31,7 +34,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
   const brandName = brand?.name;
 
-  const [productsResult, auctionsResult, preOrdersResult, prizeDrawsResult, allBundles, activeBrands] = await Promise.all([
+  const [productsResult, auctionsResult, preOrdersResult, prizeDrawsResult, allBundles, activeBrands, groupedListings] = await Promise.all([
     brandName
       ? productRepository
           .list({
@@ -73,23 +76,22 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           .catch(() => null)
       : Promise.resolve(null),
     // SB-UNI-D — bundles are categoryType:"bundle" rows on the categories
-    // collection. We pull all bundle categories and filter client-side by
-    // brand affinity until the bundle storage carries an explicit brandSlug.
-    brandName
+    // collection, tagged to a brand via the real brandSlug field (added
+    // 2026-08-21 — previously a fragile seo.keywords string-match heuristic).
+    // We pull all bundle categories and filter client-side by brandSlug —
+    // no dedicated repository query needed at this catalog's bundle volume.
+    brand?.slug
       ? categoriesRepository
           .listByType("bundle", { activeOnly: true, limit: 50 })
           .catch(() => [])
       : Promise.resolve([]),
     // Related brands — every other active brand row, excluding this one.
     categoriesRepository.findActiveBrands().catch(() => []) as Promise<CategoryItem[]>,
+    brand?.slug ? getGroupsForBrand(brand.slug).catch(() => []) : Promise.resolve([]),
   ]);
 
-  const brandLower = brandName?.toLowerCase();
-  const brandBundles = brandLower
-    ? (allBundles as CategoryDocument[]).filter((b) => {
-        const seo = b.seo?.keywords?.map((k) => k.toLowerCase()) ?? [];
-        return seo.includes(brandLower);
-      })
+  const brandBundles = brand?.slug
+    ? (allBundles as CategoryDocument[]).filter((b) => b.brandSlug === brand.slug)
     : [];
 
   const relatedBrands = activeBrands.filter((b) => b.id !== brand?.id);
@@ -199,6 +201,45 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
         </Div>
       </Section>
 
+      {/* ── About this brand ────────────────────────────────────────────── */}
+      {(brand?.brandWebsite || brand?.brandCountry || brand?.brandFounded) && (
+        <Section border="subtle" surface="default" className="border-b" padding="y-md">
+          <Container size="xl">
+            <Stack gap="sm">
+              <Heading level={2} size="sm" weight="semibold" color="muted" transform="uppercase">
+                About this brand
+              </Heading>
+              <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden max-w-lg">
+                {brand?.brandWebsite && (
+                  <Row gap="md" oddEven="zebra" surface="default" padding="inline">
+                    <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Website</Dt>
+                    <Dd className="flex-1">
+                      <Anchor href={brand.brandWebsite} tone="brand" underline="hover">
+                        {brand.brandWebsite}
+                      </Anchor>
+                    </Dd>
+                  </Row>
+                )}
+                {brand?.brandCountry && (
+                  <Row gap="md" oddEven="zebra" surface="default" padding="inline">
+                    <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Country</Dt>
+                    <Dd className="flex-1" color="muted">{brand.brandCountry}</Dd>
+                  </Row>
+                )}
+                {brand?.brandFounded && (
+                  <Row gap="md" oddEven="zebra" surface="default" padding="inline">
+                    <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Founded</Dt>
+                    <Dd className="flex-1" color="muted">{brand.brandFounded}</Dd>
+                  </Row>
+                )}
+              </Dl>
+            </Stack>
+          </Container>
+        </Section>
+      )}
+
+      <CategoryHighlightsAndFaqSection highlights={brand?.highlights} faqs={brand?.faqs} />
+
       {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}
       <Section padding="y-lg">
         <Container size="xl">
@@ -216,6 +257,14 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           )}
         </Container>
       </Section>
+
+      {groupedListings.length > 0 && (
+        <Section padding="y-lg">
+          <Container size="xl">
+            <GroupedListingsCarousel groups={groupedListings} />
+          </Container>
+        </Section>
+      )}
 
       {/* ── Related brands ───────────────────────────────────────────────── */}
       {relatedBrands.length > 0 && (

@@ -36,8 +36,6 @@ const COUPON_TYPES: { value: CouponType; label: string }[] = [
 export interface CouponsIndexListingProps {
   /** Pre-fetched coupons to show on first render */
   initialCoupons?: any[];
-  /** If set, only show coupons from this store (slug, for display) */
-  storeSlug?: string;
   /** If set, only show coupons from this store (id, for filtering) */
   storeId?: string;
 }
@@ -46,7 +44,6 @@ const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO] 
 
 export function CouponsIndexListing({
   initialCoupons,
-  storeSlug: _storeSlug,
   storeId,
 }: CouponsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "12", sort: DEFAULT_SORT } });

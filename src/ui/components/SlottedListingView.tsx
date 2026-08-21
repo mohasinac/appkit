@@ -96,8 +96,14 @@ export function SlottedListingView({
   renderTable,
   renderPagination,
   overlays,
+  // audit-dead-underscore-prop-ok: deliberately unused — see the doc comment
+  // on `manageSearch` above; wiring this to gate renderSearch would break
+  // real consumers with self-contained closures.
   manageSearch: _manageSearch,
   manageSelection,
+  // audit-dead-underscore-prop-ok: deliberately unused — see the doc comment
+  // on `manageSort` above; wiring this to gate renderSort would break real
+  // consumers with self-contained closures.
   manageSort: _manageSort = false,
   inlineToolbar = false,
   total = 0,

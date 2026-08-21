@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import { Input } from "./Input";
 import { Select, type SelectOption } from "./Select";
 import { Textarea } from "./Textarea";
 import { Label, Text, Span } from "./Typography";
 import { ImageUpload, MediaUploadField } from "../../features/media";
+import { FormShellContext } from "../forms/FormShell";
 
 export interface FormFieldProps {
   label?: string;
@@ -24,7 +25,9 @@ export interface FormFieldProps {
   value?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
+  /** Override error — falls back to FormShell context error for this field */
   error?: string;
+  /** Override touched — falls back to FormShell context touched state for this field */
   touched?: boolean;
   placeholder?: string;
   required?: boolean;
@@ -52,8 +55,8 @@ export function FormField({
   value = "",
   onChange,
   onBlur,
-  error,
-  touched,
+  error: errorProp,
+  touched: touchedProp,
   placeholder,
   required = false,
   disabled = false,
@@ -68,6 +71,13 @@ export function FormField({
   accept,
   maxSizeMB,
 }: FormFieldProps) {
+  // Falls back to FormShellContext (the same context FieldInput/FieldSelect
+  // read) whenever the caller doesn't pass an explicit error/touched prop —
+  // an explicit prop always wins, preserving back-compat for the handful of
+  // call sites that already manage their own error state manually.
+  const ctx = useContext(FormShellContext);
+  const error = errorProp ?? ctx?.errors[name];
+  const touched = touchedProp ?? ctx?.touched[name];
   const showError = error
     ? touched != null
       ? touched && !!error
@@ -76,6 +86,16 @@ export function FormField({
   const inputId = `field-${name}`;
   const errorId = `${inputId}-error`;
   const describedBy = showError ? errorId : undefined;
+
+  function handleFieldChange(newValue: string) {
+    onChange?.(newValue);
+    if (showError) ctx?.clearFieldError(name);
+  }
+
+  function handleFieldBlur() {
+    ctx?.setFieldTouched(name);
+    onBlur?.();
+  }
 
   if (type === "image" && onUpload) {
     return (
@@ -92,7 +112,7 @@ export function FormField({
           <ImageUpload
             currentImage={value || undefined}
             onUpload={onUpload}
-            onChange={(url) => onChange?.(url)}
+            onChange={(url) => handleFieldChange(url)}
             label={label ? `${label}${required ? " *" : ""}` : undefined}
             helperText={hint ?? helpText}
             captureSource={captureSource ?? "file-only"}
@@ -121,7 +141,7 @@ export function FormField({
         <MediaUploadField
           label={`${label || name}${required ? " *" : ""}`}
           value={value}
-          onChange={(url) => onChange?.(url)}
+          onChange={(url) => handleFieldChange(url)}
           onUpload={onUpload}
           disabled={disabled}
           helperText={hint ?? helpText}
@@ -161,8 +181,8 @@ export function FormField({
           id={inputId}
           name={name}
           value={value}
-          onChange={(event) => onChange?.(event.target.value)}
-          onBlur={onBlur}
+          onChange={(event) => handleFieldChange(event.target.value)}
+          onBlur={handleFieldBlur}
           disabled={disabled}
           options={options}
           aria-required={required || undefined}
@@ -174,8 +194,8 @@ export function FormField({
           id={inputId}
           name={name}
           value={value}
-          onChange={(event) => onChange?.(event.target.value)}
-          onBlur={onBlur}
+          onChange={(event) => handleFieldChange(event.target.value)}
+          onBlur={handleFieldBlur}
           placeholder={placeholder}
           disabled={disabled}
           rows={rows}
@@ -189,8 +209,8 @@ export function FormField({
           name={name}
           type={type}
           value={value}
-          onChange={(event) => onChange?.(event.target.value)}
-          onBlur={onBlur}
+          onChange={(event) => handleFieldChange(event.target.value)}
+          onBlur={handleFieldBlur}
           placeholder={placeholder}
           disabled={disabled}
           autoComplete={autoComplete}

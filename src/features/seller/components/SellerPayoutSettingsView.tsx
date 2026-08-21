@@ -1,7 +1,9 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { z } from "zod";
 import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
+import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { StepDef, StepForm } from "../../shell";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -9,6 +11,45 @@ import { normalizeError } from "../../../errors/normalize";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
+
+// No accountNumber format check here on purpose — the UI supports "leave
+// blank to keep the existing saved account number" on re-save (see the
+// accountNumber field's helpText below), and the exact keep-existing
+// semantics live server-side; a client-side format requirement risks
+// blocking that legitimate blank-resave case.
+const payoutSettingsDraftSchema = z.object({
+  method: z.enum(["upi", "bank_transfer"]),
+  upiId: z.string(),
+  accountHolderName: z.string(),
+  accountNumber: z.string(),
+  ifscCode: z.string(),
+  bankName: z.string(),
+  accountType: z.enum(["savings", "current"]),
+  gstin: z.string(),
+  pan: z.string(),
+  businessType: z.string(),
+  autoPayout: z.boolean(),
+  minimumThreshold: z.string(),
+  emiEnabled: z.boolean(),
+}).superRefine((v, ctx) => {
+  if (v.method === "upi") {
+    if (!v.upiId.trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["upiId"], message: "UPI ID is required" });
+    } else if (!/^[\w.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(v.upiId.trim())) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["upiId"], message: "Please enter a valid UPI ID" });
+    }
+  } else {
+    if (!v.accountHolderName.trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["accountHolderName"], message: "Account holder name is required" });
+    }
+    if (v.ifscCode.trim() && !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(v.ifscCode.trim())) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["ifscCode"], message: "Invalid IFSC code" });
+    }
+    if (!v.bankName.trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["bankName"], message: "Bank name is required" });
+    }
+  }
+});
 
 type PayoutMethod = "upi" | "bank_transfer";
 type AccountType = "savings" | "current";
@@ -70,6 +111,12 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(payoutSettingsDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   useEffect(() => {
     fetch(apiBase)
@@ -141,7 +188,17 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         body: JSON.stringify(body),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error ?? "Failed to save");
+      if (!res.ok) {
+        if (Array.isArray(json?.issues) && json.issues.length > 0) {
+          applyZodIssues(
+            json.issues as { path: (string | number)[]; message: string }[],
+            setFieldError,
+          );
+        }
+        setError(json?.error ?? "Failed to save");
+        return;
+      }
+      clearErrors();
       setSuccess(true);
       const updated: SafePayoutDetails = json?.data?.payoutDetails ?? { method: draft.method, isConfigured: false };
       setCurrent(updated);
@@ -159,6 +216,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
   const steps: StepDef<PayoutDraft>[] = [
     {
       label: "Payout Method",
+      fields: ["method", "upiId", "accountHolderName", "accountNumber", "ifscCode", "bankName", "accountType"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Method</Heading>
@@ -284,6 +342,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     },
     {
       label: "Tax Info",
+      fields: ["gstin", "pan", "businessType"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Tax Information</Heading>
@@ -324,6 +383,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     },
     {
       label: "Preferences",
+      fields: ["autoPayout", "minimumThreshold", "emiEnabled"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Preferences</Heading>
@@ -366,22 +426,39 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     },
   ];
 
+  const fieldToStepIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    steps.forEach((step, i) => {
+      step.fields?.forEach((field) => { map[field] = i; });
+    });
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [steps.length]);
+
+  const wizardShellCtx = useMemo(
+    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
+    [shellCtx, fieldToStepIndex, setCurrentStep],
+  );
+
   return (
     <StackedViewShell portal="seller" title="Payout Settings" sections={[
       <Div key="payout">
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
         {success && <Alert variant="success" className="mb-4">Payout details saved.</Alert>}
-        <StepForm<PayoutDraft>
-          steps={steps}
-          values={draft}
-          onChange={update}
-          onComplete={handleSave}
-          formId="seller-payout-settings"
-          currentStep={currentStep}
-          onStepChange={setCurrentStep}
-          completeLabel="Save Payout Details"
-          isLoading={busy}
-        />
+        <FormShellContext.Provider value={wizardShellCtx}>
+          <FormErrorSummary />
+          <StepForm<PayoutDraft>
+            steps={steps}
+            values={draft}
+            onChange={update}
+            onComplete={handleSave}
+            formId="seller-payout-settings"
+            currentStep={currentStep}
+            onStepChange={setCurrentStep}
+            completeLabel="Save Payout Details"
+            isLoading={busy}
+          />
+        </FormShellContext.Provider>
       </Div>,
     ]} />
   );

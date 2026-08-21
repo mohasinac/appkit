@@ -91,6 +91,20 @@ export const ADMIN_PAYOUT_STATUS_TABS = [
   { id: "failed", label: "Failed" },
 ] as const satisfies readonly AdminFilterTab[];
 
+/** Admin > Audit Log — action-type filter chip set. IDs match
+ *  `AdminAuditActionValues` (`appkit/src/features/audit-log/schemas/firestore.ts`) exactly. */
+export const ADMIN_AUDIT_LOG_ACTION_TABS = [
+  ALL_TAB,
+  { id: "user_hard_ban", label: "Hard ban" },
+  { id: "user_soft_ban", label: "Soft ban" },
+  { id: "user_unban", label: "Unban" },
+  { id: "checkout_bypass", label: "Checkout bypass" },
+  { id: "coupon_update", label: "Coupon update" },
+  { id: "payout_mark_paid", label: "Payout paid" },
+  { id: "store_status_change", label: "Store status" },
+  { id: "user_role_change", label: "Role change" },
+] as const satisfies readonly AdminFilterTab[];
+
 /** Admin > Orders — order-state filter chip set. Lowercase IDs match
  *  `OrderStatusValues` and the actual Firestore document `status` field. */
 export const ADMIN_ORDER_STATUS_TABS = [

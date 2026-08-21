@@ -1,16 +1,32 @@
 "use client";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
+import type { ZodTypeAny } from "zod";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
 import { Div, Nav, Row, Span, Stack, Text, useToast } from "../../ui";
 import { normalizeError } from "../../errors/normalize";
+import { FormSchemaContext } from "./FormShell";
+
 export interface StepDef<T extends object = Record<string, JsonValue>> {
   label: string;
   render: (props: { values: T; onChange: (partial: Partial<T>) => void; errors: Record<string, string> }) => ReactNode;
   /** Returns an error message string if invalid, or null/undefined if valid. */
   validate?: (values: T) => string | null | undefined;
+  /**
+   * Schema field names this step owns — drives error→step attribution
+   * (surfaced to the caller via `onValidationChange`'s `fieldToStepIndex`,
+   * consumed by `<FormErrorSummary>`).
+   */
+  fields?: string[];
+  /**
+   * Per-step Zod schema. Runs live (on every value change, not just on
+   * Next/Publish) via `onValidationChange`. Falls back to the whole-form
+   * `schema` prop, then to a schema inherited from an ancestor `FormShell`
+   * via `FormSchemaContext`, when omitted.
+   */
+  schema?: ZodTypeAny;
 }
 
 export interface StepFormProps<T extends object = Record<string, JsonValue>> {
@@ -29,6 +45,24 @@ export interface StepFormProps<T extends object = Record<string, JsonValue>> {
   hideActions?: boolean;
   /** Per-step error flags — when true, step button shows a red error badge */
   stepErrors?: boolean[];
+  /**
+   * Whole-form Zod schema, used by any step that doesn't declare its own
+   * `StepDef.schema`. Falls back to an ancestor `FormShell`'s schema (via
+   * `FormSchemaContext`) when omitted here too.
+   */
+  schema?: ZodTypeAny;
+  /**
+   * Fired whenever live validation recomputes — the current field-name→
+   * message map plus a field-name→step-index map derived from `steps[].fields`.
+   * The caller (which owns the single `FormShellContext.Provider` for the
+   * surrounding form) composes these into its own context value so
+   * `<FormErrorSummary>` and per-field inline errors both work, instead of
+   * `StepForm` mounting a second, potentially-shadowing provider itself.
+   */
+  onValidationChange?: (
+    fieldErrors: Record<string, string>,
+    fieldToStepIndex: Record<string, number>,
+  ) => void;
 }
 
 export interface StepFormActionsProps {
@@ -174,10 +208,56 @@ export function StepForm<T extends object = Record<string, JsonValue>>({
   onStepChange,
   hideActions = false,
   stepErrors,
+  schema,
+  onValidationChange,
 }: StepFormProps<T>) {
   const { showToast } = useToast();
-  const [fieldErrors, _setFieldErrors] = useState<Record<string, string>>({});
+  const inheritedSchema = useContext(FormSchemaContext);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [stepError, setStepError] = useState<string | null>(null);
+
+  const fieldToStepIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    steps.forEach((step, i) => {
+      step.fields?.forEach((field) => { map[field] = i; });
+    });
+    return map;
+  }, [steps]);
+
+  const runValidation = useCallback((nextValues: T) => {
+    const activeSchema = steps[currentStep]?.schema ?? schema ?? inheritedSchema;
+    if (!activeSchema) return;
+    // audit-unvalidated-safeparse-ok: bulk-replaces fieldErrors from the full
+    // parse result (clears fields that just became valid); applyZodIssues'
+    // incremental setFieldError-per-issue can't do that.
+    const parsed = activeSchema.safeParse(nextValues);
+    if (parsed.success) {
+      setFieldErrors({});
+      onValidationChange?.({}, fieldToStepIndex);
+      return;
+    }
+    const next: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      if (!issue.path || issue.path.length === 0) continue;
+      next[issue.path.map(String).join(".")] = issue.message;
+    }
+    setFieldErrors(next);
+    onValidationChange?.(next, fieldToStepIndex);
+  }, [steps, currentStep, schema, inheritedSchema, fieldToStepIndex, onValidationChange]);
+
+  // Re-run validation whenever the active step or schema changes, so
+  // switching steps (or arriving with pre-filled values) shows accurate
+  // live errors immediately rather than only after the next keystroke.
+  useEffect(() => {
+    runValidation(values);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep, steps[currentStep]?.schema, schema, inheritedSchema]);
+
+  const handleFieldChange = useCallback((partial: Partial<T>) => {
+    const merged = { ...values, ...partial };
+    onChange(partial);
+    runValidation(merged);
+  }, [values, onChange, runValidation]);
 
   // Persist step to localStorage if formId provided
   useEffect(() => {
@@ -234,7 +314,7 @@ export function StepForm<T extends object = Record<string, JsonValue>>({
       />
 
       <Div className="flex-1">
-        {currentStepDef?.render({ values, onChange, errors: fieldErrors })}
+        {currentStepDef?.render({ values, onChange: handleFieldChange, errors: fieldErrors })}
       </Div>
 
       {!hideActions && stepError && (

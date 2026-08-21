@@ -24,6 +24,7 @@ import {
   sendWhatsAppTemplateMessage,
   sendWhatsAppBusinessMessage,
 } from "../../../../features/whatsapp-bot/helpers/whatsapp";
+import { isChannelHealthy, recordChannelOutcome } from "../../notifications/channel-health";
 import type { JobContext } from "../runtime/types";
 import type { JobRunResult } from "./jobRunners";
 
@@ -53,6 +54,21 @@ export async function runWhatsAppNotify(
   ctx: JobContext,
 ): Promise<JobRunResult> {
   const { toPhone, title, message, templateName, templateLanguage, notificationId, phoneNumberId, accessToken } = payload;
+
+  if (!(await isChannelHealthy("whatsapp"))) {
+    ctx.logger.warn("whatsappNotify: WhatsApp channel circuit is open — skipping send", { notificationId });
+    await notificationRepository
+      .update(notificationId, { whatsappStatus: "skipped" } as never)
+      .catch((err: unknown) => {
+        void normalizeError(err);
+      });
+    return {
+      summary: { total: 1, succeeded: 0, skipped: 1, failed: 0 },
+      succeeded: [],
+      skipped: [notificationId],
+      failed: [],
+    };
+  }
 
   let sent = false;
   let lastError: string | undefined;
@@ -88,6 +104,8 @@ export async function runWhatsAppNotify(
   if (!templateName) {
     ctx.logger.warn("whatsappNotify: no approved template configured for this notification type — sent as free-form text, which Meta rejects outside the 24h customer-service window", { notificationId });
   }
+
+  await recordChannelOutcome("whatsapp", sent);
 
   await notificationRepository
     .update(notificationId, { whatsappStatus: sent ? "sent" : "failed" } as never)

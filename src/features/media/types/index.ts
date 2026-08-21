@@ -17,6 +17,13 @@ export interface MediaField {
   source?: MediaSource;
   /** YouTube video ID. Only set when source === "youtube". */
   youtubeId?: string;
+  /**
+   * Duration in seconds, for `type: "video"`. Captured automatically for
+   * direct uploads (off-DOM `<video>` element, see `video-poster.ts`) — not
+   * obtainable client-side for `source: "youtube" | "external"` without a
+   * server round-trip, so it stays undefined for those sources.
+   */
+  duration?: number;
 }
 
 export const mediaFieldSchema = z.object({
@@ -26,6 +33,7 @@ export const mediaFieldSchema = z.object({
   thumbnailUrl: z.string().optional(),
   source: z.enum(["upload", "youtube", "external"]).optional(),
   youtubeId: z.string().optional(),
+  duration: z.number().optional(),
 });
 
 export function coerceMediaField(

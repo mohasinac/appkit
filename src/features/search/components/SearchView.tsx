@@ -5,8 +5,6 @@ export interface SearchViewProps {
   query?: string;
   /** Total result count */
   total: number;
-  /** Whether data is loading */
-  isLoading: boolean;
   labels?: {
     searchTitle?: string;
     resultsCount?: (count: number, query: string) => string;
@@ -31,7 +29,6 @@ export interface SearchViewProps {
 export function SearchView({
   query,
   total,
-  isLoading: _isLoading,
   labels = {},
   renderSearchInput,
   renderFilters,

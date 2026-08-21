@@ -10,6 +10,14 @@ export const PAGE_VIEW_ENTITY_TYPES = [
   "auction",
   "review",
   "user-profile",
+  "blog",
+  "event",
+  "pre-order",
+  "prize-draw",
+  "classified",
+  "digital-code",
+  "live",
+  "bundle",
 ] as const;
 
 export type PageViewEntityType = (typeof PAGE_VIEW_ENTITY_TYPES)[number];

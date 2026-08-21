@@ -147,8 +147,14 @@ export interface CategoryDocument extends BaseDocument {
   brandCountry?: string;
   /** Brand founding year — categoryType==="brand". */
   brandFounded?: number;
-  /** Banner image for the brand storefront page — categoryType==="brand". */
-  brandBannerImage?: string;
+
+  /**
+   * Short bullet points — "why shop this category/brand." Category and
+   * brand detail pages only; renders nothing when absent/empty.
+   */
+  highlights?: string[];
+  /** A handful of Q&A pairs shown on the category/brand detail page. */
+  faqs?: { question: string; answer: string }[];
 
   // ── Bundle fields — categoryType==="bundle" (SB-UNI-D) ────────────────
   /**
@@ -159,6 +165,15 @@ export interface CategoryDocument extends BaseDocument {
    * Does NOT update `partOfBundleIds`; used as a discovery surface only.
    */
   bundleKind?: "special" | "brand";
+  /**
+   * Which brand this bundle belongs to, for the brand detail page's bundle
+   * tab — works for both `bundleKind:"special"` (static) and `"brand"`
+   * (dynamic) bundles. Distinct from `bundleQueryRule.filter.brandSlug`,
+   * which is a dynamic-rule query *filter* (only meaningful when
+   * `bundleQueryRule.type==="dynamic"`) — this field is the bundle's own
+   * brand tag regardless of how its members are resolved.
+   */
+  brandSlug?: string;
   /** Discounted bundle price in decimal rupees. */
   bundlePrice?: number;
   /** Rule resolving the bundle's member products — static list or live query. */

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import type { ZodType } from "zod";
 import { Button } from "../../ui/components/Button";
@@ -7,6 +7,7 @@ import { IconButton } from "../../ui/components/IconButton";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
 import { Div, Form, Row, Stack, Text } from "../../ui";
+import { FormShellContext, FormErrorSummary, type FormShellContextValue } from "../../ui/forms";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
 import { useHandMode } from "../../_internal/client/hand-mode";
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
@@ -126,6 +127,35 @@ export function QuickFormDrawer({
     return Object.keys(errs).length === 0;
   };
 
+  // Live-derived (not state — a pure function of the current values, so it
+  // never needs a separate effect) validation for the error summary below.
+  // Deliberately kept SEPARATE from the `errors` state above: `errors` only
+  // populates on submit and gates each field's inline error display, which
+  // must stay submit-gated so an untouched, freshly-opened drawer doesn't
+  // show every required field as invalid immediately. The summary is meant
+  // to be live per the shared error-summary requirement; the per-field
+  // inline errors are not.
+  const liveErrors: Record<string, string> = (() => {
+    if (schema) {
+      const parsed = (schema as ZodType<unknown>).safeParse(values);
+      if (parsed.success) return {};
+      const errs: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const path = issue.path[0];
+        if (typeof path === "string" && !errs[path]) errs[path] = issue.message;
+      }
+      return errs;
+    }
+    const errs: Record<string, string> = {};
+    for (const f of fields) {
+      if (f.required) {
+        const v = values[f.name];
+        if (v === undefined || v === null || v === "") errs[f.name] = `${f.label} is required`;
+      }
+    }
+    return errs;
+  })();
+
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       e?.preventDefault();
@@ -169,11 +199,36 @@ export function QuickFormDrawer({
     return () => document.removeEventListener("keydown", handle);
   }, [isOpen, handleClose]);
 
+  // Synthesize a FormShellContextValue from `liveErrors` (not the submit-gated
+  // `errors` state) so <FormErrorSummary> — the shared live-error-summary
+  // primitive — can be reused here without migrating this drawer's
+  // already-working schema/errors mechanism onto useFormShellState. Kept
+  // separate from `errors` deliberately: this context only backs the
+  // summary, never the per-field inline `error={errors[field.name]}` props
+  // above, which must stay submit-gated.
+  const shellCtx = useMemo<FormShellContextValue>(() => ({
+    errors: liveErrors,
+    touched: {},
+    setFieldError: () => {},
+    setFieldTouched: () => {},
+    clearFieldError: () => {},
+    steps: [],
+    currentStep: 0,
+    goToStep: () => {},
+    nextStep: () => {},
+    prevStep: () => {},
+    isPublishReady: Object.keys(liveErrors).length === 0,
+    isDirty: false,
+    isSubmitting: submitting,
+    stepErrorCounts: [],
+  }), [liveErrors, submitting]);
+
   if (!isOpen) return null;
 
   const busy = submitting || isLoading;
 
   return (
+    <FormShellContext.Provider value={shellCtx}>
     <>
       {/* Backdrop */}
       <Div surface="overlay-xs"
@@ -266,21 +321,27 @@ export function QuickFormDrawer({
         </Form>
 
         {/* Footer */}
-        <Row className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]" padding="md" align="center" justify="between" gap="sm">
-          <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
-            {cancelLabel}
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => void handleSubmit()}
-            disabled={busy}
-            isLoading={busy}
-          >
-            {submitLabel} →
-          </Button>
-        </Row>
+        <Div className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]">
+          <Div paddingX="x-md" padding="t-sm">
+            <FormErrorSummary />
+          </Div>
+          <Row padding="md" align="center" justify="between" gap="sm">
+            <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
+              {cancelLabel}
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => void handleSubmit()}
+              disabled={busy}
+              isLoading={busy}
+            >
+              {submitLabel} →
+            </Button>
+          </Row>
+        </Div>
       </Div>
     </>
+    </FormShellContext.Provider>
   );
 }

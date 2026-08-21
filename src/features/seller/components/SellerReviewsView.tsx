@@ -1,13 +1,15 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Badge, BulkActionBar, Button, Checkbox, Div, Input, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea } from "../../../ui";
+import { useCallback, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Alert, Badge, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
-import { StackedViewShell } from "../../../ui";
-import { useBottomActions } from "../../layout";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import { sortBy } from "../../../constants/sort";
+import { sortBy, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -38,12 +40,9 @@ interface ReviewItem {
   createdAt: Date | string;
 }
 
-interface Meta {
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-  hasMore: boolean;
+interface ReviewsListResponse {
+  reviews?: ReviewItem[];
+  meta?: { total: number };
 }
 
 export interface SellerReviewsViewProps {
@@ -75,17 +74,11 @@ export function SellerReviewsView({
   reviewsApiBase = SELLER_ENDPOINTS.REVIEWS,
   replyApiBase = SELLER_ENDPOINTS.REVIEWS,
 }: SellerReviewsViewProps) {
-  const [reviews, setReviews] = useState<ReviewItem[]>([]);
-  const [meta, setMeta] = useState<Meta | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Filters
-  const [rating, setRating] = useState("");
-  const [replied, setReplied] = useState("");
-  const [sort, setSort] = useState(SORT_OPTIONS[0].value);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const queryClient = useQueryClient();
+  const refetchReviews = useCallback(
+    () => queryClient.invalidateQueries({ queryKey: ["seller", "reviews", "listing"] }),
+    [queryClient],
+  );
 
   // Reply drawer
   const [replyTarget, setReplyTarget] = useState<ReviewItem | null>(null);
@@ -94,45 +87,45 @@ export function SellerReviewsView({
   const [replyError, setReplyError] = useState<string | null>(null);
 
   // S-STORE-4-C — bulk reply + contest + feedback selection
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkReplyOpen, setBulkReplyOpen] = useState(false);
   const [bulkReplyText, setBulkReplyText] = useState("");
   const [bulkSaving, setBulkSaving] = useState(false);
+  const [bulkTargetIds, setBulkTargetIds] = useState<string[]>([]);
+  const [bulkClearSelection, setBulkClearSelection] = useState<(() => void) | null>(null);
   const [contestTarget, setContestTarget] = useState<ReviewItem | null>(null);
   const [contestReason, setContestReason] = useState("");
   const [feedbackTarget, setFeedbackTarget] = useState<ReviewItem | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
 
-  const toggleSelected = useCallback((id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
-  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+  const openReply = (review: ReviewItem) => {
+    setReplyTarget(review);
+    setReplyText(review.sellerReply ?? "");
+    setReplyError(null);
+  };
 
-  const submitBulkReply = useCallback(async () => {
-    if (!bulkReplyText.trim() || selectedIds.size === 0) return;
-    setBulkSaving(true);
-    await Promise.all(
-      Array.from(selectedIds).map((id) =>
-        fetch(`${replyApiBase}/${id}/reply`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reply: bulkReplyText }),
-        }).catch(() => null),
-      ),
-    );
-    setBulkSaving(false);
-    setBulkReplyOpen(false);
-    setBulkReplyText("");
-    clearSelection();
-    fetchReviewsRef.current?.();
-  }, [bulkReplyText, selectedIds, replyApiBase, clearSelection]);
+  const handleReplySave = async (onDone: () => void) => {
+    if (!replyTarget) return;
+    setReplySaving(true);
+    setReplyError(null);
+    try {
+      const res = await fetch(`${replyApiBase}/${replyTarget.id}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reply: replyText }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error ?? "Failed to save reply");
+      setReplyTarget(null);
+      onDone();
+    } catch (err) {
+      void normalizeError(err);
+      setReplyError((err as Error).message);
+    } finally {
+      setReplySaving(false);
+    }
+  };
 
-  const submitContest = useCallback(async () => {
+  const submitContest = useCallback(async (onDone: () => void) => {
     if (!contestTarget) return;
     await fetch(SELLER_ENDPOINTS.REVIEW_CONTEST(contestTarget.id), {
       method: "POST",
@@ -141,7 +134,7 @@ export function SellerReviewsView({
     }).catch(() => null);
     setContestTarget(null);
     setContestReason("");
-    fetchReviewsRef.current?.();
+    onDone();
   }, [contestTarget, contestReason]);
 
   const submitFeedback = useCallback(async () => {
@@ -155,250 +148,150 @@ export function SellerReviewsView({
     setFeedbackText("");
   }, [feedbackTarget, feedbackText]);
 
-  const fetchReviewsRef = useMemo(
-    () => ({ current: null as (() => void) | null }),
-    [],
-  );
-
-  const fetchReviews = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({ page: String(page), pageSize: "20", sorts: sort });
-      if (rating) params.set("rating", rating);
-      if (replied) params.set("replied", replied);
-
-      const res = await fetch(`${reviewsApiBase}?${params}`);
-      const json = await res.json();
-      if (!res.ok) throw new Error(json?.error ?? "Failed to load reviews");
-      setReviews(json?.data?.reviews ?? []);
-      setMeta(json?.data?.meta ?? null);
-    } catch (err) {
-      void normalizeError(err);
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  }, [reviewsApiBase, rating, replied, sort, page]);
-
-  // The API route has no ?q= support (only rating/replied/sorts) — filter
-  // the fetched page client-side, same category of post-fetch narrowing the
-  // route itself already does for `replied`.
-  const visibleReviews = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return reviews;
-    return reviews.filter(
-      (r) =>
-        r.productTitle?.toLowerCase().includes(q) ||
-        r.userName?.toLowerCase().includes(q) ||
-        r.comment?.toLowerCase().includes(q) ||
-        r.title?.toLowerCase().includes(q),
+  const submitBulkReply = useCallback(async () => {
+    if (!bulkReplyText.trim() || bulkTargetIds.length === 0) return;
+    setBulkSaving(true);
+    await Promise.all(
+      bulkTargetIds.map((id) =>
+        fetch(`${replyApiBase}/${id}/reply`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reply: bulkReplyText }),
+        }).catch(() => null),
+      ),
     );
-  }, [reviews, search]);
+    setBulkSaving(false);
+    setBulkReplyOpen(false);
+    setBulkReplyText("");
+    bulkClearSelection?.();
+    setBulkTargetIds([]);
+    await refetchReviews();
+  }, [bulkReplyText, bulkTargetIds, replyApiBase, bulkClearSelection, refetchReviews]);
 
-  useEffect(() => { fetchReviews(); }, [fetchReviews]);
-  useEffect(() => { fetchReviewsRef.current = fetchReviews; }, [fetchReviews, fetchReviewsRef]);
-
-  const openReply = (review: ReviewItem) => {
-    setReplyTarget(review);
-    setReplyText(review.sellerReply ?? "");
-    setReplyError(null);
+  const config: ListingViewConfig<ReviewsListResponse, ReviewItem> = {
+    portal: "seller",
+    title: "Reviews",
+    searchPlaceholder: "Search product, reviewer, or comment…",
+    emptyLabel: "No reviews found.",
+    filterKeys: ["rating", "replied"],
+    defaultSort: SORT_OPTIONS[0].value,
+    queryKey: ["seller", "reviews", "listing"],
+    endpoint: reviewsApiBase,
+    sortOptions: SORT_OPTIONS,
+    hideTableView: true,
+    mapRows: (response) => response.reviews ?? [],
+    getTotal: (response, rows) => response.meta?.total ?? rows.length,
+    buildFilters: (state) => {
+      const clauses: string[] = [];
+      if (state.rating) clauses.push(sieveFilter("rating", SIEVE_OP.EQ, state.rating));
+      if (state.replied) clauses.push(sieveFilter("replied", SIEVE_OP.EQ, state.replied));
+      return clauses.length ? clauses.join(",") : undefined;
+    },
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <Stack gap="md">
+        <Select
+          label="Rating"
+          value={pendingFilters.rating || ""}
+          onChange={(e) => setPendingFilters((p) => ({ ...p, rating: e.target.value }))}
+          options={[
+            { value: "", label: "All ratings" },
+            { value: "5", label: "5 stars" },
+            { value: "4", label: "4 stars" },
+            { value: "3", label: "3 stars" },
+            { value: "2", label: "2 stars" },
+            { value: "1", label: "1 star" },
+          ]}
+        />
+        <Select
+          label="Reply status"
+          value={pendingFilters.replied || ""}
+          onChange={(e) => setPendingFilters((p) => ({ ...p, replied: e.target.value }))}
+          options={[
+            { value: "", label: "All reply statuses" },
+            { value: "true", label: "Store replied" },
+            { value: "false", label: "Awaiting reply" },
+          ]}
+        />
+      </Stack>
+    ),
+    buildBulkActions: (selection: ListingSelectionContext<ReviewItem>) =>
+      SELLER_BULK_ACTIONS.reviews.map((id) => ({
+        ...ROW_ACTION_META[id],
+        onClick: () => {
+          setBulkTargetIds(selection.selectedIds);
+          setBulkClearSelection(() => selection.clearSelection);
+          setBulkReplyOpen(true);
+        },
+      })) as BulkActionItem[],
+    renderCards: (rows, _view, selection, isLoading) => (
+      <Stack gap="md">
+        {isLoading ? (
+          <Div className="text-center" padding="y-xl">
+            <Text className="text-[var(--appkit-color-text-muted)]">Loading reviews…</Text>
+          </Div>
+        ) : rows.length === 0 ? (
+          <Div className="text-center" padding="y-3xl">
+            <Text className="text-[var(--appkit-color-text-muted)]">No reviews found.</Text>
+          </Div>
+        ) : (
+          rows.map((review) => (
+            <Div
+              key={review.id}
+              className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg" padding="md"
+            >
+              <Row align="start" justify="between" gap="3" wrap>
+                <Row align="start" className="flex-1 min-w-0" gap="3">
+                  <Checkbox
+                    checked={selection.selectedIds.includes(review.id)}
+                    onChange={() => selection.toggleSelect(review.id)}
+                    aria-label="Select review"
+                  />
+                  <Div className="flex-1 min-w-0">
+                    <Text className="truncate" weight="medium">{review.productTitle}</Text>
+                    <Row className="mt-1" align="center" gap="sm" wrap>
+                      <Stars rating={review.rating} />
+                      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">by {review.userName}</Text>
+                      {review.verified && <Badge variant="success">Verified</Badge>}
+                      {statusBadge(review.status)}
+                      <Badge variant={review.sellerReply ? "success" : "warning"}>
+                        {review.sellerReply ? "Store replied" : "Awaiting store reply"}
+                      </Badge>
+                    </Row>
+                    {review.title && <Text className="mt-2" weight="medium">{review.title}</Text>}
+                    <Text className="mt-1 text-[var(--appkit-color-text-secondary)] line-clamp-3" size="sm">
+                      {review.comment}
+                    </Text>
+                    {review.sellerReply && (
+                      <Div className="mt-2 pl-[0.75rem] border-l-2 border-[var(--appkit-color-primary)]">
+                        <Text className="text-[var(--appkit-color-text-muted)]" size="xs">Store reply:</Text>
+                        <Text size="sm">{review.sellerReply}</Text>
+                      </Div>
+                    )}
+                  </Div>
+                </Row>
+                <Row className="flex-shrink-0" gap="sm">
+                  <Button variant="outline" size="sm" onClick={() => openReply(review)}>
+                    {review.sellerReply ? "Edit Reply" : ACTIONS.STORE["reply-review"].label}
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setContestTarget(review)}>
+                    {ACTIONS.STORE["contest-review"].label}
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setFeedbackTarget(review)}>
+                    {ACTIONS.STORE["buyer-feedback"].label}
+                  </Button>
+                </Row>
+              </Row>
+            </Div>
+          ))
+        )}
+      </Stack>
+    ),
   };
-
-  const handleReplySave = async () => {
-    if (!replyTarget) return;
-    setReplySaving(true);
-    setReplyError(null);
-    try {
-      const res = await fetch(`${replyApiBase}/${replyTarget.id}/reply`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reply: replyText }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json?.error ?? "Failed to save reply");
-      setReplyTarget(null);
-      fetchReviews();
-    } catch (err) {
-      void normalizeError(err);
-      setReplyError((err as Error).message);
-    } finally {
-      setReplySaving(false);
-    }
-  };
-
-  useBottomActions(selectedIds.size > 0 ? { bulk: { selectedCount: selectedIds.size, onClearSelection: clearSelection, actions: [
-    {
-      id: "bulk-reply",
-      label: "Reply to selected",
-      onClick: () => setBulkReplyOpen(true),
-    } as BulkActionItem,
-  ] } } : {});
 
   return (
     <>
-      <StackedViewShell portal="seller" title="Reviews" sections={[
-        <Stack key="reviews" gap="lg">
-          {/* Filters */}
-          <Row align="center" gap="3" wrap>
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search product, reviewer, or comment…"
-              aria-label="Search reviews"
-              className="min-w-[220px]"
-            />
-            <Select
-              value={rating}
-              onChange={(e) => { setRating(e.target.value); setPage(1); }}
-              aria-label="Filter by rating"
-              options={[
-                { value: "", label: "All ratings" },
-                { value: "5", label: "5 stars" },
-                { value: "4", label: "4 stars" },
-                { value: "3", label: "3 stars" },
-                { value: "2", label: "2 stars" },
-                { value: "1", label: "1 star" },
-              ]}
-            />
-            <Select
-              value={replied}
-              onChange={(e) => { setReplied(e.target.value); setPage(1); }}
-              aria-label="Filter by reply status"
-              options={[
-                { value: "", label: "All reply statuses" },
-                { value: "true", label: "Store replied" },
-                { value: "false", label: "Awaiting reply" },
-              ]}
-            />
-            <Select
-              value={sort}
-              onChange={(e) => { setSort(e.target.value); setPage(1); }}
-              aria-label="Sort reviews"
-              options={SORT_OPTIONS}
-            />
-            {meta && (
-              <Text className="text-[var(--appkit-color-text-muted)] ml-auto" size="sm">
-                {meta.total} review{meta.total !== 1 ? "s" : ""}
-              </Text>
-            )}
-          </Row>
+      <DataListingView config={config} />
 
-          {error && <Alert variant="error">{error}</Alert>}
-
-          {/* S-STORE-4-C — bulk reply bar */}
-          {selectedIds.size > 0 && (
-            <BulkActionBar
-              selectedCount={selectedIds.size}
-              onClearSelection={clearSelection}
-              actions={[
-                {
-                  id: "bulk-reply",
-                  label: "Reply to selected",
-                  onClick: () => setBulkReplyOpen(true),
-                } as BulkActionItem,
-              ]}
-            />
-          )}
-
-          {/* Review list */}
-          {loading ? (
-            <Div className="text-center" padding="y-xl">
-              <Text className="text-[var(--appkit-color-text-muted)]">Loading reviews…</Text>
-            </Div>
-          ) : visibleReviews.length === 0 ? (
-            <Div className="text-center" padding="y-3xl">
-              <Text className="text-[var(--appkit-color-text-muted)]">No reviews found.</Text>
-            </Div>
-          ) : (
-            <Stack gap="md">
-              {visibleReviews.map((review) => (
-                <Div
-                  key={review.id}
-                  className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg" padding="md"
-                >
-                  <Row align="start" justify="between" gap="3" wrap>
-                    <Row align="start" className="flex-1 min-w-0" gap="3">
-                      <Checkbox
-                        checked={selectedIds.has(review.id)}
-                        onChange={() => toggleSelected(review.id)}
-                        aria-label="Select review"
-                      />
-                      <Div className="flex-1 min-w-0">
-                        {/* Product + reviewer */}
-                        <Text className="truncate" weight="medium">{review.productTitle}</Text>
-                        <Row className="mt-1" align="center" gap="sm" wrap>
-                          <Stars rating={review.rating} />
-                          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">by {review.userName}</Text>
-                          {review.verified && <Badge variant="success">Verified</Badge>}
-                          {statusBadge(review.status)}
-                          <Badge variant={review.sellerReply ? "success" : "warning"}>
-                            {review.sellerReply ? "Store replied" : "Awaiting store reply"}
-                          </Badge>
-                        </Row>
-
-                        {/* Review content */}
-                        {review.title && <Text className="mt-2" weight="medium">{review.title}</Text>}
-                        <Text className="mt-1 text-[var(--appkit-color-text-secondary)] line-clamp-3" size="sm">
-                          {review.comment}
-                        </Text>
-
-                        {/* Existing reply */}
-                        {review.sellerReply && (
-                          <Div className="mt-2 pl-[0.75rem] border-l-2 border-[var(--appkit-color-primary)]">
-                            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">Store reply:</Text>
-                            <Text size="sm">{review.sellerReply}</Text>
-                          </Div>
-                        )}
-                      </Div>
-                    </Row>
-
-                    {/* Actions */}
-                    <Row className="flex-shrink-0" gap="sm">
-                      <Button variant="outline" size="sm" onClick={() => openReply(review)}>
-                        {review.sellerReply ? "Edit Reply" : ACTIONS.STORE["reply-review"].label}
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => setContestTarget(review)}>
-                        {ACTIONS.STORE["contest-review"].label}
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => setFeedbackTarget(review)}>
-                        {ACTIONS.STORE["buyer-feedback"].label}
-                      </Button>
-                    </Row>
-                  </Row>
-                </Div>
-              ))}
-            </Stack>
-          )}
-
-          {/* Pagination */}
-          {meta && meta.totalPages > 1 && (
-            <Row align="center" justify="center" gap="sm">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1 || loading}
-              >
-                Previous
-              </Button>
-              <Text size="sm">
-                Page {meta.page} of {meta.totalPages}
-              </Text>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => p + 1)}
-                disabled={!meta.hasMore || loading}
-              >
-                Next
-              </Button>
-            </Row>
-          )}
-        </Stack>,
-      ]} />
-
-      {/* Reply drawer */}
       <SideDrawer
         isOpen={!!replyTarget}
         onClose={() => setReplyTarget(null)}
@@ -432,7 +325,7 @@ export function SellerReviewsView({
             </Button>
             <Button
               variant="primary"
-              onClick={handleReplySave}
+              onClick={() => handleReplySave(refetchReviews)}
               disabled={replySaving || !replyText.trim()}
               isLoading={replySaving}
             >
@@ -442,15 +335,19 @@ export function SellerReviewsView({
         </Stack>
       </SideDrawer>
 
-      {/* S-STORE-4-C — Bulk reply modal */}
       <Modal
         isOpen={bulkReplyOpen}
         onClose={() => setBulkReplyOpen(false)}
-        title={`Bulk reply to ${selectedIds.size} review${selectedIds.size === 1 ? "" : "s"}`}
+        title="Bulk reply to selected reviews"
         actions={
           <Row gap="sm">
             <Button variant="ghost" onClick={() => setBulkReplyOpen(false)} disabled={bulkSaving}>Cancel</Button>
-            <Button variant="primary" onClick={() => void submitBulkReply()} disabled={!bulkReplyText.trim() || bulkSaving} isLoading={bulkSaving}>
+            <Button
+              variant="primary"
+              onClick={() => void submitBulkReply()}
+              disabled={!bulkReplyText.trim() || bulkSaving}
+              isLoading={bulkSaving}
+            >
               Send reply
             </Button>
           </Row>
@@ -470,7 +367,6 @@ export function SellerReviewsView({
         </Stack>
       </Modal>
 
-      {/* S-STORE-4-C — Contest review modal */}
       <Modal
         isOpen={!!contestTarget}
         onClose={() => setContestTarget(null)}
@@ -478,7 +374,7 @@ export function SellerReviewsView({
         actions={
           <Row gap="sm">
             <Button variant="ghost" onClick={() => setContestTarget(null)}>Cancel</Button>
-            <Button variant="primary" onClick={() => void submitContest()} disabled={!contestReason.trim()}>
+            <Button variant="primary" onClick={() => void submitContest(refetchReviews)} disabled={!contestReason.trim()}>
               Submit
             </Button>
           </Row>
@@ -497,7 +393,6 @@ export function SellerReviewsView({
         </Stack>
       </Modal>
 
-      {/* S-STORE-4-C — Feedback to buyer modal */}
       <Modal
         isOpen={!!feedbackTarget}
         onClose={() => setFeedbackTarget(null)}

@@ -24,6 +24,9 @@ export interface EventFormDrawerProps {
 
 export function EventFormDrawer({
   isOpen,
+  // audit-dead-underscore-prop-ok: required for the public contract (callers'
+  // own renderHeader/renderFooter closures already have onClose in scope to
+  // wire a close button); this shell renders slots only, no default chrome.
   onClose: _onClose,
   renderHeader,
   renderBaseFields,

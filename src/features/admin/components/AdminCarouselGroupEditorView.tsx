@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Button, Form, Row, StackedViewShell, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FieldSelect } from "../../../ui/forms";
+import { FieldInput, FieldSelect, FormErrorSummary } from "../../../ui/forms";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -77,6 +77,7 @@ export function AdminCarouselGroupEditorView({
                 { value: "active", label: "Active" },
               ]}
             />
+            <FormErrorSummary />
             <Row gap="3" padding="t-xs">
               <Button
                 type="submit"

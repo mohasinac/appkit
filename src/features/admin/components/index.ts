@@ -108,6 +108,14 @@ export { AdminHistoryView } from "./AdminHistoryView";
 export type { AdminHistoryViewProps } from "./AdminHistoryView";
 export { AdminPayoutsView } from "./AdminPayoutsView";
 export type { AdminPayoutsViewProps } from "./AdminPayoutsView";
+export { AdminPayoutMarkPaidModal } from "./AdminPayoutMarkPaidModal";
+export type { AdminPayoutMarkPaidModalProps } from "./AdminPayoutMarkPaidModal";
+export { AdminAuditLogView } from "./AdminAuditLogView";
+export type { AdminAuditLogViewProps } from "./AdminAuditLogView";
+export { ViewAuditLogEntryModal } from "./ViewAuditLogEntryModal";
+export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./ViewAuditLogEntryModal";
+export { ViewNotificationModal } from "./ViewNotificationModal";
+export type { NotificationEntryDetail, ViewNotificationModalProps } from "./ViewNotificationModal";
 export { AdminReviewsView } from "./AdminReviewsView";
 export type { AdminReviewsViewProps } from "./AdminReviewsView";
 export { AdminSectionsView } from "./AdminSectionsView";
@@ -157,7 +165,6 @@ export type {
   AdminTopProductsTableLabels,
 } from "./analytics/AdminTopProductsTable";
 export { AdminPageViewsReportView } from "./analytics/AdminPageViewsReportView";
-export type { AdminPageViewsReportViewProps } from "./analytics/AdminPageViewsReportView";
 export { AdminFeatureFlagsView } from "./AdminFeatureFlagsView";
 export type { AdminFeatureFlagsViewProps } from "./AdminFeatureFlagsView";
 export { AdminNewsletterView } from "./AdminNewsletterView";

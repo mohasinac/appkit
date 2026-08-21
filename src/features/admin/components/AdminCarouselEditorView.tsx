@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Alert, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, Slider, Stack, StackedViewShell, Text, Toggle } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -570,6 +570,7 @@ export function AdminCarouselEditorView({
           </Div>
 
           {/* ── Actions ──────────────────────────────────────────────────── */}
+          <FormErrorSummary />
           <FormActions>
             <Button
               type="submit"

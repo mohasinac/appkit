@@ -33,6 +33,8 @@ import {
   assertPrizeDrawNotLocked,
   assertPrizeDrawWonItemsImmutable,
 } from "../../../_internal/server/features/products/service";
+import { recordAdminAction } from "../../../_internal/server/features/audit-log/actions";
+import { AdminAuditActionValues } from "../../audit-log/schemas/firestore";
 
 const ERR_UID_REQUIRED = "uid is required";
 
@@ -146,6 +148,17 @@ export async function adminUpdatePayout(
     payoutId: id,
   });
 
+  if (updateData.status === "paid") {
+    void recordAdminAction({
+      actorUid: adminId,
+      action: AdminAuditActionValues.PAYOUT_MARK_PAID,
+      targetType: "payout",
+      targetId: id,
+      targetLabel: existing.sellerName ?? id,
+      metadata: { amount: existing.netAmount ?? existing.amount },
+    });
+  }
+
   return updated;
 }
 
@@ -181,6 +194,17 @@ export async function adminUpdateUser(
     targetUid: uid,
     changes: Object.keys(input),
   });
+
+  if (input.role !== undefined && input.role !== existing.role) {
+    void recordAdminAction({
+      actorUid: adminId,
+      action: AdminAuditActionValues.USER_ROLE_CHANGE,
+      targetType: "user",
+      targetId: uid,
+      targetLabel: existing.displayName ?? uid,
+      metadata: { fromRole: existing.role, toRole: input.role },
+    });
+  }
 
   return updated;
 }

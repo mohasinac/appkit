@@ -1,11 +1,20 @@
 "use client";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { X, AlertTriangle, Eye, ArrowLeft } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
 import { Div, Row, Span, Stack, Text } from "../../ui";
+
+/**
+ * Carries the `schema` prop passed to `<FormShell>` down to any nested
+ * `<StepForm>` that doesn't declare its own `schema`/`StepDef.schema` —
+ * `FormShell` (chrome) has no form values of its own to validate, so it
+ * can't run `.safeParse()` itself; this is what makes the prop load-bearing
+ * instead of silently discarded.
+ */
+export const FormSchemaContext = createContext<import("zod").ZodTypeAny | undefined>(undefined);
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -40,6 +49,15 @@ export interface FormShellProps {
   /** Override the entire bottom action bar. */
   renderBottomBar?: () => ReactNode;
   /**
+   * Rendered above the default Save/Publish buttons in FormShell's own
+   * built-in footer (the `onSaveDraft`/`onPublish` branch, not used when
+   * `renderBottomBar` is supplied — that override owns its whole footer).
+   * Typically `<FormShellContext.Provider value={shellCtx}><FormErrorSummary /></FormShellContext.Provider>`
+   * — lets a caller show the shared live error summary beside the built-in
+   * buttons without having to reimplement the footer itself.
+   */
+  footerTopSlot?: ReactNode;
+  /**
    * When provided, a 👁 Preview button appears in the top bar.
    * Clicking it replaces the form body with this read-only render.
    * A draft banner and "← Back to Edit" button are injected automatically.
@@ -52,9 +70,12 @@ export interface FormShellProps {
    */
   splitPreview?: boolean;
   /**
-   * Optional Zod schema covering the form's fields. Currently informational
-   * (consumed by the caller's submit handler); `audit-form-schema` requires
-   * every callsite to declare one so the validation contract is explicit.
+   * Zod schema covering the form's fields. `FormShell` has no form values of
+   * its own, so it can't `.safeParse()` this directly — instead it provides
+   * the schema via `FormSchemaContext` to any nested `<StepForm>` that
+   * doesn't declare its own `schema`/`StepDef.schema`, so existing
+   * `<FormShell schema={x}>` call sites start validating with zero changes.
+   * `audit-form-schema` requires every callsite to declare one.
    */
   schema?: import("zod").ZodTypeAny;
   children: ReactNode;
@@ -83,8 +104,7 @@ export function FormShell({
   onClose,
   title,
   breadcrumb,
-  // schema is consumed by callers (audit-form-schema asserts presence at callsites)
-  schema: _schema,
+  schema,
   isDirty = false,
   isLoading = false,
   sections,
@@ -93,6 +113,7 @@ export function FormShell({
   saveLabel = FORM_ACTION_META[FORM_ACTION_ID.SAVE_DRAFT].label,
   publishLabel = FORM_ACTION_META[FORM_ACTION_ID.PUBLISH].label,
   renderBottomBar,
+  footerTopSlot,
   previewSlot,
   splitPreview: splitPreviewProp,
   children,
@@ -168,7 +189,7 @@ export function FormShell({
   if (!isOpen) return null;
 
   return (
-    <>
+    <FormSchemaContext.Provider value={schema}>
       {/* Backdrop */}
       <Div surface="overlay-sm" 
         className="fixed inset-0 backdrop-blur-[2px]"
@@ -365,37 +386,44 @@ export function FormShell({
         {!previewMode && renderBottomBar ? (
           renderBottomBar()
         ) : !previewMode && (onSaveDraft || onPublish) ? (
-          <Row justify="between" paddingX="x-5" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm"
-            style={{ paddingBottom: "calc(var(--appkit-space-3) + var(--keyboard-inset-height, 0px))" }}
-          >
-            <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
-              {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
-            </Button>
-            <Row gap="xs">
-              {onSaveDraft && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSaveDraft}
-                  disabled={isLoading || savingDraft || publishing}
-                  isLoading={savingDraft}
-                >
-                  {saveLabel}
-                </Button>
-              )}
-              {onPublish && (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={handlePublish}
-                  disabled={isLoading || savingDraft || publishing}
-                  isLoading={publishing}
-                >
-                  {publishLabel} →
-                </Button>
-              )}
+          <Stack gap="none" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+            {footerTopSlot && (
+              <Div paddingX="x-5" padding="t-sm">
+                {footerTopSlot}
+              </Div>
+            )}
+            <Row justify="between" paddingX="x-5" padding="y-sm"
+              style={{ paddingBottom: "calc(var(--appkit-space-3) + var(--keyboard-inset-height, 0px))" }}
+            >
+              <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
+                {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
+              </Button>
+              <Row gap="xs">
+                {onSaveDraft && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSaveDraft}
+                    disabled={isLoading || savingDraft || publishing}
+                    isLoading={savingDraft}
+                  >
+                    {saveLabel}
+                  </Button>
+                )}
+                {onPublish && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handlePublish}
+                    disabled={isLoading || savingDraft || publishing}
+                    isLoading={publishing}
+                  >
+                    {publishLabel} →
+                  </Button>
+                )}
+              </Row>
             </Row>
-          </Row>
+          </Stack>
         ) : null}
       </Div>
 
@@ -429,6 +457,6 @@ export function FormShell({
           </Div>
         </>
       )}
-    </>
+    </FormSchemaContext.Provider>
   );
 }

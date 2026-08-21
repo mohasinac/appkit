@@ -12,6 +12,9 @@ export interface IClientAuthProvider {
   /** Apply an email verification action code */
   applyActionCode(code: string): Promise<void>;
 
+  /** Send a verification email to the currently signed-in user's own address */
+  sendEmailVerification(): Promise<void>;
+
   /** Send a password reset email */
   sendPasswordResetEmail(email: string): Promise<void>;
 

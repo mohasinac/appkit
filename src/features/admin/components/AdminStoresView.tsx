@@ -5,10 +5,12 @@ import type { JsonValue } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_STORE_STATUS_TABS } from "../constants/filter-tabs";
@@ -43,6 +45,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const [editorRow, setEditorRow] = useState<StoreRow | null>(null);
   const toast = useToast();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const verifyStore = useApiMutation({
     mutationFn: (storeId: string) =>
@@ -135,6 +138,10 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
             {
               label: ACTIONS.ADMIN["manage-store"].label,
               onClick: () => setEditorRow(row),
+            },
+            {
+              label: "Open full page",
+              onClick: () => router.push(String(ROUTES.ADMIN.STORE_DETAIL(row.id))),
             },
             {
               label: ACTIONS.ADMIN["verify-store"].label,

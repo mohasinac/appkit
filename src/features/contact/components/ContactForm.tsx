@@ -1,7 +1,17 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { z } from "zod";
 import { Button, Div, Form, Heading, Input, Span, Stack, Text, Textarea } from "../../../ui";
+import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
+
+const contactFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Enter a valid email address"),
+  subject: z.string().min(1, "Subject is required"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
 const CLS_FIELD_ERROR = "text-error";
 const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-error dark:text-error";
 
@@ -56,6 +66,12 @@ export function ContactForm({
     Partial<Record<keyof ContactFormData, string>>
   >({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { shellCtx, validate: validateSchema } = useFormShellState(contactFormSchema);
+
+  useEffect(() => {
+    validateSchema(form);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, validateSchema]);
 
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof ContactFormData, string>> = {};
@@ -153,6 +169,7 @@ export function ContactForm({
   );
 
   return (
+    <FormShellContext.Provider value={shellCtx}>
     <Form
       onSubmit={handleSubmit}
       noValidate
@@ -191,6 +208,7 @@ export function ContactForm({
         true,
       )}
 
+      <FormErrorSummary />
       <Button
         type="submit"
         variant="primary"
@@ -202,5 +220,6 @@ export function ContactForm({
           : (labels.submitButton ?? "Send Message")}
       </Button>
     </Form>
+    </FormShellContext.Provider>
   );
 }

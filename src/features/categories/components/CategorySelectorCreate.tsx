@@ -1,13 +1,23 @@
 "use client"
 import { Button, Div, Label, Row, Select, SideDrawer } from "../../../ui";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { z } from "zod";
 import { useCategories, useCreateCategory } from "../hooks/useCategorySelector";
 import { useMessage } from "../../../react";
 import { flattenCategories, type Category } from "../types";
 import { DrawerFormFooter } from "../../admin/components/DrawerFormFooter";
 import { CategoryForm } from "./CategoryForm";
 import type { CategoryFormLabels } from "./CategoryForm";
+import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
+
+// Form-input subset — `categoryFirestoreSchema` (categories schemas) models
+// the full stored document (id, timestamps, computed metrics) which this
+// create-draft never has.
+const categoryDraftSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().optional(),
+});
 
 export interface CategorySelectorCreateLabels {
   selectPlaceholder?: string;
@@ -54,6 +64,13 @@ function CreateCategoryContent({
     order: 0,
   });
 
+  const { shellCtx, validate } = useFormShellState(categoryDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
+
   const { mutate, isPending: isLoading } = useCreateCategory({
     onSuccess: (res) => {
       showSuccess(labels.successCreated);
@@ -68,22 +85,25 @@ function CreateCategoryContent({
   }, [draft, mutate]);
 
   return (
-    <Div className={stackClassName}>
-      <CategoryForm
-        category={draft}
-        allCategories={allCategories}
-        onChange={setDraft}
-        labels={labels.form}
-        stackClassName={stackClassName}
-      />
-      <DrawerFormFooter
-        variant="inline"
-        isLoading={isLoading}
-        onSubmit={handleSave}
-        onCancel={onCancel}
-        isSubmitDisabled={!draft.name}
-      />
-    </Div>
+    <FormShellContext.Provider value={shellCtx}>
+      <Div className={stackClassName}>
+        <CategoryForm
+          category={draft}
+          allCategories={allCategories}
+          onChange={setDraft}
+          labels={labels.form}
+          stackClassName={stackClassName}
+        />
+        <FormErrorSummary />
+        <DrawerFormFooter
+          variant="inline"
+          isLoading={isLoading}
+          onSubmit={handleSave}
+          onCancel={onCancel}
+          isSubmitDisabled={!draft.name}
+        />
+      </Div>
+    </FormShellContext.Provider>
   );
 }
 

@@ -1707,7 +1707,7 @@ export { cartRepository } from "./repositories/index";
 // Brands now live in the categories collection with categoryType:"brand".
 // Use categoriesRepository.findBySlugAndType(slug, "brand") and
 // categoriesRepository.findActiveBrands(). CategoryDocument carries
-// brandWebsite / brandCountry / brandFounded / brandBannerImage.
+// brandWebsite / brandCountry / brandFounded / highlights / faqs.
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // categoriesRepository - Shared export for categories repository.
 export { categoriesRepository } from "./repositories/index";
@@ -1750,6 +1750,13 @@ export { homepageSectionsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // jobsRepository - Shared export for the async-job (jobs collection) repository.
 export { jobsRepository, JobsRepository } from "./repositories/index";
+// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// adminAuditLogRepository - Shared export for the admin audit-log (adminAuditLog collection) repository.
+export { adminAuditLogRepository, AdminAuditLogRepository } from "./repositories/index";
+export { recordAdminAction } from "./_internal/server/features/audit-log/actions";
+export type { RecordAdminActionInput } from "./_internal/server/features/audit-log/actions";
+export { AdminAuditActionValues, ADMIN_AUDIT_LOG_FIELDS, ADMIN_AUDIT_LOG_COLLECTION } from "./features/audit-log/schemas/firestore";
+export type { AdminAuditAction, AdminAuditLogDocument } from "./features/audit-log/schemas/firestore";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // notificationRepository - Shared export for notification repository.
 export { notificationRepository } from "./repositories/index";
@@ -3326,9 +3333,6 @@ export type { UserOrderTrackViewLabels } from "./features/account/index";
 // UserOrderTrackViewProps - Type contract for user order track view props.
 export type { UserOrderTrackViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UserOrdersViewLabels - Type contract for user orders view labels.
-export type { UserOrdersViewLabels } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserOrdersViewProps - Type contract for user orders view props.
 export type { UserOrdersViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -3491,6 +3495,13 @@ export { AdminPageHeader } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminPayoutsView - Component for admin payouts view.
 export { AdminPayoutsView } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// AdminAuditLogView - Read-only admin action audit trail list view.
+export { AdminAuditLogView } from "./features/admin/index";
+export type { AdminAuditLogViewProps } from "./features/admin/index";
+// ViewAuditLogEntryModal - Detail modal for one audit-log entry.
+export { ViewAuditLogEntryModal } from "./features/admin/index";
+export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminPrizeDrawsView - Component for admin prize draws listing view (SB4-E).
 export { AdminPrizeDrawsView } from "./features/admin/index";
@@ -6751,6 +6762,8 @@ export { OrderSiblingPayments } from "./features/orders/index";
 export type { OrderSiblingPaymentsProps } from "./features/orders/index";
 export { OrderPaymentSummary } from "./features/orders/index";
 export type { OrderPaymentSummaryProps } from "./features/orders/index";
+export { OrderStatusTimeline } from "./features/orders/index";
+export type { OrderStatusTimelineProps } from "./features/orders/index";
 export type {
   OrderPaymentRecord,
   OrderPaymentRecordMethod,
@@ -8180,8 +8193,14 @@ export type { SellerOffersPanelProps, SellerOfferAction } from "./features/selle
 // SellerOrdersView - Component for seller orders view.
 export { SellerOrdersView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// SellerOrderDetailPanel - Shared order-detail content (items/address/payment/EMI/status form), used by both the seller orders list drawer and the standalone /store/orders/[id]/view page.
+export { SellerOrderDetailPanel } from "./features/seller/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerPayoutHistoryTable - Component for seller payout history table.
 export { SellerPayoutHistoryTable } from "./features/seller/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// SellerPayoutDetailContent - Shared payout-detail body, used by both the payouts list drawer and the standalone /store/payouts/[id]/view page.
+export { SellerPayoutDetailContent } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerPayoutSettingsView - Component for seller payout settings view.
 export { SellerPayoutSettingsView } from "./features/seller/index";

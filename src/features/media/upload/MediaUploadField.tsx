@@ -75,6 +75,12 @@ export interface MediaUploadFieldProps {
   enableTrim?: boolean;
   enableThumbnail?: boolean;
   onThumbnailChange?: (url: string) => void;
+  /**
+   * Fired with the captured duration (seconds) for a direct video upload —
+   * mirrors `onThumbnailChange`. Never fires for the YouTube/External-URL
+   * tabs (no client-side way to read those without a server round-trip).
+   */
+  onDurationChange?: (duration: number) => void;
   /** Show a "YouTube URL" tab to embed a YouTube video by ID or URL. */
   showYoutube?: boolean;
   /** Show an "External URL" tab to link a third-party image/video URL. */
@@ -328,6 +334,7 @@ export function MediaUploadField({
   enableTrim = true,
   enableThumbnail = true,
   onThumbnailChange,
+  onDurationChange,
   showYoutube = true,
   showExternal = true,
   onAbort,
@@ -459,13 +466,17 @@ export function MediaUploadField({
     url: string,
     fileType: string,
     autoPosterUrl?: string,
+    duration?: number,
   ) => {
     onChangeField?.({
       url,
       type: inferMediaTypeFromMime(fileType, url),
+      source: "upload",
       ...(autoPosterUrl ? { thumbnailUrl: autoPosterUrl } : {}),
+      ...(duration ? { duration } : {}),
     });
     if (autoPosterUrl) onThumbnailChange?.(autoPosterUrl);
+    if (duration) onDurationChange?.(duration);
 
     const isVideoFile = fileType.startsWith("video/");
     if (isVideoFile && enableTrim) {
@@ -535,7 +546,7 @@ export function MediaUploadField({
    */
   const maybeCaptureVideoPoster = async (
     file: File,
-  ): Promise<string | null> => {
+  ): Promise<{ posterUrl: string; duration: number } | null> => {
     if (!autoCapturePoster) return null;
     if (!file.type.startsWith("video/")) return null;
     try {
@@ -544,7 +555,7 @@ export function MediaUploadField({
       const posterFile = posterBlobAsFile(poster, file.name);
       const posterUrl = await onUpload(posterFile);
       stageUrl(posterUrl);
-      return posterUrl;
+      return { posterUrl, duration: poster.duration };
     } catch (err) {
       // The upload-poster step is best-effort. Log via normalizeError so any
       // observability hook still fires, then swallow.
@@ -568,8 +579,8 @@ export function MediaUploadField({
       } else {
         const result = await uploadSingleFile(files[0]);
         if (result) {
-          const posterUrl = (await maybeCaptureVideoPoster(files[0])) ?? undefined;
-          afterUpload(result.url, result.type, posterUrl);
+          const poster = await maybeCaptureVideoPoster(files[0]);
+          afterUpload(result.url, result.type, poster?.posterUrl, poster?.duration);
         }
       }
     } catch (err) {
@@ -611,8 +622,8 @@ export function MediaUploadField({
     try {
       const url = await onUpload(file);
       stageUrl(url);
-      const posterUrl = (await maybeCaptureVideoPoster(file)) ?? undefined;
-      afterUpload(url, blob.type || mimeType, posterUrl);
+      const poster = await maybeCaptureVideoPoster(file);
+      afterUpload(url, blob.type || mimeType, poster?.posterUrl, poster?.duration);
     } catch (err) {
       void normalizeError(err);
       setError(err instanceof Error ? err.message : "Upload failed");

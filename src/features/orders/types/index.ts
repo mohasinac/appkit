@@ -91,11 +91,18 @@ export interface Order {
   couponCode?: string;
   trackingNumber?: string;
   shippingCarrier?: string;
+  /** Carrier tracking page URL — rendered as an external link that opens in a new tab. No live-tracking API integration; this is just the passthrough URL a seller/admin entered. */
+  trackingUrl?: string;
   notes?: string;
   timeline?: OrderTimeline[];
   physicalLocation?: { zone: string; shelf: string; bin: string };
   createdAt?: string;
   updatedAt?: string;
+  /** Real per-status timestamps written by the order-status-update path — used to render a genuine status timeline (not fabricated/estimated). */
+  orderDate?: string;
+  shippingDate?: string;
+  deliveryDate?: string;
+  cancellationDate?: string;
   /** Tier PP — true when the 2-hour auto-approve sweep confirmed this order's payment instead of a manual admin review. Drives the "Raise a dispute" CTA. */
   autoApproved?: boolean;
   disputeRaised?: boolean;

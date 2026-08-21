@@ -1,9 +1,27 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 import { Button, Checkbox, FormField, FormGroup, Row, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
+import { useFormShellState, FormErrorSummary } from "../../../ui/forms";
 import type { AddressFormData } from "../hooks/useAddresses";
+
+// Local form-input schema — `userAddressSchema` (account schemas) uses
+// different field names (`line1`/`line2`, no `fullName`) and a required
+// `id`, since it models the stored Firestore shape, not this form's input.
+const addressFormSchema = z.object({
+  label: z.string().optional(),
+  fullName: z.string().min(1, "Full name is required"),
+  phone: z.string().min(1, "Phone number is required"),
+  addressLine1: z.string().min(1, "Address is required"),
+  addressLine2: z.string().optional(),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  postalCode: z.string().min(1, "Postal code is required"),
+  country: z.string().optional(),
+  isDefault: z.boolean().optional(),
+});
 
 export interface AddressFormLabels {
   label: string;
@@ -100,6 +118,13 @@ export function AddressForm({
     isDefault: initialData?.isDefault || false,
   });
 
+  const { shellCtx, validate } = useFormShellState(addressFormSchema);
+
+  useEffect(() => {
+    validate(formData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData, validate]);
+
   const handleChange = (
     field: keyof AddressFormData,
     value: string | boolean,
@@ -108,7 +133,7 @@ export function AddressForm({
   };
 
   return (
-    <Form onSubmit={(e) => e.preventDefault()} spacing="md">{({ setFieldError, clearErrors }) => (<>
+    <Form onSubmit={(e) => e.preventDefault()} spacing="md" shellCtx={shellCtx}>{({ setFieldError, clearErrors }) => (<>
       <FormField
         label={mergedLabels.label}
         name="label"
@@ -206,6 +231,7 @@ export function AddressForm({
         label={mergedLabels.setDefault}
       />
 
+      <FormErrorSummary />
       <Row padding="t-xs" align="center" justify="start" gap="xs">
         <Button
           type="button"

@@ -87,8 +87,8 @@ export interface ListingSelectionContext<TRow extends { id: string }> {
 
 export interface ListingViewConfig<TResponse, TRow extends { id: string }>
   extends AdminListingConfig<TResponse, TRow> {
-  /** Portal context — currently admin/seller share the same chrome. */
-  portal: "admin" | "seller";
+  /** Portal context — admin/seller/user all share the same chrome. */
+  portal: "admin" | "seller" | "user";
 
   // -- Header
   title: string;

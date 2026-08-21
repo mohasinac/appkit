@@ -1,12 +1,24 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { z } from "zod";
 import { Button, Code, ConfirmDeleteModal, Div, FormField, Heading, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
+import { FormShellContext, useFormShellState, FormErrorSummary } from "../../../ui/forms";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
+
+const groupTitleSchema = z.object({
+  groupTitle: z.string().min(1, "Group title is required"),
+});
+
+const createChildSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  price: z.string().refine((v) => v.trim() !== "" && !Number.isNaN(parseFloat(v)) && parseFloat(v) > 0, "Enter a valid price"),
+  condition: z.string(),
+});
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -79,6 +91,12 @@ export function GroupSettingsPanel({
   const [linkTargets, setLinkTargets] = useState<string[]>([]);
   const [children, setChildren] = useState<ChildInfo[] | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
+  const { shellCtx: titleShellCtx, validate: validateTitle } = useFormShellState(groupTitleSchema);
+
+  useEffect(() => {
+    validateTitle({ groupTitle: editTitle });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editTitle, validateTitle]);
 
   if (isAuction) return null;
 
@@ -114,6 +132,7 @@ export function GroupSettingsPanel({
   }
 
   async function saveTitle() {
+    if (Object.keys(titleShellCtx.errors).length > 0) return;
     setLoading(true);
     try {
       await apiClient.patch(groupEndpoint, { groupTitle: editTitle });
@@ -304,23 +323,26 @@ export function GroupSettingsPanel({
           {/* State 2: Is parent */}
           {isGroupParent && groupId && (
             <Stack gap="md">
-              <Row align="start" gap="sm" wrap>
-                <Div className="flex-1 min-w-[200px]">
-                  <FormField
-                    name="groupTitle"
-                    label="Group title"
-                    type="text"
-                    value={editTitle}
-                    onChange={setEditTitle}
-                    placeholder="e.g. Human Toy Complete Set"
-                  />
-                </Div>
-                <Div padding="t-lg">
-                  <Button type="button" variant="secondary" size="sm" onClick={saveTitle} isLoading={loading}>
-                    Save title
-                  </Button>
-                </Div>
-              </Row>
+              <FormShellContext.Provider value={titleShellCtx}>
+                <Row align="start" gap="sm" wrap>
+                  <Div className="flex-1 min-w-[200px]">
+                    <FormField
+                      name="groupTitle"
+                      label="Group title"
+                      type="text"
+                      value={editTitle}
+                      onChange={setEditTitle}
+                      placeholder="e.g. Human Toy Complete Set"
+                    />
+                  </Div>
+                  <Div padding="t-lg">
+                    <Button type="button" variant="secondary" size="sm" onClick={saveTitle} isLoading={loading}>
+                      Save title
+                    </Button>
+                  </Div>
+                </Row>
+                <FormErrorSummary />
+              </FormShellContext.Provider>
 
               <Div>
                 <Text className="mb-2" color="muted" size="xs" weight="semibold">
@@ -486,6 +508,13 @@ function AddChildContent({
   onAddLink,
   loading,
 }: AddChildContentProps) {
+  const { shellCtx, validate } = useFormShellState(createChildSchema);
+
+  useEffect(() => {
+    validate(createForm);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createForm, validate]);
+
   return (
     <Stack gap="md">
       <Tabs value={addTab} onChange={(v) => setAddTab(v as "create" | "link")}>
@@ -494,9 +523,10 @@ function AddChildContent({
           <TabsTrigger value="link">Link existing</TabsTrigger>
         </TabsList>
         <TabsContent value="create">
+          <FormShellContext.Provider value={shellCtx}>
           <Stack gap="sm" className="mt-4">
             <FormField
-              name="childTitle"
+              name="title"
               label="Title *"
               type="text"
               value={createForm.title}
@@ -504,7 +534,7 @@ function AddChildContent({
               placeholder={`${productSlug}-part`}
             />
             <FormField
-              name="childPrice"
+              name="price"
               label="Price (₹) *"
               type="number"
               value={createForm.price}
@@ -521,10 +551,12 @@ function AddChildContent({
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.
             </Text>
+            <FormErrorSummary />
             <Button type="button" onClick={onAddCreate} isLoading={loading} disabled={!createForm.title || !createForm.price}>
               Create and link child
             </Button>
           </Stack>
+          </FormShellContext.Provider>
         </TabsContent>
         <TabsContent value="link">
           <Stack gap="sm" className="mt-4">

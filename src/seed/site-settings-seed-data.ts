@@ -537,7 +537,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     razorpayKeyId: "rzp_test_PLACEHOLDER",
     razorpayKeySecret: "secret_PLACEHOLDER",
     razorpayWebhookSecret: "webhook_PLACEHOLDER",
-    resendApiKey: "re_PLACEHOLDER",
+    resendApiKey: "",
     whatsappApiKey: "wa_PLACEHOLDER",
     whatsappPhoneNumberId: "",
     whatsappCloudApiToken: "",

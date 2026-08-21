@@ -97,13 +97,6 @@ export interface SectionCarouselProps<T = unknown> {
   lightText?: boolean;
 
   /**
-   * When `true`, adds a negative right margin to the scroller wrapper so the
-   * last visible item peeks at the edge.
-   * Default: false
-   */
-  showPeek?: boolean;
-
-  /**
    * Minimum item width in px.
    * Default: 220
    */
@@ -152,7 +145,6 @@ export function SectionCarousel<T = unknown>({
   isLoading = false,
   skeletonCount = 4,
   lightText,
-  showPeek: _showPeek = false,
   minItemWidth = 220,
 }: SectionCarouselProps<T>) {
   const { hand } = useHandMode();

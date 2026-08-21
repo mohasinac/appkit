@@ -17,7 +17,6 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
 export interface ProductDetailActionsProps {
   productId: string;
-  productSlug: string;
   productTitle: string;
   productImage?: string;
   price?: number;
@@ -42,7 +41,6 @@ export interface ProductDetailActionsProps {
  */
 export function ProductDetailActions({
   productId,
-  productSlug: _productSlug,
   productTitle,
   productImage,
   price,

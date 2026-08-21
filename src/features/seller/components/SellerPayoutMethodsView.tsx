@@ -2,33 +2,19 @@
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
-import { Row, Stack, sortBy } from "@mohasinac/appkit/client";
+import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Plus } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import {
-  Button,
-  Badge,
-  ConfirmDeleteModal,
-  Div,
-  ListingToolbar,
-  Span,
-  Text,
-  useToast,
-} from "../../../ui";
+import { Badge, ConfirmDeleteModal, Div, Row, RowActionMenu, Span, Text, useToast } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../constants/index";
+import { toRecordArray, toStringValue } from "../hooks/useSellerListingData";
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig } from "../../admin/components/DataListingView";
+import type { AdminTableColumn } from "../../admin/types";
 
 const CLS_TYPE_PILL = "inline-flex items-center rounded-full px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-semibold uppercase tracking-wide bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300";
-import { ROUTES } from "../../../constants/index";
-import {
-  toRecordArray,
-  toStringValue,
-  useSellerListingData,
-} from "../hooks/useSellerListingData";
-import { TABLE_KEYS } from "../../../constants/table-keys";
 
-const PAGE_SIZE = 50;
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -77,58 +63,51 @@ function TypeBadge({ type }: { type: string }) {
   );
 }
 
+const COLUMNS: AdminTableColumn<PayoutMethodRow>[] = [
+  {
+    key: "label",
+    header: "Method",
+    render: (row) => (
+      <Div>
+        <Row align="center" gap="sm" wrap>
+          <Text size="sm" weight="medium">{row.label}</Text>
+          <TypeBadge type={row.type} />
+          {row.isDefault && (
+            <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" rounded="full" padding="pill-xs">
+              Default
+            </Span>
+          )}
+        </Row>
+        <Text className="mt-1 font-mono" color="muted" size="xs">{row.maskedIdentifier}</Text>
+      </Div>
+    ),
+  },
+  {
+    key: "isActive",
+    header: "Status",
+    render: (row) => (
+      <Badge variant={row.isActive ? "active" : "inactive"} size="xs">
+        {row.isActive ? "Active" : "Inactive"}
+      </Badge>
+    ),
+  },
+];
+
 export function SellerPayoutMethodsView({
   onCreateClick,
   onEditClick,
   onDelete,
   onSetDefault,
 }: SellerPayoutMethodsViewProps) {
-  const table = useUrlTable({ defaults: { sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: SELLER_ENDPOINTS.PAYOUT_METHOD_BY_ID,
     deleteFn: onDelete,
     successMessage: "Payout method deleted.",
-    onSuccess: () => { refetch?.(); },
     fetchOptions: { credentials: "include" },
   });
   const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
   const { showToast } = useToast();
-
-  const commitSearch = useCallback(() => {
-    table.set(TABLE_KEYS.QUERY, searchInput.trim());
-  }, [searchInput, table]);
-
-  const resetAll = useCallback(() => {
-    table.setMany({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" });
-    setSearchInput("");
-  }, [table]);
-
-  const hasActiveState =
-    !!table.get(TABLE_KEYS.QUERY) || table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT;
-
-  const { rows, isLoading, errorMessage, refetch } = useSellerListingData<
-    PayoutMethodsResponse,
-    PayoutMethodRow
-  >({
-    queryKey: ["seller", "payout-methods"],
-    endpoint: SELLER_ENDPOINTS.PAYOUT_METHODS,
-    page: 1,
-    pageSize: PAGE_SIZE,
-    sorts: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
-    q: table.get(TABLE_KEYS.QUERY) || undefined,
-    mapRows: (response) =>
-      toRecordArray(response.items).map((item, index) => ({
-        id: toStringValue(item.id, `pm-${index}`),
-        raw: item,
-        label: String(item.label ?? ""),
-        type: String(item.type ?? ""),
-        isDefault: Boolean(item.isDefault),
-        isActive: Boolean(item.isActive),
-        maskedIdentifier: getMaskedIdentifier(item),
-      })),
-  });
 
   const handleDelete = useCallback(async (id: string) => {
     try {
@@ -153,7 +132,6 @@ export function SellerPayoutMethodsView({
           body: JSON.stringify({ isDefault: true }),
         });
       }
-      refetch?.();
       showToast("Default payout method updated.", "success");
     } catch (err) {
       void normalizeError(err);
@@ -161,135 +139,63 @@ export function SellerPayoutMethodsView({
     } finally {
       setSettingDefaultId(null);
     }
-  }, [onSetDefault, refetch, showToast]);
+  }, [onSetDefault, showToast]);
 
   const handleCreate = useCallback(() => {
-    if (onCreateClick) {
-      onCreateClick();
-    } else {
-      window.location.href = String(ROUTES.STORE.PAYOUT_METHODS_NEW);
-    }
+    if (onCreateClick) onCreateClick();
+    else window.location.href = String(ROUTES.STORE.PAYOUT_METHODS_NEW);
   }, [onCreateClick]);
 
   const handleEdit = useCallback((id: string) => {
-    if (onEditClick) {
-      onEditClick(id);
-    } else {
-      window.location.href = String(ROUTES.STORE.PAYOUT_METHODS_EDIT(id));
-    }
+    if (onEditClick) onEditClick(id);
+    else window.location.href = String(ROUTES.STORE.PAYOUT_METHODS_EDIT(id));
   }, [onEditClick]);
 
-  return (
-    <Div className="min-h-screen">
-      <ListingToolbar
-        filterCount={0}
-        searchValue={searchInput}
-        searchPlaceholder="Search payout methods..."
-        onSearchChange={setSearchInput}
-        onSearchCommit={commitSearch}
-        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
-        onResetAll={resetAll}
-        hasActiveState={hasActiveState}
-        extra={
-          <Button gap="sm" size="sm" onClick={handleCreate}>
-            <Plus className="h-4 w-4" />
-            <Span>New Method</Span>
-          </Button>
-        }
+  const config: ListingViewConfig<PayoutMethodsResponse, PayoutMethodRow> = {
+    portal: "seller",
+    title: "Payout Methods",
+    searchPlaceholder: "Search payout methods...",
+    emptyLabel: "No payout methods yet — add a UPI VPA or bank account to receive payouts",
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
+    queryKey: ["seller", "payout-methods", "listing"],
+    endpoint: SELLER_ENDPOINTS.PAYOUT_METHODS,
+    sortOptions: SORT_OPTIONS,
+    columns: COLUMNS,
+    mapRows: (response) =>
+      toRecordArray(response.items).map((item, index) => ({
+        id: toStringValue(item.id, `pm-${index}`),
+        raw: item,
+        label: String(item.label ?? ""),
+        type: String(item.type ?? ""),
+        isDefault: Boolean(item.isDefault),
+        isActive: Boolean(item.isActive),
+        maskedIdentifier: getMaskedIdentifier(item),
+      })),
+    getTotal: (response, mappedRows) => (typeof response.total === "number" ? response.total : mappedRows.length),
+    buildFilters: () => undefined,
+    primaryAction: { label: "New Method", onClick: handleCreate },
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          ...(!row.isDefault
+            ? [{ label: "Set as Default", disabled: settingDefaultId === row.id, onClick: () => handleSetDefault(row.id) }]
+            : []),
+          { label: "Edit", onClick: () => handleEdit(row.id) },
+          {
+            label: "Delete",
+            destructive: true,
+            onClick: () => setDeleteTargetId(row.id),
+            disabled: deletingId === row.id,
+          },
+        ]}
       />
+    ),
+  };
 
-      <Div paddingX="x-sm-md" padding="y-md">
-        {errorMessage && (
-          <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
-            {errorMessage}
-          </Div>
-        )}
-        {isLoading ? (
-          <Stack gap="3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Div
-                key={i}
-                className="h-20 animate-pulse" border="subtle" surface="muted" rounded="xl"
-              />
-            ))}
-          </Stack>
-        ) : rows.length === 0 ? (
-          <Div className="text-center" padding="y-4xl">
-            <Text color="faint">
-              No payout methods yet — add a UPI VPA or bank account to receive payouts
-            </Text>
-            <Div className="mt-4">
-              <Button size="sm" onClick={handleCreate}>
-                Add payout method
-              </Button>
-            </Div>
-          </Div>
-        ) : (
-          <Stack gap="3">
-            {rows.map((row) => (
-              <Div
-                key={row.id}
-                rounded="xl"
-                border="default"
-                padding="inline"
-                className="bg-[var(--appkit-color-surface)]"
-              >
-                <Row align="start" justify="between" gap="md">
-                  <Row className="min-w-0" align="start" gap="3">
-                    <Div className="min-w-0 flex-1">
-                      <Row align="center" gap="sm" wrap>
-                        <Text size="sm" weight="medium">{row.label}</Text>
-                        <TypeBadge type={row.type} />
-                        {row.isDefault && (
-                          <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" rounded="full" padding="pill-xs">
-                            Default
-                          </Span>
-                        )}
-                        <Badge variant={row.isActive ? "active" : "inactive"} size="xs">
-                          {row.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                      </Row>
-                      <Text className="mt-1 font-mono" color="muted" size="xs">
-                        {row.maskedIdentifier}
-                      </Text>
-                    </Div>
-                  </Row>
-                  <Row className="shrink-0" align="center" gap="sm">
-                    {!row.isDefault && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        isLoading={settingDefaultId === row.id}
-                        onClick={() => handleSetDefault(row.id)}
-                      >
-                        Set Default
-                      </Button>
-                    )}
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEdit(row.id)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      disabled={deletingId === row.id}
-                      onClick={() => setDeleteTargetId(row.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Row>
-                </Row>
-              </Div>
-            ))}
-          </Stack>
-        )}
-      </Div>
-
+  return (
+    <>
+      <DataListingView config={config} />
       {deleteTargetId && (
         <ConfirmDeleteModal
           isOpen
@@ -300,6 +206,6 @@ export function SellerPayoutMethodsView({
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </Div>
+    </>
   );
 }

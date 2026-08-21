@@ -11,34 +11,25 @@ import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin } from "lucide-react";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Select, Span, Text, useToast, StickyToolbar } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { Badge, Button, Div, Row, Select, Span, Text, useToast } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import type { ListingType } from "../../products/types";
-import {
-  toRecordArray,
-  toRelativeDate,
-  toStringValue,
-  useSellerListingData,
-} from "../hooks/useSellerListingData";
-import { DataTable } from "../../admin/components/DataTable";
-import { useDataViewMode } from "../../account/hooks/useDataViewMode";
-import type { AdminTableColumn } from "../../admin/types";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { toRecordArray, toRelativeDate, toStringValue } from "../hooks/useSellerListingData";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 
 import { SellerProductsCards } from "./SellerProductsCards";
-import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
+import { SellerProductsFilterFields } from "./SellerProductsFilterDrawer";
 import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
-import { useBottomActions } from "../../layout";
-
-const PAGE_SIZE = 25;
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
+import type { AdminTableColumn } from "../../admin/types";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 
 const FILTER_KEYS = [
   "status",
@@ -49,6 +40,8 @@ const FILTER_KEYS = [
   "maxPrice",
   "tags",
   "badges",
+  "listingType",
+  "showSold",
 ];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
@@ -70,7 +63,6 @@ interface ProductRow {
   status: string;
   updatedAt: string;
   imageUrl?: string;
-  /** Alias of `imageUrl` under the generic `AdminListingScaffoldRow.image` field name — consumed by AdminViewCards' list/grid avatar when this view isn't rendering its own PRODUCT_COLUMNS table. */
   image?: string;
   listingKind: ListingKind;
   price: string;
@@ -82,14 +74,11 @@ interface SellerProductsResponse {
   meta?: { total: number; totalPages?: number };
 }
 
-export interface SellerProductsViewProps extends ListingLayoutProps {
+export interface SellerProductsViewProps {
   onDeleteProduct?: (id: string) => Promise<void>;
-  /** S-STORE-2-E — "New Listing" toolbar button. */
   onCreateClick?: () => void;
 }
 
-// S-STORE-2-A — `<TypeDropdown>` replaces the legacy chip strip. Same width on
-// mobile, narrower on desktop. Drives the `?listingType=` query param.
 function TypeDropdown({
   active,
   onChange,
@@ -98,9 +87,6 @@ function TypeDropdown({
   onChange: (kind: ListingKind) => void;
 }) {
   const flags = useListingTypeFlags();
-  // W1-43 — hide disabled types so the seller can't filter for an
-  // inactive listing surface. Bundle is a categoryType (not a listingType)
-  // and stays unconditionally available.
   const options: { value: ListingKind; label: string }[] = [
     { value: "all", label: "All listings" },
     flags.standard && { value: "standard", label: "Standard" },
@@ -127,7 +113,6 @@ function TypeDropdown({
     </Row>
   );
 }
-
 
 const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
   {
@@ -173,30 +158,20 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     header: "Status",
     className: "w-28",
     render: (row) => {
-      // Real ProductStatus is draft|published|in_review|archived — "active"
-      // and "sold" are not stored status values (sold is tracked separately
-      // via isSold, shown via the "Show sold" toolbar toggle, not this
-      // column), so those two branches never matched and were dead code.
       const variant =
         row.status === "published"
           ? "success"
           : row.status === "draft"
             ? "default"
             : "danger";
-      return (
-        <Badge variant={variant}>
-          {row.status}
-        </Badge>
-      );
+      return <Badge variant={variant}>{row.status}</Badge>;
     },
   },
   {
     key: "updatedAt",
     header: "Updated",
     className: "w-28",
-    render: (row) => (
-      <Span size="xs" color="muted">{row.updatedAt}</Span>
-    ),
+    render: (row) => <Span size="xs" color="muted">{row.updatedAt}</Span>,
   },
   {
     key: "physicalLocation",
@@ -216,19 +191,17 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
 export function SellerProductsView({
   onDeleteProduct,
   onCreateClick,
-  children,
-  ...props
 }: SellerProductsViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
-  const { view, setView } = useDataViewMode("list");
   const dispatch = useActionDispatch();
   const { showToast } = useToast();
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  // listingKind is URL-driven so it survives navigation and back/forward
-  const listingKind = ((table.get("listingType") as ListingKind) || "all") as ListingKind;
+  // Independent useUrlTable() instance for the type-dropdown + "Show sold"
+  // toggle (Root Cause #35) — reads/writes the same URL params DataListingView's
+  // own internal table also reads via `filterKeys`, so both stay in sync.
+  const sideTable = useUrlTable({ defaults: { sort: DEFAULT_SORT } });
+  const listingKind = ((sideTable.get("listingType") as ListingKind) || "all") as ListingKind;
+  const showSold = sideTable.get("showSold") === "true";
+
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     deleteFn: onDeleteProduct,
     onSuccess: (id) => { setDeletedIds((prev) => new Set([...prev, id])); },
@@ -237,78 +210,97 @@ export function SellerProductsView({
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const [statusOverrides, setStatusOverrides] = useState<Map<string, string>>(new Map());
   const [setLocationOpen, setSetLocationOpen] = useState(false);
-
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
-  );
-
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
-
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
-
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", listingType: "", showSold: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
+  const [selectedIdsForLocation, setSelectedIdsForLocation] = useState<string[]>([]);
 
   const handleKindChange = useCallback(
     (kind: ListingKind) => {
-      // setMany prevents the double router.replace race condition (audit-double-navigation)
-      table.setMany({ listingType: kind === "all" ? "" : kind, page: "1" });
+      sideTable.setMany({ listingType: kind === "all" ? "" : kind, page: "1" });
     },
-    [table],
+    [sideTable],
   );
 
-  const showSold = table.get("showSold") === "true";
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== DEFAULT_SORT ||
-    activeFilterCount > 0 ||
-    listingKind !== "all" ||
-    showSold;
+  const handleEdit = (row: ProductRow) => {
+    const href =
+      row.listingKind === "auction"
+        ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
+        : row.listingKind === "pre-order"
+          ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
+          : row.listingKind === "prize-draw"
+            ? String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))
+            : String(ROUTES.STORE.PRODUCTS_EDIT(row.id));
+    void dispatch({ type: "NAVIGATE", href });
+  };
 
-  const statusRaw = table.get("status");
-  const statusFilter = statusRaw && statusRaw !== "All" ? sieveFilter("status", SIEVE_OP.EQ, statusRaw) : undefined;
-  // SB1-G — single-field listingType clause. The repository's Sieve aliases
-  // accept both `==auction|preorder|standard` and `==pre-order` directly.
-  const kindFilter = listingKind === "all" ? undefined : sieveFilter("listingType", SIEVE_OP.EQ, listingKind);
-  const soldFilter = showSold ? undefined : "isSold==false";
+  const handleDelete = async (row: ProductRow) => {
+    if (!onDeleteProduct) return;
+    await performDelete(row.id);
+  };
 
-  const filters = [statusFilter, kindFilter, soldFilter].filter(Boolean).join(",") || undefined;
+  const handleDuplicate = async (row: ProductRow) => {
+    const res = await fetch(SELLER_ENDPOINTS.PRODUCT_DUPLICATE(row.id), {
+      method: "POST",
+    }).catch(() => null);
+    if (res && res.ok) {
+      const json = await res.json().catch(() => null);
+      const newId: string | undefined = json?.data?.id;
+      if (newId) handleEdit({ ...row, id: newId });
+    }
+  };
 
-  const { rows, total, isLoading, errorMessage } = useSellerListingData<
-    SellerProductsResponse,
-    ProductRow
-  >({
+  const handleTogglePublish = async (row: ProductRow) => {
+    const currentStatus = statusOverrides.get(row.id) ?? row.status;
+    const newStatus = currentStatus === "published" ? "draft" : "published";
+    setPublishingId(row.id);
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCT_BY_ID(row.id), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }).catch(() => null);
+      if (res?.ok) {
+        setStatusOverrides((prev) => new Map([...prev, [row.id, newStatus]]));
+      }
+    } finally {
+      setPublishingId(null);
+    }
+  };
+
+  const handleSetLocation = useCallback(async (loc: PhysicalLocation, ids: string[]) => {
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCTS_BULK_LOCATION, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productIds: ids, physicalLocation: loc }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to update location");
+      }
+      showToast("Location updated.", "success");
+      setSetLocationOpen(false);
+    } catch (err) {
+      void normalizeError(err);
+      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
+    }
+  }, [showToast]);
+
+  const config: ListingViewConfig<SellerProductsResponse, ProductRow> = {
+    portal: "seller",
+    title: "Products",
+    searchPlaceholder: "Search products by name…",
+    emptyLabel: listingKind !== "all" ? `No ${listingKind} listings found` : "No products listed yet",
+    filterKeys: FILTER_KEYS,
+    defaultSort: DEFAULT_SORT,
     queryKey: ["seller", "products", "listing", listingKind],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
-    mapRows: (response) =>
-      toRecordArray(response.products).map((item, index) => {
-        // SB1-G — derive kind from canonical listingType with legacy fallback.
+    sortOptions: SORT_OPTIONS,
+    columns: PRODUCT_COLUMNS,
+    toggles: [
+      { label: "Show sold", active: showSold, onChange: (next) => sideTable.set("showSold", next ? "true" : "") },
+    ],
+    primaryAction: onCreateClick ? { label: "New Listing", onClick: onCreateClick } : undefined,
+    mapRows: (response) => {
+      const rows = toRecordArray(response.products).map((item, index) => {
         const lt = normalizeListingType(
           item as { listingType?: import("../../products/types").ListingType },
         );
@@ -321,11 +313,6 @@ export function SellerProductsView({
                 ? "prize-draw"
                 : "standard";
         const priceRaw = typeof item.price === "number" ? item.price : 0;
-        // Auction listings lost their reserve/bid/end-date summary when this
-        // view was consolidated from the old dedicated SellerAuctionsView —
-        // restore it into `secondary` (the one line every row/card renders)
-        // instead of the generic condition string, which auction sellers
-        // care about far less than bid activity.
         const auctionSecondary =
           kind === "auction"
             ? [
@@ -356,274 +343,114 @@ export function SellerProductsView({
               ? (item.physicalLocation as { zone: string; shelf: string; bin: string })
               : undefined,
         };
-      }),
+      });
+      return rows.filter((r) => !deletedIds.has(r.id)).map((r) =>
+        statusOverrides.has(r.id) ? { ...r, status: statusOverrides.get(r.id)! } : r,
+      );
+    },
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-  });
-
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const visibleRows = rows
-    .filter((r) => !deletedIds.has(r.id))
-    .map((r) => statusOverrides.has(r.id) ? { ...r, status: statusOverrides.get(r.id)! } : r);
-  const selection = useBulkSelection<ProductRow>({ items: visibleRows, keyExtractor: (r) => r.id });
-
-  // handleBulkPrintLabels/handleSetLocation (useCallback) and useBottomActions
-  // must run unconditionally on every render — they were previously declared
-  // after the `hasChildren` early return below, which skips these hook calls
-  // in passthrough mode, violating the Rules of Hooks.
-  const handleBulkPrintLabels = useCallback(() => {
-    const ids = selection.selectedIds.join(",");
-    void dispatch({
-      type: "NAVIGATE",
-      href: `${String(ROUTES.STORE.PRINT_CENTER)}?type=product&ids=${ids}&autoprint=1`,
-    });
-  }, [selection.selectedIds, dispatch]);
-
-  const handleSetLocation = useCallback(async (loc: PhysicalLocation) => {
-    try {
-      const res = await fetch(SELLER_ENDPOINTS.PRODUCTS_BULK_LOCATION, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productIds: selection.selectedIds, physicalLocation: loc }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error((body as { error?: string })?.error ?? "Failed to update location");
-      }
-      showToast("Location updated.", "success");
-      setSetLocationOpen(false);
-    } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
-    }
-  }, [selection.selectedIds, showToast]);
-
-  const bulkActions: BulkActionItem[] = [
-    buildBulkAction(ACTIONS.STORE["print-labels"], handleBulkPrintLabels, { icon: <Printer className="w-4 h-4" /> }),
-    buildBulkAction(ACTIONS.STORE["set-location"], () => setSetLocationOpen(true), { icon: <MapPin className="w-4 h-4" /> }),
-  ];
-
-  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
-
-  if (hasChildren) {
-    return (
-      <ListingLayout portal="seller" {...props}>
-        {children}
-      </ListingLayout>
-    );
-  }
-
-  const handleEdit = (row: ProductRow) => {
-    const href =
+    buildFilters: (state) => {
+      const statusFilter = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined;
+      const kindFilter = !state.listingType || state.listingType === "all" ? undefined : sieveFilter("listingType", SIEVE_OP.EQ, state.listingType);
+      const soldFilter = state.showSold === "true" ? undefined : "isSold==false";
+      return [statusFilter, kindFilter, soldFilter].filter(Boolean).join(",") || undefined;
+    },
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <SellerProductsFilterFields
+        pendingFilters={pendingFilters}
+        statusOptions={STATUS_OPTIONS}
+        onChange={setPendingFilters}
+      />
+    ),
+    renderAboveContent: () => <TypeDropdown active={listingKind} onChange={handleKindChange} />,
+    buildBulkActions: (selection: ListingSelectionContext<ProductRow>) => {
+      const handleBulkPrintLabels = () => {
+        const ids = selection.selectedIds.join(",");
+        void dispatch({
+          type: "NAVIGATE",
+          href: `${String(ROUTES.STORE.PRINT_CENTER)}?type=product&ids=${ids}&autoprint=1`,
+        });
+      };
+      return [
+        buildBulkAction(ACTIONS.STORE["print-labels"], handleBulkPrintLabels, { icon: <Printer className="w-4 h-4" /> }),
+        buildBulkAction(ACTIONS.STORE["set-location"], () => { setSelectedIdsForLocation(selection.selectedIds); setSetLocationOpen(true); }, { icon: <MapPin className="w-4 h-4" /> }),
+      ] as BulkActionItem[];
+    },
+    renderCards: (rows, view, selection, isLoading) => (
+      <SellerProductsCards
+        view={view}
+        rows={rows}
+        isLoading={isLoading}
+        listingKind={listingKind}
+        selectedIds={new Set(selection.selectedIds)}
+        toggle={selection.toggleSelect}
+        onEdit={handleEdit}
+        onDuplicate={(row) => void handleDuplicate(row)}
+        onDelete={onDeleteProduct ? (row) => void handleDelete(row) : undefined}
+      />
+    ),
+    rowHrefTemplate: (row) =>
       row.listingKind === "auction"
-        ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
+        ? `/auctions/${row.id}`
         : row.listingKind === "pre-order"
-          ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
-          : row.listingKind === "prize-draw"
-            ? String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))
-            : String(ROUTES.STORE.PRODUCTS_EDIT(row.id));
-    void dispatch({ type: "NAVIGATE", href });
-  };
-
-  const handleDelete = async (row: ProductRow) => {
-    if (!onDeleteProduct) return;
-    await performDelete(row.id);
-  };
-
-  // S-STORE-2-C — Duplicate verb. Server-side endpoint is /api/store/products/[id]/duplicate.
-  const handleDuplicate = async (row: ProductRow) => {
-    const res = await fetch(SELLER_ENDPOINTS.PRODUCT_DUPLICATE(row.id), {
-      method: "POST",
-    }).catch(() => null);
-    if (res && res.ok) {
-      const json = await res.json().catch(() => null);
-      const newId: string | undefined = json?.data?.id;
-      if (newId) handleEdit({ ...row, id: newId });
-    }
-  };
-
-  const handleTogglePublish = async (row: ProductRow) => {
-    const currentStatus = statusOverrides.get(row.id) ?? row.status;
-    const newStatus = currentStatus === "published" ? "draft" : "published";
-    setPublishingId(row.id);
-    try {
-      const res = await fetch(SELLER_ENDPOINTS.PRODUCT_BY_ID(row.id), {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      }).catch(() => null);
-      if (res?.ok) {
-        setStatusOverrides((prev) => new Map([...prev, [row.id, newStatus]]));
-      }
-    } finally {
-      setPublishingId(null);
-    }
+          ? `/pre-orders/${row.id}`
+          : `/products/${row.id}`,
+    renderRowActions: (row) => {
+      const isPublished = (statusOverrides.get(row.id) ?? row.status) === "published";
+      return (
+        <Row gap="xs">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); handleEdit(row); }}
+            aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
+          >
+            <Pencil className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); void handleTogglePublish(row); }}
+            aria-label={isPublished ? "Unpublish" : "Publish"}
+            title={isPublished ? "Unpublish" : "Publish"}
+            disabled={publishingId === row.id}
+          >
+            {isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); void handleDuplicate(row); }}
+            aria-label="Duplicate listing"
+            title="Duplicate"
+          >
+            ⧉
+          </Button>
+          {onDeleteProduct && (
+            <Button
+              variant="ghost"
+              size="sm"
+              action={ACTIONS.STORE["delete-listing"]}
+              onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
+              disabled={deletingId === row.id}
+              className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-border-subtle)]"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </Row>
+      );
+    },
   };
 
   return (
     <>
-      <Div className="min-h-screen">
-        <ListingToolbar
-          filterCount={activeFilterCount}
-          onFiltersClick={openFilters}
-          searchValue={searchInput}
-          searchPlaceholder="Search products by name…"
-          onSearchChange={setSearchInput}
-          onSearchCommit={commitSearch}
-          sortValue={table.get("sort") || DEFAULT_SORT}
-          sortOptions={SORT_OPTIONS}
-          onSortChange={(v) => { table.set("sort", v); }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-          onResetAll={resetAll}
-          hasActiveState={hasActiveState}
-          toggles={[
-            { label: "Show sold", active: showSold, onChange: (next) => table.set("showSold", next ? "true" : "") },
-          ]}
-          extra={
-            onCreateClick ? (
-              <Button variant="primary" size="sm" onClick={onCreateClick}>
-                + New Listing
-              </Button>
-            ) : null
-          }
-        />
-
-        <TypeDropdown active={listingKind} onChange={handleKindChange} />
-
-        {totalPages > 1 && (
-          <StickyToolbar offset="header+pagination" tone="default" border padding="sm">
-            <Row justify="center">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={(p) => table.setPage(p)}
-              />
-            </Row>
-          </StickyToolbar>
-        )}
-
-        {selection.selectedIds.length > 0 && (
-          <StickyToolbar offset="header+bulk-actions" tone="default" border padding="sm" z="above-toolbar">
-            <BulkActionBar
-              selectedCount={selection.selectedIds.length}
-              onClearSelection={selection.clearSelection}
-              actions={bulkActions}
-            />
-          </StickyToolbar>
-        )}
-
-        <Div paddingX="x-sm-lg-md" padding="y-md">
-          {errorMessage && (
-            <Alert variant="error" className="mb-4">{errorMessage}</Alert>
-          )}
-          {/* S-STORE — grid + list card views (table is the default). */}
-          {view !== "table" && (
-            <SellerProductsCards
-              view={view}
-              rows={visibleRows}
-              isLoading={isLoading}
-              listingKind={listingKind}
-              selectedIds={selection.selectedIdSet}
-              toggle={selection.toggle}
-              onEdit={handleEdit}
-              onDuplicate={(row) => void handleDuplicate(row)}
-              onDelete={onDeleteProduct ? (row) => void handleDelete(row) : undefined}
-            />
-          )}
-          {view === "table" && (
-          <DataTable
-            columns={PRODUCT_COLUMNS}
-            rows={visibleRows}
-            isLoading={isLoading}
-            emptyLabel={
-              listingKind !== "all"
-                ? `No ${listingKind} listings found`
-                : "No products listed yet"
-            }
-            selectedIds={selection.selectedIdSet}
-            onToggleSelect={selection.toggle}
-            onToggleSelectAll={() => selection.toggleAll()}
-            rowHrefTemplate={(row) =>
-              // S-STORE-2-D — row click → public detail/preview, not edit.
-              // A function is safe here: both this view and DataTable are
-              // already client components, and the target varies per row
-              // (not expressible as a single {id} template string).
-              row.listingKind === "auction"
-                ? `/auctions/${row.id}`
-                : row.listingKind === "pre-order"
-                  ? `/pre-orders/${row.id}`
-                  : `/products/${row.id}`
-            }
-            renderRowActions={(row) => {
-              const isPublished = (statusOverrides.get(row.id) ?? row.status) === "published";
-  return (
-                <Row gap="xs">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => { e.stopPropagation(); handleEdit(row); }}
-                    aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => { e.stopPropagation(); void handleTogglePublish(row); }}
-                    aria-label={isPublished ? "Unpublish" : "Publish"}
-                    title={isPublished ? "Unpublish" : "Publish"}
-                    disabled={publishingId === row.id}
-                  >
-                    {isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => { e.stopPropagation(); void handleDuplicate(row); }}
-                    aria-label="Duplicate listing"
-                    title="Duplicate"
-                  >
-                    ⧉
-                  </Button>
-                  {onDeleteProduct && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      action={ACTIONS.STORE["delete-listing"]}
-                      onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
-                      disabled={deletingId === row.id}
-                      className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-border-subtle)]"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  )}
-                </Row>
-              );
-            }}
-          />
-          )}
-        </Div>
-
-        <SellerProductsFilterDrawer
-          isOpen={filterOpen}
-          pendingFilters={pendingFilters}
-          statusOptions={STATUS_OPTIONS}
-          activeFilterCount={activeFilterCount}
-          onChange={setPendingFilters}
-          onClear={clearFilters}
-          onApply={applyFilters}
-          onClose={() => setFilterOpen(false)}
-        />
-      </Div>
-
+      <DataListingView config={config} />
       {setLocationOpen && (
         <PhysicalLocationModal
-          count={selection.selectedIds.length}
-          onSave={handleSetLocation}
+          count={selectedIdsForLocation.length}
+          onSave={(loc) => handleSetLocation(loc, selectedIdsForLocation)}
           onClose={() => setSetLocationOpen(false)}
         />
       )}

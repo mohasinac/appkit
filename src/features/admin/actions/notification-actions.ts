@@ -3,6 +3,7 @@ import { notificationRepository } from "../repository/notification.repository";
 import { siteSettingsRepository } from "../repository/site-settings.repository";
 import { userRepository } from "../../auth/repository/user.repository";
 import { createResendProvider } from "../../../providers/email-resend/provider";
+import { isChannelHealthy, withChannelRetry } from "../../../_internal/server/notifications/channel-health";
 import { enqueueJob } from "../../jobs/actions/enqueue-job";
 import { serverLogger } from "../../../monitoring";
 import { decryptPii } from "../../../security/index";
@@ -182,15 +183,17 @@ export async function sendNotification(
     const apiKey = creds.resendApiKey?.trim() ?? "";
     const fromEmail = settings.emailSettings?.fromEmail ?? "noreply@letitrip.in";
     const fromName = settings.emailSettings?.fromName ?? "LetItRip";
-    if (apiKey && !apiKey.includes("PLACEHOLDER")) {
+    if (apiKey && !apiKey.includes("PLACEHOLDER") && (await isChannelHealthy("email"))) {
       try {
         const emailProvider = createResendProvider({ apiKey, fromEmail, fromName });
-        await emailProvider.send({
-          to: resolvedEmail,
-          subject: title,
-          html: emailHtml ?? `<p>${message}</p>`,
-          text: message,
-        });
+        await withChannelRetry("email", () =>
+          emailProvider.send({
+            to: resolvedEmail,
+            subject: title,
+            html: emailHtml ?? `<p>${message}</p>`,
+            text: message,
+          }),
+        );
         emailStatus = "sent";
       } catch (err) {
         void normalizeError(err);

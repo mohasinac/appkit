@@ -4,6 +4,7 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { Alert, Button, FieldInput, FieldSelect, FieldTextarea, Form, Grid, Row, Span, Stack, Toggle } from "../../../ui";
+import { FormErrorSummary } from "../../../ui/forms";
 import { MediaUploadList } from "../../media/upload/MediaUploadList";
 import { useMediaUpload } from "../../media";
 import type { MediaField } from "../../media/types";
@@ -106,6 +107,8 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
             <Toggle checked={visibility === "public"} onChange={(checked) => setVisibility(checked ? "public" : "private")} size="sm" />
             <Span>{visibility === "public" ? "Public — visible on your profile" : "Private — only you can see it"}</Span>
           </Row>
+
+          <FormErrorSummary />
 
           <Button
             type="button"

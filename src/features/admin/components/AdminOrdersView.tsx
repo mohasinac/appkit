@@ -17,14 +17,45 @@ import {
   toRelativeDate,
   toCurrency,
   toStringValue,
+  type ListingItemRecord,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
-import { AdminOrderEditorView } from "./AdminOrderEditorView";
+import { AdminOrderEditorView, type AdminOrderItemRow } from "./AdminOrderEditorView";
 
 interface AdminOrdersResponse {
   orders?: JsonArray;
   meta?: { total?: number };
+}
+
+/**
+ * `OrderDocument` has no `orderNumber` field — the real item info an order
+ * list row should show lives in the denormalized `items[]` snapshot
+ * (`productTitle`/`image`), written at order time specifically so list/detail
+ * UI never needs an extra product fetch. Falling back to `Order {id}` (a raw
+ * GUID) instead was Root Cause Pattern #(order-guid) — see CLAUDE.md.
+ */
+function toOrderItemRows(item: ListingItemRecord): AdminOrderItemRow[] {
+  const items = Array.isArray(item.items) ? item.items : [];
+  return items
+    .filter((entry): entry is Record<string, unknown> => Boolean(entry) && typeof entry === "object")
+    .map((entry) => ({
+      productId: typeof entry.productId === "string" ? entry.productId : "",
+      title: typeof entry.productTitle === "string" ? entry.productTitle : "Item",
+      image: typeof entry.image === "string" ? entry.image : undefined,
+      quantity: typeof entry.quantity === "number" ? entry.quantity : 1,
+      unitPrice: typeof entry.unitPrice === "number" ? entry.unitPrice : 0,
+      totalPrice: typeof entry.totalPrice === "number" ? entry.totalPrice : 0,
+    }));
+}
+
+function firstOrderItem(item: ListingItemRecord): { image?: string; title?: string; extraCount: number } {
+  const items = toOrderItemRows(item);
+  return {
+    image: items[0]?.image,
+    title: items[0]?.title,
+    extraCount: Math.max(0, items.length - 1),
+  };
 }
 
 interface OrderRow {
@@ -33,6 +64,8 @@ interface OrderRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  image?: string;
+  items: AdminOrderItemRow[];
   paymentProofUrl?: string;
   paymentTransactionId?: string;
   paymentMethod?: string;
@@ -87,25 +120,34 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.orders).map((item, index) => ({
-        id: toStringValue(item.id, `order-${index}`),
-        primary: `Order ${toStringValue(item.orderNumber ?? item.id, "-")}`,
-        secondary: [
-          toStringValue(item.buyerName ?? item.customerName, "Unknown buyer"),
-          toCurrency(item.totalAmount ?? item.total ?? item.amount),
-        ].join(" · "),
-        status: toStringValue(item.status, "Unknown"),
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-        paymentProofUrl: toStringValue(item.paymentProofUrl, "") || undefined,
-        paymentTransactionId: toStringValue(item.paymentTransactionId, "") || undefined,
-        paymentMethod: toStringValue(item.paymentMethod, "") || undefined,
-        paymentStatus: toStringValue(item.paymentStatus, "") || undefined,
-        displayedUpiId: toStringValue(item.displayedUpiId, "") || undefined,
-        buyerReportedUpiId: toStringValue(item.buyerReportedUpiId, "") || undefined,
-        paymentUpiMismatch: Boolean(item.paymentUpiMismatch),
-        buyerMarkedPaid: Boolean(item.buyerMarkedPaid),
-        buyerFraudAgreementAccepted: Boolean(item.buyerFraudAgreementAccepted),
-      })),
+      toRecordArray(response.orders).map((item, index) => {
+        const orderId = toStringValue(item.id, `order-${index}`);
+        const { image, title, extraCount } = firstOrderItem(item);
+        return {
+          id: orderId,
+          primary: title
+            ? `${title}${extraCount > 0 ? ` +${extraCount} more` : ""}`
+            : `Order ${orderId}`,
+          secondary: [
+            toStringValue(item.buyerName ?? item.customerName, "Unknown buyer"),
+            toCurrency(item.totalAmount ?? item.total ?? item.amount),
+            orderId.slice(0, 14),
+          ].join(" · "),
+          status: toStringValue(item.status, "Unknown"),
+          updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+          image,
+          items: toOrderItemRows(item),
+          paymentProofUrl: toStringValue(item.paymentProofUrl, "") || undefined,
+          paymentTransactionId: toStringValue(item.paymentTransactionId, "") || undefined,
+          paymentMethod: toStringValue(item.paymentMethod, "") || undefined,
+          paymentStatus: toStringValue(item.paymentStatus, "") || undefined,
+          displayedUpiId: toStringValue(item.displayedUpiId, "") || undefined,
+          buyerReportedUpiId: toStringValue(item.buyerReportedUpiId, "") || undefined,
+          paymentUpiMismatch: Boolean(item.paymentUpiMismatch),
+          buyerMarkedPaid: Boolean(item.buyerMarkedPaid),
+          buyerFraudAgreementAccepted: Boolean(item.buyerFraudAgreementAccepted),
+        };
+      }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
@@ -193,6 +235,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         orderId={selectedRow?.id}
         orderLabel={selectedRow?.primary}
         currentStatus={selectedRow?.status}
+        items={selectedRow?.items}
         paymentProofUrl={selectedRow?.paymentProofUrl}
         paymentTransactionId={selectedRow?.paymentTransactionId}
         paymentMethod={selectedRow?.paymentMethod}

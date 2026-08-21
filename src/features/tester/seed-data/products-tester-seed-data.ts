@@ -5,9 +5,12 @@
  *      pre-ordering against real code paths — including navigating every entry of the store
  *      detail page's listing-type dropdown (see StoreNavTabs). Auto-expires after 7 days
  *      (testerSandboxCleanup cascades into any bids on the auction).
- * WHAT: Exports productsTesterSeedData — 2 standard + 2 auction + 1 pre-order + 1 prize-draw +
+ * WHAT: Exports productsTesterSeedData — 2 standard + 4 auction (3 staggered 1h/2h/3h "still
+ *       open" cycling fixtures + 1 already-ended "won" fixture) + 1 pre-order + 1 prize-draw +
  *       1 classified + 1 digital-code + 1 live + 1 art + 1 stickers product + 1 product-group
  *       ("Set") parent (product-tester-standard-1/2 are its children, linked via groupId).
+ *       The 3 staggered auction ids/end-dates are recomputed on every seed run (including the
+ *       testerSandboxRefresh job, every 4h) so testers can watch one actually end mid-session.
  *
  * EXPORTS:
  *   productsTesterSeedData — Array of Partial<ProductDocument> for the seed runner
@@ -47,7 +50,49 @@ function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   };
 }
 
+// Staggered, incrementing-id auction fixtures so testers can watch a live
+// auction actually cross its end time within a single sandbox refresh cycle
+// (testerSandboxRefresh re-imports this module every 4 hours, recomputing
+// these Date.now()-relative offsets fresh each time) instead of the old
+// single fixture that always sat 5 days out. A loop (not hand-typed ids)
+// avoids id collisions if the stagger list is ever extended.
+const AUCTION_CYCLE_STAGGER_HOURS = [1, 2, 3];
+const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_HOURS.map((hours, i) =>
+  withTokens({
+    id: `auction-tester-sandbox-cycle-${i + 1}`,
+    slug: `auction-tester-sandbox-cycle-${i + 1}`,
+    title: `Test Auction — Ends in ~${hours}h`,
+    description: `Disposable test auction for the tester QA program, staggered to end roughly ${hours} hour(s) after the last sandbox refresh so testers can watch the end-of-auction flow live. Place a bid — it auto-expires in 7 days, cascading to any bids.`,
+    categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
+    categoryNames: COLLECTIBLES_CATEGORY_NAMES,
+    brandSlug: "brand-tester-sandbox",
+    brand: "TestBrand",
+    startingBid: 15000,
+    currentBid: 15000,
+    currency: "INR",
+    price: 150,
+    stockQuantity: 1,
+    availableQuantity: 1,
+    auctionEndDate: new Date(Date.now() + hours * 60 * 60 * 1000),
+    bidCount: 0,
+    bidsHaveStarted: false,
+    isSold: false,
+    mainImage: seedExtMedia(`https://picsum.photos/seed/auction-image-tester-sandbox-cycle-${i + 1}-20260101/900/900`),
+    images: [seedExtMedia(`https://picsum.photos/seed/auction-image-tester-sandbox-cycle-${i + 1}-20260101/900/900`)],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "auction" as const,
+    customFields: [],
+    customSections: [],
+    isPromoted: false,
+    isOnSale: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }),
+);
+
 export const productsTesterSeedData: Partial<ProductDocument>[] = [
+  ...stagedAuctions,
   withTokens({
     id: "product-tester-standard-1",
     slug: "product-tester-standard-1",
@@ -129,37 +174,6 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "standard" as const,
-    customFields: [],
-    customSections: [],
-    isPromoted: false,
-    isOnSale: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }),
-  withTokens({
-    id: "auction-tester-sandbox-1",
-    slug: "auction-tester-sandbox-1",
-    title: "Test Auction — Bid Me!",
-    description: "Disposable test auction for the tester QA program. Place a bid — it auto-expires in 7 days, cascading to any bids.",
-    categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
-    categoryNames: COLLECTIBLES_CATEGORY_NAMES,
-    brandSlug: "brand-tester-sandbox",
-    brand: "TestBrand",
-    startingBid: 15000,
-    currentBid: 15000,
-    currency: "INR",
-    price: 150,
-    stockQuantity: 1,
-    availableQuantity: 1,
-    auctionEndDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    bidCount: 0,
-    bidsHaveStarted: false,
-    isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-tester-sandbox-1-20260101/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/auction-image-tester-sandbox-1-20260101/900/900")],
-    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
-    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "auction" as const,
     customFields: [],
     customSections: [],
     isPromoted: false,

@@ -30,10 +30,8 @@ export type {
   UserSettingsViewLabels,
 } from "./UserSettingsView";
 export { UserOrdersView } from "./UserOrdersView";
-export type {
-  UserOrdersViewProps,
-  UserOrdersViewLabels,
-} from "./UserOrdersView";
+export type { UserOrdersViewProps } from "./UserOrdersView";
+export { UserBidsView } from "./UserBidsView";
 export { OrderDetailView } from "./OrderDetailView";
 export type {
   OrderDetailViewProps,
@@ -73,10 +71,7 @@ export type {
   UserOrderTrackViewLabels,
 } from "./UserOrderTrackView";
 export { UserReturnsView } from "./UserReturnsView";
-export type {
-  UserReturnsViewProps,
-  UserReturnsViewLabels,
-} from "./UserReturnsView";
+export type { UserReturnsViewProps } from "./UserReturnsView";
 export { UserSupportView } from "./UserSupportView";
 export type { UserSupportViewProps } from "./UserSupportView";
 export { NotificationPreferencesPanel } from "./NotificationPreferencesPanel";

@@ -5,7 +5,9 @@
 
 import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue, type FirestoreDocument } from "@mohasinac/appkit/client";
+import type { ApiClientError } from "../../../http";
 import React from "react";
+import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -24,7 +26,20 @@ import {
   Text,
   useToast,
  Show, StickyToolbar, } from "../../../ui";
+import { useFormShellState, applyZodIssues, FormErrorSummary, FormShellContext } from "../../../ui/forms";
 import type { StackedViewShellProps } from "../../../ui";
+
+// Admin form-input validation — deliberately a small local schema, not the
+// broader `productItemSchema` (that one requires `id`/`price`/`status` as
+// non-optional, since it's the full read/display shape used across many
+// features — applying it directly here would show false "required" errors
+// on every keystroke while creating a new product, before an id exists).
+const adminProductFormSchema = z.object({
+  title: z.string().min(1, "Product title is required"),
+  price: z.number().min(0).optional(),
+  images: z.array(z.string()).max(5, "Up to 5 gallery images allowed").optional(),
+  video: z.object({ url: z.string(), thumbnailUrl: z.string().optional() }).optional(),
+}).passthrough();
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductForm } from "../../products/components/ProductForm";
@@ -165,6 +180,13 @@ export function AdminProductEditorView({
   const [mode, setMode] = React.useState<ProductMode>("standard");
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const { showToast } = useToast();
+  const { shellCtx, setFieldError, validate } = useFormShellState(adminProductFormSchema);
+
+  // Live validation — re-run on every product change, not just on submit.
+  React.useEffect(() => {
+    validate(product);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product, validate]);
 
   const productQuery = useQuery({
     queryKey: ["admin", "product", productId],
@@ -219,6 +241,13 @@ export function AdminProductEditorView({
       if (onSaved && id) onSaved(id as string);
     },
     onError: (err: Error) => {
+      const issues = (err as ApiClientError)?.issues;
+      if (issues && issues.length > 0) {
+        applyZodIssues(
+          issues as { path: (string | number)[]; message: string }[],
+          setFieldError,
+        );
+      }
       showToast((err as Error)?.message ?? "Failed to save product.", "error");
     },
   });
@@ -237,40 +266,44 @@ export function AdminProductEditorView({
   const isSubmitting = saveMutation.isPending || productQuery.isLoading;
 
   const actionSidebar = (
-    <Card variant="outlined" padding="md" spacing="sm">
-      <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-        Status
-      </Text>
-      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-        {isEdit ? product.status ?? "—" : "New"}
-      </Text>
-      <Button
-        type="submit"
-        form="product-editor-form"
-        className="w-full"
-        isLoading={isSubmitting}
-        disabled={!product.title || isSubmitting}
-      >
-        {isEdit ? "Save changes" : "Create product"}
-      </Button>
-      {isEdit && (
+    <FormShellContext.Provider value={shellCtx}>
+      <Card variant="outlined" padding="md" spacing="sm">
+        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
+          Status
+        </Text>
+        <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+          {isEdit ? product.status ?? "—" : "New"}
+        </Text>
+        <FormErrorSummary />
         <Button
-          type="button"
-          variant="danger"
+          type="submit"
+          form="product-editor-form"
           className="w-full"
-          isLoading={deleteMutation.isPending}
-          onClick={() => setDeleteOpen(true)}
+          isLoading={isSubmitting}
+          disabled={!product.title || isSubmitting}
         >
-          Delete product
+          {isEdit ? "Save changes" : "Create product"}
         </Button>
-      )}
-    </Card>
+        {isEdit && (
+          <Button
+            type="button"
+            variant="danger"
+            className="w-full"
+            isLoading={deleteMutation.isPending}
+            onClick={() => setDeleteOpen(true)}
+          >
+            Delete product
+          </Button>
+        )}
+      </Card>
+    </FormShellContext.Provider>
   );
 
   const formContent = (
     <Form
       id="product-editor-form"
       key="product-form"
+      shellCtx={shellCtx}
       onSubmit={(e) => {
         e.preventDefault();
         saveMutation.mutate();
@@ -432,6 +465,7 @@ export function AdminProductEditorView({
       </Card>
 
       {/* Mobile-only action buttons */}
+      <FormErrorSummary />
       <Row gap="3" className="lg:hidden">
         <Button
           type="submit"

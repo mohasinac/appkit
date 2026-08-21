@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -246,6 +246,7 @@ export function AdminFaqEditorView({
             <Toggle label="Show in footer FAQ links" checked={showInFooter} onChange={setShowInFooter} />
           </Stack>
 
+          <FormErrorSummary />
           <Row gap="3" padding="t-xs">
             <Button
               type="submit"

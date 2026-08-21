@@ -44,6 +44,10 @@ export interface CategoryItem {
   brandCountry?: string;
   /** Brand founded year — only set when categoryType==="brand". */
   brandFounded?: number;
+  /** Short bullet points — "why shop this category/brand." */
+  highlights?: string[];
+  /** A handful of Q&A pairs shown on the category/brand detail page. */
+  faqs?: { question: string; answer: string }[];
   name: string;
   slug: string;
   description?: string;

@@ -61,7 +61,7 @@ export function TesterChecklistStepRow({
             <Text size="xs" color="muted">{item.description}</Text>
           )}
           {item.href && (
-            <Anchor href={item.href} tone="brand" underline="hover">
+            <Anchor href={item.href} tone="brand" underline="hover" target="_blank" rel="noopener noreferrer">
               Go test this →
             </Anchor>
           )}

@@ -80,6 +80,17 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     tags: ["vintage-collectible", "sealed"],
     specifications: DRANZER_SPECS,
     customFields: [{ key: "Sealed / Unopened", type: "boolean", value: "true" }],
+    // Added 2026-08-21 — an authenticity/unboxing video makes narrative sense
+    // on a rare sealed grail piece, and gives the auction detail page's
+    // gallery a fixture beyond the standard-product-only video-demo cluster
+    // (products-standard-seed-data.ts). YouTube-sourced, same as that file's
+    // Metal Fight fixture — exercises getYouTubeVideoId()'s iframe-embed path
+    // on a non-standard listing type.
+    video: {
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/auction-video-thumb-beyblade-original-dragoon-storm-20260821/800/450"),
+      duration: 212,
+    },
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-05-18"),

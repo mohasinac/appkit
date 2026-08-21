@@ -1,5 +1,6 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { z } from "zod";
 import { StackedViewShell } from "../../../ui";
 import {
   Alert,
@@ -11,8 +12,28 @@ import {
   Text,
   Toggle,
 } from "../../../ui";
+import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { ImageUpload, useMediaUpload } from "../../media";
 import { StepDef, StepForm, useFormShell } from "../../shell";
+
+// Small local schema for the storefront form-input shape (not the broader
+// `sellerStoreSchema`, which requires id/storeSlug/ownerId/status/createdAt —
+// fields this editable draft never has, so applying it directly would show
+// false "required" errors on every keystroke).
+const storefrontDraftSchema = z.object({
+  storeName: z.string().min(2, "Store name is required").max(80),
+  storeDescription: z.string().max(10000).optional().or(z.literal("")),
+  storeCategory: z.string().max(80).optional().or(z.literal("")),
+  bio: z.string().max(300, "Bio must be 300 characters or fewer").optional().or(z.literal("")),
+  website: z.string().url("Enter a valid URL").optional().or(z.literal("")),
+  vacationMessage: z.string().max(300).optional().or(z.literal("")),
+}).passthrough();
+
+export interface StorefrontSaveResult {
+  ok: boolean;
+  error?: string;
+  issues?: unknown[];
+}
 
 export interface StorefrontDraft {
   storeName?: string;
@@ -38,7 +59,7 @@ export interface StorefrontDraft {
 
 export interface SellerStorefrontViewProps {
   initialValues?: StorefrontDraft;
-  onSave: (data: StorefrontDraft) => void | Promise<void>;
+  onSave: (data: StorefrontDraft) => Promise<StorefrontSaveResult>;
   isLoading?: boolean;
   storeSlug?: string;
 }
@@ -55,6 +76,12 @@ export function SellerStorefrontView({
   const [currentStep, setCurrentStep] = useState(0);
   const { markDirty, markClean } = useFormShell();
   const { upload } = useMediaUpload();
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(storefrontDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   const update = useCallback(
     (partial: Partial<StorefrontDraft>) => {
@@ -69,9 +96,17 @@ export function SellerStorefrontView({
     setSaving(true);
     setSaved(false);
     try {
-      await onSave(draft);
-      markClean();
-      setSaved(true);
+      const result = await onSave(draft);
+      if (result.ok) {
+        markClean();
+        clearErrors();
+        setSaved(true);
+        return;
+      }
+      applyZodIssues(
+        (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
+        setFieldError,
+      );
     } finally {
       setSaving(false);
     }
@@ -82,6 +117,7 @@ export function SellerStorefrontView({
   const steps: StepDef<StorefrontDraft>[] = [
     {
       label: "Store Identity",
+      fields: ["storeName", "storeDescription", "storeCategory", "bio"],
       validate: (values) =>
         !values.storeName?.trim() ? "Store name is required" : null,
       render: ({ values, onChange }) => (
@@ -128,6 +164,7 @@ export function SellerStorefrontView({
     },
     {
       label: "Branding",
+      fields: ["storeLogoURL", "storeBannerURL"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Branding</Heading>
@@ -156,6 +193,7 @@ export function SellerStorefrontView({
     },
     {
       label: "Policies",
+      fields: ["returnPolicy", "shippingPolicy"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Policies</Heading>
@@ -182,6 +220,7 @@ export function SellerStorefrontView({
     },
     {
       label: "Contact & Visibility",
+      fields: ["website", "location", "socialLinks", "isPublic", "isVacationMode", "vacationMessage"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Contact &amp; Social</Heading>
@@ -288,6 +327,20 @@ export function SellerStorefrontView({
     },
   ];
 
+  const fieldToStepIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    steps.forEach((step, i) => {
+      step.fields?.forEach((field) => { map[field] = i; });
+    });
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [steps.length]);
+
+  const wizardShellCtx = useMemo(
+    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
+    [shellCtx, fieldToStepIndex, setCurrentStep],
+  );
+
   return (
     <StackedViewShell
       portal="seller"
@@ -299,17 +352,20 @@ export function SellerStorefrontView({
               Changes saved successfully.
             </Alert>
           )}
-          <StepForm<StorefrontDraft>
-            steps={steps}
-            values={draft}
-            onChange={update}
-            onComplete={handleSave}
-            formId="seller-storefront"
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
-            completeLabel="Save Changes"
-            isLoading={busy}
-          />
+          <FormShellContext.Provider value={wizardShellCtx}>
+            <FormErrorSummary />
+            <StepForm<StorefrontDraft>
+              steps={steps}
+              values={draft}
+              onChange={update}
+              onComplete={handleSave}
+              formId="seller-storefront"
+              currentStep={currentStep}
+              onStepChange={setCurrentStep}
+              completeLabel="Save Changes"
+              isLoading={busy}
+            />
+          </FormShellContext.Provider>
         </Div>,
       ]}
     />

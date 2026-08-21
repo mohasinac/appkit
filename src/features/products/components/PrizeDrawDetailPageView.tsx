@@ -361,14 +361,11 @@ export async function PrizeDrawDetailPageView({
                 productId={String(product.id)}
                 productSlug={slug}
                 title={title}
-                thumb={thumb}
                 pricePerEntry={pricePerEntry}
                 currency={currency}
                 remainingEntries={remaining}
                 revealStatus={revealStatus}
                 prizeGithubFileUrl={githubUrl}
-                storeId={typeof p.storeId === "string" ? p.storeId : undefined}
-                storeName={storeName ?? undefined}
               />
             </Div>
           )}

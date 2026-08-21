@@ -10,7 +10,7 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
 
 const categoryFormSchema = z.object({
   name: z.string().min(1, "Category name is required").max(120),
@@ -76,6 +76,7 @@ export function AdminCategoryEditorView({
 }: AdminCategoryEditorViewProps) {
   const isEdit = Boolean(categoryId);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const { shellCtx } = useFormShellState(categoryFormSchema);
 
   const [name, setName] = React.useState("");
   const [slug, setSlug] = React.useState("");
@@ -153,34 +154,37 @@ export function AdminCategoryEditorView({
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
 
   const actionSidebar = (
-    <Card variant="outlined" padding="md" spacing="sm">
-      <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-        Status
-      </Text>
-      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-        {isEdit ? (isActive ? "Active" : "Inactive") : "New"}
-      </Text>
-      <Button
-        type="submit"
-        form="category-editor-form"
-        className="w-full"
-        isLoading={isSubmitting}
-        disabled={!name || isSubmitting}
-      >
-        {isEdit ? "Save changes" : "Create category"}
-      </Button>
-      {isEdit && (
+    <FormShellContext.Provider value={shellCtx}>
+      <Card variant="outlined" padding="md" spacing="sm">
+        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
+          Status
+        </Text>
+        <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+          {isEdit ? (isActive ? "Active" : "Inactive") : "New"}
+        </Text>
+        <FormErrorSummary />
         <Button
-          type="button"
-          variant="danger"
+          type="submit"
+          form="category-editor-form"
           className="w-full"
-          isLoading={deleteMutation.isPending}
-          onClick={() => setDeleteOpen(true)}
+          isLoading={isSubmitting}
+          disabled={!name || isSubmitting}
         >
-          Delete category
+          {isEdit ? "Save changes" : "Create category"}
         </Button>
-      )}
-    </Card>
+        {isEdit && (
+          <Button
+            type="button"
+            variant="danger"
+            className="w-full"
+            isLoading={deleteMutation.isPending}
+            onClick={() => setDeleteOpen(true)}
+          >
+            Delete category
+          </Button>
+        )}
+      </Card>
+    </FormShellContext.Provider>
   );
 
   const formContent = (
@@ -188,6 +192,7 @@ export function AdminCategoryEditorView({
       id="category-editor-form"
       key="cat-form"
       schema={categoryFormSchema}
+      shellCtx={shellCtx}
       onSubmit={(e) => e.preventDefault()}
       spacing="lg"
     >{({ setFieldError, clearErrors }) => (
@@ -271,6 +276,7 @@ export function AdminCategoryEditorView({
       </Card>
 
       {/* Mobile-only action buttons */}
+      <FormErrorSummary />
       <Row gap="3" className="lg:hidden">
         <Button
           type="submit"

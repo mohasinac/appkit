@@ -6,6 +6,7 @@ import { buildSurfaceClasses, type SurfaceProps } from "./surface-tokens";
 import {
   FormShellContext,
   useFormShellState,
+  type FormShellContextValue,
   type UseFormShellStateResult,
 } from "../forms/FormShell";
 
@@ -39,6 +40,15 @@ export interface FormProps
    * boilerplate per callsite.
    */
   schema?: ZodTypeAny;
+  /**
+   * Use an externally-computed `FormShellContextValue` (e.g. from a parent's
+   * own `useFormShellState(schema)` call) instead of `<Form>` creating its
+   * own. Needed when other elements outside this `<form>` — a submit button
+   * in a separate sidebar, associated via the HTML `form` attribute — must
+   * share the exact same validation state; otherwise `<Form>`'s own internal
+   * provider would shadow the parent's for everything rendered as `children`.
+   */
+  shellCtx?: FormShellContextValue;
   /** Cross-axis alignment of flex/grid children. Replaces raw `items-*` className. */
   align?: "start" | "center" | "end" | "stretch";
   /** Gap between children — use instead of raw `gap-*` className. */
@@ -81,14 +91,15 @@ const FORM_ALIGN_MAP: Record<"start" | "center" | "end" | "stretch", string> = {
   stretch: "items-stretch",
 };
 
-export function Form({ children, spacing, schema, align, gap, surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, className = "", ...props }: FormProps) {
+export function Form({ children, spacing, schema, shellCtx: shellCtxProp, align, gap, surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, className = "", ...props }: FormProps) {
   const helpers = useFormShellState(schema);
+  const effectiveCtx = shellCtxProp ?? helpers.shellCtx;
   const content =
     typeof children === "function"
-      ? (children as (h: UseFormShellStateResult) => React.ReactNode)(helpers)
+      ? (children as (h: UseFormShellStateResult) => React.ReactNode)({ ...helpers, shellCtx: effectiveCtx })
       : children;
   return (
-    <FormShellContext.Provider value={helpers.shellCtx}>
+    <FormShellContext.Provider value={effectiveCtx}>
       <form
         className={[
           "appkit-form",

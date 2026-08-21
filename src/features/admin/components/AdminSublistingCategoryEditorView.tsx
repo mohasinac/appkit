@@ -15,7 +15,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 
 const sublistingCategoryFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(120),
@@ -163,6 +163,7 @@ export function AdminSublistingCategoryEditorView({
             onChange={setCoverImage}
           />
 
+          <FormErrorSummary />
           <Row gap="3" padding="t-xs">
             <Button
               type="submit"

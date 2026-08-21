@@ -30,6 +30,26 @@ export class GroupedListingsRepository extends BaseRepository<GroupedListingDocu
       .get();
     return snap.docs.map((doc) => this.mapDoc(doc));
   }
+
+  /** Groups tagged to a category, same eligibility filter as findByProductId. */
+  async findByCategorySlug(categorySlug: string): Promise<GroupedListingDocument[]> {
+    const snap = await this.getCollection()
+      .where(PRODUCT_FIELDS.CATEGORY_SLUG, "==", categorySlug)
+      .where(PRODUCT_FIELDS.IS_ACTIVE, "==", true)
+      .where("visibilityStatus", "==", "visible")
+      .get();
+    return snap.docs.map((doc) => this.mapDoc(doc));
+  }
+
+  /** Groups tagged to a brand, same eligibility filter as findByProductId. */
+  async findByBrandSlug(brandSlug: string): Promise<GroupedListingDocument[]> {
+    const snap = await this.getCollection()
+      .where(PRODUCT_FIELDS.BRAND_SLUG, "==", brandSlug)
+      .where(PRODUCT_FIELDS.IS_ACTIVE, "==", true)
+      .where("visibilityStatus", "==", "visible")
+      .get();
+    return snap.docs.map((doc) => this.mapDoc(doc));
+  }
 }
 
 export const groupedListingsRepository = new GroupedListingsRepository();

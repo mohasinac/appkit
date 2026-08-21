@@ -52,6 +52,9 @@ export type Permission =
   | "admin:payouts:read"
   | "admin:payouts:write"
 
+  // Audit log (read-only — entries are written only via recordAdminAction())
+  | "admin:audit-log:read"
+
   // Catalog
   | "admin:categories:read"
   | "admin:categories:write"
@@ -354,6 +357,7 @@ export const PERMISSION_GROUPS: Record<
     "admin:payouts:write",
     "admin:orders:read",
     "admin:returns:read",
+    "admin:audit-log:read",
   ],
 
   data_analyst: [
@@ -484,6 +488,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/store-addresses": "admin:store-addresses:read",
   "/admin/analytics": "admin:analytics:view",
   "/admin/payouts": "admin:payouts:read",
+  "/admin/audit-log": "admin:audit-log:read",
   "/admin/shipments": "admin:shipments:read",
   "/admin/catalogue-approvals": "admin:catalogue:read",
   "/admin/categories": "admin:categories:read",

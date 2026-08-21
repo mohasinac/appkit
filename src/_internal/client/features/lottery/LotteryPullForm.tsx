@@ -38,7 +38,7 @@ export function LotteryPullForm({
   eventId,
   productId,
   totalSlots,
-  maxPullsPerUser: _maxPullsPerUser,
+  maxPullsPerUser,
   onSuccess,
 }: LotteryPullFormProps) {
   const [result, setResult] = useState<PullResult | null>(null);
@@ -115,6 +115,7 @@ export function LotteryPullForm({
           </Heading>
           <Text size="sm" color="muted">
             Enter your UPI Transaction ID and payment details to claim your slot.
+            {" "}You may enter up to {maxPullsPerUser} time{maxPullsPerUser === 1 ? "" : "s"}.
           </Text>
 
           <FieldInput

@@ -14,10 +14,6 @@ export interface CategoryProductsViewProps {
   initialCategory?: CategoryItem;
   /** Initial SSR child categories */
   initialChildren?: CategoryItem[];
-  labels?: {
-    emptyTitle?: string;
-    emptyDescription?: string;
-  };
   /** Optional UrlTable-compatible state source for shared filter/sort controls */
   table?: UrlTable;
   /** Filter/sort preset for admin/seller/public listing behavior */
@@ -62,7 +58,6 @@ export interface CategoryProductsViewProps {
 }
 
 export function CategoryProductsView({
-  labels: _labels = {},
   table,
   filterVariant = "public",
   sortValue,

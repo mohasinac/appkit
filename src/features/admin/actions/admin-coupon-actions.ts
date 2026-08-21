@@ -8,6 +8,8 @@
 import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
+import { recordAdminAction } from "../../../_internal/server/features/audit-log/actions";
+import { AdminAuditActionValues } from "../../audit-log/schemas/firestore";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -84,6 +86,15 @@ export async function adminUpdateCoupon(
   serverLogger.info("adminUpdateCoupon", {
     adminId,
     couponId: id,
+  });
+
+  void recordAdminAction({
+    actorUid: adminId,
+    action: AdminAuditActionValues.COUPON_UPDATE,
+    targetType: "coupon",
+    targetId: id,
+    targetLabel: existing.code,
+    metadata: { changedFields: Object.keys(input) },
   });
 
   return updated;

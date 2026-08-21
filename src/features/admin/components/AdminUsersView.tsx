@@ -299,6 +299,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         onClose={() => setDrawerOpen(false)}
         userId={selectedRow?.id}
         displayName={selectedRow?.primary}
+        photoURL={toStringValue(selectedRow?._raw?.photoURL, "") || undefined}
         currentRole={toStringValue(selectedRow?._raw?.role, "user")}
         currentEmailVerified={Boolean(selectedRow?._raw?.emailVerified)}
         currentIsTester={Boolean(selectedRow?._raw?.isTester)}

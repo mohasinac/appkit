@@ -1,13 +1,19 @@
 /*
  * WHY: Seeds a minimal, Beyblade-focused catalog of standard product listings — 2 products per
  *      generation (Original, Metal Fight, Burst, X), all from the Beyblade Arena store, plus
- *      2 video-demo products (one per generation family) so the product gallery's video slide
- *      (theater-mode playback, zoom/rotate) has real, playable fixtures to test against.
- * WHAT: Exports 10 standard products with listingType:"standard", covering all 4 generation
+ *      4 video-demo products so the product gallery's video slide (theater-mode playback,
+ *      zoom/rotate, fullscreen) has real, playable fixtures covering every supported video
+ *      source: a raw file from Google's public sample-video bucket (x2, one per Original/X),
+ *      a YouTube-embed URL (Metal Fight — exercises getYouTubeVideoId()'s iframe-embed path,
+ *      2026-08-21), and a second raw-external-host file from Wikimedia Commons (Burst,
+ *      2026-08-21). A real MediaUploadField file-upload video can't be reproduced from seed
+ *      data (no Storage object actually exists for a seeded URL to point at) — that path is
+ *      covered by a tester-checklist manual test case instead, not a fixture here.
+ * WHAT: Exports 12 standard products with listingType:"standard", covering all 4 generation
  *       leaf categories (tagged with both leaf + root category slugs).
  *
  * EXPORTS:
- *   productsStandardSeedData — Array of 10 standard products with listingType:"standard"
+ *   productsStandardSeedData — Array of 12 standard products with listingType:"standard"
  *
  * @tag domain:products,catalog
  * @tag layer:seed
@@ -490,6 +496,89 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
+  },
+  {
+    // Added 2026-08-21 — the first two video-demo fixtures only covered a raw,
+    // directly-playable <video src> from one external host (Google's public
+    // sample-video bucket). MediaUploadField's "YouTube" tab is a real,
+    // separately-supported video source (see getYouTubeVideoId() /
+    // Recurrent Root Cause Pattern for the YouTube-embed fix), but until now
+    // NO permanent seed fixture exercised it — the only reproduction was an
+    // ephemeral manual edit on a tester-sandbox product that a reseed would
+    // silently wipe out.
+    id: "product-beyblade-metal-dark-bull-video-demo",
+    slug: "product-beyblade-metal-dark-bull-video-demo",
+    barcodeId: "LIR-BEY-VID-003",
+    title: "Metal Fight Beyblade BB-118 Dark Bull (Video Demo, YouTube)",
+    description: "Dark Bull H145SD, a defense-type top from the Metal Masters generation. Listed with a YouTube battle video to exercise the gallery's YouTube-embed video source.",
+    categorySlugs: ["category-beyblade-metal", "category-spinning-tops"],
+    categoryNames: ["Beyblade Metal Fight", "Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    price: 1099,
+    currency: "INR",
+    stockQuantity: 4,
+    availableQuantity: 4,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-dark-bull-video-demo-1-20260821/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-dark-bull-video-demo-1-20260821/900/900"),
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-dark-bull-video-demo-2-20260821/900/900"),
+    ],
+    video: {
+      // audit-seed-external-url-ok: MediaUploadField's YouTube tab always stores a
+      // youtube.com/watch?v= URL — this is exactly that shape, not a raw file.
+      // getYouTubeVideoId() detects it and MediaVideo/ImageLightbox render a
+      // youtube-nocookie.com iframe embed instead of a native <video> element.
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-metal-dark-bull-video-demo-20260821/800/450"),
+      duration: 212,
+    },
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["defense-type"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-21"),
+    updatedAt: new Date("2026-08-21"),
+  },
+  {
+    // Added 2026-08-21 — third distinct video source (Wikimedia Commons,
+    // CC-BY-SA) alongside the Google-sample-bucket and YouTube fixtures above,
+    // matching the raw-external-URL source already used on the live-tester-
+    // sandbox live-item fixture (products-tester-seed-data.ts) so a standard
+    // product exercises the same non-YouTube external-host path too.
+    id: "product-beyblade-burst-spryzen-video-demo",
+    slug: "product-beyblade-burst-spryzen-video-demo",
+    barcodeId: "LIR-BEY-VID-004",
+    title: "Beyblade Burst B-97 Spryzen S2 (Video Demo, Wikimedia)",
+    description: "Spryzen S2 stamina-type top from the God Layer generation. Listed with a Wikimedia-hosted spin video to exercise a second raw-external-host video source.",
+    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
+    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    price: 899,
+    currency: "INR",
+    stockQuantity: 7,
+    availableQuantity: 7,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-spryzen-video-demo-1-20260821/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-spryzen-video-demo-1-20260821/900/900"),
+      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-spryzen-video-demo-2-20260821/900/900"),
+    ],
+    video: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/4/42/Slow_motion_of_running_greyhound.webm", // audit-seed-external-url-ok: raw <video> src, CC-BY-SA 4.0 (Wikimedia Commons)
+      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-burst-spryzen-video-demo-20260821/800/450"),
+      duration: 14,
+    },
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["stamina-type"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-21"),
+    updatedAt: new Date("2026-08-21"),
   },
 ];
 

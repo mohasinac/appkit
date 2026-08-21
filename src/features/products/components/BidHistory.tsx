@@ -46,6 +46,14 @@ function formatBidDate(raw: string): string {
   }
 }
 
+/** Bidder identity is already masked server-side (`maskPublicBid`) when a
+ *  display name is present; this is only a fallback for bare bidder ids. */
+function maskBidderId(id: string): string {
+  if (!id) return "Anonymous";
+  const tail = id.slice(-4);
+  return `Bidder ***${tail}`;
+}
+
 export function BidHistory({
   isLoading = false,
   isEmpty = false,
@@ -102,9 +110,14 @@ export function BidHistory({
               textSize="sm"
               className="border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]"
              data-section="bidhistory-div-422">
-              <Span weight="bold" className="text-primary-600 dark:text-primary-400">
-                {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
-              </Span>
+              <Stack gap="xs">
+                <Span weight="bold" className="text-primary-600 dark:text-primary-400">
+                  {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
+                </Span>
+                <Span size="xs" color="muted">
+                  {bid.bidderName || maskBidderId(bid.bidderId)}
+                </Span>
+              </Stack>
               <Span size="xs" color="muted">
                 {formatBidDate(bid.placedAt)}
               </Span>

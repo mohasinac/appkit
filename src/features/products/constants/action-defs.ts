@@ -691,4 +691,5 @@ export const SELLER_BULK_ACTIONS = {
   storeCategories:[ROW_ACTION_ID.ACTIVATE, ROW_ACTION_ID.DEACTIVATE, ROW_ACTION_ID.DELETE],
   groupedListings:[ROW_ACTION_ID.DELETE],
   offers:         [ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT],
+  reviews:        [ROW_ACTION_ID.REPLY],
 } as const satisfies Record<string, readonly RowActionId[]>;

@@ -1,45 +1,32 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit/client";
 
 import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
-import { Eye, Printer, MapPin, Truck } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { Eye, ExternalLink, Printer, MapPin, Truck } from "lucide-react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
-import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Span, Stack, Text, useToast, StickyToolbar } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps, SelectOption } from "../../../ui";
+import { Badge, Button, Div, FilterChipGroup, Heading, Input, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
+import type { BulkActionItem, SelectOption } from "../../../ui";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
-import {
-  toRecordArray,
-  toRelativeDate,
-  toCurrency,
-  toStringValue,
-  useSellerListingData,
-} from "../hooks/useSellerListingData";
-import { DataTable } from "../../admin/components/DataTable";
+import { toRecordArray, toRelativeDate, toCurrency, toStringValue } from "../hooks/useSellerListingData";
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
-import { useBottomActions } from "../../layout";
+import { MediaImage } from "../../media/MediaImage";
 
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
-// ---------------------------------------------------------------------------
-// Config
-// ---------------------------------------------------------------------------
-
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status"];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -65,10 +52,6 @@ const UPDATE_STATUS_OPTIONS: SelectOption[] = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
 interface OrderRow {
   id: string;
   primary: string;
@@ -78,6 +61,8 @@ interface OrderRow {
   itemCount: number;
   totalAmount: number;
   buyerName: string;
+  itemImage?: string;
+  itemTitle?: string;
   physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
@@ -96,7 +81,7 @@ interface OrderDetail {
   totalAmount?: number;
   buyerName?: string;
   shippingAddress?: Record<string, JsonValue>;
-  items?: Array<{ productId?: string; title?: string; quantity?: number; price?: number }>;
+  items?: Array<{ productId?: string; title?: string; image?: string; quantity?: number; price?: number }>;
   trackingNumber?: string;
   carrier?: string;
   trackingUrl?: string;
@@ -119,19 +104,23 @@ const EMI_INSTALLMENT_BADGE_VARIANT: Record<string, "success" | "warning" | "dan
 };
 
 interface SellerOrdersResponse {
-  orders?: JsonArray;
+  orders?: unknown[];
   meta?: { total: number };
 }
 
-export interface SellerOrdersViewProps extends ListingLayoutProps {
+export interface SellerOrdersViewProps {
   orderDetailApiBase?: string;
 }
 
-// ---------------------------------------------------------------------------
-// Order Detail Drawer
-// ---------------------------------------------------------------------------
-
-function OrderDetailDrawer({
+/**
+ * Fetches + renders one order's full detail content (items, address,
+ * payment, EMI, status/tracking update form). Shared by the seller orders
+ * list's `OrderDetailDrawer` (SideDrawer chrome) and the standalone
+ * `/store/orders/[id]/view` page (full-page chrome) so the two surfaces
+ * can't drift — see CLAUDE.md Root Cause Pattern list for the order-detail
+ * duplication class of bug this avoids.
+ */
+export function SellerOrderDetailPanel({
   orderId,
   apiBase,
   onClose,
@@ -229,7 +218,7 @@ function OrderDetailDrawer({
   const addrLine = [addr.addressLine1, addr.city, addr.state, addr.pincode].filter(Boolean).join(", ");
 
   return (
-    <SideDrawer isOpen title={`Order ${order?.id ?? orderId}`} onClose={onClose}>
+    <>
       {loading && (
         <Row align="center" justify="center" padding="y-4xl">
           <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
@@ -245,7 +234,6 @@ function OrderDetailDrawer({
       {order && !loading && (
         <Stack gap="none">
           <Stack className={`flex-1 ${__O.yAuto}`} gap="5" padding="md">
-            {/* Status row */}
             <Row align="center" justify="between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
                 {order.status ?? "Unknown"}
@@ -255,17 +243,21 @@ function OrderDetailDrawer({
               </Text>
             </Row>
 
-            {/* Items */}
             {(order.items ?? []).length > 0 && (
               <Div>
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
                     <Row key={i} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
-                      <Div className="min-w-0">
-                        <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
-                        <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
-                      </Div>
+                      <Row align="center" gap="sm" className="min-w-0">
+                        <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
+                          <MediaImage src={item.image} alt={item.title ?? "Order item"} size="thumbnail" />
+                        </Div>
+                        <Div className="min-w-0">
+                          <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
+                          <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
+                        </Div>
+                      </Row>
                       <Text size="sm" className="shrink-0" weight="medium">{toCurrency(item.price ?? 0)}</Text>
                     </Row>
                   ))}
@@ -273,7 +265,6 @@ function OrderDetailDrawer({
               </Div>
             )}
 
-            {/* Gift wrap — surfaces the buyer's addon selection + message so it actually drives fulfilment, not just revenue */}
             {order.giftWrapAddon && (
               <Div className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)]" surface="subtle" padding="inline" rounded="lg">
                 <Text size="sm" weight="semibold">🎁 Gift wrap requested</Text>
@@ -285,13 +276,11 @@ function OrderDetailDrawer({
               </Div>
             )}
 
-            {/* Total */}
             <Row surface="muted" padding="inline" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
               <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toCurrency(order.totalAmount ?? 0)}</Text>
             </Row>
 
-            {/* Shipping address */}
             {addrLine && (
               <Div>
                 <Text size="sm" className="mb-1" weight="semibold">Shipping address</Text>
@@ -301,7 +290,6 @@ function OrderDetailDrawer({
               </Div>
             )}
 
-            {/* Payment */}
             {order.paymentMethod && (
               <Div>
                 <Text size="sm" className="mb-1" weight="semibold">Payment</Text>
@@ -309,7 +297,6 @@ function OrderDetailDrawer({
               </Div>
             )}
 
-            {/* EMI installments */}
             {order.emiEnabled && (
               <Div className="border-t border-[var(--appkit-color-border)]" padding="t-md">
                 <Row align="center" justify="between" className="mb-2">
@@ -369,7 +356,6 @@ function OrderDetailDrawer({
               </Div>
             )}
 
-            {/* Update section */}
             <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
               <Heading level={4} size="sm" weight="semibold">Update order</Heading>
               <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
@@ -384,117 +370,123 @@ function OrderDetailDrawer({
             </Stack>
           </Stack>
 
-          {/* Footer */}
           <Row border="top" paddingY="y-sm-tall" padding="x-md" align="center" justify="end" gap="3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
           </Row>
         </Stack>
       )}
+    </>
+  );
+}
+
+function OrderDetailDrawer({
+  orderId,
+  apiBase,
+  onClose,
+}: {
+  orderId: string;
+  apiBase: string;
+  onClose: () => void;
+}) {
+  return (
+    <SideDrawer isOpen title={`Order ${orderId}`} onClose={onClose}>
+      <SellerOrderDetailPanel orderId={orderId} apiBase={apiBase} onClose={onClose} />
     </SideDrawer>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Main view
-// ---------------------------------------------------------------------------
-
 export function SellerOrdersView({
   orderDetailApiBase = SELLER_ENDPOINTS.ORDERS,
-  children,
-  ...props
 }: SellerOrdersViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [setLocationOpen, setSetLocationOpen] = useState(false);
+  const [shippingRowId, setShippingRowId] = useState<string | null>(null);
   const dispatch = useActionDispatch();
   const { showToast } = useToast();
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
-  );
+  const handleQuickShip = useCallback(async (row: OrderRow, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShippingRowId(row.id);
+    try {
+      const res = await fetch(`${orderDetailApiBase}/${row.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "shipped" }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to mark order shipped");
+      }
+      showToast("Order marked shipped.", "success");
+      setSelectedOrderId(null);
+    } catch (err) {
+      void normalizeError(err);
+      showToast(err instanceof Error ? err.message : "Failed to mark order shipped.", "error");
+    } finally {
+      setShippingRowId(null);
+    }
+  }, [orderDetailApiBase, showToast]);
 
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
+  const handleSetLocation = useCallback(async (loc: PhysicalLocation, ids: string[]) => {
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.ORDERS_BULK_LOCATION, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderIds: ids, physicalLocation: loc }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to update location");
+      }
+      showToast("Location updated.", "success");
+      setSetLocationOpen(false);
+    } catch (err) {
+      void normalizeError(err);
+      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
+    }
+  }, [showToast]);
 
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
+  const requestPayoutForSelection = useCallback(async (selection: ListingSelectionContext<OrderRow>) => {
+    if (!selection.selectedIds.length) return;
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.PAYOUT_REQUEST, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderIds: selection.selectedIds }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to request payout");
+      }
+      showToast("Payout requested.", "success");
+      selection.clearSelection();
+    } catch (err) {
+      void normalizeError(err);
+      showToast(err instanceof Error ? err.message : "Failed to request payout.", "error");
+    }
+  }, [showToast]);
 
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => { table.set("q", searchInput.trim()); }, [searchInput, table]);
-
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
-
-  const statusRaw = table.get("status");
-  const filters = statusRaw && statusRaw !== "All" ? sieveFilter("status", SIEVE_OP.EQ, statusRaw) : undefined;
-
-  const { rows, total, isLoading, errorMessage } = useSellerListingData<
-    SellerOrdersResponse,
-    OrderRow
-  >({
-    queryKey: ["seller", "orders", "listing"],
-    endpoint: SELLER_ENDPOINTS.ORDERS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
-    mapRows: (response) =>
-      toRecordArray(response.orders).map((item, index) => {
-        const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
-        const loc = item.physicalLocation as { zone?: string; shelf?: string; bin?: string } | undefined;
-        return {
-          id: toStringValue(item.id, `order-${index}`),
-          primary: toStringValue(item.id, "Order"),
-          secondary: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
-          status: toStringValue(item.status, "PENDING"),
-          updatedAt: toRelativeDate(item.updatedAt ?? item.orderDate ?? item.createdAt),
-          itemCount: itemsArr.length,
-          totalAmount: Number(item.totalAmount ?? item.total ?? 0),
-          buyerName: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
-          physicalLocation:
-            loc && typeof loc.zone === "string"
-              ? { zone: loc.zone, shelf: loc.shelf ?? "", bin: loc.bin ?? "" }
-              : undefined,
-        };
-      }),
-    getTotal: (response, mappedRows) =>
-      typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-  });
-
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const [selectedIdsForLocation, setSelectedIdsForLocation] = useState<string[]>([]);
 
   const columns: AdminTableColumn<OrderRow>[] = [
     {
       key: "primary",
       header: "Order",
       render: (row) => (
-        <Stack gap="none" className="min-w-0">
-          <Text className="font-mono truncate" color="primary" size="xs" weight="semibold">{row.primary}</Text>
-          <Text size="xs" color="muted">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
-        </Stack>
+        <Row gap="sm" align="center" className="min-w-0">
+          <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
+            <MediaImage src={row.itemImage} alt={row.itemTitle ?? "Order item"} size="thumbnail" />
+          </Div>
+          <Stack gap="none" className="min-w-0">
+            <Text className="truncate" size="sm" weight="semibold">
+              {row.itemTitle
+                ? `${row.itemTitle}${row.itemCount > 1 ? ` +${row.itemCount - 1} more` : ""}`
+                : row.primary}
+            </Text>
+            <Text size="xs" color="muted">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
+          </Stack>
+        </Row>
       ),
     },
     {
@@ -527,32 +519,6 @@ export function SellerOrdersView({
         ),
     },
     {
-      key: "shipping",
-      header: "Shipping",
-      className: "w-32",
-      render: (row) => {
-        const r = row as unknown as { shippingMethod?: string; carrier?: string; trackingNumber?: string };
-        return (
-          <Span size="xs" color="muted">
-            {r.shippingMethod ?? r.carrier ?? "—"}
-          </Span>
-        );
-      },
-    },
-    {
-      key: "weight",
-      header: "Weight",
-      className: "w-20 text-right",
-      render: (row) => {
-        const r = row as unknown as { weightGrams?: number };
-        return (
-          <Span size="xs" className="tabular-nums" color="muted">
-            {r.weightGrams ? `${r.weightGrams} g` : "—"}
-          </Span>
-        );
-      },
-    },
-    {
       key: "updatedAt",
       header: "Date",
       className: "w-28",
@@ -560,33 +526,66 @@ export function SellerOrdersView({
     },
   ];
 
-  const [shippingRowId, setShippingRowId] = useState<string | null>(null);
-
-  const handleQuickShip = useCallback(async (row: OrderRow, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShippingRowId(row.id);
-    try {
-      const res = await fetch(`${orderDetailApiBase}/${row.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "shipped" }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error((body as { error?: string })?.error ?? "Failed to mark order shipped");
-      }
-      showToast("Order marked shipped.", "success");
-      setSelectedOrderId(null);
-    } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to mark order shipped.", "error");
-    } finally {
-      setShippingRowId(null);
-    }
-  }, [orderDetailApiBase, showToast]);
-
-  const renderRowActions = useCallback(
-    (row: OrderRow) => {
+  const config: ListingViewConfig<SellerOrdersResponse, OrderRow> = {
+    portal: "seller",
+    title: "Orders",
+    searchPlaceholder: "Search by order ID or buyer name",
+    emptyLabel: "No orders yet",
+    filterKeys: ["status"],
+    defaultSort: DEFAULT_SORT,
+    queryKey: ["seller", "orders", "listing"],
+    endpoint: SELLER_ENDPOINTS.ORDERS,
+    sortOptions: SORT_OPTIONS,
+    columns,
+    mapRows: (response) =>
+      toRecordArray(response.orders).map((item, index) => {
+        const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
+        const firstItem =
+          itemsArr[0] && typeof itemsArr[0] === "object" ? (itemsArr[0] as Record<string, unknown>) : {};
+        const loc = item.physicalLocation as { zone?: string; shelf?: string; bin?: string } | undefined;
+        return {
+          id: toStringValue(item.id, `order-${index}`),
+          primary: `Order ${toStringValue(item.id, "-").slice(0, 14)}`,
+          secondary: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+          status: toStringValue(item.status, "PENDING"),
+          updatedAt: toRelativeDate(item.updatedAt ?? item.orderDate ?? item.createdAt),
+          itemCount: itemsArr.length,
+          totalAmount: Number(item.totalAmount ?? item.total ?? 0),
+          buyerName: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+          itemImage: typeof firstItem.image === "string" ? firstItem.image : undefined,
+          itemTitle: typeof firstItem.productTitle === "string" ? firstItem.productTitle : undefined,
+          physicalLocation:
+            loc && typeof loc.zone === "string"
+              ? { zone: loc.zone, shelf: loc.shelf ?? "", bin: loc.bin ?? "" }
+              : undefined,
+        };
+      }),
+    getTotal: (response, mappedRows) =>
+      typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
+    buildFilters: (state) => (state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <FilterChipGroup
+        label="Status"
+        tabs={STATUS_OPTIONS}
+        value={pendingFilters.status ?? ""}
+        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+      />
+    ),
+    buildBulkActions: (selection) => {
+      const handlePrintPackingSlips = () => {
+        const ids = selection.selectedIds.join(",");
+        void dispatch({
+          type: "NAVIGATE",
+          href: `${String(ROUTES.STORE.PRINT_CENTER)}?type=order&ids=${ids}&autoprint=1`,
+        });
+      };
+      return [
+        buildBulkAction(ACTIONS.STORE["print-packing-slips"], handlePrintPackingSlips, { icon: <Printer className="w-4 h-4" /> }),
+        buildBulkAction(ACTIONS.STORE["set-location"], () => { setSelectedIdsForLocation(selection.selectedIds); setSetLocationOpen(true); }, { icon: <MapPin className="w-4 h-4" /> }),
+        buildBulkAction(ACTIONS.STORE["request-payout"], () => void requestPayoutForSelection(selection), { variant: "primary" }),
+      ] as BulkActionItem[];
+    },
+    renderRowActions: (row) => {
       const isShippable = ["PENDING", "PROCESSING", "CONFIRMED"].includes(row.status?.toUpperCase() ?? "");
       return (
         <Row align="center" gap="xs">
@@ -612,143 +611,27 @@ export function SellerOrdersView({
           >
             <Eye className="h-4 w-4" />
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.ORDER_DETAIL(row.id)) });
+            }}
+            title="Open full page"
+            aria-label="Open full page"
+          >
+            <ExternalLink className="h-4 w-4" />
+          </Button>
         </Row>
       );
     },
-    [handleQuickShip, shippingRowId],
-  );
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
-
-  const handlePrintPackingSlips = useCallback(() => {
-    const ids = selection.selectedIds.join(",");
-    void dispatch({
-      type: "NAVIGATE",
-      href: `${String(ROUTES.STORE.PRINT_CENTER)}?type=order&ids=${ids}&autoprint=1`,
-    });
-  }, [selection.selectedIds, dispatch]);
-
-  const handleSetLocation = useCallback(async (loc: PhysicalLocation) => {
-    try {
-      const res = await fetch(SELLER_ENDPOINTS.ORDERS_BULK_LOCATION, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderIds: selection.selectedIds, physicalLocation: loc }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error((body as { error?: string })?.error ?? "Failed to update location");
-      }
-      showToast("Location updated.", "success");
-      setSetLocationOpen(false);
-    } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
-    }
-  }, [selection.selectedIds, showToast]);
-
-  // S-STORE-5-A — bulk order selection → single payout request.
-  const requestPayoutForSelection = useCallback(async () => {
-    if (!selection.selectedIds.length) return;
-    try {
-      const res = await fetch(SELLER_ENDPOINTS.PAYOUT_REQUEST, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderIds: selection.selectedIds }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error((body as { error?: string })?.error ?? "Failed to request payout");
-      }
-      showToast("Payout requested.", "success");
-      selection.clearSelection();
-    } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to request payout.", "error");
-    }
-  }, [selection, showToast]);
-
-  const bulkActions: BulkActionItem[] = [
-    buildBulkAction(ACTIONS.STORE["print-packing-slips"], handlePrintPackingSlips, { icon: <Printer className="w-4 h-4" /> }),
-    buildBulkAction(ACTIONS.STORE["set-location"], () => setSetLocationOpen(true), { icon: <MapPin className="w-4 h-4" /> }),
-    buildBulkAction(ACTIONS.STORE["request-payout"], () => void requestPayoutForSelection(), { variant: "primary" }),
-  ];
-
-  // useBottomActions must run unconditionally on every render — it was
-  // previously called after the `hasChildren` early return below, which
-  // skips the hook call in passthrough mode, violating the Rules of Hooks.
-  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
-
-  if (hasChildren) {
-    return <ListingLayout portal="seller" {...props}>{children}</ListingLayout>;
-  }
+  };
 
   return (
-    <Div className="min-h-screen">
-      <ListingToolbar
-        filterCount={activeFilterCount}
-        onFiltersClick={openFilters}
-        searchValue={searchInput}
-        searchPlaceholder="Search by order ID or buyer name"
-        onSearchChange={setSearchInput}
-        onSearchCommit={commitSearch}
-        sortValue={table.get("sort") || DEFAULT_SORT}
-        sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-        onResetAll={resetAll}
-        hasActiveState={hasActiveState}
-      />
+    <>
+      <DataListingView config={config} />
 
-      {totalPages > 1 && (
-        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
-          <Row justify="center">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-          </Row>
-        </StickyToolbar>
-      )}
-
-      {selection.selectedIds.length > 0 && (
-        <StickyToolbar offset="header+bulk-actions" tone="default" border padding="sm" z="above-toolbar">
-          <BulkActionBar
-            selectedCount={selection.selectedIds.length}
-            onClearSelection={selection.clearSelection}
-            actions={bulkActions}
-          />
-        </StickyToolbar>
-      )}
-
-      <Div paddingX="x-sm-md" padding="y-md">
-        {errorMessage && (
-          <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
-            {errorMessage}
-          </Div>
-        )}
-        <DataTable
-          rows={rows}
-          columns={columns}
-          isLoading={isLoading}
-          emptyLabel="No orders yet"
-          selectedIds={selection.selectedIdSet}
-          onToggleSelect={selection.toggle}
-          onToggleSelectAll={() => selection.toggleAll()}
-          renderRowActions={renderRowActions}
-        />
-      </Div>
-
-      {/* Filter sidebar */}
-      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-          label="Status"
-          tabs={STATUS_OPTIONS}
-          value={pendingFilters.status ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-        />
-      </ListingFilterDrawer>
-
-      {/* Order detail drawer */}
       {selectedOrderId && (
         <OrderDetailDrawer
           orderId={selectedOrderId}
@@ -759,11 +642,11 @@ export function SellerOrdersView({
 
       {setLocationOpen && (
         <PhysicalLocationModal
-          count={selection.selectedIds.length}
-          onSave={handleSetLocation}
+          count={selectedIdsForLocation.length}
+          onSave={(loc) => handleSetLocation(loc, selectedIdsForLocation)}
           onClose={() => setSetLocationOpen(false)}
         />
       )}
-    </Div>
+    </>
   );
 }

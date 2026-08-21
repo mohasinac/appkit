@@ -237,6 +237,16 @@ export {
 } from "./features/jobs/schemas/firestore";
 export type { JobStatus, JobDocument, JobResult } from "./features/jobs/schemas/firestore";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// recordAdminAction - single write-site for the admin audit trail (adminAuditLog collection).
+export { recordAdminAction } from "./_internal/server/features/audit-log/actions";
+export type { RecordAdminActionInput } from "./_internal/server/features/audit-log/actions";
+export {
+  AdminAuditActionValues,
+  ADMIN_AUDIT_LOG_COLLECTION,
+  ADMIN_AUDIT_LOG_FIELDS,
+} from "./features/audit-log/schemas/firestore";
+export type { AdminAuditAction, AdminAuditLogDocument } from "./features/audit-log/schemas/firestore";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeOrder - Shared export for make order.
 export { makeOrder } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -1540,7 +1550,7 @@ export {
   type BundleMetadataOptions,
   type BundleOgData,
 } from "./_internal/server/features/bundles/index";
-export { getGroupsForProduct, getGroupsWithItemsForProduct } from "./_internal/server/features/grouped/index";
+export { getGroupsForProduct, getGroupsWithItemsForProduct, getGroupsForCategory, getGroupsForBrand } from "./_internal/server/features/grouped/index";
 export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
 export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";

@@ -2,7 +2,10 @@ import type { JobContext } from "../runtime/types";
 import { batchDelete, getTestDataRefs } from "../handlers/_helpers";
 import { BID_FIELDS } from "../../../../constants/field-names";
 
-const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"] as const;
+// Exported so testerSandboxRefresh.ts (the every-4h revert+prune job) reuses
+// the exact same collection scope instead of redefining it — one source of
+// truth for "what counts as sandbox scope."
+export const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"] as const;
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 
 export interface TesterSandboxCleanupOptions {

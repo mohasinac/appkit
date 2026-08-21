@@ -22,6 +22,7 @@ import {
   Td,
   Text,
   TextLink,
+  FormErrorSummary,
 } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -125,6 +126,8 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
             <FieldInput name="shippingTotal" label="Shipping Total (₹)" type="number" min="0" value={shippingTotalRupees} onChange={setShippingTotalRupees} hint="Split across lots by weight" />
           </Grid>
           <FieldTextarea name="notes" label="Notes" value={notes} onChange={setNotes} rows={3} />
+
+          <FormErrorSummary />
 
           <Button
             type="button"

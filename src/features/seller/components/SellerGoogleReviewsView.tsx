@@ -2,10 +2,22 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
 import { RefreshCw } from "lucide-react";
 import { Alert, Button, Div, FormField, Heading, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
+import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+
+const googleReviewsDraftSchema = z.object({
+  isConnected: z.boolean(),
+  placeId: z.string(),
+  businessName: z.string(),
+}).superRefine((v, ctx) => {
+  if (v.isConnected && !v.placeId.trim()) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["placeId"], message: "A Place ID is required to show Google reviews on your store page" });
+  }
+});
 
 interface GoogleConfigDraft {
   placeId: string;
@@ -37,6 +49,12 @@ export function SellerGoogleReviewsView({
   const [syncing, setSyncing] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const { showToast } = useToast();
+  const { shellCtx, validate } = useFormShellState(googleReviewsDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   useEffect(() => {
     fetch(SELLER_ENDPOINTS.GOOGLE_REVIEWS, { credentials: "include" })
@@ -131,6 +149,7 @@ export function SellerGoogleReviewsView({
     : "Never";
 
   return (
+    <FormShellContext.Provider value={shellCtx}>
     <Div paddingX="x-sm-md" className="max-w-2xl" padding="y-md">
       <Stack gap="lg">
         {/* Settings */}
@@ -206,6 +225,8 @@ export function SellerGoogleReviewsView({
           </Alert>
         )}
 
+        <FormErrorSummary />
+
         {/* Actions */}
         <Row className="border-t border-[var(--appkit-color-border)]" padding="t-md" align="center" justify="between" gap="3">
           <Button gap="sm" 
@@ -230,5 +251,6 @@ export function SellerGoogleReviewsView({
         </Row>
       </Stack>
     </Div>
+    </FormShellContext.Provider>
   );
 }

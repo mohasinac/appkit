@@ -1,5 +1,5 @@
 export type { FormShellSection, FormShellProps, UseFormShellResult } from "./FormShell";
-export { FormShell, useFormShell } from "./FormShell";
+export { FormShell, useFormShell, FormSchemaContext } from "./FormShell";
 
 export type { CommandPaletteGroup, CommandPaletteProps } from "./CommandPalette";
 export { CommandPalette, useCommandPaletteHotkey } from "./CommandPalette";

@@ -30,7 +30,7 @@ describe("posterBlobAsFile", () => {
       type: "image/jpeg",
     });
     const file = posterBlobAsFile(
-      { blob, width: 320, height: 180 },
+      { blob, width: 320, height: 180, duration: 12.5 },
       "promo-reel.mp4",
     );
     expect(file).toBeInstanceOf(File);

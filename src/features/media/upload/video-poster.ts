@@ -33,6 +33,26 @@ export interface ExtractedPoster {
   /** Frame dimensions in pixels (also the JPEG's pixel dimensions). */
   width: number;
   height: number;
+  /** Video duration in seconds, read from the same off-DOM element. */
+  duration: number;
+}
+
+/** Bounded wait for `video.duration` to become a finite, positive number. */
+async function readDuration(video: HTMLVideoElement): Promise<number> {
+  if (Number.isFinite(video.duration) && video.duration > 0) return video.duration;
+  return new Promise<number>((resolve) => {
+    const timer = window.setTimeout(() => resolve(0), 2000);
+    video.addEventListener(
+      "durationchange",
+      () => {
+        if (Number.isFinite(video.duration) && video.duration > 0) {
+          window.clearTimeout(timer);
+          resolve(video.duration);
+        }
+      },
+      { once: true },
+    );
+  });
 }
 
 /**
@@ -120,6 +140,8 @@ export async function extractVideoPosterFrame(
     const height = video.videoHeight;
     if (!width || !height) return null;
 
+    const duration = await readDuration(video);
+
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -132,7 +154,7 @@ export async function extractVideoPosterFrame(
     );
     if (!blob) return null;
 
-    return { blob, width, height };
+    return { blob, width, height, duration };
   } catch (_err) {
     void normalizeError(_err);
     return null;

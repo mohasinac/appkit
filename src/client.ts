@@ -139,6 +139,8 @@ export { Divider } from "./ui/components/Divider";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/components/Tabs";
 export type { TabsProps, TabsListProps, TabsTriggerProps, TabsContentProps } from "./ui/components/Tabs";
 export { SellerProductsView } from "./features/seller/components/SellerProductsView";
+export { SellerOrderDetailPanel } from "./features/seller/components/SellerOrdersView";
+export { SellerPayoutDetailContent } from "./features/seller/components/SellerPayoutsView";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // Drawer - Component for drawer.
 export { Drawer } from "./ui/components/Drawer";
@@ -306,6 +308,10 @@ export { ProgressBarFill } from "./ui/components/ProgressBarFill";
 export type { ProgressBarFillProps } from "./ui/components/ProgressBarFill";
 export { Main, Section, Nav, Ul, Ol, Li, Table, Thead, Tbody, Tr, Th, Td, Code, Pre, Blockquote } from "./ui/components/Semantic";
 export { Badge } from "./ui/components/Badge";
+export { Avatar, AvatarGroup } from "./ui/components/Avatar";
+export type { AvatarProps, AvatarGroupProps } from "./ui/components/Avatar";
+export { AvatarDisplay } from "./ui/components/AvatarDisplay";
+export type { AvatarDisplayProps } from "./ui/components/AvatarDisplay";
 export { Button } from "./ui/components/Button";
 export { ClaimCouponButton } from "./ui/components/ClaimCouponButton";
 export type { ClaimCouponButtonProps } from "./ui/components/ClaimCouponButton";
@@ -337,6 +343,8 @@ export type { FieldTextareaProps } from "./ui/forms";
 export { FieldTextarea } from "./ui/forms";
 export type { ColorPickerFieldProps } from "./ui/forms";
 export { ColorPickerField } from "./ui/forms";
+export type { FormErrorSummaryProps } from "./ui/forms";
+export { FormErrorSummary } from "./ui/forms";
 export { Select } from "./ui/components/Select";
 export type { SelectOption, SelectProps } from "./ui/components/Select";
 export { Heading } from "./ui/components/Typography";
@@ -360,7 +368,7 @@ export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
 export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/admin/components/AdminSidebar";
 export { AdminDashboardView, AdminAnalyticsView, AdminPageViewsReportView, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, AdminFulfillmentView, DataTable, DataListingView, useAdminListingData, toRecordArray, toStringValue, toRelativeDate } from "./features/admin/index";
-export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPageViewsReportViewProps, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
+export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
 // S-ADMIN-7 — permission catalog data, shared by AdminEmployeeEditorView and the read-only /admin/permissions page.
 export { PERMISSION_GROUPS, PERMISSION_DOMAINS, getPermissionsForDomain, formatPermLabel } from "./features/auth/permissions/constants";
@@ -554,9 +562,13 @@ export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboa
 export { SellerPayoutSettingsView, SellerShippingView, SellerReviewsView, SellerPayoutRequestView, SellerAnalyticsStats, SellerTopProducts, SellerAnalyticsView, SellerPayoutsView, SellerCouponEditorView, SellerBidsView, SellerAddressesView, SellerPreOrdersView, SellerPrizeDrawsView, PrintCenterView, SellerOffersView, SellerGroupedListingsView, StoreGroupedListingsView, SellerAnalyticsAlertsView, StoreAnalyticsAlertsView, BarcodeField, FulfillmentView } from "./features/seller/components/index";
 export type { SellerPayoutSettingsViewProps, SellerShippingViewProps, SellerReviewsViewProps, SellerPayoutRequestViewProps, SellerAnalyticsViewProps, SellerPayoutsViewProps, SellerCouponEditorViewProps, CouponEditorDraft, SellerBidsViewProps, SellerAddressesViewProps, SellerPreOrdersViewProps, SellerPrizeDrawsViewProps, SellerOffersViewProps, SellerGroupedListingsViewProps, SellerAnalyticsAlertsViewProps, BarcodeFieldProps, FulfillmentViewProps } from "./features/seller/components/index";
 export type { SellerAnalyticsSummary, SellerAnalyticsTopProduct } from "./features/seller/types/index";
-export { UserAccountHubView, UserOrdersView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView, useNotifications } from "./features/account/index";
-export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels, OrderDetailViewProps, OrderDetailViewLabels, UserNotificationsViewProps, UserNotificationsViewLabels, UserReturnsViewProps, UserReturnsViewLabels, UserSupportViewProps } from "./features/account/index";
+export { UserAccountHubView, UserOrdersView, UserBidsView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView, useNotifications } from "./features/account/index";
+export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, OrderDetailViewProps, OrderDetailViewLabels, UserNotificationsViewProps, UserNotificationsViewLabels, UserReturnsViewProps, UserSupportViewProps } from "./features/account/index";
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
+export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
+export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
+export { UserOrderTrackView } from "./features/account/components/UserOrderTrackView";
+export type { UserOrderTrackViewProps, UserOrderTrackViewLabels } from "./features/account/components/UserOrderTrackView";
 export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";
 export { BlogPostView } from "./features/blog/components/BlogPostView";
 export type { BlogPostViewProps } from "./features/blog/components/BlogPostView";
@@ -878,11 +890,16 @@ export {
   AdminCouponEditorView,
   AdminFaqEditorView,
   AdminOrderEditorView,
+  AdminPayoutMarkPaidModal,
+  AdminAuditLogView,
+  ViewAuditLogEntryModal,
   AdminProductEditorView,
   AdminScammerEditorView,
+  AdminStoreEditorView,
   AdminSublistingCategoryEditorView,
   AdminSupportTicketDetailView,
 } from "./features/admin/index";
+export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAuditLogViewProps, AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
 export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
 export { SpinWheelView, EventRaffleEntryForm } from "./features/events/index";
 export { Card, CardBody } from "./ui/index";

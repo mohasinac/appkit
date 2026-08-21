@@ -20,6 +20,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { NOTIFICATION_TYPES } from "../../../constants/notification-types";
+import { ViewNotificationModal, type NotificationEntryDetail } from "./ViewNotificationModal";
+import type { JsonValue } from "../../../schemas/types";
 
 // W1-33 — sourced from shared NOTIFICATION_TYPES registry, prefixed with "All".
 const NOTIF_TYPES = ["All", ...NOTIFICATION_TYPES] as const;
@@ -36,6 +38,7 @@ interface NotifRow {
   status: string;
   updatedAt: string;
   type?: string;
+  _raw: Record<string, JsonValue>;
 }
 
 export type AdminNotificationsViewProps = ListingLayoutProps;
@@ -45,6 +48,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
   const { showToast } = useToast();
   const [deleteTarget, setDeleteTarget] = useState<NotifRow | null>(null);
   const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
+  const [viewNotification, setViewNotification] = useState<NotificationEntryDetail | null>(null);
 
   const bulkNotifs = useBulkAction<{ action: string; ids: string[] }, unknown>({
     mutationFn: (payload) => apiClient.post(ADMIN_ENDPOINTS.ADMIN_NOTIFICATIONS_BULK, payload),
@@ -95,6 +99,25 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     );
   }
 
+  const openNotification = (row: NotifRow) => {
+    const raw = row._raw;
+    setViewNotification({
+      id: row.id,
+      userId: toStringValue(raw.userId, ""),
+      type: toStringValue(raw.type, ""),
+      priority: toStringValue(raw.priority, "") || undefined,
+      title: toStringValue(raw.title, "Notification"),
+      message: toStringValue(raw.message, ""),
+      imageUrl: toStringValue(raw.imageUrl, "") || undefined,
+      actionUrl: toStringValue(raw.actionUrl, "") || undefined,
+      actionLabel: toStringValue(raw.actionLabel, "") || undefined,
+      isRead: Boolean(raw.isRead),
+      relatedId: toStringValue(raw.relatedId, "") || undefined,
+      relatedType: toStringValue(raw.relatedType, "") || undefined,
+      createdAt: toStringValue(raw.createdAt, "") || undefined,
+    });
+  };
+
   const config: ListingViewConfig<AdminNotificationsResponse, NotifRow> = {
     portal: "admin",
     title: "Notifications",
@@ -119,6 +142,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
         status: Boolean(item.isRead) ? "Read" : "Unread",
         updatedAt: toRelativeDate(item.createdAt),
         type: toStringValue(item.type, ""),
+        _raw: item,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
@@ -129,6 +153,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       else if (state.readState === "read") parts.push(sieveFilter("isRead", SIEVE_OP.EQ, true));
       return parts.join(",") || undefined;
     },
+    onRowClick: (row) => openNotification(row),
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
       ADMIN_BULK_ACTIONS.notifications.map((id) => ({
@@ -149,6 +174,10 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
+          {
+            label: "View details",
+            onClick: () => openNotification(row),
+          },
           {
             label: ACTIONS.ADMIN["resend-notification"].label,
             onClick: () => resendMutation.mutate(row.id),
@@ -209,6 +238,11 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
         }
         confirmText="Delete"
         variant="danger"
+      />
+      <ViewNotificationModal
+        notification={viewNotification}
+        isOpen={Boolean(viewNotification)}
+        onClose={() => setViewNotification(null)}
       />
     </>
   );

@@ -24,7 +24,6 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
   if (input.website !== undefined) out.brandWebsite = input.website;
   if (input.country !== undefined) out.brandCountry = input.country;
   if (input.founded !== undefined) out.brandFounded = input.founded;
-  if (input.bannerURL !== undefined) out.brandBannerImage = input.bannerURL;
   if (input.logoURL !== undefined) {
     out.display = { coverImage: input.logoURL, showInMenu: false, showInFooter: false };
   }

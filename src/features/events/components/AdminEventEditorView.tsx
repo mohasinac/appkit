@@ -3,7 +3,8 @@ import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonObjectWithUndefined } from "@mohasinac/appkit/client";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
+import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import {
   Alert,
@@ -23,8 +24,10 @@ import {
   Textarea,
   Toggle,
 } from "../../../ui";
+import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
+import type { ApiClientError } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type {
   EventItem,
@@ -38,6 +41,35 @@ import type {
 import { StepDef, StepForm } from "../../shell";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
+
+// Covers the cross-type required fields plus the two conditional rules the
+// "Settings" step already hand-enforces (offer coupon/code, poll min-2
+// options) — mirrored here as Zod so they're also live/summary-visible, not
+// just a submit-time gate. The many other per-type fields (survey/feedback
+// form-builder arrays, raffle/spin config) are deliberately left unvalidated
+// — modeling their full conditional shape correctly would need much deeper
+// per-type domain rules than this pass is scoped for.
+const eventDraftSchema = z.object({
+  type: z.string(),
+  title: z.string().min(1, "Title is required"),
+  startsAt: z.string().min(1, "Start date is required"),
+  endsAt: z.string().min(1, "End date is required"),
+  couponId: z.string(),
+  displayCode: z.string(),
+  pollOptions: z.array(z.object({ id: z.string(), label: z.string() })),
+}).passthrough().superRefine((v, ctx) => {
+  if (v.type === "offer") {
+    if (!v.couponId.trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["couponId"], message: "Coupon is required for offer events" });
+    }
+    if (!v.displayCode.trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["displayCode"], message: "Display code is required for offer events" });
+    }
+  }
+  if (v.type === "poll" && v.pollOptions.filter((o) => o.label.trim()).length < 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["pollOptions"], message: "Poll events require at least 2 options" });
+  }
+});
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -418,6 +450,12 @@ export function AdminEventEditorView({
   const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
   const [raffleEntryCount, setRaffleEntryCount] = React.useState<number | null>(null);
   const [raffleGithubUrl, setRaffleGithubUrl] = React.useState("");
+  const { shellCtx, setFieldError, validate } = useFormShellState(eventDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   const update = React.useCallback((partial: Partial<EventDraft>) => {
     setDraft((prev) => ({ ...prev, ...partial }));
@@ -514,6 +552,13 @@ export function AdminEventEditorView({
       if (savedId) onSaved?.(savedId);
     },
     onError: (error) => {
+      const issues = (error as ApiClientError)?.issues;
+      if (issues && issues.length > 0) {
+        applyZodIssues(
+          issues as { path: (string | number)[]; message: string }[],
+          setFieldError,
+        );
+      }
       setSaveMessage(error instanceof Error ? error.message : "Save failed");
     },
   });
@@ -544,6 +589,7 @@ export function AdminEventEditorView({
   const steps: StepDef<EventDraft>[] = [
     {
       label: "Details",
+      fields: ["type", "title", "slug", "description", "startsAt", "endsAt", "tags"],
       validate: (values) => {
         if (!values.title.trim()) return "Title is required";
         if (!values.startsAt) return "Start date is required";
@@ -592,6 +638,7 @@ export function AdminEventEditorView({
     },
     {
       label: "Media",
+      fields: ["coverImageUrl"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Media</Heading>
@@ -607,6 +654,7 @@ export function AdminEventEditorView({
     },
     {
       label: "Settings",
+      fields: ["status", "allowGuestParticipation", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
       validate: (values) => {
         if (values.type === "offer" && !values.couponId.trim()) return "Coupon ID is required for offer events";
         if (values.type === "offer" && !values.displayCode.trim()) return "Display code is required for offer events";
@@ -732,6 +780,7 @@ export function AdminEventEditorView({
     },
     {
       label: "Raffle / Spin",
+      fields: ["hasRaffle", "raffleType", "raffleTopN", "rafflePrize", "rafflePrizeCouponId", "rafflePrizeProductIds", "spinPrizes", "spinMaxPerUser", "spinWindowStart", "spinWindowEnd"],
       render: ({ values, onChange }) => {
         const isRaffleType = values.type === "raffle" || values.type === "spin_wheel";
         const showRaffleConfig = isRaffleType || values.hasRaffle;
@@ -808,20 +857,37 @@ export function AdminEventEditorView({
     </Alert>
   ) : null;
 
+  const fieldToStepIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    steps.forEach((step, i) => {
+      step.fields?.forEach((field) => { map[field] = i; });
+    });
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [steps.length]);
+
+  const wizardShellCtx = useMemo(
+    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
+    [shellCtx, fieldToStepIndex, setCurrentStep],
+  );
+
   const formContent = (
     <Stack gap="sm">
       {alertSection}
-      <StepForm<EventDraft>
-        steps={steps}
-        values={draft}
-        onChange={update}
-        onComplete={() => { saveMutation.mutate(); }}
-        formId="admin-event"
-        currentStep={currentStep}
-        onStepChange={setCurrentStep}
-        completeLabel={isEdit ? "Save Changes" : "Create Event"}
-        isLoading={isLoading}
-      />
+      <FormShellContext.Provider value={wizardShellCtx}>
+        <FormErrorSummary />
+        <StepForm<EventDraft>
+          steps={steps}
+          values={draft}
+          onChange={update}
+          onComplete={() => { saveMutation.mutate(); }}
+          formId="admin-event"
+          currentStep={currentStep}
+          onStepChange={setCurrentStep}
+          completeLabel={isEdit ? "Save Changes" : "Create Event"}
+          isLoading={isLoading}
+        />
+      </FormShellContext.Provider>
       {saveMessage && (
         <Alert variant={saveMessage.toLowerCase().includes("fail") || saveMessage.toLowerCase().includes("error") ? "error" : "success"} title="Save status">
           {saveMessage}

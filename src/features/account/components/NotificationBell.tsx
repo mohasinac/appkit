@@ -91,7 +91,7 @@ export function NotificationBell({
 }: NotificationBellProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { showSuccess, showError: _showError } = useMessage();
+  const { showSuccess } = useMessage();
   const { showToast } = useToast();
   const {
     notifications,

@@ -14,7 +14,6 @@ export interface BecomeSellerViewProps {
   renderAlreadySeller?: () => React.ReactNode;
   /** Which state to render. Shell exposes all three slots; consumer controls which is active. */
   state?: "guide" | "success" | "already-seller";
-  isLoading?: boolean;
   className?: string;
 }
 
@@ -24,7 +23,6 @@ export function BecomeSellerView({
   renderSuccess,
   renderAlreadySeller,
   state = "guide",
-  isLoading: _isLoading = false,
   className = "",
 }: BecomeSellerViewProps) {
   return (

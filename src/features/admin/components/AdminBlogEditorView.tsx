@@ -2,15 +2,29 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation, type JsonValue, type FirestoreDocument } from "@mohasinac/appkit/client";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
+import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
+import type { ApiClientError } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
+import { blogPostCategorySchema } from "../../blog/schemas";
 import { StepDef, StepForm } from "../../shell";
+
+// Form-input subset — `blogPostSchema` (blog schemas) requires `id` and uses
+// a `MediaField` shape for `coverImage`, neither of which this draft has
+// (coverImage here is a plain uploaded-URL string; id doesn't exist pre-save).
+const blogDraftSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  slug: z.string().min(1, "Slug is required").regex(/^blog-/, "Slug must start with 'blog-'"),
+  category: blogPostCategorySchema,
+  metaDescription: z.string().max(160).optional().or(z.literal("")),
+}).passthrough();
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -116,6 +130,12 @@ export function AdminBlogEditorView({
 
   const { showToast } = useToast();
   const { upload } = useMediaUpload();
+  const { shellCtx, setFieldError, validate } = useFormShellState(blogDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   const update = React.useCallback((partial: Partial<BlogDraft>) => {
     setDraft((prev) => ({ ...prev, ...partial }));
@@ -199,6 +219,13 @@ export function AdminBlogEditorView({
       if (onSaved && id) onSaved(id);
     },
     onError: (err: Error) => {
+      const issues = (err as ApiClientError)?.issues;
+      if (issues && issues.length > 0) {
+        applyZodIssues(
+          issues as { path: (string | number)[]; message: string }[],
+          setFieldError,
+        );
+      }
       showToast((err as Error)?.message ?? "Failed to save post.", "error");
     },
   });
@@ -219,6 +246,7 @@ export function AdminBlogEditorView({
   const steps: StepDef<BlogDraft>[] = [
     {
       label: "Content",
+      fields: ["title", "slug", "excerpt", "content"],
       validate: (values) =>
         !values.title.trim() ? "Title is required" : null,
       render: ({ values, onChange }) => (
@@ -265,6 +293,7 @@ export function AdminBlogEditorView({
     },
     {
       label: "Media",
+      fields: ["coverImage", "youtubeId"],
       render: ({ values, onChange }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Media</Heading>
@@ -292,6 +321,7 @@ export function AdminBlogEditorView({
     },
     {
       label: "SEO & Tags",
+      fields: ["category", "tags", "metaTitle", "metaDescription"],
       render: ({ values, onChange }) => {
         const readTime = Math.max(
           1,
@@ -341,6 +371,7 @@ export function AdminBlogEditorView({
     },
     {
       label: "Publish",
+      fields: ["status", "publishedAt", "authorName", "isFeatured"],
       render: ({ values, onChange }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Publish Settings</Heading>
@@ -401,8 +432,23 @@ export function AdminBlogEditorView({
     />
   );
 
+  const fieldToStepIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    steps.forEach((step, i) => {
+      step.fields?.forEach((field) => { map[field] = i; });
+    });
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [steps.length]);
+
+  const wizardShellCtx = useMemo(
+    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
+    [shellCtx, fieldToStepIndex, setCurrentStep],
+  );
+
   const formContent = (
-    <>
+    <FormShellContext.Provider value={wizardShellCtx}>
+      <FormErrorSummary />
       <StepForm<BlogDraft>
         steps={steps}
         values={draft}
@@ -415,7 +461,7 @@ export function AdminBlogEditorView({
         isLoading={isLoading}
       />
       {deleteModal}
-    </>
+    </FormShellContext.Provider>
   );
 
   if (embedded) {
