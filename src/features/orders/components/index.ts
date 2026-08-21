@@ -1,5 +1,10 @@
 export { OrderCard, OrdersList } from "./OrdersList";
 export {
+  OrderAddonBadges,
+  type OrderAddonBadgesOrder,
+  type OrderAddonBadgesProps,
+} from "./OrderAddonBadges";
+export {
   MarketplaceOrderCard,
   type MarketplaceOrderCardLabels,
   type MarketplaceOrderCardLinks,

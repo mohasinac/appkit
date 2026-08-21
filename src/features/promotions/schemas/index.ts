@@ -53,7 +53,6 @@ export const restrictionsConfigSchema = z.object({
   excludeProducts: z.array(z.string()).optional(),
   excludeCategories: z.array(z.string()).optional(),
   firstTimeUserOnly: z.boolean(),
-  combineWithSellerCoupons: z.boolean(),
 });
 
 export const couponStatsSchema = z.object({

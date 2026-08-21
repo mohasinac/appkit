@@ -45,7 +45,6 @@ export interface RestrictionsConfig {
   excludeProducts?: string[];
   excludeCategories?: string[];
   firstTimeUserOnly: boolean;
-  combineWithSellerCoupons: boolean;
 }
 
 export interface CouponStats {
@@ -190,7 +189,7 @@ export const COUPON_TYPE_LABELS: Record<CouponType, string> = {
 export const DEFAULT_COUPON_DATA: Partial<CouponDocument> = {
   usage: { currentUsage: 0 },
   validity: { isActive: true, startDate: new Date(), endDate: undefined },
-  restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: false },
+  restrictions: { firstTimeUserOnly: false },
   stats: { totalUses: 0, totalRevenue: 0, totalDiscount: 0 },
 };
 

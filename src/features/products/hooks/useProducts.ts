@@ -68,6 +68,16 @@ export function useProducts<T extends ProductItem = ProductItem>(
   if (params.brand) sp.set("brand", params.brand);
   if (params.freeShipping !== undefined)
     sp.set("freeShipping", String(params.freeShipping));
+  // Pipe-joined multi-select facets. Omitted here until 2026-08-21, so the
+  // Tags / Sublisting Type / Features drawer sections were inert.
+  if (params.tags) sp.set("tags", params.tags);
+  if (params.sublistingCategory) sp.set("sublistingCategory", params.sublistingCategory);
+  if (params.features) sp.set("features", params.features);
+  // Per-type facets travel under their own TABLE_KEY names, which is what
+  // parsePublicProductParams reads them back from.
+  for (const [key, value] of Object.entries(params.typeFacets ?? {})) {
+    if (value) sp.set(key, value);
+  }
   const qs = sp.toString();
 
   const query = useQuery<ProductListResponse>({

@@ -1,4 +1,5 @@
 "use client";
+import { OrderAddonBadges } from "../../orders/components/OrderAddonBadges";
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit/client";
 
@@ -92,8 +93,18 @@ interface OrderDetail {
   paymentProofUrl?: string;
   paymentReviewOutcome?: string;
   createdAt?: JsonValue;
+  // Fulfilment flags — the seller has to act on all three, not just gift wrap:
+  // WhatsApp changes how status updates go out, protection changes how a
+  // loss claim is handled.
+  whatsappNotifyAddon?: boolean;
+  whatsappNotifyFee?: number;
   giftWrapAddon?: boolean;
+  giftWrapFee?: number;
   giftWrapMessage?: string;
+  shipmentProtectionAddon?: boolean;
+  shipmentProtectionFee?: number;
+  couponCode?: string;
+  couponDiscount?: number;
   emiEnabled?: boolean;
   emiTenureMonths?: number;
   emiTokenAmount?: number;
@@ -287,6 +298,11 @@ export function SellerOrderDetailPanel({
                 </Div>
               </Div>
             )}
+
+            {/* Every add-on the buyer paid for, plus any coupon — was a
+                gift-wrap-only block, so a seller had no way to see that a buyer
+                had bought WhatsApp updates or shipment protection. */}
+            <OrderAddonBadges order={order} variant="detail" />
 
             {order.giftWrapAddon && (
               <Div className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)]" surface="subtle" padding="inline" rounded="lg">

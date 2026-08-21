@@ -14,7 +14,6 @@ export const createCouponSchema = z.object({
   name: z.string().min(1).max(100),
   type: z.enum(["percentage", "fixed", "free_shipping", "buy_x_get_y"]),
   scope: z.enum(["admin", "seller"]),
-  sellerId: z.string().optional(),
   discount: z.object({
     value: z.number().min(0),
     maxDiscount: z.number().min(0).optional(),
@@ -31,7 +30,6 @@ export const createCouponSchema = z.object({
   }),
   restrictions: z.object({
     firstTimeUserOnly: z.boolean().default(false),
-    combineWithSellerCoupons: z.boolean().default(false),
     applicableProducts: z.array(z.string()).optional(),
     applicableCategories: z.array(z.string()).optional(),
   }).optional(),

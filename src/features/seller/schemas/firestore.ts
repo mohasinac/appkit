@@ -50,6 +50,9 @@ export interface OfferDocument extends BaseDocument {
   acceptedAt?: Date;
   checkoutDeadline?: Date;
   respondedAt?: Date;
+  /** Set by `markPaid` once the buyer's order exists — makes "paid" auditable. */
+  paidOrderId?: string;
+  paidAt?: Date;
 }
 
 export const OFFER_COLLECTION = "offers" as const;
@@ -61,6 +64,7 @@ export const OFFER_INDEXED_FIELDS = [
   "status",
   "createdAt",
   "expiresAt",
+  "checkoutDeadline",
 ] as const;
 
 export const OFFER_FIELDS = {
@@ -84,6 +88,8 @@ export const OFFER_FIELDS = {
   ACCEPTED_AT: "acceptedAt",
   CHECKOUT_DEADLINE: "checkoutDeadline",
   RESPONDED_AT: "respondedAt",
+  PAID_ORDER_ID: "paidOrderId",
+  PAID_AT: "paidAt",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 } as const;
@@ -113,7 +119,10 @@ export type OfferUpdateInput = Partial<
     | "lockedPrice"
     | "sellerNote"
     | "acceptedAt"
+    | "checkoutDeadline"
     | "respondedAt"
+    | "paidOrderId"
+    | "paidAt"
     | "updatedAt"
   >
 >;

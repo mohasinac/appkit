@@ -12,6 +12,12 @@ import { productRepository } from "../../products/repository/products.repository
 import { storeRepository } from "../../stores/repository/store.repository";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import {
+  CART_LANE,
+  activeLane,
+  canAddNewItems,
+  laneOf,
+} from "../../../_internal/shared/checkout/lanes";
 import type {
   AddToCartInput,
   CartDocument,
@@ -49,10 +55,38 @@ export async function addItemToCart(
       `Listings of type "${input.listingType}" cannot be added to the cart.`,
     );
   }
+  // Lane gate. While a higher-obligation lane (a won auction, then an accepted
+  // offer) is outstanding, no NEW shopping may be added — otherwise the buyer
+  // can keep deferring something they already committed to by piling more into
+  // the cart. Enforced here, on the server, not only in the UI: the UI hint is
+  // a courtesy, this is the rule.
+  const cart = await cartRepository.getOrCreate(userId);
+  if (!canAddNewItems(cart.items ?? [])) {
+    const blocking = activeLane(cart.items ?? []);
+    throw new ValidationError(
+      blocking === CART_LANE.AUCTION
+        ? "Settle your won auction first — you can add other items once it's paid for."
+        : "Complete your accepted offer first — you can add other items once it's paid for.",
+      { code: CART_LANE_BLOCKED },
+    );
+  }
+
   const storeName = await resolveStoreName(input.storeId, input.storeName);
   return cartRepository.addItem(userId, { ...input, storeName });
 }
 
+/** Error code the client maps to a lane-aware message. */
+export const CART_LANE_BLOCKED = "CART_LANE_BLOCKED";
+
+/**
+ * Won-auction lines are non-removable and fixed-quantity — the buyer committed
+ * to the purchase by bidding, and letting them delete it would turn every
+ * auction into a free option. That's already enforced one layer down:
+ * `cartRepository.updateItem` / `removeItem` both reject a `locked` line, and
+ * auction settlement is the only writer that sets `locked: true`. Accepted
+ * offers deliberately do NOT set it — declining to buy is the buyer's right,
+ * and the offer simply lapses at its `checkoutDeadline`.
+ */
 export async function updateCartItem(
   userId: string,
   itemId: string,

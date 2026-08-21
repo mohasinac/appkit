@@ -151,7 +151,7 @@ export async function getStoreReviews(
     .slice(0, 20);
 
   const reviewArrays = await Promise.all(
-    publishedProducts.map((p) => reviewRepository.findApprovedByProduct(p.id)),
+    publishedProducts.map((p) => reviewRepository.findApprovedByProduct(p.id, 50)),
   );
 
   const allReviews = reviewArrays

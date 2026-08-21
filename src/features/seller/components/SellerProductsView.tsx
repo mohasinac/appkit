@@ -21,10 +21,12 @@ import { normalizeListingType } from "../../products/utils/listing-type";
 import type { ListingType } from "../../products/types";
 import { toRecordArray, toRelativeDate, toStringValue } from "../hooks/useSellerListingData";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 import { SellerProductsCards } from "./SellerProductsCards";
 import { SellerProductsFilterFields } from "./SellerProductsFilterDrawer";
-import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
+import { listingBadgeVariant } from "../../products/utils/listing-badge-variant";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -51,10 +53,17 @@ const SORT_OPTIONS = [
   { value: sortBy("title", "DESC"), label: "Title Z–A" },
   { value: sortBy("price", "DESC"), label: "Price High" },
   { value: sortBy("price", "ASC"), label: "Price Low" },
+  // Now genuinely sortable — see the note on AdminProductsView's sortOptions.
+  { value: sortBy("featured", "DESC"), label: "Featured first" },
+  { value: sortBy("isPromoted", "DESC"), label: "Promoted first" },
 ];
 const STATUS_OPTIONS = SELLER_PRODUCT_STATUS_TABS;
 
-type ListingKind = ListingType | "all" | "bundle";
+/** A real listing type, or the dropdown's "no type filter" sentinel.
+ *  `"bundle"` was removed 2026-08-21 — bundles are a `categoryType` on the
+ *  `categories` collection (SB-UNI-D), so filtering products by it always
+ *  returned zero rows. */
+type ListingKind = ListingType | "all";
 
 interface ProductRow {
   id: string;
@@ -87,17 +96,17 @@ function TypeDropdown({
   onChange: (kind: ListingKind) => void;
 }) {
   const flags = useListingTypeFlags();
+  // Derived from ALL_LISTING_TYPES + the plugin registry (2026-08-21). This
+  // used to be a hand-written list that had no `art`/`stickers` entries and
+  // still offered `bundle` — which stopped being a listingType in SB-UNI-D, so
+  // picking it filtered on a value no product can hold and returned nothing.
   const options: { value: ListingKind; label: string }[] = [
     { value: "all", label: "All listings" },
-    flags.standard && { value: "standard", label: "Standard" },
-    flags.auction && { value: "auction", label: "Auction" },
-    flags["pre-order"] && { value: "pre-order", label: "Pre-order" },
-    flags["prize-draw"] && { value: "prize-draw", label: "Prize Draw" },
-    { value: "bundle", label: "Bundle" },
-    flags.classified && { value: "classified", label: "Classified" },
-    flags["digital-code"] && { value: "digital-code", label: "Digital Code" },
-    flags.live && { value: "live", label: "Live" },
-  ].filter(Boolean) as { value: ListingKind; label: string }[];
+    ...ALL_LISTING_TYPES.filter(flags.isEnabled).map((type) => ({
+      value: type as ListingKind,
+      label: pluginFor(type).typeLabel,
+    })),
+  ];
   return (
     <Row paddingX="x-sm-lg-md" border="bottom" padding="y-xs" gap="sm">
       <Text className="tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
@@ -137,7 +146,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
       <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="medium">{row.primary}</Text>
         <Row gap="sm">
-          <Badge variant={LISTING_BADGE_VARIANT[row.listingKind] ?? "default"}>
+          <Badge variant={listingBadgeVariant(row.listingKind)}>
             {row.listingKind}
           </Badge>
           <Span size="xs" color="muted">{row.secondary}</Span>
@@ -304,14 +313,11 @@ export function SellerProductsView({
         const lt = normalizeListingType(
           item as { listingType?: import("../../products/types").ListingType },
         );
-        const kind: ListingKind =
-          lt === "auction"
-            ? "auction"
-            : lt === "pre-order"
-              ? "pre-order"
-              : lt === "prize-draw"
-                ? "prize-draw"
-                : "standard";
+        // The row's own type, verbatim. This used to be a 4-branch ternary
+        // that collapsed classified / digital-code / live / art / stickers all
+        // down to "standard", so five of nine types displayed the wrong badge
+        // in the seller table (2026-08-21).
+        const kind: ListingKind = lt;
         const priceRaw = typeof item.price === "number" ? item.price : 0;
         const auctionSecondary =
           kind === "auction"

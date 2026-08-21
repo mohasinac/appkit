@@ -18,7 +18,18 @@ export interface CheckboxProps extends Omit<
    * (border, padding, hover state) and just need the underlying control.
    */
   bare?: boolean;
+  /**
+   * Classes for the OUTER wrapper `<div>` — the element that is the real flex
+   * child when this checkbox sits inside a `<Row>`/flex container. `className`
+   * only ever reaches the inner `<input>`, so sizing/flex utilities passed
+   * there are silently inert (Recurrent Root Cause #29 — same defect `Select`
+   * ships `wrapperClassName` for). Use this for `flex-shrink-0`, `min-w-*`,
+   * margins, alignment — anything positioning the control within its parent.
+   */
+  wrapperClassName?: string;
 }
+
+const UI_CHECKBOX_INLINE = "appkit-checkbox--inline";
 
 const UI_CHECKBOX = {
   base: "appkit-checkbox",
@@ -41,6 +52,7 @@ export function Checkbox({
   type = "checkbox",
   bare = false,
   className = "",
+  wrapperClassName = "",
   checked,
   disabled,
   id,
@@ -71,8 +83,23 @@ export function Checkbox({
     );
   }
 
+  // A checkbox with no label/suffix has no text to lay out beside the box, so
+  // the default `width: 100%` on the root serves no purpose and actively harms
+  // it: as a flex child it claims the whole row and squeezes its siblings to
+  // zero. `--inline` makes it size to its content instead.
+  const isInline = !label && !suffix;
+
   return (
-    <div className={UI_CHECKBOX.base} data-section="checkbox-div-467">
+    <div
+      className={[
+        UI_CHECKBOX.base,
+        isInline ? UI_CHECKBOX_INLINE : "",
+        wrapperClassName,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      data-section="checkbox-div-467"
+    >
       <Label
         htmlFor={inputId}
         className={[

@@ -265,7 +265,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-free-shipping-available",
     question: "Is free shipping available?",
-    answer: html(`<p>Many sellers offer free shipping on orders above a certain amount. Look for the "Free Shipping" badge on product listings. You can also use the FREESHIP999 coupon for free shipping on orders ₹999+.</p>`),
+    answer: html(`<p>Many sellers offer free shipping on orders above a certain amount. Look for the "Free Shipping" badge on product listings. You can also use the FREESHIP499 coupon for free shipping on orders ₹499+.</p>`),
     category: "shipping_delivery",
     showOnHomepage: true,
     showInFooter: false,
@@ -556,7 +556,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-coupons-and-discounts",
     question: "How do I use coupons and discount codes?",
-    answer: html(`<p>Enter your coupon code at checkout in the "Apply Coupon" field. Coupons may be platform-wide (from LetItRip) or store-specific (from individual sellers). Some coupons have minimum order requirements, expiry dates, or per-user limits. You cannot stack multiple coupons on a single order unless the coupon explicitly allows it.</p>`),
+    answer: html(`<p>Enter your coupon code at checkout in the "Apply Coupon" field. Coupons are either <strong>store coupons</strong> (issued by an individual seller) or <strong>platform-wide coupons</strong> (issued by LetItRip).</p><p><strong>Coupons stack.</strong> You can apply <strong>one coupon per store</strong> — so a cart with items from three stores can carry all three of those stores' coupons at once — <strong>plus one platform-wide coupon</strong> on top. A second coupon for the same store, or a second platform-wide coupon, is declined; remove the first one to swap it.</p><p>A store coupon only discounts that store's items. A platform-wide coupon is spread proportionally across every store in your cart. Because orders are placed per store, each store's order shows its own share of the discount.</p><p>Coupons may also have a minimum order value (measured against the items the coupon actually covers, not your whole cart), an expiry date, a per-user limit, or a total limit across all buyers. Coupons are re-checked when you place the order — if one expired or ran out while it sat in your cart, it is removed and your total is recalculated before payment.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,

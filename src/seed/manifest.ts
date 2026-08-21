@@ -76,6 +76,7 @@ import {
   couponsTesterSeedData,
   bidsTesterSeedData,
   ordersTesterSeedData,
+  offersTesterSeedData,
 } from "../features/tester/seed-data";
 
 export interface SeedManifestEntry {
@@ -296,7 +297,7 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   offers: pick(
-    asArr(offersSeedData).map((o) => ({
+    [...asArr(offersSeedData), ...asArr(offersTesterSeedData)].map((o) => ({
       ...o,
       name: o.productTitle ?? o.id,
     })),

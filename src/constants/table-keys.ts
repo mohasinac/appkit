@@ -50,6 +50,8 @@ export const TABLE_KEYS = {
   // Live-item-specific
   SPECIES: "species",
   JURISDICTION: "jurisdiction",
+  LIVE_SEX: "liveSex",
+  LIVE_TRANSPORT_METHOD: "liveTransportMethod",
 } as const;
 
 export type TableKey = (typeof TABLE_KEYS)[keyof typeof TABLE_KEYS];

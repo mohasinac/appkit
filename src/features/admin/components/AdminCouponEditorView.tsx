@@ -62,7 +62,6 @@ interface CouponPayload {
   validity: { startDate: string; endDate?: string; isActive: boolean };
   restrictions: {
     firstTimeUserOnly: boolean;
-    combineWithSellerCoupons: boolean;
     applicableProducts?: string[];
     applicableCategories?: string[];
   };
@@ -237,7 +236,6 @@ export function AdminCouponEditorView({
 
   // restrictions
   const [firstTimeOnly, setFirstTimeOnly] = React.useState(false);
-  const [combinable, setCombinable] = React.useState(false);
   const [appliesToAuctions, setAppliesToAuctions] = React.useState(false);
   const [applicableProducts, setApplicableProducts] = React.useState<string[]>([]);
   const [applicableCategories, setApplicableCategories] = React.useState<string[]>([]);
@@ -280,7 +278,6 @@ export function AdminCouponEditorView({
     setEndDate(toDateInputValue(c.validity?.endDate));
     setIsActive(c.validity?.isActive ?? false);
     setFirstTimeOnly(c.restrictions?.firstTimeUserOnly ?? false);
-    setCombinable(c.restrictions?.combineWithSellerCoupons ?? false);
     setApplicableProducts(Array.isArray(c.restrictions?.applicableProducts) ? c.restrictions.applicableProducts : []);
     setApplicableCategories(Array.isArray(c.restrictions?.applicableCategories) ? c.restrictions.applicableCategories : []);
     setAppliesToAuctions(c.applicableToAuctions ?? false);
@@ -321,7 +318,6 @@ export function AdminCouponEditorView({
         },
         restrictions: {
           firstTimeUserOnly: firstTimeOnly,
-          combineWithSellerCoupons: combinable,
           ...(applicableProducts.length > 0 && { applicableProducts }),
           ...(applicableCategories.length > 0 && { applicableCategories }),
         },
@@ -464,11 +460,6 @@ export function AdminCouponEditorView({
             label="First-time users only"
             checked={firstTimeOnly}
             onChange={setFirstTimeOnly}
-          />
-          <Toggle
-            label="Allow stacking with seller coupons"
-            checked={combinable}
-            onChange={setCombinable}
           />
           <Toggle
             label="Applies to auctions"

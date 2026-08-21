@@ -34,7 +34,6 @@ export interface HorizontalScrollerProps<T = unknown> {
    */
   arrowStyle?: "circle" | "full-height";
   showScrollbar?: boolean;
-  showFadeEdges?: boolean;
   scrollContainerRef?: RefObject<HTMLDivElement | null>;
   onScroll?: () => void;
   items?: T[];
@@ -83,7 +82,6 @@ export function HorizontalScroller<T = unknown>({
   arrowSize = "md",
   arrowStyle = "circle",
   showScrollbar,
-  showFadeEdges,
   scrollContainerRef: externalRef,
   onScroll,
   items,
@@ -329,7 +327,11 @@ export function HorizontalScroller<T = unknown>({
     const arrowsHidden = !loop && atStart && atEnd; // no scrollable overflow
     return (
       <div
-        className={["appkit-hscroller appkit-hscroller--with-arrows", className]
+        className={[
+          "appkit-hscroller appkit-hscroller--with-arrows",
+          `appkit-hscroller--arrow-${arrowSize}`,
+          className,
+        ]
           .filter(Boolean)
           .join(" ")}
         tabIndex={0}
@@ -337,12 +339,6 @@ export function HorizontalScroller<T = unknown>({
         {...interactionHandlers}
         data-section="horizontalscroller-div-511"
       >
-        {showFadeEdges && (
-          <>
-            <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
-            <div className="appkit-hscroller__fade appkit-hscroller__fade--right" />
-          </>
-        )}
         {!arrowsHidden && (
         <button
           type="button"
@@ -359,7 +355,7 @@ export function HorizontalScroller<T = unknown>({
           ref={containerRef}
           onScroll={combinedOnScroll}
           className={scrollerCls(snapToItems, showScrollbar)}
-          style={{ gap: `${gap}px`, paddingLeft: 36, paddingRight: 36 }}
+          style={{ gap: `${gap}px` }}
           data-section="horizontalscroller-div-512"
         >
           {content}
@@ -388,12 +384,6 @@ export function HorizontalScroller<T = unknown>({
       {...interactionHandlers}
       data-section="horizontalscroller-div-513"
     >
-      {showFadeEdges && (
-        <>
-          <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
-          <div className="appkit-hscroller__fade appkit-hscroller__fade--right" />
-        </>
-      )}
       <div
         ref={containerRef}
         onScroll={combinedOnScroll}

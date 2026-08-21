@@ -59,13 +59,21 @@ export interface ReviewFiltersProps {
   variant?: ReviewFilterVariant;
   /** Optional brand options for filter by brand */
   brandOptions?: FacetOption[];
+  /**
+   * Restrict which filter controls render. Callers that only *apply* a subset must pass
+   * it here — a rendered control whose value the caller never reads is a silent no-op,
+   * which reads to the user as a broken filter. Omit to keep the variant's full set.
+   */
+  keys?: readonly string[];
 }
 
 export function ReviewFilters({
   table,
   variant = "admin",
   brandOptions,
+  keys,
 }: ReviewFiltersProps) {
+  const shows = (key: string) => (keys ? keys.includes(key) : true);
   const t = useTranslations("filters");
 
   const statusOptions = [
@@ -89,7 +97,7 @@ export function ReviewFilters({
     ? table.get("rating").split("|").filter(Boolean)
     : [];
   const isAdmin = variant === "admin";
-  const showStatus = variant !== "public";
+  const showStatus = variant !== "public" && shows(TABLE_KEYS.STATUS);
 
   return (
     <Div>
@@ -104,16 +112,18 @@ export function ReviewFilters({
         />
       )}
 
-      <FilterFacetSection
-        title={t("rating")}
-        options={ratingOptions}
-        selected={selectedRating}
-        onChange={(vals) => table.set("rating", vals.join("|"))}
-        searchable={false}
-        defaultCollapsed={variant === "admin"}
-      />
+      {shows(TABLE_KEYS.RATING) && (
+        <FilterFacetSection
+          title={t("rating")}
+          options={ratingOptions}
+          selected={selectedRating}
+          onChange={(vals) => table.set("rating", vals.join("|"))}
+          searchable={false}
+          defaultCollapsed={variant === "admin"}
+        />
+      )}
 
-      {brandOptions && brandOptions.length > 0 && (
+      {shows(TABLE_KEYS.BRAND) && brandOptions && brandOptions.length > 0 && (
         <FilterFacetSection
           title={t("brand")}
           options={brandOptions}
@@ -125,17 +135,19 @@ export function ReviewFilters({
         />
       )}
 
-      <RangeFilter
-        title={t("dateRange")}
-        type="date"
-        minValue={table.get("dateFrom")}
-        maxValue={table.get("dateTo")}
-        onMinChange={(v) => table.set("dateFrom", v)}
-        onMaxChange={(v) => table.set("dateTo", v)}
-        minPlaceholder={t("minDate")}
-        maxPlaceholder={t("maxDate")}
-        defaultCollapsed={true}
-      />
+      {shows(TABLE_KEYS.DATE_FROM) && (
+        <RangeFilter
+          title={t("dateRange")}
+          type="date"
+          minValue={table.get("dateFrom")}
+          maxValue={table.get("dateTo")}
+          onMinChange={(v) => table.set("dateFrom", v)}
+          onMaxChange={(v) => table.set("dateTo", v)}
+          minPlaceholder={t("minDate")}
+          maxPlaceholder={t("maxDate")}
+          defaultCollapsed={true}
+        />
+      )}
 
       {isAdmin && (
         <>
@@ -155,26 +167,30 @@ export function ReviewFilters({
         </>
       )}
 
-      <RangeFilter
-        title={t("votesRange")}
-        minValue={table.get("minVotes")}
-        maxValue={table.get("maxVotes")}
-        onMinChange={(v) => table.set("minVotes", v)}
-        onMaxChange={(v) => table.set("maxVotes", v)}
-        minBound={0}
-        maxBound={10000}
-        step={1}
-        minPlaceholder={t("minVotes")}
-        maxPlaceholder={t("maxVotes")}
-        defaultCollapsed={true}
-      />
+      {shows("minVotes") && (
+        <RangeFilter
+          title={t("votesRange")}
+          minValue={table.get("minVotes")}
+          maxValue={table.get("maxVotes")}
+          onMinChange={(v) => table.set("minVotes", v)}
+          onMaxChange={(v) => table.set("maxVotes", v)}
+          minBound={0}
+          maxBound={10000}
+          step={1}
+          minPlaceholder={t("minVotes")}
+          maxPlaceholder={t("maxVotes")}
+          defaultCollapsed={true}
+        />
+      )}
 
-      <SwitchFilter
-        title="Media"
-        label="Show reviews with photos only"
-        checked={table.get("hasImages") === "true"}
-        onChange={(v: boolean) => table.set("hasImages", v ? "true" : "")}
-      />
+      {shows("hasImages") && (
+        <SwitchFilter
+          title="Media"
+          label="Show reviews with photos only"
+          checked={table.get("hasImages") === "true"}
+          onChange={(v: boolean) => table.set("hasImages", v ? "true" : "")}
+        />
+      )}
     </Div>
   );
 }

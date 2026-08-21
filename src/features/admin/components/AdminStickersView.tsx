@@ -1,72 +1,26 @@
 "use client";
 
 /**
- * AdminStickersView — admin browse of sticker listings (EMI/art-stickers session).
- * Mirrors AdminClassifiedView's thin config-driven pattern.
+ * AdminStickersView — admin browse of stickers listings.
+ *
+ * A thin wrapper over the shared per-listing-type config. This file (and its
+ * four siblings) used to carry a full hand-written ListingViewConfig; all five
+ * were the same config with a different listingType, and all five shipped
+ * an empty filterKeys array — no filter drawer at all — plus their own copy
+ * of a three-option sort array. See listing-type-listing-config.ts.
  */
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import {
-  toRecordArray,
-  toRelativeDate,
-  toCurrency,
-  toStringValue,
-} from "../hooks/useAdminListingData";
+import { buildListingTypeListingConfig } from "../../products/config/listing-type-listing-config";
 import { DataListingView } from "./DataListingView";
-import type { ListingViewConfig } from "./DataListingView";
-import { ROUTES } from "../../../next/routing/route-map";
 
-interface AdminProductsResponse {
-  items?: JsonArray;
-  total?: number;
-}
-
-interface StickersRow {
-  id: string;
-  primary: string;
-  secondary: string;
-  status: string;
-  updatedAt: string;
-  image?: string;
-}
-
-const ADMIN_STICKERS_CONFIG: ListingViewConfig<AdminProductsResponse, StickersRow> = {
-  portal: "admin",
+const CONFIG = buildListingTypeListingConfig("stickers", {
   title: "Stickers",
   searchPlaceholder: "Search stickers by name or seller",
   emptyLabel: "No sticker listings",
-  filterKeys: [],
-  defaultSort: sortBy("createdAt", "DESC"),
-  queryKey: ["admin", "stickers", "listing"],
-  endpoint: ADMIN_ENDPOINTS.PRODUCTS,
-  sortOptions: [
-    { value: sortBy("createdAt", "DESC"), label: "Newest" },
-    { value: sortBy("createdAt", "ASC"), label: "Oldest" },
-    { value: "title", label: "Title A–Z" },
-  ],
-  mapRows: (response) =>
-    toRecordArray(response.items).map((item, index) => ({
-      id: toStringValue(item.id, `stickers-${index}`),
-      primary: toStringValue(item.title ?? item.productTitle, "Untitled sticker listing"),
-      secondary: [
-        toStringValue(item.sellerName, "Unknown seller"),
-        toCurrency(item.price),
-      ].join(" · "),
-      status: toStringValue(item.status, "draft"),
-      updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-      image: toStringValue(item.mainImage, "") || undefined,
-    })),
-  getTotal: (response, mappedRows) =>
-    typeof response.total === "number" ? response.total : mappedRows.length,
-  buildFilters: () => "listingType==stickers",
-  // Sticker listings are products (filtered by listingType) — reuse the
-  // real admin product edit page rather than leaving rows non-navigable.
-  rowHrefTemplate: String(ROUTES.ADMIN.PRODUCTS_EDIT("{id}")),
-};
+});
 
 export type AdminStickersViewProps = ListingLayoutProps;
 
@@ -78,5 +32,5 @@ export function AdminStickersView({ children, ...props }: AdminStickersViewProps
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_STICKERS_CONFIG} />;
+  return <DataListingView config={CONFIG} />;
 }

@@ -4,7 +4,7 @@ import { sortBy, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../constants/index";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { Button, Div, Grid, Stack, Text, TextLink } from "../../../ui";
+import { Button, Div, FilterChipGroup, Grid, Stack, Text, TextLink } from "../../../ui";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
@@ -20,6 +20,24 @@ const SORT_OPTIONS = [
   { value: sortBy("totalPrice", "DESC"), label: "Highest total" },
   { value: sortBy("totalPrice", "ASC"), label: "Lowest total" },
 ];
+
+/**
+ * Lane tabs — the same auction > offer > standard split the cart and checkout
+ * use, viewed after the fact. Every `id` is EXACTLY a stored
+ * `OrderDocument.orderType` value (or "" for All): a tab id that doesn't
+ * match a real stored value returns zero rows forever with no error anywhere
+ * (CLAUDE.md Root Cause #33).
+ *
+ * "standard" is filtered in memory server-side, because orders written before
+ * `orderType` existed have no such field and a Firestore `==` would exclude
+ * every one of them.
+ */
+const ORDER_LANE_TABS = [
+  { id: "", label: "All" },
+  { id: "standard", label: "Normal" },
+  { id: "auction", label: "Auction wins" },
+  { id: "offer", label: "Offer wins" },
+] as const;
 
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
@@ -46,7 +64,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
     title: "My Orders",
     searchPlaceholder: "Search by order id…",
     emptyLabel: "You haven't placed any orders yet.",
-    filterKeys: ["status"],
+    filterKeys: ["status", "orderType"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["user", "orders", "listing"],
     endpoint: ACCOUNT_ENDPOINTS.ORDERS,
@@ -54,8 +72,21 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
     hideTableView: true,
     mapRows: (response) => response.items ?? [],
     getTotal: (response, rows) => response.total ?? rows.length,
-    buildFilters: (state) => (state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined),
+    buildFilters: (state) =>
+      [
+        state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null,
+        state.orderType ? sieveFilter("orderType", SIEVE_OP.EQ, state.orderType) : null,
+      ]
+        .filter(Boolean)
+        .join(",") || undefined,
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <Stack gap="md">
+        <FilterChipGroup
+          label="Type"
+          tabs={ORDER_LANE_TABS as unknown as { id: string; label: string }[]}
+          value={pendingFilters.orderType ?? ""}
+          onChange={(id) => setPendingFilters((prev) => ({ ...prev, orderType: id }))}
+        />
       <Div>
         <PaginatedSelect
           value={pendingFilters.status || null}
@@ -65,6 +96,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
           ariaLabel="Filter by order status"
         />
       </Div>
+      </Stack>
     ),
     renderCards: (rows, _view, _selection, isLoading) => {
       if (isLoading) {

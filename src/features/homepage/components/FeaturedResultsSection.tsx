@@ -96,7 +96,6 @@ export function FeaturedResultsSection({
           minItemWidth={260}
           snapToItems
           showArrows
-          showFadeEdges
           loop
         />
       </Div>

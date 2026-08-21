@@ -1531,6 +1531,18 @@ export {
   type SitemapProduct,
   type RelatedItemsResult,
 } from "./_internal/server/features/products/index";
+// The single public-listing query — every SSR listing view and /api/products
+// share it so their filter semantics cannot drift (Root Cause #30).
+export {
+  listPublicProducts,
+  parsePublicProductParams,
+  PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+  type PublicProductListInput,
+  type PublicProductListResult,
+  type PublicProductListOptions,
+  type PublicProductExecutor,
+  type PublicProductQuery,
+} from "./_internal/server/features/products/index";
 // S-SBUNI-3/4 2026-05-13 — bundle data/metadata/og layer.
 export {
   getBundleForDetail,

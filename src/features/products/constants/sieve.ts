@@ -89,6 +89,20 @@ export const PREORDER_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DEPOSIT_AMOUNT, "ASC"), label: "Lowest Deposit First" },
 ] as const satisfies readonly SortOption[];
 
+/**
+ * Public pre-order browse subset. Drops "Lowest Deposit First" — deposit
+ * amount is a seller-side pricing lever buyers don't shop by — but keeps
+ * both delivery-date directions, which are the primary browse intent.
+ */
+export const PREORDER_PUBLIC_SORT_OPTIONS = [
+  PREORDER_SORT_OPTIONS[0],
+  PREORDER_SORT_OPTIONS[1],
+  PREORDER_SORT_OPTIONS[2],
+  PREORDER_SORT_OPTIONS[3],
+  PREORDER_SORT_OPTIONS[4],
+  PREORDER_SORT_OPTIONS[5],
+] as const satisfies readonly SortOption[];
+
 // ---------------------------------------------------------------------------
 // Bundles
 // ---------------------------------------------------------------------------
@@ -114,14 +128,21 @@ export const PRIZE_DRAW_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Entry: High to Low" },
 ] as const satisfies readonly SortOption[];
 
+/** Public prize-draw browse subset — every option is buyer-meaningful. */
+export const PRIZE_DRAW_PUBLIC_SORT_OPTIONS = PRIZE_DRAW_SORT_OPTIONS;
+
 // ---------------------------------------------------------------------------
 // Lookup by listing type
 // ---------------------------------------------------------------------------
-
-export const SORT_OPTIONS_BY_LISTING_TYPE: Record<string, readonly SortOption[]> = {
-  standard: STANDARD_SORT_OPTIONS,
-  auction: AUCTION_SORT_OPTIONS,
-  "pre-order": PREORDER_SORT_OPTIONS,
-  bundle: BUNDLE_SORT_OPTIONS,
-  "prize-draw": PRIZE_DRAW_SORT_OPTIONS,
-} as const;
+//
+// The per-type lookup used to live here as a hand-written map keyed on plain
+// strings. It carried a `bundle` key long after SB-UNI-D stopped bundles from
+// being a listingType, and had no entry at all for classified / digital-code /
+// live / art / stickers — five of nine types. It is now DERIVED from the
+// listing-type plugin registry (`sortOptionsFor()` in
+// `_internal/shared/listing-types/_registry.ts`), so a type can never be
+// missing from it again.
+//
+// `BUNDLE_SORT_OPTIONS` above stays a standalone export on purpose — bundles
+// are a `categoryType` on the `categories` collection, not a listingType, so
+// they must not be reachable through a ListingType-keyed lookup.

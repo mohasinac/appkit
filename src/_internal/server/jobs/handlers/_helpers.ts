@@ -3,6 +3,7 @@
  */
 
 import { getAdminRealtimeDb } from "../../../../providers/db-firebase";
+import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { BATCH_LIMIT } from "./messages";
 import type { JobContext } from "../runtime/types";
 
@@ -34,7 +35,9 @@ export async function getTestDataRefs(
   collection: string,
   cutoff: Date | null,
 ): Promise<FirebaseFirestore.DocumentReference[]> {
-  let q: FirebaseFirestore.Query = db.collection(collection).where("isTestData", "==", true);
+  let q: FirebaseFirestore.Query = db
+    .collection(collection)
+    .where(PRODUCT_FIELDS.IS_TEST_DATA, "==", true);
   if (cutoff) q = q.where("testDataExpiresAt", "<=", cutoff);
   const snap = await q.limit(200).get();
   return snap.docs.map((d) => d.ref);

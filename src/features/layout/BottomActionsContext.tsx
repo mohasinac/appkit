@@ -84,9 +84,22 @@ export interface BottomBulkConfig {
   actions: BottomAction[];
 }
 
+/**
+ * Whether the bar is allowed to show on desktop (>= lg), where it has always been
+ * `lg:hidden`.
+ *
+ * - `"hidden"` (default) — mobile/tablet only, the historical behaviour.
+ * - `"after-scroll"` — appears once the user has scrolled past the top of the page,
+ *   so a detail page's primary CTA comes back after the hero scrolls away.
+ * - `"always"` — pinned on desktop from first paint.
+ */
+export type BottomActionsDesktopMode = "hidden" | "after-scroll" | "always";
+
 export interface BottomActionsState {
   /** Page-level primary actions. */
   actions: BottomAction[];
+  /** Desktop visibility policy. Defaults to "hidden" — opt in per page. */
+  desktop?: BottomActionsDesktopMode;
   /** Bulk-selection config. Bulk mode activates when selectedCount > 0. */
   bulk?: BottomBulkConfig;
   /**
@@ -102,6 +115,16 @@ export interface BottomActionsState {
    * the auction detail page's live countdown ("Ends in 2d 5h").
    */
   secondaryLabel?: string;
+  /**
+   * Optional expandable content revealed ABOVE the bar when the buyer taps the
+   * `infoLabel` row, which becomes a disclosure toggle while this is set.
+   *
+   * Exists so a summarised figure in `infoLabel` ("Total: ₹777.00") can be
+   * opened up into the detail behind it without navigating away — the mobile
+   * counterpart of a "Show details" expander in a desktop sidebar. Ignored in
+   * bulk mode, which owns the same space for its action picker.
+   */
+  infoPanel?: React.ReactNode;
 }
 
 // --- Context ------------------------------------------------------------------
@@ -125,6 +148,10 @@ interface BottomActionsContextValue {
   setInfoLabel: (label: string | undefined) => void;
   /** Set or clear the secondary label (rendered above infoLabel). */
   setSecondaryLabel: (label: string | undefined) => void;
+  /** Set or clear the expandable panel revealed above the bar. */
+  setInfoPanel: (panel: React.ReactNode | undefined) => void;
+  /** Set the desktop visibility policy. */
+  setDesktopMode: (mode: BottomActionsDesktopMode | undefined) => void;
   /** Clear all state (called on feature unmount). */
   clearAll: () => void;
 }
@@ -195,6 +222,17 @@ export function BottomActionsProvider({
     setState((prev) => ({ ...prev, secondaryLabel }));
   }, []);
 
+  const setInfoPanel = useCallback((infoPanel: React.ReactNode | undefined) => {
+    setState((prev) => ({ ...prev, infoPanel }));
+  }, []);
+
+  const setDesktopMode = useCallback(
+    (desktop: BottomActionsDesktopMode | undefined) => {
+      setState((prev) => (prev.desktop === desktop ? prev : { ...prev, desktop }));
+    },
+    [],
+  );
+
   const clearAll = useCallback(() => {
     actionCallbacksRef.current = new Map();
     bulkCallbacksRef.current = new Map();
@@ -212,10 +250,21 @@ export function BottomActionsProvider({
       bulkClearRef,
       setInfoLabel,
       setSecondaryLabel,
+      setInfoPanel,
+      setDesktopMode,
       clearAll,
     }),
 
-    [state, setActions, setBulkConfig, setInfoLabel, setSecondaryLabel, clearAll],
+    [
+      state,
+      setActions,
+      setBulkConfig,
+      setInfoLabel,
+      setSecondaryLabel,
+      setInfoPanel,
+      setDesktopMode,
+      clearAll,
+    ],
   );
 
   return (

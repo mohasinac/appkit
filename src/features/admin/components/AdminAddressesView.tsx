@@ -1,7 +1,8 @@
 "use client";
 
 import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
-import React, { useState } from "react";
+import React from "react";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Div, FilterChipGroup, Span, Stack, Text, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -72,7 +73,6 @@ const ADDRESS_COLUMNS: AdminTableColumn<AddressRow>[] = [
 ];
 
 function buildAddressConfig(
-  banStatus: string,
   onAction: (id: string, action: string) => void,
 ): ListingViewConfig<AdminAddressesResponse, AddressRow> {
   return {
@@ -80,14 +80,21 @@ function buildAddressConfig(
     title: "Address Management",
     searchPlaceholder: "Search by city or owner",
     emptyLabel: "No addresses found",
-    filterKeys: [],
+    // URL-synced via filterKeys (2026-08-21). The ban-status chips used to
+    // live outside this config in local useState, so the selection was not in
+    // the URL, not shareable, not counted by activeFilterCount, and lost on
+    // back-navigation. banStatus is a plain query param rather than a Sieve
+    // clause, which is exactly what buildExtraParams is for.
+    filterKeys: ["banStatus"],
     defaultSort: sortBy("bannedAt", "DESC"),
-    queryKey: ["admin", "addresses", banStatus],
-    endpoint: banStatus
-      ? `${ADMIN_ENDPOINTS.ADDRESSES}?banStatus=${encodeURIComponent(banStatus)}`
-      : ADMIN_ENDPOINTS.ADDRESSES,
+    queryKey: ["admin", "addresses"],
+    endpoint: ADMIN_ENDPOINTS.ADDRESSES,
+    buildExtraParams: (state) =>
+      state.banStatus ? { banStatus: state.banStatus } : undefined,
     sortOptions: [
-      { value: "bannedAt", label: "Flagged Date" },
+      // -bannedAt (newest flagged first) to match defaultSort — the option was
+      // "bannedAt" (oldest first), so the dropdown opened with nothing selected.
+      { value: sortBy("bannedAt", "DESC"), label: "Flagged Date" },
       { value: "city", label: "City" },
     ],
     columns: ADDRESS_COLUMNS,
@@ -153,7 +160,11 @@ export interface AdminAddressesViewProps {
 }
 
 export function AdminAddressesView(_props: AdminAddressesViewProps) {
-  const [banStatus, setBanStatus] = useState("");
+  // Independent useUrlTable() against the same URL param DataListingView's own
+  // table reads via filterKeys — safe because useUrlTable holds no local state
+  // (the documented Root Cause #35 pattern).
+  const chipTable = useUrlTable({ defaults: {} });
+  const banStatus = chipTable.get("banStatus");
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -174,7 +185,7 @@ export function AdminAddressesView(_props: AdminAddressesViewProps) {
     actionMutation.mutate({ id, action });
   };
 
-  const config = buildAddressConfig(banStatus, handleAction);
+  const config = buildAddressConfig(handleAction);
 
   return (
     <Stack gap="md">
@@ -183,7 +194,7 @@ export function AdminAddressesView(_props: AdminAddressesViewProps) {
           label="Status"
           tabs={BAN_STATUS_TABS}
           value={banStatus}
-          onChange={(v) => setBanStatus(v)}
+          onChange={(v) => chipTable.set("banStatus", v)}
         />
       </Div>
       <DataListingView config={config} />

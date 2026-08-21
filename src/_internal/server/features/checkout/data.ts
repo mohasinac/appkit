@@ -24,4 +24,14 @@ export interface CheckoutOrderResult {
     requestedQty: number;
     availableQty: number;
   }[];
+  /**
+   * Coupons that were on the cart but failed re-validation at placement time
+   * (expired, limit reached, no longer any eligible items). They were removed
+   * and the order priced without them — surfaced so the UI can tell the buyer
+   * rather than silently charging more than the cart showed.
+   */
+  droppedCoupons?: {
+    code: string;
+    reason: string;
+  }[];
 }

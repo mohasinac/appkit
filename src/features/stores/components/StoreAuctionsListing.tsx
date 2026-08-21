@@ -13,20 +13,15 @@ import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushWishlistOp } from "../../cart/utils/pending-ops";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
+import { AUCTION_PUBLIC_SORT_OPTIONS } from "../../products/constants/sieve";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
 
-const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC");
-
-const AUCTION_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"), label: "Ending Soonest" },
-  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE), label: "Ending Latest" },
-  { value: sortBy(PRODUCT_FIELDS.CURRENT_BID), label: "Highest Bid" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
-] as const;
+// Shared with /auctions — a local copy here drifted ("Ending Soonest" vs
+// "Ending Soon", and it silently omitted Most Bids / Buy It Now).
+const DEFAULT_SORT = AUCTION_PUBLIC_SORT_OPTIONS[0].value;
 
 const FILTER_KEYS = ["minBid", "maxBid", "dateFrom", "dateTo"];
 
@@ -147,7 +142,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || DEFAULT_SORT}
-        sortOptions={AUCTION_SORT_OPTIONS}
+        sortOptions={AUCTION_PUBLIC_SORT_OPTIONS}
         onSortChange={(v) => {
           table.set("sort", v);
         }}

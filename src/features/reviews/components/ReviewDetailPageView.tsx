@@ -45,7 +45,8 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
   }
 
   const [sameProductDocs, sameStoreDocs] = await Promise.all([
-    reviewRepository.findApprovedByProduct(review.productId).catch(() => []),
+    // 12 = the 6 rendered below, with headroom for the current review + any filtered out.
+    reviewRepository.findApprovedByProduct(review.productId, 12).catch(() => []),
     storeSlug ? reviewRepository.findApprovedByStore(storeSlug).catch(() => []) : Promise.resolve([]),
   ]);
   const sameProductReviews = (sameProductDocs as unknown as Review[]).filter((r) => r.id !== review.id).slice(0, 6);

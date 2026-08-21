@@ -1,31 +1,34 @@
-import { sieveFilter, sieveAnd, SIEVE_OP, sortBy, PRODUCT_FIELDS } from "@mohasinac/appkit";
 import React from "react";
-import { productRepository } from "../../../repositories";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
+import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreDigitalCodesListing } from "./StoreDigitalCodesListing";
 
+type SearchParams = Record<string, string | string[]>;
+
+const LISTING_TYPES = ["digital-code"] as const;
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
+
 export interface StoreDigitalCodesPageViewProps {
   storeSlug: string;
+  searchParams?: SearchParams;
 }
 
-export async function StoreDigitalCodesPageView({ storeSlug }: StoreDigitalCodesPageViewProps) {
+export async function StoreDigitalCodesPageView({ storeSlug, searchParams }: StoreDigitalCodesPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
-  const storeId = (store as Record<string, any>)?.id;
+  const storeId = (store as Record<string, unknown> | null)?.id;
+  if (typeof storeId !== "string" || !storeId) return null;
 
-  if (!storeId) return null;
-
-  const result = await productRepository
-    .list({
-      filters: sieveAnd(
-        sieveFilter("storeId", SIEVE_OP.EQ, storeId),
-        sieveFilter("status", SIEVE_OP.EQ, "published"),
-        sieveFilter("listingType", SIEVE_OP.EQ, "digital-code"),
-      ),
-      sorts: sortBy(PRODUCT_FIELDS.CREATED_AT),
-      page: 1,
-      pageSize: 24,
-    })
-    .catch(() => null);
+  // Shared query — see listStoreProducts. This view used to call
+  // productRepository.list() with an inline filter string and swallow every
+  // failure via a bare .catch(() => null), so a missing index rendered as an
+  // empty store tab with nothing logged (Root Cause #30's family).
+  const result = await listStoreProducts(storeId, LISTING_TYPES, searchParams ?? {}, {
+    pageSize: DEFAULT_PAGE_SIZE,
+    sorts: DEFAULT_SORT,
+  });
 
   return <StoreDigitalCodesListing storeId={storeId} initialData={result ?? undefined} />;
 }

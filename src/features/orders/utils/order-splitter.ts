@@ -18,7 +18,9 @@ import type { ListingType } from "../../products/types/index";
 import {
   getListingRule,
   offerRule,
+  auctionRule,
 } from "../../../_internal/shared/checkout/rules";
+import { CART_LANE, laneOf } from "../../../_internal/shared/checkout/lanes";
 
 /**
  * Split a sequence of cart-items into order groups by `OrderType`.
@@ -42,7 +44,19 @@ export function splitCartIntoOrderGroups<
   for (const check of checks) {
     const { item } = check;
     const lt = (item.listingType ?? "standard") as ListingType;
-    const rule = item.isOffer ? offerRule : (getListingRule(lt) ?? getListingRule("standard"));
+    // Lane first, listing type second. A locked line's obligation — not the
+    // product's listing type — decides how it settles: an accepted offer is
+    // always its own order, and a won auction is always its own order even
+    // though `auctionRule` is otherwise unreachable (auctions are
+    // `cartEligible: false` for user-initiated adds; the only way one reaches
+    // the cart is auction settlement writing the winner's locked line).
+    const lane = laneOf(item);
+    const rule =
+      lane === CART_LANE.OFFER
+        ? offerRule
+        : lane === CART_LANE.AUCTION
+          ? auctionRule
+          : (getListingRule(lt) ?? getListingRule("standard"));
 
     // Prize-draw (and future types with maxLinesPerOrder < Infinity) may split
     // one cart item into N virtual batch items.

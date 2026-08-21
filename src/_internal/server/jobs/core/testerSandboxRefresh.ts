@@ -9,6 +9,7 @@ import { storesTesterSeedData } from "../../../../features/tester/seed-data/stor
 import { productsTesterSeedData } from "../../../../features/tester/seed-data/products-tester-seed-data";
 import { blogTesterSeedData } from "../../../../features/tester/seed-data/blog-tester-seed-data";
 import { eventsTesterSeedData } from "../../../../features/tester/seed-data/events-tester-seed-data";
+import { offersTesterSeedData } from "../../../../features/tester/seed-data/offers-tester-seed-data";
 import { bidsTesterSeedData } from "../../../../features/tester/seed-data/bids-tester-seed-data";
 
 type SandboxCollection = (typeof SANDBOX_COLLECTIONS)[number];
@@ -19,6 +20,7 @@ const SEED_BY_COLLECTION: Record<SandboxCollection, Partial<{ id: string }>[]> =
   products: productsTesterSeedData,
   blogPosts: blogTesterSeedData,
   events: eventsTesterSeedData,
+  offers: offersTesterSeedData,
 };
 
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap

@@ -155,6 +155,10 @@ export function ProductDetailActions({
             price != null && currency
               ? formatCurrency(price, currency)
               : undefined,
+          // The bar itself owns responsive visibility now, so this one registrar serves
+          // both breakpoints. The desktop branch below must NOT also register —
+          // useBottomActions is last-mounted-wins and the two would clobber each other.
+          desktop: "after-scroll" as const,
         }
       : {},
   );

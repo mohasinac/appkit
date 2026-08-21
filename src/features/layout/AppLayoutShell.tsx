@@ -727,10 +727,19 @@ export function AppLayoutShell({
     setSidebarOpen(false);
   }, []);
 
+  // Must stay in sync with BottomActions' own `isVisible` — `secondaryLabel` was missing
+  // here, so an auction bar shown by its countdown alone got no bottom clearance.
   const hasBottomActions =
     bottomActionsState.actions.length > 0 ||
     !!(bottomActionsState.bulk && bottomActionsState.bulk.selectedCount > 0) ||
-    !!bottomActionsState.infoLabel;
+    !!bottomActionsState.infoLabel ||
+    !!bottomActionsState.secondaryLabel;
+
+  /** The bar overlays desktop content too once a page opts in, so reserve space there. */
+  const hasDesktopBottomActions =
+    hasBottomActions &&
+    (bottomActionsState.desktop === "always" ||
+      bottomActionsState.desktop === "after-scroll");
 
   const sidebarContent = (
     <SidebarContent
@@ -845,7 +854,7 @@ export function AppLayoutShell({
 
           <Main
             id="main-content"
-            className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} lg:mb-0`}
+            className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} ${hasDesktopBottomActions ? "lg:mb-24" : "lg:mb-0"}`}
           >
             <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}

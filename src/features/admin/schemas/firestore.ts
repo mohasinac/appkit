@@ -22,6 +22,9 @@ export type NotificationType =
   | "bid_outbid"
   | "bid_won"
   | "bid_lost"
+  // Seller-facing: an auction closed without a winner (no bids, or the
+  // highest bid did not meet the reserve price).
+  | "auction_ended"
   | "review_approved"
   | "review_replied"
   | "product_available"
@@ -107,6 +110,7 @@ export const NOTIFICATION_FIELDS = {
     BID_OUTBID: "bid_outbid" as NotificationType,
     BID_WON: "bid_won" as NotificationType,
     BID_LOST: "bid_lost" as NotificationType,
+    AUCTION_ENDED: "auction_ended" as NotificationType,
     REVIEW_APPROVED: "review_approved" as NotificationType,
     REVIEW_REPLIED: "review_replied" as NotificationType,
     PRODUCT_AVAILABLE: "product_available" as NotificationType,
@@ -493,6 +497,12 @@ export interface SiteSettingsDocument extends BaseDocument {
     gstPercent: number;
     /** Per-transaction gateway minimum fee in rupees. Ensures total charge is never below this floor. 0 = no minimum. */
     minimumTransactionFee: number;
+    /**
+     * Rupee ceiling on the buyer-facing platform commission. Charged on every
+     * payment method (COD/UPI-manual/cash/EMI/Razorpay), once per checkout.
+     * Optional so pre-existing documents keep working — falls back to ₹10.
+     */ // audit-money-units-ok: rupee ceiling, not paise
+    platformFeeMax?: number;
     /** Razorpay gateway cost % (absorbed by platform, not passed through separately). */
     gatewayFeePercent: number;
     codDepositPercent: number;
@@ -773,6 +783,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     platformFeePercent: 5,
     gstPercent: 18,
     minimumTransactionFee: 0,
+    platformFeeMax: 10,
     gatewayFeePercent: 2,
     codDepositPercent: 10,
     codHandlingFeeMin: 200,

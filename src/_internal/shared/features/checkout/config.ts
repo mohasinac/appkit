@@ -1,4 +1,12 @@
 export const CHECKOUT_DEFAULT_COMMISSIONS = {
+  // Platform-commission rates. Previously absent here because no checkout path
+  // computed a buyer-facing platform fee — the moment one did, a siteSettings
+  // document that failed to load would have produced NaN fees rather than a
+  // sane fallback. Mirrors the SiteSettingsDocument defaults.
+  platformFeePercent: 5,
+  gstPercent: 18,
+  minimumTransactionFee: 0,
+  platformFeeMax: 10,
   codDepositPercent: 10,
   codHandlingFeeMin: 200,
   codHandlingFeePercent: 10,

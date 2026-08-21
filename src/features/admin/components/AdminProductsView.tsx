@@ -25,6 +25,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { parseSelectedListingTypes } from "../../products/utils/listing-type";
 
 export interface AdminProductsViewProps extends ListingLayoutProps {
   actionHref?: string;
@@ -46,15 +47,10 @@ const FLAG_DEFS: { key: FlagField; label: string }[] = [
   { key: "isSold", label: "Sold" },
 ];
 
-const TYPE_FILTER_MAP: Record<string, string> = {
-  Auctions: "listingType==auction",
-  "Pre-orders": "listingType==pre-order",
-  "Prize Draws": "listingType==prize-draw",
-  Products: "listingType==standard",
-  Classifieds: "listingType==classified",
-  "Digital Codes": "listingType==digital-code",
-  "Live Items": "listingType==live",
-};
+// TYPE_FILTER_MAP (label -> Sieve clause) was deleted 2026-08-21. Chip ids are
+// now canonical ListingType values, so the clause is built directly and the
+// array is covered by audit-filter-tab-enums. The map had no `art`/`stickers`
+// entries, which is why admin could never filter to either type.
 
 function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
   return [
@@ -182,11 +178,23 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "products", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
+    // "Featured first" / "Promoted first" existed in STANDARD_SORT_OPTIONS but
+    // were offered nowhere, and would not have worked if they had been:
+    // `featured`/`isPromoted` were `canSort: false`, so sievejs dropped the
+    // sort silently. Both are now sortable (products.repository.ts) with
+    // matching composite indexes, and admin is where curating them matters.
+    //
+    // Deliberately a curated set, not the full 10-option STANDARD_SORT_OPTIONS:
+    // every additional sort field multiplies out against this view's
+    // isSold/status/listingType filter combinations into more composite
+    // indexes, and Rule #6 says spend those only where they earn their keep.
     sortOptions: [
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
       { value: sortBy("price", "DESC"), label: "Highest price" },
+      { value: sortBy("featured", "DESC"), label: "Featured first" },
+      { value: sortBy("isPromoted", "DESC"), label: "Promoted first" },
     ],
     columns: [...buildBaseColumns(), flagColumn],
     mapRows: (response) =>
@@ -237,15 +245,26 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       const parts: string[] = [];
       if (state.showSold !== "true") parts.push("isSold==false");
       if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
-      const typeFilter = TYPE_FILTER_MAP[state.type];
-      if (typeFilter) parts.push(typeFilter);
-      // Ended/closed only apply to auctions/prize-draws — auctionEndDate
-      // and prizeRevealWindowEnd do not exist on other listing types, so
-      // these are no-ops unless the matching Type tab is also selected.
-      if (typeFilter === "listingType==auction" && state.showEnded !== "true") {
+
+      // `state.type` is a pipe-joined set of canonical ListingType values
+      // (multi-select chips). It used to be a single display LABEL resolved
+      // through a TYPE_FILTER_MAP lookup — an indirection that silently
+      // dropped `art` and `stickers`, which had no map entry.
+      const selectedTypes = parseSelectedListingTypes(state.type);
+      if (selectedTypes.length > 0) {
+        parts.push(sieveFilter("listingType", SIEVE_OP.EQ, selectedTypes.join("|")));
+      }
+
+      // Ended/closed are per-type predicates: `auctionEndDate` and
+      // `prizeRevealWindowEnd` only exist on auctions and prize-draws. Apply
+      // each only when its type is the ONLY one selected — with a mixed
+      // selection the inequality would exclude every row of the other types
+      // (they have no such field at all), which reads as "no results".
+      const onlyType = selectedTypes.length === 1 ? selectedTypes[0] : null;
+      if (onlyType === "auction" && state.showEnded !== "true") {
         parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, new Date().toISOString()));
       }
-      if (typeFilter === "listingType==prize-draw" && state.showClosed !== "true") {
+      if (onlyType === "prize-draw" && state.showClosed !== "true") {
         parts.push(sieveFilter("prizeRevealWindowEnd", SIEVE_OP.GTE, new Date().toISOString()));
       }
       return parts.join(",") || undefined;
@@ -329,11 +348,15 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           value={pendingFilters.status ?? ""}
           onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
         />
+        {/* Multi-select: an admin reviewing the queue usually wants two or
+            three types at once (e.g. auctions + prize draws), which the old
+            single-select chips made impossible. */}
         <FilterChipGroup
+          multiple
           label="Type"
           tabs={ADMIN_PRODUCT_LISTING_TYPE_TABS}
           value={pendingFilters.type ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
+          onChange={(ids) => setPendingFilters((p) => ({ ...p, type: ids }))}
         />
         <FilterChipGroup
           label="Sold"

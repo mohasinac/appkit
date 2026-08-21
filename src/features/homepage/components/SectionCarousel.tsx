@@ -266,7 +266,6 @@ const headingGradient: "none" | "brand" =
             // easier to hit than a small circle when the track is tall.
             arrowStyle={rows > 1 ? "full-height" : "circle"}
             snapToItems
-            showFadeEdges
             showScrollbar={false}
             pauseOnHover
           />

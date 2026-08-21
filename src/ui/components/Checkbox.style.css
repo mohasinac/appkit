@@ -4,6 +4,17 @@
   width: 100%;
 }
 
+/*
+ * Label-less checkbox: size to the control, never claim the parent's width.
+ * Applied automatically by Checkbox.tsx when there is no label/suffix — a bare
+ * box inside a <Row> is a flex child, and `width: 100%` there starves its
+ * siblings (Recurrent Root Cause #29).
+ */
+.appkit-checkbox--inline {
+  width: auto;
+  flex-shrink: 0;
+}
+
 .appkit-checkbox__label {
   display: inline-flex;
   width: 100%;

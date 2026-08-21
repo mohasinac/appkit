@@ -48,6 +48,7 @@ export function AuctionBottomActions({
           ],
           secondaryLabel: formatCountdownLabel(remaining),
           infoLabel: `${formatCurrency(currentBid, currency)} · ${bidCount} bid${bidCount !== 1 ? "s" : ""}`,
+          desktop: "after-scroll" as const,
         },
   );
   return null;

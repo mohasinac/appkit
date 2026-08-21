@@ -47,6 +47,12 @@ export interface ReviewListResponse {
   hasMore: boolean;
   averageRating?: number;
   ratingDistribution?: Record<number, number>;
+  /**
+   * Total approved reviews ignoring any active filters — `total` above is the filtered
+   * count and changes as the user narrows by rating/date, which makes it wrong for the
+   * "N reviews" summary line next to the average.
+   */
+  totalApproved?: number;
 }
 
 export interface ReviewListParams {
@@ -57,7 +63,8 @@ export interface ReviewListParams {
   rating?: number | string;
   featured?: boolean;
   page?: number;
-  perPage?: number;
+  /** Must stay named `pageSize` — that is the query param `/api/reviews` actually reads. */
+  pageSize?: number;
   sort?: string;
   q?: string;
   dateFrom?: string;

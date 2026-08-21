@@ -13,6 +13,7 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
+import { serverLogger } from "../../../monitoring";
 import { generateUniqueId, slugify, buildSearchTokens, tokenizeQuery, generateBarcodeId } from "../../../utils";
 import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
 import type { ProductStatus } from "../types";
@@ -50,6 +51,8 @@ type ProductListingKind =
   | "classified"
   | "digital-code"
   | "live"
+  | "art"
+  | "stickers"
   // Legacy aliases — see `LISTING_KIND_ALIAS_MAP` below.
   | "preorder"
   | "product"
@@ -63,6 +66,8 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   classified: LISTING_TYPE_VALUES.CLASSIFIED,
   "digital-code": LISTING_TYPE_VALUES.DIGITAL_CODE,
   live: LISTING_TYPE_VALUES.LIVE,
+  art: LISTING_TYPE_VALUES.ART,
+  stickers: LISTING_TYPE_VALUES.STICKERS,
   // Legacy → canonical.
   product: LISTING_TYPE_VALUES.STANDARD,
   preorder: LISTING_TYPE_VALUES.PRE_ORDER,
@@ -490,22 +495,38 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     status: { canFilter: true, canSort: true },
     storeId: { canFilter: true, canSort: false },
     storeName: { canFilter: true, canSort: true },
-    featured: { canFilter: true, canSort: false },
+    // canSort:true — STANDARD_SORT_OPTIONS offers "Featured First" and
+    // "Promoted First". They were `canSort:false` until 2026-08-21, so sievejs
+    // silently dropped the sort and both dropdown options did nothing on the
+    // admin and seller product lists.
+    featured: { canFilter: true, canSort: true },
     listingType: { canFilter: true, canSort: false },
-    isPromoted: { canFilter: true, canSort: false },
+    isPromoted: { canFilter: true, canSort: true },
+    isOnSale: { canFilter: true, canSort: false },
     price: { canFilter: true, canSort: true },
     stockQuantity: { canFilter: true, canSort: true },
+    availableQuantity: { canFilter: true, canSort: true },
     viewCount: { canFilter: true, canSort: true },
     currentBid: { canFilter: true, canSort: true },
     bidCount: { canFilter: true, canSort: true },
+    bidsHaveStarted: { canFilter: true, canSort: false },
     isSold: { canFilter: true, canSort: true },
     isPartOfBundle: { canFilter: true, canSort: false },
+    isTestData: { canFilter: true, canSort: false },
+    brandSlug: { canFilter: true, canSort: false },
+    sublistingCategoryId: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     auctionEndDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealWindowStart: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealWindowEnd: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealStatus: { canFilter: true, canSort: false },
+    prizeDrawMode: { canFilter: true, canSort: false },
+    // Prize-draw entry price. PrizeDrawsListingView emits min/max filters on
+    // this field; without an entry here sievejs dropped both clauses silently.
+    pricePerEntry: { canFilter: true, canSort: true },
+    prizeCurrentEntries: { canFilter: true, canSort: true },
+    prizeMaxEntries: { canFilter: true, canSort: true },
     startingBid: { canFilter: true, canSort: true },
     buyNowPrice: { canFilter: true, canSort: true },
     minBidIncrement: { canFilter: true, canSort: false },
@@ -518,11 +539,18 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     preOrderCurrentCount: { canFilter: true, canSort: true },
     preOrderProductionStatus: { canFilter: true, canSort: false },
     preOrderCancellable: { canFilter: true, canSort: false },
+    preOrderClosed: { canFilter: true, canSort: false },
     tags: { canFilter: true, canSort: false },
     features: { canFilter: true, canSort: false },
     insurance: { canFilter: true, canSort: false },
     currency: { canFilter: true, canSort: false },
-    freeShipping: { canFilter: true, canSort: false },
+    // `freeShipping` used to be listed here and is NOT a ProductDocument field
+    // at all — free shipping is derived from `shippingPaidBy === "seller"`.
+    // The public "Free shipping" toggle emitted `shippingPaidBy==seller`
+    // (buildFirestoreSafeFilters), which sievejs then dropped because the real
+    // field had no entry: `throwExceptions:false` means an unknown field is
+    // silently skipped. The toggle did nothing at all until 2026-08-21.
+    shippingPaidBy: { canFilter: true, canSort: false },
     searchTokens: { canFilter: true, canSort: false },
     "classified.meetupArea": { canFilter: true, canSort: false },
     "classified.acceptsShipping": { canFilter: true, canSort: false },
@@ -559,14 +587,44 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     listingType: (value, operator) => {
       if (operator !== "==" && operator !== "!=") return "";
       // Accept both canonical tokens (`standard`, `auction`, `pre-order`,
-      // `prize-draw`) and legacy aliases (`product`, `preorder`, `prizedraw`).
-      // `LISTING_KIND_ACCEPTED` is the single source of truth — keep it in
-      // sync with `LISTING_KIND_ALIAS_MAP`.
-      if (!LISTING_KIND_ACCEPTED.has(value)) return "";
-      return buildListingKindClause(
-        value as ProductListingKind,
-        operator === "!=",
-      );
+      // `prize-draw`, `art`, `stickers`, …) and legacy aliases (`product`,
+      // `preorder`, `prizedraw`). `LISTING_KIND_ACCEPTED` is the single source
+      // of truth — keep it in sync with `LISTING_KIND_ALIAS_MAP`.
+      //
+      // A pipe-joined value (`art|stickers`, `standard|classified|live`) is a
+      // sievejs OR-group that the Firebase adapter upgrades to a `.where(…,
+      // "in", …)` query — the combined browse pages (/products, /art) send
+      // exactly this. Before 2026-08-21 the whole string was tested against
+      // `LISTING_KIND_ACCEPTED` as one token, never matched, and the clause was
+      // dropped silently, so those pages queried with NO listing-type filter at
+      // all. Split first, map each part, then re-emit the OR-group.
+      const parts = value.split("|").filter(Boolean);
+      if (parts.length === 0) return "";
+      const unknown = parts.filter((p) => !LISTING_KIND_ACCEPTED.has(p));
+      if (unknown.length > 0) {
+        // Loud, not silent — a dropped filter reads as "no results" downstream
+        // with nothing to trace it back to (Root Cause: the art/stickers bug).
+        serverLogger.warn("Unknown listingType filter value(s) — clause dropped", {
+          value,
+          unknown,
+          accepted: [...LISTING_KIND_ACCEPTED],
+        });
+        return "";
+      }
+      if (operator === "!=") {
+        // Firestore allows at most one `!=` per query, so a multi-value
+        // exclusion can't be expressed here — reject rather than half-apply it.
+        if (parts.length > 1) {
+          serverLogger.warn("Multi-value listingType != is not supported — clause dropped", { value });
+          return "";
+        }
+        return buildListingKindClause(parts[0] as ProductListingKind, true);
+      }
+      const canonical = parts.map((p) => LISTING_KIND_ALIAS_MAP[p as ProductListingKind]);
+      // De-dupe: legacy aliases can collapse onto the same canonical token
+      // (e.g. `product|standard`), and Firestore rejects a duplicate `in` value.
+      const unique = [...new Set(canonical)];
+      return `${PRODUCT_FIELDS.LISTING_TYPE}==${unique.join("|")}`;
     },
 
     /**

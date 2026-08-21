@@ -8,7 +8,14 @@ import {
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
-export type BidStatus = "active" | "outbid" | "won" | "lost" | "cancelled";
+export type BidStatus =
+  | "active"
+  | "outbid"
+  | "won"
+  | "lost"
+  | "cancelled"
+  /** Won, then the buyer let the 48h payment window lapse. */
+  | "forfeited";
 
 /** Runtime-accessible bid status values — use instead of bare string literals. */
 export const BidStatusValues = {
@@ -17,6 +24,7 @@ export const BidStatusValues = {
   WON: "won",
   LOST: "lost",
   CANCELLED: "cancelled",
+  FORFEITED: "forfeited",
 } as const satisfies Record<string, BidStatus>;
 
 export interface BidDocument extends BaseDocument {
@@ -32,6 +40,13 @@ export interface BidDocument extends BaseDocument {
   previousBidAmount?: number;
   bidDate: Date;
   autoMaxBid?: number;
+  /**
+   * The order this winning bid was settled into. Written by
+   * `finalizeLockedLines` once the winner actually pays; absent on a won-but-
+   * unpaid bid, which is what lets /user/bids show a "Pay now" CTA rather than
+   * a dead status badge.
+   */
+  orderId?: string;
 }
 
 export const BID_COLLECTION = "bids" as const;

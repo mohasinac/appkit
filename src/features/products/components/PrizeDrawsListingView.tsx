@@ -1,33 +1,19 @@
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
-import { productRepository } from "../../../repositories";
 import { Container, Main, Heading, Section, Text } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { parseListingSearchParams } from "../../../utils/listing-params";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
+import {
+  listPublicProducts,
+  parsePublicProductParams,
+  defaultTogglesForListingTypes,
+} from "../../../_internal/server/features/products/list-public";
 import { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
 
 type SearchParams = Record<string, string | string[]>;
 
-const DEFAULT_PAGE = 1;
+const LISTING_TYPES = ["prize-draw"] as const;
 const DEFAULT_PAGE_SIZE = 24;
-const DEFAULT_SORT = "-createdAt";
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildPrizeDrawFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "listingType==prize-draw"];
-  const minPrice = sp(params, "minPrice");
-  const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(sieveFilter("pricePerEntry", SIEVE_OP.GTE, minPrice));
-  if (maxPrice) parts.push(sieveFilter("pricePerEntry", SIEVE_OP.LTE, maxPrice));
-  const store = sp(params, "storeId");
-  if (store) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, store));
-  const status = sp(params, "prizeRevealStatus");
-  if (status) parts.push(sieveFilter("prizeRevealStatus", SIEVE_OP.EQ, status));
-  return parts.join(",");
-}
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 export interface PrizeDrawsListingViewProps {
   searchParams?: SearchParams;
@@ -45,15 +31,21 @@ export interface PrizeDrawsListingViewProps {
 export async function PrizeDrawsListingView({
   searchParams = {},
 }: PrizeDrawsListingViewProps) {
-  const std = parseListingSearchParams(searchParams);
-  const sort = std.sorts ?? DEFAULT_SORT;
-  const page = std.page ?? DEFAULT_PAGE;
-  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
-  const filters = buildPrizeDrawFilters(searchParams);
-
-  const result = await productRepository
-    .list({ filters, sorts: sort, page, pageSize })
-    .catch(() => null);
+  // Routed through the shared query (2026-08-21). The hand-rolled builder this
+  // replaces had its own Root Cause #30 divergence: it applied the price range
+  // to `pricePerEntry`, while the client's refetch sends minPrice/maxPrice,
+  // which the shared query applies to `price`. Both fields carry the same
+  // value today, so the split was invisible — until one of them drifted.
+  // `price` wins because it is also what PRIZE_DRAW_SORT_OPTIONS sorts by for
+  // "Entry: Low to High".
+  const result = await listPublicProducts(
+    parsePublicProductParams(searchParams, {
+      listingTypes: LISTING_TYPES,
+      pageSize: DEFAULT_PAGE_SIZE,
+      sorts: DEFAULT_SORT,
+      ...defaultTogglesForListingTypes(LISTING_TYPES),
+    }),
+  );
 
   return (
     <Main>

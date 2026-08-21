@@ -3,9 +3,9 @@
  * created as fully public/active documents so testers exercise the real browse/search/
  * checkout code paths, but must stay invisible to non-testers. Filtering happens at the
  * application layer (post-fetch, in-memory) rather than via a Firestore `where` clause,
- * because `isTestData` is a new optional field — a Firestore inequality filter
- * (`where("isTestData", "!=", true)`) would silently exclude every pre-existing document
- * that doesn't have the field set at all, which is worse than the problem it solves.
+ * because `isTestData` is a new optional field — a Firestore inequality filter on it
+ * (a `!=` clause) would silently exclude every pre-existing document that doesn't have
+ * the field set at all, which is worse than the problem it solves.
  */
 import { isAdminUser } from "../../../../features/auth/role-predicates";
 

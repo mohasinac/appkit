@@ -323,6 +323,13 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     orderDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     contestable: { canFilter: true, canSort: false },
+    // Fulfilment flags. Filterable so "which of my orders need gift wrap?" is a
+    // query against the orders themselves — the whole point of recording the
+    // add-on on the order rather than keeping a side list of who asked for what.
+    whatsappNotifyAddon: { canFilter: true, canSort: false },
+    giftWrapAddon: { canFilter: true, canSort: false },
+    shipmentProtectionAddon: { canFilter: true, canSort: false },
+    couponCode: { canFilter: true, canSort: false },
   };
 
   async listForSeller(
@@ -397,6 +404,17 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     // S-SBUNI-RULES 2026-05-13 — refund + batch fields
     paymentBatchId: { canFilter: true, canSort: false },
     contestable: { canFilter: true, canSort: false },
+    // Lane segregation on /user/orders — "standard"/"auction"/"offer" etc.
+    // Never filtered as "standard" via Firestore == (see listForUser callers):
+    // orders written before this field existed have no value to match.
+    orderType: { canFilter: true, canSort: false },
+    // Same fulfilment flags as SELLER_SIEVE_FIELDS — admin needs to answer
+    // "who opted into WhatsApp updates?" when a status change goes out, without
+    // maintaining a parallel tracker.
+    whatsappNotifyAddon: { canFilter: true, canSort: false },
+    giftWrapAddon: { canFilter: true, canSort: false },
+    shipmentProtectionAddon: { canFilter: true, canSort: false },
+    couponCode: { canFilter: true, canSort: false },
   };
 
   async listAll(
@@ -699,49 +717,6 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     });
   }
 
-  /**
-   * Cloud Functions: create an auction-won order inside a caller-owned WriteBatch.
-   * Returns the new DocumentReference synchronously so the caller can chain further batch ops.
-   */
-  createFromAuction(
-    batch: WriteBatch,
-    input: {
-      productId: string;
-      productTitle: string;
-      userId: string;
-      userName: string;
-      userEmail: string;
-      storeId?: string;
-      amount: number;
-      currency: string;
-      auctionProductId: string;
-    },
-  ): DocumentReference {
-    const ref = this.db.collection(this.collection).doc() as DocumentReference;
-    batch.create(
-      ref,
-      prepareForFirestore({
-        id: ref.id,
-        productId: input.productId,
-        productTitle: input.productTitle,
-        userId: input.userId,
-        userName: input.userName,
-        userEmail: input.userEmail,
-        storeId: input.storeId ?? null,
-        quantity: 1,
-        unitPrice: input.amount,
-        totalPrice: input.amount,
-        currency: input.currency,
-        status: OrderStatusValues.CONFIRMED,
-        paymentStatus: "pending",
-        orderDate: new Date(),
-        notes: `Won via auction bid — auction product ${input.auctionProductId}`,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      }),
-    );
-    return ref;
-  }
 }
 
 const orderRepository = new OrderRepository();

@@ -51,12 +51,23 @@ export { StoreBundlesPageView } from "./features/stores/components/StoreBundlesP
 export { StoreClassifiedsPageView } from "./features/stores/components/StoreClassifiedsPageView";
 export { StoreDigitalCodesPageView } from "./features/stores/components/StoreDigitalCodesPageView";
 export { StoreLiveItemsPageView } from "./features/stores/components/StoreLiveItemsPageView";
+export { StoreArtStickersPageView } from "./features/stores/components/StoreArtStickersPageView";
 
 // S2: products data layer — deduped via React.cache()
 export {
   getProductForDetail,
   listSitemapProducts,
   type SitemapProduct,
+} from "./_internal/server/features/products/index";
+export {
+  listPublicProducts,
+  parsePublicProductParams,
+  PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+  type PublicProductListInput,
+  type PublicProductListResult,
+  type PublicProductListOptions,
+  type PublicProductExecutor,
+  type PublicProductQuery,
 } from "./_internal/server/features/products/index";
 
 // S3: auctions data layer — deduped via React.cache()

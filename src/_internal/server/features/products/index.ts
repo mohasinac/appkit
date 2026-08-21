@@ -7,8 +7,20 @@ export {
   toProductItem,
   toReview,
   getReviewItemsForProduct,
+  getReviewPageForProduct,
   type RelatedItemsResult,
 } from "./data";
+export {
+  listPublicProducts,
+  parsePublicProductParams,
+  PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+  type PublicProductListInput,
+  type PublicProductListResult,
+  type PublicProductListOptions,
+  type PublicProductExecutor,
+  type PublicProductQuery,
+  type ExecutorResult,
+} from "./list-public";
 export {
   assertProductOwnership,
   assertStatusTransition,

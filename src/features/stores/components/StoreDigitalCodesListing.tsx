@@ -50,6 +50,11 @@ export function StoreDigitalCodesListing({ storeId, initialData }: StoreDigitalC
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
     listingType: "digital-code" as const,
+    // Per-type facets — declared in FILTER_KEYS (so they counted toward the
+    // filter badge) and rendered in the drawer, but never sent until 2026-08-21.
+    typeFacets: {
+      [TABLE_KEYS.DELIVERY_METHOD]: table.get(TABLE_KEYS.DELIVERY_METHOD),
+    },
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });

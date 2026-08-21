@@ -50,6 +50,13 @@ export function StoreClassifiedsListing({ storeId, initialData }: StoreClassifie
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
     listingType: "classified" as const,
+    // Per-type facets — declared in FILTER_KEYS (so they counted toward the
+    // filter badge) and rendered in the drawer, but never sent until 2026-08-21.
+    typeFacets: {
+      [TABLE_KEYS.CITY]: table.get(TABLE_KEYS.CITY),
+      [TABLE_KEYS.NEGOTIABLE]: table.get(TABLE_KEYS.NEGOTIABLE),
+      [TABLE_KEYS.ACCEPTS_SHIPPING]: table.get(TABLE_KEYS.ACCEPTS_SHIPPING),
+    },
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });

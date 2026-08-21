@@ -154,7 +154,7 @@ export async function sendNotification(
     order_placed: "orderUpdates", order_confirmed: "orderUpdates",
     order_shipped: "orderUpdates", order_delivered: "orderUpdates",
     order_cancelled: "orderUpdates",
-    bid_placed: "bids", bid_outbid: "bids", bid_won: "bids", bid_lost: "bids",
+    bid_placed: "bids", bid_outbid: "bids", bid_won: "bids", bid_lost: "bids", auction_ended: "bids",
     review_approved: "reviews", review_replied: "reviews",
     promotion: "promotions",
     system: "system", welcome: "system", account_action: "system",

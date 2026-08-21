@@ -23,10 +23,16 @@ const FILTER_KEYS = ["condition", "brand", "minPrice", "maxPrice"];
 export interface StoreProductsListingProps {
   /** Store document ID — used for filtering */
   storeId?: string;
+  /**
+   * Listing types this tab spans. Defaults to `["standard"]`. The combined
+   * Art & Stickers store tab passes both of its types so it renders real
+   * content instead of the standard-only set it used to land on.
+   */
+  listingTypes?: readonly string[];
   initialData?: any;
 }
 
-export function StoreProductsListing({ storeId, initialData }: StoreProductsListingProps) {
+export function StoreProductsListing({ storeId, listingTypes = ["standard"], initialData }: StoreProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const { showToast } = useToast();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
@@ -72,7 +78,8 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    listingType: "standard" as const,
+    // Pipe-joined OR-group when the tab spans several types.
+    listingType: listingTypes.join("|"),
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });

@@ -1,6 +1,8 @@
 "use client";
 
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
+import type { ListingType } from "../../features/products/types/index";
+import { ALL_LISTING_TYPES } from "../../_internal/shared/listing-types/feature-flags";
 
 /**
  * W1-43 — useListingTypeFlags
@@ -12,37 +14,20 @@ import { useSiteSettings } from "../../core/hooks/useSiteSettings";
  * Defaults to all-enabled when settings haven't loaded yet — match the
  * permissive default used by `DEFAULT_SITE_SETTINGS_DATA` so first paint
  * doesn't briefly hide enabled features.
+ *
+ * KEYED ON THE UNION, NOT A HAND-WRITTEN LIST (2026-08-21). Both types below
+ * used to enumerate seven types by hand and had never been updated for `art`
+ * and `stickers` — so `isEnabled("art")` didn't even typecheck, and the seller
+ * TypeDropdown (its main consumer) could not offer either type. Deriving from
+ * `ListingType` makes a missing member a compile error, matching the same
+ * decision made for `ALL_LISTING_TYPES_MAP` in `feature-flags.ts`.
  */
-export type ListingTypeFlagsShape = Partial<{
-  standard: boolean;
-  auction: boolean;
-  "pre-order": boolean;
-  "prize-draw": boolean;
-  classified: boolean;
-  "digital-code": boolean;
-  live: boolean;
-}>;
+export type ListingTypeFlagsShape = Partial<Record<ListingType, boolean>>;
 
-export interface ListingTypeFlags {
-  standard: boolean;
-  auction: boolean;
-  "pre-order": boolean;
-  "prize-draw": boolean;
-  classified: boolean;
-  "digital-code": boolean;
-  live: boolean;
+export type ListingTypeFlags = Record<ListingType, boolean> & {
   /** True when the listing type is enabled (or the setting hasn't loaded yet). */
-  isEnabled: (
-    type:
-      | "standard"
-      | "auction"
-      | "pre-order"
-      | "prize-draw"
-      | "classified"
-      | "digital-code"
-      | "live",
-  ) => boolean;
-}
+  isEnabled: (type: ListingType) => boolean;
+};
 
 export function useListingTypeFlags(): ListingTypeFlags {
   const { data } = useSiteSettings<{
@@ -51,15 +36,11 @@ export function useListingTypeFlags(): ListingTypeFlags {
 
   const lt = data?.featureFlags?.listingTypes;
 
-  const flags: Omit<ListingTypeFlags, "isEnabled"> = {
-    standard: lt?.standard !== false,
-    auction: lt?.auction !== false,
-    "pre-order": lt?.["pre-order"] !== false,
-    "prize-draw": lt?.["prize-draw"] !== false,
-    classified: lt?.classified !== false,
-    "digital-code": lt?.["digital-code"] !== false,
-    live: lt?.live !== false,
-  };
+  // A type is disabled only when EXPLICITLY set to false — a missing flag (or
+  // settings that haven't loaded) means enabled.
+  const flags = Object.fromEntries(
+    ALL_LISTING_TYPES.map((type) => [type, lt?.[type] !== false]),
+  ) as Record<ListingType, boolean>;
 
   return {
     ...flags,

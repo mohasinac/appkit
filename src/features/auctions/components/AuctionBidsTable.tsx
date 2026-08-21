@@ -1,7 +1,9 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { Badge, Button, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Badge, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
+import { CART_LANE } from "../../../_internal/shared/checkout/lanes";
 import { Pagination } from "../../../ui/components/Pagination";
 import type { BidDocument } from "../schemas/firestore";
 
@@ -155,9 +157,28 @@ function AuctionRow({
               <Badge variant={STATUS_VARIANT[bid.status] ?? "pending"} className="capitalize">
                 {bid.status}
               </Badge>
-              <Text variant="secondary" size="xs" align="end">
-                {relDate(bid.bidDate)}
-              </Text>
+              <Stack gap="xs" align="end">
+                <Text variant="secondary" size="xs" align="end">
+                  {relDate(bid.bidDate)}
+                </Text>
+                {/* A "Won" badge with nothing to click is a dead end (Root
+                    Cause #56). A win that hasn't been paid for yet links into
+                    the auction checkout lane; once `orderId` is set the win is
+                    settled and links to the order instead. */}
+                {portal === "buyer" && bid.status === "won" && (
+                  <TextLink
+                    href={
+                      bid.orderId
+                        ? String(ROUTES.USER.ORDER_DETAIL(bid.orderId))
+                        : `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.AUCTION}`
+                    }
+                    size="xs"
+                    weight="semibold"
+                  >
+                    {bid.orderId ? "View order" : "Pay now →"}
+                  </TextLink>
+                )}
+              </Stack>
             </Div>
           ))}
         </Div>

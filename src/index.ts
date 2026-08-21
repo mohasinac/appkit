@@ -7381,6 +7381,7 @@ export {
   isCategoryTypeEnabled,
   enabledListingTypes,
   enabledCategoryTypes,
+  ALL_LISTING_TYPES,
 } from "./_internal/shared/listing-types/feature-flags";
 // SB-UNI-X5 2026-05-13 â€" action telemetry sink.
 export {
@@ -7665,6 +7666,9 @@ export { COUPON_USAGE_SUBCOLLECTION } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // CouponCard - Component for coupon card.
 export { CouponCard } from "./features/promotions/index";
+// CouponHelpDetails - Expandable "How coupons work" explainer (scoping + stacking rules).
+export { CouponHelpDetails } from "./features/promotions/index";
+export type { CouponHelpDetailsProps } from "./features/promotions/index";
 // CouponsIndexListing - Client component for browsing coupons with search/filter/sort.
 export { CouponsIndexListing } from "./features/promotions/index";
 export type { CouponsIndexListingProps } from "./features/promotions/index";
@@ -7797,6 +7801,12 @@ export type { UsageConfig } from "./features/promotions/index";
 export type { ValidityConfig } from "./features/promotions/index";
 
 // ./features/promotions/server
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// detectCouponConflict - Coupon stacking rule: one seller coupon per store + one admin coupon per cart.
+export { detectCouponConflict } from "./features/promotions/server";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// IncomingCoupon - Type contract for the coupon being added, passed to detectCouponConflict.
+export type { IncomingCoupon } from "./features/promotions/server";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // getPromotions - Helper for get promotions.
 export { getPromotions } from "./features/promotions/server";
@@ -9384,14 +9394,20 @@ export {
  CATEGORY_PAGE_TABS,
  STORE_PAGE_TABS,
  SELLER_LISTING_TABS,
- SEARCH_RESULT_TABS,
+ PRODUCT_TYPE_FILTER_TABS,
+ ART_STICKERS_TYPE_FILTER_TABS,
+ GENERIC_PRODUCT_LISTING_TYPES,
+ ART_STICKERS_LISTING_TYPES,
 } from "./features/products/constants/listing-tabs";
+// SEARCH_RESULT_TABS was removed 2026-08-21 — it had zero consumers (/search
+// renders no type tabs) and was one more hand-maintained listing-type array to
+// keep in sync. Rebuild it from PRODUCT_TYPE_FILTER_TABS if /search ever needs
+// type tabs.
 export type {
  ListingTab,
  CategoryTabId,
  StoreTabId,
  SellerListingTabId,
- SearchTabId,
 } from "./features/products/constants/listing-tabs";
 export {
  STANDARD_SORT_OPTIONS,
@@ -9399,10 +9415,20 @@ export {
  AUCTION_SORT_OPTIONS,
  AUCTION_PUBLIC_SORT_OPTIONS,
  PREORDER_SORT_OPTIONS,
+ PREORDER_PUBLIC_SORT_OPTIONS,
  BUNDLE_SORT_OPTIONS,
  PRIZE_DRAW_SORT_OPTIONS,
- SORT_OPTIONS_BY_LISTING_TYPE,
+ PRIZE_DRAW_PUBLIC_SORT_OPTIONS,
 } from "./features/products/constants/sieve";
+// The per-type sort lookup is DERIVED from the listing-type plugin registry
+// (it used to be a hand-written map here that was missing five of the nine
+// types and still listed the long-dead `bundle` listingType).
+export {
+ sortOptionsFor,
+ commonSortOptionsFor,
+ hideDefaultsFor,
+} from "./_internal/shared/listing-types/_registry";
+export type { ListingHideDefault } from "./_internal/shared/listing-types/_registry";
 export type { SortOption } from "./features/products/constants/sieve";
 // SB10-C admin + seller filter-chip tab sets (S8 2026-05-13)
 export {
@@ -9861,3 +9887,21 @@ export type {
   NormalizedUnknownThrownValue,
   NormalizedZodError,
 } from "./errors/normalize";
+
+// Checkout lanes — the derived auction > offer > standard partition of the
+// cart, and the priority rule that decides which one may be checked out.
+export {
+  CART_LANE,
+  CART_LANE_PRIORITY,
+  CART_LANE_LABELS,
+  laneOf,
+  activeLane,
+  laneItems,
+  laneCounts,
+  isLaneCheckoutable,
+  laneBlockReason,
+  isLockedLane,
+  canAddNewItems,
+  type CartLane,
+  type LaneAssignable,
+} from "./_internal/shared/checkout/lanes";

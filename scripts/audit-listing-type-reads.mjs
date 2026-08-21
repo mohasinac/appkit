@@ -33,9 +33,18 @@ const ALLOW = [
 ];
 const SUPPRESS_RE = /\/\/\s*audit-listing-type-reads-ok\b/;
 
-// Baseline drift — keep at 0 (currently clean).
+// Strict zero — every audit in this project is zero-tolerance (CLAUDE.md Rule
+// #5). `BASELINE` was referenced below but never declared, so the moment a
+// single violation appeared the audit crashed with `ReferenceError: BASELINE is
+// not defined` instead of reporting it. Declared explicitly rather than deleting
+// the comparison, so the intent stays visible.
+const BASELINE = 0;
 
-const RE = /\.(isAuction|isPreOrder|isPreorder)\b/g;
+// `\b` on the right is deliberate: it must NOT match `isAuctionWin`, the cart
+// line's "this line came from a won auction" flag. That is a different field on
+// a different document with a different meaning — the removed booleans this
+// audit guards were on ProductDocument.
+const RE = /\.(isAuction|isPreOrder|isPreorder)(?!Win)\b/g;
 
 function walk(dir, files = []) {
   let entries;

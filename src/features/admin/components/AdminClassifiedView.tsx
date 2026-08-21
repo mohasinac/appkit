@@ -1,72 +1,26 @@
 "use client";
 
 /**
- * AdminClassifiedView — admin browse of classified listings (W1-29).
- * Read-only summary with edit-handoff to the seller-portal edit route.
+ * AdminClassifiedView — admin browse of classified listings.
+ *
+ * A thin wrapper over the shared per-listing-type config. This file (and its
+ * four siblings) used to carry a full hand-written ListingViewConfig; all five
+ * were the same config with a different listingType, and all five shipped
+ * an empty filterKeys array — no filter drawer at all — plus their own copy
+ * of a three-option sort array. See listing-type-listing-config.ts.
  */
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import {
-  toRecordArray,
-  toRelativeDate,
-  toCurrency,
-  toStringValue,
-} from "../hooks/useAdminListingData";
+import { buildListingTypeListingConfig } from "../../products/config/listing-type-listing-config";
 import { DataListingView } from "./DataListingView";
-import type { ListingViewConfig } from "./DataListingView";
-import { ROUTES } from "../../../next/routing/route-map";
 
-interface AdminProductsResponse {
-  items?: JsonArray;
-  total?: number;
-}
-
-interface ClassifiedRow {
-  id: string;
-  primary: string;
-  secondary: string;
-  status: string;
-  updatedAt: string;
-  image?: string;
-}
-
-const ADMIN_CLASSIFIED_CONFIG: ListingViewConfig<AdminProductsResponse, ClassifiedRow> = {
-  portal: "admin",
+const CONFIG = buildListingTypeListingConfig("classified", {
   title: "Classified",
   searchPlaceholder: "Search classified by name or seller",
   emptyLabel: "No classified listings",
-  filterKeys: [],
-  defaultSort: sortBy("createdAt", "DESC"),
-  queryKey: ["admin", "classified", "listing"],
-  endpoint: ADMIN_ENDPOINTS.PRODUCTS,
-  sortOptions: [
-    { value: sortBy("createdAt", "DESC"), label: "Newest" },
-    { value: sortBy("createdAt", "ASC"), label: "Oldest" },
-    { value: "title", label: "Title A–Z" },
-  ],
-  mapRows: (response) =>
-    toRecordArray(response.items).map((item, index) => ({
-      id: toStringValue(item.id, `classified-${index}`),
-      primary: toStringValue(item.title ?? item.productTitle, "Untitled classified"),
-      secondary: [
-        toStringValue(item.sellerName, "Unknown seller"),
-        toCurrency(item.price),
-      ].join(" · "),
-      status: toStringValue(item.status, "draft"),
-      updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-      image: toStringValue(item.mainImage, "") || undefined,
-    })),
-  getTotal: (response, mappedRows) =>
-    typeof response.total === "number" ? response.total : mappedRows.length,
-  buildFilters: () => "listingType==classified",
-  // Classified listings are products (filtered by listingType) — reuse the
-  // real admin product edit page rather than leaving rows non-navigable.
-  rowHrefTemplate: String(ROUTES.ADMIN.PRODUCTS_EDIT("{id}")),
-};
+});
 
 export type AdminClassifiedViewProps = ListingLayoutProps;
 
@@ -78,5 +32,5 @@ export function AdminClassifiedView({ children, ...props }: AdminClassifiedViewP
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_CLASSIFIED_CONFIG} />;
+  return <DataListingView config={CONFIG} />;
 }

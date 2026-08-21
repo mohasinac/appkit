@@ -5,6 +5,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { Button, DateInput, IconButton, Input, ListingFilterDrawer, Pagination, RadioGroup, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading, StickyToolbar } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
+import { CouponHelpDetails } from "./CouponHelpDetails";
 import type { CouponType } from "../types";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { COUPON_FIELDS } from "../../../constants/field-names";
@@ -244,6 +245,11 @@ export function CouponsIndexListing({
           </Row>
         )}
       </StickyToolbar>
+
+      {/* ── How coupons work ────────────────────────────────────────────── */}
+      <Div paddingY="y-md" paddingX="x-md">
+        <CouponHelpDetails />
+      </Div>
 
       {/* ── Coupon grid ─────────────────────────────────────────────────── */}
       <Div paddingY="y-lg" paddingX="x-md">

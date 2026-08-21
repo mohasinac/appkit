@@ -4,9 +4,11 @@ import type {
 } from "../../../providers/db-firebase";
 import {
   BaseRepository,
+  getFirestoreCount,
   prepareForFirestore,
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
+import { REVIEW_MAX_RATING, REVIEW_MIN_RATING } from "../../../_internal/shared/features/reviews/config";
 import {
   addPiiIndices,
   decryptPiiFields,
@@ -31,6 +33,7 @@ const REVIEW_FIELDS = {
   CREATED_AT: "createdAt",
   REVIEWEE_ID: "revieweeId",
   REVIEWER_ROLE: "reviewerRole",
+  RATING: "rating",
 } as const;
 
 export interface ReviewRatingAggregate {
@@ -116,14 +119,27 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return this.findBy(REVIEW_FIELDS.PRODUCT_ID, productId);
   }
 
-  async findApprovedByProduct(productId: string): Promise<ReviewDocument[]> {
-    const snapshot = await this.db
-      .collection(this.collection)
+  /**
+   * Approved reviews for a product, newest first.
+   *
+   * `limit` is optional and deliberately has no default — callers that page or aggregate
+   * should use `listForProduct` / `getApprovedRatingSummary` instead, and the remaining
+   * callers each pass their own explicit bound. Silently capping here would truncate
+   * consumers that expect the full set (Rule #6 wants the bound at the call site, where
+   * it can be reasoned about).
+   */
+  async findApprovedByProduct(
+    productId: string,
+    limit?: number,
+  ): Promise<ReviewDocument[]> {
+    let query = this.getCollection()
       .where(REVIEW_FIELDS.PRODUCT_ID, "==", productId)
       .where(REVIEW_FIELDS.STATUS, "==", "approved")
-      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
-      .get();
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc");
 
+    if (limit !== undefined) query = query.limit(limit);
+
+    const snapshot = await query.get();
     return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
   }
 
@@ -222,48 +238,70 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     }
   }
 
-  async getAverageRating(productId: string): Promise<number> {
-    const reviews = await this.findApprovedByProduct(productId);
-    if (reviews.length === 0) return 0;
+  /**
+   * Approved-review count, average and per-star distribution for one product.
+   *
+   * Built from Firestore *aggregation* queries (one `count()` per star bucket, run in
+   * parallel) rather than reading the documents. Ratings are `z.number().int().min(1).max(5)`
+   * at the write path, so the five buckets are exhaustive and the average derived from them
+   * is exact. This replaces an unbounded `findApprovedByProduct()` scan that used to sit on
+   * the hot path of every product render and every `/api/reviews?productId=` call (Rule #6).
+   */
+  async getApprovedRatingSummary(productId: string): Promise<{
+    total: number;
+    averageRating: number;
+    ratingDistribution: Record<number, number>;
+  }> {
+    const base = this.getCollection()
+      .where(REVIEW_FIELDS.PRODUCT_ID, "==", productId)
+      .where(REVIEW_FIELDS.STATUS, "==", "approved");
 
-    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return sum / reviews.length;
+    const buckets: number[] = [];
+    for (let r = REVIEW_MIN_RATING; r <= REVIEW_MAX_RATING; r++) buckets.push(r);
+
+    const counts = await Promise.all(
+      buckets.map((rating) => getFirestoreCount(base.where(REVIEW_FIELDS.RATING, "==", rating))),
+    );
+
+    const ratingDistribution: Record<number, number> = {};
+    let total = 0;
+    let weighted = 0;
+    buckets.forEach((rating, i) => {
+      const count = counts[i] ?? 0;
+      ratingDistribution[rating] = count;
+      total += count;
+      weighted += count * rating;
+    });
+
+    return {
+      total,
+      averageRating: total > 0 ? weighted / total : 0,
+      ratingDistribution,
+    };
+  }
+
+  async getAverageRating(productId: string): Promise<number> {
+    const { averageRating } = await this.getApprovedRatingSummary(productId);
+    return averageRating;
   }
 
   async getRatingDistribution(
     productId: string,
   ): Promise<Record<number, number>> {
-    const reviews = await this.findApprovedByProduct(productId);
-    const distribution: Record<number, number> = {
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-      5: 0,
-    };
-
-    reviews.forEach((review) => {
-      distribution[review.rating]++;
-    });
-
-    return distribution;
+    const { ratingDistribution } = await this.getApprovedRatingSummary(productId);
+    return ratingDistribution;
   }
 
   /**
    * Cloud Functions compatibility: approved review count + average by product.
+   * Return shape is load-bearing for the Functions callers — do not change it.
    */
   async getApprovedRatingAggregate(
     productId: string,
   ): Promise<ReviewRatingAggregate> {
-    const reviews = await this.findApprovedByProduct(productId);
-    if (reviews.length === 0) {
-      return { count: 0, avgRating: 0 };
-    }
-
-    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-    const count = reviews.length;
-    const avgRating = Math.round((sum / count) * 10) / 10;
-    return { count, avgRating };
+    const { total, averageRating } = await this.getApprovedRatingSummary(productId);
+    if (total === 0) return { count: 0, avgRating: 0 };
+    return { count: total, avgRating: Math.round(averageRating * 10) / 10 };
   }
 
   /**
@@ -272,23 +310,27 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   async getApprovedRatingAggregateByStore(
     storeId: string,
   ): Promise<ReviewRatingAggregate> {
-    const snapshot = await this.db
-      .collection(this.collection)
+    // Same aggregation-query approach as getApprovedRatingSummary — no document reads.
+    const base = this.getCollection()
       .where(REVIEW_FIELDS.STORE_ID, "==", storeId)
-      .where(REVIEW_FIELDS.STATUS, "==", "approved")
-      .get();
+      .where(REVIEW_FIELDS.STATUS, "==", "approved");
 
-    if (snapshot.empty) {
-      return { count: 0, avgRating: 0 };
-    }
+    const buckets: number[] = [];
+    for (let r = REVIEW_MIN_RATING; r <= REVIEW_MAX_RATING; r++) buckets.push(r);
 
-    const reviews = snapshot.docs.map((doc) =>
-      this.mapDoc<ReviewDocument>(doc),
+    const counts = await Promise.all(
+      buckets.map((rating) => getFirestoreCount(base.where(REVIEW_FIELDS.RATING, "==", rating))),
     );
-    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-    const count = reviews.length;
-    const avgRating = Math.round((sum / count) * 10) / 10;
-    return { count, avgRating };
+
+    let count = 0;
+    let weighted = 0;
+    buckets.forEach((rating, i) => {
+      count += counts[i] ?? 0;
+      weighted += (counts[i] ?? 0) * rating;
+    });
+
+    if (count === 0) return { count: 0, avgRating: 0 };
+    return { count, avgRating: Math.round((weighted / count) * 10) / 10 };
   }
 
   /** Find reviews where this user is the reviewee (seller→buyer reviews received by a buyer). */
@@ -330,6 +372,10 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     status: { canFilter: true, canSort: true },
     rating: { canFilter: true, canSort: true },
     verified: { canFilter: true, canSort: false },
+    // Denormalised flag that exists specifically to make `hasImages==true` queryable —
+    // it was missing here, so the sieve whitelist silently dropped the clause and the
+    // "with photos only" filter did nothing.
+    hasImages: { canFilter: true, canSort: false },
     helpfulCount: { canFilter: true, canSort: true },
     featured: { canFilter: true, canSort: false },
     reportCount: { canFilter: true, canSort: true },

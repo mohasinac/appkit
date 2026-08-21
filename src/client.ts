@@ -382,6 +382,8 @@ export { UserSidebar } from "./features/account/components/UserSidebar";
 export type { UserSidebarProps, UserNavItem, UserNavGroup } from "./features/account/components/UserSidebar";
 export { CouponsIndexListing } from "./features/promotions/components/CouponsIndexListing";
 export type { CouponsIndexListingProps } from "./features/promotions/components/CouponsIndexListing";
+export { CouponHelpDetails } from "./features/promotions/components/CouponHelpDetails";
+export type { CouponHelpDetailsProps } from "./features/promotions/components/CouponHelpDetails";
 export { NotificationBell } from "./features/account/components/NotificationBell";
 export { NotificationPreferencesPanel } from "./features/account/components/NotificationPreferencesPanel";
 export type { NotificationPreferencesPanelProps } from "./features/account/components/NotificationPreferencesPanel";
@@ -411,7 +413,9 @@ export type {
 } from "./features/auth/index";
 export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangeEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/index";
-export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
+export { CartView, CartItemRow, CartSummary, CartPriceBreakdown, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
+export { StoreAddonsPicker } from "./features/cart/index";
+export type { CartPriceBreakdownData, CartPriceBreakdownStore, StoreAddonsValue, StoreAddonsRates } from "./features/cart/index";
 export { getCartOps, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
 export type { CartOp } from "./features/cart/utils/pending-ops";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
@@ -481,10 +485,18 @@ export {
   AUCTION_SORT_OPTIONS,
   AUCTION_PUBLIC_SORT_OPTIONS,
   PREORDER_SORT_OPTIONS,
+  PREORDER_PUBLIC_SORT_OPTIONS,
   BUNDLE_SORT_OPTIONS,
   PRIZE_DRAW_SORT_OPTIONS,
-  SORT_OPTIONS_BY_LISTING_TYPE,
+  PRIZE_DRAW_PUBLIC_SORT_OPTIONS,
 } from "./features/products/constants/sieve";
+// Derived from the listing-type plugin registry — see the note in index.ts.
+export {
+  sortOptionsFor,
+  commonSortOptionsFor,
+  hideDefaultsFor,
+} from "./_internal/shared/listing-types/_registry";
+export type { ListingHideDefault } from "./_internal/shared/listing-types/_registry";
 export type { SortOption } from "./features/products/constants/sieve";
 
 // Messages — RTDB-pinged Firestore conversations (D5 + VC7)
@@ -567,6 +579,10 @@ export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewP
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
+export { CountdownDisplay } from "./ui/components/CountdownDisplay";
+export type { CountdownDisplayProps } from "./ui/components/CountdownDisplay";
+export { OrderAddonBadges } from "./features/orders/components/OrderAddonBadges";
+export type { OrderAddonBadgesOrder, OrderAddonBadgesProps } from "./features/orders/components/OrderAddonBadges";
 // Manual-payment (cash / UPI / EMI) shared constants — pure data + predicates,
 // no server deps. Used by the buyer proof-upload page and order-detail CTAs.
 export {
@@ -653,6 +669,7 @@ export {
   isCategoryTypeEnabled,
   enabledListingTypes,
   enabledCategoryTypes,
+  ALL_LISTING_TYPES,
 } from "./_internal/shared/listing-types/feature-flags";
 
 // SB-UNI-X5 2026-05-13 — action telemetry sink (client-safe; defaults to
@@ -1019,3 +1036,21 @@ export {
   OAUTH_STATE_VALUES,
   SCHEMA_DEFAULTS,
 } from "./constants/field-names";
+
+// Checkout lanes — the derived auction > offer > standard partition of the
+// cart, and the priority rule that decides which one may be checked out.
+export {
+  CART_LANE,
+  CART_LANE_PRIORITY,
+  CART_LANE_LABELS,
+  laneOf,
+  activeLane,
+  laneItems,
+  laneCounts,
+  isLaneCheckoutable,
+  laneBlockReason,
+  isLockedLane,
+  canAddNewItems,
+  type CartLane,
+  type LaneAssignable,
+} from "./_internal/shared/checkout/lanes";

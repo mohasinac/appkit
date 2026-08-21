@@ -44,7 +44,6 @@ export interface SellerCreateCouponInput {
     excludeProducts?: string[];
     excludeCategories?: string[];
     firstTimeUserOnly: boolean;
-    combineWithSellerCoupons: boolean;
   };
 }
 
@@ -90,7 +89,6 @@ export async function sellerCreateCoupon(
     restrictions: {
       ...rest.restrictions,
       applicableSellers: [userId],
-      combineWithSellerCoupons: false,
     },
     stats: { totalUses: 0, totalRevenue: 0, totalDiscount: 0 },
   });

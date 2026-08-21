@@ -1,79 +1,26 @@
 "use client";
 
 /**
- * AdminLiveView — admin browse of live-item listings (W1-29).
+ * AdminLiveView — admin browse of live items listings.
+ *
+ * A thin wrapper over the shared per-listing-type config. This file (and its
+ * four siblings) used to carry a full hand-written ListingViewConfig; all five
+ * were the same config with a different listingType, and all five shipped
+ * an empty filterKeys array — no filter drawer at all — plus their own copy
+ * of a three-option sort array. See listing-type-listing-config.ts.
  */
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import {
-  toRecordArray,
-  toRelativeDate,
-  toCurrency,
-  toStringValue,
-} from "../hooks/useAdminListingData";
+import { buildListingTypeListingConfig } from "../../products/config/listing-type-listing-config";
 import { DataListingView } from "./DataListingView";
-import type { ListingViewConfig } from "./DataListingView";
-import { ROUTES } from "../../../next/routing/route-map";
 
-interface AdminProductsResponse {
-  items?: JsonArray;
-  total?: number;
-}
-
-interface LiveRow {
-  id: string;
-  primary: string;
-  secondary: string;
-  status: string;
-  updatedAt: string;
-  image?: string;
-}
-
-const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
-  portal: "admin",
+const CONFIG = buildListingTypeListingConfig("live", {
   title: "Live Items",
   searchPlaceholder: "Search live items",
   emptyLabel: "No live item listings",
-  filterKeys: [],
-  defaultSort: sortBy("createdAt", "DESC"),
-  queryKey: ["admin", "live-items", "listing"],
-  endpoint: ADMIN_ENDPOINTS.PRODUCTS,
-  sortOptions: [
-    { value: sortBy("createdAt", "DESC"), label: "Newest" },
-    { value: sortBy("createdAt", "ASC"), label: "Oldest" },
-    { value: "title", label: "Title A–Z" },
-  ],
-  mapRows: (response) =>
-    toRecordArray(response.items).map((item, index) => {
-      const live = (item.liveItem ?? {}) as Record<string, JsonValue>;
-      return {
-        id: toStringValue(item.id, `live-${index}`),
-        primary: toStringValue(item.title ?? item.productTitle, "Untitled live item"),
-        secondary: [
-          toStringValue(item.sellerName, "Unknown seller"),
-          toCurrency(item.price),
-          toStringValue(live.species, ""),
-          Boolean(live.vendorVerified) ? "verified" : "pending",
-        ]
-          .filter(Boolean)
-          .join(" · "),
-        status: toStringValue(item.status, "draft"),
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-        image: toStringValue(item.mainImage, "") || undefined,
-      };
-    }),
-  getTotal: (response, mappedRows) =>
-    typeof response.total === "number" ? response.total : mappedRows.length,
-  buildFilters: () => "listingType==live",
-  // Live-item listings are products (filtered by listingType) — reuse the
-  // real admin product edit page rather than leaving rows non-navigable.
-  rowHrefTemplate: String(ROUTES.ADMIN.PRODUCTS_EDIT("{id}")),
-};
+});
 
 export type AdminLiveViewProps = ListingLayoutProps;
 
@@ -85,5 +32,5 @@ export function AdminLiveView({ children, ...props }: AdminLiveViewProps) {
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_LIVE_CONFIG} />;
+  return <DataListingView config={CONFIG} />;
 }

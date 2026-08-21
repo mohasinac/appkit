@@ -4,6 +4,8 @@ import {
 } from "../../payments/schemas";
 export { type PaymentGateway, PaymentGatewayValues };
 import type { ListingType } from "../../products/types/index";
+import type { OrderType } from "../utils/order-splitter";
+import type { AppliedOrderDiscount } from "../schemas/firestore";
 
 export type PaymentStatus =
   | "pending"
@@ -81,6 +83,13 @@ export interface Order {
   address: UserAddress;
   orderStatus: OrderStatus;
   paymentStatus: PaymentStatus;
+  /**
+   * Which checkout lane produced this order. Absent on orders written before
+   * the field existed — treat missing as `"standard"`, never filter it out.
+   */
+  orderType?: OrderType;
+  /** Set when this order settled an accepted Make-an-Offer. */
+  offerId?: string;
   paymentGateway?: PaymentGateway;
   subtotal: number;
   shippingCost?: number;
@@ -88,7 +97,38 @@ export interface Order {
   tax?: number;
   total: number;
   currency: string;
+  /**
+   * First applied coupon's code only. Kept for back-compat; prefer
+   * `appliedDiscounts` when rendering, since a cart may stack one coupon per
+   * store plus one platform-wide coupon and this scalar shows only one of them.
+   */
   couponCode?: string;
+  /** Total rupee value of every discount applied to this order. */
+  couponDiscount?: number;
+  /** Every discount applied to this order — the full stack, not just the first. */
+  appliedDiscounts?: AppliedOrderDiscount[];
+
+  /**
+   * Paid add-ons the buyer opted into for THIS order (= this store).
+   *
+   * These are operational flags, not just billing records: `whatsappNotifyAddon`
+   * is what the status-change notifier checks to decide whether to send a
+   * WhatsApp message, and `giftWrapAddon`/`shipmentProtectionAddon` are what
+   * the packer needs to see before dispatch. They live on the order itself and
+   * are filterable (`orders` SIEVE_FIELDS) precisely so nobody has to keep a
+   * separate list of who asked for what.
+   */
+  whatsappNotifyAddon?: boolean;
+  whatsappNotifyFee?: number;
+  giftWrapAddon?: boolean;
+  giftWrapFee?: number;
+  /** The buyer's gift message — the packer has to physically include this. */
+  giftWrapMessage?: string;
+  shipmentProtectionAddon?: boolean;
+  shipmentProtectionFee?: number;
+  /** Buyer-facing platform commission apportioned to this order. */
+  platformFee?: number;
+
   trackingNumber?: string;
   shippingCarrier?: string;
   /** Carrier tracking page URL — rendered as an external link that opens in a new tab. No live-tracking API integration; this is just the passthrough URL a seller/admin entered. */

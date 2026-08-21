@@ -1,83 +1,52 @@
 import React from "react";
-import { productRepository } from "../../../repositories";
 import { ROUTES } from "../../../constants";
 import { Container, Div, Heading, Main, Section, Text, TextLink } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { parseListingSearchParams } from "../../../utils/listing-params";
 import { ProductsIndexListing } from "./ProductsIndexListing";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
+import { TABLE_KEYS } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { GENERIC_PRODUCT_LISTING_TYPES } from "../constants/listing-tabs";
+import {
+  listPublicProducts,
+  parsePublicProductParams,
+  defaultTogglesForListingTypes,
+} from "../../../_internal/server/features/products/list-public";
+import { parseSelectedListingTypes } from "../utils/listing-type";
 
 type SearchParams = Record<string, string | string[]>;
 
-const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildProductFilters(params: SearchParams): string {
-  const listingTypeParam = sp(params, "listingType");
-  const listingType =
-    listingTypeParam && (GENERIC_PRODUCT_LISTING_TYPES as readonly string[]).includes(listingTypeParam)
-      ? listingTypeParam
-      : GENERIC_PRODUCT_LISTING_TYPES.join("|");
-  const parts: string[] = [
-    sieveFilter(PRODUCT_FIELDS.STATUS, SIEVE_OP.EQ, PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED),
-    sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, listingType),
-  ];
-  const condition = sp(params, "condition");
-  if (condition) {
-    const values = condition.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(sieveFilter(PRODUCT_FIELDS.CONDITION, SIEVE_OP.EQ, values[0]));
-    // BUG FIX: pipe is invalid for ==; expand to multiple AND clauses
-    else if (values.length > 1) parts.push(sieveMultiEq(PRODUCT_FIELDS.CONDITION, values));
-  }
-  const minPrice = sp(params, "minPrice");
-  const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(sieveFilter(PRODUCT_FIELDS.PRICE, SIEVE_OP.GTE, minPrice));
-  if (maxPrice) parts.push(sieveFilter(PRODUCT_FIELDS.PRICE, SIEVE_OP.LTE, maxPrice));
-  const storeId = sp(params, "seller");
-  if (storeId) parts.push(sieveFilter(PRODUCT_FIELDS.STORE_ID, SIEVE_OP.EQ, storeId));
-  const freeShipping = sp(params, "freeShipping");
-  if (freeShipping === "true") {
-    parts.push(sieveFilter(PRODUCT_FIELDS.SHIPPING_PAID_BY, SIEVE_OP.EQ, PRODUCT_FIELDS.SHIPPING_PAID_BY_VALUES.SELLER));
-  }
-  // Mirror ProductsIndexListing's client-side "Show sold" default (same Root Cause
-  // pattern as auctions' dateFrom default — SSR initialData is seeded into React
-  // Query with staleTime:Infinity, so if this filter doesn't already exclude sold /
-  // out-of-stock products, the client never refetches and they leak into the default view).
-  const showSold = sp(params, "showSold") === "true";
-  if (!showSold) parts.push(sieveFilter(PRODUCT_FIELDS.STOCK_QUANTITY, SIEVE_OP.GT, 0));
-  return sieveAnd(...parts);
-}
 
 export interface ProductsIndexPageViewProps {
   searchParams?: SearchParams;
 }
 
 export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndexPageViewProps) {
-  const std = parseListingSearchParams(searchParams);
-  const sort = std.sorts ?? DEFAULT_SORT;
-  const page = std.page ?? DEFAULT_PAGE;
-  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
-  const filters = buildProductFilters(searchParams);
+  // The "Show sold" / "Show ended" defaults depend on WHICH types are in play,
+  // and this page now spans all nine. Both sides derive them from the same
+  // helper — a hardcoded `hideSoldByDefault: true` here would disagree with
+  // the client the moment the user ticks Auctions, and `staleTime: Infinity`
+  // would freeze that disagreement (Root Cause #30).
+  const raw = searchParams[TABLE_KEYS.LISTING_TYPE];
+  const selectedTypes = parseSelectedListingTypes(Array.isArray(raw) ? raw[0] : raw);
+  const effectiveTypes =
+    selectedTypes.length > 0 ? selectedTypes : GENERIC_PRODUCT_LISTING_TYPES;
+  const { hideSoldByDefault, hideEndedByDefault } =
+    defaultTogglesForListingTypes(effectiveTypes);
 
-  const result = await productRepository
-    .list({
-      filters,
-      sorts: sort,
-      page,
-      pageSize,
-    })
-    .catch(() => null);
-
-  const products = result ?? null;
+  // See ArtStickersListView — one shared filter implementation with
+  // /api/products, so SSR and the client refetch agree by construction.
+  const products = await listPublicProducts(
+    parsePublicProductParams(searchParams, {
+      listingTypes: GENERIC_PRODUCT_LISTING_TYPES,
+      pageSize: DEFAULT_PAGE_SIZE,
+      sorts: DEFAULT_SORT,
+      hideSoldByDefault,
+      hideEndedByDefault,
+    }),
+  );
 
   return (
     <Main>

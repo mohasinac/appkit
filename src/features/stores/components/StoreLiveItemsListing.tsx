@@ -50,6 +50,13 @@ export function StoreLiveItemsListing({ storeId, initialData }: StoreLiveItemsLi
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
     listingType: "live" as const,
+    // Per-type facets — declared in FILTER_KEYS (so they counted toward the
+    // filter badge) and rendered in the drawer, but never sent until 2026-08-21.
+    typeFacets: {
+      [TABLE_KEYS.SPECIES]: table.get(TABLE_KEYS.SPECIES),
+      [TABLE_KEYS.LIVE_SEX]: table.get(TABLE_KEYS.LIVE_SEX),
+      [TABLE_KEYS.JURISDICTION]: table.get(TABLE_KEYS.JURISDICTION),
+    },
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });

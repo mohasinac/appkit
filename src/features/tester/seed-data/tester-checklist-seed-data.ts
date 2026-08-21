@@ -216,6 +216,88 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/products",
         },
         {
+          key: "product-type-chips-cover-all-types",
+          label: "The TYPE chip row on /products lists ALL nine listing types — Standard, Auctions, Pre-Orders, Prize Draws, Classifieds, Digital Codes, Live Items, Art and Stickers",
+          description: "Fixed 2026-08-21 — the row used to show only 5 chips (All / Standard / Classified / Digital Codes / Live Items), so auctions, pre-orders, prize draws, art and stickers were unreachable from the main catalogue even though items of those types existed. Count the chips: there should be nine, and none labelled \"Bundles\" (bundles are not a listing type).",
+          href: "/products",
+        },
+        {
+          key: "product-type-chips-multi-select",
+          label: "The TYPE chips behave as CHECKBOXES, not radio buttons — several can be ticked at once, and ticking Auctions + Pre-Orders shows both types in one grid",
+          description: "Tick Auctions, then tick Pre-Orders WITHOUT unticking Auctions. Both must stay highlighted and the grid must contain items of both types. Untick both and the grid returns to showing every type.",
+          href: "/products",
+        },
+        {
+          key: "product-type-chips-none-means-all",
+          label: "With NO type chip ticked, /products shows a mix of listing types — check the coloured type badges on the cards",
+          description: "\"Nothing ticked\" means \"every type\", so you should be able to spot at least two different badges (e.g. an \"Auction\" and a \"Digital Code\") within the first page without filtering.",
+          href: "/products",
+        },
+        {
+          key: "product-type-chip-drives-sort-options",
+          label: "Ticking exactly ONE type changes the Sort dropdown to that type's own sorts — Auctions alone offers \"Ending Soon\", Pre-Orders alone offers \"Earliest Delivery\"",
+          description: "Tick only Auctions and open Sort: \"Ending Soon\" must be present. Untick it, tick only Pre-Orders: \"Earliest Delivery\" must be present and \"Ending Soon\" gone. With two types ticked only the sorts valid for both remain (Newest / Price / Name) — that is correct, not a bug.",
+          href: "/products",
+        },
+        {
+          key: "product-type-chip-sort-resets-no-empty-page",
+          label: "Choosing a type-specific sort and THEN changing the type selection never leaves an empty grid or an error",
+          description: "The important regression check. Tick Auctions, sort by \"Ending Soon\", then untick Auctions and tick Standard instead. The grid must repopulate with products. A blank page here means a stale sort leaked into the new query.",
+          href: "/products",
+        },
+        {
+          key: "product-type-toggles-follow-selection",
+          label: "The toolbar toggles follow the type selection — \"Show ended\" appears only when a time-limited type is in play, \"Show sold\" only when a sellable type is",
+          description: "Tick only Auctions: a \"Show ended\" toggle appears. Tick only Standard instead: \"Show ended\" disappears and \"Show sold\" remains. With nothing ticked (= all types) both may appear, which is correct.",
+          href: "/products",
+        },
+        {
+          key: "product-type-chip-dedicated-page-link",
+          label: "Ticking exactly one type that has its own browse page shows a \"Full <type> filters\" link that lands on the right page",
+          description: "Tick only Auctions — a \"Full Auctions filters\" link should appear beside the chips and open /auctions. Repeat for Pre-Orders and Prize Draws.",
+          href: "/products",
+        },
+        {
+          key: "product-type-selection-survives-reload",
+          label: "The ticked type chips are reflected in the URL and survive a reload and the browser Back button",
+          description: "Tick Auctions + Art, copy the URL, open it in a new tab: the same two chips must come back ticked with the same grid. Then press Back and confirm the previous selection returns.",
+          href: "/products",
+        },
+        {
+          key: "free-shipping-toggle-actually-filters",
+          label: "The \"Free shipping\" toggle on /products actually REDUCES the number of results — it is not a no-op",
+          description: "Fixed 2026-08-21 — the toggle sent a filter on a field that was not permitted, so it was silently discarded and the toggle did nothing at all. Note the result count with it off, switch it on, and confirm the count drops and every remaining card really is free-shipping.",
+          href: "/products",
+        },
+        {
+          key: "filter-drawer-facets-actually-filter",
+          label: "The Tags, Sublisting Type and Features sections in the Filters drawer actually change the results — not just the number on the Filters button",
+          description: "Fixed 2026-08-21 — all three were drawn and counted toward the Filters badge but were never sent to the server. Pick a value in each, Apply, and confirm the result set genuinely narrows instead of staying identical while the badge increments.",
+          href: "/products",
+        },
+        {
+          key: "pre-orders-reachable-from-products",
+          label: "Pre-orders are reachable from /products — tick the Pre-Orders chip and confirm real pre-order items appear with a \"Pre-Order\" badge",
+          description: "This was the original report: pre-orders (and auctions, prize draws, art, stickers) had no chip at all, so they could only be found via their own dedicated pages.",
+          href: "/products",
+        },
+        {
+          key: "art-stickers-default-not-empty",
+          label: "The Art & Stickers listing (/art) shows real items by default — not an empty grid that only populates after clicking \"Show sold\"",
+          description: "Fixed 2026-08-21, two independent bugs: (1) \"art\"/\"stickers\" were missing from the repository's listing-type alias map, so the type filter was silently dropped and the query lost its listingType clause entirely on every path (SSR, /api/products, and the listingProcessor Function); (2) the SSR page pushed a stockQuantity>0 inequality into Firestore against a createdAt sort, which Firestore rejects, and the failure was swallowed into a bare empty page. Load /art fresh, with no filters touched, and confirm both Art and Sticker items are visible.",
+          href: "/art",
+        },
+        {
+          key: "art-stickers-type-chips-narrow",
+          label: "On /art, the \"Art\" and \"Stickers\" type chips each narrow the grid to only that type — neither chip nor \"All\" ever returns zero rows",
+          href: "/art",
+        },
+        {
+          key: "art-stickers-show-sold-adds-not-reveals",
+          label: "On /art, turning \"Show sold\" ON adds sold-out items to the grid (it should not be required to see anything at all)",
+          href: "/art",
+        },
+        {
           key: "auctions-show-ended-off-shows-live",
           label: "With \"Show ended\" off (the default), the Auctions listing shows LIVE auctions — not empty, and not requiring the toggle to see anything",
           description: "Fixed 2026-08-20 — the bounded fetch behind the \"unsafe filter\" workaround used to be sorted by the same field the date filter was about to reject on (auctionEndDate ASC = oldest/most-ended first), so once a store accumulated enough already-ended auctions the entire batch could be all-ended and live ones never got fetched at all — you had to turn \"Show ended\" ON to see anything, including live auctions. Load /products?listingType=auction fresh with the toggle off and confirm live auctions appear without touching the toggle.",
@@ -483,7 +565,22 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "place-bid-live-self", label: "After placing a bid, the current bid amount and bid count update immediately on the auction page for the bidder — no manual page refresh needed" },
         { key: "place-bid-live-other-viewer", label: "Opening the same auction in two browser tabs (or two accounts) and placing a bid in one updates the current bid and bid count in the other within a few seconds, without a manual refresh (realtime SSE)" },
         { key: "outbid-notification", label: "Getting outbid triggers a notification" },
-        { key: "win-auction", label: "Winning an auction creates a payable order correctly", href: "/auctions/auction-tester-sandbox-won" },
+        {
+          key: "win-auction",
+          label: "Winning an auction creates a payable locked cart line, not a stuck order",
+          description: "Fixed 2026-08-21 — settlement used to write a document that was not a real order (no items[], no buyerId, no payment method), so a winner had no way to pay anywhere in the product. Wait for `auction-tester-sandbox-won` to settle (or trigger the sweep manually), then confirm: a \"Won auction\" badge appears on the /user/bids row with a working \"Pay now\" link; the item shows up in the Cart's \"Won Auctions\" tab as a non-removable, non-editable line; and completing checkout produces a real order visible under the \"Auction wins\" tab on /user/orders.",
+          href: "/auctions/auction-tester-sandbox-won",
+        },
+        {
+          key: "auction-below-reserve-no-winner",
+          label: "An auction that ends below its reserve price declares no winner and archives the listing, instead of awarding it to the highest bidder anyway",
+          description: "Fixed 2026-08-21 — the reserve price was displayed and editable everywhere but never actually enforced at settlement.",
+        },
+        {
+          key: "auction-win-unpaid-forfeit",
+          label: "A won auction left unpaid past its 48-hour checkout window is removed from the cart and the bid is marked forfeited, with a notification to the buyer",
+          description: "Requires waiting out the window (or adjusting the fixture's checkoutDeadline) — a background/low-priority case.",
+        },
         { key: "bid-history", label: "My Bids page shows accurate bid history, paginated with the most recent bid first", href: "/user/bids" },
         { key: "bid-history-auction-detail-pagination", label: "An auction detail page's Bid History section shows the most recent bid first and paginates once there are more bids than fit on one page (try the L-Drago auction — 13 seeded bids)" },
         {
@@ -567,7 +664,364 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "cart-mobile-no-overflow",
           label: "On mobile, cart item cards stay fully within the screen width per seller group — no horizontal overflow/clipping — and a floating checkout bar (styled like the bulk-action bar, sitting above the bottom nav) shows the total and a Checkout button, with enough bottom margin that the last cart item is never hidden behind it",
+          description: "Root-caused 2026-08-21 — the appkit <Checkbox> root div is width:100%, and the caller's className landed on the inner <input> instead of that root, so the select-item checkbox claimed the whole row, squeezed each item card to ~0px, and pushed its 80px thumbnail outside the seller card's border (same defect class as <Select>/wrapperClassName, Root Cause #29). Test at a 360px viewport with at least two sellers.",
           href: "/cart",
+        },
+        {
+          key: "cart-seller-group-contains-items",
+          label: "At a 360px viewport, every cart item row sits fully inside its seller's rounded card, separated by thin divider lines — no card-inside-a-card look, nothing overlapping or extending past the card border, and no horizontal scrolling of the page",
+          description: "Add items from two different sellers, ideally one with a very long product title. The seller card should be the only card: header with \"Sold by <store>\" and that seller's subtotal, then divider-separated item rows, then that seller's fees and add-ons.",
+          href: "/cart",
+        },
+        {
+          key: "checkout-lanes-auction-blocks-others",
+          label: "With a won auction pending, the cart's Offers and Cart tabs render their checkout button DISABLED with a stated reason, and adding any new item to the cart is refused",
+          description: "Added 2026-08-21 (Checkout Lanes). Get a won auction into your cart (see win-auction), then try to: (a) check out from the Cart tab — button disabled, reason names the auction; (b) add a new standard product to cart — refused with the same reason, item does not appear.",
+          href: "/cart",
+        },
+        {
+          key: "checkout-lanes-offer-blocks-standard-only",
+          label: "With an accepted offer pending (and no won auction), only the Cart tab's checkout is disabled — the Offers tab itself is checkoutable",
+          href: "/cart",
+        },
+        {
+          key: "auction-win-countdown-visible",
+          label: "A won-auction cart line shows a live countdown next to \"payment required\" — days/hours/minutes remaining out of the 48-hour window — that ticks down while you watch",
+          description: "Payment for a won auction is MANDATORY (unlike an accepted offer, which the buyer may walk away from). The deadline was being written by settlement and enforced by the expiry sweep, but nothing ever rendered it, so a win could silently lapse and be forfeited with no warning anywhere in the UI. Use auction-tester-sandbox-won.",
+          href: "/cart",
+        },
+        {
+          key: "auction-win-forfeits-after-deadline",
+          label: "A won auction left unpaid past its 48-hour deadline is forfeited — the cart line disappears, the bid shows as forfeited, and the buyer is notified that repeated non-payment can restrict their account",
+          description: "An accepted offer past its deadline must lapse quietly instead, with no penalty — walking away from your own offer is allowed. Confirm the two behave differently.",
+          href: "/user/bids",
+        },
+        {
+          key: "checkout-lanes-totals-scoped",
+          label: "Each cart tab's summary total reflects ONLY that tab's items — the Cart tab total never includes a pending auction or offer amount, and vice versa",
+          href: "/cart",
+        },
+        {
+          key: "checkout-lanes-checkout-page-matches-tab",
+          label: "Opening checkout from a specific cart tab lands on the matching lane, shows only that lane's items and total, and (for Auction/Offer lanes) shows an info banner and hides the coupon field",
+          href: "/checkout",
+        },
+
+        // --- Mobile bar parity with the desktop summary ---------------------
+        {
+          key: "cart-mobile-bar-lane-scoped",
+          label: "The mobile bottom bar's total matches the desktop Summary total on every cart tab, and both name which lane the total covers (\"This total covers your cart only\" / \"…your won auctions only\")",
+          description: "The desktop Summary was converted to per-lane totals but the mobile bar was left reading the old blended figure, so the two disagreed on the same cart. Needs items in more than one lane — e.g. a normal product plus auction-tester-sandbox-won. Switch tabs and compare both viewports.",
+          href: "/cart",
+        },
+        {
+          key: "cart-mobile-bar-lane-gated",
+          label: "On a cart tab that is not currently payable, the mobile Checkout button is disabled and shows the same blocking reason the desktop button shows — tapping it does nothing",
+          description: "On a phone viewport with a won auction pending, open the Cart tab. The total still shows (so you can see what's there), but Checkout must be disabled with a reason naming the blocking lane. Previously the mobile button stayed enabled and navigated.",
+          href: "/cart",
+        },
+        {
+          key: "cart-mobile-checkout-carries-lane",
+          label: "Tapping Checkout from the Won Auctions or Accepted Offers tab on mobile lands on the checkout page already on that lane (URL contains ?lane=auction or ?lane=offer)",
+          description: "The desktop button already carried the lane; the mobile one navigated to a lane-less /checkout.",
+          href: "/cart",
+        },
+        {
+          key: "cart-select-all-lane-scoped",
+          label: "\"Select all (N)\" counts only the items on the current tab, and \"Remove all\" never deletes won-auction or accepted-offer lines",
+          href: "/cart",
+        },
+
+        // --- Expandable price breakdown -------------------------------------
+        {
+          key: "cart-breakdown-expand-mobile",
+          label: "On mobile, the total row in the bottom bar shows an up-arrow; tapping it opens a panel ABOVE the checkout bar with the full price breakdown, and tapping again (or outside) closes it",
+          href: "/cart",
+        },
+        {
+          key: "cart-breakdown-expand-desktop",
+          label: "On desktop, \"Show details\" in the Summary panel expands the same breakdown below the subtotal, and \"Hide details\" collapses it",
+          href: "/cart",
+        },
+        {
+          key: "cart-breakdown-aggregate-only",
+          label: "The expanded breakdown shows ONE line per fee type (Shipping, WhatsApp updates, Gift wrap, Platform fee, GST…) with a \"(N stores)\" qualifier where a fee applies to several sellers — not a separate block per store",
+          description: "Per-store detail belongs on each seller card, not in this panel. Confirm the two don't duplicate each other.",
+          href: "/cart",
+        },
+        {
+          key: "cart-breakdown-checked-items-only",
+          label: "Deselecting an item lowers the breakdown's item count and every affected line; deselecting ALL of one seller's items removes that seller's shipping and add-on fees from the total entirely",
+          description: "Use a two-seller cart. Deselect everything from seller B and confirm B's shipping leaves the breakdown and the total drops — the preview prices only what is actually being checked out.",
+          href: "/cart",
+        },
+        {
+          key: "cart-breakdown-no-coupon-on-locked-lanes",
+          label: "The Won Auctions and Accepted Offers tabs show no coupon-discount line in the breakdown (those prices are already won/negotiated)",
+          href: "/cart",
+        },
+        {
+          key: "cart-guest-breakdown-fallback",
+          label: "Signed out, the cart shows subtotals plus a \"Sign in to see shipping & fees\" note instead of fee lines — no error and no blank panel",
+          href: "/cart",
+        },
+
+        // --- Per-store add-ons ----------------------------------------------
+        {
+          key: "cart-store-card-fee-lines",
+          label: "Each seller card shows that seller's own shipping and add-on fees below its items, and those per-store figures add up to the matching lines in the expanded breakdown",
+          href: "/cart",
+        },
+        {
+          key: "cart-addons-per-store",
+          label: "Ticking \"WhatsApp order updates\" on ONE seller's card charges the fee once (₹10, not ₹20 on a two-seller cart) and shows it under that seller only",
+          description: "Requires Site Settings → Fees → WhatsApp notify fee enabled. Core regression guard: the selection used to be a single cart-wide checkbox while the fee was billed per seller, so one tick charged every store in the cart.",
+          href: "/cart",
+        },
+        {
+          key: "cart-addons-deselected-store-excluded",
+          label: "Deselecting all of a seller's items disables that seller's add-on checkboxes with an explanation and removes their fees from the total; re-selecting restores both",
+          href: "/cart",
+        },
+        {
+          key: "cart-addons-persist-to-checkout",
+          label: "Add-ons ticked per seller in the cart are still ticked against the SAME seller at checkout, and survive a page reload",
+          description: "Tick gift wrap for seller A only, go to checkout, confirm A's block is ticked and B's is not, then reload and confirm it holds.",
+          href: "/checkout",
+        },
+        {
+          key: "cart-addons-editable-at-checkout",
+          label: "Add-ons can still be changed on the checkout page itself, per seller — important because Buy Now skips the cart entirely",
+          description: "Use Buy Now on a product without touching the cart page, and confirm checkout still offers that seller's add-on checkboxes and that ticking one updates the Order Summary total.",
+          href: "/checkout",
+        },
+        {
+          key: "cart-addons-hidden-when-disabled",
+          label: "With an add-on disabled in Site Settings → Fees, its checkbox does not appear on any seller card in the cart or at checkout",
+          href: "/cart",
+        },
+        {
+          key: "cart-addons-order-record",
+          label: "After placing a multi-seller order, only the seller whose add-on was ticked has that fee on their order — the other seller's order shows no add-on fee",
+          href: "/user/orders",
+        },
+        {
+          key: "order-addon-icons-visible",
+          label: "An order that included add-ons shows icon chips for them (WhatsApp updates / Gift wrap / Protected) plus the coupon code, on the buyer's order page, the seller's order detail AND the admin order drawer",
+          description: "These are fulfilment instructions, not decoration: WhatsApp tells the notifier to message this buyer on status change, and gift wrap tells the packer to wrap the parcel. Check all three surfaces — they render from one shared component, so if one is missing something is unwired.",
+          href: "/user/orders",
+        },
+        {
+          key: "order-gift-message-visible-to-seller",
+          label: "When a buyer bought gift wrap and left a message, the seller sees the full message text on the order detail — not truncated and not hidden behind a tooltip",
+          description: "The packer has to physically write or enclose it, so it must be readable in full.",
+          href: "/store/orders",
+        },
+        {
+          key: "order-addons-queryable",
+          label: "Admin can filter the orders list down to orders that opted into a given add-on (e.g. only gift-wrap orders), so \"who do I need to do this for?\" is answered from the orders list itself and not a side list",
+          href: "/admin/orders",
+        },
+        {
+          key: "order-coupon-shown-all-lanes",
+          label: "A coupon applied to an order is shown on the order for every lane — standard, won-auction and accepted-offer orders alike",
+          href: "/user/orders",
+        },
+
+        // --- Platform fee ----------------------------------------------------
+        {
+          key: "platform-fee-capped",
+          label: "The buyer's platform fee stops at the configured maximum instead of scaling with cart value",
+          description: "With Site Settings → Fees at platform fee 5%, maximum platform fee ₹10, GST 18%: a ₹100 cart must show a ₹5.00 platform fee and ₹0.90 GST on it; a ₹700 cart must show ₹10.00 and ₹1.80 — NOT ₹35.00. Check the arithmetic, not just that a line exists.",
+          href: "/checkout",
+        },
+        {
+          key: "platform-fee-all-methods",
+          label: "The platform fee is charged on every payment method — COD, UPI-manual/cash and Razorpay all include it; COD additionally shows the COD handling fee and the 10% token",
+          description: "It used to be added only on the Razorpay path, so COD and UPI buyers were never charged it. Compare the same cart across each available method.",
+          href: "/checkout",
+        },
+        {
+          key: "platform-fee-charged-once",
+          label: "A three-seller cart is charged the platform fee ONCE for the checkout, not once per seller",
+          href: "/checkout",
+        },
+        {
+          key: "platform-fee-sums-across-orders",
+          label: "After placing a multi-seller order, the platform fees recorded on the resulting orders add up to exactly the single figure the cart and checkout showed — no rupee of drift",
+          href: "/user/orders",
+        },
+
+        // --- The money has to agree everywhere -------------------------------
+        {
+          key: "cart-checkout-order-totals-agree",
+          label: "For the same cart, the expanded cart breakdown, the sum of the per-seller card fee lines, the checkout Order Summary and the created orders all show the SAME total",
+          description: "Repeat on COD, UPI-manual and Razorpay. Acceptance test for the whole pricing change — if any two of those four disagree, something is reading a different source than it charges from.",
+          href: "/checkout",
+        },
+      ],
+    },
+    {
+      pageKey: "buying-coupons",
+      pageLabel: "Coupons — Scoping & Stacking",
+      href: "/checkout",
+      cases: [
+        {
+          key: "coupon-help-visible-cart",
+          label: "The cart's order summary has an expandable \"How coupons work\" panel, collapsed by default",
+          href: "/cart",
+          description: "Open /cart with at least one item. Below the \"Apply coupons at checkout\" note there should be a collapsed \"How coupons work\" panel. Expand it and confirm it explains: one coupon per store, plus one platform-wide coupon, and why a coupon might not apply.",
+        },
+        {
+          key: "coupon-help-visible-checkout",
+          label: "The checkout coupon box has the same \"How coupons work\" panel, and it mentions re-checking at payment",
+          description: "At checkout, below the coupon input and any error text. The checkout version has one extra line the cart version does not: that coupons are re-checked when you place the order. Confirm the wording matches the cart panel otherwise.",
+        },
+        {
+          key: "coupon-help-visible-listing",
+          label: "The public coupons listing shows the same \"How coupons work\" panel above the coupon grid",
+          href: "/promotions",
+          description: "Also check a store-scoped listing at /stores/store-beyblade-arena/coupons. Wording must be identical on all three surfaces (cart, checkout, listing) — any difference is a bug.",
+        },
+        {
+          key: "coupon-stack-two-stores-plus-global",
+          label: "Two store coupons AND one platform-wide coupon all apply to the same cart at once",
+          description: "Build a cart with ≥₹1,000 from Beyblade Arena and ≥₹500 from LetItRip Official. At checkout apply ARENA25, then OFFICIAL10, then FREESHIP499. All three should stay applied and each should be listed in the applied-coupons list with its own discount amount. This is the headline behaviour — if any of the three is rejected, stop and report it.",
+        },
+        {
+          key: "coupon-stack-second-store-coupon-rejected",
+          label: "A second coupon for a store that already has one is declined with a clear message",
+          description: "With ARENA25 applied, try SEALED20 (also Beyblade Arena). Expect a message naming the already-applied code, along the lines of \"A coupon for this store is already applied (ARENA25). Remove it first.\" The first coupon must stay applied — it must not be silently swapped.",
+        },
+        {
+          key: "coupon-stack-second-global-rejected",
+          label: "A second platform-wide coupon is declined with a clear message",
+          description: "With FREESHIP499 applied, try BLADER50 (also platform-wide, needs ≥₹2,000). Expect \"Only one platform-wide coupon can be applied at a time (FREESHIP499). Remove it first.\" Then remove FREESHIP499 and confirm BLADER50 now applies — i.e. the slot frees up.",
+        },
+        {
+          key: "coupon-stack-duplicate-code-rejected",
+          label: "Applying the exact same code twice is declined",
+          description: "Apply ARENA25, then type ARENA25 again. Expect \"Coupon ARENA25 is already applied.\" and no duplicate row in the applied list.",
+        },
+        {
+          key: "coupon-store-scope-limited-to-its-own-items",
+          label: "A store coupon only discounts that store's items, not the whole cart",
+          description: "With items from both stores in the cart, apply only ARENA25 (25%, max ₹500). The discount must be computed from the Beyblade Arena items alone — it should NOT change if you add or remove LetItRip Official items (unless the Arena subtotal itself crosses the ₹1,000 minimum).",
+        },
+        {
+          key: "coupon-min-purchase-uses-eligible-subtotal",
+          label: "Minimum spend is measured against the coupon's eligible items, not the whole cart total",
+          description: "ARENA25 needs ₹1,000. Put ₹600 of Beyblade Arena items plus ₹900 of LetItRip Official items in the cart — cart total is ₹1,500 but the Arena-eligible subtotal is only ₹600, so ARENA25 must be REJECTED for not meeting the minimum. A cart-total-based check would wrongly accept it.",
+        },
+        {
+          key: "coupon-category-restriction-rejects-non-matching-cart",
+          label: "A category-restricted coupon is rejected when the cart has none of those categories",
+          description: "SEALED20 is restricted to the Burst and X categories. With a Beyblade Arena cart of ONLY Original/Metal-generation items, applying SEALED20 must be declined with a category-related message. Previously category restrictions were ignored entirely and it would have been accepted and discounted the whole store — that is the regression this case guards.",
+        },
+        {
+          key: "coupon-category-restriction-accepts-matching-cart",
+          label: "The same category-restricted coupon IS accepted once a matching item is in the cart",
+          description: "Continuing from the case above: add a Burst or X generation Beyblade to the cart, then apply SEALED20 again. It should now be accepted, and the discount should be based only on the Burst/X items — not on the Original/Metal items sharing the cart.",
+        },
+        {
+          key: "coupon-remove-one-of-many",
+          label: "Removing one coupon from a stack leaves the others applied and recalculates the total",
+          description: "With three coupons applied, remove the middle one. The other two must remain, the total must go up by exactly the removed coupon's amount, and the Order Summary discount line(s) must update to match.",
+        },
+        {
+          key: "coupon-summary-total-matches-sum",
+          label: "The Order Summary's discount equals the sum of the applied coupons",
+          description: "With a stack applied, add up the individual coupon amounts in the applied-coupons list and compare against the \"Coupon discount\" line in the Order Summary. They must agree. Also confirm the Total equals Subtotal − discount + shipping + fees + GST.",
+        },
+        {
+          key: "coupon-persists-across-reload",
+          label: "Applied coupons survive a page reload and are still there when you return to checkout",
+          description: "Apply a stack, reload the checkout page, and confirm all coupons are still listed with the same amounts. Then navigate to the cart and back to checkout — still there.",
+        },
+        {
+          key: "coupon-split-across-per-store-orders",
+          label: "After placing a multi-store order, each store's order shows its own share of the discount",
+          href: "/user/orders",
+          description: "Check out a multi-store cart carrying a platform-wide coupon plus at least one store coupon. A multi-store cart creates one order PER STORE. Open each resulting order: the store coupon must appear only on its own store's order, the platform-wide coupon must appear on every order as a proportional share, and the shares across all orders must add up to the discount shown at checkout.",
+        },
+        {
+          key: "coupon-all-codes-listed-on-order",
+          label: "An order placed with several coupons lists every one of them, not just the first",
+          href: "/user/orders",
+          description: "Open the order detail page and the invoice page for an order placed with 2+ coupons. Both must show a separate discount line per coupon, each naming its code. Previously only the first coupon's code was shown — a single \"Discount (CODE)\" line for a multi-coupon order is the bug this case guards.",
+        },
+        {
+          key: "coupon-expired-in-cart-dropped-at-placement",
+          label: "A coupon that expired while sitting in the cart is dropped at placement instead of being honoured",
+          description: "Needs an admin: apply a coupon at checkout, then have an admin deactivate or expire it in /admin/coupons, then place the order without touching the cart. The order must be priced WITHOUT that coupon, and the buyer must be told it was removed — the order must not silently charge the pre-discount amount without explanation, and must not honour a dead coupon.",
+        },
+        {
+          key: "coupon-usage-limit-increments-after-order",
+          label: "Placing an order increments the coupon's usage count and counts against your per-user limit",
+          description: "Note a coupon's current usage in /admin/coupons, place an order using it, then re-check. Usage must have gone up by one. Then, for a coupon with perUserLimit 1, try to apply it again on a new cart — it must be refused as limit-reached.",
+        },
+        {
+          key: "coupon-wallet-apply-lands-on-checkout",
+          label: "\"Use\" on a claimed coupon in My Coupons carries the code through to checkout",
+          href: "/user/coupons",
+          description: "From /user/coupons press Use on an active coupon. You should end up on checkout with that coupon already applied (it may route via /cart first). If the coupon can't apply to your current cart, the reason must be shown rather than failing silently.",
+        },
+        {
+          key: "coupon-auction-offer-lane-no-coupon-field",
+          label: "Auction and Offer checkout lanes hide the coupon field entirely",
+          description: "Open checkout from the Auction or Offer cart tab. The coupon input and the \"How coupons work\" panel should not be shown at all for those lanes, and an info banner should explain why.",
+        },
+      ],
+    },
+    {
+      pageKey: "offers",
+      pageLabel: "Offers",
+      href: "/products",
+      cases: [
+        {
+          key: "make-offer",
+          label: "Making an offer on a product's detail page works and the seller receives a notification",
+          href: "/products",
+        },
+        {
+          key: "seller-sees-and-can-act-on-offers",
+          label: "A seller's Offers page (/store/offers) actually lists incoming offers, and Accept / Decline / Counter all work from the row menu",
+          description: "Fixed 2026-08-21 — the page rendered the view with no handlers at all (so the row menu had nothing but a status badge), and separately the view read an API response key (`offers`) the route never sent (it sends `items`), so the list rendered empty even before the handler gap. Make an offer as a buyer, then confirm the seller can see it, open its details, and Accept/Decline/Counter each work.",
+          href: "/store/offers",
+        },
+        {
+          key: "buyer-sees-offer-status-changes",
+          label: "\"My Offers\" (/user/offers) actually lists the buyer's offers and reflects accept/decline/counter as the seller responds",
+          description: "Fixed 2026-08-21 — the panel read `json.items` off a response the API always wraps as `{success, data:{items}}`, so it showed \"No offers yet\" for every buyer regardless of how many offers existed.",
+          href: "/user/offers",
+        },
+        {
+          key: "offer-seller-can-read-before-acting",
+          label: "Before accepting/declining/countering, the seller can open a \"View details\" panel showing the buyer's note, listed vs. offered price, and expiry — not just a bare row with action buttons",
+          href: "/store/offers",
+        },
+        {
+          key: "counter-offer-has-a-form",
+          label: "Countering an offer opens a form asking for the counter amount (and an optional note) — it is not a bare confirm with no input",
+          description: "Fixed 2026-08-21 — the counter action previously took no input at all, so it had no real caller anywhere in the codebase.",
+          href: "/store/offers",
+        },
+        {
+          key: "offer-accept-checkout-charges-agreed-price",
+          label: "Accepting an offer, then completing checkout from the Offers cart tab, charges the NEGOTIATED price — not the listing's current price",
+          description: "Fixed 2026-08-21 — every copy of the checkout price calculation ignored the offer's locked price and billed the listing price instead, while the cart UI displayed the correct negotiated figure — so the buyer saw one number and was charged another. Accept an offer below the listing price, complete checkout, and confirm the order total matches the AGREED amount.",
+          href: "/user/offers",
+        },
+        {
+          key: "offer-flips-to-paid-after-order",
+          label: "After completing checkout on an accepted offer, the offer's status becomes \"paid\" and it can't be added to the cart or checked out again",
+          description: "Fixed 2026-08-21 — the \"paid\" status existed in the schema but had no server-side writer anywhere, so an accepted offer stayed re-orderable indefinitely.",
+          href: "/user/offers",
+        },
+        {
+          key: "offer-expired-accepted-cannot-checkout",
+          label: "An accepted offer past its 48-hour checkout window can no longer be checked out, and is cleared from the cart with a notification to the buyer",
+          description: "Background/low-priority — requires waiting out the window or adjusting the fixture's checkoutDeadline.",
         },
       ],
     },
@@ -590,6 +1044,87 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A review's uploaded photos actually render — on the review-detail permalink page, the reviews list on a product/store page, and the admin \"View review\" modal — not a fallback icon",
           description: "A 2026-08-19 type mismatch (review images stored as plain URL strings but read as {url,thumbnailUrl} objects) meant every review photo silently fell back to a placeholder icon everywhere. Leave a review with a photo, then confirm it renders on all three surfaces.",
           href: "/reviews",
+        },
+      ],
+    },
+    {
+      pageKey: "reviews-pagination",
+      pageLabel: "Reviews — Pagination, Sort & Filter",
+      // "Beyblade Original Dranzer S" is the deep-review fixture: 19 approved reviews
+      // spread across all five star ratings, so it is the only product where page 2
+      // and the rating filter have anything to show.
+      href: "/products/product-beyblade-original-dranzer-s",
+      cases: [
+        {
+          key: "detail-tab-paginates",
+          label: "The Reviews tab on a product page shows at most 10 reviews with page controls underneath — it does NOT dump every review into one endlessly long tab",
+          description: "Open the Dranzer S product page and click the Reviews tab. It has 19 approved reviews, so you should see 10 and a pager offering page 2. Before this change every approved review rendered at once, which is what made these pages so long.",
+        },
+        {
+          key: "detail-tab-newest-first",
+          label: "Reviews are ordered newest first by default (the dates run downward as you read down the list)",
+        },
+        {
+          key: "detail-tab-page-2-differs",
+          label: "Page 2 shows DIFFERENT reviews from page 1 — not a repeat of the same 10",
+          description: "This is the one to be fussy about. The first page is server-rendered and handed to the browser cache; if that hand-off is wired wrong, page 2 silently re-displays page 1's reviews. Note the top review's title on page 1, go to page 2, and confirm it is not there.",
+        },
+        {
+          key: "detail-tab-url-unchanged",
+          label: "Paging through reviews on a product page does NOT change the page URL, and does not reload/flicker the rest of the product page (gallery, price, Add to Cart all stay put)",
+          description: "Deliberate: on a detail page the review pager keeps its state in the component, because writing it to the URL would re-run the whole product page just to turn a page of reviews.",
+        },
+        {
+          key: "detail-tab-sort",
+          label: "The sort dropdown in the Reviews tab works — Newest / Oldest / Highest rated / Lowest rated each reorder the list correctly",
+        },
+        {
+          key: "detail-tab-rating-filter",
+          label: "Filtering by star rating in the Reviews tab works — picking 5★ shows only 5-star reviews, and the result count/pager updates to match",
+          description: "Open the Filters drawer in the Reviews tab. The fixture has reviews at every star level from 1 to 5. If this shows an error or an empty list for every rating, the Firestore index for it has not been deployed yet — report that.",
+        },
+        {
+          key: "detail-tab-summary-stable",
+          label: "The average rating and total review count above the list describe ALL reviews — they do not shrink when you apply a rating filter",
+          description: "Note the \"x.x / 5 · N reviews\" line, then filter to 5★ only. The list shortens but that summary line should stay the same, because it describes the product overall, not the current filter.",
+        },
+        {
+          key: "detail-tab-filters-all-work",
+          label: "Every control shown in the Reviews tab's Filters drawer actually does something — there is no filter you can set that changes nothing",
+          description: "A filter that renders but is never applied looks broken to a buyer. Set each control in turn and confirm the list responds.",
+        },
+        {
+          key: "date-range-sort-options",
+          label: "While a review date range is set, the sort dropdown offers only the date-based sorts — and choosing a date range never produces an error page",
+          description: "Set a From/To date in the Filters drawer. \"Highest rated\"/\"Lowest rated\" are withdrawn on purpose while a date range is active — the database cannot serve that combination, so it is hidden rather than allowed to fail.",
+        },
+        {
+          key: "other-listing-types-paginate",
+          label: "The Reviews tab paginates the same way on a digital-code and a live-item page, not just standard products",
+          href: "/digital-codes/digitalcode-beyblade-x-app-unlock",
+        },
+        {
+          key: "auction-store-reviews-paginated",
+          label: "An auction page's \"Store Reviews\" section is paginated and genuinely newest-first — not a fixed block of 10 with no way to see more",
+          description: "Previously this section showed exactly 10 reviews with no pager, and they were grouped by product rather than ordered by date, so the \"latest\" reviews were not actually the latest. Scroll to Store Reviews on this auction and confirm you can page through and that the dates run downward.",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
+        },
+        {
+          key: "store-reviews-tab-url-state",
+          label: "On the store's own Reviews tab (a full page, not a tab inside a product), the page number and sort DO appear in the URL and survive a browser refresh / can be shared as a link",
+          description: "Open the store below and click its Reviews tab. The opposite of the product-page behaviour above, and intentional: this is a page in its own right, so its state belongs in the URL. Go to page 2, refresh, and confirm you are still on page 2.",
+          href: "/stores/store-beyblade-arena",
+        },
+        {
+          key: "reviews-index-unchanged",
+          label: "The site-wide /reviews page still works exactly as before — search, sort, filters, paging, and grid/list toggle",
+          description: "This page was rebuilt on shared internals during the pagination work, so it is worth a regression pass even though nothing about it was meant to change.",
+          href: "/reviews",
+        },
+        {
+          key: "empty-state",
+          label: "A product with no reviews yet shows \"No reviews yet — be the first to review this product.\" and no pager, rather than an empty box or a stray page control",
+          href: "/products/product-beyblade-x-dran-sword-video-demo",
         },
       ],
     },
@@ -761,7 +1296,43 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Seller — All Listing Types (Coupons, Bundles, Classifieds, Digital Codes, Live, Prize Draws, Art, Stickers)",
       href: "/store/products",
       cases: [
+        {
+          key: "seller-listing-type-dropdown-all-types",
+          label: "The \"Listing type\" dropdown on the seller Products page offers all nine types including Art and Stickers, and no longer offers \"Bundle\"",
+          description: "Fixed 2026-08-21 — the dropdown was a hand-written list missing art and stickers, and still offered \"Bundle\", which is a category type rather than a listing type and therefore always returned zero rows. Open the dropdown and check every option returns results for a store that has that type.",
+          href: "/store/products",
+        },
+        {
+          key: "seller-products-badge-per-type",
+          label: "Each row in the seller Products list shows a badge naming its real listing type — a classified row says \"classified\", a sticker row says \"stickers\", and so on",
+          description: "Fixed 2026-08-21 — the row mapper collapsed classified, digital-code, live, art and stickers all down to \"standard\", so five of the nine types were mislabelled in the table. Create or find one listing of each type and confirm each badge is correct.",
+          href: "/store/products",
+        },
+        {
+          key: "seller-products-featured-promoted-sorts",
+          label: "The seller Products \"Featured first\" and \"Promoted first\" sorts actually reorder the list",
+          description: "Same fix as the admin equivalent — both sorts previously did nothing at all. Confirm the order genuinely changes.",
+          href: "/store/products",
+        },
         { key: "seller-coupons-crud", label: "Seller can create, edit, and list their own coupons", href: "/store/coupons" },
+        {
+          key: "seller-coupon-auto-scoped-to-own-store",
+          label: "A seller-created coupon is automatically scoped to that seller's own store, with no store picker",
+          href: "/store/coupons/new",
+          description: "The coupon form must NOT offer a store selector — the store is taken from the logged-in seller. After creating one, confirm it only discounts that store's items when a buyer applies it, and that it can be stacked alongside a different store's coupon.",
+        },
+        {
+          key: "seller-coupon-no-stacking-toggle",
+          label: "The seller coupon form has no \"allow stacking\" option — stacking is always permitted",
+          href: "/store/coupons/new",
+          description: "Stacking is now governed by scope alone (one per store + one platform-wide), so any leftover stacking checkbox on this form is a bug.",
+        },
+        {
+          key: "seller-coupon-category-restriction-works",
+          label: "Restricting a seller coupon to specific categories actually limits which items it discounts",
+          href: "/store/coupons/new",
+          description: "Create a coupon restricted to one category, then as a buyer put a non-matching item from that store in the cart and try the code — it must be refused. Add a matching item and confirm the discount covers only the matching item's value.",
+        },
         { key: "seller-bundles-crud", label: "Seller can create, edit, and list bundles/grouped listings", href: "/store/bundles" },
         { key: "seller-classified-crud", label: "Seller can create, edit, and list classified listings", href: "/store/classified" },
         { key: "seller-digitalcodes-crud", label: "Seller can create, edit, and list digital-code listings", href: "/store/digital-codes" },
@@ -1035,6 +1606,98 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "sticky-cta-bar",
+      pageLabel: "Sticky Buy/Bid Bar on Scroll",
+      href: "/products/product-beyblade-original-dranzer-s",
+      cases: [
+        {
+          key: "desktop-hidden-at-top",
+          label: "ON DESKTOP: when a product page first loads, there is NO floating bar across the bottom of the window — the page looks exactly as it always has",
+          description: "Use a full-size browser window (not a phone or a narrow window). The bar is meant to stay out of the way while the real Add to Cart / Buy Now buttons are still visible on screen.",
+        },
+        {
+          key: "desktop-appears-on-scroll",
+          label: "ON DESKTOP: after scrolling down past the product images and buy buttons, a bar slides up from the bottom of the window with the price and the same Add to Cart / Buy Now actions",
+          description: "This is the whole point of the change: on a long page the buy buttons used to scroll away with no way back except scrolling up.",
+        },
+        {
+          key: "desktop-hides-scrolling-back-up",
+          label: "ON DESKTOP: scrolling back to the top of the page slides the bar away again",
+        },
+        {
+          key: "desktop-buttons-work",
+          label: "ON DESKTOP: the buttons in the floating bar actually work — Add to Cart adds the item, Buy Now starts checkout, and the wishlist button saves it",
+          description: "They should behave identically to the buttons in the main product panel, including going disabled for an out-of-stock item.",
+        },
+        {
+          key: "desktop-not-covering-footer",
+          label: "ON DESKTOP: scrolling to the very bottom of the page, the floating bar does not permanently cover the footer — you can still read and click footer links",
+        },
+        {
+          key: "mobile-unchanged",
+          label: "ON MOBILE: the bottom action bar behaves exactly as it did before — visible while you browse the product, sitting above the bottom navigation, not overlapping it",
+          description: "Regression check. Nothing about the phone experience was supposed to change; only desktop gained the bar.",
+        },
+        {
+          key: "auction-countdown-in-bar",
+          label: "On an auction page the sticky bar shows the live countdown (\"Ends in …\"), the current bid and bid count, and its Place Bid button jumps to the bidding form",
+          description: "The countdown should tick, not sit frozen.",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
+        },
+        {
+          key: "ended-auction-no-bar",
+          label: "An auction that has already ended shows NO sticky bar at all — there is nothing left to bid on",
+          href: "/auctions/auction-tester-sandbox-won",
+        },
+        {
+          key: "preorder-bar",
+          label: "A pre-order page's sticky bar says Reserve Now and shows the price, and the button jumps to the reserve panel",
+          href: "/pre-orders/preorder-tester-sandbox-1",
+        },
+        {
+          key: "prize-draw-bar-label",
+          label: "A prize-draw page's sticky bar CTA reads \"Enter Draw\" (not \"Buy Now\") and the info line shows the price per entry",
+          description: "Label changed on purpose — you are entering a draw, not buying a specific item. Flag it if \"Buy Now\" still appears.",
+          href: "/prize-draws/prizedraw-tester-sandbox-1",
+        },
+        {
+          key: "closed-prize-draw-no-bar",
+          label: "A closed prize draw shows NO sticky bar",
+          href: "/prize-draws/prizedraw-tester-sandbox-closed",
+        },
+        {
+          key: "classified-bar-no-cart",
+          label: "A classified listing's sticky bar offers \"Make an Offer\" and does NOT offer Add to Cart or Buy Now — classifieds are arranged directly with the seller",
+          description: "Tapping it should jump to the contact-seller panel. An Add to Cart button appearing here is a real bug.",
+          href: "/classified/classified-tester-sandbox-1",
+        },
+        {
+          key: "digital-code-bar",
+          label: "A digital-code listing has a sticky Buy Now bar, and a sold-out one has no bar at all",
+          href: "/digital-codes/digitalcode-tester-sandbox-1",
+        },
+        {
+          key: "live-item-bar",
+          label: "A live-item listing has a sticky Buy Now bar that jumps to its buy panel",
+          href: "/live/live-tester-sandbox-1",
+        },
+        {
+          key: "bar-not-overlapping-content",
+          label: "On every page above, nothing at the bottom of the page is left permanently hidden behind the sticky bar — you can always scroll far enough to read the last line of content",
+        },
+        {
+          key: "no-bar-on-non-listing-pages",
+          label: "Pages that never had a bottom bar still do not have one — homepage, blog posts, FAQ, and the site-wide listing pages show no floating buy bar on desktop",
+          description: "The bar is opt-in per page; a stray one on the homepage would be a bug.",
+          href: "/",
+        },
+        {
+          key: "bar-with-keyboard-open",
+          label: "ON MOBILE: opening the on-screen keyboard (e.g. tapping a bid amount or search field) does not leave the sticky bar floating in the middle of the screen or hidden behind the keyboard",
+        },
+      ],
+    },
+    {
       pageKey: "form-validation-errors",
       pageLabel: "Form Validation & Error Summary",
       href: "/store/products/new",
@@ -1153,6 +1816,87 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
       ],
     },
+    {
+      pageKey: "carousel-arrow-bounds",
+      pageLabel: "Carousel Arrows — Card Boundaries",
+      href: "/",
+      cases: [
+        {
+          key: "arrows-never-cover-cards",
+          label: "On a laptop/desktop, the carousel's ← / → arrows sit in their own empty strip to the left and right of the cards — no part of any card (image, title, price, badge, button) is ever hidden behind an arrow",
+          description:
+            "Fixed 2026-08-21. Previously the arrows were drawn ON TOP of the cards: an opaque white circle sat over the card's left and right edges, cutting into the title and image. The arrows should now read as boundary walls with the cards living strictly between them.",
+          href: "/",
+        },
+        {
+          key: "arrows-no-overlap-mid-scroll",
+          label: "Scroll a carousel to a HALFWAY position (drag it, or click → once and stop mid-way) and confirm the cards are still cleanly cut off at the inner edge of the arrow strip — a card must never slide underneath an arrow while scrolling",
+          description:
+            "This is the single most important case — the old bug was invisible at rest and only appeared once you scrolled. The arrows looked fine on first load, then cards slid under them the moment the row moved. Check several carousels, and stop scrolling at a few different in-between positions.",
+          href: "/",
+        },
+        {
+          key: "no-arrows-on-mobile",
+          label: "On a phone, carousels show NO ← / → arrow buttons at all — you scroll them by swiping",
+          description:
+            "Intentional as of 2026-08-21: on a narrow screen the arrows would eat roughly 60px of card width, so they are hidden below tablet size and swiping is the only control. Seeing arrows on a phone is now a bug.",
+          href: "/",
+        },
+        {
+          key: "mobile-card-not-clipped",
+          label: "On a phone, a carousel card fills the row edge-to-edge and is NOT cut off on either side — its title, price and button are fully visible without any part running off-screen",
+          description:
+            "Fixed 2026-08-21. Cards used to be rendered wider than the space available, so both the left and right edges were chopped off simultaneously. Compare against the section heading above it: the card should line up with the section's own left/right margins.",
+          href: "/",
+        },
+        {
+          key: "mobile-swipe-and-snap",
+          label: "On a phone, swiping a carousel still scrolls it, and it settles neatly on one card at a time rather than stopping halfway between two cards",
+          href: "/",
+        },
+        {
+          key: "no-white-fade-smear",
+          label: "There is no washed-out white gradient smear at the left/right ends of a carousel — especially on sections that have a coloured or photo background, where a white haze would look obviously wrong",
+          description:
+            "The old fade-edge effect was removed on 2026-08-21 because the arrow gutters now mark the boundary. Check a section with a background image (if one is configured) as well as a plain one, in both light and dark mode.",
+          href: "/",
+        },
+        {
+          key: "two-row-tall-arrows",
+          label: "On a section that shows TWO rows of cards (e.g. Reserve Before It Ships / Live Auctions when configured for 2 rows), the taller full-height arrow bars also sit beside the cards, not over them",
+          href: "/",
+        },
+        {
+          key: "arrows-dark-mode",
+          label: "In dark mode the carousel arrows are still clearly visible against the page and sit in the same position beside the cards as in light mode",
+          href: "/",
+        },
+        {
+          key: "arrow-end-state-no-jump",
+          label: "Clicking → repeatedly to the end of a carousel that does not loop dims/greys the → arrow, and the cards do NOT shift sideways when that happens",
+          href: "/",
+        },
+        {
+          key: "resize-across-breakpoint",
+          label: "On a desktop browser, slowly narrow the window until it is phone-width and back again — the arrows disappear/reappear at the size change and the cards re-fit cleanly each time, never ending up underneath an arrow",
+          description:
+            "Easiest with the browser's responsive/device-toolbar mode. Drag the width slowly rather than jumping between presets.",
+          href: "/",
+        },
+        {
+          key: "related-carousels-same-behaviour",
+          label: "The \"You might also like\" / related-items carousels lower down a PRODUCT page behave exactly the same as the homepage ones — arrows beside the cards, nothing covered, no arrows on mobile",
+          description:
+            "These are a different surface using the same underlying scroller, so they are the best check that the fix applied everywhere rather than only on the homepage.",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "category-page-carousels-same-behaviour",
+          label: "Carousels on a CATEGORY page (e.g. related groups / bundles strips) behave the same — arrows beside the cards, nothing covered",
+          href: "/categories/category-beyblade-burst",
+        },
+      ],
+    },
   ]),
 
   ...group("public-pages", "Public & Marketing Pages", [
@@ -1214,10 +1958,62 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "store-directory", label: "The store directory page loads correctly", href: "/stores" },
         { key: "store-detail-tabs", label: "A store detail page's listing-type dropdown (Products/Auctions/Pre-Orders/Prize Draws/Bundles/Classifieds/Digital Codes/Live Items/Art & Stickers) switches correctly between listing types, and the separate Coupons/Reviews/About tabs next to it all load correctly", description: "The listing-type dropdown is always a dropdown (not just on narrow/mobile widths, unlike category/brand/product/event tabs) since a store can have up to 9 listing types — Coupons, Reviews, and About stay as standalone tabs beside it, never folded into the dropdown." },
         {
+          key: "category-tabs-every-type-renders",
+          label: "On a category page, EVERY listing-type tab that is offered renders real content when opened — none show a blank panel",
+          description: "Fixed 2026-08-21 — the Classifieds, Digital Codes, Live Items and Art & Stickers tabs were clickable but had no content behind them, so selecting one highlighted the tab and showed nothing at all. Open every tab the page offers, one by one.",
+          href: "/categories/category-beyblade-burst",
+        },
+        {
+          key: "brand-tabs-every-type-offered",
+          label: "A brand page offers the same listing-type tabs a category page does (minus Stores) — Classifieds, Digital Codes, Live Items and Art & Stickers are not silently missing",
+          description: "Fixed 2026-08-21 — the brand page dropped those four tabs entirely rather than rendering them, so those listing types were unreachable from any brand. Compare the tab row on a brand page against the same brand's category page.",
+          href: "/brands/brand-beyblade",
+        },
+        {
+          key: "category-brand-tab-counts-match",
+          label: "Each category/brand tab's count badge matches the number of items the tab actually shows",
+          href: "/categories/category-beyblade-burst",
+        },
+        {
           key: "empty-tabs-hidden",
           label: "A store/category/brand detail page never shows a tab for a listing type it has zero items of — e.g. a store with no products doesn't show a \"Products\" tab at all, not an empty products page",
           description: "Fixed 2026-08-20 — tab visibility now checks the already-fetched per-type count and omits the tab entirely when it's zero, instead of always rendering all tabs regardless of whether they'd show anything. \"About\" always stays visible on store pages (no item-count concept). Verify on a real store/category/brand that's genuinely missing at least one listing type.",
           href: "/stores",
+        },
+        {
+          key: "store-art-stickers-tab-shows-items",
+          label: "A store's \"Art & Stickers\" tab opens a real page with art and sticker items on it — not an empty grid or a page full of ordinary products",
+          description: "Fixed 2026-08-21 — the tab showed a genuine non-zero count but linked to the store's Products tab, which filters to standard products only, so it always landed on a page containing none of the items it had just counted. It now has its own /stores/{slug}/art page.",
+          href: "/stores/store-beyblade-arena/art",
+        },
+        {
+          key: "store-tab-counts-match-contents",
+          label: "Every store tab's count badge matches what the tab actually contains — open each of Products, Auctions, Pre-Orders, Prize Draws, Classifieds, Digital Codes, Live Items, Art & Stickers and Bundles in turn",
+          description: "A tab showing \"5\" and then rendering an empty grid (or somebody else's items) is the bug class this checks for. Any mismatch is a failure.",
+          href: "/stores/store-beyblade-arena",
+        },
+        {
+          key: "store-tab-sort-survives-reload",
+          label: "Changing the sort on a store tab and reloading the page keeps that sort applied — the first paint matches what the Sort dropdown shows",
+          description: "Fixed 2026-08-21 — store tab pages ignored the URL when rendering server-side, so a reload always painted page 1 in the default order while the toolbar still displayed the sort you had picked. Set a non-default sort, reload, and confirm the item order matches the dropdown.",
+          href: "/stores/store-beyblade-arena/auctions",
+        },
+        {
+          key: "store-preorders-tab-default-sort",
+          label: "A store's Pre-Orders tab opens in the same default order as the public /pre-orders page (earliest delivery first)",
+          description: "Fixed 2026-08-21 — the store tab had its own drifted copy of the sort list and opened Newest-first while /pre-orders opened Earliest-Delivery-first for the same items. Compare the two side by side; the first item should match.",
+          href: "/stores/store-beyblade-arena/pre-orders",
+        },
+        {
+          key: "store-classified-live-facets-filter",
+          label: "The type-specific filters on a store's Classifieds and Live Items tabs actually narrow the results (city / negotiable / accepts shipping, and species / sex / jurisdiction)",
+          description: "Fixed 2026-08-21 — these were rendered and counted toward the Filters badge but never sent to the server, so they changed nothing. Apply one and confirm the grid genuinely shrinks.",
+          href: "/stores/store-beyblade-arena/classified",
+        },
+        {
+          key: "store-tab-empty-state-not-error",
+          label: "A store tab with genuinely no items shows a friendly empty state — never a blank white area, a spinner that never stops, or an error toast about a missing index",
+          href: "/stores/store-tester-qa-seller",
         },
         { key: "sellers-directory", label: "The sellers directory page loads correctly", href: "/sellers" },
         { key: "seller-detail-page", label: "An individual seller's public detail page loads correctly" },
@@ -1304,6 +2100,48 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             description: "Verify against the seeded \"Test Inactive Category\" fixture (isActive:false) — it should only appear when the Active filter is switched to show inactive categories.",
             href: "/admin/categories",
           },
+          {
+            key: "admin-products-type-chips-all-types",
+            label: "The admin Products \"Type\" filter lists all nine listing types including Art and Stickers, and does NOT offer \"Bundles\"",
+            description: "Fixed 2026-08-21 — the chips used display labels as the underlying filter values, and had no entry at all for art or stickers, so admin could never filter to either. Bundles are a category type, not a listing type; a Bundles chip here would always return zero rows.",
+            href: "/admin/products",
+          },
+          {
+            key: "admin-products-type-chips-multi-select",
+            label: "The admin Products \"Type\" chips are multi-select — ticking Auctions AND Prize Draws lists both, and every single chip on its own returns rows (never zero)",
+            description: "Tick each of the nine chips one at a time and confirm each returns results (given seeded data exists for that type). A chip that always returns nothing means its value no longer matches what the database stores.",
+            href: "/admin/products",
+          },
+          {
+            key: "admin-products-featured-promoted-sorts",
+            label: "The admin Products \"Featured first\" and \"Promoted first\" sorts actually reorder the list — featured/promoted items move to the top",
+            description: "Fixed 2026-08-21 — both options existed in the code but targeted fields that were not sortable, so the sort was silently discarded and the list never changed order. Toggle a couple of items' Featured flags first so there is something to sort, then pick the sort and confirm they rise to the top.",
+            href: "/admin/products",
+          },
+          {
+            key: "admin-per-type-pages-have-filters",
+            label: "The admin Art, Stickers, Classified, Digital Codes and Live Items pages each have a working Status filter and a sort dropdown, and clicking a row opens the product editor",
+            description: "Fixed 2026-08-21 — all five pages were near-identical copies with no filter drawer at all. They now share one config. Check each page: a Status filter exists, sorting works, and a row click lands on the real product edit page.",
+            href: "/admin/art",
+          },
+          {
+            key: "admin-listing-reset-restores-defaults",
+            label: "The \"Reset\" button on an admin listing returns it to exactly what a fresh page load shows — not to a wider, unfiltered list",
+            description: "Fixed 2026-08-21 — Reset cleared every filter to empty instead of restoring each view's configured default, so Reset could show MORE rows than opening the page fresh. Compare: load the page, note the row count, apply some filters, hit Reset, and the count should return to the original.",
+            href: "/admin/tester-checklist",
+          },
+          {
+            key: "admin-address-payment-status-chips-in-url",
+            label: "The status chips on Admin > Addresses and Admin > Payment Methods are reflected in the URL and survive a reload and the Back button",
+            description: "Fixed 2026-08-21 — these chips were held in local component state only, so the selection vanished on reload, could not be shared as a link, and the browser Back button skipped past it. Pick a status, reload, and confirm it is still selected.",
+            href: "/admin/addresses",
+          },
+          {
+            key: "admin-listing-sort-dropdown-preselected",
+            label: "Every admin listing opens with its Sort dropdown showing a selected option — never blank",
+            description: "Fixed 2026-08-21 on Addresses and Payment Methods, whose default sort was not among the options they offered, so the dropdown opened with nothing selected. Spot-check several admin listings.",
+            href: "/admin/addresses",
+          },
           { key: "sublisting-categories-crud", label: "Admin can create, edit, and list sublisting categories", href: "/admin/sublisting-categories" },
           { key: "carousel-crud", label: "Admin can create, edit, and reorder carousel slides", href: "/admin/carousel" },
           { key: "sections-crud", label: "Admin can create, edit, and reorder homepage sections", href: "/admin/sections" },
@@ -1322,6 +2160,34 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "coupon-min-max-discount", label: "Admin-set minPurchase and maxDiscount are correctly enforced at checkout" },
           { key: "coupon-scope-admin-vs-seller", label: "Admin-scope and seller-scope coupons both apply correctly, respecting scope rules" },
           { key: "coupon-expire-reject", label: "Expiring a coupon from the admin editor causes checkout to reject it immediately" },
+          {
+            key: "coupon-admin-is-platform-wide",
+            label: "An admin-created coupon applies across every store in the cart, not just one",
+            href: "/admin/coupons/new",
+            description: "Admin coupons have no store field — they are platform-wide by design. Create one, then as a buyer apply it to a cart holding items from two different stores and confirm the discount is spread across both stores' items.",
+          },
+          {
+            key: "coupon-admin-no-stacking-toggle",
+            label: "The admin coupon form no longer has an \"Allow stacking with seller coupons\" toggle",
+            href: "/admin/coupons/new",
+            description: "Stacking is now unconditional (one per store + one platform-wide), so that toggle was removed. Its presence — or any saved coupon still blocking a seller coupon from stacking — is a bug.",
+          },
+          {
+            key: "coupon-admin-category-restriction-enforced",
+            label: "Restricting an admin coupon to categories actually limits which items it discounts",
+            href: "/admin/coupons/new",
+            description: "Create a platform-wide coupon restricted to one category. A cart with none of that category must have the code refused; a cart with some must discount only those items. Leaving the category list empty must keep the coupon applicable to everything.",
+          },
+          {
+            key: "coupon-admin-edit-actually-saves",
+            label: "Editing a coupon's name, discount, limits or dates actually persists after reload",
+            description: "Change several fields at once, save, then hard-reload the edit page. Every change must still be there. A save that returns success but shows the old values after reload is a bug.",
+          },
+          {
+            key: "coupon-admin-usage-visible",
+            label: "The admin coupon list shows usage counts that go up after a buyer redeems the coupon",
+            description: "Note the current usage, have a buyer complete an order with the coupon, then refresh the admin list. Check this for BOTH a cash/UPI order and (if Razorpay is enabled) an online-payment order — online payments previously did not record usage at all.",
+          },
         ],
       },
       {

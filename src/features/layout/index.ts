@@ -60,6 +60,7 @@ export type {
   BottomAction,
   BottomBulkConfig,
   BottomActionsState,
+  BottomActionsDesktopMode,
 } from "./BottomActionsContext";
 export { useBottomActions } from "./hooks/useBottomActions";
 export type { UseBottomActionsOptions } from "./hooks/useBottomActions";

@@ -148,7 +148,14 @@ export function PlaceBidFormClient({
           return;
         }
         setSuccess(true);
-        router.refresh();
+        // Buy-Now writes a locked cart line, so send the buyer straight to the
+        // auction checkout lane to pay for it. This used to just call
+        // `router.refresh()` and discard the action's result entirely, leaving
+        // the buyer on the product page with no indication that anything was
+        // owed — the action returned an orderId nobody ever used.
+        const checkoutUrl = (result as { checkoutUrl?: string } | null)?.checkoutUrl;
+        if (checkoutUrl) router.push(checkoutUrl);
+        else router.refresh();
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) setShowLoginModal(true);

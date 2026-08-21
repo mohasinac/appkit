@@ -24,6 +24,13 @@ import {
 import { OfferStatusValues } from "../schemas";
 import type { OfferDocument } from "../schemas";
 
+/**
+ * How long an accepted offer stays claimable at its locked price. Shared by the
+ * seller-accept path, the buyer-accepts-counter path, and the expiry sweep so
+ * all three can't drift.
+ */
+export const OFFER_CHECKOUT_WINDOW_MS = 48 * 60 * 60 * 1000;
+
 const ERR_OFFER_NOT_FOUND = "Offer not found";
 const ERR_NOT_AUTHORISED = "Not authorized";
 import type { CartDocument } from "../../cart/schemas/firestore";
@@ -151,17 +158,13 @@ export async function respondToOffer(
 
   let updated: OfferDocument;
 
-  const CHECKOUT_WINDOW_MS = 48 * 60 * 60 * 1000;
-
   if (action === "accept") {
     updated = await offerRepository.accept(
       offerId,
       offer.offerAmount,
       sellerNote,
+      new Date(Date.now() + OFFER_CHECKOUT_WINDOW_MS),
     );
-    await offerRepository.update(offerId, {
-      checkoutDeadline: new Date(Date.now() + CHECKOUT_WINDOW_MS),
-    });
   } else if (action === "decline") {
     updated = await offerRepository.decline(offerId, sellerNote);
   } else {
@@ -221,10 +224,10 @@ export async function acceptCounterOffer(
   if (new Date() > offer.expiresAt)
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
 
-  const updated = await offerRepository.acceptCounter(offerId);
-  await offerRepository.update(offerId, {
-    checkoutDeadline: new Date(Date.now() + 48 * 60 * 60 * 1000),
-  });
+  const updated = await offerRepository.acceptCounter(
+    offerId,
+    new Date(Date.now() + OFFER_CHECKOUT_WINDOW_MS),
+  );
 
   const counterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
   if (counterStore?.ownerId) await sendNotification({

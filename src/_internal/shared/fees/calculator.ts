@@ -22,23 +22,84 @@ export interface FeeCommissionRates {
   gstPercent: number;
   /** Rupee floor (not paise) — matches the existing `minimumTransactionFee` doc convention. */ // audit-money-units-ok: clarifies this is NOT paise
   minimumTransactionFee?: number;
+  /**
+   * Rupee ceiling on the buyer-facing platform commission. Optional so
+   * siteSettings documents saved before this field existed keep working —
+   * falls back to DEFAULT_PLATFORM_FEE_MAX (₹10).
+   *
+   * Applies to `computeCheckoutFees` (what the BUYER pays) only. The seller-side
+   * `computePayoutDeduction` is deliberately uncapped — that is a separate
+   * commercial decision, not the same number.
+   */ // audit-money-units-ok: rupee ceiling, not paise
+  platformFeeMax?: number;
   gatewayFeePercent?: number;
 }
 
+/** Buyer-facing platform commission ceiling, in decimal rupees. */
+const DEFAULT_PLATFORM_FEE_MAX = 10;
+
 export interface CheckoutFees {
-  /** Platform commission in decimal rupees. */
+  /** Platform commission in decimal rupees, capped at `platformFeeMax`. */
   platformFee: number;
-  /** GST on the platform fee, in decimal rupees. */
+  /** GST on the (already capped) platform fee, in decimal rupees. */
   gstOnFee: number;
   /** platformFee + gstOnFee, floored at minimumTransactionFee. */
   totalFee: number;
 }
 
+/**
+ * What the buyer pays on top of the subtotal.
+ *
+ * The cap is applied to the commission BEFORE GST is computed, because GST is
+ * levied on the commission actually charged — capping afterwards would bill tax
+ * on money that was never collected.
+ */
 export function computeCheckoutFees(subtotal: number, commissions: FeeCommissionRates): CheckoutFees {
-  const platformFee = roundRupees(subtotal * (commissions.platformFeePercent / 100));
+  const uncapped = roundRupees(subtotal * (commissions.platformFeePercent / 100));
+  const cap = commissions.platformFeeMax ?? DEFAULT_PLATFORM_FEE_MAX;
+  const platformFee = Math.min(uncapped, cap);
   const gstOnFee = roundRupees(platformFee * (commissions.gstPercent / 100));
   const totalFee = Math.max(platformFee + gstOnFee, commissions.minimumTransactionFee ?? 0);
   return { platformFee, gstOnFee, totalFee };
+}
+
+/**
+ * Split one checkout's platform commission across the orders it produces.
+ *
+ * The buyer is charged a single capped commission for the transaction, but the
+ * cart splits into one order per store, and each `OrderDocument` records its own
+ * `platformFee` (invoices, reconciliation). Apportioning pro-rata by group
+ * subtotal keeps those per-order figures meaningful; giving the last group the
+ * rounding remainder guarantees they sum to exactly what was charged, so the
+ * orders can never quietly total a rupee more or less than the buyer paid.
+ *
+ * @param groupSubtotals `[storeId, subtotal]` pairs, in stable order.
+ */
+export function allocateCheckoutFees(
+  groupSubtotals: readonly (readonly [string, number])[],
+  fees: CheckoutFees,
+): Map<string, { platformFee: number; gstOnFee: number }> {
+  const allocation = new Map<string, { platformFee: number; gstOnFee: number }>();
+  if (groupSubtotals.length === 0) return allocation;
+
+  const total = groupSubtotals.reduce((sum, [, subtotal]) => sum + subtotal, 0);
+  let platformRemaining = fees.platformFee;
+  let gstRemaining = fees.gstOnFee;
+
+  groupSubtotals.forEach(([storeId, subtotal], index) => {
+    const isLast = index === groupSubtotals.length - 1;
+    // An all-zero cart can't be apportioned by share — fall back to giving the
+    // whole (necessarily zero-ish) fee to the last group rather than dividing
+    // by zero.
+    const share = total > 0 ? subtotal / total : 0;
+    const platformFee = isLast ? roundRupees(platformRemaining) : roundRupees(fees.platformFee * share);
+    const gstOnFee = isLast ? roundRupees(gstRemaining) : roundRupees(fees.gstOnFee * share);
+    platformRemaining = roundRupees(platformRemaining - platformFee);
+    gstRemaining = roundRupees(gstRemaining - gstOnFee);
+    allocation.set(storeId, { platformFee, gstOnFee });
+  });
+
+  return allocation;
 }
 
 export interface PayoutDeduction {

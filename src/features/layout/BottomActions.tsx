@@ -18,7 +18,9 @@
  *        styled with the selected action's variant (danger = red, etc.).
  *
  * Layout rules:
- *  - Hidden on lg+ screens (`lg:hidden`) — desktop shows inline action panels.
+ *  - Hidden on lg+ screens by default — desktop shows inline action panels. A page can
+ *    opt in by passing `desktop: "after-scroll" | "always"` to `useBottomActions`;
+ *    "after-scroll" brings the bar back once the primary CTA has scrolled out of view.
  *  - The bar slides up with a 300 ms ease-out transition; `pointer-events-none`
  *    while off-screen.
  *
@@ -28,7 +30,7 @@
  * // Features use `useBottomActions` to register their actions.
  */
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import type { BottomAction } from "./BottomActionsContext";
@@ -42,6 +44,8 @@ const Z_BOTTOM_ACTIONS = "z-[var(--appkit-z-bottom-nav)]";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
 const CLS_COUNT_BADGE = "bg-error-surface text-white";
+/** How far the user must scroll before the desktop bar reveals itself. */
+const DESKTOP_REVEAL_SCROLL_PX = 400;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -113,6 +117,46 @@ function BulkPickerPanel({
   );
 }
 
+/**
+ * Expandable detail that opens UPWARD from the bar.
+ *
+ * Same recipe as BulkPickerPanel above — absolutely positioned at `bottom-full`
+ * so it grows into the space above the bar rather than pushing the page, and
+ * animated on max-height/opacity so it can't be tabbed into while closed.
+ * Scrolls internally, since a many-store cart's breakdown can outgrow the
+ * screen.
+ */
+function InfoPanel({
+  id,
+  open,
+  children,
+}: {
+  id: string;
+  open: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Div
+      id={id}
+      className={[
+        "absolute bottom-full left-0 right-0 overflow-hidden",
+        BOTTOM_NAV_BG,
+        "border-t border-zinc-200/80 border-[var(--appkit-color-border)]/80",
+        "shadow-[0_-8px_24px_rgba(0,0,0,0.10)] dark:shadow-[0_-8px_24px_rgba(0,0,0,0.35)]",
+        "transition-[max-height,opacity] duration-200 ease-out",
+        open ? "max-h-[60vh] opacity-100" : "max-h-0 opacity-0 pointer-events-none",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      aria-hidden={!open}
+    >
+      <Div className="max-h-[60vh]" overflow="y-auto" padding="md">
+        {children}
+      </Div>
+    </Div>
+  );
+}
+
 function PageActionsRow({
   pageActions,
   dispatchAction,
@@ -174,20 +218,53 @@ export default function BottomActions() {
     useBottomActionsContext();
 
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const infoPanelId = useId();
 
-  useClickOutside(containerRef, () => setPickerOpen(false));
+  useClickOutside(containerRef, () => {
+    setPickerOpen(false);
+    setInfoOpen(false);
+  });
 
-  const { actions, bulk, infoLabel, secondaryLabel } = state;
+  const { actions, bulk, infoLabel, secondaryLabel, infoPanel, desktop } = state;
+
+  // Desktop reveal-on-scroll. Kept as a plain passive listener to match BackToTop —
+  // there is no shared scroll-position hook in the codebase and one consumer doesn't
+  // justify inventing one. Only armed when a page actually opts into "after-scroll".
+  const [scrolledPastFold, setScrolledPastFold] = useState(false);
+  const wantsScrollGate = desktop === "after-scroll";
+
+  useEffect(() => {
+    if (!wantsScrollGate) {
+      setScrolledPastFold(false);
+      return;
+    }
+    const onScroll = () =>
+      setScrolledPastFold(window.scrollY > DESKTOP_REVEAL_SCROLL_PX);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [wantsScrollGate]);
+
+  const showOnDesktop =
+    desktop === "always" || (wantsScrollGate && scrolledPastFold);
 
   const isBulkMode = !!(bulk && bulk.selectedCount > 0);
+  const hasInfoPanel = infoPanel != null && !isBulkMode;
   const bulkActions = bulk?.actions ?? [];
   const pageActions = actions;
   const isVisible =
     (isBulkMode ? bulkActions.length > 0 || !!bulk : pageActions.length > 0) ||
     !!infoLabel ||
     !!secondaryLabel;
+
+  // A panel left open after its content is withdrawn (bulk mode taking over, or
+  // the page clearing it) would sit there as an empty sheet.
+  useEffect(() => {
+    if (!hasInfoPanel) setInfoOpen(false);
+  }, [hasInfoPanel]);
 
   // Keep selectedActionId in sync with available bulk actions
   useEffect(() => {
@@ -226,7 +303,10 @@ export default function BottomActions() {
       }
       aria-hidden={!isVisible}
       className={[
-        "fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))] left-0 right-0 lg:hidden",
+        "fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))] left-0 right-0",
+        // `--bottom-nav-height` resolves to 0px above lg, so the same offset lands the
+        // bar on the viewport bottom on desktop with no extra positioning.
+        showOnDesktop ? "" : "lg:hidden",
         Z_BOTTOM_ACTIONS,
         BOTTOM_NAV_BG,
         "shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.30)]",
@@ -246,6 +326,13 @@ export default function BottomActions() {
         />
       )}
 
+      {/* -- Expandable detail panel (page mode only — bulk owns this space) -- */}
+      {hasInfoPanel && !isBulkMode && (
+        <InfoPanel id={infoPanelId} open={infoOpen}>
+          {infoPanel}
+        </InfoPanel>
+      )}
+
       {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
       {isBulkMode && (
         <Div className="h-[3px] w-full bg-[image:var(--appkit-gradient-brand-tri)]" />
@@ -261,12 +348,38 @@ export default function BottomActions() {
       )}
 
       {/* -- Info label row (page mode only) --------------------------------- */}
-      {infoLabel && !isBulkMode && (
+      {infoLabel && !isBulkMode && !hasInfoPanel && (
         <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
           <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
             {infoLabel}
           </Text>
         </Div>
+      )}
+
+      {/* -- Info label as a disclosure toggle (when a panel is registered) --- */}
+      {infoLabel && !isBulkMode && hasInfoPanel && (
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => setInfoOpen((o) => !o)}
+          aria-expanded={infoOpen}
+          aria-controls={infoPanelId}
+          className="w-full flex items-center justify-between gap-[var(--appkit-space-2)] rounded-none border-b border-[var(--appkit-color-border)]/80 px-[var(--appkit-space-4)] pt-[var(--appkit-space-2)] pb-[var(--appkit-space-1)] min-h-0"
+        >
+          <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
+            {infoLabel}
+          </Text>
+          <Span className="flex-shrink-0 flex items-center gap-[var(--appkit-space-1)]">
+            <Text as="span" size="xs" color="muted">
+              {infoOpen ? "Hide" : "Details"}
+            </Text>
+            {infoOpen ? (
+              <ChevronDown className="w-4 h-4 text-zinc-400" aria-hidden="true" />
+            ) : (
+              <ChevronUp className="w-4 h-4 text-zinc-400" aria-hidden="true" />
+            )}
+          </Span>
+        </Button>
       )}
 
       {/* -- Main action row -------------------------------------------------- */}

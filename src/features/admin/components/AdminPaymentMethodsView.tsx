@@ -1,7 +1,8 @@
 "use client";
 
 import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
-import React, { useState } from "react";
+import React from "react";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Div, FilterChipGroup, Span, Stack, Text, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -69,7 +70,6 @@ const PM_COLUMNS: AdminTableColumn<PaymentMethodRow>[] = [
 ];
 
 function buildConfig(
-  banStatus: string,
   onAction: (id: string, action: string) => void,
 ): ListingViewConfig<AdminPaymentMethodsResponse, PaymentMethodRow> {
   return {
@@ -77,14 +77,19 @@ function buildConfig(
     title: "Payment Methods",
     searchPlaceholder: "Search by type or owner",
     emptyLabel: "No payment methods found",
-    filterKeys: [],
+    // URL-synced via filterKeys (2026-08-21) — see the matching note in
+    // AdminAddressesView. banStatus is a query param, not a Sieve clause,
+    // hence buildExtraParams rather than buildFilters.
+    filterKeys: ["banStatus"],
     defaultSort: sortBy("bannedAt", "DESC"),
-    queryKey: ["admin", "payment-methods", banStatus],
-    endpoint: banStatus
-      ? `${ADMIN_ENDPOINTS.PAYMENT_METHODS}?banStatus=${encodeURIComponent(banStatus)}`
-      : ADMIN_ENDPOINTS.PAYMENT_METHODS,
+    queryKey: ["admin", "payment-methods"],
+    endpoint: ADMIN_ENDPOINTS.PAYMENT_METHODS,
+    buildExtraParams: (state) =>
+      state.banStatus ? { banStatus: state.banStatus } : undefined,
     sortOptions: [
-      { value: "bannedAt", label: "Flagged Date" },
+      // -bannedAt (newest flagged first) to match defaultSort — the option was
+      // "bannedAt" (oldest first), so the dropdown opened with nothing selected.
+      { value: sortBy("bannedAt", "DESC"), label: "Flagged Date" },
       { value: "type", label: "Type" },
     ],
     columns: PM_COLUMNS,
@@ -141,7 +146,10 @@ export interface AdminPaymentMethodsViewProps {
 }
 
 export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
-  const [banStatus, setBanStatus] = useState("");
+  // Independent useUrlTable() against the same URL param the listing reads
+  // via filterKeys (Root Cause #35 pattern).
+  const chipTable = useUrlTable({ defaults: {} });
+  const banStatus = chipTable.get("banStatus");
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -162,7 +170,7 @@ export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
     actionMutation.mutate({ id, action });
   };
 
-  const config = buildConfig(banStatus, handleAction);
+  const config = buildConfig(handleAction);
 
   return (
     <Stack gap="md">
@@ -171,7 +179,7 @@ export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
           label="Status"
           tabs={BAN_STATUS_TABS}
           value={banStatus}
-          onChange={(v) => setBanStatus(v)}
+          onChange={(v) => chipTable.set("banStatus", v)}
         />
       </Div>
       <DataListingView config={config} />

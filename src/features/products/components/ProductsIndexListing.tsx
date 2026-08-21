@@ -28,6 +28,10 @@ import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useBottomActions } from "../../layout";
 import { GENERIC_PRODUCT_LISTING_TYPES, PRODUCT_TYPE_FILTER_TABS } from "../constants/listing-tabs";
+import { parseSelectedListingTypes } from "../utils/listing-type";
+import { commonSortOptionsFor, hideDefaultsFor } from "../../../_internal/shared/listing-types/_registry";
+import type { ListingType } from "../types";
+import { TextLink } from "../../../ui";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -72,7 +76,50 @@ export function ProductsIndexListing({
   const [view, setView] = useState<ViewMode>(
     (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
-  const productType = table.get(TABLE_KEYS.LISTING_TYPE) || "All";
+
+  // ── Type filter (multi-select) ───────────────────────────────────────────
+  // The URL value is a pipe-joined set; empty means "every type this page
+  // spans". Unknown tokens are dropped rather than passed through to a
+  // Firestore `==` that could never match (Root Cause #33).
+  const typeParam = table.get(TABLE_KEYS.LISTING_TYPE);
+  const selectedTypes = parseSelectedListingTypes(typeParam).filter((t) =>
+    listingTypes.includes(t),
+  );
+  const effectiveTypes = (
+    selectedTypes.length > 0 ? selectedTypes : listingTypes
+  ) as readonly ListingType[];
+
+  // Sorts valid across every selected type. Pick Auctions alone and you get
+  // "Ending Soon"; pick Auctions + Products and you get only what both
+  // support, because a sort on `auctionEndDate` would order the products
+  // arbitrarily (and needs an index nobody declares for that shape).
+  const sortOptions = commonSortOptionsFor(effectiveTypes, "public");
+  const sortValue = table.get(TABLE_KEYS.SORT) || DEFAULT_SORT;
+  // Guard against a sort carried over from a previous selection that the new
+  // one can't satisfy — that combination throws FAILED_PRECONDITION in
+  // Firestore and surfaces as a bare empty page (Root Cause #2).
+  const effectiveSort = sortOptions.some((o) => o.value === sortValue)
+    ? sortValue
+    : DEFAULT_SORT;
+
+  // Which "Show X" toggles are meaningful for the current selection. A mixed
+  // set can need both (products sell out, auctions end).
+  const hideDefaults = hideDefaultsFor(effectiveTypes);
+  const showsSoldToggle = hideDefaults.includes("sold");
+  const showsEndedToggle =
+    hideDefaults.includes("ended") || hideDefaults.includes("closed");
+  const showEnded = table.get(TABLE_KEYS.SHOW_ENDED) === "true";
+
+  // "Full <type> filters →" — a single selected type with a dedicated browse
+  // page gets a link to it, since that page carries facets this generic one
+  // can't (bid range, delivery-date window, reveal status).
+  const dedicatedPage =
+    selectedTypes.length === 1 && pluginFor(selectedTypes[0]).browseRoute
+      ? {
+          href: pluginFor(selectedTypes[0]).browseRoute as string,
+          label: `Full ${pluginFor(selectedTypes[0]).pluralLabel} filters →`,
+        }
+      : null;
 
   const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
@@ -88,12 +135,20 @@ export function ProductsIndexListing({
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_SOLD]: "" });
+    onResetAll({
+      [TABLE_KEYS.QUERY]: "",
+      [TABLE_KEYS.SORT]: "",
+      [TABLE_KEYS.SHOW_SOLD]: "",
+      [TABLE_KEYS.SHOW_ENDED]: "",
+      [TABLE_KEYS.LISTING_TYPE]: "",
+    });
     setSearchInput("");
   }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
     table.get(TABLE_KEYS.SHOW_SOLD) === "true" ||
+    table.get(TABLE_KEYS.SHOW_ENDED) === "true" ||
+    !!typeParam ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     filterActiveCount > 0;
 
@@ -117,13 +172,28 @@ export function ProductsIndexListing({
     brand: table.get(TABLE_KEYS.BRAND) || undefined,
     storeId: table.get(TABLE_KEYS.STORE_ID) || undefined,
     freeShipping: table.get(TABLE_KEYS.FREE_SHIPPING) === "true" ? true : undefined,
-    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
+    // These three are in FILTER_KEYS (so they count toward the filter badge)
+    // but were never put on the wire — the drawer sections were inert.
+    tags: table.get(TABLE_KEYS.TAGS) || undefined,
+    sublistingCategory: table.get(TABLE_KEYS.SUBLISTING_CATEGORY) || undefined,
+    features: table.get(TABLE_KEYS.FEATURES) || undefined,
+    sort: effectiveSort,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
-    listingType: productType === "All" ? listingTypes.join("|") : productType,
-    // Hide sold-out items by default. Uses stockQuantity>0 (always-present field)
-    // instead of status=="published" because sellers don't actively transition status.
-    inStock: showSold ? undefined : true,
+    // Pipe-joined OR-group — sievejs parses it as a same-field OR and the
+    // Firebase adapter upgrades it to a `.where(…, "in", …)` query.
+    listingType: effectiveTypes.join("|"),
+    // Hide sold-out items by default, but only when a sold-out-able type is in
+    // play — an auction has no meaningful stock, so applying it to an
+    // auctions-only view would hide every live auction.
+    inStock: showsSoldToggle && !showSold ? true : undefined,
+    // Same shape for time-boxed types. `dateFrom` only takes effect when
+    // exactly one type is selected (there is no single end-date field shared
+    // across types), which `dateFieldFor` already enforces server-side.
+    dateFrom:
+      showsEndedToggle && !showEnded && selectedTypes.length === 1
+        ? new Date().toISOString()
+        : undefined,
   };
 
   const { products, totalPages, page, isLoading } = useProducts(
@@ -259,8 +329,8 @@ export function ProductsIndexListing({
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
-        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={PRODUCT_PUBLIC_SORT_OPTIONS}
+        sortValue={effectiveSort}
+        sortOptions={sortOptions}
         onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
@@ -272,23 +342,49 @@ export function ProductsIndexListing({
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
         toggles={[
-          { label: "Show sold", active: showSold, onChange: (next) => table.set(TABLE_KEYS.SHOW_SOLD, next ? "true" : "") },
+          // Each toggle appears only when it means something for the selected
+          // types — "Show ended" against a Products-only view would be noise,
+          // and "Show sold" against an Auctions-only view is meaningless.
+          ...(showsSoldToggle
+            ? [{ label: "Show sold", active: showSold, onChange: (next: boolean) => table.set(TABLE_KEYS.SHOW_SOLD, next ? "true" : "") }]
+            : []),
+          ...(showsEndedToggle
+            ? [{ label: "Show ended", active: showEnded, onChange: (next: boolean) => table.set(TABLE_KEYS.SHOW_ENDED, next ? "true" : "") }]
+            : []),
           // Inline quick-filter: the highest-frequency drawer-only facet promoted
           // to the sticky toolbar so it doesn't require open-drawer → check → Apply
           // → close for every toggle. The full facet set (category/price/brand/…)
           // remains in <FilterDrawer> below.
-          { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
+          { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next: boolean) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
         ]}
       />
 
-      {/* ── Product-type chips — narrows the consolidated generic tab ───── */}
+      {/* ── Product-type chips — multi-select, spans every listing type ──── */}
       <Div padding="y-sm">
-        <FilterChipGroup
-          label="Type"
-          tabs={typeTabs}
-          value={productType}
-          onChange={(v) => table.set(TABLE_KEYS.LISTING_TYPE, v === "All" ? "" : v)}
-        />
+        <Row justify="between" align="center" wrap gap="sm">
+          <FilterChipGroup
+            multiple
+            label="Type"
+            tabs={typeTabs}
+            value={selectedTypes.join("|")}
+            onChange={(next) => {
+              // Clear `sort` alongside the type change: a sort valid for the
+              // old selection (say -auctionEndDate) can be invalid for the new
+              // one, and useUrlTable's single router.replace means we must set
+              // both in ONE call — a follow-up setPage/set would read stale
+              // searchParams and overwrite this update (Root Cause #13).
+              table.setMany({
+                [TABLE_KEYS.LISTING_TYPE]: next,
+                [TABLE_KEYS.SORT]: "",
+              });
+            }}
+          />
+          {dedicatedPage && (
+            <TextLink href={dedicatedPage.href} size="sm" weight="medium">
+              {dedicatedPage.label}
+            </TextLink>
+          )}
+        </Row>
       </Div>
 
       {/* ── Bulk action bar (inline, replaces fixed bottom bar) ────────── */}

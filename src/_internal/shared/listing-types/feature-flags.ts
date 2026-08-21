@@ -45,20 +45,38 @@ export function isCategoryTypeEnabled(
   return flag !== false;
 }
 
+/**
+ * Every listing type, in canonical iteration order.
+ *
+ * Declared as `Record<ListingType, true>` rather than a plain array on purpose:
+ * adding a member to the `ListingType` union without adding it here is then a
+ * COMPILE error, not a silent omission. `art` / `stickers` were missing from
+ * the old hand-written array for exactly that reason, which meant
+ * `/api/products`' "strip disabled types" post-filter dropped every art and
+ * sticker row from any call that didn't name a listingType explicitly
+ * (homepage, search, related-items).
+ */
+const ALL_LISTING_TYPES_MAP: Record<ListingType, true> = {
+  standard: true,
+  auction: true,
+  "pre-order": true,
+  "prize-draw": true,
+  classified: true,
+  "digital-code": true,
+  live: true,
+  art: true,
+  stickers: true,
+};
+
+export const ALL_LISTING_TYPES = Object.keys(
+  ALL_LISTING_TYPES_MAP,
+) as ListingType[];
+
 /** Pull the full list of enabled listing types in canonical iteration order. */
 export function enabledListingTypes(
   settings: FeatureFlagSnapshot | null | undefined,
 ): ListingType[] {
-  const all: ListingType[] = [
-    "standard",
-    "auction",
-    "pre-order",
-    "prize-draw",
-    "classified",
-    "digital-code",
-    "live",
-  ];
-  return all.filter((t) => isListingTypeEnabled(t, settings));
+  return ALL_LISTING_TYPES.filter((t) => isListingTypeEnabled(t, settings));
 }
 
 export function enabledCategoryTypes(

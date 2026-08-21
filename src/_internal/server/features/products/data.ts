@@ -17,7 +17,9 @@ import type { ListingType } from "../../../../features/products/types";
 import type { ProductItem } from "../../../../features/products/types";
 import type { FirestoreDocument } from "../../../../schemas/types";
 import { SIEVE_OP, sieveAnd, sieveFilter, sortBy } from "../../../../utils/sieve-builder";
-import type { Review } from "../../../../features/reviews/types";
+import type { Review, ReviewListResponse } from "../../../../features/reviews/types";
+import { REVIEW_FIELDS } from "../../../../constants/field-names";
+import { REVIEWS_DETAIL_PAGE_SIZE } from "../../../shared/features/reviews/config";
 
 // ---------------------------------------------------------------------------
 // Request-scoped cache — each function is deduplicated per RSC render tree.
@@ -36,8 +38,8 @@ export const getProductForDetail = cache(
 
 /** Fetch the first page of approved reviews for a product, deduped per request. */
 export const getReviewsForProduct = cache(
-  async (productId: string): Promise<unknown[]> => {
-    return reviewRepository.findApprovedByProduct(productId).catch(() => []);
+  async (productId: string, limit = REVIEWS_DETAIL_PAGE_SIZE): Promise<unknown[]> => {
+    return reviewRepository.findApprovedByProduct(productId, limit).catch(() => []);
   },
 );
 
@@ -73,9 +75,65 @@ export function toReview(doc: FirestoreDocument): Review {
 
 /** Fetch + map approved reviews for a product straight to the client Review shape, deduped per request. */
 export const getReviewItemsForProduct = cache(
-  async (productId: string): Promise<Review[]> => {
-    const docs = await reviewRepository.findApprovedByProduct(productId).catch(() => [] as unknown[]);
+  async (productId: string, limit = REVIEWS_DETAIL_PAGE_SIZE): Promise<Review[]> => {
+    const docs = await reviewRepository
+      .findApprovedByProduct(productId, limit)
+      .catch(() => [] as unknown[]);
     return (docs as FirestoreDocument[]).map(toReview);
+  },
+);
+
+/**
+ * Page 1 of a product's approved reviews, shaped exactly like `GET /api/reviews?productId=`
+ * so it can seed `<ReviewsListingPanel initialData>` without a client round-trip.
+ *
+ * The defaults here MUST match the panel's bare (unfiltered, page-1) query defaults —
+ * `staleTime: Infinity` freezes whatever `initialData` is handed over, so a mismatch would
+ * pin the wrong rows into the cache (Recurrent Root Cause #30).
+ */
+export const getReviewPageForProduct = cache(
+  async (
+    productId: string,
+    pageSize = REVIEWS_DETAIL_PAGE_SIZE,
+  ): Promise<ReviewListResponse> => {
+    const empty: ReviewListResponse = {
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize,
+      totalPages: 1,
+      hasMore: false,
+      averageRating: 0,
+      ratingDistribution: {},
+      totalApproved: 0,
+    };
+
+    try {
+      const [summary, result] = await Promise.all([
+        reviewRepository.getApprovedRatingSummary(productId),
+        reviewRepository.listForProduct(productId, {
+          filters: sieveFilter(REVIEW_FIELDS.STATUS, SIEVE_OP.EQ, "approved"),
+          sorts: sortBy(REVIEW_FIELDS.CREATED_AT),
+          page: 1,
+          pageSize,
+        }),
+      ]);
+
+      return {
+        items: (result.items as unknown as FirestoreDocument[]).map(toReview),
+        total: result.total,
+        page: result.page,
+        pageSize: result.pageSize,
+        totalPages: result.totalPages,
+        hasMore: result.hasMore,
+        averageRating: summary.averageRating,
+        ratingDistribution: summary.ratingDistribution,
+        totalApproved: summary.total,
+      };
+    } catch (err) {
+      void normalizeError(err);
+      return empty;
+    }
   },
 );
 

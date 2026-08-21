@@ -1,31 +1,34 @@
-import { sieveFilter, sieveAnd, SIEVE_OP, sortBy, PRODUCT_FIELDS } from "@mohasinac/appkit";
 import React from "react";
-import { productRepository } from "../../../repositories";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
+import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreClassifiedsListing } from "./StoreClassifiedsListing";
 
+type SearchParams = Record<string, string | string[]>;
+
+const LISTING_TYPES = ["classified"] as const;
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
+
 export interface StoreClassifiedsPageViewProps {
   storeSlug: string;
+  searchParams?: SearchParams;
 }
 
-export async function StoreClassifiedsPageView({ storeSlug }: StoreClassifiedsPageViewProps) {
+export async function StoreClassifiedsPageView({ storeSlug, searchParams }: StoreClassifiedsPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
-  const storeId = (store as Record<string, any>)?.id;
+  const storeId = (store as Record<string, unknown> | null)?.id;
+  if (typeof storeId !== "string" || !storeId) return null;
 
-  if (!storeId) return null;
-
-  const result = await productRepository
-    .list({
-      filters: sieveAnd(
-        sieveFilter("storeId", SIEVE_OP.EQ, storeId),
-        sieveFilter("status", SIEVE_OP.EQ, "published"),
-        sieveFilter("listingType", SIEVE_OP.EQ, "classified"),
-      ),
-      sorts: sortBy(PRODUCT_FIELDS.CREATED_AT),
-      page: 1,
-      pageSize: 24,
-    })
-    .catch(() => null);
+  // Shared query — see listStoreProducts. This view used to call
+  // productRepository.list() with an inline filter string and swallow every
+  // failure via a bare .catch(() => null), so a missing index rendered as an
+  // empty store tab with nothing logged (Root Cause #30's family).
+  const result = await listStoreProducts(storeId, LISTING_TYPES, searchParams ?? {}, {
+    pageSize: DEFAULT_PAGE_SIZE,
+    sorts: DEFAULT_SORT,
+  });
 
   return <StoreClassifiedsListing storeId={storeId} initialData={result ?? undefined} />;
 }

@@ -61,6 +61,14 @@ export interface CategoryProductsListingProps {
   categoryId?: string;
   /** Filter products by brand name (for brand detail pages) */
   brandName?: string;
+  /**
+   * Listing types this tab spans. Defaults to `["standard"]` — the original,
+   * only behaviour. Category/brand pages pass a single non-standard type (or
+   * the `["art","stickers"]` pair) so the classifieds / digital-codes / live /
+   * art tabs render real content instead of a blank panel: those four tabs
+   * existed in CATEGORY_PAGE_TABS but had no render branch at all.
+   */
+  listingTypes?: readonly string[];
   initialData?: any;
 }
 
@@ -68,6 +76,7 @@ export function CategoryProductsListing({
   categorySlug,
   categoryId,
   brandName,
+  listingTypes = ["standard"],
   initialData,
 }: CategoryProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
@@ -97,7 +106,10 @@ export function CategoryProductsListing({
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    listingType: "standard" as const,
+    // Pipe-joined OR-group when the tab spans several types (art + stickers);
+    // sievejs parses it as a same-field OR and the Firebase adapter upgrades
+    // it to a `.where(…, "in", …)` query.
+    listingType: listingTypes.join("|"),
   };
 
   const { products, totalPages, page, isLoading } = useProducts(

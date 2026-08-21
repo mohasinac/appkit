@@ -3,6 +3,18 @@ export { CartView } from "./CartView";
 export type { CartViewProps, CartOrderGroup } from "./CartView";
 export { CartSummary } from "./CartSummary";
 export type { CartSummaryProps } from "./CartSummary";
+export { StoreAddonsPicker } from "./StoreAddonsPicker";
+export type {
+  StoreAddonsPickerProps,
+  StoreAddonsValue,
+  StoreAddonsRates,
+} from "./StoreAddonsPicker";
+export { CartPriceBreakdown } from "./CartPriceBreakdown";
+export type {
+  CartPriceBreakdownProps,
+  CartPriceBreakdownData,
+  CartPriceBreakdownStore,
+} from "./CartPriceBreakdown";
 export { CheckoutView } from "./CheckoutView";
 export type { CheckoutViewProps } from "./CheckoutView";
 export { CheckoutAddressStep } from "./CheckoutAddressStep";

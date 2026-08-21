@@ -1,68 +1,34 @@
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
-import { productRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { parseListingSearchParams } from "../../../utils/listing-params";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
+import {
+  listPublicProducts,
+  parsePublicProductParams,
+} from "../../../_internal/server/features/products/list-public";
 
 type SearchParams = Record<string, string | string[]>;
 
-const DEFAULT_PAGE = 1;
+const AUCTION_LISTING_TYPES = ["auction"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = "auctionEndDate";
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildAuctionFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "listingType==auction"];
-  const minBid = sp(params, "minBid");
-  const maxBid = sp(params, "maxBid");
-  if (minBid) parts.push(sieveFilter("currentBid", SIEVE_OP.GTE, minBid));
-  if (maxBid) parts.push(sieveFilter("currentBid", SIEVE_OP.LTE, maxBid));
-  const store = sp(params, "store");
-  if (store) {
-    const values = store.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, values[0]));
-    else if (values.length > 1) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, values.join("|")));
-  }
-  // Mirror AuctionsIndexListing's client-side default (Root Cause pattern —
-  // SSR initialData is seeded into React Query with staleTime:Infinity, so if
-  // this SSR filter doesn't already exclude ended auctions, the client never
-  // refetches and ended auctions leak into the default "Show ended" off view).
-  const showEnded = sp(params, "showEnded") === "true";
-  const dateFrom = showEnded
-    ? sp(params, "dateFrom")
-    : sp(params, "dateFrom") || new Date().toISOString();
-  const dateTo = sp(params, "dateTo");
-  if (dateFrom) parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, dateFrom));
-  if (dateTo) parts.push(sieveFilter("auctionEndDate", SIEVE_OP.LTE, dateTo));
-  return parts.join(",");
-}
 
 export interface AuctionsListViewProps {
   searchParams?: SearchParams;
 }
 
 export async function AuctionsListView({ searchParams = {} }: AuctionsListViewProps) {
-  const std = parseListingSearchParams(searchParams);
-  const sort = std.sorts ?? DEFAULT_SORT;
-  const page = std.page ?? DEFAULT_PAGE;
-  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
-  const filters = buildAuctionFilters(searchParams);
-
-  const result = await productRepository
-    .list({
-      filters,
-      sorts: sort,
-      page,
-      pageSize,
-    })
-    .catch(() => null);
-
-  const initial = result ?? null;
+  // Shared with /api/products. `hideEndedByDefault` mirrors
+  // AuctionsIndexListing's `showEnded ? … : dateFrom=now` default; because the
+  // default sort IS auctionEndDate, listPublicProducts pushes that range into
+  // Firestore rather than filtering in memory.
+  const initial = await listPublicProducts(
+    parsePublicProductParams(searchParams, {
+      listingTypes: AUCTION_LISTING_TYPES,
+      pageSize: DEFAULT_PAGE_SIZE,
+      sorts: DEFAULT_SORT,
+      hideEndedByDefault: true,
+    }),
+  );
 
   return (
     <Main>

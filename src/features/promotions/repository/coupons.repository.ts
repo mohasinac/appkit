@@ -486,6 +486,18 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       /** Canonical listing-kind snapshot (SB1-G Phase 4). */
       listingType: ListingType;
     }>,
+    opts?: {
+      /**
+       * Lazily resolves productId → categorySlugs[]. Supplied by the action
+       * layer (which may import the products repository) so this repository
+       * never takes a cross-repository dependency. Called at most once, and
+       * only when the coupon actually carries a category restriction — so a
+       * coupon without one costs zero extra Firestore reads.
+       */
+      resolveCategorySlugs?: (
+        productIds: string[],
+      ) => Promise<Map<string, string[]>>;
+    },
   ): Promise<{
     valid: boolean;
     coupon?: CouponDocument;
@@ -522,8 +534,12 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     }
 
     // Apply product/category restrictions from the coupon itself
-    const { applicableProducts, applicableCategories, excludeProducts } =
-      coupon.restrictions;
+    const {
+      applicableProducts,
+      applicableCategories,
+      excludeProducts,
+      excludeCategories,
+    } = coupon.restrictions;
     if (applicableProducts && applicableProducts.length > 0) {
       eligible = eligible.filter((item) =>
         applicableProducts.includes(item.productId),
@@ -534,9 +550,34 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         (item) => !excludeProducts.includes(item.productId),
       );
     }
-    // Note: category filtering requires product metadata â€” skipped here but
-    // the restriction is stored and can be enforced by the order service.
-    void applicableCategories;
+
+    // Category restrictions need product metadata the cart doesn't snapshot,
+    // so they are resolved through the injected callback. A product carries
+    // `categorySlugs[]` (1-to-many), so the test is set intersection.
+    const needsCategories =
+      (applicableCategories?.length ?? 0) > 0 ||
+      (excludeCategories?.length ?? 0) > 0;
+    if (needsCategories && eligible.length > 0 && opts?.resolveCategorySlugs) {
+      const slugsByProduct = await opts.resolveCategorySlugs(
+        eligible.map((item) => item.productId),
+      );
+      const slugsFor = (productId: string) => slugsByProduct.get(productId) ?? [];
+      if (applicableCategories && applicableCategories.length > 0) {
+        eligible = eligible.filter((item) =>
+          slugsFor(item.productId).some((slug) =>
+            applicableCategories.includes(slug),
+          ),
+        );
+      }
+      if (excludeCategories && excludeCategories.length > 0) {
+        eligible = eligible.filter(
+          (item) =>
+            !slugsFor(item.productId).some((slug) =>
+              excludeCategories.includes(slug),
+            ),
+        );
+      }
+    }
 
     if (eligible.length === 0) {
       return {
@@ -545,9 +586,11 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         message:
           coupon.applicableToAuctions === true
             ? "This coupon only applies to auction items"
-            : scope === "seller"
-              ? "This coupon is not valid for the items in your cart from this seller"
-              : "No eligible items found for this coupon",
+            : needsCategories
+              ? "This coupon does not apply to any of the categories in your cart"
+              : scope === "seller"
+                ? "This coupon is not valid for the items in your cart from this seller"
+                : "No eligible items found for this coupon",
       };
     }
 

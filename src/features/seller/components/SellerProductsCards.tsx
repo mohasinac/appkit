@@ -6,7 +6,7 @@ import React from "react";
 import { Badge, Button, Checkbox, Div, Grid, Row, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
-import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
+import { listingBadgeVariant } from "../../products/utils/listing-badge-variant";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -89,7 +89,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               <Stack className={`${__P.p3}`} gap="xs">
                 <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
                 <Row gap="sm">
-                  <Badge variant={LISTING_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
+                  <Badge variant={listingBadgeVariant(row.listingKind)}>{row.listingKind}</Badge>
                   <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
                 </Row>
               </Stack>
@@ -120,7 +120,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
             <TextLink href={href} className="flex-1 min-w-0">
               <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
               <Row gap="sm">
-                <Badge variant={LISTING_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
+                <Badge variant={listingBadgeVariant(row.listingKind)}>{row.listingKind}</Badge>
                 <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
               </Row>
             </TextLink>

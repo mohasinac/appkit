@@ -36,10 +36,11 @@ import { CustomSectionTabContent } from "../../products/components/CustomSection
 import { ShareButton } from "../../products/components/ShareButton";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { RelatedItemsSection } from "../../products/components/RelatedItemsSection";
-import { computeRelatedItems, getReviewItemsForProduct } from "../../../_internal/server/features/products/data";
+import { computeRelatedItems, getReviewPageForProduct } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
-import { ReviewsList } from "../../reviews/components/ReviewsList";
+import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
+import { ListingBottomActions } from "../../products/components/ListingBottomActions";
 import type { CustomSection, ProductDocument } from "../../products/schemas/firestore";
 
 export interface LiveItemDetailPageViewProps {
@@ -101,10 +102,10 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
   const customSections: CustomSection[] = Array.isArray(p.customSections) ? (p.customSections as CustomSection[]) : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, reviews] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, initialReviews] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
-    getReviewItemsForProduct(product.id),
+    getReviewPageForProduct(product.id),
   ]);
 
   return (
@@ -247,7 +248,13 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
                 ) : undefined
               }
               reviewsContent={
-                <ReviewsList reviews={reviews} context="listing" emptyLabel="No reviews yet — be the first to review this product." />
+                <ReviewsListingPanel
+                  source={{ kind: "product", productId: product.id }}
+                  stateMode="local"
+                  context="listing"
+                  initialData={initialReviews}
+                  emptyLabel="No reviews yet — be the first to review this product."
+                />
               }
               customTabs={customSections.map((s) => ({
                 id: s.id,
@@ -256,7 +263,7 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
               }))}
             />
           )}
-          renderBuyBar={() => renderActions?.(product)}
+          renderBuyBar={() => <Div id="live-item-buy-bar">{renderActions?.(product)}</Div>}
           renderRelated={() => (
             <Stack gap="xl">
               <GroupedListingsCarousel groups={groups} />
@@ -271,6 +278,14 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
               />
             </Stack>
           )}
+        />
+
+        {/* Sticky CTA — registers into the layout-level BottomActions bar. */}
+        <ListingBottomActions
+          listingType="live"
+          anchorId="live-item-buy-bar"
+          price={price}
+          currency={currency}
         />
       </Container>
     </Main>

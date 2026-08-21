@@ -6,15 +6,43 @@ import { AuctionsIndexListing } from "../../products/components/AuctionsIndexLis
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
 import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
-import { CATEGORY_PAGE_TABS, type CategoryTabId } from "../../products/constants/listing-tabs";
+import {
+  CATEGORY_PAGE_TABS,
+  ART_STICKERS_LISTING_TYPES,
+  type CategoryTabId,
+} from "../../products/constants/listing-tabs";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import type { CategoryDocument } from "../schemas";
 
+/**
+ * Tab slug → listing/category type, derived (2026-08-21). The hand-written
+ * version covered 5 of 10 tabs, and this view's filter did `if (!mapping)
+ * return false` — so classifieds, digital codes, live items and art were
+ * silently DROPPED from every brand page rather than rendering blank (the
+ * failure mode its category-page twin had). Same root gap, opposite symptom.
+ *
+ * `stores` is intentionally absent: a brand has no store roster, which is the
+ * one real difference between this component and CategoryDetailTabs (see
+ * CLAUDE.md's Categories & Brands Reference on why the duplication stands).
+ */
 const TAB_TYPE_MAP: Record<string, { kind: "listing" | "category"; type: string }> = {
-  products: { kind: "listing", type: "standard" },
-  auctions: { kind: "listing", type: "auction" },
-  "pre-orders": { kind: "listing", type: "pre-order" },
-  "prize-draws": { kind: "listing", type: "prize-draw" },
+  ...Object.fromEntries(
+    ALL_LISTING_TYPES.map((type) => [
+      pluginFor(type).tabSlug,
+      { kind: "listing" as const, type },
+    ]),
+  ),
   bundles: { kind: "category", type: "bundle" },
+};
+
+/** Listing types rendered by the shared products listing rather than a dedicated one. */
+const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
+  [pluginFor("standard").tabSlug]: ["standard"],
+  [pluginFor("classified").tabSlug]: ["classified"],
+  [pluginFor("digital-code").tabSlug]: ["digital-code"],
+  [pluginFor("live").tabSlug]: ["live"],
+  [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
 };
 
 export interface BrandDetailTabsProps {
@@ -55,11 +83,10 @@ export function BrandDetailTabs({
 
   const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
     const mapping = TAB_TYPE_MAP[t.id];
-    // This view only has content renderers for the 5 tab ids in
-    // TAB_TYPE_MAP (products/auctions/pre-orders/prize-draws/bundles) — any
-    // other CATEGORY_PAGE_TABS id (stores, classifieds, etc.) has no case in
-    // the render switch below and would show a blank tab, so exclude those
-    // here rather than rely on downstream JSX to silently render nothing.
+    // A tab with no mapping has no render branch below and would show a blank
+    // panel, so drop it here rather than let downstream JSX render nothing.
+    // Today that's only `stores` — a brand has no store roster. Every listing
+    // type IS mapped now (it used to also silently drop four real types).
     if (!mapping) return false;
     if (mapping.kind === "listing" && enabledListingTypes) {
       if (!enabledListingTypes.includes(mapping.type)) return false;
@@ -87,20 +114,21 @@ export function BrandDetailTabs({
         </TabsList>
       </Tabs>
 
-      {activeTab === "products" && (
+      {GENERIC_TAB_LISTING_TYPES[activeTab] && (
         <CategoryProductsListing
           categorySlug=""
           brandName={brandName}
-          initialData={initialProductsData}
+          listingTypes={GENERIC_TAB_LISTING_TYPES[activeTab]}
+          initialData={activeTab === pluginFor("standard").tabSlug ? initialProductsData : undefined}
         />
       )}
-      {activeTab === "auctions" && (
+      {activeTab === pluginFor("auction").tabSlug && (
         <AuctionsIndexListing brandName={brandName} />
       )}
-      {activeTab === "pre-orders" && (
+      {activeTab === pluginFor("pre-order").tabSlug && (
         <PreOrdersIndexListing brandName={brandName} />
       )}
-      {activeTab === "prize-draws" && (
+      {activeTab === pluginFor("prize-draw").tabSlug && (
         <PrizeDrawsIndexListing brandName={brandName} />
       )}
       {activeTab === "bundles" && (

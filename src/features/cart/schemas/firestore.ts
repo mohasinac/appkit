@@ -23,7 +23,7 @@ export interface CartItemDocument {
   /**
    * Snapshot of the product's listing-kind at add-to-cart time (SB1-G Phase 4).
    * Drives order-grouping (auctions/pre-orders settle separately from standard
-   * carts) and cart-side UI badges. Replaces the legacy `isAuction`/`isPreOrder`
+   * carts) and cart-side UI badges. Replaces the legacy `isAuctionWin`/`isPreOrder`
    * pair on the cart item.
    */
   // SB-UNI-F 2026-05-13 — Phase 2 union extension. Cart capability is
@@ -33,8 +33,25 @@ export interface CartItemDocument {
   /** True when item was added from an accepted Make-an-Offer */
   isOffer?: boolean;
   offerId?: string;
-  /** Locked offer price — overrides normal product price at checkout */
+  /**
+   * True when the line was created by auction settlement for the winning
+   * bidder. Auctions are `canAddToCart: false` for user-initiated adds — this
+   * line is written by the settlement job through the repository directly, and
+   * is the ONLY way an auction reaches the cart.
+   */
+  isAuctionWin?: boolean;
+  /** The auction product this win refers to (= productId, kept explicit). */
+  auctionId?: string;
+  /** The winning bid, so the resulting order can be linked back to it. */
+  bidId?: string;
+  /** Locked offer/winning-bid price — overrides normal product price at checkout */
   lockedPrice?: number;
+  /**
+   * When the claim on this locked price lapses. Mirrors the offer's own
+   * `checkoutDeadline`; set to now + 48h for a won auction. The expiry sweep
+   * clears lines past this point.
+   */
+  checkoutDeadline?: Date;
   /** When true the item cannot be removed or have its quantity changed. Set on won-auction and accepted-offer items that require mandatory payment. */
   locked?: boolean;
   /**
@@ -72,8 +89,22 @@ export interface CartAppliedCoupon {
   storeId?: string;
   /** Item IDs (CartItemDocument.itemId) this coupon was calculated against */
   applicableItemIds?: string[];
-  /** Mirrors CouponDocument.restrictions.combineWithSellerCoupons — used for conflict detection when adding future coupons */
-  combineWithSellerCoupons?: boolean;
+}
+
+/**
+ * Paid add-ons the buyer opted into, for ONE store.
+ *
+ * Add-on fees have always been billed per order group (= per store) by
+ * `createOrderForGroup` / `previewCheckoutPricing`, but the selection used to be
+ * a single cart-wide boolean — so one tick on "WhatsApp updates" quietly billed
+ * ₹10 × every store in the cart, with no way to opt in for just one seller.
+ * Keying the selection by storeId makes the choice match the billing.
+ */
+export interface CartStoreAddons {
+  whatsappNotifyAddon?: boolean;
+  giftWrapAddon?: boolean;
+  giftWrapMessage?: string;
+  shipmentProtectionAddon?: boolean;
 }
 
 export interface CartDocument extends BaseDocument {
@@ -83,6 +114,17 @@ export interface CartDocument extends BaseDocument {
   appliedCoupons?: CartAppliedCoupon[];
   /** Item IDs the user has selected for the next checkout (undefined = all items) */
   selectedItemIds?: string[];
+  /**
+   * Per-store add-on selections, keyed by `storeId` — the same key
+   * `splitCartIntoOrderGroups` groups on.
+   *
+   * This map is the source of truth for what gets charged; the checkout request
+   * no longer carries addon booleans. A store with no selected items forms no
+   * order group, so its entry is simply never read — that is what makes
+   * "only charge a store whose items are actually checking out" structural
+   * rather than a flag someone has to remember to check.
+   */
+  storeAddons?: Record<string, CartStoreAddons>;
 }
 
 export const CART_COLLECTION = "carts" as const;
@@ -137,7 +179,11 @@ export type AddToCartInput = {
   listingType: ListingType;
   isOffer?: boolean;
   offerId?: string;
+  isAuctionWin?: boolean;
+  auctionId?: string;
+  bidId?: string;
   lockedPrice?: number;
+  checkoutDeadline?: Date;
   locked?: boolean;
   /** SB-UNI-4 2026-05-13 — bundle identifier when the line is a bundle. */
   bundleCategorySlug?: string;

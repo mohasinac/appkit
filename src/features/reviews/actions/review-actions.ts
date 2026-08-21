@@ -282,11 +282,18 @@ export async function listReviewsBySeller(
   const reviewBatches = await Promise.all(
     productIds
       .slice(0, 20)
-      .map((id) => reviewRepository.findApprovedByProduct(id).catch(() => [])),
+      .map((id) => reviewRepository.findApprovedByProduct(id, 50).catch(() => [])),
   );
 
+  // Each per-product batch is newest-first, but concatenating them yields product order,
+  // not chronological order — the flattened list has to be re-sorted or callers get an
+  // arbitrarily interleaved "latest reviews" list.
   return reviewBatches
     .flat()
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
     .map((item) => maskPublicReview(item) as ReviewDocument);
 }
 

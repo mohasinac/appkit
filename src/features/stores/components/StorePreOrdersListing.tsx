@@ -9,20 +9,16 @@ import { ProductFilters } from "../../products/components/ProductFilters";
 import { ROUTES } from "../../../next";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
+import { PREORDER_PUBLIC_SORT_OPTIONS } from "../../products/constants/sieve";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
 
-const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
-
-const PREORDER_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"), label: "Delivery Soon" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
-] as const;
+// Shared with /pre-orders. The local copy also defaulted to -createdAt,
+// so a store tab opened Newest-first while the public page opened
+// Earliest-Delivery-first for the same data.
+const DEFAULT_SORT = PREORDER_PUBLIC_SORT_OPTIONS[0].value;
 
 const FILTER_KEYS = ["minPrice", "maxPrice"];
 
@@ -95,7 +91,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || DEFAULT_SORT}
-        sortOptions={PREORDER_SORT_OPTIONS}
+        sortOptions={PREORDER_PUBLIC_SORT_OPTIONS}
         onSortChange={(v) => {
           table.set("sort", v);
         }}

@@ -57,12 +57,32 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     address,
     orderStatus: doc.status,
     paymentStatus: doc.paymentStatus,
+    // Which checkout lane produced this order (standard / auction / offer /
+    // preorder / prize-draw). Drives the lane tabs on /user/orders. Absent on
+    // orders written before `orderType` existed — every reader must treat a
+    // missing value as "standard" rather than filtering it out.
+    orderType: doc.orderType,
+    offerId: doc.offerId,
     subtotal,
     shippingCost: shippingCost || undefined,
     discount: discount || undefined,
     total: doc.totalPrice,
     currency: doc.currency,
     couponCode: doc.couponCode,
+    couponDiscount: doc.couponDiscount,
+    appliedDiscounts: doc.appliedDiscounts,
+    // Add-ons are operational, not decorative: the status-change notifier reads
+    // whatsappNotifyAddon, and the packer needs giftWrapMessage in hand. An
+    // adapter that drops them makes every downstream surface render its
+    // "not applicable" fallback instead (Root Cause #57).
+    whatsappNotifyAddon: doc.whatsappNotifyAddon,
+    whatsappNotifyFee: doc.whatsappNotifyFee,
+    giftWrapAddon: doc.giftWrapAddon,
+    giftWrapFee: doc.giftWrapFee,
+    giftWrapMessage: doc.giftWrapMessage,
+    shipmentProtectionAddon: doc.shipmentProtectionAddon,
+    shipmentProtectionFee: doc.shipmentProtectionFee,
+    platformFee: doc.platformFee,
     trackingNumber: doc.trackingNumber,
     shippingCarrier: doc.shippingCarrier,
     trackingUrl: doc.trackingUrl,

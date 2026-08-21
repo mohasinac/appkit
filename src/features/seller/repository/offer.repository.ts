@@ -202,13 +202,19 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     offerId: string,
     lockedPrice: number,
     sellerNote?: string,
+    checkoutDeadline?: Date,
   ): Promise<OfferDocument> {
+    // One write, not two. `checkoutDeadline` used to be missing from
+    // OfferUpdateInput, which forced callers to follow every accept() with a
+    // separate generic update() — leaving a window where an offer was
+    // "accepted" with no deadline at all.
     return this.updateStatus(offerId, {
       status: "accepted",
       lockedPrice,
       sellerNote,
       acceptedAt: new Date(),
       respondedAt: new Date(),
+      ...(checkoutDeadline ? { checkoutDeadline } : {}),
     });
   }
 
@@ -233,7 +239,10 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     });
   }
 
-  async acceptCounter(offerId: string): Promise<OfferDocument> {
+  async acceptCounter(
+    offerId: string,
+    checkoutDeadline?: Date,
+  ): Promise<OfferDocument> {
     const offer = await this.findById(offerId);
     if (!offer || !offer.counterAmount)
       throw new Error("Offer or counter not found");
@@ -242,6 +251,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       lockedPrice: offer.counterAmount,
       acceptedAt: new Date(),
       respondedAt: new Date(),
+      ...(checkoutDeadline ? { checkoutDeadline } : {}),
     });
   }
 
@@ -253,6 +263,22 @@ class OfferRepository extends BaseRepository<OfferDocument> {
   }
 
   /**
+   * Terminal transition, called once the buyer's order for this offer exists.
+   *
+   * `"paid"` has been in `OfferStatusValues` since the feature shipped but had
+   * NO server-side writer — the only thing that ever set it was an optimistic
+   * client-side patch in UserOffersPanel, which meant a reload showed the offer
+   * back at "accepted" and it could be added to the cart and ordered again.
+   */
+  async markPaid(offerId: string, orderId: string): Promise<OfferDocument> {
+    return this.updateStatus(offerId, {
+      status: "paid",
+      paidOrderId: orderId,
+      paidAt: new Date(),
+    });
+  }
+
+  /**
    * Cloud Functions compatibility: pending/countered offers already expired.
    */
   async findExpiredActive(now: Date): Promise<OfferDocument[]> {
@@ -260,6 +286,23 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       .collection(this.collection)
       .where(OFFER_FIELDS.STATUS, "in", ["pending", "countered"])
       .where(OFFER_FIELDS.EXPIRES_AT, "<=", now)
+      .limit(500)
+      .get();
+
+    return snapshot.docs.map((doc) => this.mapDoc<OfferDocument>(doc));
+  }
+
+  /**
+   * Accepted offers whose 48h checkout window has lapsed. These were never
+   * swept before — `findExpiredActive` only looks at pending/countered — so an
+   * accepted-but-never-paid offer stayed "accepted" forever and its locked
+   * price remained claimable long after the seller expected it to lapse.
+   */
+  async findExpiredAccepted(now: Date): Promise<OfferDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(OFFER_FIELDS.STATUS, "==", "accepted")
+      .where(OFFER_FIELDS.CHECKOUT_DEADLINE, "<=", now)
       .limit(500)
       .get();
 

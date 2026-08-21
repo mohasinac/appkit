@@ -228,6 +228,7 @@ export function AdminSiteSettingsView({
   const [platformFeePercent, setPlatformFeePercent] = React.useState(5);
   const [gstPercent, setGstPercent] = React.useState(18);
   const [minimumTransactionFee, setMinimumTransactionFee] = React.useState(0);
+  const [platformFeeMax, setPlatformFeeMax] = React.useState(10);
   const [gatewayFeePercent, setGatewayFeePercent] = React.useState(2);
   const [payoutHoldDays, setPayoutHoldDays] = React.useState(7);
   const [minPayoutAmount, setMinPayoutAmount] = React.useState(100);
@@ -438,6 +439,7 @@ export function AdminSiteSettingsView({
     setPlatformFeePercent(s.commissions?.platformFeePercent ?? 5);
     setGstPercent(s.commissions?.gstPercent ?? 18);
     setMinimumTransactionFee(s.commissions?.minimumTransactionFee ?? 0);
+    setPlatformFeeMax(s.commissions?.platformFeeMax ?? 10);
     setGatewayFeePercent(s.commissions?.gatewayFeePercent ?? 2);
     setPayoutHoldDays(s.commissions?.payoutHoldDays ?? 7);
     setMinPayoutAmount(s.commissions?.minPayoutAmount ?? 100);
@@ -646,7 +648,7 @@ export function AdminSiteSettingsView({
         offsetX: watermarkOffsetX,
         offsetY: watermarkOffsetY,
       },
-      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, whatsappNotifyFeeEnabled, whatsappNotifyFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
+      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, whatsappNotifyFeeEnabled, whatsappNotifyFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
@@ -1151,6 +1153,7 @@ export function AdminSiteSettingsView({
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="Razorpay gateway cost (%)" helperText="Gateway's own fee — absorbed by platform, not passed through." value={String(gatewayFeePercent)} onChange={(e) => setGatewayFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
                 <Input label="Minimum transaction fee (₹)" helperText="Per-transaction floor. Total charge will never be below base + this." value={String(minimumTransactionFee)} onChange={(e) => setMinimumTransactionFee(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
+                <Input label="Maximum platform fee (₹)" helperText="Ceiling on the buyer's platform commission, charged once per checkout on every payment method. GST is calculated on the capped amount." value={String(platformFeeMax)} onChange={(e) => setPlatformFeeMax(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
                 <Input label="Seller payout hold (days)" value={String(payoutHoldDays)} onChange={(e) => setPayoutHoldDays(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Minimum payout amount (₹)" value={String(minPayoutAmount)} onChange={(e) => setMinPayoutAmount(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Auction listing fee (₹)" value={String(auctionListingFee)} onChange={(e) => setAuctionListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />

@@ -6,6 +6,7 @@
  */
 
 import { couponsRepository } from "../repository/coupons.repository";
+import { productRepository } from "../../products/repository/products.repository";
 import type { CouponValidationResult } from "../schemas";
 import type { ListingType } from "../../products/types";
 
@@ -43,6 +44,19 @@ export async function validateCoupon(
   ) as Promise<CouponValidationResult>;
 }
 
+/**
+ * Resolves productId → categorySlugs[] in a single batched `getAll` round-trip.
+ * Passed into the coupon repository so it can enforce category restrictions
+ * without importing the products repository itself. Invoked only when the
+ * coupon actually has a category restriction.
+ */
+export async function resolveCouponCategorySlugs(
+  productIds: string[],
+): Promise<Map<string, string[]>> {
+  const products = await productRepository.listByIds(productIds);
+  return new Map(products.map((p) => [p.id, p.categorySlugs ?? []]));
+}
+
 export async function validateCouponForCart(
   userId: string,
   code: string,
@@ -52,6 +66,7 @@ export async function validateCouponForCart(
     code,
     userId,
     cartItems,
+    { resolveCategorySlugs: resolveCouponCategorySlugs },
   );
 
   return {

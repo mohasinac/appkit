@@ -308,6 +308,8 @@ export const CART_ENDPOINTS = {
   BY_ITEM_ID: (itemId: string) => `/api/cart/${encodeURIComponent(itemId)}`,
   VALIDATE: "/api/cart/validate",
   SELECTION: "/api/cart/selection",
+  /** Per-store paid add-on selections — the source of truth for what's charged. */
+  ADDONS: "/api/cart/addons",
   COUPON: "/api/cart/coupon",
 } as const;
 

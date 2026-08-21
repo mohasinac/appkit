@@ -35,7 +35,7 @@ function makeClaimInput(overrides: Record<string, unknown> = {}) {
       type: "percentage" as const,
       scope: "admin" as const,
       discount: { value: 10, maxDiscount: 0, minPurchase: 0 },
-      restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
+      restrictions: { firstTimeUserOnly: false },
     },
     expiresAt: null,
     ...overrides,

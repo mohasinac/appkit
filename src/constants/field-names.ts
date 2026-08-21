@@ -82,7 +82,19 @@ export const PRODUCT_FIELDS = {
   PRIZE_CURRENT_ENTRIES: "prizeCurrentEntries",
   PRIZE_MAX_ENTRIES: "prizeMaxEntries",
   PRIZE_DRAW_MODE: "prizeDrawMode",
+  PRICE_PER_ENTRY: "pricePerEntry",
   IS_PART_OF_BUNDLE: "isPartOfBundle",
+  IS_ON_SALE: "isOnSale",
+  IS_TEST_DATA: "isTestData",
+  BIDS_HAVE_STARTED: "bidsHaveStarted",
+  PRE_ORDER_CLOSED: "preOrderClosed",
+  /**
+   * The Firestore field. NOTE the `Id` suffix: the URL/table key is
+   * `sublistingCategory` (TABLE_KEYS.SUBLISTING_CATEGORY) but the stored field
+   * is `sublistingCategoryId`. Emitting the table key as a filter field name
+   * matches zero documents — always map across via this constant.
+   */
+  SUBLISTING_CATEGORY_ID: "sublistingCategoryId",
   SEARCH_TOKENS: "searchTokens",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",

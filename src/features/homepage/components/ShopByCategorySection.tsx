@@ -227,7 +227,6 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
             autoScrollInterval={scrollInterval}
             showArrows
             snapToItems
-            showFadeEdges
             showScrollbar={false}
             loop={loop}
             pauseOnHover

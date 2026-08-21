@@ -1,54 +1,33 @@
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
-import { productRepository } from "../../../repositories";
 import { Container, Main, Heading, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { parseListingSearchParams } from "../../../utils/listing-params";
 import { PreOrdersIndexListing } from "./PreOrdersIndexListing";
+import {
+  listPublicProducts,
+  parsePublicProductParams,
+} from "../../../_internal/server/features/products/list-public";
 
 type SearchParams = Record<string, string | string[]>;
 
-const DEFAULT_PAGE = 1;
+const PRE_ORDER_LISTING_TYPES = ["pre-order"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = "-createdAt";
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildPreOrderFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "listingType==pre-order"];
-  const minPrice = sp(params, "minPrice");
-  const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(sieveFilter("price", SIEVE_OP.GTE, minPrice));
-  if (maxPrice) parts.push(sieveFilter("price", SIEVE_OP.LTE, maxPrice));
-  const store = sp(params, "storeId");
-  if (store) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, store));
-  const preOrderProductionStatus = sp(params, "preOrderProductionStatus");
-  if (preOrderProductionStatus) parts.push(sieveFilter("preOrderProductionStatus", SIEVE_OP.EQ, preOrderProductionStatus));
-  // Mirror PreOrdersIndexListing's client-side default (same Root Cause pattern as
-  // auctions' dateFrom default — SSR initialData is seeded into React Query with
-  // staleTime:Infinity, so if this filter doesn't already exclude closed/out-of-stock
-  // pre-orders, the client never refetches and they leak into the default view).
-  const showClosed = sp(params, "showClosed") === "true";
-  if (!showClosed) parts.push(sieveFilter("stockQuantity", SIEVE_OP.GT, 0));
-  return parts.join(",");
-}
 
 export interface PreOrdersListViewProps {
   searchParams?: SearchParams;
 }
 
 export async function PreOrdersListView({ searchParams = {} }: PreOrdersListViewProps) {
-  const std = parseListingSearchParams(searchParams);
-  const sort = std.sorts ?? DEFAULT_SORT;
-  const page = std.page ?? DEFAULT_PAGE;
-  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
-  const filters = buildPreOrderFilters(searchParams);
-
-  const result = await productRepository
-    .list({ filters, sorts: sort, page, pageSize })
-    .catch(() => null);
+  // Shared with /api/products. `hideSoldByDefault` covers this page's
+  // "Show closed" toggle — the stockQuantity predicate runs in memory over a
+  // bounded fetch because the default sort is createdAt, not stockQuantity.
+  const result = await listPublicProducts(
+    parsePublicProductParams(searchParams, {
+      listingTypes: PRE_ORDER_LISTING_TYPES,
+      pageSize: DEFAULT_PAGE_SIZE,
+      sorts: DEFAULT_SORT,
+      hideSoldByDefault: true,
+    }),
+  );
 
   return (
     <Main>

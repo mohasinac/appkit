@@ -85,7 +85,6 @@ function makeCoupon(overrides: Record<string, unknown> = {}) {
       endDate: new Date(Date.now() + 86_400_000 * 30),
     },
     restrictions: {
-      combineWithSellerCoupons: true,
       applicableProducts: [] as string[],
       excludeProducts: [] as string[],
     },

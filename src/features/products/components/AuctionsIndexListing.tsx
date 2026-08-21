@@ -28,7 +28,6 @@ const __O = {
 
 const DEFAULT_SORT = AUCTION_PUBLIC_SORT_OPTIONS[0].value;
 
-const AUCTION_SORT_OPTIONS = AUCTION_PUBLIC_SORT_OPTIONS;
 
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_BID, TABLE_KEYS.MAX_BID, TABLE_KEYS.STORE_ID, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 
@@ -178,7 +177,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={AUCTION_SORT_OPTIONS}
+        sortOptions={AUCTION_PUBLIC_SORT_OPTIONS}
         onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}

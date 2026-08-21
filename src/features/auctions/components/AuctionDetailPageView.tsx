@@ -11,8 +11,6 @@ const __P = {
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_LIVE_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-warning dark:text-warning";
-const CLS_STAR_ON = "text-warning";
-const CLS_STAR_OFF = "text-zinc-200 dark:text-zinc-700";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -58,8 +56,7 @@ import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { ShareButton } from "../../products/components/ShareButton";
 import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
-import { listReviewsBySeller } from "../../reviews/actions/review-actions";
-import type { ReviewDocument } from "../../reviews/schemas/firestore";
+import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
 import { PlaceBidModalButton } from "./PlaceBidFormClient";
 import type { PlaceBidInput } from "./PlaceBidFormClient";
 import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
@@ -177,34 +174,25 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
   );
 }
 
-function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
-  if (storeReviews.length === 0) return null;
-  const avg = storeReviews.reduce((s, r) => s + r.rating, 0) / storeReviews.length;
+/**
+ * Store reviews for the auction's seller.
+ *
+ * Was a bespoke `slice(0, 10)` block over `listReviewsBySeller()` — which concatenates
+ * per-product batches, so the "latest 10" it showed were in product order, not date
+ * order, and reviews 11+ were unreachable. `ReviewsListingPanel` pages the real
+ * store-reviews endpoint instead.
+ */
+function renderAuctionStoreReviews(storeSlug: string | undefined) {
+  if (!storeSlug) return null;
   return (
     <Section className="mt-10">
       <Heading level={2} className="mb-2" color="primary" size="xl" weight="semibold">Store Reviews</Heading>
-      <Row className="mb-4" align="center" gap="3">
-        <Span weight="bold" size="3xl" color="primary">{avg.toFixed(1)}</Span>
-        <Div>
-          <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
-          <Text size="xs" color="muted">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
-        </Div>
-      </Row>
-      <Stack gap="sm">
-        {storeReviews.slice(0, 10).map((review) => (
-          <Stack gap="xs" key={review.id} surface="card" padding="sm" className="">
-            <Row justify="between" align="center">
-              <Row gap="xs" align="center">
-                <Span size="sm" weight="medium" color="primary">{review.userName}</Span>
-                <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} size="xs" className={star <= review.rating ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
-              </Row>
-            </Row>
-            {review.title && <Text size="sm" weight="semibold" color="primary">{review.title}</Text>}
-            <Text className="leading-relaxed" color="muted" size="sm">{review.comment}</Text>
-            <Text size="xs" color="faint">{review.productTitle}</Text>
-          </Stack>
-        ))}
-      </Stack>
+      <ReviewsListingPanel
+        source={{ kind: "store", storeSlug }}
+        stateMode="local"
+        context="store"
+        emptyLabel="This store has no reviews yet."
+      />
     </Section>
   );
 }
@@ -218,9 +206,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     : null;
 
   const storeId = (product as unknown as FirestoreDocument)?.storeId as string | undefined;
-  const storeReviews: ReviewDocument[] = storeId
-    ? await listReviewsBySeller(storeId).catch(() => [])
-    : [];
 
   if (!product) {
     return (
@@ -631,7 +616,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         />
 
         {/* Store reviews section */}
-        {renderAuctionStoreReviews(storeReviews)}
+        {renderAuctionStoreReviews(storeId)}
 
         {/* Mobile actions registered via useBottomActions() */}
         <AuctionBottomActions

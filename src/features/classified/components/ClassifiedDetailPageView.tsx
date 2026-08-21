@@ -38,6 +38,7 @@ import { computeRelatedItems } from "../../../_internal/server/features/products
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { ClassifiedContactSellerPanel } from "./ClassifiedContactSellerPanel";
+import { ListingBottomActions } from "../../products/components/ListingBottomActions";
 import type { CustomSection, ProductDocument } from "../../products/schemas/firestore";
 
 export interface ClassifiedDetailPageViewProps {
@@ -247,6 +248,17 @@ export async function ClassifiedDetailPageView({ slug, initialProduct }: Classif
               />
             </Stack>
           )}
+        />
+
+        {/*
+          Sticky CTA. Classified has no cart (`cartLine: "blocked"`), so the registry's
+          classified CTA is Make an Offer and it scrolls to the contact-seller panel.
+        */}
+        <ListingBottomActions
+          listingType="classified"
+          anchorId="classified-contact-bar"
+          price={price}
+          currency={currency}
         />
       </Container>
     </Main>

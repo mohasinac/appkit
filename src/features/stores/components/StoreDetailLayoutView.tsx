@@ -23,9 +23,10 @@ const STORE_LISTING_HREF: Record<
   classifieds: (slug) => String(ROUTES.PUBLIC.STORE_CLASSIFIEDS(slug)),
   "digital-codes": (slug) => String(ROUTES.PUBLIC.STORE_DIGITAL_CODES(slug)),
   live: (slug) => String(ROUTES.PUBLIC.STORE_LIVE(slug)),
-  // Art & Stickers has no dedicated storefront tab page — browsable
-  // (alongside everything else the store sells) on the "Products" tab.
-  art: (slug) => String(ROUTES.PUBLIC.STORE_PRODUCTS(slug)),
+  // Combined art + stickers, mirroring the public /art page. This used to
+  // point at STORE_PRODUCTS, which filters to `standard` — so the tab showed
+  // a real non-zero count and landed on a page with none of those items.
+  art: (slug) => String(ROUTES.PUBLIC.STORE_ART(slug)),
 };
 
 export const getStoreBySlug = cache((slug: string) =>

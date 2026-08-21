@@ -26,18 +26,35 @@ interface CartItemRowProps {
   href?: string;
   /** When true: grays out item, shows "Out of Stock" badge, locks qty stepper */
   isOutOfStock?: boolean;
+  /**
+   * `"card"` (default) — self-contained card with its own surface + padding,
+   * for the cart drawer where each line stands alone.
+   * `"row"` — bare row for the cart page, where the seller group is already the
+   * card. Nesting a card inside a card there produced the card-in-a-card look
+   * and gave the overflow nowhere to be clipped.
+   */
+  variant?: "card" | "row";
 }
 
-export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
+export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false, variant = "card" }: CartItemRowProps) {
+  const isRow = variant === "row";
   return (
-    <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
-      <Div surface="muted" className={`relative h-20 w-20 flex-shrink-0 ${__O.hidden}`} rounded="lg">
+    <Div
+      layout="flex"
+      gap={isRow ? "3" : "4"}
+      surface={isRow ? "none" : "card"}
+      padding={isRow ? "none" : "sm"}
+      className={`min-w-0 transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}
+    >
+      <Div surface="muted" className={`relative ${isRow ? "h-16 w-16" : "h-20 w-20"} flex-shrink-0 ${__O.hidden}`} rounded="lg">
         {item.meta.image && (
           <MediaImage src={item.meta.image} alt={item.meta.title} size="thumbnail" />
         )}
       </Div>
       <Stack justify="between" className="flex-1 min-w-0">
-        <Row gap="xs" className="" align="start">
+        {/* min-w-0: .appkit-row sets no min-width, so a long unbroken product
+            title would otherwise force this row wider than its parent. */}
+        <Row gap="xs" className="min-w-0" align="start">
           {href ? (
             <TextLink
               href={href}
@@ -67,7 +84,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 .join(", ")}
             </Text>
           )}
-        <Row justify="between">
+        <Row justify="between" className="min-w-0" gap="sm">
           <Text className="text-[var(--appkit-color-text)]" weight="semibold">
             {formatCurrency(
               item.meta.price * item.quantity,

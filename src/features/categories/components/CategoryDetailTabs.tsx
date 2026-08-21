@@ -7,18 +7,45 @@ import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersInde
 import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { CategoryStoresListing } from "./CategoryStoresListing";
-import { CATEGORY_PAGE_TABS, type CategoryTabId } from "../../products/constants/listing-tabs";
+import {
+  CATEGORY_PAGE_TABS,
+  ART_STICKERS_LISTING_TYPES,
+  type CategoryTabId,
+} from "../../products/constants/listing-tabs";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import type { CategoryDocument } from "../schemas";
 import type { StoreListItem } from "../../stores/types";
 
-/** Maps CATEGORY_PAGE_TABS id → listing type / category type key for flag filtering. */
+/**
+ * Maps CATEGORY_PAGE_TABS id (a `tabSlug`) → listing type / category type key
+ * for feature-flag filtering.
+ *
+ * The listing-type half is DERIVED (2026-08-21). It used to be hand-written
+ * and covered only 6 of the 10 tabs — `classifieds`, `digital-codes`, `live`
+ * and `art` had no entry, so they skipped the flag check entirely AND (worse)
+ * had no render branch below, meaning all four rendered a tab you could click
+ * that showed an empty page.
+ */
 const TAB_TYPE_MAP: Record<string, { kind: "listing" | "category" | "entity"; type: string }> = {
-  products: { kind: "listing", type: "standard" },
-  auctions: { kind: "listing", type: "auction" },
-  "pre-orders": { kind: "listing", type: "pre-order" },
-  "prize-draws": { kind: "listing", type: "prize-draw" },
+  ...Object.fromEntries(
+    ALL_LISTING_TYPES.map((type) => [
+      pluginFor(type).tabSlug,
+      { kind: "listing" as const, type },
+    ]),
+  ),
   bundles: { kind: "category", type: "bundle" },
   stores: { kind: "entity", type: "stores" },
+};
+
+/** Listing types rendered by the shared products listing rather than a dedicated one. */
+const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
+  [pluginFor("standard").tabSlug]: ["standard"],
+  [pluginFor("classified").tabSlug]: ["classified"],
+  [pluginFor("digital-code").tabSlug]: ["digital-code"],
+  [pluginFor("live").tabSlug]: ["live"],
+  // The combined Art & Stickers tab spans both types under the `art` slug.
+  [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
 };
 
 export interface CategoryDetailTabsProps {
@@ -96,20 +123,24 @@ export function CategoryDetailTabs({
         </TabsList>
       </Tabs>
 
-      {activeTab === "products" && (
+      {/* Types with a dedicated listing component (bid ladder, delivery-date
+          sorts, entry counters) get it; every other type renders through the
+          shared products listing, narrowed by `listingTypes`. */}
+      {GENERIC_TAB_LISTING_TYPES[activeTab] && (
         <CategoryProductsListing
           categorySlug={categorySlug}
           categoryId={categoryId}
-          initialData={initialProductsData}
+          listingTypes={GENERIC_TAB_LISTING_TYPES[activeTab]}
+          initialData={activeTab === pluginFor("standard").tabSlug ? initialProductsData : undefined}
         />
       )}
-      {activeTab === "auctions" && (
+      {activeTab === pluginFor("auction").tabSlug && (
         <AuctionsIndexListing categorySlug={categorySlug} />
       )}
-      {activeTab === "pre-orders" && (
+      {activeTab === pluginFor("pre-order").tabSlug && (
         <PreOrdersIndexListing categorySlug={categorySlug} />
       )}
-      {activeTab === "prize-draws" && (
+      {activeTab === pluginFor("prize-draw").tabSlug && (
         <PrizeDrawsIndexListing categorySlug={categorySlug} />
       )}
       {activeTab === "bundles" && (

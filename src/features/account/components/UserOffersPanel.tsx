@@ -204,8 +204,17 @@ export function UserOffersPanel({
         if (res.status === 401 || res.status === 403) { setShowLoginModal(true); return; }
         throw new Error(`Error ${res.status}`);
       }
-      const json = (await res.json()) as { items?: OfferDocument[] } | OfferDocument[];
-      const items = Array.isArray(json) ? json : ((json as { items?: OfferDocument[] }).items ?? []);
+      // `/api/user/offers` replies through `successResponse`, i.e.
+      // `{ success, data: { items, total, … } }`. This used to read `json.items`
+      // straight off the envelope — always undefined — so "My Offers" showed
+      // "No offers yet" for every buyer, forever, with no error to notice.
+      // Both shapes are still accepted so an unwrapped caller keeps working.
+      const json = (await res.json()) as
+        | OfferDocument[]
+        | { items?: OfferDocument[]; data?: { items?: OfferDocument[] } };
+      const items = Array.isArray(json)
+        ? json
+        : (json.data?.items ?? json.items ?? []);
       setOffers(items);
     } catch (err) {
       void normalizeError(err);

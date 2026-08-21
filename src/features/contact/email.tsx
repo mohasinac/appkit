@@ -79,7 +79,11 @@ function getSupportEmail(): string {
 async function resolveEmailProvider(): Promise<IEmailProvider> {
   try {
     return getProviders().email;
-  } catch {
+  } catch (err) {
+    // Not an error condition — "no email provider registered yet" is the
+    // expected signal on the Functions runtime, and the fallback below builds
+    // one from credentials. Normalized anyway so the catch is never bare.
+    void normalizeError(err);
     const [creds, settings] = await Promise.all([
       siteSettingsRepository.getDecryptedCredentials().catch((err: unknown) => {
         void normalizeError(err);

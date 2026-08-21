@@ -175,6 +175,27 @@ export class BidRepository extends BaseRepository<BidDocument> {
     });
   }
 
+  /**
+   * Link a won bid to the order it eventually became.
+   *
+   * `BidDocument` had no `orderId` at all before 2026-08-21, so a won bid and
+   * the thing the buyer paid for were two unrelated records — the "Won" row in
+   * /user/bids could not link anywhere, and nothing could tell a settled win
+   * from an unpaid one.
+   */
+  async attachOrder(bidId: string, orderId: string): Promise<void> {
+    await this.update(bidId, { orderId, updatedAt: new Date() });
+  }
+
+  /**
+   * The winner never paid within their checkout window. Distinct from "lost"
+   * (outbid) — this bidder won and then defaulted, which a seller may want to
+   * act on.
+   */
+  async markForfeited(bidId: string): Promise<void> {
+    await this.update(bidId, { status: "forfeited", isWinning: false, updatedAt: new Date() });
+  }
+
   markLost(batch: WriteBatch, ref: DocumentReference): void {
     batch.update(ref, {
       status: "lost",

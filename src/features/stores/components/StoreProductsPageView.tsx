@@ -1,50 +1,34 @@
-import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import React from "react";
-import { productRepository } from "../../../repositories";
-import { parseListingSearchParams } from "../../../utils/listing-params";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
+import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreProductsListing } from "./StoreProductsListing";
 
 type SearchParams = Record<string, string | string[]>;
 
-const DEFAULT_PAGE = 1;
+const LISTING_TYPES = ["standard"] as const;
 const DEFAULT_PAGE_SIZE = 24;
-const DEFAULT_SORT = "-createdAt";
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 export interface StoreProductsPageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
 }
 
-export async function StoreProductsPageView({
-  storeSlug,
-  searchParams,
-}: StoreProductsPageViewProps) {
+export async function StoreProductsPageView({ storeSlug, searchParams }: StoreProductsPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
-  const storeId = store?.id;
+  const storeId = (store as Record<string, unknown> | null)?.id;
+  if (typeof storeId !== "string" || !storeId) return null;
 
-  if (!storeId) {
-    return null;
-  }
+  // Shared query — see listStoreProducts. This view used to call
+  // productRepository.list() with an inline filter string and swallow every
+  // failure via a bare .catch(() => null), so a missing index rendered as an
+  // empty store tab with nothing logged (Root Cause #30's family).
+  const result = await listStoreProducts(storeId, LISTING_TYPES, searchParams ?? {}, {
+    pageSize: DEFAULT_PAGE_SIZE,
+    sorts: DEFAULT_SORT,
+  });
 
-  const std = parseListingSearchParams(searchParams);
-  const sorts = std.sorts ?? DEFAULT_SORT;
-  const page = std.page ?? DEFAULT_PAGE;
-  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
-
-  const result = await productRepository
-    .list({
-      filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
-      sorts,
-      page,
-      pageSize,
-    })
-    .catch(() => null);
-
-  return (
-    <StoreProductsListing
-      storeId={storeId}
-      initialData={result ?? undefined}
-    />
-  );
+  return <StoreProductsListing storeId={storeId} initialData={result ?? undefined} />;
 }

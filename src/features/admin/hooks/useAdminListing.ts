@@ -88,10 +88,15 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
 
   const resetAll = useCallback(() => {
     const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of filterKeys) updates[k] = "";
+    // Restore each key to its CONFIGURED default, not to "". A view using
+    // `filterDefaults` (e.g. hide-inactive on first load) would otherwise have
+    // "Reset" land somewhere the user could never get back to by reloading —
+    // reset showed MORE rows than a fresh visit, which reads as a bug in the
+    // filter rather than in the reset.
+    for (const k of filterKeys) updates[k] = filterDefaults?.[k] ?? "";
     table.setMany(updates);
     setSearchInput("");
-  }, [filterKeys, table]);
+  }, [filterKeys, filterDefaults, table]);
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());

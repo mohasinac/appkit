@@ -21,5 +21,7 @@ export { ViewReviewModal } from "./ReviewModal";
 
 export { ReviewsIndexListing } from "./ReviewsIndexListing";
 export type { ReviewsIndexListingProps } from "./ReviewsIndexListing";
+export { ReviewsListingPanel } from "./ReviewsListingPanel";
+export type { ReviewsListingPanelProps, ReviewsSource } from "./ReviewsListingPanel";
 // ReviewDetailPageView is RSC — exported from src/index.ts directly (server barrel only)
 export type { ReviewDetailPageViewProps } from "./ReviewDetailPageView";

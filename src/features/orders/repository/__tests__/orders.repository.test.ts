@@ -228,34 +228,6 @@ describe("OrderRepository.postRefundEvent", () => {
   });
 });
 
-describe("OrderRepository.createFromAuction", () => {
-  it("stages order creation in caller batch with correct fields", () => {
-    mockCollection.doc.mockReturnValue({ ...mockDocRef, id: "new-order-id" });
-    repo.createFromAuction(mockBatch as never, {
-      productId: "auction-test",
-      productTitle: "Test Auction",
-      userId: "user-1",
-      userName: "Ravi Kumar",
-      userEmail: "ravi@example.com",
-      storeId: "store-1",
-      amount: 10000,
-      currency: "INR",
-      auctionProductId: "auction-test",
-    });
-    expect(mockBatch.create).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        productId: "auction-test",
-        userId: "user-1",
-        storeId: "store-1",
-        totalPrice: 10000,
-        status: "confirmed",
-      }),
-    );
-    expect(mockBatch.commit).not.toHaveBeenCalled();
-  });
-});
-
 describe("OrderRepository.getEligibleForPayoutSweep", () => {
   it("filters by payoutStatus=eligible, status=delivered", async () => {
     mockQuery.get.mockResolvedValue(makeQuerySnap([]));

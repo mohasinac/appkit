@@ -47,6 +47,11 @@ export const DEFAULT_ROUTE_MAP = {
     STORE_CLASSIFIEDS: (storeSlug: string) => `/stores/${storeSlug}/classified`,
     STORE_DIGITAL_CODES: (storeSlug: string) => `/stores/${storeSlug}/digital-codes`,
     STORE_LIVE: (storeSlug: string) => `/stores/${storeSlug}/live`,
+    // Combined art + stickers, mirroring the public /art page. The store's
+    // "Art & Stickers" tab used to point at STORE_PRODUCTS, which filters to
+    // `standard` — so the tab showed a real non-zero count and then landed on
+    // a page containing none of those items.
+    STORE_ART: (storeSlug: string) => `/stores/${storeSlug}/art`,
     CATEGORIES: "/categories",
     CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
     BRANDS: "/brands",

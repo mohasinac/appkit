@@ -5,7 +5,10 @@ import { BID_FIELDS } from "../../../../constants/field-names";
 // Exported so testerSandboxRefresh.ts (the every-4h revert+prune job) reuses
 // the exact same collection scope instead of redefining it — one source of
 // truth for "what counts as sandbox scope."
-export const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"] as const;
+// Keep in sync with testerSandboxRefresh.ts's SEED_BY_COLLECTION — the daily
+// TTL cleanup and the 4-hourly revert+prune must agree on what "sandbox" means
+// (CLAUDE.md § Tester QA standards #3).
+export const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events", "offers"] as const;
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 
 export interface TesterSandboxCleanupOptions {

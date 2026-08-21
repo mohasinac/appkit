@@ -1,5 +1,6 @@
 "use client";
 
+import type { OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
@@ -92,6 +93,8 @@ interface OrderRow {
   paymentUpiMismatch?: boolean;
   buyerMarkedPaid?: boolean;
   buyerFraudAgreementAccepted?: boolean;
+  /** Paid add-ons + coupon, surfaced as icon chips in the editor. */
+  addons?: OrderAddonBadgesOrder;
 }
 
 export type AdminOrdersViewProps = ListingLayoutProps;
@@ -166,6 +169,19 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           paymentUpiMismatch: Boolean(item.paymentUpiMismatch),
           buyerMarkedPaid: Boolean(item.buyerMarkedPaid),
           buyerFraudAgreementAccepted: Boolean(item.buyerFraudAgreementAccepted),
+          // Straight off the order document — the admin list route returns
+          // raw docs, so these need no serializer entry (cf. Root Cause #38).
+          addons: {
+            whatsappNotifyAddon: Boolean(item.whatsappNotifyAddon),
+            whatsappNotifyFee: Number(item.whatsappNotifyFee ?? 0) || undefined,
+            giftWrapAddon: Boolean(item.giftWrapAddon),
+            giftWrapFee: Number(item.giftWrapFee ?? 0) || undefined,
+            giftWrapMessage: toStringValue(item.giftWrapMessage) || undefined,
+            shipmentProtectionAddon: Boolean(item.shipmentProtectionAddon),
+            shipmentProtectionFee: Number(item.shipmentProtectionFee ?? 0) || undefined,
+            couponCode: toStringValue(item.couponCode) || undefined,
+            couponDiscount: Number(item.couponDiscount ?? 0) || undefined,
+          },
         };
       }),
     getTotal: (response, mappedRows) =>
@@ -281,6 +297,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         paymentUpiMismatch={selectedRow?.paymentUpiMismatch}
         buyerMarkedPaid={selectedRow?.buyerMarkedPaid}
         buyerFraudAgreementAccepted={selectedRow?.buyerFraudAgreementAccepted}
+        addons={selectedRow?.addons}
       />
     </>
   );

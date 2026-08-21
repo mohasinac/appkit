@@ -22,7 +22,7 @@ export function useReviews(
   if (params.featured !== undefined)
     sp.set("featured", String(params.featured));
   if (params.page) sp.set("page", String(params.page));
-  if (params.perPage) sp.set("perPage", String(params.perPage));
+  if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   if (params.sort) sp.set("sort", params.sort);
   if (params.q) sp.set("q", params.q);
   if (params.dateFrom) sp.set("dateFrom", params.dateFrom);
@@ -30,8 +30,10 @@ export function useReviews(
   if (params.minVotes !== undefined) sp.set("minVotes", String(params.minVotes));
   if (params.maxVotes !== undefined) sp.set("maxVotes", String(params.maxVotes));
   if (params.hasImages) sp.set("hasImages", "true");
-  // General listing mode (no productId)
-  if (!params.productId && !params.userId && !params.storeId) {
+  // General listing mode (no productId). Store-scoped reads go through
+  // useStoreReviews / `/api/stores/[slug]/reviews`, not this endpoint — `/api/reviews`
+  // has no storeId branch, so a storeId here would 400 on the productId guard.
+  if (!params.productId && !params.userId) {
     sp.set("latest", "true");
   }
   const qs = sp.toString();
@@ -54,6 +56,7 @@ export function useReviews(
     hasMore: query.data?.hasMore ?? false,
     averageRating: query.data?.averageRating,
     ratingDistribution: query.data?.ratingDistribution,
+    totalApproved: query.data?.totalApproved,
     isLoading: query.isLoading,
     error: query.error,
     refetch: query.refetch,
@@ -63,7 +66,13 @@ export function useReviews(
 interface UseProductReviewsOptions {
   page?: number;
   pageSize?: number;
+  sort?: string;
+  rating?: number | string;
+  dateFrom?: string;
+  dateTo?: string;
+  hasImages?: boolean;
   enabled?: boolean;
+  initialData?: ReviewListResponse;
 }
 
 export function useProductReviews(
@@ -75,8 +84,13 @@ export function useProductReviews(
       productId,
       status: "approved",
       page: opts?.page,
-      perPage: opts?.pageSize,
+      pageSize: opts?.pageSize,
+      sort: opts?.sort,
+      rating: opts?.rating,
+      dateFrom: opts?.dateFrom,
+      dateTo: opts?.dateTo,
+      hasImages: opts?.hasImages,
     },
-    { enabled: opts?.enabled },
+    { enabled: opts?.enabled, initialData: opts?.initialData },
   );
 }

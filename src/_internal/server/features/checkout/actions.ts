@@ -23,11 +23,18 @@ import {
   productRepository,
 } from "../../../../repositories";
 import { calculateGst } from "../../../shared/fees/calculator";
-import { computePreOrderDepositAmount } from "../../../shared/checkout/order-math";
+import { computePreOrderDepositAmount, unitPriceFor } from "../../../shared/checkout/order-math";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
 import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
+import { resolveCouponCategorySlugs } from "../../../../features/promotions/actions/coupon-actions";
+import {
+  assertCheckoutLane,
+  assertLockedLinesStillValid,
+  finalizeLockedLines,
+} from "./locked-lines";
+import { activeLane, laneOf, type CartLane } from "../../../shared/checkout/lanes";
 import {
   computeCodHandlingFee,
   type CodHandlingFeeRates,
@@ -37,6 +44,8 @@ import {
   type GiftWrapFeeRates,
   computeShipmentProtectionFee,
   type ShipmentProtectionFeeRates,
+  computeCheckoutFees,
+  allocateCheckoutFees,
 } from "../../../shared/fees/calculator";
 import {
   getAdminDb,
@@ -46,7 +55,7 @@ import {
 import { PRODUCT_COLLECTION, PRODUCT_CODES_SUBCOLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
-import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
+import type { CartItemDocument, CartStoreAddons } from "../../../../features/cart/schemas/firestore";
 // S-SBUNI-RULES 2026-05-13 — bundle cart-line stock fan-out helpers.
 import {
   getCartItemMemberIds,
@@ -389,6 +398,106 @@ interface StockResult {
 
 type CouponAccumEntry = { couponId: string; code: string; orderIds: string[]; totalDiscount: number };
 
+export interface DroppedCoupon {
+  code: string;
+  reason: string;
+}
+
+/**
+ * Re-checks every coupon persisted on the cart against the items actually
+ * being ordered, immediately before pricing.
+ *
+ * A cart can sit for days, so the `discountAmount` frozen onto
+ * `cart.appliedCoupons` at apply-time may since have become wrong or
+ * unearned — the coupon may have expired, hit its total/per-user limit, been
+ * deactivated, or had its eligible items removed from the cart. Trusting the
+ * stored amount let all of those redeem anyway.
+ *
+ * Invalid coupons are DROPPED (and reported back to the caller) rather than
+ * failing the whole checkout: the buyer is on the payment step and cannot fix
+ * a lapsed coupon from there, so killing an otherwise-valid order is hostile.
+ *
+ * One parallel round of reads for at most a handful of coupons (the stacking
+ * rule caps it at one per store plus one platform-wide), so this stays inside
+ * the Vercel Hobby round-trip budget.
+ */
+async function revalidateAppliedCoupons(
+  appliedCoupons: CartAppliedCoupon[],
+  available: { item: CartItemDocument; product: ProductDocument | null }[],
+  uid: string,
+): Promise<{ coupons: CartAppliedCoupon[]; dropped: DroppedCoupon[] }> {
+  if (appliedCoupons.length === 0) return { coupons: [], dropped: [] };
+
+  const cartItems = available.map(({ item, product }) => ({
+    productId: item.productId,
+    storeId: item.storeId,
+    price: unitPriceFor(item, product),
+    quantity: item.quantity,
+    listingType: (item.listingType ?? "standard") as ListingType,
+  }));
+
+  const results = await Promise.all(
+    appliedCoupons.map(async (coupon) => {
+      try {
+        const check = await couponsRepository.validateCouponForCart(
+          coupon.code,
+          uid,
+          cartItems,
+          { resolveCategorySlugs: resolveCouponCategorySlugs },
+        );
+        if (!check.valid) {
+          return {
+            dropped: {
+              code: coupon.code,
+              reason: check.message ?? "This coupon is no longer valid",
+            },
+          };
+        }
+        // Re-derive the amount and the eligible lines from the CURRENT cart —
+        // the stored values were computed against whatever was in the cart at
+        // apply-time.
+        const applicableItemIds = check.eligibleProductIds
+          ? available
+              .filter(({ item }) => check.eligibleProductIds!.includes(item.productId))
+              .map(({ item }) => item.itemId)
+          : undefined;
+        return {
+          coupon: {
+            ...coupon,
+            discountAmount: check.discountAmount ?? 0,
+            scope: check.scope ?? coupon.scope,
+            storeId: check.storeId ?? coupon.storeId,
+            applicableItemIds,
+          } satisfies CartAppliedCoupon,
+        };
+      } catch (err) {
+        void normalizeError(err);
+        // A lookup failure must not silently grant the discount.
+        return {
+          dropped: {
+            code: coupon.code,
+            reason: "This coupon could not be verified",
+          },
+        };
+      }
+    }),
+  );
+
+  const coupons: CartAppliedCoupon[] = [];
+  const dropped: DroppedCoupon[] = [];
+  for (const r of results) {
+    if (r.coupon) coupons.push(r.coupon);
+    else if (r.dropped) dropped.push(r.dropped);
+  }
+  if (dropped.length > 0) {
+    serverLogger.info("Dropped invalid coupons at checkout", {
+      uid,
+      codes: dropped.map((d) => d.code).join(","),
+    });
+  }
+  return { coupons, dropped };
+}
+
 async function flushCouponUsageAccumulator(
   accumulator: Map<string, CouponAccumEntry>,
   uid: string,
@@ -432,14 +541,9 @@ function dispatchOrderConfirmationEmails(
   );
 }
 
-// SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle price
-// at add-time); regular lines use product.price (current Firestore). Prevents
-// stale cart-cached prices from being charged on COD/UPI orders.
-function unitPriceFor(item: CartItemDocument, product: ProductDocument | null): number {
-  return item.bundleCategorySlug && item.bundleProductIds?.length
-    ? item.price
-    : (product as ProductDocument).price;
-}
+// unitPriceFor now lives in _internal/shared/checkout/order-math.ts — one
+// implementation for every money path, so an accepted offer's / won auction's
+// lockedPrice can never be honoured by some call sites and ignored by others.
 
 interface OrderGroupContext {
   paymentMethod: CheckoutPaymentMethod;
@@ -452,13 +556,22 @@ interface OrderGroupContext {
   uid: string;
   userName: string;
   userEmail: string;
-  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout. */
-  whatsappNotifyAddon: boolean;
-  /** Buyer opted into gift wrap at checkout. */
-  giftWrapAddon: boolean;
-  giftWrapMessage?: string;
-  /** Buyer opted into shipment protection at checkout. */
-  shipmentProtectionAddon: boolean;
+  /**
+   * Buyer's add-on selections, keyed by storeId — read off the cart document.
+   *
+   * Was four cart-wide booleans. Because add-on fees are computed inside the
+   * per-group loop, a single boolean silently multiplied every add-on by the
+   * number of stores in the cart, and gave the buyer no way to opt in for one
+   * seller only. Each group now resolves its own entry.
+   */
+  storeAddons?: Record<string, CartStoreAddons>;
+  /**
+   * The buyer-facing platform commission apportioned to this group, in decimal
+   * rupees. Computed once for the whole checkout (it is one commission on one
+   * transaction, not a per-store charge) and split pro-rata across groups, so
+   * the per-order values sum to exactly what the buyer was shown.
+   */
+  platformFeeByStore: Map<string, { platformFee: number; gstOnFee: number }>;
   shippingAddress?: string;
   notes?: string;
   adminBypass: boolean;
@@ -513,14 +626,22 @@ async function createOrderForGroup(
     buyerState,
     gstSettings,
     siteContactUpiVpa,
-    whatsappNotifyAddon,
-    giftWrapAddon,
-    giftWrapMessage,
-    shipmentProtectionAddon,
+    storeAddons,
+    platformFeeByStore,
   } = ctx;
 
   const firstItem = group[0].item;
   const firstProduct = group[0].product;
+
+  // Add-ons are this store's choice, not the cart's — see OrderGroupContext.
+  const {
+    whatsappNotifyAddon = false,
+    giftWrapAddon = false,
+    giftWrapMessage,
+    shipmentProtectionAddon = false,
+  } = storeAddons?.[firstItem.storeId] ?? {};
+  const { platformFee = 0, gstOnFee: platformFeeGst = 0 } =
+    platformFeeByStore.get(firstItem.storeId) ?? {};
   const groupTotal = group.reduce(
     (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
     0,
@@ -630,8 +751,11 @@ async function createOrderForGroup(
     }
   }
 
+  // The platform commission is now charged on EVERY payment method. It used to
+  // be added only on the Razorpay path, so COD / UPI-manual / cash / EMI buyers
+  // silently never paid it.
   const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
 
   const imageUrls = [
     ...new Set(
@@ -692,6 +816,9 @@ async function createOrderForGroup(
     depositAmount: adminBypass ? undefined : depositAmount,
     codRemainingAmount: adminBypass ? undefined : codRemainingAmount,
     codHandlingFee: !adminBypass && codHandlingFee > 0 ? codHandlingFee : undefined,
+    // This group's pro-rata share of the checkout's single capped commission —
+    // the shares across a multi-store checkout sum to exactly what was charged.
+    platformFee: !adminBypass && platformFee > 0 ? platformFee : undefined,
     whatsappNotifyAddon: !adminBypass && whatsappNotifyFee > 0 ? true : undefined,
     whatsappNotifyFee: !adminBypass && whatsappNotifyFee > 0 ? whatsappNotifyFee : undefined,
     giftWrapAddon: !adminBypass && giftWrapFee > 0 ? true : undefined,
@@ -723,6 +850,15 @@ async function createOrderForGroup(
   });
 
   orderIds.push(order.id);
+
+  // Close the loop on any locked line this order settled: flip the offer to
+  // "paid" (its terminal status had NO server-side writer before 2026-08-21,
+  // so an accepted offer could be re-added and re-ordered) and back-link the
+  // winning bid to the order it became.
+  await finalizeLockedLines(
+    group.map(({ item }) => item),
+    order.id,
+  );
 
   // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
   // order is already persisted so a claim failure is logged, not thrown).
@@ -789,10 +925,6 @@ export async function createCheckoutOrderAction(
     adminBypass = false,
     adminBypassBy,
     outOfStockPolicy = OutOfStockPolicyValues.SKIP_ITEMS,
-    whatsappNotifyAddon = false,
-    giftWrapAddon = false,
-    giftWrapMessage,
-    shipmentProtectionAddon = false,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -846,6 +978,10 @@ export async function createCheckoutOrderAction(
   if (cartItems.length === 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
+
+  // Lane priority + locked-line revalidation, before any money math runs.
+  assertCheckoutLane(cart.items, cartItems);
+  await assertLockedLinesStillValid(cartItems, uid);
 
   // Tier PP — OTP gate for high-value checkouts. Evaluated against the
   // WHOLE checkout batch's total (not each resulting per-seller order),
@@ -1047,7 +1183,8 @@ export async function createCheckoutOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
   }
 
-  const appliedCoupons = cart.appliedCoupons ?? [];
+  const { coupons: appliedCoupons, dropped: droppedCoupons } =
+    await revalidateAppliedCoupons(cart.appliedCoupons ?? [], available, uid);
   const orderGroups = splitCartIntoOrderGroups(available);
 
   // Admin-bypass orders are immediately paid and processing; generate a shared
@@ -1067,6 +1204,16 @@ export async function createCheckoutOrderAction(
   );
 
   const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
+
+  // One commission on one transaction, capped, then apportioned across the
+  // orders this cart splits into — see allocateCheckoutFees.
+  const platformFeeByStore = allocateCheckoutFees(
+    orderGroups.map(({ items: g }) => [
+      g[0].item.storeId,
+      g.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0),
+    ] as const),
+    computeCheckoutFees(cartSubtotal, commissions),
+  );
 
   const groupCtx: OrderGroupContext = {
     paymentMethod,
@@ -1091,10 +1238,8 @@ export async function createCheckoutOrderAction(
     buyerState: resolvedAddress?.state,
     gstSettings: siteSettings?.gst,
     siteContactUpiVpa: siteSettings?.contact?.upiVpa,
-    whatsappNotifyAddon,
-    giftWrapAddon,
-    giftWrapMessage,
-    shipmentProtectionAddon,
+    storeAddons: cart.storeAddons,
+    platformFeeByStore,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -1113,6 +1258,7 @@ export async function createCheckoutOrderAction(
     total,
     itemCount: orderIds.length,
     ...(unavailable.length > 0 ? { unavailableItems: unavailable } : {}),
+    ...(droppedCoupons.length > 0 ? { droppedCoupons } : {}),
   };
 }
 
@@ -1122,12 +1268,27 @@ export interface CheckoutPricingPreviewInput {
   addressId?: string;
   paymentMethod: CheckoutPaymentMethod;
   excludedProductIds?: string[];
-  whatsappNotifyAddon?: boolean;
-  giftWrapAddon?: boolean;
-  shipmentProtectionAddon?: boolean;
+  /**
+   * Which cart lane to price. Only one lane is payable in a single checkout, so
+   * a preview spanning lanes would be a number the buyer can never be charged.
+   *
+   * Passed in rather than derived from `activeLane` server-side because the cart
+   * page previews whichever tab the buyer is looking at — including a lane that
+   * is currently gated off.
+   */
+  lane?: CartLane;
+  /**
+   * Add-on selections are NOT accepted here. They live on the cart document,
+   * keyed per store (`CartDocument.storeAddons`), because that is the
+   * granularity they are billed at. Accepting them here as well would be a
+   * second source of truth for the same charge.
+   */
 }
 
-export interface CheckoutPricingPreview {
+/** One store's slice of the preview — what that seller's order will cost. */
+export interface CheckoutPricingPreviewStore {
+  storeId: string;
+  storeName: string;
   subtotal: number;
   shippingFee: number;
   codHandlingFee: number;
@@ -1139,6 +1300,30 @@ export interface CheckoutPricingPreview {
   total: number;
 }
 
+export interface CheckoutPricingPreview {
+  subtotal: number;
+  shippingFee: number;
+  codHandlingFee: number;
+  whatsappNotifyFee: number;
+  giftWrapFee: number;
+  shipmentProtectionFee: number;
+  gstAmount: number;
+  couponDiscount: number;
+  /** Buyer-facing platform commission, capped, charged once for this checkout. */
+  platformFee: number;
+  /** GST on the (capped) platform commission. */
+  gstOnFee: number;
+  total: number;
+  /**
+   * Per-store breakdown, in group order. Every figure here was already being
+   * computed inside the per-group loop and then discarded into an aggregate —
+   * surfacing it is what lets each seller card show its own fees.
+   *
+   * A store with no selected items forms no group and therefore never appears.
+   */
+  stores: CheckoutPricingPreviewStore[];
+}
+
 const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   subtotal: 0,
   shippingFee: 0,
@@ -1148,7 +1333,10 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   shipmentProtectionFee: 0,
   gstAmount: 0,
   couponDiscount: 0,
+  platformFee: 0,
+  gstOnFee: 0,
   total: 0,
+  stores: [],
 };
 
 /**
@@ -1168,9 +1356,7 @@ export async function previewCheckoutPricing(
     addressId,
     paymentMethod,
     excludedProductIds = [],
-    whatsappNotifyAddon = false,
-    giftWrapAddon = false,
-    shipmentProtectionAddon = false,
+    lane,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -1179,8 +1365,17 @@ export async function previewCheckoutPricing(
   const cart = await unitOfWork.carts.getOrCreate(uid);
   const excludedSet = new Set(excludedProductIds);
   const selectedSet = cart.selectedItemIds?.length ? new Set(cart.selectedItemIds) : null;
+  // An explicit lane wins: the cart page prices whichever tab is open, which may
+  // not be the one that is currently payable. Falling back to activeLane keeps
+  // the checkout page's existing behaviour unchanged.
+  const previewLane = lane ?? activeLane(cart.items ?? []);
   const cartItems = (cart.items ?? []).filter(
-    (item) => !excludedSet.has(item.productId) && (!selectedSet || selectedSet.has(item.itemId)),
+    (item) =>
+      !excludedSet.has(item.productId) &&
+      (!selectedSet || selectedSet.has(item.itemId)) &&
+      // A preview never throws — it just shows the lane the buyer can actually
+      // check out, matching what the checkout page's active tab displays.
+      (!previewLane || laneOf(item) === previewLane),
   );
   if (cartItems.length === 0) return EMPTY_PRICING_PREVIEW;
 
@@ -1198,9 +1393,6 @@ export async function previewCheckoutPricing(
       addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid ? addressDoc : null;
   }
 
-  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
-    item.bundleCategorySlug && item.bundleProductIds?.length ? item.price : (product?.price ?? item.price);
-
   const checks = cartItems.map((item) => ({ item, product: productById.get(item.productId) ?? null }));
   const orderGroups = splitCartIntoOrderGroups(checks);
 
@@ -1209,37 +1401,49 @@ export async function previewCheckoutPricing(
     0,
   );
 
-  const appliedCoupons = cart.appliedCoupons ?? [];
+  // Same re-validation the real order placement runs, so the preview never
+  // shows a discount the order won't actually honour.
+  const { coupons: appliedCoupons } = await revalidateAppliedCoupons(
+    cart.appliedCoupons ?? [],
+    checks,
+    uid,
+  );
 
-  let shippingFee = 0;
-  let codHandlingFee = 0;
-  let whatsappNotifyFeeTotal = 0;
-  let giftWrapFeeTotal = 0;
-  let shipmentProtectionFeeTotal = 0;
-  let gstAmount = 0;
-  let couponDiscount = 0;
+  // Each group's figures are kept, not just summed away — the aggregates below
+  // are derived FROM this array, so a store card and the summary panel can never
+  // disagree about the same fee.
+  const stores: CheckoutPricingPreviewStore[] = [];
 
   for (const { items: group } of orderGroups) {
     const firstItem = group[0].item;
     const groupTotal = group.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0);
 
     const { shippingFee: groupShippingFee, storeState } = await resolveShippingCost(firstItem.storeId);
-    shippingFee += groupShippingFee;
+
+    // Add-ons are per store, read off the cart document — the same entry
+    // createOrderForGroup will read when the order is actually placed.
+    const addons = cart.storeAddons?.[firstItem.storeId] ?? {};
 
     // Mirrors createOrderForGroup exactly — the COD handling fee is only
     // ever charged for literal "cod" (pay the courier), never upi_manual or
     // cash (both pre-paid via UPI/bank transfer before dispatch).
-    if (paymentMethod === "cod") codHandlingFee += computeCodHandlingFee(groupTotal, commissions);
-    whatsappNotifyFeeTotal += computeWhatsAppNotifyFee(whatsappNotifyAddon, commissions);
-    giftWrapFeeTotal += computeGiftWrapFee(giftWrapAddon, commissions);
-    shipmentProtectionFeeTotal += computeShipmentProtectionFee(groupTotal, shipmentProtectionAddon, commissions);
+    const groupCodHandlingFee =
+      paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+    const groupWhatsappFee = computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissions);
+    const groupGiftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissions);
+    const groupShipmentProtectionFee = computeShipmentProtectionFee(
+      groupTotal,
+      addons.shipmentProtectionAddon ?? false,
+      commissions,
+    );
 
+    let groupGstAmount = 0;
     if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
       const intraState = !!storeState && storeState === resolvedAddress.state;
       for (const { item, product } of group) {
         const lineTotal = unitPriceFor(item, product) * item.quantity;
         const rate = product?.gstRate ?? 0;
-        if (rate > 0) gstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
+        if (rate > 0) groupGstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
       }
     }
 
@@ -1251,8 +1455,43 @@ export async function previewCheckoutPricing(
       cartSubtotal,
       firstItem.storeId,
     );
-    couponDiscount += groupCouponDiscount;
+
+    stores.push({
+      storeId: firstItem.storeId,
+      storeName: firstItem.storeName || firstItem.storeId,
+      subtotal: groupTotal,
+      shippingFee: groupShippingFee,
+      codHandlingFee: groupCodHandlingFee,
+      whatsappNotifyFee: groupWhatsappFee,
+      giftWrapFee: groupGiftWrapFee,
+      shipmentProtectionFee: groupShipmentProtectionFee,
+      gstAmount: groupGstAmount,
+      couponDiscount: groupCouponDiscount,
+      total:
+        Math.max(0, groupTotal - groupCouponDiscount) +
+        groupShippingFee +
+        groupCodHandlingFee +
+        groupWhatsappFee +
+        groupGiftWrapFee +
+        groupShipmentProtectionFee +
+        groupGstAmount,
+    });
   }
+
+  const sum = (pick: (s: CheckoutPricingPreviewStore) => number) =>
+    stores.reduce((acc, s) => acc + pick(s), 0);
+
+  const shippingFee = sum((s) => s.shippingFee);
+  const codHandlingFee = sum((s) => s.codHandlingFee);
+  const whatsappNotifyFeeTotal = sum((s) => s.whatsappNotifyFee);
+  const giftWrapFeeTotal = sum((s) => s.giftWrapFee);
+  const shipmentProtectionFeeTotal = sum((s) => s.shipmentProtectionFee);
+  const gstAmount = sum((s) => s.gstAmount);
+  const couponDiscount = sum((s) => s.couponDiscount);
+
+  // One capped commission for the whole checkout, on every payment method —
+  // deliberately not per store, so it is not added to the per-store rows above.
+  const { platformFee, gstOnFee } = computeCheckoutFees(cartSubtotal, commissions);
 
   const total =
     Math.max(0, cartSubtotal - couponDiscount) +
@@ -1261,6 +1500,8 @@ export async function previewCheckoutPricing(
     whatsappNotifyFeeTotal +
     giftWrapFeeTotal +
     shipmentProtectionFeeTotal +
+    platformFee +
+    gstOnFee +
     gstAmount;
 
   return {
@@ -1272,7 +1513,10 @@ export async function previewCheckoutPricing(
     shipmentProtectionFee: shipmentProtectionFeeTotal,
     gstAmount,
     couponDiscount,
+    platformFee,
+    gstOnFee,
     total,
+    stores,
   };
 }
 
@@ -1458,12 +1702,10 @@ async function createRazorpayGroupOrder(
   ctx: {
     appliedCoupons: CartAppliedCoupon[];
     cartSubtotal: number;
-    platformFeePercent: number;
-    gstPercent: number;
-    whatsappNotifyFee: number;
-    giftWrapFee: number;
-    giftWrapMessage?: string;
-    shipmentProtectionAddon: boolean;
+    /** Per-store add-on selections off the cart doc — see OrderGroupContext. */
+    storeAddons?: Record<string, CartStoreAddons>;
+    /** Pro-rata share of the checkout's single capped commission, by storeId. */
+    platformFeeByStore: Map<string, { platformFee: number; gstOnFee: number }>;
     siteSettings: Awaited<ReturnType<typeof siteSettingsRepository.getSingleton>> | null;
     uid: string;
     userName: string;
@@ -1477,17 +1719,14 @@ async function createRazorpayGroupOrder(
     unavailablePaid: StockBucketResult["unavailable"];
     orderIds: string[];
     emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][];
+    couponUsageAccumulator: Map<string, CouponAccumEntry>;
   },
 ): Promise<number> {
   const {
     appliedCoupons,
     cartSubtotal,
-    platformFeePercent,
-    gstPercent,
-    whatsappNotifyFee,
-    giftWrapFee,
-    giftWrapMessage,
-    shipmentProtectionAddon,
+    storeAddons,
+    platformFeeByStore,
     siteSettings,
     uid,
     userName,
@@ -1501,15 +1740,9 @@ async function createRazorpayGroupOrder(
     unavailablePaid,
     orderIds,
     emailsToSend,
+    couponUsageAccumulator,
   } = ctx;
 
-  // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle
-  // price); regular lines use product.price. The helper keeps the math
-  // local to this block.
-  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
-    item.bundleCategorySlug && item.bundleProductIds?.length
-      ? item.price
-      : (product as ProductDocument).price;
 
   const firstItem = group[0].item;
   const groupTotal = group.reduce(
@@ -1531,15 +1764,38 @@ async function createRazorpayGroupOrder(
     firstItem.storeId,
   );
 
-  const rawPlatformFee = roundRupees(groupTotal * (platformFeePercent / 100));
-  const gstOnFee = roundRupees(rawPlatformFee * (gstPercent / 100));
+  // Mirrors createOrderForGroup — without this the online-payment path wrote
+  // the discount onto the order but never incremented usage.currentUsage or
+  // the per-user counter, so limits were unenforceable for Razorpay orders.
+  const groupCouponCodes = new Set<string>();
+  for (const discount of appliedDiscounts) {
+    if (discount.couponId) {
+      accumulateCouponUsage(couponUsageAccumulator, discount.code, discount.couponId, discount.discountAmount);
+      groupCouponCodes.add(discount.code);
+    }
+  }
+
+  // Was a per-group, uncapped `groupTotal × platformFeePercent` computed inline
+  // here — the only path that charged the commission at all, and it charged a
+  // different (larger, multiplied-per-store) number than the cap now allows.
+  // Both the amount and its allocation are now decided once for the checkout.
+  const { platformFee: rawPlatformFee = 0, gstOnFee = 0 } =
+    platformFeeByStore.get(firstItem.storeId) ?? {};
   const platformFee = rawPlatformFee + gstOnFee;
+
+  // Add-ons are this store's choice, read off the cart doc — previously one
+  // cart-wide fee was passed in and billed against every group.
+  const commissionRates = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+  const addons = storeAddons?.[firstItem.storeId] ?? {};
+  const whatsappNotifyFee = computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissionRates);
+  const giftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates);
+  const giftWrapMessage = addons.giftWrapMessage;
   const shipmentProtectionFee = computeShipmentProtectionFee(
     groupTotal,
-    shipmentProtectionAddon,
-    siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
+    addons.shipmentProtectionAddon ?? false,
+    commissionRates,
   );
-  const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee;
+  const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee;
   // P-8 GST — deliberately NOT wired into this Razorpay-verify path. The
   // amount-mismatch check above (expectedPaymentAmountRs) compares against
   // what the buyer already paid via the Razorpay order created earlier in
@@ -1649,6 +1905,15 @@ async function createRazorpayGroupOrder(
 
   orderIds.push(order.id);
 
+  // Close the loop on any locked line this order settled: flip the offer to
+  // "paid" (its terminal status had NO server-side writer before 2026-08-21,
+  // so an accepted offer could be re-added and re-ordered) and back-link the
+  // winning bid to the order it became.
+  await finalizeLockedLines(
+    group.map(({ item }) => item),
+    order.id,
+  );
+
   // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
   // order is already persisted so a claim failure is logged, not thrown).
   if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
@@ -1657,6 +1922,11 @@ async function createRazorpayGroupOrder(
       userName,
       productTitle: firstItem.productTitle,
     }).catch((e) => serverLogger.error("claimDigitalCode", e));
+  }
+
+  for (const code of groupCouponCodes) {
+    const entry = couponUsageAccumulator.get(code);
+    if (entry) entry.orderIds.push(order.id);
   }
 
   if (userEmail) {
@@ -1702,23 +1972,12 @@ export async function verifyAndPlaceRazorpayOrderAction(
     addressId,
     notes,
     outOfStockPolicy = OutOfStockPolicyValues.CANCEL_ORDER,
-    whatsappNotifyAddon = false,
-    giftWrapAddon = false,
-    giftWrapMessage,
-    shipmentProtectionAddon = false,
   } = input;
 
+  // Add-on fees are no longer resolved here. They are per store, and this
+  // function has no single store — each group reads its own selection off
+  // `cart.storeAddons` inside createRazorpayGroupOrder.
   const siteSettings = await siteSettingsRepository.getSingleton();
-  const platformFeePercent = siteSettings?.commissions?.platformFeePercent ?? 5;
-  const gstPercent = siteSettings?.commissions?.gstPercent ?? 18;
-  const whatsappNotifyFee = computeWhatsAppNotifyFee(
-    whatsappNotifyAddon,
-    siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
-  );
-  const giftWrapFee = computeGiftWrapFee(
-    giftWrapAddon,
-    siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
-  );
 
   const isValid = await verifyPaymentSignatureWithKeys({
     razorpay_order_id,
@@ -1741,6 +2000,12 @@ export async function verifyAndPlaceRazorpayOrderAction(
   if (!cart.items || cart.items.length === 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
+
+  // Same lane priority + locked-line revalidation the manual/COD path runs.
+  // The Razorpay path settles the whole cart (no selectedItemIds), so the
+  // "selected" set is the cart itself.
+  assertCheckoutLane(cart.items, cart.items);
+  await assertLockedLinesStillValid(cart.items, uid);
 
   const isDigitalCartRazorpay = cartIsDigitalOnly(cart.items);
 
@@ -1867,9 +2132,13 @@ export async function verifyAndPlaceRazorpayOrderAction(
       const unit = isBundle ? item.price : product!.price;
       return sum + unit * item.quantity;
     }, 0);
-    const expectedPlatformFee =
-      roundRupees(cartSubtotalRs * (platformFeePercent / 100));
-    const expectedGstOnFee = roundRupees(expectedPlatformFee * (gstPercent / 100));
+    // Must use the SAME helper /api/payment/create-order used to compute what
+    // it charged. This block used to re-derive the fee inline from the raw
+    // percentages, so the moment the cap landed it would have expected more
+    // than was actually collected and rejected every legitimate payment.
+    const commissionRates = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+    const { platformFee: expectedPlatformFee, gstOnFee: expectedGstOnFee } =
+      computeCheckoutFees(cartSubtotalRs, commissionRates);
     // Same per-seller-group shipping sum /api/payment/create-order charged
     // upfront (and the same resolveShippingCost createRazorpayGroupOrder
     // below will use to build each order's recorded totalPrice) — keeps this
@@ -1879,7 +2148,25 @@ export async function verifyAndPlaceRazorpayOrderAction(
       expectedShippingGroups.map((g) => resolveShippingCost(g.items[0].item.storeId)),
     );
     const expectedShippingFee = expectedShippingFees.reduce((sum, r) => sum + r.shippingFee, 0);
-    const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedShippingFee;
+    // Add-ons are per store, so the expected total sums each group's own
+    // selection — a single cart-wide figure would over- or under-count as soon
+    // as the buyer picked add-ons for only some sellers.
+    const expectedAddonFees = expectedShippingGroups.reduce((sum, g) => {
+      const storeId = g.items[0].item.storeId;
+      const addons = cart.storeAddons?.[storeId] ?? {};
+      const groupSubtotal = g.items.reduce(
+        (gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity,
+        0,
+      );
+      return (
+        sum +
+        computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissionRates) +
+        computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates) +
+        computeShipmentProtectionFee(groupSubtotal, addons.shipmentProtectionAddon ?? false, commissionRates)
+      );
+    }, 0);
+    const expectedPaymentAmountRs =
+      cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee;
     const rzpOrderRecord = await fetchRazorpayOrder(razorpay_order_id);
     const paidAmountRs = paiseToRupees(rzpOrderRecord.amount);
     if (paidAmountRs < expectedPaymentAmountRs - 1) {
@@ -1903,7 +2190,12 @@ export async function verifyAndPlaceRazorpayOrderAction(
     }
   }
 
-  const appliedCoupons = cart.appliedCoupons ?? [];
+  const { coupons: appliedCoupons, dropped: droppedCoupons } =
+    await revalidateAppliedCoupons(
+      cart.appliedCoupons ?? [],
+      bucketedPaid.available,
+      uid,
+    );
   // "skip_items" (or an all-available cart under any policy) — build order
   // groups from the available bucket only. Dropped items are never ordered;
   // their value is refunded below since Razorpay already captured payment
@@ -1914,13 +2206,6 @@ export async function verifyAndPlaceRazorpayOrderAction(
   let total = 0;
   const emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][] = [];
 
-  // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle
-  // price); regular lines use product.price. The helper keeps the math
-  // local to this block.
-  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
-    item.bundleCategorySlug && item.bundleProductIds?.length
-      ? item.price
-      : (product as ProductDocument).price;
   const cartSubtotal = orderGroups.reduce(
     (s, { items: g }) =>
       s +
@@ -1931,16 +2216,23 @@ export async function verifyAndPlaceRazorpayOrderAction(
     0,
   );
 
+  const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
+
+  // Same single capped commission + pro-rata split as the COD/UPI path.
+  const platformFeeByStore = allocateCheckoutFees(
+    orderGroups.map(({ items: g }) => [
+      g[0].item.storeId,
+      g.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0),
+    ] as const),
+    computeCheckoutFees(cartSubtotal, siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS),
+  );
+
   for (const { items: group, orderType } of orderGroups) {
     total += await createRazorpayGroupOrder(group, orderType, {
       appliedCoupons,
       cartSubtotal,
-      platformFeePercent,
-      gstPercent,
-      whatsappNotifyFee,
-      giftWrapFee,
-      giftWrapMessage,
-      shipmentProtectionAddon,
+      storeAddons: cart.storeAddons,
+      platformFeeByStore,
       siteSettings,
       uid,
       userName,
@@ -1954,8 +2246,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
       unavailablePaid,
       orderIds,
       emailsToSend,
+      couponUsageAccumulator,
     });
   }
+
+  await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
 
   // SB-UNI-5 2026-05-13 — bundle-aware batch decrement. We iterate the
   // cumulative `decrements` map (one entry per unique member product) so a
@@ -2015,5 +2310,6 @@ export async function verifyAndPlaceRazorpayOrderAction(
     total,
     itemCount: orderIds.length,
     ...(unavailablePaid.length > 0 ? { unavailableItems: unavailablePaid } : {}),
+    ...(droppedCoupons.length > 0 ? { droppedCoupons } : {}),
   };
 }

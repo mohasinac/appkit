@@ -31,17 +31,30 @@ export const ADMIN_PRODUCT_STATUS_TABS = [
   { id: "archived", label: "Archived" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Admin > Products — listing-type filter chip set. Legacy label-as-id IDs
- *  preserved so the existing Sieve filter values keep matching. */
+/**
+ * Admin > Products — listing-type filter chip set.
+ *
+ * IDs are canonical `ListingType` values (2026-08-21). They used to be display
+ * LABELS ("Products", "Pre-orders", …) translated to a Sieve clause through a
+ * `TYPE_FILTER_MAP` lookup in AdminProductsView — an indirection that hid two
+ * whole missing types (`art`, `stickers`) and put the array outside the reach
+ * of `audit-filter-tab-enums.mjs`, which compares chip ids against the real
+ * backing enum. Now registered there, so a missing or misspelled type blocks.
+ *
+ * Multi-select: this feeds a `<FilterChipGroup multiple>`, so several types can
+ * be active at once and the selection is emitted as a pipe-joined OR-group.
+ */
 export const ADMIN_PRODUCT_LISTING_TYPE_TABS = [
   ALL_TAB,
-  { id: "Products", label: "Products" },
-  { id: "Auctions", label: "Auctions" },
-  { id: "Pre-orders", label: "Pre-orders" },
-  { id: "Prize Draws", label: "Prize Draws" },
-  { id: "Classifieds", label: "Classifieds" },
-  { id: "Digital Codes", label: "Digital Codes" },
-  { id: "Live Items", label: "Live Items" },
+  { id: "standard", label: "Products" },
+  { id: "auction", label: "Auctions" },
+  { id: "pre-order", label: "Pre-orders" },
+  { id: "prize-draw", label: "Prize Draws" },
+  { id: "classified", label: "Classifieds" },
+  { id: "digital-code", label: "Digital Codes" },
+  { id: "live", label: "Live Items" },
+  { id: "art", label: "Art" },
+  { id: "stickers", label: "Stickers" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Blog — post status filter chip set. */

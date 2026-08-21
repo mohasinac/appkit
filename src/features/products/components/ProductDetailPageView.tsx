@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
-import { productRepository, reviewRepository } from "../../../repositories";
+import { productRepository } from "../../../repositories";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -48,8 +48,7 @@ import {
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
-import type { Review } from "../../reviews/types";
-import { ReviewsList } from "../../reviews/components/ReviewsList";
+import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
 import { ProductDetailView } from "./ProductDetailView";
 import { ProductGalleryClient } from "./ProductGalleryClient";
 import { ProductTabsShell } from "./ProductTabsShell";
@@ -63,7 +62,7 @@ import { ShowGroupSection } from "./ShowGroupSection";
 import type { CustomSection } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { RelatedItemsSection } from "./RelatedItemsSection";
-import { computeRelatedItems, toReview } from "../../../_internal/server/features/products/data";
+import { computeRelatedItems, getReviewPageForProduct } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 
@@ -331,15 +330,13 @@ export async function ProductDetailPageView({
   const storeId = typeof p.storeId === "string" ? (p.storeId as string) : null;
 
   // -- Fetch reviews + the shared 4-signal related-items computation + grouped listings in parallel --
-  const [reviewDocs, related, groups] = await Promise.all([
-    reviewRepository.findApprovedByProduct(product.id).catch(() => [] as unknown[]),
+  // Only page 1 of reviews is fetched here; <ReviewsListingPanel> pages the rest client-side.
+  const [initialReviews, related, groups] = await Promise.all([
+    getReviewPageForProduct(product.id),
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
   ]);
 
-  const reviews: Review[] = (reviewDocs as FirestoreDocument[]).map(
-    toReview,
-  );
   const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
 
   return (
@@ -817,9 +814,11 @@ export async function ProductDetailPageView({
                 ) : undefined
               }
               reviewsContent={
-                <ReviewsList
-                  reviews={reviews}
+                <ReviewsListingPanel
+                  source={{ kind: "product", productId: product.id }}
+                  stateMode="local"
                   context="listing"
+                  initialData={initialReviews}
                   emptyLabel="No reviews yet — be the first to review this product."
                 />
               }

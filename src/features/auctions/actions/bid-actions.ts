@@ -28,6 +28,15 @@ import {
 import { BID_ERROR_CODES } from "../../../errors/error-codes";
 import { increment } from "../../../contracts/field-ops";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { cartRepository } from "../../cart/repository/cart.repository";
+import { ROUTES } from "../../../next/routing/route-map";
+import { CART_LANE, LANE_CHECKOUT_WINDOW_MS } from "../../../_internal/shared/checkout/lanes";
+
+/**
+ * Buy-Now and auction settlement give the buyer the same 48h window to pay for
+ * a locked line. Kept identical on purpose — both are "you now owe this".
+ */
+const AUCTION_CHECKOUT_WINDOW_MS = LANE_CHECKOUT_WINDOW_MS.auction;
 import { resolveDate } from "../../../utils";
 import type { BidDocument } from "../schemas";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase";
@@ -214,9 +223,19 @@ export interface BuyNowAuctionInput {
 }
 
 export interface BuyNowAuctionResult {
-  orderId: string;
+  /**
+   * Buy-Now no longer creates an order directly. It writes a LOCKED CART LINE
+   * (same shape auction settlement produces for a winning bidder) and the buyer
+   * completes the real order through the auction checkout lane. The old
+   * behaviour created a document that no orders UI could render and no payment
+   * path could reach — see auctionSettlement.ts for the full writeup.
+   */
+  cartLocked: true;
+  productId: string;
   amount: number;
   currency: string;
+  /** Where to send the buyer to actually pay. */
+  checkoutUrl: string;
 }
 
 export async function buyNowAuction(
@@ -260,22 +279,8 @@ export async function buyNowAuction(
   }
 
   const currency = getDefaultCurrency();
-  let orderId = "";
 
   await unitOfWork.runBatch((batch) => {
-    const orderRef = unitOfWork.orders.createFromAuction(batch, {
-      productId,
-      productTitle: product.title,
-      userId,
-      userName,
-      userEmail,
-      storeId: product.storeId,
-      amount: buyNowPrice,
-      currency,
-      auctionProductId: productId,
-    });
-    orderId = orderRef.id;
-
     unitOfWork.products.updateInBatch(batch, productId, {
       isSold: true,
       availableQuantity: 0,
@@ -283,14 +288,35 @@ export async function buyNowAuction(
     } as any);
   });
 
+  // Locked cart line, not an order — see BuyNowAuctionResult above. Written
+  // through the repository directly (auctions are canAddToCart:false for
+  // user-initiated adds), the same deliberate bypass checkoutOffer uses.
+  await cartRepository.addItem(userId, {
+    productId,
+    productTitle: product.title,
+    productImage: product.mainImage ?? "",
+    price: buyNowPrice,
+    currency,
+    quantity: 1,
+    storeId: product.storeId,
+    storeName: product.storeName ?? "",
+    listingType: "auction",
+    isAuctionWin: true,
+    auctionId: productId,
+    lockedPrice: buyNowPrice,
+    checkoutDeadline: new Date(Date.now() + AUCTION_CHECKOUT_WINDOW_MS),
+    locked: true,
+  });
+
+  const checkoutUrl = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.AUCTION}`;
+
   serverLogger.info("buyNowAuction", {
-    orderId,
     productId,
     userId,
     amount: buyNowPrice,
   });
 
-  return { orderId, amount: buyNowPrice, currency };
+  return { cartLocked: true, productId, amount: buyNowPrice, currency, checkoutUrl };
 }
 
 export async function listBidsByProduct(

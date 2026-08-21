@@ -13,6 +13,18 @@ export const AUCTION_MESSAGES = {
   LOST_MESSAGE: (productTitle: string): string =>
     `The auction for "${productTitle}" has ended. You were outbid.`,
   NO_BIDS_LOG: (productId: string): string => `Auction ${productId} ended with no bids`,
+  /** CTA on the winner's notification — links into the auction checkout lane. */
+  WON_ACTION_LABEL: "Pay now",
+  RESERVE_NOT_MET_TITLE: "Auction ended below reserve",
+  RESERVE_NOT_MET_MESSAGE: (
+    productTitle: string,
+    currency: string,
+    highestBid: number,
+    reservePrice: number,
+  ): string =>
+    `"${productTitle}" ended at ${currency} ${highestBid}, below your reserve of ${currency} ${reservePrice}. No winner was declared and the listing was archived.`,
+  RESERVE_NOT_MET_BIDDER_MESSAGE: (productTitle: string): string =>
+    `The auction for "${productTitle}" ended without meeting the seller's reserve price, so it did not sell.`,
 };
 
 export const BID_MESSAGES = {

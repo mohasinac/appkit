@@ -1,9 +1,10 @@
 import { cache } from "react";
 import { reviewRepository, orderRepository } from "../../../../repositories";
+import { REVIEWS_DETAIL_PAGE_SIZE } from "../../../shared/features/reviews/config";
 
 export const getReviewsForProduct = cache(
-  async (productId: string) => {
-    return reviewRepository.findApprovedByProduct(productId).catch(() => []);
+  async (productId: string, limit = REVIEWS_DETAIL_PAGE_SIZE) => {
+    return reviewRepository.findApprovedByProduct(productId, limit).catch(() => []);
   },
 );
 

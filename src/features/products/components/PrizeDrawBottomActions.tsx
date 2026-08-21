@@ -1,8 +1,6 @@
 "use client";
 
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
-import { formatCurrency } from "../../../utils/number.formatter";
-import { ACTION_ID } from "../constants/action-defs";
+import { ListingBottomActions } from "./ListingBottomActions";
 
 export interface PrizeDrawBottomActionsProps {
   pricePerEntry: number;
@@ -15,24 +13,14 @@ export function PrizeDrawBottomActions({
   currency,
   closed,
 }: PrizeDrawBottomActionsProps) {
-  useBottomActions(
-    closed
-      ? {}
-      : {
-          actions: [
-            {
-              id: ACTION_ID.BUY_NOW,
-              label: "Buy Now",
-              variant: "primary",
-              onClick: () => {
-                document
-                  .getElementById("prize-draw-buy-bar")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              },
-            },
-          ],
-          infoLabel: `${formatCurrency(pricePerEntry, currency)} per entry`,
-        },
+  return (
+    <ListingBottomActions
+      listingType="prize-draw"
+      anchorId="prize-draw-buy-bar"
+      price={pricePerEntry}
+      currency={currency}
+      unavailable={closed}
+      infoSuffix="per entry"
+    />
   );
-  return null;
 }

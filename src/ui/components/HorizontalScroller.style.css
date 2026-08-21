@@ -50,9 +50,38 @@
 
 /* -- Arrows ------------------------------------------ */
 
-.appkit-hscroller--with-arrows .appkit-hscroller__track {
-  padding-left: 36px;
-  padding-right: 36px;
+/* Component-local custom properties — never added to tokens.css, so
+ * audit-theme-drift.mjs's stray-key check can't fire on them. Default
+ * gutter is 0 so the no-arrows variant is untouched. --arrow-size defaults
+ * to the old hardcoded 36px ("md") and is overridden by the
+ * --arrow-{sm,md,lg} modifiers below. */
+.appkit-hscroller {
+  --appkit-hscroller-arrow-size: 2.25rem;
+  --appkit-hscroller-gutter: 0px;
+}
+
+.appkit-hscroller--arrow-sm { --appkit-hscroller-arrow-size: 1.75rem; }
+.appkit-hscroller--arrow-md { --appkit-hscroller-arrow-size: 2.25rem; }
+.appkit-hscroller--arrow-lg { --appkit-hscroller-arrow-size: 2.75rem; }
+
+/* Arrows only render at sm+ — below that, touch users swipe and reserving
+ * gutter space would eat into an already-narrow single-column card. Gutter
+ * lives on the WRAPPER (padding box), not the scrollable track, so items
+ * are clipped at the gutter's inner edge instead of scrolling underneath
+ * an absolutely-positioned arrow. */
+.appkit-hscroller__arrow {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .appkit-hscroller--with-arrows {
+    --appkit-hscroller-gutter: calc(var(--appkit-hscroller-arrow-size) + var(--appkit-space-2));
+    padding-left: var(--appkit-hscroller-gutter);
+    padding-right: var(--appkit-hscroller-gutter);
+  }
+  .appkit-hscroller--with-arrows .appkit-hscroller__arrow {
+    display: flex;
+  }
 }
 
 .appkit-hscroller__arrow {
@@ -60,11 +89,12 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
+  width: var(--appkit-hscroller-arrow-size);
+  height: var(--appkit-hscroller-arrow-size);
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid var(--appkit-color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  display: flex;
   align-items: center;
   justify-content: center;
   transition: background 150ms;
@@ -80,18 +110,20 @@
   pointer-events: none;
 }
 
-.appkit-hscroller__arrow--prev { left: 0; }
-.appkit-hscroller__arrow--next { right: 0; }
+/* Centered within the gutter (gutter = arrow size + space-2 breathing room). */
+.appkit-hscroller__arrow--prev { left: calc((var(--appkit-hscroller-gutter) - var(--appkit-hscroller-arrow-size)) / 2); }
+.appkit-hscroller__arrow--next { right: calc((var(--appkit-hscroller-gutter) - var(--appkit-hscroller-arrow-size)) / 2); }
 
-.appkit-hscroller__arrow--sm { width: 1.75rem; height: 1.75rem; font-size: 0.875rem; }
-.appkit-hscroller__arrow--md { width: 2.25rem;  height: 2.25rem;  font-size: 1rem; }
-.appkit-hscroller__arrow--lg { width: 2.75rem;  height: 2.75rem;  font-size: 1.125rem; }
+.appkit-hscroller__arrow--sm { font-size: 0.875rem; }
+.appkit-hscroller__arrow--md { font-size: 1rem; }
+.appkit-hscroller__arrow--lg { font-size: 1.125rem; }
 
 /* Full-height variant — a thin sliver spanning the whole track height
  * instead of a small centered circle, so a double-row grid of cards has a
  * much taller, easier-to-hit click target on either side. Width still comes
- * from the --sm/--md/--lg size classes above; this only overrides the
- * vertical sizing/position and squares off the rounding on the outer edge. */
+ * from --appkit-hscroller-arrow-size via the --sm/--md/--lg modifiers above;
+ * this only overrides the vertical sizing/position and squares off the
+ * rounding on the outer edge. */
 .appkit-hscroller__arrow--full-height {
   top: 0;
   height: 100%;
@@ -119,30 +151,3 @@
   background: var(--appkit-color-slate-700);
 }
 
-/* -- Fade edges -------------------------------------- */
-
-.appkit-hscroller__fade {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2rem;
-  z-index: var(--appkit-z-raised);
-  pointer-events: none;
-}
-
-.appkit-hscroller__fade--left {
-  left: 0;
-  background: linear-gradient(to right, var(--appkit-color-surface), transparent);
-}
-
-.appkit-hscroller__fade--right {
-  right: 0;
-  background: linear-gradient(to left, var(--appkit-color-surface), transparent);
-}
-
-.dark .appkit-hscroller__fade--left {
-  background: linear-gradient(to right, var(--appkit-color-surface), transparent);
-}
-.dark .appkit-hscroller__fade--right {
-  background: linear-gradient(to left, var(--appkit-color-surface), transparent);
-}

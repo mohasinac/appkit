@@ -133,4 +133,61 @@ for (let i = 0; i < 65; i++) {
   });
 }
 
+/**
+ * A deliberately deep review list on ONE product, so the paginated reviews tab is
+ * actually exercisable.
+ *
+ * The round-robin above spreads 65 reviews across 14 products — 4-5 each, which is
+ * below the 10-per-page detail-page size, so pagination could never appear on a product
+ * page and the tester checklist cases for it would be untestable. This block pushes
+ * "Beyblade Original Dranzer S" to 5 + 14 = 19 approved reviews (2 pages), and spreads
+ * ratings across all five stars so the rating filter and the average/distribution
+ * summary have something real to act on.
+ *
+ * Ids and every field are derived from the loop index — no Math.random(), no Date.now()
+ * in an id — so `appkit-seed load` stays idempotent (Recurrent Root Cause #25).
+ */
+const DEEP_REVIEW_PRODUCT = {
+  id: "product-beyblade-original-dranzer-s",
+  title: "Beyblade Original Dranzer S",
+  store: "store-beyblade-arena",
+};
+
+for (let i = 0; i < 14; i++) {
+  const template = reviewTemplates[i % reviewTemplates.length];
+  const buyer = buyers[i % buyers.length];
+  // 1..5, cycling — guarantees every star bucket is populated for the rating filter.
+  const rating = (i % 5) + 1;
+  // Distinct from the main loop's 90-i range so the two sets interleave predictably
+  // and "newest first" is verifiable by eye.
+  const daysAgoCreated = 28 - i;
+  const hasImage = i % 4 === 0;
+
+  _rawReviewsSeedData.push({
+    id: `review-dranzer-deep-${i + 1}`,
+    productId: DEEP_REVIEW_PRODUCT.id,
+    productTitle: DEEP_REVIEW_PRODUCT.title,
+    storeId: DEEP_REVIEW_PRODUCT.store,
+    userId: buyer.id,
+    userName: buyer.name,
+    rating,
+    title: `${template.title} (${rating}★)`,
+    comment: template.comment,
+    images: hasImage
+      ? [
+          seedExtMedia(
+            `https://picsum.photos/seed/review-image-dranzer-deep-${i + 1}/800/800`,
+          ),
+        ]
+      : [],
+    hasImages: hasImage,
+    verified: i % 3 !== 2,
+    status: "approved",
+    helpfulCount: (i * 3) % 17,
+    reportCount: 0,
+    createdAt: daysAgo(daysAgoCreated),
+    updatedAt: daysAgo(daysAgoCreated),
+  });
+}
+
 export const reviewsSeedData = _rawReviewsSeedData as ReviewDocument[];

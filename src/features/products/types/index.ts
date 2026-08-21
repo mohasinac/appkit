@@ -247,4 +247,19 @@ export interface ProductListParams {
   brand?: string;
   /** Shipping / free shipping */
   freeShipping?: boolean;
+  /**
+   * Pipe-joined multi-select facets. All three were rendered by
+   * `<ProductFilters>` and counted toward the active-filter badge, but no
+   * caller ever put them on the wire — ticking one inflated the badge and
+   * changed nothing (fixed 2026-08-21).
+   */
+  tags?: string;
+  sublistingCategory?: string;
+  features?: string;
+  /**
+   * Per-listing-type facets keyed by TABLE_KEY (classified city/negotiable,
+   * digital-code deliveryMethod, live species/sex/jurisdiction). The server
+   * resolves each to its nested Firestore path and ignores unknown keys.
+   */
+  typeFacets?: Record<string, string>;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { OrderAddonBadges, type OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
 import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
@@ -38,6 +39,12 @@ export interface AdminOrderEditorViewProps {
   paymentUpiMismatch?: boolean;
   buyerMarkedPaid?: boolean;
   buyerFraudAgreementAccepted?: boolean;
+  /**
+   * Paid add-ons + applied coupon for this order. Operational, not decorative:
+   * `whatsappNotifyAddon` is who a status change should message, and the
+   * coupon is what an admin needs when reconciling a discounted order.
+   */
+  addons?: OrderAddonBadgesOrder;
 }
 
 const STATUS_OPTIONS = [
@@ -78,6 +85,7 @@ export function AdminOrderEditorView({
   paymentUpiMismatch,
   buyerMarkedPaid,
   buyerFraudAgreementAccepted,
+  addons,
 }: AdminOrderEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -189,6 +197,7 @@ export function AdminOrderEditorView({
           e.preventDefault();
           saveMutation.mutate();
         }} spacing="md" padding="md">
+        {addons && <OrderAddonBadges order={addons} variant="detail" />}
         {items && items.length > 0 && (
           <Stack gap="xs">
             <Label size="sm" weight="medium" color="primary">
