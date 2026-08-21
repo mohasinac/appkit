@@ -5,7 +5,10 @@ import { type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { Button, Modal, Row, Stack, Text, Textarea } from "../../../ui";
+import { Button, Modal, RecordDetailModal, Row, Stack, Text, Textarea } from "../../../ui";
+import type { RecordDetailItem } from "../../../ui";
+import type { JsonValue } from "../../../schemas/types";
+import { formatCurrency } from "../../../utils/number.formatter";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import {
@@ -27,12 +30,22 @@ interface CatalogueApprovalRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  _raw: Record<string, JsonValue>;
+}
+
+/** The submitted item's photos — the whole point of a visual approval. */
+function toPhotoEntries(raw: Record<string, JsonValue>): RecordDetailItem[] {
+  const images = Array.isArray(raw.images) ? raw.images : [];
+  return images
+    .filter((i): i is string => typeof i === "string")
+    .map((url, i) => ({ image: url, title: `Photo ${i + 1}` }));
 }
 
 export function AdminCatalogueApprovalsView() {
   const queryClient = useQueryClient();
   const [rejectTarget, setRejectTarget] = React.useState<string | null>(null);
   const [rejectReason, setRejectReason] = React.useState("");
+  const [selected, setSelected] = React.useState<CatalogueApprovalRow | null>(null);
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "catalogue-approvals"] });
 
@@ -69,11 +82,19 @@ export function AdminCatalogueApprovalsView() {
         secondary: toStringValue(item.ownerId, ""),
         status: toStringValue(item.listingStatus, "pending_admin_approval"),
         updatedAt: toRelativeDate(item.submittedForApprovalAt ?? item.createdAt),
+        _raw: item,
       })),
     getTotal: (response, mappedRows) => (typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length),
     buildFilters: () => undefined,
+    // Approve/Reject used to be the ONLY row affordance — an admin was asked
+    // to accept or refuse a submission whose photos, description and price
+    // were never rendered anywhere. "View" opens those first.
+    onRowClick: (row) => setSelected(row),
     renderRowActions: (row) => (
       <Row gap="sm">
+        <Button size="sm" variant="outline" onClick={() => setSelected(row)}>
+          View
+        </Button>
         <Button size="sm" isLoading={approveMutation.isPending} onClick={() => approveMutation.mutate(row.id)}>
           Approve
         </Button>
@@ -84,9 +105,51 @@ export function AdminCatalogueApprovalsView() {
     ),
   };
 
+  const raw = selected?._raw ?? {};
+  const price = typeof raw.price === "number" ? raw.price : undefined;
+
   return (
     <>
       <DataListingView config={config} />
+      <RecordDetailModal
+        isOpen={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        title={selected?.primary ?? "Catalogue Submission"}
+        badges={[{ label: selected?.status ?? "pending", variant: "warning" }]}
+        description={toStringValue(raw.description, "") || undefined}
+        fields={[
+          { label: "Submitted by", value: toStringValue(raw.ownerId, "—") },
+          { label: "Estimated price", value: price !== undefined ? formatCurrency(price) : "—" },
+          { label: "Quantity", value: String(raw.quantity ?? 1) },
+          { label: "Condition", value: toStringValue(raw.condition, "—") },
+          { label: "Submitted", value: selected?.updatedAt ?? "—" },
+        ]}
+        items={{ heading: "Photos", entries: toPhotoEntries(raw) }}
+        footer={
+          selected ? (
+            <>
+              <Button
+                variant="danger"
+                onClick={() => {
+                  setRejectTarget(selected.id);
+                  setSelected(null);
+                }}
+              >
+                Reject
+              </Button>
+              <Button
+                isLoading={approveMutation.isPending}
+                onClick={() => {
+                  approveMutation.mutate(selected.id);
+                  setSelected(null);
+                }}
+              >
+                Approve
+              </Button>
+            </>
+          ) : null
+        }
+      />
       <Modal isOpen={!!rejectTarget} onClose={() => setRejectTarget(null)} title="Reject this catalogue listing?" size="sm">
         <Stack gap="md">
           <Text variant="secondary">The owner will see this reason.</Text>

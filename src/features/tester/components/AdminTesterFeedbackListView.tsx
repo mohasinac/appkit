@@ -6,7 +6,8 @@ import { sortBy } from "../../../constants/sort";
 import { TESTER_CHECKLIST_RESPONSE_FIELDS } from "../schemas/firestore";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FilterChipGroup, RowActionMenu, Stack, Text } from "../../../ui";
+import { FilterChipGroup, RecordDetailModal, RowActionMenu, Stack, Text } from "../../../ui";
+import type { JsonValue } from "../../../schemas/types";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
@@ -32,6 +33,7 @@ interface FeedbackRow {
   status: string;
   updatedAt: string;
   screenshotUrl?: string;
+  _raw: Record<string, JsonValue>;
 }
 
 const COLUMNS: AdminTableColumn<FeedbackRow>[] = [
@@ -74,6 +76,7 @@ export type AdminTesterFeedbackListViewProps = Record<string, never>;
 
 export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewProps) {
   const queryClient = useQueryClient();
+  const [selected, setSelected] = React.useState<FeedbackRow | null>(null);
 
   const patchMutation = useApiMutation({
     mutationFn: async (id: string) => {
@@ -117,6 +120,7 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
         status: toStringValue(item.status, "new"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
         screenshotUrl: item.screenshotUrl ? toStringValue(item.screenshotUrl, "") : undefined,
+        _raw: item,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
@@ -150,9 +154,16 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
         />
       </>
     ),
+    // "Confirm bug" used to be reachable without ever reading the tester's
+    // own comment or opening their screenshot — the row truncates both.
+    onRowClick: (row) => setSelected(row),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
+          {
+            label: "View details",
+            onClick: () => setSelected(row),
+          },
           {
             label: ACTIONS.ADMIN["mark-feedback-reviewed"].label,
             disabled: row.status === "reviewed",
@@ -168,5 +179,32 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
     ),
   };
 
-  return <DataListingView config={config} />;
+  const raw = selected?._raw ?? {};
+
+  return (
+    <>
+      <DataListingView config={config} />
+      <RecordDetailModal
+        isOpen={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        title={selected?.primary ?? "Tester Feedback"}
+        badges={[
+          { label: selected?.answer === "no" ? "Reported a problem" : "Passed", variant: selected?.answer === "no" ? "danger" : "success" },
+          { label: selected?.status ?? "new", variant: "default" },
+        ]}
+        description={toStringValue(raw.comment, "") || undefined}
+        fields={[
+          { label: "Checklist item", value: toStringValue(raw.checklistItemId, "—") },
+          { label: "Phase", value: toStringValue(raw.phase, "—") },
+          { label: "Group / page", value: `${toStringValue(raw.groupKey, "—")} / ${toStringValue(raw.pageKey, "—")}` },
+          { label: "Answered", value: selected?.updatedAt ?? "—" },
+        ]}
+        items={
+          selected?.screenshotUrl
+            ? { heading: "Screenshot", entries: [{ image: selected.screenshotUrl, title: "Tester screenshot" }] }
+            : undefined
+        }
+      />
+    </>
+  );
 }

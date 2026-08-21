@@ -2,9 +2,11 @@
 
 import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   toRecordArray,
   toRelativeDate,
@@ -24,6 +26,8 @@ interface WishlistRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  /** Owning user — the row's only navigable target (see the view's comment). */
+  userId: string;
 }
 
 const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, WishlistRow> = {
@@ -50,6 +54,7 @@ const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, Wishlist
         secondary: `${itemCount} item${itemCount === 1 ? "" : "s"} of ${limit}`,
         status: isFull ? "Full" : itemCount >= limit - 2 ? "Near cap" : "OK",
         updatedAt: toRelativeDate(item.updatedAt),
+        userId: toStringValue(item.userId, ""),
       };
     }),
   getTotal: (response, mappedRows) =>
@@ -60,6 +65,8 @@ const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, Wishlist
 export type AdminWishlistsViewProps = ListingLayoutProps;
 
 export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewProps) {
+  const router = useRouter();
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -67,5 +74,20 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_WISHLISTS_CONFIG} />;
+
+  // The list API (`wishlistRepository.findAllSummaries()`) deliberately
+  // returns only {userId, itemCount, isFull, updatedAt} — never the items
+  // themselves, since pulling every user's ≤20 items into one payload is
+  // exactly the unbounded-response shape Rule #6 forbids. So the row already
+  // shows its whole record, and the genuinely useful destination is the
+  // owning user's admin page, which renders their real detail.
+  return (
+    <DataListingView
+      config={{
+        ...ADMIN_WISHLISTS_CONFIG,
+        onRowClick: (row) =>
+          row.userId && router.push(String(ROUTES.ADMIN.USER_DETAIL(row.userId))),
+      }}
+    />
+  );
 }

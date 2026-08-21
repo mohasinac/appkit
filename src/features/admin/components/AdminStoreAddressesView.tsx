@@ -1,7 +1,7 @@
 "use client";
 
 import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
-import React from "react";
+import React, { useState } from "react";
 import {
   toRecordArray,
   toStringValue,
@@ -9,6 +9,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { RecordDetailModal } from "../../../ui";
+import type { JsonValue } from "../../../schemas/types";
 
 interface AdminStoreAddressesResponse {
   items?: JsonArray;
@@ -21,6 +23,7 @@ interface StoreAddressRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  _raw: Record<string, JsonValue>;
 }
 
 const ADMIN_STORE_ADDRESSES_CONFIG: ListingViewConfig<AdminStoreAddressesResponse, StoreAddressRow> = {
@@ -54,6 +57,7 @@ const ADMIN_STORE_ADDRESSES_CONFIG: ListingViewConfig<AdminStoreAddressesRespons
         .join(" · "),
       status: item.isDefault ? "default" : "standard",
       updatedAt: toStringValue(item.storeId, ""),
+      _raw: item,
     })),
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,
@@ -65,5 +69,38 @@ export interface AdminStoreAddressesViewProps {
 }
 
 export function AdminStoreAddressesView(_props: AdminStoreAddressesViewProps) {
-  return <DataListingView config={ADMIN_STORE_ADDRESSES_CONFIG} />;
+  const [selected, setSelected] = useState<StoreAddressRow | null>(null);
+  const raw = selected?._raw ?? {};
+
+  return (
+    <>
+      <DataListingView
+        config={{ ...ADMIN_STORE_ADDRESSES_CONFIG, onRowClick: (row) => setSelected(row) }}
+      />
+      <RecordDetailModal
+        isOpen={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        title={toStringValue(raw.label, "Store Address")}
+        badges={
+          raw.isDefault
+            ? [{ label: "Default pickup location", variant: "info" as const }]
+            : undefined
+        }
+        fields={[
+          { label: "Store", value: toStringValue(raw.storeName ?? raw.storeId, "—") },
+          { label: "Contact", value: toStringValue(raw.fullName, "—") },
+          { label: "Phone", value: toStringValue(raw.phone, "—") },
+          { label: "Address", value: toStringValue(raw.addressLine1, "—") },
+          ...(raw.addressLine2
+            ? [{ label: "Address line 2", value: toStringValue(raw.addressLine2, "—") }]
+            : []),
+          ...(raw.landmark ? [{ label: "Landmark", value: toStringValue(raw.landmark, "—") }] : []),
+          { label: "City", value: toStringValue(raw.city, "—") },
+          { label: "State", value: toStringValue(raw.state, "—") },
+          { label: "Postal code", value: toStringValue(raw.postalCode ?? raw.pincode, "—") },
+          { label: "Country", value: toStringValue(raw.country, "India") },
+        ]}
+      />
+    </>
+  );
 }

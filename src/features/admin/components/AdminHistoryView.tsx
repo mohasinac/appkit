@@ -6,9 +6,11 @@
  */
 import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   toRecordArray,
   toRelativeDate,
@@ -28,6 +30,8 @@ interface HistoryRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  /** Owning user — the row's only navigable target (see the view's comment). */
+  userId: string;
 }
 
 const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> = {
@@ -53,6 +57,7 @@ const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> 
         secondary: `${itemCount} of ${limit} items`,
         status: itemCount >= limit ? "At cap" : itemCount >= limit - 5 ? "Near cap" : "OK",
         updatedAt: toRelativeDate(item.updatedAt),
+        userId: toStringValue(item.userId, ""),
       };
     }),
   getTotal: (response, mappedRows) =>
@@ -63,6 +68,8 @@ const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> 
 export type AdminHistoryViewProps = ListingLayoutProps;
 
 export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) {
+  const router = useRouter();
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -70,5 +77,17 @@ export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) 
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_HISTORY_CONFIG} />;
+
+  // Same shape as AdminWishlistsView: the list API returns only a per-user
+  // summary (never the viewed items), so the row already shows its whole
+  // record and the useful destination is the owning user's admin page.
+  return (
+    <DataListingView
+      config={{
+        ...ADMIN_HISTORY_CONFIG,
+        onRowClick: (row) =>
+          row.userId && router.push(String(ROUTES.ADMIN.USER_DETAIL(row.userId))),
+      }}
+    />
+  );
 }

@@ -272,6 +272,7 @@ export const DEFAULT_ROUTE_MAP = {
     SHIPMENTS_PROJECTIONS: "/admin/shipments/projections",
     CATALOGUE_APPROVALS: "/admin/catalogue-approvals",
     USERS: "/admin/users",
+    USER_DETAIL: (id: string) => `/admin/users/${id}`,
     SITE: "/admin/site",
     CAROUSEL: "/admin/carousel",
     CAROUSEL_NEW: "/admin/carousel/new",

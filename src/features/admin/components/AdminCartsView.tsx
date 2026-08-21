@@ -2,9 +2,11 @@
 
 import { type JsonArray, SIEVE_OP, sieveFilter } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
-import React from "react";
-import { FilterChipGroup, ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import React, { useState } from "react";
+import { FilterChipGroup, ListingLayout, RecordDetailModal } from "../../../ui";
+import type { ListingLayoutProps, RecordDetailItem } from "../../../ui";
+import type { JsonValue } from "../../../schemas/types";
+import { formatCurrency } from "../../../utils/number.formatter";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -25,6 +27,29 @@ interface CartRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  _raw: Record<string, JsonValue>;
+}
+
+/**
+ * The cart's `items[]` is already in the list response — mapRows only ever
+ * read `.length` for the row subtitle and discarded the rest, leaving no way
+ * to see what's actually in a cart (Root Cause #52). This maps it for the
+ * detail modal.
+ */
+function toCartItemEntries(raw: Record<string, JsonValue>): RecordDetailItem[] {
+  const items = Array.isArray(raw.items) ? raw.items : [];
+  return items
+    .filter((e): e is Record<string, JsonValue> => Boolean(e) && typeof e === "object")
+    .map((e) => {
+      const qty = typeof e.quantity === "number" ? e.quantity : 1;
+      const price = typeof e.price === "number" ? e.price : undefined;
+      return {
+        image: typeof e.image === "string" ? e.image : undefined,
+        title: typeof e.title === "string" ? e.title : String(e.productId ?? "Item"),
+        subtitle: `Qty: ${qty}`,
+        trailing: price !== undefined ? formatCurrency(price * qty) : undefined,
+      };
+    });
 }
 
 const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
@@ -53,6 +78,7 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
         secondary: `${itemCount} item${itemCount !== 1 ? "s" : ""}`,
         status: isGuest ? "Guest" : "Authenticated",
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        _raw: item,
       };
     }),
   getTotal: (response, mappedRows) =>
@@ -83,6 +109,8 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
 export type AdminCartsViewProps = ListingLayoutProps;
 
 export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
+  const [selected, setSelected] = useState<CartRow | null>(null);
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -90,5 +118,27 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_CARTS_CONFIG} />;
+
+  const raw = selected?._raw ?? {};
+  const isGuest = !raw.userId;
+
+  return (
+    <>
+      <DataListingView
+        config={{ ...ADMIN_CARTS_CONFIG, onRowClick: (row) => setSelected(row) }}
+      />
+      <RecordDetailModal
+        isOpen={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        title="Cart Details"
+        badges={[{ label: isGuest ? "Guest" : "Authenticated", variant: isGuest ? "default" : "info" }]}
+        fields={[
+          { label: isGuest ? "Session" : "User", value: String(raw.sessionId ?? raw.userId ?? "—") },
+          { label: "Last updated", value: selected?.updatedAt ?? "—" },
+          { label: "Cart ID", value: selected?.id ?? "—" },
+        ]}
+        items={{ heading: "Items in cart", entries: toCartItemEntries(raw) }}
+      />
+    </>
+  );
 }

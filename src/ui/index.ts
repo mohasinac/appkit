@@ -602,3 +602,14 @@ export { Show, Hide } from "./components/Responsive";
 export type { ShowProps, HideProps } from "./components/Responsive";
 export { CollapsibleSection } from "./components/CollapsibleSection";
 export type { CollapsibleSectionProps } from "./components/CollapsibleSection";
+
+// RecordDetailModal — shared "open one listing row and read it" surface.
+// Backs the 2026-08-21 dead-end-listing sweep; see the component's own
+// header comment and scripts/audit-listing-detail-affordance.mjs.
+export { RecordDetailModal } from "./components/RecordDetailModal";
+export type {
+  RecordDetailModalProps,
+  RecordDetailField,
+  RecordDetailItem,
+  RecordDetailBadge,
+} from "./components/RecordDetailModal";
