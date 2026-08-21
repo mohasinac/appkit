@@ -228,6 +228,18 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     fromName: "LetItRip",
     fromEmail: "noreply@letitrip.in",
     replyTo: "support@letitrip.in",
+    // Admin-editable in Site Settings → Notifications. The Gmail address is a
+    // standing CC so the digest still lands somewhere reachable even if the
+    // @letitrip.in mailboxes aren't receiving mail yet.
+    dailyDigest: {
+      enabled: true,
+      recipients: [
+        "support@letitrip.in",
+        "reply@letitrip.in",
+        "mohasin@letitrip.in",
+      ],
+      ccRecipients: ["letitrip.in@gmail.com"],
+    },
   },
   seo: {
     defaultTitle:

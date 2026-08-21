@@ -4240,8 +4240,6 @@ export type { PlaceBidResult } from "./features/auctions/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
 export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-value-otp";
-// PASSWORD_CHANGE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
-export { PASSWORD_CHANGE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/password-change-otp";
 // [SERVER-ONLY] Tier PP — high-value checkout OTP gate. "use server" actions
 // belong in both index.ts and server.ts per the appkit Export Rules table;
 // these were only in server.ts, leaving src/actions/checkout.actions.ts's
@@ -4251,13 +4249,6 @@ export {
   sendCheckoutValueOtp,
   verifyCheckoutValueOtp,
 } from "./features/checkout/server";
-// [SERVER-ONLY] Password-change OTP gate — see features/auth/password-change-otp.ts.
-export {
-  sendPasswordChangeOtp,
-  verifyPasswordChangeOtp,
-  isPasswordChangeOtpVerified,
-  consumePasswordChangeOtp,
-} from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // authMeGET - Shared export for auth me get.
 export { authMeGET } from "./features/auth/server";

@@ -13,6 +13,7 @@ export interface EmailOptions {
   text?: string;
   /** Defaults to SiteConfig.email.fromAddress if omitted. */
   from?: string;
+  cc?: string | string[];
   replyTo?: string;
   attachments?: EmailAttachment[];
   headers?: Record<string, string>;

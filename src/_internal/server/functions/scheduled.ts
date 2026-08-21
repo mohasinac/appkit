@@ -25,6 +25,7 @@ import {
   prizeDrawExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
+  dailyStatusDigestHandler,
   weeklyPayoutEligibilityHandler,
   testerSandboxCleanupHandler,
   testerSandboxRefreshHandler,
@@ -104,6 +105,14 @@ export const revenueRollup = defineFunction({
   trigger: { kind: "schedule", cron: "30 1 * * *", timeZone: "UTC" },
   handler: revenueRollupHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
+export const dailyStatusDigest = defineFunction({
+  name: "dailyStatusDigest",
+  description: "Email the previous 24h order summary + platform status to the team every morning at 10:00 IST.",
+  trigger: { kind: "schedule", cron: "0 10 * * *", timeZone: "Asia/Kolkata" },
+  handler: dailyStatusDigestHandler,
+  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
 export const dailyDataCleanup = defineFunction({
@@ -252,6 +261,7 @@ export const SCHEDULED_FUNCTIONS = [
   offerExpiry,
   productStatsSync,
   revenueRollup,
+  dailyStatusDigest,
   dailyDataCleanup,
   countersReconcile,
   positionsReconcile,

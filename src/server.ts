@@ -236,6 +236,10 @@ export {
   JobStatusValues,
 } from "./features/jobs/schemas/firestore";
 export type { JobStatus, JobDocument, JobResult } from "./features/jobs/schemas/firestore";
+// [SERVER-ONLY] Manual trigger for the daily status digest — shares one
+// implementation with the `dailyStatusDigest` scheduled Firebase Function.
+export { triggerDailyStatusDigest, triggerDeploymentDigest } from "./_internal/server/features/admin/daily-digest-actions";
+export type { DailyStatusDigestResult, DailyStatusDigestSummary } from "./_internal/server/jobs/core/dailyStatusDigest";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // recordAdminAction - single write-site for the admin audit trail (adminAuditLog collection).
 export { recordAdminAction } from "./_internal/server/features/audit-log/actions";
@@ -795,13 +799,6 @@ export {
   isCheckoutValueOtpVerified,
 } from "./features/checkout/server";
 export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/server";
-// [SERVER-ONLY] Password-change OTP gate — see features/auth/password-change-otp.ts.
-export {
-  sendPasswordChangeOtp,
-  verifyPasswordChangeOtp,
-  isPasswordChangeOtpVerified,
-  consumePasswordChangeOtp,
-} from "./features/auth/server";
 export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components
 // that render email-client-compatible HTML via renderToStaticMarkup. Use

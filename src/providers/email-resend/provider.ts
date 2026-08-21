@@ -82,6 +82,7 @@ export function createResendProvider(
       const { data, error } = await resend.emails.send({
         from: opts.from ?? `${fromName} <${fromEmail}>`,
         to: opts.to,
+        cc: opts.cc,
         subject: opts.subject,
         html: opts.html,
         text: opts.text,

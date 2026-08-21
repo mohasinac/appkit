@@ -104,6 +104,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "logout", label: "Log out works and clears the session" },
         { key: "email-verify", label: "Email verification link works" },
         { key: "password-reset", label: "Forgot-password / reset-password flow works" },
+        {
+          key: "signup-verification-email-arrives",
+          label: "The verification email actually arrives in the inbox after signing up — not just a \"check your email\" message on screen",
+          description: "Changed 2026-08-21 — signup verification is now sent by Firebase itself (client SDK) instead of being generated server-side and delivered through Resend. Register a brand-new account with a real inbox you can check, and confirm the email lands (check spam too) and its link marks the account verified. The email will come from Firebase's sender with Firebase's template, NOT the branded LetItRip template — that difference is expected, not a bug.",
+          href: "/auth/register",
+        },
+        {
+          key: "forgot-password-no-account-enumeration",
+          label: "Submitting \"Forgot password\" for an email that has NO account shows the same generic message as a real account — it never reveals whether the account exists",
+          description: "Changed 2026-08-21 — this flow now calls Firebase directly from the browser instead of going through a server route, so the client must swallow Firebase's auth/user-not-found error. Submit a made-up address like nobody-here-12345@example.com and confirm you see \"If an account exists for that email, a reset link is on its way.\" — the same wording a real address produces, with no error toast and nothing in the UI distinguishing the two cases.",
+          href: "/auth/forgot-password",
+        },
       ],
     },
     {
@@ -116,9 +128,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "notification-prefs", label: "Notification preferences save correctly" },
         { key: "public-profile-toggle", label: "Public profile visibility toggle works" },
         {
-          key: "password-change-otp-required",
-          label: "Changing your password from Settings requires entering an emailed 6-digit code before it actually takes effect — the password does not change just from submitting the current/new password form",
-          description: "Fixed 2026-08-20 — the password-change API previously trusted the session cookie alone, with no server-side check of the current password at all. Submit the Change Password form with a correct current password; confirm you land on a \"we sent a code to your email\" step, and the password only actually updates after entering the correct code. Also verify: an expired/wrong code is rejected with a clear error, and \"Resend code\" works.",
+          key: "password-change-reset-link",
+          label: "Changing your password from Settings sends a reset link to your account email — the password only changes after you open that link, never from the Settings page alone",
+          description: "Changed 2026-08-21 — password change is now Firebase-native (the same reset-link flow as \"Forgot Password\"), replacing the older emailed 6-digit-code flow. Click \"Send password reset link\", confirm the email arrives at your account address, and that following the link lets you set a new password which then works for sign-in. Identity is proved by access to the inbox, so verify no password change is possible from the Settings page by itself.",
           href: "/user/settings",
         },
         {
@@ -320,6 +332,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "checkout-otp-highvalue",
           label: "Carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\", default ₹5,000) prompt a \"Verify this order\" email OTP right before payment (except COD); carts below the threshold check out directly with no OTP step at all",
           description: "Root-caused 2026-08-20 — the OTP email send used to be fire-and-forget, so a Resend/API failure silently left the buyer stuck with no code and no error. Sending now surfaces a real error if the email genuinely fails to send, and the \"already sent, retry in N minutes\" rate-limit message is a clear sentence instead of a raw error code. Place a real order ≥ the threshold and confirm the code actually arrives by email (check spam too) — report the exact error text if it still doesn't.",
+        },
+        {
+          key: "checkout-otp-whatsapp-option",
+          label: "When the admin has WhatsApp OTP switched on, the high-value checkout verification step offers a \"Send via WhatsApp instead\" option — and email, not WhatsApp, is still what gets sent by default",
+          description: "Added 2026-08-21. WhatsApp is deliberately opt-in for OTP: the code must arrive by email unless the buyer explicitly clicks the WhatsApp option. Requires Site Settings → Notifications → WhatsApp → \"WhatsApp OTP\" enabled AND real Meta Cloud API credentials saved, AND the selected delivery address having a phone number. Verify: (a) the default send is email; (b) the WhatsApp option only appears when all three conditions hold; (c) clicking it delivers the code to the address's phone and the on-screen text switches to the masked phone number; (d) the code from WhatsApp verifies successfully.",
+        },
+        {
+          key: "checkout-otp-whatsapp-hidden-without-phone",
+          label: "The \"Send via WhatsApp instead\" option is NOT offered when the selected delivery address has no phone number on it, even with WhatsApp OTP enabled",
+          description: "Added 2026-08-21. The phone is resolved server-side from the selected address (never from anything the browser sends), so an address with no phone has nowhere to send the code. Select/create a delivery address with the phone field empty and confirm the WhatsApp option is absent rather than appearing and then failing.",
         },
         { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and Razorpay (when enabled) at checkout works" },
         { key: "payment-window-countdown", label: "Manual-payment orders show a 15-minute countdown timer on the payment page" },
@@ -1357,6 +1379,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             key: "auction-bid-tiers-admin",
             label: "Admin can add, edit, and remove bid-increment tiers in Site Settings → Auction Config, and the changes persist after saving and reloading the page",
             description: "Each tier row has an editable \"up to (₹)\" amount and \"increment (₹)\" amount; the last row is fixed as \"and above\" (open-ended) and can't have its threshold edited. Add a new tier, edit an existing increment, remove a tier, save, then reload the Site Settings page and confirm the tier list matches what was saved — not reverted to the old defaults.",
+            href: "/admin/site",
+          },
+          {
+            key: "daily-digest-recipients-save",
+            label: "Site Settings → Notifications → \"Daily status digest\" saves its recipient and CC lists (one address per line) and they survive a page reload",
+            description: "Added 2026-08-21. Toggle the digest on, enter a couple of addresses in Recipients (one per line) and one in CC, save, then reload Site Settings and confirm both lists come back exactly as entered. Also confirm the whole recipients/CC block is hidden when the toggle is off.",
+            href: "/admin/site",
+          },
+          {
+            key: "daily-digest-on-deploy",
+            label: "A digest email arrives once after a new version is deployed — exactly once per deployment, not repeatedly as the site gets traffic",
+            description: "Added 2026-08-21. The deploy digest fires from server startup, which on Vercel happens on every serverless cold start — so it's guarded by a stored version marker and only the first cold start of a given deployment sends. After a deploy, confirm: (a) one digest arrives whose body opens with \"Deployment <version> is live.\"; (b) browsing the site for a while (forcing more cold starts) does NOT produce further copies; (c) the next deploy produces exactly one new email again.",
+            href: "/admin/site",
+          },
+          {
+            key: "daily-digest-email-content",
+            label: "The daily status digest email arrives with subject exactly \"Daily Status\" and shows the last 24h order count, revenue, active listings, pending-over-24h count, and a per-status breakdown",
+            description: "Added 2026-08-21. The digest runs automatically at 10:00 IST, but you don't need to wait — an admin can trigger it on demand by POSTing to /api/admin/daily-digest/trigger (e.g. from the browser console while logged in as admin: fetch('/api/admin/daily-digest/trigger',{method:'POST'})). Confirm the email reaches every configured recipient AND any CC addresses, and that the numbers match what the admin orders list actually shows for the last 24 hours. Note: this requires the Firebase Functions deploy to have happened for the scheduled 10:00 run — the manual trigger works regardless.",
             href: "/admin/site",
           },
           { key: "admin-dashboard-widgets", label: "Admin dashboard widgets show accurate data", href: "/admin/dashboard" },

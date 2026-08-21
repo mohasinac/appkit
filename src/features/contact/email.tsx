@@ -41,6 +41,7 @@ type SendEmailOptions = Record<string, JsonValue> & {
   html?: string;
   text?: string;
   from?: string;
+  cc?: string | string[];
   replyTo?: string;
 };
 
@@ -66,6 +67,10 @@ export async function sendEmail(
       html: typeof opts.html === "string" ? opts.html : "",
       text: typeof opts.text === "string" ? opts.text : undefined,
       from: typeof opts.from === "string" ? opts.from : undefined,
+      cc:
+        typeof opts.cc === "string" || Array.isArray(opts.cc)
+          ? (opts.cc as string | string[])
+          : undefined,
       replyTo: typeof opts.replyTo === "string" ? opts.replyTo : undefined,
       headers:
         typeof opts.headers === "object" && opts.headers

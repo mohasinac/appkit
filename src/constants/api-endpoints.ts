@@ -56,9 +56,6 @@ export const ACCOUNT_ENDPOINTS = {
   /** @param userId — Firestore user document id */
   BY_ID: (userId: string) => `/api/account/${userId}`,
   PROFILE: "/api/user/profile",
-  CHANGE_PASSWORD: "/api/user/change-password",
-  CHANGE_PASSWORD_OTP_REQUEST: "/api/user/change-password/otp/request",
-  CHANGE_PASSWORD_OTP_VERIFY: "/api/user/change-password/otp/verify",
   /** @param userId — for public profile pages */
   PUBLIC_PROFILE: (userId: string) => `/api/profile/${userId}`,
   /** @param userId — seller profile page */

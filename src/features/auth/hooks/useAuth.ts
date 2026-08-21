@@ -57,11 +57,6 @@ export interface RegisterData {
   acceptTerms: boolean;
 }
 
-export interface ChangePasswordData {
-  currentPassword: string;
-  newPassword: string;
-}
-
 export interface ChangeEmailData {
   currentPassword: string;
   newEmail: string;
@@ -449,10 +444,14 @@ export function useRegister(options?: {
       );
 
       // Verification email is Firebase-native only (no Resend) — see project
-      // policy on "profile related auth changes". Best-effort: a failure
-      // here shouldn't fail registration itself, since the account was
-      // already created successfully.
-      await authProvider.sendEmailVerification().catch(() => {});
+      // policy on "profile related auth changes". Deliberately non-fatal:
+      // the account already exists at this point, so a send failure must not
+      // fail registration — the user can re-request verification later.
+      try {
+        await authProvider.sendEmailVerification();
+      } catch (err) {
+        void normalizeError(err);
+      }
 
       return { success: true, ...response };
     },
@@ -521,54 +520,15 @@ export function useResetPassword(options?: {
 }
 
 /**
- * Password change is now a 3-step flow (root-caused 2026-08-20 — see
- * appkit/src/features/auth/password-change-otp.ts): the old single-step
- * reauthenticateAndChangePassword() applied the new password immediately
- * client-side, before any server-verified identity check beyond the
- * session cookie. Step order:
- *   1. useRequestPasswordChangeOtp — verifies currentPassword via Firebase
- *      reauth (proves the caller actually knows it, without changing
- *      anything yet), then emails a 6-digit code.
- *   2. useVerifyPasswordChangeOtp — verifies the code server-side.
- *   3. useChangePassword — only now actually applies newPassword; the API
- *      route rejects this call unless step 2 already succeeded.
+ * Password change is Firebase-only (no custom OTP code, no Resend) — the
+ * "Change Password" settings action sends the exact same reset-link email
+ * as "Forgot Password" (see useForgotPassword above), to the signed-in
+ * user's own address. Completing the link requires access to that inbox,
+ * which a stolen session cookie alone can't provide — closing the same gap
+ * the older OTP-code system existed for, through inbox possession instead
+ * of a typed code. There is no separate hook for this: consumers call
+ * useForgotPassword({ email: user.email }) directly from the settings page.
  */
-export function useRequestPasswordChangeOtp(options?: {
-  onSuccess?: (data: { maskedEmail: string }) => void;
-  onError?: (error: Error) => void;
-}) {
-  return useMutation<{ maskedEmail: string }, Error, { currentPassword: string }>({
-    mutationFn: async ({ currentPassword }) => {
-      await getClientAuthProvider().reauthenticateOnly(currentPassword);
-      return apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD_OTP_REQUEST, {});
-    },
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
-  });
-}
-
-export function useVerifyPasswordChangeOtp(options?: {
-  onSuccess?: (data: JsonValue) => void;
-  onError?: (error: Error) => void;
-}) {
-  return useMutation<JsonValue, Error, { code: string }>({
-    mutationFn: async ({ code }) =>
-      apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD_OTP_VERIFY, { code }),
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
-  });
-}
-
-export function useChangePassword(options?: {
-  onSuccess?: (data: JsonValue) => void;
-  onError?: (error: Error) => void;
-}) {
-  return useMutation<JsonValue, Error, ChangePasswordData>({
-    mutationFn: async (data) => apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD, data),
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
-  });
-}
 
 export function useChangeEmail(options?: {
   onSuccess?: (data: JsonValue) => void;

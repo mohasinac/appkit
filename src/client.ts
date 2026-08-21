@@ -409,8 +409,8 @@ export type {
 	ResetPasswordViewProps,
 	VerifyEmailViewProps,
 } from "./features/auth/index";
-export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangePassword, useRequestPasswordChangeOtp, useVerifyPasswordChangeOtp, useChangeEmail } from "./features/auth/index";
-export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangePasswordData, ChangeEmailData } from "./features/auth/index";
+export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangeEmail } from "./features/auth/index";
+export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
 export { getCartOps, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
 export type { CartOp } from "./features/cart/utils/pending-ops";

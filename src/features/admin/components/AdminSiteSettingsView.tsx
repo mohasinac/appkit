@@ -39,6 +39,14 @@ export interface AdminSiteSettingsViewProps
 
 // --- Helpers -----------------------------------------------------------------
 
+/** Parses a newline- or comma-separated address list into a clean string[]. */
+function splitEmailList(raw: string): string[] {
+  return raw
+    .split(/[\n,]/)
+    .map((entry) => entry.trim())
+    .filter((entry) => entry.length > 0);
+}
+
 function MaskedInput({
   label,
   value,
@@ -341,6 +349,10 @@ export function AdminSiteSettingsView({
   const [resendApiKey, setResendApiKey] = React.useState("");
   const [notifFromEmail, setNotifFromEmail] = React.useState("");
   const [notifFromName, setNotifFromName] = React.useState("");
+  // Daily ops digest — recipients are edited as one-per-line text, split on save.
+  const [digestEnabled, setDigestEnabled] = React.useState(false);
+  const [digestRecipients, setDigestRecipients] = React.useState("");
+  const [digestCcRecipients, setDigestCcRecipients] = React.useState("");
 
   // Snapshot of the masked placeholder strings the server returned for every
   // credentials.* field, captured once per load. A combined single-save has
@@ -549,6 +561,9 @@ export function AdminSiteSettingsView({
     setResendApiKey(s.credentialsMasked?.resendApiKey ?? "");
     setNotifFromEmail(s.emailSettings?.fromEmail ?? "");
     setNotifFromName(s.emailSettings?.fromName ?? "");
+    setDigestEnabled(s.emailSettings?.dailyDigest?.enabled ?? false);
+    setDigestRecipients((s.emailSettings?.dailyDigest?.recipients ?? []).join("\n"));
+    setDigestCcRecipients((s.emailSettings?.dailyDigest?.ccRecipients ?? []).join("\n"));
 
     originalMaskedRef.current = {
       razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
@@ -681,6 +696,11 @@ export function AdminSiteSettingsView({
       emailSettings: {
         host: smtpHost, port: Number(smtpPort), user: smtpUser, fromAddress: smtpFrom,
         fromEmail: notifFromEmail, fromName: notifFromName,
+        dailyDigest: {
+          enabled: digestEnabled,
+          recipients: splitEmailList(digestRecipients),
+          ccRecipients: splitEmailList(digestCcRecipients),
+        },
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
@@ -1656,6 +1676,34 @@ export function AdminSiteSettingsView({
                       value={notifEmailTypes}
                       onChange={(values) => setNotifEmailTypes(values)}
                       placeholder="All notification types"
+                    />
+                  </Stack>
+                )}
+              </Stack>
+
+              {/* Daily status digest */}
+              <Stack gap="md" rounded="lg" border="default" padding="md">
+                <Toggle label="Daily status digest" checked={digestEnabled} onChange={setDigestEnabled} />
+                {digestEnabled && (
+                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
+                    <Text size="xs" color="muted">
+                      Sent every morning at 10:00 IST with the previous 24 hours of order activity. Its arrival doubles as the platform health check — if it stops landing, something needs a look.
+                    </Text>
+                    <Textarea
+                      label="Recipients (To)"
+                      value={digestRecipients}
+                      onChange={(e) => setDigestRecipients(e.target.value)}
+                      placeholder={"support@letitrip.in\nmohasin@letitrip.in"}
+                      rows={4}
+                      helperText="One address per line."
+                    />
+                    <Textarea
+                      label="CC recipients"
+                      value={digestCcRecipients}
+                      onChange={(e) => setDigestCcRecipients(e.target.value)}
+                      placeholder="One address per line"
+                      rows={3}
+                      helperText="Optional — anyone else who should receive a copy."
                     />
                   </Stack>
                 )}

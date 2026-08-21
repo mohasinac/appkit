@@ -556,6 +556,18 @@ export interface SiteSettingsDocument extends BaseDocument {
     fromName: string;
     fromEmail: string;
     replyTo: string;
+    /**
+     * Daily ops digest — the previous 24h of order activity, emailed to the
+     * team. Its arrival doubles as the platform health signal (if it stops
+     * landing, Firestore/Functions/Resend needs a look).
+     */
+    dailyDigest?: {
+      enabled: boolean;
+      /** Primary recipients (TO). */
+      recipients: string[];
+      /** Optional additional recipients (CC) — admin-extendable. */
+      ccRecipients: string[];
+    };
   };
   seo: {
     defaultTitle: string;

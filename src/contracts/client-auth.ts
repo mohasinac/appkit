@@ -27,13 +27,7 @@ export interface IClientAuthProvider {
     newPassword: string,
   ): Promise<void>;
 
-  /**
-   * Verify the current password only — does NOT change anything. Used to
-   * prove current-password knowledge before an OTP is sent, without the
-   * side effect of immediately applying a new password ahead of that OTP
-   * being verified (see password-change-otp.ts for why the two steps must
-   * stay separate).
-   */
+  /** Verify the current password only — does NOT change anything. */
   reauthenticateOnly(currentPassword: string): Promise<void>;
 
   /** Re-authenticate and send a verification email to the new address; email updates after user clicks the link */
