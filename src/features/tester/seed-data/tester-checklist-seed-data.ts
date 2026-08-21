@@ -419,6 +419,35 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Fixed 2026-08-21 — /user/orders/[id]/track previously rendered <UserOrderTrackView /> with zero render-props (a Root Cause #8 blank slot-shell), and the underlying adapter dropped orderDate/shippingDate/deliveryDate/cancellationDate/trackingUrl entirely, so even a fixed page would have had nothing to show. From My Orders, open the seeded \"order-tester-sandbox-standard-shipped\" order and click \"Track Shipment\" — confirm both timeline steps show real dates and the tracking link opens www.example.com/track/TEST-TRACK-001 in a new tab.",
           href: "/user/orders",
         },
+        {
+          key: "manual-payment-panel-on-order-detail",
+          label: "A manual-payment (UPI/Cash) order's detail page shows a \"Payment pending\" panel with a \"Complete payment\" button that opens the proof-upload page — you can get back to it at any time, not only right after checkout",
+          description: "Fixed 2026-08-21. `ROUTES.USER.ORDER_PAYMENT` previously had exactly one caller — the post-checkout redirect — so a buyer who navigated away could never find the upload page again. Place a UPI/Cash order, leave the payment page WITHOUT uploading, go to My Orders, open that order, and confirm the panel + \"Complete payment\" button are there and land on the upload page.",
+          href: "/user/orders",
+        },
+        {
+          key: "manual-payment-page-renders-upi-and-countdown",
+          label: "The payment-proof page for a UPI/Cash order actually shows the upload form, the UPI ID to pay, and a live 15-minute countdown — NOT the message \"This order does not require manual payment upload\"",
+          description: "Fixed 2026-08-21 — the order adapter (`orderDocumentToOrder`) dropped `paymentMethod`, `displayedUpiId` and `paymentDeadline` entirely, so the page's own manual-payment check always failed and every buyer saw the \"does not require manual payment upload\" dead end, with no UPI ID and no timer. This is the single most important case in this group: if it fails, the whole manual-payment flow is unusable.",
+          href: "/user/orders",
+        },
+        {
+          key: "manual-payment-awaiting-review-state",
+          label: "After submitting proof, the order detail page switches to a \"Payment under review\" panel and the \"Complete payment\" button disappears (you can't double-submit)",
+          href: "/user/orders",
+        },
+        {
+          key: "manual-payment-reupload-note-visible-to-buyer",
+          label: "When an admin requests a proof re-upload, the buyer's order detail page shows \"Payment proof needs correction\" WITH the admin's note, and a \"Re-upload proof\" button that works",
+          description: "Added 2026-08-21. Pair with the admin-side case `admin-orders-request-reupload`. The buyer previously got a notification telling them to re-upload but had no link anywhere to do it. Confirm the admin's exact note text is shown to the buyer, and that re-submitting succeeds (it must not fail with \"proof already attached\").",
+          href: "/user/orders",
+        },
+        {
+          key: "manual-payment-rejected-state",
+          label: "An order rejected as fraudulent shows a \"Payment rejected\" panel with the admin's reason, and the account is suspended for 7 days",
+          description: "Pair with the admin-side case `admin-orders-reject-fraud`. Use a throwaway buyer account — this really does ban it for 7 days.",
+          href: "/user/orders",
+        },
       ],
     },
     {
@@ -648,6 +677,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/store/orders",
       cases: [
         { key: "view-orders", label: "Seller order list shows accurate incoming orders", href: "/store/orders" },
+        {
+          key: "seller-order-manual-payment-badge",
+          label: "A manual-payment (UPI/Cash) order's seller detail shows a payment badge — Awaiting payment / Awaiting verification / Verified / Re-upload requested / Rejected — next to the Payment heading, plus the UTR once the buyer submits one",
+          description: "Added 2026-08-21. Sellers previously saw only the payment method word (\"upi_manual\") with no indication of whether the money had actually landed. The buyer's payment screenshot is deliberately NOT shown to sellers — it's a bank/UPI capture, and verifying is admin/moderator-only — so confirm the badge and UTR appear but no screenshot image does.",
+          href: "/store/orders",
+        },
         { key: "confirm-payment", label: "Approving a buyer's manual payment proof works" },
         { key: "request-reupload", label: "Requesting a proof re-upload (honest-mistake tier) clears the proof and extends the buyer's deadline" },
         { key: "reject-fraud", label: "Rejecting a proof as fraudulent cancels the order, restores stock, and bans the buyer's account for 7 days" },
@@ -1247,6 +1282,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "spin-wheel-create", label: "Admin can create a spin_wheel event with weighted prizes" },
           { key: "spin-wheel-limits-enforced", label: "spinMaxPerUser and spinWindowStart/End are correctly enforced once configured by admin" },
           { key: "event-entries-admin-view", label: "Admin event-entries list shows accurate entries", href: "/admin/event-entries" },
+          {
+            key: "event-entries-view-before-deciding",
+            label: "Admin → Event Entries rows have a \"View details\" action (and are click-openable) showing the entrant's email, points and submitted responses before Confirm / Waitlist / Cancel is used",
+            description: "Fixed 2026-08-21 — the row offered only Confirm/Waitlist/Cancel, so an admin decided an entry's fate without ever seeing what the entrant actually submitted. Open an entry on a poll or survey event and confirm its responses payload is visible in the detail modal.",
+            href: "/admin/event-entries",
+          },
         ],
       },
       {
@@ -1303,6 +1344,44 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         href: "/admin/orders",
         cases: [
           { key: "orders-status-change", label: "Admin orders list shows accurate orders and status changes save correctly", href: "/admin/orders" },
+          {
+            key: "admin-orders-payment-review-filters",
+            label: "The Admin Orders filter drawer has a \"Manual payment\" chip group with \"Awaiting payment\" and \"Awaiting verification\" — and each one actually returns the right orders",
+            description: "Added 2026-08-21 — before this there was no way to find manual-payment orders needing action; they were indistinguishable from any other pending order. \"Awaiting payment\" = buyer hasn't uploaded a screenshot yet. \"Awaiting verification\" = proof submitted, nobody has approved/rejected it. Place a UPI/Cash order and check it appears under \"Awaiting payment\"; upload proof and confirm it moves to \"Awaiting verification\". Picking a Manual-payment chip clears the Status chip (and vice versa) on purpose — the queue is always status=pending, so combining them could only ever return nothing.",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-orders-payment-state-on-row",
+            label: "Each manual-payment order's row in the Admin Orders list shows its payment state inline (\"Awaiting payment\" / \"Awaiting verification\" / \"Payment verified\" / \"Re-upload requested\" / \"Payment rejected\") — you don't have to open the drawer to tell which ones need action",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-orders-view-payment-proof",
+            label: "Opening a manual-payment order shows the buyer's payment screenshot, the UTR, the expected-vs-reported UPI IDs, and a red \"UPI mismatch\" warning when they disagree",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-orders-verify-payment",
+            label: "\"Verify payment\" on an order with submitted proof marks it paid and moves it to Processing — and it then disappears from the \"Awaiting verification\" queue",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-orders-request-reupload",
+            label: "\"Request re-upload\" (requires a review note) clears the buyer's proof, gives them another 15 minutes, and sends them a notification containing the note",
+            description: "Pair with the buyer-side case `manual-payment-reupload-note-visible-to-buyer`. Critically, verify the buyer CAN actually re-submit afterwards, and that the re-submitted proof shows up again under admin \"Awaiting verification\" — a 2026-08-21 fix; previously the re-upload left a stale review outcome on the order, so the corrected proof was invisible to both the admin queue and the 2-hour auto-approve sweep, and the order just silently stalled.",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-orders-reject-fraud",
+            label: "\"Reject as fraud\" (requires a review note) cancels the order, returns the item to stock, and suspends the buyer's account for 7 days",
+            description: "Use a throwaway buyer account — this really does ban it. Confirm the stock actually goes back up on the product page, and that the banned account can't sign in.",
+            href: "/admin/orders",
+          },
+          {
+            key: "admin-orders-payment-actions-hidden-when-paid",
+            label: "Once a payment is verified, the Verify / Request re-upload / Reject buttons are replaced by a \"Payment verified\" badge — an already-paid order can't be re-verified or rejected",
+            href: "/admin/orders",
+          },
           { key: "bids-admin-view", label: "Admin bids view shows accurate bid data", href: "/admin/bids" },
           { key: "return-requests-triage", label: "Admin can triage return requests", href: "/admin/return-requests" },
           { key: "fulfillment-queue-admin", label: "Admin fulfillment queue shows accurate pending items", href: "/admin/fulfillment" },
@@ -1353,6 +1432,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "reports-admin", label: "Admin reports queue works correctly", href: "/admin/reports" },
           { key: "payment-methods-clusters-admin", label: "Admin can manage payment methods and payment-method clusters", href: "/admin/payment-methods" },
           { key: "catalogue-approvals-admin", label: "Admin can approve/reject personal catalogue submissions", href: "/admin/catalogue-approvals" },
+          {
+            key: "catalogue-approvals-view-before-deciding",
+            label: "Admin → Catalogue Approvals rows have a \"View\" action (and are click-openable) showing the submitted item's PHOTOS, description, estimated price, quantity and condition — with Approve and Reject available from inside that detail view",
+            description: "Fixed 2026-08-21 — the row previously offered only Approve/Reject buttons, so an admin accepted or refused a user's submission with none of its content rendered anywhere: no photos, no description, no price. This was the most severe finding of the dead-end-listing sweep. Confirm you can see the item's images before deciding, and that approving/rejecting from inside the modal behaves the same as the row buttons (reject still prompts for a reason the owner will see).",
+            href: "/admin/catalogue-approvals",
+          },
         ],
       },
       {
@@ -1396,6 +1481,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "daily-digest-email-content",
             label: "The daily status digest email arrives with subject exactly \"Daily Status\" and shows the last 24h order count, revenue, active listings, pending-over-24h count, and a per-status breakdown",
+            // audit-hardcoded-api-routes-ok: prose in a tester-facing description (a copy-pasteable console snippet), not a call site — nothing to route through the registry.
             description: "Added 2026-08-21. The digest runs automatically at 10:00 IST, but you don't need to wait — an admin can trigger it on demand by POSTing to /api/admin/daily-digest/trigger (e.g. from the browser console while logged in as admin: fetch('/api/admin/daily-digest/trigger',{method:'POST'})). Confirm the email reaches every configured recipient AND any CC addresses, and that the numbers match what the admin orders list actually shows for the last 24 hours. Note: this requires the Firebase Functions deploy to have happened for the scheduled 10:00 run — the manual trigger works regardless.",
             href: "/admin/site",
           },
@@ -1419,6 +1505,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "guide-pages-admin", label: "The 8 admin guide pages all load correctly", href: "/admin/guide" },
           { key: "tester-checklist-crud-admin", label: "Admin can create, edit, and toggle adminOnly on tester checklist items", href: "/admin/tester-checklist" },
           { key: "tester-feedback-report-export", label: "Admin tester-feedback report shows Yes/No analytics grouped correctly and the Download Report export works", href: "/admin/tester-feedback" },
+          {
+            key: "tester-feedback-view-before-confirming-bug",
+            label: "Admin → Tester Feedback rows have a \"View details\" action (and are click-openable) showing the tester's full comment and screenshot before \"Confirm bug\" is used",
+            description: "Fixed 2026-08-21 — the row truncated the comment into a one-line secondary and never surfaced the screenshot at all, yet offered \"Mark reviewed\" and \"Confirm bug\" (which credits the reporting tester and disables the checklist item). Answer a checklist item \"No\" with a comment + screenshot as a tester, then confirm an admin can read both in the detail modal.",
+            href: "/admin/tester-feedback",
+          },
           {
             key: "admin-audit-log-page",
             label: "The new /admin/audit-log page (Finance nav group) lists real entries — actor, action, target, date — with working Action and Actor UID filters, and clicking a row opens a detail modal with the full reason + metadata payload",
@@ -1450,11 +1542,29 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         href: "/admin/carts",
         cases: [
           { key: "carts-admin-view", label: "Admin carts view shows accurate data", href: "/admin/carts" },
+          {
+            key: "carts-admin-row-opens-items",
+            label: "Clicking a row on Admin → Carts opens a detail modal listing the actual items in that cart (thumbnail, title, quantity, line total) — not just the \"N items\" count the row already showed",
+            description: "Fixed 2026-08-21 — the list response always contained the cart's items[] array, but mapRows only ever read `.length` for the row subtitle and discarded the rest, with no surface to show it (Root Cause #52). Open a cart that has at least one item and confirm each item renders with a thumbnail; a guest cart should show its session id, an authenticated one its user id.",
+            href: "/admin/carts",
+          },
           { key: "wishlists-admin-view", label: "Admin wishlists view shows accurate data", href: "/admin/wishlists" },
+          {
+            key: "wishlists-history-admin-row-opens-user",
+            label: "Clicking a row on Admin → Wishlists or Admin → History navigates to that user's admin detail page",
+            description: "Added 2026-08-21 — both rows were previously inert. Their list APIs deliberately return only a per-user summary (userId / itemCount / cap state), never the items themselves, since pulling every user's items into one payload would breach the Vercel Hobby response ceiling (Rule #6) — so the row already shows its whole record and the useful destination is the owning user. Confirm the click lands on /admin/users/{that user's id} and that page loads their real profile.",
+            href: "/admin/wishlists",
+          },
           { key: "history-admin-view", label: "Admin history view shows accurate data", href: "/admin/history" },
           { key: "notifications-admin-view", label: "Admin notifications and admin-notifications views show accurate data" },
           { key: "reviews-admin-view", label: "Admin reviews view shows accurate data", href: "/admin/reviews" },
           { key: "store-addresses-admin", label: "Admin store-addresses view shows accurate data", href: "/admin/store-addresses" },
+          {
+            key: "store-addresses-admin-row-opens-detail",
+            label: "Clicking a row on Admin → Store Addresses opens a detail modal with the full address (contact name, phone, both address lines, landmark, city, state, postal code, country) and a \"Default pickup location\" badge where applicable",
+            description: "Added 2026-08-21 — the row was completely inert (no click, no row actions, no editor) and truncated the address to label/city/state, so the phone and street lines were unreachable anywhere in the admin UI.",
+            href: "/admin/store-addresses",
+          },
           { key: "addresses-crud-admin", label: "Admin can create and edit addresses", href: "/admin/addresses" },
           { key: "stores-admin-view", label: "Admin stores view shows accurate data", href: "/admin/stores" },
           {
