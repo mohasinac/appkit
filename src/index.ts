@@ -6854,6 +6854,17 @@ export type { OrderCreateInput } from "./features/orders/index";
 // OrderDocument - Type contract for order document.
 export type { OrderDocument } from "./features/orders/index";
 export type { OrderRefundEvent, RefundType } from "./features/orders/schemas/firestore";
+// Manual-payment (cash / UPI / EMI) shared constants + the payment-review
+// queue discriminator. Pure data + predicates — no firebase-admin in the
+// import chain, so safe on the main barrel (see "appkit Export Rules").
+export {
+  MANUAL_PAYMENT_METHODS,
+  isManualPaymentMethod,
+  PAYMENT_REVIEW_QUEUE_MODES,
+  isPaymentReviewQueueMode,
+  PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
+} from "./features/orders/constants/payment-window";
+export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // OrderDocumentItem - Type contract for order document item.
 export type { OrderDocumentItem } from "./features/orders/index";

@@ -20,6 +20,14 @@ interface UseAdminListingDataOptions<TResponse, TRow extends { id: string }> {
   sorts?: string;
   filters?: string;
   q?: string;
+  /**
+   * Extra query-string params appended verbatim, for listing endpoints whose
+   * filter isn't expressible as a Sieve string (e.g. the admin orders
+   * payment-review queue, which keys off the *absence* of a field). Keys with
+   * an `undefined` value are dropped. Participates in the react-query key, so
+   * changing one refetches rather than serving another mode's cached page.
+   */
+  extraParams?: Record<string, string | undefined>;
   mapRows: (response: TResponse) => TRow[];
   getTotal?: (response: TResponse, rows: TRow[]) => number;
 }
@@ -46,6 +54,7 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
   sorts = "-createdAt",
   filters,
   q,
+  extraParams,
   mapRows,
   getTotal,
 }: UseAdminListingDataOptions<TResponse, TRow>): UseAdminListingDataResult<TRow> {
@@ -56,9 +65,15 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
   };
   if (filters) params.filters = filters;
   if (q) params.q = q;
+  const extraEntries = Object.entries(extraParams ?? {})
+    .filter((entry): entry is [string, string] => entry[1] !== undefined && entry[1] !== "")
+    .sort(([a], [b]) => a.localeCompare(b));
+  for (const [key, value] of extraEntries) params[key] = value;
 
   const query = useQuery<TResponse>({
-    queryKey: [...queryKey, page, pageSize, sorts, filters ?? "", q ?? ""],
+    // extraEntries is sorted so an identical param set always produces an
+    // identical key regardless of object insertion order.
+    queryKey: [...queryKey, page, pageSize, sorts, filters ?? "", q ?? "", extraEntries],
     queryFn: () =>
       apiClient.get<TResponse>(withQueryParams(endpoint, params)),
     staleTime: 60_000,

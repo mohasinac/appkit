@@ -26,6 +26,11 @@ import {
   type OrderRefundEvent,
 } from "../schemas";
 import type { OrderStatus, PaymentStatus } from "../types";
+import {
+  MANUAL_PAYMENT_METHODS,
+  PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
+  type PaymentReviewQueueMode,
+} from "../constants/payment-window";
 import { ORDER_FIELDS } from "../../../constants/field-names";
 
 /**
@@ -521,6 +526,71 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
       }))
       .filter((entry) => !!entry.data.paymentProofUrl && !entry.data.paymentReviewOutcome);
+  }
+
+  /**
+   * Admin/seller payment-review queue — the manual-payment orders that are
+   * waiting on somebody. Two modes:
+   *
+   *  - `awaiting_proof`        — buyer hasn't uploaded a screenshot yet
+   *                              (the 15-minute `paymentDeadline` window).
+   *  - `awaiting_verification` — proof submitted, no admin decision recorded
+   *                              yet (the 2-hour auto-approve window).
+   *
+   * Both refinements — proof presence and manual `paymentMethod` — are done
+   * in-memory rather than as Firestore clauses, deliberately:
+   *
+   *  - `paymentProofUrl != null` would silently exclude every doc where the
+   *    field was never set at all, which is exactly the `awaiting_proof` set
+   *    (same reasoning as `getExpiredPaymentDeadlines` /
+   *    `getUnreviewedProofPastDeadline` above).
+   *  - keeping `paymentMethod` out of the query means this reuses the
+   *    existing `(status, paymentStatus, createdAt)` composite index instead
+   *    of needing a new four-field one.
+   *
+   * The scan is hard-bounded at {@link PAYMENT_REVIEW_QUEUE_SCAN_LIMIT} for
+   * the Vercel 10s ceiling. That bound is generous for this queue by
+   * construction: an order only sits in it for 15 minutes (awaiting proof) or
+   * 2 hours (awaiting verification) before a scheduled sweep resolves it, so
+   * the live set is inherently small. `total` therefore counts matches within
+   * the scan window, not an unbounded collection-wide count.
+   */
+  async listPaymentReviewQueue(
+    mode: PaymentReviewQueueMode,
+    opts: { page?: number; pageSize?: number } = {},
+  ): Promise<FirebaseSieveResult<OrderDocument>> {
+    const page = Math.max(1, opts.page ?? 1);
+    const pageSize = Math.min(50, Math.max(1, opts.pageSize ?? 25));
+
+    const snap = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
+      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
+      .orderBy(ORDER_FIELDS.CREATED_AT, "desc")
+      .limit(PAYMENT_REVIEW_QUEUE_SCAN_LIMIT)
+      .get();
+
+    const matches = snap.docs
+      .map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument))
+      .filter((order) => MANUAL_PAYMENT_METHODS.includes(order.paymentMethod ?? ""))
+      .filter((order) =>
+        mode === "awaiting_proof"
+          ? !order.paymentProofUrl
+          : !!order.paymentProofUrl && !order.paymentReviewOutcome,
+      );
+
+    const total = matches.length;
+    const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
+    const start = (page - 1) * pageSize;
+
+    return {
+      items: matches.slice(start, start + pageSize),
+      total,
+      page,
+      pageSize,
+      totalPages,
+      hasMore: page < totalPages,
+    };
   }
 
   /**

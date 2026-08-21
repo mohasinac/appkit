@@ -108,6 +108,32 @@ export interface Order {
   disputeRaised?: boolean;
   disputeStatus?: "open" | "resolved";
   /**
+   * Manual-payment (cash / UPI / EMI) fields. Every one of these already
+   * existed on `OrderDocument` but was dropped by `orderDocumentToOrder`,
+   * so the buyer-facing surfaces that need them read `undefined`:
+   * `/user/orders/[id]/payment` gated its whole render on `paymentMethod`
+   * and therefore told every buyer "this order does not require manual
+   * payment upload", and the 15-minute countdown + UPI ID never rendered.
+   * (CLAUDE.md Root Cause Pattern #38 — adapter/serializer field drift.)
+   */
+  paymentMethod?: string;
+  /** UPI ID the buyer was told to pay to — shown on the payment page and diffed against `buyerReportedUpiId` during admin review. */
+  displayedUpiId?: string;
+  /** ISO end of the 15-minute payment window; drives the buyer countdown. */
+  paymentDeadline?: string;
+  paymentProofUrl?: string;
+  paymentProofUploadedAt?: string;
+  paymentTransactionId?: string;
+  buyerReportedUpiId?: string;
+  buyerMarkedPaid?: boolean;
+  paymentUpiMismatch?: boolean;
+  /** Admin decision on the submitted proof; unset means "not reviewed yet". */
+  paymentReviewOutcome?: "approved" | "reupload_requested" | "rejected_fraud";
+  /** Admin's note — the reason shown to the buyer on a re-upload request or fraud rejection. */
+  paymentReviewNote?: string;
+  /** Why the order was cancelled — distinguishes a payment-window expiry / fraud rejection from an ordinary cancellation. */
+  cancellationReason?: string;
+  /**
    * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the winner has
    * been automatically assigned to this order (on payment confirmation,
    * draw expiry, or sellout — see assignPrizeDrawWinner); drives the

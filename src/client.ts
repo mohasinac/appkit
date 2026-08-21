@@ -567,6 +567,16 @@ export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewP
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
+// Manual-payment (cash / UPI / EMI) shared constants — pure data + predicates,
+// no server deps. Used by the buyer proof-upload page and order-detail CTAs.
+export {
+  MANUAL_PAYMENT_METHODS,
+  isManualPaymentMethod,
+  PAYMENT_REVIEW_QUEUE_MODES,
+  isPaymentReviewQueueMode,
+  PAYMENT_WINDOW_MINUTES,
+} from "./features/orders/constants/payment-window";
+export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
 export { UserOrderTrackView } from "./features/account/components/UserOrderTrackView";
 export type { UserOrderTrackViewProps, UserOrderTrackViewLabels } from "./features/account/components/UserOrderTrackView";
 export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";

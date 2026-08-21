@@ -74,6 +74,23 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     autoApproved: doc.autoApproved,
     disputeRaised: doc.disputeRaised,
     disputeStatus: doc.disputeStatus,
+    // Manual-payment (cash / UPI / EMI) passthrough. These were previously
+    // dropped here, which silently disabled the entire buyer proof-upload
+    // flow: `/user/orders/[id]/payment` branches on `paymentMethod` and so
+    // rendered "this order does not require manual payment upload" for every
+    // order, with no UPI ID and no countdown.
+    paymentMethod: doc.paymentMethod,
+    displayedUpiId: doc.displayedUpiId,
+    paymentDeadline: toIsoOrUndefined(doc.paymentDeadline),
+    paymentProofUrl: doc.paymentProofUrl,
+    paymentProofUploadedAt: toIsoOrUndefined(doc.paymentProofUploadedAt),
+    paymentTransactionId: doc.paymentTransactionId,
+    buyerReportedUpiId: doc.buyerReportedUpiId,
+    buyerMarkedPaid: doc.buyerMarkedPaid,
+    paymentUpiMismatch: doc.paymentUpiMismatch,
+    paymentReviewOutcome: doc.paymentReviewOutcome,
+    paymentReviewNote: doc.paymentReviewNote,
+    cancellationReason: doc.cancellationReason,
     createdAt:
       doc.createdAt instanceof Date
         ? doc.createdAt.toISOString()

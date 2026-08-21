@@ -11,7 +11,8 @@ import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
-import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
+import { ADMIN_ORDER_STATUS_TABS, ADMIN_ORDER_PAYMENT_REVIEW_TABS } from "../constants/filter-tabs";
+import { isManualPaymentMethod, isPaymentReviewQueueMode } from "../../orders/constants/payment-window";
 import {
   toRecordArray,
   toRelativeDate,
@@ -56,6 +57,22 @@ function firstOrderItem(item: ListingItemRecord): { image?: string; title?: stri
     title: items[0]?.title,
     extraCount: Math.max(0, items.length - 1),
   };
+}
+
+/**
+ * Short marker appended to a row's secondary line so a manual payment needing
+ * action is visible in the list itself, not only after opening the drawer.
+ * Mirrors the same `paymentProofUrl` / `paymentReviewOutcome` derivation the
+ * server-side queue uses (`listPaymentReviewQueue`) — kept in sync by reading
+ * the same two fields rather than a denormalised flag (Root Cause #42).
+ */
+function paymentReviewLabel(item: ListingItemRecord): string | undefined {
+  if (!isManualPaymentMethod(toStringValue(item.paymentMethod, ""))) return undefined;
+  if (toStringValue(item.paymentStatus, "") === "paid") return "Payment verified";
+  const outcome = toStringValue(item.paymentReviewOutcome, "");
+  if (outcome === "rejected_fraud") return "Payment rejected";
+  if (outcome === "reupload_requested") return "Re-upload requested";
+  return item.paymentProofUrl ? "Awaiting verification" : "Awaiting payment";
 }
 
 interface OrderRow {
@@ -111,7 +128,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     title: "Orders",
     searchPlaceholder: "Search orders, buyers, or tracking IDs",
     emptyLabel: "No orders found",
-    filterKeys: ["status"],
+    filterKeys: ["status", "paymentReview"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "orders", "listing"],
     endpoint: ADMIN_ENDPOINTS.ORDERS,
@@ -132,7 +149,10 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
             toStringValue(item.buyerName ?? item.customerName, "Unknown buyer"),
             toCurrency(item.totalAmount ?? item.total ?? item.amount),
             orderId.slice(0, 14),
-          ].join(" · "),
+            paymentReviewLabel(item),
+          ]
+            .filter(Boolean)
+            .join(" · "),
           status: toStringValue(item.status, "Unknown"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           image,
@@ -150,7 +170,15 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-    buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
+    // The payment-review queue is always `status == pending` by definition, so
+    // a status chip on top of it could only ever narrow to zero rows. When the
+    // queue is active the status filter is dropped rather than combined.
+    buildFilters: (f) => {
+      if (isPaymentReviewQueueMode(f.paymentReview ?? "")) return undefined;
+      return f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined;
+    },
+    buildExtraParams: (f) =>
+      isPaymentReviewQueueMode(f.paymentReview ?? "") ? { paymentReview: f.paymentReview } : undefined,
     // Mirrors the row action's "View full details" entry so the row itself
     // is clickable, not just the overflow menu.
     onRowClick: (row) => {
@@ -217,12 +245,20 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <FilterChipGroup
-        label="Status"
-        tabs={ADMIN_ORDER_STATUS_TABS}
-        value={pendingFilters.status ?? ""}
-        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-      />
+      <>
+        <FilterChipGroup
+          label="Status"
+          tabs={ADMIN_ORDER_STATUS_TABS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id, paymentReview: "" }))}
+        />
+        <FilterChipGroup
+          label="Manual payment"
+          tabs={ADMIN_ORDER_PAYMENT_REVIEW_TABS}
+          value={pendingFilters.paymentReview ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, paymentReview: id, status: "" }))}
+        />
+      </>
     ),
   };
 

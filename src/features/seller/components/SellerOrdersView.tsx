@@ -12,6 +12,7 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { Badge, Button, Div, FilterChipGroup, Heading, Input, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, SelectOption } from "../../../ui";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
@@ -86,6 +87,10 @@ interface OrderDetail {
   carrier?: string;
   trackingUrl?: string;
   paymentMethod?: string;
+  paymentStatus?: string;
+  paymentTransactionId?: string;
+  paymentProofUrl?: string;
+  paymentReviewOutcome?: string;
   createdAt?: JsonValue;
   giftWrapAddon?: boolean;
   giftWrapMessage?: string;
@@ -95,6 +100,24 @@ interface OrderDetail {
   emiRemainingBalance?: number;
   emiComplete?: boolean;
   emiInstallments?: EmiInstallmentView[];
+}
+
+/**
+ * Manual-payment state for the seller's read-only badge. Derived from the same
+ * two fields the admin queue uses (`paymentProofUrl` + `paymentReviewOutcome`)
+ * rather than a denormalised flag, so seller and admin can't disagree about
+ * whether an order is waiting on the buyer or on us (Root Cause #42).
+ */
+function sellerPaymentBadge(order: {
+  paymentStatus?: string;
+  paymentProofUrl?: string;
+  paymentReviewOutcome?: string;
+}): { label: string; variant: "success" | "warning" | "danger" | "info" } {
+  if (order.paymentStatus === "paid") return { label: "Verified", variant: "success" };
+  if (order.paymentReviewOutcome === "rejected_fraud") return { label: "Rejected", variant: "danger" };
+  if (order.paymentReviewOutcome === "reupload_requested") return { label: "Re-upload requested", variant: "warning" };
+  if (order.paymentProofUrl) return { label: "Awaiting verification", variant: "info" };
+  return { label: "Awaiting payment", variant: "warning" };
 }
 
 const EMI_INSTALLMENT_BADGE_VARIANT: Record<string, "success" | "warning" | "danger"> = {
@@ -292,8 +315,21 @@ export function SellerOrderDetailPanel({
 
             {order.paymentMethod && (
               <Div>
-                <Text size="sm" className="mb-1" weight="semibold">Payment</Text>
+                <Row align="center" justify="between" className="mb-1" gap="3">
+                  <Text size="sm" weight="semibold">Payment</Text>
+                  {isManualPaymentMethod(order.paymentMethod) && (
+                    <Badge variant={sellerPaymentBadge(order).variant}>{sellerPaymentBadge(order).label}</Badge>
+                  )}
+                </Row>
                 <Text size="sm" className="text-[var(--appkit-color-text-secondary)]" transform="capitalize">{order.paymentMethod}</Text>
+                {/* Read-only for sellers: verifying / rejecting a manual payment
+                    is admin+moderator only (`adminVerifyPaymentAction`). The
+                    buyer's payment screenshot itself is deliberately not shown
+                    here — it's a bank/UPI capture, and the seller only needs
+                    to know whether the money landed. */}
+                {isManualPaymentMethod(order.paymentMethod) && order.paymentTransactionId && (
+                  <Text size="xs" color="muted" className="mt-1">UTR: {order.paymentTransactionId}</Text>
+                )}
               </Div>
             )}
 

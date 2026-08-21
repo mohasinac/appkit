@@ -183,6 +183,15 @@ export async function attachPaymentProofAction(
       buyerFraudAgreementAcceptedAt: new Date(),
       buyerReportedUpiId: proof.buyerReportedUpiId,
       paymentUpiMismatch,
+      // A re-upload after `adminRequestProofReuploadAction` must clear the
+      // stale `reupload_requested` outcome. Both the 2-hour auto-approve
+      // sweep (`getUnreviewedProofPastDeadline`) and the admin
+      // "Awaiting verification" queue treat *any* set outcome as "already
+      // decided" — leaving it set meant a corrected proof was invisible to
+      // both: never auto-approved, never surfaced for manual review.
+      paymentReviewOutcome: null,
+      paymentReviewedBy: null,
+      paymentReviewedAt: null,
     } as any);
 
     notifyAdminsOfPaymentProof({

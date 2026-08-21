@@ -16,6 +16,14 @@ export interface AdminListingConfig<TResponse, TRow extends { id: string }> {
   mapRows: (response: TResponse) => TRow[];
   getTotal?: (response: TResponse, rows: TRow[]) => number;
   buildFilters: (filterState: Record<string, string>) => string | undefined;
+  /**
+   * Extra query params derived from the same filter state, for endpoints whose
+   * filter can't be expressed as a Sieve string. Use `buildFilters` for
+   * anything Sieve *can* express — this is the escape hatch, not the default.
+   */
+  buildExtraParams?: (
+    filterState: Record<string, string>,
+  ) => Record<string, string | undefined> | undefined;
   initialView?: "grid" | "list" | "table";
   /** Values used for filterKeys absent from the URL — lets a view default to
    * a non-"All" filter state (e.g. hide inactive rows) on first load, while
@@ -35,6 +43,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     mapRows,
     getTotal,
     buildFilters,
+    buildExtraParams,
     filterDefaults = {},
   } = config;
 
@@ -93,6 +102,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
 
   const currentFilterState = Object.fromEntries(filterKeys.map((k) => [k, table.get(k)]));
   const filters = buildFilters(currentFilterState);
+  const extraParams = buildExtraParams?.(currentFilterState);
 
   const { rows, total, isLoading, errorMessage, refetch } = useAdminListingData<TResponse, TRow>({
     queryKey,
@@ -102,6 +112,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     sorts: table.get("sort") || defaultSort,
     filters,
     q: table.get("q") || undefined,
+    extraParams,
     mapRows,
     getTotal,
   });
