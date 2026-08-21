@@ -91,7 +91,7 @@ Mirrors `src/app/api/demo/seed/route.ts`. Special handling for:
 | `storeAddresses` | Subcollection under each store. Encrypts `ADDRESS_PII_FIELDS`. |
 | `couponUsage` | Subcollection under each user (per-coupon doc). |
 | `wishlists`, `history` | Top-level, one document per user. Full overwrite on load. |
-| `siteSettings` | Singleton doc `site_settings/global`. |
+| `siteSettings` | Singleton doc `siteSettings/global`. |
 | `homepageSections`, `carouselSlides` | Purged on load before re-write, so stale docs with old IDs are removed. |
 | `faqs` | Doc ID generated via `generateFAQId({ category, question })`. |
 | everything else | Slug-normalised upsert in 500-batch chunks; PII fields encrypted for the relevant collections. |

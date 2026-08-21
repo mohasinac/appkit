@@ -31,7 +31,7 @@ export function AdminSiteConfigGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Site Configuration</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <Code size="xs">site_settings/global</Code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <Code size="xs">siteSettings/global</Code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
       </Section>
 
       <Section className={GC.sectionWrap}>
