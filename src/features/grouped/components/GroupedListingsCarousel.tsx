@@ -3,7 +3,10 @@ import React from "react";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
 import { ProductCard } from "../../products/components/ProductGrid";
-import { toProductItem } from "../../../_internal/server/features/products/data";
+// Must come from _internal/shared — importing this as a VALUE from
+// _internal/server/.../data.ts pulled firebase-admin into the client bundle
+// and failed the Turbopack production build (Root Cause #6).
+import { toProductItem } from "../../../_internal/shared/features/products/to-product-item";
 import type { ProductItem } from "../../products/types";
 import type { GroupedListingWithItems } from "../../../_internal/server/features/grouped/data";
 import { CAROUSEL_PER_VIEW } from "../../homepage/constants/carousel-per-view";

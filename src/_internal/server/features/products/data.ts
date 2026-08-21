@@ -1,4 +1,9 @@
 import { cache } from "react";
+// Imported (not just re-exported) because this module calls it internally.
+// It lives in _internal/shared so `"use client"` components can import it
+// without dragging this file's firebase-admin chain into the client bundle.
+import { toProductItem } from "../../../shared/features/products/to-product-item";
+export { toProductItem };
 import { productRepository } from "../../../../repositories";
 import { reviewRepository } from "../../../../repositories";
 import { getAdminDb } from "../../../../providers/db-firebase";
@@ -131,29 +136,6 @@ export interface RelatedItemsResult {
 }
 
 /** Firestore doc → card-grid shape. Shared by every related/similar-items carousel. */
-export function toProductItem(doc: FirestoreDocument): ProductItem {
-  return {
-    id: String(doc.id ?? ""),
-    title: String(doc.title ?? doc.name ?? ""),
-    price: typeof doc.price === "number" ? doc.price : 0,
-    originalPrice: typeof doc.originalPrice === "number" ? doc.originalPrice : undefined,
-    mainImage: Array.isArray(doc.images)
-      ? (doc.images[0] as string | undefined)
-      : typeof doc.mainImage === "string"
-        ? doc.mainImage
-        : undefined,
-    status: (doc.status as ProductItem["status"]) ?? "published",
-    slug: typeof doc.slug === "string" ? doc.slug : undefined,
-    storeName: typeof doc.storeName === "string" ? doc.storeName : undefined,
-    rating: typeof doc.rating === "number" ? doc.rating : undefined,
-    reviewCount: typeof doc.reviewCount === "number" ? doc.reviewCount : undefined,
-    // Without this, every related-item card silently linked to the standard
-    // PDP regardless of its real type (pluginFor() defaults to "standard"
-    // when listingType is missing) — same bug class as the Phase 1 routing
-    // fix, one hop further downstream in the related-items card link path.
-    listingType: (doc.listingType as ProductItem["listingType"]) ?? undefined,
-  };
-}
 
 /**
  * Excludes the current product plus any listing-type-specific "invalid to
