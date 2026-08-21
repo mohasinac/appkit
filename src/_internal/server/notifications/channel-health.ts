@@ -95,7 +95,10 @@ export async function withChannelRetry<T>(
   fn: () => Promise<T>,
 ): Promise<T> {
   const maxAttempts = RETRY_DELAYS_MS.length + 1;
-  let lastError: unknown;
+  // Narrowed to Error at catch time rather than held as `unknown` — same
+  // conversion the throw below used to do, just done once at the source so
+  // `unknown` never escapes the catch clause (CLAUDE.md Root Cause #31).
+  let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -103,8 +106,8 @@ export async function withChannelRetry<T>(
       await recordChannelOutcome(channel, true);
       return result;
     } catch (err) {
-      lastError = err;
       void normalizeError(err);
+      lastError = err instanceof Error ? err : new Error(String(err));
       if (attempt < maxAttempts) {
         await delay(RETRY_DELAYS_MS[attempt - 1]);
       }
@@ -112,5 +115,5 @@ export async function withChannelRetry<T>(
   }
 
   await recordChannelOutcome(channel, false);
-  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+  throw lastError ?? new Error(`${channel} channel failed after ${maxAttempts} attempts`);
 }
