@@ -16,6 +16,9 @@ function renderToStaticMarkup(el: React.ReactElement): string {
 import { normalizeError } from "../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit";
 import { getProviders } from "../../contracts";
+import type { IEmailProvider } from "../../contracts/email";
+import { createResendProvider } from "../../providers/email-resend/provider";
+import { siteSettingsRepository } from "../admin/repository/site-settings.repository";
 import { serverLogger } from "../../monitoring";
 import {
   currentYear,
@@ -57,11 +60,65 @@ function getSupportEmail(): string {
   return process.env.EMAIL_SUPPORT?.trim() || "support@example.com";
 }
 
+/**
+ * Resolve an email provider that works in BOTH runtimes.
+ *
+ * The provider registry is populated by the consumer's `providers.config.ts`,
+ * which only runs from the Next.js instrumentation hook. Firebase Functions
+ * never call `registerProviders()`, so `getProviders()` throws there —
+ * silently failing every Functions-side `sendEmail()` with
+ * "Call registerProviders() before getProviders()". That is why the scheduled
+ * dailyStatusDigest never delivered: `sendEmail` catches the throw and returns
+ * it as `{ error }`, so it surfaced only as a logged "send failed".
+ *
+ * Falling back to a directly-constructed Resend provider mirrors exactly what
+ * `sendNotification()` already does for Functions-side email — Firestore
+ * credentials first, env vars second — so both paths resolve identically
+ * instead of one runtime silently having no provider at all.
+ */
+async function resolveEmailProvider(): Promise<IEmailProvider> {
+  try {
+    return getProviders().email;
+  } catch {
+    const [creds, settings] = await Promise.all([
+      siteSettingsRepository.getDecryptedCredentials().catch((err: unknown) => {
+        void normalizeError(err);
+        return {} as { resendApiKey?: string };
+      }),
+      siteSettingsRepository.getSingleton().catch((err: unknown) => {
+        void normalizeError(err);
+        return null;
+      }),
+    ]);
+
+    // A seeded placeholder ("re_PLACEHOLDER") is truthy but not a real key and
+    // must never win over a real env var — same guard as providers.config.ts.
+    const seeded = creds.resendApiKey?.trim() ?? "";
+    const apiKey =
+      seeded && !seeded.includes("PLACEHOLDER")
+        ? seeded
+        : (process.env.RESEND_API_KEY?.trim() ?? "");
+
+    return createResendProvider({
+      apiKey,
+      fromEmail:
+        settings?.emailSettings?.fromEmail?.trim() ||
+        process.env.EMAIL_FROM?.trim() ||
+        "",
+      fromName:
+        settings?.emailSettings?.fromName?.trim() ||
+        process.env.EMAIL_FROM_NAME?.trim() ||
+        "App",
+    });
+  }
+}
+
 export async function sendEmail(
   opts: SendEmailOptions,
 ): Promise<{ data: JsonValue; error: JsonValue }> {
   try {
-    const data = await getProviders().email.send({
+    const provider = await resolveEmailProvider();
+    const data = await provider.send({
       to: opts.to,
       subject: opts.subject,
       html: typeof opts.html === "string" ? opts.html : "",
