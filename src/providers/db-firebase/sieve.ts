@@ -247,7 +247,16 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   const effective = withAliasesExpanded(model, aliases);
 
   const processor = new SieveProcessorBase({
-    adapter: createFirebaseAdapter() as never,
+    // MUST be the enhanced adapter, not the stock one. This is the path
+    // `BaseRepository.sieveQuery` delegates to, so it is what ProductRepository
+    // and most other repositories actually run — only `FirebaseSieveRepository`
+    // used the enhanced adapter, and nothing extends that. With the stock
+    // adapter a same-field OR group (`listingType==art|stickers`, i.e. every
+    // multi-select facet in the app) became a `whereOr` call the Admin SDK does
+    // not implement; `throwExceptions: false` then swallowed it and the clause
+    // vanished, returning the ENTIRE collection instead of the selected subset.
+    // See __tests__/sieve-or-group.test.ts.
+    adapter: createEnhancedFirebaseAdapter() as never,
     autoLoadConfig: false,
     options: merged,
     fields,
