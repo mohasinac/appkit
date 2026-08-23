@@ -15,6 +15,8 @@ export interface AboutValueItem {
   title: string;
   text: string;
   icon: string;
+  /** Optional second paragraph — how the value is actually enforced, not just stated. */
+  detail?: string;
 }
 
 export interface AboutMilestone {
@@ -41,6 +43,7 @@ export interface AboutContentDocument {
   howItWorksTitle: string;
   howItems: AboutHowItem[];
   valuesTitle: string;
+  valuesSubtitle?: string;
   valueItems: AboutValueItem[];
   milestonesTitle: string;
   milestones: AboutMilestone[];

@@ -629,11 +629,26 @@ export interface SiteSettingsDocument extends BaseDocument {
       bundle?: boolean;
     };
   };
+  /**
+   * Admin-authored HTML overrides for the public policy pages. When a key holds
+   * a non-empty string, `PolicyPageView` renders it instead of the i18n
+   * `sections[]` fallback for that page.
+   *
+   * These key names are load-bearing — they must match `POLICY_META[*].firestoreField`
+   * in `features/about/components/PolicyPageView.tsx` (read side) and the
+   * `legalPages` payload built by `AdminSiteSettingsView` (write side). Until
+   * 2026-08-24 this type declared `termsOfService`/`privacyPolicy`/`shippingPolicy`,
+   * three names that neither side ever used; the read path went through an
+   * `as any` cast, so `tsc` never caught the drift (Root Cause #38 family).
+   */
   legalPages: {
-    termsOfService: string;
-    privacyPolicy: string;
+    terms: string;
+    privacy: string;
+    cookies: string;
     refundPolicy: string;
-    shippingPolicy: string;
+    shipping: string;
+    ethics: string;
+    codeOfConduct: string;
   };
   shipping: {
     estimatedDays: number;

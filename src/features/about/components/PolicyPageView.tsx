@@ -5,41 +5,99 @@ import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { siteSettingsRepository } from "../../../repositories";
+import type { SiteSettingsDocument } from "../../admin/schemas/firestore";
 
+
+export type PolicyKey =
+  | "privacy"
+  | "terms"
+  | "cookies"
+  | "refund"
+  | "ethics"
+  | "conduct";
 
 export interface PolicyPageViewProps {
   /** Which policy to render */
-  policy: "privacy" | "terms" | "cookies" | "refund";
+  policy: PolicyKey;
 }
 
-const namespaceMap = {
-  privacy: "privacy",
-  terms: "terms",
-  cookies: "cookies",
-  refund: "refundPolicy",
-} as const;
-
-const firestoreFieldMap: Record<PolicyPageViewProps["policy"], string> = {
-  privacy: "privacy",
-  terms: "terms",
-  cookies: "cookies",
-  refund: "refundPolicy",
+/**
+ * Single source of truth for every policy page this shell can render.
+ *
+ * Declared as `Record<PolicyKey, …>` on purpose: adding a member to `PolicyKey`
+ * without adding its entry here is a COMPILE error, not a silent gap. This
+ * replaced three separate hand-maintained enumerations of the same union
+ * (a namespace map, a Firestore-field map, and an inline path lookup inside the
+ * related-links filter) — see Recurrent Root Cause #61.
+ *
+ * - `path`            — used to exclude the current page from its own related list
+ * - `namespace`       — next-intl namespace holding this page's copy
+ * - `firestoreField`  — key inside `siteSettings.legalPages` carrying the admin HTML override
+ * - `relatedLabelKey` — i18n key that OTHER policy namespaces use to label a link to this page
+ */
+const POLICY_META: Record<
+  PolicyKey,
+  {
+    path: string;
+    namespace: string;
+    firestoreField: keyof SiteSettingsDocument["legalPages"];
+    relatedLabelKey: string;
+  }
+> = {
+  privacy: {
+    path: String(ROUTES.PUBLIC.PRIVACY),
+    namespace: "privacy",
+    firestoreField: "privacy",
+    relatedLabelKey: "relatedPrivacy",
+  },
+  terms: {
+    path: String(ROUTES.PUBLIC.TERMS),
+    namespace: "terms",
+    firestoreField: "terms",
+    relatedLabelKey: "relatedTerms",
+  },
+  cookies: {
+    path: String(ROUTES.PUBLIC.COOKIE_POLICY),
+    namespace: "cookies",
+    firestoreField: "cookies",
+    relatedLabelKey: "relatedCookies",
+  },
+  refund: {
+    path: String(ROUTES.PUBLIC.REFUND_POLICY),
+    namespace: "refundPolicy",
+    firestoreField: "refundPolicy",
+    relatedLabelKey: "relatedRefund",
+  },
+  ethics: {
+    path: String(ROUTES.PUBLIC.ETHICS),
+    namespace: "ethics",
+    firestoreField: "ethics",
+    relatedLabelKey: "relatedEthics",
+  },
+  conduct: {
+    path: String(ROUTES.PUBLIC.CODE_OF_CONDUCT),
+    namespace: "codeOfConduct",
+    firestoreField: "codeOfConduct",
+    relatedLabelKey: "relatedConduct",
+  },
 };
+
+const POLICY_KEYS = Object.keys(POLICY_META) as PolicyKey[];
 
 export async function PolicyPageView({
   policy,
 }: PolicyPageViewProps) {
   const page = { container: PAGE_CONTAINER };
+  const meta = POLICY_META[policy];
   const { getTranslations } = await import("next-intl/server");
 
-  const t = await getTranslations(namespaceMap[policy]);
+  const t = await getTranslations(meta.namespace);
 
   // Check Firestore for admin-overridden HTML content
   let adminHtml = "";
   try {
     const settings = await siteSettingsRepository.getSingleton();
-    const legalPages = (settings as any).legalPages ?? {};
-    adminHtml = legalPages[firestoreFieldMap[policy]] ?? "";
+    adminHtml = settings.legalPages?.[meta.firestoreField] ?? "";
   } catch (_err) {
     void normalizeError(_err);
     // Firestore unavailable — fall back to i18n
@@ -52,15 +110,14 @@ export async function PolicyPageView({
   }>;
   const sections = Array.isArray(rawSections) ? rawSections : [];
 
-  const relatedLinks: { label: string; href: string }[] = [
-    { label: t("relatedPrivacy"), href: String(ROUTES.PUBLIC.PRIVACY) },
-    { label: t("relatedTerms"), href: String(ROUTES.PUBLIC.TERMS) },
-    { label: t("relatedCookies"), href: String(ROUTES.PUBLIC.COOKIE_POLICY) },
-    { label: t("relatedRefund"), href: String(ROUTES.PUBLIC.REFUND_POLICY) },
-  ].filter((l) => {
-    const policyPath = { privacy: "/privacy", terms: "/terms", cookies: "/cookies", refund: "/refund-policy" }[policy];
-    return !l.href.endsWith(policyPath ?? "");
-  });
+  // Derived from POLICY_META, so a newly added policy appears in every other
+  // page's related list automatically and can never link to itself.
+  const relatedLinks: { label: string; href: string }[] = POLICY_KEYS.filter(
+    (key) => key !== policy,
+  ).map((key) => ({
+    label: t(POLICY_META[key].relatedLabelKey),
+    href: POLICY_META[key].path,
+  }));
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">

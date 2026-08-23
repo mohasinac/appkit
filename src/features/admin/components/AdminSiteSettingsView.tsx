@@ -307,6 +307,8 @@ export function AdminSiteSettingsView({
   const [refundHtml, setRefundHtml] = React.useState("");
   const [shippingPolicyHtml, setShippingPolicyHtml] = React.useState("");
   const [cookieHtml, setCookieHtml] = React.useState("");
+  const [ethicsHtml, setEthicsHtml] = React.useState("");
+  const [conductHtml, setConductHtml] = React.useState("");
 
   // ⑬ WhatsApp Business Cloud API (platform-level)
   const [waPhoneNumberId, setWaPhoneNumberId] = React.useState("");
@@ -328,6 +330,7 @@ export function AdminSiteSettingsView({
   const [aboutHowItWorksTitle, setAboutHowItWorksTitle] = React.useState("");
   const [aboutHowItems, setAboutHowItems] = React.useState<AboutHowItem[]>([]);
   const [aboutValuesTitle, setAboutValuesTitle] = React.useState("");
+  const [aboutValuesSubtitle, setAboutValuesSubtitle] = React.useState("");
   const [aboutValueItems, setAboutValueItems] = React.useState<AboutValueItem[]>([]);
   const [aboutMilestonesTitle, setAboutMilestonesTitle] = React.useState("");
   const [aboutMilestones, setAboutMilestones] = React.useState<AboutMilestone[]>([]);
@@ -524,6 +527,8 @@ export function AdminSiteSettingsView({
     setRefundHtml(s.legalPages?.refundPolicy ?? "");
     setShippingPolicyHtml(s.legalPages?.shipping ?? "");
     setCookieHtml(s.legalPages?.cookies ?? "");
+    setEthicsHtml(s.legalPages?.ethics ?? "");
+    setConductHtml(s.legalPages?.codeOfConduct ?? "");
 
     setAboutTitle(s.aboutContent?.title ?? "");
     setAboutSubtitle(s.aboutContent?.subtitle ?? "");
@@ -532,6 +537,7 @@ export function AdminSiteSettingsView({
     setAboutHowItWorksTitle(s.aboutContent?.howItWorksTitle ?? "");
     setAboutHowItems(s.aboutContent?.howItems ?? []);
     setAboutValuesTitle(s.aboutContent?.valuesTitle ?? "");
+    setAboutValuesSubtitle(s.aboutContent?.valuesSubtitle ?? "");
     setAboutValueItems(s.aboutContent?.valueItems ?? []);
     setAboutMilestonesTitle(s.aboutContent?.milestonesTitle ?? "");
     setAboutMilestones(s.aboutContent?.milestones ?? []);
@@ -605,6 +611,7 @@ export function AdminSiteSettingsView({
         howItWorksTitle: aboutHowItWorksTitle,
         howItems: aboutHowItems as unknown as FirestoreDocument[],
         valuesTitle: aboutValuesTitle,
+        valuesSubtitle: aboutValuesSubtitle,
         valueItems: aboutValueItems as unknown as FirestoreDocument[],
         milestonesTitle: aboutMilestonesTitle,
         milestones: aboutMilestones as unknown as FirestoreDocument[],
@@ -709,7 +716,7 @@ export function AdminSiteSettingsView({
       payment: { razorpayEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
-      legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
+      legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
       // Spreading the raw `featureFlags` object captured at load (not hand-picking keys)
       // preserves `adminCheckoutBypass` through this save even though it's not editable
       // here — Firestore's update() replaces nested maps wholesale, so omitting a key
@@ -840,6 +847,7 @@ export function AdminSiteSettingsView({
 
               <Stack gap="sm" rounded="lg" border="default" padding="md">
                 <Input label="Values section title" value={aboutValuesTitle} onChange={(e) => setAboutValuesTitle(e.target.value)} placeholder="Our Values" />
+                <Input label="Values section subtitle" value={aboutValuesSubtitle} onChange={(e) => setAboutValuesSubtitle(e.target.value)} placeholder="Optional intro line under the heading" />
                 {aboutValueItems.map((item, i) => (
                   <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
                     <Row justify="between" align="center">
@@ -848,7 +856,8 @@ export function AdminSiteSettingsView({
                     </Row>
                     <Input label="Icon (emoji)" value={item.icon} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, icon: e.target.value }; setAboutValueItems(next); }} placeholder="🛡️" />
                     <Input label="Title" value={item.title} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, title: e.target.value }; setAboutValueItems(next); }} />
-                    <Textarea value={item.text} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, text: e.target.value }; setAboutValueItems(next); }} rows={2} />
+                    <Textarea label="Text" value={item.text} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, text: e.target.value }; setAboutValueItems(next); }} rows={2} />
+                    <Textarea label="Detail (optional)" value={item.detail ?? ""} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, detail: e.target.value }; setAboutValueItems(next); }} rows={2} placeholder="How this value is actually enforced" />
                   </Stack>
                 ))}
                 <Button type="button" variant="secondary" size="sm" onClick={() => setAboutValueItems([...aboutValueItems, { title: "", text: "", icon: "✨" }])}>+ Add value</Button>
@@ -1773,6 +1782,8 @@ export function AdminSiteSettingsView({
                 ["Refund Policy", refundHtml, setRefundHtml],
                 ["Shipping Policy", shippingPolicyHtml, setShippingPolicyHtml],
                 ["Cookie Policy", cookieHtml, setCookieHtml],
+                ["Our Ethics", ethicsHtml, setEthicsHtml],
+                ["Code of Conduct", conductHtml, setConductHtml],
               ].map(([label, value, setter]) => (
                 <Textarea
                   key={label as string}

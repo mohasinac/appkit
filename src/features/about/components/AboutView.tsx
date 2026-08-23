@@ -1,5 +1,6 @@
 import React from "react";
-import { Anchor, Avatar, Badge, Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Avatar, Badge, Card, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../constants";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
 
 export type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
@@ -12,6 +13,9 @@ export interface AboutViewProps {
     missionText?: string;
     howItWorksTitle?: string;
     valuesTitle?: string;
+    valuesSubtitle?: string;
+    /** When set, renders a link from the values section through to `/ethics`. */
+    valuesLinkLabel?: string;
     milestonesTitle?: string;
     teamTitle?: string;
     teamSubtitle?: string;
@@ -77,9 +81,21 @@ export function AboutView({
         </Section>
 
         <Section>
-          <Heading level={2} className="mb-12" align="center">{labels.valuesTitle}</Heading>
+          <Heading level={2} className={labels.valuesSubtitle ? "mb-3" : "mb-12"} align="center">
+            {labels.valuesTitle}
+          </Heading>
+          {labels.valuesSubtitle && (
+            <Text
+              size="base"
+              variant="secondary"
+              align="center"
+              className="mb-12 max-w-2xl mx-auto leading-relaxed"
+            >
+              {labels.valuesSubtitle}
+            </Text>
+          )}
           <Div className="grid md:grid-cols-3" gap="5">
-            {valueItems.map(({ title, text, icon }) => (
+            {valueItems.map(({ title, text, icon, detail }) => (
               <Stack
                 key={title}
                 gap="3"
@@ -93,9 +109,22 @@ export function AboutView({
                 <Text size="sm" variant="secondary" className="leading-relaxed">
                   {text}
                 </Text>
+                {detail && (
+                  <Text size="sm" color="muted" className="leading-relaxed">
+                    {detail}
+                  </Text>
+                )}
               </Stack>
             ))}
           </Div>
+          {/* Values state the position; /ethics is where it is spelled out and held to. */}
+          {labels.valuesLinkLabel && (
+            <Div className="mt-8 text-center">
+              <TextLink href={String(ROUTES.PUBLIC.ETHICS)} size="sm">
+                {labels.valuesLinkLabel}
+              </TextLink>
+            </Div>
+          )}
         </Section>
 
         <Section>

@@ -2268,6 +2268,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/about",
         },
         {
+          key: "about-values-expanded",
+          label: "The About page's \"Our Values\" section shows six values, each with a second smaller paragraph, plus a \"How we hold ourselves to this →\" link that opens the Ethics page",
+          description: "Added 2026-08-24 — the section previously had three values, no subtitle, and no onward link. Confirm the subtitle line renders under the heading and the link lands on /ethics.",
+          href: "/about",
+        },
+        {
           key: "developer-page-loads",
           label: "The Developer page loads correctly, is linked from the footer's Support column next to About Us, shows the real developer's name, and its \"GitHub ↗\" link opens their actual GitHub profile",
           href: "/developer",
@@ -2397,7 +2403,37 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/help",
       cases: [
         { key: "shipping-refund-policy", label: "Shipping-policy and refund-policy pages load correctly" },
+        {
+          key: "refund-policy-not-raw-json",
+          label: "The Refund Policy page shows readable policy text — NOT a wall of raw JSON starting with {\"type\":\"doc\"",
+          description: "Fixed 2026-08-24. The seeded siteSettings.legalPages.refundPolicy held a TipTap JSON document, but PolicyPageView injects that field as raw HTML — so the page rendered the JSON source as visible text. The seeded overrides are now empty strings, which makes the page fall back to its proper i18n copy. Re-seed before testing this one.",
+          href: "/refund-policy",
+        },
         { key: "privacy-cookies-security", label: "Privacy, cookies, and security pages load correctly" },
+        {
+          key: "ethics-page-loads",
+          label: "The Our Ethics page loads, and its live-animal section describes vendor verification, a lawful-destination check, CITES paperwork, and specialist transport",
+          description: "Added 2026-08-24. Reachable from the footer under Support, and from the Values section on the About page.",
+          href: "/ethics",
+        },
+        {
+          key: "code-of-conduct-loads",
+          label: "The Code of Conduct page loads and covers listing honestly, bidding in good faith, review integrity, and the enforcement/appeal ladder",
+          description: "Added 2026-08-24. Reachable from the footer under Legal.",
+          href: "/code-of-conduct",
+        },
+        {
+          key: "policy-related-links-exclude-self",
+          label: "On EVERY policy page, the \"Related Policies\" footer lists the other five policies and never links to the page you are already on",
+          description: "All six pages (Terms, Privacy, Cookies, Refund, Ethics, Code of Conduct) share one renderer whose related-links list is derived from a single registry. Open each and confirm you see exactly five links and that none of them is the current page.",
+          href: "/ethics",
+        },
+        {
+          key: "policy-admin-html-override",
+          label: "As an admin: pasting HTML into Site Settings → Legal → \"Our Ethics\" and saving replaces the default Ethics page content immediately (no waiting)",
+          description: "Added 2026-08-24. Exercises the full chain — admin textarea → legalPages.ethics → PolicyPageView read → cache bust. These pages are cached for an hour, so saving now also revalidates them; if the change only appears after a long wait, the revalidation step regressed. Clear the textarea and save again to restore the default copy.",
+          href: "/admin/site",
+        },
       ],
     },
     {

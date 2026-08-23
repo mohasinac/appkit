@@ -305,83 +305,29 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
       enabled: true,
     },
   ],
+  // Every key here is an ADMIN OVERRIDE, and an empty string is the correct
+  // default: `PolicyPageView` falls back to the i18n `sections[]` content for
+  // that page whenever the value is empty, and every one of these pages already
+  // ships full copy in `messages/en.json`.
+  //
+  // Two hard constraints, both learned the hard way (2026-08-24):
+  //   1. The value must be raw HTML. `PolicyPageView` injects it with
+  //      `dangerouslySetInnerHTML`, and the admin Legal tab edits it as a plain
+  //      HTML textarea. This block previously held TipTap `JSON.stringify({...})`
+  //      documents, so the one key that DID match a real reader (`refundPolicy`)
+  //      rendered a wall of raw JSON on /refund-policy in production.
+  //   2. The key names must match `POLICY_META[*].firestoreField` in
+  //      `features/about/components/PolicyPageView.tsx`. The other three keys here
+  //      were `termsOfService`/`privacyPolicy`/`shippingPolicy` — names no reader
+  //      or writer has ever used, so they were silently inert.
   legalPages: {
-    termsOfService: JSON.stringify({
-      type: "doc",
-      content: [
-        {
-          type: "heading",
-          attrs: { level: 1 },
-          content: [{ type: "text", text: "Terms of Service" }],
-        },
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "Welcome to LetItRip. By accessing our platform, you agree to these terms...",
-            },
-          ],
-        },
-      ],
-    }),
-    privacyPolicy: JSON.stringify({
-      type: "doc",
-      content: [
-        {
-          type: "heading",
-          attrs: { level: 1 },
-          content: [{ type: "text", text: "Privacy Policy" }],
-        },
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "Your privacy is important to us. This policy describes how we collect and use your data...",
-            },
-          ],
-        },
-      ],
-    }),
-    refundPolicy: JSON.stringify({
-      type: "doc",
-      content: [
-        {
-          type: "heading",
-          attrs: { level: 1 },
-          content: [{ type: "text", text: "Refund Policy" }],
-        },
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "We offer a 7-day return and refund policy on most products. Items must be in original condition...",
-            },
-          ],
-        },
-      ],
-    }),
-    shippingPolicy: JSON.stringify({
-      type: "doc",
-      content: [
-        {
-          type: "heading",
-          attrs: { level: 1 },
-          content: [{ type: "text", text: "Shipping Policy" }],
-        },
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "We offer free shipping on orders above ₹999. Standard delivery takes 3-7 business days...",
-            },
-          ],
-        },
-      ],
-    }),
+    terms: "",
+    privacy: "",
+    cookies: "",
+    refundPolicy: "",
+    shipping: "",
+    ethics: "",
+    codeOfConduct: "",
   },
   shipping: {
     estimatedDays: 7,
