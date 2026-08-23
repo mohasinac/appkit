@@ -569,9 +569,27 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     razorpayWebhookSecret: "webhook_PLACEHOLDER",
     resendApiKey: "",
     whatsappApiKey: "wa_PLACEHOLDER",
+    // Real Meta secrets — deliberately left empty. With these unset the order
+    // announcement logs "not configured" and skips cleanly; a placeholder
+    // string here would instead be treated as a usable token and fail on send.
+    // Enter the real values in Admin → Site Settings → WhatsApp.
     whatsappPhoneNumberId: "",
     whatsappCloudApiToken: "",
-    whatsappAdminNotifyNumbers: "",
+    // The platform's own WhatsApp number, digits-only with country code
+    // (+91 8919665811). Same number as contact.whatsappNumber above.
+    whatsappAdminNotifyNumbers: "918919665811",
+    // Default Meta message-template names. These MUST be created and approved
+    // in Meta Business Manager under exactly these names — business-initiated
+    // sends outside the 24h customer-service window are rejected without an
+    // approved template. Names match the notification types they serve, see
+    // WHATSAPP_TEMPLATE_BY_TYPE in features/admin/actions/notification-actions.ts.
+    whatsappTemplateOrderPlaced: "order_placed",
+    whatsappTemplateOrderConfirmed: "order_confirmed",
+    whatsappTemplateOrderShipped: "order_shipped",
+    whatsappTemplateOrderDelivered: "order_delivered",
+    whatsappTemplateOrderCancelled: "order_cancelled",
+    whatsappTemplateRefundInitiated: "refund_initiated",
+    whatsappTemplateLanguage: "en",
     metaAppId: "meta_app_PLACEHOLDER",
     metaAppSecret: "meta_secret_PLACEHOLDER",
     metaPageAccessToken: "meta_page_token_PLACEHOLDER",

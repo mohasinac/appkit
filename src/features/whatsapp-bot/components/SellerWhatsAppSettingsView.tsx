@@ -1,8 +1,9 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, useBulkEvent, RTDB_PATHS } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
+import { normalizeError } from "../../../errors/normalize";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -207,22 +208,50 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     },
   });
 
-  // Catalog import mutation (pull: WhatsApp → site)
-  const importMutation = useApiMutation({
-    mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_IMPORT, {}),
-    onSuccess: (res: JsonValue) => {
-      const r = (res as any) ?? {};
+  // Catalog import (pull: WhatsApp → site). Runs as the `whatsappCatalogImport`
+  // async job — the route only enqueues, so the result arrives over the
+  // useBulkEvent RTDB channel rather than in the POST response.
+  const bulkEvent = useBulkEvent({ rtdbPath: RTDB_PATHS.BULK_EVENTS });
+  const [importing, setImporting] = React.useState(false);
+
+  const startImport = async () => {
+    setImporting(true);
+    try {
+      const res = (await apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_IMPORT, {})) as {
+        data?: { jobId?: string; customToken?: string };
+      };
+      const { jobId, customToken } = res.data ?? {};
+      if (jobId && customToken) {
+        bulkEvent.subscribe(jobId, customToken);
+      } else {
+        setImporting(false);
+        showToast("Failed to start catalog import.", "error");
+      }
+    } catch (err) {
+      void normalizeError(err);
+      setImporting(false);
+      showToast(err instanceof Error ? err.message : "Import failed", "error");
+    }
+  };
+
+  React.useEffect(() => {
+    if (bulkEvent.status === "success") {
+      setImporting(false);
+      const summary = bulkEvent.result?.summary;
+      const imported = summary?.succeeded ?? 0;
+      const skipped = summary?.skipped ?? 0;
       showToast(
-        `Imported ${r.imported ?? 0} product${(r.imported ?? 0) !== 1 ? "s" : ""} from WhatsApp (${r.skipped ?? 0} already synced)`,
+        `Imported ${imported} product${imported !== 1 ? "s" : ""} from WhatsApp (${skipped} already synced)`,
         "success",
       );
       void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
-    },
-    onError: (err: Error) => {
-      const msg = err instanceof Error ? err.message : "Import failed";
-      showToast(msg, "error");
-    },
-  });
+      void queryClient.invalidateQueries({ queryKey: ["store", "products"] });
+    } else if (bulkEvent.status === "failed" || bulkEvent.status === "timeout") {
+      setImporting(false);
+      showToast(bulkEvent.error ?? "Catalog import failed.", "error");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bulkEvent.status]);
 
   if (!hasCapability) {
     return (
@@ -367,12 +396,12 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             {syncMutation.isPending ? "Syncing…" : ACTIONS.STORE["whatsapp-catalog-sync"].label}
           </Button>
           <Button
-            onClick={() => importMutation.mutate()}
-            isLoading={importMutation.isPending}
-            disabled={!cfg?.connected || !syncEnabled || importMutation.isPending}
+            onClick={() => void startImport()}
+            isLoading={importing}
+            disabled={!cfg?.connected || !syncEnabled || importing}
             variant="secondary"
           >
-            {importMutation.isPending ? "Importing…" : ACTIONS.STORE["whatsapp-catalog-import"].label}
+            {importing ? "Importing…" : ACTIONS.STORE["whatsapp-catalog-import"].label}
           </Button>
         </Row>
 

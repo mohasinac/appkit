@@ -5,6 +5,7 @@ import {
   sendWhatsAppBusinessMessage,
   buildPurchaseAnnouncementMessage,
 } from "../../../../features/whatsapp-bot/server";
+import { resolveKeys, type ResolvedKeys } from "../../../../core/integration-keys";
 import type { JobContext } from "../runtime/types";
 import type { OrderDocument, OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 
@@ -73,13 +74,52 @@ async function notifyStoreOwner(
   }
 }
 
+/**
+ * Seeded credentials are `*_PLACEHOLDER` strings rather than empty, so an
+ * emptiness test alone would happily send with a fake token. Mirrors the guard
+ * in checkout-value-otp-actions.ts.
+ */
+function usable(value: string | undefined): string {
+  const v = value?.trim() ?? "";
+  return v && !v.includes("PLACEHOLDER") ? v : "";
+}
+
+async function resolveWhatsAppCredentials(
+  ctx: JobContext,
+  orderId: string,
+): Promise<{ phoneNumberId: string; accessToken: string; adminNumbersRaw: string }> {
+  let db: Partial<ResolvedKeys> = {};
+  try {
+    db = await resolveKeys();
+  } catch (err) {
+    void normalizeError(err);
+    // Firestore unreachable from the Functions runtime — env-only is still a
+    // valid configuration, so this is a warning, not a failure.
+    ctx.logger.warn("Credential lookup failed — falling back to env", { orderId });
+  }
+
+  return {
+    phoneNumberId:
+      usable(db.whatsappPhoneNumberId) || usable(ctx.env("WHATSAPP_PHONE_NUMBER_ID")),
+    accessToken:
+      usable(db.whatsappCloudApiToken) || usable(ctx.env("WHATSAPP_CLOUD_API_TOKEN")),
+    adminNumbersRaw:
+      usable(db.whatsappAdminNotifyNumbers) || usable(ctx.env("WHATSAPP_ADMIN_NOTIFY_NUMBERS")),
+  };
+}
+
 export async function handleOrderCreate(
   input: HandleOrderCreateInput,
   ctx: JobContext,
 ): Promise<void> {
   const { orderId, order } = input;
-  const phoneNumberId = ctx.env("WHATSAPP_PHONE_NUMBER_ID") ?? "";
-  const accessToken = ctx.env("WHATSAPP_CLOUD_API_TOKEN") ?? "";
+
+  // Credentials resolve DB-first (Admin → Site Settings → WhatsApp) with an env
+  // fallback, matching resolveKeys() and every other WhatsApp send path. This
+  // read ctx.env() ONLY until 2026-08-22, so credentials saved in Site Settings
+  // never reached the order-placed announcement — it silently no-op'd unless the
+  // Functions runtime also carried the env vars.
+  const { phoneNumberId, accessToken, adminNumbersRaw } = await resolveWhatsAppCredentials(ctx, orderId);
 
   if (!phoneNumberId || !accessToken) {
     ctx.logger.info("WhatsApp Cloud API not configured — skipping announcement", { orderId });
@@ -100,7 +140,6 @@ export async function handleOrderCreate(
     orderId,
   });
 
-  const adminNumbersRaw = ctx.env("WHATSAPP_ADMIN_NOTIFY_NUMBERS") ?? "";
   const adminNumbers = adminNumbersRaw
     .split(",")
     .map((n) => n.trim().replace(/\D/g, ""))

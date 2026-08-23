@@ -15,6 +15,7 @@ import { runHardBanCascade } from "./hardBanCascade";
 import { runResetOtpVerification } from "./resetOtpVerification";
 import { runWhatsAppNotify, type WhatsAppNotifyPayload } from "./whatsappNotify";
 import { runNewsletterExport } from "./newsletterExport";
+import { runWhatsAppCatalogImport } from "./whatsappCatalogImport";
 import type { JsonValue } from "@mohasinac/appkit";
 
 export interface JobRunResult {
@@ -87,10 +88,21 @@ async function runNewsletterExportJob(
   return runNewsletterExport(ctx);
 }
 
+async function runWhatsAppCatalogImportJob(
+  payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  return runWhatsAppCatalogImport(
+    { storeSlug: String(payload.storeSlug ?? "") },
+    ctx,
+  );
+}
+
 export const JOB_RUNNERS: Record<string, JobRunner> = {
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,
   resetOtpVerification: runResetOtpVerificationJob,
   whatsappNotify: runWhatsAppNotifyJob,
   newsletterExport: runNewsletterExportJob,
+  whatsappCatalogImport: runWhatsAppCatalogImportJob,
 };

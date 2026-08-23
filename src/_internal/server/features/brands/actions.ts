@@ -34,7 +34,12 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
 
 export async function createBrandAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    await requireRoleUser("admin");
+    // Sellers create brands inline from the product form's brand picker
+    // (BrandInlineSelect -> BrandQuickCreateForm); there is no /store/brands
+    // page. Mirrors ROLES_STORE_WRITE on the only caller,
+    // src/app/api/admin/brands/route.ts. Kept as a gate rather than dropped:
+    // this is a "use server" export and is independently callable.
+    const actor = await requireRoleUser(["admin", "seller"]);
       const parsed = brandInputSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
       await assertBrandSlugUnique(parsed.data.slug);
@@ -69,7 +74,7 @@ export async function createBrandAction(input: unknown): Promise<ActionResult<un
         },
         seo: { title: parsed.data.name, description: parsed.data.description ?? "", keywords: [parsed.data.name] },
         ancestors: [],
-        createdBy: "admin",
+        createdBy: actor.uid,
         createdAt: new Date(),
         updatedAt: new Date(),
         ...fields,

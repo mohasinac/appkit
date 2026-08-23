@@ -1296,6 +1296,29 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Fixed 2026-08-21 — the video schema always required a duration the UI never collected, so ANY product with a directly-uploaded video previously failed server validation invisibly. Duration is now captured client-side for file uploads; YouTube/external sources are exempt since their duration can't be read client-side.",
           href: "/store/products/new",
         },
+        {
+          key: "media-upload-multiple-images",
+          label: "Uploading several gallery images in one go works — each shows its own progress and all of them survive the save",
+          description: "Select 3-4 images at once. They upload one after another. After saving and reopening the product for editing, every image should still be attached.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-upload-remove-image",
+          label: "Removing one gallery image removes only that image, and the removal sticks after save + reload",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-upload-main-image-crop",
+          label: "The main product image's crop tool opens, the 1:1 aspect lock works, and the cropped result is what actually gets saved",
+          description: "Not the uncropped original — check the saved product's main image on the public detail page.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-upload-video-both-sources-render",
+          label: "A video attached by file upload AND a video attached via the YouTube tab both play on the public product page",
+          description: "Two separate products, one per source. A raw file renders a native player; a YouTube URL renders an embedded player. Neither should show \"No video with supported format and MIME type found\".",
+          href: "/store/products/new",
+        },
         { key: "seller-quick-add-drawer-flips", label: "With Left-hand mode ON, the seller's quick-add-listing side drawer opens from the left instead of the right" },
       ],
     },
@@ -1439,6 +1462,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/store/coupons/new",
           description: "Create a coupon restricted to one category, then as a buyer put a non-matching item from that store in the cart and try the code — it must be refused. Add a matching item and confirm the discount covers only the matching item's value.",
         },
+        {
+          key: "seller-coupon-cannot-be-site-wide",
+          label: "A seller has no way to create a site-wide/platform coupon — the form offers no scope choice and the created coupon only ever discounts their own store",
+          href: "/store/coupons/new",
+          description: "By design: scope is resolved from the logged-in seller, not chosen. Verify as a buyer that a seller coupon leaves a second store's items in the same cart at full price. Only an admin can create a platform-wide coupon.",
+        },
+        {
+          key: "seller-coupon-second-for-same-store-rejected",
+          label: "Applying a second seller coupon for the SAME store replaces or refuses — you can never have two coupons from one store active at once",
+          href: "/cart",
+          description: "The rule is one seller coupon per store, plus at most one admin coupon overall. Try applying two of store-beyblade-arena's codes back to back.",
+        },
+        {
+          key: "seller-coupon-stacks-with-admin-coupon",
+          label: "One seller coupon and one admin (site-wide) coupon apply together, and the order total reflects both",
+          href: "/cart",
+          description: "Try ARENA25 (store-beyblade-arena) together with a platform coupon such as FREESHIP499. Both should stay applied and the breakdown should list both.",
+        },
         { key: "seller-bundles-crud", label: "Seller can create, edit, and list bundles/grouped listings", href: "/store/bundles" },
         { key: "seller-classified-crud", label: "Seller can create, edit, and list classified listings", href: "/store/classified" },
         { key: "seller-digitalcodes-crud", label: "Seller can create, edit, and list digital-code listings", href: "/store/digital-codes" },
@@ -1473,6 +1514,58 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/store/sublisting-categories",
         },
         { key: "seller-listing-templates-crud", label: "Seller can create, edit, and reuse listing templates when creating a new product", href: "/store/listing-templates" },
+        {
+          key: "seller-category-inline-create",
+          label: "On the product form, the Category picker's \"+ Create new category\" opens a drawer, saves, and auto-selects the new category",
+          description: "The inline drawer is reachable from the category picker on the product form. Type a name, save, and confirm the drawer closes and the new category is already selected in the picker — you should not have to search for it.",
+          href: "/store/products/new",
+        },
+        {
+          key: "seller-category-inline-create-persists",
+          label: "A category created inline is still there after reload — reopen the picker on a fresh product form and search for it by name",
+          description: "Proves the category actually persisted to Firestore rather than only existing in the form's local state.",
+          href: "/store/products/new",
+        },
+        {
+          key: "seller-category-inline-create-duplicate-rejected",
+          label: "Creating a category with a name that already exists shows a readable \"already exists\" error, not a generic failure or a silent no-op",
+          description: "Slug is derived from the name, so a duplicate name collides. Expect a clear message in the drawer.",
+          href: "/store/products/new",
+        },
+      ],
+    },
+    {
+      pageKey: "seller-custom-brands",
+      pageLabel: "Seller — Custom Brands",
+      // The ONLY way a seller creates a brand is the inline picker on the
+      // product form — there is no /store/brands page.
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "seller-brand-inline-create",
+          label: "On the product form, the Brand picker's \"+ Create new brand\" saves successfully and auto-selects the new brand",
+          description: "Fixed 2026-08-22 — this previously failed with a permissions error for every seller: the API route allowed sellers but the underlying action still demanded an admin role. Confirm a seller (not an admin) can complete this end to end.",
+        },
+        {
+          key: "seller-brand-inline-create-persists",
+          label: "A brand created inline is still there after reload — reopen the Brand picker on a fresh product form and search for it by name",
+          description: "Proves the brand persisted rather than only existing in form state.",
+        },
+        {
+          key: "seller-brand-appears-on-public-brands-page",
+          label: "A newly created brand appears on the public /brands page",
+          description: "Brands are stored as category rows discriminated by categoryType:\"brand\", and the public page filters on exactly that. If the brand saves but never shows here, the discriminator wasn't written.",
+          href: "/brands",
+        },
+        {
+          key: "seller-brand-inline-create-duplicate-rejected",
+          label: "Creating a brand whose name matches an existing brand shows a readable \"already exists\" error rather than creating a second copy",
+        },
+        {
+          key: "seller-brand-product-saves-with-new-brand",
+          label: "A product saved with an inline-created brand keeps that brand after save — reopen the product for editing and the Brand field still shows it",
+          description: "Catches the case where the brand is created but its id never makes it onto the product document.",
+        },
       ],
     },
     {
@@ -1505,6 +1598,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "seller-whatsapp-token-save",
           label: "Saving a WhatsApp access token on the store succeeds and comes back masked — it must not error out",
           description: "Added 2026-08-21. The store's WhatsApp access token is encrypted before storage by the same mechanism as the admin Integrations keys, and that mechanism was failing in production — so this save path was broken too, in a place nobody would think to check. Enter a throwaway token value, save, reload the page, and confirm you got a success toast and the field shows a masked value rather than an error or a blank field.",
+          href: "/store/whatsapp",
+        },
+        {
+          key: "seller-whatsapp-import-runs-in-background",
+          label: "\"Import from WhatsApp\" returns immediately and reports its result when the background job finishes — the page never hangs waiting on it",
+          description: "Changed 2026-08-22 — the import used to run inline and could time out on a large catalog, silently importing only the first 250 items. It now runs as a background job, so expect an immediate \"import started\" response and a result toast a few moments later.",
+          href: "/store/whatsapp",
+        },
+        {
+          key: "seller-whatsapp-import-skips-already-synced",
+          label: "Re-running \"Import from WhatsApp\" a second time imports nothing new — everything is reported as already synced",
+          description: "Items pushed from here carry their LetItRip slug, so a repeat import must not create duplicate draft products. Run it twice and compare the counts.",
+          href: "/store/whatsapp",
+        },
+        {
+          key: "seller-whatsapp-push-product-link-opens",
+          label: "A product pushed to the WhatsApp catalog links back to a working, full product URL — not a broken relative link",
+          description: "Fixed 2026-08-22 — the pushed link was a relative path Meta rejects. Open the item in your WhatsApp catalog and tap through to confirm it lands on the live product page.",
           href: "/store/whatsapp",
         },
         { key: "seller-reviews-response", label: "Seller can view and respond to product reviews", href: "/store/reviews" },
@@ -2641,6 +2752,23 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         href: "/admin/site",
         cases: [
           { key: "site-settings-admin", label: "Admin site settings page saves correctly", href: "/admin/site" },
+          {
+            key: "whatsapp-credentials-persist",
+            label: "Site Settings → WhatsApp saves the Phone Number ID, Cloud API token, admin notify numbers, template language and all 6 template names — and they survive a reload",
+            description: "The token field is masked on reload (shows dots, not the raw value) — that is correct. Confirm by changing an unrelated field, saving again, and verifying the token still works rather than being overwritten with the mask.",
+            href: "/admin/site",
+          },
+          {
+            key: "whatsapp-channel-toggle-persists",
+            label: "Site Settings → Notifications: the WhatsApp channel enable toggle, minimum priority, and the checkout OTP switch all persist after save + reload",
+            href: "/admin/site",
+          },
+          {
+            key: "whatsapp-order-announcement-fires",
+            label: "Placing an order sends the WhatsApp announcement to the configured admin numbers using credentials saved in Site Settings — no env var required",
+            description: "Fixed 2026-08-22 — the order-placed announcement previously read environment variables ONLY, so credentials entered in Site Settings were ignored and it silently did nothing. Needs real Meta credentials configured to verify.",
+            href: "/admin/site",
+          },
           {
             key: "auction-bid-tiers-admin",
             label: "Admin can add, edit, and remove bid-increment tiers in Site Settings → Auction Config, and the changes persist after saving and reloading the page",
