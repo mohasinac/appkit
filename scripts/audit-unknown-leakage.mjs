@@ -360,8 +360,25 @@ for (const root of SCAN_ROOTS) {
     if (!src.includes("unknown")) continue;
     totalScanned++;
     const lines = src.split(/\r?\n/);
+    // Comment-only lines are prose, not code. A docstring that MENTIONS
+    // `Record<string, unknown>` — typically to explain why it is deliberately
+    // NOT used — is not a leak. Mirrors the comment-stripping that
+    // audit-sieve-date-fields and audit-status-color-pairs already do; without
+    // it this strict-zero audit fails on its own explanatory comments.
+    let inBlockComment = false;
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      const trimmed = line.trim();
+      if (inBlockComment) {
+        if (trimmed.includes("*/")) inBlockComment = false;
+        continue;
+      }
+      if (trimmed.startsWith("//")) continue;
+      if (trimmed.startsWith("/*")) {
+        // A single-line /* … */ never opens a spanning block.
+        if (!trimmed.includes("*/")) inBlockComment = true;
+        continue;
+      }
       if (PER_LINE_OK_RE.test(line)) continue;
       if (i > 0 && PER_LINE_OK_RE.test(lines[i - 1])) continue;
       if (isLegitGenericDefault(line)) continue;
