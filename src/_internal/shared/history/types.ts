@@ -1,3 +1,5 @@
+import type { FirestoreValue } from "../../../schemas/types";
+
 /**
  * Generic entity status history — the shape shared by every entity that
  * records how it got to its current state.
@@ -19,8 +21,8 @@ export interface HistoryActor {
 
 /** A single field's before/after. `from` is `null` on the creation entry. */
 export interface FieldChange {
-  from: unknown;
-  to: unknown;
+  from: FirestoreValue;
+  to: FirestoreValue;
 }
 
 export interface StatusChangeEntry {

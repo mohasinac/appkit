@@ -9,6 +9,8 @@
  * call sites above it unchanged.
  */
 
+import { normalizeError } from "../../../errors/normalize";
+import type { FirestoreDocument, FirestoreValue } from "../../../schemas/types";
 import {
   STATUS_HISTORY_MAX,
   type AppendHistoryResult,
@@ -25,7 +27,7 @@ import {
  * because Firestore hands back a fresh object on every read — without this,
  * re-saving a document with no edits would append a history entry.
  */
-function isSameValue(a: unknown, b: unknown): boolean {
+function isSameValue(a: FirestoreValue, b: FirestoreValue): boolean {
   if (a === b) return true;
   if (a == null || b == null) return a == null && b == null;
 
@@ -37,7 +39,8 @@ function isSameValue(a: unknown, b: unknown): boolean {
   if (typeof a !== "object" || typeof b !== "object") return false;
   try {
     return JSON.stringify(a) === JSON.stringify(b);
-  } catch {
+  } catch (err) {
+    void normalizeError(err);
     // Circular or non-serialisable — treat as changed rather than throwing
     // inside a write path.
     return false;
@@ -45,12 +48,16 @@ function isSameValue(a: unknown, b: unknown): boolean {
 }
 
 /** Firestore Timestamps expose `toDate()`; plain Dates are used directly. */
-function toDateOrNull(v: unknown): Date | null {
+function toDateOrNull(v: FirestoreValue): Date | null {
   if (v instanceof Date) return v;
-  if (typeof v === "object" && v !== null && typeof (v as { toDate?: unknown }).toDate === "function") {
+  if (typeof v === "object" && v !== null && typeof (v as unknown as { toDate?: () => Date }).toDate === "function") {
     try {
-      return (v as { toDate: () => Date }).toDate();
-    } catch {
+      return (v as unknown as { toDate: () => Date }).toDate();
+    } catch (err) {
+      void normalizeError(err);
+      // A Timestamp-like object whose toDate() threw is not a usable date;
+      // the caller treats null as "not a date" and falls through to structural
+      // comparison, so there is nothing to report.
       return null;
     }
   }
@@ -58,13 +65,13 @@ function toDateOrNull(v: unknown): Date | null {
 }
 
 /** Read a possibly-dotted path (`emiInstallments.0.status`) off an object. */
-function readPath(source: Record<string, unknown> | undefined, path: string): unknown {
+function readPath(source: FirestoreDocument | undefined, path: string): FirestoreValue {
   if (!source) return undefined;
   if (!path.includes(".")) return source[path];
-  let cursor: unknown = source;
+  let cursor: FirestoreValue = source;
   for (const segment of path.split(".")) {
     if (cursor == null || typeof cursor !== "object") return undefined;
-    cursor = (cursor as Record<string, unknown>)[segment];
+    cursor = (cursor as FirestoreDocument)[segment];
   }
   return cursor;
 }
@@ -81,14 +88,14 @@ function readPath(source: Record<string, unknown> | undefined, path: string): un
  * the current document, not two full documents.
  */
 export function diffTrackedFields(
-  current: Record<string, unknown> | undefined,
-  patch: Record<string, unknown>,
+  current: FirestoreDocument | undefined,
+  patch: FirestoreDocument,
   tracked: readonly string[],
 ): Record<string, FieldChange> {
   const changes: Record<string, FieldChange> = {};
   for (const field of tracked) {
     if (!(field in patch) && !field.includes(".")) continue;
-    const to = readPath(patch as Record<string, unknown>, field);
+    const to = readPath(patch, field);
     if (to === undefined) continue;
     const from = readPath(current, field);
     if (isSameValue(from, to)) continue;
@@ -147,8 +154,8 @@ export function appendHistoryEntry(
  * record it. Returns `null` when no tracked field changed — the caller then
  * writes its patch unchanged, so an untracked update never grows the array.
  */
-export function withHistory<TPatch extends Record<string, unknown>>(
-  current: Record<string, unknown> | undefined,
+export function withHistory<TPatch extends FirestoreDocument>(
+  current: FirestoreDocument | undefined,
   patch: TPatch,
   opts: {
     tracked: readonly string[];
@@ -171,7 +178,7 @@ export function withHistory<TPatch extends Record<string, unknown>>(
     now?: Date;
     cap?: number;
   },
-): (TPatch & Record<string, unknown>) | null {
+): (TPatch & FirestoreDocument) | null {
   const changes = { ...diffTrackedFields(current, patch, opts.tracked), ...opts.extraChanges };
   if (Object.keys(changes).length === 0) return null;
 

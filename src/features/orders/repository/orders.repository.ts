@@ -27,6 +27,7 @@ import {
   type OrderRefundEvent,
 } from "../schemas";
 import { withHistory, type HistoryActor, type FieldChange } from "../../../_internal/shared/history/index";
+import type { FirestoreDocument } from "../../../schemas/types";
 import type { OrderStatus, PaymentStatus } from "../types";
 import {
   MANUAL_PAYMENT_METHODS,
@@ -160,8 +161,8 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   ): Promise<OrderDocument> {
     const current = known !== undefined ? known : await this.findById(orderId);
     const withEntry = withHistory(
-      current as unknown as Record<string, unknown> | undefined,
-      patch as Record<string, unknown>,
+      current as unknown as FirestoreDocument | undefined,
+      patch as unknown as FirestoreDocument,
       {
         tracked: ORDER_TRACKED_FIELDS,
         actor: ctx?.actor ?? { role: "system" },
@@ -872,10 +873,10 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    * order, so they cannot be what overflows the array.
    */
   private batchHistoryPatch(input: {
-    changes: Record<string, { from: unknown; to: unknown }>;
+    changes: Record<string, FieldChange>;
     trigger: string;
     reason?: string;
-  }): Record<string, unknown> {
+  }): FirestoreDocument {
     const entry = {
       at: new Date(),
       actorRole: "system" as const,
