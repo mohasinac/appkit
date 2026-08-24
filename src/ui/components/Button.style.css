@@ -217,13 +217,28 @@
  * That is exactly what happened to every image-tile button in the app when
  * the ripple landed.
  *
- * `justify-content` / `gap` are inherited so the button's own `justify` and
- * `gap` props keep reaching the real children now that they sit one level
- * deeper than the flex container that declares them.
+ * ALL FOUR flex-container properties must be inherited — `flex-direction` and
+ * `align-items` as much as `justify-content` and `gap` — because the real
+ * children now sit one level deeper than the container declaring them. The
+ * first pass at this fix inherited only two and hard-coded `align-items:
+ * center`, so a Button asking for `flex-col` silently still laid its children
+ * out in a row: the prize-draw collage, the media picker and the concern card
+ * each rendered an image tile BESIDE its caption instead of above it, at a
+ * fraction of the intended width. `inherit` is behaviour-identical for every
+ * ordinary button — `.appkit-button` declares `align-items: center` and never
+ * declares `flex-direction`, so it computes to the initial `row`.
+ *
+ * One thing this CSS cannot defend against: a caller putting a bare `block` /
+ * `flex` / `hidden` Tailwind utility on the Button. The consumer's globals.css
+ * declares those un-layered and `!important`, which beats `.appkit-button`'s
+ * `display: inline-flex` — and every rule below applies only to a flex ITEM, so
+ * the whole contract goes inert and fill children collapse to 0x0 again. That
+ * is guarded from the call-site side by scripts/audit-primitive-child-wrappers.mjs.
  */
 .appkit-button__content {
   display: inline-flex;
-  align-items: center;
+  flex-direction: inherit;
+  align-items: inherit;
   justify-content: inherit;
   gap: inherit;
   flex: 1 1 auto;

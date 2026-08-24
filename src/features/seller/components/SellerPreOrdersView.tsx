@@ -21,6 +21,10 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
+
+const PRE_ORDER_TYPES: readonly ListingType[] = ["pre-order"];
 
 interface PreOrderRow {
   id: string;
@@ -138,6 +142,9 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
     );
   }
 
+  const scope = useAvailabilityScope(PRE_ORDER_TYPES);
+
+
   const config: ListingViewConfig<SellerProductsResponse, PreOrderRow> = {
     portal: "seller",
     title: "Pre-Orders",
@@ -185,6 +192,8 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==pre-order", status].filter(Boolean).join(",");
     },
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     rowHrefTemplate: String(ROUTES.STORE.PRE_ORDERS_EDIT("{id}")),
     renderRowActions: (row) => (
       <RowActionMenu

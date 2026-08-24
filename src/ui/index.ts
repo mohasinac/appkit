@@ -7,6 +7,7 @@ import "./forms/FormShell.style.css";
 // FieldInput/FieldSelect/etc. read internally for inline validation.
 export type {
   FormShellStep,
+  FormShellNav,
   FormShellContextValue,
 } from "./forms";
 export { FormShellProvider, useFormShell } from "./forms";

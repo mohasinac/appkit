@@ -6,9 +6,13 @@ import type { LotteryConfig, LotterySlot, ClientLotteryConfig, ClientLotterySlot
 
 /** Strip price and weight from a single slot for client consumption. */
 export function toClientLotterySlot(slot: LotterySlot): ClientLotterySlot {
+  // Allow-list, not a spread: every field named here is a deliberate public
+  // exposure with a known reader (§ Public Data Projections). `image` is read
+  // by the prize collage on the lottery detail page.
   return {
     slotNumber: slot.slotNumber,
     name: slot.name,
+    image: slot.image,
     isBooked: slot.isBooked,
     bookedByUserLotteryNumber: slot.bookedByUserLotteryNumber,
     bookedByDisplayName: slot.bookedByDisplayName,

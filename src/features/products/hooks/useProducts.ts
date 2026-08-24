@@ -49,7 +49,13 @@ export function useProducts<T extends ProductItem = ProductItem>(
     sp.set("minPrice", String(params.minPrice));
   if (params.maxPrice !== undefined)
     sp.set("maxPrice", String(params.maxPrice));
-  if (params.inStock !== undefined) sp.set("inStock", String(params.inStock));
+  // ALWAYS sent when the caller has a scope, including the default
+  // "available". `/api/products` leaves `availability` unset (= all) so that
+  // non-browse callers are unaffected — which means a browse component that
+  // stopped sending it would filter on the SSR paint and NOT on the refetch,
+  // and `staleTime: Infinity` would freeze that disagreement (Root Cause #30).
+  // `audit-listing-filter-parity` asserts every listing component sends it.
+  if (params.availability) sp.set("availability", params.availability);
   // SB1-G Phase 4 — canonical `listingType` URL param only.
   if (params.listingType !== undefined)
     sp.set("listingType", params.listingType);
@@ -108,6 +114,11 @@ export function useProducts<T extends ProductItem = ProductItem>(
     totalPages: query.data?.totalPages ?? 1,
     page: query.data?.page ?? 1,
     hasMore: query.data?.hasMore ?? false,
+    /**
+     * A bounded fetch hit its ceiling, so `total` is a floor. Render it as
+     * "50+", never as an exact count, and never derive a final page from it.
+     */
+    truncated: query.data?.truncated ?? false,
     isLoading: query.isLoading,
     error: query.error,
     warning,

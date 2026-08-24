@@ -1300,8 +1300,6 @@ export { sellerCouponsGET } from "./features/seller/server";
 // sellerDeleteProduct - Shared export for seller delete product.
 export { sellerDeleteProduct } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sellerOffersGET - Shared export for seller offers get.
-export { sellerOffersGET } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerProductsGET - Shared export for seller products get.
 export { sellerProductsGET } from "./features/seller/server";
@@ -1536,7 +1534,9 @@ export {
 export {
   listPublicProducts,
   parsePublicProductParams,
+  defaultAvailabilityForListingTypes,
   PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+  ANY_STATUS,
   type PublicProductListInput,
   type PublicProductListResult,
   type PublicProductListOptions,
@@ -1551,6 +1551,7 @@ export {
   getRelatedBundles,
   resolveBundleMemberIds,
   resolveBundleOriginalTotal,
+  resolveBundleCategorySlugs,
   buildBundleMetadata,
   renderBundleOg,
   renderBundleOgImage,
@@ -1563,6 +1564,18 @@ export { getGroupsForProduct, getGroupsWithItemsForProduct, getGroupsForCategory
 export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
 export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";
+
+// Public-store allow-list projection — the ONLY sanctioned way a StoreDocument
+// may reach a client component or an HTTP response. See adapters.ts header.
+export {
+  toStoreDetail,
+  toStoreListItem,
+  PUBLIC_STORE_FIELDS,
+  PRIVATE_STORE_FIELDS,
+  type ToStoreDetailOptions,
+  type ToStoreListItemOptions,
+  type StoreProjectionSource,
+} from "./_internal/server/features/stores/adapters";
 export { getBrandForDetail } from "./_internal/server/features/brands/index";
 export { getBlogPostForDetail } from "./_internal/server/features/blog/index";
 export { getEventForDetail } from "./_internal/server/features/events/index";
@@ -1673,6 +1686,15 @@ export { getDisabledRoutes } from "./features/admin/utils/getDisabledRoutes";
 export { getSiteSettingsGlobal } from "./features/admin/utils/getSiteSettingsGlobal";
 // Null-safe wrapper — returns null on Firestore failure instead of throwing.
 export { getSiteSettingsSafe } from "./_internal/server/features/site-settings/safe-settings";
+
+// Public site-settings allow-list projection — the ONLY sanctioned shape for
+// an unauthenticated site-settings response. See adapters.ts header.
+export {
+  toPublicSiteSettings,
+  PUBLIC_SITE_SETTINGS_FIELDS,
+  PRIVATE_SITE_SETTINGS_FIELDS,
+  type ToPublicSiteSettingsOptions,
+} from "./_internal/server/features/site-settings/adapters";
 // Firebase Identity Toolkit REST helper (signInWithPassword / signInWithCustomToken).
 export { callFirebaseIdentityToolkit } from "./_internal/server/features/auth/firebase-identity";
 

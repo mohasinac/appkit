@@ -5,31 +5,38 @@ import type {
   ProductListResponse,
 } from "../../products/types";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
-
-const MIN_COUNT = 12;
+import { buildHomepageListingQuery, MIN_HOMEPAGE_COUNT } from "./homepage-query";
+import { sortBy } from "../../../constants/sort";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 export function useFeaturedPreOrders(options?: {
   filterByBrand?: string;
   initialData?: ProductItem[];
 }) {
-  const brandFilter = options?.filterByBrand
-    ? `%2Cbrand%3D%3D${encodeURIComponent(options.filterByBrand)}`
-    : "";
-
   return useQuery<ProductItem[]>({
     queryKey: ["pre-orders", "featured", options?.filterByBrand ?? "all"],
     initialData: options?.initialData,
     queryFn: async () => {
       const featuredRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=listingType%3D%3Dpre-order%2Cstatus%3D%3Dpublished${brandFilter}&sorts=preOrderDeliveryDate&pageSize=6`,
+        `${PRODUCT_ENDPOINTS.LIST}?${buildHomepageListingQuery({
+          listingType: "pre-order",
+          brand: options?.filterByBrand,
+          sorts: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"),
+          pageSize: 6,
+        })}`,
       );
       const featured = featuredRes?.items ?? [];
 
-      if (featured.length >= MIN_COUNT) return featured;
+      if (featured.length >= MIN_HOMEPAGE_COUNT) return featured;
 
-      const remaining = MIN_COUNT - featured.length;
+      const remaining = MIN_HOMEPAGE_COUNT - featured.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=listingType%3D%3Dpre-order%2Cstatus%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + featured.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?${buildHomepageListingQuery({
+          listingType: "pre-order",
+          brand: options?.filterByBrand,
+          sorts: sortBy(PRODUCT_FIELDS.CREATED_AT, "DESC"),
+          pageSize: remaining + featured.length,
+        })}`,
       );
       const latest = latestRes?.items ?? [];
 

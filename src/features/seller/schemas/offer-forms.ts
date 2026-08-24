@@ -30,3 +30,34 @@ export const counterOfferFormSchema = z.object({
 });
 
 export type CounterOfferFormValues = z.infer<typeof counterOfferFormSchema>;
+
+/**
+ * Buyer-side Make-an-Offer form.
+ *
+ * A factory rather than a constant because both bounds depend on the listing:
+ * the floor is `minOfferAmount(listedPrice, minOfferPercent)` and the ceiling is
+ * the listed price itself. Both are re-checked server-side in `makeOffer` — this
+ * exists so the buyer is told before submitting, using the SAME
+ * `minOfferAmount()` the server uses, rather than a second rounding rule that
+ * could disagree by a rupee.
+ */
+export function makeOfferFormSchema(opts: {
+  listedPrice: number;
+  minOffer: number;
+  formatAmount: (n: number) => string;
+}) {
+  const { listedPrice, minOffer, formatAmount } = opts;
+  return z.object({
+    offerAmount: z.coerce
+      .number({ invalid_type_error: "Enter an offer amount." })
+      .positive("Offer amount must be greater than zero.")
+      .min(minOffer, `Minimum offer is ${formatAmount(minOffer)}.`)
+      .max(
+        listedPrice - 0.01,
+        `Offer must be below the listed price of ${formatAmount(listedPrice)} — use Add to Cart to buy at that price.`,
+      ),
+    buyerNote: z.string().max(300, "Keep your note under 300 characters.").optional(),
+  });
+}
+
+export type MakeOfferFormValues = z.infer<ReturnType<typeof makeOfferFormSchema>>;

@@ -47,6 +47,23 @@ export interface BidDocument extends BaseDocument {
    * a dead status badge.
    */
   orderId?: string;
+  /**
+   * True when this bid was created by Buy Now rather than by a buyer typing an
+   * amount. Its `bidAmount` is the listing's `buyNowPrice`.
+   *
+   * A buyout bid starts `active` like any other, but is NOT an ordinary bid in
+   * two respects and both are load-bearing:
+   *  1. **Auction settlement must ignore it.** A pending buyout sits at the BIN
+   *     price, so it would otherwise win by default the moment the auction's
+   *     clock ran out — awarding the item to someone who explicitly did not
+   *     complete their purchase in time.
+   *  2. **It never moves `product.currentBid`.** A pending claim is not a
+   *     public price, and inflating the visible bid to the BIN price would make
+   *     `isBuyNowAvailable` false for everybody else, silently making the
+   *     buyout single-occupancy. Concurrency is settled by the transaction in
+   *     `claimAuctionForCheckout`, not by blocking the second buyer up front.
+   */
+  isBuyout?: boolean;
 }
 
 export const BID_COLLECTION = "bids" as const;

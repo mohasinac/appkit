@@ -6,9 +6,21 @@ export const BID_ERROR_CODES = {
   INCREMENT_VIOLATED: "BID_INCREMENT_TOO_LOW",
   SELF_BID: "BID_SELF_BID",
   USER_BANNED: "BID_USER_BANNED",
+  /**
+   * The buyout price is no longer better than the standing bid. Replaced
+   * `BUY_NOW_BIDS_STARTED` (deleted 2026-08-24), which fired the instant anyone
+   * bid at all — that eBay rule hid Buy Now on nearly every live auction.
+   */
   BUY_NOW_UNAVAILABLE: "BID_BUY_NOW_UNAVAILABLE",
-  BUY_NOW_BIDS_STARTED: "BID_BUY_NOW_BIDS_STARTED",
   BUY_NOW_NO_PRICE: "BID_BUY_NOW_NO_PRICE",
+  /** The buyout hold expired (or was cancelled) before checkout completed. */
+  BUYOUT_LAPSED: "BID_BUYOUT_LAPSED",
+  /** Bidding passed the buyout price while the buyer was in checkout. */
+  BUYOUT_OUTBID: "BID_BUYOUT_OUTBID",
+  /** Another buyer's buyout claimed the auction first. */
+  AUCTION_ALREADY_SOLD: "BID_AUCTION_ALREADY_SOLD",
+  /** The auction's clock ran out mid-checkout, so it settled to a real bidder. */
+  AUCTION_ENDED_BEFORE_CHECKOUT: "BID_AUCTION_ENDED_BEFORE_CHECKOUT",
 } as const;
 
 export const OFFER_ERROR_CODES = {

@@ -21,6 +21,10 @@ import type { ProductItem, ProductListResponse } from "../types/index";
 import { mediaFieldSchema } from "../../media/types/index";
 import { printMetaSchema } from "../schemas/index";
 import { sanitizeProductsForPublic } from "../utils/sanitize";
+import {
+  listPublicProducts,
+  parsePublicProductParams,
+} from "../../../_internal/server/features/products/list-public";
 
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue } from "../../../schemas/types";
@@ -59,8 +63,11 @@ const productMutateSchema = z
     sellerName: z.string().optional(),
     sellerEmail: z.string().email().optional(),
     slug: z.string().optional(),
+    // `bundle` is deliberately absent: SB-UNI-D moved bundles onto
+    // `categories` as a categoryType, so a product written with that value
+    // would match no listing-type query anywhere.
     listingType: z
-      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live", "art", "stickers"])
+      .enum(["standard", "auction", "pre-order", "prize-draw", "classified", "digital-code", "live", "art", "stickers"])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })
@@ -72,121 +79,60 @@ function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);
 }
 
-function numParam(url: URL, key: string, fallback: number): number {
-  const v = url.searchParams.get(key);
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
-}
-
-/** Public fields callers may filter on via the ?filters= param. */
-const SAFE_PRODUCT_FILTER_FIELDS = new Set([
-  "status",
-  "category",
-  "brand",
-  "condition",
-  "storeId",
-  "title",
-  "price",
-  "listingType",
-  "featured",
-  "isPromoted",
-  "stockQuantity",
-  "availableQuantity",
-  "tags",
-]);
-
-/**
- * Validates a raw Sieve filter string against an allowlist of safe fields.
- * Drops any clause whose field name is not in the allowlist.
- */
-function validateSieveFilters(
-  raw: string,
-  allowedFields: ReadonlySet<string>,
-): string {
-  return raw
-    .split(",")
-    .map((c) => c.trim())
-    .filter((c) => {
-      const m = c.match(/^([^<>=!@]+)\s*(?:==|!=|<=|>=|<|>|@=\*?)/);
-      return m ? allowedFields.has(m[1].trim()) : false;
-    })
-    .join(",");
-}
-
-function buildFilters(url: URL): string {
-  const parts: string[] = [];
-  const status = param(url, "status");
-  if (status) parts.push(`status==${status}`);
-  const category = param(url, "category");
-  if (category) parts.push(`category==${category}`);
-  const brand = param(url, "brand");
-  if (brand) parts.push(`brand==${brand}`);
-  const condition = param(url, "condition");
-  if (condition) parts.push(`condition==${condition}`);
-  const storeId = param(url, "storeId");
-  if (storeId) parts.push(`storeId==${storeId}`);
-  const q = param(url, "q");
-  if (q) parts.push(`title@=*${q}`);
-  const minPrice = param(url, "minPrice");
-  if (minPrice !== null && !Number.isNaN(Number(minPrice)))
-    parts.push(`price>=${minPrice}`);
-  const maxPrice = param(url, "maxPrice");
-  if (maxPrice !== null && !Number.isNaN(Number(maxPrice)))
-    parts.push(`price<=${maxPrice}`);
-  const inStock = param(url, "inStock");
-  if (inStock === "true") parts.push("stockQuantity>0");
-  // SB1-G — canonical discriminator. Public URL accepts only ?listingType=X.
-  const listingTypeParam = param(url, "listingType");
-  if (listingTypeParam) {
-    parts.push(`listingType==${listingTypeParam}`);
-  }
-  const featured = param(url, "featured");
-  if (featured === "true") parts.push("featured==true");
-  // Merge validated Sieve filters — only safe public fields allowed
-  const raw = param(url, "filters");
-  if (raw) {
-    const safe = validateSieveFilters(raw, SAFE_PRODUCT_FILTER_FIELDS);
-    if (safe) parts.push(safe);
-  }
-  return parts.join(",");
-}
-
 // --- GET /api/products --------------------------------------------------------
 
+/**
+ * Delegates to `listPublicProducts` — the single implementation shared with
+ * every SSR listing view and with the reference consumer's own route.
+ *
+ * It used to be an independent copy: its own `buildFilters`, its own
+ * `validateSieveFilters`, and its own filter allowlist that omitted
+ * `auctionEndDate` / `preOrderDeliveryDate` / `prizeRevealStatus` — so on this
+ * path an ended auction could not be filtered out even by a caller that asked
+ * for it, and an `inStock=true` became a raw `stockQuantity>0` pushed straight
+ * into Firestore, the FAILED_PRECONDITION shape Root Cause #59 documents.
+ * Two implementations of one query is the drift itself; there is now one.
+ */
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const url = new URL(request.url);
-    const page = numParam(url, "page", 1);
-    const pageSize = numParam(url, "pageSize", 20);
-    const sort = param(url, "sorts") ?? param(url, "sort") ?? "-createdAt";
-    const filters = buildFilters(url);
+    const listingTypeParam = param(url, "listingType");
+    const requestedTypes = (listingTypeParam ?? "").split("|").filter(Boolean);
 
-    const { db } = getProviders();
-    if (!db) {
-      return NextResponse.json(
-        { success: false, error: "Database provider not registered" },
-        { status: 503 },
-      );
+    const result = await listPublicProducts(
+      parsePublicProductParams(url.searchParams, {
+        listingTypes: requestedTypes.length > 0 ? requestedTypes : undefined,
+      }),
+    );
+
+    if (!result) {
+      // Already logged loudly by listPublicProducts. Surfaced as an explicit
+      // warning rather than a bare empty page, so a broken query stays
+      // distinguishable from an empty catalogue.
+      return NextResponse.json({
+        success: true,
+        data: {
+          items: [],
+          total: 0,
+          page: 1,
+          pageSize: 0,
+          totalPages: 0,
+          hasMore: false,
+          warning: "Product search is temporarily unavailable.",
+        } satisfies ProductListResponse,
+      });
     }
 
-    const repo = db.getRepository<ProductRecord>("products");
-    const result = await repo.findAll({
-      filters,
-      sort,
-      page,
-      perPage: pageSize,
-    });
-
-    const totalPages = Math.max(1, Math.ceil(result.total / pageSize));
     const body: ProductListResponse = {
       items: sanitizeProductsForPublic(
-        result.data as unknown as Array<Record<string, JsonValue>>,
+        result.items as Array<Record<string, JsonValue>>,
       ) as unknown as ProductItem[],
       total: result.total,
       page: result.page,
-      pageSize,
-      totalPages,
-      hasMore: result.page < totalPages,
+      pageSize: result.pageSize,
+      totalPages: result.totalPages,
+      hasMore: result.hasMore,
+      truncated: result.truncated,
     };
 
     const response = NextResponse.json({ success: true, data: body });

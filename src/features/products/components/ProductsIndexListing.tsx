@@ -29,7 +29,9 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useBottomActions } from "../../layout";
 import { GENERIC_PRODUCT_LISTING_TYPES, PRODUCT_TYPE_FILTER_TABS } from "../constants/listing-tabs";
 import { parseSelectedListingTypes } from "../utils/listing-type";
-import { commonSortOptionsFor, hideDefaultsFor } from "../../../_internal/shared/listing-types/_registry";
+import { commonSortOptionsFor } from "../../../_internal/shared/listing-types/_registry";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { AvailabilityTabs } from "./AvailabilityTabs";
 import type { ListingType } from "../types";
 import { TextLink } from "../../../ui";
 
@@ -72,7 +74,6 @@ export function ProductsIndexListing({
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const showSold = table.get(TABLE_KEYS.SHOW_SOLD) === "true";
   const [view, setView] = useState<ViewMode>(
     (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
@@ -102,13 +103,12 @@ export function ProductsIndexListing({
     ? sortValue
     : DEFAULT_SORT;
 
-  // Which "Show X" toggles are meaningful for the current selection. A mixed
-  // set can need both (products sell out, auctions end).
-  const hideDefaults = hideDefaultsFor(effectiveTypes);
-  const showsSoldToggle = hideDefaults.includes("sold");
-  const showsEndedToggle =
-    hideDefaults.includes("ended") || hideDefaults.includes("closed");
-  const showEnded = table.get(TABLE_KEYS.SHOW_ENDED) === "true";
+  // The availability scope. Absent means "available" — the same default
+  // `defaultAvailabilityForListingTypes` resolves server-side, which is what
+  // keeps the SSR paint and the first refetch in agreement (Root Cause #30).
+  const availability =
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+    AVAILABILITY_VALUES.AVAILABLE;
 
   // "Full <type> filters →" — a single selected type with a dedicated browse
   // page gets a link to it, since that page carries facets this generic one
@@ -138,16 +138,14 @@ export function ProductsIndexListing({
     onResetAll({
       [TABLE_KEYS.QUERY]: "",
       [TABLE_KEYS.SORT]: "",
-      [TABLE_KEYS.SHOW_SOLD]: "",
-      [TABLE_KEYS.SHOW_ENDED]: "",
+      [TABLE_KEYS.AVAILABILITY]: "",
       [TABLE_KEYS.LISTING_TYPE]: "",
     });
     setSearchInput("");
   }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
-    table.get(TABLE_KEYS.SHOW_SOLD) === "true" ||
-    table.get(TABLE_KEYS.SHOW_ENDED) === "true" ||
+    availability !== AVAILABILITY_VALUES.AVAILABLE ||
     !!typeParam ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     filterActiveCount > 0;
@@ -183,17 +181,12 @@ export function ProductsIndexListing({
     // Pipe-joined OR-group — sievejs parses it as a same-field OR and the
     // Firebase adapter upgrades it to a `.where(…, "in", …)` query.
     listingType: effectiveTypes.join("|"),
-    // Hide sold-out items by default, but only when a sold-out-able type is in
-    // play — an auction has no meaningful stock, so applying it to an
-    // auctions-only view would hide every live auction.
-    inStock: showsSoldToggle && !showSold ? true : undefined,
-    // Same shape for time-boxed types. `dateFrom` only takes effect when
-    // exactly one type is selected (there is no single end-date field shared
-    // across types), which `dateFieldFor` already enforces server-side.
-    dateFrom:
-      showsEndedToggle && !showEnded && selectedTypes.length === 1
-        ? new Date().toISOString()
-        : undefined,
+    // One scope for every type. The per-type meaning of "unavailable" — sold
+    // out, ended, closed, depleted — is resolved server-side from the listing
+    // -type registry, which is why this no longer needs the old
+    // "only when exactly one type is selected" caveat that let ended auctions
+    // leak into the default /products view.
+    availability,
   };
 
   const { products, totalPages, page, isLoading } = useProducts(
@@ -342,15 +335,11 @@ export function ProductsIndexListing({
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
         toggles={[
-          // Each toggle appears only when it means something for the selected
-          // types — "Show ended" against a Products-only view would be noise,
-          // and "Show sold" against an Auctions-only view is meaningless.
-          ...(showsSoldToggle
-            ? [{ label: "Show sold", active: showSold, onChange: (next: boolean) => table.set(TABLE_KEYS.SHOW_SOLD, next ? "true" : "") }]
-            : []),
-          ...(showsEndedToggle
-            ? [{ label: "Show ended", active: showEnded, onChange: (next: boolean) => table.set(TABLE_KEYS.SHOW_ENDED, next ? "true" : "") }]
-            : []),
+          // "Show sold" / "Show ended" used to live here. They WIDENED the
+          // list rather than scoping it, so live and dead rows arrived mixed
+          // together and the archive was unbrowsable — replaced by the
+          // <AvailabilityTabs> scope bar below.
+          //
           // Inline quick-filter: the highest-frequency drawer-only facet promoted
           // to the sticky toolbar so it doesn't require open-drawer → check → Apply
           // → close for every toggle. The full facet set (category/price/brand/…)
@@ -358,6 +347,11 @@ export function ProductsIndexListing({
           { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next: boolean) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
         ]}
       />
+
+      {/* ── Availability scope — Available / Sold & Ended / All ─────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={effectiveTypes} />
+      </Div>
 
       {/* ── Product-type chips — multi-select, spans every listing type ──── */}
       <Div padding="y-sm">

@@ -7,9 +7,14 @@ import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Text, StickyToolbar
 import { ClassifiedFilters } from "../../classified/components/ClassifiedFilters";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { TABLE_KEYS } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { ROUTES } from "../../../next";
+import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import type { ListingType } from "../../products/types";
+
+const STORE_CLASSIFIED_TYPES: readonly ListingType[] = ["classified"];
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
@@ -41,6 +46,21 @@ export function StoreClassifiedsListing({ storeId, initialData }: StoreClassifie
 
   const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || filterActiveCount > 0;
 
+  // Absent means "available" — the same default `listStoreProducts`
+
+  // resolves server-side. These six store tabs sent NO availability
+
+  // param at all until 2026-08-24, while their SSR fetch did apply one,
+
+  // so any client refetch silently widened the list (Root Cause #30).
+
+  const availability =
+
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+
+    AVAILABILITY_VALUES.AVAILABLE;
+
+
   const params = {
     q: table.get("q") || undefined,
     minPrice: table.get(TABLE_KEYS.MIN_PRICE) ? Number(table.get(TABLE_KEYS.MIN_PRICE)) : undefined,
@@ -57,6 +77,7 @@ export function StoreClassifiedsListing({ storeId, initialData }: StoreClassifie
       [TABLE_KEYS.NEGOTIABLE]: table.get(TABLE_KEYS.NEGOTIABLE),
       [TABLE_KEYS.ACCEPTS_SHIPPING]: table.get(TABLE_KEYS.ACCEPTS_SHIPPING),
     },
+    availability,
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });
@@ -78,6 +99,11 @@ export function StoreClassifiedsListing({ storeId, initialData }: StoreClassifie
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
+
+      {/* ── Availability scope ───────────────────────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={STORE_CLASSIFIED_TYPES} />
+      </Div>
 
       {totalPages > 1 && (
         <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">

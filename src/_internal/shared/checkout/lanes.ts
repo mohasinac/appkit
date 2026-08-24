@@ -25,6 +25,8 @@
  * @tag sideEffects:none
  */
 
+import { ROUTES } from "../../../next/routing/route-map";
+
 export const CART_LANE = {
   AUCTION: "auction",
   OFFER: "offer",
@@ -79,6 +81,34 @@ export const LANE_CHECKOUT_WINDOW_HOURS: Record<"auction" | "offer", number> = {
   auction: LANE_CHECKOUT_WINDOW_MS.auction / (60 * 60 * 1000),
   offer: LANE_CHECKOUT_WINDOW_MS.offer / (60 * 60 * 1000),
 };
+
+/**
+ * A BUYOUT hold is a third window, deliberately much shorter than the two above,
+ * even though it lands in the same auction lane.
+ *
+ * A settled win (`LANE_CHECKOUT_WINDOW_MS.auction`) is a finished auction: the
+ * clock already ran, nobody else is waiting, and 48 hours costs no one anything.
+ * A buyout is the opposite — the auction is still live and still taking bids
+ * while the hold exists, so a long window would let one buyer sit on a listing
+ * they may never pay for. One hour, and the hold is additionally clamped to the
+ * auction's own end time by `buyNowAuction` (see `AUCTION_BUYOUT_WINDOW_MS`
+ * callers): a buyout that hasn't been paid for by the time the auction ends
+ * fails, because by then the auction has settled to whoever actually won it.
+ */
+export const AUCTION_BUYOUT_WINDOW_MS = 60 * 60 * 1000;
+
+/** 1 hour, in minutes — for buyer-facing copy ("pay within 60 minutes"). */
+export const AUCTION_BUYOUT_WINDOW_MINUTES = AUCTION_BUYOUT_WINDOW_MS / (60 * 1000);
+
+/**
+ * Deep link that drops a buyer straight into the auction lane at checkout.
+ *
+ * Declared once here, with the lane it selects, because it was previously a
+ * const in `auctionSettlement.ts` AND an inline template literal in
+ * `bid-actions.ts` — the same two-copies problem `LANE_CHECKOUT_WINDOW_MS` was
+ * extracted to fix, one layer up.
+ */
+export const AUCTION_CHECKOUT_URL = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.AUCTION}`;
 
 /** The two lanes whose price is fixed outside the listing. */
 export function isLockedLane(lane: CartLane): boolean {

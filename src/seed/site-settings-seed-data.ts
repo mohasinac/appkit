@@ -48,50 +48,19 @@ const adPlacementsSeed = [
   },
 ] as const;
 
-export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
-  adSettings: {
-    consentRequired: boolean;
-    placements: readonly {
-      id: string;
-      label: string;
-      enabled: boolean;
-      reservedHeight: number;
-    }[];
-    providerCredentials: {
-      adsenseClientId: string;
-      thirdPartyScriptUrl: string;
-    };
-    inventory: {
-      id: string;
-      name: string;
-      provider: "manual" | "adsense" | "thirdParty";
-      status: "draft" | "active" | "scheduled" | "paused";
-      placementIds: string[];
-      requiresConsent: boolean;
-      priority: number;
-      startAt?: string;
-      endAt?: string;
-      createdAt: string;
-      updatedAt: string;
-      updatedBy: string;
-      creative: {
-        title?: string;
-        body?: string;
-        imageUrl?: string;
-        ctaLabel?: string;
-        ctaHref?: string;
-        adsenseSlot?: string;
-        thirdPartyUrl?: string;
-      };
-    }[];
-  };
-} = {
+export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   id: "global",
   siteName: "LetItRip",
   motto: "India's Marketplace for Collectibles — Action Figures, Trading Cards, Spinning Tops & More",
+  // `message` is the canonical field — `AnnouncementBar` and the homepage read
+  // it. The main admin editor used to save this copy under `text`, which no
+  // renderer has ever read, so admin-authored announcements saved and then
+  // never appeared (fixed 2026-08-24). `link` is seeded because it only became
+  // a rendered field in that same fix — without a fixture nothing exercises it.
   announcementBar: {
     enabled: true,
     message: "🎉 Up to 25% off select listings + free shipping on orders above ₹999 — See Events for codes",
+    link: "/events",
   },
   watermark: {
     type: "text",
@@ -491,6 +460,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     notifications: true,
     sellerRegistration: true,
     preOrders: true,
+    offers: true,
     adminCheckoutBypass: false,
     listingTypes: {
       standard: true,
@@ -545,6 +515,15 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     tiktokAccessToken: "tiktok_access_token_PLACEHOLDER",
     deviantartClientId: "deviantart_client_id_PLACEHOLDER",
     deviantartClientSecret: "deviantart_client_secret_PLACEHOLDER",
+    // Google Places — billed API. Left EMPTY for the same reason as the Meta
+    // secrets above: `/api/social-feed/google-reviews` and
+    // `GoogleReviewsSection` read these directly and would treat a
+    // `*_PLACEHOLDER` string as a usable key, producing a failed billed call
+    // instead of cleanly skipping. Editable at Admin → Site Settings →
+    // Integrations (inputs added 2026-08-24 — both fields were consumed by the
+    // Google Reviews section but had no UI, so they could never be set).
+    googleMapsApiKey: "",
+    googlePlaceId: "",
   },
   notificationChannels: {
     inApp: { enabled: true, readOnly: true },

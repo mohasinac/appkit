@@ -91,8 +91,138 @@ const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_HOURS.m
   }),
 );
 
+/**
+ * Buy-Now (buyout) fixtures. Four states, because the 2026-08-24 rework made
+ * buyout availability depend on `buyNowPrice > currentBid` rather than on
+ * "nobody has bid yet" — so the interesting cases are now about PRICE, and
+ * three of them were previously unreachable as test data.
+ *
+ * Every date is Date.now()-relative at module import, per CLAUDE.md's tester
+ * fixture standard, so the 4-hour testerSandboxRefresh re-arms them.
+ */
+const buyoutAuctions: Partial<ProductDocument>[] = [
+  {
+    key: "buyout",
+    title: "Test Auction — Buy It Now available",
+    desc: "The clean buyout case. Buy Now is offered, there is plenty of clock, and completing checkout within the hour should close the auction as sold with your bid recorded at the buyout price.",
+    currentBid: 8000,
+    buyNowPrice: 12000,
+    bidCount: 0,
+    bidsHaveStarted: false,
+    endsInHours: 6,
+  },
+  {
+    key: "buyout-contested",
+    title: "Test Auction — Buy It Now with live bidding",
+    desc: "Buy Now is STILL offered even though bidding has started, because the buyout price is above the current bid. Buying it out should mark the other bidders lost. This case did not exist before the bidsHaveStarted gate was dropped.",
+    currentBid: 9500,
+    buyNowPrice: 12000,
+    bidCount: 2,
+    bidsHaveStarted: true,
+    endsInHours: 6,
+  },
+  {
+    key: "buyout-passed",
+    title: "Test Auction — bidding passed Buy It Now",
+    desc: "Negative control. Bidding has overtaken the buyout price, so Buy Now must appear NOWHERE — no button, no advertised price on the detail page, no Buyout chip on the card.",
+    currentBid: 9500,
+    buyNowPrice: 9000,
+    bidCount: 5,
+    bidsHaveStarted: true,
+    endsInHours: 6,
+  },
+  {
+    key: "buyout-expiring",
+    title: "Test Auction — Buy It Now, ends in ~20 minutes",
+    desc: "The buyout hold is clamped to the auction's own end time rather than the full hour. Start a buyout here and DON'T finish checkout: when the clock runs out the buyout must fail and the item must go to the bidding, not to you.",
+    currentBid: 3000,
+    buyNowPrice: 5000,
+    bidCount: 1,
+    bidsHaveStarted: true,
+    endsInMinutes: 20,
+  },
+].map((f) =>
+  withTokens({
+    id: `auction-tester-sandbox-${f.key}`,
+    slug: `auction-tester-sandbox-${f.key}`,
+    title: f.title,
+    description: f.desc,
+    categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
+    categoryNames: COLLECTIBLES_CATEGORY_NAMES,
+    brandSlug: "brand-tester-sandbox",
+    brand: "TestBrand",
+    startingBid: 8000,
+    currentBid: f.currentBid,
+    buyNowPrice: f.buyNowPrice,
+    currency: "INR",
+    price: f.currentBid,
+    stockQuantity: 1,
+    availableQuantity: 1,
+    auctionEndDate: new Date(
+      Date.now() +
+        (f.endsInMinutes ? f.endsInMinutes * 60 * 1000 : (f.endsInHours ?? 6) * 60 * 60 * 1000),
+    ),
+    bidCount: f.bidCount,
+    bidsHaveStarted: f.bidsHaveStarted,
+    isSold: false,
+    mainImage: seedExtMedia(`https://picsum.photos/seed/auction-image-tester-sandbox-${f.key}-20260101/900/900`),
+    images: [seedExtMedia(`https://picsum.photos/seed/auction-image-tester-sandbox-${f.key}-20260101/900/900`)],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "auction" as const,
+    customFields: [],
+    customSections: [],
+    isPromoted: false,
+    isOnSale: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }),
+);
+
+/**
+ * An offerable standard listing, owned by the tester's OWN sandbox store
+ * (`withTokens` supplies `storeId: TESTER_STORE_ID`).
+ *
+ * That ownership is the point: one tester can drive the whole negotiation
+ * solo — make the offer at /products/product-tester-offerable as the buyer,
+ * then accept/counter/decline it at /store/offers as the seller. The
+ * complementary fixture `offer-tester-sandbox-accepted` covers the other half
+ * (an already-accepted offer on somebody ELSE's store, so the checkout lane can
+ * be exercised without the tester having accepted it themselves).
+ */
+const offerableProduct: Partial<ProductDocument> = withTokens({
+  id: "product-tester-offerable",
+  slug: "product-tester-offerable",
+  title: "Test Gadget — Accepts Offers",
+  description: "Disposable test product with buyer offers enabled. Make an offer below the listed price and watch it appear under My Offers. Minimum accepted offer is 70% of the listed price.",
+  categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
+  categoryNames: COLLECTIBLES_CATEGORY_NAMES,
+  brandSlug: "brand-tester-sandbox",
+  brand: "TestBrand",
+  price: 2000,
+  currency: "INR",
+  allowOffers: true,
+  minOfferPercent: 70,
+  stockQuantity: 5,
+  availableQuantity: 5,
+  isSold: false,
+  mainImage: seedExtMedia("https://picsum.photos/seed/product-image-tester-offerable-20260101/900/900"),
+  images: [seedExtMedia("https://picsum.photos/seed/product-image-tester-offerable-20260101/900/900")],
+  status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+  condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+  listingType: "standard" as const,
+  customFields: [],
+  customSections: [],
+  isPromoted: false,
+  isOnSale: false,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+});
+
 export const productsTesterSeedData: Partial<ProductDocument>[] = [
   ...stagedAuctions,
+  ...buyoutAuctions,
+  offerableProduct,
   withTokens({
     id: "product-tester-standard-1",
     slug: "product-tester-standard-1",
@@ -335,13 +465,19 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     id: "classified-tester-sandbox-1",
     slug: "classified-tester-sandbox-1",
     title: "Test Classified — Contact Me!",
-    description: "Disposable test classified listing for the tester QA program. No checkout — contact the seller. Auto-expires in 7 days.",
+    description: "Disposable test classified listing for the tester QA program. No checkout — make an offer or contact the seller. Auto-expires in 7 days.",
     categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
     categoryNames: COLLECTIBLES_CATEGORY_NAMES,
     brandSlug: "brand-tester-sandbox",
     brand: "TestBrand",
     price: 250,
     currency: "INR",
+    // Classifieds are the one non-standard type with `canMakeOffer: true`.
+    // Until 2026-08-24 the sticky "Make an Offer" CTA on this page only
+    // scrolled to the chat box and created no offer at all — this flag is what
+    // makes the real form render there.
+    allowOffers: true,
+    minOfferPercent: 70,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     listingType: "classified" as const,

@@ -14,6 +14,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_ORDER_STATUS_TABS, ADMIN_ORDER_PAYMENT_REVIEW_TABS } from "../constants/filter-tabs";
 import { isManualPaymentMethod, isPaymentReviewQueueMode } from "../../orders/constants/payment-window";
+import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -129,6 +130,9 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     );
   }
 
+  const orderScope = useOrderScope();
+
+
   const config: ListingViewConfig<AdminOrdersResponse, OrderRow> = {
     portal: "admin",
     title: "Orders",
@@ -197,8 +201,15 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       if (isPaymentReviewQueueMode(f.paymentReview ?? "")) return undefined;
       return f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined;
     },
+    // The payment-review queue is its own mode — it already ignores `status`
+    // (see buildFilters above), so it must ignore the lifecycle scope too, or
+    // an admin opening the queue from the default Active tab would see it
+    // silently narrowed.
     buildExtraParams: (f) =>
-      isPaymentReviewQueueMode(f.paymentReview ?? "") ? { paymentReview: f.paymentReview } : undefined,
+      isPaymentReviewQueueMode(f.paymentReview ?? "")
+        ? { paymentReview: f.paymentReview }
+        : orderScope.extraParams,
+    renderAboveContent: orderScope.renderAboveContent,
     // Mirrors the row action's "View full details" entry so the row itself
     // is clickable, not just the overflow menu.
     onRowClick: (row) => {

@@ -17,8 +17,8 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const catalogueSeedData: Partial<CatalogueItemDocument>[] = [
   {
-    id: "mycatalog-user-ravi-kumar-vintage-hotwheels-20260801-a1b2c3",
-    ownerId: "user-ravi-kumar",
+    id: "mycatalog-user-rohit-collector-vintage-hotwheels-20260801-a1b2c3",
+    ownerId: "user-rohit-collector",
     ownerRole: "user",
     title: "Vintage Hot Wheels Redline (1969)",
     description: "Original paint, minor wheel wear. Family collection.",
@@ -34,8 +34,8 @@ export const catalogueSeedData: Partial<CatalogueItemDocument>[] = [
     updatedAt: daysAgo(5),
   },
   {
-    id: "mycatalog-user-ravi-kumar-charizard-holo-20260805-b2c3d4",
-    ownerId: "user-ravi-kumar",
+    id: "mycatalog-user-rohit-collector-charizard-holo-20260805-b2c3d4",
+    ownerId: "user-rohit-collector",
     ownerRole: "user",
     title: "Charizard Holo 1st Edition (played)",
     images: [],
@@ -50,8 +50,8 @@ export const catalogueSeedData: Partial<CatalogueItemDocument>[] = [
     updatedAt: daysAgo(2),
   },
   {
-    id: "mycatalog-user-priya-shah-gundam-rx78-20260710-c3d4e5",
-    ownerId: "user-priya-shah",
+    id: "mycatalog-user-priya-cards-gundam-rx78-20260710-c3d4e5",
+    ownerId: "user-priya-cards",
     ownerRole: "user",
     title: "Gundam RX-78-2 Model Kit (built)",
     images: [],
@@ -67,8 +67,8 @@ export const catalogueSeedData: Partial<CatalogueItemDocument>[] = [
     updatedAt: daysAgo(20),
   },
   {
-    id: "mycatalog-user-priya-shah-broken-beyblade-20260715-d4e5f6",
-    ownerId: "user-priya-shah",
+    id: "mycatalog-user-priya-cards-broken-beyblade-20260715-d4e5f6",
+    ownerId: "user-priya-cards",
     ownerRole: "user",
     title: "Beyblade Burst (missing launcher)",
     images: [],
@@ -84,8 +84,8 @@ export const catalogueSeedData: Partial<CatalogueItemDocument>[] = [
     updatedAt: daysAgo(14),
   },
   {
-    id: "mycatalog-store-mistys-water-cards-pokemon-binder-20260601-e5f6a7",
-    ownerId: "user-store-owner-misty",
+    id: "mycatalog-user-tyson-blader-pokemon-binder-20260601-e5f6a7",
+    ownerId: "user-tyson-blader",
     ownerRole: "seller",
     title: "Pokémon Binder — 180 cards, mixed sets",
     images: [],
@@ -99,8 +99,8 @@ export const catalogueSeedData: Partial<CatalogueItemDocument>[] = [
     updatedAt: daysAgo(45),
   },
   {
-    id: "mycatalog-user-arjun-mehta-funko-batman-20260620-f6a7b8",
-    ownerId: "user-arjun-mehta",
+    id: "mycatalog-user-arjun-gunpla-funko-batman-20260620-f6a7b8",
+    ownerId: "user-arjun-gunpla",
     ownerRole: "user",
     title: "Funko Pop Batman (box wear only)",
     images: [],

@@ -33,6 +33,7 @@ const PLATFORM_FLAGS = [
   { key: "reviews",            label: "Reviews",            desc: "Product review system" },
   { key: "wishlists",          label: "Wishlists",          desc: "Per-user saved lists" },
   { key: "coupons",            label: "Coupons",            desc: "Discount code system" },
+  { key: "offers",             label: "Buyer Offers",       desc: "Make-an-offer price negotiation" },
   { key: "notifications",      label: "Notifications",      desc: "In-app notification feed" },
   { key: "chats",              label: "Live Chat",          desc: "Buyer-seller messaging" },
   { key: "sellerRegistration", label: "Seller Reg.",        desc: "New vendor registration" },

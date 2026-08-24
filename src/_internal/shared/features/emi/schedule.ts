@@ -58,13 +58,24 @@ export interface EmiInstallmentPlan {
   amount: number;
 }
 
-export interface EmiScheduleResult {
+export interface EmiScheduleResult extends BuyerEmiQuote {
+  surchargeSellerShare: number;
+  surchargePlatformShare: number;
+}
+
+/**
+ * The buyer-visible half of an EMI schedule — everything the checkout UI
+ * renders, with the platform/seller surcharge split deliberately absent.
+ *
+ * This exists so the browser never needs `surchargeSellerSharePercent`, an
+ * internal revenue-split figure. `computeEmiSchedule` below adds the split
+ * back for the two server-side order-creation callers.
+ */
+export interface BuyerEmiQuote {
   /** Down payment collected at checkout, decimal rupees. */
   tokenAmount: number;
   /** Total surcharge across the whole tenure, decimal rupees. */
   surchargeAmount: number;
-  surchargeSellerShare: number;
-  surchargePlatformShare: number;
   installments: EmiInstallmentPlan[];
   /** Sum of all installment amounts — what's still owed after the token. */
   remainingBalance: number;
@@ -75,19 +86,17 @@ export interface EmiScheduleResult {
  * calendar month AFTER purchase, regardless of which day of the current
  * month the purchase happens on.
  */
-export function computeEmiSchedule(
+export function computeBuyerEmiQuote(
   sellerSubtotal: number,
   tenureMonths: number,
-  settings: Pick<EmiSettings, "tokenPercent" | "billingDay" | "surchargePercentPerMonth" | "surchargeSellerSharePercent">,
+  settings: Pick<EmiSettings, "tokenPercent" | "billingDay" | "surchargePercentPerMonth">,
   purchaseDate: Date = new Date(),
-): EmiScheduleResult {
+): BuyerEmiQuote {
   const tokenAmount = roundRupees(sellerSubtotal * (settings.tokenPercent / 100));
   const principalRemaining = sellerSubtotal - tokenAmount;
   const surchargeAmount = roundRupees(
     principalRemaining * (settings.surchargePercentPerMonth / 100) * tenureMonths,
   );
-  const surchargeSellerShare = roundRupees(surchargeAmount * (settings.surchargeSellerSharePercent / 100));
-  const surchargePlatformShare = roundRupees(surchargeAmount - surchargeSellerShare);
 
   const totalToInstall = roundRupees(principalRemaining + surchargeAmount);
   const baseInstallment = roundRupees(Math.floor((totalToInstall / tenureMonths) * 100) / 100);
@@ -107,9 +116,34 @@ export function computeEmiSchedule(
   return {
     tokenAmount,
     surchargeAmount,
-    surchargeSellerShare,
-    surchargePlatformShare,
     installments,
     remainingBalance: totalToInstall,
+  };
+}
+
+/**
+ * Server-side schedule — the buyer quote plus the platform/seller surcharge
+ * split. Order creation needs the split; the checkout UI does not, and must
+ * use `computeBuyerEmiQuote` so `surchargeSellerSharePercent` never has to be
+ * shipped to the browser.
+ *
+ * `surchargeSellerSharePercent` stays REQUIRED here on purpose: defaulting it
+ * to 0 would let a server caller that forgot to pass it silently record a zero
+ * seller share on a real order.
+ */
+export function computeEmiSchedule(
+  sellerSubtotal: number,
+  tenureMonths: number,
+  settings: Pick<EmiSettings, "tokenPercent" | "billingDay" | "surchargePercentPerMonth" | "surchargeSellerSharePercent">,
+  purchaseDate: Date = new Date(),
+): EmiScheduleResult {
+  const quote = computeBuyerEmiQuote(sellerSubtotal, tenureMonths, settings, purchaseDate);
+  const surchargeSellerShare = roundRupees(
+    quote.surchargeAmount * (settings.surchargeSellerSharePercent / 100),
+  );
+  return {
+    ...quote,
+    surchargeSellerShare,
+    surchargePlatformShare: roundRupees(quote.surchargeAmount - surchargeSellerShare),
   };
 }

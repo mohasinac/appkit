@@ -62,7 +62,9 @@ export {
 export {
   listPublicProducts,
   parsePublicProductParams,
+  defaultAvailabilityForListingTypes,
   PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+  ANY_STATUS,
   type PublicProductListInput,
   type PublicProductListResult,
   type PublicProductListOptions,
@@ -183,12 +185,9 @@ export {
   HISTORY_GUEST_STORAGE_KEY,
 } from "./_internal/server/features/history/index";
 
-// S5: homepage data layer
-export {
-  getHomepageInitial,
-  getHomepageSections,
-  getHeroCarouselSlides,
-} from "./_internal/server/features/homepage/index";
+// S5: homepage data layer — getHomepageInitial / getHomepageSections /
+// getHeroCarouselSlides were deleted 2026-08-24 (zero call sites; see that
+// module's index.ts).
 
 // S5: reviews data layer + actions
 export {

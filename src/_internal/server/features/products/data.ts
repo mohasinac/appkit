@@ -12,6 +12,8 @@ import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { PRODUCTS_SITEMAP_LIMIT } from "../../../shared/features/products/config";
+import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
+import { isPubliclyVisible } from "../../../shared/listing-types/availability";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import type { ListingType } from "../../../../features/products/types";
 import type { ProductItem } from "../../../../features/products/types";
@@ -196,44 +198,26 @@ export interface RelatedItemsResult {
 /** Firestore doc → card-grid shape. Shared by every related/similar-items carousel. */
 
 /**
- * Excludes the current product plus any listing-type-specific "invalid to
- * surface as related" state: sold/archived/out-of-stock/draft, ended
- * auctions, closed prize-draws, sold-out pre-orders, depleted digital-code
- * pools.
+ * Excludes the current product, anything not publicly visible, and anything
+ * no longer available — ended auctions, closed prize-draws, filled pre-orders,
+ * depleted code pools, sold-out stock.
+ *
+ * This used to be a private `isValidRelatedItem` here, and it was the only
+ * per-type availability predicate in the codebase — which meant it was also
+ * the only place three bugs could hide: it read `codesAvailable` at the top
+ * level when the schema nests it under `digitalCode.codesAvailable` (so that
+ * branch never fired), it excluded `status` values ("sold", "out_of_stock",
+ * "discontinued") that are not members of the real `ProductStatus` union, and
+ * it had no branch at all for classified / live / art / stickers. It now
+ * shares one definition with the listing query and the homepage.
  */
-function isValidRelatedItem(r: FirestoreDocument, currentProductId: string, now: Date): boolean {
-  if (r.id === currentProductId) return false;
-  const s = r.status as string | undefined;
-  if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
-  if (r.isSold === true) return false;
-  if (r.availableQuantity === 0) return false;
-  if (r.listingType === "auction" && r.auctionEndDate) {
-    const end = r.auctionEndDate;
-    const endDate =
-      typeof (end as { toDate?: () => Date }).toDate === "function"
-        ? (end as unknown as { toDate: () => Date }).toDate()
-        : end instanceof Date
-          ? end
-          : new Date(String(end));
-    if (endDate <= now) return false;
-  }
-  if (r.listingType === "prize-draw" && r.prizeRevealStatus === "closed") return false;
-  if (
-    r.listingType === "pre-order" &&
-    typeof r.preOrderMaxQuantity === "number" &&
-    typeof r.preOrderCurrentCount === "number" &&
-    r.preOrderCurrentCount >= r.preOrderMaxQuantity
-  ) {
-    return false;
-  }
-  if (r.listingType === "digital-code" && r.codesAvailable === 0) return false;
-  return true;
-}
-
 function toRelatedItems(docs: unknown[], currentProductId: string): ProductItem[] {
   const now = new Date();
   return (docs as FirestoreDocument[])
-    .filter((r) => isValidRelatedItem(r, currentProductId, now))
+    .filter(
+      (r) =>
+        r.id !== currentProductId && isPubliclyVisible(r) && isListingRowAvailable(r, now),
+    )
     .slice(0, RELATED_DISPLAY_LIMIT)
     .map(toProductItem);
 }

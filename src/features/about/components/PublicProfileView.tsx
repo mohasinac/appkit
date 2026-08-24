@@ -65,6 +65,11 @@ function toProductItem(p: ProductDocument): ProductItem {
     currentBid: p.currentBid,
     availableQuantity: p.availableQuantity,
     tags: p.tags,
+    // Feeds ProductCard's "Taking Offers" pill. This is a second, local copy of
+    // the shared `toProductItem` in _internal/shared/features/products/ and it
+    // had the same omission — when a field is added to one, check the other.
+    allowOffers: p.allowOffers,
+    minOfferPercent: p.minOfferPercent,
     createdAt: p.createdAt instanceof Date ? p.createdAt.toISOString() : undefined,
   };
 }

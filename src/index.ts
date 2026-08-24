@@ -143,7 +143,7 @@ export { FormGroup } from "./ui/index";
 // FormShell wizard + context-aware fields (SB-UNI-Y-1)
 // Note: FormShell and useFormShell are the old overlay shell from features/shell — exported below.
 // The step-wizard variant (FormShellStep/FormShellContextValue) is unique to ui/forms.
-export type { FormShellStep, FormShellContextValue } from "./ui/index";
+export type { FormShellStep, FormShellNav, FormShellContextValue } from "./ui/index";
 export type { FieldInputProps } from "./ui/index";
 export { FieldInput } from "./ui/index";
 export type { FieldSelectProps } from "./ui/index";
@@ -3066,8 +3066,6 @@ export { UserAddressesView } from "./features/account/index";
 // UserNotificationsView - Component for user notifications view.
 export { UserNotificationsView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// UserOffersView - Component for user offers view.
-export { UserOffersView } from "./features/account/index";
 // [CLIENT]-Runs in browser only â€" interactive buyer offers panel with accept/withdraw actions.
 // UserOffersPanel - Interactive buyer offers panel.
 export { UserOffersPanel } from "./features/account/index";
@@ -3318,11 +3316,7 @@ export type { UserNotificationsViewProps } from "./features/account/index";
 // UserOffer - Type contract for user offer.
 export type { UserOffer } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UserOffersViewLabels - Type contract for user offers view labels.
-export type { UserOffersViewLabels } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UserOffersViewProps - Type contract for user offers view props.
-export type { UserOffersViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserOrder - Type contract for user order.
 export type { UserOrder } from "./features/account/index";
@@ -3390,6 +3384,8 @@ export { AdminAdEditorView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminBidsView - Component for admin bids view.
 export { AdminBidsView } from "./features/admin/index";
+// AdminOffersView - Component for admin offers view.
+export { AdminOffersView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminBlogView - Component for admin blog view.
 export { AdminBlogView } from "./features/admin/index";
@@ -3744,6 +3740,8 @@ export type { AdminAdEditorViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AdminBidsViewProps - Type contract for admin bids view props.
 export type { AdminBidsViewProps } from "./features/admin/index";
+// AdminOffersViewProps - Type contract for admin offers view props.
+export type { AdminOffersViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AdminBlogViewProps - Type contract for admin blog view props.
 export type { AdminBlogViewProps } from "./features/admin/index";
@@ -6865,6 +6863,15 @@ export {
   PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
 } from "./features/orders/constants/payment-window";
 export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
+export {
+  ORDER_SCOPE_VALUES,
+  ORDER_SCOPE_TABS,
+  isOrderScope,
+  statusesForScope,
+  mergeOrderScopeFilter,
+} from "./features/orders/constants/order-scope";
+export type { OrderScope } from "./features/orders/constants/order-scope";
+
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // OrderDocumentItem - Type contract for order document item.
 export type { OrderDocumentItem } from "./features/orders/index";
@@ -7209,8 +7216,6 @@ export { DEFAULT_PRODUCT_DATA } from "./features/products/index";
 // InteractiveProductCard - Component for interactive product card.
 export { InteractiveProductCard } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// MakeOfferForm - Component for make offer form.
-export { MakeOfferForm } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ACTION_ID / ACTION_META / DETAIL_ACTIONS / MOBILE_PRIMARY_ACTIONS / LISTING_BULK_ACTIONS - Single source of truth for all product-type action constants.
 // Product / listing actions
@@ -7433,7 +7438,18 @@ export type {
   GstBreakdown,
 } from "./_internal/shared/fees/calculator";
 // EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).
-export { checkEmiEligibility, computeEmiSchedule } from "./_internal/shared/features/emi/schedule";
+export { checkEmiEligibility, computeEmiSchedule, computeBuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
+export type { BuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
+// Buyer-facing projections of siteSettings.commissions / .emi — the single
+// definition of "safe to send to a browser" for fee data. See fees.ts header.
+export {
+  toBuyerFacingFees,
+  toBuyerEmiSettings,
+} from "./_internal/shared/features/site-settings/fees";
+export type {
+  BuyerFacingFees,
+  BuyerEmiSettings,
+} from "./_internal/shared/features/site-settings/fees";
 export type {
   EmiSettings,
   EmiIneligibleReason,
@@ -7502,8 +7518,6 @@ export type { InteractiveProductCardProps } from "./features/products/index";
 // ListingType - Type contract for listing type.
 export type { ListingType } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MakeOfferFormProps - Type contract for make offer form props.
-export type { MakeOfferFormProps } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PlaceBidFormProps - Type contract for place bid form props.
 export type { PlaceBidFormProps } from "./features/products/index";
@@ -8198,9 +8212,6 @@ export { SellerAnalyticsAlertsView } from "./features/seller/index";
 export type { SellerAnalyticsAlertsViewProps } from "./features/seller/index";
 export { SellerAnalyticsAlertsView as StoreAnalyticsAlertsView } from "./features/seller/index";
 // [CLIENT]-Runs in browser only â€" uses useState/useEffect/fetch.
-// SellerOffersPanel - Interactive panel with accept/decline/counter actions for seller offers.
-export { SellerOffersPanel } from "./features/seller/index";
-export type { SellerOffersPanelProps, SellerOfferAction } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerOrdersView - Component for seller orders view.
 export { SellerOrdersView } from "./features/seller/index";
@@ -8580,8 +8591,6 @@ export { sellerCouponsGET } from "./features/seller/server";
 // sellerDeleteProduct - Shared export for seller delete product.
 export { sellerDeleteProduct } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sellerOffersGET - Shared export for seller offers get.
-export { sellerOffersGET } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerProductsGET - Shared export for seller products get.
 export { sellerProductsGET } from "./features/seller/server";
@@ -9624,6 +9633,28 @@ export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./feat
 // [CLIENT] StepForm â€" multi-step wizard with step indicator, prev/next, localStorage persistence.
 export { StepForm, StepFormActions, StepIndicator } from "./features/shell/index";
 export type { StepDef, StepFormProps, StepFormActionsProps } from "./features/shell/index";
+// [CLIENT] SectionForm — collapsible-section form engine replacing StepForm.
+// Required section first and always open, one shared submit at the bottom, no
+// per-section gate blocking a later section.
+export {
+  SectionForm,
+  useSectionFormNav,
+  orderSections,
+  buildFieldToSectionIndex,
+  sectionAnchorId,
+} from "./features/shell/index";
+export type { SectionDef, SectionFormProps, UseSectionFormNavResult } from "./features/shell/index";
+// [CLIENT] EntityFormDefinition — one definition per entity, rendered as both a
+// self-submitting quick drawer and a full page, so the two cannot drift.
+export {
+  deriveQuickFields,
+  deriveQuickFieldNames,
+  allDefinitionFields,
+  applyDerive,
+  assertNoDeriveCollision,
+  humaniseFieldName,
+} from "./features/shell/index";
+export type { EntityFormDefinition } from "./features/shell/index";
 
 // OG image renderers (server-side JSX, used with next/og ImageResponse)
 export { renderProductOgImage } from "./_internal/server/features/products/og";

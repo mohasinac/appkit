@@ -125,8 +125,18 @@ export function NavbarLayout({
       aria-label={ariaLabel}
       className="hidden lg:block bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b"
     >
-      <Row className="container mx-auto sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)] max-w-[1920px] h-10" padding="x-md" align="center">
-        {/* Scrollable items area */}
+      {/* `reverse="hand"` is DEFENSIVE ONLY today: `rightSlot` is the sole
+          asymmetric child, and nothing in this app populates it —
+          NavbarWithSettings renders <MainNavbar navItems hiddenNavItems /> and
+          never forwards hasDashboardNav, and that is the only MainNavbar call
+          site. With one in-flow child, row-reverse is a visual no-op. Kept so a
+          future consumer that does pass rightSlot mirrors correctly.
+          The nav items themselves are `justify-center`, i.e. hand-neutral. */}
+      <Row className="container mx-auto sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)] max-w-[1920px] h-10" padding="x-md" align="center" reverse="hand">
+        {/* Scrollable items area. The chevrons below are hand-NEUTRAL on
+            purpose: their left/right is scroll direction (bound to
+            scrollBy({ left: ±240 })), not reachability. Same precedent as the
+            product gallery's prev/next arrows. */}
         <Div className={`relative flex-1 ${__O.hidden}`}>
           {canScrollLeft && (
             <NavbarChevron direction="left" onClick={() => scroll("left")} />
@@ -155,7 +165,10 @@ export function NavbarLayout({
           )}
         </Div>
 
-        {rightSlot && <Div className="shrink-0 ml-2">{rightSlot}</Div>}
+        {/* No directional `ml-2` — it would sit on the wrong side once the row
+            mirrors. Spacing comes from the parent Row's default gap="md" (1rem),
+            so this is a 0.5rem tightening of a slot nothing currently renders. */}
+        {rightSlot && <Div className="shrink-0">{rightSlot}</Div>}
       </Row>
     </Nav>
   );

@@ -15,6 +15,13 @@ import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsForBrand } from "../../../_internal/server/features/grouped/data";
+import {
+  listingTabCounts,
+  type ListingTabCounts,
+} from "../../../_internal/server/features/products/listing-tab-counts";
+import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
+import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
+import { siteSettingsRepository } from "../../../repositories";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
 
@@ -34,7 +41,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
   const brandName = brand?.name;
 
-  const [productsResult, auctionsResult, preOrdersResult, prizeDrawsResult, allBundles, activeBrands, groupedListings] = await Promise.all([
+  const [productsResult, tabCounts, allBundles, activeBrands, groupedListings, settings] = await Promise.all([
     brandName
       ? productRepository
           .list({
@@ -45,36 +52,12 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           })
           .catch(() => null)
       : Promise.resolve(null),
+    // One count per tab, derived from CATEGORY_PAGE_TABS. Four of the nine tabs
+    // (classifieds, digital codes, live, art) had no count at all and could
+    // therefore never hide, however empty the brand was.
     brandName
-      ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "auction")),
-            sorts: sortBy("auctionEndDate", "ASC"),
-            page: 1,
-            pageSize: 1,
-          })
-          .catch(() => null)
-      : Promise.resolve(null),
-    brandName
-      ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 1,
-          })
-          .catch(() => null)
-      : Promise.resolve(null),
-    brandName
-      ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 1,
-          })
-          .catch(() => null)
-      : Promise.resolve(null),
+      ? listingTabCounts(CATEGORY_PAGE_TABS, { brandName })
+      : Promise.resolve({} as ListingTabCounts),
     // SB-UNI-D — bundles are categoryType:"bundle" rows on the categories
     // collection, tagged to a brand via the real brandSlug field (added
     // 2026-08-21 — previously a fragile seo.keywords string-match heuristic).
@@ -88,6 +71,9 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     // Related brands — every other active brand row, excluding this one.
     categoriesRepository.findActiveBrands().catch(() => []) as Promise<CategoryItem[]>,
     brand?.slug ? getGroupsForBrand(brand.slug).catch(() => []) : Promise.resolve([]),
+    // Feature flags — accepted by BrandDetailTabs all along but never passed,
+    // so a disabled listing type still showed its tab here.
+    siteSettingsRepository.findById("global").catch(() => null),
   ]);
 
   const brandBundles = brand?.slug
@@ -103,20 +89,22 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   // accepts both CSS vars and raw hex written by an admin.
   const brandColor = brand?.display?.color || "var(--appkit-color-primary)";
 
-  const counts = {
-    products: productsResult?.total ?? brand?.metrics?.productCount ?? 0,
-    auctions: auctionsResult?.total ?? brand?.metrics?.auctionCount ?? 0,
-    preOrders: preOrdersResult?.total ?? 0,
-    prizeDraws: prizeDrawsResult?.total ?? 0,
+  // Keyed by tabSlug. `bundles` is overridden with the brand-scoped figure —
+  // `listingTabCounts` cannot narrow bundles by brand (a bundle's brand lives on
+  // `brandSlug`, which this page already filters on locally).
+  const counts: ListingTabCounts = {
+    ...tabCounts,
+    products: tabCounts.products ?? brand?.metrics?.productCount ?? 0,
+    auctions: tabCounts.auctions ?? brand?.metrics?.auctionCount ?? 0,
     bundles: brandBundles.length,
   };
 
-  const totalItems =
-    counts.products +
-    counts.auctions +
-    counts.preOrders +
-    counts.prizeDraws +
-    counts.bundles;
+  // Header total — `?? 0` is right here (a pill just doesn't render), unlike the
+  // tab bar where an unknown count must keep its tab visible.
+  const totalItems = Object.values(counts).reduce<number>(
+    (sum, n) => sum + (n ?? 0),
+    0,
+  );
 
   return (
     <Main>
@@ -177,19 +165,19 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
           {/* Item count chips */}
           <Row gap="sm" wrap className="mt-3">
-            {counts.products > 0 && (
+            {(counts.products ?? 0) > 0 && (
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="pill-sm-tall">
-                {counts.products.toLocaleString()} {counts.products === 1 ? "product" : "products"}
+                {counts.products!.toLocaleString()} {counts.products === 1 ? "product" : "products"}
               </Span>
             )}
-            {counts.auctions > 0 && (
+            {(counts.auctions ?? 0) > 0 && (
               <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {counts.auctions.toLocaleString()} {counts.auctions === 1 ? "auction" : "auctions"}
+                {counts.auctions!.toLocaleString()} {counts.auctions === 1 ? "auction" : "auctions"}
               </Span>
             )}
-            {counts.preOrders > 0 && (
+            {(counts["pre-orders"] ?? 0) > 0 && (
               <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "info"} surface={hasCover ? undefined : "info-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {counts.preOrders.toLocaleString()} {counts.preOrders === 1 ? "pre-order" : "pre-orders"}
+                {counts["pre-orders"]!.toLocaleString()} {counts["pre-orders"] === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}
             {totalItems === 0 && (
@@ -249,6 +237,8 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               initialProductsData={productsResult ?? undefined}
               initialBundles={brandBundles as any}
               counts={counts}
+              enabledListingTypes={enabledListingTypes(settings)}
+              enabledCategoryTypes={enabledCategoryTypes(settings)}
             />
           ) : (
             <Text paddingY="3xl" color="muted" size="sm" align="start">

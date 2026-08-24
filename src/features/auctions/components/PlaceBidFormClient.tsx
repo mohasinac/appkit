@@ -10,8 +10,10 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { placeBidSchema } from "../schemas/bid-input";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
+import { AUCTION_BUYOUT_WINDOW_MINUTES } from "../../../_internal/shared/checkout/lanes";
 import {
   BID_PRESET_MULTIPLIERS,
+  isBuyNowAvailable,
   resolveMinBid,
   resolveMinBidIncrement,
   type BidIncrementTier,
@@ -47,7 +49,6 @@ export interface PlaceBidFormClientProps {
   isEnded: boolean;
   auctionEndDate: Date | null;
   buyNowPrice: number | null;
-  bidsHaveStarted?: boolean;
   bidCount: number;
   tags?: string[];
   onPlaceBid: (input: PlaceBidInput) => Promise<unknown>;
@@ -64,7 +65,6 @@ export function PlaceBidFormClient({
   isEnded,
   auctionEndDate,
   buyNowPrice,
-  bidsHaveStarted = false,
   bidCount: ssrBidCount,
   tags = [],
   onPlaceBid,
@@ -146,7 +146,11 @@ export function PlaceBidFormClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentBid, minBidIncrement, stepMul]);
 
-  const buyNowAvailable = buyNowPrice !== null && !isEnded && !bidsHaveStarted && !!onBuyNow;
+  // `currentBid` here is the LIVE SSE price, so the button hides itself the
+  // moment another bidder passes the buyout price — without a page reload, and
+  // without this component owning a second copy of the rule.
+  const buyNowAvailable =
+    isBuyNowAvailable({ buyNowPrice, currentBid, isEnded }) && !!onBuyNow;
   const schema = placeBidSchema(minBid, formatCurrency(minBid, currency));
 
   async function submitBid(
@@ -376,17 +380,26 @@ export function PlaceBidFormClient({
             </Button>
 
             {buyNowAvailable && (
-              <Button
-                variant="secondary"
-                size="md"
-                className="w-full"
-                type="button"
-                disabled={isBuyNowPending || isPending}
-                isLoading={isBuyNowPending}
-                onClick={handleBuyNow}
-              >
-                {`Buy Now — ${formatCurrency(buyNowPrice!, currency)}`}
-              </Button>
+              <>
+                <Button
+                  variant="secondary"
+                  size="md"
+                  className="w-full"
+                  type="button"
+                  disabled={isBuyNowPending || isPending}
+                  isLoading={isBuyNowPending}
+                  onClick={handleBuyNow}
+                >
+                  {`Buy Now — ${formatCurrency(buyNowPrice!, currency)}`}
+                </Button>
+                {/* The auction keeps running while the claim is held, so the
+                    deadline is the whole point — saying "Buy Now" alone reads
+                    as an instant purchase, which it deliberately is not. */}
+                <Text align="center" size="xs" color="muted">
+                  Skips the bidding. The auction stays live until you pay —
+                  complete checkout within {AUCTION_BUYOUT_WINDOW_MINUTES} minutes.
+                </Text>
+              </>
             )}
           </Stack>
         )}

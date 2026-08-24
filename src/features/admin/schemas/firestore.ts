@@ -438,15 +438,87 @@ export interface SiteSettingsTheme {
   defaultDarkThemeId?: string;
 }
 
+/** Third-party analytics/tag IDs. Public by nature — they ship in page markup. */
+export interface SiteSettingsIntegrations {
+  googleAnalyticsId?: string;
+  facebookPixelId?: string;
+  gtmContainerId?: string;
+}
+
+/** Admin-tunable platform caps. Enforced server-side; not buyer-facing. */
+export interface SiteSettingsPlatformLimits {
+  maxProductsPerStore?: number;
+  maxImagesPerProduct?: number;
+  maxVideoSizeMb?: number;
+  maxCustomFieldsPerProduct?: number;
+  maxCustomSectionsPerProduct?: number;
+  orderCancellationWindowHours?: number;
+}
+
+/** Embedded in siteSettings.adSettings — a type alias, not a collection root. */
+export type SiteSettingsAdPlacement = {
+  id: string;
+  label: string;
+  enabled: boolean;
+  reservedHeight: number;
+};
+
+/** Embedded in siteSettings.adSettings — a type alias, not a collection root. */
+export type SiteSettingsAdInventoryItem = {
+  id: string;
+  name: string;
+  provider: "manual" | "adsense" | "thirdParty";
+  status: "draft" | "active" | "scheduled" | "paused";
+  placementIds: string[];
+  requiresConsent: boolean;
+  priority: number;
+  startAt?: string;
+  endAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
+  creative: {
+    title?: string;
+    body?: string;
+    imageUrl?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    adsenseSlot?: string;
+    thirdPartyUrl?: string;
+  };
+};
+
+/**
+ * Ad inventory + provider config.
+ *
+ * `providerCredentials` is masked by `GET /api/admin/ads` and must never be
+ * returned by a public endpoint; `inventory` holds draft/paused/scheduled
+ * entries that `GET /api/ads` deliberately filters out. Both are therefore in
+ * `PRIVATE_SITE_SETTINGS_FIELDS` — the whole group is server-side only.
+ */
+export interface SiteSettingsAdSettings {
+  consentRequired: boolean;
+  placements: readonly SiteSettingsAdPlacement[];
+  providerCredentials: {
+    adsenseClientId: string;
+    thirdPartyScriptUrl: string;
+  };
+  inventory: SiteSettingsAdInventoryItem[];
+}
+
 export interface SiteSettingsDocument extends BaseDocument {
   id: "global";
   siteName: string;
+  /** Short strapline shown beside the site name in admin chrome. */
+  tagline?: string;
   motto: string;
   logo: {
     url: string;
     alt: string;
     format: "svg" | "png";
   };
+  /** Favicon URL. Distinct from `logo.url`, which is the wordmark. */
+  favicon?: string;
   background: {
     light: {
       type: "color" | "gradient" | "image" | "video";
@@ -605,6 +677,19 @@ export interface SiteSettingsDocument extends BaseDocument {
     notifications: boolean;
     sellerRegistration: boolean;
     preOrders: boolean;
+    /**
+     * Buyer price negotiation (Make an Offer / counter-offer).
+     *
+     * The global kill switch. Per-listing opt-in still applies on top of it via
+     * `ProductDocument.allowOffers`, and only certain listing types support
+     * offers at all (`LISTING_TYPE_CAPABILITIES.canMakeOffer`) — a product needs
+     * all three to show the CTA.
+     *
+     * Guards NEW offers only. Switching it off must not strand in-flight ones:
+     * sellers keep responding, buyers keep checking out accepted offers, and
+     * both dashboards stay reachable.
+     */
+    offers: boolean;
     /** When true, admin users see a bypass button in checkout that skips OTP and payment. Server-enforced. */
     adminCheckoutBypass?: boolean;
     // Single-source flag-key constant so consumers don't reference the field
@@ -681,9 +766,21 @@ export interface SiteSettingsDocument extends BaseDocument {
     };
     newsletterEnabled?: boolean;
   };
+  /**
+   * `message` is canonical — it is what `AnnouncementBar` and the homepage
+   * read. `AdminSiteSettingsView` used to write the text under a `text` key
+   * instead, so anything typed in the main Site Settings editor was saved and
+   * never displayed; `link`/`backgroundColor` were collected and had no
+   * renderer at all. Unified on `message` 2026-08-24 (migration
+   * `scripts/migrate-settings-wiring.mjs` copies any stray `text` across).
+   */
   announcementBar?: {
     enabled: boolean;
     message: string;
+    /** Optional destination — renders the message as a link. */
+    link?: string;
+    /** Optional CSS colour override for the bar background. */
+    backgroundColor?: string;
   };
   /**
    * Image watermark configuration applied by the `/api/media/[...slug]` CDN
@@ -717,6 +814,18 @@ export interface SiteSettingsDocument extends BaseDocument {
   };
   /** Encrypted provider credentials � never return raw to the client. */
   credentials?: SiteSettingsCredentials;
+  /**
+   * These three were written by `AdminSiteSettingsView.buildFullPayload()` and
+   * read back by it, but were never declared here. Being absent from the type
+   * meant no type-driven check could see them — and the public site-settings
+   * deny-list, which strips named fields off a spread, shipped all three to
+   * anonymous callers by default (`adSettings.providerCredentials` unmasked,
+   * plus every draft/paused ad). Declared 2026-08-24 so they are visible to
+   * `audit-public-projection-parity`.
+   */
+  integrations?: SiteSettingsIntegrations;
+  platformLimits?: SiteSettingsPlatformLimits;
+  adSettings?: SiteSettingsAdSettings;
   /**
    * Theme color overrides — injected as CSS custom properties by LayoutShellClient.
    * Keys map to --appkit-color-* variables (e.g. primary → --appkit-color-primary).
@@ -853,6 +962,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     notifications: true,
     sellerRegistration: true,
     preOrders: true,
+    offers: true,
     // W1-37 2026-05-23 — Phase 2 listing types enabled by default; all per-type
     // surfaces (seller + admin via W1-29 + public) are now shipped.
     listingTypes: {

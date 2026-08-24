@@ -18,8 +18,8 @@ import { useAuth } from "../../react/contexts/SessionContext";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";
-import { useBottomActionsContext } from "./BottomActionsContext";
 import BottomActions from "./BottomActions";
+import { BottomChrome } from "./BottomChrome";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
 import { BottomNavbar, type BottomNavbarUser } from "./BottomNavbar";
 import { FooterLayout, type FooterLayoutProps } from "./FooterLayout";
@@ -120,6 +120,16 @@ export interface AppLayoutShellProps {
     logout?: string;
   };
   eventBannerSlot?: React.ReactNode;
+  /**
+   * Render the public mobile tab bar. Defaults to `true`.
+   *
+   * Set `false` on routes that mount their own bottom nav — `DashboardLayoutClient`
+   * renders a section-scoped one for /admin, /store and /user. Only ONE bottom nav
+   * may be mounted at a time: both are `fixed bottom-0` at the same z-index, so two
+   * stack on the identical pixels, and both publish `--bottom-nav-height`, which
+   * every offset above them reads.
+   */
+  showBottomNav?: boolean;
   /** When provided, renders a tour-start icon button in the title bar. Null in Patch 1. */
   onTourStart?: () => void;
   /**
@@ -677,6 +687,7 @@ export function AppLayoutShell({
   showThemeToggleInSidebar = false,
   sidebarProfileLabels,
   eventBannerSlot,
+  showBottomNav = true,
   onTourStart,
   contentClassName,
   lightBackground = DEFAULT_LIGHT_BG,
@@ -694,7 +705,6 @@ export function AppLayoutShell({
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
   const { theme, toggleTheme, activeTheme } = useTheme();
   const { closeNav: closeDashboardNav, hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } = useDashboardNav();
-  const { state: bottomActionsState } = useBottomActionsContext();
   const { user: authUser } = useAuth();
 
   const headerRef = useRef<HTMLDivElement>(null);
@@ -727,19 +737,12 @@ export function AppLayoutShell({
     setSidebarOpen(false);
   }, []);
 
-  // Must stay in sync with BottomActions' own `isVisible` — `secondaryLabel` was missing
-  // here, so an auction bar shown by its countdown alone got no bottom clearance.
-  const hasBottomActions =
-    bottomActionsState.actions.length > 0 ||
-    !!(bottomActionsState.bulk && bottomActionsState.bulk.selectedCount > 0) ||
-    !!bottomActionsState.infoLabel ||
-    !!bottomActionsState.secondaryLabel;
-
-  /** The bar overlays desktop content too once a page opts in, so reserve space there. */
-  const hasDesktopBottomActions =
-    hasBottomActions &&
-    (bottomActionsState.desktop === "always" ||
-      bottomActionsState.desktop === "after-scroll");
+  // The shell used to mirror BottomActions' `isVisible` here to pick a margin
+  // for <Main>, and a comment warned it had to be kept in sync by hand (it had
+  // already drifted once — `secondaryLabel` was missing, so an auction bar shown
+  // by its countdown alone got no clearance). That mirror is gone: BottomChrome
+  // measures the real tier and publishes --bottom-chrome-height, and the footer
+  // reserves space from that. Nothing needs to guess any more.
 
   const sidebarContent = (
     <SidebarContent
@@ -854,7 +857,12 @@ export function AppLayoutShell({
 
           <Main
             id="main-content"
-            className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} ${hasDesktopBottomActions ? "lg:mb-24" : "lg:mb-0"}`}
+            // No bottom-chrome clearance here on purpose. FooterLayout is a
+            // SIBLING rendered after <Main>, so a margin here only gaps
+            // main-to-footer — it never clears the bottom of the page, which is
+            // what the fixed nav + tier actually overlap. That reservation now
+            // lives on the footer's own padding-bottom.
+            className="w-full flex-1 flex flex-col"
           >
             <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}
@@ -864,20 +872,24 @@ export function AppLayoutShell({
 
         <BackToTop />
         <FooterLayout {...footer} />
-        <BottomActions />
-        <BottomNavbar
-          user={user}
-          userId={userId}
-          homeHref={homeHref}
-          shopHref={shopHref}
-          cartHref={cartHref}
-          wishlistHref={wishlistHref}
-          profileHref={profileHref}
-          loginHref={loginHref}
-          onSearchToggle={() => setSearchOpen((prev) => !prev)}
-          navItems={navItems}
-          onMoreToggle={hasDashboardNav ? toggleDashboardNav : handleTogglePublicSidebar}
-        />
+        <BottomChrome>
+          <BottomActions />
+        </BottomChrome>
+        {showBottomNav && (
+          <BottomNavbar
+            user={user}
+            userId={userId}
+            homeHref={homeHref}
+            shopHref={shopHref}
+            cartHref={cartHref}
+            wishlistHref={wishlistHref}
+            profileHref={profileHref}
+            loginHref={loginHref}
+            onSearchToggle={() => setSearchOpen((prev) => !prev)}
+            navItems={navItems}
+            onMoreToggle={hasDashboardNav ? toggleDashboardNav : handleTogglePublicSidebar}
+          />
+        )}
         <UnsavedChangesModal />
       </Stack>
     </>

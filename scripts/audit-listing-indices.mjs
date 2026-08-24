@@ -65,6 +65,10 @@ const ENDPOINT_TO_COLLECTION = {
   "ADMIN_ENDPOINTS.USERS":                  { collection: "users",               implicit: [] },
   "ADMIN_ENDPOINTS.REVIEWS":                { collection: "reviews",             implicit: [] },
   "ADMIN_ENDPOINTS.BIDS":                   { collection: "bids",                implicit: [] },
+  // Registered 2026-08-24 — both features shipped without an entry here, so
+  // this audit reported them as UNKNOWN and blocked.
+  "ADMIN_ENDPOINTS.AUDIT_LOG":              { collection: "adminAuditLog",       implicit: [] },
+  "ADMIN_ENDPOINTS.OFFERS":                 { collection: "offers",              implicit: [] },
   "ADMIN_ENDPOINTS.BLOG":                   { collection: "blogPosts",           implicit: [] },
   // Bundles are a categoryType on `categories`, not a literal `bundles`
   // collection (SB-UNI-D — the literal collection is dead, zero indices).
@@ -147,6 +151,7 @@ const REPO_TO_COLLECTION = {
   // `productTemplates` is a dead naming-bug duplicate, zero indices.
   productTemplateRepository:   "product_templates",
   userRepository:              "users",
+  adminAuditLogRepository:     "adminAuditLog",
   addressesRepository:         "addresses",
   conversationsRepository:     "conversations",
   // Previously UNKNOWN_REPO (informational-only, unscanned).

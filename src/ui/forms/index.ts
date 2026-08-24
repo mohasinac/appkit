@@ -1,6 +1,7 @@
 export type {
   FormShellProviderProps,
   FormShellStep,
+  FormShellNav,
   FormShellContextValue,
   UseFormShellStateResult,
 } from "./FormShell";

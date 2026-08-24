@@ -25,6 +25,8 @@ export { AdminOrdersView } from "./AdminOrdersView";
 export type { AdminOrdersViewProps } from "./AdminOrdersView";
 export { AdminBidsView } from "./AdminBidsView";
 export type { AdminBidsViewProps } from "./AdminBidsView";
+export { AdminOffersView } from "./AdminOffersView";
+export type { AdminOffersViewProps } from "./AdminOffersView";
 export { AdminCouponsView } from "./AdminCouponsView";
 export type { AdminCouponsViewProps } from "./AdminCouponsView";
 export { AdminCouponEditorView } from "./AdminCouponEditorView";

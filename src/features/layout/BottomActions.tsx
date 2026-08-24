@@ -40,7 +40,6 @@ import { Div, Row, Span, Text, Button } from "../../ui";
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =
   "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)]";
-const Z_BOTTOM_ACTIONS = "z-[var(--appkit-z-bottom-nav)]";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
 const CLS_COUNT_BADGE = "bg-error-solid text-error-on-solid";
@@ -303,15 +302,13 @@ export default function BottomActions() {
       }
       aria-hidden={!isVisible}
       className={[
-        "fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))] left-0 right-0",
-        // `--bottom-nav-height` resolves to 0px above lg, so the same offset lands the
-        // bar on the viewport bottom on desktop with no extra positioning.
+        // Position, z-index and the offset above the nav all belong to
+        // <BottomChrome>, the tier container this renders inside. `relative` is
+        // kept because the two panels below are `absolute bottom-full` against it.
+        "relative pointer-events-auto",
+        // Desktop opt-in stays per-bar. `lg:hidden` is display:none, so a bar the
+        // page hasn't opted into contributes nothing to the tier's height.
         showOnDesktop ? "" : "lg:hidden",
-        Z_BOTTOM_ACTIONS,
-        BOTTOM_NAV_BG,
-        "shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.30)]",
-        "will-change-transform transition-transform duration-300 ease-out",
-        isVisible ? "translate-y-0" : "translate-y-full pointer-events-none",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -333,143 +330,169 @@ export default function BottomActions() {
         </InfoPanel>
       )}
 
-      {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
-      {isBulkMode && (
-        <Div className="h-[3px] w-full bg-[image:var(--appkit-gradient-brand-tri)]" />
-      )}
-
-      {/* -- Secondary label row (page mode only) — stacked ABOVE infoLabel -- */}
-      {secondaryLabel && !isBulkMode && (
-        <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
-          <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
-            {secondaryLabel}
-          </Text>
-        </Div>
-      )}
-
-      {/* -- Info label row (page mode only) --------------------------------- */}
-      {infoLabel && !isBulkMode && !hasInfoPanel && (
-        <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
-          <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
-            {infoLabel}
-          </Text>
-        </Div>
-      )}
-
-      {/* -- Info label as a disclosure toggle (when a panel is registered) --- */}
-      {infoLabel && !isBulkMode && hasInfoPanel && (
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => setInfoOpen((o) => !o)}
-          aria-expanded={infoOpen}
-          aria-controls={infoPanelId}
-          className="w-full flex items-center justify-between gap-[var(--appkit-space-2)] rounded-none border-b border-[var(--appkit-color-border)]/80 px-[var(--appkit-space-4)] pt-[var(--appkit-space-2)] pb-[var(--appkit-space-1)] min-h-0"
-        >
-          <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
-            {infoLabel}
-          </Text>
-          <Span className="flex-shrink-0 flex items-center gap-[var(--appkit-space-1)]">
-            <Text as="span" size="xs" color="muted">
-              {infoOpen ? "Hide" : "Details"}
-            </Text>
-            {infoOpen ? (
-              <ChevronDown className="w-4 h-4 text-zinc-400" aria-hidden="true" />
-            ) : (
-              <ChevronUp className="w-4 h-4 text-zinc-400" aria-hidden="true" />
+      {/* -- The bar itself, collapsing rather than translating on hide -------
+          <BottomChrome> measures this subtree to publish --bottom-chrome-height.
+          The old `translate-y-full` moved the bar out of sight but left its
+          layout height behind, which would reserve ~3.5rem of the tier on every
+          page that has no CTA at all. `grid-template-rows: 1fr → 0fr` animates
+          the box to a true zero height, so the published height is honest at
+          every frame and BackToTop glides down in step instead of snapping. */}
+      <Div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${isVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+      >
+        <Div overflow="hidden" className="min-h-0">
+          {/* Background, border and shadow sit INSIDE the clipper on purpose: on
+              the collapsing box itself they would still paint a 1px hairline and
+              a shadow smudge across the screen at zero height. */}
+          <Div
+            className={[
+              BOTTOM_NAV_BG,
+              "shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.30)]",
+              isVisible ? "" : "pointer-events-none",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
+            {isBulkMode && (
+              <Div className="h-[3px] w-full bg-[image:var(--appkit-gradient-brand-tri)]" />
             )}
-          </Span>
-        </Button>
-      )}
 
-      {/* -- Main action row -------------------------------------------------- */}
-      <Row className={`${BOTTOM_NAV_HEIGHT}`} gap="sm" padding="x-sm">
-        {isBulkMode && bulk ? (
-          <>
-            {/* Selection count pill — tap to clear ----------------------- */}
-            <Button rounded="full" gap="xs" 
-              type="button"
-              variant="ghost"
-              onClick={dispatchBulkClear}
-              className="inline- flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
-              aria-label="Clear selection"
-            >
-              <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
-              <Span size="xs" weight="semibold" className="tabular-nums whitespace-nowrap leading-none">
-                {bulk.noun
-                  ? `${bulk.selectedCount} ${bulk.noun}`
-                  : `${bulk.selectedCount} selected`}
-              </Span>
-            </Button>
+            {/* -- Secondary label row (page mode only) — stacked ABOVE infoLabel -- */}
+            {secondaryLabel && !isBulkMode && (
+              <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
+                <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
+                  {secondaryLabel}
+                </Text>
+              </Div>
+            )}
 
-            {/* Type picker trigger — flex-1 ------------------------------- */}
-            {bulkActions.length > 0 && (
+            {/* -- Info label row (page mode only) --------------------------------- */}
+            {infoLabel && !isBulkMode && !hasInfoPanel && (
+              <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
+                <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
+                  {infoLabel}
+                </Text>
+              </Div>
+            )}
+
+            {/* -- Info label as a disclosure toggle (when a panel is registered) --- */}
+            {infoLabel && !isBulkMode && hasInfoPanel && (
               <Button
                 type="button"
                 variant="ghost"
-                onClick={() => setPickerOpen((o) => !o)}
-                aria-haspopup="listbox"
-                aria-expanded={pickerOpen}
-                className={[
-                  "flex-1 min-w-0 h-10 flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] rounded-lg border text-[length:var(--appkit-text-sm)] font-medium transition-colors",
-                  "bg-zinc-50 hover:bg-[var(--appkit-color-surface)] active:bg-zinc-200 bg-[var(--appkit-color-surface-input)] dark:hover:bg-slate-700/60",
-                  "border-[var(--appkit-color-border)]",
-                  selectedAction?.variant === "danger"
-                    ? "text-error"
-                    : "text-[var(--appkit-color-text)]",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                onClick={() => setInfoOpen((o) => !o)}
+                aria-expanded={infoOpen}
+                aria-controls={infoPanelId}
+                className="w-full flex items-center justify-between gap-[var(--appkit-space-2)] rounded-none border-b border-[var(--appkit-color-border)]/80 px-[var(--appkit-space-4)] pt-[var(--appkit-space-2)] pb-[var(--appkit-space-1)] min-h-0"
               >
-                {selectedAction?.icon && (
-                  <Span
-                    className={`flex-shrink-0 w-4 h-4 ${FLEX_CENTER}`}
-                    aria-hidden="true"
-                  >
-                    {selectedAction.icon}
-                  </Span>
-                )}
-                <Span className="flex-1 truncate leading-none" align="start">
-                  {selectedAction?.label ?? "Bulk actions"}
+                <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
+                  {infoLabel}
+                </Text>
+                <Span className="flex-shrink-0 flex items-center gap-[var(--appkit-space-1)]">
+                  <Text as="span" size="xs" color="muted">
+                    {infoOpen ? "Hide" : "Details"}
+                  </Text>
+                  {infoOpen ? (
+                    <ChevronDown className="w-4 h-4 text-zinc-400" aria-hidden="true" />
+                  ) : (
+                    <ChevronUp className="w-4 h-4 text-zinc-400" aria-hidden="true" />
+                  )}
                 </Span>
-                {pickerOpen ? (
-                  <ChevronDown
-                    className="w-4 h-4 flex-shrink-0 text-zinc-400"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <ChevronUp
-                    className="w-4 h-4 flex-shrink-0 text-zinc-400"
-                    aria-hidden="true"
-                  />
-                )}
               </Button>
             )}
 
-            {/* Apply / submit button -------------------------------------- */}
-            {bulkActions.length > 0 && (
-              <Button
-                type="button"
-                variant={selectedAction?.variant ?? "primary"}
-                size="sm"
-                isLoading={selectedAction?.loading}
-                disabled={
-                  !selectedActionId ||
-                  selectedAction?.disabled ||
-                  selectedAction?.loading
-                }
-                onClick={handleApply}
-                className="h-10 flex-shrink-0"
-              >
-                <Span className="leading-none">Apply</Span>
-              </Button>
-            )}
-          </>
-        ) : (
-          /* Page mode — action buttons inline ------------------------------ */
-          <PageActionsRow pageActions={pageActions} dispatchAction={dispatchAction} />
-        )}
-      </Row>
+            {/* -- Main action row -------------------------------------------------- */}
+            <Row className={`${BOTTOM_NAV_HEIGHT}`} gap="sm" padding="x-sm">
+              {isBulkMode && bulk ? (
+                <>
+                  {/* Selection count pill — tap to clear ----------------------- */}
+                  <Button rounded="full" gap="xs" 
+                    type="button"
+                    variant="ghost"
+                    onClick={dispatchBulkClear}
+                    className="inline- flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
+                    aria-label="Clear selection"
+                  >
+                    <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
+                    <Span size="xs" weight="semibold" className="tabular-nums whitespace-nowrap leading-none">
+                      {bulk.noun
+                        ? `${bulk.selectedCount} ${bulk.noun}`
+                        : `${bulk.selectedCount} selected`}
+                    </Span>
+                  </Button>
+
+                  {/* Type picker trigger — flex-1 ------------------------------- */}
+                  {bulkActions.length > 0 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setPickerOpen((o) => !o)}
+                      aria-haspopup="listbox"
+                      aria-expanded={pickerOpen}
+                      className={[
+                        "flex-1 min-w-0 h-10 flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] rounded-lg border text-[length:var(--appkit-text-sm)] font-medium transition-colors",
+                        "bg-zinc-50 hover:bg-[var(--appkit-color-surface)] active:bg-zinc-200 bg-[var(--appkit-color-surface-input)] dark:hover:bg-slate-700/60",
+                        "border-[var(--appkit-color-border)]",
+                        selectedAction?.variant === "danger"
+                          ? "text-error"
+                          : "text-[var(--appkit-color-text)]",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      {selectedAction?.icon && (
+                        <Span
+                          className={`flex-shrink-0 w-4 h-4 ${FLEX_CENTER}`}
+                          aria-hidden="true"
+                        >
+                          {selectedAction.icon}
+                        </Span>
+                      )}
+                      <Span className="flex-1 truncate leading-none" align="start">
+                        {selectedAction?.label ?? "Bulk actions"}
+                      </Span>
+                      {pickerOpen ? (
+                        <ChevronDown
+                          className="w-4 h-4 flex-shrink-0 text-zinc-400"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ChevronUp
+                          className="w-4 h-4 flex-shrink-0 text-zinc-400"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Button>
+                  )}
+
+                  {/* Apply / submit button -------------------------------------- */}
+                  {bulkActions.length > 0 && (
+                    <Button
+                      type="button"
+                      variant={selectedAction?.variant ?? "primary"}
+                      size="sm"
+                      isLoading={selectedAction?.loading}
+                      disabled={
+                        !selectedActionId ||
+                        selectedAction?.disabled ||
+                        selectedAction?.loading
+                      }
+                      onClick={handleApply}
+                      className="h-10 flex-shrink-0"
+                    >
+                      <Span className="leading-none">Apply</Span>
+                    </Button>
+                  )}
+                </>
+              ) : (
+                /* Page mode — action buttons inline ------------------------------ */
+                <PageActionsRow pageActions={pageActions} dispatchAction={dispatchAction} />
+              )}
+            </Row>
+          </Div>
+        </Div>
+      </Div>
     </Div>
   );
 }

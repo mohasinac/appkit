@@ -244,7 +244,7 @@ export const eventsSeedData: EventDocument[] = [
   {
     id: "event-pokemon-number-draw-july-2026",
     slug: "pokemon-number-draw-july-2026",
-    type: "lottery" as const,
+    type: EVENT_FIELDS.TYPE_VALUES.LOTTERY,
     title: "Pokémon Number Draw — July 2026",
     description: "<p>Choose your lucky slot and win rare Pokémon collectibles! 25 slots available. Each slot is assigned a prize from our collection. First-come, first-served.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
@@ -259,14 +259,18 @@ export const eventsSeedData: EventDocument[] = [
       maxPullsPerTransaction: 1,
       maxPullsPerUser: 1,
       slots: [
-        { slotNumber: 1,  name: "Charizard Base Set Holo",          price: 5000, weight: 1,  isBooked: true,  bookedByUserId: "user-ravi-k",   bookedByDisplayName: "Ravi K",   bookedByUserLotteryNumber: 1 },
-        { slotNumber: 2,  name: "Blastoise Base Set Holo",          price: 3000, weight: 33, isBooked: true,  bookedByUserId: "user-priya-s",  bookedByDisplayName: "Priya S",  bookedByUserLotteryNumber: 2 },
-        { slotNumber: 3,  name: "Venusaur Base Set Holo",           price: 2500, weight: 40, isBooked: true,  bookedByUserId: "user-arjun-m",  bookedByDisplayName: "Arjun M",  bookedByUserLotteryNumber: 3 },
-        { slotNumber: 4,  name: "Pikachu Surfing Promo",            price: 1500, weight: 66, isBooked: true,  bookedByUserId: "user-sneha-p",  bookedByDisplayName: "Sneha P",  bookedByUserLotteryNumber: 4 },
-        { slotNumber: 5,  name: "Mewtwo Base Set Holo",             price: 2000, weight: 50, isBooked: true,  bookedByUserId: "user-vikram-r", bookedByDisplayName: "Vikram R", bookedByUserLotteryNumber: 5 },
-        { slotNumber: 6,  name: "Gengar First Ed. Fossil",          price: 3500, weight: 28, isBooked: false },
-        { slotNumber: 7,  name: "Alakazam Base Set Holo",           price: 800,  weight: 93, isBooked: false },
-        { slotNumber: 8,  name: "Machamp 1st Ed. Base Set",         price: 400,  weight: 99, isBooked: false },
+        // The first 8 slots carry a prize photo; the rest deliberately do not,
+        // so the detail page exercises both sides of the "only photographed
+        // slots get a collage tile" rule. `image` is a plain image URL and so
+        // is seedExtMedia()-wrapped like every other image in this file.
+        { slotNumber: 1,  name: "Charizard Base Set Holo",          image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-1/600/600"), price: 5000, weight: 1,  isBooked: true,  bookedByUserId: "user-ravi-k",   bookedByDisplayName: "Ravi K",   bookedByUserLotteryNumber: 1 },
+        { slotNumber: 2,  name: "Blastoise Base Set Holo",          image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-2/600/600"), price: 3000, weight: 33, isBooked: true,  bookedByUserId: "user-priya-s",  bookedByDisplayName: "Priya S",  bookedByUserLotteryNumber: 2 },
+        { slotNumber: 3,  name: "Venusaur Base Set Holo",           image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-3/600/600"), price: 2500, weight: 40, isBooked: true,  bookedByUserId: "user-arjun-m",  bookedByDisplayName: "Arjun M",  bookedByUserLotteryNumber: 3 },
+        { slotNumber: 4,  name: "Pikachu Surfing Promo",            image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-4/600/600"), price: 1500, weight: 66, isBooked: true,  bookedByUserId: "user-sneha-p",  bookedByDisplayName: "Sneha P",  bookedByUserLotteryNumber: 4 },
+        { slotNumber: 5,  name: "Mewtwo Base Set Holo",             image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-5/600/600"), price: 2000, weight: 50, isBooked: true,  bookedByUserId: "user-vikram-r", bookedByDisplayName: "Vikram R", bookedByUserLotteryNumber: 5 },
+        { slotNumber: 6,  name: "Gengar First Ed. Fossil",          image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-6/600/600"), price: 3500, weight: 28, isBooked: false },
+        { slotNumber: 7,  name: "Alakazam Base Set Holo",           image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-7/600/600"), price: 800,  weight: 93, isBooked: false },
+        { slotNumber: 8,  name: "Machamp 1st Ed. Base Set",         image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-8/600/600"), price: 400,  weight: 99, isBooked: false },
         { slotNumber: 9,  name: "Clefairy Base Set Holo",           price: 600,  weight: 95, isBooked: false },
         { slotNumber: 10, name: "Chansey Base Set Holo",            price: 700,  weight: 94, isBooked: false },
         { slotNumber: 11, name: "Ninetales Base Set Holo",          price: 1000, weight: 80, isBooked: false },
@@ -296,7 +300,7 @@ export const eventsSeedData: EventDocument[] = [
   {
     id: "event-beyblade-slot-raffle-draft",
     slug: "beyblade-slot-raffle-draft",
-    type: "lottery" as const,
+    type: EVENT_FIELDS.TYPE_VALUES.LOTTERY,
     title: "Beyblade Slot Raffle — Coming Soon",
     description: "<p>10 rare beyblade slots up for grabs. Details coming soon!</p>",
     status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
@@ -314,6 +318,10 @@ export const eventsSeedData: EventDocument[] = [
       slots: Array.from({ length: 10 }, (_, i) => ({
         slotNumber: i + 1,
         name: `Prize Slot ${i + 1}`,
+        // Seed index, not Math.random() — a seed file is re-executed on every
+        // CLI invocation, so any non-deterministic value breaks upsert
+        // idempotency (Root Cause #25).
+        image: seedExtMedia(`https://picsum.photos/seed/lottery-beyblade-slot-raffle-slot-${i + 1}/600/600`),
         price: 500,
         weight: 50,
         isBooked: false,
@@ -323,6 +331,53 @@ export const eventsSeedData: EventDocument[] = [
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(1),
     updatedAt: daysAgo(0),
+  } as EventDocument,
+
+  // ── 11. PAUSED — Sale ────────────────────────────────────────────────────
+  // `paused` and `cancelled` are real `EventStatus` values that had no fixture
+  // at all: the seed only ever produced active/draft/ended. Their admin filter
+  // chips were added 2026-08-24, and a chip that can only ever return an empty
+  // list is exactly what the hide-empty rule is meant to remove — so the states
+  // need real rows to be worth showing.
+  {
+    id: "event-monsoon-sale-paused",
+    slug: "monsoon-sale-paused",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Monsoon Sale — Paused",
+    description:
+      "<p>Temporarily paused while we restock. Discounts resume once stock lands.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.PAUSED,
+    startsAt: daysAgo(3),
+    endsAt: daysAhead(10),
+    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-monsoon-sale-paused-20260101/1200/600"), alt: "Monsoon Sale" },
+    tags: ["sale", "monsoon", "paused"],
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(6),
+    updatedAt: daysAgo(3),
+  } as EventDocument,
+
+  // ── 12. CANCELLED — Raffle ───────────────────────────────────────────────
+  {
+    id: "event-x-launch-raffle-cancelled",
+    slug: "x-launch-raffle-cancelled",
+    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
+    title: "Beyblade X Launch Raffle — Cancelled",
+    description:
+      "<p>Cancelled after the prize stock could not be sourced in time. Entrants were refunded in full.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.CANCELLED,
+    startsAt: daysAgo(20),
+    endsAt: daysAgo(6),
+    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-x-launch-raffle-cancelled-20260101/1200/600"), alt: "Beyblade X Launch Raffle" },
+    tags: ["raffle", "beyblade-x", "cancelled"],
+    hasRaffle: true,
+    raffleType: "open_raffle",
+    rafflePrize: "Beyblade X Dran Sword starter set",
+    raffleEntryCount: 0,
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(25),
+    updatedAt: daysAgo(6),
   } as EventDocument,
 ];
 

@@ -8,6 +8,7 @@
 import {
   BaseRepository,
   prepareForFirestore,
+  parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import type {
   SieveModel,
@@ -36,13 +37,49 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     ]) as unknown as D;
   }
 
+  /**
+   * Every Timestamp field here carries `parseValue: parseSieveDateValue`.
+   *
+   * Without it a GTE/LTE on a Timestamp field silently matches ZERO documents:
+   * sievejs's default coercion leaves an ISO string as a string, and Firestore
+   * requires an inequality's value to match the stored type. That is Root Cause
+   * #47, and `createdAt` flipping from `canFilter: false` to `true` here is
+   * exactly the transition that introduces it.
+   *
+   * `checkoutDeadline` is added by hand: `audit-sieve-date-fields` recognises
+   * Timestamp fields by an `...At` / `...Date` / `...Time` suffix, which this
+   * name does not have, so the audit cannot flag it for you.
+   */
   static readonly SIEVE_FIELDS = {
-    status: { canFilter: true, canSort: false },
+    id: { canFilter: true, canSort: false },
+    status: { canFilter: true, canSort: true },
     productId: { canFilter: true, canSort: false },
+    productTitle: { canFilter: true, canSort: true },
     buyerUid: { canFilter: true, canSort: false },
+    buyerName: { canFilter: true, canSort: true },
     storeId: { canFilter: true, canSort: false },
-    createdAt: { canFilter: false, canSort: true },
-  } as const;
+    storeName: { canFilter: true, canSort: true },
+    offerAmount: { canFilter: true, canSort: true },
+    listedPrice: { canFilter: true, canSort: true },
+    createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    expiresAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    checkoutDeadline: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+  };
+
+  /**
+   * Paginated, Firestore-native offer list (admin use).
+   *
+   * Mirrors `BidRepository.list`. The seller- and buyer-scoped reads have their
+   * own dedicated methods (`findByStore` / `findByBuyer`) because they carry
+   * mandatory ownership filters; this one is deliberately unscoped and is only
+   * reachable behind `admin:offers:read`.
+   */
+  async list(model: SieveModel): Promise<FirebaseSieveResult<OfferDocument>> {
+    return this.sieveQuery<OfferDocument>(model, OfferRepository.SIEVE_FIELDS, {
+      defaultPageSize: 50,
+      maxPageSize: 200,
+    });
+  }
 
   // --- Create --------------------------------------------------------------
 

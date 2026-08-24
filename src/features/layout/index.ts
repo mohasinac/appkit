@@ -67,6 +67,9 @@ export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
 
 export { default as BottomActions } from "./BottomActions";
 
+export { BottomChrome } from "./BottomChrome";
+export type { BottomChromeProps } from "./BottomChrome";
+
 export { BottomNavbar } from "./BottomNavbar";
 export type { BottomNavbarProps } from "./BottomNavbar";
 

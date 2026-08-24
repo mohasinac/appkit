@@ -18,6 +18,7 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import type { ListingType } from "../../products/types";
 import { toRecordArray, toRelativeDate, toStringValue } from "../hooks/useSellerListingData";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
@@ -43,7 +44,6 @@ const FILTER_KEYS = [
   "tags",
   "badges",
   "listingType",
-  "showSold",
 ];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
@@ -209,7 +209,11 @@ export function SellerProductsView({
   // own internal table also reads via `filterKeys`, so both stay in sync.
   const sideTable = useUrlTable({ defaults: { sort: DEFAULT_SORT } });
   const listingKind = ((sideTable.get("listingType") as ListingKind) || "all") as ListingKind;
-  const showSold = sideTable.get("showSold") === "true";
+  // The scope bar spans whichever types the type-dropdown has narrowed to, so
+  // its middle tab reads "Ended" on Auctions and "Sold" on Products.
+  const scope = useAvailabilityScope(
+    listingKind === "all" ? ALL_LISTING_TYPES : ([listingKind] as readonly ListingType[]),
+  );
 
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     deleteFn: onDeleteProduct,
@@ -304,9 +308,6 @@ export function SellerProductsView({
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
     sortOptions: SORT_OPTIONS,
     columns: PRODUCT_COLUMNS,
-    toggles: [
-      { label: "Show sold", active: showSold, onChange: (next) => sideTable.set("showSold", next ? "true" : "") },
-    ],
     primaryAction: onCreateClick ? { label: "New Listing", onClick: onCreateClick } : undefined,
     mapRows: (response) => {
       const rows = toRecordArray(response.products).map((item, index) => {
@@ -359,8 +360,11 @@ export function SellerProductsView({
     buildFilters: (state) => {
       const statusFilter = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined;
       const kindFilter = !state.listingType || state.listingType === "all" ? undefined : sieveFilter("listingType", SIEVE_OP.EQ, state.listingType);
-      const soldFilter = state.showSold === "true" ? undefined : "isSold==false";
-      return [statusFilter, kindFilter, soldFilter].filter(Boolean).join(",") || undefined;
+      // The hardcoded `isSold==false` that used to live here is gone: it asked
+      // a narrower question than the rest of the app (an ended auction is not
+      // `isSold`), so the seller dashboard and /auctions disagreed about the
+      // same rows. The scope param carries the per-type meaning instead.
+      return [statusFilter, kindFilter].filter(Boolean).join(",") || undefined;
     },
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <SellerProductsFilterFields
@@ -369,7 +373,13 @@ export function SellerProductsView({
         onChange={setPendingFilters}
       />
     ),
-    renderAboveContent: () => <TypeDropdown active={listingKind} onChange={handleKindChange} />,
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: () => (
+      <Stack gap="sm">
+        <TypeDropdown active={listingKind} onChange={handleKindChange} />
+        {scope.renderAboveContent()}
+      </Stack>
+    ),
     buildBulkActions: (selection: ListingSelectionContext<ProductRow>) => {
       const handleBulkPrintLabels = () => {
         const ids = selection.selectedIds.join(",");

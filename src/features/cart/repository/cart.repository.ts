@@ -143,6 +143,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
           ...(input.isAuctionWin !== undefined && { isAuctionWin: input.isAuctionWin }),
           ...(input.auctionId !== undefined && { auctionId: input.auctionId }),
           ...(input.bidId !== undefined && { bidId: input.bidId }),
+          ...(input.isBuyout !== undefined && { isBuyout: input.isBuyout }),
           ...(input.lockedPrice !== undefined && {
             lockedPrice: input.lockedPrice,
           }),

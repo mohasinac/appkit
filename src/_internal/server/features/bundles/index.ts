@@ -5,6 +5,7 @@ export {
   getRelatedBundles,
   resolveBundleMemberIds,
   resolveBundleOriginalTotal,
+  resolveBundleCategorySlugs,
   type BundleDataOptions,
 } from "./data";
 export { buildBundleMetadata, type BundleMetadataOptions } from "./metadata";

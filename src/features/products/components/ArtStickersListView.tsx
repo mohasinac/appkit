@@ -11,7 +11,7 @@ import {
 import {
   listPublicProducts,
   parsePublicProductParams,
-  defaultTogglesForListingTypes,
+  defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 
 type SearchParams = Record<string, string | string[]>;
@@ -34,7 +34,7 @@ export async function ArtStickersListView({ searchParams = {} }: ArtStickersList
       sorts: DEFAULT_SORT,
       // Derived, so this page and ProductsIndexListing can never disagree
       // about the default view (Root Cause #30).
-      ...defaultTogglesForListingTypes(ART_STICKERS_LISTING_TYPES),
+      ...defaultAvailabilityForListingTypes(ART_STICKERS_LISTING_TYPES),
     }),
   );
 

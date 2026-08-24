@@ -7,7 +7,20 @@ import { NavItem } from "./NavItem";
 import { useWishlistCount } from "../wishlist/hooks/useWishlistCount";
 import { useCartCount } from "../cart/hooks/useCartCount";
 
-const CLS_COUNT_BADGE = "absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-[var(--appkit-space-1)] leading-none text-[var(--appkit-color-text-on-primary)]";
+/** Badge counter class for the cart/wishlist slots.
+ *
+ * Horizontal offset comes from `.appkit-hand-badge` + the `--lg` (0.5rem) size
+ * modifier (HandMode.style.css), NOT a `-right-2` utility — the badge hugs the
+ * icon's outer top corner, which is top-left in left-hand mode. Do not re-add
+ * `-right-2`: Tailwind runs with `important: true`, so the utility would beat
+ * the unlayered rule and the badge would silently stop mirroring.
+ *
+ * Colours use the `-solid`/`-on-solid` overlay pair (Root Cause #67), matching
+ * TitleBarLayout's `countBadge`. The previous `bg-[var(--appkit-color-error)]` +
+ * `text-[var(--appkit-color-text-on-primary)]` used the theme-INVERTING ink
+ * token as a fill, which audit-status-color-pairs can't see through arbitrary
+ * -value syntax. */
+const CLS_COUNT_BADGE = "appkit-hand-badge appkit-hand-badge--lg absolute -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-error-solid px-[var(--appkit-space-1)] leading-none text-error-on-solid";
 
 export interface BottomNavItem {
   key: string;
@@ -186,7 +199,7 @@ export function BottomNavbar({
     <BottomNavLayout ariaLabel={labels.mobileNav}>
       {/* 1 — Home */}
       <Li
-        className="flex-1 w-1/5"
+        className="flex-1"
       >
         <NavItem
           href={homeHref}

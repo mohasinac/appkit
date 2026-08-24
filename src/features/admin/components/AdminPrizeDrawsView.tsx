@@ -19,6 +19,10 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
+
+const PRIZE_DRAW_TYPES: readonly ListingType[] = ["prize-draw"];
 
 const STATUS_VARIANT: Record<
   string,
@@ -102,6 +106,9 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     );
   }
 
+  const scope = useAvailabilityScope(PRIZE_DRAW_TYPES);
+
+
   const config: ListingViewConfig<AdminProductsResponse, PrizeDrawAdminRow> = {
     portal: "admin",
     title: "Prize Draws",
@@ -141,6 +148,8 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==prize-draw", status].filter(Boolean).join(",");
     },
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     rowHrefTemplate: String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT("{id}")),
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>

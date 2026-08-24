@@ -11,6 +11,22 @@ export interface CollapsibleSectionProps {
   onToggle: () => void;
   /** Optional right-aligned content next to the title (badges, counts). */
   renderHeaderExtra?: () => React.ReactNode;
+  /**
+   * Keep collapsed children mounted (hidden via CSS) instead of unmounting them.
+   *
+   * `<Collapse>` renders `{isOpen && <motion.div>}` — collapsing therefore
+   * UNMOUNTS the subtree and destroys any uncommitted state inside it. That is
+   * harmless for inputs driven entirely off a parent `values` object, but it
+   * discards in-flight work for anything holding its own: a `useMediaUpload`
+   * transfer, a rich-text editor buffer, a partially-filled multi-select.
+   *
+   * Set this on any section that can hold uncommitted state. The trade-off is
+   * that hidden children still render, so don't enable it for expensive
+   * subtrees that are purely presentational.
+   */
+  keepMounted?: boolean;
+  /** Anchor id on the section root — lets a caller scroll/link to it. */
+  id?: string;
   className?: string;
   children?: React.ReactNode;
 }
@@ -24,11 +40,13 @@ export function CollapsibleSection({
   isCollapsed,
   onToggle,
   renderHeaderExtra,
+  keepMounted = false,
+  id,
   className = "",
   children,
 }: CollapsibleSectionProps) {
   return (
-    <Div className={className} rounded="xl" border="default" surface="default">
+    <Div id={id} className={className} rounded="xl" border="default" surface="default">
       <Row align="center" justify="between" paddingX="x-md" paddingY="y-sm">
         <Button
           type="button"
@@ -54,9 +72,16 @@ export function CollapsibleSection({
             often renders a Link, and nesting an anchor inside a button is invalid HTML. */}
         {renderHeaderExtra && <Div className="ml-3 shrink-0">{renderHeaderExtra()}</Div>}
       </Row>
-      <Collapse isOpen={!isCollapsed}>
-        <Div padding="md" border="top">{children}</Div>
-      </Collapse>
+      {keepMounted ? (
+        // No <Collapse>: it unmounts on close, which would discard uncommitted
+        // child state (see `keepMounted` docs). `hidden` keeps the subtree
+        // mounted and removes it from the a11y tree at the same time.
+        <Div padding="md" border="top" hidden={isCollapsed}>{children}</Div>
+      ) : (
+        <Collapse isOpen={!isCollapsed}>
+          <Div padding="md" border="top">{children}</Div>
+        </Collapse>
+      )}
     </Div>
   );
 }

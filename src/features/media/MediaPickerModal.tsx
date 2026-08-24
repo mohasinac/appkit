@@ -257,7 +257,11 @@ export function MediaPickerModal({
                     variant="ghost"
                     onClick={() => setSelectedExisting(f.downloadURL)}
                     className={[
-                      "rounded-lg border overflow-hidden text-left transition p-[var(--appkit-space-0)] h-auto",
+                      // `flex-col items-stretch` — without it the thumbnail and the
+                      // filename lay out as row siblings inside `.appkit-button__content`
+                      // and the square tile shrinks to a fraction of its width
+                      // (Root Cause #68).
+                      "flex-col items-stretch rounded-lg border overflow-hidden text-left transition p-[var(--appkit-space-0)] h-auto",
                       isSelected
                         ? "border-primary-500 ring-2 ring-primary-300"
                         : "border-[var(--appkit-color-border)]",

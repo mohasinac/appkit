@@ -1,6 +1,7 @@
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import { slugify } from "../../../utils";
+import { ALL_EVENT_STATUSES, ALL_EVENT_TYPES } from "../types";
 import type {
   FirebaseSieveFields,
   FirebaseSieveResult,
@@ -54,6 +55,42 @@ class EventRepository extends BaseRepository<EventDocument> {
 
   async list(model: SieveModel): Promise<FirebaseSieveResult<EventDocument>> {
     return this.sieveQuery<EventDocument>(model, EventRepository.SIEVE_FIELDS);
+  }
+
+  /**
+   * How many events exist per `type` and per `status` — the numbers behind the
+   * facet checkboxes, and what lets a type with no events disappear from the
+   * filter instead of offering a guaranteed-empty result.
+   *
+   * Events carry no store/category/brand FK (verified against `EventDocument`),
+   * so these counts are global by nature; `baseFilters` narrows them only when
+   * a surface wants a subset (e.g. the public page counting active events).
+   *
+   * Both fields are counted in ONE parallel batch — 13 `.count()` aggregations,
+   * no document reads.
+   */
+  async facetCountsForTypesAndStatuses(opts?: {
+    types?: readonly string[];
+    statuses?: readonly string[];
+    baseFilters?: string;
+  }): Promise<Record<string, number | undefined>> {
+    const types = opts?.types ?? ALL_EVENT_TYPES;
+    const statuses = opts?.statuses ?? ALL_EVENT_STATUSES;
+    const [typeCounts, statusCounts] = await Promise.all([
+      this.facetCounts(EVENT_FIELDS.TYPE, types, EventRepository.SIEVE_FIELDS, {
+        baseFilters: opts?.baseFilters,
+      }),
+      this.facetCounts(
+        EVENT_FIELDS.STATUS,
+        statuses,
+        EventRepository.SIEVE_FIELDS,
+        { baseFilters: opts?.baseFilters },
+      ),
+    ]);
+    // Type and status values are disjoint, so one flat map is unambiguous and
+    // lets the filter component look either up by value without knowing which
+    // field it came from.
+    return { ...typeCounts, ...statusCounts };
   }
 
   async findBySlug(slug: string): Promise<EventDocument | null> {

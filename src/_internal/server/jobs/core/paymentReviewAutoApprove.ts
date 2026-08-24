@@ -7,17 +7,51 @@ import type { JobContext } from "../runtime/types";
 const AUTO_APPROVE_HOURS = 2;
 
 /**
+ * Buyout orders get a full day of admin review instead of two hours.
+ *
+ * A Buy Now purchase is settled in a one-hour scramble against a still-live
+ * auction, and the amounts involved are whole-listing rather than incremental —
+ * so an admin should get a proper working day to look at the proof before the
+ * safety net fires, rather than a window that can elapse overnight.
+ */
+const BUYOUT_AUTO_APPROVE_HOURS = 24;
+
+function autoApproveHoursFor(order: { isBuyout?: boolean }): number {
+  return order.isBuyout === true ? BUYOUT_AUTO_APPROVE_HOURS : AUTO_APPROVE_HOURS;
+}
+
+/**
  * 2-hour auto-approve safety net — a manual-payment proof nobody has acted
  * on (no admin approve / re-upload-request / fraud-reject) within 2 hours of
  * submission is auto-confirmed, exactly mirroring `adminVerifyPaymentAction`'s
  * effect, plus `autoApproved`/`autoApprovedAt` so it's visibly distinguishable
  * from a manually-reviewed order. Buyer/seller can raise a dispute afterward
  * via `raiseOrderDisputeAction` — this sweep never reverses itself.
+ *
+ * Buyout orders are held back to 24 hours (see `BUYOUT_AUTO_APPROVE_HOURS`).
+ * The QUERY still runs at the 2-hour cutoff and the longer window is applied
+ * in-memory, so this keeps one query on one existing composite index rather
+ * than needing a second scan on a second cutoff.
  */
 export async function runPaymentReviewAutoApprove(ctx: JobContext): Promise<void> {
   ctx.logger.info(`Scanning unreviewed payment proofs > ${AUTO_APPROVE_HOURS}h old`);
 
-  const unreviewed = await orderRepository.getUnreviewedProofPastDeadline(AUTO_APPROVE_HOURS);
+  const scanned = await orderRepository.getUnreviewedProofPastDeadline(AUTO_APPROVE_HOURS);
+  const unreviewed = scanned.filter((entry) => {
+    const hours = autoApproveHoursFor(entry.data);
+    if (hours === AUTO_APPROVE_HOURS) return true;
+    const uploadedAt = entry.data.paymentProofUploadedAt
+      ? new Date(entry.data.paymentProofUploadedAt as unknown as string | Date)
+      : null;
+    if (!uploadedAt) return false;
+    return ctx.now.getTime() - uploadedAt.getTime() >= hours * 60 * 60 * 1000;
+  });
+
+  const held = scanned.length - unreviewed.length;
+  if (held > 0) {
+    ctx.logger.info(`Holding ${held} buyout order(s) for the ${BUYOUT_AUTO_APPROVE_HOURS}h admin window`);
+  }
+
   if (unreviewed.length === 0) {
     ctx.logger.info("No unreviewed payment proofs past the auto-approve window");
     return;

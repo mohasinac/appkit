@@ -36,9 +36,9 @@ import { filterNavItems } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
 import { useHandMode } from "../../hand-mode";
-import { BackgroundRenderer, Div, Nav, Span, type BackgroundConfig } from "../../../../ui";
+import { BackgroundRenderer, Div, Li, Nav, Span, type BackgroundConfig } from "../../../../ui";
+import { BottomNavLayout } from "../../../../features/layout/BottomNavLayout";
 import { useToast } from "../../../../ui/components/Toast";
-import { useVisualViewportInset } from "../../../../react/hooks/useVisualViewportInset";
 import { useSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
 
@@ -189,31 +189,37 @@ const MAX_BOTTOM_NAV_ITEMS = 5;
  * behind a hamburger toggle). Pattern lifted from the unused
  * `DashboardScaffold` scaffold, which has since been retired in favour of
  * wiring it directly here where the sidebars already live.
+ *
+ * Renders through the shared `<BottomNavLayout>` rather than hand-rolling its
+ * own `fixed bottom-0` chrome. That is not cosmetic: `BottomNavLayout` is what
+ * publishes `--bottom-nav-height`, which every bottom-anchored surface above it
+ * (the CTA tier, the pagination bar, BackToTop, the footer's clearance) offsets
+ * against. The hand-rolled version published nothing, so on dashboard routes
+ * that whole stack was positioned against the PUBLIC nav's height instead —
+ * which was itself a bug, since both bars were rendering on the same pixels.
+ * `AppLayoutShell` is now told to suppress the public one here via
+ * `showBottomNav={!isDashboard}`; exactly one nav must be mounted at a time.
  */
 function DashboardBottomNav({ items, activeHref }: { items: SidebarNavItem[]; activeHref: string }) {
-  const isKeyboardOpen = useVisualViewportInset();
   if (items.length === 0) return null;
   return (
-    <Nav
-      aria-label="Dashboard bottom navigation"
-      aria-hidden={isKeyboardOpen}
-      className={`fixed bottom-0 left-0 right-0 z-[var(--appkit-z-bottom-nav)] flex items-stretch justify-around border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] lg:hidden transition-transform duration-200 ease-out ${isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"}`}
-    >
+    <BottomNavLayout id="dashboard-bottom-navbar" ariaLabel="Dashboard bottom navigation">
       {items.slice(0, MAX_BOTTOM_NAV_ITEMS).map((item) => {
         const isActive = activeHref === item.href || activeHref.startsWith(`${item.href}/`);
         return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex flex-1 flex-col items-center justify-center gap-[var(--appkit-space-0-5)] py-[var(--appkit-space-2)] ${isActive ? "text-[var(--appkit-color-primary)]" : "text-[var(--appkit-color-text-muted)]"}`}
-            aria-current={isActive ? "page" : undefined}
-          >
-            {item.icon && <Span size="base">{item.icon}</Span>}
-            <Span size="xs" className="max-w-full truncate">{item.label}</Span>
-          </Link>
+          <Li key={item.href} className="flex-1">
+            <Link
+              href={item.href}
+              className={`flex h-full flex-col items-center justify-center gap-[var(--appkit-space-0-5)] py-[var(--appkit-space-2)] ${isActive ? "text-[var(--appkit-color-primary)]" : "text-[var(--appkit-color-text-muted)]"}`}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {item.icon && <Span size="base">{item.icon}</Span>}
+              <Span size="xs" className="max-w-full truncate">{item.label}</Span>
+            </Link>
+          </Li>
         );
       })}
-    </Nav>
+    </BottomNavLayout>
   );
 }
 

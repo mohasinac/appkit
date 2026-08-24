@@ -14,6 +14,49 @@ export type EventType =
   | "spin_wheel"
   | "lottery";
 
+/**
+ * Every event type, in canonical iteration order — the single array every
+ * filter chip group, tab bar and dropdown derives from.
+ *
+ * Declared as `Record<EventType, true>` rather than a plain array on purpose:
+ * adding a member to the union without adding it here is then a COMPILE error,
+ * not a silent omission. It exists because there were THREE hand-written
+ * enumerations of this union and all three had drifted — the admin chips
+ * offered `contest`/`giveaway`/`flash-sale` (values `EventType` never had, so
+ * they matched zero rows) while omitting five real types, the public filter
+ * omitted `lottery`, and `EVENT_FIELDS.TYPE_VALUES` omitted it too. Same shape
+ * as `ALL_LISTING_TYPES_MAP`; same reason (Root Cause #61).
+ */
+const ALL_EVENT_TYPES_MAP: Record<EventType, true> = {
+  sale: true,
+  offer: true,
+  poll: true,
+  survey: true,
+  feedback: true,
+  raffle: true,
+  spin_wheel: true,
+  lottery: true,
+};
+
+export const ALL_EVENT_TYPES = Object.keys(ALL_EVENT_TYPES_MAP) as EventType[];
+
+/**
+ * Display labels for the admin/seller dashboards, which are not i18n-wrapped.
+ * Public surfaces use the `filters.eventType*` message keys instead.
+ *
+ * `Record<EventType, string>` so a new union member is a compile error here too.
+ */
+export const EVENT_TYPE_LABELS: Record<EventType, string> = {
+  sale: "Sale",
+  offer: "Offer",
+  poll: "Poll",
+  survey: "Survey",
+  feedback: "Feedback",
+  raffle: "Raffle",
+  spin_wheel: "Spin the Wheel",
+  lottery: "Lottery",
+};
+
 export type RaffleType =
   | "top_n_scorers"
   | "top_n_participants"
@@ -28,6 +71,28 @@ export interface SpinPrize {
   isActive: boolean;
 }
 export type EventStatus = "draft" | "active" | "paused" | "ended" | "cancelled";
+
+/** Every event status, in lifecycle order. Compile-checked like `ALL_EVENT_TYPES`. */
+const ALL_EVENT_STATUSES_MAP: Record<EventStatus, true> = {
+  draft: true,
+  active: true,
+  paused: true,
+  ended: true,
+  cancelled: true,
+};
+
+export const ALL_EVENT_STATUSES = Object.keys(
+  ALL_EVENT_STATUSES_MAP,
+) as EventStatus[];
+
+/** Dashboard display labels — see `EVENT_TYPE_LABELS`. */
+export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
+  draft: "Draft",
+  active: "Active",
+  paused: "Paused",
+  ended: "Ended",
+  cancelled: "Cancelled",
+};
 export type EntryReviewStatus = "pending" | "approved" | "flagged";
 export type PollResultsVisibility = "always" | "after_vote" | "after_end";
 

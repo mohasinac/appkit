@@ -38,6 +38,9 @@ import { computeRelatedItems } from "../../../_internal/server/features/products
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { ClassifiedContactSellerPanel } from "./ClassifiedContactSellerPanel";
+import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
+import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
 import type { CustomSection, ProductDocument } from "../../products/schemas/firestore";
 
@@ -45,6 +48,21 @@ export interface ClassifiedDetailPageViewProps {
   slug: string;
   /** Pre-fetched product document — dedupes with generateMetadata() via React.cache(). */
   initialProduct?: ProductDocument | null;
+  /**
+   * Render prop for offer UI, mounted inside the contact-seller panel.
+   *
+   * Deliberately the SAME shape `ProductDetailPageView.renderOfferAction` uses,
+   * so both detail views share one contract and both consumer pages share one
+   * snippet. Called only when all three offer gates pass: `featureFlags.offers`,
+   * the classified type's `canMakeOffer` capability, and the seller's own
+   * `allowOffers` opt-in.
+   */
+  renderOfferAction?: (opts: {
+    productId: string;
+    price: number;
+    currency: string;
+    minOfferPercent: number;
+  }) => React.ReactNode;
 }
 
 function toDescriptionHtml(raw: unknown): string {
@@ -53,7 +71,7 @@ function toDescriptionHtml(raw: unknown): string {
   return normalizeRichTextHtml(s);
 }
 
-export async function ClassifiedDetailPageView({ slug, initialProduct }: ClassifiedDetailPageViewProps) {
+export async function ClassifiedDetailPageView({ slug, initialProduct, renderOfferAction }: ClassifiedDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
     : await getClassifiedForDetail(slug).catch(() => undefined);
@@ -96,10 +114,21 @@ export async function ClassifiedDetailPageView({ slug, initialProduct }: Classif
   const customSections: CustomSection[] = Array.isArray(p.customSections) ? (p.customSections as CustomSection[]) : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
+    getSiteSettingsGlobal().catch(() => null),
   ]);
+
+  // Classifieds are the one non-standard type where haggling is the norm, so
+  // `canMakeOffer` is true for them — but the seller still opts in per listing
+  // (`allowOffers`, usually alongside `classified.negotiable`).
+  const offersAvailable =
+    siteSettings?.featureFlags?.offers !== false &&
+    canMakeOffer("classified") &&
+    p.allowOffers === true &&
+    price !== null &&
+    !!renderOfferAction;
 
   return (
     <Main>
@@ -231,6 +260,19 @@ export async function ClassifiedDetailPageView({ slug, initialProduct }: Classif
           )}
           renderBuyBar={() => (
             <Stack id="classified-contact-bar" className="p-[var(--appkit-space-5)]" border="subtle" gap="md" rounded="xl" surface="muted">
+              {/* Above the chat panel on purpose: the sticky CTA below is
+                  labelled "Make an Offer" and scrolls here, so the offer form
+                  has to be the first thing in view when it lands. */}
+              {offersAvailable &&
+                renderOfferAction!({
+                  productId: String(product.id),
+                  price: price!,
+                  currency,
+                  minOfferPercent:
+                    typeof p.minOfferPercent === "number"
+                      ? (p.minOfferPercent as number)
+                      : DEFAULT_MIN_OFFER_PERCENT,
+                })}
               <ClassifiedContactSellerPanel productId={String(product.id)} onContactSeller={startClassifiedConversationAction} />
             </Stack>
           )}
@@ -252,7 +294,10 @@ export async function ClassifiedDetailPageView({ slug, initialProduct }: Classif
 
         {/*
           Sticky CTA. Classified has no cart (`cartLine: "blocked"`), so the registry's
-          classified CTA is Make an Offer and it scrolls to the contact-seller panel.
+          classified CTA is Make an Offer and it scrolls to the contact-seller panel —
+          which, since 2026-08-24, actually contains a Make-an-Offer form. Before that
+          it scrolled to a chat box and no offer was ever created, so the button was
+          advertising a feature the page did not have.
         */}
         <ListingBottomActions
           listingType="classified"

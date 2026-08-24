@@ -4,11 +4,11 @@
  *      stub with the note "out of scope for the minimal Beyblade-focused demo catalog,"
  *      but unlike "live," art prints fit the Beyblade theme naturally as fan-art (see
  *      CLAUDE.md seed-data blandness sweep, 2026-08-20 session).
- * WHAT: Exports 5 Beyblade fan-art print listings on Beyblade Arena, varying size,
+ * WHAT: Exports 6 Beyblade fan-art print listings on Beyblade Arena, varying size,
  *       material, finish, and edition size (including one open-edition, no editionSize).
  *
  * EXPORTS:
- *   productsArtSeedData — Array of 5 Partial<ProductDocument> with listingType:"art"
+ *   productsArtSeedData — Array of 6 Partial<ProductDocument> with listingType:"art"
  *
  * @tag domain:products,art
  * @tag layer:seed
@@ -29,8 +29,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-dranzer-phoenix-poster",
     title: "Dranzer Phoenix Rising — Fan Art Poster",
     description: "A vibrant fan-art poster of Dranzer erupting in phoenix flame, hand-illustrated and giclée-printed on matte photo paper.",
-    categorySlugs: ["category-spinning-tops"],
-    categoryNames: ["Spinning Tops"],
+    categorySlugs: ["category-stadiums-standard","category-gear-stadiums","category-battle-gear","category-spinning-tops"],
+    categoryNames: ["Standard Stadiums","Stadiums","Battle Gear","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 599,
@@ -71,8 +71,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-valkyrie-holographic-print",
     title: "Beyblade Burst Valkyrie — Holographic Art Print (Limited /100)",
     description: "A limited-edition holographic art print of Valkyrie mid-battle, numbered out of 100. Ships in a rigid mailer to prevent bending.",
-    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
-    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    categorySlugs: ["category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Burst Classic","Burst Tops","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 1299,
@@ -113,8 +113,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-beyblade-x-lineup-canvas",
     title: "Beyblade X Full Lineup — Canvas Print",
     description: "A gallery-style canvas print featuring the full current Beyblade X roster in battle formation. Stretched and ready to hang.",
-    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
-    categoryNames: ["Beyblade X", "Spinning Tops"],
+    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 2499,
@@ -158,8 +158,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-metal-fight-vintage-poster",
     title: "Metal Fight Beyblade — Vintage-Style Poster (Open Edition)",
     description: "A retro-styled poster celebrating the Metal Fight era, printed on demand — open edition, no print run limit.",
-    categorySlugs: ["category-beyblade-metal", "category-spinning-tops"],
-    categoryNames: ["Beyblade Metal Fight", "Spinning Tops"],
+    categorySlugs: ["category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categoryNames: ["Metal Fusion","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 449,
@@ -197,8 +197,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-original-series-anniversary-print",
     title: "Original Series 25th Anniversary — Glossy Art Print",
     description: "A commemorative glossy print marking 25 years of the original Beyblade series, featuring Dragoon, Dranzer, Driger, and Draciel together.",
-    categorySlugs: ["category-beyblade-original", "category-spinning-tops"],
-    categoryNames: ["Beyblade Original", "Spinning Tops"],
+    categorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Plastic Generation","Original Tops","Beyblade Original","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 899,
@@ -232,6 +232,51 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["fan-art", "vintage-collectible", "limited-run"],
+    ),
+  } as unknown as Partial<ProductDocument>,
+  {
+    // Sold-out fixture. The canonical unavailable shape for a stock-only type:
+    // isSold + both quantities zeroed, and status STILL published — an
+    // archived row is hidden by the status filter before the availability
+    // predicate ever runs, so it would prove nothing.
+    id: "art-dragoon-galaxy-turbo-print-sold-out",
+    slug: "art-dragoon-galaxy-turbo-print-sold-out",
+    title: "Dragoon Galaxy Turbo — Fan Art Print (Sold Out)",
+    description: "A sold-out run of the Dragoon Galaxy Turbo fan-art print. Every copy of this edition has shipped.",
+    categorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Heavy Metal System","Original Tops","Beyblade Original","Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    price: 749,
+    currency: "INR",
+    stockQuantity: 0,
+    availableQuantity: 0,
+    isSold: true,
+    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-dragoon-galaxy-sold-out-1-20260824/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/art-image-dragoon-galaxy-sold-out-1-20260824/900/900"),
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "art" as const,
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    printMeta: { size: "18x24 in", material: "Archival cotton rag", finish: "Matte", editionSize: 40 },
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["fan-art", "poster", "sold-out"],
+    createdAt: new Date("2026-08-24"),
+    updatedAt: new Date("2026-08-24"),
+    searchTokens: buildSearchTokens(
+      "Dragoon Galaxy Turbo — Fan Art Print (Sold Out)",
+      "A sold-out run of the Dragoon Galaxy Turbo fan-art print.",
+      "Beyblade",
+      "brand-beyblade",
+      ["Beyblade Original", "Spinning Tops"],
+      ["fan-art", "poster", "sold-out"],
     ),
   } as unknown as Partial<ProductDocument>,
 ];

@@ -52,9 +52,18 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
   const filters = buildEventFilters(searchParams);
 
-  const result = await eventRepository
-    .list({ filters, sorts: sort, page, pageSize })
-    .catch(() => null);
+  const [result, facetCounts] = await Promise.all([
+    eventRepository
+      .list({ filters, sorts: sort, page, pageSize })
+      .catch(() => null),
+    // Facet counts are deliberately NOT narrowed by the shopper's own type or
+    // status selection: a count that shrank to zero as you ticked boxes would
+    // hide the very facet you'd need to untick. They answer "does this kind of
+    // event exist at all", which is the question that decides visibility.
+    eventRepository
+      .facetCountsForTypesAndStatuses()
+      .catch(() => ({}) as Record<string, number | undefined>),
+  ]);
 
   return (
     <Main>
@@ -64,7 +73,7 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
             Events
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <EventsIndexListing initialData={result} />
+          <EventsIndexListing initialData={result} facetCounts={facetCounts} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

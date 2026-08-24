@@ -4,11 +4,11 @@
  *      `codesAvailable === codePoolSize` (i.e. no fixture ever showed a partially-redeemed
  *      or sold-out pool, and `manual-email` delivery was never exercised at all) — see
  *      CLAUDE.md seed-data blandness sweep, 2026-08-20 session.
- * WHAT: Exports 7 digital-code listings on Beyblade Arena — mixed auto-claim/manual-email
+ * WHAT: Exports 8 digital-code listings on Beyblade Arena — mixed auto-claim/manual-email
  *       delivery, partially-redeemed and fully-sold-out pools, and expiring codes.
  *
  * EXPORTS:
- *   productsDigitalCodesSeedData — Array of 7 Partial<ProductDocument> with listingType:"digital-code"
+ *   productsDigitalCodesSeedData — Array of 8 Partial<ProductDocument> with listingType:"digital-code"
  *
  * @tag domain:products,digital-codes
  * @tag layer:seed
@@ -29,8 +29,8 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-x-app-starter-pack",
     title: "Beyblade X App — Starter Pack Code",
     description: "Digital redemption code for the Beyblade X companion app's Starter Pack — instantly unlocks 5 exclusive digital tops.",
-    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
-    categoryNames: ["Beyblade X", "Spinning Tops"],
+    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 199,
@@ -76,8 +76,8 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-x-app-legendary-pack",
     title: "Beyblade X App — Legendary Pack Code (Partially Claimed)",
     description: "Unlocks 3 legendary digital tops in the companion app. Popular pack — most of the batch has already been claimed.",
-    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
-    categoryNames: ["Beyblade X", "Spinning Tops"],
+    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 349,
@@ -121,15 +121,20 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-burst-app-sold-out",
     title: "Beyblade Burst App — Anniversary Pack Code (Sold Out)",
     description: "Limited-run anniversary code pack for the Beyblade Burst app — every code in this batch has been claimed.",
-    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
-    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    categorySlugs: ["category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Burst Classic","Burst Tops","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 299,
     currency: "INR",
-    stockQuantity: 15,
+    // `stockQuantity: 15` / `isSold: false` until 2026-08-24, contradicting
+    // both `availableQuantity: 0` and the drained `codesAvailable` below.
+    // digital-code's own config comment claimed stockQuantity mirrors the pool
+    // count; this fixture is the proof it does not, which is why the per-type
+    // predicate reads the nested pool counter rather than trusting the mirror.
+    stockQuantity: 0,
     availableQuantity: 0,
-    isSold: false,
+    isSold: true,
     mainImage: seedExtMedia("https://picsum.photos/seed/digitalcode-image-beyblade-burst-sold-out-1-20260810/900/900"),
     images: [seedExtMedia("https://picsum.photos/seed/digitalcode-image-beyblade-burst-sold-out-1-20260810/900/900")],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
@@ -165,8 +170,8 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-x-manual-tournament-pass",
     title: "Beyblade X Regional Tournament — Digital Entry Pass",
     description: "Digital entry pass for the next regional tournament, emailed manually by the organizer within 24 hours of purchase.",
-    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
-    categoryNames: ["Beyblade X", "Spinning Tops"],
+    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 499,
@@ -213,8 +218,8 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-metal-app-classic-pack",
     title: "Beyblade Metal Fight App — Classic Pack Code",
     description: "Unlocks the Metal Fight classic-era top roster in the companion app — Storm Pegasus, Lightning L-Drago, and more.",
-    categorySlugs: ["category-beyblade-metal", "category-spinning-tops"],
-    categoryNames: ["Beyblade Metal Fight", "Spinning Tops"],
+    categorySlugs: ["category-metal-fury","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categoryNames: ["Metal Fury","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 249,
@@ -257,8 +262,8 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-burst-app-avatar-skins",
     title: "Beyblade Burst App — Avatar Skin Bundle Code",
     description: "Cosmetic-only code bundle — unlocks 8 exclusive player avatar skins in the Beyblade Burst app, no gameplay advantage.",
-    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
-    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    categorySlugs: ["category-burst-cho-z","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Cho-Z","Burst Tops","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 149,
@@ -301,8 +306,8 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     slug: "digitalcode-beyblade-x-manual-coaching-session",
     title: "1-on-1 Beyblade X Coaching Session — Digital Booking Code",
     description: "Redeem this code for a 30-minute 1-on-1 video coaching session with a tournament-ranked Beyblade X player. Booking link emailed manually.",
-    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
-    categoryNames: ["Beyblade X", "Spinning Tops"],
+    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 799,
@@ -347,4 +352,47 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
       ["digital-code", "coaching"],
     ),
   } as unknown as Partial<ProductDocument>,
+  {
+    // Pool drained, but `stockQuantity: 5` and `isSold: false`.
+    //
+    // The NESTED-field fixture: the only row that fails purely on
+    // `digitalCode.codesAvailable`. The old related-items predicate read
+    // `row.codesAvailable` at the TOP level, which is undefined on every
+    // document, so its digital-code branch had never once fired. Without a
+    // fixture in this exact shape that bug is untestable.
+    id: "digitalcode-beyblade-x-app-launch-codes-depleted",
+    slug: "digitalcode-beyblade-x-app-launch-codes-depleted",
+    title: "Beyblade X App — Launch Bonus Code (Pool Empty)",
+    description: "Launch-bonus codes for the Beyblade X app. Every code in the pool has been claimed; restock pending.",
+    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    price: 399,
+    currency: "INR",
+    stockQuantity: 5,
+    availableQuantity: 5,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/digitalcode-image-beyblade-x-depleted-1-20260824/900/900"),
+    images: [seedExtMedia("https://picsum.photos/seed/digitalcode-image-beyblade-x-depleted-1-20260824/900/900")],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "digital-code" as const,
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    digitalCode: {
+      codeDeliveryMethod: "auto-claim" as const,
+      codePoolSize: 30,
+      codesAvailable: 0,
+      redemptionInstructions: "Open the Beyblade X app, tap Settings → Redeem, and paste your code.",
+    },
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["digital-code"],
+    createdAt: new Date("2026-08-24"),
+    updatedAt: new Date("2026-08-24"),
+  },
 ];

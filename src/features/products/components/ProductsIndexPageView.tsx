@@ -10,7 +10,7 @@ import { GENERIC_PRODUCT_LISTING_TYPES } from "../constants/listing-tabs";
 import {
   listPublicProducts,
   parsePublicProductParams,
-  defaultTogglesForListingTypes,
+  defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 import { parseSelectedListingTypes } from "../utils/listing-type";
 
@@ -24,17 +24,14 @@ export interface ProductsIndexPageViewProps {
 }
 
 export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndexPageViewProps) {
-  // The "Show sold" / "Show ended" defaults depend on WHICH types are in play,
-  // and this page now spans all nine. Both sides derive them from the same
-  // helper — a hardcoded `hideSoldByDefault: true` here would disagree with
-  // the client the moment the user ticks Auctions, and `staleTime: Infinity`
-  // would freeze that disagreement (Root Cause #30).
+  // The availability scope is derived from the same helper the client reads
+  // its default from — a hardcoded default here would disagree with the
+  // client, and `staleTime: Infinity` would freeze that disagreement
+  // (Root Cause #30).
   const raw = searchParams[TABLE_KEYS.LISTING_TYPE];
   const selectedTypes = parseSelectedListingTypes(Array.isArray(raw) ? raw[0] : raw);
   const effectiveTypes =
     selectedTypes.length > 0 ? selectedTypes : GENERIC_PRODUCT_LISTING_TYPES;
-  const { hideSoldByDefault, hideEndedByDefault } =
-    defaultTogglesForListingTypes(effectiveTypes);
 
   // See ArtStickersListView — one shared filter implementation with
   // /api/products, so SSR and the client refetch agree by construction.
@@ -43,8 +40,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
       listingTypes: GENERIC_PRODUCT_LISTING_TYPES,
       pageSize: DEFAULT_PAGE_SIZE,
       sorts: DEFAULT_SORT,
-      hideSoldByDefault,
-      hideEndedByDefault,
+      ...defaultAvailabilityForListingTypes(effectiveTypes),
     }),
   );
 

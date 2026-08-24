@@ -20,6 +20,15 @@ export interface AdminFilterTab {
 
 export const ALL_TAB = { id: "All", label: "All" } as const;
 
+// COVERAGE (2026-08-24): `audit-filter-tab-enums` gained a check that every
+// value of the backing enum HAS a chip, not just that every chip is a real
+// value. It immediately found ten gaps across the seller sets — `in_review`
+// (where a submission waits on admin approval, arguably the state a seller most
+// wants to filter for), `archived`, `returned`, and the offer states
+// `countered` / `withdrawn` / `paid`. Rows in those states were visible under
+// "All" and isolatable by nothing. All ten now have chips; anything genuinely
+// not worth a chip goes in that audit entry's `omit` list with a reason.
+
 /** Admin > Products — listing status filter chip set. Real `ProductStatus`
  *  is draft|published|in_review|archived — "pending" fixed to "in_review"
  *  (its real meaning); the previous id never matched any document. */
@@ -123,12 +132,17 @@ export const ADMIN_AUDIT_LOG_ACTION_TABS = [
 export const ADMIN_ORDER_STATUS_TABS = [
   ALL_TAB,
   { id: "pending", label: "Pending" },
+  // `confirmed` and `returned` were both missing until 2026-08-24 even though
+  // both are real `OrderStatusValues` an order reaches — so an admin could see
+  // such an order in the All tab and had no chip that would isolate it.
+  { id: "confirmed", label: "Confirmed" },
   { id: "processing", label: "Processing" },
   { id: "shipped", label: "Shipped" },
   { id: "delivered", label: "Delivered" },
   { id: "cancelled", label: "Cancelled" },
   { id: "refunded", label: "Refunded" },
   { id: "return_requested", label: "Return Requested" },
+  { id: "returned", label: "Returned" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /**
@@ -203,11 +217,19 @@ export const ADMIN_EVENT_ENTRY_STATUS_TABS = [
  *  feature's own events/types/index.ts). A "Published" chip previously
  *  returned zero rows every time — removed rather than aliased since
  *  "Active" already covers the intended meaning. */
+/**
+ * Every `EventStatus`, not a subset. `paused` and `cancelled` were missing
+ * until 2026-08-24 — a real status with no chip is unreachable, and
+ * `audit-filter-tab-enums` never caught it because that audit only checks the
+ * reverse (that no chip names a DEAD value).
+ */
 export const ADMIN_EVENT_STATUS_TABS = [
   ALL_TAB,
   { id: "draft", label: "Draft" },
   { id: "active", label: "Active" },
+  { id: "paused", label: "Paused" },
   { id: "ended", label: "Ended" },
+  { id: "cancelled", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Scammers — scammer profile status filter chip set. */
@@ -276,6 +298,7 @@ export const SELLER_PRODUCT_STATUS_TABS = [
   { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
   { id: "archived", label: "Archived" },
+  { id: "in_review", label: "In Review" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Auctions — auction-state filter chip set. Real `ProductStatus`
@@ -292,6 +315,8 @@ export const SELLER_AUCTION_STATUS_TABS = [
   ALL_TAB,
   { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
+  { id: "in_review", label: "In Review" },
+  { id: "archived", label: "Archived" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Pre-orders — pre-order-state filter chip set. Same root cause
@@ -303,6 +328,7 @@ export const SELLER_PRE_ORDER_STATUS_TABS = [
   { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
   { id: "archived", label: "Archived" },
+  { id: "in_review", label: "In Review" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Prize Draws — draw-state filter chip set. Same root cause and
@@ -313,6 +339,8 @@ export const SELLER_PRIZE_DRAW_STATUS_TABS = [
   ALL_TAB,
   { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
+  { id: "in_review", label: "In Review" },
+  { id: "archived", label: "Archived" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Orders — order-state filter chip set. Subset of
@@ -324,11 +352,37 @@ export const SELLER_PRIZE_DRAW_STATUS_TABS = [
 export const SELLER_ORDER_STATUS_TABS = [
   ALL_TAB,
   { id: "pending", label: "Pending" },
+  // `confirmed` is settable from SellerOrdersView's own Update-Status dropdown
+  // but had no chip here, so a seller could move an order into a state they
+  // could then never filter for. `return_requested` was excluded on the theory
+  // that sellers never see one — they do, it is the state a buyer's return
+  // request lands in and the seller is the one who has to act on it.
+  { id: "confirmed", label: "Confirmed" },
   { id: "processing", label: "Processing" },
   { id: "shipped", label: "Shipped" },
   { id: "delivered", label: "Delivered" },
   { id: "cancelled", label: "Cancelled" },
   { id: "refunded", label: "Refunded" },
+  { id: "return_requested", label: "Return Requested" },
+  { id: "returned", label: "Returned" },
+] as const satisfies readonly AdminFilterTab[];
+
+/**
+ * Admin > Offers — the FULL `OfferStatus` union, unlike the seller variant
+ * below, which deliberately surfaces only the four states a seller acts on.
+ * An admin is auditing the whole lifecycle, so `countered`, `withdrawn` and
+ * `paid` all need to be reachable. Cross-checked against the real union by
+ * `audit-filter-tab-enums`.
+ */
+export const ADMIN_OFFER_STATUS_TABS = [
+  ALL_TAB,
+  { id: "pending", label: "Pending" },
+  { id: "countered", label: "Countered" },
+  { id: "accepted", label: "Accepted" },
+  { id: "paid", label: "Paid" },
+  { id: "declined", label: "Declined" },
+  { id: "expired", label: "Expired" },
+  { id: "withdrawn", label: "Withdrawn" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Offers — offer-state filter chip set. Real `OfferStatus` is
@@ -342,6 +396,9 @@ export const SELLER_OFFER_STATUS_TABS = [
   { id: "accepted", label: "Accepted" },
   { id: "declined", label: "Rejected" },
   { id: "expired", label: "Expired" },
+  { id: "countered", label: "Countered" },
+  { id: "withdrawn", label: "Withdrawn" },
+  { id: "paid", label: "Paid" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Bids — bid-state filter chip set. Uses the empty-sentinel

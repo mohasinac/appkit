@@ -409,8 +409,15 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   wrap?: boolean;
   /** Reverse the visual order of children (`flex-direction: row-reverse`) without
    * touching DOM/source order. Used for hand-mode-aware layouts (e.g. moving a
-   * close button to the opposite header edge) — replaces raw `flex-row-reverse`. */
-  reverse?: boolean;
+   * close button to the opposite header edge) — replaces raw `flex-row-reverse`.
+   *
+   * `true` reverses unconditionally. `"hand"` defers the decision to the
+   * `data-hand` preference: it mirrors only in left-hand mode, entirely in CSS
+   * (`HandMode.style.css`), so `Row` stays hook-free and server-safe and the
+   * flip lands on the FIRST paint — no flash, no hydration mismatch. Prefer
+   * `"hand"` over `useHandMode()` + `reverse={hand === "left"}` for anything
+   * rendered above the fold. */
+  reverse?: boolean | "hand";
   /** Zebra-stripe pattern when this Row is a repeating list element (rendered with `even:bg-*`). */
   oddEven?: "none" | "zebra";
   /**
@@ -498,7 +505,7 @@ export function Row({
   const Tag = (as ?? "div") as React.ElementType;
   const classes = [
     "appkit-row",
-    reverse ? "appkit-row--reverse" : "",
+    reverse === "hand" ? "appkit-hand-mirror" : reverse ? "appkit-row--reverse" : "",
     centered ? "appkit-row--centered" : align !== "center" ? ITEMS_MAP[align] : "",
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],

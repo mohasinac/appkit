@@ -10,13 +10,21 @@
  *
  * WHAT: `parsePublicProductParams` (URL/searchParams -> typed input) and
  *       `listPublicProducts` (typed input -> page of documents). Firestore-safe
- *       clauses go into the query; `inStock` and unsafe date ranges are applied as
- *       in-memory predicates over one bounded fetch, then re-sorted into the caller's
- *       requested order and re-paginated.
+ *       clauses go into the query; the availability scope and unsafe date
+ *       ranges are applied over bounded fetches, then re-sorted into the
+ *       caller's requested order and re-paginated. See the comment block above
+ *       `listPublicProducts` for why the three scopes execute differently.
+ *
+ *       Since 2026-08-24 this also backs the admin/seller dashboards, via the
+ *       `ANY_STATUS` sentinel — so a dashboard and a public page filtering the
+ *       same listing type issue byte-identical queries instead of two
+ *       hand-rolled filter builders that drift.
  *
  * EXPORTS:
  *   PublicProductListInput, PublicProductListResult, PublicProductExecutor,
- *   PublicProductListOptions, parsePublicProductParams, listPublicProducts
+ *   PublicProductListOptions, parsePublicProductParams, listPublicProducts,
+ *   listStoreProducts, defaultAvailabilityForListingTypes, ANY_STATUS,
+ *   PUBLIC_PRODUCT_MAX_PAGE_SIZE
  *
  * @tag domain:products
  * @tag layer:server-data
@@ -40,14 +48,31 @@ import {
   expandSieveParam,
 } from "../../../../utils/sieve-builder";
 import { ALL_LISTING_TYPES } from "../../../shared/listing-types/feature-flags";
-import { hideDefaultsFor } from "../../../shared/listing-types/_registry";
+import {
+  isListingRowAvailable,
+  unavailableClausesFor,
+} from "../../../shared/listing-types/_registry";
+import type { UnavailableClause } from "../../../shared/listing-types/availability";
+import {
+  AVAILABILITY_VALUES,
+  isAvailabilityFilter,
+  type AvailabilityFilter,
+} from "../../../../constants/field-names";
 import type { ListingType } from "../../../../features/products/types/index";
 
 /** Vercel Hobby Fluid Compute ceiling (CLAUDE.md Rule #6) — never fetch more at once. */
 export const PUBLIC_PRODUCT_MAX_PAGE_SIZE = 50;
 
 /**
- * Which "Show X" defaults apply to a set of listing types.
+ * `status` sentinel meaning "every publication state". Only the authenticated
+ * admin/seller dashboards may pass it — a public surface that did would leak
+ * drafts. A sentinel rather than `status: undefined` because undefined already
+ * means "use the safe default", and conflating the two is how a leak ships.
+ */
+export const ANY_STATUS = "__any__";
+
+/**
+ * The availability scope a listing surface starts in.
  *
  * THE POINT OF THIS FUNCTION is that SSR and the client refetch call the SAME
  * implementation. `staleTime: Infinity` freezes SSR `initialData` forever, so
@@ -56,26 +81,24 @@ export const PUBLIC_PRODUCT_MAX_PAGE_SIZE = 50;
  * them is wrong — permanently (Root Cause #30). Two mirrored literals is
  * exactly how that bug is written; one shared function is how it isn't.
  *
- * `/products` now spans all nine listing types, which makes this load-bearing
- * rather than theoretical: a mixed set includes both sold-out-able types
- * (products, art) and time-boxed ones (auctions, pre-orders, prize draws), so
- * BOTH toggles can apply at once.
+ * It is a constant today rather than a per-type decision — every listing
+ * surface opens on what a shopper can actually buy. It stays a function
+ * because that is the seam a surface would override through, and because
+ * `audit-listing-filter-parity` asserts on this name to prove every SSR view
+ * derives its default rather than hard-coding one (two of them used to).
  */
-export function defaultTogglesForListingTypes(types: readonly string[] | undefined): {
-  hideSoldByDefault: boolean;
-  hideEndedByDefault: boolean;
-} {
-  // No explicit set = every type is in play, so both defaults apply.
+export function defaultAvailabilityForListingTypes(
+  _types?: readonly string[],
+): { availability: AvailabilityFilter } {
+  return { availability: AVAILABILITY_VALUES.AVAILABLE };
+}
+
+/** Narrow arbitrary strings to real listing types, dropping the rest. */
+function asListingTypes(types: readonly string[] | undefined): ListingType[] {
   const effective = types && types.length > 0 ? types : ALL_LISTING_TYPES;
-  const defaults = hideDefaultsFor(
-    effective.filter((t): t is ListingType => ALL_LISTING_TYPES.includes(t as ListingType)),
+  return effective.filter((t): t is ListingType =>
+    ALL_LISTING_TYPES.includes(t as ListingType),
   );
-  return {
-    hideSoldByDefault: defaults.includes("sold"),
-    // "ended" and "closed" are the same query mechanic (a date range against
-    // the type's own end field); they differ only in the toggle's wording.
-    hideEndedByDefault: defaults.includes("ended") || defaults.includes("closed"),
-  };
 }
 
 const DEFAULT_PAGE = 1;
@@ -102,6 +125,12 @@ export interface PublicProductListInput {
   /** Pipe-joined multi-select (`new|used`) — emitted as an OR-group, never as AND. */
   condition?: string;
   storeId?: string;
+  /**
+   * Publication status. Defaults to `published`. Pass `ANY_STATUS` for the
+   * admin/seller dashboards, which exist precisely to show drafts, in-review
+   * and archived rows — that is what lets them share this implementation
+   * instead of hand-rolling a fourth filter builder.
+   */
   status?: string;
   minPrice?: string;
   maxPrice?: string;
@@ -124,8 +153,12 @@ export interface PublicProductListInput {
   typeFacets?: Record<string, string>;
   preOrderProductionStatus?: string;
   prizeRevealStatus?: string;
-  /** Hide sold-out rows. Applied in memory — never pushed into Firestore. */
-  inStock?: boolean;
+  /**
+   * Which availability scope to return. Defaults to `all` so non-browse
+   * callers (related items, search, homepage helpers that opt in explicitly)
+   * are unaffected. Browse surfaces pass `available`.
+   */
+  availability?: AvailabilityFilter;
   dateFrom?: string;
   dateTo?: string;
   /** Pre-validated raw Sieve string (callers must safelist fields themselves). */
@@ -144,6 +177,14 @@ export interface PublicProductListResult {
   totalPages: number;
   hasMore: boolean;
   cursor: string | null;
+  /**
+   * A bounded fetch saturated its ceiling, so `total` is a FLOOR, not a count.
+   * Callers must render it as "50+", never as an exact figure, and must not
+   * compute a final page number from it. Before this existed, the in-memory
+   * path reported the size of its own 50-row window as the size of the result
+   * set — a claim that is simply false past the ceiling.
+   */
+  truncated: boolean;
   /** The Sieve string actually sent to Firestore — surfaced for debugging. */
   filters: string;
   sorts: string;
@@ -183,6 +224,12 @@ export interface PublicProductListOptions {
    * the fetch. Callers that can read siteSettings pass `enabledListingTypes(...)`.
    */
   enabledListingTypes?: ReadonlySet<string>;
+  /**
+   * The instant "now" refers to. Defaults to the wall clock; injectable so a
+   * fan-out's several queries all resolve `"NOW"` to the SAME timestamp, and
+   * so tests can pin it.
+   */
+  now?: Date;
 }
 
 // ---------------------------------------------------------------------------
@@ -243,6 +290,34 @@ function pipeList(raw: string): string[] | undefined {
 }
 
 /**
+ * Read the availability scope, with a back-compat mapping for the three URL
+ * spellings this replaced.
+ *
+ * An unrecognised token falls back to the caller's default rather than being
+ * passed through — a raw query param must never reach a Firestore value.
+ */
+function readAvailability(
+  get: (key: string) => string,
+  fallback: AvailabilityFilter | undefined,
+): AvailabilityFilter | undefined {
+  const raw = get(TABLE_KEYS.AVAILABILITY);
+  if (raw && isAvailabilityFilter(raw)) return raw;
+  if (raw) return fallback;
+
+  // `showSold` / `showEnded` / `showClosed` each meant "stop filtering", so
+  // they map to `all`, NOT to `unavailable`. Kept only so links shared before
+  // 2026-08-24 still resolve to something sensible; nothing writes them.
+  if (
+    get(TABLE_KEYS.SHOW_SOLD) === "true" ||
+    get(TABLE_KEYS.SHOW_ENDED) === "true" ||
+    get(TABLE_KEYS.SHOW_CLOSED) === "true"
+  ) {
+    return AVAILABILITY_VALUES.ALL;
+  }
+  return fallback;
+}
+
+/**
  * Read the shared public-listing query params. SSR views hand in Next's
  * `searchParams` record; the API route hands in `url.searchParams`. Both produce
  * the same typed input, which is the whole point — the two paths cannot drift.
@@ -254,17 +329,11 @@ export function parsePublicProductParams(
     pageSize?: number;
     sorts?: string;
     /**
-     * Public browse pages hide sold-out rows until the user flips "Show sold".
-     * The API route leaves this off so non-browse callers (related items,
-     * homepage sections) keep their current behaviour.
+     * The scope to use when the URL names none. Browse surfaces pass
+     * `available` via `defaultAvailabilityForListingTypes`; the API route
+     * leaves it undefined so non-browse callers keep seeing everything.
      */
-    hideSoldByDefault?: boolean;
-    /**
-     * Auctions / pre-orders hide already-ended rows until "Show ended" is on,
-     * by defaulting `dateFrom` to now. Must mirror the paired client listing
-     * component exactly or the SSR paint and the refetch disagree.
-     */
-    hideEndedByDefault?: boolean;
+    availability?: AvailabilityFilter;
   },
 ): PublicProductListInput {
   const get = (k: string) => first(params, k);
@@ -311,23 +380,12 @@ export function parsePublicProductParams(
     preOrderProductionStatus:
       get(TABLE_KEYS.PREORDER_STATUS) || get("preOrderStatus") || undefined,
     prizeRevealStatus: get(TABLE_KEYS.PRIZE_REVEAL_STATUS) || undefined,
-    // Three spellings of one intent — /products and /art call it "Show sold",
-    // /pre-orders calls it "Show closed", and the client hook sends `inStock`.
-    // Any of them turning the filter OFF wins, so SSR and the client refetch
-    // agree on what the default view means (Root Cause #30).
-    inStock:
-      get(TABLE_KEYS.SHOW_SOLD) === "true" || get(TABLE_KEYS.SHOW_CLOSED) === "true"
-        ? undefined
-        : get(TABLE_KEYS.IN_STOCK)
-          ? get(TABLE_KEYS.IN_STOCK) === "true"
-          : defaults?.hideSoldByDefault
-            ? true
-            : undefined,
-    dateFrom:
-      get(TABLE_KEYS.DATE_FROM) ||
-      (defaults?.hideEndedByDefault && get(TABLE_KEYS.SHOW_ENDED) !== "true"
-        ? new Date().toISOString()
-        : undefined),
+    availability: readAvailability(get, defaults?.availability),
+    // Now a plain drawer facet again. It used to double as the hide-ended
+    // mechanism, which is why it only worked when exactly one listing type was
+    // selected — `dateFieldFor` returns null otherwise, so /products silently
+    // showed ended auctions in its default view.
+    dateFrom: get(TABLE_KEYS.DATE_FROM) || undefined,
     dateTo: get(TABLE_KEYS.DATE_TO) || undefined,
     page: num(get(TABLE_KEYS.PAGE)) ?? DEFAULT_PAGE,
     pageSize: num(get(TABLE_KEYS.PAGE_SIZE)) ?? defaults?.pageSize ?? DEFAULT_PAGE_SIZE,
@@ -352,13 +410,16 @@ function buildFirestoreSafeFilters(input: PublicProductListInput): string {
 
   // Published-only unless the caller explicitly asks otherwise. Without this
   // default, any refetch that omits `status` leaks drafts (Root Cause #30).
-  parts.push(
-    sieveFilter(
-      PRODUCT_FIELDS.STATUS,
-      SIEVE_OP.EQ,
-      input.status || PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
-    ),
-  );
+  // ANY_STATUS is the one opt-out, reserved for the authenticated dashboards.
+  if (input.status !== ANY_STATUS) {
+    parts.push(
+      sieveFilter(
+        PRODUCT_FIELDS.STATUS,
+        SIEVE_OP.EQ,
+        input.status || PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+      ),
+    );
+  }
 
   const types = input.listingTypes?.filter(Boolean) ?? [];
   if (types.length > 0) {
@@ -493,14 +554,38 @@ async function defaultExecutor(query: PublicProductQuery): Promise<ExecutorResul
   };
 }
 
+/** Render one `UnavailableClause` as a Sieve clause against a fixed `now`. */
+function clauseToSieve(clause: UnavailableClause, now: Date): string {
+  const value = clause.value === "NOW" ? now.toISOString() : clause.value;
+  return clause.op === "lt"
+    ? sieveFilter(clause.field, SIEVE_OP.LT, value)
+    : sieveFilter(clause.field, SIEVE_OP.EQ, value);
+}
+
 // ---------------------------------------------------------------------------
 // The one public listing query
 // ---------------------------------------------------------------------------
+//
+// AVAILABILITY IS ASYMMETRIC, and the asymmetry is what makes this tractable.
+//
+//   "unavailable" is SPARSE and expressible as an OR of EQUALITIES — sold out,
+//   ended, closed, depleted. Firestore cannot OR across different fields, but
+//   it can run each equality as its own bounded query, and merging N small
+//   result sets in memory is cheap. That is Path C.
+//
+//   "available" is DENSE and NEGATION-shaped: NOT(a OR b OR c). There is no
+//   query for that, so it stays what it has always been — one bounded window
+//   in the caller's own sort order, filtered per row. That is fine precisely
+//   because it is dense: nearly every row in the window passes.
+//
+// Path A ("all") applies no predicate at all and is therefore the only scope
+// with true Firestore pagination and an exact total.
 
 export async function listPublicProducts(
   input: PublicProductListInput,
   opts?: PublicProductListOptions,
 ): Promise<PublicProductListResult | null> {
+  const now = opts?.now ?? new Date();
   const page = Math.max(1, input.page ?? DEFAULT_PAGE);
   const pageSize = Math.min(
     PUBLIC_PRODUCT_MAX_PAGE_SIZE,
@@ -508,26 +593,138 @@ export async function listPublicProducts(
   );
   const sorts = input.sorts || DEFAULT_SORTS;
   const requestedSortField = sorts.replace(/^-/, "");
+  const sortDesc = sorts.startsWith("-");
+
+  const availability = input.availability ?? AVAILABILITY_VALUES.ALL;
+  const wantAvailable = availability === AVAILABILITY_VALUES.AVAILABLE;
+  const wantUnavailable = availability === AVAILABILITY_VALUES.UNAVAILABLE;
 
   const dateField = dateFieldFor(input.listingTypes);
   const hasDateRange = Boolean((input.dateFrom || input.dateTo) && dateField);
-  // Firestore DOES accept one inequality when the query sorts by that same field —
-  // the auctions "Ending Soon" default is exactly that shape, so push it down.
-  const canPushDate =
-    hasDateRange && !input.inStock && requestedSortField === dateField;
+  // Firestore DOES accept one inequality when the query sorts by that same
+  // field, so a matching date facet can still be pushed down.
+  const canPushDate = hasDateRange && !wantAvailable && requestedSortField === dateField;
 
   const safeFilters = buildFirestoreSafeFilters(input);
-  const filters = sieveAnd(
-    safeFilters,
+  const dateClauses = [
     ...(canPushDate && input.dateFrom
       ? [sieveFilter(dateField as string, SIEVE_OP.GTE, input.dateFrom)]
       : []),
     ...(canPushDate && input.dateTo
       ? [sieveFilter(dateField as string, SIEVE_OP.LTE, input.dateTo)]
       : []),
-  );
+  ];
 
-  const hasUnsafeFilter = Boolean(input.inStock) || (hasDateRange && !canPushDate);
+  const executor = opts?.executor ?? defaultExecutor;
+  const types = asListingTypes(input.listingTypes);
+
+  // ── Path B: one type whose unavailability IS a pushable inequality, and the
+  //    caller is already sorting by that field. Ended auctions sorted by end
+  //    date is the whole reason this branch exists — it gives the archive real,
+  //    unbounded-depth Firestore pagination instead of a 50-row window.
+  const pushdown =
+    wantUnavailable && types.length === 1 && !hasDateRange
+      ? unavailableClausesFor(types).find(
+          (c) => c.op === "lt" && c.sortField === requestedSortField,
+        )
+      : undefined;
+
+  if (pushdown) {
+    const filters = sieveAnd(safeFilters, clauseToSieve(pushdown, now));
+    const result = await runQuery(executor, {
+      filters,
+      sorts,
+      page,
+      pageSize,
+      cursor: input.cursor ?? null,
+    });
+    if (!result) return null;
+    return finish({
+      items: result.items as Row[],
+      total: result.total,
+      page: result.page,
+      pageSize,
+      totalPages: result.totalPages,
+      hasMore: result.hasMore,
+      cursor: result.cursor ?? null,
+      truncated: false,
+      filters,
+      sorts,
+      enabled: opts?.enabledListingTypes,
+    });
+  }
+
+  // ── Path C: unavailable, everything else. One bounded query per distinct
+  //    clause, run in parallel, merged and deduped. Nine listing types collapse
+  //    to five clauses, so this is 5 × 50 = 250 documents in a single round —
+  //    well inside Rule #6, and the same fan-out shape `computeRelatedItems`
+  //    already uses.
+  if (wantUnavailable) {
+    const clauses = unavailableClausesFor(types);
+    const results = await Promise.all(
+      clauses.map((clause) => {
+        // An inequality still has to be ordered by its own field, even here.
+        const clauseSorts =
+          clause.op === "lt" && clause.sortField
+            ? sortBy(clause.sortField, "DESC")
+            : sorts;
+        return runQuery(executor, {
+          filters: sieveAnd(safeFilters, clauseToSieve(clause, now)),
+          sorts: clauseSorts,
+          page: 1,
+          pageSize: PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+          cursor: null,
+        });
+      }),
+    );
+    // One failed branch must not blank the whole scope — but it is already
+    // logged loudly by `runQuery`, and it does mean the merge is incomplete,
+    // which `truncated` communicates honestly.
+    if (results.every((r) => r === null)) return null;
+
+    const merged = new Map<string, Row>();
+    let truncated = false;
+    for (const result of results) {
+      if (!result) {
+        truncated = true;
+        continue;
+      }
+      const rows = result.items as Row[];
+      if (rows.length >= PUBLIC_PRODUCT_MAX_PAGE_SIZE) truncated = true;
+      for (const row of rows) {
+        const id = typeof row.id === "string" ? row.id : JSON.stringify(row.id);
+        if (!merged.has(id)) merged.set(id, row);
+      }
+    }
+
+    // Drop false positives — a clause selects a SUPERSET. A pre-order can hold
+    // `availableQuantity: 0` from an over-signed allocation while still open,
+    // and only the per-type predicate knows that.
+    const rows = [...merged.values()].filter((row) => !isListingRowAvailable(row, now));
+    const ordered = sortRows(rows, requestedSortField, sortDesc);
+    const start = (page - 1) * pageSize;
+
+    return finish({
+      items: ordered.slice(start, start + pageSize),
+      total: ordered.length,
+      page,
+      pageSize,
+      totalPages: truncated
+        ? page + 1
+        : Math.max(1, Math.ceil(ordered.length / pageSize)),
+      hasMore: truncated || start + pageSize < ordered.length,
+      cursor: null,
+      truncated,
+      filters: clauses.map((c) => sieveAnd(safeFilters, clauseToSieve(c, now))).join(" OR "),
+      sorts,
+      enabled: opts?.enabledListingTypes,
+    });
+  }
+
+  // ── Path A ("all") and the dense "available" case share one query. The only
+  //    difference is whether a per-row predicate runs afterwards.
+  const filters = sieveAnd(safeFilters, ...dateClauses);
+  const inMemory = wantAvailable || (hasDateRange && !canPushDate);
 
   // When a date range stays in memory, fetch in whichever direction front-loads
   // the rows that will PASS it: `dateFrom` (">=", still live) wants the most
@@ -535,34 +732,20 @@ export async function listPublicProducts(
   // Fetching in the client's own order instead is what made live auctions
   // invisible once ~50 had already ended.
   const fetchSorts =
-    hasUnsafeFilter && hasDateRange && dateField
+    inMemory && hasDateRange && !canPushDate && dateField
       ? input.dateFrom
         ? sortBy(dateField, "DESC")
         : sortBy(dateField, "ASC")
       : sorts;
 
-  const executor = opts?.executor ?? defaultExecutor;
-
-  let result: ExecutorResult;
-  try {
-    result = await executor({
-      filters,
-      sorts: fetchSorts,
-      page: hasUnsafeFilter ? 1 : page,
-      pageSize: hasUnsafeFilter ? PUBLIC_PRODUCT_MAX_PAGE_SIZE : pageSize,
-      cursor: hasUnsafeFilter ? null : (input.cursor ?? null),
-    });
-  } catch (error) {
-    void normalizeError(error);
-    // Loud. A swallowed query failure here is indistinguishable from an empty
-    // catalogue at every call site above, which is exactly how the /art bug hid.
-    serverLogger.error("listPublicProducts query failed", {
-      filters,
-      sorts: fetchSorts,
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  }
+  const result = await runQuery(executor, {
+    filters,
+    sorts: fetchSorts,
+    page: inMemory ? 1 : page,
+    pageSize: inMemory ? PUBLIC_PRODUCT_MAX_PAGE_SIZE : pageSize,
+    cursor: inMemory ? null : (input.cursor ?? null),
+  });
+  if (!result) return null;
 
   let items = result.items as Row[];
   let total = result.total;
@@ -570,14 +753,13 @@ export async function listPublicProducts(
   let resultPage = result.page;
   let hasMore = result.hasMore;
   let cursor = result.cursor ?? null;
+  let truncated = false;
 
-  if (hasUnsafeFilter) {
+  if (inMemory) {
+    truncated = items.length >= PUBLIC_PRODUCT_MAX_PAGE_SIZE;
     const filtered = items.filter((item) => {
-      if (input.inStock) {
-        const stock = item[PRODUCT_FIELDS.STOCK_QUANTITY];
-        if (!(typeof stock === "number" && stock > 0)) return false;
-      }
-      if (hasDateRange && dateField) {
+      if (wantAvailable && !isListingRowAvailable(item, now)) return false;
+      if (hasDateRange && !canPushDate && dateField) {
         const raw = item[dateField];
         if (!raw) return false;
         const value = raw instanceof Date ? raw.toISOString() : String(raw);
@@ -588,30 +770,18 @@ export async function listPublicProducts(
     });
 
     const ordered =
-      fetchSorts === sorts ? filtered : sortRows(filtered, requestedSortField, sorts.startsWith("-"));
+      fetchSorts === sorts ? filtered : sortRows(filtered, requestedSortField, sortDesc);
 
     total = ordered.length;
-    totalPages = Math.max(1, Math.ceil(total / pageSize));
+    totalPages = truncated ? page + 1 : Math.max(1, Math.ceil(total / pageSize));
     resultPage = page;
     const start = (page - 1) * pageSize;
     items = ordered.slice(start, start + pageSize);
-    hasMore = start + pageSize < total;
+    hasMore = truncated || start + pageSize < total;
     cursor = null;
   }
 
-  // Feature-flagged-off types never reach a public surface.
-  const enabled = opts?.enabledListingTypes;
-  if (enabled && enabled.size > 0) {
-    const before = items.length;
-    items = items.filter((it) => {
-      const lt = typeof it.listingType === "string" ? it.listingType : "standard";
-      return enabled.has(lt);
-    });
-    const removed = before - items.length;
-    if (removed > 0) total = Math.max(0, total - removed);
-  }
-
-  return {
+  return finish({
     items,
     total,
     page: resultPage,
@@ -619,8 +789,55 @@ export async function listPublicProducts(
     totalPages,
     hasMore,
     cursor,
+    truncated,
     filters,
     sorts,
+    enabled: opts?.enabledListingTypes,
+  });
+}
+
+/**
+ * Run one executor call, logging loudly and returning null on failure.
+ *
+ * Loud on purpose: a swallowed query failure is indistinguishable from an
+ * empty catalogue at every call site above, which is exactly how the /art bug
+ * hid for months (Root Cause #59).
+ */
+async function runQuery(
+  executor: PublicProductExecutor,
+  query: PublicProductQuery,
+): Promise<ExecutorResult | null> {
+  try {
+    return await executor(query);
+  } catch (error) {
+    void normalizeError(error);
+    serverLogger.error("listPublicProducts query failed", {
+      filters: query.filters,
+      sorts: query.sorts,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
+}
+
+/** Apply the feature-flag post-filter and assemble the result. */
+function finish(
+  draft: PublicProductListResult & { enabled?: ReadonlySet<string> },
+): PublicProductListResult {
+  const { enabled, ...result } = draft;
+  if (!enabled || enabled.size === 0) return result;
+
+  // Feature-flagged-off types never reach a public surface.
+  const before = result.items.length;
+  const items = result.items.filter((it) => {
+    const lt = typeof it.listingType === "string" ? it.listingType : "standard";
+    return enabled.has(lt);
+  });
+  const removed = before - items.length;
+  return {
+    ...result,
+    items,
+    total: removed > 0 ? Math.max(0, result.total - removed) : result.total,
   };
 }
 
@@ -649,7 +866,7 @@ export async function listStoreProducts(
       listingTypes,
       pageSize: defaults?.pageSize ?? DEFAULT_PAGE_SIZE,
       sorts: defaults?.sorts,
-      ...defaultTogglesForListingTypes(listingTypes),
+      ...defaultAvailabilityForListingTypes(listingTypes),
     }),
     // The route owns the store identity — a `?storeId=` in the URL must not be
     // able to make one store's tab render another store's inventory.

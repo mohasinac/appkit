@@ -16,6 +16,15 @@ export interface BackToTopProps {
 
 /**
  * BackToTop — floating scroll-to-top button.
+ *
+ * Sits at the top of the three-tier bottom edge: the nav bar is the floor
+ * (`--bottom-nav-height`), everything non-nav is one measured tier in between
+ * (`--bottom-chrome-height`, published by `<BottomChrome>`), and this floats a
+ * gutter above the sum. The offset is deliberately expressed against the tier
+ * rather than against any individual bar, so a CTA row changing height, a bar
+ * revealing on desktop scroll, or a new bottom bar added later all just work —
+ * this `calc()` never has to grow again.
+ *
  * Appears after the page has scrolled past `threshold` pixels. A small
  * dismiss control hides it for the current page view only — dismissal is
  * plain in-memory component state, reset on every route change (via
@@ -57,7 +66,7 @@ export function BackToTop({
   };
 
   return (
-    <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--appkit-space-4))] ${hand === "left" ? "left-4" : "right-4"} z-[var(--appkit-z-back-to-top)] ${className}`}>
+    <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+var(--appkit-space-4))] transition-[bottom] duration-300 ease-out ${hand === "left" ? "left-4" : "right-4"} z-[var(--appkit-z-back-to-top)] ${className}`}>
       <Button
         type="button"
         variant="outline"

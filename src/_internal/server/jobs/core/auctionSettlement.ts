@@ -5,8 +5,9 @@ import {
   storeRepository,
 } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
-import { AUCTION_MESSAGES } from "../handlers/messages";
+import { AUCTION_MESSAGES, BID_MESSAGES } from "../handlers/messages";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { CART_LANE, LANE_CHECKOUT_WINDOW_MS } from "../../../shared/checkout/lanes";
 
@@ -26,8 +27,67 @@ const AUCTION_CHECKOUT_WINDOW_MS = LANE_CHECKOUT_WINDOW_MS.auction;
 /** Deep link the winner straight into the auction checkout lane. */
 const AUCTION_CHECKOUT_URL = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.AUCTION}`;
 
+/**
+ * Clear every unpaid Buy Now hold on an auction whose clock just ran out.
+ *
+ * This is the user's explicit rule: "if by the time the checkout is not
+ * finished but auction timeout ends the buyout should fail as well." The item
+ * goes to whoever actually won the bidding, and the claimants get their carts
+ * back — the line is `locked: true`, so they cannot clear it themselves.
+ *
+ * `cancelled`, never `forfeited`: forfeiture means "won, then defaulted" and
+ * carries a warning about account restrictions. Nobody won anything here, and
+ * losing a race against a clock is not misconduct.
+ *
+ * Best-effort per hold — one failure must not abort settling the auction.
+ */
+async function releasePendingBuyouts(
+  ctx: JobContext,
+  product: AuctionProductRow,
+  holds: Array<{ id: string; data: { userId: string } }>,
+): Promise<void> {
+  for (const hold of holds) {
+    try {
+      await cartRepository.removeItemsByBidId(hold.data.userId, hold.id);
+      await bidRepository.markCancelled(hold.id);
+      await sendNotification({
+        userId: hold.data.userId,
+        type: "auction_ended",
+        priority: "high",
+        title: BID_MESSAGES.BUY_NOW_AUCTION_ENDED_TITLE,
+        message: BID_MESSAGES.BUY_NOW_AUCTION_ENDED_MESSAGE(product.title),
+        relatedId: product.id,
+        relatedType: "product",
+      });
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.warn(`Failed to release buyout hold ${hold.id}`, {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+  ctx.logger.info(`Released ${holds.length} unpaid buyout hold(s) on ${product.id}`);
+}
+
 async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promise<void> {
-  const activeBids = await bidRepository.getActiveByProduct(product.id);
+  const allActive = await bidRepository.getActiveByProduct(product.id);
+
+  /**
+   * A pending Buy Now claim is `active` and sits at the BIN price, so it would
+   * be `activeBids[0]` and win by default the instant the clock ran out —
+   * handing the item to somebody who explicitly did NOT complete their purchase
+   * in time. A buyout only counts once it has been paid for, at which point
+   * `claimAuctionForCheckout` has already marked it `won` and flipped the
+   * product to `isSold`, so this job never sees that auction at all.
+   *
+   * The stale holds are released below, after the real winner is decided.
+   */
+  const pendingBuyouts = allActive.filter((e) => e.data.isBuyout === true);
+  const activeBids = allActive.filter((e) => e.data.isBuyout !== true);
+
+  if (pendingBuyouts.length > 0) {
+    await releasePendingBuyouts(ctx, product, pendingBuyouts);
+  }
 
   if (activeBids.length === 0) {
     const batch = ctx.db.batch();

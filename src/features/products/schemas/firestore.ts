@@ -212,11 +212,21 @@ export interface ProductDocument extends BaseDocument {
   auctionExtensionMinutes?: number;
   auctionOriginalEndDate?: Date;
   auctionShippingPaidBy?: "seller" | "winner";
-  // SB-UNI-H 2026-05-13 — eBay-style hybrid auction + Buy It Now.
-  // BIN is offered while the auction has zero bids; once `bidsHaveStarted`
-  // flips to true the PDP hides the BIN button per eBay rules. Sellers
-  // can leave `buyItNowPrice` unset to disable BIN entirely.
-  buyItNowPrice?: number;
+  /**
+   * True once anybody has bid. Written by `placeBid`, never reset.
+   *
+   * It no longer gates Buy Now. The original SB-UNI-H design copied eBay's rule
+   * — BIN vanishes the moment the first bid lands — which in practice hid the
+   * button on nearly every real auction (3 of 4 seeded BIN fixtures had it
+   * hidden), while the PDP went on advertising the BIN *price* right above the
+   * missing button. Availability is now `buyNowPrice > currentBid`, via
+   * `isBuyNowAvailable()`; this field survives as a plain filterable fact about
+   * the auction.
+   *
+   * (A `buyItNowPrice` field used to sit alongside this one, documented as THE
+   * BIN price while every consumer actually read `buyNowPrice` above. Deleted
+   * 2026-08-24 — it had no readers and had already caused one seed-data bug.)
+   */
   bidsHaveStarted?: boolean;
   // SB-UNI-G 2026-05-13 — TCGPlayer-style grading + card metadata.
   // Applies to listingType:"standard" + "auction". Composite indices
@@ -467,6 +477,13 @@ export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
 };
 
 export const PRODUCT_PUBLIC_FIELDS = [
+  // Public-facing offer signals: the card grid renders a "Taking Offers" pill
+  // from `allowOffers`, and the detail-page form seeds its minimum from
+  // `minOfferPercent`. Listed here prophylactically — this array currently has
+  // no consumers, so their absence was not a live bug, but it would become one
+  // the moment something starts projecting through it.
+  "allowOffers",
+  "minOfferPercent",
   "id",
   "title",
   "description",
@@ -498,7 +515,6 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "auctionExtensionMinutes",
   "auctionShippingPaidBy",
   // SB-UNI-H 2026-05-13 — eBay hybrid BIN.
-  "buyItNowPrice",
   "bidsHaveStarted",
   // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata.
   "grading",
@@ -565,7 +581,6 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "buyNowPrice",
   "minBidIncrement",
   // SB-UNI-H 2026-05-13 — eBay hybrid BIN updatable.
-  "buyItNowPrice",
   "bidsHaveStarted",
   // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata updatable.
   "grading",

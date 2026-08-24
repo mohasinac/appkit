@@ -14,6 +14,7 @@ import { DatabaseError, NotFoundError } from "../../errors";
 import { serverLogger } from "../../monitoring";
 import {
   applySieveToFirestore,
+  countSieveMatches,
   type FirebaseSieveFields,
   type FirebaseSieveOptions,
   type FirebaseSieveResult,
@@ -228,6 +229,75 @@ export abstract class BaseRepository<T extends DocumentData> {
       fields,
       options: sieveOptions,
     });
+  }
+
+  /**
+   * Count matches for a Sieve model without reading any documents.
+   *
+   * Prefer this over `sieveQuery({ pageSize: 1 }).total` whenever only the
+   * number is wanted — that idiom pays for a wasted document read per call,
+   * which matters once a surface issues one query per union member.
+   */
+  protected async sieveCount(
+    model: SieveModel,
+    fields: FirebaseSieveFields,
+    options?: FirebaseSieveOptions & {
+      baseQuery?: CollectionReference | Query;
+    },
+  ): Promise<number> {
+    const { baseQuery, ...sieveOptions } = options ?? {};
+    return countSieveMatches({
+      baseQuery: baseQuery ?? this.getCollection(),
+      model,
+      fields,
+      options: sieveOptions,
+    });
+  }
+
+  /**
+   * How many documents match each value of a discriminator field, given a
+   * shared base filter — the "N rows of each type" behind every faceted tab
+   * bar and filter chip group.
+   *
+   * One `.count()` aggregation per value, all in parallel. A value whose query
+   * fails maps to `undefined`, NOT to 0: callers hide a facet at zero, and a
+   * swallowed failure that reads as "none of these exist" would hide a facet
+   * holding real rows (Root Cause #59). `undefined` means "unknown", and every
+   * caller is expected to keep the facet visible in that case.
+   *
+   * `values` may contain a pipe-joined OR-group (`"art|stickers"`) — it is
+   * passed through untouched so the enhanced adapter upgrades it to a
+   * Firestore `in` query, exactly as it does on the list path.
+   */
+  protected async facetCounts(
+    field: string,
+    values: readonly string[],
+    fields: FirebaseSieveFields,
+    options?: FirebaseSieveOptions & {
+      baseQuery?: CollectionReference | Query;
+      /** Sieve clauses ANDed into every count (e.g. `status==published`). */
+      baseFilters?: string;
+    },
+  ): Promise<Record<string, number | undefined>> {
+    const { baseFilters, ...rest } = options ?? {};
+    const entries = await Promise.all(
+      values.map(async (value) => {
+        // Sieve ANDs clauses with a comma; see utils/sieve-builder.ts.
+        const filters = [baseFilters, `${field}==${value}`]
+          .filter(Boolean)
+          .join(",");
+        try {
+          return [value, await this.sieveCount({ filters }, fields, rest)] as const;
+        } catch (error) {
+          void normalizeError(error);
+          serverLogger.warn(
+            `facetCounts: count failed for ${this.collection}.${field}==${value}; facet will stay visible`,
+          );
+          return [value, undefined] as const;
+        }
+      }),
+    );
+    return Object.fromEntries(entries);
   }
 
   async findByIdInTx(tx: Transaction, id: string): Promise<T | null> {

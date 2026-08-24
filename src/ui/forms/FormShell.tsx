@@ -14,19 +14,38 @@ import type { FormValues } from "../../schemas/types";
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 /**
- * A step descriptor. The step-wizard *rendering* this once drove
- * (`<FormShell steps={…}>`) was deleted 2026-08-09 as dead code — the real
- * wizard chrome is `features/shell/FormShell.tsx` + `StepForm.tsx`. This type
- * survives because `FormShellContextValue.steps` still carries the shape for
- * any context consumer that reads it (FormShellProvider/useFormShellState
- * both populate it as `[]` since neither is step-aware).
+ * A navigable form segment — a wizard step historically, a `<SectionForm>`
+ * section today. `FormShellContextValue.steps` carries these purely so
+ * `<FormErrorSummary>` can name the segment that owns an error and offer a
+ * jump link.
+ *
+ * `content` is optional because the common producer (`useSectionFormNav`)
+ * builds descriptors from section metadata alone — it has an id and a label
+ * to render in the summary, and no node to hand over. Requiring a node here
+ * is what previously forced both context producers to give up and populate
+ * `steps: []`, which silently disabled the jump link everywhere.
  */
 export interface FormShellStep {
   id: string;
   label: string;
   /** Field names required in this step — drives publish gate + error badge */
   requiredFields?: string[];
-  content: React.ReactNode;
+  content?: React.ReactNode;
+}
+
+/**
+ * Navigation wiring for a form split into steps or collapsible sections.
+ *
+ * Supplying this is what makes `<FormErrorSummary>`'s "jump to section" link
+ * work: it needs `sections` to name the owning segment and `onGoToSection` to
+ * actually move there. Omit it for single-segment forms — the summary then
+ * renders a flat list, which is correct for them.
+ */
+export interface FormShellNav {
+  sections?: FormShellStep[];
+  onGoToSection?: (index: number) => void;
+  /** Maps a (dotted) error key to the index of the section that owns it. */
+  fieldToSectionIndex?: Record<string, number>;
 }
 
 export interface FormShellContextValue {
@@ -114,13 +133,19 @@ export function applyZodIssues(
 }
 
 /**
- * `useFormShellState(schema?)` — caller-owned form state with optional Zod
- * validation. When a schema is supplied, `validate(values)` runs it and pipes
- * issues into the FormShellContext error map. `audit-form-schema` requires
- * every callsite to pass a schema.
+ * `useFormShellState(schema?, nav?)` — caller-owned form state with optional
+ * Zod validation. When a schema is supplied, `validate(values)` runs it and
+ * pipes issues into the FormShellContext error map. `audit-form-schema`
+ * requires every callsite to pass a schema.
+ *
+ * Pass `nav` when the form is split into sections (see `useSectionFormNav`)
+ * so `<FormErrorSummary>` can name the owning section and jump to it. Omit it
+ * for single-segment forms; the summary renders a flat list, which is right
+ * for them.
  */
 export function useFormShellState<TSchema extends import("zod").ZodTypeAny = import("zod").ZodTypeAny>(
   schema?: TSchema,
+  nav?: FormShellNav,
 ): UseFormShellStateResult {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -148,22 +173,29 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
     [schema, setFieldError],
   );
 
+  const navSections = nav?.sections;
+  const navGoTo = nav?.onGoToSection;
+  const navFieldMap = nav?.fieldToSectionIndex;
+
   const shellCtx = useMemo<FormShellContextValue>(() => ({
     errors,
     touched: Object.fromEntries(Object.keys(errors).map((k) => [k, true])),
     setFieldError,
     setFieldTouched: () => {},
     clearFieldError: (name) => setFieldError(name, null),
-    steps: [],
+    // Real sections when the caller supplied nav — this is what makes
+    // <FormErrorSummary>'s jump link resolve a label instead of `undefined`.
+    steps: navSections ?? [],
     currentStep: 0,
-    goToStep: () => {},
+    goToStep: navGoTo ?? (() => {}),
     nextStep: () => {},
     prevStep: () => {},
     isPublishReady: Object.keys(errors).length === 0,
     isDirty: false,
     isSubmitting: false,
     stepErrorCounts: [],
-  }), [errors, setFieldError]);
+    fieldToStepIndex: navFieldMap,
+  }), [errors, setFieldError, navSections, navGoTo, navFieldMap]);
 
   return { shellCtx, setFieldError, clearErrors, hasErrors: Object.keys(errors).length > 0, validate };
 }
@@ -200,6 +232,13 @@ export interface FormShellProviderProps {
   fieldToStepIndex?: Record<string, number>;
   /** Wired into `FormShellContextValue.goToStep` when the caller has real step navigation to drive (e.g. a step-wizard's `setCurrentStep`). */
   onGoToStep?: (n: number) => void;
+  /**
+   * The navigable segments this form is split into, in order. Without these
+   * `<FormErrorSummary>` can call `goToStep(i)` but has no label to render for
+   * segment `i`, so it silently falls back to a flat list — which is why this
+   * used to be hardcoded `[]`. Supply alongside `fieldToStepIndex`.
+   */
+  sections?: FormShellStep[];
 }
 
 export function FormShellProvider({
@@ -211,6 +250,7 @@ export function FormShellProvider({
   schema,
   fieldToStepIndex,
   onGoToStep,
+  sections,
 }: FormShellProviderProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -268,7 +308,7 @@ export function FormShellProvider({
     setFieldError,
     setFieldTouched,
     clearFieldError,
-    steps: [],
+    steps: sections ?? [],
     currentStep: 0,
     goToStep: onGoToStep ?? (() => {}),
     nextStep: () => {},
@@ -278,7 +318,7 @@ export function FormShellProvider({
     isSubmitting: false,
     stepErrorCounts: [],
     fieldToStepIndex,
-  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty, onGoToStep, fieldToStepIndex]);
+  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty, onGoToStep, fieldToStepIndex, sections]);
 
   return <FormShellContext.Provider value={ctx}>{children}</FormShellContext.Provider>;
 }

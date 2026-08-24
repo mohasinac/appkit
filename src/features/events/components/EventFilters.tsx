@@ -8,8 +8,33 @@ import { Div } from "../../../ui";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { EVENT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
+import {
+  ALL_EVENT_STATUSES,
+  ALL_EVENT_TYPES,
+  type EventStatus,
+  type EventType,
+} from "../types";
 
 export type EventFilterVariant = "admin" | "seller" | "public";
+
+/**
+ * `sale` -> `eventTypeSale`, `spin_wheel` -> `eventTypeSpinWheel`.
+ *
+ * Derived rather than a lookup map so a new union member cannot be silently
+ * label-less; a missing i18n key surfaces as the key itself, which is loud.
+ */
+function pascal(value: string): string {
+  return value
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+function eventTypeLabelKey(value: EventType): string {
+  return `eventType${pascal(value)}`;
+}
+function eventStatusLabelKey(value: EventStatus): string {
+  return `eventStatus${pascal(value)}`;
+}
 
 export const EVENT_FILTER_KEYS = {
   admin: ["type", TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
@@ -68,32 +93,50 @@ export function getEventSortOptions(
 export interface EventFiltersProps {
   table: UrlTable;
   variant?: EventFilterVariant;
+  /**
+   * Matching-row counts keyed by event type AND status value. Optional — when
+   * absent every facet renders uncounted and nothing is hidden, which is the
+   * pre-existing behaviour.
+   */
+  counts?: Record<string, number | undefined>;
+  /** Drop facets whose count is 0. Requires `counts`. */
+  hideEmpty?: boolean;
 }
 
-export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
+export function EventFilters({
+  table,
+  variant = "admin",
+  counts,
+  hideEmpty = false,
+}: EventFiltersProps) {
   const t = useTranslations("filters");
 
-  const typeOptions = [
-    { value: "sale", label: t("eventTypeSale") },
-    { value: "offer", label: t("eventTypeOffer") },
-    { value: "poll", label: t("eventTypePoll") },
-    { value: "survey", label: t("eventTypeSurvey") },
-    { value: "feedback", label: t("eventTypeFeedback") },
-    { value: "raffle", label: t("eventTypeRaffle") },
-    { value: "spin_wheel", label: t("eventTypeSpinWheel") },
-  ];
+  // Derived from the unions, not hand-listed. The previous literals were
+  // missing `lottery` (type) and `cancelled` (admin status) — a facet that
+  // doesn't exist can never be selected, so those events were unfilterable
+  // (Root Cause #61).
+  const typeOptions = ALL_EVENT_TYPES.map((value) => ({
+    value,
+    label: t(eventTypeLabelKey(value)),
+    count: counts?.[value],
+  }));
 
-  const adminStatusOptions = [
-    { value: "draft", label: t("eventStatusDraft") },
-    { value: "active", label: t("eventStatusActive") },
-    { value: "paused", label: t("eventStatusPaused") },
-    { value: "ended", label: t("eventStatusEnded") },
-  ];
+  const adminStatusOptions = ALL_EVENT_STATUSES.map((value) => ({
+    value,
+    label: t(eventStatusLabelKey(value)),
+    count: counts?.[value],
+  }));
 
-  const publicStatusOptions = [
-    { value: "active", label: t("eventStatusActive") },
-    { value: "ended", label: t("eventStatusEnded") },
-  ];
+  // Deliberately narrower than the union: a shopper has no use for draft,
+  // paused or cancelled events, and the public list query only ever returns
+  // active ones anyway. Kept as an explicit subset of ALL_EVENT_STATUSES so it
+  // is a documented omission rather than another drifted literal.
+  const PUBLIC_STATUSES: EventStatus[] = ["active", "ended"];
+  const publicStatusOptions = PUBLIC_STATUSES.map((value) => ({
+    value,
+    label: t(eventStatusLabelKey(value)),
+    count: counts?.[value],
+  }));
 
   const statusOptions =
     variant === "public" ? publicStatusOptions : adminStatusOptions;
@@ -114,6 +157,7 @@ export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
         onChange={(vals) => table.set("type", vals.join("|"))}
         searchable={false}
         defaultCollapsed={false}
+        hideEmpty={hideEmpty}
       />
 
       <FilterFacetSection
@@ -121,6 +165,7 @@ export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
         options={statusOptions}
         selected={selectedStatus}
         onChange={(vals) => table.set("status", vals.join("|"))}
+        hideEmpty={hideEmpty}
         searchable={false}
         defaultCollapsed={false}
       />

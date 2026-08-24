@@ -28,6 +28,7 @@ import {
 } from "../../media";
 import { useMediaUpload } from "../../media";
 import { resolveDate } from "../../../utils/date.formatter";
+import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 import type { ProductItem, ProductStatus } from "../types";
@@ -512,7 +513,9 @@ export function ProductForm({
           onChange={(e) =>
             update({
               allowOffers: e.target.checked,
-              minOfferPercent: e.target.checked ? product.minOfferPercent ?? 50 : undefined,
+              minOfferPercent: e.target.checked
+                ? product.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT
+                : undefined,
             })
           }
           disabled={isReadonly}
@@ -531,7 +534,7 @@ export function ProductForm({
             value={String(product.minOfferPercent ?? "")}
             onChange={(value) => update({ minOfferPercent: Number(value) })}
             disabled={isReadonly}
-            placeholder="50"
+            placeholder={String(DEFAULT_MIN_OFFER_PERCENT)}
           />
         </>
       )}

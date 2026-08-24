@@ -1,0 +1,47 @@
+/* Hand-mode mirroring — CSS-only, driven by `<html data-hand>`.
+ *
+ * `data-hand` is written before first paint by the blocking script in the
+ * consumer's root layout, so these rules apply on the FIRST paint: no flash,
+ * no server/client hydration mismatch (`HandModeProvider` reads localStorage
+ * in its useState initialiser, so a className derived from `hand` would
+ * differ server vs client), and no "use client" forced onto server-safe
+ * primitives (Root Cause #12). These are hand-authored classes, not Tailwind
+ * output, so they also survive the consumer's `@source not "../../appkit"`
+ * purge (Root Cause #3).
+ *
+ * NOTE: both appkit's and the consumer's Tailwind builds set
+ * `important: true`. Any call site using these classes MUST NOT also carry
+ * the equivalent utility (`flex-row-reverse`, `-right-*`) — an !important
+ * declaration in @layer utilities beats these unlayered rules, so the class
+ * would silently do nothing.
+ */
+
+/* Mirror a flex row's VISUAL order only. DOM order — and therefore reading
+   order, aria-* and the focus sequence — is unchanged. */
+[data-hand="left"] .appkit-hand-mirror {
+  flex-direction: row-reverse;
+}
+
+/* Corner count badge hugging the OUTER top corner of its icon: top-right by
+   default, top-left in left-hand mode. Owns the HORIZONTAL axis only — the
+   vertical offset stays a `-top-*` utility at the call site.
+
+   The offset comes from `--appkit-badge-offset`, declared only by the size
+   modifiers below. That matters: a `--lg { right: -0.5rem }` variant would be
+   specificity (0,1,0) and would LOSE to `[data-hand="left"] .appkit-hand-badge`
+   at (0,2,0), so left-hand mode would silently fall back to the small offset.
+   A custom property has no such race. */
+.appkit-hand-badge {
+  right: calc(var(--appkit-badge-offset, 0.125rem) * -1);
+  left: auto;
+}
+
+[data-hand="left"] .appkit-hand-badge {
+  left: calc(var(--appkit-badge-offset, 0.125rem) * -1);
+  right: auto;
+}
+
+/* 0.5rem inset — the offset the bottom-nav badges expressed as `-right-2`. */
+.appkit-hand-badge--lg {
+  --appkit-badge-offset: var(--appkit-space-2, 0.5rem);
+}

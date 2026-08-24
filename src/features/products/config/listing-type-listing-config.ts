@@ -27,7 +27,8 @@ import type { JsonArray } from "../../../schemas/types";
 import { SIEVE_OP, sieveAnd, sieveFilter } from "../../../utils/sieve-builder";
 import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { AvailabilityScope } from "../hooks/useAvailabilityScope";
 import { ROUTES } from "../../../next/routing/route-map";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import type { ListingType } from "../types";
@@ -49,8 +50,12 @@ export interface ListingTypeListingRow {
 }
 
 interface ListingTypeListingResponse {
+  /** Admin route shape. */
   items?: JsonArray;
   total?: number;
+  /** Seller route shape. */
+  products?: JsonArray;
+  meta?: { total?: number };
 }
 
 export interface BuildListingTypeListingOptions {
@@ -58,6 +63,19 @@ export interface BuildListingTypeListingOptions {
   title?: string;
   searchPlaceholder?: string;
   emptyLabel?: string;
+  /**
+   * Which dashboard this config is for. `"seller"` swaps the endpoint and the
+   * row href for the store-scoped equivalents; the store identity itself is
+   * resolved server-side from the session, never passed here.
+   */
+  portal?: "admin" | "seller";
+  /**
+   * The availability scope, from `useAvailabilityScope(...)` in the calling
+   * component. Passed in rather than called here because this is a plain
+   * factory function, not a component — a hook call would break the rules of
+   * hooks the moment a caller invoked it conditionally.
+   */
+  scope?: AvailabilityScope;
 }
 
 /**
@@ -74,21 +92,25 @@ export function buildListingTypeListingConfig(
 ): ListingViewConfig<ListingTypeListingResponse, ListingTypeListingRow> {
   const plugin = pluginFor(type);
   const label = opts.title ?? plugin.pluralLabel;
+  const portal = opts.portal ?? "admin";
+  const isSeller = portal === "seller";
 
   return {
-    portal: "admin",
+    portal,
     title: label,
     searchPlaceholder: opts.searchPlaceholder ?? `Search ${label.toLowerCase()} by name or seller`,
     emptyLabel: opts.emptyLabel ?? `No ${label.toLowerCase()} listings`,
     filterKeys: ["status"],
     defaultSort: sortBy(PRODUCT_FIELDS.CREATED_AT),
-    // Keyed on the canonical type so two types can never share a cache entry.
-    queryKey: ["admin", "listing-type", type],
-    endpoint: ADMIN_ENDPOINTS.PRODUCTS,
+    // Keyed on the canonical type AND the portal so an admin's all-stores list
+    // and a seller's own-store list can never share a cache entry.
+    queryKey: [portal, "listing-type", type],
+    endpoint: isSeller ? SELLER_ENDPOINTS.PRODUCTS : ADMIN_ENDPOINTS.PRODUCTS,
     // The type's own sort set, not a copy-pasted three-option array.
     sortOptions: [...plugin.sortOptions],
+    // The seller route returns `{ products }`, the admin route `{ items }`.
     mapRows: (response) =>
-      toRecordArray(response.items).map((item, index) => ({
+      toRecordArray(response.items ?? response.products).map((item, index) => ({
         id: toStringValue(item.id, `${type}-${index}`),
         primary: toStringValue(item.title ?? item.productTitle, "Untitled listing"),
         secondary: [
@@ -100,7 +122,11 @@ export function buildListingTypeListingConfig(
         image: toStringValue(item.mainImage, "") || undefined,
       })),
     getTotal: (response, mappedRows) =>
-      typeof response.total === "number" ? response.total : mappedRows.length,
+      typeof response.total === "number"
+        ? response.total
+        : typeof response.meta?.total === "number"
+          ? response.meta.total
+          : mappedRows.length,
     buildFilters: (state) =>
       sieveAnd(
         sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, type),
@@ -108,8 +134,14 @@ export function buildListingTypeListingConfig(
           ? sieveFilter(PRODUCT_FIELDS.STATUS, SIEVE_OP.EQ, state.status)
           : "",
       ) || undefined,
-    // These are products filtered by listingType — reuse the real admin
-    // product editor rather than leaving rows non-navigable.
-    rowHrefTemplate: String(ROUTES.ADMIN.PRODUCTS_EDIT("{id}")),
+    // The availability scope, when the caller supplies one. Optional so the
+    // factory stays usable from a non-component context.
+    buildExtraParams: opts.scope ? () => opts.scope!.extraParams : undefined,
+    renderAboveContent: opts.scope?.renderAboveContent,
+    // These are products filtered by listingType — reuse the real product
+    // editor rather than leaving rows non-navigable.
+    rowHrefTemplate: String(
+      isSeller ? ROUTES.STORE.PRODUCTS_EDIT("{id}") : ROUTES.ADMIN.PRODUCTS_EDIT("{id}"),
+    ),
   };
 }

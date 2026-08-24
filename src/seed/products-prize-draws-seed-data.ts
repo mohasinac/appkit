@@ -4,12 +4,12 @@
  *      content, not just the disposable 7-day tester sandbox item. Previously an empty
  *      stub — "out of scope for the minimal Beyblade-focused demo catalog" — now populated
  *      with two platform-run mystery-box draws, on-theme for the spinning-tops catalog.
- * WHAT: Exports 2 prize-draw listings (classic reveal mode) run by the platform's own
+ * WHAT: Exports 7 prize-draw listings (classic reveal mode) run by the platform's own
  *       store, letitrip-official — one "instant" mode (4 prizes), one "scheduled" mode
  *       (2 prizes, small pool for easy manual sellout testing).
  *
  * EXPORTS:
- *   productsPrizeDrawsSeedData — Array of 2 Partial<ProductDocument> with listingType:"prize-draw"
+ *   productsPrizeDrawsSeedData — Array of 7 Partial<ProductDocument> with listingType:"prize-draw"
  *
  * @tag domain:products,prize-draws
  * @tag layer:seed
@@ -30,8 +30,8 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-mystery-box",
     title: "Beyblade Mystery Box — Prize Draw",
     description: "Buy an entry for ₹99 and reveal your prize instantly — win anything from a rare limited-edition Beyblade down to a spare launcher grip. 4 prizes available, revealed on a first-come basis.",
-    categorySlugs: ["category-spinning-tops"],
-    categoryNames: ["Spinning Tops"],
+    categorySlugs: ["category-storage-cases","category-gear-storage","category-battle-gear","category-spinning-tops"],
+    categoryNames: ["Cases & Trays","Storage & Care","Battle Gear","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 99,
@@ -83,8 +83,8 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-scheduled-demo",
     title: "Beyblade Champion's Draw — Prize Draw",
     description: "Two entries, two prizes — the winners are revealed automatically the moment the draw closes (3 days) or sells out, whichever comes first.",
-    categorySlugs: ["category-spinning-tops"],
-    categoryNames: ["Spinning Tops"],
+    categorySlugs: ["category-stadiums-standard","category-gear-stadiums","category-battle-gear","category-spinning-tops"],
+    categoryNames: ["Standard Stadiums","Stadiums","Battle Gear","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 149,
@@ -136,8 +136,8 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-x-legendary-vault",
     title: "Beyblade X Legendary Vault — Prize Draw",
     description: "6 entries, 6 prizes ranging from a legendary chase top to spare parts — over half the draw is already sold, don't miss the remaining slots.",
-    categorySlugs: ["category-beyblade-x", "category-spinning-tops"],
-    categoryNames: ["Beyblade X", "Spinning Tops"],
+    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 199,
@@ -196,8 +196,8 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-metal-closed-revealed",
     title: "Metal Fight Mystery Draw — Ended (Revealed)",
     description: "This draw has closed and every prize has been revealed to its winner. Browse the results below.",
-    categorySlugs: ["category-beyblade-metal", "category-spinning-tops"],
-    categoryNames: ["Beyblade Metal Fight", "Spinning Tops"],
+    categorySlugs: ["category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categoryNames: ["Metal Fusion","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 129,
@@ -250,8 +250,8 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-burst-collectors-draw",
     title: "Beyblade Burst Collector's Draw — Almost Sold Out",
     description: "Only 1 entry left — 4 of 5 slots are already claimed for this Burst-generation collector's draw. Winners revealed the moment the draw closes.",
-    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
-    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    categorySlugs: ["category-burst-cho-z","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Cho-Z","Burst Tops","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 179,
@@ -309,8 +309,8 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-original-vintage-vault",
     title: "Beyblade Original Vintage Vault — Prize Draw",
     description: "A high-value original-series vault — 3 entries, each prize photographed from multiple angles so you know exactly what you might win.",
-    categorySlugs: ["category-beyblade-original", "category-spinning-tops"],
-    categoryNames: ["Beyblade Original", "Spinning Tops"],
+    categorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Plastic Generation","Original Tops","Beyblade Original","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 299,
@@ -359,4 +359,53 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       ["prize-draw", "mystery-box", "vintage-collectible"],
     ),
   } as unknown as Partial<ProductDocument>,
+  {
+    // Closed, but with slots still unsold and `isSold: false`.
+    //
+    // This is the fixture that proves the prize-draw branch reads
+    // `prizeRevealStatus`. The other closed draw has availableQuantity 0 AND
+    // isSold true, so it is caught by the shared base check and would still
+    // look correct even if the type-specific rule were deleted.
+    id: "prizedraw-beyblade-x-vault-closed-pending-reveal",
+    slug: "prizedraw-beyblade-x-vault-closed-pending-reveal",
+    title: "Beyblade X Vault Draw — Closed Early",
+    description: "The seller closed this draw before every slot sold. Remaining entries were refunded; no further entries are accepted.",
+    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    price: 249,
+    currency: "INR",
+    stockQuantity: 5,
+    availableQuantity: 3,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/prizedraw-image-beyblade-x-vault-closed-1-20260824/900/900"),
+    images: [seedExtMedia("https://picsum.photos/seed/prizedraw-image-beyblade-x-vault-closed-1-20260824/900/900")],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "prize-draw" as const,
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    prizeDrawMode: "reveal" as const,
+    prizeRevealMode: "instant" as const,
+    pricePerEntry: 249,
+    prizeMaxEntries: 5,
+    prizeCurrentEntries: 2,
+    prizeDrawDurationDays: 7,
+    prizeRevealWindowStart: new Date("2026-08-17"),
+    prizeRevealWindowEnd: new Date("2026-08-24"),
+    prizeRevealStatus: "closed" as const,
+    prizeDrawItems: [
+      { itemNumber: 1, title: "Dran Sword 3-60F", description: "Beyblade X starter attack top.", images: [seedExtMedia("https://picsum.photos/seed/prizedraw-item-x-vault-1-20260824/600/600")], condition: "new", estimatedValue: 1499, isWon: false },
+      { itemNumber: 2, title: "Hells Scythe 4-60T", description: "Beyblade X defence top.", images: [seedExtMedia("https://picsum.photos/seed/prizedraw-item-x-vault-2-20260824/600/600")], condition: "new", estimatedValue: 1499, isWon: false },
+    ],
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["prize-draw"],
+    createdAt: new Date("2026-08-17"),
+    updatedAt: new Date("2026-08-24"),
+  },
 ];

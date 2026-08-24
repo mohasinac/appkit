@@ -15,41 +15,13 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import type { StoreDetail } from "../../types/index";
+import { toStoreDetail, type StoreProjectionSource } from "../../../../_internal/server/features/stores/adapters";
 
 import { normalizeError } from "../../../../errors/normalize";
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 
-interface StoreEntity {
-  id: string;
-  storeSlug: string;
-  ownerId: string;
-  storeName: string;
-  storeDescription?: string;
-  storeCategory?: string;
-  storeLogoURL?: string;
-  storeBannerURL?: string;
-  status: string;
-  isPublic: boolean;
-  stats?: {
-    totalProducts?: number;
-    itemsSold?: number;
-    totalReviews?: number;
-    averageRating?: number;
-  };
-  totalProducts?: number;
-  itemsSold?: number;
-  totalReviews?: number;
-  averageRating?: number;
-  bio?: string;
-  location?: string;
-  website?: string;
-  socialLinks?: StoreDetail["socialLinks"];
-  returnPolicy?: string;
-  shippingPolicy?: string;
-  isVacationMode?: boolean;
-  vacationMessage?: string;
-  createdAt?: string;
-}
+/** Loose row shape — the projection is `toStoreDetail`, not this interface. */
+type StoreEntity = StoreProjectionSource & { id: string };
 
 // --- GET /api/stores/[storeSlug] ---------------------------------------------
 
@@ -84,31 +56,7 @@ export async function GET(
     }
 
     // Map to public-safe StoreDetail shape (strip internal/sensitive fields)
-    const store: StoreDetail = {
-      id: raw.id,
-      storeSlug: raw.storeSlug,
-      ownerId: raw.ownerId,
-      storeName: raw.storeName,
-      storeDescription: raw.storeDescription,
-      storeCategory: raw.storeCategory,
-      storeLogoURL: raw.storeLogoURL,
-      storeBannerURL: raw.storeBannerURL,
-      status: raw.status,
-      isPublic: raw.isPublic,
-      totalProducts: raw.stats?.totalProducts ?? raw.totalProducts ?? undefined,
-      itemsSold: raw.stats?.itemsSold ?? raw.itemsSold ?? undefined,
-      totalReviews: raw.stats?.totalReviews ?? raw.totalReviews ?? undefined,
-      averageRating: raw.stats?.averageRating ?? raw.averageRating,
-      bio: raw.bio,
-      location: raw.location,
-      website: raw.website,
-      socialLinks: raw.socialLinks,
-      returnPolicy: raw.returnPolicy,
-      shippingPolicy: raw.shippingPolicy,
-      isVacationMode: raw.isVacationMode,
-      vacationMessage: raw.vacationMessage,
-      createdAt: raw.createdAt,
-    };
+    const store: StoreDetail = toStoreDetail(raw);
 
     return NextResponse.json({ success: true, data: store });
   } catch (error) {

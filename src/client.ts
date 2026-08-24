@@ -331,7 +331,7 @@ export type { DateInputProps, DateRangeInputProps } from "./ui/components/DateIn
 // was dead code (no real JSX callers) and previously shadowed the real
 // wizard component whenever imported from `@mohasinac/appkit/client`
 // specifically; deleted 2026-08-09.
-export type { FormShellProviderProps, FormShellStep, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
+export type { FormShellProviderProps, FormShellStep, FormShellNav, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
 export { FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./ui/forms";
 export type { FieldInputProps } from "./ui/forms";
 export { FieldInput } from "./ui/forms";
@@ -565,8 +565,6 @@ export type {
   FeatureBadgeProps,
   FeatureBadgeListProps,
 } from "./features/products/components/FeatureBadge";
-export { SellerOffersPanel } from "./features/seller/components/SellerOffersPanel";
-export type { SellerOffersPanelProps, SellerOfferAction } from "./features/seller/components/SellerOffersPanel";
 export { UserOffersPanel } from "./features/account/components/UserOffersPanel";
 export type { UserOffersPanelProps } from "./features/account/components/UserOffersPanel";
 export { SellerDashboardView as StoreDashboardView, SellerDashboardView, useSellerDashboard as useStoreDashboard, useSellerDashboard } from "./features/seller/index";
@@ -593,6 +591,15 @@ export {
   PAYMENT_WINDOW_MINUTES,
 } from "./features/orders/constants/payment-window";
 export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
+export {
+  ORDER_SCOPE_VALUES,
+  ORDER_SCOPE_TABS,
+  isOrderScope,
+  statusesForScope,
+  mergeOrderScopeFilter,
+} from "./features/orders/constants/order-scope";
+export type { OrderScope } from "./features/orders/constants/order-scope";
+
 export { UserOrderTrackView } from "./features/account/components/UserOrderTrackView";
 export type { UserOrderTrackViewProps, UserOrderTrackViewLabels } from "./features/account/components/UserOrderTrackView";
 export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";
@@ -955,8 +962,19 @@ export { useSiteSettings } from "./core/index";
 export {
   checkEmiEligibility,
   computeEmiSchedule,
+  computeBuyerEmiQuote,
 } from "./_internal/shared/features/emi/schedule";
-export type { EmiSettings } from "./_internal/shared/features/emi/schedule";
+export type { EmiSettings, BuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
+// Buyer-facing fee projections — the checkout/cart client props are typed
+// against these so internal economics can't be widened back in by accident.
+export type {
+  BuyerFacingFees,
+  BuyerEmiSettings,
+} from "./_internal/shared/features/site-settings/fees";
+// The public site-settings shape. Type `useSiteSettings<PublicSiteSettings>()`
+// against this so a client reading a field the endpoint no longer returns is a
+// compile error rather than a silent `undefined`.
+export type { PublicSiteSettings } from "./_internal/shared/features/site-settings/types";
 export { computeCodHandlingFee } from "./_internal/shared/fees/calculator"; // reexport-from-internal-ok: pure fee-calc utility consumed directly by public checkout UI (CheckoutRouteClient.tsx), same category as the sibling computeEmiSchedule/checkEmiEligibility re-export two lines above
 export type {
   CodHandlingFeeRates,

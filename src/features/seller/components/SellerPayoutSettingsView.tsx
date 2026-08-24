@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
-import { StepDef, StepForm } from "../../shell";
+import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -110,13 +110,6 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(payoutSettingsDraftSchema);
-
-  useEffect(() => {
-    validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, validate]);
 
   useEffect(() => {
     fetch(apiBase)
@@ -213,9 +206,17 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
 
   const busy = loading || saving;
 
-  const steps: StepDef<PayoutDraft>[] = [
+  // Payout Method is the only section that must be filled for the record to be
+  // valid — the schema's superRefine rejects an empty UPI ID or bank name and
+  // nothing else. Tax Info is explicitly optional, and Preferences all have
+  // working defaults. So it is the required-first section, and the other two
+  // start collapsed.
+  const sections: SectionDef<PayoutDraft>[] = useMemo(() => [
     {
+      id: "method",
       label: "Payout Method",
+      required: true,
+      quick: true,
       fields: ["method", "upiId", "accountHolderName", "accountNumber", "ifscCode", "bankName", "accountType"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
@@ -341,6 +342,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       ),
     },
     {
+      id: "tax",
       label: "Tax Info",
       fields: ["gstin", "pan", "businessType"],
       render: ({ values, onChange }) => (
@@ -382,6 +384,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       ),
     },
     {
+      id: "preferences",
       label: "Preferences",
       fields: ["autoPayout", "minimumThreshold", "emiEnabled"],
       render: ({ values, onChange }) => (
@@ -424,38 +427,37 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         </Stack>
       ),
     },
-  ];
+  ], [busy, current]);
 
-  const fieldToStepIndex = useMemo(() => {
-    const map: Record<string, number> = {};
-    steps.forEach((step, i) => {
-      step.fields?.forEach((field) => { map[field] = i; });
-    });
-    return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps.length]);
+  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+    useSectionFormNav(sections, draft);
 
-  const wizardShellCtx = useMemo(
-    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
-    [shellCtx, fieldToStepIndex, setCurrentStep],
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(
+    payoutSettingsDraftSchema,
+    { sections: sectionMeta, onGoToSection: goToSection, fieldToSectionIndex },
   );
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   return (
     <StackedViewShell portal="seller" title="Payout Settings" sections={[
       <Div key="payout">
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
         {success && <Alert variant="success" className="mb-4">Payout details saved.</Alert>}
-        <FormShellContext.Provider value={wizardShellCtx}>
+        <FormShellContext.Provider value={shellCtx}>
           <FormErrorSummary />
-          <StepForm<PayoutDraft>
-            steps={steps}
+          <SectionForm<PayoutDraft>
+            sections={sections}
             values={draft}
             onChange={update}
-            onComplete={handleSave}
-            formId="seller-payout-settings"
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
-            completeLabel="Save Payout Details"
+            onSubmit={handleSave}
+            schema={payoutSettingsDraftSchema}
+            openIds={openIds}
+            onOpenChange={setOpenIds}
+            submitLabel="Save Payout Details"
             isLoading={busy}
           />
         </FormShellContext.Provider>

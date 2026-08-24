@@ -12,6 +12,7 @@ import type { MediaField } from "../../media/types";
 import { QuickProductForm } from "./QuickProductForm";
 import { BarcodeField } from "./BarcodeField";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
 import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -987,7 +988,12 @@ function StepPricing({
       <Toggle
         checked={!!values.allowOffers}
         onChange={(checked) =>
-          onChange({ allowOffers: checked, minOfferPercent: checked ? values.minOfferPercent ?? 50 : undefined })
+          onChange({
+            allowOffers: checked,
+            minOfferPercent: checked
+              ? values.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT
+              : undefined,
+          })
         }
         label="Allow buyer offers"
       />
@@ -998,7 +1004,7 @@ function StepPricing({
           type="number"
           value={String(values.minOfferPercent ?? "")}
           onChange={(v) => onChange({ minOfferPercent: Number(v) })}
-          placeholder="50"
+          placeholder={String(DEFAULT_MIN_OFFER_PERCENT)}
         />
       )}
     </Stack>

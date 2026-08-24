@@ -238,7 +238,8 @@ export const ACTIONS: ActionTree = {
     "buy-it-now": {
       id: "auction.buy-it-now",
       label: "Buy It Now",
-      description: "Skip bidding and purchase at the BIN price (SB-UNI-H). Hidden once bidsHaveStarted is true.",
+      description:
+        "Claim the listing at the buy-now price (SB-UNI-H). Offered while the auction is unsold, before its end date, and while the buy-now price still beats the standing bid. Places a bid at that price plus a 1h locked cart line — the auction stays live until the buyer pays.",
       kind: "secondary",
       listingTypeScope: ["auction"],
     },
@@ -1979,6 +1980,21 @@ export const ACTIONS: ActionTree = {
         title: "Cancel these bids?",
         body: "The selected bids will be cancelled. Bidders will be notified.",
         confirmLabel: "Cancel bids",
+        confirmKind: "danger",
+      },
+    },
+    "cancel-offer": {
+      id: "admin.cancel-offer",
+      label: "Cancel Offer",
+      ariaLabel: "Cancel this offer",
+      description:
+        "Expire the offer, clear it from the buyer's cart, and notify them. Admin cannot accept or counter on a seller's behalf.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Cancel this offer?",
+        body: "The offer will be expired and removed from the buyer's cart, and they'll be notified. This cannot be undone — the buyer would need to make a new offer.",
+        confirmLabel: "Cancel offer",
         confirmKind: "danger",
       },
     },

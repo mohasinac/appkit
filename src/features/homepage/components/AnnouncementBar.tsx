@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { Div } from "../../../ui/components/Div";
 
-import { IconButton, Row, Span } from "@mohasinac/appkit/client";
+import { IconButton, Row, Span, TextLink } from "@mohasinac/appkit/client";
 const STORAGE_KEY = "letitrip:announcement-dismissed";
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -38,6 +38,12 @@ function saveLocalDismissal(message: string): void {
 
 export interface AnnouncementBarProps {
   message: string;
+  /**
+   * Optional destination for the message. The admin editor has collected this
+   * (and `backgroundColor`) since it was built, but neither was ever rendered —
+   * so both were silently discarded on save. Wired 2026-08-24.
+   */
+  link?: string;
   className?: string;
   /** Called when the user dismisses — consumer wires this to a server action to persist. */
   onDismiss?: (hash: string) => void;
@@ -51,7 +57,7 @@ export interface AnnouncementBarProps {
   overlay?: boolean;
 }
 
-export function AnnouncementBar({ message, className = "", onDismiss, overlay = false }: AnnouncementBarProps) {
+export function AnnouncementBar({ message, link, className = "", onDismiss, overlay = false }: AnnouncementBarProps) {
   const { user } = useAuth();
   const bannerHash = hashBannerMessage(message);
   const userAlreadyDismissed = !!user?.dismissedBannerHash && user.dismissedBannerHash === bannerHash;
@@ -76,7 +82,13 @@ export function AnnouncementBar({ message, className = "", onDismiss, overlay = 
     <Div className={`${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
         <Row textWeight="medium" textSize="sm" className="relative text-left text-white" padding="y-xs" align="center" justify="start">
-          <Span>{message}</Span>
+          {link ? (
+            <TextLink href={link} className="text-white underline">
+              {message}
+            </TextLink>
+          ) : (
+            <Span>{message}</Span>
+          )}
           <IconButton
             type="button"
             onClick={() => {

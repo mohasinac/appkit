@@ -4,6 +4,7 @@ import { PreOrdersIndexListing } from "./PreOrdersIndexListing";
 import {
   listPublicProducts,
   parsePublicProductParams,
+  defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 
 type SearchParams = Record<string, string | string[]>;
@@ -17,15 +18,16 @@ export interface PreOrdersListViewProps {
 }
 
 export async function PreOrdersListView({ searchParams = {} }: PreOrdersListViewProps) {
-  // Shared with /api/products. `hideSoldByDefault` covers this page's
-  // "Show closed" toggle — the stockQuantity predicate runs in memory over a
-  // bounded fetch because the default sort is createdAt, not stockQuantity.
+  // Shared with /api/products, and derived rather than hardcoded. This view
+  // carried a literal `hideSoldByDefault: true` until 2026-08-24 even though
+  // pre-order's registered hide-default is "closed" — so /pre-orders and
+  // /products disagreed about what "closed" meant for the same rows.
   const result = await listPublicProducts(
     parsePublicProductParams(searchParams, {
       listingTypes: PRE_ORDER_LISTING_TYPES,
       pageSize: DEFAULT_PAGE_SIZE,
       sorts: DEFAULT_SORT,
-      hideSoldByDefault: true,
+      ...defaultAvailabilityForListingTypes(PRE_ORDER_LISTING_TYPES),
     }),
   );
 

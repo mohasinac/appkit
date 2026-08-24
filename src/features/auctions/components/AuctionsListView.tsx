@@ -4,6 +4,7 @@ import { AuctionsIndexListing } from "../../products/components/AuctionsIndexLis
 import {
   listPublicProducts,
   parsePublicProductParams,
+  defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 
 type SearchParams = Record<string, string | string[]>;
@@ -17,16 +18,15 @@ export interface AuctionsListViewProps {
 }
 
 export async function AuctionsListView({ searchParams = {} }: AuctionsListViewProps) {
-  // Shared with /api/products. `hideEndedByDefault` mirrors
-  // AuctionsIndexListing's `showEnded ? … : dateFrom=now` default; because the
-  // default sort IS auctionEndDate, listPublicProducts pushes that range into
-  // Firestore rather than filtering in memory.
+  // Shared with /api/products, and derived rather than hardcoded — this view
+  // carried a literal `hideEndedByDefault: true` until 2026-08-24, which is
+  // exactly the mirrored-literal shape Root Cause #30 is written as.
   const initial = await listPublicProducts(
     parsePublicProductParams(searchParams, {
       listingTypes: AUCTION_LISTING_TYPES,
       pageSize: DEFAULT_PAGE_SIZE,
       sorts: DEFAULT_SORT,
-      hideEndedByDefault: true,
+      ...defaultAvailabilityForListingTypes(AUCTION_LISTING_TYPES),
     }),
   );
 

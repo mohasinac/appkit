@@ -10,7 +10,11 @@ import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
 import { ProductFilters } from "./ProductFilters";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { PRIZE_DRAW_SORT_OPTIONS } from "../constants/sieve";
-import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { AvailabilityTabs } from "./AvailabilityTabs";
+import type { ListingType } from "../types";
+
+const PRIZE_DRAW_LISTING_TYPES: readonly ListingType[] = ["prize-draw"];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -44,7 +48,9 @@ export function PrizeDrawsIndexListing({
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const showClosed = table.get(TABLE_KEYS.SHOW_CLOSED) === "true";
+  const availability =
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+    AVAILABILITY_VALUES.AVAILABLE;
   const [view, setView] = useState<"grid" | "list">(
     (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
@@ -66,13 +72,13 @@ export function PrizeDrawsIndexListing({
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" });
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.AVAILABILITY]: "" });
     setSearchInput("");
   }, [onResetAll]);
 
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
-    showClosed ||
+    availability !== AVAILABILITY_VALUES.AVAILABLE ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     filterActiveCount > 0;
 
@@ -95,6 +101,7 @@ export function PrizeDrawsIndexListing({
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "prize-draw" as const,
+    availability,
   };
 
   const { products: draws, totalPages, page, isLoading } = useProducts(
@@ -102,14 +109,11 @@ export function PrizeDrawsIndexListing({
     { initialData },
   );
 
-  // When no explicit reveal-status filter is set, hide closed draws client-side
-  // as a UX default (showClosed toggle). Server handles explicit status filters.
-  const filteredDraws =
-    !revealFilter && !showClosed
-      ? (draws as any[]).filter(
-          (d) => d.prizeRevealStatus !== PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.CLOSED,
-        )
-      : (draws as any[]);
+  // Closed draws used to be filtered out of the page HERE, client-side, after
+  // pagination — which silently shrank the grid below the page size and left
+  // `totalPages` counting rows the user could never see. The availability
+  // scope does it in the query instead, where the count is computed.
+  const filteredDraws = draws as any[];
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -144,10 +148,12 @@ export function PrizeDrawsIndexListing({
         }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
-        toggles={[
-          { label: "Show closed", active: showClosed, onChange: (next) => table.set(TABLE_KEYS.SHOW_CLOSED, next ? "true" : "") },
-        ]}
       />
+
+      {/* ── Availability scope — Available / Ended / All ────────────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={PRIZE_DRAW_LISTING_TYPES} />
+      </Div>
 
       {totalPages > 1 && (
         <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">

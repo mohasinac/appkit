@@ -27,6 +27,16 @@ import { Text } from "./Typography";
 export interface FilterChipGroupTab {
   id: string;
   label: string;
+  /**
+   * Rows matching this chip within the surface's current scope. Rendered as a
+   * trailing count and, with `hideEmpty`, used to drop chips that would return
+   * nothing.
+   *
+   * `undefined` means "not counted / count failed" — NOT zero. Such a chip is
+   * always kept, so a surface that supplies no counts behaves exactly as before
+   * and a failed count can never hide a filter that has rows (Root Cause #59).
+   */
+  count?: number;
 }
 
 export interface FilterChipGroupProps {
@@ -58,6 +68,20 @@ export interface FilterChipGroupProps {
    * same state that every caller would have to remember to clear.
    */
   multiple?: boolean;
+  /**
+   * Drop chips whose `count` is exactly 0 — a filter that can only ever return
+   * an empty list is noise.
+   *
+   * Opt-in (default `false`) because most of this component's ~45 call sites
+   * supply no counts at all, and because it is only ever correct for a FILTER
+   * over existing rows. Never enable it on a picker that CREATES something: a
+   * seller with no auctions yet must still be able to make their first one.
+   *
+   * A chip whose count is `undefined` is always kept — see `FilterChipGroupTab.count`.
+   * The currently-selected chip is also always kept, so an active filter can
+   * never vanish from under the user mid-interaction.
+   */
+  hideEmpty?: boolean;
   /** Optional className spread onto the outer wrapper. */
   className?: string;
 }
@@ -70,6 +94,11 @@ const CHIP_BASE_CLS =
   "rounded-full px-3 py-1 text-xs font-medium border transition-colors";
 const LABEL_CLS =
   "text-xs font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]";
+// `opacity-70` rather than a fixed colour so the count stays legible against
+// both the active (primary fill) and inactive (surface) chip backgrounds —
+// a literal text colour would be invisible on one of them in some theme
+// (Root Cause #67).
+const COUNT_CLS = "ml-1.5 tabular-nums opacity-70";
 
 /** Split a pipe-joined multi-select value into its ids. */
 function parseMulti(value: string): string[] {
@@ -83,13 +112,24 @@ export function FilterChipGroup({
   onChange,
   allId = "All",
   multiple = false,
+  hideEmpty = false,
   className,
 }: FilterChipGroupProps) {
   const selected = new Set(multiple ? parseMulti(value) : []);
   const current = value || allId;
   // In multi-select the "All" sentinel is redundant with an empty selection —
   // see the `multiple` prop docs.
-  const visibleTabs = multiple ? tabs.filter((t) => t.id !== allId) : tabs;
+  const allTabs = multiple ? tabs.filter((t) => t.id !== allId) : tabs;
+  const visibleTabs = hideEmpty
+    ? allTabs.filter((t) => {
+        // Never hide the "All" sentinel, and never hide a chip the user has
+        // already picked — a filter disappearing while it is applied would
+        // leave the URL holding a value with no way to clear it.
+        if (t.id === allId) return true;
+        if (multiple ? selected.has(t.id) : current === t.id) return true;
+        return t.count === undefined || t.count > 0;
+      })
+    : allTabs;
 
   const handleClick = (tabId: string) => {
     if (!multiple) {
@@ -131,6 +171,9 @@ export function FilterChipGroup({
               className={`${CHIP_BASE_CLS} ${isActive ? ACTIVE_CLS : INACTIVE_CLS}`}
             >
               {tab.label}
+              {typeof tab.count === "number" && (
+                <span className={COUNT_CLS}>{tab.count > 99 ? "99+" : tab.count}</span>
+              )}
             </button>
           );
         })}

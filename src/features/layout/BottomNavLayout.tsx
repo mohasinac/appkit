@@ -20,6 +20,12 @@ export interface BottomNavLayoutProps {
  * `--bottom-nav-height: 4rem` to `:root` (sub-`lg` only — the nav itself is
  * `lg:hidden`). Sticky CTAs read `var(--bottom-nav-height, 0px)` to position
  * themselves above the navbar so they don't get clipped.
+ *
+ * Hand mode: the item strip carries `appkit-hand-mirror`, so slot order
+ * reverses in left-hand mode (CSS-only via `[data-hand]` — applies on the
+ * first paint, no flash). This deliberately covers BOTH bottom bars: the
+ * public `BottomNavbar` and `DashboardLayoutClient`'s `dashboard-bottom-navbar`
+ * both render through here, and they must behave identically.
  */
 export function BottomNavLayout({
   ariaLabel,
@@ -61,7 +67,7 @@ export function BottomNavLayout({
       aria-hidden={isKeyboardOpen}
       className={`fixed bottom-0 left-0 right-0 lg:hidden z-[var(--appkit-z-bottom-nav)] bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)] shadow-2xl pb-[env(safe-area-inset-bottom,0px)] transition-transform duration-200 ease-out ${isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"}${className ? ` ${className}` : ""}`}
     >
-      <Ul className="flex items-stretch h-16">{children}</Ul>
+      <Ul className="appkit-hand-mirror flex items-stretch h-16">{children}</Ul>
     </Nav>
   );
 }

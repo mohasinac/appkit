@@ -294,17 +294,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     );
   }
 
-  async findActivePreOrders(): Promise<ProductDocument[]> {
-    const now = new Date();
-    const snapshot = await this.db
-      .collection(this.collection)
-      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.PRE_ORDER)
-      .where(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, ">=", now)
-      .get();
-
-    return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
-  }
-
   async findPromoted(): Promise<ProductDocument[]> {
     return this.findBy(PRODUCT_FIELDS.IS_PROMOTED, true);
   }
@@ -359,17 +348,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         LISTING_TYPE_VALUES.PRE_ORDER,
       ])
       .get();
-    return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
-  }
-
-  async findActiveAuctions(): Promise<ProductDocument[]> {
-    const now = new Date();
-    const snapshot = await this.db
-      .collection(this.collection)
-      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.AUCTION)
-      .where(PRODUCT_FIELDS.AUCTION_END_DATE, ">=", now)
-      .get();
-
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
   }
 
@@ -689,11 +667,38 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     },
   };
 
-  async list(
-    model: SieveModel,
-    opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string },
-  ): Promise<FirebaseSieveResult<ProductDocument>> {
+  /**
+   * Firestore's ceiling for `array-contains-any` / `in` comparison values.
+   * Exceeding it throws `INVALID_ARGUMENT`, and every caller of `list()` wraps
+   * the call in `.catch(() => null)`, so the throw would surface as a silently
+   * empty page rather than an error (Root Cause #59).
+   */
+  private static readonly MAX_ARRAY_CONTAINS_ANY = 30;
+
+  /**
+   * Shared scope construction for `list()` and `countBy*()` — both must narrow
+   * by exactly the same store/status/category/search predicates or a tab's
+   * count would disagree with the rows behind it.
+   */
+  private buildScopedQuery(opts?: {
+    storeId?: string;
+    status?: string;
+    categoriesIn?: string[];
+    search?: string;
+    brandName?: string;
+  }) {
     let baseQuery = this.getCollection();
+
+    if (opts?.brandName) {
+      // The free-text display name, NOT brandSlug — BrandDetailPageView filters
+      // products this way, so a count keyed on brandSlug would disagree with
+      // the rows the tab goes on to show.
+      baseQuery = baseQuery.where(
+        PRODUCT_FIELDS.BRAND,
+        "==",
+        opts.brandName,
+      ) as typeof baseQuery;
+    }
 
     if (opts?.status) {
       baseQuery = baseQuery.where(
@@ -721,20 +726,75 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     }
 
     if (searchTokens.length === 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
+      let categoriesIn = opts.categoriesIn;
+      if (categoriesIn.length > ProductRepository.MAX_ARRAY_CONTAINS_ANY) {
+        // Products carry their FULL ancestor chain in `categorySlugs`, so a
+        // category page only ever needs to pass its own id — a list this long
+        // means a caller is still expanding descendants. Truncating keeps the
+        // query legal (an over-long list throws INVALID_ARGUMENT, which every
+        // caller's `.catch(() => null)` would turn into a blank page), and the
+        // warning names the real bug instead of hiding it.
+        serverLogger.warn(
+          `productRepository: categoriesIn had ${categoriesIn.length} values, above Firestore's ${ProductRepository.MAX_ARRAY_CONTAINS_ANY} limit — truncating. Pass only the category's own id; products are tagged with their full ancestor chain.`,
+        );
+        categoriesIn = categoriesIn.slice(
+          0,
+          ProductRepository.MAX_ARRAY_CONTAINS_ANY,
+        );
+      }
       baseQuery = baseQuery.where(
         PRODUCT_FIELDS.CATEGORY_SLUGS,
         "array-contains-any",
-        opts.categoriesIn,
+        categoriesIn,
       ) as typeof baseQuery;
     }
 
+    return baseQuery;
+  }
+
+  async list(
+    model: SieveModel,
+    opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string },
+  ): Promise<FirebaseSieveResult<ProductDocument>> {
     return this.sieveQuery<ProductDocument>(
       model,
       ProductRepository.SIEVE_FIELDS,
       {
-        baseQuery,
+        baseQuery: this.buildScopedQuery(opts),
         defaultPageSize: 20,
         maxPageSize: 100,
+        aliases: ProductRepository.FILTER_ALIASES,
+      },
+    );
+  }
+
+  /**
+   * How many products of each listing type exist within a scope — the numbers
+   * behind every listing-type tab bar and filter chip group.
+   *
+   * `types` entries are passed through verbatim, so a pipe-joined OR-group
+   * (`"art|stickers"`, the combined Art & Stickers tab) is counted as one
+   * bucket, matching how the tab itself queries.
+   *
+   * A type whose count query fails maps to `undefined`, not 0 — callers hide a
+   * tab at zero, and a swallowed failure reading as "none exist" would hide a
+   * tab holding real inventory (Root Cause #59).
+   */
+  async countByListingTypes(
+    types: readonly string[],
+    opts?: {
+      storeId?: string;
+      status?: string;
+      categoriesIn?: string[];
+      brandName?: string;
+    },
+  ): Promise<Record<string, number | undefined>> {
+    return this.facetCounts(
+      PRODUCT_FIELDS.LISTING_TYPE,
+      types,
+      ProductRepository.SIEVE_FIELDS,
+      {
+        baseQuery: this.buildScopedQuery(opts),
         aliases: ProductRepository.FILTER_ALIASES,
       },
     );

@@ -1,6 +1,8 @@
 import { sieveAnd, sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import type { ListingType } from "../types";
+import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
+import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-names";
 import { productRepository } from "../repository/products.repository";
 import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
@@ -71,26 +73,70 @@ export async function getProductById(
   return productRepository.findById(id);
 }
 
+/**
+ * `PublicProductListResult` → the `FirebaseSieveResult<ProductDocument>` shape
+ * these helpers have always returned, so their ~15 call sites (including the
+ * six server-action wrappers in `src/actions/product.actions.ts` and their
+ * tests) are unchanged by the switch to the shared query.
+ */
+function toListResult(
+  result: Awaited<ReturnType<typeof listPublicProducts>>,
+  pageSize: number,
+): ProductListResult {
+  if (!result) {
+    return { items: [], total: 0, page: 1, pageSize, totalPages: 0, hasMore: false };
+  }
+  return {
+    items: result.items as unknown as ProductDocument[],
+    total: result.total,
+    page: result.page,
+    pageSize: result.pageSize,
+    totalPages: result.totalPages,
+    hasMore: result.hasMore,
+  };
+}
+
 export async function getFeaturedProducts(
   pageSize = 8,
 ): Promise<ProductListResult> {
-  return productRepository.list({
-    filters: sieveAnd(sieveFilter("featured", SIEVE_OP.EQ, "true"), PUBLISHED_CLAUSE),
-    sorts: sortBy("createdAt", "DESC"),
-    page: 1,
+  return toListResult(
+    await listPublicProducts({
+      featured: true,
+      availability: AVAILABILITY_VALUES.AVAILABLE,
+      sorts: sortBy("createdAt", "DESC"),
+      page: 1,
+      pageSize,
+    }),
     pageSize,
-  });
+  );
 }
 
+/**
+ * The soonest-ending LIVE auctions.
+ *
+ * This used to be `listingType==auction,status==published` sorted
+ * `auctionEndDate ASC` with no lower bound — and ascending order front-loads
+ * the OLDEST end dates, so the homepage's "Live Auctions" strip led with the
+ * most-expired lots in the catalogue. Nothing about it was flagged as wrong
+ * because an ended auction still renders as a perfectly normal card.
+ *
+ * One listing type, sorted by the same field the scope filters on, means
+ * `listPublicProducts` pushes `auctionEndDate >= now` into Firestore rather
+ * than filtering a bounded window in memory.
+ */
 export async function getFeaturedAuctions(
   pageSize = 6,
 ): Promise<ProductListResult> {
-  return productRepository.list({
-    filters: AUCTIONS_PUBLISHED,
-    sorts: sortBy("auctionEndDate", "ASC"),
-    page: 1,
+  return toListResult(
+    await listPublicProducts({
+      listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION],
+      availability: AVAILABILITY_VALUES.AVAILABLE,
+      sorts: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"),
+      page: 1,
+      pageSize,
+    }),
     pageSize,
-  });
+  );
 }
 
 export async function getLatestProducts(
@@ -127,15 +173,20 @@ export async function listAuctions(
   });
 }
 
+/** Pre-orders still accepting orders, soonest delivery first. */
 export async function getFeaturedPreOrders(
   pageSize = 6,
 ): Promise<ProductListResult> {
-  return productRepository.list({
-    filters: PREORDERS_PUBLISHED,
-    sorts: sortBy("preOrderDeliveryDate", "ASC"),
-    page: 1,
+  return toListResult(
+    await listPublicProducts({
+      listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.PRE_ORDER],
+      availability: AVAILABILITY_VALUES.AVAILABLE,
+      sorts: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"),
+      page: 1,
+      pageSize,
+    }),
     pageSize,
-  });
+  );
 }
 
 export async function getLatestPreOrders(

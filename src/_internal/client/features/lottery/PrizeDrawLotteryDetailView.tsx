@@ -16,6 +16,8 @@ import { MediaImage } from "../../../../features/media/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
+import { PrizeDrawCollage } from "../../../../features/products/components/PrizeDrawCollage";
+import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
 interface ClientProduct {
@@ -54,6 +56,7 @@ export function PrizeDrawLotteryDetailView({
   );
 
   const config = product.lotteryConfig;
+  const prizeItems = slotsToCollageItems(config?.slots ?? []);
   const isActive = product.status === "published";
 
   return (
@@ -91,6 +94,15 @@ export function PrizeDrawLotteryDetailView({
               <Text color="muted">{product.description}</Text>
             ) : null}
           </Stack>
+
+          {/* Prize previews — only the slots that actually have a photo. The
+              numbered grid below stays the complete slot map. */}
+          {prizeItems.length > 0 ? (
+            <Stack gap="sm">
+              <Heading level={2} size="xl" weight="semibold">Prizes</Heading>
+              <PrizeDrawCollage items={prizeItems} wonLabel="Claimed" />
+            </Stack>
+          ) : null}
 
           {config && config.slots.length > 0 ? (
             <Stack gap="sm">

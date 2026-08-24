@@ -15,6 +15,13 @@ import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsForCategory } from "../../../_internal/server/features/grouped/data";
+import {
+  listingTabCounts,
+  type ListingTabCounts,
+} from "../../../_internal/server/features/products/listing-tab-counts";
+import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
+import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
+import { siteSettingsRepository } from "../../../repositories";
 import type { CategoryItem } from "../types";
 
 const __O = {
@@ -31,17 +38,16 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     .getCategoryBySlug(slug)
     .catch(() => undefined) as CategoryItem | undefined;
 
-  // Roll up descendant categories so a parent category page shows products
-  // filed under any of its children too, not just products tagged with the
-  // parent's own id — parentIds stores the full ancestor chain, so a single
-  // array-contains query already returns the whole subtree (see
-  // categoriesRepository.getDescendantIds).
-  const descendantIds = category?.id
-    ? await categoriesRepository.getDescendantIds(category.id).catch(() => [])
-    : [];
-  const categoriesIn = category?.id ? [category.id, ...descendantIds] : null;
+  // Products carry their FULL ancestor chain in `categorySlugs`, so matching on
+  // this category's own id already returns the whole subtree — no descendant
+  // expansion needed. Expanding it was also a latent outage: `categoriesIn` is
+  // applied as `array-contains-any`, which Firestore caps at 30 values, and
+  // every caller here wraps the query in `.catch(() => null)` — so a category
+  // tree deeper than a couple of levels would have turned into a silently blank
+  // page rather than an error (Root Cause #59).
+  const categoriesIn = category?.id ? [category.id] : null;
 
-  const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories, rootSiblingCategories, groupedListings] = await Promise.all([
+  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings] = await Promise.all([
     categoriesIn
       ? productRepository
           .list(
@@ -55,45 +61,12 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           )
           .catch(() => null)
       : Promise.resolve(null),
+    // One count per tab, derived from CATEGORY_PAGE_TABS itself — so every
+    // listing type is counted and a type with nothing in this category hides.
+    // Four of the ten tabs used to have no count at all and could never hide.
     categoriesIn
-      ? productRepository
-          .list(
-            {
-              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "auction")),
-              sorts: sortBy("auctionEndDate", "ASC"),
-              page: 1,
-              pageSize: 1,
-            },
-            { categoriesIn },
-          )
-          .catch(() => null)
-      : Promise.resolve(null),
-    categoriesIn
-      ? productRepository
-          .list(
-            {
-              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")),
-              sorts: sortBy("createdAt", "DESC"),
-              page: 1,
-              pageSize: 1,
-            },
-            { categoriesIn },
-          )
-          .catch(() => null)
-      : Promise.resolve(null),
-    categoriesIn
-      ? productRepository
-          .list(
-            {
-              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
-              sorts: sortBy("createdAt", "DESC"),
-              page: 1,
-              pageSize: 1,
-            },
-            { categoriesIn },
-          )
-          .catch(() => null)
-      : Promise.resolve(null),
+      ? listingTabCounts(CATEGORY_PAGE_TABS, { categoriesIn })
+      : Promise.resolve({} as ListingTabCounts),
     // SB-UNI-D — bundles fetched from the categories collection. We pull
     // all active bundle rows; the carousel filters by category affinity.
     categoriesIn
@@ -111,21 +84,40 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       ? categoriesRepository.getCategoriesByRootId(category.rootId).catch(() => []) as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
     category?.slug ? getGroupsForCategory(category.slug).catch(() => []) : Promise.resolve([]),
+    // Listing/category-type feature flags. This page accepted the props all
+    // along but never passed them, so an admin disabling a listing type still
+    // saw its tab here while the store page correctly hid it.
+    siteSettingsRepository.findById("global").catch(() => null),
   ]);
 
   const relatedCategories = rootSiblingCategories.filter(
     (c) => c.id !== category?.id && (!c.categoryType || c.categoryType === "category"),
   );
 
-  // Stores tab — query stores whose storeCategory matches this category or any child
+  // Stores tab — stores whose storeCategory is this category or ANY descendant.
+  //
+  // `storeCategory` is a single slug with no ancestor chain (unlike a product's
+  // categorySlugs), so the descendant list genuinely is needed here. It used to
+  // use direct children only, which meant a store filed under a tier-3 category
+  // was invisible on its root's Stores tab, and it issued one query per slug —
+  // an unbounded N+1. Both are fixed by pipe-joining the slugs into OR-groups:
+  // the enhanced Sieve adapter turns a same-field OR into a Firestore `in`,
+  // which caps at 30 values, hence the chunking.
   const storeCategorySlugs = [
     slug,
-    ...childCategories.map((c) => c.slug).filter(Boolean),
-  ];
+    ...(await categoriesRepository
+      .getDescendantIds(category?.id ?? "")
+      .catch(() => [] as string[])),
+  ].filter(Boolean);
+  const SLUG_CHUNK = 30;
+  const slugChunks: string[][] = [];
+  for (let i = 0; i < storeCategorySlugs.length; i += SLUG_CHUNK) {
+    slugChunks.push(storeCategorySlugs.slice(i, i + SLUG_CHUNK));
+  }
   const storeResults = await Promise.all(
-    storeCategorySlugs.map((catSlug) =>
+    slugChunks.map((chunk) =>
       storeRepository
-        .listStores({ filters: sieveFilter("storeCategory", SIEVE_OP.EQ, catSlug), page: 1, pageSize: 50 }, true)
+        .listStores({ filters: sieveFilter("storeCategory", SIEVE_OP.EQ, chunk.join("|")), page: 1, pageSize: 50 }, true)
         .catch(() => null),
     ),
   );
@@ -155,12 +147,18 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       createdAt: s.createdAt as unknown as string,
     }));
 
-  const productCount = productsResult?.total ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
-  const auctionCount = auctionsCountResult?.total ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
-  const preOrderCount = preOrdersCountResult?.total ?? 0;
-  const prizeDrawCount = prizeDrawsCountResult?.total ?? 0;
-  const bundleCount = bundlesResult?.length ?? 0;
   const storeCount = categoryStores.length;
+  // `tabCounts` is keyed by tabSlug and already covers every listing type plus
+  // bundles; `stores` is added here because this page resolves its store list
+  // eagerly to render the tab body anyway.
+  const counts: ListingTabCounts = { ...tabCounts, stores: storeCount };
+
+  // Header pills read the same numbers the tabs do. `?? 0` is safe here (a pill
+  // simply doesn't render) — unlike the tab bar, where an unknown count must
+  // stay visible rather than collapse to "hide me".
+  const productCount = counts.products ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
+  const auctionCount = counts.auctions ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
+  const preOrderCount = counts["pre-orders"] ?? 0;
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
@@ -276,14 +274,9 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             initialProductsData={productsResult ?? undefined}
             initialBundles={bundlesResult ?? []}
             initialStores={categoryStores}
-            counts={{
-              products: productCount,
-              auctions: auctionCount,
-              preOrders: preOrderCount,
-              prizeDraws: prizeDrawCount,
-              bundles: bundleCount,
-              stores: storeCount,
-            }}
+            counts={counts}
+            enabledListingTypes={enabledListingTypes(settings)}
+            enabledCategoryTypes={enabledCategoryTypes(settings)}
           />
         </Container>
       </Section>

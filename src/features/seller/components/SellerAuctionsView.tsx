@@ -21,6 +21,10 @@ import {
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
+
+const AUCTION_TYPES: readonly ListingType[] = ["auction"];
 
 interface SellerAuctionsResponse {
   auctions?: JsonArray;
@@ -54,8 +58,7 @@ export function SellerAuctionsView({
   // and write the same URL, useUrlTable has no local state, so they stay in
   // sync (same pattern SellerProductsView already uses for its "Show sold"
   // toggle).
-  const toggleTable = useUrlTable({});
-  const showEnded = toggleTable.get(TABLE_KEYS.SHOW_ENDED) === "true";
+  const scope = useAvailabilityScope(AUCTION_TYPES);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
@@ -93,7 +96,7 @@ export function SellerAuctionsView({
     title: "Auctions",
     searchPlaceholder: "Search auctions by product name",
     emptyLabel: "No auctions found",
-    filterKeys: ["status", TABLE_KEYS.SHOW_ENDED],
+    filterKeys: ["status"],
     defaultSort: sortBy("auctionEndDate", "ASC"),
     queryKey: ["seller", "auctions", "listing"],
     endpoint: SELLER_ENDPOINTS.AUCTIONS,
@@ -122,20 +125,19 @@ export function SellerAuctionsView({
     buildFilters: (state) => {
       // Previously missing entirely — the seller Auctions tab silently
       // listed the entire seller catalog, not just auctions.
+      //
+      // The hide-ended clause that used to live here is gone: it hard-coded
+      // `auctionEndDate >= now`, which is an INEQUALITY pushed straight into
+      // Firestore alongside whichever sort the toolbar happened to be on —
+      // the FAILED_PRECONDITION shape of Root Cause #59. The scope param now
+      // carries it, and `listPublicProducts` decides whether it can be pushed
+      // down or has to be applied over a bounded fetch.
       const parts = ["listingType==auction"];
       if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
-      if (state[TABLE_KEYS.SHOW_ENDED] !== "true") {
-        parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, new Date().toISOString()));
-      }
       return parts.join(",");
     },
-    toggles: [
-      {
-        label: "Show ended",
-        active: showEnded,
-        onChange: (next) => toggleTable.set(TABLE_KEYS.SHOW_ENDED, next ? "true" : ""),
-      },
-    ],
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] =>

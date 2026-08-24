@@ -83,6 +83,12 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     isPublic: true,
     isVacationMode: false,
     emiEnabled: true,
+    // No seeded store set either flag before 2026-08-24, so the verification
+    // badge and every featured-store surface rendered from empty data — and the
+    // public /stores "Featured" toggle (which only started filtering at all in
+    // the same change) had nothing to match.
+    isVerified: true,
+    isFeatured: true,
 
     stats: {
       totalProducts: 0,
@@ -135,8 +141,16 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     isPublic: true,
     isVacationMode: false,
     emiEnabled: true,
+    isVerified: true,
     stats: { totalProducts: 0, itemsSold: 0, totalReviews: 6, averageRating: 4.8 },
-    capabilities: ["host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
+    // `host_auctions` added 2026-08-24. Every one of the seeded auctions belongs
+    // to this store, but its owner could not have created any of them:
+    // `createSellerProductAction` throws AuthorizationError for
+    // `listingType === "auction"` without this capability. The only store that
+    // had it (letitrip-official) owns zero auctions, so no seeded seller could
+    // walk a successful auction-create flow except by logging in as admin,
+    // which bypasses the gate entirely.
+    capabilities: ["host_auctions", "host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
     createdAt: daysAgo(150),
     updatedAt: daysAgo(4),
   },
@@ -169,5 +183,66 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     capabilities: ["host_preorders", "verified_seller", "create_coupons"] as StoreCapability[],
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),
+  },
+
+  // ── Store 4: pending seller application ───────────────────────────────────
+  // `StoreStatus` is pending|active|suspended|rejected, but every seeded store
+  // was `active` — so three of the four admin status chips could only ever
+  // return an empty list, and the seller-approval queue had nothing in it.
+  {
+    id: "store-blader-bazaar",
+    storeSlug: "store-blader-bazaar",
+    ownerId: "user-meera-bey",
+    storeName: "Blader Bazaar",
+    storeDescription:
+      "Applied to sell refurbished Burst-era tops and spare parts. Awaiting review — not yet visible to buyers.",
+    storeCategory: "category-beyblade-burst",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-blader-bazaar-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-blader-bazaar-20260101/1600/400"),
+    status: STORE_FIELDS.STATUS_VALUES.PENDING,
+    bio: "Refurbishing and reselling Burst-era tops and parts.",
+    location: "Pune, Maharashtra, India",
+    returnPolicy: "7-day returns once approved.",
+    shippingPolicy: "Standard courier, dispatch within 48 hours.",
+    // A pending store is not public — this pairing is the point of the fixture:
+    // public visibility gates on `status`/`isPublic`, not on the user doc's own
+    // storeStatus, and the two are separate fields.
+    isPublic: false,
+    isVacationMode: false,
+    isVerified: false,
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 0, averageRating: 0 },
+    capabilities: ["suggest_brands", "create_coupons"] as StoreCapability[],
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(4),
+  },
+
+  // ── Store 5: suspended store ──────────────────────────────────────────────
+  // Exercises `suspensionReason`, which no seeded row populated, and gives the
+  // admin "Suspended" chip a row.
+  {
+    id: "store-vintage-vault-co",
+    storeSlug: "store-vintage-vault-co",
+    ownerId: "user-sneha-vintage",
+    storeName: "Vintage Vault Co.",
+    storeDescription:
+      "Vintage original-series specialist. Currently suspended pending a listing-authenticity review.",
+    storeCategory: "category-beyblade-original",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-vintage-vault-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-vintage-vault-20260101/1600/400"),
+    status: STORE_FIELDS.STATUS_VALUES.SUSPENDED,
+    suspensionReason:
+      "Three listings flagged as possible reproductions; suspended while authenticity documentation is reviewed.",
+    adminNotes: "Owner responsive. Re-review once COAs are supplied.",
+    bio: "Original-series collector turned seller.",
+    location: "Kolkata, West Bengal, India",
+    returnPolicy: "14-day returns on sealed items.",
+    shippingPolicy: "Insured courier only.",
+    isPublic: false,
+    isVacationMode: false,
+    isVerified: false,
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 0, averageRating: 0 },
+    capabilities: ["suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(220),
+    updatedAt: daysAgo(9),
   },
 ];

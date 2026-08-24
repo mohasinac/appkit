@@ -45,5 +45,12 @@ export function toProductItem(doc: FirestoreDocument): ProductItem {
     // when listingType is missing) — same bug class as the Phase 1 routing
     // fix, one hop further downstream in the related-items card link path.
     listingType: (doc.listingType as ProductItem["listingType"]) ?? undefined,
+    // Same reasoning as `listingType` directly above, on the offers axis: the
+    // card grid renders a "Taking Offers" pill from this flag, so dropping it
+    // here made every related-item / grouped-listing card claim the seller
+    // doesn't negotiate — regardless of whether they do.
+    allowOffers: doc.allowOffers === true ? true : undefined,
+    minOfferPercent:
+      typeof doc.minOfferPercent === "number" ? doc.minOfferPercent : undefined,
   };
 }

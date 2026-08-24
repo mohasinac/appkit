@@ -1,15 +1,21 @@
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import React, { cache } from "react";
 import type { ReactNode } from "react";
-import { storeRepository, productRepository, categoriesRepository, siteSettingsRepository, reviewRepository, couponsRepository } from "../../../repositories";
+import { storeRepository, siteSettingsRepository, reviewRepository, couponsRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section, Text } from "../../../ui";
 import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { isListingTypeEnabled, isCategoryTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import {
+  listingTabCounts,
+  type ListingTabCounts,
+} from "../../../_internal/server/features/products/listing-tab-counts";
+import type { ListingType } from "../../products/types";
 import { getSellerTrustStatus } from "../../scams/actions/scam-actions";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";
-import type { StoreDetail } from "../types";
+import { toStoreDetail } from "../../../_internal/server/features/stores/adapters";
 
 const STORE_LISTING_HREF: Record<
   (typeof STORE_PAGE_TABS)[number]["id"],
@@ -81,46 +87,14 @@ export async function StoreDetailLayoutView({
       : Promise.resolve(undefined),
   ]);
 
-  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, classifiedsCount, digitalCodesCount, liveCount, artStickersCount, couponsCount, reviewsCount] = storeId
+  // One derived batch instead of nine copy-pasted per-type queries. The tabs
+  // themselves say which listing types to count (including the combined
+  // `art|stickers` OR-group), so a tenth type is counted automatically — the
+  // hand-written `TAB_LISTING_TYPE` map this replaces was unguarded by any
+  // audit and already omitted art/stickers (Root Cause #61).
+  const [listingCounts, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "auction")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        // SB-UNI-D — bundles live on categories with categoryType:"bundle"
-        // + createdByStoreId scoping.
-        categoriesRepository
-          .listByType("bundle", { activeOnly: true, limit: 100 })
-          .then((rows) => rows.filter((c) => c.createdByStoreId === storeId).length)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "classified")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "digital-code")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "live")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "art|stickers")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
+        listingTabCounts(STORE_PAGE_TABS, { storeId }),
         couponsRepository
           .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("validity.isActive", SIEVE_OP.EQ, "true")), page: 1, pageSize: 1 })
           .then((r) => r.total)
@@ -130,46 +104,24 @@ export async function StoreDetailLayoutView({
           .then((r) => r.total)
           .catch(() => 0),
       ])
-    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  const listingCounts: Record<(typeof STORE_PAGE_TABS)[number]["id"], number> = {
-    products: productsCount,
-    auctions: auctionsCount,
-    "pre-orders": preOrdersCount,
-    "prize-draws": prizeDrawsCount,
-    bundles: bundlesCount,
-    classifieds: classifiedsCount,
-    "digital-codes": digitalCodesCount,
-    live: liveCount,
-    art: artStickersCount,
-  };
-
-  const TAB_LISTING_TYPE: Record<string, string> = {
-    products: "standard",
-    auctions: "auction",
-    "pre-orders": "pre-order",
-    "prize-draws": "prize-draw",
-    classifieds: "classified",
-    "digital-codes": "digital-code",
-    live: "live",
-  };
+    : [{} as ListingTabCounts, 0, 0];
 
   const visibleStoreTabs = STORE_PAGE_TABS.filter((tab) => {
     if (tab.id === "bundles") {
       if (!isCategoryTypeEnabled("bundle", settings)) return false;
-      return listingCounts[tab.id] > 0;
-    }
-    // Combined tab — visible if either underlying listing type is enabled.
-    if (tab.id === "art") {
+    } else if (tab.id === pluginFor("art").tabSlug) {
+      // Combined tab — visible if either underlying listing type is enabled.
       if (!(isListingTypeEnabled("art", settings) || isListingTypeEnabled("stickers", settings))) return false;
-      return listingCounts[tab.id] > 0;
+    } else if (tab.listingType) {
+      if (!isListingTypeEnabled(tab.listingType as ListingType, settings)) return false;
     }
-    const lt = TAB_LISTING_TYPE[tab.id];
-    if (lt && !isListingTypeEnabled(lt as Parameters<typeof isListingTypeEnabled>[0], settings)) return false;
     // A store with zero items of a given listing type shouldn't offer a tab
     // that leads to an empty page — matches the "hide empty tab" rule below
-    // for coupons/reviews.
-    return listingCounts[tab.id] > 0;
+    // for coupons/reviews. `undefined` means the count query FAILED, not zero,
+    // so the tab stays visible rather than hiding real stock behind a
+    // swallowed error (Root Cause #59) — this used to be `.catch(() => 0)`.
+    const count = listingCounts[tab.id];
+    return count === undefined || count > 0;
   });
 
   const dropdownTabs = visibleStoreTabs.map((tab) => ({
@@ -190,7 +142,9 @@ export async function StoreDetailLayoutView({
 
   return (
     <Main>
-      <StoreHeader store={store as unknown as StoreDetail} trust={trust} />
+      {/* Projected, not cast: the raw document carries secrets, and the cast
+          also skipped the stats flattening StoreHeader's counters rely on. */}
+      <StoreHeader store={toStoreDetail(store)} trust={trust} />
       <Container size="xl" className="mt-6">
         <StoreNavTabs
           dropdownTabs={dropdownTabs}

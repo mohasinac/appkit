@@ -167,6 +167,12 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       [STORE_FIELDS.STORE_CATEGORY]: { canFilter: true, canSort: false },
       [STORE_FIELDS.STATUS]: { canFilter: true, canSort: false },
       [STORE_FIELDS.IS_PUBLIC]: { canFilter: true, canSort: false },
+      // The public /stores toolbar has always emitted `isFeatured==true` for its
+      // "Featured" toggle, and the API allowlist has always accepted it — but it
+      // was absent from this map, so sievejs (`throwExceptions: false`) dropped
+      // the clause and the toggle did nothing at all. Root Cause #62's
+      // EMITTED_BUT_UNFILTERABLE, live in production.
+      [STORE_FIELDS.IS_FEATURED]: { canFilter: true, canSort: false },
       [STORE_FIELDS.CREATED_AT]: { canFilter: false, canSort: true },
       "stats.itemsSold": { canFilter: false, canSort: true },
       "stats.averageRating": { canFilter: false, canSort: true },

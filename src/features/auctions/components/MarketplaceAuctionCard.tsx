@@ -11,6 +11,7 @@ import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { isBuyNowAvailable } from "../../../_internal/shared/features/auctions/config";
 import type { ListingType } from "../../products/types/index";
 
 const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
@@ -39,6 +40,13 @@ export interface MarketplaceAuctionCardData {
   status?: string;
   slug?: string;
   buyNowPrice?: number;
+  /**
+   * Feeds `isBuyNowAvailable` alongside `currentBid`/`auctionEndDate`. Every
+   * doc→card mapper must copy it: dropping one field a shared predicate reads
+   * is exactly how a card ends up advertising a buyout the detail page refuses
+   * (Root Cause #48).
+   */
+  isSold?: boolean;
   /** Display name of the auction winner — shown masked when the auction has ended */
   winnerDisplayName?: string;
 }
@@ -254,7 +262,10 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
               <Span>{mergedLabels.placeBid}</Span>
             </Button>
             {resolvedBuyoutPrice ? (
-              <Button gap="xs" type="button" variant="danger" size="sm" textSize="xs" paddingX="xs" className="flex-1" onClick={handleNavigate}>
+              /* `secondary`, not `danger` — this button only navigates to the
+                 PDP, and `danger` is reserved for destructive actions (Rule #7
+                 kinds). ACTIONS.AUCTION["buy-it-now"] is itself `secondary`. */
+              <Button gap="xs" type="button" variant="secondary" size="sm" textSize="xs" paddingX="xs" className="flex-1" onClick={handleNavigate}>
                 <ShoppingBag className="h-3 w-3" />
                 <Span>{mergedLabels.buyout}</Span>
               </Button>
@@ -368,7 +379,19 @@ export function MarketplaceAuctionCard({
   const bidCount = product.bidCount ?? 0;
   const hasCurrentBid = (product.currentBid ?? 0) > 0;
   const hasVideo = Boolean(product.video?.url);
-  const resolvedBuyoutPrice = buyoutPrice ?? product.buyNowPrice;
+  // Availability is folded in HERE rather than at the render site, so the chip
+  // can never advertise a buyout the detail page will refuse. It used to gate on
+  // the price merely EXISTING, so cards linked through to a PDP with no Buy Now
+  // button at all. `isBuyNowAvailable` is the same predicate that page uses.
+  const rawBuyoutPrice = buyoutPrice ?? product.buyNowPrice;
+  const resolvedBuyoutPrice = isBuyNowAvailable({
+    buyNowPrice: rawBuyoutPrice,
+    currentBid: product.currentBid,
+    isEnded,
+    isSold: product.isSold === true,
+  })
+    ? rawBuyoutPrice
+    : undefined;
   const images = [product.mainImage, ...(product.images ?? [])].filter(Boolean);
   const currentSrc = images[imageIndex] ?? product.mainImage;
 

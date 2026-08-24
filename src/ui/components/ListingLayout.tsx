@@ -20,6 +20,8 @@
  */
 
 import { ReactNode, useState } from "react";
+import { createPortal } from "react-dom";
+import { useBottomChromeSlot } from "./bottom-chrome-slot";
 import { Aside, Nav } from "./Semantic";
 import { Text, Span } from "./Typography";
 import { Button } from "./Button";
@@ -148,6 +150,9 @@ export function ListingLayout({
   // Rules of Hooks.
   const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  // Must run before the detail-view short-circuit below — hooks cannot sit
+  // after a conditional return.
+  const bottomChromeSlot = useBottomChromeSlot();
 
   // Detail view short-circuit (folded from ListingViewShell)
   if (detailView) {
@@ -391,22 +396,23 @@ export function ListingLayout({
         </Div>
       </Div>
 
-      {/* Mobile sticky pagination bar */}
-      {toolbarPaginationSlot && (
-        <Nav
-          aria-label="Pagination"
-          className={[
-            "appkit-listing-layout__mobile-pagination",
-            effectiveIsDashboard
-              ? "appkit-listing-layout__mobile-pagination--dashboard"
-              : selectedCount > 0
-                ? "appkit-listing-layout__mobile-pagination--bulk"
-                : "appkit-listing-layout__mobile-pagination--default",
-          ].join(" ")}
-        >
-          {toolbarPaginationSlot}
-        </Nav>
-      )}
+      {/* Mobile pagination bar — rendered into <BottomChrome>, the shell's
+          bottom-edge tier, rather than positioning itself. It used to be
+          `fixed` with three hand-picked `bottom` values, and the one it used
+          whenever a page-level CTA was up resolved to the identical offset as
+          that CTA bar at a lower z-index — so it was invisible. The tier now
+          supplies position, stacking and ordering; this is just a flex child. */}
+      {toolbarPaginationSlot &&
+        bottomChromeSlot &&
+        createPortal(
+          <Nav
+            aria-label="Pagination"
+            className="appkit-listing-layout__mobile-pagination"
+          >
+            {toolbarPaginationSlot}
+          </Nav>,
+          bottomChromeSlot,
+        )}
 
       {/* Mobile filter drawer — slides up from bottom */}
       {hasFilter && (

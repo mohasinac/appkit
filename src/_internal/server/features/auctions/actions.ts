@@ -46,9 +46,15 @@ export async function placeBidAction(input: unknown): Promise<ActionResult<unkno
       // Now set this new bid as the winning bid
       await bidRepository.setWinningBid(bid.id, auctionId);
     
+      // `bidsHaveStarted` and `leadingBidderId` are set by the primary bid path
+      // (`features/auctions/actions/bid-actions.ts`) but were missing here, so a
+      // bid placed through this legacy entrypoint left both mirrors stale —
+      // CLAUDE.md Root Cause #42.
       const updates: FirestoreDocument = {
         currentBid: amount,
         bidCount: ((product as any).bidCount ?? 0) + 1,
+        leadingBidderId: user.uid,
+        bidsHaveStarted: true,
       };
       if (shouldAutoExtend(product)) {
         updates.auctionEndDate = computeExtendedEndDate(product);

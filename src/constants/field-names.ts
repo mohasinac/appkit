@@ -9,6 +9,40 @@
  */
 
 // ============================================================================
+// AVAILABILITY SCOPE (not a stored field — a derived listing-surface scope)
+// ============================================================================
+
+/**
+ * The three-state scope every listing surface (public browse, store tabs,
+ * category/brand panels, admin/seller dashboards) offers as a tab bar.
+ *
+ * DELIBERATELY NOT a Firestore field. "Unavailable" means different things to
+ * different listing types — an auction ENDS, a product SELLS OUT, a prize draw
+ * CLOSES, a code pool DEPLETES — so there is no single column to filter on.
+ * The per-type meaning lives on each listing-type plugin
+ * (`isAvailable` / `unavailableClauses` in `_internal/shared/listing-types/`),
+ * and `availabilityTabsFor()` derives the middle tab's label from the plugin's
+ * `hideDefault`. Do not add a mirror field to ProductDocument to "simplify"
+ * this — a denormalised mirror drifts the first time a write path forgets it
+ * (Recurrent Root Cause #42).
+ */
+export const AVAILABILITY_VALUES = {
+  /** Still buyable / biddable / enterable. The default when the param is absent. */
+  AVAILABLE: "available",
+  /** Sold out, ended, closed, or depleted — the archive. */
+  UNAVAILABLE: "unavailable",
+  /** No availability predicate at all. The only scope with an exact total. */
+  ALL: "all",
+} as const;
+
+export type AvailabilityFilter =
+  (typeof AVAILABILITY_VALUES)[keyof typeof AVAILABILITY_VALUES];
+
+export function isAvailabilityFilter(value: string): value is AvailabilityFilter {
+  return (Object.values(AVAILABILITY_VALUES) as string[]).includes(value);
+}
+
+// ============================================================================
 // PRODUCT FIELDS
 // ============================================================================
 
@@ -88,6 +122,16 @@ export const PRODUCT_FIELDS = {
   IS_TEST_DATA: "isTestData",
   BIDS_HAVE_STARTED: "bidsHaveStarted",
   PRE_ORDER_CLOSED: "preOrderClosed",
+  /**
+   * Digital-code pool counters. NESTED under `digitalCode.*` on the document —
+   * reading `row.codesAvailable` at the top level silently returns `undefined`
+   * for every row, which is exactly the bug the old `isValidRelatedItem`
+   * carried. Both paths are allowlisted in the products repository's
+   * SIEVE_FIELDS.
+   */
+  DIGITAL_CODES_AVAILABLE: "digitalCode.codesAvailable",
+  DIGITAL_CODE_POOL_SIZE: "digitalCode.codePoolSize",
+  DIGITAL_CODE_DELIVERY_METHOD: "digitalCode.codeDeliveryMethod",
   /**
    * The Firestore field. NOTE the `Id` suffix: the URL/table key is
    * `sublistingCategory` (TABLE_KEYS.SUBLISTING_CATEGORY) but the stored field
@@ -391,15 +435,26 @@ export const EVENT_FIELDS = {
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 
+  /**
+   * Mirrors the `EventStatus` union in `features/events/types/index.ts`, which
+   * is the source of truth. A `PUBLISHED: "published"` entry lived here until
+   * 2026-08-24 — `EventStatus` never had that value, so any filter built from
+   * it matched zero rows forever. It had no consumers and was removed; verified
+   * by grep before deleting (Root Cause #34).
+   */
   STATUS_VALUES: {
     DRAFT: "draft",
-    PUBLISHED: "published",
     ACTIVE: "active",
+    PAUSED: "paused",
     ENDED: "ended",
     CANCELLED: "cancelled",
-    PAUSED: "paused",
   },
 
+  /**
+   * Mirrors the `EventType` union. `LOTTERY` was missing until 2026-08-24,
+   * which is why `events-seed-data.ts` had to write `type: "lottery"` as a raw
+   * string literal while every other row used this map.
+   */
   TYPE_VALUES: {
     SALE: "sale",
     OFFER: "offer",
@@ -408,6 +463,7 @@ export const EVENT_FIELDS = {
     FEEDBACK: "feedback",
     RAFFLE: "raffle",
     SPIN_WHEEL: "spin_wheel",
+    LOTTERY: "lottery",
   },
 
   RAFFLE_TYPE_VALUES: {
@@ -1053,6 +1109,7 @@ export const SITE_SETTINGS_FIELDS = {
     NOTIFICATIONS: "featureFlags.notifications",
     SELLER_REGISTRATION: "featureFlags.sellerRegistration",
     PRE_ORDERS: "featureFlags.preOrders",
+    OFFERS: "featureFlags.offers",
   },
   LEGAL_PAGES: "legalPages",
   SHIPPING: "shipping",

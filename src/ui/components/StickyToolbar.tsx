@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { normalizeError } from "../../errors/normalize";
 
@@ -16,7 +16,9 @@ import { normalizeError } from "../../errors/normalize";
  * Dismiss/hide: pass `dismissible` (with a stable `id`) to let the user
  * collapse the bar to a thin re-expand strip for the rest of the browser
  * session — a viewport-annoyance-avoidance toggle, not a durable
- * preference, so it resets on reload rather than persisting forever. This
+ * preference, so it resets on reload rather than persisting forever. Both
+ * directions render the same centred, labelled strip ("Hide Toolbar" /
+ * "Show Toolbar") so the control is symmetric and self-describing. This
  * is what closes the mobile-overlap complaint the sticky toolbar pattern
  * caused across listing pages: at narrow widths, any sticky bar competing
  * with page content for vertical space needs a way out that doesn't require
@@ -87,19 +89,22 @@ function resolveOffsetClass(offset: StickyToolbarOffset): string {
     return "top-[calc(var(--header-height,0px)+var(--appkit-navbar-height,2.5rem))]";
   }
   if (offset === "header+pagination") {
-    // Matches the sticky pagination-row offset repeated verbatim across
-    // every DataListingView-style index listing (64px = the ListingToolbar
-    // row height above it — py-3/py-3.5 padding + its ~38px content row) —
-    // consolidated here instead of copy-pasted. Keep in sync with
-    // ListingToolbar's own padding classes; a mismatch makes the pagination
-    // row overlap/hide behind the toolbar (the "too compact when sticky"
-    // regression fixed 2026-08-19).
-    return "top-[calc(var(--header-height,0px)+64px)]";
+    // The sticky pagination-row offset repeated verbatim across every
+    // DataListingView-style index listing — consolidated here instead of
+    // copy-pasted. It tracks the toolbar's REAL height via
+    // --appkit-toolbar-height, which a dismissible StickyToolbar publishes
+    // from its own ResizeObserver (see TOOLBAR_HEIGHT_VAR below). A fixed
+    // constant can only ever be right in one state: the toolbar is ~64px
+    // expanded but ~20px collapsed, so hard-coding 64px left a ~44px gap
+    // through which page content scrolled between the two pinned bars.
+    // The 64px fallback is the expanded height, used on any page whose
+    // toolbar isn't dismissible and therefore publishes nothing.
+    return "top-[calc(var(--header-height,0px)+var(--appkit-toolbar-height,64px))]";
   }
   if (offset === "header+bulk-actions") {
-    // Matches the sticky bulk-action-bar offset that stacks below both the
-    // filter toolbar (64px) and the pagination row above it (~52px more).
-    return "top-[calc(var(--header-height,0px)+116px)]";
+    // Stacks below both the filter toolbar (same variable as above) and the
+    // pagination row between them (~52px).
+    return "top-[calc(var(--header-height,0px)+var(--appkit-toolbar-height,64px)+52px)]";
   }
   // Numeric offsets are applied via inline style instead (see below) —
   // Tailwind's static scanner can never see a dynamically-interpolated
@@ -107,6 +112,14 @@ function resolveOffsetClass(offset: StickyToolbarOffset): string {
   // generated for it in the compiled stylesheet.
   return "";
 }
+
+/**
+ * Written to `<html>` by every dismissible StickyToolbar from a
+ * ResizeObserver, and consumed by the `header+pagination` /
+ * `header+bulk-actions` offsets so a bar stacked underneath tracks the real
+ * height in both the expanded and collapsed states.
+ */
+const TOOLBAR_HEIGHT_VAR = "--appkit-toolbar-height";
 
 const STORAGE_PREFIX = "appkit:sticky-toolbar-collapsed:";
 
@@ -131,6 +144,42 @@ function writeCollapsed(id: string, value: boolean): void {
   }
 }
 
+/**
+ * The collapse/expand control — one component for both states so the two
+ * halves of the affordance can't drift apart (the collapsed strip read
+ * "Show Toolbar" while the expanded one was a bare, unlabelled chevron
+ * pinned to the far right until 2026-08-24).
+ */
+function CollapseStrip({
+  collapsed,
+  label,
+  onToggle,
+  className,
+}: {
+  collapsed: boolean;
+  label: string;
+  onToggle: () => void;
+  className?: string;
+}) {
+  return (
+    <div className={`flex justify-center ${className ?? ""}`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-label={`${collapsed ? "Show" : "Hide"} ${label}`}
+        aria-expanded={!collapsed}
+        className="flex items-center gap-1 px-4 py-0.5 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
+      >
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform duration-150 ${collapsed ? "" : "rotate-180"}`}
+          aria-hidden="true"
+        />
+        {collapsed ? "Show" : "Hide"} {label}
+      </button>
+    </div>
+  );
+}
+
 export function StickyToolbar({
   children,
   offset = "header",
@@ -146,10 +195,36 @@ export function StickyToolbar({
   label = "Toolbar",
 }: StickyToolbarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (dismissible && id) setCollapsed(readCollapsed(id));
   }, [dismissible, id]);
+
+  // Publish the rendered height so a bar stacked below (sticky pagination,
+  // bulk-action bar) can offset itself against what's actually on screen.
+  // `collapsed` is a dependency because the two states are distinct elements
+  // — React remounts the node, so the observer must re-attach to the new one.
+  useEffect(() => {
+    if (!dismissible || !id) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const write = () => {
+      document.documentElement.style.setProperty(
+        TOOLBAR_HEIGHT_VAR,
+        `${Math.round(el.getBoundingClientRect().height)}px`,
+      );
+    };
+    write();
+    const observer = new ResizeObserver(write);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      // Drop it on unmount so a route with no dismissible toolbar falls back
+      // to the 64px default instead of inheriting the previous page's value.
+      document.documentElement.style.removeProperty(TOOLBAR_HEIGHT_VAR);
+    };
+  }, [dismissible, id, collapsed]);
 
   const offsetCls = resolveOffsetClass(offset);
   const offsetStyle = typeof offset === "number" ? { top: `${offset}px` } : undefined;
@@ -165,49 +240,33 @@ export function StickyToolbar({
   if (dismissible && id && collapsed) {
     return (
       <div
+        ref={rootRef}
         data-testid={dataTestId}
         style={offsetStyle}
-        className={`sticky ${offsetCls} ${zCls} ${TONE_CLS[tone]} ${borderCls} flex justify-center`}
+        className={`sticky ${offsetCls} ${zCls} ${TONE_CLS[tone]} ${borderCls}`}
       >
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label={`Show ${label}`}
-          aria-expanded={false}
-          className="flex items-center gap-1 px-4 py-0.5 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
-        >
-          <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
-          Show {label}
-        </button>
+        <CollapseStrip collapsed label={label} onToggle={toggle} />
       </div>
     );
   }
 
   return (
     <div
+      ref={rootRef}
       role={role}
       data-testid={dataTestId}
       style={offsetStyle}
       // for the translucent sticky-toolbar pattern. The header offset is
       // sourced from --header-height (set by AppLayoutShell at runtime).
-      // `relative` only when dismissible — the absolutely-positioned toggle
-      // button anchors to it without disturbing the existing internal
-      // layout of `children` (each of the 27+ migrated call sites has its
-      // own Row/Div structure; a flex wrapper here would double-nest and
-      // risk breaking their centering).
-      className={`sticky ${offsetCls} ${zCls} ${TONE_CLS[tone]} ${borderCls} ${PADDING_CLS[padding]} ${dismissible ? "relative pr-8" : ""} ${className ?? ""}`}
+      // The collapse control is a full-width strip appended AFTER `children`
+      // rather than an element positioned over them, so it never competes
+      // with the internal Row/Div layout each of the 27+ migrated call sites
+      // brings of its own.
+      className={`sticky ${offsetCls} ${zCls} ${TONE_CLS[tone]} ${borderCls} ${PADDING_CLS[padding]} ${className ?? ""}`}
     >
       {children}
       {dismissible && id && (
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label={`Hide ${label}`}
-          aria-expanded={true}
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text)]"
-        >
-          <ChevronDown className="h-3.5 w-3.5 rotate-180 transition-transform duration-150" aria-hidden="true" />
-        </button>
+        <CollapseStrip collapsed={false} label={label} onToggle={toggle} className="mt-1.5" />
       )}
     </div>
   );

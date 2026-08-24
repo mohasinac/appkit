@@ -66,9 +66,15 @@ export interface TitleBarLayoutProps {
 const iconBtn =
   "flex items-center justify-center w-9 h-9 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-400 transition-colors";
 
-/** Badge counter class for wishlist/cart counts. */
+/** Badge counter class for wishlist/cart counts.
+ *
+ * The horizontal offset lives in `.appkit-hand-badge` (HandMode.style.css), NOT
+ * in a `-right-*` utility — the badge hugs the icon's outer top corner, which
+ * is top-left in left-hand mode. Do not re-add `-right-0.5`: Tailwind runs with
+ * `important: true`, so the utility would beat the unlayered rule and the badge
+ * would silently stop mirroring. The vertical `-top-0.5` is hand-neutral and stays. */
 const countBadge =
-  "absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-error-solid text-error-on-solid text-[10px] font-bold leading-none";
+  "appkit-hand-badge absolute -top-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-error-solid text-error-on-solid text-[10px] font-bold leading-none";
 
 /**
  * TitleBarLayout — generic top sticky title-bar shell.
@@ -76,6 +82,13 @@ const countBadge =
  * Layout:
  *  TB1 (h-14, all screens): wordmark (+ mark on mobile) | centred mark (md+) | [secondary actions lg+] | search | deals | theme | hamburger
  *  TB2 (h-10, below lg only): wishlist | cart | profile  — mirrors what TB1 hides below lg
+ *
+ * Hand mode: both rows carry `reverse="hand"`, so in left-hand mode the whole
+ * bar mirrors — wordmark to the right edge, action cluster (hamburger
+ * outermost) to the left. Purely CSS via `[data-hand]`, so it lands on the
+ * first paint and this file stays server-safe (no `useHandMode()`, no
+ * `"use client"`). The centred mark and the brand lockup deliberately do not
+ * flip; see their inline notes.
  *
  * Receives all domain data as props — zero domain imports.
  */
@@ -284,7 +297,9 @@ export function TitleBarLayout({
   ) : null;
 
   const authButtonsEl = !user && (loginHref || registerHref) ? (
-    <Row gap="xs" className="hidden lg:flex">
+    // Mirrors with TB1 so Register (the primary CTA) keeps the outer, more
+    // reachable edge instead of ending up tucked inside after the flip.
+    <Row gap="xs" reverse="hand" className="hidden lg:flex">
       {loginHref && (
         <Link
           href={loginHref}
@@ -321,8 +336,11 @@ export function TitleBarLayout({
       )}
 
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
-        {/* TB1 — primary row, always visible */}
-        <Row justify="between" gap="none" className="relative h-14">
+        {/* TB1 — primary row, always visible.
+            `reverse="hand"` swaps the wordmark and the action cluster in
+            left-hand mode. The centred mark below is `position: absolute`, so
+            it is out of flow and unaffected — see its own note. */}
+        <Row justify="between" gap="none" reverse="hand" className="relative h-14">
           {/* Left: #1 — wordmark, always shown. Mobile also gets the icon
               mark prefixed before the text (md:hidden) since the centred
               mark below has no room on narrow viewports. */}
@@ -341,7 +359,12 @@ export function TitleBarLayout({
 
           {/* Centre: #2 — icon mark, always centred on desktop. `src` falls
               back to the theme-aware inline mark when no admin logo image is
-              configured, and swaps to the admin's raster upload when one is. */}
+              configured, and swaps to the admin's raster upload when one is.
+
+              Hand-neutral by design — do NOT add `reverse="hand"` here. It is
+              absolutely positioned (out of flex flow, so `flex-direction` can't
+              reach it) and `left-1/2 -translate-x-1/2` centres it independent of
+              its own width. A centred brand mark must not move with hand mode. */}
           <Row className="hidden md:flex absolute inset-y-0 left-1/2 -translate-x-1/2" align="center">
             <Link
               href={logoHref}
@@ -352,9 +375,10 @@ export function TitleBarLayout({
             </Link>
           </Row>
 
-          {/* Right: #3 — all action buttons.
-              wishlist/cart/profile shown only on lg+ here — TB2 carries them on mobile. */}
-          <Row gap="xs">
+          {/* Right: #3 — all action buttons (left edge in left-hand mode).
+              wishlist/cart/profile shown only on lg+ here — TB2 carries them on mobile.
+              Mirrored so the hamburger stays in the outermost corner. */}
+          <Row gap="xs" reverse="hand">
             {devSlot}
             {navSlot}
             {compareEl}
@@ -378,11 +402,18 @@ export function TitleBarLayout({
             Bottom nav (BN-1) is shown on the same breakpoint — TB2 carries
             wishlist/cart/profile since BN-1 does not have those slots. */}
         {hasTb2 && (
-          <Row border="subtle" 
+          // `justify="end"` is CORRECT alongside `reverse="hand"` — do not
+          // "fix" it to "start". `row-reverse` inverts the main axis, so
+          // main-end IS the left edge: flex-end already packs this row left in
+          // left-hand mode, in mirrored order (profile leftmost). Adding a raw
+          // `justify-start` className would also trip audit-inline-styles'
+          // RAW_JUSTIFY_ON_ROW.
+          <Row border="subtle"
             as="nav"
             aria-label="Account actions"
             justify="end"
             gap="xs"
+            reverse="hand"
             className="flex lg:hidden h-10 border-t px-[var(--appkit-space-1)]"
           >
             {notificationsEl}

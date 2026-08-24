@@ -36,6 +36,12 @@ export interface FilterFacetSectionProps {
    * "dropdown" — compact pill button with a floating panel; use in horizontal toolbars.
    */
   displayAs?: "accordion" | "dropdown";
+  /**
+   * Hide options whose `count` is exactly 0. Requires the caller to populate
+   * `FacetOption.count`; opt-in so the existing callers that pass no counts are
+   * unaffected. A selected option, or one with no count, is always kept.
+   */
+  hideEmpty?: boolean;
 }
 
 /**
@@ -56,6 +62,7 @@ export function FilterFacetSection({
   onClear,
   className = "",
   displayAs = "accordion",
+  hideEmpty = false,
 }: FilterFacetSectionProps) {
   const isControlled = controlledOpen !== undefined;
   const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
@@ -88,11 +95,23 @@ export function FilterFacetSection({
     }
   }
 
-  const filtered = search
-    ? options.filter((o) =>
-        o.label.toLowerCase().includes(search.toLowerCase()),
+  // Drop options that would return nothing, when the caller supplies counts and
+  // opts in. A selected option is always kept — a facet vanishing while it is
+  // applied would strand a value in the URL with no control to clear it — and
+  // so is an option with no count, since `undefined` means "not counted", not
+  // "zero" (Root Cause #59).
+  const scoped = hideEmpty
+    ? options.filter(
+        (o) =>
+          selected.includes(o.value) || o.count === undefined || o.count > 0,
       )
     : options;
+
+  const filtered = search
+    ? scoped.filter((o) =>
+        o.label.toLowerCase().includes(search.toLowerCase()),
+      )
+    : scoped;
 
   const toggle = (value: string) => {
     if (selectionMode === "single") {

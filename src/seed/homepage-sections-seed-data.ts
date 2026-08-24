@@ -391,7 +391,11 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       maxItems: 6,
       showCountdown: true,
       showEntriesRemaining: true,
-      revealStatus: "all",
+      // "all" until 2026-08-24, which is why a closed, already-revealed draw
+      // sat on the homepage advertising entries nobody could buy. "all" is
+      // still a valid choice — it builds an archive strip — but it is not what
+      // a "Prize Draws" strip on the homepage means.
+      revealStatus: "open",
     },
     createdAt: daysAgo(2),
     updatedAt: daysAgo(2),

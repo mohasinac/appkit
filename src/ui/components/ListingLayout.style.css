@@ -376,11 +376,10 @@
 
 /* -- Mobile sticky pagination bar ------------------- */
 
+/* Positioned by <BottomChrome>, the shell's bottom-edge tier — this element is
+   a flex child of it, so it owns no position, offset or z-index of its own. */
 .appkit-listing-layout__mobile-pagination {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 39;
+  pointer-events: auto;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   border-top: 1px solid rgba(228, 228, 231, 0.8);
@@ -406,9 +405,11 @@
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.appkit-listing-layout__mobile-pagination--dashboard { bottom: 0; }
-.appkit-listing-layout__mobile-pagination--default   { bottom: var(--bottom-nav-height, 4rem); }
-.appkit-listing-layout__mobile-pagination--bulk      { bottom: calc(var(--bottom-nav-height, 4rem) + 3.5rem); }
+/* The --dashboard / --default / --bulk offset modifiers are gone. --bulk only
+   ever meant "the CTA bar is up", expressed as "rows are selected", and it
+   hardcoded 3.5rem for that bar's height; --dashboard's `bottom: 0` only
+   existed because the dashboard nav published no height. The tier answers both
+   questions directly now. */
 
 /* -- Mobile filter overlay --------------------------- */
 

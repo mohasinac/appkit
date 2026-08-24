@@ -16,15 +16,17 @@ import {
   encryptPiiFields,
   ORDER_PII_FIELDS,
 } from "../../../security";
-import { serverTimestamp } from "../../../contracts/field-ops";
+import { serverTimestamp, arrayUnion } from "../../../contracts/field-ops";
 import {
   createOrderId,
   ORDER_COLLECTION,
+  ORDER_TRACKED_FIELDS,
   OrderStatusValues,
   type OrderCreateInput,
   type OrderDocument,
   type OrderRefundEvent,
 } from "../schemas";
+import { withHistory, type HistoryActor, type FieldChange } from "../../../_internal/shared/history/index";
 import type { OrderStatus, PaymentStatus } from "../types";
 import {
   MANUAL_PAYMENT_METHODS,
@@ -32,6 +34,25 @@ import {
   type PaymentReviewQueueMode,
 } from "../constants/payment-window";
 import { ORDER_FIELDS } from "../../../constants/field-names";
+
+/**
+ * Who/why for a write that lands in `statusHistory`.
+ *
+ * Optional everywhere so existing callers keep compiling and record
+ * `system`; pass it wherever the acting user is known.
+ */
+export interface OrderWriteContext {
+  actor?: HistoryActor;
+  /** Overrides the default trigger label with the calling function's name. */
+  trigger?: string;
+  reason?: string;
+  note?: string;
+  /**
+   * Changes the field diff cannot express — used by `postRefundEvent` to put
+   * the refund itself on the timeline rather than an array-length delta.
+   */
+  extraChanges?: Record<string, FieldChange>;
+}
 
 /**
  * Statuses that count toward a user's per-product / per-bundle purchase
@@ -111,16 +132,64 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return this.findBy(ORDER_FIELDS.STATUS, "pending");
   }
 
+  /**
+   * Every write primitive below routes through this so `statusHistory` is
+   * appended at the SEVEN places a tracked field can change, rather than at
+   * the ~32 call sites above them. That is what makes order history a
+   * contained change instead of a codebase-wide sweep — and it follows the
+   * precedent `postRefundEvent` already set for append-only order data.
+   *
+   * `ctx` is optional throughout: a caller that has not been updated yet
+   * records `system` rather than failing, so this rolls out incrementally.
+   * The actor is worth passing wherever it is known — a history entry that
+   * cannot say who cancelled an order is a much weaker record.
+   */
+  private async updateWithHistory(
+    orderId: string,
+    patch: Partial<OrderDocument>,
+    ctx: OrderWriteContext | undefined,
+    defaultTrigger: string,
+    /**
+     * The already-fetched document, when the caller has one. Three of the six
+     * write primitives (`markPicked`, `markCodCollected`, `postRefundEvent`)
+     * read the order before patching it — passing it through avoids a second
+     * read of the same document on every one of those writes, which matters
+     * against the Firestore daily read budget (Rule #6).
+     */
+    known?: OrderDocument | null,
+  ): Promise<OrderDocument> {
+    const current = known !== undefined ? known : await this.findById(orderId);
+    const withEntry = withHistory(
+      current as unknown as Record<string, unknown> | undefined,
+      patch as Record<string, unknown>,
+      {
+        tracked: ORDER_TRACKED_FIELDS,
+        actor: ctx?.actor ?? { role: "system" },
+        trigger: ctx?.trigger ?? defaultTrigger,
+        reason: ctx?.reason,
+        note: ctx?.note,
+        extraChanges: ctx?.extraChanges,
+        historyField: "statusHistory",
+        truncatedField: "statusHistoryTruncated",
+      },
+    );
+    // `null` means no tracked field actually changed — write the patch as-is
+    // so an untracked update never grows the array.
+    return this.update(orderId, (withEntry ?? patch) as Partial<OrderDocument>);
+  }
+
   async updateStatus(
     orderId: string,
     status: OrderStatus,
     additionalData?: Partial<OrderDocument>,
+    ctx?: OrderWriteContext,
   ): Promise<OrderDocument> {
-    return this.update(orderId, {
-      status,
-      ...additionalData,
-      updatedAt: new Date(),
-    });
+    return this.updateWithHistory(
+      orderId,
+      { status, ...additionalData, updatedAt: new Date() },
+      ctx,
+      "orderRepository.updateStatus",
+    );
   }
 
   async assignWorker(orderId: string, workerId: string): Promise<OrderDocument> {
@@ -131,12 +200,18 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return this.update(orderId, { assignedWorkerId: undefined, updatedAt: new Date() });
   }
 
-  async markPicked(orderId: string): Promise<OrderDocument> {
+  async markPicked(orderId: string, ctx?: OrderWriteContext): Promise<OrderDocument> {
     const order = await this.findById(orderId);
     if (!order) throw new NotFoundError(`Order ${orderId} not found`);
     const nextStatus =
       order.status === "confirmed" ? ("processing" as OrderStatus) : (order.status as OrderStatus);
-    return this.update(orderId, { pickedAt: new Date(), status: nextStatus, updatedAt: new Date() });
+    return this.updateWithHistory(
+      orderId,
+      { pickedAt: new Date(), status: nextStatus, updatedAt: new Date() },
+      ctx,
+      "orderRepository.markPicked",
+      order,
+    );
   }
 
   async markPacked(orderId: string): Promise<OrderDocument> {
@@ -154,21 +229,30 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     orderId: string,
     verifiedBy: string,
     note?: string,
+    ctx?: OrderWriteContext,
   ): Promise<OrderDocument> {
     const order = await this.findById(orderId);
     if (!order) throw new NotFoundError(`Order ${orderId} not found`);
-    return this.update(orderId, {
-      paymentStatus: "paid",
-      paymentRecord: {
-        method: "cod",
-        transactionId: note,
-        amount: order.totalPrice,
-        paidAt: new Date(),
-        verifiedBy,
-        verificationMethod: "cod_collection",
+    return this.updateWithHistory(
+      orderId,
+      {
+        paymentStatus: "paid",
+        paymentRecord: {
+          method: "cod",
+          transactionId: note,
+          amount: order.totalPrice,
+          paidAt: new Date(),
+          verifiedBy,
+          verificationMethod: "cod_collection",
+        },
+        updatedAt: new Date(),
       },
-      updatedAt: new Date(),
-    });
+      // `verifiedBy` is the acting user — use it unless the caller supplied a
+      // richer actor. Cash collection is always a person, never the system.
+      ctx ?? { actor: { uid: verifiedBy, role: "seller" }, note },
+      "orderRepository.markCodCollected",
+      order,
+    );
   }
 
   async findFulfillmentQueue(storeId: string): Promise<OrderDocument[]> {
@@ -188,26 +272,41 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     orderId: string,
     paymentStatus: PaymentStatus,
     paymentId?: string,
+    ctx?: OrderWriteContext,
   ): Promise<OrderDocument> {
-    return this.update(orderId, {
-      paymentStatus,
-      ...(paymentId ? { paymentId } : {}),
-      updatedAt: new Date(),
-    });
+    return this.updateWithHistory(
+      orderId,
+      {
+        paymentStatus,
+        ...(paymentId ? { paymentId } : {}),
+        updatedAt: new Date(),
+      },
+      ctx,
+      "orderRepository.updatePaymentStatus",
+    );
   }
 
   async cancelOrder(
     orderId: string,
     reason: string,
     refundAmount?: number,
+    ctx?: OrderWriteContext,
   ): Promise<OrderDocument> {
-    return this.update(orderId, {
-      status: "cancelled",
-      cancellationDate: new Date(),
-      cancellationReason: reason,
-      ...(refundAmount ? { refundAmount, refundStatus: "pending" } : {}),
-      updatedAt: new Date(),
-    });
+    return this.updateWithHistory(
+      orderId,
+      {
+        status: "cancelled",
+        cancellationDate: new Date(),
+        cancellationReason: reason,
+        ...(refundAmount ? { refundAmount, refundStatus: "pending" } : {}),
+        updatedAt: new Date(),
+      },
+      // The cancellation reason is already a first-class argument here — carry
+      // it into the history entry so the timeline can say WHY, not just that
+      // it was cancelled.
+      { ...ctx, reason: ctx?.reason ?? reason },
+      "orderRepository.cancelOrder",
+    );
   }
 
   async findRecentByUser(userId: string): Promise<OrderDocument[]> {
@@ -438,17 +537,45 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     orderId: string,
     event: OrderRefundEvent,
     becomeRefunded = false,
+    ctx?: OrderWriteContext,
   ): Promise<OrderDocument> {
     const order = await this.findById(orderId);
     if (!order) throw new NotFoundError(`Order ${orderId} not found`);
 
     const existing = order.refunds ?? [];
-    return this.update(orderId, {
-      refunds: [...existing, event],
-      contestable: false,
-      ...(becomeRefunded ? { status: "refunded" as OrderStatus } : {}),
-      updatedAt: new Date(),
-    });
+    return this.updateWithHistory(
+      orderId,
+      {
+        refunds: [...existing, event],
+        contestable: false,
+        ...(becomeRefunded ? { status: "refunded" as OrderStatus } : {}),
+        updatedAt: new Date(),
+      },
+      {
+        ...ctx,
+        // The refund is contributed explicitly rather than diffed. A raw diff
+        // of `refunds[]` would say "an array of 1 became an array of 2" —
+        // true, and useless on a timeline. PARTIAL refunds matter as much as
+        // full ones here: a partial changes no tracked field at all, so
+        // without this it would leave no trace despite being exactly the kind
+        // of event a buyer later asks about.
+        extraChanges: {
+          refund: {
+            from: null,
+            to: {
+              refundId: event.refundId,
+              type: event.type,
+              amount: event.amount,
+              reason: event.reason,
+            },
+          },
+        },
+        actor: ctx?.actor ?? { uid: event.refundedBy, role: "admin" },
+        reason: ctx?.reason ?? event.reason,
+      },
+      "orderRepository.postRefundEvent",
+      order,
+    );
   }
 
   /** Fetch all orders sharing a paymentBatchId (for sibling-orders display). */
@@ -702,19 +829,61 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       payoutStatus: "requested",
       payoutId,
       updatedAt: serverTimestamp(),
+      ...this.batchHistoryPatch({
+        changes: { payoutStatus: { from: "eligible", to: "requested" } },
+        trigger: "orderRepository.markPayoutRequested",
+      }),
     });
   }
 
   /**
    * Cloud Functions: stage a cancellation update into a caller-owned WriteBatch.
+   *
+   * `fromStatus` is supplied by the caller because a batch write does no read
+   * — but the sweep that calls this already filtered on a status, so it knows
+   * the value. Passing it beats recording `null` for something that is
+   * genuinely known one stack frame up.
    */
-  cancelInBatch(batch: WriteBatch, ref: DocumentReference): void {
+  cancelInBatch(
+    batch: WriteBatch,
+    ref: DocumentReference,
+    fromStatus: OrderStatus | null = null,
+  ): void {
     batch.update(ref, {
       status: OrderStatusValues.CANCELLED,
       cancellationDate: new Date(),
       cancellationReason: "payment_timeout",
       updatedAt: serverTimestamp(),
+      ...this.batchHistoryPatch({
+        changes: { status: { from: fromStatus, to: OrderStatusValues.CANCELLED } },
+        reason: "payment_timeout",
+        trigger: "orderRepository.cancelInBatch",
+      }),
     });
+  }
+
+  /**
+   * History append for the two WriteBatch paths, which cannot read-then-diff.
+   *
+   * Uses `arrayUnion` so the entry lands without a prior read. The FIFO cap
+   * therefore is NOT applied here — it is enforced on the next ordinary
+   * write. That is an acceptable trade: both batch paths are terminal
+   * transitions (cancelled, payout-requested) that fire at most once per
+   * order, so they cannot be what overflows the array.
+   */
+  private batchHistoryPatch(input: {
+    changes: Record<string, { from: unknown; to: unknown }>;
+    trigger: string;
+    reason?: string;
+  }): Record<string, unknown> {
+    const entry = {
+      at: new Date(),
+      actorRole: "system" as const,
+      changes: input.changes,
+      trigger: input.trigger,
+      ...(input.reason ? { reason: input.reason } : {}),
+    };
+    return { statusHistory: arrayUnion(entry) };
   }
 
 }

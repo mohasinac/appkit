@@ -185,6 +185,19 @@ export interface CategoryDocument extends BaseDocument {
   /** Hand-picked products list (mirror of bundleQueryRule for static rules); kept for index-friendly queries. */
   bundleProductIds?: string[];
   /**
+   * Categories this bundle belongs to — the union of its member products'
+   * `categorySlugs`. A bundle row has no category of its own, so without this
+   * the category page could not scope its Bundles tab at all and counted every
+   * active bundle site-wide.
+   *
+   * Denormalised at bundle create/update time and refreshed by the daily bundle
+   * stock sync. Per Root Cause #42 a mirror is never trusted alone: readers
+   * treat an ABSENT mirror as "unscoped" (show it) rather than "belongs to no
+   * category" (hide it), so a write path that forgets to set it degrades to
+   * over-inclusion instead of silently losing the bundle.
+   */
+  bundleCategorySlugs?: string[];
+  /**
    * Sum of member products' individual prices (decimal rupees) — the "buy
    * separately" total the discount badge is measured against. Denormalised
    * at bundle create/update time and refreshed by the daily bundle stock

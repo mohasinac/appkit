@@ -18,6 +18,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import {
+  isBuyNowAvailable,
   resolveMinBid,
   resolveMinBidIncrement,
   type BidIncrementTier,
@@ -94,6 +95,8 @@ interface AuctionInfoPanelProps {
   productId: string;
   title: string; currentBid: number; currency: string; bidCount: number;
   isEnded: boolean; endDate: Date | null; buyNowPrice: number | null;
+  /** Resolved via isBuyNowAvailable() by the caller — never re-derived here. */
+  buyNowAvailable: boolean;
   featured: boolean; freeShipping: boolean; condition: string | null;
   category: string | null; categoryName: string | null;
   brand: string | null; brandSlug: string | null;
@@ -103,7 +106,7 @@ interface AuctionInfoPanelProps {
 }
 
 function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
-  const { productId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
+  const { productId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
   return (
     <Stack gap="md">
       <Div>
@@ -135,7 +138,11 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         )}
         {endDate && <Text className="mt-0.5" color="faint" size="xs">{isEnded ? "Ended" : "Ends"} {endDate.toLocaleString()}</Text>}
       </Div>
-      {buyNowPrice !== null && !isEnded && (
+      {/* Gated on the SAME predicate as the button below. It used to be a
+          two-condition check while the button used three, so the panel
+          advertised "Buy Now: ₹5,999" on auctions that offered no Buy Now
+          button at all — which is what "the buyout button is disabled" was. */}
+      {buyNowAvailable && buyNowPrice !== null && (
         <Row align="center" gap="sm" className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)] bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
@@ -264,7 +271,12 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
   const bidCount = typeof p.bidCount === "number" ? p.bidCount : 0;
   const buyNowPrice =
     typeof p.buyNowPrice === "number" ? p.buyNowPrice : null;
-  const bidsHaveStarted = p.bidsHaveStarted === true;
+  const buyNowAvailable = isBuyNowAvailable({
+    buyNowPrice,
+    currentBid,
+    isEnded,
+    isSold: p.isSold === true,
+  });
 
   const condition = typeof p.condition === "string" ? p.condition : null;
   const featured = p.featured === true;
@@ -353,7 +365,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           renderGallery={() => (
             <ProductGalleryClient images={images} video={productVideo} productName={title} />
           )}
-          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
+          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">
@@ -396,7 +408,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     isEnded={isEnded}
                     auctionEndDate={endDate}
                     buyNowPrice={buyNowPrice}
-                    bidsHaveStarted={bidsHaveStarted}
                     bidCount={bidCount}
                     tags={tags}
                     onPlaceBid={onPlaceBid}
@@ -430,10 +441,16 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
                     {isEnded ? "Auction Ended" : "Place Bid"}
                   </Button>
-                  {buyNowPrice !== null && !isEnded && !bidsHaveStarted && (
-                    <Button variant="secondary" size="md" className="w-full" disabled>
-                      Buy Now — {formatCurrency(buyNowPrice, currency)}
-                    </Button>
+                  {/* A permanently-`disabled` Buy Now button used to sit here.
+                      This whole branch is the no-action preview (the live route
+                      always passes onPlaceBid + onBuyNow), so it rendered a CTA
+                      that could never be clicked and explained nothing — the
+                      dead-affordance shape Root Cause #56 is about. The price
+                      is stated instead. */}
+                  {buyNowAvailable && buyNowPrice !== null && (
+                    <Text align="center" size="xs" color="muted">
+                      Buy Now available at {formatCurrency(buyNowPrice, currency)}
+                    </Text>
                   )}
                 </Stack>
                 {tags.length > 0 && (
@@ -477,7 +494,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   isEnded={isEnded}
                   auctionEndDate={endDate}
                   buyNowPrice={buyNowPrice}
-                  bidsHaveStarted={bidsHaveStarted}
                   bidCount={bidCount}
                   tags={tags}
                   onPlaceBid={onPlaceBid}

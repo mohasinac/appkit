@@ -204,6 +204,30 @@ export class BidRepository extends BaseRepository<BidDocument> {
     });
   }
 
+  /**
+   * Batched "everyone else lost", for callers that are not already inside a
+   * batch of their own — a Buy Now purchase ends the auction outside the
+   * settlement job, and the losing bids can be any number, so this writes them
+   * in Firestore-batch chunks rather than one round-trip per bid.
+   */
+  async markManyLost(refs: readonly DocumentReference[]): Promise<void> {
+    const CHUNK = 400; // under Firestore's 500-write batch limit, with headroom
+    for (let i = 0; i < refs.length; i += CHUNK) {
+      const batch = this.db.batch();
+      for (const ref of refs.slice(i, i + CHUNK)) this.markLost(batch, ref);
+      await batch.commit();
+    }
+  }
+
+  /**
+   * A pending Buy Now claim that never became a sale. Not `forfeited` — that
+   * status means "won, then defaulted", and a lapsed claim never won anything;
+   * the auction it was placed against carried on untouched.
+   */
+  async markCancelled(bidId: string): Promise<void> {
+    await this.update(bidId, { status: "cancelled", isWinning: false, updatedAt: new Date() });
+  }
+
   markOutbid(batch: WriteBatch, ref: DocumentReference): void {
     batch.update(ref, {
       status: "outbid",

@@ -23,10 +23,15 @@ const PAGE_SIZE = 24;
 const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, TABLE_KEYS.SHOW_EXPIRED];
 
 export interface EventsIndexListingProps {
+  /**
+   * Event counts keyed by type AND status value, resolved server-side. Drives
+   * both the facet count badges and hiding facets that would return nothing.
+   */
+  facetCounts?: Record<string, number | undefined>;
   initialData?: any;
 }
 
-export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
+export function EventsIndexListing({ initialData, facetCounts }: EventsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: sortBy(EVENT_FIELDS.STARTS_AT, "ASC") } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -213,7 +218,12 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <EventFilters table={pendingTable} variant="public" />
+        <EventFilters
+          table={pendingTable}
+          variant="public"
+          counts={facetCounts}
+          hideEmpty={Boolean(facetCounts)}
+        />
       </ListingFilterDrawer>
     </Div>
   );

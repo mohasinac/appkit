@@ -21,8 +21,15 @@ import {
   NotFoundError,
   OFFER_ERROR_CODES,
 } from "../../../errors";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
+import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
+import { normalizeListingType } from "../../products/utils/listing-type";
 import { OfferStatusValues } from "../schemas";
 import type { OfferDocument } from "../schemas";
+import {
+  DEFAULT_MIN_OFFER_PERCENT,
+  minOfferAmount,
+} from "../../../_internal/shared/features/offers/config";
 
 /**
  * How long an accepted offer stays claimable at its locked price. Shared by the
@@ -63,17 +70,37 @@ export async function makeOffer(
 ): Promise<OfferDocument> {
   const { productId, offerAmount, buyerNote } = input;
 
+  /**
+   * Three independent gates, checked in widening-to-narrowing order. Only
+   * `makeOffer` is guarded — switching the site flag off must stop NEW offers
+   * without stranding in-flight ones, so accept/decline/counter/withdraw and
+   * `checkoutOffer` deliberately stay open.
+   */
+  const settings = await siteSettingsRepository.getSingleton().catch(() => null);
+  if (settings?.featureFlags?.offers === false) {
+    throw new ValidationError(ERROR_MESSAGES.OFFER.DISABLED, {
+      code: OFFER_ERROR_CODES.DISABLED,
+    });
+  }
+
   const product = await productRepository.findById(productId);
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);
+
+  // Some listing types cannot be negotiated at all — an auction already has
+  // bidding, a prize-draw sells fixed-price entries. This was never checked, so
+  // an offer could be (and in seed data was) attached to an auction, producing
+  // a cart line that claims `listingType: "standard"` in the offer lane.
+  if (!canMakeOffer(normalizeListingType(product))) {
+    throw new ValidationError("Offers aren't available for this kind of listing.");
+  }
+
   if (!product.allowOffers)
     throw new ValidationError("This product does not accept offers.");
 
-  const minAllowed = Math.ceil(
-    product.price * ((product.minOfferPercent ?? 70) / 100) * 100,
-  ) / 100;
+  const minAllowed = minOfferAmount(product.price, product.minOfferPercent);
   if (offerAmount < minAllowed)
     throw new ValidationError(
-      `Minimum offer is ₹${minAllowed} (${product.minOfferPercent ?? 70}% of listing price).`,
+      `Minimum offer is ₹${minAllowed} (${product.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT}% of listing price).`,
     );
   if (offerAmount >= product.price)
     throw new ValidationError(

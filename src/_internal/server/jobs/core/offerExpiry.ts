@@ -1,6 +1,7 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { bidRepository, cartRepository, offerRepository, storeRepository } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { BID_MESSAGES } from "../handlers/messages";
 import type { JobContext } from "../runtime/types";
 
 export async function runOfferExpiry(ctx: JobContext): Promise<void> {
@@ -121,16 +122,25 @@ async function expireAcceptedPastCheckoutDeadline(ctx: JobContext): Promise<void
 }
 
 /**
- * A won auction the buyer never paid for.
+ * An auction line the buyer never paid for. TWO different situations, and the
+ * difference matters to both parties.
  *
- * Folded into this job rather than given its own scheduled function: both are
- * "a locked cart line whose claim has lapsed", they want the same cadence, and
- * Cloud Scheduler bills per registered job (see CLAUDE.md's Firebase budget
- * table — 27 jobs is already an accepted, documented cost).
+ * Folded into this job rather than given its own scheduled function: all of
+ * these are "a locked cart line whose claim has lapsed", they want the same
+ * cadence, and Cloud Scheduler bills per registered job (see CLAUDE.md's
+ * Firebase budget table — 27 jobs is already an accepted, documented cost).
  *
- * The listing is NOT silently relisted. A forfeited win is a seller decision
- * (relist, offer to the runner-up, or ban the non-payer), so this clears the
- * line, marks the bid forfeited, and notifies both sides.
+ * **A settled win** (`!isBuyout`) is a finished auction the buyer committed to
+ * by bidding. The listing is NOT silently relisted — that is a seller decision
+ * (relist, approach the runner-up, or ban the non-payer) — so the line is
+ * cleared, the bid is `forfeited`, and both sides are told.
+ *
+ * **A buyout hold** (`isBuyout`) never won anything. `buyNowAuction` left the
+ * auction completely untouched, so there is no sale to reverse and nothing for
+ * the seller to decide: the line is cleared, the bid is `cancelled`, and only
+ * the buyer hears about it. This is what makes flipping nothing on the product
+ * at claim time pay off — the old buy-now marked the listing sold immediately,
+ * so an abandoned buyout permanently killed an auction that still had time left.
  */
 async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
   let stale;
@@ -142,7 +152,34 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
     return;
   }
 
-  const auctionLines = stale.filter(({ item }) => item.bidId && item.isAuctionWin);
+  const allAuctionLines = stale.filter(({ item }) => item.bidId && item.isAuctionWin);
+  const buyoutHolds = allAuctionLines.filter(({ item }) => item.isBuyout === true);
+  const auctionLines = allAuctionLines.filter(({ item }) => item.isBuyout !== true);
+
+  if (buyoutHolds.length > 0) {
+    ctx.logger.info(`Found ${buyoutHolds.length} expired Buy Now hold(s)`);
+    for (const { userId, item } of buyoutHolds) {
+      try {
+        await cartRepository.removeItemsByBidId(userId, item.bidId!);
+        await bidRepository.markCancelled(item.bidId!);
+        await sendNotification({
+          userId,
+          type: "auction_ended",
+          priority: "normal",
+          title: BID_MESSAGES.BUY_NOW_LAPSED_TITLE,
+          message: BID_MESSAGES.BUY_NOW_LAPSED_MESSAGE(item.productTitle),
+          relatedId: item.auctionId ?? item.productId,
+          relatedType: "product",
+        });
+      } catch (err) {
+        void normalizeError(err);
+        ctx.logger.warn(`Failed to lapse buyout hold ${item.bidId}`, {
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+  }
+
   if (auctionLines.length === 0) return;
   ctx.logger.info(`Found ${auctionLines.length} unpaid auction win(s) past deadline`);
 

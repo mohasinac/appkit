@@ -61,6 +61,11 @@ function makeCtx(overrides = {}) {
     },
     now: new Date(),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    // `runAuctionSettlement` early-returns unless FEATURE_AUCTIONS is "true".
+    // This was missing, so EVERY test in this file died on
+    // "ctx.env is not a function" before reaching a single assertion — the
+    // whole suite had been silently dead.
+    env: vi.fn((key: string) => (key === "FEATURE_AUCTIONS" ? "true" : undefined)),
     ...overrides,
   } as unknown as Parameters<typeof runAuctionSettlement>[0];
 }

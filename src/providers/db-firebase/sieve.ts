@@ -233,17 +233,21 @@ function withAliasesExpanded(
 }
 
 /**
- * Apply Sieve DSL to a CollectionReference/Query without requiring repository subclassing.
+ * Build the filtered (unpaginated) Firestore query for a Sieve model.
+ *
+ * Extracted so the count-only path and the full list path apply the SAME
+ * filter pipeline — alias expansion included. Hand-building a Firestore query
+ * for a "just give me the total" call would skip `expandFilterAliases`, and a
+ * same-field OR group like `listingType==art|stickers` would silently vanish
+ * (Root Cause #58). Never reimplement this; call it.
  */
-export async function applySieveToFirestore<T extends DocumentData>(params: {
-  baseQuery: CollectionReference | Query;
-  model: SieveModel;
-  fields: SieveFields;
-  options?: SieveOptions;
-}): Promise<SieveResult<T>> {
-  const { baseQuery, model, fields, options } = params;
-  const { aliases, ...rest } = options ?? {};
-  const merged = { ...SIEVE_DEFAULTS, ...rest };
+function buildFilteredSieveQuery(
+  baseQuery: CollectionReference | Query,
+  model: SieveModel,
+  fields: SieveFields,
+  merged: Omit<Required<SieveOptions>, "aliases">,
+  aliases: SieveFilterAliases | undefined,
+): Query {
   const effective = withAliasesExpanded(model, aliases);
 
   const processor = new SieveProcessorBase({
@@ -262,6 +266,48 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
     fields,
   } as never);
 
+  return processor.apply(effective, baseQuery, {
+    applyPagination: false,
+  } as never) as unknown as Query;
+}
+
+/**
+ * Count matching documents WITHOUT reading any of them.
+ *
+ * `applySieveToFirestore(...).total` already counts via the `.count()`
+ * aggregation, but it also fetches a page of documents on the way — so the
+ * `list({ pageSize: 1 }).total` idiom used across the codebase pays for one
+ * wasted document read per call. Facet/tab counts issue one query per union
+ * member, so that waste multiplies; this path skips the document read
+ * entirely.
+ */
+export async function countSieveMatches(params: {
+  baseQuery: CollectionReference | Query;
+  model: SieveModel;
+  fields: SieveFields;
+  options?: SieveOptions;
+}): Promise<number> {
+  const { baseQuery, model, fields, options } = params;
+  const { aliases, ...rest } = options ?? {};
+  const merged = { ...SIEVE_DEFAULTS, ...rest };
+  return getFirestoreCount(
+    buildFilteredSieveQuery(baseQuery, model, fields, merged, aliases),
+  );
+}
+
+/**
+ * Apply Sieve DSL to a CollectionReference/Query without requiring repository subclassing.
+ */
+export async function applySieveToFirestore<T extends DocumentData>(params: {
+  baseQuery: CollectionReference | Query;
+  model: SieveModel;
+  fields: SieveFields;
+  options?: SieveOptions;
+}): Promise<SieveResult<T>> {
+  const { baseQuery, model, fields, options } = params;
+  const { aliases, ...rest } = options ?? {};
+  const merged = { ...SIEVE_DEFAULTS, ...rest };
+
   const page = Math.max(1, Number(model.page ?? 1));
   const pageSize = Math.min(
     merged.maxPageSize,
@@ -269,9 +315,13 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   );
 
   // Apply filters + sorts once; count without reading docs.
-  const filteredQ = processor.apply(effective, baseQuery, {
-    applyPagination: false,
-  } as never) as unknown as Query;
+  const filteredQ = buildFilteredSieveQuery(
+    baseQuery,
+    model,
+    fields,
+    merged,
+    aliases,
+  );
   const total = await getFirestoreCount(filteredQ);
 
   // Apply pagination on top of the already-filtered query — avoids re-applying
@@ -315,14 +365,6 @@ export abstract class FirebaseSieveRepository<
     const { baseQuery, aliases, ...sieveOptions } = options ?? {};
     const merged = { ...SIEVE_DEFAULTS, ...sieveOptions };
     const base = baseQuery ?? this.getCollection();
-    const effective = withAliasesExpanded(model, aliases);
-
-    const processor = new SieveProcessorBase({
-      adapter: createEnhancedFirebaseAdapter() as never,
-      autoLoadConfig: false,
-      options: merged,
-      fields,
-    } as never);
 
     const page = Math.max(1, Number(model.page ?? 1));
     const pageSize = Math.min(
@@ -331,9 +373,13 @@ export abstract class FirebaseSieveRepository<
     );
 
     // Apply filters + sorts once; count without reading docs.
-    const filteredQ = processor.apply(effective, base, {
-      applyPagination: false,
-    } as never) as unknown as Query;
+    const filteredQ = buildFilteredSieveQuery(
+      base,
+      model,
+      fields,
+      merged,
+      aliases,
+    );
     const total = await getFirestoreCount(filteredQ);
 
     // Apply pagination on top of the already-filtered query — avoids re-applying
@@ -357,5 +403,25 @@ export abstract class FirebaseSieveRepository<
       totalPages,
       hasMore: page < totalPages,
     };
+  }
+
+  /**
+   * Count matches for a Sieve model without reading any documents.
+   *
+   * Same filter pipeline as `sieveQuery` (aliases included) — see
+   * `countSieveMatches`.
+   */
+  protected async sieveCount(
+    model: SieveModel,
+    fields: SieveFields,
+    options?: SieveOptions & { baseQuery?: CollectionReference | Query },
+  ): Promise<number> {
+    const { baseQuery, ...rest } = options ?? {};
+    return countSieveMatches({
+      baseQuery: baseQuery ?? this.getCollection(),
+      model,
+      fields,
+      options: rest,
+    });
   }
 }

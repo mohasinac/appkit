@@ -1,5 +1,3 @@
-import { normalizeError } from "../../../errors/normalize";
-import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import {
   Container,
@@ -11,7 +9,8 @@ import {
 } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { PrizeDrawsSectionConfig } from "../../homepage/schemas/firestore";
-import { productRepository } from "../repository/products.repository";
+import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
+import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-names";
 import type { ProductDocument } from "../schemas";
 import { InteractiveProductCard } from "./InteractiveProductCard";
 
@@ -21,7 +20,13 @@ export interface PrizeDrawsSectionProps {
 
 /**
  * Renders a prize-draws strip on the homepage.
- * W1-38 (2026-05-23): fetches active prize-draw listings from productRepository.
+ *
+ * Until 2026-08-24 this read `config.title` / `config.subtitle` and ignored
+ * every other field it was given — `revealStatus`, `maxItems`, `storeId`,
+ * `showCountdown` and `showEntriesRemaining` were all inert, with the count
+ * hardcoded to 8. `revealStatus` mattering most: the seeded value is `"all"`,
+ * which is why a closed, already-revealed draw sat on the homepage advertising
+ * entries nobody could buy.
  */
 export async function PrizeDrawsSection({
   config,
@@ -30,21 +35,22 @@ export async function PrizeDrawsSection({
   const subtitle =
     config.subtitle ?? "Enter for a chance to win rare collectibles";
 
-  const limit = 8;
+  const revealStatus = config.revealStatus ?? "open";
+  const showAll = revealStatus === "all";
 
-  let draws: ProductDocument[] = [];
-  try {
-    const result = await productRepository.list({
-      filters: sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw"), sieveFilter("status", SIEVE_OP.EQ, "published")),
-      sorts: sortBy("createdAt", "DESC"),
-      pageSize: limit,
-    });
-    draws = (result.items ?? []) as ProductDocument[];
-  } catch (_err) {
-    void normalizeError(_err);
-    draws = [];
-  }
+  const result = await listPublicProducts({
+    listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.PRIZE_DRAW],
+    storeId: config.storeId,
+    // "all" means the admin deliberately wants closed draws too — an archive
+    // strip — so neither the status filter nor the availability scope applies.
+    prizeRevealStatus: showAll ? undefined : revealStatus,
+    availability: showAll ? AVAILABILITY_VALUES.ALL : AVAILABILITY_VALUES.AVAILABLE,
+    sorts: sortBy(PRODUCT_FIELDS.CREATED_AT, "DESC"),
+    page: 1,
+    pageSize: config.maxItems ?? 8,
+  });
 
+  const draws = (result?.items ?? []) as unknown as ProductDocument[];
   if (draws.length === 0) return null;
 
   return (

@@ -43,11 +43,15 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     buyerUid: "user-tester-qa",
     buyerName: "QA Tester",
     buyerEmail: "tester@letitrip.in",
-    listedPrice: 1899,
-    offerAmount: 1450,
+    // Realigned 2026-08-24: this carried listedPrice 1899 / offer 1450 against
+    // a product that costs ₹999 — an offer ABOVE the listing price, which
+    // `makeOffer` would reject outright. Same stale-snapshot drift the main
+    // offers seed had.
+    listedPrice: 999,
+    offerAmount: 780,
     // The agreed price. Checkout MUST bill this, not `listedPrice` — that
     // divergence is exactly what the paired checklist case checks.
-    lockedPrice: 1450,
+    lockedPrice: 780,
     currency: "INR",
     status: OfferStatusValues.ACCEPTED,
     buyerNote: "Sandbox offer — already accepted so testers can drive checkout.",
@@ -59,6 +63,122 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     checkoutDeadline: hoursFromNow(36),
     createdAt: hoursAgo(2),
     updatedAt: hoursAgo(1),
+    isTestData: true,
+    testDataExpiresAt: testDataExpiresAt(),
+  } as Partial<OfferDocument>,
+
+  /**
+   * COUNTERED. The buyer-accepts-a-counter path had no fixture at all, so
+   * `acceptCounterOffer` was unreachable for a tester working solo.
+   */
+  {
+    id: "offer-tester-sandbox-countered",
+    productId: "product-beyblade-metal-storm-pegasus",
+    productTitle: "Beyblade Metal Storm Pegasus",
+    productSlug: "product-beyblade-metal-storm-pegasus",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    buyerUid: "user-tester-qa",
+    buyerName: "QA Tester",
+    buyerEmail: "tester@letitrip.in",
+    listedPrice: 1299,
+    offerAmount: 1000,
+    counterAmount: 1150,
+    currency: "INR",
+    status: OfferStatusValues.COUNTERED,
+    buyerNote: "Sandbox offer — seller has countered, accept it to test the counter path.",
+    sellerNote: "Counter: ₹1,150.",
+    expiresAt: hoursFromNow(24),
+    respondedAt: hoursAgo(1),
+    createdAt: hoursAgo(2),
+    updatedAt: hoursAgo(1),
+    isTestData: true,
+    testDataExpiresAt: testDataExpiresAt(),
+  } as Partial<OfferDocument>,
+
+  /**
+   * ACCEPTED with a deliberately SHORT window, so the live countdown and the
+   * "pay before it closes" case are observable inside one test session rather
+   * than needing a 36-hour wait.
+   */
+  {
+    id: "offer-tester-sandbox-expiring",
+    productId: "product-beyblade-x-wizard-arrow",
+    productTitle: "Beyblade X Wizard Arrow",
+    productSlug: "product-beyblade-x-wizard-arrow",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    buyerUid: "user-tester-qa",
+    buyerName: "QA Tester",
+    buyerEmail: "tester@letitrip.in",
+    listedPrice: 899,
+    offerAmount: 700,
+    lockedPrice: 700,
+    currency: "INR",
+    status: OfferStatusValues.ACCEPTED,
+    buyerNote: "Sandbox offer — accepted with a short checkout window.",
+    sellerNote: "Accepted. Pay soon!",
+    expiresAt: hoursFromNow(1),
+    acceptedAt: hoursAgo(0),
+    respondedAt: hoursAgo(0),
+    checkoutDeadline: new Date(NOW.getTime() + 30 * 60_000),
+    createdAt: hoursAgo(1),
+    updatedAt: hoursAgo(0),
+    isTestData: true,
+    testDataExpiresAt: testDataExpiresAt(),
+  } as Partial<OfferDocument>,
+
+  /**
+   * PENDING. Two cases need this: withdrawing an offer, and the
+   * "you already have an active offer on this item" rejection when the tester
+   * tries to offer on the same listing again.
+   */
+  {
+    id: "offer-tester-sandbox-pending",
+    productId: "product-beyblade-original-driger-v",
+    productTitle: "Beyblade Original Driger V",
+    productSlug: "product-beyblade-original-driger-v",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    buyerUid: "user-tester-qa",
+    buyerName: "QA Tester",
+    buyerEmail: "tester@letitrip.in",
+    listedPrice: 1799,
+    offerAmount: 1450,
+    currency: "INR",
+    status: OfferStatusValues.PENDING,
+    buyerNote: "Sandbox offer — still pending, withdraw it to test that path.",
+    expiresAt: hoursFromNow(24),
+    createdAt: hoursAgo(1),
+    updatedAt: hoursAgo(1),
+    isTestData: true,
+    testDataExpiresAt: testDataExpiresAt(),
+  } as Partial<OfferDocument>,
+
+  /**
+   * The SELLER side. Every fixture above has the tester as the buyer, so
+   * accept / decline / counter at /store/offers were unreachable for them —
+   * you cannot respond to your own offer. This one is addressed TO the
+   * tester's own sandbox store from a different persona.
+   */
+  {
+    id: "offer-tester-sandbox-inbound",
+    productId: "product-tester-standard-1",
+    productTitle: "Test Gadget — Standard Listing #1",
+    productSlug: "product-tester-standard-1",
+    storeId: "store-tester-qa-seller",
+    storeName: "Tester QA Seller",
+    buyerUid: "user-yugi-muto",
+    buyerName: "Mock User 3",
+    buyerEmail: "rehan.sheikh@gmail.com",
+    listedPrice: 150,
+    offerAmount: 120,
+    currency: "INR",
+    status: OfferStatusValues.PENDING,
+    buyerNote: "Sandbox inbound offer — accept, counter, or decline it from your store dashboard.",
+    expiresAt: hoursFromNow(24),
+    createdAt: hoursAgo(2),
+    updatedAt: hoursAgo(2),
     isTestData: true,
     testDataExpiresAt: testDataExpiresAt(),
   } as Partial<OfferDocument>,

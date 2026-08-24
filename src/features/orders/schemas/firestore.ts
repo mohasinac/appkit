@@ -7,6 +7,84 @@ import type { OrderStatus, PaymentStatus } from "../types";
 import type { OrderType } from "../utils/order-splitter";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ListingType } from "../../products/types";
+import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
+
+// ── Acquisition provenance ────────────────────────────────────────────────
+//
+// Six paths, not five. `OrderType` has only `"auction"`, which cannot tell a
+// won auction from a bought-out one — yet they have nothing in common: one
+// has a winning bid and N competitors, the other has zero bids BY DEFINITION
+// (buy-now is only valid while `!bidsHaveStarted`). So this keys on its own
+// discriminator.
+//
+// Every variant records the price it DISPLACED (`listPrice`), because that is
+// what makes "you saved ₹800" provable months later, and it is exactly what
+// disappears when the product is re-priced afterwards.
+
+export interface OrderSourceStandard {
+  path: "standard";
+  listPrice: number;
+}
+
+export interface OrderSourceAuctionWon {
+  path: "auction-won";
+  auctionId: string;
+  bidId: string;
+  winningBidAmount: number;
+  /** Bids placed across the whole auction — the "against N bidders" figure. */
+  bidCount: number;
+  startingBid: number;
+  reservePrice?: number;
+  reserveMet: boolean;
+  auctionEndedAt: Date;
+  /** Second-highest bid, when there was one. */
+  runnerUpAmount?: number;
+}
+
+export interface OrderSourceAuctionBuyNow {
+  path: "auction-buy-now";
+  auctionId: string;
+  buyNowPrice: number;
+  listPrice: number;
+  boughtAt: Date;
+}
+
+export interface OrderSourceOfferAccepted {
+  path: "offer-accepted";
+  offerId: string;
+  offeredAmount: number;
+  /** The asking price at the moment the offer was made. */
+  listPriceAtOffer: number;
+  counterAmount?: number;
+  /** How many counter rounds before agreement. 0 = accepted outright. */
+  counterRounds: number;
+  acceptedBy: string;
+  acceptedAt: Date;
+  checkoutDeadline?: Date;
+}
+
+export interface OrderSourcePreOrder {
+  path: "pre-order";
+  depositAmount: number;
+  balanceDue: number;
+  expectedDeliveryDate?: Date;
+}
+
+export interface OrderSourcePrizeDraw {
+  path: "prize-draw";
+  prizeDrawProductId: string;
+  pricePerEntry: number;
+  entryCount: number;
+  revealMode: "instant" | "scheduled";
+}
+
+export type OrderSourceContext =
+  | OrderSourceStandard
+  | OrderSourceAuctionWon
+  | OrderSourceAuctionBuyNow
+  | OrderSourceOfferAccepted
+  | OrderSourcePreOrder
+  | OrderSourcePrizeDraw;
 
 /** Manual shipping is the only supported method — sellers enter carrier + tracking directly, no carrier API integration. */
 export type ShippingMethod = "custom";
@@ -166,6 +244,18 @@ export interface OrderDocument extends BaseDocument {
   storeName?: string;
   items?: OrderDocumentItem[];
   orderType?: OrderType;
+  /**
+   * True when this `orderType: "auction"` order came from Buy Now rather than
+   * from winning the bidding.
+   *
+   * Not a new `orderType` value on purpose — the /user/orders tabs key on
+   * `orderType`, and a buyout IS an auction order from the buyer's point of
+   * view. What it changes is the ADMIN review window: a buyout is settled in a
+   * one-hour scramble against a still-live auction, so `paymentReviewAutoApprove`
+   * gives an admin a full day to verify its proof instead of the usual couple of
+   * hours before auto-approving.
+   */
+  isBuyout?: boolean;
   imageUrls?: string[];
   quantity: number;
   unitPrice: number;
@@ -273,6 +363,39 @@ export interface OrderDocument extends BaseDocument {
    * orders are the source of truth for invoicing, refunds, and disputes.
    */
   paymentBatchId?: string;
+
+  // ── Status history + acquisition provenance (W2) ────────────────────────
+  /**
+   * Append-only delta log of every tracked-field change on this order —
+   * who, when, from what to what, and which function did it.
+   *
+   * DELTAS, never snapshots: only `statusHistory[0]` (the creation entry)
+   * carries a `snapshot`, holding the provenance that cannot be re-derived
+   * later because its sources move on — the discounts and add-ons actually
+   * applied and the fee breakdown at the moment of purchase.
+   *
+   * Capped at `STATUS_HISTORY_MAX` (FIFO). An unbounded array on a document
+   * this hot inflates every read of it (Rule #6).
+   */
+  statusHistory?: StatusChangeEntry[];
+  /**
+   * Entries dropped off the front of `statusHistory` over this order's
+   * lifetime. Present so the UI can say "earlier history trimmed" instead
+   * of implying the order simply had no earlier history.
+   */
+  statusHistoryTruncated?: number;
+  /**
+   * How the buyer acquired the right to buy, written ONCE at creation.
+   *
+   * A discriminated union rather than optional fields, because `orderType`
+   * cannot distinguish an auction that was WON from one that was BOUGHT OUT
+   * — both are `"auction"` — and `winningBidAmount`/`bidCount` are
+   * meaningless on a buy-now, where there are zero bids by definition.
+   *
+   * Never recomputed: a settled auction's numbers must not move when the
+   * auction document is later archived or the product is re-priced.
+   */
+  sourceContext?: OrderSourceContext;
 
   // ── Refund machinery (S-SBUNI-RULES 2026-05-13) ─────────────────────────
   /**
@@ -468,6 +591,37 @@ export const ORDER_PUBLIC_FIELDS = [
 ] as const;
 
 export const ORDER_UPDATABLE_FIELDS = ["notes", "shippingAddress"] as const;
+
+/**
+ * The fields whose changes are recorded in `statusHistory`.
+ *
+ * Deliberately minimal — the timeline answers "where is my order and what
+ * happened to it", nothing else.
+ *
+ * **Money is NOT tracked here.** `appliedDiscounts`, `storeAddons` and the
+ * fee fields hold the FINAL state on the order document, and that is the
+ * record. Logging every intermediate coupon/add-on change would bury the five
+ * transitions anyone actually reads under pricing churn, and a coupon that
+ * was dropped before the order existed is not part of the order's history.
+ *
+ * **Acquisition is NOT tracked here either** — how the buyer got the right to
+ * buy (auction won, offer accepted, bought out) is written once to
+ * `sourceContext` at creation. It never changes, so it is not a timeline
+ * event.
+ *
+ * A whole-document diff would append an entry for every `updatedAt` bump —
+ * which is every single write — and exhaust the FIFO cap within days.
+ */
+export const ORDER_TRACKED_FIELDS = [
+  "status",
+  "paymentStatus",
+  /** Manual-payment review: proof verified, re-upload requested, rejected. */
+  "paymentReviewOutcome",
+  /** The substance of the "shipped" transition. */
+  "trackingNumber",
+  /** Why it was cancelled — a bare "cancelled" is not a useful entry. */
+  "cancellationReason",
+] as const;
 
 export type OrderCreateInput = Omit<
   OrderDocument,

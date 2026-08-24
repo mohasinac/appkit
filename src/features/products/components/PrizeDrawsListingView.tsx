@@ -5,7 +5,7 @@ import { sortBy } from "../../../constants/sort";
 import {
   listPublicProducts,
   parsePublicProductParams,
-  defaultTogglesForListingTypes,
+  defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 import { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
 
@@ -43,7 +43,7 @@ export async function PrizeDrawsListingView({
       listingTypes: LISTING_TYPES,
       pageSize: DEFAULT_PAGE_SIZE,
       sorts: DEFAULT_SORT,
-      ...defaultTogglesForListingTypes(LISTING_TYPES),
+      ...defaultAvailabilityForListingTypes(LISTING_TYPES),
     }),
   );
 

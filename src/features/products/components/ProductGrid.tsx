@@ -32,6 +32,11 @@ const CLS_BADGE_NEW = "rounded-full bg-error-solid px-[var(--appkit-space-2)] py
 const CLS_BADGE_SALE = "rounded-full bg-success-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-success-on-solid shadow-sm";
 const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
 const CLS_BADGE_LIMITED = "rounded-full bg-info-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-info-on-solid shadow-sm";
+// Overlay badge sitting on the product photo, so the pairing is `-solid` +
+// `-on-solid` (Root Cause #67) — never `text-white` on a status colour, which
+// inverts with the theme. `warning` because success/info/error are each already
+// taken by a sibling pill in this same stack.
+const CLS_BADGE_OFFERABLE = "rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-warning-on-solid shadow-sm";
 const CLS_HEART_ACTIVE = "bg-[var(--appkit-color-surface-elevated)]/90 text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_HEART_IDLE = "bg-[var(--appkit-color-surface-elevated)]/90 text-[var(--appkit-color-text-muted)] hover:text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_STAR = "text-[11px] text-warning";
@@ -187,6 +192,21 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
                 >
                   {product.isGroupParent ? "Set Parent" : "In Set"}
+                </Span>
+              )}
+              {/* "Taking Offers" pill — the seller accepts price negotiation on
+                  this listing (`allowOffers`). Deliberately NOT gated on the
+                  site-wide featureFlags.offers: that would mean threading the
+                  settings doc into every card data path, which is the
+                  mirror-drift trap of Root Cause #42. The badge states a
+                  LISTING attribute; the flag gates the ACTION, and the detail
+                  page's CTA is where that gate lives. */}
+              {product.allowOffers && (
+                <Span
+                  className={CLS_BADGE_OFFERABLE}
+                  title="The seller accepts offers on this listing"
+                >
+                  Taking Offers
                 </Span>
               )}
               {/* "Variants" pill — product has sub-listings/variants */}

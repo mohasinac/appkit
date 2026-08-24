@@ -149,6 +149,17 @@ export const EVENT_FIELDS = {
     ENDED: "ended" as EventStatus,
     CANCELLED: "cancelled" as EventStatus,
   },
+  /**
+   * Every `EventType`. `LOTTERY` was missing until 2026-08-24, which is why
+   * `events-seed-data.ts` — which imports EVENT_FIELDS from HERE, not from
+   * `constants/field-names.ts` — had to write `type: "lottery"` as a raw string
+   * literal while every other row used this map.
+   *
+   * NB. there are two `EVENT_FIELDS` constants (this one and the one in
+   * `constants/field-names.ts`) and they drifted independently. Same shape as
+   * the two competing `OrderStatus` types in Root Cause #36. Keep both in step
+   * with the `EventType` / `EventStatus` unions until one of them is retired.
+   */
   TYPE_VALUES: {
     SALE: "sale" as EventType,
     OFFER: "offer" as EventType,
@@ -157,6 +168,7 @@ export const EVENT_FIELDS = {
     FEEDBACK: "feedback" as EventType,
     RAFFLE: "raffle" as EventType,
     SPIN_WHEEL: "spin_wheel" as EventType,
+    LOTTERY: "lottery" as EventType,
   },
   STATS: {
     TOTAL_ENTRIES: "stats.totalEntries",

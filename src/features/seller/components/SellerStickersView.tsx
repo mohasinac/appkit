@@ -23,6 +23,10 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
+
+const LISTING_TYPES: readonly ListingType[] = ["stickers"];
 
 interface StickersRow {
   id: string;
@@ -104,6 +108,9 @@ export function SellerStickersView({
     else window.location.href = String(ROUTES.STORE.STICKERS_NEW);
   }, [onCreateClick]);
 
+  const scope = useAvailabilityScope(LISTING_TYPES);
+
+
   const config: ListingViewConfig<ProductsResponse, StickersRow> = {
     portal: "seller",
     title: "Stickers",
@@ -136,6 +143,8 @@ export function SellerStickersView({
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: () => "listingType==stickers",
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     primaryAction: { label: "New Sticker Listing", onClick: () => handleCreate() },
     // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
     onRowClick: (row) => handleEdit(row.id),

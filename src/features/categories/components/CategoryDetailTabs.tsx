@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "../../../ui";
+import { EmptyState, Tabs, TabsList, TabsTrigger } from "../../../ui";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
@@ -54,14 +54,16 @@ export interface CategoryDetailTabsProps {
   initialProductsData?: any;
   initialBundles?: CategoryDocument[];
   initialStores?: StoreListItem[];
-  counts?: {
-    products?: number;
-    auctions?: number;
-    preOrders?: number;
-    prizeDraws?: number;
-    bundles?: number;
-    stores?: number;
-  };
+  /**
+   * tabSlug -> row count. `undefined` means the count could not be resolved,
+   * NOT zero — such a tab stays visible so a failed query can never hide real
+   * inventory (Root Cause #59).
+   *
+   * Keyed by tab id rather than by hand-named properties: the previous shape
+   * named only 6 of the 10 tabs, so classifieds / digital-codes / live / art
+   * were structurally uncountable and could never hide (Root Cause #61).
+   */
+  counts?: Record<string, number | undefined>;
   /** Enabled listing types (e.g. ["standard","auction","pre-order"]). When omitted, all tabs shown. */
   enabledListingTypes?: string[];
   /** Enabled category types (e.g. ["category","brand","bundle"]). When omitted, all tabs shown. */
@@ -78,17 +80,7 @@ export function CategoryDetailTabs({
   enabledListingTypes,
   enabledCategoryTypes,
 }: CategoryDetailTabsProps) {
-  const countFor = (id: CategoryTabId): number | undefined => {
-    switch (id) {
-      case "products": return counts?.products;
-      case "auctions": return counts?.auctions;
-      case "pre-orders": return counts?.preOrders;
-      case "prize-draws": return counts?.prizeDraws;
-      case "bundles": return counts?.bundles;
-      case "stores": return counts?.stores;
-      default: return undefined;
-    }
-  };
+  const countFor = (id: CategoryTabId): number | undefined => counts?.[id];
 
   const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
     const mapping = TAB_TYPE_MAP[t.id];
@@ -100,16 +92,27 @@ export function CategoryDetailTabs({
         if (!enabledCategoryTypes.includes(mapping.type)) return false;
       }
     }
-    // Hide a tab only when its count is known and explicitly zero — a tab
-    // whose count was never fetched (undefined) stays visible so we don't
-    // silently hide a listing type this page hasn't wired count-tracking
-    // for yet.
+    // Hide a tab only when its count is known and explicitly zero. `undefined`
+    // now means the count query FAILED (every tab is counted), so keeping it
+    // visible is the fail-open choice: an empty tab is a far smaller error than
+    // hiding a tab that holds real listings.
     const count = countFor(t.id as CategoryTabId);
     return count === undefined || count > 0;
   });
 
   const firstTabId = (visibleTabs[0]?.id ?? "products") as CategoryTabId;
   const [activeTab, setActiveTab] = useState<CategoryTabId>(firstTabId);
+
+  // Every tab counted zero — render the empty state rather than an empty tab
+  // strip with no body beneath it.
+  if (visibleTabs.length === 0) {
+    return (
+      <EmptyState
+        title="Nothing listed here yet"
+        description="This category has no active listings right now. Check back soon."
+      />
+    );
+  }
 
   return (
     <>

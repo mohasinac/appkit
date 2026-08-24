@@ -19,6 +19,10 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
+
+const LISTING_TYPES: readonly ListingType[] = ["classified"];
 
 interface ClassifiedRow {
   id: string;
@@ -114,6 +118,9 @@ export function SellerClassifiedView({
     else window.location.href = String(ROUTES.STORE.CLASSIFIED_NEW);
   }, [onCreateClick]);
 
+  const scope = useAvailabilityScope(LISTING_TYPES);
+
+
   const config: ListingViewConfig<ProductsResponse, ClassifiedRow> = {
     portal: "seller",
     title: "Classified",
@@ -150,6 +157,8 @@ export function SellerClassifiedView({
         ? response.meta.total
         : mappedRows.length,
     buildFilters: () => "listingType==classified",
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     primaryAction: { label: "New Classified", onClick: () => handleCreate() },
     // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
     onRowClick: (row) => handleEdit(row.id),

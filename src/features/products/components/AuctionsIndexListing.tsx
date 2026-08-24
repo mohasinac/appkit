@@ -17,6 +17,9 @@ import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
 import { AUCTION_PUBLIC_SORT_OPTIONS } from "../constants/sieve";
 import { useBottomActions } from "../../layout";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { AvailabilityTabs } from "./AvailabilityTabs";
+import type { ListingType } from "../types";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -27,6 +30,8 @@ const __O = {
 } as const;
 
 const DEFAULT_SORT = AUCTION_PUBLIC_SORT_OPTIONS[0].value;
+
+const AUCTION_LISTING_TYPES: readonly ListingType[] = ["auction"];
 
 
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_BID, TABLE_KEYS.MAX_BID, TABLE_KEYS.STORE_ID, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
@@ -44,7 +49,9 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const showEnded = table.get(TABLE_KEYS.SHOW_ENDED) === "true";
+  const availability =
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+    AVAILABILITY_VALUES.AVAILABLE;
   const [view, setView] = useState<"grid" | "list">(
     (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
@@ -70,12 +77,12 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_ENDED]: "" });
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.AVAILABILITY]: "" });
     setSearchInput("");
   }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
-    table.get(TABLE_KEYS.SHOW_ENDED) === "true" ||
+    availability !== AVAILABILITY_VALUES.AVAILABLE ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     filterActiveCount > 0;
 
@@ -87,16 +94,16 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     minBid: table.get(TABLE_KEYS.MIN_BID) ? Number(table.get(TABLE_KEYS.MIN_BID)) : undefined,
     maxBid: table.get(TABLE_KEYS.MAX_BID) ? Number(table.get(TABLE_KEYS.MAX_BID)) : undefined,
     storeId: table.get(TABLE_KEYS.STORE_ID) || undefined,
-    // When showEnded is false (default), force dateFrom=now so only live auctions appear.
-    // When showEnded is true, respect the filter-drawer value (or show all if none set).
-    dateFrom: showEnded
-      ? (table.get(TABLE_KEYS.DATE_FROM) || undefined)
-      : new Date().toISOString(),
+    // Now purely the drawer's own end-date window. It used to double as the
+    // hide-ended mechanism, which meant the drawer facet and the toggle fought
+    // over one param; the scope tab owns that decision instead.
+    dateFrom: table.get(TABLE_KEYS.DATE_FROM) || undefined,
     dateTo: table.get(TABLE_KEYS.DATE_TO) || undefined,
     sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "auction" as const,
+    availability,
   };
 
   const { products: auctions, totalPages, page, isLoading } = useProducts(
@@ -188,10 +195,12 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         bulkTotalCount={auctions.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
-        toggles={[
-          { label: "Show ended", active: showEnded, onChange: (next) => table.set(TABLE_KEYS.SHOW_ENDED, next ? "true" : "") },
-        ]}
       />
+
+      {/* ── Availability scope — Available / Ended / All ────────────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={AUCTION_LISTING_TYPES} />
+      </Div>
 
       {/* ── Bulk action bar ───────────────────────────────────────────── */}
       <BulkActionBar

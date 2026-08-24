@@ -10,6 +10,12 @@ import { ROUTES } from "../../../next";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 import { PREORDER_PUBLIC_SORT_OPTIONS } from "../../products/constants/sieve";
+import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import type { ListingType } from "../../products/types";
+
+const STORE_PRE_ORDER_TYPES: readonly ListingType[] = ["pre-order"];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -58,6 +64,21 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
     table.get("sort") !== DEFAULT_SORT ||
     filterActiveCount > 0;
 
+  // Absent means "available" — the same default `listStoreProducts`
+
+  // resolves server-side. These six store tabs sent NO availability
+
+  // param at all until 2026-08-24, while their SSR fetch did apply one,
+
+  // so any client refetch silently widened the list (Root Cause #30).
+
+  const availability =
+
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+
+    AVAILABILITY_VALUES.AVAILABLE;
+
+
   const params = {
     q: table.get("q") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
@@ -67,6 +88,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
     listingType: "pre-order" as const,
+    availability,
   };
 
   const { products: preOrders, totalPages, page, isLoading } = useProducts(
@@ -104,6 +126,11 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
+
+      {/* ── Availability scope ───────────────────────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={STORE_PRE_ORDER_TYPES} />
+      </Div>
 
       {totalPages > 1 && (
         <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">

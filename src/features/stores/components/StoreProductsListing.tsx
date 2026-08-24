@@ -13,6 +13,10 @@ import { ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from "../../products/comp
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
+import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import type { ListingType } from "../../products/types";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -68,6 +72,21 @@ export function StoreProductsListing({ storeId, listingTypes = ["standard"], ini
     table.get("sort") !== "-createdAt" ||
     filterActiveCount > 0;
 
+  // Absent means "available" — the same default `listStoreProducts`
+
+  // resolves server-side. These six store tabs sent NO availability
+
+  // param at all until 2026-08-24, while their SSR fetch did apply one,
+
+  // so any client refetch silently widened the list (Root Cause #30).
+
+  const availability =
+
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+
+    AVAILABILITY_VALUES.AVAILABLE;
+
+
   const params = {
     q: table.get("q") || undefined,
     condition: table.get("condition") || undefined,
@@ -80,6 +99,7 @@ export function StoreProductsListing({ storeId, listingTypes = ["standard"], ini
     storeId: storeId || undefined,
     // Pipe-joined OR-group when the tab spans several types.
     listingType: listingTypes.join("|"),
+    availability,
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });
@@ -150,6 +170,11 @@ export function StoreProductsListing({ storeId, listingTypes = ["standard"], ini
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
+
+      {/* ── Availability scope ───────────────────────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={listingTypes as readonly ListingType[]} />
+      </Div>
 
       {totalPages > 1 && (
         <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">

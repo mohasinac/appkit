@@ -8,6 +8,8 @@
 export interface LotterySlot {
   slotNumber: number; // 1..totalSlots
   name: string; // prize item name shown to users
+  /** Prize photo. Public — rendered in the prize collage on the lottery detail page. */
+  image?: string;
   // FUTURE_FINANCIAL_DB: external_tx_id → lottery_transactions.external_tx_id
   price: number; // NEVER sent to client — determines weight (decimal rupees)
   weight: number; // computed server-side; NEVER sent to client
@@ -21,6 +23,7 @@ export interface LotterySlot {
 export interface ClientLotterySlot {
   slotNumber: number;
   name: string;
+  image?: string;
   isBooked: boolean;
   bookedByUserLotteryNumber?: number;
   bookedByDisplayName?: string;

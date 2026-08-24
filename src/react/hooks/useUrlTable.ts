@@ -54,7 +54,16 @@ export interface UseUrlTableOptions {
   searchParams?: URLSearchParams;
 }
 
-const NON_RESETTING_KEYS = [TABLE_KEYS.PAGE, TABLE_KEYS.PAGE_SIZE, TABLE_KEYS.VIEW] as const;
+// Keys whose change must NOT reset pagination. `SECTION` is here because
+// expanding a form section is not a filter change: without it, opening a
+// section inside a listing's drawer would rewrite the listing's own URL with
+// `page=1` and refetch the table behind it.
+const NON_RESETTING_KEYS = [
+  TABLE_KEYS.PAGE,
+  TABLE_KEYS.PAGE_SIZE,
+  TABLE_KEYS.VIEW,
+  TABLE_KEYS.SECTION,
+] as const;
 
 export function useUrlTable(options?: UseUrlTableOptions) {
   // Always call native hooks unconditionally (React rules).

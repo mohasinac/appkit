@@ -335,6 +335,11 @@ export const ADMIN_ROW_ACTIONS = {
   blog:                [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.PUBLISH, ROW_ACTION_ID.DRAFT, ROW_ACTION_ID.DELETE],
   faqs:                [ROW_ACTION_ID.EDIT, ROW_ACTION_ID.ARCHIVE, ROW_ACTION_ID.DELETE],
   bids:                [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.CANCEL],
+  // View + Cancel only, deliberately. Admin does NOT get accept/counter/reject
+  // (which the seller preset below has) — negotiating a price on a seller's
+  // behalf is an authority nobody asked for. Admin's job here is to read the
+  // record and kill a bad one.
+  offers:              [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.CANCEL],
   notifications:       [ROW_ACTION_ID.RESEND, ROW_ACTION_ID.DELETE],
   sessions:            [ROW_ACTION_ID.REVOKE],
   bundles:             [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.ACTIVATE, ROW_ACTION_ID.DEACTIVATE, ROW_ACTION_ID.DELETE],
@@ -645,6 +650,7 @@ export const ADMIN_BULK_ACTIONS = {
   blog:                [ROW_ACTION_ID.PUBLISH, ROW_ACTION_ID.DRAFT, ROW_ACTION_ID.DELETE],
   faqs:                [ROW_ACTION_ID.ARCHIVE, ROW_ACTION_ID.DELETE],
   bids:                [ROW_ACTION_ID.CANCEL],
+  offers:              [ROW_ACTION_ID.CANCEL],
   notifications:       [ROW_ACTION_ID.MARK_READ, ROW_ACTION_ID.DELETE],
   sessions:            [ROW_ACTION_ID.REVOKE],
   payouts:             [ROW_ACTION_ID.MARK_PAID],

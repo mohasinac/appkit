@@ -108,6 +108,46 @@ export function resolveMinBid(
   return currentBidAmount + resolveMinBidIncrement(currentBidAmount, tiers, override);
 }
 
+export interface BuyNowAvailabilityInput {
+  buyNowPrice: number | null | undefined;
+  /** The auction's live visible price. Pass the SSE value client-side. */
+  currentBid: number | null | undefined;
+  isEnded: boolean;
+  isSold?: boolean;
+}
+
+/**
+ * The single definition of "can this auction be bought outright right now".
+ *
+ * Written once for the same reason `resolveMinBid` is: the predicate had been
+ * hand-written in five places (the bid form, three spots on the auction detail
+ * page, the marketplace card) and they disagreed — the detail page advertised
+ * "Buy Now: ₹5,999" from a two-condition check while the button beneath it used
+ * a three-condition one, so most auctions showed a price with no button under
+ * it. That is the drift shape Root Cause #30 describes.
+ *
+ * The old third condition was `!bidsHaveStarted` (eBay's rule: BIN vanishes the
+ * moment anyone bids). It is deliberately gone. Buyout now stays available for
+ * as long as it is still a better deal than the standing bid, which is the
+ * condition that actually matters — a BIN price the bidding has already passed
+ * is meaningless, and one it hasn't is still a real offer.
+ *
+ * `isSold` is optional because client callers rendering a live auction page
+ * already know it isn't sold; server callers should always pass it.
+ */
+export function isBuyNowAvailable({
+  buyNowPrice,
+  currentBid,
+  isEnded,
+  isSold,
+}: BuyNowAvailabilityInput): boolean {
+  if (isEnded || isSold === true) return false;
+  if (typeof buyNowPrice !== "number" || !Number.isFinite(buyNowPrice) || buyNowPrice <= 0) {
+    return false;
+  }
+  return buyNowPrice > (currentBid ?? 0);
+}
+
 /**
  * Preset step multipliers offered by the bid form, as multiples of the
  * effective minimum increment. With a ₹100 increment this renders

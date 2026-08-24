@@ -95,6 +95,35 @@ export async function resolveBundleOriginalTotal(
 }
 
 /**
+ * Union of the member products' `categorySlugs` — the `bundleCategorySlugs`
+ * mirror that lets a category page scope its Bundles tab.
+ *
+ * A bundle row has no category field of its own, which is why the category page
+ * counted every active bundle site-wide before this existed. Maintained at the
+ * same call sites as `resolveBundleOriginalTotal` so the two mirrors cannot
+ * drift apart.
+ *
+ * Unlike the price total, a partially-resolvable member set still yields a
+ * useful answer: over-inclusion (a bundle appearing under one category too many)
+ * is a far smaller error than a bundle vanishing from the category it belongs
+ * to, and readers already treat an ABSENT mirror as "unscoped" rather than
+ * "belongs nowhere" (Root Cause #42).
+ */
+export async function resolveBundleCategorySlugs(
+  productIds: string[],
+): Promise<string[]> {
+  if (productIds.length === 0) return [];
+  const results = await Promise.all(
+    productIds.map((id) => productRepository.findById(id).catch(() => null)),
+  );
+  const slugs = new Set<string>();
+  for (const p of results) {
+    for (const slug of p?.categorySlugs ?? []) slugs.add(slug);
+  }
+  return [...slugs];
+}
+
+/**
  * List the most recent active bundles for homepage placement. Bounded to
  * `limit` (default 8) and filtered to `isActive: true` server-side.
  */

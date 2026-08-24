@@ -20,6 +20,8 @@ interface LotterySlotRow {
   slotNumber: number;
   name: string;
   price: number;
+  /** Prize photo — rendered publicly in the prize collage on the detail page. */
+  image?: string;
 }
 
 interface LotteryEventFormData {
@@ -30,6 +32,7 @@ interface LotteryEventFormData {
     slots: Array<{
       slotNumber: number;
       name: string;
+      image?: string;
       price: number;
       weight: number;
       isBooked: boolean;
@@ -91,7 +94,7 @@ export function LotteryAdminEditView({
     );
   };
 
-  const updateSlot = (idx: number, field: "name" | "price", value: string) => {
+  const updateSlot = (idx: number, field: "name" | "price" | "image", value: string) => {
     setSlots((prev) =>
       prev.map((s, i) =>
         i === idx
@@ -109,6 +112,7 @@ export function LotteryAdminEditView({
           slots: slots.map((s) => ({
             slotNumber: s.slotNumber,
             name: s.name,
+            image: s.image?.trim() || undefined,
             price: s.price,
             weight: 0,
             isBooked: false,
@@ -146,6 +150,20 @@ export function LotteryAdminEditView({
           value={s.name}
           onChange={(e) => updateSlot(s._idx, "name", e.target.value)}
           aria-label={`Slot ${s.slotNumber} prize name`}
+        />
+      ),
+    },
+    {
+      key: "image",
+      header: "Image",
+      render: (s) => (
+        <Input
+          type="text"
+          className="w-full"
+          placeholder="/media/… or https://…"
+          value={s.image ?? ""}
+          onChange={(e) => updateSlot(s._idx, "image", e.target.value)}
+          aria-label={`Slot ${s.slotNumber} prize image URL`}
         />
       ),
     },

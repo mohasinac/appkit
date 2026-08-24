@@ -47,11 +47,6 @@ export type {
   UserNotificationsViewProps,
   UserNotificationsViewLabels,
 } from "./UserNotificationsView";
-export { UserOffersView } from "./UserOffersView";
-export type {
-  UserOffersViewProps,
-  UserOffersViewLabels,
-} from "./UserOffersView";
 export { UserOffersPanel } from "./UserOffersPanel";
 export type { UserOffersPanelProps } from "./UserOffersPanel";
 export { MessagesView } from "./MessagesView";

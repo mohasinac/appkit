@@ -155,6 +155,8 @@ export const ADMIN_ENDPOINTS = {
   REVIEW_BY_ID: (id: string) => `/api/admin/reviews/${id}`,
   BIDS: "/api/admin/bids",
   BID_BY_ID: (id: string) => `/api/admin/bids/${id}`,
+  OFFERS: "/api/admin/offers",
+  OFFER_BY_ID: (id: string) => `/api/admin/offers/${id}`,
   BLOG: "/api/admin/blog",
   BLOG_BY_ID: (id: string) => `/api/admin/blog/${id}`,
   BUNDLES: "/api/admin/bundles",

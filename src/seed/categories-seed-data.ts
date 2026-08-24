@@ -1,12 +1,27 @@
 /*
- * WHY: Provides a minimal, Beyblade-focused category hierarchy plus brand entries for the
+ * WHY: Provides the Beyblade-focused category hierarchy plus brand entries for the
  *      demo seed. The site itself stays generically branded as a collectibles marketplace —
- *      only the seeded catalog data is narrowed to Beyblade so the demo has a coherent,
- *      small dataset instead of a sprawling multi-franchise catalog.
- * WHAT: Exports categoriesSeedData — 1 root category (Spinning Tops) + 4 generation leaves
- *       (Original, Metal Fight, Burst, X) + 2 brands (categoryType:"brand").
- *       Products tag BOTH a leaf category AND its root so array-contains queries work at
- *       both levels simultaneously.
+ *      only the seeded catalog data is narrowed to Beyblade so the demo has a coherent
+ *      dataset instead of a sprawling multi-franchise catalog.
+ * WHAT: Exports categoriesSeedData — a 4-level, TWO-root category forest
+ *       (`Spinning Tops` + `Living Collectibles`, see _helpers/category-forest.ts),
+ *       brand rows (categoryType:"brand") and pricing bundles (categoryType:"bundle").
+ *
+ *       The tree was 2 levels under a single root until 2026-08-24. That made
+ *       `categoryType:"sublisting"` — documented as "tier-4 leaf groups under a
+ *       parent category" — structurally unreachable, and left the live-item
+ *       products with no category at all.
+ *
+ *       Products tag their FULL ancestor chain (leaf -> … -> root) so a single
+ *       array-contains at any level returns the whole subtree. That is what lets
+ *       a category page match on its own id alone; expanding descendants into an
+ *       `array-contains-any` would break past Firestore's 30-value cap.
+ *
+ *       Structural fields (parentIds/ancestors/tier/path/position/subtreeSize/
+ *       childrenIds/isLeaf) are DERIVED by buildCategoryTree — never hand-written.
+ *       The old hand-written values were already internally inconsistent: the root
+ *       claimed subtreeSize 4 at position 0 while its four children also occupied
+ *       positions 0-3, which is not a valid DFS pre-order numbering.
  *
  * EXPORTS:
  *   categoriesSeedData — array of Partial<CategoryDocument> for the seed runner
@@ -22,6 +37,8 @@
 import type { CategoryDocument } from "../features/categories/schemas";
 import { CATEGORY_FIELDS } from "../constants/field-names";
 import { seedExtMedia } from "./_helpers/media";
+import { buildCategoryTree } from "./_helpers/category-tree";
+import { CATEGORY_FOREST } from "./_helpers/category-forest";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -38,195 +55,121 @@ const emptyMetrics = {
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Categories: 1 root (Spinning Tops) + 4 Beyblade generations
+// Categories — 47 rows across 4 tiers and 2 roots, all structural fields derived.
+// The shape lives in _helpers/category-forest.ts; the derivation in
+// _helpers/category-tree.ts.
 // ──────────────────────────────────────────────────────────────────────────────
-const rawCategories: Partial<CategoryDocument>[] = [
+const rawCategories: Partial<CategoryDocument>[] = buildCategoryTree(
+  CATEGORY_FOREST,
+  {
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(1),
+    defaults: {
+      metrics: emptyMetrics,
+      isFeatured: false,
+      isActive: true,
+      isSearchable: true,
+      showOnHomepage: false,
+    },
+  },
+);
 
-  // ── ROOT: Spinning Tops ─────────────────────────────────────────────────────
+/**
+ * Sublistings — `categoryType:"sublisting"`, documented on `CategoryDocument`
+ * as "tier-4 leaf groups under a parent category". This array was EMPTY for the
+ * life of the seed, because the tree only went two levels deep and there was no
+ * tier-3 leaf to hang a tier-4 group off. Now that there is, these give
+ * `itemCode` and `ProductDocument.sublistingCategoryId` / `sublistingIcon`
+ * their first real data.
+ *
+ * `itemCode` is the grading/variant code a collector actually searches by.
+ */
+const sublistingRows: Partial<CategoryDocument>[] = [
   {
-    id: "category-spinning-tops",
-    slug: "category-spinning-tops",
-    name: "Spinning Tops",
-    description: "Collectible spinning tops and battle systems — Beyblade Original, Metal Fight, Burst, X, and accessories.",
+    id: "sublisting-dranzer-s-a-5",
+    slug: "sublisting-dranzer-s-a-5",
+    name: "Dranzer S (A-5)",
+    description: "The A-5 Dranzer S release — the original Plastic Generation Dranzer.",
+    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.SUBLISTING,
+    itemCode: "A-5",
     rootId: "category-spinning-tops",
-    parentIds: [],
-    childrenIds: ["category-beyblade-original", "category-beyblade-metal", "category-beyblade-burst", "category-beyblade-x"],
-    tier: 0,
-    path: "spinning-tops",
-    order: 1,
-    isLeaf: false,
-    position: 0,
-    subtreeSize: 4,
-    metrics: emptyMetrics,
-    isFeatured: true,
-    featuredPriority: 1,
-    isBrand: false,
-    highlights: [
-      "Every era of Beyblade in one place — Original, Metal Fight, Burst, and X",
-      "Verified sellers with condition-graded listings",
-      "Auctions, pre-orders, and prize draws alongside straightforward buy-now listings",
+    parentIds: [
+      "category-spinning-tops",
+      "category-beyblade-original",
+      "category-original-tops",
+      "category-original-plastic-gen",
     ],
-    faqs: [
-      { question: "What's the difference between the four Beyblade generations?", answer: "Original (1999-2003) started the franchise with ripcord launchers; Metal Fight (2008-2013) added metal-weighted tops; Burst (2015-present) introduced tops that burst apart on hard hits; X (2023-present) uses the new Xtreme Gear system with clip-on parts." },
-      { question: "Are used tops sold here safe to battle with?", answer: "Every listing shows a condition rating (New/Like New/Good/Used) and sellers are expected to disclose any chips or cracks — check the condition badge and item photos before buying." },
-    ],
-    seo: { title: "Spinning Tops | LetItRip", description: "Buy Beyblade and spinning tops — Original, Metal Fight, Burst, X, and accessories.", keywords: ["beyblade", "spinning tops", "beyblade x", "beyblade burst"] },
-    display: { icon: "🌀", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-spinning-tops-20260101/1200/600"), color: "#0891b2", showInMenu: true, showInFooter: true },
-    isActive: true,
-    isSearchable: true,
-    showOnHomepage: true,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(1),
-  },
-  {
-    id: "category-beyblade-original",
-    slug: "category-beyblade-original",
-    name: "Beyblade Original",
-    description: "The original Beyblade series (1999–2003) by Takara — Plastic Generation tops, Ultimate Beyblade, and the launchers that started the franchise.",
-    rootId: "category-spinning-tops",
-    parentIds: ["category-spinning-tops"],
     childrenIds: [],
-    tier: 1,
-    path: "spinning-tops/beyblade-original",
-    order: 1,
+    ancestors: [
+      { id: "category-spinning-tops", name: "Spinning Tops", tier: 0 },
+      { id: "category-beyblade-original", name: "Beyblade Original", tier: 1 },
+      { id: "category-original-tops", name: "Original Tops", tier: 2 },
+      { id: "category-original-plastic-gen", name: "Plastic Generation", tier: 3 },
+    ],
+    tier: 4,
+    path: "spinning-tops/beyblade-original/original-tops/original-plastic-gen/dranzer-s-a-5",
     isLeaf: true,
-    position: 0,
-    subtreeSize: 0,
+    order: 1,
+    position: 900,
+    subtreeSize: 1,
     metrics: emptyMetrics,
     isFeatured: false,
-    isBrand: false,
-    highlights: [
-      "The tops that started it all in 1999",
-      "Ripcord launcher compatible with the full original-series lineup",
-      "A favorite among vintage collectors — sealed pieces command a premium",
-    ],
-    faqs: [
-      { question: "Will an original-series top work with a Burst or X launcher?", answer: "No — each generation uses its own launcher and ripcord system. Original-series tops need an original-series launcher." },
-      { question: "How do I tell if an original top is a genuine Takara release vs. a reprint?", answer: "Check the sticker finish and base stamp under good lighting — sellers with vintage-collectible tagged listings usually note authentication details in the description." },
-    ],
-    seo: { title: "Beyblade Original | LetItRip", description: "Buy original-series Beyblade tops and launchers — Plastic Generation, 1999-2003.", keywords: ["beyblade original", "plastic generation", "vintage beyblade", "beyblade 1999"] },
-    display: { icon: "🪀", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-original-20260101/1200/600"), color: "#b45309", showInMenu: true, showInFooter: false },
     isActive: true,
     isSearchable: true,
-    showOnHomepage: false,
+    display: { icon: "🔥", showInMenu: false, showInFooter: false },
+    seo: { title: "Dranzer S (A-5) | LetItRip", description: "The A-5 Dranzer S release.", keywords: ["dranzer s", "a-5", "plastic generation"] },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(300),
-    updatedAt: daysAgo(1),
+    updatedAt: daysAgo(30),
   },
   {
-    id: "category-beyblade-metal",
-    slug: "category-beyblade-metal",
-    name: "Beyblade Metal Fight",
-    description: "Classic Beyblade Metal Fight series — Metal Fusion, Metal Masters, Metal Fury, and Zero-G. Highly collectible vintage tops.",
+    id: "sublisting-storm-pegasus-105rf",
+    slug: "sublisting-storm-pegasus-105rf",
+    name: "Storm Pegasus 105RF",
+    description: "Storm Pegasus on a 105 track with a Rubber Flat bottom — the canonical attack build.",
+    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.SUBLISTING,
+    itemCode: "105RF",
     rootId: "category-spinning-tops",
-    parentIds: ["category-spinning-tops"],
+    parentIds: [
+      "category-spinning-tops",
+      "category-beyblade-metal",
+      "category-metal-tops",
+      "category-metal-fusion",
+    ],
     childrenIds: [],
-    tier: 1,
-    path: "spinning-tops/beyblade-metal",
+    ancestors: [
+      { id: "category-spinning-tops", name: "Spinning Tops", tier: 0 },
+      { id: "category-beyblade-metal", name: "Beyblade Metal Fight", tier: 1 },
+      { id: "category-metal-tops", name: "Metal Fight Tops", tier: 2 },
+      { id: "category-metal-fusion", name: "Metal Fusion", tier: 3 },
+    ],
+    tier: 4,
+    path: "spinning-tops/beyblade-metal/metal-tops/metal-fusion/storm-pegasus-105rf",
+    isLeaf: true,
     order: 2,
-    isLeaf: true,
-    position: 1,
-    subtreeSize: 0,
+    position: 901,
+    subtreeSize: 1,
     metrics: emptyMetrics,
     isFeatured: false,
-    isBrand: false,
-    highlights: [
-      "Metal-weighted tops for serious attack and defense power",
-      "Covers all four Metal Fight sub-generations: Fusion, Masters, Fury, Zero-G",
-      "Popular with tournament players for their heavier base weight",
-    ],
-    faqs: [
-      { question: "What does the number/letter code after a top's name mean (e.g. \"105RF\")?", answer: "It's the track height and bottom type — e.g. 105RF means a 105-height track with a Rubber Flat bottom. Swapping tracks and bottoms lets you tune stamina vs. attack." },
-      { question: "Can Metal Fight tops battle Burst tops in the same stadium?", answer: "Physically yes if the stadium size matches, but they don't burst apart on impact the way Burst tops do — most local groups keep the generations separate for fair play." },
-    ],
-    seo: { title: "Beyblade Metal Fight | LetItRip", description: "Buy vintage Beyblade Metal Fight tops — Fusion, Masters, Fury.", keywords: ["beyblade metal fight", "metal fusion", "metal masters", "vintage beyblade"] },
-    display: { icon: "⚙️", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-metal-20260101/1200/600"), color: "#64748b", showInMenu: true, showInFooter: false },
     isActive: true,
     isSearchable: true,
-    showOnHomepage: false,
+    display: { icon: "🐴", showInMenu: false, showInFooter: false },
+    seo: { title: "Storm Pegasus 105RF | LetItRip", description: "Storm Pegasus 105RF builds.", keywords: ["storm pegasus", "105rf", "metal fusion"] },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(300),
-    updatedAt: daysAgo(1),
-  },
-  {
-    id: "category-beyblade-burst",
-    slug: "category-beyblade-burst",
-    name: "Beyblade Burst",
-    description: "Beyblade Burst by Takara-Tomy/Hasbro — Burst system tops, launchers, and stadiums from all Burst sub-generations.",
-    rootId: "category-spinning-tops",
-    parentIds: ["category-spinning-tops"],
-    childrenIds: [],
-    tier: 1,
-    path: "spinning-tops/beyblade-burst",
-    order: 3,
-    isLeaf: true,
-    position: 2,
-    subtreeSize: 0,
-    metrics: emptyMetrics,
-    isFeatured: false,
-    isBrand: false,
-    highlights: [
-      "Tops that burst apart on a hard enough hit — a whole new battle mechanic",
-      "Swappable Layer / Disc / Driver parts for build customization",
-      "The most actively traded generation on the platform",
-    ],
-    faqs: [
-      { question: "What's the difference between a Layer, Disc, and Driver?", answer: "Layer is the top piece (attack profile), Disc sits underneath it (weight/stamina), Driver is the tip that touches the stadium floor (spin behavior). Mixing and matching lets you build custom combos." },
-      { question: "Is a burst during battle bad for the top?", answer: "No — Burst tops are designed to separate on hard impacts as the game's core mechanic, then click back together for the next battle." },
-    ],
-    seo: { title: "Beyblade Burst | LetItRip", description: "Buy Beyblade Burst tops, launchers, and stadiums.", keywords: ["beyblade burst", "burst system", "beyblade burst pro"] },
-    display: { icon: "💥", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-burst-20260101/1200/600"), color: "#059669", showInMenu: true, showInFooter: false },
-    isActive: true,
-    isSearchable: true,
-    showOnHomepage: false,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(1),
-  },
-  {
-    id: "category-beyblade-x",
-    slug: "category-beyblade-x",
-    name: "Beyblade X",
-    description: "Beyblade X by Takara-Tomy — the latest generation with Xtreme Gear system, X Dash, and tournament-grade stadiums.",
-    rootId: "category-spinning-tops",
-    parentIds: ["category-spinning-tops"],
-    childrenIds: [],
-    tier: 1,
-    path: "spinning-tops/beyblade-x",
-    order: 4,
-    isLeaf: true,
-    position: 3,
-    subtreeSize: 0,
-    metrics: emptyMetrics,
-    isFeatured: true,
-    isBrand: false,
-    highlights: [
-      "The newest generation — Xtreme Gear system launched in 2023",
-      "Faster clip-on part swaps than any previous generation",
-      "Actively growing tournament scene with new waves releasing regularly",
-    ],
-    faqs: [
-      { question: "Do I need new stadiums for Beyblade X?", answer: "X-format tops battle best in the wider X-format stadiums, though many X tops still spin in older round stadiums — check a listing's description for stadium compatibility notes." },
-      { question: "What does the Blade / Ratchet / Bit naming mean?", answer: "Beyblade X renamed the part system — Blade (top piece), Ratchet (middle, sets height), Bit (bottom tip) — functionally similar to Burst's Layer/Disc/Driver but not physically interchangeable with them." },
-    ],
-    seo: { title: "Beyblade X | LetItRip", description: "Buy Beyblade X tops and stadiums by Takara-Tomy.", keywords: ["beyblade x", "xtreme gear", "beyblade x starter", "takara tomy beyblade"] },
-    display: { icon: "💫", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-beyblade-x-20260101/1200/600"), color: "#0d9488", showInMenu: true, showInFooter: false },
-    isActive: true,
-    isSearchable: true,
-    showOnHomepage: false,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(1),
+    updatedAt: daysAgo(30),
   },
 ];
 
-const sublistingRows: Partial<CategoryDocument>[] = [];
-
 // ──────────────────────────────────────────────────────────────────────────────
-// Brands (categoryType:"brand") — narrowed to the two brands relevant to the
-// Beyblade catalog. Takara-Tomy is a real manufacturer (also makes Tomica,
-// Transformers Japan) so it stays generic; Beyblade is the franchise brand.
+// Brands (categoryType:"brand").
+//
+// ⚠️ `BrandDetailPageView` matches products on the free-text `brand` DISPLAY
+// NAME (`sieveFilter("brand", EQ, brandName)`), not on `brandSlug`. So a brand
+// row's `name` here and the `brand:` string on every product that belongs to it
+// must match EXACTLY — renaming a brand silently orphans its whole catalogue.
+// Keep `brand` and `brandSlug` in lockstep on the product side.
 // ──────────────────────────────────────────────────────────────────────────────
 const brandRows: Partial<CategoryDocument>[] = [
   {
@@ -297,6 +240,77 @@ const brandRows: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(30),
     seo: { title: "Beyblade | LetItRip", description: "Shop Beyblade — Original, X, Burst, Metal Fight tops and stadiums.", keywords: ["beyblade", "beyblade x", "beyblade burst", "spinning top battle"] },
   },
+  {
+    id: "brand-hasbro",
+    slug: "brand-hasbro",
+    name: "Hasbro",
+    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BRAND,
+    description:
+      "The international Beyblade licensee — Hasbro distributes its own Beyblade product line outside Japan, with different packaging, part names and sometimes different mould tolerances from the Takara-Tomy originals.",
+    brandWebsite: "https://shop.hasbro.com",
+    brandCountry: "United States",
+    brandFounded: 1923,
+    highlights: [
+      "The Beyblade line most collectors outside Japan grew up with",
+      "Widely available and generally cheaper than Japanese imports",
+      "Same-generation parts are usually cross-compatible with Takara-Tomy",
+    ],
+    faqs: [
+      { question: "Is a Hasbro Beyblade worse than the Takara-Tomy version?", answer: "Not worse, but often different — Hasbro releases can use different plastics and slightly looser tolerances, which competitive players notice. For casual play they perform comparably." },
+      { question: "Can I mix Hasbro and Takara-Tomy parts?", answer: "Within the same generation, almost always yes. Across generations, no — the launcher and locking systems differ." },
+    ],
+    rootId: "brand-hasbro",
+    parentIds: [],
+    tier: 0,
+    path: "brand-hasbro",
+    isLeaf: true,
+    order: 3,
+    display: { coverImage: seedExtMedia("https://picsum.photos/seed/brand-logo-hasbro-20260101/800/800"), showInMenu: false, showInFooter: true },
+    isFeatured: false,
+    isBrand: true,
+    isActive: true,
+    isSearchable: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(30),
+    seo: { title: "Hasbro | LetItRip", description: "Shop Hasbro Beyblade — the international product line.", keywords: ["hasbro", "hasbro beyblade", "beyblade burst hasbro"] },
+  },
+  {
+    // The Living Collectibles root needs a brand of its own: live listings are
+    // sold by individual keepers and breeders, not by a manufacturer. Without
+    // one, the three live-item products carried a `brand: "Beyblade Arena"`
+    // string (a STORE name in a brand field) that matched no brand row, so they
+    // were invisible on every brand page.
+    id: "brand-independent-keepers",
+    slug: "brand-independent-keepers",
+    name: "Independent Keepers",
+    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BRAND,
+    description:
+      "Live animals and plants come from individual keepers, breeders and growers rather than a manufacturer. This entry groups those listings so they are reachable from brand browsing like everything else.",
+    brandCountry: "India",
+    highlights: [
+      "Every seller is verified before a live listing can go public",
+      "Provenance, age and health information disclosed per listing",
+    ],
+    faqs: [
+      { question: "Why is there a \"brand\" for living things at all?", answer: "Purely so live listings behave like every other listing in browse and search. It identifies the class of seller, not a manufacturer." },
+    ],
+    rootId: "brand-independent-keepers",
+    parentIds: [],
+    tier: 0,
+    path: "brand-independent-keepers",
+    isLeaf: true,
+    order: 4,
+    display: { coverImage: seedExtMedia("https://picsum.photos/seed/brand-logo-independent-keepers-20260101/800/800"), showInMenu: false, showInFooter: false },
+    isFeatured: false,
+    isBrand: true,
+    isActive: true,
+    isSearchable: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(30),
+    seo: { title: "Independent Keepers | LetItRip", description: "Live animals and plants from verified independent keepers and growers.", keywords: ["independent keepers", "breeders", "live plants"] },
+  },
 ];
 
 // P-17 — 5 bundle rows (categoryType:"bundle") grouping the Beyblade-minimal
@@ -318,6 +332,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
     },
     bundleProductIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
+    bundleCategorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops","category-original-plastic-gen","category-metal-masters","category-metal-tops","category-beyblade-metal"],
     bundleOriginalTotal: 4597, // 1499 + 1799 + 1299
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-original-collectors-set-20260101/1200/900"), showInFooter: false },
@@ -352,6 +367,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
     },
     bundleProductIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
+    bundleCategorySlugs: ["category-metal-masters","category-metal-tops","category-beyblade-metal","category-spinning-tops","category-metal-fury","category-original-hms","category-original-tops","category-beyblade-original"],
     bundleOriginalTotal: 3997, // 1299 + 1199 + 1499
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-metal-fusion-duo-20260101/1200/900"), showInFooter: false },
@@ -388,6 +404,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
     },
     bundleProductIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
+    bundleCategorySlugs: ["category-burst-superking","category-burst-tops","category-beyblade-burst","category-spinning-tops","category-burst-classic","category-metal-fury","category-metal-tops","category-beyblade-metal"],
     bundleOriginalTotal: 3597, // 999 + 1399 + 1199
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-burst-battlers-pack-20260101/1200/900"), showInFooter: false },
@@ -422,6 +439,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
     },
     bundleProductIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
+    bundleCategorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops","category-x-boosters","category-burst-superking","category-burst-tops","category-beyblade-burst"],
     bundleOriginalTotal: 2847, // 899 + 949 + 999
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-x-series-starter-20260101/1200/900"), showInFooter: false },
@@ -469,6 +487,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       "product-beyblade-burst-valkyrie",
       "product-beyblade-x-wizard-arrow",
     ],
+    bundleCategorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops","category-metal-masters","category-metal-tops","category-beyblade-metal","category-burst-superking","category-burst-tops","category-beyblade-burst","category-x-starters","category-x-tops","category-beyblade-x"],
     bundleOriginalTotal: 4996, // 1799 + 1299 + 999 + 899
     bundleStockStatus: "in_stock",
     display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-every-generation-starter-pack-20260101/1200/900"), showInFooter: false },

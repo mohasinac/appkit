@@ -15,16 +15,20 @@ import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { buildListingTypeListingConfig } from "../../products/config/listing-type-listing-config";
 import { DataListingView } from "./DataListingView";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
 
-const CONFIG = buildListingTypeListingConfig("stickers", {
+const LISTING_TYPES: readonly ListingType[] = ["stickers"];
+const CONFIG_OPTS = {
   title: "Stickers",
   searchPlaceholder: "Search stickers by name or seller",
   emptyLabel: "No sticker listings",
-});
+};
 
 export type AdminStickersViewProps = ListingLayoutProps;
 
 export function AdminStickersView({ children, ...props }: AdminStickersViewProps) {
+  const scope = useAvailabilityScope(LISTING_TYPES);
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -32,5 +36,11 @@ export function AdminStickersView({ children, ...props }: AdminStickersViewProps
       </ListingLayout>
     );
   }
-  return <DataListingView config={CONFIG} />;
+  // Built per-render rather than at module scope: the availability scope
+  // reads the URL through a hook, which cannot run outside a component.
+  return (
+    <DataListingView
+      config={buildListingTypeListingConfig("stickers", { ...CONFIG_OPTS, scope })}
+    />
+  );
 }

@@ -15,16 +15,20 @@ import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { buildListingTypeListingConfig } from "../../products/config/listing-type-listing-config";
 import { DataListingView } from "./DataListingView";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
 
-const CONFIG = buildListingTypeListingConfig("digital-code", {
+const LISTING_TYPES: readonly ListingType[] = ["digital-code"];
+const CONFIG_OPTS = {
   title: "Digital Codes",
   searchPlaceholder: "Search digital code listings",
   emptyLabel: "No digital code listings",
-});
+};
 
 export type AdminDigitalCodesViewProps = ListingLayoutProps;
 
 export function AdminDigitalCodesView({ children, ...props }: AdminDigitalCodesViewProps) {
+  const scope = useAvailabilityScope(LISTING_TYPES);
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -32,5 +36,11 @@ export function AdminDigitalCodesView({ children, ...props }: AdminDigitalCodesV
       </ListingLayout>
     );
   }
-  return <DataListingView config={CONFIG} />;
+  // Built per-render rather than at module scope: the availability scope
+  // reads the URL through a hook, which cannot run outside a component.
+  return (
+    <DataListingView
+      config={buildListingTypeListingConfig("digital-code", { ...CONFIG_OPTS, scope })}
+    />
+  );
 }

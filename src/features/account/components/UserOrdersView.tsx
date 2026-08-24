@@ -10,6 +10,7 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { OrderCard } from "../../orders/components/OrdersList";
 import type { Order } from "../../orders/types";
+import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 
 const CANCELLABLE_STATUSES = new Set(["pending", "confirmed", "processing"]);
 const TRACKABLE_STATUSES = new Set(["shipped"]);
@@ -59,6 +60,8 @@ export interface UserOrdersViewProps {
 }
 
 export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
+  const orderScope = useOrderScope();
+
   const config: ListingViewConfig<OrdersListResponse, Order> = {
     portal: "user",
     title: "My Orders",
@@ -79,6 +82,11 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
       ]
         .filter(Boolean)
         .join(",") || undefined,
+    // The lifecycle scope sits alongside the lane tabs as a second,
+    // independent axis: a buyer can ask "which of my auction wins are still
+    // in flight" without those two questions fighting over one control.
+    buildExtraParams: () => orderScope.extraParams,
+    renderAboveContent: orderScope.renderAboveContent,
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <Stack gap="md">
         <FilterChipGroup

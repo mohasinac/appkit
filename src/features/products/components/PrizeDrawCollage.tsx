@@ -29,11 +29,28 @@ const __P = {
 
 const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-error-solid px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-bold uppercase tracking-wider text-error-on-solid shadow";
 
-export interface PrizeDrawCollageProps {
-  items: PrizeDrawItem[];
+/**
+ * The subset of a prize this collage actually renders.
+ *
+ * Declared structurally, and deliberately narrower than `PrizeDrawItem`, so a
+ * lottery slot can be mapped onto it without inventing the fields it does not
+ * have (`condition` is required on `PrizeDrawItem`; a lottery slot has no such
+ * concept, and faking one would be a shape lie). `PrizeDrawItem` already
+ * satisfies this interface, so every existing caller is unaffected.
+ */
+export interface CollagePrizeItem {
+  itemNumber: number;
+  title: string;
+  images?: string[];
+  estimatedValue?: number;
+  isWon?: boolean;
+}
+
+export interface PrizeDrawCollageProps<T extends CollagePrizeItem = PrizeDrawItem> {
+  items: T[];
   highlightItemNumber?: number;
   /** Custom click handler — overrides the built-in lightbox. */
-  onItemClick?: (item: PrizeDrawItem) => void;
+  onItemClick?: (item: T) => void;
   /** Defaults to "Won". Use for localisation. */
   wonLabel?: string;
   /**
@@ -45,10 +62,10 @@ export interface PrizeDrawCollageProps {
   hideWonState?: boolean;
 }
 
-function makePrizeItemClickHandler(
-  it: PrizeDrawItem,
+function makePrizeItemClickHandler<T extends CollagePrizeItem>(
+  it: T,
   idx: number,
-  onItemClick: ((item: PrizeDrawItem) => void) | undefined,
+  onItemClick: ((item: T) => void) | undefined,
   setLightboxIndex: (i: number) => void,
 ): () => void {
   return () => {
@@ -61,7 +78,7 @@ function makePrizeItemClickHandler(
 }
 
 /** Build the lightbox images array from sorted prize items. */
-function toGalleryImages(items: PrizeDrawItem[]): LightboxImage[] {
+function toGalleryImages(items: CollagePrizeItem[]): LightboxImage[] {
   return items.map((it) => ({
     src: it.images?.[0] ?? "",
     alt: it.title || `Prize #${it.itemNumber}`,
@@ -74,13 +91,13 @@ function toGalleryImages(items: PrizeDrawItem[]): LightboxImage[] {
   }));
 }
 
-export function PrizeDrawCollage({
+export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
   items,
   highlightItemNumber,
   onItemClick,
   wonLabel = "Won",
   hideWonState = false,
-}: PrizeDrawCollageProps) {
+}: PrizeDrawCollageProps<T>) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (!items.length) {
@@ -111,7 +128,15 @@ export function PrizeDrawCollage({
               paddingX="none"
               paddingY="none"
               className={[
-                "group relative overflow-hidden border bg-[var(--appkit-color-surface)] text-left transition-transform",
+                // `flex-col items-stretch` reaches the real children only because
+                // `.appkit-button__content` declares `flex-direction: inherit` /
+                // `align-items: inherit`. Without them the square tile and the caption
+                // become side-by-side row items and the tile shrinks to ~half width.
+                // `items-stretch` is load-bearing: the span would otherwise inherit
+                // `center` from `.appkit-button` and the caption would ignore `text-left`.
+                // Never add a bare `block` / `flex` / `hidden` utility here — see
+                // Root Cause #68 and scripts/audit-primitive-child-wrappers.mjs.
+                "group relative flex-col items-stretch overflow-hidden border bg-[var(--appkit-color-surface)] text-left transition-transform",
                 "border-[var(--appkit-color-border)]",
                 isHighlight
                   ? "ring-2 ring-offset-2 ring-[var(--appkit-color-primary)] scale-[1.02]"

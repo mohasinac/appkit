@@ -14,7 +14,7 @@ import {
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
-import { SITE_SETTINGS_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 
 interface AdminSiteSettingsAnnouncement {
@@ -53,7 +53,11 @@ export function AdminSiteView({
 
   const saveAnnouncement = useApiMutation({
     mutationFn: async () => {
-      await apiClient.patch(SITE_SETTINGS_ENDPOINTS.GET, {
+      // Writes go to the admin endpoint. `PATCH /api/site-settings` was
+      // removed — that route is public-read-only now. The READ above still
+      // uses the public endpoint, which is fine: `announcementBar` is in its
+      // allow-list.
+      await apiClient.put(ADMIN_ENDPOINTS.ADMIN_SITE, {
         announcementBar: {
           enabled: announcementEnabled,
           message: announcementMessage,

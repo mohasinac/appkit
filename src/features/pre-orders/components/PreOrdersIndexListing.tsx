@@ -21,6 +21,11 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { PREORDER_SORT_OPTIONS } from "../../products/constants/sieve";
 import { useBottomActions } from "../../layout";
+import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
+import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
+import type { ListingType } from "../../products/types";
+
+const PRE_ORDER_LISTING_TYPES: readonly ListingType[] = ["pre-order"];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -48,7 +53,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const showClosed = table.get(TABLE_KEYS.SHOW_CLOSED) === "true";
+  const availability =
+    (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
+    AVAILABILITY_VALUES.AVAILABLE;
   const [view, setView] = useState<"grid" | "list">(
     (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
@@ -76,12 +83,12 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" });
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.AVAILABILITY]: "" });
     setSearchInput("");
   }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
-    table.get(TABLE_KEYS.SHOW_CLOSED) === "true" ||
+    availability !== AVAILABILITY_VALUES.AVAILABLE ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     filterActiveCount > 0;
 
@@ -100,9 +107,12 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "pre-order" as const,
-    // Hide out-of-stock pre-orders by default. Uses stockQuantity>0 (always-present field).
-    // Quota over-sign is intentional — never block pre-orders by availability.
-    inStock: showClosed ? undefined : true,
+    // "Closed" for a pre-order means its allocation filled, which the shared
+    // per-type predicate resolves from preOrderCurrentCount vs
+    // preOrderMaxQuantity. This used to be a bare stockQuantity>0, which is
+    // a DIFFERENT question and disagreed with what /products asked of the
+    // same rows.
+    availability,
   };
 
   const { products: preOrders, totalPages, page, isLoading } = useProducts(
@@ -234,10 +244,12 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         bulkTotalCount={preOrders.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
-        toggles={[
-          { label: "Show closed", active: showClosed, onChange: (next) => table.set(TABLE_KEYS.SHOW_CLOSED, next ? "true" : "") },
-        ]}
       />
+
+      {/* ── Availability scope — Available / Ended / All ────────────────── */}
+      <Div padding="y-sm">
+        <AvailabilityTabs types={PRE_ORDER_LISTING_TYPES} />
+      </Div>
 
       {/* ── Bulk action bar ───────────────────────────────────────────── */}
       <BulkActionBar

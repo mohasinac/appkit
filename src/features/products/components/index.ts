@@ -51,6 +51,8 @@ export type {
 } from "./MarketplaceBundleCard";
 export { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
 export type { PrizeDrawsIndexListingProps } from "./PrizeDrawsIndexListing";
+export { AvailabilityTabs } from "./AvailabilityTabs";
+export type { AvailabilityTabsProps } from "./AvailabilityTabs";
 // PrizeDrawsListingView + PrizeDrawDetailPageView are server components that
 // import productRepository (→ firebase-admin). Re-exporting them from this
 // client-mixed barrel pulls firebase-admin into client bundles via webpack/
@@ -87,8 +89,6 @@ export { BidHistory } from "./BidHistory";
 export type { BidHistoryProps, BidHistoryEntry } from "./BidHistory";
 export { PlaceBidForm } from "./PlaceBidForm";
 export type { PlaceBidFormProps } from "./PlaceBidForm";
-export { MakeOfferForm } from "./MakeOfferForm";
-export type { MakeOfferFormProps } from "./MakeOfferForm";
 export { MakeOfferButton } from "./MakeOfferButton";
 export type { MakeOfferButtonProps } from "./MakeOfferButton";
 export { RelatedProducts } from "./RelatedProducts";

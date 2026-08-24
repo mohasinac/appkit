@@ -250,12 +250,14 @@ export function AdminSiteSettingsView({
 
   // ⑧ Integrations
   const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
-  const [razorpaySecret, setRazorpaySecret] = React.useState("");
+  const [razorpayKeySecret, setRazorpayKeySecret] = React.useState("");
+  const [razorpayWebhookSecret, setRazorpayWebhookSecret] = React.useState("");
   const [smtpHost, setSmtpHost] = React.useState("");
   const [smtpPort, setSmtpPort] = React.useState("587");
   const [smtpUser, setSmtpUser] = React.useState("");
-  const [smtpPassword, setSmtpPassword] = React.useState("");
   const [smtpFrom, setSmtpFrom] = React.useState("");
+  const [googleMapsApiKey, setGoogleMapsApiKey] = React.useState("");
+  const [googlePlaceId, setGooglePlaceId] = React.useState("");
   const [gaMeasurementId, setGaMeasurementId] = React.useState("");
   const [fbPixelId, setFbPixelId] = React.useState("");
   const [gtmContainerId, setGtmContainerId] = React.useState("");
@@ -406,7 +408,7 @@ export function AdminSiteSettingsView({
     });
 
     setAnnouncementEnabled(s.announcementBar?.enabled ?? false);
-    setAnnouncementText(s.announcementBar?.text ?? s.announcementBar?.message ?? "");
+    setAnnouncementText(s.announcementBar?.message ?? "");
     setAnnouncementLink(s.announcementBar?.link ?? "");
     setAnnouncementBg(s.announcementBar?.backgroundColor ?? "");
 
@@ -479,11 +481,13 @@ export function AdminSiteSettingsView({
     setGstAddress(s.gst?.address ?? "");
 
     setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
-    setRazorpaySecret(s.credentialsMasked?.razorpaySecret ?? "");
+    setRazorpayKeySecret(s.credentialsMasked?.razorpayKeySecret ?? "");
+    setRazorpayWebhookSecret(s.credentialsMasked?.razorpayWebhookSecret ?? "");
+    setGoogleMapsApiKey(s.credentialsMasked?.googleMapsApiKey ?? "");
+    setGooglePlaceId(s.credentialsMasked?.googlePlaceId ?? "");
     setSmtpHost(s.emailSettings?.host ?? "");
     setSmtpPort(String(s.emailSettings?.port ?? 587));
     setSmtpUser(s.emailSettings?.user ?? "");
-    setSmtpPassword(s.credentialsMasked?.smtpPassword ?? "");
     setSmtpFrom(s.emailSettings?.fromAddress ?? "");
     setGaMeasurementId(s.integrations?.googleAnalyticsId ?? "");
     setFbPixelId(s.integrations?.facebookPixelId ?? "");
@@ -575,8 +579,10 @@ export function AdminSiteSettingsView({
 
     originalMaskedRef.current = {
       razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
-      razorpaySecret: s.credentialsMasked?.razorpaySecret ?? "",
-      smtpPassword: s.credentialsMasked?.smtpPassword ?? "",
+      razorpayKeySecret: s.credentialsMasked?.razorpayKeySecret ?? "",
+      razorpayWebhookSecret: s.credentialsMasked?.razorpayWebhookSecret ?? "",
+      googleMapsApiKey: s.credentialsMasked?.googleMapsApiKey ?? "",
+      googlePlaceId: s.credentialsMasked?.googlePlaceId ?? "",
       metaPageAccessToken: s.credentialsMasked?.metaPageAccessToken ?? "",
       metaPageId: s.credentialsMasked?.metaPageId ?? "",
       tiktokClientKey: s.credentialsMasked?.tiktokClientKey ?? "",
@@ -641,7 +647,8 @@ export function AdminSiteSettingsView({
         defaultLightThemeId: themeRegistry.defaultLightThemeId,
         defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
       },
-      announcementBar: { enabled: announcementEnabled, text: announcementText, link: announcementLink, backgroundColor: announcementBg },
+      // message, not text — text was never read by AnnouncementBar or the homepage.
+      announcementBar: { enabled: announcementEnabled, message: announcementText, link: announcementLink, backgroundColor: announcementBg },
       seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
       contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp },
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
@@ -681,8 +688,10 @@ export function AdminSiteSettingsView({
       // own masked display string.
       credentials: {
         razorpayKeyId: maskedOrReal("razorpayKeyId", razorpayKeyId),
-        razorpaySecret: maskedOrReal("razorpaySecret", razorpaySecret),
-        smtpPassword: maskedOrReal("smtpPassword", smtpPassword),
+        razorpayKeySecret: maskedOrReal("razorpayKeySecret", razorpayKeySecret),
+        razorpayWebhookSecret: maskedOrReal("razorpayWebhookSecret", razorpayWebhookSecret),
+        googleMapsApiKey: maskedOrReal("googleMapsApiKey", googleMapsApiKey),
+        googlePlaceId: maskedOrReal("googlePlaceId", googlePlaceId),
         metaPageAccessToken: maskedOrReal("metaPageAccessToken", metaPageAccessToken),
         metaPageId: maskedOrReal("metaPageId", metaPageId),
         tiktokClientKey: maskedOrReal("tiktokClientKey", tiktokClientKey),
@@ -1434,7 +1443,8 @@ export function AdminSiteSettingsView({
                 <Text size="sm" weight="medium" color="muted">Razorpay</Text>
                 <Grid cols={2} gap="md">
                   <MaskedInput label="Razorpay Key ID" value={razorpayKeyId} onChange={setRazorpayKeyId} placeholder="rzp_live_…" />
-                  <MaskedInput label="Razorpay Secret" value={razorpaySecret} onChange={setRazorpaySecret} placeholder="••••••••" />
+                  <MaskedInput label="Razorpay Key Secret" value={razorpayKeySecret} onChange={setRazorpayKeySecret} placeholder="••••••••" />
+                  <MaskedInput label="Razorpay Webhook Secret" value={razorpayWebhookSecret} onChange={setRazorpayWebhookSecret} placeholder="••••••••" />
                 </Grid>
               </Stack>
               <Stack gap="sm">
@@ -1443,9 +1453,19 @@ export function AdminSiteSettingsView({
                   <Input label="SMTP host" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} placeholder="smtp.sendgrid.net" />
                   <Input label="SMTP port" value={smtpPort} onChange={(e) => setSmtpPort(e.target.value)} type="number" placeholder="587" />
                   <Input label="SMTP user" value={smtpUser} onChange={(e) => setSmtpUser(e.target.value)} placeholder="apikey" />
-                  <MaskedInput label="SMTP password" value={smtpPassword} onChange={setSmtpPassword} placeholder="••••••••" />
                 </Grid>
                 <Input label="From address" value={smtpFrom} onChange={(e) => setSmtpFrom(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
+                <Text size="xs" color="muted">
+                  Transactional email is delivered through Resend — set the Resend API key below.
+                  These SMTP fields are stored but not currently used for delivery.
+                </Text>
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Google Places (store reviews)</Text>
+                <Grid cols={2} gap="md">
+                  <MaskedInput label="Google Maps API key" value={googleMapsApiKey} onChange={setGoogleMapsApiKey} placeholder="••••••••" />
+                  <Input label="Default Google Place ID" value={googlePlaceId} onChange={(e) => setGooglePlaceId(e.target.value)} placeholder="ChIJ…" />
+                </Grid>
               </Stack>
               <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">Analytics & Tracking</Text>

@@ -18,7 +18,12 @@ export function ConcernCard({
       type="button"
       variant="outline"
       onClick={() => onClick?.(concern)}
-      className={`group flex flex-col items-center gap-[var(--appkit-space-3)] rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] text-left shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
+      // No bare `flex` here: globals.css declares `.flex` un-layered + !important,
+      // which overrides `.appkit-button`'s own display. It is redundant anyway —
+      // the button is already a flex container. `flex-col items-center` now
+      // actually reaches the icon and label, which have been rendering
+      // side-by-side since the ripple wrapper landed (Root Cause #68).
+      className={`group flex-col items-center gap-[var(--appkit-space-3)] rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] text-left shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
     >
       {concern.display?.coverImage && (
         <Div className="relative h-16 w-16" rounded="full" overflow="hidden">

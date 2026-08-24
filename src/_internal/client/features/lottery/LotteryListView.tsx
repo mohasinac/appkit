@@ -24,7 +24,12 @@ interface ClientLotteryEvent {
   status: string;
   startsAt?: string | Date;
   endsAt?: string | Date;
+  /**
+   * Only `coverImage.url` is ever populated on EventDocument — reading
+   * `coverImageUrl` alone showed the 🎰 placeholder on every card.
+   */
   coverImageUrl?: string;
+  coverImage?: { url?: string } | null;
   lotteryConfig?: ClientLotteryConfig;
 }
 
@@ -88,10 +93,10 @@ export function LotteryListView({ items, adminMode = false }: LotteryListViewPro
                     animate="hoverLift"
                     className="overflow-hidden"
                   >
-                    {event.coverImageUrl ? (
+                    {event.coverImageUrl || event.coverImage?.url ? (
                       <Div className="relative aspect-video overflow-hidden">
                         <MediaImage
-                          src={event.coverImageUrl}
+                          src={event.coverImageUrl || event.coverImage?.url || ""}
                           alt={event.title}
                           size="card"
                         />

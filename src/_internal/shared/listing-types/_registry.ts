@@ -35,8 +35,17 @@ import * as art from "./art/config";
 import * as stickers from "./stickers/config";
 
 import { LISTING_TYPE_CAPABILITIES } from "./capabilities";
+import {
+  baseAvailable,
+  type AvailabilityRow,
+  type UnavailableClause,
+} from "./availability";
 import type { ListingType } from "../../../features/products/types/index";
 import type { SortOption } from "../../../features/products/constants/sieve";
+import {
+  AVAILABILITY_VALUES,
+  type AvailabilityFilter,
+} from "../../../constants/field-names";
 
 /**
  * Which "Show X" quick-filter a listing type's browse surfaces default to
@@ -94,8 +103,29 @@ export interface ListingTypePlugin {
    * /products when exactly this type is selected.
    */
   browseRoute: string | null;
-  /** Which "Show X" default this type's browse surfaces apply. */
+  /**
+   * Which "Show X" default this type's browse surfaces apply. Since 2026-08-24
+   * this drives the LABEL of the availability tab bar's middle tab
+   * (`availabilityTabsFor`) rather than a toggle pill's wording.
+   */
   hideDefault: ListingHideDefault;
+  /**
+   * Is this row still buyable / biddable / enterable? Type-specific checks
+   * ONLY — `baseAvailable` (isSold / availableQuantity / stockQuantity) is
+   * applied to every type by `isListingRowAvailable` before this runs, so a
+   * type with no extra rule returns `true`.
+   *
+   * Must stay pure and client-safe: the same predicate runs inside the SSR
+   * query, the homepage fetch and the related-items carousel.
+   */
+  isAvailable: (row: AvailabilityRow, now: Date) => boolean;
+  /**
+   * The query half of the same question — see `UnavailableClause`. Used to
+   * front-load the "Sold & Ended" scope, which is sparse and therefore
+   * expressible as an OR of equalities, unlike "available", which is dense and
+   * negation-shaped and stays an in-memory predicate.
+   */
+  unavailableClauses: readonly UnavailableClause[];
   /** Sort set offered on admin/seller dashboards for this type. */
   sortOptions: readonly SortOption[];
   /** Narrower sort set offered on public browse surfaces for this type. */
@@ -197,6 +227,89 @@ export function hideDefaultsFor(types: readonly ListingType[]): ListingHideDefau
   const seen = new Set<ListingHideDefault>();
   for (const type of types) seen.add(LISTING_TYPE_REGISTRY[type].hideDefault);
   return [...seen];
+}
+
+// ---------------------------------------------------------------------------
+// Availability scope
+// ---------------------------------------------------------------------------
+
+/**
+ * The user-facing noun for each hide-default. "ended" and "closed" are one
+ * query mechanic and one word to a buyer — an auction that ended and a prize
+ * draw that closed are both simply over.
+ *
+ * `Record<ListingHideDefault, …>` on purpose: adding a fourth hide-default is
+ * then a compile error rather than a tab that silently renders `undefined`.
+ */
+const HIDE_DEFAULT_NOUN: Record<ListingHideDefault, "Sold" | "Ended"> = {
+  sold: "Sold",
+  ended: "Ended",
+  closed: "Ended",
+};
+
+export interface AvailabilityTab {
+  id: AvailabilityFilter;
+  label: string;
+}
+
+/**
+ * The three-tab availability bar for a set of listing types.
+ *
+ * The middle label is derived, not a constant: `/auctions` reads "Ended",
+ * `/art` reads "Sold", and `/products` — which spans both kinds — reads
+ * "Sold & Ended". Ordering is fixed rather than set-iteration order so the
+ * label can never flip to "Ended & Sold" between renders.
+ */
+export function availabilityTabsFor(types: readonly ListingType[]): AvailabilityTab[] {
+  const nouns = new Set(
+    (types.length > 0 ? types : (Object.keys(LISTING_TYPE_REGISTRY) as ListingType[])).map(
+      (t) => HIDE_DEFAULT_NOUN[LISTING_TYPE_REGISTRY[t].hideDefault],
+    ),
+  );
+  const unavailableLabel =
+    (["Sold", "Ended"] as const).filter((n) => nouns.has(n)).join(" & ") || "Sold";
+
+  return [
+    { id: AVAILABILITY_VALUES.AVAILABLE, label: "Available" },
+    { id: AVAILABILITY_VALUES.UNAVAILABLE, label: unavailableLabel },
+    { id: AVAILABILITY_VALUES.ALL, label: "All" },
+  ];
+}
+
+/**
+ * THE definition of "this listing is still available", shared by the listing
+ * query, the homepage fetch and the related-items carousel. Before this there
+ * were four partial versions of it and they disagreed — see the header of
+ * `./availability`.
+ *
+ * An unrecognised `listingType` falls back to `standard` rather than throwing:
+ * these rows come from Firestore and a bad value must degrade to the base
+ * checks, not blank the page.
+ */
+export function isListingRowAvailable(row: AvailabilityRow, now: Date): boolean {
+  if (!baseAvailable(row)) return false;
+  const raw = row.listingType;
+  const type: ListingType =
+    typeof raw === "string" && raw in LISTING_TYPE_REGISTRY ? (raw as ListingType) : "standard";
+  return LISTING_TYPE_REGISTRY[type].isAvailable(row, now);
+}
+
+/**
+ * Every distinct `UnavailableClause` across a set of listing types, deduped by
+ * field+op+value. `/products` (all nine types) collapses to five clauses, so
+ * the "Sold & Ended" scope costs five bounded queries, not nine.
+ */
+export function unavailableClausesFor(
+  types: readonly ListingType[],
+): UnavailableClause[] {
+  const effective = types.length > 0 ? types : (Object.keys(LISTING_TYPE_REGISTRY) as ListingType[]);
+  const seen = new Map<string, UnavailableClause>();
+  for (const type of effective) {
+    for (const clause of LISTING_TYPE_REGISTRY[type].unavailableClauses) {
+      seen.set(`${clause.field}|${clause.op}|${String(clause.value)}`, clause);
+    }
+  }
+  return [...seen.values()];
 }
 
 // Re-export the capability map so consumers can pull both surfaces from

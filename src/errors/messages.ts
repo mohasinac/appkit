@@ -416,9 +416,17 @@ export const ERROR_MESSAGES = {
     BID_TOO_LOW: "Your bid must be higher than the current bid",
     INCREMENT_TOO_LOW: "Your bid does not meet the minimum increment requirement",
     OWN_AUCTION: "You cannot bid on your own auction",
-    BUY_NOW_UNAVAILABLE: "Buy Now is not available for this auction",
-    BUY_NOW_BIDS_STARTED: "Buy Now is no longer available — bids have already been placed",
+    BUY_NOW_UNAVAILABLE:
+      "Buy Now is unavailable — bidding has already passed the Buy Now price",
     BUY_NOW_NO_PRICE: "This auction does not have a Buy Now price",
+    BUYOUT_LAPSED:
+      "Your Buy Now claim expired. Head back to the auction to bid or try again.",
+    BUYOUT_OUTBID:
+      "Bidding passed the Buy Now price while you were checking out, so this purchase can no longer go through.",
+    AUCTION_ALREADY_SOLD:
+      "Another buyer completed their purchase first, so this auction is already sold.",
+    AUCTION_ENDED_BEFORE_CHECKOUT:
+      "The auction ended before you completed payment, so it went to the winning bidder.",
   },
 
   CONTACT: {
@@ -504,6 +512,11 @@ export const ERROR_MESSAGES = {
 
   // Offer errors
   OFFER: {
+    /**
+     * The site-wide `featureFlags.offers` kill switch is off. Existing offers
+     * can still be responded to and paid for — only new ones are refused.
+     */
+    DISABLED: "Offers are currently turned off across the site.",
     LIMIT_REACHED:
       "You have reached the maximum of 3 offers for this product. Wait for the seller to update the listing.",
     COUNTER_RANGE:

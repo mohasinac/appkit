@@ -70,9 +70,18 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
           return (
             <Div
               key={p.id}
+              layout="flex-col"
               className="group relative overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] transition-transform hover:scale-[1.01]" rounded="lg"
             >
-              {/* Clickable image area → lightbox */}
+              {/* Clickable image area → lightbox.
+                  NEVER put a bare `block` / `flex` / `hidden` utility on this Button:
+                  the consumer's globals.css declares those un-layered and !important,
+                  which beats `.appkit-button { display: inline-flex }`. The button then
+                  stops being a flex container, `.appkit-button__content`'s
+                  `flex: 1 1 auto` / `align-self: stretch` go inert, and MediaImage
+                  collapses to 0x0 — this tile rendered blank for exactly that reason
+                  (Root Cause #68). The card above is a flex column instead, which
+                  blockifies this Button as a flex item without touching its display. */}
               <Button
                 variant="ghost"
                 type="button"
@@ -80,24 +89,28 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                 paddingX="none"
                 paddingY="none"
                 rounded="none"
-                className="relative block aspect-square w-full overflow-hidden focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)]"
+                className="relative aspect-square w-full overflow-hidden focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)]"
                 aria-label={`View ${p.title} in lightbox`}
               >
-                {cover ? (
-                  <MediaImage
-                    src={cover}
-                    alt={p.title}
-                    size="card"
-                    className="transition-transform group-hover:scale-105"
-                  />
-                ) : (
-                  <Row textSize="3xl" surface="muted" className="absolute inset-0" align="center" justify="center">
-                    {PLACEHOLDER_EMOJI}
-                  </Row>
-                )}
+                {/* Real sized box: the image resolves its percentages against THIS,
+                    and the badge anchors here rather than to the button's inner span. */}
+                <Div className="relative aspect-square w-full">
+                  {cover ? (
+                    <MediaImage
+                      src={cover}
+                      alt={p.title}
+                      size="card"
+                      className="transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <Row textSize="3xl" surface="muted" className="absolute inset-0" align="center" justify="center">
+                      {PLACEHOLDER_EMOJI}
+                    </Row>
+                  )}
 
-                <Div textWeight="semibold" textSize="xs" surface="overlay-xl" padding="chip-2xs" className="absolute left-2 top-2 text-white" rounded="default">
-                  #{idx + 1}
+                  <Div textWeight="semibold" textSize="xs" surface="overlay-xl" padding="chip-2xs" className="absolute left-2 top-2 text-white" rounded="default">
+                    #{idx + 1}
+                  </Div>
                 </Div>
               </Button>
 

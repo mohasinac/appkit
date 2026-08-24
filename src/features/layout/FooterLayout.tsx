@@ -74,7 +74,16 @@ export function FooterLayout({
   return (
     <BlockFooter
       id={id}
-      className="bg-[var(--appkit-color-bg)] border-t border-[var(--appkit-color-border-subtle)]"
+      // The footer is the last thing on the page, so it is what the fixed bottom
+      // chrome actually covers — the copyright and bottom-links rows used to sit
+      // under the nav bar and CTA tier, unreadable. <Main> carried a margin for
+      // this, but <Main> is a SIBLING before the footer, so that only ever opened
+      // a gap between the two and never cleared the page's own end.
+      //
+      // Padding here rather than on the scroll container so the footer's own
+      // background continues behind the translucent chrome — otherwise scrolling
+      // to the end shows a band of bare page background under the nav.
+      className="bg-[var(--appkit-color-bg)] border-t border-[var(--appkit-color-border-subtle)] pb-[calc(var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px))]"
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (

@@ -13,6 +13,8 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { Badge, Button, Div, FilterChipGroup, Heading, Input, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, SelectOption } from "../../../ui";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { useOrderScope } from "../../orders/components/OrderScopeTabs";
+import { OrderStatusValues } from "../../orders/schemas/firestore";
 import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
@@ -36,13 +38,20 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = SELLER_ORDER_STATUS_TABS;
 
+// Keyed on the STORED lowercase values, and covering all nine. It was keyed
+// UPPERCASE and read via `status.toUpperCase()` — the only consumer in the
+// codebase doing that — and covered six, so `confirmed`, `return_requested`
+// and `returned` all fell through to the neutral default badge.
 const STATUS_BADGE_VARIANT: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
-  DELIVERED: "success",
-  SHIPPED: "info",
-  PROCESSING: "warning",
-  PENDING: "default",
-  CANCELLED: "danger",
-  REFUNDED: "danger",
+  pending: "default",
+  confirmed: "info",
+  processing: "warning",
+  shipped: "info",
+  delivered: "success",
+  cancelled: "danger",
+  refunded: "danger",
+  return_requested: "warning",
+  returned: "danger",
 };
 
 const UPDATE_STATUS_OPTIONS: SelectOption[] = [
@@ -269,7 +278,7 @@ export function SellerOrderDetailPanel({
         <Stack gap="none">
           <Stack className={`flex-1 ${__O.yAuto}`} gap="5" padding="md">
             <Row align="center" justify="between">
-              <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
+              <Badge variant={STATUS_BADGE_VARIANT[order.status ?? ""] ?? "default"}>
                 {order.status ?? "Unknown"}
               </Badge>
               <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
@@ -552,7 +561,7 @@ export function SellerOrdersView({
       header: "Status",
       className: "w-32",
       render: (row) => (
-        <Badge variant={STATUS_BADGE_VARIANT[row.status?.toUpperCase()] ?? "default"}>
+        <Badge variant={STATUS_BADGE_VARIANT[row.status ?? ""] ?? "default"}>
           {row.status}
         </Badge>
       ),
@@ -577,6 +586,9 @@ export function SellerOrdersView({
       render: (row) => <Span size="xs" color="muted">{row.updatedAt}</Span>,
     },
   ];
+
+  const orderScope = useOrderScope();
+
 
   const config: ListingViewConfig<SellerOrdersResponse, OrderRow> = {
     portal: "seller",
@@ -614,7 +626,12 @@ export function SellerOrdersView({
       }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
+    // The scope narrows; the status chip drills down inside it. Both are
+    // emitted — an explicit status always wins, since picking "Delivered"
+    // while sitting on Active should show delivered orders, not nothing.
     buildFilters: (state) => (state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined),
+    buildExtraParams: () => orderScope.extraParams,
+    renderAboveContent: orderScope.renderAboveContent,
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <FilterChipGroup
         label="Status"
@@ -638,7 +655,14 @@ export function SellerOrdersView({
       ] as BulkActionItem[];
     },
     renderRowActions: (row) => {
-      const isShippable = ["PENDING", "PROCESSING", "CONFIRMED"].includes(row.status?.toUpperCase() ?? "");
+      // Compared against the stored lowercase values, like every other
+      // consumer — the uppercase form here was a local convention that only
+      // worked because of the `.toUpperCase()` alongside it.
+      const isShippable = ([
+        OrderStatusValues.PENDING,
+        OrderStatusValues.PROCESSING,
+        OrderStatusValues.CONFIRMED,
+      ] as string[]).includes(row.status ?? "");
       return (
         <Row align="center" gap="xs">
           {isShippable && (

@@ -21,6 +21,10 @@ import {
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import type { ListingType } from "../../products/types";
+
+const PRIZE_DRAW_TYPES: readonly ListingType[] = ["prize-draw"];
 import type { AdminTableColumn } from "../../admin/types";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 
@@ -118,8 +122,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
   const dispatch = useActionDispatch();
   // Independent of DataListingView's own internal useUrlTable() — see the
   // same pattern in SellerAuctionsView.tsx.
-  const toggleTable = useUrlTable({});
-  const showClosed = toggleTable.get(TABLE_KEYS.SHOW_CLOSED) === "true";
+  const scope = useAvailabilityScope(PRIZE_DRAW_TYPES);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
@@ -149,7 +152,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
     title: "Prize Draws",
     searchPlaceholder: "Search prize draws by name…",
     emptyLabel: "No prize draws listed yet",
-    filterKeys: ["status", TABLE_KEYS.SHOW_CLOSED],
+    filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "prize-draws", "listing"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
@@ -181,19 +184,17 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (state) => {
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
-      const closed =
-        state[TABLE_KEYS.SHOW_CLOSED] !== "true"
-          ? sieveFilter("prizeRevealWindowEnd", SIEVE_OP.GTE, new Date().toISOString())
-          : null;
-      return ["listingType==prize-draw", status, closed].filter(Boolean).join(",");
+      // The hide-closed clause that used to live here tested the reveal
+      // WINDOW END date, a different field from the reveal STATUS every other
+      // surface reads — so a draw the seller had closed early still showed as
+      // open here. It also pushed an inequality alongside an arbitrary sort
+      // (Root Cause #59), which `audit-listing-indices` had been reporting as
+      // QUERY_UNSATISFIABLE. The scope param now carries it, resolved from the
+      // listing-type registry.
+      return ["listingType==prize-draw", status].filter(Boolean).join(",");
     },
-    toggles: [
-      {
-        label: "Show closed",
-        active: showClosed,
-        onChange: (next) => toggleTable.set(TABLE_KEYS.SHOW_CLOSED, next ? "true" : ""),
-      },
-    ],
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     rowHrefTemplate: String(ROUTES.STORE.PRIZE_DRAWS_EDIT("{id}")),
     renderRowActions: (row) => (
       <RowActionMenu

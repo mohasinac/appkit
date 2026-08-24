@@ -6,7 +6,8 @@ import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ADMIN_EVENT_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { ADMIN_EVENT_STATUS_TABS, ALL_TAB } from "../../admin/constants/filter-tabs";
+import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";
 import {
   toRecordArray,
   toRelativeDate,
@@ -17,18 +18,21 @@ import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { AdminEventEditorView } from "./AdminEventEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 
-// TODO(events): TYPE_OPTIONS list pre-dates the SB9 EventType union refresh
-// (sale|offer|poll|survey|feedback|raffle|spin_wheel). Keep current values to
-// avoid silently breaking saved-filter URLs — sync in a dedicated follow-up.
+/**
+ * Derived from the `EventType` union (2026-08-24).
+ *
+ * The hand-written list this replaces offered `contest`, `giveaway` and
+ * `flash-sale` — none of which are `EventType` values, so each was fed straight
+ * into `sieveFilter("type", EQ, id)` and matched zero rows forever — while
+ * omitting five real types (`offer`, `feedback`, `raffle`, `spin_wheel`,
+ * `lottery`). It carried a TODO deferring the fix on the grounds of "avoid
+ * silently breaking saved-filter URLs"; that reasoning didn't hold, since a URL
+ * naming a dead id was already returning nothing (Root Cause #33 + #61).
+ */
 const TYPE_OPTIONS = [
-  { id: "All", label: "All" },
-  { id: "contest", label: "Contest" },
-  { id: "giveaway", label: "Giveaway" },
-  { id: "sale", label: "Sale" },
-  { id: "poll", label: "Poll" },
-  { id: "survey", label: "Survey" },
-  { id: "flash-sale", label: "Flash Sale" },
-] as const;
+  ALL_TAB,
+  ...ALL_EVENT_TYPES.map((type) => ({ id: type, label: EVENT_TYPE_LABELS[type] })),
+];
 
 interface AdminEventsApiResponse {
   items?: JsonArray;

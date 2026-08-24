@@ -9,13 +9,19 @@
  *      panels, the Phase 4 full-parity detail page) has permanent data to exercise —
  *      following the shape already established by the tester-sandbox's dog fixture.
  *      Deliberately kept small (3 items) since this doesn't fit the demo brand.
- * WHAT: Exports 3 live listings on Beyblade Arena — a dog, a reptile, and a plant —
+ * WHAT: Exports 4 live listings on Beyblade Arena — a dog, a reptile, and a plant —
  *       covering varied transport methods, vendor-verification states, and one CITES-
- *       restricted example. No categorySlugs (the Beyblade-only category tree has no
- *       applicable leaf for live animals/plants).
+ *       restricted example.
+ *
+ *       These carried `categorySlugs: []` and a `brand: "Beyblade Arena"` string (a
+ *       STORE name in a brand field, matching no brand row) until 2026-08-24, which
+ *       made them unreachable from every category and brand page. Once empty tabs
+ *       started hiding, that would have meant the Live Items tab never appeared
+ *       anywhere at all. They now sit under the `category-living-collectibles` root
+ *       added for exactly this purpose, with the `brand-independent-keepers` brand.
  *
  * EXPORTS:
- *   productsLiveItemsSeedData — Array of 3 Partial<ProductDocument> with listingType:"live"
+ *   productsLiveItemsSeedData — Array of 4 Partial<ProductDocument> with listingType:"live"
  *
  * @tag domain:products,live-items
  * @tag layer:seed
@@ -36,9 +42,10 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     slug: "live-golden-retriever-puppy",
     title: "Golden Retriever Puppy — 6 Months, Vaccinated",
     description: "Friendly, vaccinated Golden Retriever puppy from a verified breeder. Comes with vaccination records and a starter care guide.",
-    categorySlugs: [],
-    categoryNames: [],
-    brand: "Beyblade Arena",
+    categorySlugs: ["category-dogs-retrievers","category-animals-dogs","category-companion-animals","category-living-collectibles"],
+    categoryNames: ["Retrievers","Dogs","Companion Animals","Living Collectibles"],
+    brand: "Independent Keepers",
+    brandSlug: "brand-independent-keepers",
     price: 25000,
     currency: "INR",
     stockQuantity: 1,
@@ -85,9 +92,10 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     slug: "live-bearded-dragon-juvenile",
     title: "Bearded Dragon — Juvenile, Captive-Bred",
     description: "Healthy captive-bred bearded dragon, eating well on a staple diet of greens and insects. Specialist courier transport only.",
-    categorySlugs: [],
-    categoryNames: [],
-    brand: "Beyblade Arena",
+    categorySlugs: ["category-reptiles-lizards","category-animals-reptiles","category-companion-animals","category-living-collectibles"],
+    categoryNames: ["Lizards","Reptiles","Companion Animals","Living Collectibles"],
+    brand: "Independent Keepers",
+    brandSlug: "brand-independent-keepers",
     price: 6500,
     currency: "INR",
     stockQuantity: 1,
@@ -132,9 +140,10 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     slug: "live-bonsai-juniper-10yr",
     title: "Juniper Bonsai — 10 Years Trained",
     description: "A 10-year trained juniper bonsai in a glazed ceramic pot. Low-maintenance, shipped by courier with root-ball protection.",
-    categorySlugs: [],
-    categoryNames: [],
-    brand: "Beyblade Arena",
+    categorySlugs: ["category-bonsai-juniper","category-plants-bonsai","category-live-plants","category-living-collectibles"],
+    categoryNames: ["Juniper Bonsai","Bonsai","Live Plants","Living Collectibles"],
+    brand: "Independent Keepers",
+    brandSlug: "brand-independent-keepers",
     price: 3200,
     currency: "INR",
     stockQuantity: 1,
@@ -175,4 +184,46 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
       ["live-item"],
     ),
   } as unknown as Partial<ProductDocument>,
+  {
+    // Sold live item. Keeps species / sex / jurisdiction populated so those
+    // per-type facets still have a row inside the Sold scope.
+    id: "live-bonsai-juniper-5yr-sold",
+    slug: "live-bonsai-juniper-5yr-sold",
+    title: "Juniper Bonsai, 5 Years — Sold",
+    description: "A five-year-old shimpaku juniper bonsai, already rehomed. Listing kept up for reference.",
+    categorySlugs: ["category-bonsai-juniper","category-plants-bonsai","category-live-plants","category-living-collectibles"],
+    categoryNames: ["Juniper Bonsai","Bonsai","Live Plants","Living Collectibles"],
+    brandSlug: "brand-independent-keepers",
+    brand: "Independent Keepers",
+    price: 4500,
+    currency: "INR",
+    stockQuantity: 0,
+    availableQuantity: 0,
+    isSold: true,
+    mainImage: seedExtMedia("https://picsum.photos/seed/live-image-juniper-bonsai-sold-1-20260824/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/live-image-juniper-bonsai-sold-1-20260824/900/900"),
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "live" as const,
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    liveItem: {
+      species: "Juniperus chinensis Shimpaku",
+      ageMonths: 60,
+      careInfo: "Full sun, water when the topsoil dries, wire-trained.",
+      transport: { method: "in-person" as const, insuranceIncluded: false },
+      jurisdictionAllowed: ["MH", "KA", "DL"],
+      vendorVerified: true,
+    },
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["bonsai", "sold"],
+    createdAt: new Date("2026-08-24"),
+    updatedAt: new Date("2026-08-24"),
+  },
 ];

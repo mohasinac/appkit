@@ -44,6 +44,19 @@ export interface CartItemDocument {
   auctionId?: string;
   /** The winning bid, so the resulting order can be linked back to it. */
   bidId?: string;
+  /**
+   * True when this auction line came from Buy Now rather than from settlement.
+   *
+   * The two are NOT interchangeable even though both sit in the auction lane:
+   *  - a settlement line is a FINISHED auction — the item is already sold, the
+   *    buyer owes it, and the 48h window costs nobody anything;
+   *  - a buyout line is a CLAIM on an auction that is still live and still
+   *    taking bids. The item is not sold yet; it becomes sold only when
+   *    `claimAuctionForCheckout` commits at order time. Hence the 1h window,
+   *    and hence a lapse that cancels the bid rather than forfeiting it —
+   *    nothing was won, so nothing is forfeited, and the auction is untouched.
+   */
+  isBuyout?: boolean;
   /** Locked offer/winning-bid price — overrides normal product price at checkout */
   lockedPrice?: number;
   /**
@@ -182,6 +195,8 @@ export type AddToCartInput = {
   isAuctionWin?: boolean;
   auctionId?: string;
   bidId?: string;
+  /** See `CartItemDocument.isBuyout` — a claim on a live auction, not a win. */
+  isBuyout?: boolean;
   lockedPrice?: number;
   checkoutDeadline?: Date;
   locked?: boolean;

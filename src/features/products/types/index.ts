@@ -1,4 +1,5 @@
 import type { MediaField } from "../../media/types/index";
+import type { AvailabilityFilter } from "../../../constants/field-names";
 import type { CustomField, CustomSection, ProductPrintMeta } from "../schemas/firestore";
 export type { CustomField, CustomSection, ProductPrintMeta } from "../schemas/firestore";
 
@@ -212,6 +213,13 @@ export interface ProductListResponse {
   hasMore: boolean;
   /** Set when the query fell back to an empty result due to a DB error (index missing, permission denied). */
   warning?: string;
+  /**
+   * A bounded fetch saturated its ceiling, so `total` is a FLOOR. Render it as
+   * "50+", never as an exact count, and never derive a final page number from
+   * it — `totalPages` is deliberately `page + 1` while this is set, so the
+   * pager offers a live Next instead of claiming a false last page.
+   */
+  truncated?: boolean;
 }
 
 export interface ProductListParams {
@@ -222,7 +230,14 @@ export interface ProductListParams {
   condition?: ProductCondition;
   minPrice?: number;
   maxPrice?: number;
-  inStock?: boolean;
+  /**
+   * Which availability scope to request — the three-tab bar rendered by
+   * `<AvailabilityTabs>`. Browse surfaces must send this on EVERY request,
+   * including the default `"available"`: the API treats an absent value as
+   * "all", so omitting it makes the client refetch disagree with the SSR
+   * paint, permanently (Root Cause #30).
+   */
+  availability?: AvailabilityFilter;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). Accepts a single
    * `ListingType`, or a `|`-joined multi-value string (sievejs OR-group,
    * e.g. `"standard|classified|digital-code|live"`) for the consolidated

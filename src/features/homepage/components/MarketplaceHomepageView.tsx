@@ -6,10 +6,12 @@ import { carouselRepository, faqsRepository, siteSettingsRepository } from "../.
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
+import { filterSectionsByFeatureFlags } from "../../../_internal/shared/features/homepage/section-gate";
 import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
 import { listFeaturedBundles } from "../../../_internal/server/features/bundles/data";
 import { listStores } from "../../stores/actions/store-query-actions";
+import { toStoreListItem } from "../../../_internal/server/features/stores/adapters";
 import { getFeaturedBlogPosts } from "../../blog/actions/blog-actions";
 import { listPublicEvents } from "../../events/actions/event-actions";
 import type {
@@ -59,10 +61,18 @@ export async function MarketplaceHomepageView({
     "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15";
   const showAnnouncement = siteSettings?.announcementBar?.enabled ?? true;
 
-  const [enabledSections, rawFaqItems] = await Promise.all([
+  const [allSections, rawFaqItems] = await Promise.all([
     homepageSectionsRepository.getEnabledSections().catch(() => [] as HomepageSectionDocument[]),
     faqsRepository.getHomepageFAQs().catch(() => []),
   ]);
+
+  // Respect the feature flags. This gate existed but lived inside a function
+  // with no call sites, so until 2026-08-24 turning off `auctions` hid auctions
+  // everywhere EXCEPT the homepage, which went on advertising them.
+  const enabledSections = filterSectionsByFeatureFlags(
+    allSections,
+    siteSettings?.featureFlags,
+  );
 
   // Collect live metric requests from all enabled stats sections
   const liveStatRequests: import("../lib/live-stats").LiveStatRequest[] = [];
@@ -114,9 +124,13 @@ export async function MarketplaceHomepageView({
     blogResult,
     eventsResult,
   ] = await Promise.all([
-    activeTypes.has("products") ? getFeaturedProducts(12).catch(() => null) : null,
-    activeTypes.has("auctions") ? getFeaturedAuctions(12).catch(() => null) : null,
-    activeTypes.has("pre-orders") ? getFeaturedPreOrders(12).catch(() => null) : null,
+    // No `.catch(() => null)` on these three: they go through
+    // `listPublicProducts`, which already logs a failed query loudly and
+    // returns an empty result. Swallowing here would make a broken query
+    // indistinguishable from an empty catalogue (Root Cause #59).
+    activeTypes.has("products") ? getFeaturedProducts(12) : null,
+    activeTypes.has("auctions") ? getFeaturedAuctions(12) : null,
+    activeTypes.has("pre-orders") ? getFeaturedPreOrders(12) : null,
     activeTypes.has("categories") ? listTopLevelCategories(12).catch(() => null) : null,
     activeTypes.has("brands") ? listBrandCategories(12).catch(() => null) : null,
     activeTypes.has("featured-bundles") ? listFeaturedBundles(8).catch(() => null) : null,
@@ -145,8 +159,12 @@ export async function MarketplaceHomepageView({
       ? (brandsResult as unknown as CategoryItem[])
       : undefined,
     bundles: bundlesResult?.length ? bundlesResult : undefined,
+    // Projected, NOT cast. FeaturedStoresSection is a Client Component and this
+    // value becomes its `initialItems`, so a raw StoreDocument here would be
+    // serialised into the homepage's public HTML — secrets included. Every
+    // other cast in this object maps a document that carries no secrets.
     stores: storesResult?.items?.length
-      ? (storesResult.items as unknown as StoreListItem[])
+      ? storesResult.items.map((s) => toStoreListItem(s))
       : undefined,
     blog: blogResult?.length
       ? (blogResult as unknown as BlogPost[])
@@ -162,7 +180,7 @@ export async function MarketplaceHomepageView({
     <Main>
       <Div className="relative">
         {showAnnouncement ? (
-          <AnnouncementBar overlay message={announcementMessage} onDismiss={onBannerDismiss} />
+          <AnnouncementBar overlay message={announcementMessage} link={siteSettings?.announcementBar?.link} onDismiss={onBannerDismiss} />
         ) : null}
         {orderedSections.map((section) =>
           renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData),

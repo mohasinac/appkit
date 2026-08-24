@@ -419,6 +419,57 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      // Root Cause #68, part 2. Every case here is a LAYOUT assertion — an image
+      // that renders at 0x0, or a tile that lays out sideways, is invisible to
+      // tsc, to lint and to jsdom, so a human eye is the only gate that catches
+      // a regression. Bundle tiles rendered blank for weeks before this.
+      pageKey: "image-tile-layout",
+      pageLabel: "Image Tiles & Collages",
+      href: "/bundles/bundle-burst-battlers-pack",
+      cases: [
+        {
+          key: "bundle-member-thumbnails",
+          label: "A bundle's member tiles show the real product photo, filling the whole square tile — not a blank/grey box",
+          description:
+            "The three members of \"Burst Battlers Pack\" each have a mainImage. If you see grey boxes, the image collapsed to 0x0 — check whether a `block`/`flex`/`hidden` Tailwind class has been added back onto the tile's <Button>, which silently overrides appkit's own display and voids the fix.",
+        },
+        {
+          key: "bundle-badge-position",
+          label: "The #1 / #2 / #3 badge sits at the TOP-LEFT corner of each bundle tile, not floating in the middle of it",
+          description:
+            "The badge is absolutely positioned. If it drifts toward the centre, it is anchoring to the button's collapsed inner span instead of the tile box — the same root cause as a blank thumbnail, and often the first visible symptom.",
+        },
+        {
+          key: "bundle-tile-opens-lightbox",
+          label: "Clicking a bundle tile opens the lightbox at that item and cycles through the others; the product title below the tile still links to the product page",
+        },
+        {
+          key: "prizedraw-collage-stacked",
+          label: "Prize-draw collage tiles stack the image ABOVE the title/value caption at full card width — the image is never squashed beside the text at half width",
+          href: "/prize-draws/prizedraw-tester-sandbox-1",
+        },
+        {
+          key: "concern-card-icon-above-label",
+          label: "Category concern cards show their icon ABOVE the label, not beside it",
+          description:
+            "This is a deliberate visual change: the card always asked for a vertical layout but had been rendering side-by-side. Confirm the stacked layout looks right rather than assuming the old side-by-side was intended.",
+          href: "/categories",
+        },
+        {
+          key: "media-picker-existing-grid",
+          label: "In any media field, \"Choose existing\" shows each file as a square thumbnail with the filename underneath — not thumbnail-beside-filename with a shrunken image",
+          href: "/admin/media",
+        },
+        {
+          key: "icon-button-spacing",
+          label: "Buttons that combine an icon and a label still have normal spacing between them, and a loading button's spinner stays centred against its text",
+          description:
+            "Regression check for the shared Button change that fixed the tiles — it altered how the button's own alignment reaches its children, so spot-check a few ordinary buttons anywhere in the app.",
+          href: "/products",
+        },
+      ],
+    },
+    {
       pageKey: "buying-checkout",
       pageLabel: "Buying & Checkout",
       href: "/checkout",
@@ -1677,6 +1728,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "view-event", label: "Viewing an event detail page works", href: "/user/events" },
         { key: "events-listing-cards-images", label: "The events listing page shows each event's real cover image (not a generic icon placeholder) when one is set, and all cards in a row are the same height", href: "/events" },
         {
+          key: "lottery-cover-image",
+          label: "A lottery's cover image renders on both the lottery listing card and its detail page — not the 🎰 emoji placeholder",
+          description:
+            "Both views used to read a field the data never populates, so every lottery fell back to the emoji. Verify against \"Pokémon Number Draw — July 2026\" (event-pokemon-number-draw-july-2026), which has a real cover image.",
+          href: "/lottery/event-pokemon-number-draw-july-2026",
+        },
+        {
+          key: "lottery-prize-previews",
+          label: "A lottery detail page shows a \"Prizes\" collage of prize photos above the numbered \"Slots\" grid, and the numbered grid itself still shows every slot as a plain number",
+          description:
+            "Only slots that actually have a photo get a collage tile — the seeded fixture has photos on the first 8 of its 25 slots, so expect 8 tiles above a 25-square grid. Claimed slots show a \"Claimed\" stamp. Prices and odds must never appear anywhere on this page.",
+          href: "/lottery/event-pokemon-number-draw-july-2026",
+        },
+        {
           key: "related-events-section",
           label: "An event's Overview tab shows a \"Related Events\" carousel of other active events sharing at least one tag, with real events (not empty)",
           description: "Verify against \"Beyblade Original Series Clearance Sale\" (event-original-series-clearance) — it shares the \"original-series\" tag with the favourite-blader poll event and the \"singles\" tag with the buy-3-get-1 offer event, so Related Events should show both.",
@@ -2098,7 +2163,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "hero-carousel-arrows-flip", label: "With Left-hand mode ON, the homepage hero carousel's Prev/Next arrow pair appears in the bottom-left corner instead of bottom-right; the dots stay centered either way", href: "/" },
         { key: "gallery-arrows-unaffected", label: "Left-hand mode does NOT change a product image gallery/lightbox's Prev/Next arrows — Prev stays on the left edge and Next stays on the right edge in both modes" },
         { key: "homepage-section-buttons-mirror", label: "With Left-hand mode ON, homepage section header rows (e.g. Brands, Featured Bundles, Google Reviews) have their \"View All\" button on the opposite side from default — title and button swap sides", href: "/" },
-        { key: "hand-mode-no-fouc", label: "On a hard page reload with Left-hand mode already ON, panels/sidebars render on the left immediately — there is no visible flash of them briefly appearing on the right before snapping left" },
+        { key: "titlebar-actions-mirror", label: "With Left-hand mode ON, the top bar's action icons (search, Today's Deals, theme toggle, hamburger) move from the right edge to the LEFT edge and their order is mirrored — the hamburger ends up in the far-left corner — while the brand wordmark moves to the right edge; with it OFF (default), everything is the other way round", href: "/" },
+        { key: "titlebar-centre-mark-unaffected", label: "Left-hand mode does NOT move the centred logo mark in the middle of the desktop top bar — it stays exactly centred in both modes", href: "/" },
+        { key: "titlebar-row2-mirror", label: "On a phone-width viewport with Left-hand mode ON, the top bar's SECOND row (notifications / wishlist / cart / profile icons) packs against the LEFT edge in mirrored order with profile leftmost; with it OFF it packs against the right edge with notifications leftmost", href: "/" },
+        { key: "titlebar-actions-no-overflow-narrow", label: "With Left-hand mode ON at the narrowest phone width (~320px), no top-bar icon is clipped or pushed off-screen — the mirrored row fits exactly as well as the default row does", href: "/" },
+        { key: "bottom-nav-mirror", label: "With Left-hand mode ON, the mobile bottom tab bar's slots appear in reverse order (Profile leftmost, Home rightmost); with it OFF, Home is leftmost. Slot widths stay equal in both modes.", href: "/" },
+        { key: "dashboard-bottom-nav-mirror", label: "With Left-hand mode ON, the dashboard's own mobile bottom tab bar (on admin/store/user routes) mirrors the same way the public one does — both bars behave identically", href: "/user" },
+        { key: "count-badges-mirror", label: "With Left-hand mode ON, the red count bubbles on the cart / wishlist / notification icons sit on the TOP-LEFT corner of their icon instead of top-right — in BOTH the top bar and the mobile bottom tab bar — and neither is clipped by the icon's edge", href: "/" },
+        { key: "nav-scroll-arrows-unaffected", label: "Left-hand mode does NOT flip the main navigation bar's overflow scroll chevrons — the left chevron still scrolls the nav left and the right chevron still scrolls it right, in both modes", href: "/" },
+        { key: "header-tab-order-sane", label: "With Left-hand mode ON, pressing Tab repeatedly from the top of the page still reaches every top-bar control with none skipped or trapped", description: "The visual left-to-right order will NOT match the tab order in left-hand mode — that is expected and accepted (the mirror is visual only, DOM order is deliberately unchanged so screen-reader reading order stays stable). What must not happen is a control becoming unreachable.", href: "/" },
+        { key: "hand-mode-no-fouc", label: "On a hard page reload with Left-hand mode already ON, panels/sidebars AND the top bar / bottom tab bar render in their left-hand positions immediately — there is no visible flash of the header icons or tab bar briefly appearing in their default positions before snapping over" },
       ],
     },
     {

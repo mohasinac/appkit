@@ -319,6 +319,7 @@ export const DEFAULT_ROUTE_MAP = {
     ORDERS: "/admin/orders",
     ORDER_DETAIL: (id: string) => `/admin/orders/${id}/view`,
     BIDS: "/admin/bids",
+    OFFERS: "/admin/offers",
     BLOG: "/admin/blog",
     BLOG_NEW: "/admin/blog/new",
     BLOG_EDIT: (id: string) => `/admin/blog/${id}/edit`,

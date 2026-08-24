@@ -16,6 +16,8 @@ import { MediaImage } from "../../../../features/media/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
+import { PrizeDrawCollage } from "../../../../features/products/components/PrizeDrawCollage";
+import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
 interface ClientLotteryEvent {
@@ -24,7 +26,13 @@ interface ClientLotteryEvent {
   description?: string;
   status: string;
   endsAt?: string | Date | null;
+  /**
+   * Two spellings exist on EventDocument and only `coverImage.url` is ever
+   * populated — by seed data or the admin editor. Reading `coverImageUrl`
+   * alone is why this page showed the 🎰 placeholder for every lottery.
+   */
   coverImageUrl?: string;
+  coverImage?: { url?: string } | null;
   lotteryConfig?: ClientLotteryConfig;
 }
 
@@ -46,6 +54,7 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
   } | null>(currentEntry?.assignedPrizeSlotNumber != null ? currentEntry as { userLotteryNumber: number; assignedPrizeSlotNumber: number; slotName: string } : null);
 
   const config = event.lotteryConfig;
+  const prizeItems = slotsToCollageItems(config?.slots ?? []);
   const isActive = event.status === "active";
   const isEnded = event.status === "ended" || event.status === "cancelled";
 
@@ -54,10 +63,10 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
       <Section>
         <Stack gap="xl">
           {/* Hero */}
-          {event.coverImageUrl ? (
+          {event.coverImageUrl || event.coverImage?.url ? (
             <Div rounded="2xl" className="relative overflow-hidden" style={{ aspectRatio: "16/9", maxHeight: "16rem" }}>
               <MediaImage
-                src={event.coverImageUrl}
+                src={event.coverImageUrl || event.coverImage?.url || ""}
                 alt={event.title}
                 size="hero"
               />
@@ -96,6 +105,17 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
               </Text>
             ) : null}
           </Stack>
+
+          {/* Prize previews — only the slots that actually have a photo. The
+              numbered grid below stays the complete slot map. */}
+          {prizeItems.length > 0 ? (
+            <Stack gap="sm">
+              <Heading level={2} size="xl" weight="semibold">
+                Prizes
+              </Heading>
+              <PrizeDrawCollage items={prizeItems} wonLabel="Claimed" />
+            </Stack>
+          ) : null}
 
           {/* Slot Grid */}
           {config && config.slots.length > 0 ? (

@@ -80,6 +80,8 @@ export type Permission =
   | "admin:blog:publish"
   | "admin:bids:read"
   | "admin:bids:write"
+  | "admin:offers:read"
+  | "admin:offers:write"
   | "admin:media:read"
   | "admin:media:write"
   | "admin:media:delete"
@@ -371,6 +373,7 @@ export const PERMISSION_GROUPS: Record<
     "admin:carts:read",
     "admin:wishlists:read",
     "admin:bids:read",
+    "admin:offers:read",
   ],
 
   customer_support: [
@@ -426,6 +429,8 @@ export const PERMISSION_GROUPS: Record<
     "admin:reviews:delete",
     "admin:bids:read",
     "admin:bids:write",
+    "admin:offers:read",
+    "admin:offers:write",
     "admin:sessions:read",
     "admin:sessions:delete",
     "admin:carts:read",
@@ -441,6 +446,8 @@ export const PERMISSION_GROUPS: Record<
     "admin:dashboard:view",
     "admin:bids:read",
     "admin:bids:write",
+    "admin:offers:read",
+    "admin:offers:write",
     "admin:products:read",
     "admin:orders:read",
     "admin:users:read",
@@ -499,6 +506,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/reviews": "admin:reviews:read",
   "/admin/blog": "admin:blog:read",
   "/admin/bids": "admin:bids:read",
+  "/admin/offers": "admin:offers:read",
   "/admin/media": "admin:media:read",
   "/admin/site": "admin:site:read",
   "/admin/settings": "admin:settings:write",
@@ -634,7 +642,10 @@ export const PERMISSION_DOMAINS: { label: string; prefix: string }[] = [
   { label: "Dashboard", prefix: "admin:dashboard:" },
   { label: "Users & Bans", prefix: "admin:users:|admin:user-bans:" },
   { label: "Products", prefix: "admin:products:" },
-  { label: "Orders & Returns", prefix: "admin:orders:|admin:returns:" },
+  // Offers sit with Orders, not with Content where Bids live: an offer is a
+  // commerce-pipeline object that ends in an order, and the permissions
+  // catalogue should group it where an operator would look for it.
+  { label: "Orders & Returns", prefix: "admin:orders:|admin:returns:|admin:offers:" },
   { label: "Stores", prefix: "admin:stores:|admin:store-addresses:" },
   { label: "Finance", prefix: "admin:analytics:|admin:payouts:" },
   { label: "Catalog", prefix: "admin:categories:|admin:brands:|admin:coupons:|admin:deals:|admin:featured:" },

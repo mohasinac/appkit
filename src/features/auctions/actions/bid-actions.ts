@@ -18,7 +18,11 @@ import { storeRepository } from "../../stores/repository/store.repository";
 import { siteSettingsRepository } from "../../../repositories";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
-import { resolveMinBid, resolveMinBidIncrement } from "../../../_internal/shared/features/auctions/config";
+import {
+  isBuyNowAvailable,
+  resolveMinBid,
+  resolveMinBidIncrement,
+} from "../../../_internal/shared/features/auctions/config";
 import { sendNotification } from "../../admin/actions/notification-actions";
 import { BID_MESSAGES } from "../../../_internal/server/jobs/handlers/messages";
 import {
@@ -31,14 +35,11 @@ import { BID_ERROR_CODES } from "../../../errors/error-codes";
 import { increment } from "../../../contracts/field-ops";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { cartRepository } from "../../cart/repository/cart.repository";
-import { ROUTES } from "../../../next/routing/route-map";
-import { CART_LANE, LANE_CHECKOUT_WINDOW_MS } from "../../../_internal/shared/checkout/lanes";
-
-/**
- * Buy-Now and auction settlement give the buyer the same 48h window to pay for
- * a locked line. Kept identical on purpose — both are "you now owe this".
- */
-const AUCTION_CHECKOUT_WINDOW_MS = LANE_CHECKOUT_WINDOW_MS.auction;
+import {
+  AUCTION_BUYOUT_WINDOW_MINUTES,
+  AUCTION_BUYOUT_WINDOW_MS,
+  AUCTION_CHECKOUT_URL,
+} from "../../../_internal/shared/checkout/lanes";
 import { resolveDate } from "../../../utils";
 import type { BidDocument } from "../schemas";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase";
@@ -289,16 +290,31 @@ export interface BuyNowAuctionInput {
 
 export interface BuyNowAuctionResult {
   /**
-   * Buy-Now no longer creates an order directly. It writes a LOCKED CART LINE
-   * (same shape auction settlement produces for a winning bidder) and the buyer
-   * completes the real order through the auction checkout lane. The old
-   * behaviour created a document that no orders UI could render and no payment
-   * path could reach — see auctionSettlement.ts for the full writeup.
+   * Buy-Now creates neither an order nor a sale. It places a real BID at the
+   * listing's buy-now price and writes a LOCKED CART LINE pointing at it; the
+   * buyer then completes a normal order through the auction checkout lane, and
+   * only THAT closes the auction (see `claimAuctionForCheckout`).
+   *
+   * Two earlier shapes were both wrong. The original created an order document
+   * no orders UI could render and no payment path could reach (see
+   * auctionSettlement.ts). Its replacement wrote a locked cart line with no
+   * `bidId`, which every downstream sweep filters on — so the line could never
+   * lapse, could never be removed (it is `locked: true`), and permanently
+   * blocked the buyer's other two lanes.
+   *
+   * The auction itself is deliberately left ALONE here. It keeps running, keeps
+   * taking bids, and keeps accepting other buyouts. Nothing is sold until
+   * somebody pays, and which of several racing buyers that is gets decided by a
+   * transaction at order time rather than by a first-come lock here.
    */
   cartLocked: true;
   productId: string;
   amount: number;
   currency: string;
+  /** The bid placed at the buy-now price. Won only once the order completes. */
+  bidId: string;
+  /** When this claim lapses — 1h, clamped to the auction's own end time. */
+  checkoutDeadline: Date;
   /** Where to send the buyer to actually pay. */
   checkoutUrl: string;
 }
@@ -339,19 +355,75 @@ export async function buyNowAuction(
     throw new ValidationError(ERROR_MESSAGES.BID.BUY_NOW_NO_PRICE, { code: BID_ERROR_CODES.BUY_NOW_NO_PRICE });
   }
 
-  if (product.bidsHaveStarted === true) {
-    throw new ValidationError(ERROR_MESSAGES.BID.BUY_NOW_BIDS_STARTED, { code: BID_ERROR_CODES.BUY_NOW_BIDS_STARTED });
+  // The standing price this buyout has to beat. Read from the bids as well as
+  // the product because `product.currentBid` is a denormalised mirror, and a
+  // pending buyout deliberately never writes to it (see BidDocument.isBuyout) —
+  // so the bids are the authority here and buyout bids are excluded from it.
+  const activeBids = await bidRepository.getActiveByProduct(productId);
+  const standingBid = Math.max(
+    product.currentBid ?? 0,
+    ...activeBids.filter((e) => e.data.isBuyout !== true).map((e) => e.data.bidAmount ?? 0),
+    0,
+  );
+
+  // Replaces the old `bidsHaveStarted` gate. Buy Now used to vanish the instant
+  // anybody bid, eBay-style, which hid it on almost every real auction. What
+  // actually matters is whether it is still a better deal than the bidding.
+  if (!isBuyNowAvailable({ buyNowPrice, currentBid: standingBid, isEnded: false, isSold: product.isSold })) {
+    throw new ValidationError(ERROR_MESSAGES.BID.BUY_NOW_UNAVAILABLE, {
+      code: BID_ERROR_CODES.BUY_NOW_UNAVAILABLE,
+    });
   }
 
-  const currency = getDefaultCurrency();
+  // Idempotency, NOT exclusivity. Re-clicking Buy Now (or a double submit) must
+  // not stack a second hold on the same buyer — but a DIFFERENT buyer holding
+  // one is fine and deliberate: whoever pays first gets it.
+  const existingHold = activeBids.find(
+    (e) => e.data.isBuyout === true && e.data.userId === userId,
+  );
+  if (existingHold) {
+    return {
+      cartLocked: true,
+      productId,
+      amount: existingHold.data.bidAmount,
+      currency: existingHold.data.currency,
+      bidId: existingHold.data.id,
+      checkoutDeadline: new Date(Date.now() + AUCTION_BUYOUT_WINDOW_MS),
+      checkoutUrl: AUCTION_CHECKOUT_URL,
+    };
+  }
 
-  await unitOfWork.runBatch((batch) => {
-    unitOfWork.products.updateInBatch(batch, productId, {
-      isSold: true,
-      availableQuantity: 0,
-      auctionEndDate: new Date(),
-    } as any);
-  });
+  // The product's own currency, not the site default — the cart line, the bid
+  // and the listing all have to agree, and settlement uses the bid's currency.
+  const currency = product.currency || getDefaultCurrency();
+  const profile = await userRepository.findById(userId);
+
+  // A real bid at the buy-now price — this is what "the bid placed is the
+  // buyout price by the buyer" means. It starts `active`/`isWinning: false`
+  // like any other bid (bidRepository.create forces both) and is promoted to
+  // `won` by claimAuctionForCheckout when the order actually lands.
+  const bid = await bidRepository.create({
+    productId,
+    productTitle: product.title,
+    userId,
+    userName: profile?.displayName ?? userName ?? userEmail ?? "Anonymous",
+    userEmail: profile?.email ?? userEmail ?? "",
+    bidAmount: buyNowPrice,
+    currency,
+    bidDate: new Date(),
+    autoMaxBid: buyNowPrice,
+    isBuyout: true,
+  } as Parameters<typeof bidRepository.create>[0]);
+
+  // Clamped to the auction's own end: a buyout that hasn't been paid for by the
+  // time the clock runs out fails anyway, because settlement will have awarded
+  // the item to whoever actually won the bidding. Showing a deadline past that
+  // point would promise a window that does not exist.
+  const auctionEnd = product.auctionEndDate ? resolveDate(product.auctionEndDate) : null;
+  const softDeadline = Date.now() + AUCTION_BUYOUT_WINDOW_MS;
+  const checkoutDeadline = new Date(
+    auctionEnd ? Math.min(softDeadline, auctionEnd.getTime()) : softDeadline,
+  );
 
   // Locked cart line, not an order — see BuyNowAuctionResult above. Written
   // through the repository directly (auctions are canAddToCart:false for
@@ -367,21 +439,59 @@ export async function buyNowAuction(
     storeName: product.storeName ?? "",
     listingType: "auction",
     isAuctionWin: true,
+    isBuyout: true,
     auctionId: productId,
+    bidId: bid.id,
     lockedPrice: buyNowPrice,
-    checkoutDeadline: new Date(Date.now() + AUCTION_CHECKOUT_WINDOW_MS),
+    checkoutDeadline,
     locked: true,
   });
 
-  const checkoutUrl = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.AUCTION}`;
+  // Best-effort, exactly like placeBid's outbid notice: the hold is already
+  // committed and a failed notification must never undo it.
+  try {
+    await sendNotification({
+      userId,
+      type: "bid_won",
+      priority: "high",
+      title: BID_MESSAGES.BUY_NOW_HELD_TITLE,
+      message: BID_MESSAGES.BUY_NOW_HELD_MESSAGE(
+        product.title,
+        currency,
+        buyNowPrice,
+        AUCTION_BUYOUT_WINDOW_MINUTES,
+      ),
+      relatedId: productId,
+      relatedType: "product",
+      actionUrl: AUCTION_CHECKOUT_URL,
+      actionLabel: BID_MESSAGES.BUY_NOW_HELD_ACTION,
+    });
+  } catch (notifyErr) {
+    void normalizeError(notifyErr);
+    serverLogger.warn("buyNowAuction: hold notification failed", {
+      error: notifyErr,
+      productId,
+      userId,
+    });
+  }
 
   serverLogger.info("buyNowAuction", {
     productId,
     userId,
+    bidId: bid.id,
     amount: buyNowPrice,
+    checkoutDeadline: checkoutDeadline.toISOString(),
   });
 
-  return { cartLocked: true, productId, amount: buyNowPrice, currency, checkoutUrl };
+  return {
+    cartLocked: true,
+    productId,
+    amount: buyNowPrice,
+    currency,
+    bidId: bid.id,
+    checkoutDeadline,
+    checkoutUrl: AUCTION_CHECKOUT_URL,
+  };
 }
 
 export async function listBidsByProduct(

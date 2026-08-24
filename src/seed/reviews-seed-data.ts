@@ -124,7 +124,12 @@ for (let i = 0; i < 65; i++) {
       : undefined,
     verified: i % 3 !== 2,
     status: "approved",
-    helpfulCount: Math.floor(Math.random() * 20),
+    // Derived from the loop index, not Math.random(): a seed file is
+    // re-executed top-to-bottom on every CLI invocation, so a random value
+    // rewrites this field on every reseed and makes `appkit-seed status` diffs
+    // permanently noisy (Root Cause #25). The file's own header already claimed
+    // "no Math.random()" — this was the one place it wasn't true.
+    helpfulCount: (i * 7) % 20,
     reportCount: 0,
     sellerReply: hasSellerReply ? sellerReplies[Math.floor(i / 4) % sellerReplies.length] : undefined,
     sellerRepliedAt: hasSellerReply ? daysAgo(daysAgoCreated - 2) : undefined,

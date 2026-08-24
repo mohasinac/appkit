@@ -26,6 +26,8 @@ import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { parseSelectedListingTypes } from "../../products/utils/listing-type";
+import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 
 export interface AdminProductsViewProps extends ListingLayoutProps {
   actionHref?: string;
@@ -164,17 +166,17 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     ),
   };
 
-  // We need showSold state to be derived from URL — read it via a small inner component
-  // that uses the listing's own table state. To keep things simple, use a ref into the
-  // config's render-prop chain via `renderAboveContent` which has no useUrlTable.
-  // Simplest: use buildFilters which gets the full filterState, and add showSold to filterKeys.
+
+  // Spans every listing type unless the Type chips narrow it, which is what
+  // makes the middle tab read "Sold & Ended" here rather than one or the other.
+  const scope = useAvailabilityScope(ALL_LISTING_TYPES);
 
   const config: ListingViewConfig<AdminProductsResponse, ProductRow> = {
     portal: "admin",
     title: "Products",
     searchPlaceholder: "Search products, SKUs, or seller names",
     emptyLabel: "No products found",
-    filterKeys: ["status", "type", "showSold", "showEnded", "showClosed"],
+    filterKeys: ["status", "type"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "products", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
@@ -243,7 +245,6 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) => {
       const parts: string[] = [];
-      if (state.showSold !== "true") parts.push("isSold==false");
       if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
 
       // `state.type` is a pipe-joined set of canonical ListingType values
@@ -255,20 +256,17 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
         parts.push(sieveFilter("listingType", SIEVE_OP.EQ, selectedTypes.join("|")));
       }
 
-      // Ended/closed are per-type predicates: `auctionEndDate` and
-      // `prizeRevealWindowEnd` only exist on auctions and prize-draws. Apply
-      // each only when its type is the ONLY one selected — with a mixed
-      // selection the inequality would exclude every row of the other types
-      // (they have no such field at all), which reads as "no results".
-      const onlyType = selectedTypes.length === 1 ? selectedTypes[0] : null;
-      if (onlyType === "auction" && state.showEnded !== "true") {
-        parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, new Date().toISOString()));
-      }
-      if (onlyType === "prize-draw" && state.showClosed !== "true") {
-        parts.push(sieveFilter("prizeRevealWindowEnd", SIEVE_OP.GTE, new Date().toISOString()));
-      }
+      // Three drawer chips (Sold / Ended / Closed) used to live here, each
+      // emitting its own clause and each guarded by an `onlyType` check
+      // because `auctionEndDate` and `prizeRevealWindowEnd` do not exist on
+      // the other seven types. That guard meant the ended/closed filters
+      // silently did nothing on any mixed selection. The scope param replaces
+      // all three, and resolves the per-type meaning server-side — so it works
+      // across a mixed selection, which is the common case here.
       return parts.join(",") || undefined;
     },
+    buildExtraParams: () => scope.extraParams,
+    renderAboveContent: scope.renderAboveContent,
     primaryAction: {
       label: "Add Product",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
@@ -357,36 +355,6 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           tabs={ADMIN_PRODUCT_LISTING_TYPE_TABS}
           value={pendingFilters.type ?? ""}
           onChange={(ids) => setPendingFilters((p) => ({ ...p, type: ids }))}
-        />
-        <FilterChipGroup
-          label="Sold"
-          tabs={[
-            { id: "", label: "Hide sold" },
-            { id: "true", label: "Show sold" },
-          ]}
-          value={pendingFilters.showSold ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, showSold: id }))}
-          allId=""
-        />
-        <FilterChipGroup
-          label="Ended"
-          tabs={[
-            { id: "", label: "Hide ended" },
-            { id: "true", label: "Show ended" },
-          ]}
-          value={pendingFilters.showEnded ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, showEnded: id }))}
-          allId=""
-        />
-        <FilterChipGroup
-          label="Closed"
-          tabs={[
-            { id: "", label: "Hide closed" },
-            { id: "true", label: "Show closed" },
-          ]}
-          value={pendingFilters.showClosed ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, showClosed: id }))}
-          allId=""
         />
       </>
     ),

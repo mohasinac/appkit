@@ -1,17 +1,26 @@
 // --- Order types -------------------------------------------------------------
 
-export type OrderStatus =
-  | "placed"
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "returned"
-  | "refunded";
-
-export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+/**
+ * Root Cause #36 — this module used to declare its OWN `OrderStatus` and
+ * `PaymentStatus`, and `appkit/src/index.ts` re-exported *those* rather than
+ * the real ones. So a bare `import type { OrderStatus } from "@mohasinac/appkit"`
+ * silently resolved to a narrower, wrong union:
+ *
+ *   OrderStatus    had a fake `"placed"` (used nowhere but its own declaration)
+ *                  and was MISSING `"return_requested"` — a real status with
+ *                  29 references across the codebase.
+ *   PaymentStatus  was missing `"processing"` and `"partial_refund"`.
+ *
+ * Assigning a legitimate `OrderStatusValues.RETURN_REQUESTED` to an
+ * `OrderStatus[]` therefore failed to typecheck, which is what pushed callers
+ * onto `Set<string>` and untyped workarounds.
+ *
+ * These are now re-exports of the single source of truth. The account feature
+ * describes the same orders the rest of the app does; it never had grounds for
+ * its own union.
+ */
+import type { OrderStatus, PaymentStatus } from "../../orders/types/index";
+export type { OrderStatus, PaymentStatus };
 
 export interface OrderItem {
   productId: string;

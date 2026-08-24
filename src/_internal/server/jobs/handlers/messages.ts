@@ -31,6 +31,27 @@ export const BID_MESSAGES = {
   OUTBID_TITLE: "You've been outbid",
   OUTBID_MESSAGE: (productTitle: string, currency: string, currentBid: number): string =>
     `Someone placed a higher bid on "${productTitle}". Current bid: ${currency} ${currentBid}.`,
+
+  // Buy Now places a HOLD, not a purchase — the auction stays live and other
+  // buyers can still bid or buy it out, so the copy has to convey urgency
+  // without claiming the item is already theirs.
+  BUY_NOW_HELD_TITLE: "Complete your Buy Now purchase",
+  BUY_NOW_HELD_MESSAGE: (
+    productTitle: string,
+    currency: string,
+    amount: number,
+    minutes: number,
+  ): string =>
+    `You've claimed "${productTitle}" at the Buy Now price of ${currency} ${amount}. The auction is still live, so it's yours only once you've paid — complete checkout within ${minutes} minutes.`,
+  BUY_NOW_HELD_ACTION: "Pay now",
+
+  BUY_NOW_LAPSED_TITLE: "Buy Now claim expired",
+  BUY_NOW_LAPSED_MESSAGE: (productTitle: string): string =>
+    `Your Buy Now claim on "${productTitle}" expired before payment was completed, so it's been released. The auction is still running if you'd like to bid.`,
+
+  BUY_NOW_AUCTION_ENDED_TITLE: "Buy Now claim released",
+  BUY_NOW_AUCTION_ENDED_MESSAGE: (productTitle: string): string =>
+    `The auction for "${productTitle}" ended before you completed your Buy Now purchase, so your claim was released and the item went to the winning bidder.`,
 };
 
 export const ORDER_MESSAGES = {

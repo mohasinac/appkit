@@ -65,6 +65,10 @@ import { RelatedItemsSection } from "./RelatedItemsSection";
 import { computeRelatedItems, getReviewPageForProduct } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
+import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
+import { normalizeListingType } from "../utils/listing-type";
+import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -77,7 +81,10 @@ export interface ProductDetailPageViewProps {
   initialProduct?: import("../schemas/firestore").ProductDocument | null;
   /**
    * Render prop for offer UI. Receives the resolved product fields.
-   * Only called when product.allowOffers is true and product.type is "simple".
+   *
+   * Called only when all three offer gates pass: the site-wide
+   * `featureFlags.offers`, the listing type's `canMakeOffer` capability, and the
+   * seller's own `product.allowOffers` opt-in.
    */
   renderOfferAction?: (opts: {
     productId: string;
@@ -302,10 +309,15 @@ export async function ProductDetailPageView({
     : [];
 
   const allowOffers = p.allowOffers === true;
-  const productType =
-    typeof p.type === "string" ? (p.type as string) : "simple";
+  // Was `p.type === "simple"`. `ProductDocument` has no `type` field at all —
+  // the check passed only because the `?? "simple"` fallback made it vacuously
+  // true, so it was a gate that could never fail and could never be right.
+  // `listingType` is the real discriminator.
+  const offerableType = canMakeOffer(normalizeListingType(p as never));
   const minOfferPercent =
-    typeof p.minOfferPercent === "number" ? (p.minOfferPercent as number) : 70;
+    typeof p.minOfferPercent === "number"
+      ? (p.minOfferPercent as number)
+      : DEFAULT_MIN_OFFER_PERCENT;
 
   const shippingInfo =
     typeof p.shippingInfo === "string" ? (p.shippingInfo as string) : null;
@@ -331,11 +343,16 @@ export async function ProductDetailPageView({
 
   // -- Fetch reviews + the shared 4-signal related-items computation + grouped listings in parallel --
   // Only page 1 of reviews is fetched here; <ReviewsListingPanel> pages the rest client-side.
-  const [initialReviews, related, groups] = await Promise.all([
+  const [initialReviews, related, groups, siteSettings] = await Promise.all([
     getReviewPageForProduct(product.id),
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
+    getSiteSettingsGlobal().catch(() => null),
   ]);
+
+  // Site-wide kill switch. Absent/unreadable settings mean ON — a failed
+  // settings read must not silently remove a working feature.
+  const offersEnabled = siteSettings?.featureFlags?.offers !== false;
 
   const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
 
@@ -655,7 +672,7 @@ export async function ProductDetailPageView({
                     </Button>
                   </>
                 )}
-                {allowOffers && productType === "simple" && price !== null && renderOfferAction?.({
+                {allowOffers && offerableType && offersEnabled && price !== null && renderOfferAction?.({
                   productId: product.id,
                   price,
                   currency,

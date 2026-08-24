@@ -800,6 +800,9 @@ async function createOrderForGroup(
     items: orderItems,
     orderType,
     offerId: firstItem.offerId ?? undefined,
+    // Distinguishes a Buy Now purchase from a settled auction win. Both are
+    // orderType "auction"; only this one gets the 24h admin-review window.
+    isBuyout: firstItem.isBuyout ? true : undefined,
     status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
     paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
     paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
@@ -1863,6 +1866,9 @@ async function createRazorpayGroupOrder(
     items: orderItems,
     orderType,
     offerId: firstItem.offerId ?? undefined,
+    // Distinguishes a Buy Now purchase from a settled auction win. Both are
+    // orderType "auction"; only this one gets the 24h admin-review window.
+    isBuyout: firstItem.isBuyout ? true : undefined,
     status: OrderStatusValues.CONFIRMED,
     paymentStatus: PaymentStatusValues.PAID,
     paymentMethod: PaymentMethodValues.ONLINE,
