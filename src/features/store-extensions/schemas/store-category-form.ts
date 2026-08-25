@@ -64,6 +64,21 @@ export const storeCategoryFormSchema = z.object({
     z.coerce.number().int("Display order must be a whole number.").min(0, "Display order cannot be negative."),
     { section: "visibility", sectionLabel: "Visibility", order: 1, row: "pair" },
   ),
+  /*
+   * 🛑 This field was MISSING, and `StoreCategoryDocument.isActive` is
+   * required.
+   *
+   * The edit page has always rendered an "Active" toggle and sent its value in
+   * the body; the schema simply did not name it. It surfaced the moment that
+   * page was typed against this schema — which is the argument for wiring a
+   * schema to its form rather than only to its route.
+   *
+   * Optional here (not `.min`) because a PATCH may legitimately omit it; the
+   * document default is `true`.
+   */
+  isActive: annotate(z.boolean().optional(), {
+    section: "visibility", order: 2, row: "quarter",
+  }),
 });
 
 export type StoreCategoryFormValues = z.infer<typeof storeCategoryFormSchema>;
@@ -79,3 +94,17 @@ export type StoreCategoryFormValues = z.infer<typeof storeCategoryFormSchema>;
 export const storeCategoryCreateSchema = storeCategoryFormSchema.extend({
   slug: z.string().min(1, "Slug is required").max(80),
 });
+
+/**
+ * Update contract.
+ *
+ * `.partial()` so a PATCH may carry one field, and `.strict()` so an unknown
+ * key is a 400 rather than a silent write. `slug` is deliberately still
+ * accepted here, unlike on categories/brands/bundles: a STOREFRONT category is
+ * seller-local organisation with no public permalink of its own, so renaming
+ * one breaks no inbound link.
+ *
+ * `storeId` is absent — the route sets it from the session, so a seller cannot
+ * move a category into another store.
+ */
+export const storeCategoryUpdateSchema = storeCategoryFormSchema.partial().strict();

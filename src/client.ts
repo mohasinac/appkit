@@ -301,6 +301,7 @@ export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./react/hook
 export {
   storeCategoryFormSchema,
   storeCategoryCreateSchema,
+  storeCategoryUpdateSchema,
   type StoreCategoryFormValues,
 } from "./features/store-extensions/schemas/store-category-form";
 
@@ -359,12 +360,14 @@ export {
 } from "./features/store-extensions/schemas/report-review-form";
 export {
   shippingConfigFormSchema,
+  SHIPPING_METHOD_OPTIONS,
   shippingConfigCreateSchema,
   shippingConfigUpdateSchema,
   type ShippingConfigFormValues,
 } from "./features/store-extensions/schemas/shipping-config-form";
 export {
   listingTemplateFormSchema,
+  LISTING_TEMPLATE_TYPE_OPTIONS,
   listingTemplateCreateSchema,
   listingTemplateUpdateSchema,
   type ListingTemplateFormValues,

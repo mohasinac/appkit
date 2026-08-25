@@ -27,9 +27,36 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
+import type { ShippingMethod } from "./firestore";
 
-/** Mirrors `ShippingMethod` in ./firestore. */
-const shippingMethodSchema = z.enum(["free", "flat", "weight", "express", "pickup", "custom"]);
+/*
+ * Method labels, keyed on the real union.
+ *
+ * This was a hand-written `z.enum([...])` with a comment saying it "mirrors
+ * ShippingMethod" — the shape that always eventually stops mirroring. Keyed
+ * `Record<ShippingMethod, string>`, a value added to the union is now a
+ * compile error here, and the enum and the dropdown options both derive from
+ * this one map rather than from two separate literals (the edit page carried
+ * its own copy of the six options inline).
+ */
+const SHIPPING_METHOD_LABEL: Record<ShippingMethod, string> = {
+  free: "Free",
+  flat: "Flat rate",
+  weight: "By weight",
+  express: "Express",
+  pickup: "Pickup",
+  custom: "Custom",
+};
+
+const SHIPPING_METHODS = Object.keys(SHIPPING_METHOD_LABEL) as [ShippingMethod, ...ShippingMethod[]];
+
+const shippingMethodSchema = z.enum(SHIPPING_METHODS);
+
+/** Dropdown options for any surface that picks a shipping method. */
+export const SHIPPING_METHOD_OPTIONS = SHIPPING_METHODS.map((value) => ({
+  value,
+  label: SHIPPING_METHOD_LABEL[value],
+}));
 
 /** A non-negative money/threshold amount, coerced from the form's string. */
 const amount = (label: string) =>
