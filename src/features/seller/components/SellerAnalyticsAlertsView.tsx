@@ -7,6 +7,9 @@ import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Sect
 import { apiClient } from "../../../http";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AnalyticsAlertDocument } from "../../store-extensions/schemas/firestore";
+import { analyticsAlertCreateSchema } from "../../store-extensions/schemas/analytics-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { ValidationError } from "../../../errors/validation-error";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -163,17 +166,32 @@ export function SellerAnalyticsAlertsView({
 
   const createMutation = useApiMutation({
     mutationFn: async () => {
-      const payload = {
+      /*
+       * Parsed against the SAME schema the route uses, before the request.
+       *
+       * This form used to hand-build its payload and included `scope: "seller"`
+       * — a field the route pins from the session and the schema does not
+       * declare. Once that schema became `.strict()`, every "Create Alert"
+       * became a 400, and nothing local could have caught it: the client had
+       * no schema to check against. Parsing here is the structural fix, not
+       * the deletion of one key.
+       */
+      const parsed = analyticsAlertCreateSchema.safeParse({
         label: draft.label,
         metric: draft.metric,
         operator: draft.operator,
-        threshold: Number(draft.threshold),
-        windowHours: Number(draft.windowHours),
+        threshold: draft.threshold,
+        windowHours: draft.windowHours,
         notifyChannels: draft.notifyChannels,
-        scope: "seller",
         isActive: true,
-      };
-      return apiClient.post(SELLER_ENDPOINTS.ANALYTICS_ALERTS, payload);
+      });
+      if (!parsed.success) {
+        throw new ValidationError(
+          parsed.error.issues[0]?.message ?? "Invalid alert",
+          parsed.error.issues,
+        );
+      }
+      return apiClient.post(SELLER_ENDPOINTS.ANALYTICS_ALERTS, parsed.data);
     },
     onSuccess: () => {
       showToast("Alert created", "success");
@@ -181,7 +199,7 @@ export function SellerAnalyticsAlertsView({
       setShowForm(false);
       setDraft(EMPTY_DRAFT);
     },
-    onError: () => showToast("Failed to create alert", "error"),
+    onError: (err: Error) => showToast(err?.message ?? "Failed to create alert", "error"),
   });
 
   const toggleMutation = useApiMutation({
@@ -232,7 +250,13 @@ export function SellerAnalyticsAlertsView({
           <Heading level={3} size="sm" weight="semibold" color="primary">
             Create Alert
           </Heading>
-          <Form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(); }}>
+          <Form
+            schema={analyticsAlertCreateSchema}
+            onSubmit={(e) => {
+              e.preventDefault();
+              createMutation.mutate();
+            }}
+          >
             <Div layout="grid" gap="4" className="sm:grid-cols-2">
               <Input
                 label="Alert label"
@@ -295,6 +319,8 @@ export function SellerAnalyticsAlertsView({
                 ))}
               </Row>
             </Div>
+
+            <FormErrorSummary />
 
             <FormActions align="right" className="mt-4">
               <Button type="submit" isLoading={createMutation.isPending}>
