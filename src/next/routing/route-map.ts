@@ -148,8 +148,15 @@ export const DEFAULT_ROUTE_MAP = {
     WISHLIST: "/wishlist",
     HISTORY: "/user/history",
     ADDRESSES: "/user/addresses",
-    ADDRESSES_ADD: "/user/addresses/add",
-    ADDRESSES_EDIT: (id: string) => `/user/addresses/edit/${id}`,
+    /**
+     * Canonical shapes. `/add` and `/edit/[id]` were the only two
+     * non-standard route shapes in the codebase — every other entity uses
+     * `/new` and `/[id]/edit`. Both old paths still resolve, as redirects.
+     */
+    ADDRESSES_NEW: "/user/addresses/new",
+    ADDRESSES_EDIT: (id: string) => `/user/addresses/${id}/edit`,
+    /** @deprecated Use ADDRESSES_NEW. Kept so existing links keep resolving. */
+    ADDRESSES_ADD: "/user/addresses/new",
     ORDER_DETAIL: (id: string) => `/user/orders/view/${id}`,
     ORDER_CANCEL: (id: string) => `/user/orders/${id}/cancel`,
     ORDER_TRACK: (id: string) => `/user/orders/${id}/track`,

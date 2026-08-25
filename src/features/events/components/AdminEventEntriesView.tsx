@@ -1,9 +1,11 @@
 "use client";
 
 import { useApiMutation, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit/client";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Row, Select, Stack, Text, useToast } from "../../../ui";
+import { Alert, Button, Div, Input, Row, Select, Stack, Text, useToast,
+  RecordDetailModal,
+} from "../../../ui";
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -260,6 +262,11 @@ export function AdminEventEntriesView({
 
   const eventTitle = statsQuery.data?.event?.title;
 
+  // Approve / Waitlist / Cancel were offered on an entry the admin could never
+  // read — the poll vote, the comment and the survey answers were all invisible
+  // (Root Cause #56, "acting blind"). The row already carries the whole entry.
+  const [detail, setDetail] = useState<EventEntryItem | null>(null);
+
   const config: ListingViewConfig<EventEntryListResponse, EventEntryItem> = {
     portal: "admin",
     title: eventTitle ? `${eventTitle} Entries` : "Event Entries",
@@ -271,6 +278,7 @@ export function AdminEventEntriesView({
     endpoint: resolvedEntriesEndpoint,
     sortOptions: [{ value: sortBy("submittedAt", "DESC"), label: "Most recent" }],
     columns,
+    onRowClick: (row) => setDetail(row),
     mapRows: (response) => response.items ?? [],
     getTotal: (response) => response.total ?? (response.items ?? []).length,
     buildFilters: (state) =>
@@ -313,5 +321,33 @@ export function AdminEventEntriesView({
     ),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <DataListingView config={config} />
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={detail?.userDisplayName || detail?.userEmail || "Entry"}
+        badges={detail ? [{ label: detail.reviewStatus }] : undefined}
+        description={detail?.pollComment}
+        fields={
+          detail
+            ? [
+                { label: "Entrant", value: detail.userDisplayName ?? detail.userId ?? "—" },
+                { label: "Email", value: detail.userEmail ?? "—" },
+                { label: "Review status", value: detail.reviewStatus },
+                { label: "Points", value: detail.points != null ? String(detail.points) : "—" },
+                { label: "Raffle eligible", value: detail.raffleEligible ? "Yes" : "No" },
+                { label: "Poll votes", value: detail.pollVotes?.join(", ") || "—" },
+                { label: "Reviewed by", value: detail.reviewedBy ?? "—" },
+                { label: "Review note", value: detail.reviewNote ?? "—" },
+                { label: "Entry ID", value: detail.id },
+              ]
+            : undefined
+        }
+        // The survey/feedback answers — the actual submission being judged.
+        metadata={detail?.formResponses}
+      />
+    </>
+  );
 }

@@ -7,6 +7,7 @@
 export {
   SCHEMAS,
   lookupApiSchema,
+  lookupFormSchema,
   lookupFirestoreSchema,
 } from "./registry";
 

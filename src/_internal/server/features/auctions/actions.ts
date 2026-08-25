@@ -3,7 +3,7 @@
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { bidRepository, productRepository, userRepository, siteSettingsRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
-import { placeBidSchema } from "../../../shared/features/auctions/schema";
+import { placeBidActionSchema } from "../../../shared/features/auctions/schema";
 import {
   assertAuctionActive,
   assertBidAmount,
@@ -17,7 +17,7 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
 export async function placeBidAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
-      const parsed = placeBidSchema.safeParse(input);
+      const parsed = placeBidActionSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid bid input");
     
       const { auctionId, amount } = parsed.data;

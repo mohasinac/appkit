@@ -20,13 +20,13 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
 import { AdminScammerEditorView } from "./AdminScammerEditorView";
+import type { ScammerStatus } from "../../scams/schemas/firestore";
+import {
+  SCAMMER_STATUS_BADGE,
+  SCAMMER_STATUS_LABEL,
+  toScammerStatus,
+} from "../../scams/constants/scammer-status-display";
 
-const STATUS_BADGE: Record<string, string> = {
-  pending_review: "bg-warning-surface text-warning",
-  verified: "bg-success-surface text-success",
-  rejected: "bg-error-surface text-error",
-  removed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
-};
 
 interface AdminScammersResponse {
   scammers?: JsonArray;
@@ -38,7 +38,7 @@ interface ScammerRow {
   id: string;
   primary: string;
   secondary: string;
-  status: string;
+  status: ScammerStatus;
   updatedAt: string;
   _raw?: Record<string, JsonValue>;
 }
@@ -62,9 +62,9 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
     className: "w-36",
     render: (row) => (
       <Span
-        className={`inline-flex ${ STATUS_BADGE[row.status] ?? STATUS_BADGE.pending_review }`} size="xs" weight="medium" rounded="full" padding="pill-sm-tall"
+        className={`inline-flex ${SCAMMER_STATUS_BADGE[row.status]}`} size="xs" weight="medium" rounded="full" padding="pill-sm-tall"
       >
-        {row.status.replace(/_/g, " ")}
+        {SCAMMER_STATUS_LABEL[row.status]}
       </Span>
     ),
   },
@@ -122,7 +122,7 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
         ]
           .filter(Boolean)
           .join(" · "),
-        status: toStringValue(item.status, "pending_review"),
+        status: toScammerStatus(item.status),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
         _raw: item,
       })),

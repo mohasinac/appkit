@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "4.13.1",
+  "version": "4.15.0",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -128,6 +128,7 @@
     "scripts/init-config.mjs",
     "scripts/labels-extract.mjs",
     "scripts/seed-cli.mjs",
+    "scripts/node-esm-loader.mjs",
     "scripts/seed-cli-loader.mjs",
     "scripts/dedupe-peer-deps.mjs",
     "scripts/copy-assets.mjs",

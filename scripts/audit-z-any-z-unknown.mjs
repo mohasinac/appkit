@@ -54,8 +54,24 @@ for (const root of SCAN_ROOTS) {
     const src = readFileSync(file, "utf8");
     if (!/\bz\s*\.\s*(any|unknown)\s*\(/.test(src)) continue;
     const lines = src.split(/\r?\n/);
+    // Track block comments so a docstring that QUOTES the defect cannot be
+    // reported as one. This audit flagged a sentence inside the header of the
+    // very module written to AVOID z.unknown(). Third instance of this same
+    // blindness (audit-field-ui-meta and audit-listing-detail-affordance both
+    // had it) — a comment is not code, in every audit.
+    let inBlockComment = false;
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      const trimmed = line.trim();
+      if (inBlockComment) {
+        if (trimmed.includes("*/")) inBlockComment = false;
+        continue;
+      }
+      if (trimmed.startsWith("/*")) {
+        if (!trimmed.includes("*/")) inBlockComment = true;
+        continue;
+      }
+      if (trimmed.startsWith("//") || trimmed.startsWith("*")) continue;
       VIOLATION_RE.lastIndex = 0;
       if (!VIOLATION_RE.test(line)) continue;
       if (PER_LINE_OK_RE.test(line)) continue;

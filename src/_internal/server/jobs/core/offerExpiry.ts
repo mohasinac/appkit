@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { bidRepository, cartRepository, offerRepository, storeRepository } from "../../../../repositories";
+import type { OfferDocument } from "../../../../features/seller/schemas";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { BID_MESSAGES } from "../handlers/messages";
 import type { JobContext } from "../runtime/types";
@@ -24,10 +25,10 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
     ctx.logger.info(`Found ${expiredOffers.length} expired offer(s) to process`);
   }
 
-  const expiredIds: string[] = [];
+  const expired: OfferDocument[] = [];
   for (const offer of expiredOffers) {
     try {
-      expiredIds.push(offer.id);
+      expired.push(offer);
       await sendNotification({
         userId: offer.buyerUid,
         type: "offer_expired",
@@ -45,9 +46,9 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
     }
   }
 
-  if (expiredIds.length > 0) {
+  if (expired.length > 0) {
     try {
-      await offerRepository.expireMany(expiredIds);
+      await offerRepository.expireMany(expired, { trigger: "runOfferExpiry:active" });
     } catch (err) {
       ctx.logger.error("Failed to batch-expire offers", err);
       throw err;
@@ -58,8 +59,8 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
   await lapseUnpaidAuctionWins(ctx);
 
   ctx.logger.info("Offer expiry complete", {
-    processed: expiredIds.length,
-    skipped: expiredOffers.length - expiredIds.length,
+    processed: expired.length,
+    skipped: expiredOffers.length - expired.length,
   });
 }
 
@@ -86,14 +87,14 @@ async function expireAcceptedPastCheckoutDeadline(ctx: JobContext): Promise<void
   if (stale.length === 0) return;
   ctx.logger.info(`Found ${stale.length} accepted offer(s) past their checkout deadline`);
 
-  const ids: string[] = [];
+  const lapsed: OfferDocument[] = [];
   for (const offer of stale) {
     try {
       // Drop the locked cart line first — leaving it behind would keep the
       // buyer's offer lane non-empty and block their standard checkout on an
       // offer they can no longer act on.
       await cartRepository.removeItemsByOfferId(offer.buyerUid, offer.id);
-      ids.push(offer.id);
+      lapsed.push(offer);
       await sendNotification({
         userId: offer.buyerUid,
         type: "offer_expired",
@@ -111,9 +112,9 @@ async function expireAcceptedPastCheckoutDeadline(ctx: JobContext): Promise<void
     }
   }
 
-  if (ids.length > 0) {
+  if (lapsed.length > 0) {
     try {
-      await offerRepository.expireMany(ids);
+      await offerRepository.expireMany(lapsed, { trigger: "runOfferExpiry:acceptedLapsed" });
     } catch (err) {
       void normalizeError(err);
       ctx.logger.error("Failed to batch-expire accepted offers", err);

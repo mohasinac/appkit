@@ -172,11 +172,19 @@ export const PRODUCT_FIELDS = {
     WINNER: "winner",
   },
 
+  /*
+   * Corrected 2026-08-24 (W3). This block used to read
+   * {in_production, ready, delayed, cancelled} — and `ready`, `delayed` and
+   * `cancelled` were values no product has ever held. `ProductDocument`
+   * declares "upcoming" | "in_production" | "ready_to_ship", the write schema
+   * agrees, and all 9 seeded pre-orders store one of those three. It had zero
+   * consumers, which is the only reason it never produced a visibly broken
+   * filter chip (Recurrent Root Cause #33).
+   */
   PRE_ORDER_PRODUCTION_STATUS_VALUES: {
+    UPCOMING: "upcoming",
     IN_PRODUCTION: "in_production",
-    READY: "ready",
-    DELAYED: "delayed",
-    CANCELLED: "cancelled",
+    READY_TO_SHIP: "ready_to_ship",
   },
 
   PRIZE_REVEAL_STATUS_VALUES: {
@@ -283,11 +291,19 @@ export const ORDER_FIELDS = {
     REFUNDED: "refunded",
   },
 
+  /*
+   * Corrected 2026-08-24 (W3) — `processing` and `partial_refund` were
+   * missing, so this listed 4 of the real 6. `PaymentStatus`
+   * (features/orders/types/index.ts) is the source; a partial refund is a
+   * state real orders reach, and W2 put it on the order timeline.
+   */
   PAYMENT_STATUS_VALUES: {
     PENDING: "pending",
+    PROCESSING: "processing",
     PAID: "paid",
     FAILED: "failed",
     REFUNDED: "refunded",
+    PARTIAL_REFUND: "partial_refund",
   },
 
   PAYOUT_STATUS_VALUES: {
@@ -369,12 +385,22 @@ export const BID_FIELDS = {
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 
+  /*
+   * Corrected 2026-08-24 (W3). Verified against the feature's own union AND
+   * against what is actually stored. This file is a deliberate LEAF — it
+   * imports nothing, and `features/products/types/index.ts` imports IT — so it
+   * cannot re-export the feature unions without a cycle. The values are
+   * therefore duplicated on purpose, and `audit-field-names-union-parity`
+   * blocks them drifting again.
+   */
   STATUS_VALUES: {
     ACTIVE: "active",
     OUTBID: "outbid",
     WON: "won",
     LOST: "lost",
     CANCELLED: "cancelled",
+    /** Won, then the buyer let the payment window lapse. Was missing here. */
+    FORFEITED: "forfeited",
   },
 } as const;
 
@@ -520,12 +546,17 @@ export const PAYOUT_FIELDS = {
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 
+  /*
+   * Corrected 2026-08-24 (W3) — `cancelled` was listed here and is NOT a
+   * member of `PayoutStatus` (features/payments/schemas/firestore.ts:18,
+   * pending|processing|paid|failed). A chip or badge keyed on it could only
+   * ever match zero rows (Recurrent Root Cause #33).
+   */
   STATUS_VALUES: {
     PENDING: "pending",
     PROCESSING: "processing",
     PAID: "paid",
     FAILED: "failed",
-    CANCELLED: "cancelled",
   },
 } as const;
 
@@ -853,10 +884,17 @@ export const SCAMMER_FIELDS = {
   VERIFIED_BY: "verifiedBy",
   CREATED_AT: "createdAt",
 
+  /*
+   * Corrected 2026-08-24 (W3). Two defects: the real stored value is
+   * `pending_review`, not `pending` (the seeded scammer profile stores
+   * `pending_review`), and `removed` was missing entirely. Already flagged in
+   * CLAUDE.md's Root Cause #34 and never actioned.
+   */
   STATUS_VALUES: {
-    PENDING: "pending",
+    PENDING_REVIEW: "pending_review",
     VERIFIED: "verified",
     REJECTED: "rejected",
+    REMOVED: "removed",
   },
 } as const;
 
@@ -883,10 +921,14 @@ export const SUPPORT_TICKET_FIELDS = {
     CLOSED: "closed",
   },
 
+  /*
+   * Corrected 2026-08-24 (W3) — `medium` is not a member of
+   * `TicketPriorityValues` (low|normal|high|urgent). `normal` is the
+   * middle value.
+   */
   PRIORITY_VALUES: {
     LOW: "low",
     NORMAL: "normal",
-    MEDIUM: "medium",
     HIGH: "high",
     URGENT: "urgent",
   },

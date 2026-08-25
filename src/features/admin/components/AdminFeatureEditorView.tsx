@@ -24,6 +24,8 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ERROR_MESSAGES } from "../../../errors/messages";
+import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { productFeatureFormSchema } from "../../products/schemas/product-features.validators";
 import {
   PRODUCT_FEATURE_CATEGORY_OPTIONS,
   PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
@@ -250,18 +252,26 @@ export function AdminFeatureEditorView({
     [storesQuery.data],
   );
 
-  const isDisabled =
-    !label || !icon || (scope === "store" && !storeId) || isSubmitting;
+  /**
+   * Submit is gated on SUBMISSION, not on a truthiness guess.
+   *
+   * This used to be `!label || !icon || (scope === "store" && !storeId)` — a
+   * hand-rolled restatement of three of the schema's rules, which silently
+   * disagreed with it on every other rule (max lengths, displayOrder bounds,
+   * the productTypes minimum). The button now stays enabled and the schema
+   * reports what is actually wrong, on the field itself.
+   */
+  const isDisabled = isSubmitting;
 
   const formSection = (
     <Form
       key="feature-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        saveMutation.mutate();
-      }}
+      schema={productFeatureFormSchema}
+      onSubmit={(e) => e.preventDefault()}
     >
+      {({ setFieldError, clearErrors }) => (
       <Stack gap="md">
+        <FormErrorSummary />
         <Input
           label="Label"
           value={label}
@@ -362,7 +372,34 @@ export function AdminFeatureEditorView({
         <Toggle label="Active" checked={isActive} onChange={setIsActive} />
 
         <Row gap="3" padding="t-xs">
-          <Button type="submit" isLoading={isSubmitting} disabled={isDisabled}>
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            disabled={isDisabled}
+            onClick={() => {
+              // Parse before saving. This form had NO validation at all: the
+              // only guard was `required` on the inputs, an HTML attribute
+              // that any programmatic submit bypasses, and the max lengths /
+              // displayOrder bounds / productTypes minimum were never checked
+              // client-side at all.
+              clearErrors();
+              const parsed = productFeatureFormSchema.safeParse({
+                label, description: description || undefined,
+                icon, iconColor: iconColor || undefined,
+                category, scope,
+                productTypes: productTypes.length === 0 ? ["all"] : productTypes,
+                storeId: scope === "store" ? storeId || undefined : undefined,
+                isActive,
+                displayOrder:
+                  Number(displayOrder) || PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
+              });
+              if (!parsed.success) {
+                applyZodIssues(parsed.error.issues, setFieldError);
+                return;
+              }
+              saveMutation.mutate();
+            }}
+          >
             {isEdit ? "Save changes" : "Create feature"}
           </Button>
           {isEdit && (
@@ -377,6 +414,7 @@ export function AdminFeatureEditorView({
           )}
         </Row>
       </Stack>
+      )}
     </Form>
   );
 

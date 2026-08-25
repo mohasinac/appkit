@@ -45,6 +45,7 @@ const ACTION_LABELS: Record<string, string> = {
   checkout_bypass: "Admin checkout bypass",
   coupon_update: "Coupon updated",
   payout_mark_paid: "Payout marked paid",
+  offer_cancel: "Offer cancelled",
   store_status_change: "Store status changed",
   user_role_change: "User role changed",
 };

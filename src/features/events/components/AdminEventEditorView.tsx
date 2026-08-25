@@ -38,7 +38,8 @@ import type {
   SpinPrize,
   SurveyFormField,
 } from "../types";
-import { StepDef, StepForm } from "../../shell";
+import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
+import { eventDraftSchema } from "../schemas/event-form";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 
@@ -49,27 +50,7 @@ import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 // form-builder arrays, raffle/spin config) are deliberately left unvalidated
 // — modeling their full conditional shape correctly would need much deeper
 // per-type domain rules than this pass is scoped for.
-const eventDraftSchema = z.object({
-  type: z.string(),
-  title: z.string().min(1, "Title is required"),
-  startsAt: z.string().min(1, "Start date is required"),
-  endsAt: z.string().min(1, "End date is required"),
-  couponId: z.string(),
-  displayCode: z.string(),
-  pollOptions: z.array(z.object({ id: z.string(), label: z.string() })),
-}).passthrough().superRefine((v, ctx) => {
-  if (v.type === "offer") {
-    if (!v.couponId.trim()) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["couponId"], message: "Coupon is required for offer events" });
-    }
-    if (!v.displayCode.trim()) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["displayCode"], message: "Display code is required for offer events" });
-    }
-  }
-  if (v.type === "poll" && v.pollOptions.filter((o) => o.label.trim()).length < 2) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["pollOptions"], message: "Poll events require at least 2 options" });
-  }
-});
+
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -444,7 +425,6 @@ export function AdminEventEditorView({
   const isEdit = Boolean(eventId);
   const [draft, setDraft] = React.useState<EventDraft>(DEFAULT_DRAFT);
   const [slugManual, setSlugManual] = React.useState(false);
-  const [currentStep, setCurrentStep] = React.useState(0);
   const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
   const [triggerMessage, setTriggerMessage] = React.useState<string | null>(null);
   const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
@@ -586,16 +566,24 @@ export function AdminEventEditorView({
   const isLoading = saveMutation.isPending || eventQuery.isLoading;
 
   // --- steps ---
-  const steps: StepDef<EventDraft>[] = [
+  /**
+   * Sections, not steps — every field reachable at once, one submit at the
+   * bottom. The old wizard gated Settings behind Details validating, so a
+   * missing end date made an event's poll options unreachable.
+   *
+   * Ids match the schema's `section` annotations exactly, which is what lets
+   * `<FormErrorSummary>` jump to the right panel.
+   */
+  const sections: SectionDef<EventDraft>[] = [
     {
+      id: "details",
+      required: true,
+      quick: true,
       label: "Details",
       fields: ["type", "title", "slug", "description", "startsAt", "endsAt", "tags"],
-      validate: (values) => {
-        if (!values.title.trim()) return "Title is required";
-        if (!values.startsAt) return "Start date is required";
-        if (!values.endsAt) return "End date is required";
-        return null;
-      },
+      // The per-step `validate` is gone: every rule it stated is already in
+      // eventDraftSchema (title/startsAt/endsAt are .min(1)), and it only ever
+      // acted as a gate to the next step.
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Event Details</Heading>
@@ -637,7 +625,11 @@ export function AdminEventEditorView({
       ),
     },
     {
+      id: "media",
       label: "Media",
+      // <Collapse> unmounts its children — without this, collapsing the
+      // section mid-upload discards the transfer.
+      keepMounted: true,
       fields: ["coverImageUrl"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
@@ -653,14 +645,12 @@ export function AdminEventEditorView({
       ),
     },
     {
+      id: "settings",
       label: "Settings",
       fields: ["status", "allowGuestParticipation", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
-      validate: (values) => {
-        if (values.type === "offer" && !values.couponId.trim()) return "Coupon ID is required for offer events";
-        if (values.type === "offer" && !values.displayCode.trim()) return "Display code is required for offer events";
-        if (values.type === "poll" && values.pollOptions.filter((o) => o.label.trim()).length < 2) return "Poll events require at least 2 options";
-        return null;
-      },
+      // Same: the offer-coupon, offer-display-code and poll-minimum-options
+      // rules are all stated in eventDraftSchema's superRefine, which now
+      // surfaces them inline on the field instead of as a step-blocking banner.
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Event Settings</Heading>
@@ -779,6 +769,7 @@ export function AdminEventEditorView({
       ),
     },
     {
+      id: "raffle",
       label: "Raffle / Spin",
       fields: ["hasRaffle", "raffleType", "raffleTopN", "rafflePrize", "rafflePrizeCouponId", "rafflePrizeProductIds", "spinPrizes", "spinMaxPerUser", "spinWindowStart", "spinWindowEnd"],
       render: ({ values, onChange }) => {
@@ -857,34 +848,26 @@ export function AdminEventEditorView({
     </Alert>
   ) : null;
 
-  const fieldToStepIndex = useMemo(() => {
-    const map: Record<string, number> = {};
-    steps.forEach((step, i) => {
-      step.fields?.forEach((field) => { map[field] = i; });
-    });
-    return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps.length]);
-
-  const wizardShellCtx = useMemo(
-    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
-    [shellCtx, fieldToStepIndex, setCurrentStep],
-  );
+  // Replaces the hand-rolled fieldToStepIndex + goToStep pair. The hook owns
+  // the expand-then-scroll ordering a raw setState cannot: a collapsed panel
+  // must MOUNT before scrollIntoView and focus can reach the offending field.
+  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+    useSectionFormNav(sections, draft);
 
   const formContent = (
     <Stack gap="sm">
       {alertSection}
-      <FormShellContext.Provider value={wizardShellCtx}>
+      <FormShellContext.Provider value={shellCtx}>
         <FormErrorSummary />
-        <StepForm<EventDraft>
-          steps={steps}
+        <SectionForm<EventDraft>
+          sections={sections}
           values={draft}
           onChange={update}
-          onComplete={() => { saveMutation.mutate(); }}
-          formId="admin-event"
-          currentStep={currentStep}
-          onStepChange={setCurrentStep}
-          completeLabel={isEdit ? "Save Changes" : "Create Event"}
+          onSubmit={() => { saveMutation.mutate(); }}
+          schema={eventDraftSchema}
+          openIds={openIds}
+          onOpenChange={setOpenIds}
+          submitLabel={isEdit ? "Save Changes" : "Create Event"}
           isLoading={isLoading}
         />
       </FormShellContext.Provider>

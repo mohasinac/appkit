@@ -6,7 +6,8 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
-import { Badge, Button, Div, FilterChipGroup, Span, Text, useToast } from "../../../ui";
+import { Badge, Button, Div, FilterChipGroup, RecordDetailModal, Span, Text, useToast } from "../../../ui";
+import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -59,6 +60,7 @@ export interface SellerBidsViewProps {
 }
 
 export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsViewProps) {
+  const [detail, setDetail] = useState<BidRow | null>(null);
   const { showToast } = useToast();
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
@@ -225,6 +227,10 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                       emptyLabel=""
                       selectedIds={new Set(selection.selectedIds)}
                       onToggleSelect={selection.toggleSelect}
+                      // Without this the row could be selected and bulk-acted
+                      // on but never opened — a seller could cancel a bid they
+                      // had no way to read (Root Cause #56).
+                      onRowClick={(row) => setDetail(row)}
                     />
                   </Div>
                 )}
@@ -236,5 +242,18 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     },
   };
 
-  return <DataListingView config={config} />;
+  const detailBadge = detail ? bidStatusBadge(detail.status) : null;
+
+  return (
+    <>
+      <DataListingView config={config} />
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={detail?.productTitle || "Bid"}
+        badges={detailBadge ? [{ label: detailBadge.label }] : undefined}
+        fields={detail ? buildBidDetailFields(detail as never, "seller") : undefined}
+      />
+    </>
+  );
 }

@@ -192,15 +192,37 @@ export const DEFAULT_STORE_CATEGORY_DATA: Partial<StoreCategoryDocument> = {
 
 // 6. ───── listingTemplates ───────────────────────────────────────────────
 
-export type ListingTemplateType =
-  | "standard"
-  | "auction"
-  | "pre-order"
-  | "prize-draw"
-  | "bundle"
-  | "classified"
-  | "digital-code"
-  | "live";
+/**
+ * The listing kinds a seller can save a template for.
+ *
+ * A runtime array, with the type DERIVED from it — so the Zod enum in
+ * `listing-template-form.ts` reads this rather than restating it. That was the
+ * eleventh hand-written copy of the listing-type union in this codebase, and
+ * the tenth had already drifted (Root Cause #61).
+ *
+ * Two deliberate differences from `ListingType`:
+ *  - `bundle` is KEPT even though SB-UNI-D stopped it being a listingType. A
+ *    seeded template stores it (`store-extensions-seed-data.ts:202`), so
+ *    dropping it here would make that template fail validation and become
+ *    unsaveable — the same defect as the blog `slug` regex no stored row
+ *    satisfied.
+ *  - `art` and `stickers` are ADDED. They are real listing types a seller can
+ *    create, and their absence meant a template could never be saved for them.
+ */
+export const LISTING_TEMPLATE_TYPES = [
+  "standard",
+  "auction",
+  "pre-order",
+  "prize-draw",
+  "bundle",
+  "classified",
+  "digital-code",
+  "live",
+  "art",
+  "stickers",
+] as const;
+
+export type ListingTemplateType = (typeof LISTING_TEMPLATE_TYPES)[number];
 
 export interface ListingTemplateDocument extends BaseDocument {
   storeId: string;
@@ -308,6 +330,44 @@ export interface ReportDocument extends BaseDocument {
   resolution?: string;
   resolvedAt?: Date;
 }
+
+/*
+ * Runtime companions for the three report unions above.
+ *
+ * Keyed `Record<Union, true>` rather than written as arrays, because that is
+ * the only shape where BOTH mistakes are compile errors: a member added to the
+ * union and forgotten here, AND a value here that is not a real member. An
+ * array literal catches neither, which is how ten independent enumerations of
+ * `ListingType` came to disagree (Recurrent Root Cause #61).
+ */
+const REPORT_ENTITY_TYPE_MAP: Record<ReportEntityType, true> = {
+  product: true,
+  store: true,
+  review: true,
+  event: true,
+  user: true,
+  blog: true,
+  comment: true,
+};
+export const REPORT_ENTITY_TYPES = Object.keys(REPORT_ENTITY_TYPE_MAP) as [
+  ReportEntityType,
+  ...ReportEntityType[],
+];
+
+const REPORT_REASON_MAP: Record<ReportReason, true> = {
+  scam: true,
+  counterfeit: true,
+  prohibited: true,
+  inappropriate: true,
+  harassment: true,
+  spam: true,
+  "ip-violation": true,
+  other: true,
+};
+export const REPORT_REASONS = Object.keys(REPORT_REASON_MAP) as [
+  ReportReason,
+  ...ReportReason[],
+];
 
 export const REPORTS_COLLECTION = "reports" as const;
 export const REPORT_INDEXED_FIELDS = [

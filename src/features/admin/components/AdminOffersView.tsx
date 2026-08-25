@@ -36,16 +36,18 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  ConfirmDeleteModal,
   FilterChipGroup,
   ListingLayout,
   RecordDetailModal,
   RowActionMenu,
   useToast,
 } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_OFFER_STATUS_TABS } from "../constants/filter-tabs";
+import { OfferPhaseTimeline } from "../../seller/components/OfferPhaseTimeline";
+import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
+import { cancelOfferFormSchema } from "../../seller/schemas/offer-forms";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -58,6 +60,7 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { normalizeError } from "../../../errors/normalize";
 
 interface AdminOffersResponse {
   items?: JsonArray;
@@ -86,9 +89,39 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<OfferRow | null>(null);
 
+  /**
+   * Open on the SINGLE-ITEM response, not the row's cached list blob.
+   *
+   * Two reasons. The list payload has no `chain`, so a three-round negotiation
+   * would render as one orphan round; and a modal opened on a list snapshot
+   * shows whatever the last refetch happened to hold, which is the stale-editor
+   * shape of Root Cause #38.
+   *
+   * The row is shown immediately and enriched when the fetch lands, so the
+   * modal never blocks on the network.
+   */
+  const openDetail = async (row: OfferRow) => {
+    setDetailRow(row);
+    try {
+      const full = await apiClient.get<JsonObject>(ADMIN_ENDPOINTS.OFFER_BY_ID(row.id));
+      const detail = ((full as JsonObject)?.data ?? full) as JsonObject;
+      if (detail && typeof detail === "object") {
+        setDetailRow((prev) => (prev?.id === row.id ? { ...prev, detail } : prev));
+      }
+    } catch (err) {
+      // The row's own data is already on screen, so this degrades to "no
+      // chain" rather than to an empty modal. Say so instead of failing silently.
+      const normalized = normalizeError(err);
+      showToast(normalized.message || "Couldn't load the full offer history.", "error");
+    }
+  };
+
   const cancelMutation = useApiMutation({
-    mutationFn: async (offerId: string) => {
-      await apiClient.patch(ADMIN_ENDPOINTS.OFFER_BY_ID(offerId), { status: "expired" });
+    mutationFn: async ({ offerId, reason }: { offerId: string; reason: string }) => {
+      await apiClient.patch(ADMIN_ENDPOINTS.OFFER_BY_ID(offerId), {
+        status: "expired",
+        reason,
+      });
     },
     onSuccess: () => {
       showToast("Offer cancelled and cleared from the buyer's cart.", "success");
@@ -143,23 +176,20 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
       typeof response.total === "number" ? response.total : mappedRows.length,
     // A menu of pure mutations is not a detail affordance (Root Cause #56) —
     // cancelling an offer without first reading it is acting blind.
-    onRowClick: (row) => setDetailRow(row),
+    onRowClick: (row) => void openDetail(row),
     buildFilters: (state) =>
       state.status && state.status !== "All"
         ? sieveFilter("status", SIEVE_OP.EQ, state.status)
         : undefined,
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: ROW_ACTION_ID.CANCEL,
-        label: ACTIONS.ADMIN["cancel-offer"].label,
-        variant: "secondary",
-        onClick: () => selection.clearSelection(),
-      },
-    ],
+    // No bulk actions, deliberately. There was a destructively-labelled
+    // "Cancel offer" entry here whose onClick only called clearSelection() — a
+    // registry-backed control that read as working and did nothing. Cancel now
+    // requires a per-offer reason, and one shared reason across a mixed
+    // selection is worse audit data than no bulk action at all.
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
-          { label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label, onClick: () => setDetailRow(row) },
+          { label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label, onClick: () => void openDetail(row) },
           {
             label: ACTIONS.ADMIN["cancel-offer"].label,
             destructive: true,
@@ -247,22 +277,48 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
               }
             : undefined
         }
+        extra={
+          <OfferPhaseTimeline
+            status={toStringValue(d.status, "pending")}
+            timeline={d.timeline as never}
+            timelineTruncated={d.timelineTruncated as never}
+            superseded={Boolean(d.superseded)}
+            createdAt={toStringValue(d.createdAt, "")}
+            respondedAt={toStringValue(d.respondedAt, "")}
+            acceptedAt={toStringValue(d.acceptedAt, "")}
+            paidAt={toStringValue(d.paidAt, "")}
+            chain={d.chain as never}
+          />
+        }
       />
 
-      <ConfirmDeleteModal
+      <QuickFormDrawer
         isOpen={cancelOpen}
         onClose={() => {
           setCancelOpen(false);
           setSelectedRow(null);
         }}
-        onConfirm={() => {
-          if (selectedRow) cancelMutation.mutate(selectedRow.id);
-        }}
-        isDeleting={cancelMutation.isPending}
         title={ACTIONS.ADMIN["cancel-offer"].confirmation!.title}
-        message={ACTIONS.ADMIN["cancel-offer"].confirmation!.body}
-        confirmText={ACTIONS.ADMIN["cancel-offer"].confirmation!.confirmLabel}
-        variant="warning"
+        schema={cancelOfferFormSchema}
+        fields={[
+          {
+            name: "reason",
+            label: "Reason for cancelling",
+            type: "textarea",
+            required: true,
+            placeholder: "e.g. Listing withdrawn by the seller after a pricing error",
+            helperText: `${ACTIONS.ADMIN["cancel-offer"].confirmation!.body} The buyer sees this reason, and it is recorded in the audit log.`,
+          },
+        ]}
+        submitLabel={ACTIONS.ADMIN["cancel-offer"].confirmation!.confirmLabel}
+        isLoading={cancelMutation.isPending}
+        onSubmit={(values) => {
+          if (!selectedRow) return;
+          cancelMutation.mutate({
+            offerId: selectedRow.id,
+            reason: String(values.reason ?? ""),
+          });
+        }}
       />
     </>
   );

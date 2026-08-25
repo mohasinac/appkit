@@ -34,7 +34,7 @@ import readline from "node:readline";
 // Register an ESM resolver hook that retries with `.js` / `/index.js` when
 // appkit's bundler-target dist emits extension-less relative imports.
 const __dirname = dirname(fileURLToPath(import.meta.url));
-register("./seed-cli-loader.mjs", pathToFileURL(__dirname + "/"));
+register("./node-esm-loader.mjs", pathToFileURL(__dirname + "/"));
 
 // ---------------------------------------------------------------------------
 // CLI parsing — entry point detects bin name so the same script powers

@@ -65,6 +65,33 @@ export const homepageSectionFirestoreSchema = z.object({
   ...auditTimestampsShape,
 });
 
+/**
+ * The create contract for a homepage section, shared by BOTH routes that can
+ * create one — `POST /api/admin/sections` (what the editor calls) and
+ * `POST /api/homepage-sections` (reachable by URL only).
+ *
+ * It exists because those two had drifted into being one validated path and
+ * one raw `{...body}` spread, and because the validated one's hand-written
+ * type list had fallen four values behind `SectionType` — so an admin could
+ * configure a Featured Bundles / Prize Draws / Event Raffles / Collection
+ * Cards section in full and get a 400 on save.
+ *
+ * `type` comes from `homepageSectionTypeSchema`, which is derived from the
+ * union, so that gap cannot reopen.
+ */
+export const homepageSectionCreateSchema = z.object({
+  type: homepageSectionTypeSchema,
+  enabled: z.boolean().optional().default(true),
+  order: z.number().int().optional(),
+  // Deliberately open. Every section type carries a different config shape,
+  // and a closed schema here would silently STRIP the builder's output for any
+  // type it did not enumerate — the `productBaseSchema` failure, one domain
+  // over.
+  config: z.record(z.string(), jsonValueSchema),
+});
+
+export type HomepageSectionCreateValues = z.infer<typeof homepageSectionCreateSchema>;
+
 export const carouselBackgroundSchema = z.object({
   type: z.enum(["image", "video", "color", "gradient"]),
   url: z.string().optional(),

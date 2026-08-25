@@ -3,6 +3,8 @@
 import { sortBy } from "../../../constants/sort";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { Div, Grid, Stack, Text } from "../../../ui";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "../../../next/routing/route-map";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { OrderCard } from "../../orders/components/OrdersList";
@@ -20,10 +22,20 @@ interface OrdersListResponse {
 }
 
 export interface UserReturnsViewProps {
+  /**
+   * Optional override. When omitted the card still opens — see below.
+   */
   onOrderClick?: (order: Order) => void;
 }
 
 export function UserReturnsView({ onOrderClick }: UserReturnsViewProps) {
+  const router = useRouter();
+  // Client-side navigation, not a full reload — the row is a link in behaviour
+  // even though the card itself contains its own controls, so wrapping it in
+  // an <a> would nest interactive content inside a link.
+  const openOrder = (order: Order) =>
+    router.push(String(ROUTES.USER.ORDER_DETAIL(order.id)));
+
   const config: ListingViewConfig<OrdersListResponse, Order> = {
     portal: "user",
     title: "Returns & Refunds",
@@ -54,7 +66,19 @@ export function UserReturnsView({ onOrderClick }: UserReturnsViewProps) {
       return (
         <Grid gap="md" className="grid-cols-1">
           {rows.map((order) => (
-            <OrderCard key={order.id} order={order} onClick={onOrderClick} />
+            <OrderCard
+              key={order.id}
+              order={order}
+              // A return IS an order, and its detail page already exists — so
+              // the row opens whether or not a consumer supplies a handler.
+              //
+              // It was previously openable ONLY because the single consumer
+              // happened to pass `onOrderClick`; a second one that forgot
+              // would have produced a listing whose rows do nothing, and no
+              // audit could have seen it because the affordance lived in the
+              // caller. Defaulting here makes it structural.
+              onClick={onOrderClick ?? openOrder}
+            />
           ))}
         </Grid>
       );

@@ -11,6 +11,8 @@
  *
  * EXPORTS:
  *   counterOfferFormSchema, type CounterOfferFormValues
+ *   makeOfferFormSchema, type MakeOfferFormValues
+ *   cancelOfferFormSchema, type CancelOfferFormValues
  *
  * @tag domain:seller,offers
  * @tag layer:schema
@@ -61,3 +63,25 @@ export function makeOfferFormSchema(opts: {
 }
 
 export type MakeOfferFormValues = z.infer<ReturnType<typeof makeOfferFormSchema>>;
+
+/**
+ * Admin cancel-offer form.
+ *
+ * A bare confirm dialog was the wrong control here. Admin cancel is an
+ * escalation over the store's own authority, and it lands in three permanent
+ * places at once — the buyer's notification, the offer's own status history,
+ * and `adminAuditLog`. All three are useless without a reason, and the route
+ * used to accept an optional one and never read it.
+ *
+ * The 10-character floor mirrors the server schema exactly. Stating it in both
+ * places is deliberate: the client bound exists so the admin is told before
+ * submitting, not so the server can trust it.
+ */
+export const cancelOfferFormSchema = z.object({
+  reason: z
+    .string()
+    .min(10, "Give a reason of at least 10 characters — the buyer sees this.")
+    .max(300, "Keep the reason under 300 characters."),
+});
+
+export type CancelOfferFormValues = z.infer<typeof cancelOfferFormSchema>;

@@ -13,6 +13,8 @@ import {
   Toggle,
   useToast,
 } from "../../../ui";
+import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { navItemFormSchema } from "../schemas/nav-item-form";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -131,10 +133,19 @@ export function AdminNavEditorView({
       title={isEdit ? "Edit Nav Item" : "New Nav Item"}
     >
       <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          saveMutation.mutate();
-        }} spacing="md" padding="md">
+        schema={navItemFormSchema}
+        onSubmit={(e) => e.preventDefault()}
+        spacing="md"
+        padding="md"
+      >
+        {({ setFieldError, clearErrors }) => (
+        <>
+        {/*
+          The routes already validated a nav item; this form did not, so an
+          invalid href surfaced as a 400 banner after a round-trip instead of
+          an error on the field. Same schema both sides now.
+        */}
+        <FormErrorSummary />
         <Input
           label="Label"
           value={label}
@@ -190,11 +201,25 @@ export function AdminNavEditorView({
           <Button
             type="submit"
             isLoading={saveMutation.isPending}
-            disabled={!canSave || saveMutation.isPending}
+            disabled={saveMutation.isPending}
+            onClick={() => {
+              clearErrors();
+              const parsed = navItemFormSchema.safeParse({
+                label, href, icon: icon || undefined, order,
+                parentId: parentId || undefined, isVisible,
+              });
+              if (!parsed.success) {
+                applyZodIssues(parsed.error.issues, setFieldError);
+                return;
+              }
+              saveMutation.mutate();
+            }}
           >
             {isEdit ? "Save changes" : "Create item"}
           </Button>
         </FormActions>
+        </>
+        )}
       </Form>
     </SideDrawer>
   );

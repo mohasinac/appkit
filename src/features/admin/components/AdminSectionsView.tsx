@@ -8,6 +8,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 import { Button, Checkbox, Div, Form, FormActions, Input, Modal, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
+import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { homepageSectionFormSchema } from "../schemas/homepage-section-form";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -2547,11 +2549,19 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       </Stack>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Manage Homepage Section" size="lg">
+        {/*
+          The route already validates order/enabled/config; this form did not,
+          so a bad order or malformed config came back as a 400 banner instead
+          of an error on the field that caused it.
+        */}
         <Form
-          onSubmit={(event) => {
-            event.preventDefault();
-            saveSection.mutate();
-          }} spacing="md">
+          schema={homepageSectionFormSchema}
+          onSubmit={(event) => event.preventDefault()}
+          spacing="md"
+        >
+          {({ setFieldError, clearErrors }) => (
+          <>
+          <FormErrorSummary />
           <Select
             label="Mode"
             value={mode}
@@ -2628,10 +2638,27 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" disabled={saveSection.isPending}>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={saveSection.isPending}
+              onClick={() => {
+                clearErrors();
+                const parsed = homepageSectionFormSchema.safeParse({
+                  sectionType, order, enabled, configJson,
+                });
+                if (!parsed.success) {
+                  applyZodIssues(parsed.error.issues, setFieldError);
+                  return;
+                }
+                saveSection.mutate();
+              }}
+            >
               {saveSection.isPending ? "Saving..." : mode === "create" ? "Create section" : "Update section"}
             </Button>
           </FormActions>
+          </>
+          )}
         </Form>
       </Modal>
     </>

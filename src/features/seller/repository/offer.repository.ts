@@ -15,12 +15,28 @@ import type {
   FirebaseSieveResult,
 } from "../../../providers/db-firebase";
 import type { OfferDocument, OfferCreateInput, OfferUpdateInput } from "../schemas";
-import { OFFER_COLLECTION, OFFER_FIELDS, createOfferId } from "../schemas";
+import { OFFER_COLLECTION, OFFER_FIELDS, OFFER_TRACKED_FIELDS, createOfferId } from "../schemas";
+import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import type { FirestoreDocument } from "../../../schemas/types";
 import {
   encryptPiiFields,
   decryptPiiFields,
   OFFER_PII_FIELDS,
 } from "../../../security";
+
+/** Max rounds in one negotiation chain — matches the per-buyer offer limit. */
+const OFFER_CHAIN_MAX = 3;
+
+/**
+ * Who/why for a write that lands in an offer's `statusHistory`.
+ * Optional throughout so existing callers keep compiling and record `system`.
+ */
+export interface OfferWriteContext {
+  actor?: HistoryActor;
+  trigger?: string;
+  reason?: string;
+  note?: string;
+}
 
 class OfferRepository extends BaseRepository<OfferDocument> {
   constructor() {
@@ -98,6 +114,13 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       expiresAt,
       createdAt: now,
       updatedAt: now,
+      // The root of a chain stores its OWN id. Without this, round 1 is the
+      // only document with no `chainRootOfferId`, so `findChain(root.id)`
+      // would return rounds 2..N and silently omit the round the buyer
+      // actually started with. Set here rather than at the call site because
+      // the id is generated in this method.
+      chainRootOfferId: input.chainRootOfferId ?? id,
+      counterRound: input.counterRound ?? 1,
     };
 
     // Encrypt PII fields before persisting
@@ -225,14 +248,42 @@ class OfferRepository extends BaseRepository<OfferDocument> {
 
   // --- Mutations -----------------------------------------------------------
 
+  /**
+   * The single write choke point for offers, so `statusHistory` is appended
+   * in ONE place rather than at every call site — the same shape
+   * `OrderRepository.updateWithHistory` uses.
+   *
+   * `prior` is the already-fetched document when the caller has one. Every
+   * real caller does (`respondToOffer`, `acceptCounterOffer`, `withdrawOffer`,
+   * `counterOfferByBuyer`, `finalizeLockedLines`, the admin PATCH, both expiry
+   * sweeps), so threading it through means history costs **zero extra reads**.
+   */
   async updateStatus(
     offerId: string,
     patch: OfferUpdateInput,
+    ctx?: OfferWriteContext,
+    prior?: OfferDocument | null,
   ): Promise<OfferDocument> {
-    return this.update(offerId, {
-      ...patch,
-      updatedAt: new Date(),
-    });
+    const full: OfferUpdateInput = { ...patch, updatedAt: new Date() };
+    const current = prior !== undefined ? prior : await this.findById(offerId);
+    const withEntry = withHistory(
+      current as unknown as FirestoreDocument | undefined,
+      full as unknown as FirestoreDocument,
+      {
+        tracked: OFFER_TRACKED_FIELDS,
+        actor: ctx?.actor ?? { role: "system" },
+        trigger: ctx?.trigger ?? "offerRepository.updateStatus",
+        reason: ctx?.reason,
+        note: ctx?.note,
+        // buyerName/buyerEmail live on this document. `encryptPiiFields` is a
+        // flat top-level loop and never descends into arrays, so without this
+        // they would persist in PLAINTEXT inside statusHistory.
+        piiFields: OFFER_PII_FIELDS,
+        historyField: OFFER_FIELDS.STATUS_HISTORY,
+        truncatedField: OFFER_FIELDS.STATUS_HISTORY_TRUNCATED,
+      },
+    );
+    return this.update(offerId, (withEntry ?? full) as OfferUpdateInput);
   }
 
   async accept(
@@ -240,6 +291,8 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     lockedPrice: number,
     sellerNote?: string,
     checkoutDeadline?: Date,
+    ctx?: OfferWriteContext,
+    prior?: OfferDocument | null,
   ): Promise<OfferDocument> {
     // One write, not two. `checkoutDeadline` used to be missing from
     // OfferUpdateInput, which forced callers to follow every accept() with a
@@ -252,35 +305,47 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       acceptedAt: new Date(),
       respondedAt: new Date(),
       ...(checkoutDeadline ? { checkoutDeadline } : {}),
-    });
+    }, { actor: { role: "seller" }, trigger: "respondToOffer:accept", note: sellerNote, ...ctx }, prior);
   }
 
-  async decline(offerId: string, sellerNote?: string): Promise<OfferDocument> {
+  async decline(
+    offerId: string,
+    sellerNote?: string,
+    ctx?: OfferWriteContext,
+    prior?: OfferDocument | null,
+  ): Promise<OfferDocument> {
     return this.updateStatus(offerId, {
       status: "declined",
       sellerNote,
       respondedAt: new Date(),
-    });
+    }, { actor: { role: "seller" }, trigger: "respondToOffer:decline", note: sellerNote, ...ctx }, prior);
   }
 
   async counter(
     offerId: string,
     counterAmount: number,
     sellerNote?: string,
+    ctx?: OfferWriteContext,
+    prior?: OfferDocument | null,
   ): Promise<OfferDocument> {
     return this.updateStatus(offerId, {
       status: "countered",
       counterAmount,
       sellerNote,
       respondedAt: new Date(),
-    });
+    }, { actor: { role: "seller" }, trigger: "respondToOffer:counter", note: sellerNote, ...ctx }, prior);
   }
 
   async acceptCounter(
     offerId: string,
     checkoutDeadline?: Date,
+    ctx?: OfferWriteContext,
+    prior?: OfferDocument | null,
   ): Promise<OfferDocument> {
-    const offer = await this.findById(offerId);
+    // Reuse the caller's document when supplied — this method used to always
+    // re-read, so passing `prior` makes the feature land one read CHEAPER
+    // than before rather than one more expensive.
+    const offer = prior !== undefined && prior !== null ? prior : await this.findById(offerId);
     if (!offer || !offer.counterAmount)
       throw new Error("Offer or counter not found");
     return this.updateStatus(offerId, {
@@ -289,14 +354,35 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       acceptedAt: new Date(),
       respondedAt: new Date(),
       ...(checkoutDeadline ? { checkoutDeadline } : {}),
-    });
+    }, { actor: { role: "buyer" }, trigger: "acceptCounterOffer", ...ctx }, offer);
   }
 
-  async withdraw(offerId: string): Promise<OfferDocument> {
+  /**
+   * Two distinct events share this method:
+   *  - the buyer walks away        → status alone
+   *  - the buyer counters          → status + `supersededByOfferId`
+   *
+   * The second is what makes the chain walkable forward, and it is ONE write
+   * with ONE history entry. A `withdrawn` document carrying
+   * `supersededByOfferId` renders as *Superseded* (neutral) rather than
+   * *Withdrawn* (negative) — the negotiation continued, it did not end.
+   */
+  async withdraw(
+    offerId: string,
+    supersededByOfferId?: string,
+    ctx?: OfferWriteContext,
+    prior?: OfferDocument | null,
+  ): Promise<OfferDocument> {
     return this.updateStatus(offerId, {
       status: "withdrawn",
       respondedAt: new Date(),
-    });
+      ...(supersededByOfferId ? { supersededByOfferId } : {}),
+    }, {
+      actor: { role: "buyer" },
+      trigger: supersededByOfferId ? "counterOfferByBuyer:supersede" : "withdrawOffer",
+      ...(supersededByOfferId ? { reason: "Superseded by the buyer's counter" } : {}),
+      ...ctx,
+    }, prior);
   }
 
   /**
@@ -307,12 +393,41 @@ class OfferRepository extends BaseRepository<OfferDocument> {
    * client-side patch in UserOffersPanel, which meant a reload showed the offer
    * back at "accepted" and it could be added to the cart and ordered again.
    */
-  async markPaid(offerId: string, orderId: string): Promise<OfferDocument> {
+  async markPaid(
+    offerId: string,
+    orderId: string,
+    prior?: OfferDocument | null,
+  ): Promise<OfferDocument> {
     return this.updateStatus(offerId, {
       status: "paid",
       paidOrderId: orderId,
       paidAt: new Date(),
-    });
+    }, { actor: { role: "system" }, trigger: "finalizeLockedLines" }, prior);
+  }
+
+  /**
+   * Every round of one negotiation, oldest first.
+   *
+   * A single-field equality — served by Firestore's AUTOMATIC index, so this
+   * adds no composite index and none of the existing `offers` indexes is
+   * affected. The sort is done in memory because the result is at most 3 rows
+   * (the per-buyer offer limit), which is cheaper than the index a compound
+   * orderBy would demand.
+   *
+   * Offers written before `chainRootOfferId` existed return ZERO rows, not
+   * one — callers must fall back to `[offer]` and never read empty as
+   * "this offer is missing".
+   */
+  async findChain(chainRootOfferId: string): Promise<OfferDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(OFFER_FIELDS.CHAIN_ROOT_OFFER_ID, "==", chainRootOfferId)
+      .limit(OFFER_CHAIN_MAX)
+      .get();
+
+    return snapshot.docs
+      .map((doc) => this.mapDoc<OfferDocument>(doc))
+      .sort((a, b) => (a.counterRound ?? 1) - (b.counterRound ?? 1));
   }
 
   /**
@@ -346,14 +461,54 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     return snapshot.docs.map((doc) => this.mapDoc<OfferDocument>(doc));
   }
 
-  async expireMany(offerIds: string[]): Promise<void> {
+  /**
+   * Bulk-expire, taking the DOCUMENTS rather than their ids.
+   *
+   * The signature changed deliberately. `arrayUnion` would let a batch append
+   * without a read, but it **cannot enforce the FIFO cap** — so history would
+   * grow unbounded on exactly the path that touches the most documents at
+   * once. Folding entries in memory and writing whole arrays keeps the cap,
+   * and costs **zero extra reads**: `findExpiredActive`, `findExpiredAccepted`
+   * and the admin cancel route all already hold full `OfferDocument`s.
+   *
+   * Also carries the admin path: a reasoned cancel is an expiry with an actor
+   * and a reason, recorded in the offer's own history as well as in
+   * `adminAuditLog`.
+   */
+  async expireMany(
+    offers: OfferDocument[],
+    ctx?: OfferWriteContext & { cancelledByAdminUid?: string },
+  ): Promise<void> {
+    if (offers.length === 0) return;
     const batch = this.db.batch();
     const now = new Date();
-    for (const id of offerIds) {
-      batch.update(this.db.collection(this.collection).doc(id), {
-        [OFFER_FIELDS.STATUS]: "expired",
-        [OFFER_FIELDS.UPDATED_AT]: now,
-      });
+
+    for (const offer of offers) {
+      const patch: OfferUpdateInput = {
+        status: "expired",
+        updatedAt: now,
+        ...(ctx?.cancelledByAdminUid
+          ? { cancelledByAdminUid: ctx.cancelledByAdminUid, cancelReason: ctx.reason }
+          : {}),
+      };
+      const withEntry = withHistory(
+        offer as unknown as FirestoreDocument,
+        patch as unknown as FirestoreDocument,
+        {
+          tracked: OFFER_TRACKED_FIELDS,
+          actor: ctx?.actor ?? { role: "system" },
+          trigger: ctx?.trigger ?? "runOfferExpiry",
+          reason: ctx?.reason,
+          piiFields: OFFER_PII_FIELDS,
+          historyField: OFFER_FIELDS.STATUS_HISTORY,
+          truncatedField: OFFER_FIELDS.STATUS_HISTORY_TRUNCATED,
+          now,
+        },
+      );
+      batch.update(
+        this.db.collection(this.collection).doc(offer.id),
+        (withEntry ?? patch) as Record<string, unknown>,
+      );
     }
     await batch.commit();
   }

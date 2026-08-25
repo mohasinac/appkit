@@ -1600,6 +1600,12 @@ export { getScammerForDetail, getScammerProfilePageData as getScammerProfilePage
 
 // Adapters
 export { orderDocumentToOrder } from "./_internal/server/features/orders/adapters";
+// Offers had NO adapter at all — all three routes returned raw OfferDocuments
+// with live Date objects. `offerDocumentToOffer` gates buyer identity behind
+// an explicit flag so a route that forgets `maskOfferForSeller` under-shares
+// rather than leaking.
+export { offerDocumentToOffer, offerToChainRound } from "./_internal/server/features/offers/adapters";
+export type { Offer, OfferAdapterOptions, OfferChainRound, OfferTimelineEntry } from "./_internal/server/features/offers/adapters";
 
 // Listing-type capability registry — SB-UNI X1.
 export {

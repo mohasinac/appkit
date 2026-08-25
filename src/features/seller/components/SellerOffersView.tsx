@@ -5,6 +5,7 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
 import { FilterChipGroup, ListingLayout, RowActionMenu, RecordDetailModal } from "../../../ui";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
+import { OfferPhaseTimeline } from "./OfferPhaseTimeline";
 import { counterOfferFormSchema } from "../schemas/offer-forms";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -156,6 +157,19 @@ export function SellerOffersView({
             : []),
           ...(d.sellerNote ? [{ label: "Your note", value: toStringValue(d.sellerNote, "") }] : []),
         ]}
+        extra={
+          <OfferPhaseTimeline
+            status={toStringValue(d.status, "pending")}
+            timeline={d.timeline as never}
+            timelineTruncated={d.timelineTruncated as never}
+            superseded={Boolean(d.superseded)}
+            createdAt={toStringValue(d.createdAt, "")}
+            respondedAt={toStringValue(d.respondedAt, "")}
+            acceptedAt={toStringValue(d.acceptedAt, "")}
+            paidAt={toStringValue(d.paidAt, "")}
+            chain={d.chain as never}
+          />
+        }
       />
       <QuickFormDrawer
         isOpen={counterRow !== null}

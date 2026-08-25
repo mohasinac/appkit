@@ -1,10 +1,12 @@
 "use client";
 
-import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
-import React from "react";
+import { sortBy, type JsonArray, type JsonValue, type JsonObject } from "@mohasinac/appkit/client";
+import React, { useState } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, Div, FilterChipGroup, Span, Stack, Text, useToast } from "../../../ui";
+import { Badge, Div, FilterChipGroup, Span, Stack, Text, useToast,
+  RecordDetailModal,
+} from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { toRecordArray, toRelativeDate, toStringValue } from "../hooks/useAdminListingData";
@@ -32,6 +34,15 @@ interface AdminPaymentMethodsResponse {
 }
 
 interface PaymentMethodRow {
+  /**
+   * The raw document, so the detail modal can render it.
+   *
+   * The row's other fields are display COMPOSITES — `primary` already
+   * joins several values — so a modal built from them could only repeat
+   * the row. Same approach as AdminOffersView; the response already
+   * contains the document, so it costs nothing.
+   */
+  detail: JsonObject;
   id: string;
   primary: string;
   secondary: string;
@@ -71,6 +82,9 @@ const PM_COLUMNS: AdminTableColumn<PaymentMethodRow>[] = [
 
 function buildConfig(
   onAction: (id: string, action: string) => void,
+  // Threaded in rather than closed over: this factory sits OUTSIDE the
+  // component, so the component's state setter is not in scope here.
+  onOpen: (row: PaymentMethodRow) => void,
 ): ListingViewConfig<AdminPaymentMethodsResponse, PaymentMethodRow> {
   return {
     portal: "admin",
@@ -93,6 +107,9 @@ function buildConfig(
       { value: "type", label: "Type" },
     ],
     columns: PM_COLUMNS,
+    // Opening a row is what makes the destructive actions beside it
+    // safe to offer at all.
+    onRowClick: onOpen,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `pm-${index}`),
@@ -101,6 +118,7 @@ function buildConfig(
         status: toStringValue(item.banStatus, ""),
         updatedAt: toRelativeDate(item.bannedAt ?? item.updatedAt),
         _raw: item,
+        detail: item as JsonObject,
       })),
     getTotal: (response, rows) =>
       typeof response.total === "number" ? response.total : rows.length,
@@ -146,6 +164,7 @@ export interface AdminPaymentMethodsViewProps {
 }
 
 export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
+  const [detail, setDetail] = useState<PaymentMethodRow | null>(null);
   // Independent useUrlTable() against the same URL param the listing reads
   // via filterKeys (Root Cause #35 pattern).
   const chipTable = useUrlTable({ defaults: {} });
@@ -170,10 +189,33 @@ export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
     actionMutation.mutate({ id, action });
   };
 
-  const config = buildConfig(handleAction);
+  const config = buildConfig(handleAction, setDetail);
 
   return (
     <Stack gap="md">
+      {/*
+        A row that could be seen and never opened. Two of these listings offered
+        only DESTRUCTIVE row actions, which let an admin unsubscribe, ban or
+        revoke a record they had no way to read first (Root Cause #56).
+      */}
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={toStringValue(detail?.detail?.displayLabel, "Payment method")}
+        fields={(() => {
+          const d = (detail?.detail ?? {}) as Record<string, JsonValue>;
+          return detail ? [
+                { label: "Type", value: toStringValue(d.type, "—").toUpperCase() },
+                { label: "Label", value: toStringValue(d.displayLabel, "—") },
+                { label: "Owner", value: toStringValue(d.userId, "—") },
+                { label: "Ban status", value: toStringValue(d.banStatus, "Not banned") },
+                { label: "Ban reason", value: toStringValue(d.banReason, "—") },
+                { label: "Banned at", value: toRelativeDate(d.bannedAt) },
+                { label: "Method ID", value: detail?.id ?? "—" },
+              ] : undefined;
+        })()}
+      />
+
       <Div padding="inline" border="default" className="border-b">
         <FilterChipGroup
           label="Status"

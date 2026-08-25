@@ -12,10 +12,11 @@ import type { StatusChangeEntry } from "../../../_internal/shared/history/index"
 // ── Acquisition provenance ────────────────────────────────────────────────
 //
 // Six paths, not five. `OrderType` has only `"auction"`, which cannot tell a
-// won auction from a bought-out one — yet they have nothing in common: one
-// has a winning bid and N competitors, the other has zero bids BY DEFINITION
-// (buy-now is only valid while `!bidsHaveStarted`). So this keys on its own
-// discriminator.
+// won auction from a bought-out one — yet the two differ in what set the
+// price: one is the highest bid at close, the other is a fixed buyout price
+// that beat the standing bid. BOTH involve real bids (a buyout writes its own
+// `BidDocument`), so neither is distinguishable by bid count either. Hence a
+// discriminator of this union's own.
 //
 // Every variant records the price it DISPLACED (`listPrice`), because that is
 // what makes "you saved ₹800" provable months later, and it is exactly what
@@ -41,12 +42,39 @@ export interface OrderSourceAuctionWon {
   runnerUpAmount?: number;
 }
 
+/**
+ * A buyout is a REAL BID, not a bid-free purchase.
+ *
+ * An earlier draft of this type asserted "zero bids BY DEFINITION, because
+ * buy-now is only valid while `!bidsHaveStarted`". That gate no longer
+ * exists: `buyNowAuction` places an actual `BidDocument` (`isBuyout: true`)
+ * plus a 1h locked cart line and leaves the auction **live**, and Buy Now is
+ * offered whenever `buyNowPrice` still beats the standing bid. Recording
+ * `bidCount: 0` would bake a falsehood into an immutable audit record.
+ *
+ * `standingBidAtBuyout` is the highest NON-buyout bid the buyout beat — read
+ * from the bids rather than `product.currentBid`, because a pending buyout
+ * deliberately never writes to that mirror.
+ *
+ * An unpaid buyout lapses to **`cancelled`**, not `forfeited`, and the seller
+ * is deliberately not notified: nothing was ever sold. That makes its
+ * timeline materially different from a lapsed auction win.
+ */
 export interface OrderSourceAuctionBuyNow {
   path: "auction-buy-now";
   auctionId: string;
+  /** The buyout bid itself — a buyout IS a bid. */
+  bidId: string;
   buyNowPrice: number;
   listPrice: number;
+  /** Highest non-buyout bid at the moment of buyout. 0 when nobody had bid. */
+  standingBidAtBuyout: number;
+  /** Active non-buyout bids at buyout time. NOT always zero. */
+  bidCount: number;
   boughtAt: Date;
+  /** `min(now + AUCTION_BUYOUT_WINDOW_MS, auctionEndDate)`. */
+  checkoutDeadline: Date;
+  auctionEndDate?: Date;
 }
 
 export interface OrderSourceOfferAccepted {
@@ -56,7 +84,15 @@ export interface OrderSourceOfferAccepted {
   /** The asking price at the moment the offer was made. */
   listPriceAtOffer: number;
   counterAmount?: number;
-  /** How many counter rounds before agreement. 0 = accepted outright. */
+  /**
+   * How many counter rounds before agreement. 1 = accepted outright.
+   *
+   * Read straight off the accepted offer's `counterRound`, which W2 made a
+   * persisted field. Before that this number was **unknowable**: each counter
+   * created an unlinked document and `previousOfferId` lived only inside a
+   * `serverLogger.info` call, so a three-round negotiation left no trace of
+   * having been one.
+   */
   counterRounds: number;
   acceptedBy: string;
   acceptedAt: Date;

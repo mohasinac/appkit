@@ -293,6 +293,49 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     updatedAt: new Date("2026-08-10"),
   },
 
+  // --- Closed by BUY NOW: ended early, a real buyout bid won it ---
+  // Nothing in the seed demonstrated a buyout before W2, so the only fixture
+  // for `sourceContext.path === "auction-buy-now"` would have been a dangling
+  // FK. A buyout is a REAL bid (`isBuyout: true`), so `bidCount` counts the
+  // competitive ladder AND the buyout that ended it — 3 + 1 here.
+  {
+    id: "auction-beyblade-burst-spriggan-requiem-bought-out",
+    slug: "auction-beyblade-burst-spriggan-requiem-bought-out",
+    title: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
+    description:
+      "Spriggan Requiem, the dual-spin legend of Burst Super Z. Bidding had reached ₹3,100 when a buyer took the ₹4,999 Buy Now price and ended the auction early.",
+    categorySlugs: ["category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Burst Tops","Beyblade Burst","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 2499,
+    currentBid: 3100,
+    buyNowPrice: 4999,
+    currency: "INR",
+    auctionEndDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    bidCount: 4,
+    bidsHaveStarted: true,
+    leadingBidderId: "user-seto-kaiba",
+    isSold: true,
+    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-spriggan-requiem-1-20260810/900/900"),
+    images: [
+      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-spriggan-requiem-1-20260810/900/900"),
+      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-spriggan-requiem-2-20260810/900/900"),
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
+    tags: ["balance-type", "dual-spin"],
+    specifications: [
+      { name: "Spin Direction", value: "Dual (Left / Right)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "51.2", unit: "g" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-01"),
+    updatedAt: new Date("2026-08-20"),
+  },
+
   // --- Additional active auctions, varied end dates + bid activity ---
   {
     id: "auction-beyblade-burst-cho-z-achilles",

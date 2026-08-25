@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
-import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
+import { SectionDef, SectionForm, useSectionFormNav, annotate } from "../../shell";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -17,20 +17,46 @@ const __P = {
 // accountNumber field's helpText below), and the exact keep-existing
 // semantics live server-side; a client-side format requirement risks
 // blocking that legitimate blank-resave case.
+/**
+ * Section membership and row span live on the FIELD (W3).
+ *
+ * The `sections` array below still hand-writes this form's JSX, because its
+ * Payout Method panel is genuinely bespoke — a configured/not-configured
+ * badge, a "current UPI/bank" alert, and a UPI-vs-bank branch. What is NOT
+ * hand-written any more is which field belongs where and how wide it is:
+ * that is read off the schema, and `audit-form-field-roundtrip` (W4) can
+ * cross-check the two so they cannot drift apart.
+ *
+ * 🛑 `annotate()` must be the OUTERMOST call on each field. It keys a WeakMap
+ * by schema instance, and every zod wrapper returns a NEW instance — so
+ * `annotate(z.string(), …).optional()` silently loses the metadata and the
+ * field falls into the "advanced" fallback section. `audit-field-ui-meta`
+ * blocks that ordering.
+ */
 const payoutSettingsDraftSchema = z.object({
-  method: z.enum(["upi", "bank_transfer"]),
-  upiId: z.string(),
-  accountHolderName: z.string(),
-  accountNumber: z.string(),
-  ifscCode: z.string(),
-  bankName: z.string(),
-  accountType: z.enum(["savings", "current"]),
-  gstin: z.string(),
-  pan: z.string(),
-  businessType: z.string(),
-  autoPayout: z.boolean(),
-  minimumThreshold: z.string(),
-  emiEnabled: z.boolean(),
+  method: annotate(z.enum(["upi", "bank_transfer"]), {
+    section: "method", sectionLabel: "Payout Method", sectionRequired: true,
+    quick: true, order: 1, row: "pair",
+  }),
+  upiId: annotate(z.string(), { section: "method", quick: true, order: 2, row: "pair" }),
+  accountHolderName: annotate(z.string(), { section: "method", quick: true, order: 3, row: "full" }),
+  // Account number and IFSC read as one unit and each needs about half the
+  // width — the pairing this whole mechanism exists to make declarative
+  // instead of a bare `grid-cols-2` that is two columns wide at 320px.
+  accountNumber: annotate(z.string(), { section: "method", quick: true, order: 4, row: "pair" }),
+  ifscCode: annotate(z.string(), { section: "method", quick: true, order: 5, row: "pair" }),
+  bankName: annotate(z.string(), { section: "method", quick: true, order: 6, row: "pair" }),
+  accountType: annotate(z.enum(["savings", "current"]), { section: "method", quick: true, order: 7, row: "pair" }),
+
+  gstin: annotate(z.string(), { section: "tax", sectionLabel: "Tax Info", order: 1, row: "pair" }),
+  pan: annotate(z.string(), { section: "tax", order: 2, row: "pair" }),
+  businessType: annotate(z.string(), { section: "tax", order: 3, row: "pair" }),
+
+  autoPayout: annotate(z.boolean(), {
+    section: "preferences", sectionLabel: "Preferences", order: 1, row: "quarter",
+  }),
+  minimumThreshold: annotate(z.string(), { section: "preferences", order: 2, row: "pair" }),
+  emiEnabled: annotate(z.boolean(), { section: "preferences", order: 3, row: "quarter" }),
 }).superRefine((v, ctx) => {
   if (v.method === "upi") {
     if (!v.upiId.trim()) {

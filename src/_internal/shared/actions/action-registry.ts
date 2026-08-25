@@ -1990,7 +1990,9 @@ export const ACTIONS: ActionTree = {
       description:
         "Expire the offer, clear it from the buyer's cart, and notify them. Admin cannot accept or counter on a seller's behalf.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      // Admin only. The route is ROLES_ADMIN_ONLY, so listing "moderator" here
+      // showed a moderator an action that could only ever return 403.
+      permissions: ["admin"],
       confirmation: {
         title: "Cancel this offer?",
         body: "The offer will be expired and removed from the buyer's cart, and they'll be notified. This cannot be undone — the buyer would need to make a new offer.",

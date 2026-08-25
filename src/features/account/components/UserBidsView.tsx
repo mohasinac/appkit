@@ -3,7 +3,9 @@
 import { sortBy, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../constants/index";
-import { Div, Span, Stack, TextLink } from "../../../ui";
+import { useState } from "react";
+import { Div, Span, Stack, TextLink, RecordDetailModal } from "../../../ui";
+import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
 import { FieldSelect } from "../../../ui/forms";
 import { AuctionBidsTable } from "../../auctions/components/AuctionBidsTable";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -31,6 +33,12 @@ interface UserBidsResponse {
 }
 
 export function UserBidsView() {
+  // A bid could be seen in this list and never opened — no row click, no row
+  // action, no detail page. The "Browse auctions" link in the empty state is
+  // not an affordance: it is not row-scoped, and it only shows when there are
+  // no bids at all.
+  const [detail, setDetail] = useState<BidDocument | null>(null);
+
   const config: ListingViewConfig<UserBidsResponse, BidDocument> = {
     portal: "user",
     title: "My Bids",
@@ -68,6 +76,7 @@ export function UserBidsView() {
         <AuctionBidsTable
           bids={rows}
           portal="buyer"
+          onRowClick={(bid) => setDetail(bid)}
           totalPages={1}
           currentPage={1}
           onPageChange={() => {}}
@@ -84,5 +93,25 @@ export function UserBidsView() {
     },
   };
 
-  return <DataListingView config={config} />;
+  const badge = detail ? bidStatusBadge(detail.status) : null;
+
+  return (
+    <>
+      <DataListingView config={config} />
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={detail?.productTitle || "Bid"}
+        badges={badge ? [{ label: badge.label }] : undefined}
+        fields={detail ? buildBidDetailFields(detail, "buyer") : undefined}
+        footer={
+          detail ? (
+            <TextLink href={String(ROUTES.PUBLIC.AUCTION_DETAIL(detail.productId))}>
+              View auction →
+            </TextLink>
+          ) : undefined
+        }
+      />
+    </>
+  );
 }

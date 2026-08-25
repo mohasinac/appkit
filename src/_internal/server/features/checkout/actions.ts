@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
+import { buildOrderSourceContext } from "./source-context";
 import { roundRupees } from "../../../../utils/number.formatter";
 /**
  * Checkout server actions (appkit).
@@ -785,6 +786,11 @@ async function createOrderForGroup(
     ? await resolveDisplayedUpiId(firstItem.storeId, siteContactUpiVpa)
     : undefined;
 
+  // Both creation paths call the SAME builder — two hand-written copies is the
+  // create-vs-create axis of Root Cause #39, and these two functions have
+  // already drifted once before (add-on fees, Root Cause #65).
+  const sourceContext = await buildOrderSourceContext(firstItem, firstProduct, orderType);
+
   const order = await unitOfWork.orders.create({
     productId: firstItem.productId,
     productTitle: firstItem.productTitle,
@@ -799,6 +805,11 @@ async function createOrderForGroup(
     storeName: firstItem.storeName || undefined,
     items: orderItems,
     orderType,
+    // How the buyer earned the right to buy at this price. `orderType` cannot
+    // answer that — it has five values, and both a settled win and a buyout
+    // are "auction". Written ONCE here and never recomputed: the auction and
+    // offer documents it summarises are mutable and eventually archived.
+    sourceContext,
     offerId: firstItem.offerId ?? undefined,
     // Distinguishes a Buy Now purchase from a settled auction win. Both are
     // orderType "auction"; only this one gets the 24h admin-review window.
@@ -1851,6 +1862,11 @@ async function createRazorpayGroupOrder(
     ...groupRuleRzp.decorateOrderDoc(group[0].item, group[0].product!),
   };
 
+  // Both creation paths call the SAME builder — two hand-written copies is the
+  // create-vs-create axis of Root Cause #39, and these two functions have
+  // already drifted once before (add-on fees, Root Cause #65).
+  const sourceContext = await buildOrderSourceContext(firstItem, group[0].product!, orderType);
+
   const order = await unitOfWork.orders.create({
     productId: firstItem.productId,
     productTitle: firstItem.productTitle,
@@ -1865,6 +1881,11 @@ async function createRazorpayGroupOrder(
     storeName: firstItem.storeName || undefined,
     items: orderItems,
     orderType,
+    // How the buyer earned the right to buy at this price. `orderType` cannot
+    // answer that — it has five values, and both a settled win and a buyout
+    // are "auction". Written ONCE here and never recomputed: the auction and
+    // offer documents it summarises are mutable and eventually archived.
+    sourceContext,
     offerId: firstItem.offerId ?? undefined,
     // Distinguishes a Buy Now purchase from a settled auction win. Both are
     // orderType "auction"; only this one gets the 24h admin-review window.

@@ -164,6 +164,37 @@ const _rawBidsSeedData: Partial<BidDocument>[] = [
     currentBid: 1450,
     bidderIds: ["user-ananya-collector", "user-rohit-collector", "user-meera-bey"],
   }),
+
+  // auction-beyblade-burst-spriggan-requiem-bought-out — a BUYOUT ended it.
+  //
+  // Three competitive bids that lost, then the buyout that won. A buyout is a
+  // real BidDocument (`isBuyout: true`) — it is not a bid-free purchase, which
+  // is why the order's `sourceContext.bidCount` is 3 rather than 0: the buyout
+  // itself is excluded from the "against N bidders" figure, the three it beat
+  // are not. `standingBidAtBuyout` is read from these bids and NOT from
+  // `product.currentBid`, because a pending buyout never writes that mirror.
+  ...buildLadder({
+    productId: "auction-beyblade-burst-spriggan-requiem-bought-out",
+    productTitle: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
+    startingBid: 2499,
+    currentBid: 3100,
+    bidderIds: ["user-meera-bey", "user-ananya-collector", "user-rohit-collector"],
+    closed: true,
+  }).map((b) => ({ ...b, status: "lost" as const, isWinning: false })),
+  {
+    id: "bid-beyblade-burst-spriggan-requiem-seto-kaiba-20260820-buyout",
+    productId: "auction-beyblade-burst-spriggan-requiem-bought-out",
+    productTitle: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
+    userId: "user-seto-kaiba",
+    userName: "Mock User 2",
+    bidAmount: 4999,
+    status: "won",
+    isWinning: true,
+    isBuyout: true,
+    bidDate: daysAgo(4),
+    createdAt: daysAgo(4),
+    orderId: "order-1-20260820-buyout",
+  },
 ];
 
 export const bidsSeedData = _rawBidsSeedData.map(withBidDefaults) as BidDocument[];

@@ -111,6 +111,30 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     paymentReviewOutcome: doc.paymentReviewOutcome,
     paymentReviewNote: doc.paymentReviewNote,
     cancellationReason: doc.cancellationReason,
+    // ── W2: history + provenance ──────────────────────────────────────────
+    //
+    // `Order.timeline` has existed, been exported, and had ZERO writers since
+    // it was declared — `OrderStatusTimeline` synthesised its steps from four
+    // scalar dates instead, so a status change with no dedicated date field
+    // (payment reviewed, refund posted) was simply invisible.
+    //
+    // `statusHistory` is that field's real source. Dates are serialised to
+    // ISO here for the same reason every other date on this shape is: the
+    // client receives JSON, and a raw `Date` arrives as a string that no
+    // longer satisfies the type.
+    timeline: doc.statusHistory?.map((entry) => ({
+      at: entry.at instanceof Date ? entry.at.toISOString() : String(entry.at),
+      actorUid: entry.actorUid,
+      actorRole: entry.actorRole,
+      changes: entry.changes,
+      reason: entry.reason,
+      note: entry.note,
+      trigger: entry.trigger,
+    })),
+    /** Entries trimmed off the front — so the UI never implies "this is all of it". */
+    timelineTruncated: doc.statusHistoryTruncated,
+    /** How the buyer acquired the right to buy. Written once, at creation. */
+    sourceContext: doc.sourceContext,
     createdAt:
       doc.createdAt instanceof Date
         ? doc.createdAt.toISOString()

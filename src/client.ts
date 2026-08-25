@@ -296,6 +296,80 @@ export { useEntityDelete } from "./react/hooks/useEntityDelete";
 export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./react/hooks/useEntityDelete";
 
 // Client-safe constants, UI primitives, and views
+// Storefront-category form schema — isomorphic (the page parses it client-side,
+// the route parses the same one server-side).
+export {
+  storeCategoryFormSchema,
+  storeCategoryCreateSchema,
+  type StoreCategoryFormValues,
+} from "./features/store-extensions/schemas/store-category-form";
+
+// Payout-method + listing-template form schemas — isomorphic: the pages parse
+// them client-side and the routes parse the SAME ones server-side.
+export {
+  payoutMethodFormSchema,
+  payoutMethodCreateSchema,
+  payoutMethodUpdateSchema,
+  type PayoutMethodFormValues,
+} from "./features/store-extensions/schemas/payout-method-form";
+export {
+  groupedListingFormSchema,
+  groupedListingCreateSchema,
+  groupedListingUpdateSchema,
+  type GroupedListingFormValues,
+} from "./features/grouped/schemas/grouped-listing-form";
+export {
+  navItemFormSchema,
+  navItemCreateSchema,
+  navItemUpdateSchema,
+  type NavItemFormValues,
+} from "./features/admin/schemas/nav-item-form";
+export {
+  customRoleFormSchema,
+  customRoleCreateSchema,
+  customRoleUpdateSchema,
+  isKnownPermission,
+  type CustomRoleFormValues,
+} from "./features/store-extensions/schemas/custom-role-form";
+// Client-only: deliberately NOT added to `features/store-extensions/index.ts`,
+// which the schema registry's import chain reaches — a "use client" React tree
+// re-exported from there would be pulled into every API route (the W4 trap).
+export {
+  SCAMMER_STATUS_LABEL,
+  SCAMMER_STATUS_BADGE,
+  SCAMMER_STATUS_OPTIONS,
+  toScammerStatus,
+} from "./features/scams/constants/scammer-status-display";
+export {
+  ReviewDecisionModal,
+  type ReviewDecisionModalProps,
+} from "./features/store-extensions/components/ReviewDecisionModal";
+export {
+  moderationReviewFormSchema,
+  moderationReviewUpdateSchema,
+  MODERATION_REVIEWER_STATUSES,
+  type ModerationReviewFormValues,
+} from "./features/store-extensions/schemas/moderation-review-form";
+export {
+  reportReviewFormSchema,
+  reportReviewUpdateSchema,
+  REPORT_REVIEWER_STATUSES,
+  REPORT_TERMINAL_STATUSES,
+  type ReportReviewFormValues,
+} from "./features/store-extensions/schemas/report-review-form";
+export {
+  shippingConfigFormSchema,
+  shippingConfigCreateSchema,
+  shippingConfigUpdateSchema,
+  type ShippingConfigFormValues,
+} from "./features/store-extensions/schemas/shipping-config-form";
+export {
+  listingTemplateFormSchema,
+  listingTemplateCreateSchema,
+  listingTemplateUpdateSchema,
+  type ListingTemplateFormValues,
+} from "./features/store-extensions/schemas/listing-template-form";
+
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
 export { SORT_DIR, sortBy } from "./constants/sort";
 export { SIEVE_OP, sieveFilter, sieveAnd, sieveMultiEq } from "./utils/sieve-builder";
@@ -838,6 +912,7 @@ export type { SellerLiveViewProps } from "./features/seller/components/SellerLiv
 export {
   SCHEMAS,
   lookupApiSchema,
+  lookupFormSchema,
   lookupFirestoreSchema,
 } from "./schemas/index";
 export type {
@@ -923,6 +998,7 @@ export {
   AdminCategoryEditorView,
   AdminCouponEditorView,
   AdminFaqEditorView,
+  AdminFeatureEditorView,
   AdminOrderEditorView,
   AdminPayoutMarkPaidModal,
   AdminAuditLogView,

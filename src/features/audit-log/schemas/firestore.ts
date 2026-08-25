@@ -26,6 +26,13 @@ export const AdminAuditActionValues = {
   PAYOUT_MARK_PAID: "payout_mark_paid",
   STORE_STATUS_CHANGE: "store_status_change",
   USER_ROLE_CHANGE: "user_role_change",
+  /**
+   * Admin cancelled an offer. The store keeps sole authority to accept,
+   * counter and decline; cancelling is the ONE write an admin may make, and
+   * it is an escalation — reason required, and recorded both here and in the
+   * offer's own `statusHistory`.
+   */
+  OFFER_CANCEL: "offer_cancel",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

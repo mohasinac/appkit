@@ -1,16 +1,24 @@
 "use client";
 
-import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray, type JsonObject } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
+import {
+  ConfirmDeleteModal,
+  FilterChipGroup,
+  ListingLayout,
+  RecordDetailModal,
+  RowActionMenu,
+  useToast,
+} from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BID_STATUS_TABS } from "../constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
 import {
   toRecordArray,
   toRelativeDate,
@@ -32,6 +40,15 @@ interface BidRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  /**
+   * The raw bid, kept so the detail modal can render it.
+   *
+   * The row's other fields are display strings — `primary` is already a
+   * title-and-amount composite — so a modal built from them could only repeat
+   * the row. Carrying the document is the same thing `AdminOffersView` does,
+   * and it costs nothing: the response already contains it.
+   */
+  detail: JsonObject;
 }
 
 export type AdminBidsViewProps = ListingLayoutProps;
@@ -41,6 +58,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
   const { showToast } = useToast();
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<BidRow | null>(null);
+  const [detail, setDetail] = useState<BidRow | null>(null);
 
   const cancelMutation = useApiMutation({
     mutationFn: async (bidId: string) => {
@@ -91,6 +109,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
         updatedAt: toRelativeDate(
           item.bidDate ?? item.updatedAt ?? item.createdAt,
         ),
+        detail: item as JsonObject,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
@@ -109,6 +128,13 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
       return (
         <RowActionMenu
           actions={[
+            // A menu of pure MUTATIONS is not a detail affordance (Root Cause
+            // #56): it let an admin cancel a bid they had never been able to
+            // read. View comes first for that reason.
+            {
+              label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label,
+              onClick: () => setDetail(row),
+            },
             {
               label: ROW_ACTION_META[ROW_ACTION_ID.CANCEL].label,
               destructive: ROW_ACTION_META[ROW_ACTION_ID.CANCEL].destructive,
@@ -132,9 +158,22 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
     ),
   };
 
+  const detailBadge = detail ? bidStatusBadge(detail.status) : null;
+
   return (
     <>
       <DataListingView config={config} />
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={toStringValue(detail?.detail?.productTitle, "Bid")}
+        badges={detailBadge ? [{ label: detailBadge.label }] : undefined}
+        fields={
+          detail
+            ? buildBidDetailFields(detail.detail as never, "admin")
+            : undefined
+        }
+      />
       <ConfirmDeleteModal
         isOpen={cancelOpen}
         onClose={() => {

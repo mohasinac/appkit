@@ -66,6 +66,15 @@ export interface RecordDetailModalProps {
   fields?: RecordDetailField[];
   /** A nested collection on the record (cart items, wishlist entries, …). */
   items?: { heading: string; entries: RecordDetailItem[] };
+  /**
+   * Rich content rendered between `items` and `metadata` — a timeline rail, a
+   * chart, anything that is neither a scalar field nor a raw payload.
+   *
+   * `footer` cannot host this: that slot is an action-button row wrapped in
+   * `<Row justify="end">`, so a full-width block placed there is squeezed to
+   * the right and reads as a control.
+   */
+  extra?: ReactNode;
   /** Raw payload dump for records that carry an open-ended object. */
   metadata?: Record<string, JsonValue>;
   /** Action buttons rendered at the bottom (approve/reject/etc). */
@@ -80,6 +89,7 @@ export function RecordDetailModal({
   description,
   fields,
   items,
+  extra,
   metadata,
   footer,
 }: RecordDetailModalProps) {
@@ -162,6 +172,8 @@ export function RecordDetailModal({
             </Div>
           </Stack>
         )}
+
+        {extra}
 
         {hasMetadata && (
           <Div rounded="lg" padding="sm" surface="muted" border="default">

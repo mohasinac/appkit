@@ -433,9 +433,18 @@ export function GroupSettingsPanel({
         </Stack>
       )}
 
-      {/* Add child modal */}
-      {(groupChildSlugs?.length ?? 0) >= 4 ? (
-        <SideDrawer isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add child listing">
+      {/*
+        Add-child surface: a drawer once the group is large enough to be worth
+        scrolling, a modal below that.
+
+        The CONTENT is built once. It used to be written out verbatim in both
+        arms of this ternary — the same eleven props, twice — so every prop
+        added to AddChildContent had to be added in two places, and adding it
+        to only one would compile fine and silently differ between the two
+        presentations depending on how many children a group happened to have.
+      */}
+      {(() => {
+        const content = (
           <AddChildContent
             addTab={addTab}
             setAddTab={setAddTab}
@@ -449,24 +458,18 @@ export function GroupSettingsPanel({
             onAddLink={addLinkChild}
             loading={loading}
           />
-        </SideDrawer>
-      ) : (
-        <Modal open={showAddModal} onClose={() => setShowAddModal(false)} title="Add child listing" size="lg">
-          <AddChildContent
-            addTab={addTab}
-            setAddTab={setAddTab}
-            createForm={createForm}
-            setCreateForm={setCreateForm}
-            productSlug={productSlug}
-            storeProductsEndpoint={storeProductsEndpoint}
-            linkTargets={linkTargets}
-            setLinkTargets={setLinkTargets}
-            onAddCreate={addCreateChild}
-            onAddLink={addLinkChild}
-            loading={loading}
-          />
-        </Modal>
-      )}
+        );
+        const close = () => setShowAddModal(false);
+        return (groupChildSlugs?.length ?? 0) >= 4 ? (
+          <SideDrawer isOpen={showAddModal} onClose={close} title="Add child listing">
+            {content}
+          </SideDrawer>
+        ) : (
+          <Modal open={showAddModal} onClose={close} title="Add child listing" size="lg">
+            {content}
+          </Modal>
+        );
+      })()}
       {confirmAction && (
         <ConfirmDeleteModal
           isOpen

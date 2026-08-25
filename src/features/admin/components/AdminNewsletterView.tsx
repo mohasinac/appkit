@@ -2,12 +2,14 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation, useBulkEvent, RTDB_PATHS, type JsonArray } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit/client";
+import type { JsonValue, JsonObject } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast,
+  RecordDetailModal,
+} from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -28,6 +30,15 @@ interface AdminNewsletterResponse {
 }
 
 interface NewsletterRow {
+  /**
+   * The raw document, so the detail modal can render it.
+   *
+   * The row's other fields are display COMPOSITES — `primary` already
+   * joins several values — so a modal built from them could only repeat
+   * the row. Same approach as AdminOffersView; the response already
+   * contains the document, so it costs nothing.
+   */
+  detail: JsonObject;
   id: string;
   primary: string;
   secondary: string;
@@ -44,6 +55,7 @@ export function AdminNewsletterView({
   onBulkUnsubscribe,
   ...props
 }: AdminNewsletterViewProps) {
+  const [detail, setDetail] = useState<NewsletterRow | null>(null);
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [unsubscribeOpen, setUnsubscribeOpen] = useState(false);
@@ -131,6 +143,9 @@ export function AdminNewsletterView({
       { value: sortBy("subscribedAt", "DESC"), label: "Newest" },
       { value: "subscribedAt", label: "Oldest" },
     ],
+    // Opening a row is what makes the destructive actions beside it
+    // safe to offer at all.
+    onRowClick: (row) => setDetail(row),
     mapRows: (response) =>
       toRecordArray(response.subscribers).map((item, index) => ({
         id: toStringValue(item.id, `sub-${index}`),
@@ -140,6 +155,7 @@ export function AdminNewsletterView({
             .filter(Boolean)
             .join(" · ") || "—",
         status: toStringValue(item.status, "unknown"),
+        detail: item as JsonObject,
         updatedAt: toRelativeDate(
           (item as Record<string, JsonValue>).subscribedAt ??
             (item as Record<string, JsonValue>).createdAt,
@@ -193,6 +209,29 @@ export function AdminNewsletterView({
   return (
     <>
       <DataListingView config={config} />
+      {/*
+        A row that could be seen and never opened. Two of these listings offered
+        only DESTRUCTIVE row actions, which let an admin unsubscribe, ban or
+        revoke a record they had no way to read first (Root Cause #56).
+      */}
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={toStringValue(detail?.detail?.email, "Subscriber")}
+        fields={(() => {
+          const d = (detail?.detail ?? {}) as Record<string, JsonValue>;
+          return detail ? [
+                { label: "Email", value: toStringValue(d.email, "—") },
+                { label: "Status", value: toStringValue(d.status, "—") },
+                { label: "Source", value: toStringValue(d.source, "—") },
+                { label: "Subscribed", value: toRelativeDate(d.subscribedAt ?? d.createdAt) },
+                { label: "Unsubscribed", value: toRelativeDate(d.unsubscribedAt) },
+                { label: "IP address", value: d.ipAddress ? "Logged" : "Not logged" },
+                { label: "Subscriber ID", value: detail?.id ?? "—" },
+              ] : undefined;
+        })()}
+      />
+
       <ConfirmDeleteModal
         isOpen={unsubscribeOpen}
         onClose={() => {

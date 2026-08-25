@@ -13,18 +13,10 @@ import { apiClient } from "../../../http";
 import type { ApiClientError } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
-import { blogPostCategorySchema } from "../../blog/schemas";
-import { StepDef, StepForm } from "../../shell";
+import { blogDraftSchema } from "../../blog/schemas/blog-form";
+import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 
-// Form-input subset — `blogPostSchema` (blog schemas) requires `id` and uses
-// a `MediaField` shape for `coverImage`, neither of which this draft has
-// (coverImage here is a plain uploaded-URL string; id doesn't exist pre-save).
-const blogDraftSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  slug: z.string().min(1, "Slug is required").regex(/^blog-/, "Slug must start with 'blog-'"),
-  category: blogPostCategorySchema,
-  metaDescription: z.string().max(160).optional().or(z.literal("")),
-}).passthrough();
+
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -100,7 +92,12 @@ function toSlug(str: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-  return base.startsWith("blog-") ? base : `blog-${base}`;
+  // Deliberately NOT prefixed with `blog-`. That prefix belongs to the
+  // document ID (`generateBlogPostId` adds it); the `slug` FIELD is what
+  // `findBySlug` queries and what appears in the public URL, and all 20 stored
+  // posts hold it bare. Prefixing here made every newly created post's URL
+  // disagree with every existing one.
+  return base;
 }
 
 function toDateInputValue(val: Date | string | undefined): string {
@@ -125,17 +122,10 @@ export function AdminBlogEditorView({
   const isEdit = Boolean(postId);
   const [draft, setDraft] = React.useState<BlogDraft>(DEFAULT_DRAFT);
   const [slugManual, setSlugManual] = React.useState(false);
-  const [currentStep, setCurrentStep] = React.useState(0);
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
   const { showToast } = useToast();
   const { upload } = useMediaUpload();
-  const { shellCtx, setFieldError, validate } = useFormShellState(blogDraftSchema);
-
-  useEffect(() => {
-    validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, validate]);
 
   const update = React.useCallback((partial: Partial<BlogDraft>) => {
     setDraft((prev) => ({ ...prev, ...partial }));
@@ -198,18 +188,26 @@ export function AdminBlogEditorView({
         metaTitle: draft.metaTitle || undefined,
         metaDescription: draft.metaDescription || undefined,
       };
+      // T1 calculated field. It used to be computed ONLY on create, so editing
+      // a post's body left its "N min read" frozen at whatever the first draft
+      // happened to be — Root Cause #39, a CREATE transform with no UPDATE
+      // counterpart. Computed once here and sent on both paths.
+      const readTimeMinutes = Math.max(
+        1,
+        Math.round(
+          draft.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length / 200,
+        ),
+      );
       if (isEdit) {
-        return apiClient.patch(ADMIN_ENDPOINTS.BLOG_BY_ID(postId!), payload);
+        return apiClient.patch(ADMIN_ENDPOINTS.BLOG_BY_ID(postId!), {
+          ...payload,
+          readTimeMinutes,
+        });
       }
       return apiClient.post(ADMIN_ENDPOINTS.BLOG, {
         ...payload,
         authorId: "admin",
-        readTimeMinutes: Math.max(
-          1,
-          Math.round(
-            draft.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length / 200,
-          ),
-        ),
+        readTimeMinutes,
         views: 0,
       });
     },
@@ -243,12 +241,29 @@ export function AdminBlogEditorView({
 
   const isLoading = saveMutation.isPending || postQuery.isLoading;
 
-  const steps: StepDef<BlogDraft>[] = [
+  /**
+   * Sections, not steps. Every field is reachable at once and one submit at
+   * the bottom saves the lot — the old wizard blocked step 2 until step 1
+   * validated, so a typo in the title made the whole post uneditable.
+   *
+   * The `render` bodies are unchanged: this form's controls are genuinely
+   * bespoke (a slug that auto-follows the title until touched, a read-time
+   * estimate, a live preview). What is no longer hand-written is which field
+   * belongs where — that is read off the schema's annotations, and the ids
+   * below match them exactly so `<FormErrorSummary>` can jump to the right
+   * section.
+   *
+   * The per-step `validate` callbacks are gone: they duplicated rules the Zod
+   * schema already states, and only ran as a gate to the NEXT step, which no
+   * longer exists.
+   */
+  const sections: SectionDef<BlogDraft>[] = [
     {
+      id: "content",
       label: "Content",
+      required: true,
+      quick: true,
       fields: ["title", "slug", "excerpt", "content"],
-      validate: (values) =>
-        !values.title.trim() ? "Title is required" : null,
       render: ({ values, onChange }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Content</Heading>
@@ -292,7 +307,11 @@ export function AdminBlogEditorView({
       ),
     },
     {
+      id: "media",
       label: "Media",
+      // Media sections MUST stay mounted while collapsed: <Collapse> unmounts
+      // its children, which would abort an in-flight upload.
+      keepMounted: true,
       fields: ["coverImage", "youtubeId"],
       render: ({ values, onChange }) => (
         <Stack gap="5">
@@ -320,7 +339,9 @@ export function AdminBlogEditorView({
       ),
     },
     {
+      id: "seo",
       label: "SEO & Tags",
+      quick: true,
       fields: ["category", "tags", "metaTitle", "metaDescription"],
       render: ({ values, onChange }) => {
         const readTime = Math.max(
@@ -370,7 +391,9 @@ export function AdminBlogEditorView({
       },
     },
     {
+      id: "publish",
       label: "Publish",
+      quick: true,
       fields: ["status", "publishedAt", "authorName", "isFeatured"],
       render: ({ values, onChange }) => (
         <Stack gap="5">
@@ -432,32 +455,40 @@ export function AdminBlogEditorView({
     />
   );
 
-  const fieldToStepIndex = useMemo(() => {
-    const map: Record<string, number> = {};
-    steps.forEach((step, i) => {
-      step.fields?.forEach((field) => { map[field] = i; });
-    });
-    return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps.length]);
+  // Replaces the hand-rolled fieldToStepIndex + goToStep pair. The hook owns
+  // expand-then-scroll ordering, which a raw setState could not: a collapsed
+  // panel has to MOUNT before scrollIntoView/focus can reach the field. That
+  // jump was dead before W0 — `steps: []` was hardcoded in both context paths,
+  // so FormErrorSummary's label resolved to undefined for every form.
+  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+    useSectionFormNav(sections, draft);
 
-  const wizardShellCtx = useMemo(
-    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
-    [shellCtx, fieldToStepIndex, setCurrentStep],
-  );
+  const { shellCtx, setFieldError, validate } = useFormShellState(blogDraftSchema, {
+    sections: sectionMeta,
+    onGoToSection: goToSection,
+    fieldToSectionIndex,
+  });
+
+  // Live validation. Must sit AFTER useFormShellState — it used to run above
+  // the hook, which only compiled because the wizard declared the hook higher
+  // up the component.
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   const formContent = (
-    <FormShellContext.Provider value={wizardShellCtx}>
+    <FormShellContext.Provider value={shellCtx}>
       <FormErrorSummary />
-      <StepForm<BlogDraft>
-        steps={steps}
+      <SectionForm<BlogDraft>
+        sections={sections}
         values={draft}
         onChange={update}
-        onComplete={() => { saveMutation.mutate(); }}
-        formId="admin-blog"
-        currentStep={currentStep}
-        onStepChange={setCurrentStep}
-        completeLabel={isEdit ? "Save Changes" : "Create Post"}
+        onSubmit={() => { saveMutation.mutate(); }}
+        schema={blogDraftSchema}
+        openIds={openIds}
+        onOpenChange={setOpenIds}
+        submitLabel={isEdit ? "Save Changes" : "Create Post"}
         isLoading={isLoading}
       />
       {deleteModal}

@@ -1537,6 +1537,56 @@ export {
   DEFAULT_ANALYTICS_ALERT_DATA,
   // Schemas — store categories
   type StoreCategoryDocument,
+  storeCategoryFormSchema,
+  storeCategoryCreateSchema,
+  type StoreCategoryFormValues,
+  listingTemplateFormSchema,
+  listingTemplateCreateSchema,
+  listingTemplateUpdateSchema,
+  type ListingTemplateFormValues,
+  LISTING_TEMPLATE_TYPES,
+  payoutMethodFormSchema,
+  payoutMethodCreateSchema,
+  payoutMethodUpdateSchema,
+  type PayoutMethodFormValues,
+  shippingConfigFormSchema,
+  shippingConfigCreateSchema,
+  shippingConfigUpdateSchema,
+  type ShippingConfigFormValues,
+  customRoleFormSchema,
+  customRoleCreateSchema,
+  customRoleUpdateSchema,
+  isKnownPermission,
+  type CustomRoleFormValues,
+  moderationReviewFormSchema,
+  moderationReviewUpdateSchema,
+  MODERATION_REVIEWER_STATUSES,
+  type ModerationReviewFormValues,
+  reportReviewFormSchema,
+  reportReviewUpdateSchema,
+  REPORT_REVIEWER_STATUSES,
+  REPORT_TERMINAL_STATUSES,
+  type ReportReviewFormValues,
+  reportCreateSchema,
+  type ReportCreateValues,
+  itemRequestCreateSchema,
+  type ItemRequestCreateValues,
+  REPORT_ENTITY_TYPES,
+  REPORT_REASONS,
+  analyticsAlertCreateSchema,
+  type AnalyticsAlertCreateValues,
+  analyticsCardCreateSchema,
+  type AnalyticsCardCreateValues,
+  ANALYTICS_ALERT_OPERATORS,
+  ANALYTICS_CARD_TYPES,
+  storeGoogleConfigUpdateSchema,
+  type StoreGoogleConfigFormValues,
+  toSellerGoogleConfig,
+  type SellerGoogleConfig,
+  adminNotificationCreateSchema,
+  type AdminNotificationCreateValues,
+  ADMIN_NOTIFICATION_CATEGORIES,
+  ADMIN_NOTIFICATION_SEVERITIES,
   STORE_CATEGORIES_COLLECTION,
   STORE_CATEGORY_INDEXED_FIELDS,
   DEFAULT_STORE_CATEGORY_DATA,
@@ -6752,6 +6802,13 @@ export type { OrderSiblingPaymentsProps } from "./features/orders/index";
 export { OrderPaymentSummary } from "./features/orders/index";
 export type { OrderPaymentSummaryProps } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/index";
+// [CLIENT] StatusTimeline — the ONE rail both orders and offers render.
+// Each feature supplies only its phase vocabulary; the never-fabricate-a-
+// timestamp rule and the dot/connector rail live in one place.
+export { StatusTimeline, stepsFromEntries } from "./features/status-history/index";
+export type { StatusTimelineProps, TimelineEntry, TimelineStep } from "./features/status-history/index";
+export { OfferPhaseTimeline } from "./features/seller/components/OfferPhaseTimeline";
+export type { OfferPhaseTimelineProps, OfferChainRound } from "./features/seller/components/OfferPhaseTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/index";
 export type {
   OrderPaymentRecord,
@@ -9050,6 +9107,10 @@ export type { EnrichedWishlistItem } from "./features/wishlist/server";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // BANNER_HEIGHTS - Constant used across modules.
 export { BANNER_HEIGHTS } from "./features/homepage/schemas/index";
+export { homepageSectionTypeSchema } from "./features/homepage/schemas/index";
+export { homepageSectionCreateSchema } from "./features/homepage/schemas/index";
+export { resolveNextSectionOrder } from "./features/homepage/actions/homepage-section-actions";
+export type { HomepageSectionCreateValues } from "./features/homepage/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // CAROUSEL_SLIDES_COLLECTION - Constant used across modules.
 export { CAROUSEL_SLIDES_COLLECTION } from "./features/homepage/schemas/index";
@@ -9502,6 +9563,18 @@ export {
 } from "./_internal/shared/features/categories/bundle-schemas";
 
 export type { GroupedListingDocument, GroupTheme, GroupVisibility } from "./features/grouped/schemas/firestore";
+export {
+  navItemFormSchema,
+  navItemCreateSchema,
+  navItemUpdateSchema,
+  type NavItemFormValues,
+} from "./features/admin/schemas/nav-item-form";
+export {
+  groupedListingFormSchema,
+  groupedListingCreateSchema,
+  groupedListingUpdateSchema,
+  type GroupedListingFormValues,
+} from "./features/grouped/schemas/grouped-listing-form";
 
 // Scam registry â€" seed data
 export { scammersSeedData } from "./seed/index";
@@ -9853,6 +9926,7 @@ export type { SellerLiveViewProps } from "./features/seller/components/SellerLiv
 export {
   SCHEMAS,
   lookupApiSchema,
+  lookupFormSchema,
   lookupFirestoreSchema,
 } from "./schemas/index";
 export type {

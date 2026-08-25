@@ -54,6 +54,15 @@ export interface AuctionBidsTableProps {
   totalPages?: number;
   currentPage?: number;
   onPageChange?: (page: number) => void;
+  /**
+   * Open a bid. Supplied by the three dashboard bid listings, which were dead
+   * ends until W8 — a bid could be seen here and never opened, so its amount,
+   * auction, timing and outcome existed only as a table row.
+   *
+   * Optional because the PUBLIC bid history on an auction page also renders
+   * this table, and there a row is not something a visitor may open.
+   */
+  onRowClick?: (bid: BidDocument) => void;
 }
 
 function groupByAuction(bids: BidDocument[]): AuctionWithBids[] {
@@ -71,12 +80,29 @@ function groupByAuction(bids: BidDocument[]): AuctionWithBids[] {
   return Array.from(map.values());
 }
 
+/**
+ * Enter/Space activate a non-button element that behaves as one.
+ *
+ * A named helper rather than an inline closure: the inline form nested six
+ * braces deep inside the row's JSX, which is both unreadable and what
+ * `audit-code-quality`'s DEEP_NESTING rule exists to prevent.
+ */
+function activateOnKey(run: () => void) {
+  return (e: React.KeyboardEvent) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    run();
+  };
+}
+
 function AuctionRow({
   auction,
   portal,
+  onRowClick,
 }: {
   auction: AuctionWithBids;
   portal: "buyer" | "store" | "admin";
+  onRowClick?: (bid: BidDocument) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   // Most-recent bid first — matches the caller's own newest-first ordering
@@ -144,7 +170,13 @@ function AuctionRow({
               align="center"
               paddingX="x-md"
               paddingY="y-xs-tall"
-              className={`border-b border-[var(--appkit-color-border-subtle)] last:border-0 hover:bg-[var(--appkit-color-border-subtle)] transition-colors ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
+              // Keyboard-reachable only when it is actually interactive —
+              // a row with no handler must not be a tab stop.
+              role={onRowClick ? "button" : undefined}
+              tabIndex={onRowClick ? 0 : undefined}
+              onClick={onRowClick ? () => onRowClick(bid) : undefined}
+              onKeyDown={onRowClick ? activateOnKey(() => onRowClick(bid)) : undefined}
+              className={`border-b border-[var(--appkit-color-border-subtle)] last:border-0 hover:bg-[var(--appkit-color-border-subtle)] transition-colors ${onRowClick ? "cursor-pointer" : ""} ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
             >
               {portal !== "buyer" && (
                 <Text className="text-[var(--appkit-color-text)] truncate pr-[0.75rem]" size="sm">
@@ -194,6 +226,7 @@ export function AuctionBidsTable({
   totalPages,
   currentPage,
   onPageChange,
+  onRowClick,
 }: AuctionBidsTableProps) {
   const auctions = useMemo(() => groupByAuction(bids), [bids]);
 
@@ -208,7 +241,7 @@ export function AuctionBidsTable({
   return (
     <Stack gap="3">
       {auctions.map((auction) => (
-        <AuctionRow key={auction.productId} auction={auction} portal={portal} />
+        <AuctionRow key={auction.productId} auction={auction} portal={portal} onRowClick={onRowClick} />
       ))}
       {totalPages !== undefined && totalPages > 1 && currentPage !== undefined && onPageChange && (
         <Row justify="center">

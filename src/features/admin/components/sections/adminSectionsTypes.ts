@@ -1,36 +1,59 @@
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { ROUTES } from "../../../../next/routing/route-map";
+import type { SectionType as CanonicalSectionType } from "../../../homepage/schemas/firestore";
 const LABEL_VERIFIED_SELLERS = "Verified Sellers";
 
-export const SECTION_TYPE_OPTIONS = [
-  "welcome",
-  "stats",
-  "trust-indicators",
-  "categories",
-  "brands",
-  "products",
-  "pre-orders",
-  "auctions",
-  "banner",
-  "features",
-  "reviews",
-  "whatsapp-community",
-  "faq",
-  "blog-articles",
-  "newsletter",
-  "stores",
-  "events",
-  "social-feed",
-  "carousel",
-  "custom-cards",
-  "google-reviews",
-  "featured-bundles",
-  "prize-draws",
-  "event-raffles",
-  "collection-cards",
-] as const;
+/*
+ * The admin dropdown's section types.
+ *
+ * 🛑 This used to be a bare `as const` array with its OWN `SectionType` derived
+ * from it — a second declaration shadowing the real `SectionType` in
+ * `features/homepage/schemas/firestore.ts`, which is how the two came to
+ * disagree with the create route (Recurrent Root Cause #36's shape, one union
+ * over). The route's own copy was missing `featured-bundles`, `prize-draws`,
+ * `event-raffles` and `collection-cards`, so choosing any of those four in this
+ * dropdown produced a 400 on save — four of twenty-five section types could be
+ * configured in full and never created.
+ *
+ * It is now a `Record<CanonicalSectionType, true>`, so a type added to the
+ * union and not offered here is a COMPILE error, and an entry here that is not
+ * a real section type is too. Declaration order is preserved because the array
+ * is derived from this map's keys, and that order is the dropdown's order.
+ */
+const SECTION_TYPE_PRESENCE: Record<CanonicalSectionType, true> = {
+  welcome: true,
+  stats: true,
+  "trust-indicators": true,
+  categories: true,
+  brands: true,
+  products: true,
+  "pre-orders": true,
+  auctions: true,
+  banner: true,
+  features: true,
+  reviews: true,
+  "whatsapp-community": true,
+  faq: true,
+  "blog-articles": true,
+  newsletter: true,
+  stores: true,
+  events: true,
+  "social-feed": true,
+  carousel: true,
+  "custom-cards": true,
+  "google-reviews": true,
+  "featured-bundles": true,
+  "prize-draws": true,
+  "event-raffles": true,
+  "collection-cards": true,
+};
 
-export type SectionType = (typeof SECTION_TYPE_OPTIONS)[number];
+export const SECTION_TYPE_OPTIONS = Object.keys(
+  SECTION_TYPE_PRESENCE,
+) as CanonicalSectionType[];
+
+/** Re-exported, NOT re-declared. There is one `SectionType` in this codebase. */
+export type SectionType = CanonicalSectionType;
 
 export interface SectionPatchPayload {
   enabled: boolean;

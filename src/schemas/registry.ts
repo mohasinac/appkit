@@ -123,8 +123,60 @@ const api = {
 // `audit-form-schema` already enforces presence at FormShell sites; this
 // registry centralizes the schemas for cross-route reuse.
 // ---------------------------------------------------------------------------
+/**
+ * Entity id -> the form schema that validates it.
+ *
+ * Populated one entity per slice from W4 on. Deliberately NOT pre-declared
+ * with placeholder keys: an empty bucket is honest, and a bucket full of
+ * `undefined` reads as "migrated" to everyone who comes after — this codebase
+ * already documents eight abandoned migrations that started exactly that way.
+ *
+ * `roundtrip-diff` reads this. An entity registered here is checked, on every
+ * run, against real documents for silent field loss; an entity absent from it
+ * has no such protection, which is the whole reason to register early.
+ */
+import { blogDraftSchema } from "../features/blog/schemas/blog-form";
+import { eventDraftSchema } from "../features/events/schemas/event-form";
+import { productFeatureFormSchema } from "../features/products/schemas/product-features.validators";
+import { storeCategoryFormSchema } from "../features/store-extensions/schemas/store-category-form";
+import { listingTemplateFormSchema } from "../features/store-extensions/schemas/listing-template-form";
+import { payoutMethodFormSchema } from "../features/store-extensions/schemas/payout-method-form";
+import { shippingConfigFormSchema } from "../features/store-extensions/schemas/shipping-config-form";
+import { groupedListingFormSchema } from "../features/grouped/schemas/grouped-listing-form";
+import { sellerCouponFormSchema } from "../features/seller/schemas/coupon-form";
+import { customRoleFormSchema } from "../features/store-extensions/schemas/custom-role-form";
+import { moderationReviewFormSchema } from "../features/store-extensions/schemas/moderation-review-form";
+import { reportReviewFormSchema } from "../features/store-extensions/schemas/report-review-form";
+import { reportCreateSchema } from "../features/store-extensions/schemas/report-create-form";
+import { itemRequestCreateSchema } from "../features/store-extensions/schemas/item-request-create-form";
+import {
+  analyticsAlertCreateSchema,
+  analyticsCardCreateSchema,
+} from "../features/store-extensions/schemas/analytics-forms";
+import { storeGoogleConfigUpdateSchema } from "../features/store-extensions/schemas/google-config-form";
+import { adminNotificationCreateSchema } from "../features/store-extensions/schemas/admin-notification-form";
+import { homepageSectionCreateSchema } from "../features/homepage/schemas/index";
+
 const forms = {
-  // Populated in W5 as section builders + admin forms are tightened.
+  blog: blogDraftSchema,
+  event: eventDraftSchema,
+  productFeature: productFeatureFormSchema,
+  storeCategory: storeCategoryFormSchema,
+  listingTemplate: listingTemplateFormSchema,
+  payoutMethod: payoutMethodFormSchema,
+  shippingConfig: shippingConfigFormSchema,
+  groupedListing: groupedListingFormSchema,
+  sellerCoupon: sellerCouponFormSchema,
+  customRole: customRoleFormSchema,
+  moderationReview: moderationReviewFormSchema,
+  reportReview: reportReviewFormSchema,
+  reportCreate: reportCreateSchema,
+  itemRequest: itemRequestCreateSchema,
+  analyticsAlert: analyticsAlertCreateSchema,
+  analyticsCard: analyticsCardCreateSchema,
+  storeGoogleConfig: storeGoogleConfigUpdateSchema,
+  adminNotification: adminNotificationCreateSchema,
+  homepageSection: homepageSectionCreateSchema,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -211,6 +263,26 @@ export function lookupApiSchema<K extends RegisteredApiRouteKey>(
   const entry = SCHEMAS.api[key];
   if (!entry) {
     throw new Error(`[schemas] No API schema registered for route "${String(key)}".`);
+  }
+  return entry;
+}
+
+/**
+ * The form schema for an entity.
+ *
+ * Throws rather than returning undefined: a caller asking for a schema it
+ * expects to exist should fail loudly at the call site, not silently skip
+ * validation and strip every field on the next save.
+ */
+export function lookupFormSchema<K extends RegisteredFormId>(
+  entity: K,
+): SchemasShape["forms"][K] {
+  const entry = SCHEMAS.forms[entity];
+  if (!entry) {
+    throw new Error(
+      `[schemas] No form schema registered for "${String(entity)}". ` +
+        `Register it in SCHEMAS.forms as part of that entity's slice.`,
+    );
   }
   return entry;
 }

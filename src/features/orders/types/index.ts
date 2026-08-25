@@ -5,7 +5,8 @@ import {
 export { type PaymentGateway, PaymentGatewayValues };
 import type { ListingType } from "../../products/types/index";
 import type { OrderType } from "../utils/order-splitter";
-import type { AppliedOrderDiscount } from "../schemas/firestore";
+import type { AppliedOrderDiscount, OrderSourceContext } from "../schemas/firestore";
+import type { FieldChange } from "../../../_internal/shared/history/index";
 
 export type PaymentStatus =
   | "pending"
@@ -69,12 +70,35 @@ export interface OrderItem {
   bundleProductIds?: string[];
 }
 
-export interface OrderTimeline {
-  status: OrderStatus;
-  message?: string;
-  timestamp: string;
-  actor?: string;
+/**
+ * One entry on an order's timeline — the client-facing shape of
+ * `StatusChangeEntry`, with dates as ISO strings.
+ *
+ * The previous declaration here was `{status, message?, timestamp, actor?}`
+ * and had **zero writers** in the entire codebase since the day it was
+ * added, so nothing depended on it. `OrderStatusTimeline` synthesised its
+ * steps from four scalar date fields instead, which meant any transition
+ * without a dedicated date field — payment reviewed, proof re-upload asked
+ * for, a partial refund posted — could not appear at all.
+ */
+export interface OrderTimelineEntry {
+  at: string;
+  actorUid?: string;
+  actorRole: "buyer" | "seller" | "admin" | "system";
+  /**
+   * Delta only: `{ status: { from: "confirmed", to: "shipped" } }`.
+   * Reuses the primitive's `FieldChange` rather than restating the shape, so
+   * the client type cannot drift from what the repository writes.
+   */
+  changes: Record<string, FieldChange>;
+  reason?: string;
+  note?: string;
+  /** The function or job that caused it — what the timeline renders by. */
+  trigger: string;
 }
+
+/** @deprecated Use {@link OrderTimelineEntry}. Kept only to avoid breaking a stale import. */
+export type OrderTimeline = OrderTimelineEntry;
 
 export interface Order {
   id: string;
@@ -134,7 +158,12 @@ export interface Order {
   /** Carrier tracking page URL — rendered as an external link that opens in a new tab. No live-tracking API integration; this is just the passthrough URL a seller/admin entered. */
   trackingUrl?: string;
   notes?: string;
-  timeline?: OrderTimeline[];
+  /** Real recorded transitions — see {@link OrderTimelineEntry}. */
+  timeline?: OrderTimelineEntry[];
+  /** Entries trimmed off the front of the capped history, if any. */
+  timelineTruncated?: number;
+  /** How the buyer acquired the right to buy. Written once, at creation. */
+  sourceContext?: OrderSourceContext;
   physicalLocation?: { zone: string; shelf: string; bin: string };
   createdAt?: string;
   updatedAt?: string;

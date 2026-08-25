@@ -123,6 +123,7 @@ export const ADMIN_AUDIT_LOG_ACTION_TABS = [
   { id: "checkout_bypass", label: "Checkout bypass" },
   { id: "coupon_update", label: "Coupon update" },
   { id: "payout_mark_paid", label: "Payout paid" },
+  { id: "offer_cancel", label: "Offer cancelled" },
   { id: "store_status_change", label: "Store status" },
   { id: "user_role_change", label: "Role change" },
 ] as const satisfies readonly AdminFilterTab[];

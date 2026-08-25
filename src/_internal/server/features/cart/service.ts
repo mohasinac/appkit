@@ -3,7 +3,7 @@ import { CART_MAX_ITEMS } from "../../../shared/features/cart/config";
 import { CartFullError, CartQuantityError } from "../../../shared/features/cart/errors";
 import type { z } from "zod";
 import type { addToCartSchema } from "../../../shared/features/cart/schema";
-type AddToCartInput = z.infer<typeof addToCartSchema>;
+type AddToCartActionInput = z.infer<typeof addToCartSchema>;
 
 export async function assertCartCapacity(userId: string, addingQty: number): Promise<void> {
   const cart = await cartRepository.findByUserId(userId).catch(() => null);
@@ -21,7 +21,7 @@ export function assertValidQuantity(quantity: number): void {
 
 export async function upsertCartItem(
   userId: string,
-  item: AddToCartInput,
+  item: AddToCartActionInput,
 ): Promise<void> {
   assertValidQuantity(item.quantity);
   await assertCartCapacity(userId, 1);
@@ -30,7 +30,7 @@ export async function upsertCartItem(
 
 export async function mergeGuestItems(
   userId: string,
-  guestItems: AddToCartInput[],
+  guestItems: AddToCartActionInput[],
 ): Promise<void> {
   for (const item of guestItems) {
     await cartRepository.addItem(userId, item).catch(() => null);

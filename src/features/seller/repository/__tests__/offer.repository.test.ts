@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { makeMockDb, makeSnap, makeQuerySnap } from "../../../../../tests/helpers/mock-firestore";
+import type { OfferDocument } from "../../schemas";
 
 const { db, mockDocRef, mockCollection, mockQuery, mockBatch } = makeMockDb();
 
@@ -322,32 +323,81 @@ describe("OfferRepository.findExpiredActive", () => {
 // expireMany
 // ---------------------------------------------------------------------------
 describe("OfferRepository.expireMany", () => {
-  it("batch-updates each offer ID to status: expired", async () => {
-    await repo.expireMany(["offer-1", "offer-2", "offer-3"]);
+  /**
+   * `expireMany` takes DOCUMENTS, not ids — it folds a `statusHistory` entry
+   * in memory for each one. `arrayUnion` would allow ids alone but cannot
+   * enforce the FIFO cap, and this is the path that touches the most
+   * documents at once. Every real caller already holds the documents, so the
+   * signature change costs zero extra reads.
+   */
+  const offerFixture = (id: string, over: Partial<OfferDocument> = {}) =>
+    ({
+      id,
+      status: "pending",
+      buyerUid: "user-buyer",
+      productId: "product-x",
+      offerAmount: 100,
+      ...over,
+    }) as OfferDocument;
+
+  it("batch-updates each offer to status: expired", async () => {
+    await repo.expireMany([offerFixture("offer-1"), offerFixture("offer-2"), offerFixture("offer-3")]);
     expect(mockBatch.update).toHaveBeenCalledTimes(3);
     const calls = mockBatch.update.mock.calls as [unknown, Record<string, unknown>][];
     expect(calls.every((c) => c[1].status === "expired")).toBe(true);
   });
 
   it("sets updatedAt on every expired offer", async () => {
-    await repo.expireMany(["offer-1", "offer-2"]);
+    await repo.expireMany([offerFixture("offer-1"), offerFixture("offer-2")]);
     const calls = mockBatch.update.mock.calls as [unknown, Record<string, unknown>][];
     expect(calls.every((c) => c[1].updatedAt instanceof Date)).toBe(true);
   });
 
+  it("appends a statusHistory entry recording pending → expired", async () => {
+    await repo.expireMany([offerFixture("offer-1")]);
+    const [, patch] = mockBatch.update.mock.calls[0] as [unknown, Record<string, unknown>];
+    const history = patch.statusHistory as { changes: Record<string, unknown>; trigger: string }[];
+    expect(history).toHaveLength(1);
+    expect(history[0].changes.status).toEqual({ from: "pending", to: "expired" });
+  });
+
+  it("records the admin actor and reason on the cancel path", async () => {
+    await repo.expireMany([offerFixture("offer-1")], {
+      actor: { uid: "user-admin", role: "admin" },
+      trigger: "adminCancelOffer",
+      reason: "Buyer requested cancellation via support",
+      cancelledByAdminUid: "user-admin",
+    });
+    const [, patch] = mockBatch.update.mock.calls[0] as [unknown, Record<string, unknown>];
+    expect(patch.cancelledByAdminUid).toBe("user-admin");
+    const history = patch.statusHistory as { actorRole: string; trigger: string; reason?: string }[];
+    expect(history[0].actorRole).toBe("admin");
+    expect(history[0].trigger).toBe("adminCancelOffer");
+    expect(history[0].reason).toBe("Buyer requested cancellation via support");
+  });
+
+  it("never writes buyer PII into the history entry", async () => {
+    await repo.expireMany([
+      offerFixture("offer-1", { buyerName: "Ravi Kumar", buyerEmail: "ravi@example.com" } as Partial<OfferDocument>),
+    ]);
+    const [, patch] = mockBatch.update.mock.calls[0] as [unknown, Record<string, unknown>];
+    const serialised = JSON.stringify(patch.statusHistory);
+    expect(serialised).not.toContain("Ravi Kumar");
+    expect(serialised).not.toContain("ravi@example.com");
+  });
+
   it("commits the batch exactly once", async () => {
-    await repo.expireMany(["offer-a", "offer-b"]);
+    await repo.expireMany([offerFixture("offer-a"), offerFixture("offer-b")]);
     expect(mockBatch.commit).toHaveBeenCalledOnce();
   });
 
-  it("empty ID list → batch.commit called, no updates staged", async () => {
+  it("empty list → no updates staged, no commit needed", async () => {
     await repo.expireMany([]);
     expect(mockBatch.update).not.toHaveBeenCalled();
-    expect(mockBatch.commit).toHaveBeenCalledOnce();
   });
 
   it("single offer → one batch.update call", async () => {
-    await repo.expireMany(["offer-only"]);
+    await repo.expireMany([offerFixture("offer-only")]);
     expect(mockBatch.update).toHaveBeenCalledTimes(1);
   });
 });

@@ -35,6 +35,38 @@ export {
   humaniseFieldName,
 } from "./entity-form";
 
+// UI metadata on the schema (W3) — sections, rows and quick mode are DERIVED
+// from the field itself, so there is no second SectionDef[] to keep aligned.
+export type {
+  FieldUiMeta,
+  FieldRow,
+  FieldKind,
+  CalculatedTier,
+} from "./field-ui-meta";
+export {
+  ui,
+  annotate,
+  ROW_COLUMNS,
+  inferFieldUiMeta,
+  resolveFieldUiMeta,
+  unwrapSchema,
+  schemaEnumOptions,
+  schemaIsOptional,
+  objectShape,
+} from "./field-ui-meta";
+
+export type {
+  ResolvedField,
+  FieldRenderer,
+  BuildSectionsOptions,
+} from "./build-sections";
+export {
+  buildSectionsFromSchema,
+  resolveFields,
+  groupFieldsBySection,
+  packRows,
+} from "./build-sections";
+
 // Field-group primitives (W1-15)
 export type {
   TitleDescriptionGroupProps,

@@ -3,10 +3,12 @@
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import { SIEVE_OP, sieveFilter } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit/client";
+import type { JsonValue, JsonObject } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
+import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast,
+  RecordDetailModal,
+} from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
@@ -32,6 +34,15 @@ interface AdminSessionsResponse {
 }
 
 interface SessionRow {
+  /**
+   * The raw document, so the detail modal can render it.
+   *
+   * The row's other fields are display COMPOSITES — `primary` already
+   * joins several values — so a modal built from them could only repeat
+   * the row. Same approach as AdminOffersView; the response already
+   * contains the document, so it costs nothing.
+   */
+  detail: JsonObject;
   id: string;
   primary: string;
   secondary: string;
@@ -42,6 +53,7 @@ interface SessionRow {
 export type AdminSessionsViewProps = ListingLayoutProps;
 
 export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps) {
+  const [detail, setDetail] = useState<SessionRow | null>(null);
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [revokeTarget, setRevokeTarget] = useState<SessionRow | null>(null);
@@ -82,6 +94,9 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       { value: "lastActivity", label: "Least recent" },
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
     ],
+    // Opening a row is what makes the destructive actions beside it
+    // safe to offer at all.
+    onRowClick: (row) => setDetail(row),
     mapRows: (response) =>
       toRecordArray(response.sessions).map((item, index) => {
         const deviceInfo = (item.deviceInfo ?? {}) as Record<string, JsonValue>;
@@ -93,6 +108,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
         const ipMasked = maskIp(toStringValue(deviceInfo.ip, ""));
         return {
           id: toStringValue(item.id, `session-${index}`),
+          detail: item as JsonObject,
           primary: userLabel,
           secondary: [
             toStringValue(deviceInfo.browser, "Unknown browser"),
@@ -144,6 +160,28 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
   return (
     <>
       <DataListingView config={config} />
+      {/*
+        A row that could be seen and never opened. Two of these listings offered
+        only DESTRUCTIVE row actions, which let an admin unsubscribe, ban or
+        revoke a record they had no way to read first (Root Cause #56).
+      */}
+      <RecordDetailModal
+        isOpen={detail !== null}
+        onClose={() => setDetail(null)}
+        title={toStringValue(detail?.detail?.userId, "Session")}
+        fields={(() => {
+          const d = (detail?.detail ?? {}) as Record<string, JsonValue>;
+          return detail ? [
+                { label: "User", value: toStringValue(d.userId, "—") },
+                { label: "Active", value: d.isActive ? "Yes" : "No" },
+                { label: "Last activity", value: toRelativeDate(d.lastActivity) },
+                { label: "Expires", value: toRelativeDate(d.expiresAt) },
+                { label: "Started", value: toRelativeDate(d.createdAt) },
+                { label: "Session ID", value: detail?.id ?? "—" },
+              ] : undefined;
+        })()}
+      />
+
       <ConfirmDeleteModal
         isOpen={Boolean(revokeTarget)}
         onClose={() => setRevokeTarget(null)}

@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { serverLogger } from "../../../monitoring";
+import { sortBy } from "../../../constants/sort";
+import { HOMEPAGE_SECTION_FIELDS } from "../../../constants/field-names";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
+import { homepageSectionTypeSchema } from "../schemas";
 import type {
   HomepageSectionDocument,
   HomepageSectionCreateInput,
@@ -13,12 +16,42 @@ import type {
 
 // --- Schemas --------------------------------------------------------------
 
+/*
+ * 🛑 `type` was `z.string().min(1)` — ANY non-empty string.
+ *
+ * This is the third of three create paths for `homepageSections`
+ * (`POST /api/admin/sections`, `POST /api/homepage-sections`, and this server
+ * action via `createHomepageSectionAction`), and it was the loosest: a caller
+ * could store a section whose `type` matches no renderer, which the homepage
+ * then skips in silence — a row that exists, occupies an order slot, and draws
+ * nothing.
+ *
+ * All three now agree on `homepageSectionTypeSchema`, which is derived from
+ * the `SectionType` union.
+ */
 export const createSectionSchema = z.object({
-  type: z.string().min(1),
+  type: homepageSectionTypeSchema,
   enabled: z.boolean().default(true),
   order: z.number().int().default(0),
   config: z.object({}).passthrough().optional(),
 });
+
+/**
+ * The next free `order` value.
+ *
+ * `HomepageSectionCreateInput.order` is REQUIRED, and both API create routes
+ * need the same answer for "the caller did not choose one". Two copies of this
+ * query is how they would come to disagree about where a new section lands.
+ */
+export async function resolveNextSectionOrder(): Promise<number> {
+  const latest = await homepageSectionsRepository.list({
+    sorts: sortBy(HOMEPAGE_SECTION_FIELDS.ORDER),
+    page: "1",
+    pageSize: "1",
+  });
+  const top = latest.items[0]?.order;
+  return typeof top === "number" ? top + 1 : 1;
+}
 
 export const updateSectionSchema = z.object({
   order: z.number().int().optional(),

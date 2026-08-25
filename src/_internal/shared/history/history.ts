@@ -104,6 +104,46 @@ export function diffTrackedFields(
   return changes;
 }
 
+/**
+ * Remove PII-named keys from a `changes` map, at any depth.
+ *
+ * Two passes are needed because PII can arrive two ways: as a tracked field
+ * that happens to be PII (`buyerEmail` in `changes`), or nested inside a
+ * value a caller contributed via `extraChanges` (a refund's `reason`, an
+ * offer note object). `encryptPiiFields` catches neither — it only ever
+ * looks at top-level string properties of the document itself.
+ *
+ * Scrubbed rather than redacted-in-place: an entry that silently omits a
+ * field is honest, whereas one containing `"[redacted]"` invites a reader to
+ * assume the real value is recoverable somewhere.
+ */
+function scrubPii(
+  changes: Record<string, FieldChange>,
+  piiFields: readonly string[] | undefined,
+): Record<string, FieldChange> {
+  if (!piiFields?.length) return changes;
+  const pii = new Set(piiFields);
+
+  const stripNested = (v: FirestoreValue): FirestoreValue => {
+    if (v == null || typeof v !== "object") return v;
+    if (v instanceof Date) return v;
+    if (Array.isArray(v)) return v.map(stripNested);
+    const out: Record<string, FirestoreValue> = {};
+    for (const [k, val] of Object.entries(v as Record<string, FirestoreValue>)) {
+      if (pii.has(k)) continue;
+      out[k] = stripNested(val);
+    }
+    return out;
+  };
+
+  const result: Record<string, FieldChange> = {};
+  for (const [field, change] of Object.entries(changes)) {
+    if (pii.has(field)) continue; // the tracked field itself is PII
+    result[field] = { from: stripNested(change.from), to: stripNested(change.to) };
+  }
+  return result;
+}
+
 export interface BuildHistoryEntryInput {
   actor: HistoryActor;
   trigger: string;
@@ -173,13 +213,38 @@ export function withHistory<TPatch extends FirestoreDocument>(
      * a reader actually wants on the timeline.
      */
     extraChanges?: Record<string, FieldChange>;
+    /**
+     * This entity's PII field names — pass the same list the repository hands
+     * to `encryptPiiFields` (`ORDER_PII_FIELDS`, `OFFER_PII_FIELDS`, …).
+     *
+     * 🛑 Not optional in spirit. `encryptPiiFields` is a FLAT top-level loop:
+     * it reads `doc[field]`, skips anything that is not a string, and never
+     * descends into arrays or nested objects. `statusHistory` is an array of
+     * objects, so a PII value that reaches `changes` is written to Firestore
+     * **in plaintext** and `mapDoc`'s decrypt never touches it on the way
+     * back out — a leak with no error and no visible symptom.
+     *
+     * Scrubbing here rather than at each call site is deliberate: a
+     * convention that says "don't put PII in history" is one forgetful
+     * adopter away from that leak, and 9 more entities adopt this primitive.
+     *
+     * SCOPE: this scrubs `changes` structurally, at any depth — a key whose
+     * NAME is PII is dropped. It cannot scrub `note`, which is free text the
+     * user themselves authored (a seller's counter-offer note). The rule
+     * there is a call-site one: pass the author's own text, never an identity
+     * field lifted off the document.
+     */
+    piiFields?: readonly string[];
     historyField?: string;
     truncatedField?: string;
     now?: Date;
     cap?: number;
   },
 ): (TPatch & FirestoreDocument) | null {
-  const changes = { ...diffTrackedFields(current, patch, opts.tracked), ...opts.extraChanges };
+  const changes = scrubPii(
+    { ...diffTrackedFields(current, patch, opts.tracked), ...opts.extraChanges },
+    opts.piiFields,
+  );
   if (Object.keys(changes).length === 0) return null;
 
   const historyField = opts.historyField ?? "statusHistory";

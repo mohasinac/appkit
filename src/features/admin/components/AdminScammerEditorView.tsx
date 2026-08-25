@@ -6,6 +6,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button, Code, Div, FormActions, HorizontalRule, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import {
+  ScammerStatusValues,
+  type ScammerStatus,
+} from "../../scams/schemas/firestore";
+import {
+  SCAMMER_STATUS_BADGE,
+  SCAMMER_STATUS_LABEL,
+  SCAMMER_STATUS_OPTIONS,
+} from "../../scams/constants/scammer-status-display";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -23,25 +32,12 @@ export interface AdminScammerEditorViewProps {
   description?: string;
   phones?: string[];
   upiIds?: string[];
-  currentStatus?: string;
+  currentStatus?: ScammerStatus;
   verificationNote?: string;
   reportedBy?: string;
   reportedByAnon?: boolean;
 }
 
-const STATUS_OPTIONS = [
-  { label: "Pending review", value: "pending_review" },
-  { label: "Verified", value: "verified" },
-  { label: "Rejected", value: "rejected" },
-  { label: "Removed", value: "removed" },
-];
-
-const STATUS_COLOR: Record<string, string> = {
-  pending_review: "bg-warning-surface text-warning",
-  verified: "bg-success-surface text-success",
-  rejected: "bg-error-surface text-error",
-  removed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
-};
 
 export function AdminScammerEditorView({
   open,
@@ -113,9 +109,9 @@ export function AdminScammerEditorView({
           <Span
             size="xs"
             weight="medium"
-            className={`inline-flex ${ STATUS_COLOR[currentStatus ?? "pending_review"] ?? STATUS_COLOR.pending_review }`} rounded="full" padding="pill-sm-tall"
+            className={`inline-flex ${SCAMMER_STATUS_BADGE[currentStatus ?? ScammerStatusValues.PENDING_REVIEW]}`} rounded="full" padding="pill-sm-tall"
           >
-            {(currentStatus ?? "pending_review").replace(/_/g, " ")}
+            {SCAMMER_STATUS_LABEL[currentStatus ?? ScammerStatusValues.PENDING_REVIEW]}
           </Span>
           {scamType && (
             <Span size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">
@@ -201,7 +197,7 @@ export function AdminScammerEditorView({
         {/* Status change */}
         <Select
           label="Status"
-          options={STATUS_OPTIONS}
+          options={SCAMMER_STATUS_OPTIONS}
           value={status}
           onValueChange={setStatus}
         />

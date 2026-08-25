@@ -2,6 +2,30 @@
  * WHY: Seeds purchase orders representing completed transactions across Beyblade marketplace buyers and sellers.
  * WHAT: Exports 50 orders across 3 buyer/store combos. All statuses distributed. Order IDs: order-{itemCount}-{YYYYMMDD}-{rand6}.
  *
+ * ## One fixture per acquisition path
+ *
+ * The six `acquisitionOrders` below exist so every branch of the
+ * `OrderSourceContext` union has real data behind it. `orderType` has five
+ * values and cannot separate a settled auction win from a buyout — both are
+ * "auction" — which is exactly why `sourceContext` keys on its own
+ * discriminator.
+ *
+ * Every FK in a `sourceContext` points at a real seeded document: the winning
+ * bid, the buyout bid, the accepted offer. A provenance record pointing at
+ * nothing is worse than none, because it reads as evidence (Root Cause #26).
+ *
+ * ## `statusHistory` is a DELTA log, never a snapshot
+ *
+ * Each entry records only the tracked fields that changed. Money is
+ * deliberately absent: the final coupon and add-on state already lives on the
+ * order document, and replaying pricing churn buries the handful of
+ * transitions anyone actually reads. Refunds ARE here — a partial refund
+ * changes no tracked field, so it is contributed explicitly.
+ *
+ * `actorUid` is the only identity an entry may carry. Never a name or an
+ * email: `encryptPiiFields` never descends into arrays, so PII inside
+ * `statusHistory` would be stored in plaintext.
+ *
  * EXPORTS:
  *   ordersSeedData — Array of 50 order documents with full transactional metadata
  *
@@ -14,6 +38,7 @@
  */
 
 import type { OrderDocument } from "../features/orders/schemas/firestore";
+import type { StatusChangeEntry } from "../_internal/shared/history/index";
 import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
@@ -406,8 +431,333 @@ function withOrderImages(order: Partial<OrderDocument>): Partial<OrderDocument> 
   };
 }
 
+/**
+ * One history entry, in the same delta shape `withHistory()` writes at runtime,
+ * so a seeded timeline and a real one render identically.
+ */
+function entry(
+  at: Date,
+  actorRole: StatusChangeEntry["actorRole"],
+  trigger: string,
+  changes: StatusChangeEntry["changes"],
+  extra: { actorUid?: string; note?: string; reason?: string } = {},
+): StatusChangeEntry {
+  return { at, actorRole, trigger, changes, ...extra };
+}
+
+const BUYER_YUGI = "user-yugi-muto";
+const BUYER_KAIBA = "user-seto-kaiba";
+const BUYER_ADMIN = "user-admin-letitrip";
+const ARENA = "store-beyblade-arena";
+
+/**
+ * Six orders, one per `OrderSourceContext` path.
+ *
+ * The two auction fixtures are the point of the set: they are the pair
+ * `orderType` alone cannot tell apart.
+ */
+const acquisitionOrders: Partial<OrderDocument>[] = [
+  // ── standard ──────────────────────────────────────────────────────────
+  {
+    id: "order-1-20260818-stdctx",
+    productId: "product-beyblade-burst-valkyrie",
+    productTitle: "Beyblade Burst B-01 Valkyrie",
+    userId: BUYER_YUGI,
+    userName: "Mock User 3",
+    userEmail: "rehan.sheikh@gmail.com",
+    storeId: ARENA,
+    quantity: 1,
+    unitPrice: 999,
+    totalPrice: 999,
+    currency: "INR",
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "cash",
+    orderType: "standard",
+    shippingAddress: "addr-yugi-home",
+    trackingNumber: "LIR-TRK-88213004",
+    shippingCarrier: "Delhivery",
+    orderDate: daysAgo(12),
+    shippingDate: daysAgo(9),
+    deliveryDate: daysAgo(6),
+    createdAt: daysAgo(12),
+    updatedAt: daysAgo(6),
+    sourceContext: { path: "standard", listPrice: 999 },
+    statusHistory: [
+      entry(daysAgo(12), "buyer", "createCheckoutOrder", {
+        status: { from: null, to: "pending" },
+      }, { actorUid: BUYER_YUGI }),
+      entry(daysAgo(11), "seller", "updateOrderStatus", {
+        status: { from: "pending", to: "confirmed" },
+        paymentStatus: { from: "pending", to: "paid" },
+      }, { actorUid: ARENA }),
+      entry(daysAgo(9), "seller", "customShipOrder", {
+        status: { from: "confirmed", to: "shipped" },
+        trackingNumber: { from: null, to: "LIR-TRK-88213004" },
+      }, { actorUid: ARENA }),
+      entry(daysAgo(6), "system", "deliveryConfirmation", {
+        status: { from: "shipped", to: "delivered" },
+      }),
+    ],
+  },
+
+  // ── auction-won — settled at close, against a real ladder ─────────────
+  {
+    id: "order-1-20260822-aucwon",
+    productId: "auction-beyblade-metal-diablo-nemesis",
+    productTitle: "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
+    userId: BUYER_KAIBA,
+    userName: "Mock User 2",
+    userEmail: "vivaan.kapoor@gmail.com",
+    storeId: ARENA,
+    quantity: 1,
+    unitPrice: 6200,
+    totalPrice: 6200,
+    currency: "INR",
+    status: "processing",
+    paymentStatus: "paid",
+    paymentMethod: "upi_manual",
+    orderType: "auction",
+    shippingAddress: "addr-kaiba-mansion",
+    orderDate: daysAgo(2),
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(1),
+    sourceContext: {
+      path: "auction-won",
+      auctionId: "auction-beyblade-metal-diablo-nemesis",
+      bidId: "bid-beyblade-metal-diablo-nemesis-rohit-collector-20260601-005",
+      winningBidAmount: 6200,
+      bidCount: 6,
+      startingBid: 3499,
+      // No reserve on this auction, so the reserve cannot fail to be met.
+      reserveMet: true,
+      auctionEndedAt: daysAgo(2),
+      runnerUpAmount: 5428,
+    },
+    statusHistory: [
+      entry(daysAgo(2), "system", "auctionSettlement", {
+        status: { from: null, to: "pending" },
+      }, { reason: "Won at auction close" }),
+      entry(daysAgo(1), "admin", "adminVerifyPayment", {
+        status: { from: "pending", to: "processing" },
+        paymentStatus: { from: "pending", to: "paid" },
+        paymentReviewOutcome: { from: null, to: "verified" },
+      }, { actorUid: BUYER_ADMIN }),
+    ],
+  },
+
+  // ── auction-buy-now — a buyout ENDED a live auction ───────────────────
+  {
+    // Referenced back by the buyout bid's `orderId`, so the link resolves in
+    // both directions.
+    id: "order-1-20260820-buyout",
+    productId: "auction-beyblade-burst-spriggan-requiem-bought-out",
+    productTitle: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
+    userId: BUYER_KAIBA,
+    userName: "Mock User 2",
+    userEmail: "vivaan.kapoor@gmail.com",
+    storeId: ARENA,
+    quantity: 1,
+    unitPrice: 4999,
+    totalPrice: 4999,
+    currency: "INR",
+    status: "shipped",
+    paymentStatus: "paid",
+    paymentMethod: "cash",
+    orderType: "auction",
+    // What separates this from the win above. Both are orderType "auction";
+    // only a buyout gets the 24h admin-review window.
+    isBuyout: true,
+    shippingAddress: "addr-kaiba-mansion",
+    trackingNumber: "LIR-TRK-77410992",
+    shippingCarrier: "Blue Dart",
+    orderDate: daysAgo(4),
+    shippingDate: daysAgo(2),
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(2),
+    sourceContext: {
+      path: "auction-buy-now",
+      auctionId: "auction-beyblade-burst-spriggan-requiem-bought-out",
+      bidId: "bid-beyblade-burst-spriggan-requiem-seto-kaiba-20260820-buyout",
+      buyNowPrice: 4999,
+      listPrice: 5499,
+      // The highest NON-buyout bid the buyout beat.
+      standingBidAtBuyout: 3100,
+      // Three, not zero. The old type asserted "zero bids by definition"
+      // because Buy Now used to be gated on `!bidsHaveStarted`; that gate was
+      // removed, and recording 0 would bake a falsehood into an audit record.
+      bidCount: 3,
+      boughtAt: daysAgo(4),
+      checkoutDeadline: daysAgo(4),
+    },
+    statusHistory: [
+      entry(daysAgo(4), "buyer", "claimAuctionForCheckout", {
+        status: { from: null, to: "pending" },
+      }, { actorUid: BUYER_KAIBA, reason: "Buy Now claim won" }),
+      entry(daysAgo(3), "seller", "updateOrderStatus", {
+        status: { from: "pending", to: "confirmed" },
+        paymentStatus: { from: "pending", to: "paid" },
+      }, { actorUid: ARENA }),
+      entry(daysAgo(2), "seller", "customShipOrder", {
+        status: { from: "confirmed", to: "shipped" },
+        trackingNumber: { from: null, to: "LIR-TRK-77410992" },
+      }, { actorUid: ARENA }),
+    ],
+  },
+
+  // ── offer-accepted — the end of a real negotiation ────────────────────
+  {
+    id: "order-1-20260813-offerctx",
+    productId: "product-beyblade-x-knife-shinobi",
+    productTitle: "Beyblade X Knife Shinobi",
+    userId: BUYER_ADMIN,
+    userName: "Mock User 1",
+    userEmail: "admin@letitrip.in",
+    storeId: ARENA,
+    quantity: 1,
+    unitPrice: 800,
+    totalPrice: 800,
+    currency: "INR",
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "cash",
+    orderType: "offer",
+    // The offer this order settled — its own status is `paid`, and this is the
+    // order id it points at.
+    offerId: "offer-admin-x-knife-shinobi-paid",
+    shippingAddress: "addr-letitrip-hq",
+    orderDate: daysAgo(11),
+    shippingDate: daysAgo(9),
+    deliveryDate: daysAgo(7),
+    createdAt: daysAgo(11),
+    updatedAt: daysAgo(7),
+    sourceContext: {
+      path: "offer-accepted",
+      offerId: "offer-admin-x-knife-shinobi-paid",
+      offeredAmount: 800,
+      listPriceAtOffer: 949,
+      // Accepted outright — no counter rounds. Compare the Metal Storm
+      // Pegasus chain in offers-seed-data.ts, which reaches round 3.
+      counterRounds: 1,
+      acceptedBy: ARENA,
+      acceptedAt: daysAgo(12),
+      checkoutDeadline: daysAgo(10),
+    },
+    statusHistory: [
+      entry(daysAgo(11), "buyer", "createCheckoutOrder", {
+        status: { from: null, to: "pending" },
+      }, { actorUid: BUYER_ADMIN }),
+      entry(daysAgo(10), "seller", "updateOrderStatus", {
+        status: { from: "pending", to: "confirmed" },
+        paymentStatus: { from: "pending", to: "paid" },
+      }, { actorUid: ARENA }),
+      entry(daysAgo(9), "seller", "customShipOrder", {
+        status: { from: "confirmed", to: "shipped" },
+        trackingNumber: { from: null, to: "LIR-TRK-30028841" },
+      }, { actorUid: ARENA }),
+      entry(daysAgo(7), "system", "deliveryConfirmation", {
+        status: { from: "shipped", to: "delivered" },
+      }),
+      // A PARTIAL refund. It changes no tracked field, so it can only reach the
+      // timeline as an explicit contribution — diffing `refunds[]` would render
+      // as "an array of 0 became an array of 1", which is true and useless.
+      entry(daysAgo(6), "admin", "postRefundEvent", {
+        refund: {
+          from: null,
+          to: { refundId: "refund-x-knife-shinobi-1", type: "partial", amount: 120, reason: "Minor box damage in transit" },
+        },
+      }, { actorUid: BUYER_ADMIN, reason: "Minor box damage in transit" }),
+    ],
+    trackingNumber: "LIR-TRK-30028841",
+    shippingCarrier: "Delhivery",
+  },
+
+  // ── pre-order — deposit taken, balance outstanding ────────────────────
+  {
+    id: "order-1-20260819-preordr",
+    productId: "preorder-beyblade-x-bx-08-wave",
+    productTitle: "Beyblade X BX-08 Wave (Pre-Order)",
+    userId: BUYER_YUGI,
+    userName: "Mock User 3",
+    userEmail: "rehan.sheikh@gmail.com",
+    storeId: ARENA,
+    quantity: 1,
+    unitPrice: 799,
+    totalPrice: 799,
+    currency: "INR",
+    status: "confirmed",
+    paymentStatus: "pending",
+    paymentMethod: "cash",
+    orderType: "preorder",
+    // 25% of ₹799 — matches `preOrderDepositPercent` on the product.
+    depositAmount: 199.75,
+    shippingAddress: "addr-yugi-home",
+    orderDate: daysAgo(5),
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(5),
+    sourceContext: {
+      path: "pre-order",
+      depositAmount: 199.75,
+      balanceDue: 599.25,
+    },
+    statusHistory: [
+      entry(daysAgo(5), "buyer", "createCheckoutOrder", {
+        status: { from: null, to: "pending" },
+      }, { actorUid: BUYER_YUGI }),
+      entry(daysAgo(5), "seller", "updateOrderStatus", {
+        status: { from: "pending", to: "confirmed" },
+      }, { actorUid: ARENA, note: "Deposit received — balance due on dispatch." }),
+    ],
+  },
+
+  // ── prize-draw — several entries bought in one order ──────────────────
+  {
+    id: "order-1-20260821-prizedr",
+    productId: "prizedraw-beyblade-mystery-box",
+    productTitle: "Beyblade Mystery Box — Prize Draw",
+    userId: BUYER_KAIBA,
+    userName: "Mock User 2",
+    userEmail: "vivaan.kapoor@gmail.com",
+    storeId: ARENA,
+    quantity: 3,
+    unitPrice: 99,
+    totalPrice: 297,
+    currency: "INR",
+    status: "confirmed",
+    paymentStatus: "paid",
+    paymentMethod: "cash",
+    orderType: "prize-draw",
+    shippingAddress: "addr-kaiba-mansion",
+    orderDate: daysAgo(3),
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(3),
+    sourceContext: {
+      path: "prize-draw",
+      prizeDrawProductId: "prizedraw-beyblade-mystery-box",
+      pricePerEntry: 99,
+      entryCount: 3,
+      // `prizeDrawMode` is reveal-vs-lottery, a different axis. This records
+      // the reveal TIMING: no reveal window means it reveals on sell-out.
+      revealMode: "instant",
+    },
+    statusHistory: [
+      entry(daysAgo(3), "buyer", "createCheckoutOrder", {
+        status: { from: null, to: "pending" },
+      }, { actorUid: BUYER_KAIBA }),
+      entry(daysAgo(3), "seller", "updateOrderStatus", {
+        status: { from: "pending", to: "confirmed" },
+        paymentStatus: { from: "pending", to: "paid" },
+      }, { actorUid: ARENA }),
+    ],
+  },
+];
+
 export const ordersSeedData = [
   cashOrderPendingProof,
   cashOrderVerified,
-  ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 48),
+  ...acquisitionOrders,
+  // The slice keeps the fixture count stable as fixtures are added above it —
+  // it used to be 48 for the two manual-payment orders, and now also absorbs
+  // the six acquisition-path orders.
+  ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 42),
 ].map(withOrderImages) as OrderDocument[];

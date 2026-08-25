@@ -314,7 +314,24 @@ export async function counterOfferByBuyer(
   if (offerCount >= 3)
     throw new ValidationError(ERROR_MESSAGES.OFFER.LIMIT_REACHED);
 
-  await offerRepository.withdraw(offerId);
+  // ── Create BEFORE superseding. Order matters. ───────────────────────────
+  //
+  // This used to `withdraw()` first and `create()` second. If `create` threw —
+  // a validation slip, a Firestore blip — the buyer's live counter was ALREADY
+  // withdrawn, no replacement existed, the negotiation was dead, and one of
+  // their three offer slots had been burnt for nothing.
+  //
+  // Reversed, the worst failure is a transient extra pending offer, which
+  // `hasActiveOffer` and the expiry sweep both already handle.
+  //
+  // The chain fields are what make a multi-round negotiation readable at all:
+  // `previousOfferId` used to exist ONLY inside the serverLogger call below
+  // and never reached Firestore, so three rounds were three unrelated
+  // documents. `chainRootOfferId` is denormalised onto every round so a list
+  // row can render "Round 2" with zero extra reads, and `findChain` stays a
+  // single-field equality served by the automatic index.
+  const chainRoot = offer.chainRootOfferId ?? offer.id;
+  const nextRound = (offer.counterRound ?? 1) + 1;
 
   const newOffer = await offerRepository.create({
     productId: offer.productId,
@@ -330,7 +347,24 @@ export async function counterOfferByBuyer(
     listedPrice: offer.listedPrice,
     currency: offer.currency,
     buyerNote,
+    // NOT carrying `sellerNote` forward: it would render as "Seller note" on
+    // the new round, making the seller look like they had already answered a
+    // counter they have never seen. Round N-1 keeps its own note and is now
+    // reachable via `previousOfferId`.
+    previousOfferId: offer.id,
+    chainRootOfferId: chainRoot,
+    counterRound: nextRound,
   });
+
+  // Now supersede the old round — one write, one history entry. A `withdrawn`
+  // document carrying `supersededByOfferId` renders as *Superseded* (neutral),
+  // not *Withdrawn* (negative): the buyer did not walk away, they countered.
+  await offerRepository.withdraw(
+    offerId,
+    newOffer.id,
+    { actor: { uid: userId, role: "buyer" } },
+    offer,
+  );
 
   const buyerCounterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
   if (buyerCounterStore?.ownerId) await sendNotification({
@@ -343,12 +377,14 @@ export async function counterOfferByBuyer(
     relatedType: "offer",
   });
 
+  // `previousOfferId` is no longer logged as its only record — it is a
+  // persisted field on `newOffer` now. A log line is not a data model.
   serverLogger.info("counterOfferByBuyer", {
-    previousOfferId: offerId,
     newOfferId: newOffer.id,
     buyerUid: userId,
     productId: offer.productId,
     counterAmount,
+    counterRound: nextRound,
   });
 
   return newOffer;

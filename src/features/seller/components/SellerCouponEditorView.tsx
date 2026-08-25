@@ -7,6 +7,8 @@ import { ProductInlineSelect } from "./ProductInlineSelect";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 
 import { normalizeError } from "../../../errors/normalize";
+import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { sellerCouponFormSchema } from "../schemas/coupon-form";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -77,12 +79,24 @@ export function SellerCouponEditorView({
   const set = <K extends keyof CouponEditorDraft>(key: K, value: CouponEditorDraft[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    setFieldError?: (name: string, error: string | null) => void,
+  ) => {
     e.preventDefault();
-    if (!draft.code.trim()) { setError("Coupon code is required"); return; }
-    if (draft.type !== "free_shipping" && !draft.value) { setError("Discount value is required"); return; }
-    if (!draft.startDate || !draft.endDate) { setError("Start and end dates are required"); return; }
-    if (draft.startDate > draft.endDate) { setError("Start date must be before end date"); return; }
+    // Replaces four hand-rolled `if` checks that covered presence and date
+    // order and nothing else — a 500% percentage discount, a non-numeric
+    // value, a negative minimum spend and a per-customer limit above the
+    // total all passed. Errors now land on the field, not in one banner.
+    const parsed = sellerCouponFormSchema.safeParse(draft);
+    if (!parsed.success) {
+      if (setFieldError) {
+        applyZodIssues(parsed.error.issues, setFieldError);
+      } else {
+        setError(parsed.error.issues[0]?.message ?? "Please check the form.");
+      }
+      return;
+    }
 
     setError(null);
     setSaving(true);
@@ -99,7 +113,8 @@ export function SellerCouponEditorView({
   const isEdit = Boolean(couponId);
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
+    <Form schema={sellerCouponFormSchema} onSubmit={(e) => e.preventDefault()}>
+      {({ setFieldError }) => (
       <Stack gap="none" className={`max-w-lg mx-auto border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl" shadow="sm">
         <Div
           className="h-[3px] w-full [background:linear-gradient(to_right,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_55%,var(--appkit-color-secondary-400)_100%)]"
@@ -119,6 +134,13 @@ export function SellerCouponEditorView({
         </Div>
 
         <Stack gap="5" padding="lg">
+          {/*
+            Lists every current field error and, in a step wizard, links to the
+            owning step. It SUPPLEMENTS the banner below — that one carries
+            save failures from the server, this one carries schema failures
+            from the fields.
+          */}
+          <FormErrorSummary />
           {error && (
             <Div textSize="sm" className="border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="lg">
               {error}
@@ -323,12 +345,18 @@ export function SellerCouponEditorView({
                 Cancel
               </Button>
             )}
-            <Button type="submit" isLoading={saving} disabled={saving}>
+            <Button
+              type="submit"
+              isLoading={saving}
+              disabled={saving}
+              onClick={(e) => void handleSubmit(e, setFieldError)}
+            >
               {isEdit ? "Save Changes" : "Create Coupon"}
             </Button>
           </Row>
         </Div>
       </Stack>
+      )}
     </Form>
   );
 }
