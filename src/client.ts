@@ -1151,3 +1151,9 @@ export {
   type CartLane,
   type LaneAssignable,
 } from "./_internal/shared/checkout/lanes";
+export {
+  newsletterSubscribeSchema,
+  quickCreateTaxonomySchema,
+  payoutMarkPaidSchema,
+} from "./features/admin/schemas/small-forms";
+export { raffleEntrySchema } from "./features/contact/schemas/inquiry-forms";

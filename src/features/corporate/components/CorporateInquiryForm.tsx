@@ -6,6 +6,8 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import type { SubmitCorporateInquiryInput } from "../types";
+import { submitCorporateInquirySchema } from "../schemas";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 interface CorporateInquiryFormProps {
   onSubmit: (data: SubmitCorporateInquiryInput) => Promise<void>;
@@ -39,7 +41,8 @@ export function CorporateInquiryForm({
   }
 
   return (
-    <Form onSubmit={handleSubmit} spacing="md">
+    <Form schema={submitCorporateInquirySchema} onSubmit={handleSubmit} spacing="md">
+      <FormErrorSummary />
       <Div layout="grid" gap="4" className="grid-cols-1 sm:grid-cols-2">
         <FieldInput
           name="companyName"

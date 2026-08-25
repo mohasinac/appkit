@@ -8,6 +8,7 @@ import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { loginSchema } from "../schemas";
 import { SocialAuthButtons } from "./SocialAuthButtons";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 export interface LoginFormValues {
   email: string;
@@ -81,11 +82,12 @@ export function LoginForm({
           </Alert>
         )}
 
-        <Form
+        <Form schema={loginSchema}
           noValidate
           onSubmit={(e) => e.preventDefault()} spacing="md">
           {({ setFieldError, clearErrors }) => (
             <>
+              <FormErrorSummary />
               <FieldInput
                 name="email"
                 label={labels.emailLabel ?? "Email address"}

@@ -5,6 +5,8 @@ import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import type { BookConsultationInput } from "../types";
+import { bookConsultationSchema } from "../schemas";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 interface ConsultationFormProps {
   onSubmit: (data: BookConsultationInput) => Promise<void>;
@@ -61,7 +63,8 @@ export function ConsultationForm({
   }
 
   return (
-    <Form onSubmit={handleSubmit} spacing="md">
+    <Form schema={bookConsultationSchema} onSubmit={handleSubmit} spacing="md">
+      <FormErrorSummary />
       <FieldInput
         name="name"
         type="text"

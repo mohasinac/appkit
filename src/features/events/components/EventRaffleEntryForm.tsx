@@ -5,6 +5,8 @@ import { Form } from "../../../ui/components/Form";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { Div, Heading, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
+import { raffleEntrySchema } from "../../contact/schemas/inquiry-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const __P = {
   p6: "p-[var(--appkit-space-6)]",
@@ -90,7 +92,8 @@ export function EventRaffleEntryForm({
           You&apos;ve used all {maxEntriesPerUser} entry slot{maxEntriesPerUser === 1 ? "" : "s"} for this raffle.
         </Div>
       ) : (
-        <Form onSubmit={handleSubmit} className="space-y-[0.75rem]">
+        <Form schema={raffleEntrySchema} onSubmit={handleSubmit} className="space-y-[0.75rem]">
+      <FormErrorSummary />
           <FieldTextarea
             name="message"
             label="Message"

@@ -13,6 +13,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button, Form, FormActions, Input, Modal, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { payoutMarkPaidSchema } from "../schemas/small-forms";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { applyZodIssues } from "../../../ui/forms/FormShell";
 
 export interface AdminPayoutMarkPaidModalProps {
   isOpen: boolean;
@@ -54,24 +58,47 @@ export function AdminPayoutMarkPaidModal({ isOpen, payoutId, onClose, onSuccess 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Mark payout as paid">
       <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          markPaid.mutate();
-        }} spacing="md">
-        <Input
-          label="Transaction / reference ID"
-          value={transactionId}
-          onChange={(e) => setTransactionId(e.target.value)}
-          placeholder="UTR, UPI ref, or bank transfer ID (optional)"
-        />
-        <FormActions align="right">
-          <Button type="button" variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary" disabled={markPaid.isPending}>
-            {markPaid.isPending ? "Saving..." : "Confirm paid"}
-          </Button>
-        </FormActions>
+        schema={payoutMarkPaidSchema}
+        onSubmit={(e) => e.preventDefault()}
+        spacing="md"
+      >
+        {({ setFieldError, clearErrors }) => (
+          <>
+            <FormErrorSummary />
+            <FieldInput
+              name="transactionId"
+              label="Transaction / reference ID"
+              required
+              value={transactionId}
+              onChange={setTransactionId}
+              placeholder="UTR, UPI ref, or bank transfer ID"
+            />
+            <FormActions align="right">
+              <Button type="button" variant="outline" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={markPaid.isPending}
+                onClick={() => {
+                  clearErrors();
+                  // The reference used to be optional and its placeholder even
+                  // said so — which left payouts marked paid with nothing to
+                  // reconcile them against.
+                  const parsed = payoutMarkPaidSchema.safeParse({ transactionId });
+                  if (!parsed.success) {
+                    applyZodIssues(parsed.error.issues, setFieldError);
+                    return;
+                  }
+                  markPaid.mutate();
+                }}
+              >
+                {markPaid.isPending ? "Saving..." : "Confirm paid"}
+              </Button>
+            </FormActions>
+          </>
+        )}
       </Form>
     </Modal>
   );

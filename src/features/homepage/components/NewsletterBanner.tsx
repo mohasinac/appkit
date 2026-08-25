@@ -5,6 +5,8 @@ import { Button, Div, Heading, Span, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
+import { newsletterSubscribeSchema } from "../../admin/schemas/small-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const CLS_ERROR_TEXT = "mt-3 text-[length:var(--appkit-text-sm)] text-error";
 
@@ -87,7 +89,8 @@ export function NewsletterBanner({
             {successMessage}
           </Text>
         ) : (
-          <Form onSubmit={handleSubmit} className="mt-8 flex gap-[0.75rem]">
+          <Form schema={newsletterSubscribeSchema} onSubmit={handleSubmit} className="mt-8 flex gap-[0.75rem]">
+      <FormErrorSummary />
             <FieldInput
               name="email"
               type="email"

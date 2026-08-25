@@ -6,6 +6,7 @@ import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { forgotPasswordSchema } from "../schemas";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 export interface ForgotPasswordViewProps {
   onSubmit: (email: string) => Promise<void>;
@@ -79,9 +80,10 @@ export function ForgotPasswordView({
         )}
 
         {!success && (
-          <Form noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
+          <Form schema={forgotPasswordSchema} noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
             {({ setFieldError, clearErrors }) => (
               <>
+                <FormErrorSummary />
                 <FieldInput
                   name="email"
                   label={labels.emailLabel ?? "Email address"}

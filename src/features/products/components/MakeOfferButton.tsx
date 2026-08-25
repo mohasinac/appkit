@@ -157,7 +157,7 @@ export function MakeOfferButton({
         Make Offer
       </Button>
       <Modal isOpen={state === "open"} onClose={() => setState("idle")} size="md" title="Make an offer">
-        <Form onSubmit={(e) => e.preventDefault()}>
+        <Form schema={schema} onSubmit={(e) => e.preventDefault()}>
           {({ setFieldError, clearErrors }) => (
             <Stack gap="md">
               <Text size="xs" color="muted">

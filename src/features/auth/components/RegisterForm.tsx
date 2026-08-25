@@ -8,6 +8,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { registerSchema, registerPasswordSchema } from "../schemas";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 export interface RegisterFormValues {
   email: string;
@@ -107,9 +108,10 @@ export function RegisterForm({
           </Alert>
         )}
 
-        <Form noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
+        <Form schema={registerClientSchema} noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
           {({ setFieldError, clearErrors }) => (
             <>
+              <FormErrorSummary />
               <FieldInput
                 name="displayName"
                 label={labels.displayNameLabel ?? "Full name"}

@@ -7,6 +7,9 @@ import React from "react";
 import { Button, Form, Input, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { quickCreateTaxonomySchema } from "../schemas/small-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { applyZodIssues } from "../../../ui/forms/FormShell";
 
 export interface CategoryQuickCreateFormProps {
   onSaved: (id: string, name: string) => void;
@@ -41,11 +44,10 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
   });
 
   return (
-    <Form
-      onSubmit={(e) => {
-        e.preventDefault();
-        mutation.mutate();
-      }} spacing="md">
+    <Form schema={quickCreateTaxonomySchema} onSubmit={(e) => e.preventDefault()} spacing="md">
+      {({ setFieldError, clearErrors }) => (
+        <>
+      <FormErrorSummary />
       <Input
         label="Category name"
         value={name}
@@ -62,13 +64,28 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
       />
       <Toggle label="Active" checked={isActive} onChange={setIsActive} />
       <Row gap="3" padding="t-xs">
-        <Button type="submit" isLoading={mutation.isPending} disabled={!name || mutation.isPending}>
+        <Button
+          type="submit"
+          isLoading={mutation.isPending}
+          disabled={mutation.isPending}
+          onClick={() => {
+            clearErrors();
+            const parsed = quickCreateTaxonomySchema.safeParse({ name, description, isActive });
+            if (!parsed.success) {
+              applyZodIssues(parsed.error.issues, setFieldError);
+              return;
+            }
+            mutation.mutate();
+          }}
+        >
           Create category
         </Button>
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
       </Row>
+        </>
+      )}
     </Form>
   );
 }

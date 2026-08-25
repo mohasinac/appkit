@@ -6,6 +6,7 @@ import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../.
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 export interface ResetPasswordViewProps {
   /** OOB code from URL */
@@ -94,9 +95,10 @@ export function ResetPasswordView({
             {renderLoginLink && <Div className="mt-2">{renderLoginLink()}</Div>}
           </Alert>
         ) : (
-          <Form noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
+          <Form schema={resetClientSchema} noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
             {({ setFieldError, clearErrors }) => (
               <>
+                <FormErrorSummary />
                 <FieldInput
                   name="password"
                   label={labels.passwordLabel ?? "New password"}
