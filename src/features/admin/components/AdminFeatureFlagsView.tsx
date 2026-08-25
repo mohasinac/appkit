@@ -8,6 +8,8 @@ import { Alert, Button, Div, Form, FormActions, Input, Row, Stack, StackedViewSh
 import type { StackedViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
+import { featureFlagsUpdateSchema } from "../schemas/admin-ops-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -201,11 +203,12 @@ export function AdminFeatureFlagsView({
   });
 
   const defaultFlags = () => (
-    <Form
+    <Form schema={featureFlagsUpdateSchema}
       onSubmit={(event) => {
         event.preventDefault();
         saveFlags.mutate();
       }} spacing="md">
+      <FormErrorSummary />
       <AccordionSection title="Platform Features">
         {PLATFORM_FLAGS.map(({ key, label, desc }) => (
           <FlagRow

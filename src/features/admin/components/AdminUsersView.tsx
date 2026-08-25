@@ -36,6 +36,8 @@ import { useBulkAction } from "../../../react";
 import { useBulkEvent } from "../../events/hooks/useBulkEvent";
 import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
+import { hardBanReasonSchema } from "../schemas/admin-ops-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 interface AdminUsersResponse {
   users?: JsonArray;
@@ -382,12 +384,13 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         <AppText size="sm" color="muted" className="mb-4">
           {ACTIONS.ADMIN["ban-user"].confirmation!.body}
         </AppText>
-        <Form
+        <Form schema={hardBanReasonSchema}
           onSubmit={(e) => {
             e.preventDefault();
             banUser.mutate();
           }}
         >
+      <FormErrorSummary />
           <Input
             label="Reason"
             value={banReason}

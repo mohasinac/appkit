@@ -12,6 +12,8 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { toCurrency } from "../hooks/useAdminListingData";
+import { adminOrderUpdateSchema } from "../schemas/admin-ops-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 // --- Types -------------------------------------------------------------------
 
@@ -212,11 +214,12 @@ export function AdminOrderEditorView({
       onClose={onClose}
       title={orderLabel ? `Order: ${orderLabel}` : "Update Order"}
     >
-      <Form
+      <Form schema={adminOrderUpdateSchema}
         onSubmit={(e) => {
           e.preventDefault();
           saveMutation.mutate();
         }} spacing="md" padding="md">
+      <FormErrorSummary />
         {addons && <OrderAddonBadges order={addons} variant="detail" />}
         {items && items.length > 0 && (
           <Stack gap="xs">

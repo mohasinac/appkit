@@ -13,6 +13,8 @@ import {
   formatPermLabel,
   type EmployeeGroup,
 } from "../../auth/permissions/constants";
+import { employeeInviteSchema } from "../schemas/admin-ops-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -221,7 +223,8 @@ export function AdminEmployeeEditorView({
         onClose={onClose}
         title={mode === "invite" ? "Invite Employee" : `Edit — ${displayName ?? "Employee"}`}
       >
-        <Form onSubmit={handleSubmit} spacing="lg" padding="md">
+        <Form schema={employeeInviteSchema} onSubmit={handleSubmit} spacing="lg" padding="md">
+      <FormErrorSummary />
           {mode === "invite" && (
             <Stack gap="xs" className="">
               <Label size="sm" weight="medium" color="primary">

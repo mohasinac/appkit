@@ -16,6 +16,8 @@ import type { StackedViewShellProps } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
+import { announcementBarSchema } from "../schemas/admin-editor-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 interface AdminSiteSettingsAnnouncement {
   announcementBar?: {
@@ -74,11 +76,12 @@ export function AdminSiteView({
   });
 
   const defaultForm = () => (
-    <Form
+    <Form schema={announcementBarSchema}
       onSubmit={(event) => {
         event.preventDefault();
         saveAnnouncement.mutate();
       }} spacing="md">
+      <FormErrorSummary />
       <Toggle
         checked={announcementEnabled}
         onChange={setAnnouncementEnabled}

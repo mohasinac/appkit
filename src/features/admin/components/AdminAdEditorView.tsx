@@ -8,6 +8,8 @@ import { Alert, Button, Checkbox, Div, Form, FormActions, Input, Select, Span, S
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { adminAdFormSchema } from "../schemas/admin-ops-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -375,7 +377,7 @@ export function AdminAdEditorView({
             {adQuery.error instanceof Error ? adQuery.error.message : "Unknown error"}
           </Alert>
         ) : null,
-        <Form
+        <Form schema={adminAdFormSchema}
           onSubmit={(event) => {
             event.preventDefault();
             if (blockedByPublishValidation) {
@@ -384,6 +386,7 @@ export function AdminAdEditorView({
             }
             saveMutation.mutate();
           }} spacing="md">
+      <FormErrorSummary />
           <Input
             label="Ad name"
             value={name}

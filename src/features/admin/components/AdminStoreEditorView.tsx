@@ -7,6 +7,8 @@ import { Button, Checkbox, Details, Div, Form, FormActions, Label, Select, SideD
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { StoreCapability } from "../../auth/permissions/constants";
+import { adminStoreUpdateSchema } from "../schemas/admin-editor-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 // --- Types -------------------------------------------------------------------
 
@@ -233,11 +235,12 @@ export function AdminStoreEditorView({
       onClose={onClose}
       title={storeName ? `Manage: ${storeName}` : "Manage Store"}
     >
-      <Form
+      <Form schema={adminStoreUpdateSchema}
         onSubmit={(e) => {
           e.preventDefault();
           saveMutation.mutate();
         }} padding="md">
+      <FormErrorSummary />
         <StackedViewShell
           portal="admin"
           className="space-y-4"

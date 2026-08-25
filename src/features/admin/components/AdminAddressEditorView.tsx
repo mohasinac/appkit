@@ -11,6 +11,8 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { INDIAN_STATES } from "../../account/constants/addresses";
 import type { AddressOwnerType } from "../../addresses/schemas";
+import { adminAddressFormSchema } from "../schemas/admin-editor-forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const STATE_OPTIONS = INDIAN_STATES.map((s) => ({ value: s, label: s }));
 
@@ -176,13 +178,14 @@ export function AdminAddressEditorView({
 
   // ── Form sections ──────────────────────────────────────────────────────────
   const formContent = (
-    <Form
+    <Form schema={adminAddressFormSchema}
       id="address-editor-form"
       key="address-form"
       onSubmit={(e) => {
         e.preventDefault();
         saveMutation.mutate();
       }} spacing="lg">
+      <FormErrorSummary />
       {/* ── Ownership ── */}
       <Card variant="outlined" padding="lg">
         <SectionHeading>Ownership</SectionHeading>
