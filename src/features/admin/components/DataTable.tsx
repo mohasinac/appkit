@@ -4,7 +4,9 @@ import React from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import type { AdminTableColumn } from "../types";
 import { BaseListingCard, Button, Checkbox, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
-import { getStatusTone } from "../../../ui/columns/column-renderers";
+import { renderStatusBadge, renderThumbnail } from "../../../ui/columns/cell-renderers";
+import { resolveColumnPriority } from "../../../ui/columns/build-columns";
+import { COLUMN_PRIORITY_CLASS, COLUMN_PRIORITY_CLASS_BLOCK } from "../../../contracts/extend";
 import { MediaImage } from "../../media/MediaImage";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
@@ -13,14 +15,6 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const STATUS_TONE_CLASSES: Record<string, string> = {
-  success: "bg-success-surface text-success",
-  warning: "bg-warning-surface text-warning",
-  error: "bg-error-surface text-error",
-  info: "bg-info-surface text-info",
-  neutral: "bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300",
-};
-
 function buildDefaultColumns(resourceIcon?: string): AdminTableColumn<Record<string, JsonValue>>[] {
   return [
     {
@@ -28,14 +22,7 @@ function buildDefaultColumns(resourceIcon?: string): AdminTableColumn<Record<str
       header: "Name",
       render: (row) => (
         <Row gap="sm" align="center">
-          <Div className="relative h-8 w-8 shrink-0" overflow="hidden" rounded="full">
-            <MediaImage
-              src={typeof row.image === "string" ? row.image : undefined}
-              alt={String(row.primary ?? "")}
-              size="avatar"
-              fallback={resourceIcon}
-            />
-          </Div>
+          {renderThumbnail(typeof row.image === "string" ? row.image : undefined, String(row.primary ?? ""), { rounded: "full", fallback: resourceIcon })}
           <Stack gap="none" className="min-w-0">
             <Text weight="medium" color="primary" className="truncate">{String(row.primary ?? "")}</Text>
             {row.secondary ? <Text size="xs" color="muted" className="truncate">{String(row.secondary)}</Text> : null}
@@ -47,15 +34,7 @@ function buildDefaultColumns(resourceIcon?: string): AdminTableColumn<Record<str
       key: "status",
       header: "Status",
       className: "w-32",
-      render: (row) => {
-        const status = String(row.status ?? "—");
-        const tone = getStatusTone(status);
-        return (
-          <Span size="xs" weight="medium" className={`inline-flex ${STATUS_TONE_CLASSES[tone]}`} rounded="full" padding="pill-sm-tall">
-            {status}
-          </Span>
-        );
-      },
+      render: (row) => renderStatusBadge(row.status == null ? null : String(row.status)),
     },
     {
       key: "updatedAt",
@@ -156,7 +135,9 @@ function SelectableRow<T extends { id: string }>({
       {columns.map((col) => (
         <Td
           key={col.key}
-          color="muted" className={col.className ?? ""} padding="md"
+          color="muted"
+          className={`${COLUMN_PRIORITY_CLASS[resolveColumnPriority(col)]} ${col.className ?? ""}`}
+          padding="md"
         >
           {col.render
             ? col.render(row)
@@ -222,7 +203,7 @@ export function DataTable<T extends { id: string }>({
                   onClick={
                     col.sortable && onSort ? () => onSort(col.key) : undefined
                   }
-                  className={`text-left text-[var(--appkit-color-text)] text-[var(--appkit-color-text)] ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} padding="md" weight="semibold"
+                  className={`text-left text-[var(--appkit-color-text)] ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${COLUMN_PRIORITY_CLASS[resolveColumnPriority(col)]} ${col.className ?? ""}`} padding="md" weight="semibold"
                 >
                   {col.header}
                   {col.sortable && sortKey === col.key && (
@@ -241,7 +222,7 @@ export function DataTable<T extends { id: string }>({
                 <Tr key={i} border="default">
                   {selectionEnabled && <Td padding="xs-3" className="w-10" />}
                   {columns.map((col) => (
-                    <Td key={col.key} padding="md">
+                    <Td key={col.key} padding="md" className={COLUMN_PRIORITY_CLASS[resolveColumnPriority(col)]}>
                       <Div className="h-4 w-full animate-pulse bg-neutral-200" rounded="default" />
                     </Td>
                   ))}

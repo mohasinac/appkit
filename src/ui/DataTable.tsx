@@ -15,6 +15,8 @@ import { Row } from "./components/Layout";
 import { Div } from "./components/Div";
 import type { TableColumn, TableConfig, PaginationConfig } from "../contracts";
 import { mergeTableConfig, DEFAULT_PAGINATION_CONFIG } from "../contracts";
+import { resolveColumnPriority } from "./columns/build-columns";
+import { COLUMN_PRIORITY_CLASS } from "../contracts/extend";
 
 /**
  * DataTable — generic sortable + paginated table promoted to @mohasinac/ui.
@@ -475,7 +477,7 @@ export function DataTable<T extends object>({
                             : "none"
                           : undefined
                       }
-                      className={`appkit-data-table__th ${col.sortable ? "appkit-data-table__th--sortable" : ""}`}
+                      className={`appkit-data-table__th ${col.sortable ? "appkit-data-table__th--sortable" : ""} ${COLUMN_PRIORITY_CLASS[resolveColumnPriority(col)]}`}
                       style={{ width: col.width }}
                       onClick={() => col.sortable && handleSort(col.key)}
                     >
@@ -535,7 +537,7 @@ export function DataTable<T extends object>({
                       </td>
                     )}
                     {columns.map((col) => (
-                      <td key={col.key} className="appkit-data-table__td">
+                      <td key={col.key} className={`appkit-data-table__td ${COLUMN_PRIORITY_CLASS[resolveColumnPriority(col)]}`}>
                         {col.render
                           ? col.render(item)
                           : (((item as Record<string, JsonValue>)[

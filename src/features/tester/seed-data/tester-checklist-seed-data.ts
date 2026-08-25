@@ -3129,6 +3129,30 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             href: "/admin/reports",
           },
           {
+            key: "admin-tables-render-badges-not-text",
+            label: "Admin list tables show a coloured STATUS BADGE, a thumbnail and formatted money — not raw text",
+            description: "Fixed 2026-08-25 — `column-renderers.tsx` was promised by its own sibling's docstring and never written (it could not be: a .ts and .tsx of the same name both emit the same .js). Every column without a hand-written renderer fell back to String(value), so a price read `1499` and a date read as a raw ISO string. Check a few different admin lists.",
+            href: "/admin/products",
+          },
+          {
+            key: "admin-table-readable-on-phone",
+            label: "An admin list is readable at phone width — it switches to the card/list view instead of squeezing a table",
+            description: "Fixed 2026-08-25 — no column-level responsive behaviour existed at all (`TableColumn.hidden` was documented but no DataTable ever read it). Below md the table view is now suppressed entirely; from md up, low-priority columns (created/updated dates, ids, view counts) drop out progressively. Resize from 320px to 1400px and confirm columns reappear rather than the row wrapping.",
+            href: "/admin/orders",
+          },
+          {
+            key: "action-buttons-have-icons",
+            label: "Buttons driven by the action registry show an icon beside their label",
+            description: "Fixed 2026-08-25 — `ActionDef.iconKey` existed on the type, was set on 2 of 220 actions, and was rendered by nothing. All 220 now carry one and `<Button action={…}>` renders it. Spot-check a row action menu and a bulk action bar.",
+            href: "/admin/products",
+          },
+          {
+            key: "sold-flag-badge-readable",
+            label: "The \"Sold\" flag chip on an admin product card is legible in BOTH light and dark themes",
+            description: "Fixed 2026-08-25 — the flag list gave `isSold` two backgrounds and two inks on one element, so the painted colour was decided by stylesheet order rather than by the list. The identical bug was found on the scammer status badge the day before. Also check \"Promoted\", which was raw dual-theme purple.",
+            href: "/admin/products",
+          },
+          {
             key: "homepage-section-all-types-creatable",
             label: "EVERY section type in the New Section dropdown can actually be created — especially Featured Bundles, Prize Draws, Event Raffles and Collection Cards",
             description: "Fixed 2026-08-24 — the create route validated `type` against a hand-written list of 21 values while the union (and the dropdown) had 25. Those four types could be chosen, configured in full through their own builders, and then failed with a 400 on Save. Walk the dropdown and create one of each of the four named types.",

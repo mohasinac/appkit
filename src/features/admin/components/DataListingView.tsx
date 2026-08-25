@@ -33,6 +33,7 @@ import type { AdminTableColumn } from "../types";
 import { getResourceIcon } from "../../../ui/columns/column-renderers";
 import { AdminViewCards } from "./AdminViewCards";
 import { DataTable } from "./DataTable";
+import { useBreakpoint } from "../../../react/hooks/useBreakpoint";
 
 /**
  * Generic admin data row shape used by DataListingView and AdminViewCards.
@@ -175,6 +176,19 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
 }: {
   config: ListingViewConfig<TResponse, TRow>;
 }) {
+  /*
+   * Below `md` the table view is suppressed entirely and the list/card view is
+   * rendered instead.
+   *
+   * No amount of per-column hiding rescues a grid at 320px — even a two-column
+   * table wraps its cells, so rows grow to different heights and stop being
+   * scannable. `TableColumn.priority` handles density from `md` upward; this
+   * handles the case below it, where the answer is "not a table at all".
+   *
+   * The user's stored preference is untouched, so widening the window brings
+   * their table straight back.
+   */
+  const { isMobile } = useBreakpoint();
   const effectiveInitialView = config.initialView ?? "list";
   const listing = useAdminListing<TResponse, TRow>({
     ...config,
@@ -344,7 +358,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
         {/* The view-mode preference is global (persisted across every listing
             page, not just this one) — a "table" choice made elsewhere must
             never leak into a hideTableView-only view like Coupons. */}
-        {view === "table" && !config.hideTableView ? (
+        {view === "table" && !config.hideTableView && !isMobile ? (
           <DataTable
             columns={config.columns}
             rows={rows}

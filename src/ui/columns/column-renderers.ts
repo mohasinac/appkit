@@ -4,7 +4,12 @@
  * Every renderer returns a `string` (not ReactNode) so it works with
  * `TableColumn<T>.render` in both server and client contexts.
  *
- * For JSX renderers (badge, thumbnail, action buttons) see `column-renderers.tsx`.
+ * For JSX renderers (status badge, thumbnail, avatar, money, relative date,
+ * boolean icon, count pill, type chip) see `cell-renderers.tsx`.
+ *
+ * NOTE: that sibling was called `column-renderers.tsx` here for months and was
+ * never written, because it cannot be: `.ts` and `.tsx` of the same basename
+ * both emit `column-renderers.js` (TS5056). Hence the distinct name.
  */
 
 import { formatCurrency } from "../../utils/number.formatter";

@@ -26,6 +26,7 @@
 import type { UserRole } from "../../../features/auth/types";
 import type { ListingType } from "../../../features/products/types/index";
 import type { CategoryType } from "../../../features/categories/types/index";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 
 // ─── Action types ────────────────────────────────────────────────────────────
 
@@ -103,8 +104,14 @@ export interface ActionDef {
   listingTypeScope?: readonly ListingType[];
   /** Category-type scope — same but for category discriminators. */
   categoryTypeScope?: readonly CategoryType[];
-  /** Optional icon name (resolved by the consumer's icon set). */
-  iconKey?: string;
+  /**
+   * Icon for this action, resolved through `ICONS` in `ui/icons/icon-registry`.
+   *
+   * Typed `IconKey`, not `string`: as a bare string this field was set on 2 of
+   * 220 actions and rendered by nothing for months, and a typo was a silent
+   * no-op. A key outside the registry is now a compile error.
+   */
+  iconKey?: IconKey;
   /** Optional confirmation modal config. */
   confirmation?: ActionConfirmation;
 }
@@ -169,7 +176,54 @@ export function actionLabel(def: ActionDef): string {
 
 export const ACTIONS: ActionTree = {
   PRODUCT: {
+    /*
+     * The buyer-facing verbs below shipped long ago; the four CRUD entries
+     * here did not exist at all, so every "New listing" / "Edit" / "Delete"
+     * control in the seller and admin product surfaces was an inline action
+     * object outside the registry (Rule #7).
+     */
+    view: {
+      iconKey: "view",
+      id: "product.view",
+      label: "View",
+      ariaLabel: "View listing",
+      description: "Open the listing's public detail page.",
+      kind: "secondary",
+    },
+    create: {
+      iconKey: "create",
+      id: "product.create",
+      label: "New listing",
+      ariaLabel: "Create a new listing",
+      description: "Create a listing of any type.",
+      kind: "primary",
+      permissions: ["admin", "seller"],
+    },
+    edit: {
+      iconKey: "edit",
+      id: "product.edit",
+      label: "Edit",
+      ariaLabel: "Edit listing",
+      description: "Edit this listing.",
+      kind: "secondary",
+      permissions: ["admin", "seller"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "product.delete",
+      label: "Delete",
+      ariaLabel: "Delete listing",
+      description: "Permanently delete this listing.",
+      kind: "danger",
+      permissions: ["admin", "seller"],
+      confirmation: {
+        title: "Delete this listing?",
+        body: "This cannot be undone. Orders that already reference it keep their own copy of the title, price and image, so past orders stay readable.",
+        confirmLabel: "Delete listing",
+      },
+    },
     "add-to-cart": {
+      iconKey: "cart",
       id: "product.add-to-cart",
       label: "Add to cart",
       ariaLabel: "Add to cart",
@@ -178,6 +232,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["standard", "pre-order", "prize-draw", "digital-code", "live"],
     },
     "buy-now": {
+      iconKey: "cart",
       id: "product.buy-now",
       label: "Buy now",
       description: "Skip cart and head straight to checkout for this listing.",
@@ -185,6 +240,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["standard", "pre-order"],
     },
     "add-to-wishlist": {
+      iconKey: "wishlist",
       id: "product.add-to-wishlist",
       label: "Save",
       ariaLabel: "Add to wishlist",
@@ -192,6 +248,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "remove-from-wishlist": {
+      iconKey: "wishlist",
       id: "product.remove-from-wishlist",
       label: "Saved",
       ariaLabel: "Remove from wishlist",
@@ -199,6 +256,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "sync-wishlist-item": {
+      iconKey: "retry",
       id: "product.sync-wishlist-item",
       label: "Sync",
       ariaLabel: "Sync this wishlist item with the latest product data",
@@ -206,6 +264,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "share": {
+      iconKey: "share",
       id: "product.share",
       label: "Share",
       ariaLabel: "Share this listing",
@@ -213,6 +272,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "compare": {
+      iconKey: "analytics",
       id: "product.compare",
       label: "Compare",
       ariaLabel: "Add to comparison",
@@ -220,6 +280,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "make-offer": {
+      iconKey: "message",
       id: "product.make-offer",
       label: "Make an offer",
       description: "Propose a price to the seller for a classified listing.",
@@ -229,6 +290,7 @@ export const ACTIONS: ActionTree = {
   },
   AUCTION: {
     "place-bid": {
+      iconKey: "bid",
       id: "auction.place-bid",
       label: "Place bid",
       description: "Submit a bid on an auction listing.",
@@ -236,6 +298,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["auction"],
     },
     "buy-it-now": {
+      iconKey: "cart",
       id: "auction.buy-it-now",
       label: "Buy It Now",
       description:
@@ -244,6 +307,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["auction"],
     },
     "watch": {
+      iconKey: "view",
       id: "auction.watch",
       label: "Watch auction",
       ariaLabel: "Watch this auction",
@@ -252,6 +316,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["auction"],
     },
     "unwatch": {
+      iconKey: "hide",
       id: "auction.unwatch",
       label: "Watching",
       ariaLabel: "Stop watching this auction",
@@ -262,6 +327,7 @@ export const ACTIONS: ActionTree = {
   },
   PRE_ORDER: {
     "add-to-cart": {
+      iconKey: "cart",
       id: "pre-order.add-to-cart",
       label: "Add to cart",
       description: "Add a pre-order listing to the cart for checkout.",
@@ -269,6 +335,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["pre-order"],
     },
     "reserve-now": {
+      iconKey: "cart",
       id: "pre-order.reserve-now",
       label: "Reserve now",
       description: "Lock in a pre-order reservation for this listing.",
@@ -276,6 +343,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["pre-order"],
     },
     "cancel-reservation": {
+      iconKey: "cancel",
       id: "pre-order.cancel-reservation",
       label: "Cancel reservation",
       description: "Cancel the buyer's pre-order reservation.",
@@ -291,6 +359,7 @@ export const ACTIONS: ActionTree = {
   },
   PRIZE_DRAW: {
     "buy-now": {
+      iconKey: "cart",
       id: "prize-draw.buy-now",
       label: "Buy now",
       description: "Purchase a prize-draw entry directly (buyout — skips cart, goes to checkout).",
@@ -298,6 +367,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["prize-draw"],
     },
     "enter-draw": {
+      iconKey: "confirm",
       id: "prize-draw.enter-draw",
       label: "Enter draw",
       description: "Purchase an entry into the prize draw.",
@@ -305,6 +375,7 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["prize-draw"],
     },
     "reveal-code": {
+      iconKey: "view",
       id: "prize-draw.reveal-code",
       label: "Reveal code",
       description: "Reveal the buyer's prize-draw redemption code.",
@@ -314,6 +385,7 @@ export const ACTIONS: ActionTree = {
   },
   CLASSIFIED: {
     "contact-seller": {
+      iconKey: "message",
       id: "classified.contact-seller",
       label: "Contact seller",
       description: "Open a conversations thread with the seller — classified flow (SB-UNI-M).",
@@ -323,6 +395,7 @@ export const ACTIONS: ActionTree = {
   },
   DIGITAL_CODE: {
     "claim-code": {
+      iconKey: "confirm",
       id: "digital-code.claim-code",
       label: "Claim code",
       description: "Purchase and immediately reveal a digital code.",
@@ -332,6 +405,7 @@ export const ACTIONS: ActionTree = {
   },
   LIVE: {
     "inquire": {
+      iconKey: "message",
       id: "live.inquire",
       label: "Inquire",
       description: "Open a conversation with the seller about a live-item listing.",
@@ -341,6 +415,7 @@ export const ACTIONS: ActionTree = {
   },
   BUNDLE: {
     "buy-now": {
+      iconKey: "cart",
       id: "bundle.buy-now",
       label: "Buy now",
       description: "Purchase a bundle directly (buyout — skips cart, goes to checkout).",
@@ -348,12 +423,198 @@ export const ACTIONS: ActionTree = {
       categoryTypeScope: ["bundle"],
     },
   },
-  GROUP: {},
-  CATEGORY: {},
-  BRAND: {},
-  SUBLISTING: {},
+  /*
+   * These four buckets were literally `{}` for months while their editors
+   * shipped and worked — every CRUD control on a category, brand, grouped
+   * listing or sub-listing was therefore an inline action object, which is
+   * exactly what Rule #7 exists to prevent.
+   *
+   * Every destructive entry carries a `confirmation`, without which the action
+   * fires immediately and irreversibly.
+   */
+  GROUP: {
+    view: {
+      iconKey: "view",
+      id: "group.view",
+      label: "View",
+      ariaLabel: "View grouped listing",
+      description: "Open the grouped listing detail page.",
+      kind: "secondary",
+    },
+    create: {
+      iconKey: "create",
+      id: "group.create",
+      label: "New grouped listing",
+      ariaLabel: "Create a new grouped listing",
+      description: "Create a new grouped listing.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    edit: {
+      iconKey: "edit",
+      id: "group.edit",
+      label: "Edit",
+      ariaLabel: "Edit grouped listing",
+      description: "Edit this grouped listing.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "group.delete",
+      label: "Delete",
+      ariaLabel: "Delete grouped listing",
+      description: "Permanently delete this grouped listing.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this grouped listing?",
+        body: "This cannot be undone. Member listings are not deleted — only the group that ties them together.",
+        confirmLabel: "Delete",
+      },
+    },
+  },
+  CATEGORY: {
+    view: {
+      iconKey: "view",
+      id: "category.view",
+      label: "View",
+      ariaLabel: "View category",
+      description: "Open the category detail page.",
+      kind: "secondary",
+      categoryTypeScope: ["category"],
+    },
+    create: {
+      iconKey: "create",
+      id: "category.create",
+      label: "New category",
+      ariaLabel: "Create a new category",
+      description: "Create a new category.",
+      kind: "primary",
+      permissions: ["admin"],
+      categoryTypeScope: ["category"],
+    },
+    edit: {
+      iconKey: "edit",
+      id: "category.edit",
+      label: "Edit",
+      ariaLabel: "Edit category",
+      description: "Edit this category.",
+      kind: "secondary",
+      permissions: ["admin"],
+      categoryTypeScope: ["category"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "category.delete",
+      label: "Delete",
+      ariaLabel: "Delete category",
+      description: "Permanently delete this category.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this category?",
+        body: "This cannot be undone. Listings filed under it are not deleted, but they will no longer appear on this category page.",
+        confirmLabel: "Delete",
+      },
+      categoryTypeScope: ["category"],
+    },
+  },
+  BRAND: {
+    view: {
+      iconKey: "view",
+      id: "brand.view",
+      label: "View",
+      ariaLabel: "View brand",
+      description: "Open the brand detail page.",
+      kind: "secondary",
+      categoryTypeScope: ["brand"],
+    },
+    create: {
+      iconKey: "create",
+      id: "brand.create",
+      label: "New brand",
+      ariaLabel: "Create a new brand",
+      description: "Create a new brand.",
+      kind: "primary",
+      permissions: ["admin"],
+      categoryTypeScope: ["brand"],
+    },
+    edit: {
+      iconKey: "edit",
+      id: "brand.edit",
+      label: "Edit",
+      ariaLabel: "Edit brand",
+      description: "Edit this brand.",
+      kind: "secondary",
+      permissions: ["admin"],
+      categoryTypeScope: ["brand"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "brand.delete",
+      label: "Delete",
+      ariaLabel: "Delete brand",
+      description: "Permanently delete this brand.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this brand?",
+        body: "This cannot be undone. Products keep their `brand` string, so they will be orphaned from every brand page until re-filed.",
+        confirmLabel: "Delete",
+      },
+      categoryTypeScope: ["brand"],
+    },
+  },
+  SUBLISTING: {
+    view: {
+      iconKey: "view",
+      id: "sublisting.view",
+      label: "View",
+      ariaLabel: "View sub-listing",
+      description: "Open the sub-listing detail page.",
+      kind: "secondary",
+      categoryTypeScope: ["sublisting"],
+    },
+    create: {
+      iconKey: "create",
+      id: "sublisting.create",
+      label: "New sub-listing",
+      ariaLabel: "Create a new sub-listing",
+      description: "Create a new sub-listing.",
+      kind: "primary",
+      permissions: ["admin"],
+      categoryTypeScope: ["sublisting"],
+    },
+    edit: {
+      iconKey: "edit",
+      id: "sublisting.edit",
+      label: "Edit",
+      ariaLabel: "Edit sub-listing",
+      description: "Edit this sub-listing.",
+      kind: "secondary",
+      permissions: ["admin"],
+      categoryTypeScope: ["sublisting"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "sublisting.delete",
+      label: "Delete",
+      ariaLabel: "Delete sub-listing",
+      description: "Permanently delete this sub-listing.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this sub-listing?",
+        body: "This cannot be undone.",
+        confirmLabel: "Delete",
+      },
+      categoryTypeScope: ["sublisting"],
+    },
+  },
   STORE: {
     "follow": {
+      iconKey: "wishlist",
       id: "store.follow",
       label: "Follow",
       ariaLabel: "Follow this store",
@@ -361,6 +622,7 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
     },
     "unfollow": {
+      iconKey: "wishlist",
       id: "store.unfollow",
       label: "Following",
       ariaLabel: "Unfollow this store",
@@ -368,6 +630,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "view-all": {
+      iconKey: "view",
       id: "store.view-all",
       label: "View all",
       ariaLabel: "View all listings from this store",
@@ -376,6 +639,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Offer management ─────────────────────────────────────────────────
     "accept-offer": {
+      iconKey: "approve",
       id: "store.accept-offer",
       label: "Accept",
       ariaLabel: "Accept this offer",
@@ -384,6 +648,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "reject-offer": {
+      iconKey: "reject",
       id: "store.reject-offer",
       label: "Reject",
       ariaLabel: "Reject this offer",
@@ -398,6 +663,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "counter-offer": {
+      iconKey: "reply",
       id: "store.counter-offer",
       label: "Counter",
       ariaLabel: "Counter this offer",
@@ -407,6 +673,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Payout view ──────────────────────────────────────────────────────
     "view-payout": {
+      iconKey: "view",
       id: "store.view-payout",
       label: "View Details",
       ariaLabel: "View payout details",
@@ -415,6 +682,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "export-payout": {
+      iconKey: "export",
       id: "store.export-payout",
       label: "Export",
       ariaLabel: "Export payout details",
@@ -423,6 +691,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "set-payout-reminder": {
+      iconKey: "settings",
       id: "store.set-payout-reminder",
       label: "Remind Me",
       ariaLabel: "Toggle a follow-up reminder on this payout",
@@ -432,6 +701,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Review management ───────────────────────────────────────────────
     "reply-review": {
+      iconKey: "reply",
       id: "store.reply-review",
       label: "Reply",
       ariaLabel: "Reply to this review",
@@ -440,6 +710,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "contest-review": {
+      iconKey: "report",
       id: "store.contest-review",
       label: "Contest",
       ariaLabel: "Contest this review",
@@ -448,6 +719,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "buyer-feedback": {
+      iconKey: "message",
       id: "store.buyer-feedback",
       label: "Feedback",
       ariaLabel: "Send feedback to buyer",
@@ -457,6 +729,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── WhatsApp integration ────────────────────────────────────────────
     "whatsapp-connect": {
+      iconKey: "link",
       id: "store.whatsapp-connect",
       label: "Save & Connect",
       ariaLabel: "Save WhatsApp credentials and connect",
@@ -465,6 +738,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "whatsapp-catalog-sync": {
+      iconKey: "retry",
       id: "store.whatsapp-catalog-sync",
       label: "Push to WhatsApp",
       ariaLabel: "Sync products to WhatsApp catalog",
@@ -473,6 +747,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "whatsapp-catalog-import": {
+      iconKey: "upload",
       id: "store.whatsapp-catalog-import",
       label: "Import from WhatsApp",
       ariaLabel: "Import products from WhatsApp catalog",
@@ -482,6 +757,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Google Reviews integration ──────────────────────────────────────
     "google-reviews-sync": {
+      iconKey: "retry",
       id: "store.google-reviews-sync",
       label: "Sync now",
       ariaLabel: "Sync Google Business reviews",
@@ -490,6 +766,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "save-google-settings": {
+      iconKey: "save",
       id: "store.save-google-settings",
       label: "Save Settings",
       ariaLabel: "Save Google Business settings",
@@ -499,6 +776,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Refresh ─────────────────────────────────────────────────────────
     "refresh-offers": {
+      iconKey: "retry",
       id: "store.refresh-offers",
       label: "Refresh",
       ariaLabel: "Refresh offers list",
@@ -507,6 +785,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "edit-listing": {
+      iconKey: "edit",
       id: "store.edit-listing",
       label: "Edit",
       ariaLabel: "Edit listing",
@@ -515,6 +794,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "delete-listing": {
+      iconKey: "delete",
       id: "store.delete-listing",
       label: "Delete",
       ariaLabel: "Delete listing",
@@ -529,6 +809,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "publish-listing": {
+      iconKey: "save",
       id: "store.publish-listing",
       label: "Publish",
       description: "Make this listing visible to buyers.",
@@ -536,6 +817,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "unpublish-listing": {
+      iconKey: "hide",
       id: "store.unpublish-listing",
       label: "Unpublish",
       description: "Hide this listing from buyers.",
@@ -543,6 +825,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "mark-shipped": {
+      iconKey: "ship",
       id: "store.mark-shipped",
       label: "Mark as shipped",
       description: "Update an order status to shipped and enter tracking info.",
@@ -550,6 +833,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "mark-installment-paid": {
+      iconKey: "confirm",
       id: "store.mark-installment-paid",
       label: "Mark installment paid",
       ariaLabel: "Mark this EMI installment as paid",
@@ -564,6 +848,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "request-payout": {
+      iconKey: "send",
       id: "store.request-payout",
       label: "Request payout",
       description: "Submit a payout request for available store earnings.",
@@ -571,6 +856,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller"],
     },
     "save-changes": {
+      iconKey: "save",
       id: "store.save-changes",
       label: "Save changes",
       description: "Submit the store listing or settings form.",
@@ -578,6 +864,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "print-labels": {
+      iconKey: "export",
       id: "store.print-labels",
       label: "Print Labels",
       ariaLabel: "Print inventory labels for selected products",
@@ -586,6 +873,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "set-location": {
+      iconKey: "settings",
       id: "store.set-location",
       label: "Set Location",
       ariaLabel: "Set physical storage location for selected items",
@@ -594,6 +882,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "print-packing-slips": {
+      iconKey: "export",
       id: "store.print-packing-slips",
       label: "Print Packing Slips",
       ariaLabel: "Print packing slips for selected orders",
@@ -602,6 +891,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "open-print-center": {
+      iconKey: "view",
       id: "store.open-print-center",
       label: "Print Center",
       ariaLabel: "Open the Print & Label Center",
@@ -612,6 +902,7 @@ export const ACTIONS: ActionTree = {
     // SB-UNI-W follow-up (plan §7) — leaves for the 11 unwired store-dashboard
     // form/row CTAs identified by the W-3 sweep.
     "create-template": {
+      iconKey: "create",
       id: "store.create-template",
       label: "Create Template",
       ariaLabel: "Create a new product template",
@@ -620,6 +911,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "update-template": {
+      iconKey: "edit",
       id: "store.update-template",
       label: "Save Changes",
       ariaLabel: "Save changes to template",
@@ -628,6 +920,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "edit-template": {
+      iconKey: "edit",
       id: "store.edit-template",
       label: "Edit",
       ariaLabel: "Edit template",
@@ -636,6 +929,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "delete-template": {
+      iconKey: "delete",
       id: "store.delete-template",
       label: "Delete",
       ariaLabel: "Delete template",
@@ -650,6 +944,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "create-bundle": {
+      iconKey: "create",
       id: "store.create-bundle",
       label: "Create Bundle",
       ariaLabel: "Create a new bundle",
@@ -658,6 +953,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "create-feature": {
+      iconKey: "create",
       id: "store.create-feature",
       label: "Create Feature",
       ariaLabel: "Create a new product feature badge",
@@ -666,6 +962,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "update-slug": {
+      iconKey: "edit",
       id: "store.update-slug",
       label: "Update Slug",
       ariaLabel: "Update store slug",
@@ -680,6 +977,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "delete-sublisting-category": {
+      iconKey: "delete",
       id: "store.delete-sublisting-category",
       label: "Delete",
       ariaLabel: "Delete sublisting category",
@@ -694,6 +992,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "cancel-form": {
+      iconKey: "cancel",
       id: "store.cancel-form",
       label: "Cancel",
       ariaLabel: "Cancel form and close",
@@ -701,6 +1000,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "new-template": {
+      iconKey: "create",
       id: "store.new-template",
       label: "+ New Template",
       ariaLabel: "Open the new-template drawer",
@@ -711,6 +1011,7 @@ export const ACTIONS: ActionTree = {
   },
   BLOG: {
     "create-post": {
+      iconKey: "create",
       id: "blog.create-post",
       label: "New Post",
       ariaLabel: "Create a new blog post",
@@ -719,6 +1020,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "edit-post": {
+      iconKey: "edit",
       id: "blog.edit-post",
       label: "Edit",
       ariaLabel: "Edit this blog post",
@@ -727,6 +1029,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "delete-post": {
+      iconKey: "delete",
       id: "blog.delete-post",
       label: "Delete",
       ariaLabel: "Delete this blog post",
@@ -743,12 +1046,14 @@ export const ACTIONS: ActionTree = {
   },
   EVENT: {
     "register": {
+      iconKey: "user",
       id: "event.register",
       label: "Register",
       description: "Register to participate in this event.",
       kind: "primary",
     },
     "cancel-registration": {
+      iconKey: "cancel",
       id: "event.cancel-registration",
       label: "Cancel registration",
       description: "Cancel participation in this event.",
@@ -763,6 +1068,7 @@ export const ACTIONS: ActionTree = {
   },
   USER: {
     "cancel-order": {
+      iconKey: "cancel",
       id: "user.cancel-order",
       label: "Cancel Order",
       description: "Cancel a pending or confirmed order.",
@@ -775,6 +1081,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "cancel-order-items": {
+      iconKey: "cancel",
       id: "user.cancel-order-items",
       label: "Cancel Selected Items",
       description: "Cancel a subset of items on a pending or confirmed order and continue with the rest.",
@@ -787,30 +1094,35 @@ export const ACTIONS: ActionTree = {
       },
     },
     "request-return": {
+      iconKey: "restore",
       id: "user.request-return",
       label: "Request return",
       description: "Raise a return request for a delivered order.",
       kind: "secondary",
     },
     "save-settings": {
+      iconKey: "save",
       id: "user.save-settings",
       label: "Save changes",
       description: "Submit the user settings form.",
       kind: "primary",
     },
     "send-verification-email": {
+      iconKey: "send",
       id: "user.send-verification-email",
       label: "Send Verification Email",
       description: "Send a verification link to the new email address.",
       kind: "secondary",
     },
     "update-password": {
+      iconKey: "edit",
       id: "user.update-password",
       label: "Update Password",
       description: "Submit the change-password form.",
       kind: "secondary",
     },
     "delete-address": {
+      iconKey: "delete",
       id: "user.delete-address",
       label: "Delete address",
       ariaLabel: "Delete address",
@@ -824,6 +1136,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "set-default-address": {
+      iconKey: "confirm",
       id: "user.set-default-address",
       label: "Set as default",
       ariaLabel: "Set as default address",
@@ -832,6 +1145,7 @@ export const ACTIONS: ActionTree = {
     },
     // Plan §6 — wishlist bulk actions (sticky bulk-action toolbar leaves).
     "wishlist-bulk-remove": {
+      iconKey: "wishlist",
       id: "user.wishlist-bulk-remove",
       label: "Remove selected",
       ariaLabel: "Remove selected items from wishlist",
@@ -845,6 +1159,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "wishlist-bulk-move-to-cart": {
+      iconKey: "wishlist",
       id: "user.wishlist-bulk-move-to-cart",
       label: "Move to cart",
       ariaLabel: "Move selected items to cart",
@@ -852,6 +1167,7 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
     },
     "clear-selection": {
+      iconKey: "delete",
       id: "user.clear-selection",
       label: "Deselect",
       ariaLabel: "Clear current selection",
@@ -865,9 +1181,10 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "View order details",
       description: "Open the full details of this order.",
       kind: "ghost",
-      iconKey: "Eye",
+      iconKey: "view",
     },
     "track-order": {
+      iconKey: "ship",
       id: "user.track-order",
       label: "Track Order",
       ariaLabel: "Track your order shipment",
@@ -875,6 +1192,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "reorder": {
+      iconKey: "order",
       id: "user.reorder",
       label: "Reorder",
       ariaLabel: "Reorder items from this order",
@@ -887,9 +1205,10 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Download order invoice",
       description: "Download a PDF invoice for this order.",
       kind: "ghost",
-      iconKey: "FileDown",
+      iconKey: "export",
     },
     "write-review": {
+      iconKey: "review",
       id: "user.write-review",
       label: "Write Review",
       ariaLabel: "Write a review for this order",
@@ -897,6 +1216,7 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
     },
     "refresh-offers": {
+      iconKey: "retry",
       id: "user.refresh-offers",
       label: "Refresh",
       ariaLabel: "Refresh offers",
@@ -905,6 +1225,7 @@ export const ACTIONS: ActionTree = {
     },
     // Plan §10 — claim-coupon wallet (won-coupon entry points & wallet leaves).
     "claim-coupon": {
+      iconKey: "confirm",
       id: "user.claim-coupon",
       label: "Claim Coupon",
       ariaLabel: "Claim this coupon to your wallet",
@@ -912,6 +1233,7 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
     },
     "use-claimed-coupon": {
+      iconKey: "confirm",
       id: "user.use-claimed-coupon",
       label: "Apply at checkout",
       ariaLabel: "Apply this coupon at checkout",
@@ -919,6 +1241,7 @@ export const ACTIONS: ActionTree = {
       kind: "link",
     },
     "remove-claimed-coupon": {
+      iconKey: "delete",
       id: "user.remove-claimed-coupon",
       label: "Remove",
       ariaLabel: "Remove coupon from wallet",
@@ -928,6 +1251,7 @@ export const ACTIONS: ActionTree = {
   },
   SELLER: {
     "cancel-bid": {
+      iconKey: "cancel",
       id: "seller.cancel-bid",
       label: "Cancel selected",
       ariaLabel: "Cancel selected bids",
@@ -944,6 +1268,7 @@ export const ACTIONS: ActionTree = {
   },
   SHIPMENT: {
     "create": {
+      iconKey: "create",
       id: "shipment.create",
       label: "New Shipment",
       ariaLabel: "Create a new procurement shipment",
@@ -952,6 +1277,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "mark-received": {
+      iconKey: "confirm",
       id: "shipment.mark-received",
       label: "Mark Received",
       ariaLabel: "Mark this shipment as received",
@@ -960,6 +1286,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "unlink-item": {
+      iconKey: "link",
       id: "shipment.unlink-item",
       label: "Unlink",
       ariaLabel: "Unlink this item from its product",
@@ -968,6 +1295,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "delete": {
+      iconKey: "delete",
       id: "shipment.delete",
       label: "Delete",
       ariaLabel: "Delete this shipment",
@@ -984,6 +1312,7 @@ export const ACTIONS: ActionTree = {
   },
   CATALOGUE: {
     "list-item": {
+      iconKey: "create",
       id: "catalogue.list-item",
       label: "List",
       ariaLabel: "List this catalogue item directly",
@@ -992,6 +1321,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["seller", "admin"],
     },
     "submit-for-approval": {
+      iconKey: "send",
       id: "catalogue.submit-for-approval",
       label: "Request to sell",
       ariaLabel: "Request admin list this item on your behalf",
@@ -999,6 +1329,7 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
     },
     "unlink": {
+      iconKey: "link",
       id: "catalogue.unlink",
       label: "Unlink",
       ariaLabel: "Unlink this catalogue item from its product",
@@ -1007,6 +1338,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "delete": {
+      iconKey: "delete",
       id: "catalogue.delete",
       label: "Delete",
       ariaLabel: "Remove this catalogue item",
@@ -1020,6 +1352,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "approve": {
+      iconKey: "approve",
       id: "catalogue.approve",
       label: "Approve",
       ariaLabel: "Approve this catalogue listing request",
@@ -1028,6 +1361,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "reject": {
+      iconKey: "reject",
       id: "catalogue.reject",
       label: "Reject",
       ariaLabel: "Reject this catalogue listing request",
@@ -1045,6 +1379,7 @@ export const ACTIONS: ActionTree = {
   ADMIN: {
     // ── Product moderation ─────────────────────────────────────────────────
     "approve-product": {
+      iconKey: "approve",
       id: "admin.approve-product",
       label: "Approve",
       ariaLabel: "Approve listing",
@@ -1053,6 +1388,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "reject-product": {
+      iconKey: "reject",
       id: "admin.reject-product",
       label: "Reject",
       ariaLabel: "Reject listing",
@@ -1068,6 +1404,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── User moderation ────────────────────────────────────────────────────
     "ban-user": {
+      iconKey: "ban",
       id: "admin.ban-user",
       label: "Ban user",
       ariaLabel: "Ban this user",
@@ -1082,6 +1419,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "unban-user": {
+      iconKey: "restore",
       id: "admin.unban-user",
       label: "Lift ban",
       ariaLabel: "Lift ban on this user",
@@ -1090,6 +1428,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "bulk-suspend-users": {
+      iconKey: "ban",
       id: "admin.bulk-suspend-users",
       label: "Suspend selected",
       ariaLabel: "Suspend selected users",
@@ -1104,6 +1443,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "bulk-restore-users": {
+      iconKey: "restore",
       id: "admin.bulk-restore-users",
       label: "Restore selected",
       ariaLabel: "Restore selected users",
@@ -1112,6 +1452,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "bulk-delete-users": {
+      iconKey: "delete",
       id: "admin.bulk-delete-users",
       label: "Delete selected",
       ariaLabel: "Delete selected users",
@@ -1126,6 +1467,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "verify-payment": {
+      iconKey: "verify",
       id: "admin.verify-payment",
       label: "Verify Payment",
       ariaLabel: "Mark payment as received and verified",
@@ -1139,6 +1481,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "request-payment-reupload": {
+      iconKey: "upload",
       id: "admin.request-payment-reupload",
       label: "Request Re-upload",
       ariaLabel: "Ask the buyer to re-upload a corrected payment proof",
@@ -1152,6 +1495,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "reject-payment-fraud": {
+      iconKey: "reject",
       id: "admin.reject-payment-fraud",
       label: "Reject as Fraudulent",
       ariaLabel: "Reject this payment proof as fraudulent, cancel the order, and ban the account",
@@ -1166,6 +1510,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "verify-vendor": {
+      iconKey: "verify",
       id: "admin.verify-vendor",
       label: "Verify vendor",
       ariaLabel: "Grant verified-vendor status",
@@ -1174,6 +1519,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "unverify-vendor": {
+      iconKey: "reject",
       id: "admin.unverify-vendor",
       label: "Remove verification",
       ariaLabel: "Revoke verified-vendor status",
@@ -1189,6 +1535,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Store moderation ───────────────────────────────────────────────────
     "verify-store": {
+      iconKey: "verify",
       id: "admin.verify-store",
       label: "Verify store",
       ariaLabel: "Verify this store",
@@ -1197,6 +1544,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "suspend-store": {
+      iconKey: "ban",
       id: "admin.suspend-store",
       label: "Suspend store",
       ariaLabel: "Suspend this store",
@@ -1212,6 +1560,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Review moderation ──────────────────────────────────────────────────
     "approve-review": {
+      iconKey: "approve",
       id: "admin.approve-review",
       label: "Approve",
       ariaLabel: "Approve review",
@@ -1220,6 +1569,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "reject-review": {
+      iconKey: "reject",
       id: "admin.reject-review",
       label: "Reject",
       ariaLabel: "Reject review",
@@ -1235,6 +1585,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Return request moderation ──────────────────────────────────────────
     "approve-return": {
+      iconKey: "approve",
       id: "admin.approve-return",
       label: "Approve return",
       ariaLabel: "Approve return request",
@@ -1243,6 +1594,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "reject-return": {
+      iconKey: "reject",
       id: "admin.reject-return",
       label: "Reject return",
       ariaLabel: "Reject return request",
@@ -1258,6 +1610,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Payout management ──────────────────────────────────────────────────
     "calculate-payouts": {
+      iconKey: "analytics",
       id: "admin.calculate-payouts",
       label: "Calculate Payouts",
       ariaLabel: "Run the weekly payout eligibility calculation",
@@ -1266,6 +1619,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "grant-payout": {
+      iconKey: "approve",
       id: "admin.grant-payout",
       label: "Approve payout",
       ariaLabel: "Approve payout request",
@@ -1274,6 +1628,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "hold-payout": {
+      iconKey: "pause",
       id: "admin.hold-payout",
       label: "Hold payout",
       ariaLabel: "Put payout on hold",
@@ -1289,6 +1644,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Bundle management ──────────────────────────────────────────────────
     "rebuild-bundle": {
+      iconKey: "retry",
       id: "admin.rebuild-bundle",
       label: "Rebuild bundle",
       ariaLabel: "Trigger bundle stock rebuild",
@@ -1298,6 +1654,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Dev / system ───────────────────────────────────────────────────────
     "reset-seed-data": {
+      iconKey: "retry",
       id: "admin.reset-seed-data",
       label: "Reset seed data",
       ariaLabel: "Clear and re-seed Firestore",
@@ -1313,6 +1670,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Generic admin forms ────────────────────────────────────────────────
     "save-changes": {
+      iconKey: "save",
       id: "admin.save-changes",
       label: "Save changes",
       description: "Submit any admin editor form.",
@@ -1320,6 +1678,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "export-csv": {
+      iconKey: "export",
       id: "admin.export-csv",
       label: "Export CSV",
       ariaLabel: "Export data as CSV",
@@ -1329,6 +1688,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Order management ──────────────────────────────────────────────────
     "mark-shipped": {
+      iconKey: "ship",
       id: "admin.mark-shipped",
       label: "Mark as Shipped",
       ariaLabel: "Mark order as shipped",
@@ -1337,6 +1697,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "mark-delivered": {
+      iconKey: "ship",
       id: "admin.mark-delivered",
       label: "Mark as Delivered",
       ariaLabel: "Mark order as delivered",
@@ -1345,6 +1706,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "mark-installment-paid": {
+      iconKey: "confirm",
       id: "admin.mark-installment-paid",
       label: "Mark installment paid",
       ariaLabel: "Mark this EMI installment as paid",
@@ -1359,6 +1721,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "cancel-order": {
+      iconKey: "cancel",
       id: "admin.cancel-order",
       label: "Cancel Orders",
       ariaLabel: "Cancel selected orders",
@@ -1374,6 +1737,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Payout management (extended) ──────────────────────────────────────
     "mark-paid": {
+      iconKey: "confirm",
       id: "admin.mark-paid",
       label: "Mark Paid",
       ariaLabel: "Mark payout as paid",
@@ -1383,6 +1747,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Session management ────────────────────────────────────────────────
     "revoke-session": {
+      iconKey: "ban",
       id: "admin.revoke-session",
       label: "Revoke Sessions",
       ariaLabel: "Revoke selected sessions",
@@ -1398,6 +1763,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Notification management ───────────────────────────────────────────
     "mark-read": {
+      iconKey: "confirm",
       id: "admin.mark-read",
       label: "Mark Read",
       ariaLabel: "Mark selected notifications as read",
@@ -1406,6 +1772,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "delete-notification": {
+      iconKey: "delete",
       id: "admin.delete-notification",
       label: "Delete Notifications",
       ariaLabel: "Delete selected notifications",
@@ -1421,6 +1788,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Tester QA management ──────────────────────────────────────────────
     "mark-feedback-reviewed": {
+      iconKey: "confirm",
       id: "admin.mark-feedback-reviewed",
       label: "Mark Reviewed",
       ariaLabel: "Mark this tester feedback as reviewed",
@@ -1429,6 +1797,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "export-tester-feedback": {
+      iconKey: "export",
       id: "admin.export-tester-feedback",
       label: "Download Report",
       ariaLabel: "Download tester feedback as a Markdown report",
@@ -1437,6 +1806,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "export-event-entries": {
+      iconKey: "export",
       id: "admin.export-event-entries",
       label: "Download Report",
       ariaLabel: "Download this event's entries as a Markdown report",
@@ -1445,6 +1815,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "create-checklist-item": {
+      iconKey: "create",
       id: "admin.create-checklist-item",
       label: "Add Test Case",
       ariaLabel: "Add a new tester checklist item",
@@ -1453,6 +1824,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "edit-checklist-item": {
+      iconKey: "edit",
       id: "admin.edit-checklist-item",
       label: "Edit",
       ariaLabel: "Edit this tester checklist item",
@@ -1461,6 +1833,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "delete-checklist-item": {
+      iconKey: "delete",
       id: "admin.delete-checklist-item",
       label: "Delete",
       ariaLabel: "Delete this tester checklist item",
@@ -1475,6 +1848,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "confirm-bug": {
+      iconKey: "confirm",
       id: "admin.confirm-bug",
       label: "Mark as Bug",
       ariaLabel: "Confirm this as a real bug and credit the reporting tester",
@@ -1490,6 +1864,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "reopen-checklist-item": {
+      iconKey: "restore",
       id: "admin.reopen-checklist-item",
       label: "Reopen as New Test Case",
       ariaLabel: "Reopen this fixed case as a new version for retest",
@@ -1505,6 +1880,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "resend-notification": {
+      iconKey: "send",
       id: "admin.resend-notification",
       label: "Resend",
       ariaLabel: "Resend this notification",
@@ -1514,6 +1890,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Blog management ───────────────────────────────────────────────────
     "publish-blog": {
+      iconKey: "save",
       id: "admin.publish-blog",
       label: "Publish Selected",
       ariaLabel: "Publish selected blog posts",
@@ -1522,6 +1899,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "draft-blog": {
+      iconKey: "edit",
       id: "admin.draft-blog",
       label: "Move to Draft",
       ariaLabel: "Move selected posts to draft",
@@ -1531,6 +1909,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Brand & category management ───────────────────────────────────────
     "edit-brand": {
+      iconKey: "edit",
       id: "admin.edit-brand",
       label: "Edit Brand",
       ariaLabel: "Edit this brand",
@@ -1539,6 +1918,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "edit-category": {
+      iconKey: "edit",
       id: "admin.edit-category",
       label: "Edit Category",
       ariaLabel: "Edit this category",
@@ -1548,6 +1928,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Feature & prize-draw management ────────────────────────────────────
     "delete-feature": {
+      iconKey: "delete",
       id: "admin.delete-feature",
       label: "Delete Features",
       ariaLabel: "Delete selected features",
@@ -1562,6 +1943,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "delete-prize-draw": {
+      iconKey: "delete",
       id: "admin.delete-prize-draw",
       label: "Delete Prize Draws",
       ariaLabel: "Delete selected prize draws",
@@ -1577,6 +1959,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Product toggles ───────────────────────────────────────────────────
     "toggle-featured": {
+      iconKey: "review",
       id: "admin.toggle-featured",
       label: "Toggle Featured",
       ariaLabel: "Toggle featured status",
@@ -1585,6 +1968,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "toggle-promoted": {
+      iconKey: "analytics",
       id: "admin.toggle-promoted",
       label: "Toggle Promoted",
       ariaLabel: "Toggle promoted status",
@@ -1593,6 +1977,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "toggle-on-sale": {
+      iconKey: "analytics",
       id: "admin.toggle-on-sale",
       label: "Toggle On Sale",
       ariaLabel: "Toggle on-sale status",
@@ -1602,6 +1987,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Bundle management ─────────────────────────────────────────────────
     "activate-bundle": {
+      iconKey: "resume",
       id: "admin.activate-bundle",
       label: "Activate",
       ariaLabel: "Activate selected bundles",
@@ -1610,6 +1996,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "deactivate-bundle": {
+      iconKey: "pause",
       id: "admin.deactivate-bundle",
       label: "Deactivate",
       ariaLabel: "Deactivate selected bundles",
@@ -1618,6 +2005,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "delete-bundle": {
+      iconKey: "delete",
       id: "admin.delete-bundle",
       label: "Delete",
       ariaLabel: "Delete selected bundles",
@@ -1633,6 +2021,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Store/User management (bulk) ──────────────────────────────────────
     "manage-store": {
+      iconKey: "settings",
       id: "admin.manage-store",
       label: "Manage Store",
       ariaLabel: "Manage this store",
@@ -1641,6 +2030,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "manage-user": {
+      iconKey: "settings",
       id: "admin.manage-user",
       label: "Manage Selected",
       ariaLabel: "Manage selected users",
@@ -1650,6 +2040,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Carousel management ──────────────────────────────────────────────
     "edit-carousel": {
+      iconKey: "edit",
       id: "admin.edit-carousel",
       label: "Edit Slide",
       ariaLabel: "Edit carousel slide",
@@ -1658,6 +2049,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "delete-carousel": {
+      iconKey: "delete",
       id: "admin.delete-carousel",
       label: "Delete Slides",
       ariaLabel: "Delete selected carousel slides",
@@ -1673,6 +2065,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Contact management ────────────────────────────────────────────────
     "mark-contact-read": {
+      iconKey: "confirm",
       id: "admin.mark-contact-read",
       label: "Mark Read",
       ariaLabel: "Mark selected messages as read",
@@ -1681,6 +2074,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "archive-contact": {
+      iconKey: "archive",
       id: "admin.archive-contact",
       label: "Archive Messages",
       ariaLabel: "Archive selected messages",
@@ -1689,6 +2083,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "delete-contact": {
+      iconKey: "delete",
       id: "admin.delete-contact",
       label: "Delete Messages",
       ariaLabel: "Delete selected messages",
@@ -1704,6 +2099,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Newsletter management ─────────────────────────────────────────────
     "unsubscribe-newsletter": {
+      iconKey: "email",
       id: "admin.unsubscribe-newsletter",
       label: "Unsubscribe",
       ariaLabel: "Unsubscribe selected subscribers",
@@ -1719,6 +2115,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Team management ───────────────────────────────────────────────────
     "edit-team-member": {
+      iconKey: "edit",
       id: "admin.edit-team-member",
       label: "Edit Permissions",
       ariaLabel: "Edit team member permissions",
@@ -1727,6 +2124,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "remove-team-member": {
+      iconKey: "delete",
       id: "admin.remove-team-member",
       label: "Remove Members",
       ariaLabel: "Remove selected team members",
@@ -1742,6 +2140,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── FAQ management ────────────────────────────────────────────────────
     "delete-faq": {
+      iconKey: "delete",
       id: "admin.delete-faq",
       label: "Delete FAQs",
       ariaLabel: "Delete selected FAQs",
@@ -1756,6 +2155,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "archive-faq": {
+      iconKey: "archive",
       id: "admin.archive-faq",
       label: "Archive FAQs",
       ariaLabel: "Archive selected FAQs",
@@ -1765,6 +2165,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Coupon management ─────────────────────────────────────────────────
     "delete-coupon": {
+      iconKey: "delete",
       id: "admin.delete-coupon",
       label: "Delete Coupons",
       ariaLabel: "Delete selected coupons",
@@ -1779,6 +2180,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "edit-coupon": {
+      iconKey: "edit",
       id: "admin.edit-coupon",
       label: "Edit Coupon",
       ariaLabel: "Edit this coupon",
@@ -1787,6 +2189,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "duplicate-coupon": {
+      iconKey: "duplicate",
       id: "admin.duplicate-coupon",
       label: "Duplicate",
       ariaLabel: "Duplicate this coupon",
@@ -1796,6 +2199,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Navigation management ─────────────────────────────────────────────
     "edit-nav": {
+      iconKey: "edit",
       id: "admin.edit-nav",
       label: "Edit",
       ariaLabel: "Edit navigation item",
@@ -1804,6 +2208,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "delete-nav": {
+      iconKey: "delete",
       id: "admin.delete-nav",
       label: "Delete Nav Items",
       ariaLabel: "Delete selected navigation items",
@@ -1819,6 +2224,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Sublisting category management ────────────────────────────────────
     "delete-sublisting-category": {
+      iconKey: "delete",
       id: "admin.delete-sublisting-category",
       label: "Delete Categories",
       ariaLabel: "Delete selected sublisting categories",
@@ -1834,6 +2240,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Scammer management ────────────────────────────────────────────────
     "verify-scammer": {
+      iconKey: "verify",
       id: "admin.verify-scammer",
       label: "Verify Report",
       ariaLabel: "Verify this scammer report",
@@ -1842,6 +2249,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "dismiss-scammer": {
+      iconKey: "reject",
       id: "admin.dismiss-scammer",
       label: "Dismiss",
       ariaLabel: "Dismiss this scammer report",
@@ -1850,6 +2258,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "delete-scammer": {
+      iconKey: "delete",
       id: "admin.delete-scammer",
       label: "Delete Reports",
       ariaLabel: "Delete selected scammer reports",
@@ -1865,6 +2274,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Support ticket management ──────────────────────────────────────────
     "view-ticket": {
+      iconKey: "view",
       id: "admin.view-ticket",
       label: "View Details",
       ariaLabel: "View support ticket details",
@@ -1873,6 +2283,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "close-ticket": {
+      iconKey: "cancel",
       id: "admin.close-ticket",
       label: "Close Tickets",
       ariaLabel: "Close selected tickets",
@@ -1881,6 +2292,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "escalate-ticket": {
+      iconKey: "report",
       id: "admin.escalate-ticket",
       label: "Escalate",
       ariaLabel: "Escalate this ticket",
@@ -1890,6 +2302,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Event entry management ────────────────────────────────────────────
     "approve-entry": {
+      iconKey: "approve",
       id: "admin.approve-entry",
       label: "Approve Entries",
       ariaLabel: "Approve selected event entries",
@@ -1898,6 +2311,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "reject-entry": {
+      iconKey: "reject",
       id: "admin.reject-entry",
       label: "Reject Entries",
       ariaLabel: "Reject selected event entries",
@@ -1913,6 +2327,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Event entry management (row-level) ──────────────────────────────
     "confirm-entry": {
+      iconKey: "confirm",
       id: "admin.confirm-entry",
       label: "Confirm",
       ariaLabel: "Confirm this event entry",
@@ -1921,6 +2336,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "waitlist-entry": {
+      iconKey: "pause",
       id: "admin.waitlist-entry",
       label: "Waitlist",
       ariaLabel: "Waitlist this event entry",
@@ -1929,6 +2345,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "cancel-entry": {
+      iconKey: "cancel",
       id: "admin.cancel-entry",
       label: "Cancel",
       ariaLabel: "Cancel this event entry",
@@ -1944,6 +2361,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Review management (row-level) ─────────────────────────────────
     "feature-review": {
+      iconKey: "review",
       id: "admin.feature-review",
       label: "Feature",
       ariaLabel: "Feature this review",
@@ -1952,6 +2370,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "unfeature-review": {
+      iconKey: "review",
       id: "admin.unfeature-review",
       label: "Unfeature",
       ariaLabel: "Unfeature this review",
@@ -1961,6 +2380,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Scammer management (row-level) ────────────────────────────────
     "review-scammer": {
+      iconKey: "review",
       id: "admin.review-scammer",
       label: "Review",
       ariaLabel: "Review this scammer report",
@@ -1970,6 +2390,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Bid management ────────────────────────────────────────────────────
     "cancel-bid": {
+      iconKey: "cancel",
       id: "admin.cancel-bid",
       label: "Cancel Selected",
       ariaLabel: "Cancel selected bids",
@@ -1984,6 +2405,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "cancel-offer": {
+      iconKey: "cancel",
       id: "admin.cancel-offer",
       label: "Cancel Offer",
       ariaLabel: "Cancel this offer",
@@ -2002,6 +2424,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Address ban management ─────────────────────────────────────────────
     "ban-address": {
+      iconKey: "ban",
       id: "admin.ban-address",
       label: "Ban Address",
       ariaLabel: "Ban this address",
@@ -2016,6 +2439,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "approve-unban": {
+      iconKey: "approve",
       id: "admin.approve-unban",
       label: "Approve Unban",
       ariaLabel: "Approve unban request",
@@ -2024,6 +2448,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "reject-unban": {
+      iconKey: "reject",
       id: "admin.reject-unban",
       label: "Reject Unban",
       ariaLabel: "Reject unban request",
@@ -2033,6 +2458,7 @@ export const ACTIONS: ActionTree = {
     },
     // ── Payment method ban management ──────────────────────────────────────
     "ban-payment-method": {
+      iconKey: "ban",
       id: "admin.ban-payment-method",
       label: "Ban Payment Method",
       ariaLabel: "Ban this payment method",
@@ -2047,6 +2473,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "approve-payment-unban": {
+      iconKey: "approve",
       id: "admin.approve-payment-unban",
       label: "Approve Unban",
       ariaLabel: "Approve payment method unban",
@@ -2055,6 +2482,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin"],
     },
     "reject-payment-unban": {
+      iconKey: "reject",
       id: "admin.reject-payment-unban",
       label: "Reject Unban",
       ariaLabel: "Reject payment method unban",
@@ -2065,6 +2493,7 @@ export const ACTIONS: ActionTree = {
   },
   CART: {
     "clear-cart": {
+      iconKey: "delete",
       id: "cart.clear",
       label: "Clear cart",
       description: "Remove every item from the buyer's cart.",
@@ -2077,6 +2506,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "remove-item": {
+      iconKey: "delete",
       id: "cart.remove-item",
       label: "Remove",
       ariaLabel: "Remove item from cart",
@@ -2084,12 +2514,14 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "checkout": {
+      iconKey: "cart",
       id: "cart.checkout",
       label: "Proceed to checkout",
       description: "Navigate from the cart page to the checkout flow.",
       kind: "primary",
     },
     "continue-shopping": {
+      iconKey: "back",
       id: "cart.continue-shopping",
       label: "Continue shopping",
       description: "Navigate back from the cart to the product catalogue.",
@@ -2098,60 +2530,70 @@ export const ACTIONS: ActionTree = {
   },
   CHECKOUT: {
     "place-order": {
+      iconKey: "bid",
       id: "checkout.place-order",
       label: "Place order",
       description: "Submit the order with the chosen payment method.",
       kind: "primary",
     },
     "continue-to-verification": {
+      iconKey: "back",
       id: "checkout.continue-to-verification",
       label: "Continue",
       description: "Advance from address selection to the payment step.",
       kind: "primary",
     },
     "verify-otp": {
+      iconKey: "verify",
       id: "checkout.verify-otp",
       label: "Verify & Continue",
       description: "Submit the high-value-order one-time code and proceed to payment.",
       kind: "primary",
     },
     "resend-otp": {
+      iconKey: "send",
       id: "checkout.resend-otp",
       label: "Resend code",
       description: "Re-send the high-value-order verification code to the buyer's registered email.",
       kind: "ghost",
     },
     "pay-online": {
+      iconKey: "cart",
       id: "checkout.pay-online",
       label: "Pay Online (Razorpay)",
       description: "Initiate an online payment via Razorpay UPI/Card/NetBanking.",
       kind: "primary",
     },
     "pay-cod": {
+      iconKey: "cart",
       id: "checkout.pay-cod",
       label: "Cash on Delivery",
       description: "Place the order for cash-on-delivery payment.",
       kind: "secondary",
     },
     "admin-bypass": {
+      iconKey: "lock",
       id: "checkout.admin-bypass",
       label: "Skip Verification — Admin Bypass",
       description: "Admin test mode: skip identity verification and place a test order without payment.",
       kind: "secondary",
     },
     "admin-bypass-payment": {
+      iconKey: "lock",
       id: "checkout.admin-bypass-payment",
       label: "No Payment — Admin Bypass Order",
       description: "Admin test mode: place a real order record without charging any payment.",
       kind: "secondary",
     },
     "apply-coupon": {
+      iconKey: "confirm",
       id: "checkout.apply-coupon",
       label: "Apply coupon",
       description: "Validate and apply a coupon code at checkout before payment.",
       kind: "secondary",
     },
     "remove-coupon": {
+      iconKey: "delete",
       id: "checkout.remove-coupon",
       label: "Remove coupon",
       description: "Remove an applied coupon from the current checkout session.",
@@ -2160,18 +2602,21 @@ export const ACTIONS: ActionTree = {
   },
   NAV: {
     "sign-in": {
+      iconKey: "user",
       id: "nav.sign-in",
       label: "Sign in",
       description: "Navigate to the sign-in page.",
       kind: "primary",
     },
     "sign-up": {
+      iconKey: "user",
       id: "nav.sign-up",
       label: "Sign up",
       description: "Navigate to the registration page.",
       kind: "secondary",
     },
     "sign-out": {
+      iconKey: "back",
       id: "nav.sign-out",
       label: "Sign out",
       description: "End the current session.",
@@ -2185,6 +2630,7 @@ export const ACTIONS: ActionTree = {
   },
   MEDIA: {
     "copy-url": {
+      iconKey: "duplicate",
       id: "media.copy-url",
       label: "Copy URL",
       ariaLabel: "Copy media URL to clipboard",
@@ -2192,6 +2638,7 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
     },
     "clear-previews": {
+      iconKey: "delete",
       id: "media.clear-previews",
       label: "Clear previews",
       ariaLabel: "Clear uploaded previews",
@@ -2200,6 +2647,7 @@ export const ACTIONS: ActionTree = {
       permissions: ["admin", "moderator"],
     },
     "discard-staged": {
+      iconKey: "delete",
       id: "media.discard-staged",
       label: "Discard staged uploads",
       ariaLabel: "Discard all staged uploads",
@@ -2216,6 +2664,7 @@ export const ACTIONS: ActionTree = {
   },
   SUPPORT: {
     "create-ticket": {
+      iconKey: "create",
       id: "support.create-ticket",
       label: "Contact Support",
       ariaLabel: "Create a support ticket",
@@ -2223,6 +2672,7 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
     },
     "reply-ticket": {
+      iconKey: "reply",
       id: "support.reply-ticket",
       label: "Reply",
       ariaLabel: "Reply to this ticket",
@@ -2230,6 +2680,7 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
     },
     "close-ticket": {
+      iconKey: "cancel",
       id: "support.close-ticket",
       label: "Close Ticket",
       ariaLabel: "Close this support ticket",
@@ -2244,6 +2695,7 @@ export const ACTIONS: ActionTree = {
   },
   TESTER: {
     "save-note": {
+      iconKey: "save",
       id: "tester.save-note",
       label: "Save Note",
       ariaLabel: "Save comment and screenshot for this step",
@@ -2253,12 +2705,14 @@ export const ACTIONS: ActionTree = {
   },
   LOTTERY: {
     "pull": {
+      iconKey: "retry",
       id: "lottery.pull",
       label: "Submit Entry",
       description: "Submit a lottery pull entry — slot assigned immediately.",
       kind: "primary",
     },
     "flag-entry": {
+      iconKey: "report",
       id: "lottery.flag-entry",
       label: "Flag as Scammer",
       description: "Flag a lottery entry as fraudulent.",
@@ -2272,6 +2726,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "reopen-slot": {
+      iconKey: "restore",
       id: "lottery.reopen-slot",
       label: "Reopen Slot",
       description: "Free a flagged entry's slot so it can be claimed again.",
@@ -2284,6 +2739,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "cancel": {
+      iconKey: "cancel",
       id: "lottery.cancel",
       label: "Cancel Lottery",
       description: "Close the draw window and reject pending pulls.",

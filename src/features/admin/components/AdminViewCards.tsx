@@ -3,7 +3,8 @@
 import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
 import { Checkbox, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
-import { getStatusTone } from "../../../ui/columns/column-renderers";
+import type { StatusTone } from "../../../ui/columns/column-renderers";
+import { STATUS_TONE_CLASSES, renderStatusBadge } from "../../../ui/columns/cell-renderers";
 import { MediaImage } from "../../media/MediaImage";
 
 const __P = {
@@ -28,14 +29,6 @@ interface AdminViewCardsProps {
   resourceIcon?: string;
 }
 
-const STATUS_TONE_CLASSES: Record<string, string> = {
-  success: "bg-success-surface text-success",
-  warning: "bg-warning-surface text-warning",
-  error: "bg-error-surface text-error",
-  info: "bg-info-surface text-info",
-  neutral: "bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300",
-};
-
 function RowAvatar({ image, alt, icon, size = "9" }: { image?: string; alt: string; icon?: string; size?: "9" | "12" }) {
   const dims = size === "12" ? "h-12 w-12" : "h-9 w-9";
   return (
@@ -45,20 +38,30 @@ function RowAvatar({ image, alt, icon, size = "9" }: { image?: string; alt: stri
   );
 }
 
-const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; color: string }> = [
-  { key: "featured", label: "Featured", color: "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" },
-  { key: "isPromoted", label: "Promoted", color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-  { key: "isOnSale", label: "Sale", color: "bg-success-surface text-success" },
-  { key: "isSold", label: "Sold", color: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]" },
+/*
+ * Flag chips, all drawn from the shared tone map.
+ *
+ * Three defects lived in the previous literal list:
+ *  - `isSold` carried TWO backgrounds and TWO inks on one element
+ *    (`bg-…surface … bg-…surface-elevated …`). Tailwind emits all four and
+ *    stylesheet order — not string order — decides the winner, so the painted
+ *    colour was not what the list said. The identical bug was found and fixed
+ *    on the scammer status badge the same week.
+ *  - `isPromoted` was raw dual-theme purple (`bg-purple-100 … dark:bg-purple-900/30`),
+ *    the hand-written theme branching that variants exist to absorb.
+ *  - `featured` repeated its light classes under `dark:`, which is a no-op —
+ *    `-surface` tokens already invert with the theme.
+ */
+const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; tone: StatusTone }> = [
+  { key: "featured", label: "Featured", tone: "warning" },
+  { key: "isPromoted", label: "Promoted", tone: "info" },
+  { key: "isOnSale", label: "Sale", tone: "success" },
+  // Sold is the absence of availability, not a status outcome — neutral.
+  { key: "isSold", label: "Sold", tone: "neutral" },
 ];
 
 function StatusBadge({ status }: { status: string }) {
-  const tone = getStatusTone(status);
-  return (
-    <Span size="xs" weight="medium" className={`inline-flex truncate max-w-[120px] ${STATUS_TONE_CLASSES[tone]}`} rounded="full" padding="pill-xs">
-      {status}
-    </Span>
-  );
+  return <>{renderStatusBadge(status)}</>;
 }
 
 function SkeletonCard({ view }: { view: "grid" | "list" }) {
@@ -143,8 +146,8 @@ function AdminCardItem({
         </Stack>
         {flags.length > 0 && (
           <Row gap="xs" className="hidden sm:flex shrink-0">
-            {flags.map(({ key, label, color }) => (
-              <Span padding="pill-2xs" key={key} weight="medium" className={`inline-flex text-[10px] ${color}`} rounded="full">{label}</Span>
+            {flags.map(({ key, label, tone }) => (
+              <Span padding="pill-2xs" key={key} weight="medium" className={`inline-flex text-[10px] ${STATUS_TONE_CLASSES[tone]}`} rounded="full">{label}</Span>
             ))}
           </Row>
         )}
@@ -187,8 +190,8 @@ function AdminCardItem({
           />
           {flags.length > 0 && (
             <Row gap="xs" wrap>
-              {flags.map(({ key, label, color }) => (
-                <Span padding="pill-2xs" key={key} weight="medium" className={`inline-flex text-[10px] ${color}`} rounded="full">{label}</Span>
+              {flags.map(({ key, label, tone }) => (
+                <Span padding="pill-2xs" key={key} weight="medium" className={`inline-flex text-[10px] ${STATUS_TONE_CLASSES[tone]}`} rounded="full">{label}</Span>
               ))}
             </Row>
           )}

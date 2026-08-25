@@ -6,7 +6,62 @@
  * export const buildOrderColumns = createColumnBuilder(orderAdminColumns);
  */
 
-import type { TableColumn, ColumnExtensionOpts } from "../../contracts";
+import type { TableColumn, ColumnExtensionOpts, ColumnPriority } from "../../contracts";
+
+/*
+ * Field-name → breakpoint, from the same vocabulary the form field-dictionary
+ * uses. Applied ONLY when a column does not set `priority` itself.
+ *
+ * 🛑 The default for an unrecognised key is `"always"`, not `"lg"`.
+ *
+ * A `"lg"` default would have been tidier and would have silently hidden a
+ * column on every one of the ~25 existing column sets the moment this shipped
+ * — including, on some tables, the only identifying label. Safe-by-default
+ * plus an audit that nudges wide tables to declare priorities gets the same
+ * end state without a silent regression in between.
+ */
+const PRIORITY_BY_FIELD: Record<string, ColumnPriority> = {
+  // md — one state and one number is enough to triage a row
+  status: "md",
+  price: "md",
+  total: "md",
+  totalAmount: "md",
+  amount: "md",
+  listingType: "md",
+  type: "md",
+  // lg — relational context
+  category: "lg",
+  categorySlug: "lg",
+  brand: "lg",
+  brandSlug: "lg",
+  store: "lg",
+  storeName: "lg",
+  storeId: "lg",
+  quantity: "lg",
+  stockQuantity: "lg",
+  rating: "lg",
+  scope: "lg",
+  role: "lg",
+  // xl — audit metadata: useful, never urgent
+  createdAt: "xl",
+  updatedAt: "xl",
+  publishedAt: "xl",
+  id: "xl",
+  slug: "xl",
+  views: "xl",
+  viewCount: "xl",
+  productCount: "xl",
+  createdBy: "xl",
+  updatedBy: "xl",
+};
+
+/**
+ * Resolve a column's breakpoint. An explicit `priority` always wins; otherwise
+ * the field dictionary decides; otherwise the column shows at every width.
+ */
+export function resolveColumnPriority<T>(col: TableColumn<T>): ColumnPriority {
+  return col.priority ?? PRIORITY_BY_FIELD[col.key] ?? "always";
+}
 
 /**
  * Build a merged column list from base columns + extension opts.

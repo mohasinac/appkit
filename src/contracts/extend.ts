@@ -96,7 +96,49 @@ export interface TableColumn<T = unknown> {
   width?: string;
   /** Hide this column from the rendered table (keeps it in the array for export) */
   hidden?: boolean;
+  /**
+   * Lowest breakpoint at which this column is rendered. Default `"lg"`.
+   *
+   * The DataTable turns this into `hidden md:table-cell` / `lg:` / `xl:`
+   * INSIDE the primitive, so consumer code never authors a breakpoint prefix
+   * (and `audit-variant-prop-coverage` stays green).
+   *
+   * Set from the field dictionary, not by taste:
+   *   `always` — the thumbnail, the one identifying label, row actions
+   *   `md`     — one state and one number: status, price/total, type badge
+   *   `lg`     — relational context: category, store, quantity, rating
+   *   `xl`     — audit metadata: createdAt/updatedAt, id/slug, view counts
+   *
+   * A 7-column table with none of these set renders all 7 at 320px, which is
+   * what every table in this codebase did before this field existed.
+   */
+  priority?: ColumnPriority;
 }
+
+/** @see TableColumn.priority */
+export type ColumnPriority = "always" | "md" | "lg" | "xl";
+
+/**
+ * Tailwind classes per priority. `always` emits nothing — an unprefixed
+ * column is visible at every width.
+ *
+ * Written out in full rather than interpolated: Tailwind's scanner only sees
+ * literal class strings, so `hidden ${bp}:table-cell` would be purged.
+ */
+export const COLUMN_PRIORITY_CLASS: Record<ColumnPriority, string> = {
+  always: "",
+  md: "hidden md:table-cell",
+  lg: "hidden lg:table-cell",
+  xl: "hidden xl:table-cell",
+};
+
+/** The same, for a non-table (card/list) cell where `table-cell` is wrong. */
+export const COLUMN_PRIORITY_CLASS_BLOCK: Record<ColumnPriority, string> = {
+  always: "",
+  md: "hidden md:block",
+  lg: "hidden lg:block",
+  xl: "hidden xl:block",
+};
 
 // --- Column extension helper --------------------------------------------------
 

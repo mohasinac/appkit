@@ -8,6 +8,7 @@ import { surfaceError } from "../../client/api/surface-error";
 import { useToastSafe } from "./Toast";
 import { SHADOW_MAP } from "./surface-tokens";
 import type { ShadowKey } from "./surface-tokens";
+import { resolveIcon } from "../icons/icon-registry";
 
 function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
   const rect = host.getBoundingClientRect();
@@ -163,6 +164,23 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   action?: ActionDef;
 }
 
+/**
+ * The action's icon, rendered before its label.
+ *
+ * This is what makes `ActionDef.iconKey` real. It has existed on the type
+ * since the registry shipped, with a comment saying it is "resolved by the
+ * consumer's icon set" — there was no icon set, nothing resolved it, and every
+ * button in the app was text-only as a result.
+ *
+ * `aria-hidden` because the label (or `ariaLabel`) already names the action;
+ * announcing the glyph as well would read it twice.
+ */
+function ActionIcon({ action }: { action?: ActionDef }) {
+  const Icon = resolveIcon(action?.iconKey);
+  if (!Icon) return null;
+  return <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />;
+}
+
 // Map ActionKind → Button variant (caller can override via explicit variant prop)
 const ACTION_KIND_VARIANT: Record<string, keyof typeof UI_BUTTON.variants> = {
   primary: "primary",
@@ -208,7 +226,24 @@ export function Button({
 
   // Resolve defaults from action registry
   const resolvedVariant = variant ?? (action ? (ACTION_KIND_VARIANT[action.kind] ?? "primary") : "primary");
-  const resolvedChildren = children ?? (action ? action.label : undefined);
+  /*
+   * The icon is prepended only when the Button is rendering the action's OWN
+   * label. If the caller passed children they have composed their own content,
+   * and injecting a glyph into it would be a surprise.
+   */
+  const actionIcon = children === undefined && action?.iconKey ? <ActionIcon action={action} /> : null;
+  const resolvedChildren =
+    children ??
+    (action ? (
+      actionIcon ? (
+        <>
+          {actionIcon}
+          {action.label}
+        </>
+      ) : (
+        action.label
+      )
+    ) : undefined);
   const resolvedAriaLabel = props["aria-label"] ?? (action ? (action.ariaLabel ?? action.label) : undefined);
 
   const classes = twMerge(

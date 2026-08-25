@@ -112,10 +112,13 @@ export type {
   WithTransformOpts,
   GenericListResponse,
   TableColumn,
+  ColumnPriority,
   ColumnExtensionOpts,
   LayoutSlots,
   FeatureExtension,
 } from "./extend";
+// Value exports (the priority→class maps are runtime lookups, not types).
+export { COLUMN_PRIORITY_CLASS, COLUMN_PRIORITY_CLASS_BLOCK } from "./extend";
 
 // Table / Pagination / Sticky config
 export type {
