@@ -18,6 +18,8 @@ import { DataTable } from "../../admin/components/DataTable";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
+import { TextLink } from "../../../ui";
+import { ROUTES } from "../../../constants/index";
 
 const DEFAULT_SORT = "-bidDate";
 const SORT_OPTIONS = [
@@ -253,6 +255,15 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         title={detail?.productTitle || "Bid"}
         badges={detailBadge ? [{ label: detailBadge.label }] : undefined}
         fields={detail ? buildBidDetailFields(detail as never, "seller") : undefined}
+              footer={
+          detail ? (
+            // The full page — a modal cannot be linked, bookmarked or reloaded
+            // into, which is the whole reason the page exists.
+            <TextLink href={String(ROUTES.STORE.BID_DETAIL(detail.id))}>
+              Open full page →
+            </TextLink>
+          ) : undefined
+        }
       />
     </>
   );

@@ -85,6 +85,7 @@ export const ACCOUNT_ENDPOINTS = {
   HISTORY_MERGE: "/api/user/history/merge",
   REVIEWS: "/api/user/reviews",
   BIDS: "/api/user/bids",
+  BID_BY_ID: (id: string) => `/api/user/bids/${id}`,
   EXPORT: "/api/user/export",
   /** Claimed-coupons wallet — GET list, POST claim, DELETE by id. */
   COUPONS: "/api/user/coupons",

@@ -483,6 +483,12 @@ export type { PageViewTrackerProps } from "./features/analytics/components/PageV
 export { PAGE_VIEW_ENTITY_TYPES } from "./features/analytics/types";
 export type { PageViewEntityType } from "./features/analytics/types";
 export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
+// The ONE bid-detail field builder, shared by all three portals' list modals
+// and — since W22 — their detail pages. `viewer` is what decides whether the
+// bidder's identity is shown, so keeping it in one place is what stops a
+// buyer-facing surface ever rendering another bidder's name.
+export { buildBidDetailFields, bidStatusBadge } from "./features/auctions/components/bid-detail-fields";
+export type { BidDetailViewer } from "./features/auctions/components/bid-detail-fields";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
 export type {

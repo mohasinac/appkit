@@ -29,6 +29,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
+import { TextLink } from "../../../ui";
+import { ROUTES } from "../../../constants/index";
 
 interface AdminBidsResponse {
   items?: JsonArray;
@@ -173,6 +175,15 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
           detail
             ? buildBidDetailFields(detail.detail as never, "admin")
             : undefined
+        }
+        footer={
+          detail ? (
+            // The full page — a modal cannot be linked, bookmarked or reloaded
+            // into, which is the whole reason the page exists.
+            <TextLink href={String(ROUTES.ADMIN.BID_DETAIL(detail.id))}>
+              Open full page →
+            </TextLink>
+          ) : undefined
         }
         extra={
           // A bid moves through more states than any record a buyer owns, and

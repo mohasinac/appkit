@@ -106,9 +106,16 @@ export function UserBidsView() {
         fields={detail ? buildBidDetailFields(detail, "buyer") : undefined}
         footer={
           detail ? (
-            <TextLink href={String(ROUTES.PUBLIC.AUCTION_DETAIL(detail.productId))}>
-              View auction →
-            </TextLink>
+            <>
+              {/* The full page — a modal cannot be linked, bookmarked or
+                  reloaded into, which is the whole reason the page exists. */}
+              <TextLink href={String(ROUTES.USER.BID_DETAIL(detail.id))}>
+                Open full page →
+              </TextLink>
+              <TextLink href={String(ROUTES.PUBLIC.AUCTION_DETAIL(detail.productId))}>
+                View auction →
+              </TextLink>
+            </>
           ) : undefined
         }
       />
