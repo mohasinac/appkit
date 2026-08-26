@@ -17,7 +17,7 @@
  * parses this: `storeId` is set from the session, never from the body, so a
  * caller cannot write a category into someone else's store by adding a field.
  *
- * `productIds` and `isActive` are deliberately absent: they are managed after
+ * `productIds` is deliberately absent: it is managed after
  * creation (assigning products, toggling visibility), not typed into the
  * create form, and the repository supplies their defaults.
  *
