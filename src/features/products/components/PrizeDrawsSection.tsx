@@ -1,4 +1,8 @@
-import { sortBy } from "@mohasinac/appkit/client";
+// Import from the DEFINING module, never `@mohasinac/appkit/client` — that entry
+// is `"use client"`, so in this async Server Component `sortBy` would resolve to
+// a client-reference proxy and calling it throws during the server render
+// (Root Cause #18). That is exactly what took `section-prize-draws` down.
+import { sortBy } from "../../../constants/sort";
 import {
   Container,
   Div,

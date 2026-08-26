@@ -1,4 +1,4 @@
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation } from "../../../client/api/useApiMutation";
 
 import { apiClient } from "../../../http";
 

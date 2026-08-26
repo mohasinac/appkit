@@ -142,12 +142,23 @@ export function ProductFilters({
     { value: PRODUCT_FIELDS.CONDITION_VALUES.BROKEN, label: t("conditionBroken") },
   ];
 
-  const defaultStatusOptions: FacetOption[] = [
-    { value: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED, label: t("statusPublished") },
-    { value: PRODUCT_FIELDS.STATUS_VALUES.DRAFT, label: t("statusDraft") },
-    { value: PRODUCT_FIELDS.STATUS_VALUES.IN_REVIEW, label: t("statusInReview") },
-    { value: PRODUCT_FIELDS.STATUS_VALUES.ARCHIVED, label: t("statusArchived") },
-  ];
+  const resolvedVariant: ProductFilterVariant =
+    variant ?? (showStatus ? "admin" : "public");
+  const shouldShowStatus = resolvedVariant !== "public" || showStatus;
+
+  // Built ONLY when the status facet actually renders. This used to be
+  // constructed unconditionally at the top of the component, so every public
+  // listing that never shows a status facet still called t() four times —
+  // five such listings mount ProductFilters, which is how one missing key
+  // (`statusInReview`) produced a MISSING_MESSAGE storm on every page load.
+  const defaultStatusOptions: FacetOption[] = shouldShowStatus
+    ? [
+        { value: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED, label: t("statusPublished") },
+        { value: PRODUCT_FIELDS.STATUS_VALUES.DRAFT, label: t("statusDraft") },
+        { value: PRODUCT_FIELDS.STATUS_VALUES.IN_REVIEW, label: t("statusInReview") },
+        { value: PRODUCT_FIELDS.STATUS_VALUES.ARCHIVED, label: t("statusArchived") },
+      ]
+    : [];
 
   const splitPipe = (key: string) =>
     table.get(key) ? table.get(key).split("|").filter(Boolean) : [];
@@ -160,10 +171,6 @@ export function ProductFilters({
   const selectedStatuses = splitPipe(TABLE_KEYS.STATUS);
   const selectedSublistings = splitPipe(TABLE_KEYS.SUBLISTING_CATEGORY);
   const selectedFeatures = splitPipe(TABLE_KEYS.FEATURES);
-
-  const resolvedVariant: ProductFilterVariant =
-    variant ?? (showStatus ? "admin" : "public");
-  const shouldShowStatus = resolvedVariant !== "public" || showStatus;
 
   return (
     <Div>

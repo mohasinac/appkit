@@ -1,7 +1,7 @@
 "use client"
 import { useRef, useEffect } from "react";
 import { Div, Row, Span } from "../../ui";
-import { resolveMediaUrl, getYouTubeVideoId } from "../../utils/media-url";
+import { resolveMediaUrl, resolveVideoUrl, getYouTubeVideoId } from "../../utils/media-url";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 
 /**
@@ -86,7 +86,9 @@ export function MediaVideo({
 }: MediaVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
-  const resolvedSrc = resolveMediaUrl(src);
+  // Video src must NOT fall through to /api/media/ext (image-only, 400s on
+  // video/mp4). The poster is an image and stays on the normal image path.
+  const resolvedSrc = resolveVideoUrl(src);
   const resolvedPoster = resolveMediaUrl(thumbnailUrl);
   const youtubeId = getYouTubeVideoId(src);
 

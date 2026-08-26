@@ -102,7 +102,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
       timestamp: new Date().toISOString(),
     });
 
-    trackError(error, ErrorCategory.UI, ErrorSeverity.HIGH);
+    // Forward componentStack — `serverErrors` declares the field and, until the
+    // error tracker was wired to the client-error beacon, nothing ever produced
+    // it. It is the fastest way to identify which subtree actually blew up.
+    trackError(error, ErrorCategory.UI, ErrorSeverity.HIGH, {
+      metadata: {
+        componentStack: errorInfo.componentStack ?? null,
+        digest: (error as Error & { digest?: string }).digest ?? null,
+      },
+    });
 
     this.props.onError?.(error, errorInfo);
   }

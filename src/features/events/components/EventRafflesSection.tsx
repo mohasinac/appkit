@@ -1,6 +1,12 @@
 import { normalizeError } from "../../../errors/normalize";
-import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit/client";
-import { sortBy } from "@mohasinac/appkit/client";
+import { serverLogger } from "../../../monitoring/server-logger";
+// Import from the DEFINING modules, never `@mohasinac/appkit/client` — that
+// entry is `"use client"`, so in this async Server Component these would resolve
+// to client-reference proxies and calling them throws during the server render
+// (Root Cause #18). The `try/catch` below swallowed that throw, which is why
+// this section silently rendered nothing instead of failing loudly.
+import { sieveFilter, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
+import { sortBy } from "../../../constants/sort";
 import {
   Container,
   Div,
@@ -40,6 +46,12 @@ export async function EventRafflesSection({
     events = (result.items ?? []) as unknown as EventItem[];
   } catch (_err) {
     void normalizeError(_err);
+    // Loud on purpose: a swallowed failure here is indistinguishable from "no
+    // active raffles", which is how this section stayed invisible in production
+    // without anyone noticing (Root Cause #59).
+    serverLogger.error("EventRafflesSection query failed", {
+      error: _err instanceof Error ? _err.message : String(_err),
+    });
     events = [];
   }
 

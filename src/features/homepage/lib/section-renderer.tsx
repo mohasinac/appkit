@@ -28,6 +28,7 @@ import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
 // S-SBUNI-3 2026-05-13 — FeaturedBundlesSection rebuilt against
 // categoryType:"bundle" rows on the categories collection.
 import { FeaturedBundlesSection } from "../components/FeaturedBundlesSection";
+import { HomepageSectionBoundary } from "../components/HomepageSectionBoundary";
 import { PrizeDrawsSection } from "../../products/components/PrizeDrawsSection";
 import { EventRafflesSection } from "../../events/components/EventRafflesSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
@@ -521,7 +522,12 @@ export function renderSection(
   const adSlotKey = AD_SLOT_MAP[section.type];
   return (
     <React.Fragment key={section.id}>
-      {sectionElement}
+      {/* One section must never be able to take down the whole homepage. A
+          throw inside any section used to propagate to [locale]/error.tsx and
+          replace the entire page — see HomepageSectionBoundary. */}
+      <HomepageSectionBoundary sectionId={section.id} sectionType={section.type}>
+        {sectionElement}
+      </HomepageSectionBoundary>
       {adSlots && adSlotKey !== undefined && adSlotKey in adSlots && adSlots[adSlotKey]}
     </React.Fragment>
   );

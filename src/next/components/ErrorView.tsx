@@ -59,9 +59,14 @@ export function ErrorView({
     >
       <Heading level={2} className="mb-2">{heading}</Heading>
       <Text variant="secondary" className="mb-6">{description}</Text>
-      {process.env.NODE_ENV === "development" && error.digest && (
+      {/* Shown in production too, deliberately. A digest is an opaque hash, not
+          sensitive data, and it is the ONLY identifier that ties what the user
+          sees to the server-side row recorded by `onRequestError`. Hiding it in
+          prod meant a user reporting "something went wrong" could hand over
+          nothing actionable. */}
+      {error.digest && (
         <Text variant="muted" size="xs" className="mb-4">
-          digest: {error.digest}
+          Reference: {error.digest}
         </Text>
       )}
       <Button type="button" variant="primary" onClick={reset}>
