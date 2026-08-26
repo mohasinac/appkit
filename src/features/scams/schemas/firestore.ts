@@ -25,6 +25,7 @@
  *  - SCAMMER_MATCH_FIELDS lists the Firestore array-contains fields used for this query
  */
 
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import type { ScamType } from "../constants/scam-types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
@@ -213,6 +214,17 @@ export interface ScammerDocument extends BaseDocument {
    * Reset to false when all contests are reviewed.
    */
   isContested?: boolean;
+
+  /**
+   * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
+   *
+   * A scammer profile is a public accusation against a named person, so "who
+   * verified this and on what note" is the record that matters most on it.
+   * `verifiedBy`/`verifiedAt` only ever hold the LAST decision — a profile
+   * verified, then removed, then re-verified keeps no trace of the middle.
+   */
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
 }
 
 // ============================================================================
@@ -642,3 +654,36 @@ export const SCAMMER_STATUS_LABELS: Record<ScammerStatus, string> = {
   rejected: "Rejected",
   removed: "Removed",
 };
+
+
+/**
+ * The fields whose changes earn a timeline entry.
+ *
+ * `verificationNote` is included because it is the REASON attached to a
+ * decision, and it is overwritten by the next one.
+ */
+export const SCAMMER_TRACKED_FIELDS = [
+  "status",
+  "verifiedBy",
+  "verifiedAt",
+  "verificationNote",
+  "isPubliclyVisible",
+] as const;
+
+/**
+ * PII on this document, for `withHistory`'s scrub. A scammer profile is built
+ * ENTIRELY out of identifying details, so this list is long on purpose —
+ * `encryptPiiFields` never descends into arrays, and history is an array.
+ */
+export const SCAMMER_HISTORY_PII_FIELDS = [
+  "name",
+  "displayName",
+  "email",
+  "phone",
+  "phoneNumber",
+  "upiId",
+  "bankAccount",
+  "accountNumber",
+  "reporterEmail",
+  "reporterName",
+] as const;

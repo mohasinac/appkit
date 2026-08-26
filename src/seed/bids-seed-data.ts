@@ -42,7 +42,15 @@ const BIDDER_NAMES: Record<string, string> = {
   "user-ananya-collector": "Mock User 9",
 };
 
-function withBidDefaults(b: FirestoreDocument): Partial<BidDocument> {
+/*
+ * Typed on the document, not `FirestoreDocument`. Once `BidDocument` gained
+ * `statusHistory?: StatusChangeEntry[]`, `Partial<BidDocument>` stopped being
+ * assignable to `FirestoreDocument` — an array of objects does not satisfy
+ * that index signature. The right fix is to narrow the parameter to what the
+ * caller actually passes rather than widen the document to keep a helper
+ * happy.
+ */
+function withBidDefaults(b: Partial<BidDocument>): Partial<BidDocument> {
   return {
     ...b,
     productTitle: b.productTitle as string ?? (b.productId as string ?? "").replace(/^auction-/, "").replace(/-/g, " "),

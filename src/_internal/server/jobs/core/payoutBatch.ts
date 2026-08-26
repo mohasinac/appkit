@@ -18,7 +18,21 @@ type PayoutRow = PayoutEntry["data"];
 
 async function dispatch(ctx: JobContext, entry: { ref: DocumentReference; data: PayoutRow }): Promise<void> {
   const { ref, data: payout } = entry;
-  await payoutRepository.markProcessing(ref);
+
+  /*
+   * The batch's running copy of the document, threaded through every write.
+   *
+   * Two reasons it is not just `payout`. (a) The snapshot came from the
+   * pending query, so history costs no extra read. (b) The sequence is
+   * pending → processing → failed; diffing the final write against the
+   * ORIGINAL snapshot would record "pending → failed" and lose the dispatch
+   * attempt that is the whole reason anyone opens the timeline.
+   */
+  let current: PayoutRow = payout;
+  const actor = { role: "system" as const };
+
+  await payoutRepository.markProcessing(ref, { actor }, current as never);
+  current = { ...current, status: "processing" };
 
   try {
     const keyId = ctx.env("RAZORPAY_KEY_ID") ?? "";
@@ -82,14 +96,14 @@ async function dispatch(ctx: JobContext, entry: { ref: DocumentReference; data: 
     }
 
     const result = (await response.json()) as { id: string; status: string };
-    await payoutRepository.recordSuccess(ref, result.id, result.status);
+    await payoutRepository.recordSuccess(ref, result.id, result.status, { actor }, current as never);
     ctx.logger.info(`Payout ${payout.id} dispatched`, { razorpayId: result.id, razorpayStatus: result.status });
   } catch (error) {
     void normalizeError(error);
     const failureCount = ((payout as PayoutRow & { failureCount?: number }).failureCount ?? 0) + 1;
     const isFinal = failureCount >= MAX_FAILURES;
     const reason = error instanceof Error ? error.message : String(error);
-    await payoutRepository.recordFailure(ref, failureCount, reason, isFinal);
+    await payoutRepository.recordFailure(ref, failureCount, reason, isFinal, { actor }, current as never);
     if (isFinal) {
       ctx.logger.error(`Payout ${payout.id} permanently failed after ${MAX_FAILURES} attempts`, error, {
         sellerId: payout.storeId,

@@ -24,9 +24,11 @@ export async function submitCatalogueItemForApprovalAction(itemId: string): Prom
 
     assertCatalogueImagesFresh(item);
 
-    await catalogueRepository.update(itemId, {
-      listingStatus: "pending_admin_approval",
-      submittedForApprovalAt: new Date(),
-    });
+    await catalogueRepository.setListingStatus(
+      itemId,
+      { listingStatus: "pending_admin_approval", submittedForApprovalAt: new Date() },
+      { actor: { role: "buyer", uid: user.uid }, trigger: "submitCatalogueForApproval" },
+      item,
+    );
   });
 }

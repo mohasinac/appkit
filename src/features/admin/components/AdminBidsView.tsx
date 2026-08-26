@@ -28,6 +28,7 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 
 interface AdminBidsResponse {
   items?: JsonArray;
@@ -172,6 +173,18 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
           detail
             ? buildBidDetailFields(detail.detail as never, "admin")
             : undefined
+        }
+        extra={
+          // A bid moves through more states than any record a buyer owns, and
+          // every one of them happened inside a settlement batch with nothing
+          // recording it until W18. Absent history renders the empty label,
+          // never a step invented from `updatedAt`.
+          <RecordStatusTimeline
+            entries={(detail?.detail as { statusHistory?: never[] } | undefined)?.statusHistory}
+            truncatedCount={
+              (detail?.detail as { statusHistoryTruncated?: number } | undefined)?.statusHistoryTruncated
+            }
+          />
         }
       />
       <ConfirmDeleteModal

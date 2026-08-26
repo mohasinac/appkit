@@ -28,11 +28,17 @@ export async function approveCatalogueListingAction(
 
     const product = await createProductFromCatalogueItem(item, CONSIGNMENT_STORE_ID);
 
-    await catalogueRepository.update(itemId, {
-      listingStatus: "listed",
-      linkedProductId: product.id,
-      linkedProductSlug: product.slug ?? product.id,
-    });
+    // `item` came from the findById above, so the timeline entry is free.
+    await catalogueRepository.setListingStatus(
+      itemId,
+      {
+        listingStatus: "listed",
+        linkedProductId: product.id,
+        linkedProductSlug: product.slug ?? product.id,
+      },
+      { actor: { role: "admin", uid: user.uid }, trigger: "approveCatalogueListing" },
+      item,
+    );
 
     return { productId: product.id, productSlug: product.slug ?? product.id };
   });
@@ -49,9 +55,13 @@ export async function rejectCatalogueListingAction(itemId: string, reason: strin
       throw new ValidationError("Only items pending approval can be rejected");
     }
 
-    await catalogueRepository.update(itemId, {
-      listingStatus: "rejected",
-      rejectionReason: reason,
-    });
+    await catalogueRepository.setListingStatus(
+      itemId,
+      { listingStatus: "rejected", rejectionReason: reason },
+      // The reason is the point of the entry — `rejectionReason` on the
+      // document is overwritten by the next decision.
+      { actor: { role: "admin", uid: user.uid }, trigger: "rejectCatalogueListing", reason },
+      item,
+    );
   });
 }

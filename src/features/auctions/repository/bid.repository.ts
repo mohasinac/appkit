@@ -25,7 +25,17 @@ import type {
   BidAdminUpdateInput,
   BidStatus,
 } from "../schemas";
-import { BID_COLLECTION, createBidId } from "../schemas";
+import { BID_COLLECTION, BID_TRACKED_FIELDS, BID_HISTORY_PII_FIELDS, createBidId } from "../schemas";
+import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import type { FirestoreDocument } from "../../../schemas/types";
+
+/** Who/why for a bid write that lands in `statusHistory`. */
+export interface BidWriteContext {
+  actor?: HistoryActor;
+  trigger?: string;
+  reason?: string;
+  note?: string;
+}
 import {
   encryptPiiFields,
   decryptPiiFields,
@@ -167,12 +177,24 @@ export class BidRepository extends BaseRepository<BidDocument> {
     };
   }
 
-  markWon(batch: WriteBatch, ref: DocumentReference): void {
-    batch.update(ref, {
-      status: "won",
-      isWinning: true,
-      updatedAt: new Date(),
-    });
+  /*
+   * ── Batch mutators ─────────────────────────────────────────────────────
+   *
+   * These take a `DocumentReference` because settlement writes every bid on
+   * an auction in one Firestore batch. `prior` is the document from the SAME
+   * query that produced the ref — every caller has it (`activeBids` and
+   * `losers` are both `{ ref, data }` pairs), so history costs no extra read
+   * even when an auction closes with hundreds of bids (Rule #6).
+   *
+   * Omitting `prior` is legitimate rather than broken: the entry then records
+   * `undefined → "lost"`, which is still true and still stamped with who and
+   * when. It just cannot say what the bid was before.
+   */
+  markWon(batch: WriteBatch, ref: DocumentReference, ctx?: BidWriteContext, prior?: BidDocument | null): void {
+    batch.update(
+      ref,
+      this.withBidHistory(prior, { status: "won", isWinning: true, updatedAt: new Date() }, ctx, "markWon"),
+    );
   }
 
   /**
@@ -183,8 +205,12 @@ export class BidRepository extends BaseRepository<BidDocument> {
    * /user/bids could not link anywhere, and nothing could tell a settled win
    * from an unpaid one.
    */
-  async attachOrder(bidId: string, orderId: string): Promise<void> {
-    await this.update(bidId, { orderId, updatedAt: new Date() });
+  async attachOrder(bidId: string, orderId: string, ctx?: BidWriteContext, prior?: BidDocument | null): Promise<void> {
+    const current = prior !== undefined ? prior : await this.findById(bidId);
+    await this.update(
+      bidId,
+      this.withBidHistory(current, { orderId, updatedAt: new Date() }, ctx, "attachOrder") as never,
+    );
   }
 
   /**
@@ -192,16 +218,24 @@ export class BidRepository extends BaseRepository<BidDocument> {
    * (outbid) — this bidder won and then defaulted, which a seller may want to
    * act on.
    */
-  async markForfeited(bidId: string): Promise<void> {
-    await this.update(bidId, { status: "forfeited", isWinning: false, updatedAt: new Date() });
+  async markForfeited(bidId: string, ctx?: BidWriteContext, prior?: BidDocument | null): Promise<void> {
+    const current = prior !== undefined ? prior : await this.findById(bidId);
+    await this.update(
+      bidId,
+      this.withBidHistory(
+        current,
+        { status: "forfeited", isWinning: false, updatedAt: new Date() },
+        ctx,
+        "markForfeited",
+      ) as never,
+    );
   }
 
-  markLost(batch: WriteBatch, ref: DocumentReference): void {
-    batch.update(ref, {
-      status: "lost",
-      isWinning: false,
-      updatedAt: new Date(),
-    });
+  markLost(batch: WriteBatch, ref: DocumentReference, ctx?: BidWriteContext, prior?: BidDocument | null): void {
+    batch.update(
+      ref,
+      this.withBidHistory(prior, { status: "lost", isWinning: false, updatedAt: new Date() }, ctx, "markLost"),
+    );
   }
 
   /**
@@ -210,11 +244,23 @@ export class BidRepository extends BaseRepository<BidDocument> {
    * settlement job, and the losing bids can be any number, so this writes them
    * in Firestore-batch chunks rather than one round-trip per bid.
    */
-  async markManyLost(refs: readonly DocumentReference[]): Promise<void> {
+  async markManyLost(
+    entries: readonly (DocumentReference | { ref: DocumentReference; data?: BidDocument })[],
+    ctx?: BidWriteContext,
+  ): Promise<void> {
     const CHUNK = 400; // under Firestore's 500-write batch limit, with headroom
-    for (let i = 0; i < refs.length; i += CHUNK) {
+    for (let i = 0; i < entries.length; i += CHUNK) {
       const batch = this.db.batch();
-      for (const ref of refs.slice(i, i + CHUNK)) this.markLost(batch, ref);
+      for (const entry of entries.slice(i, i + CHUNK)) {
+        // Accepts a bare ref OR a {ref, data} pair, so the caller that already
+        // holds the documents gets a real before-value on the timeline and the
+        // one that does not still works. Widened rather than made required
+        // because forcing a read per losing bid would put a large auction's
+        // settlement over the Firestore read budget.
+        const isPair = typeof entry === "object" && "ref" in entry;
+        const ref = isPair ? entry.ref : (entry as DocumentReference);
+        this.markLost(batch, ref, ctx, isPair ? entry.data : undefined);
+      }
       await batch.commit();
     }
   }
@@ -224,23 +270,55 @@ export class BidRepository extends BaseRepository<BidDocument> {
    * status means "won, then defaulted", and a lapsed claim never won anything;
    * the auction it was placed against carried on untouched.
    */
-  async markCancelled(bidId: string): Promise<void> {
-    await this.update(bidId, { status: "cancelled", isWinning: false, updatedAt: new Date() });
+  async markCancelled(bidId: string, ctx?: BidWriteContext, prior?: BidDocument | null): Promise<void> {
+    const current = prior !== undefined ? prior : await this.findById(bidId);
+    await this.update(
+      bidId,
+      this.withBidHistory(
+        current,
+        { status: "cancelled", isWinning: false, updatedAt: new Date() },
+        ctx,
+        "markCancelled",
+      ) as never,
+    );
   }
 
-  markOutbid(batch: WriteBatch, ref: DocumentReference): void {
-    batch.update(ref, {
-      status: "outbid",
-      isWinning: false,
-      updatedAt: new Date(),
-    });
+  markOutbid(batch: WriteBatch, ref: DocumentReference, ctx?: BidWriteContext, prior?: BidDocument | null): void {
+    batch.update(
+      ref,
+      this.withBidHistory(prior, { status: "outbid", isWinning: false, updatedAt: new Date() }, ctx, "markOutbid"),
+    );
   }
 
-  markWinning(batch: WriteBatch, ref: DocumentReference): void {
-    batch.update(ref, {
-      isWinning: true,
-      updatedAt: new Date(),
-    });
+  markWinning(batch: WriteBatch, ref: DocumentReference, ctx?: BidWriteContext, prior?: BidDocument | null): void {
+    batch.update(
+      ref,
+      this.withBidHistory(prior, { isWinning: true, updatedAt: new Date() }, ctx, "markWinning"),
+    );
+  }
+
+  /** Append a timeline entry when the patch touches a tracked field. */
+  private withBidHistory(
+    current: BidDocument | null | undefined,
+    patch: Partial<BidDocument>,
+    ctx: BidWriteContext | undefined,
+    defaultTrigger: string,
+  ): Partial<BidDocument> {
+    const withEntry = withHistory(
+      current as unknown as FirestoreDocument | undefined,
+      patch as FirestoreDocument,
+      {
+        tracked: BID_TRACKED_FIELDS,
+        actor: ctx?.actor ?? { role: "system" },
+        trigger: ctx?.trigger ?? defaultTrigger,
+        reason: ctx?.reason,
+        note: ctx?.note,
+        // `userName`/`userEmail` are denormalised onto every bid, and
+        // `encryptPiiFields` never descends into arrays.
+        piiFields: BID_HISTORY_PII_FIELDS,
+      },
+    );
+    return (withEntry as Partial<BidDocument> | null) ?? patch;
   }
 
   /**

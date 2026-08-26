@@ -422,6 +422,8 @@ export type { ColorPickerFieldProps } from "./ui/forms";
 export { ColorPickerField } from "./ui/forms";
 export type { FormErrorSummaryProps } from "./ui/forms";
 export { FormErrorSummary } from "./ui/forms";
+export { RecordStatusTimeline } from "./features/status-history/index";
+export type { SerialisedStatusChangeEntry } from "./_internal/shared/history/types";
 export type { FormErrorListProps } from "./ui/forms";
 export { FormErrorList } from "./ui/forms";
 export { useFormBottomActions } from "./features/layout/index";

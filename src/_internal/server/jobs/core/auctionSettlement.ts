@@ -49,7 +49,11 @@ async function releasePendingBuyouts(
   for (const hold of holds) {
     try {
       await cartRepository.removeItemsByBidId(hold.data.userId, hold.id);
-      await bidRepository.markCancelled(hold.id);
+      await bidRepository.markCancelled(hold.id, {
+        actor: { role: "system" },
+        trigger: "auctionSettlement:lapsedBuyoutHold",
+        reason: "The auction ended before this Buy Now claim was paid for.",
+      });
       await sendNotification({
         userId: hold.data.userId,
         type: "auction_ended",
@@ -106,7 +110,11 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
   const reserve = product.reservePrice;
   if (typeof reserve === "number" && reserve > 0 && winnerEntry.data.bidAmount < reserve) {
     const batch = ctx.db.batch();
-    activeBids.forEach(({ ref }) => bidRepository.markLost(batch, ref));
+    // `data` comes from the same query as `ref`, so the timeline entry is
+    // free even on an auction that closed with hundreds of bids (Rule #6).
+    activeBids.forEach(({ ref, data }) =>
+      bidRepository.markLost(batch, ref, { actor: { role: "system" as const }, trigger: "auctionSettlement" }, data),
+    );
     productRepository.updateStatusInBatch(batch, product.id, "archived");
     await batch.commit();
 
@@ -152,8 +160,10 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
   }
 
   const batch = ctx.db.batch();
-  bidRepository.markWon(batch, winnerEntry.ref);
-  loserEntries.forEach(({ ref }) => bidRepository.markLost(batch, ref));
+  bidRepository.markWon(batch, winnerEntry.ref, { actor: { role: "system" as const }, trigger: "auctionSettlement" }, winnerEntry.data);
+  loserEntries.forEach(({ ref, data }) =>
+    bidRepository.markLost(batch, ref, { actor: { role: "system" as const }, trigger: "auctionSettlement" }, data),
+  );
 
   // Two-axis model: mark as sold without changing publish status.
   batch.update(ctx.db.collection("products").doc(product.id), {

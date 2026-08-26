@@ -20,7 +20,10 @@ import type {
   PayoutStatus,
   PayoutUpdateInput,
 } from "../schemas";
-import { PAYOUT_COLLECTION, PAYOUT_FIELDS, createPayoutId } from "../schemas";
+import { PAYOUT_COLLECTION, PAYOUT_FIELDS, PAYOUT_TRACKED_FIELDS, createPayoutId } from "../schemas";
+import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import type { FirestoreDocument } from "../../../schemas/types";
+
 import {
   encryptPiiFields,
   decryptPiiFields,
@@ -30,6 +33,14 @@ import {
   encryptPayoutBankAccount,
   decryptPayoutBankAccount,
 } from "../../../security";
+
+/** Who/why for a payout write that lands in `statusHistory`. */
+export interface PayoutWriteContext {
+  actor?: HistoryActor;
+  trigger?: string;
+  reason?: string;
+  note?: string;
+}
 
 export class PayoutRepository extends BaseRepository<PayoutDocument> {
   constructor() {
@@ -185,42 +196,75 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   }
 
   /**
-   * Update payout status (admin action)
+   * Update payout status (admin action).
+   *
+   * `prior` keeps the timeline entry read-free — the admin route already
+   * fetches the payout to authorise the change (Rule #6).
    */
   async updateStatus(
     payoutId: string,
     status: PayoutStatus,
     extra?: PayoutUpdateInput,
+    ctx?: PayoutWriteContext,
+    prior?: PayoutDocument | null,
   ): Promise<PayoutDocument> {
-    return this.update(payoutId, {
-      status,
-      ...extra,
-      ...(status === PAYOUT_FIELDS.STATUS_VALUES.PAID ||
-      status === PAYOUT_FIELDS.STATUS_VALUES.FAILED
-        ? { processedAt: new Date() }
-        : {}),
-      updatedAt: new Date(),
-    });
+    const current = prior !== undefined ? prior : await this.findById(payoutId);
+    return this.update(
+      payoutId,
+      this.withPayoutHistory(
+        current,
+        {
+          status,
+          ...extra,
+          ...(status === PAYOUT_FIELDS.STATUS_VALUES.PAID ||
+          status === PAYOUT_FIELDS.STATUS_VALUES.FAILED
+            ? { processedAt: new Date() }
+            : {}),
+          updatedAt: new Date(),
+        },
+        ctx,
+        "adminUpdatePayout",
+      ),
+    );
   }
 
-  markProcessing(ref: DocumentReference): Promise<WriteResult> {
-    return ref.update({
-      status: "processing",
-      processedAt: new Date(),
-      updatedAt: new Date(),
-    });
+  /*
+   * ── Batch dispatch primitives ──────────────────────────────────────────
+   *
+   * These take a `DocumentReference` rather than an id because the payouts
+   * batch already holds one from its query snapshot. `prior` comes from the
+   * SAME snapshot, so history costs no read here either — but it must be the
+   * caller's running copy, not the original: the sequence is
+   * pending → processing → failed, and diffing the final write against the
+   * ORIGINAL snapshot would record "pending → failed" and lose the dispatch
+   * attempt entirely.
+   */
+  markProcessing(ref: DocumentReference, ctx?: PayoutWriteContext, prior?: PayoutDocument | null): Promise<WriteResult> {
+    return ref.update(
+      this.withPayoutHistory(
+        prior,
+        { status: "processing", processedAt: new Date(), updatedAt: new Date() },
+        ctx,
+        "payoutBatch:dispatch",
+      ),
+    );
   }
 
   recordSuccess(
     ref: DocumentReference,
     razorpayPayoutId: string,
     razorpayStatus: string,
+    ctx?: PayoutWriteContext,
+    prior?: PayoutDocument | null,
   ): Promise<WriteResult> {
-    return ref.update({
-      razorpayPayoutId,
-      razorpayStatus,
-      updatedAt: new Date(),
-    });
+    return ref.update(
+      this.withPayoutHistory(
+        prior,
+        { razorpayPayoutId, razorpayStatus, updatedAt: new Date() },
+        ctx,
+        "payoutBatch:accepted",
+      ),
+    );
   }
 
   recordFailure(
@@ -228,13 +272,49 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     failureCount: number,
     reason: string,
     isFinal: boolean,
+    ctx?: PayoutWriteContext,
+    prior?: PayoutDocument | null,
   ): Promise<WriteResult> {
-    return ref.update({
-      status: isFinal ? "failed" : "pending",
-      failureCount,
-      lastFailureReason: reason,
-      updatedAt: new Date(),
-    });
+    return ref.update(
+      this.withPayoutHistory(
+        prior,
+        {
+          status: isFinal ? "failed" : "pending",
+          failureCount,
+          lastFailureReason: reason,
+          updatedAt: new Date(),
+        },
+        // The reason is the point of the entry — `lastFailureReason` is
+        // overwritten by the next retry, so history is where the earlier
+        // attempts survive.
+        { ...ctx, reason },
+        isFinal ? "payoutBatch:failedFinal" : "payoutBatch:failedRetrying",
+      ),
+    );
+  }
+
+  /** Append a timeline entry when the patch touches a tracked field. */
+  private withPayoutHistory(
+    current: PayoutDocument | null | undefined,
+    patch: Partial<PayoutDocument>,
+    ctx: PayoutWriteContext | undefined,
+    defaultTrigger: string,
+  ): Partial<PayoutDocument> {
+    const withEntry = withHistory(
+      current as unknown as FirestoreDocument | undefined,
+      patch as FirestoreDocument,
+      {
+        tracked: PAYOUT_TRACKED_FIELDS,
+        actor: ctx?.actor ?? { role: "system" },
+        trigger: ctx?.trigger ?? defaultTrigger,
+        reason: ctx?.reason,
+        note: ctx?.note,
+        // `sellerEmail` / `upiId` — `encryptPiiFields` never descends into
+        // arrays, so either reaching `changes` would persist in PLAINTEXT.
+        piiFields: PAYOUT_PII_FIELDS,
+      },
+    );
+    return (withEntry as Partial<PayoutDocument> | null) ?? patch;
   }
 
   /**

@@ -32,6 +32,7 @@ import { createShipmentSchema } from "../schemas/validation";
 import { useShipment } from "../hooks/useShipments";
 import type { ShipmentDocument, ShipmentLot } from "../schemas/firestore";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 
 const STATUS_OPTIONS = [
   { label: "Planning", value: "planning" },
@@ -155,6 +156,20 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
 
           {!isCreate && shipmentId && (
             <ShipmentLotsSection shipmentId={shipmentId} lots={lots} onLotsChanged={refetchLots} />
+          )}
+
+          {/*
+            "How many times did the ETA slip before this landed" — each slip
+            overwrites `etaDate`, so the timeline is the only place the
+            earlier promises survive.
+          */}
+          {!isCreate && (
+            <RecordStatusTimeline
+              entries={(shipment as { statusHistory?: never[] } | undefined)?.statusHistory}
+              truncatedCount={
+                (shipment as { statusHistoryTruncated?: number } | undefined)?.statusHistoryTruncated
+              }
+            />
           )}
         </>
       )}

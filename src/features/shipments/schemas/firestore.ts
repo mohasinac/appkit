@@ -17,6 +17,7 @@ import {
   generateShipmentId,
   type GenerateShipmentIdInput,
 } from "../../../utils/id-generators";
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { MediaField } from "../../media/types";
 import type { ListingType } from "../../products/types";
@@ -97,6 +98,10 @@ export interface ShipmentDocument extends BaseDocument {
   totalsComputedAt?: Date;
 
   createdBy: string;
+
+  /** Who changed what, when, and why. See § "Status History" in CLAUDE.md. */
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
 }
 
 export interface ShipmentLot extends BaseDocument {
@@ -233,3 +238,25 @@ export const shipmentQueryHelpers = {
 export function createShipmentId(input: GenerateShipmentIdInput): string {
   return generateShipmentId(input);
 }
+
+
+/**
+ * The fields whose changes earn a timeline entry.
+ *
+ * A procurement shipment's dates ARE its status for practical purposes — "ETA
+ * slipped twice before it landed" is the question this answers, and each slip
+ * overwrites the previous `etaDate`.
+ */
+export const SHIPMENT_TRACKED_FIELDS = [
+  "status",
+  "etaDate",
+  "receivedDate",
+  "trackingNumber",
+] as const;
+
+/** PII on this document, for `withHistory`'s scrub. */
+export const SHIPMENT_HISTORY_PII_FIELDS = [
+  "supplierEmail",
+  "supplierPhone",
+  "contactName",
+] as const;

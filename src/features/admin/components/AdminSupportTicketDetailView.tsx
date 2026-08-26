@@ -6,6 +6,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -47,6 +49,9 @@ export interface AdminSupportTicketDetailViewProps {
   orderId?: string;
   /** ST-6 — current relatedParties snapshot from the ticket document. */
   relatedParties?: RelatedPartiesClient;
+  /** The ticket's `statusHistory`. Absent on tickets predating W18. */
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
 }
 
 const STATUS_OPTIONS = [
@@ -92,6 +97,8 @@ export function AdminSupportTicketDetailView({
   internalNotes,
   orderId,
   relatedParties,
+  statusHistory,
+  statusHistoryTruncated,
 }: AdminSupportTicketDetailViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -429,6 +436,18 @@ export function AdminSupportTicketDetailView({
             Send reply
           </Button>
         </Stack>
+
+        <HorizontalRule tone="subtle" spacing="comfortable" />
+
+        {/*
+          The reply thread above is what was SAID; this is what was DONE —
+          status moves, priority changes, reassignments, and now the
+          `resolvedAt` / `closedAt` stamps that nothing had ever written.
+        */}
+        <RecordStatusTimeline
+          entries={statusHistory}
+          truncatedCount={statusHistoryTruncated}
+        />
 
         <HorizontalRule tone="subtle" spacing="comfortable" />
 

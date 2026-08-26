@@ -7,6 +7,7 @@ import {
   type GeneratePayoutIdInput,
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 
 export interface PayoutBankAccount {
   accountHolderName: string;
@@ -80,7 +81,58 @@ export interface PayoutDocument extends BaseDocument {
   transactionId?: string;
   /** Seller-set personal follow-up flag — surfaced only to the owning seller, never mutated by admin. */
   sellerReminderFlag?: boolean;
+
+  /*
+   * ── Dispatch outcome ──────────────────────────────────────────────────
+   *
+   * All four are written by `recordSuccess` / `recordFailure` in the payouts
+   * batch and were **undeclared here** until 2026-08-26 — the same
+   * written-but-not-declared shape as Root Cause #70's `adSettings`. Nothing
+   * type-checked against them, so no reader could safely surface a dispatch
+   * failure to the seller or to an admin, and only the repository's own tests
+   * knew they existed.
+   */
+  /** Razorpay's payout id, once the API accepted the dispatch. */
+  razorpayPayoutId?: string;
+  /** Razorpay's own status string — NOT this document's `status`. */
+  razorpayStatus?: string;
+  /** Consecutive dispatch failures. At MAX_FAILURES the payout goes `failed`. */
+  failureCount?: number;
+  /**
+   * Why the LAST attempt failed. Overwritten by every retry, which is why the
+   * timeline tracks it: `statusHistory` is the only place the earlier reasons
+   * survive.
+   */
+  lastFailureReason?: string;
+
+  /**
+   * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
+   *
+   * Payouts are the entity where this matters most to a seller: "it says
+   * failed, what happened" was previously answerable only from
+   * `lastFailureReason`, which the NEXT retry overwrites.
+   */
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
 }
+
+/**
+ * The fields whose changes earn a timeline entry.
+ *
+ * `netAmount`/`refundDeductions` are excluded — a refund deduction is money
+ * churn before dispatch, and § "Status History" keeps money off the timeline;
+ * `refundDeductions[]` on the document is already its own record.
+ * `failureCount` is excluded because `lastFailureReason` changing is the
+ * event, and tracking both would double every retry entry.
+ */
+export const PAYOUT_TRACKED_FIELDS = [
+  "status",
+  "processedAt",
+  "transactionId",
+  "razorpayPayoutId",
+  "razorpayStatus",
+  "lastFailureReason",
+] as const;
 
 export const PAYOUT_COLLECTION = "payouts" as const;
 
@@ -127,10 +179,32 @@ export const PAYOUT_PUBLIC_FIELDS = [
   "createdAt",
 ] as const;
 
+/*
+ * 🛑 `transactionId` was MISSING here until 2026-08-26, and the whole
+ * mark-paid flow was built on top of the gap:
+ *
+ *   · `AdminPayoutMarkPaidModal` collects a UTR and makes it REQUIRED
+ *   · `PATCH /api/admin/payouts/[id]` declares it in its Zod schema and its
+ *     own docstring advertises "+ transaction reference"
+ *   · that route's test asserts it reaches `adminUpdatePayout`
+ *   · `adminUpdatePayout` picks only the fields in THIS list, so it was
+ *     dropped — and the route replies `{ id, ...body }`, echoing the
+ *     discarded UTR back as though it had been stored
+ *
+ * Every payout marked paid before this therefore has no payment reference,
+ * which is the one field a seller disputing "you say you paid me" needs.
+ * Root Cause #40's shape: a 200 that confirms a write which never happened.
+ *
+ * `processedAt` stays accepted for back-compat but is server-stamped by
+ * `updateStatus` on the transition into paid/failed — a client-sent
+ * timestamp is how the reports collection ended up with two shapes in one
+ * field.
+ */
 export const PAYOUT_ADMIN_UPDATEABLE_FIELDS = [
   "status",
   "adminNote",
   "processedAt",
+  "transactionId",
 ] as const;
 
 /** The only field a seller may write on their own payout doc. */

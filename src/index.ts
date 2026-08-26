@@ -6448,6 +6448,7 @@ export { TitleBarLayout } from "./features/layout/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActions - React hook for use bottom actions.
 export { useBottomActions } from "./features/layout/index";
+export { RecordStatusTimeline } from "./features/status-history/index";
 
 // useFormBottomActions - pins a form's Save/Cancel row + error sheet to the mobile bottom-chrome tier.
 export { useFormBottomActions } from "./features/layout/index";
@@ -9833,6 +9834,7 @@ export {
   REVIEW_FIELDS,
   BID_FIELDS,
   AD_FIELDS,
+  AD_TRACKED_FIELDS,
   BLOG_FIELDS,
   BRAND_FIELDS,
   WISHLIST_FIELDS,
@@ -10057,3 +10059,27 @@ export { siteSettingsFormSchema } from "./features/admin/schemas/site-settings-f
  */
 export { createReviewSchema as reviewSubmitSchema } from "./_internal/shared/features/reviews/schema";
 export { wishlistAddSchema } from "./schemas/api-routes";
+
+/*
+ * Status history — the generic primitive behind every entity timeline.
+ *
+ * `withHistory` is exported because ads have no repository of their own: they
+ * live inside the `siteSettings` singleton, so their route calls it directly.
+ * Every other adopter funnels through its repository's write primitives and
+ * should keep doing so — a call site reaching for this outside a repository
+ * is usually a missing funnel, not a reason to export more of it.
+ */
+export {
+  withHistory,
+  buildHistoryEntry,
+  appendHistoryEntry,
+  diffTrackedFields,
+  STATUS_HISTORY_MAX,
+} from "./_internal/shared/history/index";
+export type {
+  StatusChangeEntry,
+  SerialisedStatusChangeEntry,
+  HistoryActor,
+  HistoryActorRole,
+  FieldChange,
+} from "./_internal/shared/history/index";

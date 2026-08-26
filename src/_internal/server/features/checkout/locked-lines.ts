@@ -286,7 +286,10 @@ export async function finalizeLockedLines(
     }
     if (item.bidId) {
       try {
-        await bidRepository.attachOrder(item.bidId, orderId);
+        await bidRepository.attachOrder(item.bidId, orderId, {
+          actor: { role: "system" },
+          trigger: "finalizeLockedLines",
+        });
       } catch (err) {
         void normalizeError(err);
         serverLogger.error("finalizeLockedLines: attachOrder failed", {
@@ -319,7 +322,14 @@ async function closeOutBuyoutLosers(productId: string, winningBidId: string): Pr
     const losers = active.filter((e) => e.id !== winningBidId);
     if (losers.length === 0) return;
 
-    await bidRepository.markManyLost(losers.map((e) => e.ref));
+    // Pass the {ref, data} pairs whole, not just the refs — `getActiveByProduct`
+    // already returned the documents, so the timeline gets a real before-value
+    // at zero read cost.
+    await bidRepository.markManyLost(losers, {
+      actor: { role: "system" },
+      trigger: "finalizeLockedLines:buyoutClosedAuction",
+      reason: "A Buy Now purchase ended this auction.",
+    });
     serverLogger.info("finalizeLockedLines: buyout closed out losing bids", {
       productId,
       winningBidId,

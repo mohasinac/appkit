@@ -9,6 +9,17 @@ import {
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
 import { increment } from "../../../contracts/field-ops";
+import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import { SCAMMER_TRACKED_FIELDS, SCAMMER_HISTORY_PII_FIELDS } from "../schemas/firestore";
+import type { FirestoreDocument } from "../../../schemas/types";
+
+/** Who/why for a scammer write that lands in `statusHistory`. */
+export interface ScammerWriteContext {
+  actor?: HistoryActor;
+  trigger?: string;
+  reason?: string;
+  note?: string;
+}
 import {
   SCAMMER_COLLECTION,
   SCAMMER_FIELDS,
@@ -109,9 +120,40 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
     }
   }
 
-  async adminUpdate(id: string, input: ScammerAdminUpdateInput): Promise<void> {
+  /**
+   * The single admin write path for a scammer profile.
+   *
+   * The PATCH route used to call `update()` directly, bypassing this method
+   * entirely — so a decision on a public accusation against a named person
+   * left no record beyond `verifiedBy`/`verifiedAt`, which the NEXT decision
+   * overwrites. `prior` comes from the route's own 404 lookup, so the
+   * timeline entry costs no second read (Rule #6).
+   */
+  async adminUpdate(
+    id: string,
+    input: ScammerAdminUpdateInput,
+    ctx?: ScammerWriteContext,
+    prior?: ScammerDocument | null,
+  ): Promise<void> {
     try {
-      const data = prepareForFirestore({ ...input, updatedAt: new Date() });
+      const current = prior !== undefined ? prior : await this.findById(id);
+      const withEntry = withHistory(
+        current as unknown as FirestoreDocument | undefined,
+        { ...input, updatedAt: new Date() } as unknown as FirestoreDocument,
+        {
+          tracked: SCAMMER_TRACKED_FIELDS,
+          actor: ctx?.actor ?? { role: "system" },
+          trigger: ctx?.trigger ?? "adminUpdateScammer",
+          reason: ctx?.reason,
+          note: ctx?.note,
+          // A scammer profile is built entirely from identifying details, and
+          // `encryptPiiFields` never descends into arrays.
+          piiFields: SCAMMER_HISTORY_PII_FIELDS,
+        },
+      );
+      const data = prepareForFirestore(
+        (withEntry as Record<string, unknown> | null) ?? { ...input, updatedAt: new Date() },
+      );
       await this.getCollection().doc(id).update(data);
     } catch (error) {
       void normalizeError(error);

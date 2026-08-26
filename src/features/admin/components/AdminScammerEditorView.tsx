@@ -6,6 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button, Code, Div, FormActions, HorizontalRule, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import {
   ScammerStatusValues,
   type ScammerStatus,
@@ -34,6 +36,9 @@ export interface AdminScammerEditorViewProps {
   upiIds?: string[];
   currentStatus?: ScammerStatus;
   verificationNote?: string;
+  /** The profile's own decision history. Absent on profiles predating W18. */
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
   reportedBy?: string;
   reportedByAnon?: boolean;
 }
@@ -50,6 +55,8 @@ export function AdminScammerEditorView({
   upiIds = [],
   currentStatus,
   verificationNote,
+  statusHistory,
+  statusHistoryTruncated,
   reportedBy,
   reportedByAnon,
 }: AdminScammerEditorViewProps) {
@@ -104,6 +111,19 @@ export function AdminScammerEditorView({
       title={displayNames.length > 0 ? displayNames[0] : "Scammer Profile"}
     >
       <Stack className={`${__P.p4}`} gap="md">
+        {/*
+          A scammer profile is a public accusation against a named person, so
+          "who decided this, when, and on what note" is the record that matters
+          most on it. `verifiedBy`/`verifiedAt` only ever hold the LAST
+          decision — a profile verified, removed, then re-verified kept no
+          trace of the middle.
+        */}
+        <RecordStatusTimeline
+          title="Decision history"
+          entries={statusHistory}
+          truncatedCount={statusHistoryTruncated}
+        />
+
         {/* Status badge */}
         <Row align="center" gap="sm">
           <Span

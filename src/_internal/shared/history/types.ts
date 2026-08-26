@@ -69,3 +69,21 @@ export interface AppendHistoryResult {
    */
   truncatedCount: number;
 }
+
+
+/**
+ * A `StatusChangeEntry` after it has crossed the RSC boundary.
+ *
+ * Identical except `at` is an ISO string. Server Components must serialise
+ * before handing history to a `"use client"` component: every other date prop
+ * on those drawers is already a string, and mixing the two is how a
+ * `toLocaleString` on a string ends up rendering "Invalid Date".
+ *
+ * Declared once here rather than restated per page — two client files had
+ * hand-written copies, which is both a duplication and (because each spelled
+ * `changes` as `Record<string, { from: unknown; to: unknown }>`) an untyped
+ * seam `audit-unknown-leakage` correctly refused.
+ */
+export interface SerialisedStatusChangeEntry extends Omit<StatusChangeEntry, "at"> {
+  at: string;
+}

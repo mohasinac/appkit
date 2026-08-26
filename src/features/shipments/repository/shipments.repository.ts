@@ -20,11 +20,54 @@ import {
   type ShipmentDocument,
   type ShipmentCreateInput,
   type ShipmentUpdateInput,
+  SHIPMENT_TRACKED_FIELDS,
+  SHIPMENT_HISTORY_PII_FIELDS,
 } from "../schemas/firestore";
+import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import type { FirestoreDocument } from "../../../schemas/types";
+
+/** Who/why for a shipment write that lands in `statusHistory`. */
+export interface ShipmentWriteContext {
+  actor?: HistoryActor;
+  trigger?: string;
+  reason?: string;
+  note?: string;
+}
 
 export class ShipmentsRepository extends BaseRepository<ShipmentDocument> {
   constructor() {
     super(SHIPMENT_COLLECTION);
+  }
+
+  /**
+   * The admin edit path. Two route callers, no funnel before this.
+   *
+   * `prior` is optional and unused by the current caller — the admin PATCH
+   * route does NOT fetch the shipment first (its GET sibling does), so this
+   * takes one read. That is the honest cost here rather than a hidden one:
+   * without the before-value a slipped ETA would record as
+   * `undefined → newDate`, which cannot answer "how many times did this move".
+   */
+  async adminUpdate(
+    shipmentId: string,
+    patch: Partial<ShipmentDocument>,
+    ctx?: ShipmentWriteContext,
+    prior?: ShipmentDocument | null,
+  ): Promise<ShipmentDocument> {
+    const current = prior !== undefined ? prior : await this.findById(shipmentId);
+    const withEntry = withHistory(
+      current as unknown as FirestoreDocument | undefined,
+      patch as unknown as FirestoreDocument,
+      {
+        tracked: SHIPMENT_TRACKED_FIELDS,
+        actor: ctx?.actor ?? { role: "system" },
+        trigger: ctx?.trigger ?? "adminUpdateShipment",
+        reason: ctx?.reason,
+        note: ctx?.note,
+        piiFields: SHIPMENT_HISTORY_PII_FIELDS,
+      },
+    );
+    return this.update(shipmentId, (withEntry as Partial<ShipmentDocument> | null) ?? patch);
   }
 
   async findByShipmentNumber(shipmentNumber: string): Promise<ShipmentDocument | null> {

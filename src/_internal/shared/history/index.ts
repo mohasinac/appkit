@@ -4,6 +4,7 @@ export type {
   FieldChange,
   StatusChangeEntry,
   AppendHistoryResult,
+  SerialisedStatusChangeEntry,
 } from "./types";
 export { STATUS_HISTORY_MAX } from "./types";
 

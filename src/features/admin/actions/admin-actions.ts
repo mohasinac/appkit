@@ -129,8 +129,11 @@ export async function adminUpdatePayout(
   }
 
   const updateData: PayoutUpdateInput = {
-    ...(input.status !== undefined ? { status: input.status } : {}),
     ...(input.adminNote !== undefined ? { adminNote: input.adminNote } : {}),
+    // The payment reference. Absent from this pick until 2026-08-26, so every
+    // payout marked paid was stored WITHOUT the UTR the modal required — see
+    // PAYOUT_ADMIN_UPDATEABLE_FIELDS for the full trace.
+    ...(input.transactionId !== undefined ? { transactionId: input.transactionId } : {}),
     ...(input.processedAt
       ? {
           processedAt:
@@ -141,14 +144,28 @@ export async function adminUpdatePayout(
       : {}),
   };
 
-  const updated = await payoutRepository.update(id, updateData);
+  /*
+   * Through `updateStatus`, not a bare `update`, so the change lands on the
+   * payout's own timeline — `existing` is threaded in as `prior`, so that
+   * costs no second read of a document this function already holds.
+   */
+  const updated =
+    input.status !== undefined
+      ? await payoutRepository.updateStatus(
+          id,
+          input.status,
+          updateData,
+          { actor: { role: "admin", uid: adminId }, trigger: "adminUpdatePayout" },
+          existing,
+        )
+      : await payoutRepository.update(id, updateData);
 
   serverLogger.info("adminUpdatePayout", {
     adminId,
     payoutId: id,
   });
 
-  if (updateData.status === "paid") {
+  if (input.status === "paid") {
     void recordAdminAction({
       actorUid: adminId,
       action: AdminAuditActionValues.PAYOUT_MARK_PAID,

@@ -16,6 +16,7 @@
  */
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 
 // ============================================================================
 // ENUMS
@@ -156,9 +157,58 @@ export interface SupportTicketDocument extends BaseDocument {
   /** Threaded conversation. Ordered by createdAt asc. */
   messages: TicketMessage[];
 
+  /**
+   * Stamped by the repository the first time `status` becomes `resolved` /
+   * `closed`. Both were declared, given `SUPPORT_TICKET_FIELDS` constants and
+   * listed in `SupportTicketUpdateInput` — and **nothing ever wrote either**
+   * (verified 2026-08-26), so no resolved ticket in the collection carries a
+   * resolution time and "how long do tickets take" has never been answerable.
+   *
+   * Server-stamped, never client-sent: the same discipline the reports route
+   * adopted after a client-sent `resolvedAt` arrived as a JSON string into a
+   * `Date` field and split the collection into two shapes.
+   */
   resolvedAt?: Date;
   closedAt?: Date;
+
+  /**
+   * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
+   * Append-only, capped at STATUS_HISTORY_MAX, oldest evicted first.
+   */
+  statusHistory?: StatusChangeEntry[];
+  /** How many entries fell off the front. Never imply "this is all of it". */
+  statusHistoryTruncated?: number;
 }
+
+/**
+ * The fields whose changes earn a timeline entry.
+ *
+ * Explicit, not a whole-document diff: a diff would record the `updatedAt`
+ * bump on every write and exhaust the 50-entry cap within days. `messages` is
+ * excluded on purpose — the thread is already the conversation, and mirroring
+ * every reply into history would bury the handful of transitions anyone reads.
+ */
+export const SUPPORT_TICKET_TRACKED_FIELDS = [
+  "status",
+  "priority",
+  "assignedTo",
+  "resolvedAt",
+  "closedAt",
+] as const;
+
+/**
+ * PII on this document, for `withHistory`'s scrub.
+ *
+ * `assignedToName` is a staff display name denormalised for the admin table —
+ * not the ticket author's identity — but it is still a person's name reaching
+ * an array `encryptPiiFields` cannot descend into, so history carries the UID
+ * (`assignedTo`) and never the name.
+ */
+export const SUPPORT_TICKET_PII_FIELDS = [
+  "userEmail",
+  "userDisplayName",
+  "assignedToName",
+] as const;
 
 // ============================================================================
 // INPUT TYPES
@@ -183,11 +233,16 @@ export type SupportTicketUpdateInput = Partial<
     | "assignedTo"
     | "assignedToName"
     | "internalNotes"
-    | "resolvedAt"
-    | "closedAt"
     | "relatedParties"
   >
 >;
+
+/*
+ * `resolvedAt` / `closedAt` are deliberately NOT in the update input. They are
+ * events, and the server is the only thing that knows when one happened —
+ * letting a client send them is how the reports collection ended up holding
+ * both Timestamps and ISO strings in one field.
+ */
 
 // ============================================================================
 // COLLECTION CONSTANTS

@@ -18,6 +18,7 @@ import {
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
+import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 
 interface AdminCatalogueApiResponse {
   items?: JsonArray;
@@ -125,6 +126,14 @@ export function AdminCatalogueApprovalsView() {
           { label: "Submitted", value: selected?.updatedAt ?? "—" },
         ]}
         items={{ heading: "Photos", entries: toPhotoEntries(raw) }}
+        extra={
+          // "Why was mine rejected and by whom" — `rejectionReason` alone is
+          // overwritten by the next decision.
+          <RecordStatusTimeline
+            entries={(raw as { statusHistory?: never[] }).statusHistory}
+            truncatedCount={(raw as { statusHistoryTruncated?: number }).statusHistoryTruncated}
+          />
+        }
         footer={
           selected ? (
             <>

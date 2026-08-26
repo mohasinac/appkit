@@ -41,11 +41,16 @@ export async function listFromCatalogueAction(itemId: string): Promise<ActionRes
 
     const product = await createProductFromCatalogueItem(item, storeId);
 
-    await catalogueRepository.update(itemId, {
-      listingStatus: "listed",
-      linkedProductId: product.id,
-      linkedProductSlug: product.slug ?? product.id,
-    });
+    await catalogueRepository.setListingStatus(
+      itemId,
+      {
+        listingStatus: "listed",
+        linkedProductId: product.id,
+        linkedProductSlug: product.slug ?? product.id,
+      },
+      { actor: { role: "seller", uid: user.uid }, trigger: "listFromCatalogue" },
+      item,
+    );
 
     return { productId: product.id, productSlug: product.slug ?? product.id };
   });

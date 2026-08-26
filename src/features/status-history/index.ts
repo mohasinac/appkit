@@ -9,3 +9,5 @@
  */
 export { StatusTimeline, stepsFromEntries } from "./components/StatusTimeline";
 export type { StatusTimelineProps, TimelineEntry, TimelineStep } from "./components/StatusTimeline";
+export { RecordStatusTimeline } from "./components/RecordStatusTimeline";
+export type { RecordStatusTimelineProps } from "./components/RecordStatusTimeline";

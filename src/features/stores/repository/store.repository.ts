@@ -20,6 +20,8 @@ import {
   STORE_FIELDS,
   DEFAULT_STORE_DATA,
   StoreStatusValues,
+  STORE_TRACKED_FIELDS,
+  STORE_HISTORY_PII_FIELDS,
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
@@ -28,6 +30,15 @@ import {
   decryptSecret,
 } from "../../../security/settings-encryption";
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+
+/** Who/why for a store write that lands in `statusHistory`. */
+export interface StoreWriteContext {
+  actor?: HistoryActor;
+  trigger?: string;
+  reason?: string;
+  note?: string;
+}
 
 export class StoreRepository extends BaseRepository<StoreDocument> {
   constructor() {
@@ -139,19 +150,87 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   }
 
   /**
-   * Admin: approve or reject a store.
+   * Admin: approve, reject or suspend a store — and the ONLY correct way to
+   * move `status`, because `isPublic` must move with it.
+   *
+   * `status` and `isPublic` are two distinct fields and public visibility
+   * gates on `isPublic`. The admin PATCH route wrote `status` directly and
+   * never touched `isPublic` until 2026-08-26, so approving a pending store
+   * left it `isPublic: false` — active, and invisible on every public
+   * surface, with nothing anywhere reporting a problem. Same two-field trap
+   * CLAUDE.md already records for `becomeSeller` / `createStore`.
+   *
+   * `extra` carries the other admin fields so a single save is a single
+   * write and a single timeline entry; `prior` keeps that entry read-free
+   * for the route, which has already fetched the store to 404 on a missing
+   * one (Rule #6).
    */
   async setStatus(
     storeSlug: string,
     status: StoreDocument["status"],
+    extra?: Partial<StoreDocument>,
+    ctx?: StoreWriteContext,
+    prior?: StoreDocument | null,
   ): Promise<StoreDocument> {
-    return this.update(storeSlug, {
-      status,
-      // Auto-set isPublic when approved
-      ...(status === StoreStatusValues.ACTIVE && { isPublic: true }),
-      ...(status !== StoreStatusValues.ACTIVE && { isPublic: false }),
-      updatedAt: new Date(),
-    } as Partial<StoreDocument>);
+    const current = prior !== undefined ? prior : await this.findById(storeSlug);
+    return this.update(
+      storeSlug,
+      this.withStoreHistory(
+        current,
+        {
+          status,
+          // Auto-set isPublic when approved
+          ...(status === StoreStatusValues.ACTIVE && { isPublic: true }),
+          ...(status !== StoreStatusValues.ACTIVE && { isPublic: false }),
+          ...extra,
+          updatedAt: new Date(),
+        } as Partial<StoreDocument>,
+        ctx,
+        "setStatus",
+      ),
+    );
+  }
+
+  /**
+   * Admin field edits that do NOT move `status` — verification, featuring,
+   * capabilities, the suspension reason on an already-suspended store.
+   */
+  async adminUpdate(
+    storeSlug: string,
+    patch: Partial<StoreDocument>,
+    ctx?: StoreWriteContext,
+    prior?: StoreDocument | null,
+  ): Promise<StoreDocument> {
+    const current = prior !== undefined ? prior : await this.findById(storeSlug);
+    return this.update(
+      storeSlug,
+      this.withStoreHistory(current, { ...patch, updatedAt: new Date() }, ctx, "adminUpdateStore"),
+    );
+  }
+
+  /** Append a timeline entry when the patch touches a tracked field. */
+  private withStoreHistory(
+    current: StoreDocument | null | undefined,
+    patch: Partial<StoreDocument>,
+    ctx: StoreWriteContext | undefined,
+    defaultTrigger: string,
+  ): Partial<StoreDocument> {
+    const withEntry = withHistory(
+      current as unknown as FirestoreDocument | undefined,
+      patch as unknown as FirestoreDocument,
+      {
+        tracked: STORE_TRACKED_FIELDS,
+        actor: ctx?.actor ?? { role: "system" },
+        trigger: ctx?.trigger ?? defaultTrigger,
+        reason: ctx?.reason,
+        note: ctx?.note,
+        // `mapDoc` decrypts whatsappConfig.accessToken on EVERY read, so a
+        // live Meta credential is in memory whenever this diff runs, and
+        // `encryptPiiFields` never descends into arrays.
+        piiFields: STORE_HISTORY_PII_FIELDS,
+      },
+    );
+    return (withEntry as Partial<StoreDocument> | null) ?? patch;
   }
 
   /**

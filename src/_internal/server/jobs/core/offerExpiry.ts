@@ -162,7 +162,11 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
     for (const { userId, item } of buyoutHolds) {
       try {
         await cartRepository.removeItemsByBidId(userId, item.bidId!);
-        await bidRepository.markCancelled(item.bidId!);
+        await bidRepository.markCancelled(item.bidId!, {
+          actor: { role: "system" },
+          trigger: "runOfferExpiry:buyoutLapsed",
+          reason: "The Buy Now checkout window closed without payment.",
+        });
         await sendNotification({
           userId,
           type: "auction_ended",
@@ -220,7 +224,11 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
   for (const { userId, item } of auctionLines) {
     try {
       await cartRepository.removeItemsByBidId(userId, item.bidId!);
-      await bidRepository.markForfeited(item.bidId!);
+      await bidRepository.markForfeited(item.bidId!, {
+        actor: { role: "system" },
+        trigger: "runOfferExpiry:winUnpaid",
+        reason: "The 48-hour checkout window closed without payment.",
+      });
       await sendNotification({
         userId,
         type: "auction_ended",

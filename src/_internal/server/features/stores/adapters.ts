@@ -54,6 +54,11 @@ export const PRIVATE_STORE_FIELDS = [
   "updatedAt", // bookkeeping; no public reader
   "whatsappConfig", // Meta access token + WABA/catalog ids — secret
   "adminNotes", // schema comment: never shown to the owner or the public
+  // Admin decisions with actor UIDs and suspension reasons. The store OWNER
+  // sees this on their own admin surfaces; an anonymous visitor to /stores has
+  // no business reading who suspended whom and why.
+  "statusHistory",
+  "statusHistoryTruncated",
   "isVerified", // admin moderation state; surfaced via a separate badge feed if ever needed
   "suspensionReason", // admin moderation note
   "capabilities", // internal feature gating; server-enforced, never client-read

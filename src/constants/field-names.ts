@@ -424,6 +424,19 @@ export const AD_FIELDS = {
   },
 } as const;
 
+/**
+ * The ad fields whose changes earn a `statusHistory` entry.
+ *
+ * Ads live inside the `siteSettings` singleton and have no repository, so
+ * `withHistory` is called from the route directly — it is a pure function, so
+ * that is fine. This list lives here beside `AD_FIELDS` rather than in a
+ * schema module because ads have no schema module of their own.
+ *
+ * The scheduling dates are tracked alongside `status`: an ad silently
+ * rescheduled reads on the timeline as the same kind of event as one paused.
+ */
+export const AD_TRACKED_FIELDS = ["status", "startAt", "endAt"] as const;
+
 // ============================================================================
 // EVENT FIELDS
 // ============================================================================

@@ -5,6 +5,7 @@
  * and helpers for the stores feature.
  */
 
+import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import { slugify } from "../../../utils/string.formatter";
 import type { StoreCapability } from "../../auth/permissions/constants";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
@@ -176,7 +177,49 @@ export interface StoreDocument extends BaseDocument {
     connectedAt?: Date;
   };
 
+  /**
+   * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
+   *
+   * The question this answers for a seller is "why is my store suspended and
+   * who did it" — previously recoverable only from `adminAuditLog`, which is
+   * admin-only and which the seller can never see.
+   */
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
 }
+
+/**
+ * The fields whose changes earn a timeline entry.
+ *
+ * `isPublic` is tracked alongside `status` deliberately: the two are supposed
+ * to move together (`setStatus` syncs them) and the admin PATCH route did NOT
+ * until 2026-08-26, so an approved store stayed invisible. A timeline that
+ * shows them diverging is how the next instance gets noticed.
+ *
+ * `adminNotes` is excluded — its own schema comment says it is never shown to
+ * the store owner or the public, and `statusHistory` rides on the store
+ * document the owner can read.
+ */
+export const STORE_TRACKED_FIELDS = [
+  "status",
+  "isPublic",
+  "isVerified",
+  "isFeatured",
+  "suspensionReason",
+  "capabilities",
+] as const;
+
+/**
+ * PII on this document, for `withHistory`'s scrub. `whatsappConfig.accessToken`
+ * is a live Meta credential; `mapDoc` decrypts it on EVERY read, so it is
+ * present in memory whenever a diff runs.
+ */
+export const STORE_HISTORY_PII_FIELDS = [
+  "accessToken",
+  "payoutDetails",
+  "upiVpa",
+  "accountNumber",
+] as const;
 
 // Re-export StoreCapability so consumers can import from this module
 export type { StoreCapability } from "../../auth/permissions/constants";
