@@ -363,6 +363,7 @@ export const DEFAULT_ROUTE_MAP = {
     CONTACT: "/admin/contact",
     SESSIONS: "/admin/sessions",
     ALL_EVENT_ENTRIES: "/admin/event-entries",
+    EVENT_ENTRY_DETAIL: (id: string) => `/admin/event-entries/${id}/view`,
     NOTIFICATIONS: "/admin/notifications",
     CARTS: "/admin/carts",
     WISHLISTS: "/admin/wishlists",

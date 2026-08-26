@@ -488,6 +488,10 @@ export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTabl
 // bidder's identity is shown, so keeping it in one place is what stops a
 // buyer-facing surface ever rendering another bidder's name.
 export { buildBidDetailFields, bidStatusBadge } from "./features/auctions/components/bid-detail-fields";
+// Same reason, one feature over: the entry detail modal and its full page
+// render from one builder rather than two lists that can drift.
+export { buildEventEntryDetailFields } from "./features/events/components/event-entry-detail-fields";
+export type { EntryFieldRow } from "./features/events/components/event-entry-detail-fields";
 export type { BidDetailViewer } from "./features/auctions/components/bid-detail-fields";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";

@@ -14,6 +14,9 @@ import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { EventEntryItem, EventEntryListResponse } from "../types";
+import { buildEventEntryDetailFields } from "./event-entry-detail-fields";
+import { TextLink } from "../../../ui";
+import { ROUTES } from "../../../constants/index";
 
 const CLS_RESPONSE_TEXT = "whitespace-pre-wrap break-words";
 
@@ -330,20 +333,15 @@ export function AdminEventEntriesView({
         title={detail?.userDisplayName || detail?.userEmail || "Entry"}
         badges={detail ? [{ label: detail.reviewStatus }] : undefined}
         description={detail?.pollComment}
-        fields={
-          detail
-            ? [
-                { label: "Entrant", value: detail.userDisplayName ?? detail.userId ?? "—" },
-                { label: "Email", value: detail.userEmail ?? "—" },
-                { label: "Review status", value: detail.reviewStatus },
-                { label: "Points", value: detail.points != null ? String(detail.points) : "—" },
-                { label: "Raffle eligible", value: detail.raffleEligible ? "Yes" : "No" },
-                { label: "Poll votes", value: detail.pollVotes?.join(", ") || "—" },
-                { label: "Reviewed by", value: detail.reviewedBy ?? "—" },
-                { label: "Review note", value: detail.reviewNote ?? "—" },
-                { label: "Entry ID", value: detail.id },
-              ]
-            : undefined
+        fields={detail ? buildEventEntryDetailFields(detail) : undefined}
+        footer={
+          detail ? (
+            // The full page — a modal cannot be linked, bookmarked or reloaded
+            // into, which is the whole reason the page exists.
+            <TextLink href={String(ROUTES.ADMIN.EVENT_ENTRY_DETAIL(detail.id))}>
+              Open full page →
+            </TextLink>
+          ) : undefined
         }
         // The survey/feedback answers — the actual submission being judged.
         metadata={detail?.formResponses}
