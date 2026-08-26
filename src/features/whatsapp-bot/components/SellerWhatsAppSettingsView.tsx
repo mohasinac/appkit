@@ -20,6 +20,8 @@ import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildPurchaseAnnouncementMessage } from "../helpers/whatsapp";
+import { whatsappSettingsSchema } from "../../admin/schemas/admin-user-form";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -310,11 +312,12 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           )}
         </Row>
 
-        <Form
+        <Form schema={whatsappSettingsSchema}
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
           }} spacing="md">
+      <FormErrorSummary />
           <Input
             label="WhatsApp Business Phone Number"
             value={phoneNumber}

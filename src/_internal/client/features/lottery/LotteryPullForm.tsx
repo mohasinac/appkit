@@ -12,6 +12,8 @@ import { Form, FieldInput, Button } from "../../../../ui";
 import type { UseFormShellStateResult } from "../../../../ui/forms";
 import { useApiMutation } from "../../../../client/api/useApiMutation";
 import { apiClient } from "../../../../http";
+import { lotteryPullSchema } from "../../../../features/admin/schemas/admin-user-form";
+import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 
 interface LotteryPullFormProps {
   sourceType: "event" | "product";
@@ -107,9 +109,10 @@ export function LotteryPullForm({
   }
 
   return (
-    <Form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+    <Form schema={lotteryPullSchema} onSubmit={(e) => e.preventDefault()} className="space-y-4">
       {({ setFieldError, clearErrors }: UseFormShellStateResult) => (
         <Stack gap="md">
+          <FormErrorSummary />
           <Heading level={3} size="lg" weight="semibold">
             Submit Your Entry
           </Heading>

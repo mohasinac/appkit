@@ -15,6 +15,8 @@ import {
 } from "../../../../ui";
 import { Form, FieldInput, FieldSelect, Input } from "../../../../ui";
 import type { UseFormShellStateResult } from "../../../../ui/forms";
+import { lotteryConfigFormSchema } from "../../../shared/features/lottery/config-form";
+import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 
 interface LotterySlotRow {
   slotNumber: number;
@@ -192,9 +194,10 @@ export function LotteryAdminEditView({
   return (
     <Container>
       <Section>
-        <Form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+        <Form schema={lotteryConfigFormSchema} onSubmit={(e) => e.preventDefault()} className="space-y-6">
           {({ clearErrors }: UseFormShellStateResult) => (
             <Stack gap="xl">
+              <FormErrorSummary />
               <Heading level={1} size="2xl" weight="bold">
                 {eventId ? "Edit Lottery" : "Create Lottery"}
               </Heading>

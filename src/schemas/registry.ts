@@ -147,6 +147,14 @@ import { sellerCouponFormSchema } from "../features/seller/schemas/coupon-form";
 import { customRoleFormSchema } from "../features/store-extensions/schemas/custom-role-form";
 import { moderationReviewFormSchema } from "../features/store-extensions/schemas/moderation-review-form";
 import { reportReviewFormSchema } from "../features/store-extensions/schemas/report-review-form";
+import { adminAddressFormSchema, adminStoreUpdateSchema } from "../features/admin/schemas/admin-editor-forms";
+import { adminOrderUpdateSchema, employeeInviteSchema, adminAdFormSchema } from "../features/admin/schemas/admin-ops-forms";
+import { adminUserUpdateSchema, whatsappSettingsSchema, lotteryPullSchema } from "../features/admin/schemas/admin-user-form";
+import { siteSettingsFormSchema } from "../features/admin/schemas/site-settings-form";
+import { orderCancelSchema, paymentProofSchema } from "../features/orders/schemas/buyer-forms";
+import { scamReportFormSchema } from "../features/scams/schemas/report-form";
+import { sublistingCategoryFormSchema } from "../features/store-extensions/schemas/sublisting-category-form";
+import { lotteryConfigFormSchema } from "../_internal/shared/features/lottery/config-form";
 import { reportCreateSchema } from "../features/store-extensions/schemas/report-create-form";
 import { itemRequestCreateSchema } from "../features/store-extensions/schemas/item-request-create-form";
 import {
@@ -177,6 +185,20 @@ const forms = {
   storeGoogleConfig: storeGoogleConfigUpdateSchema,
   adminNotification: adminNotificationCreateSchema,
   homepageSection: homepageSectionCreateSchema,
+  adminAddress: adminAddressFormSchema,
+  adminStore: adminStoreUpdateSchema,
+  adminOrder: adminOrderUpdateSchema,
+  adminUser: adminUserUpdateSchema,
+  employeeInvite: employeeInviteSchema,
+  adminAd: adminAdFormSchema,
+  siteSettings: siteSettingsFormSchema,
+  whatsappSettings: whatsappSettingsSchema,
+  orderCancel: orderCancelSchema,
+  paymentProof: paymentProofSchema,
+  scamReport: scamReportFormSchema,
+  sublistingCategory: sublistingCategoryFormSchema,
+  lotteryConfig: lotteryConfigFormSchema,
+  lotteryPull: lotteryPullSchema,
 } as const;
 
 // ---------------------------------------------------------------------------

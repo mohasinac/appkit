@@ -21,6 +21,7 @@ import {
 } from "../../../_internal/shared/features/auctions/config";
 
 import { normalizeError } from "../../../errors/normalize";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;
@@ -261,7 +262,7 @@ export function PlaceBidFormClient({
         message="You need to be signed in to place a bid. Please log in or create an account to continue."
       />
 
-      <Form
+      <Form schema={schema}
         onSubmit={(e) => {
           // handler wired through render-prop below — keeps setFieldError in scope
           e.preventDefault();
@@ -269,6 +270,7 @@ export function PlaceBidFormClient({
       >
         {({ setFieldError, clearErrors }) => (
           <Stack gap="sm">
+            <FormErrorSummary />
             {/*
               Steps are multiples of the EFFECTIVE minimum increment, never
               fixed rupee amounts — a ₹100 increment renders +₹100/+₹500/+₹1,000

@@ -25,6 +25,8 @@ import {
   type BidIncrementTier,
 } from "../../../_internal/shared/features/auctions/config";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
+import { siteSettingsFormSchema } from "../schemas/site-settings-form";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -100,11 +102,17 @@ const PRIORITY_OPTIONS: SelectOption[] = [
  * regardless of which one is currently active. */
 function SaveAllBar({ isPending, onSave }: { isPending: boolean; onSave: () => void }) {
   return (
-    <FormActions align="right">
-      <Button type="button" isLoading={isPending} disabled={isPending} onClick={onSave}>
-        {isPending ? "Saving…" : "Save all changes"}
-      </Button>
-    </FormActions>
+    <>
+      {/* One summary for the whole settings document — every tab writes into
+          the same payload and one save covers all of them, so a single place
+          to read what is wrong is correct here. */}
+      <FormErrorSummary />
+      <FormActions align="right">
+        <Button type="button" isLoading={isPending} disabled={isPending} onClick={onSave}>
+          {isPending ? "Saving…" : "Save all changes"}
+        </Button>
+      </FormActions>
+    </>
   );
 }
 
@@ -821,7 +829,7 @@ export function AdminSiteSettingsView({
 
           {/* ⓪ About Page */}
           <TabsContent value="about">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Override the About page content. Leave blank to use the platform defaults.
               </Text>
@@ -922,7 +930,7 @@ export function AdminSiteSettingsView({
 
           {/* ① Branding */}
           <TabsContent value="branding">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetItRip" />
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
@@ -936,7 +944,7 @@ export function AdminSiteSettingsView({
 
           {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}
           <TabsContent value="appearance">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Sets the background behind the public shell, dashboard sidebars, and any
                 Section/Card that opts into it. Leave the value blank for a plain surface.
@@ -1031,7 +1039,7 @@ export function AdminSiteSettingsView({
 
           {/* ②ᵃ Themes — admin-authored theme records */}
           <TabsContent value="themes">
-            <Form
+            <Form schema={siteSettingsFormSchema}
               onSubmit={(e) => {
                 e.preventDefault();
                 saveAllMutation.mutate();
@@ -1048,7 +1056,7 @@ export function AdminSiteSettingsView({
 
           {/* ③ Announcement */}
           <TabsContent value="announcement">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
@@ -1061,7 +1069,7 @@ export function AdminSiteSettingsView({
 
           {/* ④ SEO */}
           <TabsContent value="seo">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetItRip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
@@ -1072,7 +1080,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑤ Contact & Social */}
           <TabsContent value="contact">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder="support@letitrip.in" />
                 <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
@@ -1094,7 +1102,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑥ Watermark */}
           <TabsContent value="watermark">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Select
                 label="Watermark type"
                 options={[{ label: "Text", value: "text" }, { label: "Image", value: "image" }]}
@@ -1165,7 +1173,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑦ Fees & Commissions */}
           <TabsContent value="fees">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
@@ -1244,7 +1252,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑮ Procurement — labor rate feeding Feature A shipment cost calc */}
           <TabsContent value="procurement">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Used to compute each procurement shipment's labor cost (hours spent × hourly rate) and its
                 estimated processing time (hours spent ÷ max hours/day).
@@ -1273,7 +1281,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑯ EMI — site-wide installment financing settings */}
           <TabsContent value="emi">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 A seller must also opt in via their own Payout Settings for EMI to appear at
                 checkout on their items. See the "How EMI Works" public page for buyer-facing copy.
@@ -1339,7 +1347,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑰ GST — Indian tax compliance settings */}
           <TabsContent value="gst">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Required before enabling GST-inclusive checkout (P-8). Also set a GST rate + HSN
                 code on each taxable product for the tax breakdown to appear.
@@ -1380,7 +1388,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑱ Feature Flags */}
           <TabsContent value="featureflags">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
               <Text size="xs" color="muted">
                 Site-wide platform feature toggles. Disabling a flag hides that feature's nav entries
                 and pages — existing data is untouched, it just becomes unreachable until re-enabled.
@@ -1437,7 +1445,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">Razorpay</Text>
@@ -1505,7 +1513,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑨ Shipping Defaults */}
           <TabsContent value="shipping">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
               <Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} />
               <Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} />
@@ -1532,7 +1540,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑩ Auction Config */}
           <TabsContent value="auction">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Stack gap="sm" rounded="lg" border="default" padding="sm">
                 <Text size="xs" weight="medium" color="muted">Bid increment tiers</Text>
                 <Text size="xs" color="muted">
@@ -1601,7 +1609,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑪ Platform Limits */}
           <TabsContent value="limits">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max images per product" value={String(maxImagesPerProduct)} onChange={(e) => setMaxImagesPerProduct(parseInt(e.target.value) || 0)} type="number" min={1} />
@@ -1615,7 +1623,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑬ WhatsApp Business Cloud API */}
           <TabsContent value="whatsapp">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
                 announcements to admin numbers when orders are placed. Store owners configure their
@@ -1669,7 +1677,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑭ Notification Channels */}
           <TabsContent value="notifications">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
               <Text size="xs" color="muted">
                 In-app notifications are always on. Enable external channels below to let the platform
                 fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
@@ -1795,7 +1803,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑫ Legal Policies */}
           <TabsContent value="legal">
-            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               {[
                 ["Terms of Service", termsHtml, setTermsHtml],
                 ["Privacy Policy", privacyHtml, setPrivacyHtml],

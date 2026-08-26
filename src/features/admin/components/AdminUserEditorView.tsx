@@ -7,6 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Avatar, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { adminUserUpdateSchema } from "../schemas/admin-user-form";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 // --- Types -------------------------------------------------------------------
 
@@ -649,11 +651,12 @@ export function AdminUserEditorView({
         onClose={onClose}
         title={displayName ? `Manage: ${displayName}` : "Manage User"}
       >
-        <Form
+        <Form schema={adminUserUpdateSchema}
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
           }} padding="md">
+      <FormErrorSummary />
           <StackedViewShell
             portal="admin"
             className="space-y-4"

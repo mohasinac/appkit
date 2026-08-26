@@ -63,3 +63,27 @@ export const updateProfileSchema = z.object({
   bio: z.string().max(500, "Bio must be 500 characters or fewer").optional(),
   profileIsPublic: z.boolean().optional(),
 });
+
+/**
+ * Changing the account email.
+ *
+ * Both fields were bare `<Input required>` on `/user/settings` — an HTML
+ * attribute any programmatic submit bypasses — on a form that changes the
+ * address every future sign-in and password reset goes to.
+ *
+ * The current password is required because re-authentication is what stops a
+ * stolen session cookie from redirecting an account to an attacker's inbox;
+ * the length floor is deliberately low, since it is checked against a stored
+ * credential, not chosen here.
+ */
+export const changeEmailSchema = z.object({
+  newEmail: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(1, "Enter the new email address.")
+    .email("That doesn't look like an email address."),
+  emailPassword: z.string().min(1, "Enter your current password to confirm."),
+});
+
+export type ChangeEmailValues = z.infer<typeof changeEmailSchema>;
