@@ -271,6 +271,13 @@ export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryE
 export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
 export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
 export { lotteryConfigWriteSchema, lotterySlotWriteSchema } from "./features/lottery/schemas/config-write";
+// The SectionForm engine + its schema-derived section builder. Client-only:
+// consumer forms need these and the bare package resolves to the SERVER entry.
+export { SectionForm, useSectionFormNav } from "./features/shell/SectionForm";
+export type { SectionDef, SectionFormProps } from "./features/shell/SectionForm";
+export { buildSectionsFromSchema } from "./features/shell/build-sections";
+export { reportCreateSchema } from "./features/store-extensions/schemas/report-create-form";
+export type { ReportCreateValues } from "./features/store-extensions/schemas/report-create-form";
 export type { LotteryConfigWriteInput } from "./features/lottery/schemas/config-write";
 export { PrizeDrawLotteryDetailView } from "./_internal/client/features/lottery/PrizeDrawLotteryDetailView";
 export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
