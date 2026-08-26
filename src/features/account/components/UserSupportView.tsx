@@ -7,6 +7,7 @@ import { Button, Div, FormActions, Row, Select, SideDrawer, Span, Stack, Text, U
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { apiClient } from "../../../http";
+import { supportTicketCreateSchema } from "../../support/schemas/ticket-create-form";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
@@ -114,12 +115,28 @@ export function UserSupportView(_props: UserSupportViewProps) {
 
   const createMutation = useApiMutation({
     mutationFn: async () => {
-      await apiClient.post(SUPPORT_ENDPOINTS.TICKETS, {
+      /*
+       * This drawer validated NOTHING. Its sibling page
+       * (`/user/support/new`) hand-rolled a `canSubmit` boolean that required
+       * an order id for an `order_issue` ticket — a real rule, since an order
+       * complaint with no order is unactionable — and the route did not
+       * enforce it either. So the same ticket was acceptable or not purely
+       * depending on which surface the user happened to open.
+       *
+       * One schema now, across both surfaces and the route.
+       */
+      const parsed = supportTicketCreateSchema.safeParse({
         subject: newSubject.trim(),
         category: newCategory,
         description: newDescription.trim(),
         orderId: newOrderId.trim() || undefined,
       });
+      if (!parsed.success) {
+        throw new Error(
+          parsed.error.issues[0]?.message ?? "Check the ticket details.",
+        );
+      }
+      await apiClient.post(SUPPORT_ENDPOINTS.TICKETS, parsed.data);
     },
     onSuccess: () => {
       showToast("Support ticket created.", "success");

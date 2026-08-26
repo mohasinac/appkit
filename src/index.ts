@@ -5392,6 +5392,8 @@ export { EVENT_ADMIN_SORT_OPTIONS } from "./features/events/index";
 export { EVENT_ENTRIES_COLLECTION } from "./features/events/index";
 // LOTTERY_ENTRIES_COLLECTION - New lotteryEntries collection constant.
 export { LOTTERY_ENTRIES_COLLECTION } from "./features/lottery/schemas/firestore";
+export { supportTicketCreateSchema } from "./features/support/schemas/ticket-create-form";
+export type { SupportTicketCreateValues } from "./features/support/schemas/ticket-create-form";
 // The lotteryConfig WRITE contract + the booking-preserving merge. The only
 // sanctioned way to write lotteryConfig — see the schema module's header.
 export { lotteryConfigWriteSchema, lotterySlotWriteSchema, mergeLotteryConfig } from "./features/lottery/schemas/config-write";
@@ -9897,6 +9899,16 @@ export {
 } from "./utils/sieve-builder";
 export type { SieveOp } from "./utils/sieve-builder";
 export { buildSearchTokens, tokenizeQuery } from "./utils/search-tokens";
+
+// searchTxt — normalized edge-n-gram search field. Supersedes search-tokens;
+// see appkit/src/utils/search-txt.ts for why it is an array and not a string.
+export {
+  buildSearchTxt,
+  parseSearchTxtQuery,
+  matchesAllSearchTerms,
+  normalizeSearchText,
+  type SearchTxtOptions,
+} from "./utils/search-txt";
 // [CLIENT-ONLY] — Admin panel components for action/nav permission management.
 export { ActionPermissionsManager } from "./features/site-settings/components/ActionPermissionsManager";
 export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";
