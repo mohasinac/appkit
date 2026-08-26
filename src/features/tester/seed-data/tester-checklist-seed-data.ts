@@ -751,41 +751,135 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/cart",
       cases: [
         { key: "update-qty", label: "Updating item quantity in cart recalculates the total" },
+        // ── Grouped & bundle cart lines ──────────────────────────────────
+        // Fixtures backing these: product-tester-standard-1/2/3 (three members
+        // of one group, deliberately spanning two GST rates),
+        // product-tester-group-soldout (blocked member),
+        // product-tester-crossstore-a/b (a group spanning two sellers),
+        // bundle-tester-sandbox (a priced, all-or-nothing bundle).
         {
-          key: "group-picker-add-selected",
-          label: "On a product that is part of a group, \"Pick items →\" opens a picker with +/- per member, and \"Add selected to cart\" creates ONE cart line (not one per item)",
+          key: "group-picker-opens",
+          label: "On a product that belongs to a group, the \"Part of: …\" strip has a \"Pick items →\" control that opens a picker with a Qty column and a +/- stepper on each member",
           description:
-            "Use the Test Gadget page. Set two different members to different quantities, check the running total in the picker footer, then add. The cart should show a single line, not three.",
+            "Before this existed the panel was navigation only — the buyer had to open each member separately and add it as its own cart line.",
           href: "/products/product-tester-standard-1",
         },
         {
-          key: "group-line-editable-in-cart",
-          label: "A grouped cart line expands to show its members, each with its own +/- and remove; removing the last member removes the whole line",
+          key: "group-picker-running-total",
+          label: "Changing any member's quantity updates the picker's running total (\"N items · ₹X\") immediately, and \"Add selected to cart\" stays disabled while nothing is selected",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "group-picker-stock-cap",
+          label: "A member's + button stops at that member's available stock — it cannot be pushed past it",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "group-picker-blocked-member",
+          label: "A sold-out member shows a reason chip (e.g. \"Sold\" / \"Out of stock\") in place of its stepper and cannot be selected",
           description:
-            "There should be NO line-level quantity stepper on a grouped line — the per-member steppers carry the whole selection. Changing one member should update both the line total and the seller subtotal.",
-          href: "/cart",
+            "Test Part — Sold Out is seeded into the tester group specifically for this. The rest of the group must stay selectable around it.",
+          href: "/products/product-tester-group-soldout",
+        },
+        {
+          key: "group-picker-one-line",
+          label: "\"Add selected to cart\" with two or more members creates ONE cart line, not one line per product",
+          description:
+            "Pick 2 of one member and 1 of another, then open the cart: a single line reading \"N items\", not three separate rows.",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "group-picker-single-member-plain-line",
+          label: "Selecting exactly ONE member produces an ordinary product line (with a normal quantity stepper), not a grouped line",
+          description:
+            "1 item × qty N is already what a normal cart line means, so it deliberately does not become a group line.",
+          href: "/products/product-tester-standard-1",
         },
         {
           key: "group-picker-cross-store",
-          label: "A group whose members belong to different sellers shows the read-only table with no quantity column and an explanation, rather than an \"Add selected\" button that always fails",
+          label: "A group whose members belong to DIFFERENT sellers renders read-only — no Qty column, no \"Add selected\" button — with an explanation, rather than a button that always fails",
+          description:
+            "Use the Test Cross-Store Set. Its two members sit in different stores on purpose.",
+          href: "/products/product-tester-crossstore-a",
+        },
+        {
+          key: "group-picker-guest",
+          label: "A signed-out visitor using the picker is shown the login prompt rather than silently losing the selection",
           href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "group-line-expands-in-cart",
+          label: "A grouped cart line in the cart expands to list its members with a thumbnail, unit price and its own +/- stepper each",
+          href: "/cart",
+        },
+        {
+          key: "group-line-no-line-level-stepper",
+          label: "A grouped line has NO line-level quantity stepper — only the per-member ones",
+          description:
+            "The member quantities carry the whole selection; a second multiplier on top would double every price, tax and stock decrement.",
+          href: "/cart",
+        },
+        {
+          key: "group-line-member-edit-recalculates",
+          label: "Changing one member's quantity in the cart updates that line's total AND the seller-group subtotal above it",
+          href: "/cart",
+        },
+        {
+          key: "group-line-remove-member",
+          label: "Removing one member from a grouped line leaves the rest of the line intact; removing the LAST member removes the whole line",
+          href: "/cart",
+        },
+        {
+          key: "group-line-link-target",
+          label: "Clicking a grouped or bundle line's title in the cart lands on a real page — never a 404",
+          description:
+            "A bundle line goes to /bundles/{slug}, a grouped-listing line to /groups/{slug}, a product-group line to its parent product. It used to point at /products/{categoryId}, which never existed.",
+          href: "/cart",
         },
         {
           key: "bundle-copies-stepper",
           label: "A bundle page has a \"Copies\" +/- stepper and BOTH \"Buy now\" and \"Add to cart\" — Add to cart stays on the page, Buy now goes to checkout",
           description:
-            "A bundle is all-or-nothing: there must be no per-member quantity controls on the bundle page, only the copies stepper.",
+            "A bundle is all-or-nothing: there must be no per-member quantity controls anywhere on the bundle page, only the copies stepper.",
           href: "/bundles/bundle-tester-sandbox",
         },
         {
-          key: "bundle-line-editable-in-cart",
-          label: "A bundle in the cart shows its member list read-only and a copies stepper; changing copies recalculates the line at the bundle's discounted price, not the sum of member prices",
+          key: "bundle-line-in-cart",
+          label: "A bundle in the cart lists its members READ-ONLY and offers a copies stepper; raising copies multiplies the bundle's discounted price, never the sum of the members' individual prices",
+          description:
+            "Test Bundle is ₹199 while its members list at ₹199 + ₹149. Two copies must read ₹398, not ₹696.",
           href: "/cart",
         },
         {
+          key: "bundle-cross-store-rejected",
+          label: "Saving a bundle whose items come from two different sellers is refused with a clear message naming how many sellers they span",
+          description:
+            "Build a bundle mixing Test Cross-Store Set — Seller A with any Tester Sandbox product and save. Applies to both creating and editing, on the admin and the seller bundle editors. A bundle's storeId is a single value and is what decides which seller gets the order, the shipment and the payout — so a two-seller bundle would pay only one of them.",
+          href: "/store/bundles/new",
+        },
+        {
           key: "grouped-listing-page-picker",
-          label: "A grouped listing has its own page with the same picker, reachable from the \"Pick items from this group →\" button on a group carousel",
+          label: "A grouped listing has its own public page with the same picker, reachable from the \"Pick items from this group →\" button on a group carousel",
           href: "/groups/group-beyblade-original-lineage",
+        },
+        {
+          key: "group-lane-gate",
+          label: "While an unpaid won auction or accepted offer is sitting in the cart, adding a group selection is refused with the same lane message as any other add",
+          description:
+            "This path used to bypass the gate entirely, so a buyer could keep shopping around an obligation they had already committed to.",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "group-checkout-order-rows",
+          label: "After checking out a grouped or bundle line, the order shows one row PER MEMBER under a single group header, and the line totals add up to the order total",
+          description:
+            "Rows are expanded so each carries its own HSN code and GST rate — a collapsed row can only carry one of each, which is why bundles previously showed none.",
+          href: "/user/orders",
+        },
+        {
+          key: "group-checkout-stock",
+          label: "Checking out a grouped line decrements each member by (its per-copy quantity × the number of copies), not by one each",
+          href: "/user/orders",
         },
         { key: "apply-coupon", label: "Applying a coupon code at checkout works" },
         { key: "remove-coupon", label: "Removing an already-applied coupon from the cart recalculates the total back down" },

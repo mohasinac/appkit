@@ -1559,6 +1559,7 @@ export {
   getRelatedBundles,
   resolveBundleMemberIds,
   resolveBundleOriginalTotal,
+  findBundleMemberStores,
   resolveBundleCategorySlugs,
   buildBundleMetadata,
   renderBundleOg,

@@ -95,6 +95,39 @@ export async function resolveBundleOriginalTotal(
 }
 
 /**
+ * Reject a bundle whose members belong to more than one seller.
+ *
+ * `storeId` is a SCALAR on the cart line, and it is simultaneously the
+ * order-splitting key and the key that per-store add-ons, coupons, shipping and
+ * payout all hang off. A bundle spanning two sellers therefore produces one
+ * order belonging to one of them while containing the other's products — the
+ * second seller gets no notification, no shipping resolution and no payout.
+ *
+ * Grouped cart lines refuse this at both the picker and the add-to-cart action.
+ * Bundles had no equivalent guard, so the only reason nothing was broken was
+ * that every bundle anyone had built happened to be single-store. This closes
+ * that at the point a bundle is SAVED, which is the cheapest place to say no:
+ * bundles already in the database keep working, and checkout is untouched.
+ *
+ * Returns the offending store ids (empty when fine) rather than throwing, so
+ * each route can phrase its own 400.
+ */
+export async function findBundleMemberStores(productIds: string[]): Promise<string[]> {
+  if (productIds.length === 0) return [];
+  const results = await Promise.all(
+    productIds.map((id) => productRepository.findById(id).catch(() => null)),
+  );
+  const stores = new Set<string>();
+  for (const p of results) {
+    // An unresolvable member says nothing about seller spread — the price
+    // helper above already refuses to guess in that case, and inventing a
+    // store here would produce a false positive that blocks a valid save.
+    if (p?.storeId) stores.add(p.storeId);
+  }
+  return [...stores];
+}
+
+/**
  * Union of the member products' `categorySlugs` — the `bundleCategorySlugs`
  * mirror that lets a category page scope its Bundles tab.
  *
