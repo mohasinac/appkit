@@ -6448,6 +6448,11 @@ export { TitleBarLayout } from "./features/layout/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActions - React hook for use bottom actions.
 export { useBottomActions } from "./features/layout/index";
+
+// useFormBottomActions - pins a form's Save/Cancel row + error sheet to the mobile bottom-chrome tier.
+export { useFormBottomActions } from "./features/layout/index";
+export { FormErrorList } from "./ui/forms";
+export { OverlayContext, useIsInsideOverlay } from "./ui/components/overlay-context";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActionsContext - React hook for use bottom actions context.
 export { useBottomActionsContext } from "./features/layout/index";

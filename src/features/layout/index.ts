@@ -64,6 +64,8 @@ export type {
 } from "./BottomActionsContext";
 export { useBottomActions } from "./hooks/useBottomActions";
 export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
+export { useFormBottomActions } from "./hooks/useFormBottomActions";
+export type { UseFormBottomActionsOptions } from "./hooks/useFormBottomActions";
 
 export { default as BottomActions } from "./BottomActions";
 

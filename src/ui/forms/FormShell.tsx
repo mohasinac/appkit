@@ -71,6 +71,37 @@ export interface FormShellContextValue {
    * treats undefined as "no step context" and renders a flat list.
    */
   fieldToStepIndex?: Record<string, number>;
+  /*
+   * 🛑 Has the user tried to submit yet?
+   *
+   * `<FormErrorSummary>` renders nothing until this is true. Without it, every
+   * form in the app greeted the user with a list of its own requirements as
+   * errors: the summary is deliberately NOT `touched`-gated (unlike the
+   * per-field inline errors), and ~20 views run `validate(draft)` in an effect
+   * on mount — so an untouched empty draft was parsed immediately and every
+   * `.min(1)` failed on first paint.
+   *
+   * Gate the DISPLAY, not the computation. The live validation stays: it is
+   * what keeps the summary and the submit state current as the user fixes
+   * things after a failed submit, which is the whole reason the summary exists.
+   *
+   * Per-field inline errors keep their own `touched` gate — a field the user
+   * visited and left empty SHOULD say so. It is the summary that must wait,
+   * because it speaks about fields they have not reached yet.
+   */
+  submitAttempted: boolean;
+  /**
+   * How many times. `submitAttempted` is `submitAttemptCount > 0` — DERIVED
+   * at the one place each producer builds this object, never stored twice.
+   *
+   * The count exists because a boolean cannot express "this is a NEW
+   * attempt". The mobile error sheet force-opens on a bumped counter, so
+   * pressing Save a second time re-opens a sheet the user had collapsed,
+   * while an ordinary re-render does not.
+   */
+  submitAttemptCount: number;
+  /** Call from a submit handler, before validating. */
+  markSubmitAttempted: () => void;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -104,6 +135,16 @@ export interface UseFormShellStateResult {
    * parsed value on success or null on failure.
    */
   validate: <T = unknown>(values: unknown) => T | null;
+  /** True once the user has actually tried to submit. Gates <FormErrorSummary>. */
+  submitAttempted: boolean;
+  /** See FormShellContextValue.submitAttemptCount. */
+  submitAttemptCount: number;
+  /**
+   * Record a submit attempt. `<Form>` / `<SectionForm>` / `<QuickFormDrawer>`
+   * call this for you; call it directly only when your submit control is a
+   * `type="button"` with an `onClick`, so no native submit event fires.
+   */
+  markSubmitAttempted: () => void;
 }
 
 /**
@@ -148,6 +189,9 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
   nav?: FormShellNav,
 ): UseFormShellStateResult {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitAttemptCount, setSubmitAttemptCount] = useState(0);
+  const markSubmitAttempted = useCallback(() => setSubmitAttemptCount((n) => n + 1), []);
+  const submitAttempted = submitAttemptCount > 0;
 
   const setFieldError = useCallback((name: string, error: string | null) => {
     setErrors((prev) => {
@@ -161,6 +205,19 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
 
   const validate = useCallback(
     <T = unknown,>(values: unknown): T | null => {
+      /*
+       * 🛑 validate() does NOT mark the submit attempt, and must not.
+       *
+       * ELEVEN views call `validate(draft)` from a MOUNT EFFECT to keep the
+       * summary and the submit-button state live as the user types — which
+       * is the behaviour worth having. Marking here would fire on first
+       * paint in exactly those views and defeat the gate entirely.
+       *
+       * The attempt is marked where an attempt actually happens: <Form>'s
+       * native submit handler, <SectionForm>'s submit button, and
+       * QuickFormDrawer's. A caller whose submit is an onClick on a
+       * type="button" calls markSubmitAttempted() itself.
+       */
       if (!schema) return values as T;
       const parsed = schema.safeParse(values);
       if (parsed.success) {
@@ -195,9 +252,21 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
     isSubmitting: false,
     stepErrorCounts: [],
     fieldToStepIndex: navFieldMap,
-  }), [errors, setFieldError, navSections, navGoTo, navFieldMap]);
+    submitAttempted,
+    submitAttemptCount,
+    markSubmitAttempted,
+  }), [errors, setFieldError, navSections, navGoTo, navFieldMap, submitAttempted, submitAttemptCount, markSubmitAttempted]);
 
-  return { shellCtx, setFieldError, clearErrors, hasErrors: Object.keys(errors).length > 0, validate };
+  return {
+    shellCtx,
+    setFieldError,
+    clearErrors,
+    hasErrors: Object.keys(errors).length > 0,
+    validate,
+    submitAttempted,
+    submitAttemptCount,
+    markSubmitAttempted,
+  };
 }
 
 // ─── FormShellProvider ────────────────────────────────────────────────────────
@@ -239,6 +308,14 @@ export interface FormShellProviderProps {
    * used to be hardcoded `[]`. Supply alongside `fieldToStepIndex`.
    */
   sections?: FormShellStep[];
+  /*
+   * Force `submitAttempted` on from outside. The provider owns its own flag
+   * and exposes `markSubmitAttempted()` on the context, which is enough for a
+   * submit button rendered inside it — but a shell that already tracks the
+   * attempt itself (SellerProductShell, whose Publish button lives in a
+   * `renderBottomBar` slot) can hand it in instead. OR-ed, never overriding.
+   */
+  submitAttempted?: boolean;
 }
 
 export function FormShellProvider({
@@ -251,9 +328,14 @@ export function FormShellProvider({
   fieldToStepIndex,
   onGoToStep,
   sections,
+  submitAttempted: submitAttemptedProp = false,
 }: FormShellProviderProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [ownAttemptCount, setOwnAttemptCount] = useState(0);
+  const markSubmitAttempted = useCallback(() => setOwnAttemptCount((n) => n + 1), []);
+  const submitAttemptCount = ownAttemptCount + (submitAttemptedProp ? 1 : 0);
+  const submitAttempted = submitAttemptCount > 0;
 
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const valuesRef = useRef(values);
@@ -318,7 +400,10 @@ export function FormShellProvider({
     isSubmitting: false,
     stepErrorCounts: [],
     fieldToStepIndex,
-  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty, onGoToStep, fieldToStepIndex, sections]);
+    submitAttempted,
+    submitAttemptCount,
+    markSubmitAttempted,
+  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty, onGoToStep, fieldToStepIndex, sections, submitAttempted, submitAttemptCount, markSubmitAttempted]);
 
   return <FormShellContext.Provider value={ctx}>{children}</FormShellContext.Provider>;
 }

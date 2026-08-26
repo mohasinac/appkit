@@ -1184,6 +1184,42 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/store/classified",
         },
         {
+          key: "form-errors-wait-for-first-submit",
+          label: "Opening the address form shows NO errors until you press Save",
+          description: "Live bug fixed 2026-08-26: every schema-driven form greeted the user with a list of its own requirements as errors before they had typed anything. Two causes compounded — <FormErrorSummary> was deliberately un-gated, and ~20 views run validate(draft) in a mount effect, so an untouched empty draft failed every .min(1) on first paint. Open /user/addresses/new: the summary block must be absent. Press Save with the form empty: NOW it lists the missing fields.",
+          href: "/user/addresses/new",
+        },
+        {
+          key: "form-errors-stay-live-after-first-submit",
+          label: "After a failed Save, the error list SHRINKS as you fill fields in",
+          description: "The fix gates the DISPLAY, not the computation — the live validation underneath is what makes the list useful. Press Save on an empty address form, then fill Full name. The summary must drop that entry immediately, without a second Save. If the list is frozen, the on-mount validate() was removed instead of gated, which is the wrong fix.",
+          href: "/user/addresses/new",
+        },
+        {
+          key: "form-mobile-bar-pinned",
+          label: "On a phone, Save and Cancel are pinned above the tab bar on the address form",
+          description: "Added 2026-08-26 (W21). Narrow the window below 1024px, or use a real phone. Save/Cancel should sit in the same fixed bar the cart uses for 'Proceed to checkout' — above the bottom tab bar, not scrolled off the end of a long form. On desktop the bar is hidden and the inline Save/Cancel row at the bottom of the form is the control.",
+          href: "/user/addresses/new",
+        },
+        {
+          key: "form-mobile-error-sheet",
+          label: "On a phone, a failed Save opens a 'Fix N issues' sheet you can tap through",
+          description: "Below 1024px, press Save on an empty address form. A 'Fix 6 issues' row must appear above the buttons with the list already open. Collapse it, press Save again — it must RE-open (the count is a counter, not a boolean, precisely so a second attempt is a new event). Tapping an entry on a sectioned form jumps to that field.",
+          href: "/user/addresses/new",
+        },
+        {
+          key: "form-bar-restores-listing-bulk-bar",
+          label: "Closing a form drawer over a listing brings the listing's bulk bar back",
+          description: "Regression test for the singleton clobber: there is ONE bottom bar per route and DataListingView claims it on ~70 admin screens. Select a few rows on an admin listing so the bulk bar appears, open a row's editor drawer, then close it — the bulk bar must still be there with the selection intact. Before the claim stack landed, the drawer overwrote it and blanked it on close.",
+          href: "/admin/products",
+        },
+        {
+          key: "form-bar-absent-inside-a-modal",
+          label: "A form inside a modal or drawer does NOT get a second bar at the bottom of the screen",
+          description: "An overlay owns its own footer, and a viewport-fixed bar would render behind the backdrop, below the dialog it belongs to. Open any drawer-based editor on a phone-width window and confirm the only Save/Cancel controls are the ones inside the drawer.",
+          href: "/admin/coupons",
+        },
+        {
           key: "address-routes-normalised",
           label: "Adding and editing an address works, and the OLD urls still resolve",
           description: "/user/addresses/add and /user/addresses/edit/[id] were the only two non-standard route shapes in the app; every other entity uses /new and /[id]/edit. Both old paths are kept as redirects, so a bookmark still works. Check the buttons on the addresses page, then visit /user/addresses/add directly and confirm it lands on /user/addresses/new.",

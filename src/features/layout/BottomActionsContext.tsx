@@ -125,6 +125,19 @@ export interface BottomActionsState {
    * bulk mode, which owns the same space for its action picker.
    */
   infoPanel?: React.ReactNode;
+  /**
+   * A COUNTER, not a boolean — bump it to force `infoPanel` open once.
+   *
+   * `BottomActions` owns `infoOpen` in local state so the user can collapse
+   * the panel at will. A boolean `forceOpen` would fight that: it stays true,
+   * so every subsequent render re-opens what they just closed. A counter
+   * expresses the real intent — "this is a NEW event, show it" — and fires
+   * exactly once per increment.
+   *
+   * Used by a form's failed submit: the error list should appear without a
+   * tap, and stay dismissible afterwards.
+   */
+  infoOpenSignal?: number;
 }
 
 // --- Context ------------------------------------------------------------------
@@ -150,10 +163,31 @@ interface BottomActionsContextValue {
   setSecondaryLabel: (label: string | undefined) => void;
   /** Set or clear the expandable panel revealed above the bar. */
   setInfoPanel: (panel: React.ReactNode | undefined) => void;
+  /** Set the force-open counter. See BottomActionsState.infoOpenSignal. */
+  setInfoOpenSignal: (signal: number | undefined) => void;
   /** Set the desktop visibility policy. */
   setDesktopMode: (mode: BottomActionsDesktopMode | undefined) => void;
   /** Clear all state (called on feature unmount). */
   clearAll: () => void;
+
+  /*
+   * ── Claim stack ────────────────────────────────────────────────────────
+   *
+   * There is ONE bar per route, and until now the last component to mount
+   * simply overwrote whatever the previous one had published — then blanked
+   * the bar entirely on its own unmount. `DataListingView` claims it on ~70
+   * admin screens, so a form opened in a drawer OVER a listing wiped the
+   * listing's bulk bar and left nothing behind when it closed.
+   *
+   * A stack fixes both halves: only the TOP claimant may publish, and
+   * releasing restores the one underneath rather than clearing. Consumers do
+   * not manage this — `useBottomActions` claims on mount and releases on
+   * unmount, and re-publishes automatically when it regains the top.
+   */
+  claim: (id: string) => void;
+  release: (id: string) => void;
+  /** The id currently allowed to publish. `useBottomActions` gates on this. */
+  topClaimId: string | null;
 }
 
 const EMPTY: BottomActionsState = { actions: [] };
@@ -171,11 +205,39 @@ export function BottomActionsProvider({
 }) {
   const [state, setState] = useState<BottomActionsState>(EMPTY);
 
+
   // Callback refs — updated on every setActions call, so the component always
   // dispatches the latest onClick regardless of when the state last diffed.
   const actionCallbacksRef = useRef<Map<string, () => void>>(new Map());
   const bulkCallbacksRef = useRef<Map<string, () => void>>(new Map());
   const bulkClearRef = useRef<(() => void) | undefined>(undefined);
+
+  // Stack of claimant ids, oldest first. The last entry owns the bar.
+  const claimsRef = useRef<string[]>([]);
+  const [topClaimId, setTopClaimId] = useState<string | null>(null);
+
+  const claim = useCallback((id: string) => {
+    if (claimsRef.current.includes(id)) return;
+    claimsRef.current = [...claimsRef.current, id];
+    setTopClaimId(id);
+  }, []);
+
+  const release = useCallback((id: string) => {
+    const next = claimsRef.current.filter((c) => c !== id);
+    if (next.length === claimsRef.current.length) return;
+    claimsRef.current = next;
+    const newTop = next.length > 0 ? next[next.length - 1] : null;
+    setTopClaimId(newTop);
+    // Only blank the bar when nobody is left. Otherwise the newly-top
+    // consumer republishes on the very next effect pass, so clearing here
+    // would be a visible flicker of an empty bar.
+    if (newTop === null) {
+      actionCallbacksRef.current = new Map();
+      bulkCallbacksRef.current = new Map();
+      bulkClearRef.current = undefined;
+      setState(EMPTY);
+    }
+  }, []);
 
   const setActions = useCallback((actions: BottomAction[]) => {
     // Update callback map (always latest)
@@ -226,6 +288,10 @@ export function BottomActionsProvider({
     setState((prev) => ({ ...prev, infoPanel }));
   }, []);
 
+  const setInfoOpenSignal = useCallback((infoOpenSignal: number | undefined) => {
+    setState((prev) => (prev.infoOpenSignal === infoOpenSignal ? prev : { ...prev, infoOpenSignal }));
+  }, []);
+
   const setDesktopMode = useCallback(
     (desktop: BottomActionsDesktopMode | undefined) => {
       setState((prev) => (prev.desktop === desktop ? prev : { ...prev, desktop }));
@@ -251,8 +317,12 @@ export function BottomActionsProvider({
       setInfoLabel,
       setSecondaryLabel,
       setInfoPanel,
+      setInfoOpenSignal,
       setDesktopMode,
       clearAll,
+      claim,
+      release,
+      topClaimId,
     }),
 
     [
@@ -262,8 +332,12 @@ export function BottomActionsProvider({
       setInfoLabel,
       setSecondaryLabel,
       setInfoPanel,
+      setInfoOpenSignal,
       setDesktopMode,
       clearAll,
+      claim,
+      release,
+      topClaimId,
     ],
   );
 

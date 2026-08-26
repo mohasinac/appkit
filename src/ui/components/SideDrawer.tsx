@@ -9,6 +9,7 @@ import { useSwipe } from "../../react";
 import { Text } from "./Typography";
 import { SPRING_SNAPPY } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";
+import { OverlayContext } from "./overlay-context";
 
 export type DrawerMode = "create" | "edit" | "delete" | "view";
 
@@ -194,6 +195,7 @@ export function SideDrawer({
   const slideX = resolvedSide === "left" ? "-100%" : "100%";
 
   return (
+    <OverlayContext.Provider value={true}>
     <AnimatePresence>
       {isOpen && (
         <>
@@ -311,5 +313,6 @@ export function SideDrawer({
         </>
       )}
     </AnimatePresence>
+    </OverlayContext.Provider>
   );
 }

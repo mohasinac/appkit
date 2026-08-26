@@ -1,10 +1,10 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { Button, Checkbox, FormField, FormGroup, Row, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
-import { useFormShellState, FormErrorSummary } from "../../../ui/forms";
+import { useFormShellState, FormErrorSummary, type UseFormShellStateResult } from "../../../ui/forms";
 import type { AddressFormData } from "../hooks/useAddresses";
 
 // Local form-input schema — `userAddressSchema` (account schemas) uses
@@ -118,7 +118,41 @@ export function AddressForm({
     isDefault: initialData?.isDefault || false,
   });
 
-  const { shellCtx, validate } = useFormShellState(addressFormSchema);
+  const { shellCtx, validate, setFieldError, clearErrors, markSubmitAttempted } =
+    useFormShellState(addressFormSchema);
+
+  /*
+   * ONE submit path, shared by the inline Save button and the pinned mobile
+   * bar. Two copies would be two chances for the bar to skip a check the
+   * button performs — and the bar is the one a phone user actually presses,
+   * since the inline row sits below the fold on a form this long.
+   */
+  const submitAddress = useCallback(
+    async (h?: Pick<UseFormShellStateResult, "setFieldError" | "clearErrors">) => {
+      const setErr = h?.setFieldError ?? setFieldError;
+      const clear = h?.clearErrors ?? clearErrors;
+      markSubmitAttempted();
+      clear();
+      const errs: Record<string, string> = {};
+      if (!formData.fullName.trim()) errs["fullName"] = "Full name is required";
+      if (!formData.phone.trim()) errs["phone"] = "Phone number is required";
+      if (!formData.addressLine1.trim()) errs["addressLine1"] = "Address is required";
+      if (!formData.city.trim()) errs["city"] = "City is required";
+      if (!formData.state.trim()) errs["state"] = "State is required";
+      if (!formData.postalCode.trim()) errs["postalCode"] = "Postal code is required";
+      if (Object.keys(errs).length > 0) {
+        Object.entries(errs).forEach(([k, v]) => setErr(k, v));
+        return;
+      }
+      try {
+        await onSubmit(formData);
+      } catch (err) {
+        void normalizeError(err);
+        showToast(err instanceof Error ? err.message : "Failed to save address", "error");
+      }
+    },
+    [formData, onSubmit, showToast, setFieldError, clearErrors, markSubmitAttempted],
+  );
 
   useEffect(() => {
     validate(formData);
@@ -133,7 +167,18 @@ export function AddressForm({
   };
 
   return (
-    <Form onSubmit={(e) => e.preventDefault()} spacing="md" shellCtx={shellCtx}>{({ setFieldError, clearErrors }) => (<>
+    <Form
+      onSubmit={(e) => e.preventDefault()}
+      spacing="md"
+      shellCtx={shellCtx}
+      bottomBar={{
+        onSubmit: submitAddress,
+        onCancel,
+        submitLabel: effectiveSubmitLabel,
+        cancelLabel: mergedLabels.cancel,
+        isLoading,
+      }}
+    >{({ setFieldError, clearErrors }) => (<>
       <FormField
         label={mergedLabels.label}
         name="label"
@@ -247,26 +292,7 @@ export function AddressForm({
           variant="primary"
           disabled={isLoading}
           isLoading={isLoading}
-          onClick={async () => {
-            clearErrors();
-            const errs: Record<string, string> = {};
-            if (!formData.fullName.trim()) errs["fullName"] = "Full name is required";
-            if (!formData.phone.trim()) errs["phone"] = "Phone number is required";
-            if (!formData.addressLine1.trim()) errs["addressLine1"] = "Address is required";
-            if (!formData.city.trim()) errs["city"] = "City is required";
-            if (!formData.state.trim()) errs["state"] = "State is required";
-            if (!formData.postalCode.trim()) errs["postalCode"] = "Postal code is required";
-            if (Object.keys(errs).length > 0) {
-              Object.entries(errs).forEach(([k, v]) => setFieldError(k, v));
-              return;
-            }
-            try {
-              await onSubmit(formData);
-            } catch (err) {
-              void normalizeError(err);
-              showToast(err instanceof Error ? err.message : "Failed to save address", "error");
-            }
-          }}
+          onClick={() => void submitAddress({ setFieldError, clearErrors })}
         >
           {isLoading ? mergedLabels.loading : effectiveSubmitLabel}
         </Button>

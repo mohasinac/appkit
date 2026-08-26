@@ -83,7 +83,10 @@ export function MakeOfferButton({
   function submit(
     setFieldError: (name: string, error: string | null) => void,
     clearErrors: () => void,
+    markSubmitAttempted: () => void,
   ) {
+    // type="button" — no native submit, so unhide the summary here.
+    markSubmitAttempted();
     clearErrors();
     const parsed = schema.safeParse({ offerAmount, buyerNote: buyerNote || undefined });
     if (!parsed.success) {
@@ -158,7 +161,7 @@ export function MakeOfferButton({
       </Button>
       <Modal isOpen={state === "open"} onClose={() => setState("idle")} size="md" title="Make an offer">
         <Form schema={schema} onSubmit={(e) => e.preventDefault()}>
-          {({ setFieldError, clearErrors }) => (
+          {({ setFieldError, clearErrors, markSubmitAttempted }) => (
             <Stack gap="md">
               <Text size="xs" color="muted">
                 Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
@@ -208,7 +211,7 @@ export function MakeOfferButton({
                   type="button"
                   isLoading={isPending}
                   disabled={isPending}
-                  onClick={() => submit(setFieldError, clearErrors)}
+                  onClick={() => submit(setFieldError, clearErrors, markSubmitAttempted)}
                 >
                   {isPending ? "Sending…" : `Send offer of ${fmt(Number(offerAmount) || 0)}`}
                 </Button>

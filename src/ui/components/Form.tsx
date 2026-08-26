@@ -9,6 +9,7 @@ import {
   type FormShellContextValue,
   type UseFormShellStateResult,
 } from "../forms/FormShell";
+import { useFormBottomActions } from "../../features/layout/hooks/useFormBottomActions";
 
 export type FormSpacing = "none" | "xs" | "sm" | "md" | "lg" | "xl";
 
@@ -49,6 +50,19 @@ export interface FormProps
    * provider would shadow the parent's for everything rendered as `children`.
    */
   shellCtx?: FormShellContextValue;
+  /**
+   * Publish Save/Cancel and the mobile error sheet into the bottom-chrome
+   * tier — the same bar the cart uses.
+   *
+   * Opt-IN, unlike `<SectionForm>` where it is on by default. `<Form>` is the
+   * generic wrapper and is used inside `<Modal>` and `<SideDrawer>` footers,
+   * inside listing toolbars, and several times over on one page
+   * (`AdminSiteSettingsView` mounts twenty). Publishing route-level chrome
+   * from all of those by default would be wrong far more often than right.
+   * The hook additionally suppresses itself inside an overlay, so passing
+   * this in a modal is a no-op rather than a bug.
+   */
+  bottomBar?: FormBottomBarConfig;
   /** Cross-axis alignment of flex/grid children. Replaces raw `items-*` className. */
   align?: "start" | "center" | "end" | "stretch";
   /** Gap between children — use instead of raw `gap-*` className. */
@@ -91,9 +105,50 @@ const FORM_ALIGN_MAP: Record<"start" | "center" | "end" | "stretch", string> = {
   stretch: "items-stretch",
 };
 
-export function Form({ children, spacing, schema, shellCtx: shellCtxProp, align, gap, surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, className = "", ...props }: FormProps) {
+export interface FormBottomBarConfig {
+  onSubmit: () => void | Promise<void>;
+  onCancel?: () => void;
+  submitLabel?: string;
+  cancelLabel?: string;
+  isLoading?: boolean;
+  disabled?: boolean;
+}
+
+export function Form({ children, spacing, schema, shellCtx: shellCtxProp, bottomBar, align, gap, surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, className = "", ...props }: FormProps) {
   const helpers = useFormShellState(schema);
   const effectiveCtx = shellCtxProp ?? helpers.shellCtx;
+
+  /*
+   * Marking the attempt on the NATIVE submit event covers both shapes this
+   * component is used in: the caller that calls `validate()` (which marks
+   * anyway) and the caller that hand-rolls its checks in the submit button's
+   * `onClick`. React fires `onClick` before `onSubmit`, so by the time the
+   * re-render happens the errors are already in the context.
+   *
+   * `effectiveCtx` may come from a parent's `useFormShellState`, so mark on
+   * whichever context is actually mounted — not on `helpers`, which is a
+   * second, ignored state instance in that case.
+   */
+  const { onSubmit: onSubmitProp } = props;
+  const handleSubmit = React.useCallback(
+    (e: Parameters<NonNullable<typeof onSubmitProp>>[0]) => {
+      effectiveCtx.markSubmitAttempted();
+      onSubmitProp?.(e);
+    },
+    [effectiveCtx, onSubmitProp],
+  );
+
+  useFormBottomActions({
+    onSubmit: bottomBar?.onSubmit ?? (() => {}),
+    onCancel: bottomBar?.onCancel,
+    submitLabel: bottomBar?.submitLabel,
+    cancelLabel: bottomBar?.cancelLabel,
+    isLoading: bottomBar?.isLoading,
+    disabled: bottomBar?.disabled,
+    enabled: bottomBar != null,
+    ctx: effectiveCtx,
+  });
+
   const content =
     typeof children === "function"
       ? (children as (h: UseFormShellStateResult) => React.ReactNode)({ ...helpers, shellCtx: effectiveCtx })
@@ -110,6 +165,7 @@ export function Form({ children, spacing, schema, shellCtx: shellCtxProp, align,
           className,
         ].filter(Boolean).join(" ")}
         {...props}
+        onSubmit={handleSubmit}
       >
         {content}
       </form>

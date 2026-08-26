@@ -268,7 +268,7 @@ export function PlaceBidFormClient({
           e.preventDefault();
         }}
       >
-        {({ setFieldError, clearErrors }) => (
+        {({ setFieldError, clearErrors, markSubmitAttempted }) => (
           <Stack gap="sm">
             <FormErrorSummary />
             {/*
@@ -371,6 +371,8 @@ export function PlaceBidFormClient({
               isLoading={isPending}
               type="button"
               onClick={() => {
+                // type="button" — no native submit, so unhide the summary here.
+                markSubmitAttempted();
                 clearErrors();
                 const parsed = schema.safeParse({ bidAmount });
                 if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);

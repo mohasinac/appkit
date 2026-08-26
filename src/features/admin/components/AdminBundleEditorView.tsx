@@ -215,6 +215,9 @@ export function AdminBundleEditorView({
   }, [bundleId, endpoints]);
 
   const handleSave = useCallback(async () => {
+    // Save is a type="button" onClick — <Form>'s native submit never fires,
+    // so the error summary has to be unhidden explicitly.
+    formHelpersRef.current?.markSubmitAttempted();
     clearErrors();
     setApiError(null);
     const price = parsePriceRupees(form.priceRupees);

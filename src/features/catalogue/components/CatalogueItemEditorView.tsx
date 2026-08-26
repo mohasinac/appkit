@@ -77,7 +77,7 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
 
   return (
     <Form schema={createCatalogueItemSchema} spacing="md">
-      {({ setFieldError }) => (
+      {({ setFieldError, markSubmitAttempted }) => (
         <Stack gap="md">
           {item?.listingStatus && item.listingStatus !== "not_listed" && (
             <Alert variant="info">
@@ -114,6 +114,8 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
             type="button"
             isLoading={saveMutation.isPending}
             onClick={() => {
+              // type="button" — no native submit, so unhide the summary here.
+              markSubmitAttempted();
               const parsed = createCatalogueItemSchema.safeParse({
                 title,
                 images,

@@ -83,6 +83,15 @@ export function QuickFormDrawer({
     initValues(fields, defaultValues),
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
+  /*
+   * The drawer's `errors` state is already submit-gated (only `validate()`
+   * writes it), but the summary below reads `liveErrors`, which is a pure
+   * function of the current values and therefore non-empty from first paint.
+   * Without this flag the drawer opens listing every field it is about to
+   * ask for. Reset on close, so reopening starts clean.
+   */
+  const [submitAttemptCount, setSubmitAttemptCount] = useState(0);
+  const submitAttempted = submitAttemptCount > 0;
   const [submitting, setSubmitting] = useState(false);
 
   // Re-initialise when defaultValues change (e.g. edit mode)
@@ -159,6 +168,7 @@ export function QuickFormDrawer({
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       e?.preventDefault();
+      setSubmitAttemptCount((n) => n + 1);
       if (!validate()) return;
       setSubmitting(true);
       try {
@@ -176,6 +186,7 @@ export function QuickFormDrawer({
   const handleClose = useCallback(() => {
     setValues(initValues(fields, defaultValues));
     setErrors({});
+    setSubmitAttemptCount(0);
     onClose();
      
   }, [fields, defaultValues, onClose]);
@@ -221,7 +232,10 @@ export function QuickFormDrawer({
     isDirty: false,
     isSubmitting: submitting,
     stepErrorCounts: [],
-  }), [liveErrors, submitting]);
+    submitAttempted,
+    submitAttemptCount,
+    markSubmitAttempted: () => setSubmitAttemptCount((n) => n + 1),
+  }), [liveErrors, submitting, submitAttempted, submitAttemptCount]);
 
   if (!isOpen) return null;
 

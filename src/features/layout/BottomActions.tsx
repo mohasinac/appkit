@@ -227,7 +227,7 @@ export default function BottomActions() {
     setInfoOpen(false);
   });
 
-  const { actions, bulk, infoLabel, secondaryLabel, infoPanel, desktop } = state;
+  const { actions, bulk, infoLabel, secondaryLabel, infoPanel, infoOpenSignal, desktop } = state;
 
   // Desktop reveal-on-scroll. Kept as a plain passive listener to match BackToTop —
   // there is no shared scroll-position hook in the codebase and one consumer doesn't
@@ -264,6 +264,22 @@ export default function BottomActions() {
   useEffect(() => {
     if (!hasInfoPanel) setInfoOpen(false);
   }, [hasInfoPanel]);
+
+  /*
+   * Force-open on a bumped signal — a failed form submit, today. Depends on
+   * the counter alone, so a re-render with the same value never re-opens what
+   * the user has since collapsed. `hasInfoPanel` is read but deliberately NOT
+   * a dependency: publishing the panel and bumping the signal are two separate
+   * setState calls, so re-running on `hasInfoPanel` would open the panel again
+   * one render after the user closed it.
+   */
+  const lastSignalRef = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (infoOpenSignal == null) return;
+    if (lastSignalRef.current === infoOpenSignal) return;
+    lastSignalRef.current = infoOpenSignal;
+    setInfoOpen(true);
+  }, [infoOpenSignal]);
 
   // Keep selectedActionId in sync with available bulk actions
   useEffect(() => {

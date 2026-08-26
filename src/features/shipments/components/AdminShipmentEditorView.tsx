@@ -111,7 +111,7 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
 
   return (
     <Form schema={createShipmentSchema} spacing="md">
-      {({ setFieldError }) => (
+      {({ setFieldError, markSubmitAttempted }) => (
         <>
           <Grid cols={2} gap="md">
             <FieldInput name="shipmentNumber" label="Shipment Number" required value={shipmentNumber} onChange={setShipmentNumber} placeholder="SH-2026-0001" />
@@ -133,6 +133,8 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
             type="button"
             isLoading={saveMutation.isPending}
             onClick={() => {
+              // type="button" — no native submit, so unhide the summary here.
+              markSubmitAttempted();
               const parsed = createShipmentSchema.safeParse({
                 shipmentNumber,
                 supplierName,

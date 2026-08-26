@@ -24,3 +24,5 @@ export { ColorPickerField } from "./ColorPickerField";
 
 export type { FormErrorSummaryProps } from "./FormErrorSummary";
 export { FormErrorSummary } from "./FormErrorSummary";
+export type { FormErrorListProps } from "./FormErrorList";
+export { FormErrorList } from "./FormErrorList";

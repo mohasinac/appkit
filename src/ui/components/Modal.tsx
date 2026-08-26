@@ -6,6 +6,7 @@ import { Heading } from "./Typography";
 import { Button } from "./Button";
 import { SPRING_GENTLE } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";
+import { OverlayContext } from "./overlay-context";
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -108,6 +109,7 @@ export function Modal({
   }
 
   return createPortal(
+    <OverlayContext.Provider value={true}>
     <AnimatePresence>
       {visible && (
         <motion.div
@@ -174,7 +176,8 @@ export function Modal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>,
+    </AnimatePresence>
+    </OverlayContext.Provider>,
     document.body,
   );
 }

@@ -6,7 +6,8 @@ import { Button } from "../../ui/components/Button";
 import { CollapsibleSection } from "../../ui/components/CollapsibleSection";
 import { Badge } from "../../ui/components/Badge";
 import { Div, Row, Span, Stack } from "../../ui";
-import type { FormShellStep } from "../../ui/forms/FormShell";
+import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
+import { useFormBottomActions } from "../layout/hooks/useFormBottomActions";
 import { FormSchemaContext } from "./FormShell";
 
 /**
@@ -72,6 +73,20 @@ export interface SectionFormProps<T extends object = Record<string, JsonValue>> 
   expandMode?: "single" | "multi";
   /** Suppress the built-in submit row (a FormShell footer owns it instead). */
   hideActions?: boolean;
+  /**
+   * Secondary action for the pinned mobile bar. Omit on a settings page with
+   * nowhere to go back to — the bar then shows Save alone.
+   */
+  onCancel?: () => void;
+  cancelLabel?: string;
+  /**
+   * Publish Save/Cancel and the error sheet into the mobile bottom-chrome
+   * tier. On by default: a SectionForm is a page-level form, which is exactly
+   * the case the pinned bar exists for. The hook suppresses itself inside a
+   * Modal or SideDrawer regardless, so this is only for the rarer case of a
+   * page that wants to own the bar itself.
+   */
+  bottomBar?: boolean;
   /**
    * Fires whenever live validation recomputes. SectionForm deliberately does
    * NOT mount its own `FormShellContext.Provider` — the owning view keeps the
@@ -174,8 +189,18 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   expandMode = "multi",
   hideActions = false,
   onValidationChange,
+  onCancel,
+  cancelLabel,
+  bottomBar = true,
 }: SectionFormProps<T>) {
   const inheritedSchema = useContext(FormSchemaContext);
+  /*
+   * SectionForm deliberately does not OWN a FormShellContext (the owning view
+   * keeps the provider — see the prop docs above), but it does own the submit
+   * button, so it is the one place that knows an attempt happened. Null when
+   * a caller renders it outside a provider, which is legitimate.
+   */
+  const shellCtx = useContext(FormShellContext);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [uncontrolledOpenIds, setUncontrolledOpenIds] = useState<string[]>(() =>
     orderSections(sections).filter((s) => s.required).map((s) => s.id),
@@ -230,6 +255,25 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     onChange(partial);
     runValidation({ ...values, ...partial });
   }, [values, onChange, runValidation]);
+
+  /*
+   * The one submit path, shared by the inline button below and the pinned
+   * mobile bar — so an attempt is recorded and the error sheet revealed
+   * identically whichever the user presses.
+   */
+  const handleSubmit = useCallback(() => {
+    shellCtx?.markSubmitAttempted();
+    void onSubmit();
+  }, [shellCtx, onSubmit]);
+
+  useFormBottomActions({
+    onSubmit: handleSubmit,
+    onCancel,
+    submitLabel,
+    cancelLabel,
+    isLoading,
+    enabled: bottomBar && !hideActions,
+  });
 
   const toggle = useCallback((id: string) => {
     const isOpen = openIds.includes(id);
@@ -289,7 +333,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
           <Button
             variant="primary"
             type="submit"
-            onClick={() => void onSubmit()}
+            onClick={handleSubmit}
             isLoading={isLoading}
             disabled={isLoading}
           >
