@@ -138,6 +138,8 @@ export type { SkeletonProps } from "./ui/components/Skeleton";
 export { Divider } from "./ui/components/Divider";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/components/Tabs";
 export type { TabsProps, TabsListProps, TabsTriggerProps, TabsContentProps } from "./ui/components/Tabs";
+export { TabBarShell, TabBarButton, TabsNavSelect } from "./ui/components/TabBarShell";
+export type { TabBarShellProps, TabBarButtonProps, TabsNavSelectProps } from "./ui/components/TabBarShell";
 export { SellerProductsView } from "./features/seller/components/SellerProductsView";
 export { SellerOrderDetailPanel } from "./features/seller/components/SellerOrdersView";
 export { SellerPayoutDetailContent } from "./features/seller/components/SellerPayoutsView";
@@ -508,7 +510,9 @@ export type {
 export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangeEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartGroupLineRow, CartSummary, CartPriceBreakdown, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
-export { StoreAddonsPicker } from "./features/cart/index";
+export { StoreAddonsPicker, hasAnyStoreAddon } from "./features/cart/index";
+export { clientLineTotal } from "./features/cart/utils/line-total";
+export type { PricedCartLine } from "./features/cart/utils/line-total";
 export type { CartPriceBreakdownData, CartPriceBreakdownStore, StoreAddonsValue, StoreAddonsRates } from "./features/cart/index";
 export { getCartOps, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
 export type { CartOp } from "./features/cart/utils/pending-ops";
@@ -568,6 +572,8 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+export { GroupedListingEditorView } from "./features/grouped/components/GroupedListingEditorView";
+export type { GroupedListingEditorViewProps } from "./features/grouped/components/GroupedListingEditorView";
 export { GroupedListingDetailView } from "./features/grouped/components/GroupedListingDetailView";
 export type { GroupedListingDetailViewProps } from "./features/grouped/components/GroupedListingDetailView";
 export { GroupMemberPicker } from "./features/products/components/GroupMemberPicker";

@@ -343,6 +343,8 @@ export const DEFAULT_ROUTE_MAP = {
     ART: "/admin/art",
     STICKERS: "/admin/stickers",
     GROUPED_LISTINGS: "/admin/grouped-listings",
+    GROUPED_LISTINGS_NEW: "/admin/grouped-listings/new",
+    GROUPED_LISTINGS_EDIT: (id: string) => `/admin/grouped-listings/${id}/edit`,
     DEALS: "/admin/deals",
     FEATURED: "/admin/featured",
     ORDERS: "/admin/orders",
