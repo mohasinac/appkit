@@ -278,6 +278,9 @@ export type { SectionDef, SectionFormProps } from "./features/shell/SectionForm"
 export { buildSectionsFromSchema } from "./features/shell/build-sections";
 export { reportCreateSchema } from "./features/store-extensions/schemas/report-create-form";
 export { itemRequestCreateSchema } from "./features/store-extensions/schemas/item-request-create-form";
+export { analyticsCardCreateSchema, ANALYTICS_CARD_TYPES } from "./features/store-extensions/schemas/analytics-forms";
+export { QuickFormDrawer } from "./features/shell/QuickFormDrawer";
+export type { QuickFormDrawerProps, QuickFieldDef } from "./features/shell/QuickFormDrawer";
 export type { ItemRequestCreateValues } from "./features/store-extensions/schemas/item-request-create-form";
 export type { ReportCreateValues } from "./features/store-extensions/schemas/report-create-form";
 export type { LotteryConfigWriteInput } from "./features/lottery/schemas/config-write";
