@@ -63,6 +63,16 @@ export interface CartPriceBreakdownProps {
   unavailableNote?: React.ReactNode;
   /** Subtotal to show when `preview` is null (guest carts). */
   fallbackSubtotal?: number;
+  /**
+   * Shown when the preview request FAILED, as opposed to never having run.
+   *
+   * Separate from `unavailableNote` because the two say different things and
+   * the failure case can coexist with a rendered breakdown: on a refetch error
+   * the last good `preview` is deliberately kept, so the buyer sees real
+   * figures plus a note that they may be out of date — strictly better than
+   * blanking to ₹0, which is what a swallowed error used to produce.
+   */
+  errorNote?: React.ReactNode;
   isLoading?: boolean;
   className?: string;
 }
@@ -106,6 +116,7 @@ export function CartPriceBreakdown({
   currency = "INR",
   unavailableNote,
   fallbackSubtotal = 0,
+  errorNote,
   isLoading = false,
   className = "",
 }: CartPriceBreakdownProps) {
@@ -118,9 +129,11 @@ export function CartPriceBreakdown({
           label={itemCount !== undefined ? `Subtotal (${itemCount} item${itemCount !== 1 ? "s" : ""})` : "Subtotal"}
           amount={money(fallbackSubtotal)}
         />
-        {unavailableNote && (
-          <Text size="xs" color="muted">
-            {unavailableNote}
+        {/* A failure is the more specific statement, so it wins over the
+            generic "not calculated yet" note. */}
+        {(errorNote ?? unavailableNote) && (
+          <Text size="xs" color={errorNote ? "error" : "muted"}>
+            {errorNote ?? unavailableNote}
           </Text>
         )}
       </Stack>
@@ -179,10 +192,16 @@ export function CartPriceBreakdown({
         <Line label="Total" amount={money(preview.total)} tone="primary" strong />
       </Div>
 
-      {isLoading && (
-        <Text size="xs" color="muted">
-          Updating…
+      {errorNote ? (
+        <Text size="xs" color="error">
+          {errorNote}
         </Text>
+      ) : (
+        isLoading && (
+          <Text size="xs" color="muted">
+            Updating…
+          </Text>
+        )
       )}
     </Stack>
   );

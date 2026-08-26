@@ -36,6 +36,25 @@ export interface StoreAddonsRates {
   shipmentProtectionFeeMin?: number;
 }
 
+/**
+ * True when the site offers at least one paid add-on.
+ *
+ * Exported because the picker renders NOTHING when the answer is false, and a
+ * parent that doesn't know that ends up drawing a bare "Add-ons" heading over
+ * empty space. Callers use this to decide between mounting the picker and
+ * showing an explanatory line instead.
+ */
+export function hasAnyStoreAddon(rates: StoreAddonsRates | null | undefined): boolean {
+  return (
+    !!rates &&
+    !!(
+      rates.whatsappNotifyFeeEnabled ||
+      rates.giftWrapFeeEnabled ||
+      rates.shipmentProtectionFeeEnabled
+    )
+  );
+}
+
 export interface StoreAddonsPickerProps {
   storeId: string;
   /** This store's subtotal — shipment protection is a percentage of it. */
@@ -69,12 +88,7 @@ export function StoreAddonsPicker({
   currency = "INR",
   className = "",
 }: StoreAddonsPickerProps) {
-  const anyEnabled =
-    !!rates &&
-    (rates.whatsappNotifyFeeEnabled ||
-      rates.giftWrapFeeEnabled ||
-      rates.shipmentProtectionFeeEnabled);
-  if (!anyEnabled) return null;
+  if (!hasAnyStoreAddon(rates) || !rates) return null;
 
   const money = (value: number) => formatCurrency(value, currency);
   const set = (patch: StoreAddonsValue) => onChange(storeId, { ...value, ...patch });

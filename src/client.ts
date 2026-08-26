@@ -255,6 +255,8 @@ export { LotteryDetailView } from "./_internal/client/features/lottery/LotteryDe
 export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryEntriesView";
 export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
 export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
+export { lotteryConfigWriteSchema, lotterySlotWriteSchema } from "./features/lottery/schemas/config-write";
+export type { LotteryConfigWriteInput } from "./features/lottery/schemas/config-write";
 export { PrizeDrawLotteryDetailView } from "./_internal/client/features/lottery/PrizeDrawLotteryDetailView";
 export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.

@@ -427,11 +427,13 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     codDepositPercent: 10,
     codHandlingFeeMin: 200,
     codHandlingFeePercent: 10,
-    whatsappNotifyFeeEnabled: false,
+    // Enabled so a seeded install actually shows the add-ons — see the matching
+    // comment on DEFAULT_SITE_SETTINGS_DATA.commissions.
+    whatsappNotifyFeeEnabled: true,
     whatsappNotifyFee: 10,
-    giftWrapFeeEnabled: false,
+    giftWrapFeeEnabled: true,
     giftWrapFee: 49,
-    shipmentProtectionFeeEnabled: false,
+    shipmentProtectionFeeEnabled: true,
     shipmentProtectionFeePercent: 2,
     shipmentProtectionFeeMin: 30,
     sellerShippingFixed: 0,

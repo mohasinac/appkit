@@ -2587,6 +2587,21 @@ export const ACTIONS: ActionTree = {
       description: "Advance from address selection to the payment step.",
       kind: "primary",
     },
+    "continue-to-payment": {
+      iconKey: "cart",
+      id: "checkout.continue-to-payment",
+      label: "Continue to payment",
+      description: "Advance from the add-ons & fees step to the payment step.",
+      kind: "primary",
+    },
+    back: {
+      iconKey: "back",
+      id: "checkout.back",
+      label: "Back",
+      description:
+        "Return to the previous checkout step. Safe at any point before payment — add-on selections are persisted to the cart as they are made, so nothing is lost.",
+      kind: "ghost",
+    },
     "verify-otp": {
       iconKey: "verify",
       id: "checkout.verify-otp",

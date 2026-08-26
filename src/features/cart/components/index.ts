@@ -5,7 +5,7 @@ export { CartView } from "./CartView";
 export type { CartViewProps, CartOrderGroup } from "./CartView";
 export { CartSummary } from "./CartSummary";
 export type { CartSummaryProps } from "./CartSummary";
-export { StoreAddonsPicker } from "./StoreAddonsPicker";
+export { StoreAddonsPicker, hasAnyStoreAddon } from "./StoreAddonsPicker";
 export type {
   StoreAddonsPickerProps,
   StoreAddonsValue,

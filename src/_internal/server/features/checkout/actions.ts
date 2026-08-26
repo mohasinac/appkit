@@ -1403,7 +1403,9 @@ export async function previewCheckoutPricing(
       // check out, matching what the checkout page's active tab displays.
       (!previewLane || laneOf(item) === previewLane),
   );
-  if (cartItems.length === 0) return EMPTY_PRICING_PREVIEW;
+  // A fresh object, not the module singleton — an in-process caller mutating
+  // the returned preview would otherwise poison every later empty result.
+  if (cartItems.length === 0) return { ...EMPTY_PRICING_PREVIEW, stores: [] };
 
   // Best-effort product lookup — a preview never throws on a since-unpublished
   // product, it just falls back to the item's cart-snapshot price for that

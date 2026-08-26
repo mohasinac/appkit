@@ -4,10 +4,30 @@
  * directly, unlike `checkout/actions.ts` whose module graph pulls in
  * `server-only` guards that fail outside a real server-action test harness.
  */
-import type { CartItemDocument, CartLineMember } from "../../../features/cart/schemas/firestore";
+import type { CartItemDocument, CartLineKind, CartLineMember } from "../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../features/products/schemas/firestore";
 import { roundRupees } from "../../../utils/number.formatter";
 import { calculateGst } from "../fees/calculator";
+
+/**
+ * Exactly the fields `unitPriceFor` reads.
+ *
+ * Deliberately narrower than `CartItemDocument`, which a client cannot satisfy:
+ * `checkoutDeadline` is a `Date` on the document and a string once the cart has
+ * been through `JSON.parse`. Without this seam the checkout page would have to
+ * hand-roll a seventh copy of the pricing rule — the exact thing the docstring
+ * below spends a paragraph forbidding. `CartItemDocument` is structurally
+ * assignable to it, so every existing server call site is unaffected.
+ */
+export interface PricedCartLine {
+  price: number;
+  quantity: number;
+  lockedPrice?: number;
+  lineKind?: CartLineKind;
+  bundleCategorySlug?: string;
+  bundleProductIds?: string[];
+  groupMembers?: Array<{ unitPrice: number; quantity: number }>;
+}
 
 /**
  * The single source of truth for "what do we charge for ONE COPY of this line".
@@ -41,7 +61,7 @@ import { calculateGst } from "../fees/calculator";
  * for an accepted offer while the cart displayed the negotiated one. Call
  * `lineTotalFor` and let this function stay the only definition.
  */
-export function unitPriceFor(item: CartItemDocument, product: ProductDocument | null): number {
+export function unitPriceFor(item: PricedCartLine, product: ProductDocument | null): number {
   if (typeof item.lockedPrice === "number" && item.lockedPrice > 0) {
     return item.lockedPrice;
   }
@@ -71,7 +91,7 @@ export function unitPriceFor(item: CartItemDocument, product: ProductDocument | 
  * copies. THE call site should use this rather than multiplying `unitPriceFor`
  * itself — that multiplication is where the six hand-rolled copies diverged.
  */
-export function lineTotalFor(item: CartItemDocument, product: ProductDocument | null): number {
+export function lineTotalFor(item: PricedCartLine, product: ProductDocument | null): number {
   return unitPriceFor(item, product) * item.quantity;
 }
 

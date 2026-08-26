@@ -10,11 +10,14 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   codDepositPercent: 10,
   codHandlingFeeMin: 200,
   codHandlingFeePercent: 10,
-  whatsappNotifyFeeEnabled: false,
+  // Mirrors the SiteSettingsDocument defaults, which enable all three add-ons.
+  // Consequence of the mirror: if the settings read fails, an add-on already
+  // ticked on the cart document is still billed rather than silently dropped.
+  whatsappNotifyFeeEnabled: true,
   whatsappNotifyFee: 10,
-  giftWrapFeeEnabled: false,
+  giftWrapFeeEnabled: true,
   giftWrapFee: 49,
-  shipmentProtectionFeeEnabled: false,
+  shipmentProtectionFeeEnabled: true,
   shipmentProtectionFeePercent: 2,
   shipmentProtectionFeeMin: 30,
   sellerShippingFixed: 50,

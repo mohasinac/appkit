@@ -944,11 +944,17 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     codDepositPercent: 10,
     codHandlingFeeMin: 200,
     codHandlingFeePercent: 10,
-    whatsappNotifyFeeEnabled: false,
+    // The three buyer add-ons ship ENABLED. They were `false`, which made
+    // StoreAddonsPicker return null on both the cart and checkout, so a fresh
+    // install had no add-ons at all and no indication why. `undefined` still
+    // means disabled everywhere (computeWhatsAppNotifyFee et al. read
+    // `if (!rates.XEnabled) return 0`) — only the DEFAULT changed, so an
+    // existing siteSettings document keeps whatever it already stored.
+    whatsappNotifyFeeEnabled: true,
     whatsappNotifyFee: 10,
-    giftWrapFeeEnabled: false,
+    giftWrapFeeEnabled: true,
     giftWrapFee: 49,
-    shipmentProtectionFeeEnabled: false,
+    shipmentProtectionFeeEnabled: true,
     shipmentProtectionFeePercent: 2,
     shipmentProtectionFeeMin: 30,
     sellerShippingFixed: 0,
