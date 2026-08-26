@@ -476,13 +476,38 @@ export function useVerifyEmail(options?: {
   });
 }
 
+/**
+ * Re-send the verification email — Firebase-native, like the send that
+ * happens at registration.
+ *
+ * ## What this used to do, and why it could not work
+ *
+ * It POSTed `/api/auth/resend-verification`, a route **deleted** in the
+ * Firebase-native auth migration. Root Cause #54 is the reason it can never
+ * come back: the Admin SDK cannot send email at all — it only *generates*
+ * action links — so the only way to deliver a verification mail without
+ * routing it through Resend is the CLIENT SDK's own
+ * `sendEmailVerification()`, which uses Firebase's hosted template.
+ *
+ * So every call 404'd, and `useRegister` above says in as many words that
+ * "the user can re-request verification later" — a documented recovery path
+ * that did not exist. Found by `audit-client-verb-match`'s NO_ROUTE rule.
+ *
+ * `ResendVerificationData.email` is accepted and unused: the client SDK
+ * re-sends for the CURRENTLY signed-in user and takes no address, so honouring
+ * an arbitrary email here would be a lie about what happens. Kept in the
+ * signature so the two existing call shapes stay source-compatible.
+ */
 export function useResendVerification(options?: {
   onSuccess?: (data: JsonValue) => void;
   onError?: (error: Error) => void;
 }) {
-  return useMutation<JsonValue, Error,ResendVerificationData>({
-    mutationFn: (data) =>
-      apiClient.post(AUTH_ENDPOINTS.RESEND_VERIFICATION, data),
+  return useMutation<JsonValue, Error, ResendVerificationData | void>({
+    mutationFn: async () => {
+      const authProvider = getClientAuthProvider();
+      await authProvider.sendEmailVerification();
+      return { success: true } as JsonValue;
+    },
     onSuccess: options?.onSuccess,
     onError: options?.onError,
   });

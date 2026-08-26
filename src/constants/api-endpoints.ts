@@ -45,7 +45,13 @@ export const AUTH_ENDPOINTS = {
   SESSION_ACTIVITY: "/api/auth/session/activity",
   SESSION_VALIDATE: "/api/auth/session/validate",
   EVENT_INIT: "/api/auth/event/init",
-  RESEND_VERIFICATION: "/api/auth/resend-verification",
+  /*
+   * RESEND_VERIFICATION was here and is gone. The route was deleted in the
+   * Firebase-native auth migration (Root Cause #54: the Admin SDK cannot send
+   * email, only generate action links), and the constant outlived it — so the
+   * one hook that used it 404'd on every call. `useResendVerification` now
+   * calls the client SDK directly and needs no endpoint. Do not re-add this.
+   */
 } as const;
 
 // ---------------------------------------------------------------------------
