@@ -1184,6 +1184,36 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/store/classified",
         },
         {
+          key: "notification-email-is-a-real-email",
+          label: "A notification email has a heading, a lead line and a button — not one bare paragraph",
+          description: "`emailHtml` existed on the input since the channel was built and 0 of 40 call sites passed it, so all 28 notification types shipped `<p>{message}</p>`. Trigger any notification that emails (place an order as a buyer). The mail must carry the site header, a bold title, a one-line lead saying what kind of mail it is, the message, and a CTA button.",
+          href: "/user/notifications",
+        },
+        {
+          key: "notification-click-lands-on-the-right-page",
+          label: "Clicking a notification opens the record it is about, in YOUR portal",
+          description: "actionUrl was set by 5 of 40 writers, so 35 notifications had nothing to click. It is now resolved centrally from relatedType + relatedId + audience. Check that an order notification opens /user/orders/view/... for the buyer and /store/orders/.../view for the seller — the SAME event, two destinations. A bid or offer lands on the list, deliberately: no per-record page exists in any role yet.",
+          href: "/user/notifications",
+        },
+        {
+          key: "admin-can-filter-every-notification-type",
+          label: "The admin notifications filter offers all 28 types, and no imaginary ones",
+          description: "The chips came from a hand-written 9-value list while the document held 27 — so 18 real types were unfilterable and two chips (`review_posted`, `payout_processed`) matched zero rows because no notification has ever had those values. The list is derived now. Confirm `offer_received` and `payment_review` are both present.",
+          href: "/admin/notifications",
+        },
+        {
+          key: "admin-can-allowlist-every-type-per-channel",
+          label: "Site Settings can allow-list offer and payment-review notifications for email",
+          description: "Same 9-value list fed the per-channel allow-list, so an admin literally could not allow-list `offer_received` or `payment_review` — the toggle did not exist. Open Site Settings → Notifications and confirm every type appears in the per-channel type picker.",
+          href: "/admin/site",
+        },
+        {
+          key: "notification-optout-is-honoured-for-emi-and-payment",
+          label: "Turning off order updates actually stops EMI and payment-review emails",
+          description: "`typeToPrefsKey` was a Partial map missing `emi_installment_due_soon`, `emi_installment_overdue` and `payment_review` — and a missing key meant the opt-out check never ran, so the user's setting was silently ignored while reading as honoured. Turn off Order updates in /user/settings, then trigger a payment-review notification and confirm no email arrives.",
+          href: "/user/settings",
+        },
+        {
           key: "ticket-resolution-timestamp-stamped",
           label: "Resolving a support ticket records WHEN it was resolved",
           description: "`resolvedAt` and `closedAt` were declared on the document, had field-name constants, were listed in the update input — and nothing had ever written either (verified 2026-08-26), so no resolved ticket carried a resolution time. Move a ticket to Resolved, reopen it, and confirm the timeline shows a real date on that step. Re-save an unrelated field afterwards: the resolution time must NOT move forward.",

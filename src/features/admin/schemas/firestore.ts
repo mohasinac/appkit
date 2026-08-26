@@ -12,36 +12,91 @@ import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../../../_internal/shared/f
 // audit-invisible while keeping the runtime key correct.
 export const ADMIN_CHECKOUT_BYPASS_FLAG_KEY = "adminCheckoutBypass" as const;
 
-export type NotificationType =
-  | "order_placed"
-  | "order_confirmed"
-  | "order_shipped"
-  | "order_delivered"
-  | "order_cancelled"
-  | "bid_placed"
-  | "bid_outbid"
-  | "bid_won"
-  | "bid_lost"
-  // Seller-facing: an auction closed without a winner (no bids, or the
-  // highest bid did not meet the reserve price).
-  | "auction_ended"
-  | "review_approved"
-  | "review_replied"
-  | "product_available"
-  | "promotion"
-  | "system"
-  | "welcome"
-  | "account_action"
-  | "offer_received"
-  | "offer_responded"
-  | "offer_expired"
-  | "offer_counter_accepted"
-  | "refund_initiated"
-  | "prize_won"
-  | "prize_reveal_expired"
-  | "emi_installment_due_soon"
-  | "emi_installment_overdue"
-  | "payment_review";
+/*
+ * 🛑 The ONE notification-type union. Four existed until 2026-08-26:
+ *
+ *   · this one (27) — what `NotificationDocument.type` actually holds
+ *   · `constants/notification-types.ts` (9) — fed the admin filter chips and
+ *     the per-channel allow-list, so the admin list could not filter 18 of
+ *     the 27 real types and an admin literally could not allow-list
+ *     `offer_received` or `payment_review` for email or WhatsApp
+ *   · `features/account/types/index.ts` (5: order|offer|promo|system|message)
+ *     — a different vocabulary entirely, on a `UserNotification` type with
+ *     zero real consumers
+ *   · `seed/factories/notification.factory.ts` (9) — and THIS is the one
+ *     `appkit/src/index.ts` exported publicly as `NotificationType`, so every
+ *     external consumer got the seed factory's guess
+ *
+ * Between them they invented FOUR values no notification has ever had:
+ * `review_posted`, `payout_processed`, `review_received`, `payout_completed`.
+ * Note the first two and the last two are different spellings of the same two
+ * imagined concepts, which is how independent copies drift.
+ *
+ * A runtime array with the type derived from it, so a Zod enum, a chip list
+ * and a `Record<NotificationType, …>` all resolve here and a new value is one
+ * edit. Same shape as `ALL_LISTING_TYPES` after Root Cause #61.
+ */
+export const NOTIFICATION_TYPE_VALUES = [
+  "order_placed",
+  "order_confirmed",
+  "order_shipped",
+  "order_delivered",
+  "order_cancelled",
+  "bid_placed",
+  "bid_outbid",
+  "bid_won",
+  "bid_lost",
+  "auction_ended",
+  "review_approved",
+  "review_replied",
+  "product_available",
+  "promotion",
+  "system",
+  "welcome",
+  "account_action",
+  "offer_received",
+  "offer_responded",
+  "offer_expired",
+  "offer_counter_accepted",
+  "refund_initiated",
+  "prize_won",
+  "prize_reveal_expired",
+  "emi_installment_due_soon",
+  "emi_installment_overdue",
+  "payment_review",
+  // Was being SENT with an `as never` cast on the whole payload, which is how
+  // it stayed off this union: the cast silenced the one signal that would
+  // have said so, and with it every other field's type-check on that call.
+  "catalogue_images_stale",
+] as const;
+
+export type NotificationType = (typeof NOTIFICATION_TYPE_VALUES)[number];
+
+/**
+ * What a notification points AT. Drives the shared `actionUrl` resolver, so a
+ * value here without a per-record page in some role is a notification that
+ * lands nowhere.
+ *
+ * Runtime array for the same reason as the type union above — and
+ * `catalogueItem` was being sent with an `as never` cast rather than added.
+ */
+export const NOTIFICATION_RELATED_TYPE_VALUES = [
+  "order",
+  "product",
+  "bid",
+  "review",
+  "blog",
+  "user",
+  "offer",
+  "support_ticket",
+  "scammer",
+  "catalogueItem",
+  "payout",
+  "store",
+] as const;
+
+export type NotificationRelatedType =
+  (typeof NOTIFICATION_RELATED_TYPE_VALUES)[number];
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
@@ -59,16 +114,7 @@ export interface NotificationDocument extends BaseDocument {
   isRead: boolean;
   readAt?: Date;
   relatedId?: string;
-  relatedType?:
-    | "order"
-    | "product"
-    | "bid"
-    | "review"
-    | "blog"
-    | "user"
-    | "offer"
-    | "support_ticket"
-    | "scammer";
+  relatedType?: NotificationRelatedType;
   /** Outcome of the async whatsappNotify job for this notification's WhatsApp send, if one was enqueued. */
   whatsappStatus?: "queued" | "sent" | "failed" | "skipped";
   /** jobs/{id} doc that ran (or is running) the WhatsApp send for this notification. */

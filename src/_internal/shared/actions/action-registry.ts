@@ -2527,6 +2527,50 @@ export const ACTIONS: ActionTree = {
       description: "Navigate back from the cart to the product catalogue.",
       kind: "ghost",
     },
+    "add-group-to-cart": {
+      iconKey: "cart",
+      id: "cart.add-group-to-cart",
+      label: "Add selected to cart",
+      ariaLabel: "Add the selected group items to the cart as one line",
+      description:
+        "Add a buyer-assembled selection of group members to the cart as a SINGLE line, rather than one line per product.",
+      kind: "primary",
+    },
+    "add-bundle-to-cart": {
+      iconKey: "cart",
+      id: "cart.add-bundle-to-cart",
+      label: "Add to cart",
+      ariaLabel: "Add this bundle to the cart",
+      description:
+        "Add a whole bundle to the cart. Bundles are all-or-nothing — the quantity is the number of COPIES of the bundle.",
+      kind: "primary",
+    },
+    "remove-group-member": {
+      iconKey: "delete",
+      id: "cart.remove-group-member",
+      label: "Remove",
+      ariaLabel: "Remove this item from the group line",
+      description:
+        "Drop one member out of a grouped cart line. Ghost rather than danger on purpose: it reuses the cart's existing undo affordance, and Rule #7.4's mandatory-confirmation requirement applies to destructive actions.",
+      kind: "ghost",
+    },
+    // No iconKey — these two exist only to keep the stepper's accessible names
+    // in the registry rather than hard-coded in the primitive. The glyphs are
+    // the literal "+" / "−" characters.
+    "increase-quantity": {
+      id: "cart.increase-quantity",
+      label: "+",
+      ariaLabel: "Increase quantity",
+      description: "Default accessible name for QuantityStepper's increment control.",
+      kind: "ghost",
+    },
+    "decrease-quantity": {
+      id: "cart.decrease-quantity",
+      label: "−",
+      ariaLabel: "Decrease quantity",
+      description: "Default accessible name for QuantityStepper's decrement control.",
+      kind: "ghost",
+    },
   },
   CHECKOUT: {
     "place-order": {

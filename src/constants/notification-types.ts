@@ -1,44 +1,58 @@
 /**
- * Notification Type Registry — W1-33
+ * Notification Type Registry — DERIVED, not restated.
  *
- * Canonical list of notification type IDs. Shared across:
- *  - AdminNotificationsView filter chips
- *  - NotificationPreferencesPanel (per-type toggles)
- *  - sendNotification() dispatch (type-based channel routing)
+ * ## What this file used to be, and why it mattered
  *
- * Add new types here. Don't redefine the list inline in components.
+ * A hand-written 9-value list that called itself "canonical" while
+ * `NotificationDocument.type` held 27. Two of its nine —`review_posted` and
+ * `payout_processed` — were not real values at all, so those chips matched
+ * zero rows forever. Its two consumers were not cosmetic:
+ *
+ *  · `AdminNotificationsView`'s filter chips, so an admin could not filter
+ *    **18 of the 27 real types** and was offered two that never appear.
+ *  · `AdminSiteSettingsView`'s per-channel allow-list, so an admin literally
+ *    **could not allow-list `offer_received` or `payment_review`** for email
+ *    or WhatsApp — the toggle did not exist.
+ *
+ * Everything here now derives from `NOTIFICATION_TYPE_VALUES`, so a new
+ * notification type is one edit and cannot be missing from either surface.
+ *
+ * ## Why the import points where it does
+ *
+ * `features/admin/schemas/firestore.ts` imports nothing from `constants/`,
+ * so this direction is acyclic. That is NOT true of `field-names.ts`, which
+ * is a deliberate leaf that `features/products/types` imports — which is why
+ * that file keeps its duplicated values and relies on an audit instead.
  */
 
-export const NOTIFICATION_TYPES = [
-  "order_placed",
-  "order_shipped",
-  "order_delivered",
-  "order_cancelled",
-  "bid_placed",
-  "bid_outbid",
-  "bid_won",
-  "review_posted",
-  "payout_processed",
-] as const;
+import { NOTIFICATION_TYPE_VALUES } from "../features/admin/schemas/firestore";
+import type { NotificationType } from "../features/admin/schemas/firestore";
 
-export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
+export { NOTIFICATION_TYPE_VALUES };
+export type { NotificationType };
+
+/** Alias kept for the two existing importers. */
+export const NOTIFICATION_TYPES = NOTIFICATION_TYPE_VALUES;
 
 /**
- * Shape used by filter-chip rows (id + display label).
- * Prepended with an "All" option for the typical filter-chip pattern.
+ * `order_shipped` → `Order shipped`.
+ *
+ * Derived rather than hand-labelled: a hand-written label map is the same
+ * drift risk one layer down, and every one of these values is already a
+ * readable snake_case phrase.
+ */
+export function notificationTypeLabel(type: NotificationType | string): string {
+  return String(type).replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
+}
+
+/**
+ * Shape used by filter-chip rows (id + display label), with the usual "All"
+ * option prepended.
  */
 export const NOTIFICATION_TYPE_TABS: ReadonlyArray<{
   id: string;
   label: string;
 }> = [
   { id: "All", label: "All" },
-  { id: "order_placed", label: "Order placed" },
-  { id: "order_shipped", label: "Order shipped" },
-  { id: "order_delivered", label: "Order delivered" },
-  { id: "order_cancelled", label: "Order cancelled" },
-  { id: "bid_placed", label: "Bid placed" },
-  { id: "bid_outbid", label: "Bid outbid" },
-  { id: "bid_won", label: "Bid won" },
-  { id: "review_posted", label: "Review posted" },
-  { id: "payout_processed", label: "Payout processed" },
+  ...NOTIFICATION_TYPE_VALUES.map((id) => ({ id, label: notificationTypeLabel(id) })),
 ];

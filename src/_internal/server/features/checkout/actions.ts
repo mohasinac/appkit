@@ -24,7 +24,7 @@ import {
   productRepository,
 } from "../../../../repositories";
 import { calculateGst } from "../../../shared/fees/calculator";
-import { computePreOrderDepositAmount, unitPriceFor } from "../../../shared/checkout/order-math";
+import { computePreOrderDepositAmount, lineTotalFor, unitPriceFor } from "../../../shared/checkout/order-math";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
@@ -641,7 +641,7 @@ async function createOrderForGroup(
   const { platformFee = 0, gstOnFee: platformFeeGst = 0 } =
     platformFeeByStore.get(firstItem.storeId) ?? {};
   const groupTotal = group.reduce(
-    (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
+    (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
 
@@ -691,7 +691,7 @@ async function createOrderForGroup(
     let taxableAmount = 0;
     let gstAmount = 0;
     for (const { item, product } of group) {
-      const lineTotal = unitPriceFor(item, product) * item.quantity;
+      const lineTotal = lineTotalFor(item, product);
       const rate = product.gstRate ?? 0;
       if (rate > 0) {
         taxableAmount += lineTotal;
@@ -1154,8 +1154,16 @@ export async function createCheckoutOrderAction(
       }
 
       if (availableItems.length > 0) {
-        const orderedProductIds = new Set(availableItems.map((a) => a.item.productId));
-        const remainingCartItems = cart.items.filter((ci) => !orderedProductIds.has(ci.productId));
+        // Clear by LINE identity, not by productId. `itemId` is what uniquely
+        // identifies a line; `productId` is not unique across lines and is not
+        // even a product id on a bundle/group line (it points at the bundle
+        // category, or at the group parent — which is itself purchasable). So
+        // matching on it deleted every OTHER line that happened to share the
+        // value: a loose "Set" parent sitting beside a group line built from
+        // that same group, or two lines of one product, both vanished when only
+        // one was ordered.
+        const orderedItemIds = new Set(availableItems.map((a) => a.item.itemId));
+        const remainingCartItems = cart.items.filter((ci) => !orderedItemIds.has(ci.itemId));
         const cartRef = db.collection(CART_COLLECTION).doc(uid);
         tx.set(
           cartRef,
@@ -1210,7 +1218,7 @@ export async function createCheckoutOrderAction(
 
   const cartSubtotal = orderGroups.reduce(
     (s, { items: g }) =>
-      s + g.reduce((gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity, 0),
+      s + g.reduce((gs, { item, product }) => gs + lineTotalFor(item, product), 0),
     0,
   );
 
@@ -1221,7 +1229,7 @@ export async function createCheckoutOrderAction(
   const platformFeeByStore = allocateCheckoutFees(
     orderGroups.map(({ items: g }) => [
       g[0].item.storeId,
-      g.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0),
+      g.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0),
     ] as const),
     computeCheckoutFees(cartSubtotal, commissions),
   );
@@ -1408,7 +1416,7 @@ export async function previewCheckoutPricing(
   const orderGroups = splitCartIntoOrderGroups(checks);
 
   const cartSubtotal = orderGroups.reduce(
-    (s, { items: g }) => s + g.reduce((gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity, 0),
+    (s, { items: g }) => s + g.reduce((gs, { item, product }) => gs + lineTotalFor(item, product), 0),
     0,
   );
 
@@ -1427,7 +1435,7 @@ export async function previewCheckoutPricing(
 
   for (const { items: group } of orderGroups) {
     const firstItem = group[0].item;
-    const groupTotal = group.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0);
+    const groupTotal = group.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0);
 
     const { shippingFee: groupShippingFee, storeState } = await resolveShippingCost(firstItem.storeId);
 
@@ -1452,13 +1460,13 @@ export async function previewCheckoutPricing(
     if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
       const intraState = !!storeState && storeState === resolvedAddress.state;
       for (const { item, product } of group) {
-        const lineTotal = unitPriceFor(item, product) * item.quantity;
+        const lineTotal = lineTotalFor(item, product);
         const rate = product?.gstRate ?? 0;
         if (rate > 0) groupGstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
       }
     }
 
-    const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: unitPriceFor(item, product) * item.quantity }));
+    const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
     const { couponDiscount: groupCouponDiscount } = computeGroupCouponDiscount(
       appliedCoupons,
       groupLines,
@@ -1753,7 +1761,7 @@ async function createRazorpayGroupOrder(
 
   const firstItem = group[0].item;
   const groupTotal = group.reduce(
-    (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
+    (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
 
@@ -1762,7 +1770,7 @@ async function createRazorpayGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   const { shippingFee, storeOwnerId } = await resolveShippingCost(firstItem.storeId);
 
-  const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: unitPriceFor(item, product) * item.quantity }));
+  const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
   const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
     appliedCoupons,
     groupLines,
@@ -2179,7 +2187,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       const storeId = g.items[0].item.storeId;
       const addons = cart.storeAddons?.[storeId] ?? {};
       const groupSubtotal = g.items.reduce(
-        (gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity,
+        (gs, { item, product }) => gs + lineTotalFor(item, product),
         0,
       );
       return (
@@ -2234,7 +2242,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
     (s, { items: g }) =>
       s +
       g.reduce(
-        (gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity,
+        (gs, { item, product }) => gs + lineTotalFor(item, product),
         0,
       ),
     0,
@@ -2246,7 +2254,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
   const platformFeeByStore = allocateCheckoutFees(
     orderGroups.map(({ items: g }) => [
       g[0].item.storeId,
-      g.reduce((sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity, 0),
+      g.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0),
     ] as const),
     computeCheckoutFees(cartSubtotal, siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS),
   );

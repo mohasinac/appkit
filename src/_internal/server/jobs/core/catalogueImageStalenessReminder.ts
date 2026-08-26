@@ -38,7 +38,7 @@ export async function runCatalogueImageStalenessReminder(ctx: JobContext): Promi
         relatedId: item.id,
         relatedType: "catalogueItem",
         actionUrl: `/user/catalogue/${item.id}/edit`,
-      } as never);
+      });
       await catalogueRepository.update(item.id, { staleReminderSentAt: ctx.now });
       remindersSent++;
     } catch (err) {

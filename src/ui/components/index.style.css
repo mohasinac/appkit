@@ -45,6 +45,7 @@
 @import "./Card.style.css";
 @import "./Avatar.style.css";
 @import "./Toggle.style.css";
+@import "./QuantityStepper.style.css";
 @import "./Checkbox.style.css";
 @import "./EmptyState.style.css";
 @import "./SkipToMain.style.css";

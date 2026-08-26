@@ -731,7 +731,8 @@ export { updateBlogPost } from "./features/blog/server";
 export { updateBlogPostSchema } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
-export { addItemToCart } from "./features/cart/server";
+// assertCanAddNewItems - the lane gate every add-to-cart entry point must run.
+export { addItemToCart, assertCanAddNewItems } from "./features/cart/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
 export { clearCart } from "./features/cart/server";
@@ -1755,3 +1756,22 @@ export {
   setProductLotteryModeAction,
 } from "./_internal/server/features/lottery/actions";
 export { lotteryEntryRepository } from "./features/lottery/repository/lottery-entry.repository";
+
+/*
+ * Notification email templates + the shared actionUrl resolver.
+ *
+ * Server-only: the templates call `renderToStaticMarkup` through a lazy
+ * `require`, which must never end up reachable from a client chunk.
+ */
+export {
+  renderNotificationEmail,
+  NOTIFICATION_EMAIL_TEMPLATES,
+} from "./features/email/notification-templates";
+export type {
+  NotificationTemplateDef,
+  NotificationEmailContext,
+} from "./features/email/notification-templates";
+export {
+  resolveNotificationActionUrl,
+} from "./_internal/shared/features/notifications/action-url";
+export type { NotificationAudience } from "./_internal/shared/features/notifications/action-url";

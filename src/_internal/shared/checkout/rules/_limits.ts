@@ -1,7 +1,17 @@
 /** Checkout window / capacity constants — single source of truth. */
 
-/** Maximum distinct line items in one cart (hard cap, already enforced at addToCart). */
-export const CART_MAX_ITEMS = 50;
+/**
+ * Maximum distinct line items in one cart (hard cap, enforced at every
+ * add-to-cart entry point).
+ *
+ * Re-exported, not re-declared. This value existed as three independent `= 50`
+ * literals — here, in `constants/limits.ts`, and in
+ * `_internal/shared/features/cart/config.ts` — with nothing tying them
+ * together, so raising the cap in one place would have left two silently
+ * disagreeing. `constants/limits.ts` is a dependency-free leaf module, so this
+ * costs no import chain.
+ */
+export { CART_MAX_ITEMS } from "../../../../constants/limits";
 
 /**
  * Maximum number of order documents that can be created in one checkout

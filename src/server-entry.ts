@@ -280,6 +280,16 @@ export {
   type CheckoutPricingPreview,
 } from "./_internal/server/features/checkout/index";
 
+// The one definition of "what does this cart line cost". Exported because the
+// consumer's Razorpay create-order route needs it: that route used to hand-roll
+// the rule and reproduced only the bundle branch, so it captured the LIST price
+// for an accepted offer. Pure math — no Firestore, no server-only imports.
+export {
+  unitPriceFor,
+  lineTotalFor,
+  computePreOrderDepositAmount,
+} from "./_internal/shared/checkout/order-math";
+
 // S-SBUNI-RULES: refund action
 export {
   processRefundAction,

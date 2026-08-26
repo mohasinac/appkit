@@ -1,16 +1,17 @@
 // appkit/src/seed/factories/notification.factory.ts
 let _seq = 1;
 
-export type NotificationType =
-  | "order_placed"
-  | "order_shipped"
-  | "order_delivered"
-  | "order_cancelled"
-  | "bid_outbid"
-  | "bid_won"
-  | "review_received"
-  | "payout_completed"
-  | "system";
+/*
+ * Re-exported, never redeclared.
+ *
+ * This file's own 9-value copy was what `appkit/src/index.ts` published as
+ * the public `NotificationType` — so every external consumer was typed
+ * against a SEED FACTORY's guess, including its two invented values
+ * `review_received` and `payout_completed`. A seed factory is the last place
+ * a public type contract should come from.
+ */
+import type { NotificationType } from "../../features/admin/schemas/firestore";
+export type { NotificationType };
 
 export interface SeedNotificationDocument {
   id: string;

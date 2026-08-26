@@ -2227,7 +2227,8 @@ export type { FirestoreIndexConfig } from "./seed/index";
 export type { HomepageSectionType } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NotificationType - Type contract for notification type.
-export type { NotificationType } from "./seed/index";
+export type { NotificationType } from "./features/admin/schemas/firestore";
+export { NOTIFICATION_TYPE_VALUES } from "./features/admin/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PayoutStatus - Type contract for payout status.
 export type { PayoutStatus } from "./seed/index";
@@ -3357,8 +3358,6 @@ export type { UserAddressesViewLabels } from "./features/account/index";
 // UserAddressesViewProps - Type contract for user addresses view props.
 export type { UserAddressesViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UserNotification - Type contract for user notification.
-export type { UserNotification } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserNotificationsViewLabels - Type contract for user notifications view labels.
 export type { UserNotificationsViewLabels } from "./features/account/index";
@@ -4753,7 +4752,8 @@ export type { UpdateBlogPostInput } from "./features/blog/server";
 // ./features/cart/server
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
-export { addItemToCart } from "./features/cart/server";
+// assertCanAddNewItems - the lane gate every add-to-cart entry point must run.
+export { addItemToCart, assertCanAddNewItems } from "./features/cart/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
 export { clearCart } from "./features/cart/server";

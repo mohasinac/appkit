@@ -10,6 +10,33 @@ import { decryptPii } from "../../../security/index";
 import type { NotificationDocument, NotificationCreateInput } from "../schemas";
 import type { NotificationTypePrefs } from "../../account/types";
 import type { SiteSettingsCredentials } from "../schemas/firestore";
+import type { NotificationType } from "../schemas/firestore";
+import {
+  resolveNotificationActionUrl,
+  type NotificationAudience,
+} from "../../../_internal/shared/features/notifications/action-url";
+import { renderNotificationEmail } from "../../email/notification-templates";
+
+/**
+ * A notification's `actionUrl` is a site-relative path — correct for the
+ * in-app bell, useless in an email, where a bare `/user/orders/x` is not a
+ * link at all.
+ *
+ * `NEXT_PUBLIC_APP_URL` is the same source `ApiClient` uses for its own
+ * server-side base, so there is one answer to "what host is this" rather than
+ * a second one on `siteSettings` to drift from it.
+ *
+ * Falls back to returning the path unchanged rather than guessing a host: a
+ * wrong absolute URL sends the reader to someone else's site, while a
+ * relative one merely fails to be clickable. The template also drops the
+ * button entirely when this is undefined.
+ */
+function absoluteActionUrl(path: string | undefined): string | undefined {
+  if (!path) return undefined;
+  if (/^https?:\/\//i.test(path)) return path;
+  const base = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "");
+  return base ? `${base}${path}` : path;
+}
 import {
   DEFAULT_NOTIFICATION_CHANNELS,
   meetsMinPriority,
@@ -32,7 +59,27 @@ const ORDER_GATED_TYPES = new Set([
   "refund_initiated",
 ]);
 
-/** Notification type → the flat `SiteSettingsCredentials` field holding its approved Meta template name. */
+/**
+ * Notification type → the flat `SiteSettingsCredentials` field holding its
+ * approved Meta template name.
+ *
+ * 🛑 **`Partial` here is CORRECT and is not the `typeToPrefsKey` mistake.**
+ *
+ * The distinction is what a missing key MEANS. A missing `typeToPrefsKey`
+ * entry silently ignored a user's opt-out — a real setting that read as
+ * honoured and was not. A missing entry here means "no Meta-approved template
+ * exists for this type", which is a fact about the Meta account, not a bug:
+ * six of the 28 types have one, and the rest legitimately fall back to
+ * free-form (which Meta accepts inside the 24-hour customer-service window
+ * and rejects outside it — the runner already logs that rejection).
+ *
+ * Getting six approved templates is a Meta Business review process, not a
+ * code change, so listing all 28 here with empty values would be a
+ * `Record<…>` that lies about coverage.
+ *
+ * The six that ARE approved are the order lifecycle, which is also the set
+ * gated behind the buyer's ₹10 addon above — the two lists agree on purpose.
+ */
 const WHATSAPP_TEMPLATE_FIELD: Partial<Record<string, keyof SiteSettingsCredentials>> = {
   order_placed: "whatsappTemplateOrderPlaced",
   order_confirmed: "whatsappTemplateOrderConfirmed",
@@ -87,7 +134,59 @@ export interface SendNotificationInput extends NotificationCreateInput {
   emailHtml?: string;
   /** Buyer paid the ₹10 WhatsApp order-updates addon — enables WhatsApp channel for this notification even when the user has no standing WhatsApp subscription. */
   orderWhatsappAddonPaid?: boolean;
+  /**
+   * Which portal the recipient reads this in — decides where `actionUrl`
+   * points when the caller does not supply one.
+   *
+   * Defaults from the notification TYPE, not from the recipient's role: a
+   * seller is also a buyer, and `order_shipped` belongs in `/user` while the
+   * payout for that same order belongs in `/store`. Pass it explicitly only
+   * when one type genuinely reaches two audiences — `offer_received` goes to
+   * the seller, `offer_responded` back to the buyer.
+   */
+  audience?: NotificationAudience;
 }
+
+/**
+ * Which portal each notification type belongs to.
+ *
+ * `Record<NotificationType, …>`, so a new type cannot compile without an
+ * answer — the same discipline `typeToPrefsKey` needed after it silently
+ * omitted three types and ignored those users' opt-outs.
+ */
+const TYPE_AUDIENCE: Record<NotificationType, NotificationAudience> = {
+  // Buyer-facing: the order lifecycle they are waiting on.
+  order_placed: "buyer",
+  order_confirmed: "buyer",
+  order_shipped: "buyer",
+  order_delivered: "buyer",
+  order_cancelled: "buyer",
+  refund_initiated: "buyer",
+  payment_review: "buyer",
+  emi_installment_due_soon: "buyer",
+  emi_installment_overdue: "buyer",
+  prize_won: "buyer",
+  prize_reveal_expired: "buyer",
+  product_available: "buyer",
+  bid_placed: "buyer",
+  bid_outbid: "buyer",
+  bid_won: "buyer",
+  bid_lost: "buyer",
+  offer_responded: "buyer",
+  offer_counter_accepted: "buyer",
+  offer_expired: "buyer",
+  review_replied: "buyer",
+  catalogue_images_stale: "buyer",
+  // Seller-facing.
+  auction_ended: "seller", // "your auction closed with no winner"
+  offer_received: "seller",
+  review_approved: "seller",
+  // Account-level, which lives in the user portal for everyone.
+  welcome: "buyer",
+  account_action: "buyer",
+  system: "buyer",
+  promotion: "buyer",
+};
 
 export interface SendNotificationResult {
   notification: NotificationDocument;
@@ -109,10 +208,33 @@ export interface SendNotificationResult {
 export async function sendNotification(
   input: SendNotificationInput,
 ): Promise<SendNotificationResult> {
-  const { userEmail, userPhone, emailHtml, ...notifInput } = input;
+  const { userEmail, userPhone, emailHtml, audience, ...notifInput } = input;
+
+  /*
+   * Fill `actionUrl` when the caller did not.
+   *
+   * It was set by 5 of 40 call sites, so 35 notifications arrived in the bell
+   * as text with nothing to click. Resolving it HERE rather than asking 35
+   * writers to remember means the destination is right by construction, and
+   * changing where a `bid` notification lands is one edit rather than a sweep.
+   *
+   * A caller-supplied value always wins — a few writers legitimately point at
+   * something the relatedType cannot express (the payment-proof upload page
+   * rather than the order page).
+   */
+  const resolvedActionUrl =
+    notifInput.actionUrl ??
+    resolveNotificationActionUrl(
+      notifInput.relatedType,
+      notifInput.relatedId,
+      audience ?? TYPE_AUDIENCE[notifInput.type as NotificationType] ?? "buyer",
+    );
 
   // Always write the in-app notification first.
-  const notification = await notificationRepository.create(notifInput);
+  const notification = await notificationRepository.create({
+    ...notifInput,
+    ...(resolvedActionUrl ? { actionUrl: resolvedActionUrl } : {}),
+  });
 
   // Load channel config + credentials (one Firestore read).
   let settings: Awaited<ReturnType<typeof siteSettingsRepository.getSingleton>>;
@@ -150,7 +272,21 @@ export async function sendNotification(
     (fetchedUserDoc?.phoneNumber ? (decryptPii(fetchedUserDoc.phoneNumber) as string | undefined) : undefined);
 
   // Map NotificationType to a NotificationTypePrefs key.
-  const typeToPrefsKey: Partial<Record<string, keyof NotificationTypePrefs>> = {
+  /*
+   * 🛑 COMPLETE and compile-checked: `Record<NotificationType, …>`, not
+   * `Partial<Record<string, …>>`.
+   *
+   * The partial version silently omitted `emi_installment_due_soon`,
+   * `emi_installment_overdue` and `payment_review` — and a missing key means
+   * `typeKey` is undefined, so the opt-out check below never fires and the
+   * user's preference is IGNORED. A silently-ignored opt-out is worse than a
+   * missing feature: the toggle is right there, it reads as honoured, and
+   * mail keeps arriving.
+   *
+   * Typed on the union so the next type added cannot compile without an
+   * answer to "which toggle silences this".
+   */
+  const typeToPrefsKey: Record<NotificationType, keyof NotificationTypePrefs> = {
     order_placed: "orderUpdates", order_confirmed: "orderUpdates",
     order_shipped: "orderUpdates", order_delivered: "orderUpdates",
     order_cancelled: "orderUpdates",
@@ -164,8 +300,21 @@ export async function sendNotification(
     product_available: "system",
     prize_won: "orderUpdates",
     prize_reveal_expired: "orderUpdates",
+    // Money owed on an order. Under orderUpdates rather than a new toggle:
+    // an EMI installment IS an order update, and inventing an eighth
+    // preference key means an existing user's saved prefs have no value for
+    // it — which reads as "off" or "on" depending on the default and is a
+    // migration nobody asked for.
+    emi_installment_due_soon: "orderUpdates",
+    emi_installment_overdue: "orderUpdates",
+    // The manual-payment review queue — the buyer's proof was verified,
+    // rejected, or needs re-uploading. Squarely an order update.
+    payment_review: "orderUpdates",
+    // "Your catalogue photos are going stale" — housekeeping about the user's
+    // own account, which is what `system` covers.
+    catalogue_images_stale: "system",
   };
-  const typeKey = typeToPrefsKey[type];
+  const typeKey = typeToPrefsKey[type as NotificationType];
   // If the user has explicitly disabled this notification type, skip all external channels.
   if (typeKey && userTypePrefs[typeKey] === false) {
     return { notification, email: "skipped", whatsapp: "skipped" };
@@ -190,7 +339,25 @@ export async function sendNotification(
           emailProvider.send({
             to: resolvedEmail,
             subject: title,
-            html: emailHtml ?? `<p>${message}</p>`,
+            /*
+             * A real template, not `<p>{message}</p>`.
+             *
+             * `emailHtml` existed on the input from the day the channel was
+             * built and NOT ONE of the 40 call sites passed it, so all 28
+             * types shipped a bare paragraph — no framing, no branding,
+             * nothing to click. Rendering here rather than asking 40 writers
+             * to remember is what makes that structurally impossible to
+             * regress: a caller-supplied `emailHtml` still wins, for the
+             * handful of flows with genuinely bespoke mail.
+             */
+            html:
+              emailHtml ??
+              renderNotificationEmail(type as NotificationType, {
+                title,
+                message,
+                siteName: fromName,
+                actionUrl: absoluteActionUrl(resolvedActionUrl),
+              }),
             text: message,
           }),
         );

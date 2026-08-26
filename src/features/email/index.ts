@@ -6,6 +6,10 @@
  * email clients render correctly.
  */
 export {
+  // Was MISSING from this barrel, so both consumers reached past it into
+  // ./primitives directly — a workaround that reads as intentional and
+  // quietly says "the barrel is not the public surface after all".
+  EmailBold,
   EmailButton,
   EmailColumn,
   EmailContainer,

@@ -243,6 +243,8 @@ export { RadioGroup, RadioItem } from "./components/Radio";
 
 export type { ToggleProps } from "./components/Toggle";
 export { Toggle } from "./components/Toggle";
+export type { QuantityStepperProps } from "./components/QuantityStepper";
+export { QuantityStepper } from "./components/QuantityStepper";
 
 export type {
   ToastVariant,

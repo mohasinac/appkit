@@ -44,22 +44,26 @@ export interface UserOrder {
 
 // --- Notification types -------------------------------------------------------
 
-export type NotificationType =
-  | "order"
-  | "offer"
-  | "promo"
-  | "system"
-  | "message";
+/*
+ * 🛑 This file used to declare its OWN `NotificationType`
+ * (`order|offer|promo|system|message`) and a `UserNotification` interface
+ * around it. Both are gone.
+ *
+ * The union was a fourth spelling of a concept that already had three, and it
+ * shared a name with the canonical one — the exact Root Cause #36 shape
+ * (`OrderStatus`), one union over, where the barrel's choice between two
+ * same-named types is invisible at every call site.
+ *
+ * `UserNotification` had ZERO real consumers: a repo-wide search found only
+ * its own declaration and two barrel re-exports. Per the plan's deletion
+ * discipline that is dead, not under-used.
+ *
+ * Re-exported here so anything importing `NotificationType` from the account
+ * feature resolves to the one real union, exactly as `OrderStatus` and
+ * `PaymentStatus` were repointed in W2.
+ */
+export type { NotificationType } from "../../admin/schemas/firestore";
 
-export interface UserNotification {
-  id: string;
-  title: string;
-  message: string;
-  type: NotificationType;
-  isRead: boolean;
-  createdAt: string;
-  href?: string;
-}
 
 // --- Offer types --------------------------------------------------------------
 

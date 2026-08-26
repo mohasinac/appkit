@@ -3,6 +3,7 @@
 import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { useHandMode } from "../../../_internal/client/hand-mode";
@@ -92,28 +93,14 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             )}
           </Text>
           {onQtyChange && !isOutOfStock && (
-            <Row gap="sm">
-              <Button rounded="full" 
-                onClick={() => onQtyChange(item.id, item.quantity - 1)}
-                disabled={item.quantity <= 1}
-                variant="outline"
-                size="sm"
-                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] disabled:opacity-40"
-              >
-                −
-              </Button>
-              <Span size="sm" className="min-w-[1.5rem]" align="center">
-                {item.quantity}
-              </Span>
-              <Button rounded="full" 
-                onClick={() => onQtyChange(item.id, item.quantity + 1)}
-                variant="outline"
-                size="sm"
-                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)]"
-              >
-                +
-              </Button>
-            </Row>
+            <QuantityStepper
+              value={item.quantity}
+              onChange={(next) => onQtyChange(item.id, next)}
+              min={1}
+              ariaLabel={`Quantity for ${item.meta.title}`}
+              decrementLabel={ACTIONS.CART["decrease-quantity"].ariaLabel}
+              incrementLabel={ACTIONS.CART["increase-quantity"].ariaLabel}
+            />
           )}
           {isOutOfStock && (
             <Span size="xs" color="muted">Qty: {item.quantity}</Span>

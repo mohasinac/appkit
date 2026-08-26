@@ -16,6 +16,7 @@
 import { NotFoundError, ValidationError } from "../../../../errors";
 import { categoriesRepository } from "../../../../repositories";
 import { cartRepository } from "../../../../features/cart/repository/cart.repository";
+import { assertCanAddNewItems } from "../../../../features/cart/actions/cart-actions";
 import { getDefaultCurrency } from "../../../../core/baseline-resolver";
 
 export async function addBundleToCartAction(
@@ -37,6 +38,13 @@ export async function addBundleToCartAction(
   if (!bundle.bundlePrice || bundle.bundlePrice < 1) {
     throw new ValidationError("Bundle price is not configured");
   }
+
+  // Bundles bypass `addItemToCart`'s capability gate deliberately (a bundle's
+  // `listingType: "standard"` is a lie told to satisfy it — `bundleRule` is
+  // `cartEligible: false`). The LANE gate is not optional though, and this path
+  // silently skipped it: a buyer with an unpaid auction win could keep shopping
+  // by adding bundles.
+  await assertCanAddNewItems(userId);
 
   await cartRepository.addItem(userId, {
     productId: bundle.id,

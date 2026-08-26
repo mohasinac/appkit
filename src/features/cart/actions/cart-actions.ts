@@ -39,6 +39,35 @@ async function resolveStoreName(storeId: string, candidate: string | undefined):
   return store?.storeName ?? storeId;
 }
 
+/**
+ * Lane gate. While a higher-obligation lane (a won auction, then an accepted
+ * offer) is outstanding, no NEW shopping may be added — otherwise the buyer can
+ * keep deferring something they already committed to by piling more into the
+ * cart. Enforced on the server, not only in the UI: the UI hint is a courtesy,
+ * this is the rule.
+ *
+ * 🛑 Every add-to-cart entry point must call this. It lived inline inside
+ * `addItemToCart` and therefore covered exactly one of the four ways a line can
+ * be created — `addBundleToCartAction` and `POST /api/cart` both call
+ * `cartRepository.addItem` directly and so bypassed it entirely, letting a buyer
+ * with an unpaid auction win keep shopping.
+ *
+ * Returns the loaded cart so the caller doesn't pay a second read.
+ */
+export async function assertCanAddNewItems(userId: string): Promise<CartDocument> {
+  const cart = await cartRepository.getOrCreate(userId);
+  if (!canAddNewItems(cart.items ?? [])) {
+    const blocking = activeLane(cart.items ?? []);
+    throw new ValidationError(
+      blocking === CART_LANE.AUCTION
+        ? "Settle your won auction first — you can add other items once it's paid for."
+        : "Complete your accepted offer first — you can add other items once it's paid for.",
+      { code: CART_LANE_BLOCKED },
+    );
+  }
+  return cart;
+}
+
 export async function addItemToCart(
   userId: string,
   input: AddToCartInput,
@@ -55,21 +84,7 @@ export async function addItemToCart(
       `Listings of type "${input.listingType}" cannot be added to the cart.`,
     );
   }
-  // Lane gate. While a higher-obligation lane (a won auction, then an accepted
-  // offer) is outstanding, no NEW shopping may be added — otherwise the buyer
-  // can keep deferring something they already committed to by piling more into
-  // the cart. Enforced here, on the server, not only in the UI: the UI hint is
-  // a courtesy, this is the rule.
-  const cart = await cartRepository.getOrCreate(userId);
-  if (!canAddNewItems(cart.items ?? [])) {
-    const blocking = activeLane(cart.items ?? []);
-    throw new ValidationError(
-      blocking === CART_LANE.AUCTION
-        ? "Settle your won auction first — you can add other items once it's paid for."
-        : "Complete your accepted offer first — you can add other items once it's paid for.",
-      { code: CART_LANE_BLOCKED },
-    );
-  }
+  await assertCanAddNewItems(userId);
 
   const storeName = await resolveStoreName(input.storeId, input.storeName);
   return cartRepository.addItem(userId, { ...input, storeName });

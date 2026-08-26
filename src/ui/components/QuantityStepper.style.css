@@ -1,0 +1,56 @@
+/* QuantityStepper — the −/+ quantity control.
+ *
+ * All tokens live here rather than on the call site's className. The one
+ * hand-rolled copy this replaced carried `border-neutral-200` (a raw palette
+ * class, not a semantic token) plus an arbitrary `text-[length:...]`, and
+ * copying it to three new call sites would have multiplied that by four. */
+
+.appkit-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+}
+
+.appkit-qty-stepper__value {
+  display: inline-block;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--appkit-color-text);
+}
+
+/* Fixed min-width so the row doesn't reflow as the number crosses 9 -> 10. */
+.appkit-qty-stepper--sm .appkit-qty-stepper__value {
+  min-width: 1.5rem;
+  font-size: var(--appkit-text-sm);
+}
+.appkit-qty-stepper--md .appkit-qty-stepper__value {
+  min-width: 2rem;
+  font-size: var(--appkit-text-base);
+}
+
+.appkit-qty-stepper__btn {
+  justify-content: center;
+  border: 1px solid var(--appkit-color-border);
+  line-height: 1;
+}
+
+.appkit-qty-stepper--sm .appkit-qty-stepper__btn {
+  height: 1.75rem;
+  width: 1.75rem;
+  font-size: var(--appkit-text-sm);
+}
+.appkit-qty-stepper--md .appkit-qty-stepper__btn {
+  height: 2.25rem;
+  width: 2.25rem;
+  font-size: var(--appkit-text-base);
+}
+
+.appkit-qty-stepper__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.appkit-qty-stepper--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
