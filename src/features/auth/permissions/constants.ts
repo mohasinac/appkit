@@ -128,6 +128,20 @@ export type Permission =
   | "admin:shipments:write"
   | "admin:catalogue:read"
   | "admin:catalogue:write"
+
+  /*
+   * Grouped listings — the admin-authored "you might also like" theme
+   * scroller. It had a working view, working API routes and NO permission of
+   * its own until 2026-08-26 (W22), which is why it also had no nav entry:
+   * `adminItem()` takes a permission and there was nothing to pass.
+   *
+   * Deliberately NOT folded into `admin:products:*`. A grouped listing is
+   * catalogue curation, and a role that should arrange the storefront is not
+   * necessarily one that should edit product records — collapsing the two
+   * makes that distinction unexpressible.
+   */
+  | "admin:grouped-listings:read"
+  | "admin:grouped-listings:write"
   | "admin:support-tickets:assign"
   | "admin:support-tickets:close"
 
@@ -336,6 +350,8 @@ export const PERMISSION_GROUPS: Record<
 
   catalog_manager: [
     "admin:dashboard:view",
+    "admin:grouped-listings:read",
+    "admin:grouped-listings:write",
     "admin:categories:read",
     "admin:categories:write",
     "admin:categories:delete",
@@ -498,6 +514,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/audit-log": "admin:audit-log:read",
   "/admin/shipments": "admin:shipments:read",
   "/admin/catalogue-approvals": "admin:catalogue:read",
+  "/admin/grouped-listings": "admin:grouped-listings:read",
   "/admin/categories": "admin:categories:read",
   "/admin/brands": "admin:brands:read",
   "/admin/coupons": "admin:coupons:read",
