@@ -304,6 +304,13 @@ export const DEFAULT_ROUTE_MAP = {
     CAROUSEL_EDIT: (id: string) => `/admin/carousel/${id}/edit`,
     CAROUSELS: "/admin/carousels",
     CAROUSEL_DETAIL: (id: string) => `/admin/carousels/${id}`,
+    /*
+     * 🛑 PLURAL = the named carousel GROUP. Singular `CAROUSEL_NEW` /
+     * `CAROUSEL_EDIT` above are `/admin/carousel/*` and mean a SLIDE.
+     * Two different entities, one letter apart — do not merge them.
+     */
+    CAROUSELS_NEW: "/admin/carousels/new",
+    CAROUSELS_EDIT: (id: string) => `/admin/carousels/${id}/edit`,
     SECTIONS: "/admin/sections",
     NAVIGATION: "/admin/navigation",
     NAVIGATION_NEW: "/admin/navigation/new",
