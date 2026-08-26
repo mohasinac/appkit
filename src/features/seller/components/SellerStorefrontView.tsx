@@ -14,7 +14,7 @@ import {
 } from "../../../ui";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { ImageUpload, useMediaUpload } from "../../media";
-import { StepDef, StepForm, useFormShell } from "../../shell";
+import { SectionDef, SectionForm, useSectionFormNav, useFormShell } from "../../shell";
 
 // Small local schema for the storefront form-input shape (not the broader
 // `sellerStoreSchema`, which requires id/storeSlug/ownerId/status/createdAt —
@@ -73,15 +73,8 @@ export function SellerStorefrontView({
   const [draft, setDraft] = useState<StorefrontDraft>(initialValues ?? {});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
   const { markDirty, markClean } = useFormShell();
   const { upload } = useMediaUpload();
-  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(storefrontDraftSchema);
-
-  useEffect(() => {
-    validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, validate]);
 
   const update = useCallback(
     (partial: Partial<StorefrontDraft>) => {
@@ -114,12 +107,13 @@ export function SellerStorefrontView({
 
   const busy = saving || isLoading;
 
-  const steps: StepDef<StorefrontDraft>[] = [
+  const sections: SectionDef<StorefrontDraft>[] = [
     {
+      id: "store-identity",
       label: "Store Identity",
+      required: true,
+      quick: true,
       fields: ["storeName", "storeDescription", "storeCategory", "bio"],
-      validate: (values) =>
-        !values.storeName?.trim() ? "Store name is required" : null,
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Store Identity</Heading>
@@ -163,6 +157,7 @@ export function SellerStorefrontView({
       ),
     },
     {
+      id: "branding",
       label: "Branding",
       fields: ["storeLogoURL", "storeBannerURL"],
       render: ({ values, onChange }) => (
@@ -192,6 +187,7 @@ export function SellerStorefrontView({
       ),
     },
     {
+      id: "policies",
       label: "Policies",
       fields: ["returnPolicy", "shippingPolicy"],
       render: ({ values, onChange }) => (
@@ -219,6 +215,7 @@ export function SellerStorefrontView({
       ),
     },
     {
+      id: "contact-visibility",
       label: "Contact & Visibility",
       fields: ["website", "location", "socialLinks", "isPublic", "isVacationMode", "vacationMessage"],
       render: ({ values, onChange }) => (
@@ -327,19 +324,24 @@ export function SellerStorefrontView({
     },
   ];
 
-  const fieldToStepIndex = useMemo(() => {
-    const map: Record<string, number> = {};
-    steps.forEach((step, i) => {
-      step.fields?.forEach((field) => { map[field] = i; });
-    });
-    return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps.length]);
+  /*
+   * `useSectionFormNav` replaces the hand-rolled fieldToStepIndex map and the
+   * manually-composed wizardShellCtx. The old `useMemo(..., [steps.length])`
+   * meant a step whose FIELDS changed without changing the COUNT never
+   * recomputed its map, so the error summary could jump to the wrong step.
+   */
+  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+    useSectionFormNav(sections, draft);
 
-  const wizardShellCtx = useMemo(
-    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
-    [shellCtx, fieldToStepIndex, setCurrentStep],
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(
+    storefrontDraftSchema,
+    { sections: sectionMeta, onGoToSection: goToSection, fieldToSectionIndex },
   );
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   return (
     <StackedViewShell
@@ -352,17 +354,17 @@ export function SellerStorefrontView({
               Changes saved successfully.
             </Alert>
           )}
-          <FormShellContext.Provider value={wizardShellCtx}>
+          <FormShellContext.Provider value={shellCtx}>
             <FormErrorSummary />
-            <StepForm<StorefrontDraft>
-              steps={steps}
+            <SectionForm<StorefrontDraft>
+              sections={sections}
               values={draft}
               onChange={update}
-              onComplete={handleSave}
-              formId="seller-storefront"
-              currentStep={currentStep}
-              onStepChange={setCurrentStep}
-              completeLabel="Save Changes"
+              onSubmit={handleSave}
+              schema={storefrontDraftSchema}
+              openIds={openIds}
+              onOpenChange={setOpenIds}
+              submitLabel="Save Storefront"
               isLoading={busy}
             />
           </FormShellContext.Provider>

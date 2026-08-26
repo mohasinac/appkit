@@ -9,7 +9,7 @@ import { Div, Row, Span, Stack, Text } from "../../ui";
 
 /**
  * Carries the `schema` prop passed to `<FormShell>` down to any nested
- * `<StepForm>` that doesn't declare its own `schema`/`StepDef.schema` —
+ * `<SectionForm>` that doesn't declare its own `schema`/`SectionDef.schema` —
  * `FormShell` (chrome) has no form values of its own to validate, so it
  * can't run `.safeParse()` itself; this is what makes the prop load-bearing
  * instead of silently discarded.
@@ -38,7 +38,7 @@ export interface FormShellProps {
   breadcrumb?: string;
   isDirty?: boolean;
   isLoading?: boolean;
-  /** Left-nav anchor sections (section mode). Omit when using StepForm inside. */
+  /** Left-nav anchor sections. */
   sections?: FormShellSection[];
   onSaveDraft?: () => void | Promise<void>;
   onPublish?: () => void | Promise<void>;
@@ -72,8 +72,8 @@ export interface FormShellProps {
   /**
    * Zod schema covering the form's fields. `FormShell` has no form values of
    * its own, so it can't `.safeParse()` this directly — instead it provides
-   * the schema via `FormSchemaContext` to any nested `<StepForm>` that
-   * doesn't declare its own `schema`/`StepDef.schema`, so existing
+   * the schema via `FormSchemaContext` to any nested `<SectionForm>` that
+   * doesn't declare its own `schema`/`SectionDef.schema`, so existing
    * `<FormShell schema={x}>` call sites start validating with zero changes.
    * `audit-form-schema` requires every callsite to declare one.
    */

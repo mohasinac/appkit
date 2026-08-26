@@ -9706,10 +9706,8 @@ export type { CommandPaletteGroup, CommandPaletteProps } from "./features/shell/
 // [CLIENT] QuickFormDrawer â€" 40% desktop / 100% mobile auto-rendered field drawer.
 export { QuickFormDrawer } from "./features/shell/index";
 export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./features/shell/index";
-// [CLIENT] StepForm â€" multi-step wizard with step indicator, prev/next, localStorage persistence.
-export { StepForm, StepFormActions, StepIndicator } from "./features/shell/index";
-export type { StepDef, StepFormProps, StepFormActionsProps } from "./features/shell/index";
-// [CLIENT] SectionForm — collapsible-section form engine replacing StepForm.
+// [CLIENT] SectionForm — collapsible-section form engine. Replaced StepForm,
+// which was deleted 2026-08-26.
 // Required section first and always open, one shared submit at the bottom, no
 // per-section gate blocking a later section.
 export {

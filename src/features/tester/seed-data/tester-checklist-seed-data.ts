@@ -3129,6 +3129,30 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             href: "/admin/reports",
           },
           {
+            key: "listing-form-every-section-reachable",
+            label: "Creating a listing shows ALL sections at once — you can open Pricing before finishing Basic, and nothing blocks you",
+            description: "The last step wizard was removed 2026-08-26. It gated Next on the current step's validate, so a seller who could not satisfy step 2 could not reach step 5 to find out what else was needed. Open /store/products/new, expand a later section immediately, and confirm it opens. The required section (Basic) stays open and cannot be collapsed.",
+            href: "/store/products/new",
+          },
+          {
+            key: "listing-form-errors-land-on-fields",
+            label: "Publishing an incomplete listing puts each error on ITS OWN FIELD, and the summary links jump to that section",
+            description: "The per-step validate callbacks returned a single string rendered as one banner over the whole step. They are per-section Zod schemas now, so a missing auction start bid reports on the start-bid field. Press Publish with several sections incomplete and confirm each message appears beside its input, and that clicking an entry in the summary opens the right section.",
+            href: "/store/products/new",
+          },
+          {
+            key: "listing-form-save-draft-anywhere",
+            label: "\"Save as draft & finish later\" is available from any section, not only the first",
+            description: "It used to be gated on `currentStep === 0`, which was a wizard artefact — a draft is a draft whichever section you are looking at. Fill in a title, scroll to a later section, and confirm the button is still there and still saves.",
+            href: "/store/products/new",
+          },
+          {
+            key: "seller-shipping-storefront-sections",
+            label: "Shipping Configuration and Storefront Settings are collapsible sections with one Save at the bottom — no Next/Back",
+            description: "Both were 3- and 4-step wizards until 2026-08-26. Check that every section is reachable immediately, that the error summary jumps to the right one, and that a single Save covers whichever sections you edited.",
+            href: "/store/shipping",
+          },
+          {
             key: "admin-tables-render-badges-not-text",
             label: "Admin list tables show a coloured STATUS BADGE, a thumbnail and formatted money — not raw text",
             description: "Fixed 2026-08-25 — `column-renderers.tsx` was promised by its own sibling's docstring and never written (it could not be: a .ts and .tsx of the same name both emit the same .js). Every column without a hand-written renderer fell back to String(value), so a price read `1499` and a date read as a raw ISO string. Check a few different admin lists.",

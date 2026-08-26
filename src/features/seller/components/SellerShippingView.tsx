@@ -5,7 +5,7 @@ import { Alert, Badge, Div, FormField, Heading, Row, Stack, Text } from "../../.
 import { StackedViewShell } from "../../../ui";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
-import { StepDef, StepForm } from "../../shell";
+import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -58,13 +58,6 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(shippingDraftSchema);
-
-  useEffect(() => {
-    validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, validate]);
 
   useEffect(() => {
     fetch(apiBase)
@@ -136,9 +129,12 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
 
   const busy = loading || saving;
 
-  const steps: StepDef<ShippingDraft>[] = [
+  const sections: SectionDef<ShippingDraft>[] = [
     {
+      id: "carrier",
       label: "Carrier",
+      required: true,
+      quick: true,
       fields: ["customCarrierName", "customShippingPrice"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
@@ -178,6 +174,7 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
       ),
     },
     {
+      id: "pickup-address",
       label: "Pickup Address",
       fields: ["pickupAddressId"],
       render: ({ values, onChange }) => (
@@ -199,6 +196,7 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
       ),
     },
     {
+      id: "rules",
       label: "Rules",
       fields: ["freeShippingThreshold", "fragileSurcharge"],
       render: ({ values, onChange }) => (
@@ -229,36 +227,42 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
     },
   ];
 
-  const fieldToStepIndex = useMemo(() => {
-    const map: Record<string, number> = {};
-    steps.forEach((step, i) => {
-      step.fields?.forEach((field) => { map[field] = i; });
-    });
-    return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps.length]);
+  /*
+   * `useSectionFormNav` replaces the hand-rolled fieldToStepIndex map and the
+   * manually-composed wizardShellCtx. The old shape had to be kept in sync by
+   * hand — and `useMemo(..., [steps.length])` meant a step whose FIELDS
+   * changed without changing the COUNT never recomputed its map, so
+   * FormErrorSummary could jump to the wrong step.
+   */
+  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+    useSectionFormNav(sections, draft);
 
-  const wizardShellCtx = useMemo(
-    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
-    [shellCtx, fieldToStepIndex, setCurrentStep],
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(
+    shippingDraftSchema,
+    { sections: sectionMeta, onGoToSection: goToSection, fieldToSectionIndex },
   );
+
+  useEffect(() => {
+    validate(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft, validate]);
 
   return (
     <StackedViewShell portal="seller" title="Shipping Configuration" sections={[
       <Div key="shipping">
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
         {success && <Alert variant="success" className="mb-4">Shipping configuration saved.</Alert>}
-        <FormShellContext.Provider value={wizardShellCtx}>
+        <FormShellContext.Provider value={shellCtx}>
           <FormErrorSummary />
-          <StepForm<ShippingDraft>
-            steps={steps}
+          <SectionForm<ShippingDraft>
+            sections={sections}
             values={draft}
             onChange={update}
-            onComplete={handleSave}
-            formId="seller-shipping"
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
-            completeLabel="Save Configuration"
+            onSubmit={handleSave}
+            schema={shippingDraftSchema}
+            openIds={openIds}
+            onOpenChange={setOpenIds}
+            submitLabel="Save Configuration"
             isLoading={busy}
           />
         </FormShellContext.Provider>

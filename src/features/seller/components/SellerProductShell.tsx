@@ -2,10 +2,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
-import type { FormShellSection, StepDef } from "../../shell";
+import { FormShell, SectionForm, useSectionFormNav, useFormShell } from "../../shell";
+import type { FormShellSection, SectionDef } from "../../shell";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
-import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, TagInput, Text, Toggle, useToast, Row } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
@@ -854,22 +854,66 @@ function StepPrintMetaSettings({
 // (create mode) / section (edit mode) — one Record lookup instead of a
 // duplicated 5(+)-way chain in each mode.
 
-interface TypeSpecificStepDef extends StepDef<SellerProductDraft> {
-  /** Section id used by the edit-mode single-page layout. */
+
+/*
+ * Per-section schemas for the product form.
+ *
+ * These replace the `validate: (v) => "message" | null` callbacks each step
+ * used to carry. The rules are unchanged; what changes is where the failure
+ * surfaces. A step-level string could only ever render as one banner above the
+ * whole step — a Zod issue carries a PATH, so the message lands on the field
+ * that caused it and `<FormErrorSummary>` can offer a jump link to it.
+ *
+ * Kept beside the sections rather than folded into `sellerProductSchema`
+ * because they are per-LISTING-TYPE: a starting bid is required for an auction
+ * and meaningless for a sticker sheet, and a single whole-form schema would
+ * have to branch on type for every one of them.
+ */
+const sectionSchemas = {
+  basic: z.object({
+    title: z.string().trim().min(3, "Title must be at least 3 characters"),
+    description: z.string().trim().min(20, "Description must be at least 20 characters"),
+  }).passthrough(),
+
+  media: z.object({
+    mainImage: z.string().min(1, "A main image is required"),
+  }).passthrough(),
+
+  auction: z.object({
+    startingBid: z.coerce.number({ invalid_type_error: "Starting bid is required" }).positive("Starting bid must be greater than zero"),
+    auctionEndDate: z.string().min(1, "Auction end date is required"),
+  }).passthrough(),
+
+  preorder: z.object({
+    preOrderDeliveryDate: z.string().min(1, "Estimated delivery date is required"),
+  }).passthrough(),
+
+  classified: z.object({
+    classifiedCity: z.string().trim().min(1, "City is required for classified listings"),
+  }).passthrough(),
+
+  live: z.object({
+    liveSpecies: z.string().trim().min(1, "Species name is required"),
+  }).passthrough(),
+} as const;
+
+interface TypeSpecificSectionDef extends SectionDef<SellerProductDraft> {
+  /** Section id. Was "used by the edit-mode single-page layout" — now used by
+   *  BOTH modes, since create is sections too. */
   id: string;
   /** Edit-mode section heading — defaults to `label` when omitted (a couple of
    *  types want a fuller sentence here than fits as a compact wizard-step tab). */
   sectionHeading?: string;
 }
 
-const TYPE_SPECIFIC_STEPS: Partial<Record<ProductListingMode, TypeSpecificStepDef>> = {
+const TYPE_SPECIFIC_SECTIONS: Partial<Record<ProductListingMode, TypeSpecificSectionDef>> = {
   auction: {
     id: "auction",
     label: "Auction Settings",
     render: ({ values, onChange }) => (
       <StepAuctionSettings values={values} onChange={onChange} />
     ),
-    validate: (v) => (!v.startingBid ? "Starting bid is required" : !v.auctionEndDate ? "Auction end date is required" : null),
+    schema: sectionSchemas.auction,
   },
   "pre-order": {
     id: "preorder",
@@ -878,7 +922,7 @@ const TYPE_SPECIFIC_STEPS: Partial<Record<ProductListingMode, TypeSpecificStepDe
     render: ({ values, onChange }) => (
       <StepPreOrderSettings values={values} onChange={onChange} />
     ),
-    validate: (v) => (!v.preOrderDeliveryDate ? "Estimated delivery date is required" : null),
+    schema: sectionSchemas.preorder,
   },
   classified: {
     id: "classified",
@@ -886,7 +930,7 @@ const TYPE_SPECIFIC_STEPS: Partial<Record<ProductListingMode, TypeSpecificStepDe
     render: ({ values, onChange }) => (
       <StepClassifiedSettings values={values} onChange={onChange} />
     ),
-    validate: (v) => (!v.classifiedCity?.trim() ? "City is required for classified listings" : null),
+    schema: sectionSchemas.classified,
   },
   "digital-code": {
     id: "digitalcode",
@@ -901,7 +945,7 @@ const TYPE_SPECIFIC_STEPS: Partial<Record<ProductListingMode, TypeSpecificStepDe
     render: ({ values, onChange }) => (
       <StepLiveItemSettings values={values} onChange={onChange} />
     ),
-    validate: (v) => (!v.liveSpecies?.trim() ? "Species name is required" : null),
+    schema: sectionSchemas.live,
   },
   art: {
     id: "printmeta",
@@ -1172,13 +1216,19 @@ export function SellerProductShell({
 }: SellerProductShellProps) {
   const [draft, setDraft] = useState<SellerProductDraft>(initialValues ?? { status: "draft", condition: "new" });
   const [formMode, setFormMode] = useState<"quick" | "full">(mode === "create" && listingType === "standard" ? "quick" : "full");
-  const [currentStep, setCurrentStep] = useState(0);
+  /*
+   * Declared here, ABOVE the sections array, because section render callbacks
+   * close over `setFieldError`/`clearErrors`. The nav seam cannot be supplied
+   * yet — it needs the sections — so it is composed in below. That ordering is
+   * why the original `wizardShellCtx` existed; only its contents change.
+   */
+  const { shellCtx: baseShellCtx, setFieldError, clearErrors, validate } =
+    useFormShellState(sellerProductSchema);
   const [stepError, setStepError] = useState<string | null>(null);
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
   const { showToast } = useToast();
   const { upload: shellUpload } = useMediaUpload();
-  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(sellerProductSchema);
 
   const update = useCallback((partial: Partial<SellerProductDraft>) => {
     setDraft((prev) => {
@@ -1278,11 +1328,14 @@ export function SellerProductShell({
   }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast]);
 
   const listingTypeLabel = pluginForMode(listingType).typeLabel;
-  const typeSpecificStep: TypeSpecificStepDef | null = TYPE_SPECIFIC_STEPS[listingType] ?? null;
+  const typeSpecificSection: TypeSpecificSectionDef | null = TYPE_SPECIFIC_SECTIONS[listingType] ?? null;
 
-  const steps: StepDef<SellerProductDraft>[] = [
+  const sections: SectionDef<SellerProductDraft>[] = [
     {
+      id: "basic",
       label: "Basic",
+      required: true,
+      quick: true,
       fields: ["title", "description", "category", "brand", "condition", "tags", "barcodeId"],
       render: ({ values, onChange }) => (
         <StepBasic
@@ -1293,39 +1346,43 @@ export function SellerProductShell({
           renderTemplateSelector={renderTemplateSelector}
         />
       ),
-      validate: (v) => {
-        if (!v.title?.trim() || v.title.trim().length < 3) return "Title must be at least 3 characters";
-        if (!v.description?.trim() || v.description.trim().length < 20) return "Description must be at least 20 characters";
-        return null;
-      },
+      schema: sectionSchemas.basic,
     },
     {
+      id: "media",
       label: "Media",
+      keepMounted: true,
       fields: ["mainImage", "images", "video", "video.url", "video.duration", "video.thumbnailUrl", "youtubeId", "externalVideoUrl"],
       render: ({ values, onChange }) => (
         <StepMedia values={values} onChange={onChange} storeSlug={storeSlug} />
       ),
-      validate: (v) => (!v.mainImage ? "A main image is required" : null),
+      schema: sectionSchemas.media,
     },
-    ...(typeSpecificStep ? [typeSpecificStep] : []),
+    ...(typeSpecificSection ? [typeSpecificSection] : []),
     {
+      id: "pricing",
       label: "Pricing",
+      required: true,
+      quick: true,
       fields: ["price", "compareAtPrice", "stockQuantity", "allowOffers", "minOfferPercent", "gstRate", "hsnCode"],
       render: ({ values, onChange }) => (
         <StepPricing values={values} onChange={onChange} listingType={listingType} />
       ),
-      validate: (v) => {
-        if (!v.price) return "Price is required";
-        if (
-          pluginForMode(listingType).showsStockQuantity &&
-          (v.stockQuantity === undefined || v.stockQuantity === null)
-        ) {
-          return "Stock quantity is required";
-        }
-        return null;
-      },
+      // Built per render because whether stock is required depends on the
+      // listing type's own plugin — a digital code has no stock to speak of.
+      schema: z
+        .object({
+          price: z.coerce
+            .number({ invalid_type_error: "Price is required" })
+            .positive("Price is required"),
+          stockQuantity: pluginForMode(listingType).showsStockQuantity
+            ? z.coerce.number({ invalid_type_error: "Stock quantity is required" }).int().min(0)
+            : z.coerce.number().int().min(0).optional(),
+        })
+        .passthrough(),
     },
     {
+      id: "shipping",
       label: "Shipping",
       fields: ["shippingPaidBy", "pickupAddressId", "insurance", "insuranceCost"],
       render: ({ values, onChange }) => (
@@ -1333,6 +1390,7 @@ export function SellerProductShell({
       ),
     },
     {
+      id: "publish",
       label: "Publish",
       fields: ["seoTitle", "seoDescription", "isOnSale", "status"],
       render: ({ values, onChange }) => (
@@ -1341,17 +1399,25 @@ export function SellerProductShell({
     },
   ];
 
-  // Field-name → owning-step-index map for FormErrorSummary's step
-  // attribution/jump-to-step links (full-wizard create mode only — quick
-  // and edit modes don't have step navigation).
-  const fieldToStepIndex = useMemo(() => {
-    const map: Record<string, number> = {};
-    steps.forEach((step, i) => {
-      step.fields?.forEach((field) => { map[field] = i; });
-    });
-    return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps.length, typeSpecificStep]);
+  /*
+   * One nav for BOTH modes. Create used to be a wizard with its own
+   * fieldToStepIndex map and a separately-composed wizardShellCtx, while edit
+   * rendered the same sections as a single page — two layouts over one set of
+   * content, kept in step by hand.
+   */
+  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+    useSectionFormNav(sections, draft);
+
+  /** The one context both modes render through. */
+  const shellCtx = useMemo(
+    () => ({
+      ...baseShellCtx,
+      sections: sectionMeta,
+      onGoToSection: goToSection,
+      fieldToSectionIndex,
+    }),
+    [baseShellCtx, sectionMeta, goToSection, fieldToSectionIndex],
+  );
 
   // Live validation — re-run on every draft change, not just on submit, so
   // FormErrorSummary and inline field errors both stay current as the
@@ -1361,36 +1427,15 @@ export function SellerProductShell({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft, validate]);
 
-  const wizardShellCtx = useMemo(
-    () => ({ ...shellCtx, fieldToStepIndex, goToStep: (n: number) => setCurrentStep(n) }),
-    [shellCtx, fieldToStepIndex, setCurrentStep],
-  );
-
-  const handleNext = useCallback(async () => {
-    const step = steps[currentStep];
-    if (step?.validate) {
-      const err = step.validate(draft);
-      if (err) { setStepError(err); return; }
-    }
-    setStepError(null);
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((c) => c + 1);
-    } else {
-      try {
-        await handlePublish();
-      } catch (err) {
-        void normalizeError(err);
-        showToast(err instanceof Error ? err.message : "Something went wrong.", "error");
-      }
-    }
-  }, [currentStep, steps, draft, handlePublish, showToast]);
-
-  // Step error badges — run each step's validate against current draft
-  const stepValidationErrors = useMemo(
-    () => steps.map((s) => (s.validate ? Boolean(s.validate(draft)) : false)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [draft],
-  );
+  /*
+   * `handleNext` and `stepValidationErrors` are gone with the wizard.
+   *
+   * The next-gate was the thing SectionForm exists to remove: it ran the
+   * current step's `validate` and REFUSED to advance, so a seller who could
+   * not satisfy step 2 could not reach step 5 to see what else was needed.
+   * Every section is now reachable at any time and the shared submit is what
+   * checks the whole draft.
+   */
 
   const breadcrumb =
     mode === "create" ? `Store / ${listingTypeLabel}s / New` : `Store / ${listingTypeLabel}s / Edit`;
@@ -1448,20 +1493,19 @@ export function SellerProductShell({
         splitPreview={!!previewSlot}
         renderBottomBar={() => (
           <Div className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
-            <StepFormActions
-              currentStep={currentStep}
-              totalSteps={steps.length}
-              onNext={() => void handleNext()}
-              onPrev={currentStep > 0 ? () => setCurrentStep((c) => c - 1) : undefined}
-              completeLabel={`Publish ${listingTypeLabel}`}
-              isLoading={isLoading && currentStep === steps.length - 1}
-              disabled={isLoading}
-            />
-            {/* S-STORE-3-A — "Save as draft" exits the wizard early after step 1
-                mandatory fields. The product persists with status:"draft" and
-                can be resumed later from /store/products. */}
-            {currentStep === 0 && (
-              <Div paddingX="x-5" padding="b-sm">
+            {/* One submit for the whole draft. The wizard's Next/Prev pair is
+                gone: there are no stages to advance through, so "publish" is
+                the only forward action and it validates everything. */}
+            <FormShellContext.Provider value={shellCtx}>
+              <Div paddingX="x-5" padding="y-sm">
+                <FormErrorSummary />
+              </Div>
+            </FormShellContext.Provider>
+            <Div paddingX="x-5" padding="b-sm">
+              <Row gap="sm" justify="between" wrap>
+                {/* "Save as draft" was gated on being on step 0. It is now
+                    always available — a draft is a draft whichever section the
+                    seller is looking at. */}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -1470,31 +1514,33 @@ export function SellerProductShell({
                 >
                   Save as draft &amp; finish later
                 </Button>
-              </Div>
-            )}
+                <Button
+                  variant="primary"
+                  onClick={() => void handlePublish()}
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                >
+                  {`Publish ${listingTypeLabel}`}
+                </Button>
+              </Row>
+            </Div>
             {stepError && (
               <Text className="text-[var(--appkit-color-error)] px-[1.25rem] pb-[0.75rem]" size="sm">{stepError}</Text>
             )}
-            <FormShellContext.Provider value={wizardShellCtx}>
-              <Div paddingX="x-5" padding="b-sm">
-                <FormErrorSummary />
-              </Div>
-            </FormShellContext.Provider>
           </Div>
         )}
       >
-        <FormShellContext.Provider value={wizardShellCtx}>
-          <StepForm<SellerProductDraft>
-            steps={steps}
+        <FormShellContext.Provider value={shellCtx}>
+          <SectionForm<SellerProductDraft>
+            sections={sections}
             values={draft}
             onChange={update}
-            onComplete={handlePublish}
-            completeLabel={`Publish ${listingTypeLabel}`}
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
+            onSubmit={handlePublish}
+            schema={sellerProductSchema}
+            openIds={openIds}
+            onOpenChange={setOpenIds}
             isLoading={isLoading}
             hideActions
-            stepErrors={stepValidationErrors}
           />
         </FormShellContext.Provider>
       </FormShell>
@@ -1504,7 +1550,7 @@ export function SellerProductShell({
   // Edit mode — FormShell with section nav + full form
   const editSections: FormShellSection[] = [
     ...EDIT_SECTIONS,
-    ...(typeSpecificStep ? [{ id: typeSpecificStep.id, label: typeSpecificStep.label }] : []),
+    ...(typeSpecificSection ? [{ id: typeSpecificSection.id, label: typeSpecificSection.label }] : []),
   ];
 
   return (
@@ -1543,10 +1589,10 @@ export function SellerProductShell({
           <Heading level={3} className="mb-4">Media</Heading>
           <StepMedia values={draft} onChange={update} storeSlug={storeSlug} />
         </Section>
-        {typeSpecificStep && (
-          <Section id={typeSpecificStep.id}>
-            <Heading level={3} className="mb-4">{typeSpecificStep.sectionHeading ?? typeSpecificStep.label}</Heading>
-            {typeSpecificStep.render({ values: draft, onChange: update, errors: {} })}
+        {typeSpecificSection && (
+          <Section id={typeSpecificSection.id}>
+            <Heading level={3} className="mb-4">{typeSpecificSection.sectionHeading ?? typeSpecificSection.label}</Heading>
+            {typeSpecificSection.render({ values: draft, onChange: update, errors: {} })}
           </Section>
         )}
         <Section id="pricing">

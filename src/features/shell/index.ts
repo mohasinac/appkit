@@ -7,10 +7,9 @@ export { CommandPalette, useCommandPaletteHotkey } from "./CommandPalette";
 export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./QuickFormDrawer";
 export { QuickFormDrawer } from "./QuickFormDrawer";
 
-export type { StepDef, StepFormProps, StepFormActionsProps } from "./StepForm";
-export { StepForm, StepFormActions, StepIndicator } from "./StepForm";
 
-// Collapsible-section form engine — replaces the StepForm wizard.
+// Collapsible-section form engine. Replaced the StepForm wizard, which was
+// deleted 2026-08-26 once its last consumer migrated.
 export type {
   SectionDef,
   SectionFormProps,
