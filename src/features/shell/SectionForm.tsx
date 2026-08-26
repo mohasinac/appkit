@@ -80,6 +80,26 @@ export interface SectionFormProps<T extends object = Record<string, JsonValue>> 
   onCancel?: () => void;
   cancelLabel?: string;
   /**
+   * A destructive action for this record — almost always Delete.
+   *
+   * Added because an edit page nearly always has one and `SectionForm` had
+   * nowhere to put it, which left two bad options: hand-roll a row and pass
+   * `hideActions` (which ALSO silences the pinned mobile bar, since it is
+   * gated `bottomBar && !hideActions` — and that bar is the main reason to
+   * sectionise a short form), or render it outside the form, where every page
+   * invents its own placement.
+   *
+   * Rendered LEFT-aligned, opposite Save, so it is not adjacent to the
+   * primary action — a Delete beside Save is a misclick waiting to happen.
+   * `confirm` is expected to come from an ActionDef's `confirmation` config
+   * (Rule #7); this only carries the label and handler.
+   */
+  destructiveAction?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
+  /**
    * Publish Save/Cancel and the error sheet into the mobile bottom-chrome
    * tier. On by default: a SectionForm is a page-level form, which is exactly
    * the case the pinned bar exists for. The hook suppresses itself inside a
@@ -188,6 +208,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   onOpenChange,
   expandMode = "multi",
   hideActions = false,
+  destructiveAction,
   onValidationChange,
   onCancel,
   cancelLabel,
@@ -272,6 +293,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     submitLabel,
     cancelLabel,
     isLoading,
+    destructiveAction,
     enabled: bottomBar && !hideActions,
   });
 
@@ -329,16 +351,50 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
       })}
 
       {!hideActions && (
-        <Row justify="end" paddingY="y-sm">
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={handleSubmit}
-            isLoading={isLoading}
-            disabled={isLoading}
-          >
-            {submitLabel}
-          </Button>
+        /*
+         * `justify="between"` so a destructive action sits opposite Save
+         * rather than beside it. With no destructive action the empty <Div>
+         * still holds the left edge, keeping Save right-aligned.
+         *
+         * Cancel is rendered HERE as well as in the mobile bar. It used to
+         * exist only in the bar, so every page converted to SectionForm
+         * silently lost its Cancel button on desktop — found converting
+         * `store/categories/new`, which had one before.
+         */
+        <Row justify="between" align="center" paddingY="y-sm" gap="sm" wrap>
+          <Div>
+            {destructiveAction && (
+              <Button
+                variant="danger"
+                type="button"
+                onClick={destructiveAction.onClick}
+                disabled={destructiveAction.disabled || isLoading}
+              >
+                {destructiveAction.label}
+              </Button>
+            )}
+          </Div>
+          <Row gap="sm">
+            {onCancel && (
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={onCancel}
+                disabled={isLoading}
+              >
+                {cancelLabel}
+              </Button>
+            )}
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={handleSubmit}
+              isLoading={isLoading}
+              disabled={isLoading}
+            >
+              {submitLabel}
+            </Button>
+          </Row>
         </Row>
       )}
     </Stack>

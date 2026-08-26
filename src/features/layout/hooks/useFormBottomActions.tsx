@@ -23,6 +23,12 @@ export interface UseFormBottomActionsOptions {
    * `Form` itself renders, so the ambient lookup would find the parent's
    * context or none at all.
    */
+  /**
+   * Destructive action for this record, mirrored from `SectionForm`. Pushed
+   * to the FRONT of the bar so it is furthest from where the thumb rests on
+   * the primary action.
+   */
+  destructiveAction?: { label: string; onClick: () => void; disabled?: boolean };
   ctx?: FormShellContextValue;
 }
 
@@ -69,6 +75,7 @@ export function useFormBottomActions({
   isLoading = false,
   disabled = false,
   enabled = true,
+  destructiveAction,
   ctx: ctxProp,
 }: UseFormBottomActionsOptions) {
   const ambient = useContext(FormShellContext);
@@ -82,6 +89,20 @@ export function useFormBottomActions({
   const actions = useMemo<BottomAction[]>(() => {
     if (!active) return [];
     const list: BottomAction[] = [];
+    /*
+     * Destructive FIRST, so it is furthest from the thumb's resting position
+     * on the primary action. It never grows, so Save keeps the width.
+     */
+    if (destructiveAction) {
+      list.push({
+        id: "form-destructive",
+        label: destructiveAction.label,
+        variant: "danger",
+        grow: false,
+        onClick: destructiveAction.onClick,
+        disabled: destructiveAction.disabled || isLoading,
+      });
+    }
     if (onCancel) {
       list.push({
         id: "form-cancel",
@@ -102,7 +123,7 @@ export function useFormBottomActions({
       onClick: () => void onSubmit(),
     });
     return list;
-  }, [active, onCancel, cancelLabel, submitLabel, isLoading, disabled, onSubmit]);
+  }, [active, onCancel, cancelLabel, submitLabel, isLoading, disabled, onSubmit, destructiveAction]);
 
   useBottomActions({
     actions,
