@@ -497,12 +497,20 @@ export type {
 } from "./features/auth/index";
 export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangeEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/index";
-export { CartView, CartItemRow, CartSummary, CartPriceBreakdown, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
+export { CartView, CartItemRow, CartGroupLineRow, CartSummary, CartPriceBreakdown, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
 export { StoreAddonsPicker } from "./features/cart/index";
 export type { CartPriceBreakdownData, CartPriceBreakdownStore, StoreAddonsValue, StoreAddonsRates } from "./features/cart/index";
 export { getCartOps, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
 export type { CartOp } from "./features/cart/utils/pending-ops";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
+// Multi-member cart lines — the client needs these to render a bundle's or a
+// grouped selection's contents. See the quantity invariant on CartLineMember.
+export type {
+  CartLineKind,
+  CartGroupSource,
+  CartLineMember,
+} from "./features/cart/schemas/firestore";
+export type { CartGroupLineRowProps } from "./features/cart/components/CartGroupLineRow";
 export { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress, useSetDefaultAddress, useAddress } from "./features/account/index";
 export type { Address, AddressFormData } from "./features/account/index";
 export { AddressBook, AddressCard, AddressForm } from "./features/account/index";
@@ -550,6 +558,8 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+export { GroupedListingDetailView } from "./features/grouped/components/GroupedListingDetailView";
+export type { GroupedListingDetailViewProps } from "./features/grouped/components/GroupedListingDetailView";
 export { GroupMemberPicker } from "./features/products/components/GroupMemberPicker";
 export type {
   GroupMemberPickerProps,
@@ -1042,8 +1052,8 @@ export type {
 export { BecomeSellerView } from "./features/account/index";
 export type { BidDocument } from "./features/auctions/index";
 export type { ClaimedCouponDocument } from "./features/promotions/schemas";
-export { groupOrderItemsByBundle } from "./features/orders/index";
-export type { BundleOrderGroup, OutOfStockPolicy } from "./features/orders/index";
+export { groupOrderItemsByLine } from "./features/orders/index";
+export type { LineOrderGroup, OutOfStockPolicy } from "./features/orders/index";
 export { MediaUploadField } from "./features/media/index";
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
 export { useProduct } from "./features/products/index";

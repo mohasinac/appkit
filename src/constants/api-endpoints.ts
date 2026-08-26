@@ -320,9 +320,6 @@ export const CART_ENDPOINTS = {
    * discriminated union would put this feature's blast radius on it.
    */
   GROUP: "/api/cart/group",
-  /** Replace a grouped line's member quantities (whole array, not a delta). */
-  GROUP_MEMBERS: (itemId: string) =>
-    `/api/cart/${encodeURIComponent(itemId)}/members`,
 } as const;
 
 // ---------------------------------------------------------------------------

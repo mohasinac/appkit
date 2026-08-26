@@ -6,8 +6,8 @@ export * from "./columns";
 export * from "./utils/order-splitter";
 // S-SBUNI-5 2026-05-13 — bundle-aware order item grouping.
 export {
-  groupOrderItemsByBundle,
-  type BundleOrderGroup,
-  type OrderItemForBundleGrouping,
+  groupOrderItemsByLine,
+  type LineOrderGroup,
+  type OrderItemForLineGrouping,
 } from "./utils/bundle-grouping";
 export { manifest } from "./manifest";

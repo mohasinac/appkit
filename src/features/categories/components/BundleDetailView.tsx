@@ -58,7 +58,10 @@ export interface BundleDetailViewProps {
   bundle: CategoryDocument;
   members?: ProductDocument[];
   /** Direct-checkout callback (S-SBUNI-RULES). When supplied, renders the "Buy now" CTA. */
-  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
+  onBuyNow?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
+  /** Adds the bundle without leaving the page — the only way it can reach the
+   *  cart and stay there to be edited. */
+  onAddToCart?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
   /** Other active bundles, excluding this one — renders a "Related Bundles" section when non-empty. */
   relatedBundles?: CategoryDocument[];
 }
@@ -67,6 +70,7 @@ export function BundleDetailView({
   bundle,
   members = [],
   onBuyNow,
+  onAddToCart,
   relatedBundles = [],
 }: BundleDetailViewProps) {
   const memberCount = members.length || bundle.bundleProductIds?.length || 0;
@@ -144,6 +148,7 @@ export function BundleDetailView({
                     bundleSlug={bundle.slug}
                     outOfStock={stock === "out_of_stock"}
                     onBuyNow={onBuyNow}
+                    onAddToCart={onAddToCart}
                   />
                 ) : (
                   <Div textSize="sm" 

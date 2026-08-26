@@ -363,6 +363,14 @@ export class CartRepository extends BaseRepository<CartDocument> {
       const itemIndex = cart.items.findIndex((item) => item.itemId === itemId);
       if (itemIndex < 0) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
       if (cart.items[itemIndex].locked) throw new ValidationError(ERR_CART_ITEM_LOCKED);
+      // A grouped line's quantity is pinned to 1 — the member quantities carry
+      // the whole selection, so a copies multiplier on top would double every
+      // price, tax and stock decrement. Edit its members instead.
+      if (cart.items[itemIndex].lineKind === "group") {
+        throw new ValidationError(
+          "Change the quantities of the individual items in this group instead.",
+        );
+      }
 
       const items = [...cart.items];
       items[itemIndex] = {

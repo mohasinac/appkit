@@ -7,69 +7,85 @@
  * checkout receipt mirrors the buyer's intent. This helper is the pure
  * grouping logic — the UI primitive lives next to the consumer view.
  *
- * Two flavours of "bundle row" can appear on an order:
- *   1. ONE order row whose `bundleCategorySlug` + `bundleProductIds[]` set
- *      describe the bundle (this is what S-SBUNI-4's checkout writes — the
- *      bundle stays a single row in the order with the locked
- *      bundlePrice as its line total).
- *   2. (Future) Expanded N rows, each tagged with the same
- *      `bundleCategorySlug`. The grouping handles this too in case a future
- *      session pivots to row expansion.
+ * Two flavours of multi-member row can appear on an order:
+ *   1. LEGACY — ONE row whose `bundleCategorySlug` + `bundleProductIds[]`
+ *      describe the whole bundle, with the locked bundlePrice as its line
+ *      total. Every bundle order placed before row expansion looks like this,
+ *      and they keep rendering unchanged.
+ *   2. CURRENT — expanded N rows, one per member, all sharing a `groupSlug`
+ *      (and, for bundles, the same `bundleCategorySlug`). This is what
+ *      checkout writes now, so each row can carry its own HSN/GST and be
+ *      cancelled independently.
  *
- * Either way, `groupOrderItemsByBundle` returns a stable, ordered list of
- * "groups" so the renderer can iterate once.
+ * Either way this returns a stable, ordered list of groups so the renderer
+ * iterates once and the buyer's receipt reads the same.
  */
 
 /** Minimal shape consumed from an order item (Firestore wire format). */
-export interface OrderItemForBundleGrouping {
-  /** Bundle discriminator — set when this row is part of a bundle. */
+export interface OrderItemForLineGrouping {
+  /** Collapse key for expanded rows (bundle OR buyer-assembled group). */
+  groupSlug?: string;
+  /** Display name of the bundle / group. */
+  groupTitle?: string;
+  /** Bundle discriminator — also set on expanded bundle rows. */
   bundleCategorySlug?: string;
-  /** Snapshot of bundle members at order-creation time. */
+  /** @deprecated Legacy collapsed rows only. */
   bundleProductIds?: string[];
 }
 
-export type BundleOrderGroup<T extends OrderItemForBundleGrouping> =
+export type LineOrderGroup<T extends OrderItemForLineGrouping> =
   | { kind: "single"; item: T; index: number }
   | {
       kind: "bundle";
+      /** The key these rows were collapsed on. */
       bundleCategorySlug: string;
+      groupTitle?: string;
       items: Array<{ item: T; index: number }>;
-      /** Pulled from the first row in the group; reflects what checkout snapshotted. */
+      /** Members represented: the row count when expanded, the snapshot length when legacy. */
       memberCount: number;
     };
 
 /**
- * Walk the items array preserving original order; collapse contiguous (or
- * non-contiguous) bundle rows sharing the same `bundleCategorySlug` into a
- * single group. Single rows pass through unchanged.
+ * Walk the items array preserving original order; collapse rows sharing a
+ * collapse key into one group. Single rows pass through unchanged.
+ *
+ * The key is `groupSlug ?? bundleCategorySlug` — the fallback is what keeps
+ * legacy collapsed bundle rows (written before `groupSlug` existed) grouping
+ * exactly as they always did, with no order migration.
  */
-export function groupOrderItemsByBundle<T extends OrderItemForBundleGrouping>(
+export function groupOrderItemsByLine<T extends OrderItemForLineGrouping>(
   items: T[],
-): Array<BundleOrderGroup<T>> {
-  const groups: Array<BundleOrderGroup<T>> = [];
-  const bundleIndexBySlug = new Map<string, number>();
+): Array<LineOrderGroup<T>> {
+  const groups: Array<LineOrderGroup<T>> = [];
+  const indexByKey = new Map<string, number>();
 
   items.forEach((item, index) => {
-    const slug = item.bundleCategorySlug;
-    if (!slug) {
+    const key = item.groupSlug ?? item.bundleCategorySlug;
+    if (!key) {
       groups.push({ kind: "single", item, index });
       return;
     }
-    const existingIdx = bundleIndexBySlug.get(slug);
+    const existingIdx = indexByKey.get(key);
     if (existingIdx === undefined) {
-      const memberCount = item.bundleProductIds?.length ?? 1;
       groups.push({
         kind: "bundle",
-        bundleCategorySlug: slug,
+        bundleCategorySlug: key,
+        groupTitle: item.groupTitle,
+        // Legacy rows carry the member list; expanded rows ARE the members, so
+        // the count is grown as siblings arrive below.
+        memberCount: item.bundleProductIds?.length ?? 1,
         items: [{ item, index }],
-        memberCount,
       });
-      bundleIndexBySlug.set(slug, groups.length - 1);
+      indexByKey.set(key, groups.length - 1);
       return;
     }
     const existing = groups[existingIdx];
     if (existing.kind === "bundle") {
       existing.items.push({ item, index });
+      // Expanded rows: one row per member, so the row count IS the member count.
+      if (!item.bundleProductIds?.length) {
+        existing.memberCount = existing.items.length;
+      }
     }
   });
 

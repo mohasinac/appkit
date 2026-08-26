@@ -192,6 +192,12 @@ export const categoriesTesterSeedData: Partial<CategoryDocument>[] = [
     bundleProductIds: ["product-tester-standard-1", "product-tester-standard-2"],
     bundleOriginalTotal: 348, // 199 + 149
     bundleStockStatus: "in_stock",
+    // Without these, `addBundleToCartAction` wrote `storeId: ""` on the cart
+    // line, which produced an order group keyed `standard:` with an undefined
+    // storeId — no seller notification, no shipping resolution, no payout. The
+    // bug was seeded in, so it reproduced on every tester run.
+    createdByStoreId: "store-tester-qa-seller",
+    createdByStoreName: "Tester Sandbox Store",
     rootId: "bundle-tester-sandbox",
     parentIds: [],
     childrenIds: [],

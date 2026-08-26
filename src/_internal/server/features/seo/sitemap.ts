@@ -246,6 +246,27 @@ const fetchBrandUrls = (baseUrl: string) =>
 const fetchBundleUrls = (baseUrl: string) =>
   fetchCategoryTypeUrls(baseUrl, "bundle", (slug) => ROUTES.PUBLIC.BUNDLE_DETAIL(slug), "bundle");
 
+/**
+ * `groupedListings` documents. `listSitemapGroupedListings` has existed since
+ * the feature was built, but there was no public page for it to point at until
+ * `/groups/{slug}` — so it was never wired into the sitemap.
+ */
+async function fetchGroupedListingUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  try {
+    const { listSitemapGroupedListings } = await import("../grouped/data");
+    const groups = await listSitemapGroupedListings();
+    return groups.map((g) => ({
+      url: `${baseUrl}${ROUTES.PUBLIC.GROUP_DETAIL(g.slug)}`,
+      lastModified: g.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    }));
+  } catch (err) {
+    void normalizeError(err);
+    return [];
+  }
+}
+
 async function fetchBlogPostUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
@@ -335,6 +356,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     categoryUrls,
     brandUrls,
     bundleUrls,
+    groupedListingUrls,
     eventUrls,
     blogUrls,
     auctionUrls,
@@ -350,6 +372,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchCategoryUrls(baseUrl),
     fetchBrandUrls(baseUrl),
     fetchBundleUrls(baseUrl),
+    fetchGroupedListingUrls(baseUrl),
     fetchEventUrls(baseUrl),
     fetchBlogPostUrls(baseUrl),
     fetchAuctionUrls(baseUrl),
@@ -366,6 +389,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...categoryUrls,
     ...brandUrls,
     ...bundleUrls,
+    ...groupedListingUrls,
     ...blogUrls,
     ...productUrls,
     ...auctionUrls,

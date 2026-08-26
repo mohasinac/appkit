@@ -14,6 +14,12 @@ export {
 } from "./data";
 
 export {
+  buildGroupedListingMetadata,
+  type GroupedListingMetadataOptions,
+} from "./metadata";
+export { renderGroupedListingOg } from "./og";
+
+export {
   GROUPED_LISTINGS_PAGE_SIZE,
   GROUPED_LISTINGS_FEATURED_LIMIT,
   GROUPED_LISTINGS_SITEMAP_LIMIT,

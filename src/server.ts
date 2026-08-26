@@ -1569,6 +1569,21 @@ export {
   type BundleOgData,
 } from "./_internal/server/features/bundles/index";
 export { getGroupsForProduct, getGroupsWithItemsForProduct, getGroupsForCategory, getGroupsForBrand } from "./_internal/server/features/grouped/index";
+// Public /groups/{slug} page — data, metadata and OG.
+export {
+  getGroupedListingForDetail,
+  getGroupedListingWithItems,
+  buildGroupedListingMetadata,
+  renderGroupedListingOg,
+  type GroupedListingWithItems,
+  type GroupedListingMetadataOptions,
+} from "./_internal/server/features/grouped/index";
+// Allow-list projection for group members — see § "Public Data Projections".
+export {
+  toPublicGroupMember,
+  toPublicGroupMembers,
+  type PublicGroupMember,
+} from "./_internal/server/features/products/group-members";
 export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
 export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";

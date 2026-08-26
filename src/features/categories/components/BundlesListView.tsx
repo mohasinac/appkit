@@ -15,7 +15,7 @@ function sp(params: SearchParams, key: string): string {
 
 export interface BundlesListViewProps {
   searchParams?: SearchParams;
-  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
+  onBuyNow?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
 }
 
 /**

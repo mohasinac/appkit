@@ -253,9 +253,12 @@ export {
   GROUPED_LISTINGS_PAGE_SIZE,
   GROUPED_LISTINGS_FEATURED_LIMIT,
   GROUPED_LISTINGS_SITEMAP_LIMIT,
+  buildGroupedListingMetadata,
+  renderGroupedListingOg,
   type GroupedListingWithItems,
   type ListGroupedListingsParams,
   type SitemapGroupedListing,
+  type GroupedListingMetadataOptions,
 } from "./_internal/server/features/grouped/index";
 
 // SB-UNI-V — bundles data layer deleted; consumers should query

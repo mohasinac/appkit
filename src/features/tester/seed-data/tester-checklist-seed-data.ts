@@ -751,6 +751,42 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/cart",
       cases: [
         { key: "update-qty", label: "Updating item quantity in cart recalculates the total" },
+        {
+          key: "group-picker-add-selected",
+          label: "On a product that is part of a group, \"Pick items →\" opens a picker with +/- per member, and \"Add selected to cart\" creates ONE cart line (not one per item)",
+          description:
+            "Use the Test Gadget page. Set two different members to different quantities, check the running total in the picker footer, then add. The cart should show a single line, not three.",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "group-line-editable-in-cart",
+          label: "A grouped cart line expands to show its members, each with its own +/- and remove; removing the last member removes the whole line",
+          description:
+            "There should be NO line-level quantity stepper on a grouped line — the per-member steppers carry the whole selection. Changing one member should update both the line total and the seller subtotal.",
+          href: "/cart",
+        },
+        {
+          key: "group-picker-cross-store",
+          label: "A group whose members belong to different sellers shows the read-only table with no quantity column and an explanation, rather than an \"Add selected\" button that always fails",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "bundle-copies-stepper",
+          label: "A bundle page has a \"Copies\" +/- stepper and BOTH \"Buy now\" and \"Add to cart\" — Add to cart stays on the page, Buy now goes to checkout",
+          description:
+            "A bundle is all-or-nothing: there must be no per-member quantity controls on the bundle page, only the copies stepper.",
+          href: "/bundles/bundle-tester-sandbox",
+        },
+        {
+          key: "bundle-line-editable-in-cart",
+          label: "A bundle in the cart shows its member list read-only and a copies stepper; changing copies recalculates the line at the bundle's discounted price, not the sum of member prices",
+          href: "/cart",
+        },
+        {
+          key: "grouped-listing-page-picker",
+          label: "A grouped listing has its own page with the same picker, reachable from the \"Pick items from this group →\" button on a group carousel",
+          href: "/groups/group-beyblade-original-lineage",
+        },
         { key: "apply-coupon", label: "Applying a coupon code at checkout works" },
         { key: "remove-coupon", label: "Removing an already-applied coupon from the cart recalculates the total back down" },
         { key: "remove-item", label: "Removing an item from the cart works" },

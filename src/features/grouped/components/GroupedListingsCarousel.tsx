@@ -11,6 +11,7 @@ import type { ProductItem } from "../../products/types";
 import type { GroupedListingWithItems } from "../../../_internal/server/features/grouped/data";
 import { CAROUSEL_PER_VIEW } from "../../homepage/constants/carousel-per-view";
 import { Stack } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
 const GROUP_THEME_TITLE: Record<GroupedListingWithItems["groupTheme"], string> = {
@@ -46,6 +47,11 @@ export function GroupedListingsCarousel({ groups }: GroupedListingsCarouselProps
             title={group.title || GROUP_THEME_TITLE[group.groupTheme]}
             pillLabel="Grouped Listings"
             headingVariant="editorial"
+            // The group now has a page of its own, where the buyer can pick
+            // several members and add them as one cart line. Until it existed,
+            // this carousel was the only way a grouped listing was ever seen.
+            viewMoreHref={group.slug ? String(ROUTES.PUBLIC.GROUP_DETAIL(group.slug)) : undefined}
+            viewMoreLabel="Pick items from this group →"
             items={items}
             isLoading={false}
             perView={CAROUSEL_PER_VIEW.standard}

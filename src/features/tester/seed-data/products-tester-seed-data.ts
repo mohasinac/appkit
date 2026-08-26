@@ -246,6 +246,9 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     customSections: [],
     isPromoted: false,
     isOnSale: false,
+    // 18% — contrasts with member #3's 12% so one grouped line spans two rates.
+    gstRate: 18 as const,
+    hsnCode: "95030090",
     // Child of the "group-tester-sandbox-bundle" product-group ("Set") parent
     // below — findByGroupId() queries products by this field directly, so
     // without it the parent's groupChildSlugs[] mirror is never actually
@@ -279,6 +282,41 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     customSections: [],
     isPromoted: false,
     isOnSale: false,
+    gstRate: 18 as const,
+    hsnCode: "95030090",
+    groupId: "group-tester-sandbox-bundle",
+    groupParentSlug: "group-tester-sandbox-bundle",
+    groupTitle: TESTER_GROUP_TITLE,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }),
+  withTokens({
+    id: "product-tester-standard-3",
+    slug: "product-tester-standard-3",
+    title: "Test Sticker Pack — Standard Listing #3",
+    description:
+      "Third member of the test product group. Carries a DIFFERENT gstRate from its siblings on purpose: it is the only fixture that exercises per-member GST proration on a grouped/bundled cart line, where taxing the whole line at one product's rate would be wrong in both directions. Auto-expires in 7 days.",
+    categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
+    categoryNames: COLLECTIBLES_CATEGORY_NAMES,
+    brandSlug: "brand-tester-sandbox",
+    brand: "TestBrand",
+    price: 99,
+    currency: "INR",
+    stockQuantity: 10,
+    availableQuantity: 10,
+    isSold: false,
+    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-tester-standard-3-20260101/900/900"),
+    images: [seedExtMedia("https://picsum.photos/seed/product-image-tester-standard-3-20260101/900/900")],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "standard" as const,
+    customFields: [],
+    customSections: [],
+    isPromoted: false,
+    isOnSale: false,
+    // 12% against the siblings' 18% — the whole point of this fixture.
+    gstRate: 12 as const,
+    hsnCode: "49081000",
     groupId: "group-tester-sandbox-bundle",
     groupParentSlug: "group-tester-sandbox-bundle",
     groupTitle: TESTER_GROUP_TITLE,
@@ -658,7 +696,13 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isGroupParent: true,
     groupId: "group-tester-sandbox-bundle",
     groupTitle: TESTER_GROUP_TITLE,
-    groupChildSlugs: ["product-tester-standard-1", "product-tester-standard-2"],
+    // Parent↔child mirror: every id here must also carry `groupId` on its own
+    // document. The pair drifting is Root Cause #42's second instance.
+    groupChildSlugs: [
+      "product-tester-standard-1",
+      "product-tester-standard-2",
+      "product-tester-standard-3",
+    ],
     createdAt: new Date(),
     updatedAt: new Date(),
   } as unknown as Partial<ProductDocument>),

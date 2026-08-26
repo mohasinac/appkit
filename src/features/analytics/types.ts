@@ -18,6 +18,9 @@ export const PAGE_VIEW_ENTITY_TYPES = [
   "digital-code",
   "live",
   "bundle",
+  /** A `groupedListings` document's own page. Distinct from "bundle" — a
+   *  bundle is a priced, all-or-nothing set; a group is pick-as-you-wish. */
+  "grouped-listing",
 ] as const;
 
 export type PageViewEntityType = (typeof PAGE_VIEW_ENTITY_TYPES)[number];

@@ -227,7 +227,18 @@ export interface OrderDocumentItem {
   cancelledReason?: string;
   /** SB-UNI-5 — forwarded from the cart line when this order item is an expanded bundle, so the order-detail UI can collapse it back under a "Bundle: <name>" header and stock-restore logic can fan back out to member products. */
   bundleCategorySlug?: string;
+  /** @deprecated Legacy collapsed rows only — expanded rows carry one product each. */
   bundleProductIds?: string[];
+  /**
+   * Collapse key for a multi-member cart line, shared by every row the line
+   * expanded into. `groupOrderItemsByLine` groups on it so the receipt still
+   * reads as one "Bundle: X" / "Group: X" block.
+   */
+  groupSlug?: string;
+  /** Display name of the bundle / group these rows came from. */
+  groupTitle?: string;
+  /** Which kind of multi-member line produced these rows. */
+  groupSource?: "bundle" | "product-group" | "grouped-listing";
   /** P-8 GST — snapshotted from the product at order time so the invoice stays accurate even if the product's HSN/rate later changes. */
   hsnCode?: string;
   gstRate?: 0 | 5 | 12 | 18 | 28;

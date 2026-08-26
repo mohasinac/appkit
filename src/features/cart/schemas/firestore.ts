@@ -53,8 +53,13 @@ export interface CartLineMember {
   unitPrice: number;
   title: string;
   image?: string;
-  /** Snapshot for per-member GST proration at checkout (`lineTaxComponentsFor`). */
-  gstRate?: number;
+  /**
+   * Snapshot for per-member GST proration at checkout (`lineTaxComponentsFor`).
+   * Same literal union as `ProductDocument.gstRate` on purpose — a loose
+   * `number` here would not survive assignment to `OrderDocumentItem` and would
+   * only be fixed by a cast, which is how a wrong rate reaches an invoice.
+   */
+  gstRate?: 0 | 5 | 12 | 18 | 28;
   hsnCode?: string;
   listingType?: ListingType;
 }

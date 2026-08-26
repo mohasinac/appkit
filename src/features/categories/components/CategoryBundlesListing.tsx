@@ -37,7 +37,9 @@ const DEFAULT_SORT = "-createdAt";
 export interface CategoryBundlesListingProps {
   initialBundles: CategoryDocument[];
   brandName?: string;
-  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
+  /** Cards render the CTA in `compact` mode, which has no stepper — quantity
+   *  is always 1 from here. The full stepper lives on the bundle detail page. */
+  onBuyNow?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
 }
 
 export function CategoryBundlesListing({

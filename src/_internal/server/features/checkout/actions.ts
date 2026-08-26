@@ -24,7 +24,12 @@ import {
   productRepository,
 } from "../../../../repositories";
 import { calculateGst } from "../../../shared/fees/calculator";
-import { computePreOrderDepositAmount, lineTotalFor, unitPriceFor } from "../../../shared/checkout/order-math";
+import {
+  computePreOrderDepositAmount,
+  lineTotalFor,
+  sumGroupGst,
+  unitPriceFor,
+} from "../../../shared/checkout/order-math";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
@@ -65,6 +70,7 @@ import {
   isMultiMemberLine,
   type StockBucketResult,
 } from "./bundle-expansion";
+import { expandCartLineToOrderRows } from "./expand-order-items";
 import {
   OrderStatusValues,
   PaymentStatusValues,
@@ -393,6 +399,13 @@ function buildStockUpdatePayload(
 interface StockResult {
   available: { item: CartItemDocument; product: ProductDocument }[];
   unavailable: NonNullable<CheckoutOrderResult["unavailableItems"]>;
+  /**
+   * Every product the checkout touched, members included — carried out of the
+   * stock transaction rather than re-fetched. The transaction already reads
+   * exactly this set for the decrement, so per-member GST costs zero extra
+   * reads; the map simply never escaped the closure before.
+   */
+  productById: Map<string, ProductDocument>;
 }
 
 type CouponAccumEntry = { couponId: string; code: string; orderIds: string[]; totalDiscount: number };
@@ -588,6 +601,17 @@ interface OrderGroupContext {
   gstSettings?: SiteSettingsDocument["gst"];
   /** Site-wide UPI VPA fallback (`siteSettings.contact.upiVpa`) — used by `resolveDisplayedUpiId` when a seller has no UPI configured, or the store is admin-owned. */
   siteContactUpiVpa?: string;
+  /**
+   * Every product touched by this checkout, keyed by id — INCLUDING the members
+   * of bundle and grouped lines.
+   *
+   * The per-group `{item, product}` pairs carry only the line's REPRESENTATIVE
+   * product (the first member), which is why per-member GST could not be
+   * computed from them: the other members' rates were never in scope. Populated
+   * from `getExpandedDecrements(...).productIds`, the same fan-out the stock
+   * decrement already runs, so it costs no extra reads.
+   */
+  productById: Map<string, ProductDocument>;
 }
 
 /**
@@ -647,34 +671,15 @@ async function createOrderForGroup(
   );
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
-  const orderItems = group.map(({ item, product }) => {
+  // A multi-member line expands into one row PER MEMBER sharing a groupSlug, so
+  // each row carries its own HSN/GST and can be cancelled independently; the
+  // receipt still collapses them under one header.
+  const orderItems = group.flatMap(({ item, product }) => {
     const lt = (product.listingType ?? "standard") as ListingType;
     const itemRule = getListingRule(lt);
-    // SB-UNI-5 2026-05-13 — forward bundle identifiers so the order-detail
-    // UI can collapse expanded lines back under a "Bundle: <name>" header.
-    const bundleFields =
-      item.bundleCategorySlug && item.bundleProductIds
-        ? {
-            bundleCategorySlug: item.bundleCategorySlug,
-            bundleProductIds: item.bundleProductIds,
-          }
-        : {};
-    const unitPrice = unitPriceFor(item, product);
-    const gstFields =
-      product.gstRate != null
-        ? { gstRate: product.gstRate, ...(product.hsnCode ? { hsnCode: product.hsnCode } : {}) }
-        : {};
-    const baseLine = {
-      productId: item.productId,
-      productTitle: item.productTitle,
-      image: item.productImage,
-      quantity: item.quantity,
-      unitPrice,
-      totalPrice: unitPrice * item.quantity,
-      ...bundleFields,
-      ...gstFields,
-    };
-    return itemRule.decorateOrderItem(baseLine, product);
+    return expandCartLineToOrderRows(item, product, ctx.productById).map((baseLine) =>
+      itemRule.decorateOrderItem(baseLine, product),
+    );
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
@@ -689,16 +694,15 @@ async function createOrderForGroup(
   let gstBreakdown: { taxableAmount: number; cgst: number; sgst: number; igst: number; gstAmount: number } | undefined;
   if (gstSettings?.enabled && buyerState) {
     const intraState = !!storeState && storeState === buyerState;
-    let taxableAmount = 0;
-    let gstAmount = 0;
-    for (const { item, product } of group) {
-      const lineTotal = lineTotalFor(item, product);
-      const rate = product.gstRate ?? 0;
-      if (rate > 0) {
-        taxableAmount += lineTotal;
-        gstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
-      }
-    }
+    // Per-member, not per-line: a bundle or grouped line spans several products
+    // with several different rates, and taxing the whole line at one product's
+    // rate is wrong in both directions. Shared with previewCheckoutPricing so
+    // the figure shown and the figure charged cannot drift.
+    const { taxableAmount, gstAmount } = sumGroupGst(
+      group.map(({ item }) => item),
+      ctx.productById,
+      intraState,
+    );
     if (taxableAmount > 0) {
       gstBreakdown = intraState
         ? { taxableAmount, cgst: Math.round(gstAmount / 2), sgst: gstAmount - Math.round(gstAmount / 2), igst: 0, gstAmount }
@@ -1179,7 +1183,7 @@ export async function createCheckoutOrderAction(
         );
       }
 
-      return { available: availableItems, unavailable: unavailableItems };
+      return { available: availableItems, unavailable: unavailableItems, productById };
     });
   } catch (err: unknown) {
     void normalizeError(err);
@@ -1191,7 +1195,7 @@ export async function createCheckoutOrderAction(
       .catch((logErr: unknown) => { void normalizeError(logErr); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: logErr instanceof Error ? logErr.message : String(logErr) }); });
     throw err;
   }
-  const { available, unavailable } = stockResult;
+  const { available, unavailable, productById: checkoutProductById } = stockResult;
 
   if (available.length === 0) {
     failedCheckoutRepository
@@ -1261,6 +1265,7 @@ export async function createCheckoutOrderAction(
     siteContactUpiVpa: siteSettings?.contact?.upiVpa,
     storeAddons: cart.storeAddons,
     platformFeeByStore,
+    productById: checkoutProductById,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -1403,9 +1408,20 @@ export async function previewCheckoutPricing(
   // Best-effort product lookup — a preview never throws on a since-unpublished
   // product, it just falls back to the item's cart-snapshot price for that
   // line (same fallback cartRepository.getSubtotal() implicitly relies on).
-  const uniqueProductIds = [...new Set(cartItems.map((item) => item.productId))];
+  //
+  // Fetch by the EXPANDED member set, not by `item.productId`. On a bundle line
+  // `productId` is a CATEGORY id, so it resolved to null and the GST loop below
+  // read `product?.gstRate ?? 0` — which is precisely why a bundle has paid no
+  // GST since bundles reached the cart. The expansion is the same fan-out the
+  // stock decrement uses, so preview and placement agree by construction.
+  const expandedIds = getExpandedDecrements(cartItems).productIds;
+  const uniqueProductIds = [...new Set([...expandedIds, ...cartItems.map((i) => i.productId)])];
   const productDocs = await Promise.all(uniqueProductIds.map((pid) => productRepository.findById(pid)));
   const productById = new Map(uniqueProductIds.map((pid, i) => [pid, productDocs[i]]));
+  /** Non-null view, for helpers that need a definite product map. */
+  const resolvedProductById = new Map(
+    [...productById.entries()].filter(([, p]) => p != null) as Array<[string, ProductDocument]>,
+  );
 
   let resolvedAddress: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
   if (addressId) {
@@ -1461,11 +1477,14 @@ export async function previewCheckoutPricing(
     let groupGstAmount = 0;
     if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
       const intraState = !!storeState && storeState === resolvedAddress.state;
-      for (const { item, product } of group) {
-        const lineTotal = lineTotalFor(item, product);
-        const rate = product?.gstRate ?? 0;
-        if (rate > 0) groupGstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
-      }
+      // Same helper createOrderForGroup uses — the two disagreeing is the
+      // recurring defect here (Root Cause #59), and it is the buyer seeing one
+      // tax figure and being charged another.
+      groupGstAmount = sumGroupGst(
+        group.map(({ item }) => item),
+        resolvedProductById,
+        intraState,
+      ).gstAmount;
     }
 
     const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
@@ -1737,6 +1756,8 @@ async function createRazorpayGroupOrder(
     orderIds: string[];
     emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][];
     couponUsageAccumulator: Map<string, CouponAccumEntry>;
+    /** Every product touched, members included — see OrderGroupContext.productById. */
+    productById: Map<string, ProductDocument>;
   },
 ): Promise<number> {
   const {
@@ -1758,6 +1779,7 @@ async function createRazorpayGroupOrder(
     orderIds,
     emailsToSend,
     couponUsageAccumulator,
+    productById: razorpayProductById,
   } = ctx;
 
 
@@ -1828,32 +1850,17 @@ async function createRazorpayGroupOrder(
   // type doesn't currently carry a GST breakdown).
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
-  const orderItems = group.map(({ item, product }) => {
+  // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
+  // the price rule (`isBundle ? item.price : product.price`) that — like the
+  // two in the consumer's Razorpay route — silently omitted `lockedPrice`, so
+  // an accepted offer paid through Razorpay was RECORDED at the seller's list
+  // price. `lineTotalFor` inside the expansion is the single definition.
+  const orderItems = group.flatMap(({ item, product }) => {
     const lt = (product?.listingType ?? "standard") as ListingType;
     const itemRule = getListingRule(lt);
-    // SB-UNI-5 2026-05-13 — bundle cart-lines surface the locked
-    // bundlePrice (item.price), not the representative member's
-    // product.price. Stock decrement still runs per member elsewhere.
-    const isBundle = Boolean(
-      item.bundleCategorySlug && item.bundleProductIds?.length,
+    return expandCartLineToOrderRows(item, product!, razorpayProductById).map((baseLine) =>
+      itemRule.decorateOrderItem(baseLine, product!),
     );
-    const unitPrice = isBundle ? item.price : product!.price;
-    const bundleFields = isBundle
-      ? {
-          bundleCategorySlug: item.bundleCategorySlug as string,
-          bundleProductIds: item.bundleProductIds as string[],
-        }
-      : {};
-    const baseLine = {
-      productId: item.productId,
-      productTitle: item.productTitle,
-      image: item.productImage,
-      quantity: item.quantity,
-      unitPrice,
-      totalPrice: unitPrice * item.quantity,
-      ...bundleFields,
-    };
-    return itemRule.decorateOrderItem(baseLine, product!);
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
@@ -2281,6 +2288,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       orderIds,
       emailsToSend,
       couponUsageAccumulator,
+      productById: productByIdPaid,
     });
   }
 

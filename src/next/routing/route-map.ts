@@ -28,6 +28,12 @@ export const DEFAULT_ROUTE_MAP = {
     // SB1-J — bundles + prize draws (additive, pages not yet built)
     BUNDLES: "/bundles",
     BUNDLE_DETAIL: (slug: string) => `/bundles/${slug}`,
+    /**
+     * A `groupedListings` document's public page. Distinct from a product
+     * GROUP (`product.groupId`), whose canonical page is its parent product's
+     * detail page — see § "Bundles vs Product Groups vs Grouped Listings".
+     */
+    GROUP_DETAIL: (slug: string) => `/groups/${slug}`,
     PRIZE_DRAWS: "/prize-draws",
     PRIZE_DRAW_DETAIL: (slug: string) => `/prize-draws/${slug}`,
     SELLER_GUIDE_BUNDLES: "/seller-guide/bundles",

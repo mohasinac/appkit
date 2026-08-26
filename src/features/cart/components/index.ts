@@ -1,4 +1,6 @@
 export { CartItemRow, CartDrawer } from "./CartDrawer";
+export { CartGroupLineRow } from "./CartGroupLineRow";
+export type { CartGroupLineRowProps } from "./CartGroupLineRow";
 export { CartView } from "./CartView";
 export type { CartViewProps, CartOrderGroup } from "./CartView";
 export { CartSummary } from "./CartSummary";
