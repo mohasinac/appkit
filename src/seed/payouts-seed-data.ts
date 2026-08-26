@@ -18,6 +18,7 @@ import { getDefaultCurrency } from "./seed-market-config";
 const _CURRENCY = getDefaultCurrency();
 
 import type { PayoutDocument, PayoutRefundDeduction } from "../features/payments/schemas";
+import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 import {
   PAYOUT_FIELDS,
   DEFAULT_PLATFORM_FEE_RATE,
@@ -25,6 +26,24 @@ import {
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+/**
+ * A payout timeline entry, for the W18 `statusHistory` fixtures below.
+ *
+ * Dates come from the file's own `daysAgo()` helper, never `Date.now()` at
+ * import time in an ID position — Root Cause #25. `actorUid` only, never a
+ * name: `withHistory` scrubs PII from real writes and a fixture that carried
+ * a name would be the one place the rule is broken.
+ */
+function entry(
+  at: Date,
+  actorRole: "system" | "admin",
+  trigger: string,
+  changes: Record<string, FieldChange>,
+  extra?: { reason?: string; actorUid?: string },
+): StatusChangeEntry {
+  return { at, actorRole, trigger, changes, ...extra };
+}
 
 function payoutAmounts(grossINR: number) {
   const grossAmount = grossINR;
@@ -50,6 +69,20 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
   // 1. Beyblade Arena — Jan 2026
   {
     id: "payout-beyblade-arena-jan-2026-completed",
+    /*
+     * Carries the transactionId AND the timeline entry recording it. Until
+     * 2026-08-26 `transactionId` was absent from
+     * PAYOUT_ADMIN_UPDATEABLE_FIELDS, so every real payout marked paid was
+     * stored without the reference the modal required. A fixture that
+     * omitted it would have kept agreeing with the bug.
+     */
+    transactionId: "UTR2026011500042",
+    statusHistory: [
+      entry(daysAgo(150), "admin", "adminUpdatePayout", {
+        status: { from: "processing", to: "paid" },
+        transactionId: { from: null, to: "UTR2026011500042" },
+      }, { actorUid: "user-admin-letitrip" }),
+    ],
     storeId: "store-beyblade-arena",
     sellerName: "Beyblade Arena",
     sellerEmail: "tyson@beybladearena.in",
@@ -266,6 +299,34 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     processedAt: daysAgo(153),
     createdAt: daysAgo(155),
     updatedAt: daysAgo(153),
+    /*
+     * TWO failed attempts, and that is the point. `lastFailureReason` holds
+     * only the second one; the timeline is the only place the first survives.
+     * This fixture is what the "a payout that failed twice shows BOTH
+     * reasons" tester case reads.
+     */
+    statusHistory: [
+      entry(daysAgo(154), "system", "payoutBatch:dispatch", {
+        status: { from: "pending", to: "processing" },
+      }),
+      entry(
+        daysAgo(154),
+        "system",
+        "payoutBatch:failedRetrying",
+        { status: { from: "processing", to: "pending" }, lastFailureReason: { from: null, to: "Razorpay 400: beneficiary bank returned NEFT rejection" } },
+        { reason: "Razorpay 400: beneficiary bank returned NEFT rejection" },
+      ),
+      entry(daysAgo(153), "system", "payoutBatch:dispatch", {
+        status: { from: "pending", to: "processing" },
+      }),
+      entry(
+        daysAgo(153),
+        "system",
+        "payoutBatch:failedFinal",
+        { status: { from: "processing", to: "failed" }, lastFailureReason: { from: "Razorpay 400: beneficiary bank returned NEFT rejection", to: "Razorpay 400: IFSC code mismatch" } },
+        { reason: "Razorpay 400: IFSC code mismatch" },
+      ),
+    ],
   },
 
   // 10. Beyblade Arena — Jan 2026 — UPI limit exceeded
@@ -287,5 +348,17 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     processedAt: daysAgo(108),
     createdAt: daysAgo(110),
     updatedAt: daysAgo(108),
+    statusHistory: [
+      entry(daysAgo(109), "system", "payoutBatch:dispatch", {
+        status: { from: "pending", to: "processing" },
+      }),
+      entry(
+        daysAgo(108),
+        "system",
+        "payoutBatch:failedFinal",
+        { status: { from: "processing", to: "failed" }, lastFailureReason: { from: null, to: "Razorpay 400: UPI daily limit exceeded" } },
+        { reason: "Razorpay 400: UPI daily limit exceeded" },
+      ),
+    ],
   },
 ];

@@ -25,7 +25,10 @@ import {
   type CartDocument,
   type CartStoreAddons,
   type CartItemDocument,
+  type CartLineMember,
+  type AddGroupLineInput,
   type UpdateCartItemInput,
+  type UpdateCartGroupMembersInput,
 } from "../schemas";
 
 export class CartRepository extends BaseRepository<CartDocument> {
@@ -112,12 +115,19 @@ export class CartRepository extends BaseRepository<CartDocument> {
         return cart;
       }
 
+      // A grouped line is never merged by productId. Two "Add selected"
+      // presses are two different selections, and merging them would silently
+      // rewrite the buyer's per-member quantities into a copy count. Bundles
+      // DO still merge — the same bundle twice genuinely means two copies.
       const isLockedLine = Boolean(input.offerId || input.bidId);
-      const existingIndex = isLockedLine
+      const existingIndex = isLockedLine || input.lineKind === "group"
         ? -1
         : items.findIndex(
             (item) =>
-              item.productId === input.productId && !item.offerId && !item.bidId,
+              item.productId === input.productId &&
+              !item.offerId &&
+              !item.bidId &&
+              item.lineKind !== "group",
           );
 
       if (existingIndex >= 0) {
@@ -158,6 +168,12 @@ export class CartRepository extends BaseRepository<CartDocument> {
           ...(input.bundleProductIds !== undefined && {
             bundleProductIds: input.bundleProductIds,
           }),
+          ...(input.lineKind !== undefined && { lineKind: input.lineKind }),
+          ...(input.groupSource !== undefined && { groupSource: input.groupSource }),
+          ...(input.groupId !== undefined && { groupId: input.groupId }),
+          ...(input.groupSlug !== undefined && { groupSlug: input.groupSlug }),
+          ...(input.groupTitle !== undefined && { groupTitle: input.groupTitle }),
+          ...(input.groupMembers !== undefined && { groupMembers: input.groupMembers }),
           addedAt: new Date(),
           updatedAt: new Date(),
         };
@@ -183,6 +199,155 @@ export class CartRepository extends BaseRepository<CartDocument> {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       throw new DatabaseError("Failed to add item to cart", error);
+    }
+  }
+
+  /**
+   * Price of ONE COPY of a multi-member line.
+   *
+   * Private and called at every write of `groupMembers`, so `item.price` cannot
+   * drift from the members it is supposed to summarise — no caller sets it, so
+   * no caller can forget it. That property is load-bearing well beyond this
+   * file: `getSubtotal`, the cart page's per-seller subtotal, and both lane
+   * subtotals all compute `price × quantity`, and a grouped line pins
+   * `quantity` to 1, so all four stay correct with no changes of their own.
+   */
+  private deriveLinePrice(members: CartLineMember[]): number {
+    const raw = members.reduce((sum, m) => sum + m.unitPrice * m.quantity, 0);
+    // audit-money-units-ok: decimal rupees throughout; rounding to 2dp, not paise conversion.
+    return Math.round(raw * 100) / 100;
+  }
+
+  /**
+   * Create a multi-member line. Deliberately never merges into an existing
+   * line — see the note in `addItem`.
+   */
+  async addGroupLine(userId: string, input: AddGroupLineInput): Promise<CartDocument> {
+    try {
+      if (!input.groupMembers.length) {
+        throw new ValidationError("A grouped cart line needs at least one member.");
+      }
+      const cart = await this.getOrCreate(userId);
+
+      const newItem: CartItemDocument = {
+        itemId: randomUUID(),
+        productId: input.productId,
+        productTitle: input.productTitle,
+        productImage: input.productImage,
+        price: this.deriveLinePrice(input.groupMembers),
+        currency: input.currency,
+        quantity: input.quantity,
+        storeId: input.storeId,
+        storeName: input.storeName,
+        listingType: input.listingType,
+        groupMembers: input.groupMembers,
+        ...(input.lineKind !== undefined && { lineKind: input.lineKind }),
+        ...(input.groupSource !== undefined && { groupSource: input.groupSource }),
+        ...(input.groupId !== undefined && { groupId: input.groupId }),
+        ...(input.groupSlug !== undefined && { groupSlug: input.groupSlug }),
+        ...(input.groupTitle !== undefined && { groupTitle: input.groupTitle }),
+        ...(input.bundleCategorySlug !== undefined && {
+          bundleCategorySlug: input.bundleCategorySlug,
+        }),
+        addedAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const updatedCart: CartDocument = {
+        ...cart,
+        items: [...cart.items, newItem],
+        updatedAt: new Date(),
+      };
+
+      await this.db
+        .collection(this.collection)
+        .doc(userId)
+        .set(prepareForFirestore(updatedCart));
+
+      return updatedCart;
+    } catch (error) {
+      if (error instanceof DatabaseError || error instanceof ValidationError) throw error;
+      throw new DatabaseError("Failed to add grouped line to cart", error);
+    }
+  }
+
+  /**
+   * Replace a grouped line's member quantities.
+   *
+   * Takes the WHOLE array rather than a per-member delta: the cart is one
+   * Firestore document written with `set()`, so N per-member writes would be
+   * both a Rule #6 cost and a genuine lost-update race on a fast double-click.
+   *
+   * A member dropped to 0 is removed, and **a line left with no members is
+   * removed entirely** — enforced here rather than in the client, so a caller
+   * that forgets cannot leave an empty ghost line in the document.
+   *
+   * Only quantities move. Prices, titles and images are the snapshots taken
+   * server-side at add time and are never re-accepted from a caller; adding a
+   * NEW member is an add-to-cart, which has its own eligibility checks.
+   */
+  async updateGroupMembers(
+    userId: string,
+    itemId: string,
+    input: UpdateCartGroupMembersInput,
+  ): Promise<CartDocument> {
+    try {
+      const cart = await this.findByUserId(userId);
+      if (!cart) throw new NotFoundError("Cart not found");
+
+      const itemIndex = cart.items.findIndex((item) => item.itemId === itemId);
+      if (itemIndex < 0) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
+
+      const target = cart.items[itemIndex];
+      if (target.locked) throw new ValidationError(ERR_CART_ITEM_LOCKED);
+      if (!target.groupMembers?.length) {
+        throw new ValidationError("This cart line has no members to update.");
+      }
+
+      const requested = new Map(input.groupMembers.map((m) => [m.productId, m.quantity]));
+      for (const productId of requested.keys()) {
+        if (!target.groupMembers.some((m) => m.productId === productId)) {
+          throw new ValidationError(
+            "That item is not part of this cart line. Add it from the group page instead.",
+          );
+        }
+      }
+
+      const nextMembers = target.groupMembers
+        .map((m) => (requested.has(m.productId)
+          ? { ...m, quantity: requested.get(m.productId) as number }
+          : m))
+        .filter((m) => m.quantity > 0);
+
+      if (nextMembers.length === 0) {
+        return this.removeItem(userId, itemId);
+      }
+
+      const items = [...cart.items];
+      items[itemIndex] = {
+        ...target,
+        groupMembers: nextMembers,
+        price: this.deriveLinePrice(nextMembers),
+        updatedAt: new Date(),
+      };
+
+      const updatedCart: CartDocument = { ...cart, items, updatedAt: new Date() };
+
+      await this.db
+        .collection(this.collection)
+        .doc(userId)
+        .set(prepareForFirestore(updatedCart));
+
+      return updatedCart;
+    } catch (error) {
+      if (
+        error instanceof DatabaseError ||
+        error instanceof NotFoundError ||
+        error instanceof ValidationError
+      ) {
+        throw error;
+      }
+      throw new DatabaseError("Failed to update grouped cart line", error);
     }
   }
 

@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Div, Row, Span, Table, Thead, Tbody, Tr, Th, Td, Text, Modal, SideDrawer, Button } from "../../../ui";
+import { Div, Row, Span, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { GroupMemberPicker } from "./GroupMemberPicker";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
@@ -21,12 +22,20 @@ interface GroupMember {
   price: number;
   currency?: string;
   images?: string[];
+  /** First image, from the public projection. */
+  image?: string;
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
   listingType?: ListingType;
   isGroupParent?: boolean;
   groupTitle?: string;
   condition?: string;
+  /** Below here: added so the picker can gate a member and cap its stepper. */
+  availableQuantity?: number;
+  storeId?: string;
+  storeName?: string;
+  isSold?: boolean;
+  status?: string;
 }
 
 interface ApiResponse {
@@ -79,42 +88,6 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
   );
 }
 
-function GroupTableRow({ member }: { member: GroupMember }) {
-  const href = memberHref(member);
-  const price = formatCurrency(member.price, member.currency ?? "INR");
-  const image = member.images?.[0] ?? "";
-
-  return (
-    <Tr className="last:border-0" border="subtle">
-      <Td paddingSide="pr-sm" padding="xs-tall">
-        <Div className={`w-10 h-10 ${__O.hidden}`} rounded="full" border="default">
-          <MediaImage src={image} alt={member.title} size="thumbnail" />
-        </Div>
-      </Td>
-      <Td paddingSide="pr-sm" padding="xs-tall">
-        <Text className="line-clamp-2" color="primary" size="sm" weight="medium">{member.title}</Text>
-        {member.isGroupParent && (
-          <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary)]">Parent</Span>
-        )}
-      </Td>
-      <Td paddingSide="pr-sm" padding="xs-tall">
-        <Text size="sm" color="muted">{price}</Text>
-      </Td>
-      <Td paddingSide="pr-sm" padding="xs-tall">
-        <Text size="xs" transform="capitalize" color="muted">{member.condition ?? "—"}</Text>
-      </Td>
-      <Td padding="xs-tall">
-        <Link
-          href={href}
-          className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline"
-        >
-          View →
-        </Link>
-      </Td>
-    </Tr>
-  );
-}
-
 export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }: Props) {
   const [open, setOpen] = useState(false);
   const [members, setMembers] = useState<GroupMember[]>([]);
@@ -137,23 +110,17 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
   const parentLabel = isParent ? `Parts in this group: ${label}` : `Part of: ${label}`;
   const useDrawer = members.length >= 5;
 
+  // The overlay is now a PICKER, not a read-only table: pick how many of each
+  // member you want and add the whole selection as one cart line. The picker
+  // stands itself down (read-only, no CTA) when the group spans sellers.
   const tableContent = (
-    <Div className={`${__O.xAuto}`}>
-      <Table className="text-left min-w-[400px]">
-        <Thead>
-          <Tr border="default">
-            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Image</Th>
-            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Name</Th>
-            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Price</Th>
-            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Condition</Th>
-            <Th paddingY="sm" paddingSide="pb-sm" color="muted" size="xs" weight="semibold"></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {members.map((m) => <GroupTableRow key={m.id} member={m} />)}
-        </Tbody>
-      </Table>
-    </Div>
+    <GroupMemberPicker
+      groupId={groupId}
+      groupSource="product-group"
+      members={members}
+      onAdded={() => setShowAll(false)}
+      onAuthRequired={() => setShowAll(false)}
+    />
   );
 
   return (
@@ -179,6 +146,9 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
               {members.length}
             </Span>
           </Row>
+          {/* The overlay is a picker now, so the label says so — "View whole
+              group" read as navigation and hid the only way to buy several
+              members in one line. */}
           <Button
             type="button"
             variant="ghost"
@@ -186,7 +156,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             onClick={(e) => { e.stopPropagation(); setShowAll(true); }}
             className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
-            View whole group →
+            Pick items →
           </Button>
         </Row>
 

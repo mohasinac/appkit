@@ -20,9 +20,28 @@ import type { StoreDocument } from "../features/stores/schemas";
 import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
 import { seedExtMedia } from "./_helpers/media";
+import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+/**
+ * A timeline entry for the W18 `statusHistory` fixtures.
+ *
+ * Dates come from this file's own `daysAgo()`, never `Date.now()` in an ID
+ * position (Root Cause #25). `actorUid` only, never a name — `withHistory`
+ * scrubs PII from real writes, and a fixture carrying a name would be the one
+ * place that rule is broken.
+ */
+function entry(
+  at: Date,
+  actorRole: "system" | "admin" | "buyer" | "seller",
+  trigger: string,
+  changes: Record<string, FieldChange>,
+  extra?: { reason?: string; note?: string; actorUid?: string },
+): StatusChangeEntry {
+  return { at, actorRole, trigger, changes, ...extra };
+}
 
 export const storesSeedData: Partial<StoreDocument>[] = [
   // ── Store 1: LetItRip Official (admin-owned, platform storefront) ──────────
@@ -244,5 +263,35 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     capabilities: ["suggest_brands"] as StoreCapability[],
     createdAt: daysAgo(220),
     updatedAt: daysAgo(9),
+    /*
+     * active -> suspended, with the admin who did it and why. This is the
+     * fixture behind "a suspended store's page shows who suspended it" — the
+     * answer was previously only in adminAuditLog, which the store owner can
+     * never see.
+     *
+     * `isPublic` moves WITH `status`, which is the invariant the admin PATCH
+     * route was breaking until 2026-08-26 (it wrote status alone, leaving an
+     * approved store active and invisible).
+     */
+    statusHistory: [
+      entry(
+        daysAgo(9),
+        "admin",
+        "adminStorePatch",
+        {
+          status: { from: "active", to: "suspended" },
+          isPublic: { from: true, to: false },
+          suspensionReason: {
+            from: null,
+            to: "Three listings flagged as possible reproductions; suspended while authenticity documentation is reviewed.",
+          },
+        },
+        {
+          actorUid: "user-admin-letitrip",
+          reason:
+            "Three listings flagged as possible reproductions; suspended while authenticity documentation is reviewed.",
+        },
+      ),
+    ],
   },
 ];

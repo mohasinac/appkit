@@ -550,6 +550,11 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+export { GroupMemberPicker } from "./features/products/components/GroupMemberPicker";
+export type {
+  GroupMemberPickerProps,
+  GroupPickerMember,
+} from "./features/products/components/GroupMemberPicker";
 export { MarketplaceBundleCard } from "./features/products/components/MarketplaceBundleCard";
 export type {
   MarketplaceBundleCardProps,

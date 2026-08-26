@@ -4753,7 +4753,23 @@ export type { UpdateBlogPostInput } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
 // assertCanAddNewItems - the lane gate every add-to-cart entry point must run.
-export { addItemToCart, assertCanAddNewItems } from "./features/cart/server";
+// addGroupLineToCart - add a buyer-assembled group selection as ONE line.
+export {
+  addItemToCart,
+  assertCanAddNewItems,
+  addGroupLineToCart,
+  updateCartGroupMembers,
+  GROUP_LINE_MAX_MEMBERS,
+  type AddGroupLineToCartInput,
+} from "./features/cart/server";
+
+// Public allow-list projection for a product-group member — see
+// § "Public Data Projections".
+export {
+  toPublicGroupMember,
+  toPublicGroupMembers,
+  type PublicGroupMember,
+} from "./_internal/server/features/products/group-members";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
 export { clearCart } from "./features/cart/server";

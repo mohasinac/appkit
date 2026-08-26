@@ -313,6 +313,16 @@ export const CART_ENDPOINTS = {
   /** Per-store paid add-on selections — the source of truth for what's charged. */
   ADDONS: "/api/cart/addons",
   COUPON: "/api/cart/coupon",
+  /**
+   * Add a buyer-assembled group selection as ONE line. Separate from `GET`'s
+   * POST on purpose: that is the hot path behind every product card's
+   * Add-to-cart, and widening its `{productId, quantity}` schema into a
+   * discriminated union would put this feature's blast radius on it.
+   */
+  GROUP: "/api/cart/group",
+  /** Replace a grouped line's member quantities (whole array, not a delta). */
+  GROUP_MEMBERS: (itemId: string) =>
+    `/api/cart/${encodeURIComponent(itemId)}/members`,
 } as const;
 
 // ---------------------------------------------------------------------------

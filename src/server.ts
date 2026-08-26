@@ -732,7 +732,14 @@ export { updateBlogPostSchema } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
 // assertCanAddNewItems - the lane gate every add-to-cart entry point must run.
-export { addItemToCart, assertCanAddNewItems } from "./features/cart/server";
+export {
+  addItemToCart,
+  assertCanAddNewItems,
+  addGroupLineToCart,
+  updateCartGroupMembers,
+  GROUP_LINE_MAX_MEMBERS,
+  type AddGroupLineToCartInput,
+} from "./features/cart/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
 export { clearCart } from "./features/cart/server";

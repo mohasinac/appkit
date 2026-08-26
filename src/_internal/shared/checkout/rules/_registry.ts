@@ -18,6 +18,7 @@ import type {
 } from "./types";
 import type { OrderType } from "../../../../features/orders/utils/order-splitter";
 import type { CheckoutPaymentMethod } from "../../features/checkout/config";
+import { isMultiMemberLine } from "../line-members";
 import { standardRule } from "./standard.rule";
 import { auctionRule } from "./auction.rule";
 import { preOrderRule } from "./preorder.rule";
@@ -95,7 +96,12 @@ export function runSyncPreflight(
 ): void {
   const byType = new Map<ListingType, CartItemProductPair[]>();
   for (const pair of pairs) {
-    if (pair.item.bundleProductIds?.length) continue; // bundles skip — direct checkout
+    // Multi-member lines (bundle or grouped selection) skip the per-listing-type
+    // preflight: their `listingType` describes the wrapper, not the members, so
+    // a per-type rule would be applied to the wrong thing. Tested via the shared
+    // predicate rather than `bundleProductIds?.length`, which answers "is this a
+    // legacy bundle" and would say no for a `groupMembers`-backed line.
+    if (isMultiMemberLine(pair.item)) continue;
     const lt = (pair.item.listingType ?? "standard") as ListingType;
     const bucket = byType.get(lt) ?? [];
     bucket.push(pair);

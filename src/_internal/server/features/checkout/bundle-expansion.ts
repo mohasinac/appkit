@@ -24,25 +24,27 @@
 import type { CartItemDocument } from "../../../../features/cart/schemas";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
+import { getCartLineMembers } from "../../../shared/checkout/line-members";
+
+// Re-exported here so the many existing importers of this module keep working;
+// the definitions live in shared/ because `rules/_registry.ts` and
+// `order-math.ts` need them too and cannot import from server/.
+export {
+  getCartLineMembers,
+  getCartItemMemberIds,
+  isMultiMemberLine,
+  type CartLineMemberRef,
+} from "../../../shared/checkout/line-members";
 
 export interface BundleExpansion {
   /** Unique product ids referenced by any cart item (regular or bundle member). */
   productIds: string[];
   /**
-   * Sum of requested quantities per product id. Bundle members get
-   * `item.quantity` per occurrence (so 2x of a bundle with member X
-   * decrements X by 2, not 1).
+   * Sum of requested quantities per product id, weighted by BOTH the number of
+   * copies of the line and each member's per-copy quantity — so 2 copies of a
+   * selection containing 3× member X decrement X by 6.
    */
   decrements: Map<string, number>;
-}
-
-/** Resolve the member-product ids for a cart item. Bundle items expand to
- *  `bundleProductIds[]`; regular items collapse to `[productId]`. */
-export function getCartItemMemberIds(item: CartItemDocument): string[] {
-  if (item.bundleProductIds && item.bundleProductIds.length > 0) {
-    return item.bundleProductIds;
-  }
-  return [item.productId];
 }
 
 /** Build the unique-product-id + per-product decrement map for a cart. */
@@ -51,9 +53,12 @@ export function getExpandedDecrements(
 ): BundleExpansion {
   const decrements = new Map<string, number>();
   for (const item of cartItems) {
-    const memberIds = getCartItemMemberIds(item);
-    for (const pid of memberIds) {
-      decrements.set(pid, (decrements.get(pid) ?? 0) + item.quantity);
+    for (const member of getCartLineMembers(item)) {
+      // item.quantity = copies of the line, member.quantity = units per copy.
+      // Multiplying is the whole point: this used to add `item.quantity` alone,
+      // which silently assumed exactly one of each member.
+      const needed = item.quantity * member.quantity;
+      decrements.set(member.productId, (decrements.get(member.productId) ?? 0) + needed);
     }
   }
   return {
@@ -85,15 +90,17 @@ export function validateCartItemStock(
   productById: Map<string, ProductDocument>,
   decrements: Map<string, number>,
 ): StockShortfall | null {
-  const memberIds = getCartItemMemberIds(item);
-  for (const pid of memberIds) {
-    const product = productById.get(pid);
+  for (const member of getCartLineMembers(item)) {
+    const product = productById.get(member.productId);
     if (!product || product.status !== ProductStatusValues.PUBLISHED) {
-      return { productId: pid, availableQty: product?.availableQuantity ?? 0 };
+      return { productId: member.productId, availableQty: product?.availableQuantity ?? 0 };
     }
-    const totalNeeded = decrements.get(pid) ?? item.quantity;
+    // The fallback must be member-weighted too. Left as a bare `item.quantity`
+    // it would validate a line needing 3× of a member against demand for 1
+    // whenever the cumulative map didn't happen to carry that product.
+    const totalNeeded = decrements.get(member.productId) ?? item.quantity * member.quantity;
     if (product.availableQuantity < totalNeeded) {
-      return { productId: pid, availableQty: product.availableQuantity };
+      return { productId: member.productId, availableQty: product.availableQuantity };
     }
   }
   return null;

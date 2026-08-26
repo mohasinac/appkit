@@ -15,6 +15,7 @@
 
 import type { SupportTicketDocument, TicketMessage } from "../features/support/schemas/firestore";
 import { SUPPORT_TICKET_FIELDS } from "../constants/field-names";
+import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 function msg(
   id: string,
@@ -30,6 +31,23 @@ function msg(
 const BASE = Date.now();
 function daysBack(n: number) {
   return new Date(BASE - n * 24 * 60 * 60 * 1000);
+}
+
+/**
+ * A timeline entry for the W18 `statusHistory` fixtures.
+ *
+ * `actorUid` only, never a name — `withHistory` scrubs
+ * SUPPORT_TICKET_PII_FIELDS (which includes `assignedToName`) from real
+ * writes, so a fixture carrying one would be the single place that is untrue.
+ */
+function entry(
+  at: Date,
+  actorRole: "system" | "admin" | "buyer",
+  trigger: string,
+  changes: Record<string, FieldChange>,
+  extra?: { reason?: string; note?: string; actorUid?: string },
+): StatusChangeEntry {
+  return { at, actorRole, trigger, changes, ...extra };
 }
 
 export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
@@ -172,6 +190,30 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
       ),
     ],
     resolvedAt: daysBack(8),
+    /*
+     * open -> in_progress -> resolved, with the assignment in between.
+     *
+     * `resolvedAt` above was ALREADY in this fixture, and no code path had
+     * ever written it (verified 2026-08-26) — the seed described a shape the
+     * application could not produce. The repository stamps it on the
+     * transition now, so this fixture and reality finally agree.
+     */
+    statusHistory: [
+      entry(daysBack(12), "buyer", "createTicket", {
+        status: { from: null, to: "open" },
+      }, { actorUid: "user-yugi-muto" }),
+      entry(daysBack(11), "admin", "assignTicket", {
+        assignedTo: { from: null, to: "user-admin-letitrip" },
+        status: { from: "open", to: "in_progress" },
+      }, { actorUid: "user-admin-letitrip" }),
+      entry(daysBack(8), "admin", "adminUpdateTicket", {
+        status: { from: "in_progress", to: "resolved" },
+        resolvedAt: { from: null, to: "2026-08-18T00:00:00.000Z" },
+      }, {
+        actorUid: "user-admin-letitrip",
+        reason: "Return accepted and refund processed.",
+      }),
+    ],
     createdAt: daysBack(12),
     updatedAt: daysBack(8),
   },

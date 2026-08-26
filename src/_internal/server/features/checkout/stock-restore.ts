@@ -4,6 +4,7 @@ import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firest
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { ListingType } from "../../../../features/products/types/index";
 import { getListingRule } from "../../../shared/checkout/rules";
+import { getOrderItemMemberRefs } from "../../../shared/checkout/line-members";
 
 /**
  * Per-product quantity to restore for one order — the inverse of
@@ -18,12 +19,11 @@ function getOrderRestoreMap(order: OrderDocument): Map<string, number> {
   for (const item of order.items ?? []) {
     const remainingQty = item.quantity - (item.cancelledQuantity ?? 0);
     if (remainingQty <= 0) continue;
-    const memberIds =
-      item.bundleProductIds && item.bundleProductIds.length > 0
-        ? item.bundleProductIds
-        : [item.productId];
-    for (const pid of memberIds) {
-      map.set(pid, (map.get(pid) ?? 0) + remainingQty);
+    // Must mirror `getExpandedDecrements` exactly, including the per-member
+    // weighting — restoring fewer units than were taken silently leaks stock.
+    for (const member of getOrderItemMemberRefs(item)) {
+      const pid = member.productId;
+      map.set(pid, (map.get(pid) ?? 0) + remainingQty * member.quantity);
     }
   }
   return map;

@@ -146,32 +146,18 @@ export const NOTIFICATION_FIELDS = {
   RELATED_TYPE: "relatedType",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
-  TYPE_VALUES: {
-    ORDER_PLACED: "order_placed" as NotificationType,
-    ORDER_CONFIRMED: "order_confirmed" as NotificationType,
-    ORDER_SHIPPED: "order_shipped" as NotificationType,
-    ORDER_DELIVERED: "order_delivered" as NotificationType,
-    ORDER_CANCELLED: "order_cancelled" as NotificationType,
-    BID_PLACED: "bid_placed" as NotificationType,
-    BID_OUTBID: "bid_outbid" as NotificationType,
-    BID_WON: "bid_won" as NotificationType,
-    BID_LOST: "bid_lost" as NotificationType,
-    AUCTION_ENDED: "auction_ended" as NotificationType,
-    REVIEW_APPROVED: "review_approved" as NotificationType,
-    REVIEW_REPLIED: "review_replied" as NotificationType,
-    PRODUCT_AVAILABLE: "product_available" as NotificationType,
-    PROMOTION: "promotion" as NotificationType,
-    SYSTEM: "system" as NotificationType,
-    WELCOME: "welcome" as NotificationType,
-    OFFER_RECEIVED: "offer_received" as NotificationType,
-    OFFER_RESPONDED: "offer_responded" as NotificationType,
-    OFFER_EXPIRED: "offer_expired" as NotificationType,
-    OFFER_COUNTER_ACCEPTED: "offer_counter_accepted" as NotificationType,
-    REFUND_INITIATED: "refund_initiated" as NotificationType,
-    ACCOUNT_ACTION: "account_action" as NotificationType,
-    PRIZE_WON: "prize_won" as NotificationType,
-    PRIZE_REVEAL_EXPIRED: "prize_reveal_expired" as NotificationType,
-  },
+  /**
+   * SCREAMING_SNAKE accessors, DERIVED from `NOTIFICATION_TYPE_VALUES`.
+   *
+   * This was a fifth hand-written copy of the union — 24 of the 28 values,
+   * missing `emi_installment_due_soon`, `emi_installment_overdue`,
+   * `payment_review` and `catalogue_images_stale` — and every entry carried an
+   * `as NotificationType` cast, which is precisely the assertion that lets a
+   * wrong string through. Built from the array now, so it cannot be short.
+   */
+  TYPE_VALUES: Object.fromEntries(
+    NOTIFICATION_TYPE_VALUES.map((v) => [v.toUpperCase(), v]),
+  ) as { [K in NotificationType as Uppercase<K>]: K },
   PRIORITY_VALUES: {
     LOW: "low" as NotificationPriority,
     NORMAL: "normal" as NotificationPriority,

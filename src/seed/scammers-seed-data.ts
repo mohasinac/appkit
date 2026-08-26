@@ -21,9 +21,28 @@
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
 import { SCAMMER_FIELDS } from "../constants/field-names";
 import { seedExtMedia } from "./_helpers/media";
+import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 const NOW = new Date("2026-05-10T00:00:00.000Z");
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+/**
+ * A timeline entry for the W18 `statusHistory` fixtures.
+ *
+ * 🛑 `actorUid` only. A scammer profile is built ENTIRELY out of identifying
+ * details, which is why `SCAMMER_HISTORY_PII_FIELDS` is the longest scrub
+ * list of any adopter — a fixture carrying a name here would be modelling the
+ * exact leak the primitive exists to prevent.
+ */
+function entry(
+  at: Date,
+  actorRole: "system" | "admin",
+  trigger: string,
+  changes: Record<string, FieldChange>,
+  extra?: { reason?: string; note?: string; actorUid?: string },
+): StatusChangeEntry {
+  return { at, actorRole, trigger, changes, ...extra };
+}
 
 export const scammersSeedData: Partial<ScammerDocument>[] = [
   // ── 1. Verified — advance payment ghost ──────────────────────────────────────
@@ -130,6 +149,35 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     isContested: false,
     createdAt: daysAgo(15),
     updatedAt: daysAgo(8),
+    /*
+     * pending_review -> rejected, with the note that decided it.
+     *
+     * `verifiedBy`/`verifiedAt` hold only the LAST decision, so a profile
+     * that was verified, removed, then re-verified kept no trace of the
+     * middle. This is the fixture the "decision history" panel reads.
+     */
+    statusHistory: [
+      entry(daysAgo(15), "system", "publicScamReport", {
+        status: { from: null, to: "pending_review" },
+      }),
+      entry(
+        daysAgo(8),
+        "admin",
+        "adminScammerPatch",
+        {
+          status: { from: "pending_review", to: "rejected" },
+          verifiedBy: { from: null, to: "user-admin-letitrip" },
+          verificationNote: {
+            from: null,
+            to: "Seller provided courier proof. Likely delivery dispute, not fraud. Rejected.",
+          },
+        },
+        {
+          actorUid: "user-admin-letitrip",
+          reason: "Seller provided courier proof. Likely delivery dispute, not fraud. Rejected.",
+        },
+      ),
+    ],
   },
 
   // ── 4. Verified — advance payment ghost (same scamType as #1, different person) ──

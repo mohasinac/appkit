@@ -62,6 +62,7 @@ import {
   getCartItemMemberIds,
   getExpandedDecrements,
   bucketCartItemsByStock,
+  isMultiMemberLine,
   type StockBucketResult,
 } from "./bundle-expansion";
 import {
@@ -1132,8 +1133,9 @@ export async function createCheckoutOrderAction(
       const availableItems: StockResult["available"] = [];
       for (const { item, product } of bucketed.available) {
         // S-SBUNI-RULES 2026-05-13 — sync preflight (prize-pool cap, pre-order
-        // quota) via rule registry. Bundles skip — they bypass the cart path.
-        if (!item.bundleProductIds?.length) {
+        // quota) via rule registry. Multi-member lines skip: their listingType
+        // describes the wrapper, not the members.
+        if (!isMultiMemberLine(item)) {
           runSyncPreflight([{ item, product }], paymentMethod);
         }
         availableItems.push({ item, product });
@@ -2092,10 +2094,10 @@ export async function verifyAndPlaceRazorpayOrderAction(
   });
 
   // S-SBUNI-RULES 2026-05-13 — sync preflight via rule registry.
-  // Bundle items bypass the cart flow so skip the prize-pool cap.
+  // Multi-member lines skip the prize-pool cap, same reasoning as the COD path.
   const preflightPairs = productChecks.filter(
     (p): p is { item: CartItemDocument; product: ProductDocument } =>
-      p.product !== null && p.product !== undefined && !p.item.bundleProductIds?.length,
+      p.product !== null && p.product !== undefined && !isMultiMemberLine(p.item),
   );
   // This whole action is the Razorpay path — paymentMethod is always "online".
   runSyncPreflight(preflightPairs, "online");
