@@ -16,6 +16,7 @@ const addressFormSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
   addressLine1: z.string().min(1, "Address is required"),
   addressLine2: z.string().optional(),
+  landmark: z.string().max(100, "Keep the landmark under 100 characters.").optional(),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   postalCode: z.string().min(1, "Postal code is required"),
@@ -29,6 +30,7 @@ export interface AddressFormLabels {
   phone: string;
   addressLine1: string;
   addressLine2: string;
+  landmark: string;
   city: string;
   state: string;
   postalCode: string;
@@ -45,6 +47,7 @@ export interface AddressFormPlaceholders {
   phone: string;
   addressLine1: string;
   addressLine2: string;
+  landmark: string;
   city: string;
   state: string;
   postalCode: string;
@@ -57,6 +60,7 @@ const DEFAULT_LABELS: AddressFormLabels = {
   phone: "Phone Number",
   addressLine1: "Address Line 1",
   addressLine2: "Address Line 2",
+  landmark: "Landmark",
   city: "City",
   state: "State",
   postalCode: "Postal Code",
@@ -73,6 +77,7 @@ const DEFAULT_PLACEHOLDERS: AddressFormPlaceholders = {
   phone: "Enter phone number",
   addressLine1: "Street address, P.O. box",
   addressLine2: "Apartment, suite, unit, building, floor, etc.",
+  landmark: "Opposite the Metro station, next to the temple, etc.",
   city: "City",
   state: "State/Province",
   postalCode: "Postal/ZIP code",
@@ -111,6 +116,7 @@ export function AddressForm({
     phone: initialData?.phone || "",
     addressLine1: initialData?.addressLine1 || "",
     addressLine2: initialData?.addressLine2 || "",
+    landmark: initialData?.landmark || "",
     city: initialData?.city || "",
     state: initialData?.state || "",
     postalCode: initialData?.postalCode || "",
@@ -226,6 +232,23 @@ export function AddressForm({
         value={formData.addressLine2}
         onChange={(value) => handleChange("addressLine2", value)}
         placeholder={mergedPlaceholders.addressLine2}
+      />
+
+      {/*
+        Store addresses have always accepted `landmark` — the seller drawer
+        collects it and POST /api/store/addresses validates it — while this
+        form had no field for it. So an address created in that drawer and
+        then edited here was saved back with `landmark` undefined and LOST it.
+        Optional for both owner types; the user API ignores what it does not
+        declare.
+      */}
+      <FormField
+        label={mergedLabels.landmark}
+        name="landmark"
+        type="text"
+        value={formData.landmark ?? ""}
+        onChange={(value) => handleChange("landmark", value)}
+        placeholder={mergedPlaceholders.landmark}
       />
 
       <FormGroup columns={3}>

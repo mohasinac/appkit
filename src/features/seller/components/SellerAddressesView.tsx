@@ -10,6 +10,8 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
 import { normalizeError } from "../../../errors/normalize";
+import { TextLink } from "../../../ui";
+import { ROUTES } from "../../../constants/index";
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
@@ -269,10 +271,19 @@ export function SellerAddressesView({
             <Heading level={2} size="base" weight="semibold" color="primary">Pickup Addresses</Heading>
             <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
           </Stack>
-          <Button gap="sm" size="sm" onClick={openAdd}>
-            <Plus className="h-4 w-4" />
-            <Span>Add Address</Span>
-          </Button>
+          <Row gap="sm" align="center">
+            {/*
+              The drawer stays the fast path — it is right there beside the
+              list. The link is what makes the flow bookmarkable and
+              shareable, which a drawer can never be, and it is the same
+              editor either way (both render AddressForm).
+            */}
+            <TextLink href={String(ROUTES.STORE.ADDRESSES_NEW)}>Open full page →</TextLink>
+            <Button gap="sm" size="sm" onClick={openAdd}>
+              <Plus className="h-4 w-4" />
+              <Span>Add Address</Span>
+            </Button>
+          </Row>
         </Row>
       </StickyToolbar>
 

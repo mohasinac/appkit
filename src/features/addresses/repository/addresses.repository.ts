@@ -183,6 +183,30 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     }
   }
 
+  /**
+   * Read one address, scoped to its owner.
+   *
+   * The owner check is `ownerType` AND `ownerId` — the same pair
+   * `updateForOwner` and `deleteForOwner` use, because `addresses` is one
+   * top-level collection holding both buyer and store addresses discriminated
+   * by `ownerType` (SB-UNI-A). Checking only `ownerId` would let a seller read
+   * their own personal address through the store endpoint and vice versa.
+   *
+   * Returns null rather than throwing: the caller turns it into a 404, and a
+   * missing address and a foreign one must be indistinguishable to the client.
+   */
+  async getForOwner(
+    ownerType: AddressOwnerType,
+    ownerId: string,
+    addressId: string,
+  ): Promise<AddressDocument | null> {
+    const existing = await this.findById(addressId);
+    if (!existing || existing.ownerType !== ownerType || existing.ownerId !== ownerId) {
+      return null;
+    }
+    return existing;
+  }
+
   async updateForOwner(
     ownerType: AddressOwnerType,
     ownerId: string,

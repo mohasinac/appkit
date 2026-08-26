@@ -217,6 +217,8 @@ export const DEFAULT_ROUTE_MAP = {
     SHIPPING: "/store/shipping",
     PAYOUT_SETTINGS: "/store/payout-settings",
     ADDRESSES: "/store/addresses",
+    ADDRESSES_NEW: "/store/addresses/new",
+    ADDRESSES_EDIT: (id: string) => `/store/addresses/${id}/edit`,
     OFFERS: "/store/offers",
     WHATSAPP: "/store/whatsapp",
     REVIEWS: "/store/reviews",
