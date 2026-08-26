@@ -208,6 +208,12 @@ export const ADMIN_ENDPOINTS = {
   EVENTS: "/api/admin/events",
   EVENT_BY_ID: (id: string) => `/api/admin/events/${id}`,
   EVENT_STATUS: (id: string) => `/api/admin/events/${id}/status`,
+  /**
+   * The ONLY sanctioned writer of `lotteryConfig`. The generic EVENT_BY_ID
+   * PATCH rejects that field — it is `.passthrough()`, and letting a slot
+   * array through it erased every already-pulled slot.
+   */
+  EVENT_LOTTERY_CONFIG: (id: string) => `/api/admin/events/${id}/lottery-config`,
   EVENT_STATS: (id: string) => `/api/admin/events/${id}/stats`,
   EVENT_ENTRIES: (id: string) => `/api/admin/events/${id}/entries`,
   EVENT_ENTRIES_EXPORT: (id: string) => `/api/admin/events/${id}/entries/export`,

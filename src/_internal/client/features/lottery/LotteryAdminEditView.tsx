@@ -16,6 +16,8 @@ import {
 import { Form, FieldInput, FieldSelect, Input } from "../../../../ui";
 import type { UseFormShellStateResult } from "../../../../ui/forms";
 import { lotteryConfigFormSchema } from "../../../shared/features/lottery/config-form";
+import { lotteryConfigWriteSchema } from "../../../../features/lottery/schemas/config-write";
+import type { LotteryConfigWriteInput } from "../../../../features/lottery/schemas/config-write";
 import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 
 interface LotterySlotRow {
@@ -26,26 +28,25 @@ interface LotterySlotRow {
   image?: string;
 }
 
+/**
+ * What this form hands its caller.
+ *
+ * `lotteryConfig` is the WRITE input — deliberately not `LotteryConfig`. It
+ * carries no `isBooked`, no `bookedBy*` and no `weight`, because an admin
+ * editing a lottery is describing prizes, not attendance. The stored config
+ * gains those in `mergeLotteryConfig`, server-side, from the slots that are
+ * already there.
+ *
+ * `totalSlots` is absent for the same reason: derived from `slots.length` by
+ * the merge, never sent. A caller-supplied count that disagrees with the array
+ * is the mirror-drift trap (Root Cause #42), and the count is what the
+ * fullness check reads.
+ */
 interface LotteryEventFormData {
   title: string;
   description?: string;
   type: "lottery";
-  lotteryConfig: {
-    slots: Array<{
-      slotNumber: number;
-      name: string;
-      image?: string;
-      price: number;
-      weight: number;
-      isBooked: boolean;
-    }>;
-    totalSlots: number;
-    pricingMode: "uniform" | "variable";
-    uniformPrice?: number;
-    drawWindowDurationMinutes: number;
-    maxPullsPerTransaction: number;
-    maxPullsPerUser: number;
-  };
+  lotteryConfig: LotteryConfigWriteInput;
 }
 
 interface LotteryAdminEditViewProps {
@@ -110,23 +111,48 @@ export function LotteryAdminEditView({
     setError(null);
     startTransition(async () => {
       try {
-        const lotteryConfig = {
+        /*
+         * 🛑 This used to send `isBooked: false` and `weight: 0` on every slot,
+         * and drop `bookedByUserId` / `bookedByDisplayName` /
+         * `bookedByUserLotteryNumber` entirely — against a `.passthrough()`
+         * PATCH, which made the first save of a live lottery erase every
+         * purchased slot, silently, with a 200.
+         *
+         * The write shape now has NO booking fields at all and is `.strict()`,
+         * so a slot's buyer is not something this form can express, let alone
+         * overwrite. `PUT /lottery-config` merges by `slotNumber` against the
+         * stored config and is the only writer.
+         */
+        const candidate = {
           slots: slots.map((s) => ({
             slotNumber: s.slotNumber,
             name: s.name,
             image: s.image?.trim() || undefined,
             price: s.price,
-            weight: 0,
-            isBooked: false,
           })),
-          totalSlots: slots.length,
           pricingMode,
-          uniformPrice: pricingMode === "uniform" ? Math.round(parseFloat(uniformPrice) * 100) / 100 || 0 : undefined,
+          uniformPrice:
+            pricingMode === "uniform"
+              ? Math.round(parseFloat(uniformPrice) * 100) / 100 || 0
+              : undefined,
           drawWindowDurationMinutes: parseInt(drawWindowMinutes, 10) || 5,
           maxPullsPerTransaction: parseInt(maxPullsPerTx, 10) || 1,
           maxPullsPerUser: parseInt(maxPullsPerUser, 10) || 1,
         };
-        await onSubmit({ title, description, type: "lottery", lotteryConfig });
+
+        /*
+         * The schema was passed to `<Form>` and never actually run — so the
+         * `parseFloat(x) || 0` coercions above, which it exists to catch, were
+         * still live. Parsed here so a bad slot is refused on the client
+         * rather than discovered as a 400.
+         */
+        const parsed = lotteryConfigWriteSchema.safeParse(candidate);
+        if (!parsed.success) {
+          setError(parsed.error.issues[0]?.message ?? "Check the lottery settings.");
+          return;
+        }
+
+        await onSubmit({ title, description, type: "lottery", lotteryConfig: parsed.data });
       } catch (err) {
         void normalizeError(err);
         setError(err instanceof Error ? err.message : "Failed to save lottery");

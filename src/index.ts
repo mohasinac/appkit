@@ -5392,6 +5392,10 @@ export { EVENT_ADMIN_SORT_OPTIONS } from "./features/events/index";
 export { EVENT_ENTRIES_COLLECTION } from "./features/events/index";
 // LOTTERY_ENTRIES_COLLECTION - New lotteryEntries collection constant.
 export { LOTTERY_ENTRIES_COLLECTION } from "./features/lottery/schemas/firestore";
+// The lotteryConfig WRITE contract + the booking-preserving merge. The only
+// sanctioned way to write lotteryConfig — see the schema module's header.
+export { lotteryConfigWriteSchema, lotterySlotWriteSchema, mergeLotteryConfig } from "./features/lottery/schemas/config-write";
+export type { LotteryConfigWriteInput, LotteryMergeResult } from "./features/lottery/schemas/config-write";
 // lotteryEntriesSeedData - Seed data for the lotteryEntries collection.
 export { lotteryEntriesSeedData } from "./seed/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
@@ -5604,6 +5608,11 @@ export type { EventStatus } from "./features/events/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // EventType - Type contract for event type.
 export type { EventType } from "./features/events/index";
+// ALL_EVENT_TYPES / ALL_EVENT_STATUSES - derived from a `Record<Union, true>`,
+// so a union member missing from either is a COMPILE error rather than a
+// silently short list. Exported because consumers were hand-writing their own
+// copies and drifting (Root Cause #61).
+export { ALL_EVENT_TYPES, ALL_EVENT_STATUSES } from "./features/events/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // EventUpdateInput - Type contract for event update input.
 export type { EventUpdateInput } from "./features/events/index";
@@ -9266,6 +9275,9 @@ export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, Summar
 export { CountdownDisplay, ItemRow, HorizontalScroller } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
 export { Tabs, TabsList, TabsTrigger, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";
+// TabBarShell - rail + overflow scroll arrows around a role="tablist"; TabBarButton / TabsNavSelect - its two trigger flavours
+export { TabBarShell, TabBarButton, TabsNavSelect } from "./ui/index";
+export type { TabBarShellProps, TabBarButtonProps, TabsNavSelectProps } from "./ui/index";
 export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText, RichTextRenderer } from "./ui/index";
 export type { RichTextRendererProps } from "./ui/index";
 export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/index";
@@ -9402,7 +9414,7 @@ export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export { deriveContextTypeFromFilename } from "./utils/id-generators";
 export type { MediaFilenameContext } from "./utils/id-generators";
-export { resolveMediaUrl, FIREBASE_STORAGE_HOST, GCS_HOST } from "./utils/media-url";
+export { resolveMediaUrl, resolveVideoUrl, FIREBASE_STORAGE_HOST, GCS_HOST } from "./utils/media-url";
 
 export { generateFAQId } from "./utils/id-generators";
 export type { GenerateFAQIdInput } from "./utils/id-generators";

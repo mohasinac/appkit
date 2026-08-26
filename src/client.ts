@@ -29,6 +29,21 @@ export {
   installClientErrorReporter,
   useClientErrorReporter,
 } from "./client/observability/installClientErrorReporter";
+// [CLIENT-SAFE] Error-tracker registration. The consumer calls setErrorTracker
+// once at bootstrap to route every trackError() — notably the `error.digest`
+// captured by ErrorView / GlobalError / ErrorBoundary — into reportClientError.
+// Without a registration, trackError falls back to console.error and the digest
+// (the only link to the server-side error) is lost.
+export {
+  setErrorTracker,
+  trackError,
+  ErrorCategory,
+  ErrorSeverity,
+} from "./monitoring/error-tracking";
+export type {
+  ErrorTrackerFn,
+  ErrorContext,
+} from "./monitoring/error-tracking";
 
 // [CLIENT-SAFE] React Query wrappers — auto-toast / auto-inline-field-error
 // on failure, optional `loadingMessage` for long ops.

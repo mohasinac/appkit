@@ -15,6 +15,7 @@ import {
   Grid,
 } from "../../../../ui";
 import { MediaImage } from "../../../../features/media/MediaImage";
+import { ROUTES } from "../../../../next/routing/route-map";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
 interface ClientLotteryEvent {
@@ -81,7 +82,19 @@ export function LotteryListView({ items, adminMode = false }: LotteryListViewPro
               return (
               <Anchor
                 key={event.id}
-                href={`/lottery/${event.id}`}
+                /*
+                 * In adminMode this used to link to the PUBLIC lottery page,
+                 * so an admin on the admin list had no route to slot
+                 * configuration at all — which went unnoticed because the
+                 * editor was orphaned and there was nowhere to link TO.
+                 * Nested anchors are invalid, so the card itself changes
+                 * target rather than gaining a second link.
+                 */
+                href={
+                  adminMode
+                    ? String(ROUTES.ADMIN.LOTTERY_CONFIG(event.id))
+                    : `/lottery/${event.id}`
+                }
                 tone="brand"
                 rounded="2xl"
                 className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"

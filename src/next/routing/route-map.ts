@@ -399,6 +399,14 @@ export const DEFAULT_ROUTE_MAP = {
     PRIZE_DRAWS_EDIT: (id: string) => `/admin/prize-draws/${id}/edit`,
     PRIZE_DRAWS_ENTRIES: (id: string) => `/admin/prize-draws/${id}/entries`,
     LOTTERIES: "/admin/lotteries",
+    /*
+     * Slot configuration only. A lottery EVENT (title, dates, status, media)
+     * is created through the ordinary event editor — `LotteryAdminEditView`
+     * has no fields for any of those, so treating it as the whole create
+     * flow would produce a lottery with no dates, and the draw window is
+     * measured from them.
+     */
+    LOTTERY_CONFIG: (id: string) => `/admin/lotteries/${id}/edit`,
     LOTTERY_ENTRIES: (id: string) => `/admin/lotteries/${id}/entries`,
     TEAM: "/admin/team",
     TEAM_NEW: "/admin/team/new",

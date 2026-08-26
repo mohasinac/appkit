@@ -38,6 +38,7 @@ import type {
   SpinPrize,
   SurveyFormField,
 } from "../types";
+import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";
 import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 import { eventDraftSchema } from "../schemas/event-form";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
@@ -77,15 +78,21 @@ const CLS_RAFFLE_PANEL = "border border-warning bg-warning-surface dark:border-w
 const CLS_RAFFLE_HEADING = "text-warning dark:text-warning";
 const CLS_RAFFLE_BODY = "text-warning dark:text-warning";
 
-const EVENT_TYPE_OPTIONS = [
-  { label: "Sale", value: "sale" },
-  { label: "Offer / Coupon", value: "offer" },
-  { label: "Poll", value: "poll" },
-  { label: "Survey", value: "survey" },
-  { label: "Feedback", value: "feedback" },
-  { label: "Raffle", value: "raffle" },
-  { label: "Spin Wheel", value: "spin_wheel" },
-];
+/*
+ * DERIVED. This was a hand-written 7-entry array and `EVENT_TYPE_LABELS`
+ * — a `Record<EventType, string>` sitting one import away — already held the
+ * same labels for all 8. It was missing `lottery`, and `allowedTypes` filters
+ * AGAINST this list, so passing `"lottery"` in still could not surface it:
+ * lottery events had no create path in the UI at all and could only come from
+ * `npm run seed`.
+ *
+ * Deriving from the Record means a new EventType cannot be omitted here
+ * without failing to compile (Root Cause #61).
+ */
+const EVENT_TYPE_OPTIONS = ALL_EVENT_TYPES.map((value) => ({
+  value,
+  label: EVENT_TYPE_LABELS[value],
+}));
 
 const RAFFLE_TYPE_OPTIONS = [
   { label: "Open raffle (all confirmed entries)", value: "open_raffle" },
