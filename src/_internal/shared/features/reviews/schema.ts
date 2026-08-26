@@ -14,7 +14,17 @@ export const createReviewSchema = z.object({
   storeId: z.string().min(1),
   rating: z.number().int().min(REVIEW_MIN_RATING).max(REVIEW_MAX_RATING),
   title: z.string().min(1).max(REVIEW_TITLE_MAX_LENGTH),
-  body: z.string().min(REVIEW_BODY_MIN_LENGTH).max(REVIEW_BODY_MAX_LENGTH),
+  /*
+   * 🛑 This was named `body`. The field is `comment` — on `ReviewDocument`
+   * (schemas/firestore.ts:39), on `CreateReviewActionInput`, and in what
+   * `useCreateReview` actually sends. So this schema disagreed with the
+   * document, the action AND the client, and would have rejected every real
+   * submission the moment anything used it to validate one.
+   *
+   * It went unnoticed because `POST /api/reviews` passed `body as any` and
+   * never consulted it.
+   */
+  comment: z.string().min(REVIEW_BODY_MIN_LENGTH).max(REVIEW_BODY_MAX_LENGTH),
   images: z.array(z.string().url()).max(REVIEW_IMAGES_MAX).default([]),
   orderId: z.string().optional(),
 });

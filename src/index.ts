@@ -10042,3 +10042,13 @@ export {
   lotteryPullSchema,
 } from "./features/admin/schemas/admin-user-form";
 export { siteSettingsFormSchema } from "./features/admin/schemas/site-settings-form";
+
+/*
+ * Two schemas that existed and whose own routes did not use them.
+ * `postApiWishlist` had sat in SCHEMAS.api since the registry was seeded while
+ * `/api/wishlist` read its body raw; `createReviewSchema` was reachable only
+ * through a server action while `POST /api/reviews` passed `body as any`.
+ * Re-exported here under names that read clearly at a route call site.
+ */
+export { createReviewSchema as reviewSubmitSchema } from "./_internal/shared/features/reviews/schema";
+export { wishlistAddSchema } from "./schemas/api-routes";

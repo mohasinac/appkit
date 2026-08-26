@@ -29,7 +29,7 @@ export async function createReviewAction(input: unknown): Promise<ActionResult<u
         throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
       }
     
-      const { productId, storeId, rating, title, body, images } = parsed.data;
+      const { productId, storeId, rating, title, comment, images } = parsed.data;
     
       await assertNotDuplicateReview(productId, user.uid);
     
@@ -46,7 +46,9 @@ export async function createReviewAction(input: unknown): Promise<ActionResult<u
         userAvatar: profile?.photoURL ?? "",
         rating,
         title,
-        comment: body,
+        // Was `comment: body` — the schema called the field `body` and this
+        // line translated it. Both now use the document's own name.
+        comment,
         images: images ?? [],
         verified: false,
         status: "pending",

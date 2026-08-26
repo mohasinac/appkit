@@ -19,10 +19,13 @@ import { z } from "zod";
 import type { ApiRouteSchema } from "./types";
 
 // ── POST /api/wishlist ────────────────────────────────────────────────────────
+/** The body shape, named so a route can import it directly. */
+export const wishlistAddSchema = z.object({
+  productId: z.string().min(1),
+});
+
 export const postApiWishlist: ApiRouteSchema = {
-  body: z.object({
-    productId: z.string().min(1),
-  }),
+  body: wishlistAddSchema,
 };
 
 // ── POST /api/auth/session ───────────────────────────────────────────────────
