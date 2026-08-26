@@ -192,6 +192,32 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "browse-categories", label: "Browsing categories shows relevant products", href: "/categories" },
         { key: "search", label: "Search returns relevant results", href: "/search" },
         { key: "filters", label: "Search/listing filters (price, brand, condition) work correctly" },
+        {
+          key: "homepage-prize-draws-section",
+          label: "The homepage shows a \"Prize Draws\" strip with real cards — NOT an empty gap and NOT a \"Something went wrong\" block",
+          description:
+            "This section crashed the entire homepage in production (React error 441) until 2026-08-26. Scroll the whole homepage: every strip should render or be cleanly absent. If any single strip is replaced by an error message while the rest of the page is fine, that is the section boundary doing its job — report which strip.",
+          href: "/",
+        },
+        {
+          key: "homepage-event-raffles-section",
+          label: "If there are active raffle events, the homepage shows a \"Live Raffles & Spin Wheels\" strip",
+          description:
+            "This section silently rendered nothing in production — it looked exactly like \"no active raffles\". Cross-check against /events: if an event with a raffle is active there but no strip appears on the homepage, that is a bug.",
+          href: "/",
+        },
+        {
+          key: "listing-no-missing-message",
+          label: "Open the browser console on /products and confirm there are NO \"MISSING_MESSAGE\" errors",
+          description:
+            "Press F12 → Console tab, then load the page. A missing translation key logs 'MISSING_MESSAGE: <key>' and renders the raw key text instead of a readable label. Report the exact key name if you see one.",
+          href: "/products",
+        },
+        {
+          key: "product-filter-status-labels",
+          label: "In an admin/seller listing's filter drawer, every Status option reads as words (Published / Draft / In Review / Archived) — never a raw key like \"filters.statusInReview\"",
+          href: "/products",
+        },
         { key: "pagination", label: "Pagination / infinite scroll works on listing pages" },
         {
           key: "compare-custom-fields",
@@ -1525,7 +1551,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "store-feature-edit-page-exists",
           label: "A store feature badge can be edited on its own page, not only in a drawer",
-          description: "ROUTES.STORE.FEATURES_EDIT pointed at /store/features/[id]/edit with no page behind it and no caller anywhere — a dead route key. Open a badge's edit page directly by URL and confirm it loads with the badge's current values.",
+          description: "ROUTES.STORE.FEATURES_EDIT used to point at /store/features/[id]/edit with no page behind it. The page exists now, but nothing links to it yet — so open a badge's edit page directly by URL and confirm it loads with that badge's current values, not an empty form.",
           href: "/store/features",
         },
         {
@@ -1830,6 +1856,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Become a Seller & Store Setup",
       href: "/user/become-seller",
       cases: [
+        {
+          key: "sell-redirect",
+          label: "Visiting /sell redirects to the Become a Seller page — it must NOT show \"Something went wrong\"",
+          description:
+            "In production this returned a 200 carrying an error instead of redirecting, so the whole seller-onboarding entry point was dead while looking healthy to monitoring. Type /sell in the address bar directly; the URL should end up on /user/become-seller.",
+          href: "/sell",
+        },
         { key: "apply-seller", label: "Applying to become a seller works", href: "/user/become-seller" },
         { key: "store-setup", label: "Setting up store name/description/logo works" },
         { key: "store-address", label: "Adding a pickup address for the store works" },
@@ -2733,6 +2766,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "carousel-loops", label: "Homepage carousels (Shop by Category, Top Brands, Featured Products, Live Auctions, Reserve Before It Ships, Verified Stores, Tournaments & Events, Collector Reviews) loop back to the first item after reaching the last instead of getting stuck at the end", href: "/" },
         { key: "carousel-no-flicker", label: "Homepage carousel auto-scroll does not flash/flicker when looping back to the first item" },
+        {
+          key: "hero-carousel-video-plays",
+          label: "The hero carousel slide with a video background actually PLAYS the video — not a blank/black panel",
+          description:
+            "Open the browser console (F12 → Console) while the homepage loads. There must be no 'Load of media resource … failed' or 404 for a .mp4. If the slide is blank, note the failing URL from the console's Network tab.",
+          href: "/",
+        },
         { key: "carousel-pause-on-interaction", label: "Homepage carousel auto-scroll pauses while hovering, touching, keyboard-focusing (Tab + arrow keys), or scrolling it, and resumes afterward" },
         { key: "carousel-arrows-work", label: "Homepage carousel prev/next arrow buttons work and wrap around at both ends" },
         { key: "hero-banner-loops", label: "Hero banner at the top of the homepage rotates through all slides and loops back to the first without getting stuck" },
@@ -3750,6 +3790,121 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     version: 2,
     previousVersionId: "checklist-admin-bug-hunter-rewards-demo-fixture",
   },
+  ...group("page-wiring", "Page Wiring & Reachability", [
+    {
+      pageKey: "drawer-pages",
+      pageLabel: "Editors that are also pages",
+      href: "/admin/team",
+      cases: [
+        {
+          key: "page-drawer-opens-already-open",
+          label: "Opening an editor page directly shows the panel ALREADY OPEN",
+          description:
+            "Go to /admin/team/new by URL. The invite panel must already be open — not a blank page you have to click into. Close it and you should land back on /admin/team, not on a dead route. Same for /admin/navigation/new and /admin/tester-checklist/new.",
+        },
+        {
+          key: "page-drawer-deep-link-survives-reload",
+          label: "A deep link to an editor survives a reload",
+          description:
+            "Open a team member's edit page, then reload. The panel is still open, on the same record. This is the whole reason these pages exist — a drawer alone cannot be bookmarked, shared with a colleague, or reopened after a crash.",
+        },
+      ],
+    },
+    {
+      pageKey: "detail-pages",
+      pageLabel: "Record detail pages",
+      href: "/admin/bids",
+      cases: [
+        {
+          key: "detail-page-matches-list-modal",
+          label: "A bid's detail PAGE shows the same fields as the list's modal",
+          description:
+            "Open a bid from /admin/bids (a modal opens) and note the fields. Now open /admin/bids/{id}/view directly. The fields must be identical — both are built by one buildBidDetailFields, so any difference means a second copy has appeared and the two will drift.",
+        },
+        {
+          key: "detail-page-hides-identity-per-portal",
+          label: "The buyer's own bid page does NOT reveal other bidders",
+          description:
+            "Open the same bid at /admin/bids/{id}/view and at /user/bids/{id}/view. The buyer view must not show the other bidder's identity. One `viewer` argument decides this, in one place — if the buyer view leaks a name, that argument is being ignored somewhere.",
+        },
+      ],
+    },
+    {
+      pageKey: "data-loss",
+      pageLabel: "Saves that used to destroy data",
+      href: "/admin/lotteries",
+      cases: [
+        {
+          key: "lottery-edit-preserves-bookings",
+          label: "🛑 Editing a lottery does NOT wipe slots people already pulled",
+          description:
+            "On a seeded lottery, pull/book a slot first. Then open the admin lottery editor, change something unrelated (rename a different slot), and save. Reopen: the booked slot must STILL be booked, with the same buyer name and lottery number. Before this wave the editor sent isBooked:false for every slot and the event PATCH let it through, so the first save erased every purchased slot — with a success message and no error anywhere.",
+        },
+        {
+          key: "lottery-booked-slot-cannot-be-deleted",
+          label: "Removing a slot somebody already pulled is refused, by number",
+          description:
+            "In the same editor, try to delete the slot that has been booked. The save must fail and name that slot number. It is a conflict, not a form error — the correct next action is to reopen the pull, not to fix a field.",
+        },
+        {
+          key: "admin-grouped-listing-title-actually-saves",
+          label: "🛑 An admin renaming a grouped listing actually persists it",
+          description:
+            "Edit a grouped listing's title at /admin/grouped-listings/{id}/edit, save, then RELOAD. The new title must still be there. Reloading is the only way to tell: the old admin PATCH accepted productIds only and silently dropped everything else, so it returned a perfectly normal 200 and wrote nothing.",
+          href: "/admin/grouped-listings",
+        },
+        {
+          key: "store-address-landmark-survives-edit",
+          label: "🛑 A store address keeps its landmark through an edit",
+          description:
+            "Create a store pickup address from the /store/addresses drawer WITH a landmark filled in. Now edit that address at /store/addresses/{id}/edit, change anything else, and save. The landmark must still be set. The shared address form had no landmark field, so it sent undefined and dropped it on every edit.",
+          href: "/store/addresses",
+        },
+      ],
+    },
+    {
+      pageKey: "reachability",
+      pageLabel: "Everything built is reachable",
+      href: "/admin",
+      cases: [
+        {
+          key: "lottery-can-be-created-without-seeding",
+          label: "An admin can create a lottery end to end, with no seed script",
+          description:
+            "Create an event of type Lottery from /admin/events/new (the type must be offered — it was missing from the picker entirely), then configure its slots from /admin/lotteries/{id}/edit, then pull a slot as a buyer. Until this wave lottery events could ONLY come from `npm run seed`.",
+          href: "/admin/events/new",
+        },
+        {
+          key: "carousel-can-be-renamed",
+          label: "A named carousel can be renamed after it is created",
+          description:
+            "Open /admin/carousels, pick a carousel, use Edit carousel, change its name and status, save. There was no edit path at all: the group editor was create-only, so a carousel's name was fixed for its whole life.",
+          href: "/admin/carousels",
+        },
+        {
+          key: "grouped-listing-members-editable-from-its-own-page",
+          label: "A grouped listing's MEMBERS can be picked while creating it",
+          description:
+            "Create a group at /store/grouped-listings/new and add products in the same form. Previously productIds was hardcoded to an empty array, so a group could only ever be created empty and filled in from somewhere else. Check the minimum-active-members and cover-image fields are present too — neither had an input anywhere.",
+          href: "/store/grouped-listings/new",
+        },
+        {
+          key: "public-nav-and-footer-resolve",
+          label: "Every header, sidebar-support and footer link opens a real page",
+          description:
+            "Walk the public header nav, the sidebar support links and every footer column. All 55 hrefs must land on a real page. No audit checked ANY of them until this wave — the nav audit only ever looked at the three portal sidebars.",
+          href: "/",
+        },
+        {
+          key: "user-tester-hub-reachable-from-user-sidebar",
+          label: "A tester reaches the Tester Hub from their OWN sidebar",
+          description:
+            "As a user with the tester flag, open /user and find Tester Hub in the sidebar under Testing. The group is injected at runtime and is empty for non-testers — confirm a NON-tester account does not see it.",
+          href: "/user",
+        },
+      ],
+    },
+  ]),
 ];
 
 const defaultPhases = assignDefaultPhases(

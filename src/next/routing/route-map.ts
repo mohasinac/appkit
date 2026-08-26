@@ -161,8 +161,6 @@ export const DEFAULT_ROUTE_MAP = {
      */
     ADDRESSES_NEW: "/user/addresses/new",
     ADDRESSES_EDIT: (id: string) => `/user/addresses/${id}/edit`,
-    /** @deprecated Use ADDRESSES_NEW. Kept so existing links keep resolving. */
-    ADDRESSES_ADD: "/user/addresses/new",
     ORDER_DETAIL: (id: string) => `/user/orders/view/${id}`,
     ORDER_CANCEL: (id: string) => `/user/orders/${id}/cancel`,
     ORDER_TRACK: (id: string) => `/user/orders/${id}/track`,
@@ -239,7 +237,6 @@ export const DEFAULT_ROUTE_MAP = {
     PRIZE_DRAWS_NEW: "/store/prize-draws/new",
     PRIZE_DRAWS_EDIT: (id: string) => `/store/prize-draws/${id}/edit`,
     PRIZE_DRAW_ENTRIES: (id: string) => `/store/prize-draws/${id}/entries`,
-    PRODUCT_CODES: (id: string) => `/store/products/${id}/codes`,
     // SB-UNI-R — classified / digital-code / live
     CLASSIFIED: "/store/classified",
     CLASSIFIED_NEW: "/store/classified/new",
@@ -528,7 +525,10 @@ export const PROTECTED_ROUTES = [
   ROUTES.USER.SETTINGS as string,
   ROUTES.USER.ORDERS as string,
   ROUTES.USER.ADDRESSES as string,
-  ROUTES.USER.ADDRESSES_ADD as string,
+  // Was ADDRESSES_ADD, a deprecated alias resolving to the same path. Swapped
+  // rather than dropped: deleting the alias without this would have removed
+  // /user/addresses/new from the protected set entirely.
+  ROUTES.USER.ADDRESSES_NEW as string,
   ROUTES.USER.NOTIFICATIONS as string,
   ROUTES.USER.CART as string,
 ] as const;
