@@ -1030,11 +1030,21 @@ export {
   ViewAuditLogEntryModal,
   AdminProductEditorView,
   AdminScammerEditorView,
+  // Client-exported for the W22 /admin/team/{new,[id]/edit} pages. It was
+  // reachable only from `index.ts` (the SERVER entry), which a "use client"
+  // page must never import — that is the Turbopack client-bundle trap.
+  AdminEmployeeEditorView,
+  AdminNavEditorView,
+  AdminUserEditorView,
   AdminStoreEditorView,
   AdminSublistingCategoryEditorView,
   AdminSupportTicketDetailView,
 } from "./features/admin/index";
 export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAuditLogViewProps, AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
+// NavItemData — the whole nav record AdminNavEditorView takes (it has no
+// id-based loader), needed by the /admin/navigation page clients.
+export type { NavItemData } from "./features/admin/index";
+export { PageLoader } from "./ui/index";
 export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
 export { SpinWheelView, EventRaffleEntryForm } from "./features/events/index";
 export { Card, CardBody } from "./ui/index";
