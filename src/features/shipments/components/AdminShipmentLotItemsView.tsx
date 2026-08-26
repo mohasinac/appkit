@@ -25,6 +25,7 @@ import {
   Textarea,
 } from "../../../ui";
 import { apiClient } from "../../../http";
+import { createShipmentItemSchema } from "../schemas/validation";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { useShipmentItems } from "../hooks/useShipments";
@@ -82,13 +83,28 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
 
   const addItemMutation = useApiMutation({
     successMessage: "Item added",
-    mutationFn: () =>
-      apiClient.post(ADMIN_ENDPOINTS.SHIPMENT_LOT_ITEMS(shipmentId, lotId), {
+    mutationFn: () => {
+      /*
+       * `createShipmentItemSchema` already validated this route and had no
+       * client consumer, so its rule — a projected sale price is required
+       * unless the item is for self use — only ever surfaced as a 400 that
+       * named no field. `Number(priceRupees)` also yields NaN on a typo,
+       * which the schema rejects and the old payload sent.
+       */
+      const parsed = createShipmentItemSchema.safeParse({
         title,
         quantity: Number(quantity),
         isForSelfUse,
         price: isForSelfUse ? undefined : Math.round(Number(priceRupees) * 100) / 100,
-      }),
+      });
+      if (!parsed.success) {
+        throw new Error(parsed.error.issues[0]?.message ?? "Check the item details.");
+      }
+      return apiClient.post(
+        ADMIN_ENDPOINTS.SHIPMENT_LOT_ITEMS(shipmentId, lotId),
+        parsed.data,
+      );
+    },
     onSuccess: () => {
       setTitle("");
       setQuantity("1");
