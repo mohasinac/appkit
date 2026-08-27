@@ -11,6 +11,16 @@ vi.mock("../../../../monitoring", () => ({
   serverLogger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
+// Message bodies (`messages[].body` + the denormalised `lastMessage`) are now
+// encrypted at rest. Stubbed to identity so this suite does not need
+// PII_ENCRYPTION_KEY; the real round-trip is asserted in
+// appkit/src/security/__tests__/conversation-pii.test.ts.
+vi.mock("../../../../security/pii-encrypt", () => ({
+  encryptPiiFields: (d: unknown) => d,
+  decryptPiiFields: (d: unknown) => d,
+  piiIndicesFor: () => ({}),
+}));
+
 vi.mock("../../../../errors/normalize", () => ({
   normalizeError: vi.fn(),
 }));

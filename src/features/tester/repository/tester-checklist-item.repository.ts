@@ -1,4 +1,5 @@
 import { BaseRepository, parseSieveDateValue } from "../../../providers/db-firebase";
+import { buildSearchTxt } from "../../../utils/search-txt";
 import type { FirebaseSieveFields, FirebaseSieveResult, SieveModel } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
@@ -19,7 +20,7 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     order: { canFilter: true, canSort: true },
     phase: { canFilter: true, canSort: true },
     isActive: { canFilter: true, canSort: false },
-    searchTokens: { canFilter: true, canSort: false },
+    searchTxt: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     bugConfirmed: { canFilter: true, canSort: false },
   };
@@ -28,28 +29,10 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     super(TESTER_CHECKLIST_ITEM_COLLECTION);
   }
 
-  private buildSearchTokens(
-    input: Pick<TesterChecklistItemDocument, "label" | "description" | "groupLabel" | "pageLabel">,
-  ): string[] {
-    const rawText = [input.label, input.description, input.groupLabel, input.pageLabel]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
-
-    return Array.from(
-      new Set(
-        rawText
-          .split(/[^a-z0-9]+/i)
-          .map((token) => token.trim())
-          .filter((token) => token.length >= 2),
-      ),
-    ).slice(0, 50);
-  }
-
   async createItem(input: TesterChecklistItemCreateInput): Promise<TesterChecklistItemDocument> {
     const id = createChecklistItemId(input.groupKey, input.pageKey, input.label);
-    const searchTokens = this.buildSearchTokens(input);
-    return this.createWithId(id, { ...input, searchTokens } as Partial<TesterChecklistItemDocument>);
+    const searchTxt = buildSearchTxt([input.label, input.description, input.groupLabel, input.pageLabel]);
+    return this.createWithId(id, { ...input, searchTxt } as Partial<TesterChecklistItemDocument>);
   }
 
   override async update(
@@ -63,7 +46,7 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     const merged = { ...current, ...data } as TesterChecklistItemDocument;
     return super.update(id, {
       ...data,
-      searchTokens: this.buildSearchTokens(merged),
+      searchTxt: buildSearchTxt([merged.label, merged.description, merged.groupLabel, merged.pageLabel]),
     });
   }
 
@@ -134,7 +117,7 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
       isActive: true,
       version: nextVersion,
       previousVersionId: old.id,
-      searchTokens: this.buildSearchTokens(old),
+      searchTxt: buildSearchTxt([old.label, old.description, old.groupLabel, old.pageLabel]),
     } as Partial<TesterChecklistItemDocument>);
 
     await this.update(old.id, { supersededByItemId: newId });

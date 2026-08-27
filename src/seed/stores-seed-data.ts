@@ -17,6 +17,7 @@
  */
 
 import type { StoreDocument } from "../features/stores/schemas";
+import { withStoreSearchTxt } from "./_helpers/search-txt-wrappers";
 import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
 import { seedExtMedia } from "./_helpers/media";
@@ -43,7 +44,7 @@ function entry(
   return { at, actorRole, trigger, changes, ...extra };
 }
 
-export const storesSeedData: Partial<StoreDocument>[] = [
+const _rawstoresSeedData: Partial<StoreDocument>[] = [
   // ── Store 1: LetItRip Official (admin-owned, platform storefront) ──────────
   {
     id: "store-letitrip-official",
@@ -295,3 +296,10 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     ],
   },
 ];
+
+/**
+ * Tokens derived here, not per record — see _helpers/search-txt-wrappers.ts for
+ * why the wrapper form is what makes omission impossible.
+ */
+export const storesSeedData: Partial<StoreDocument>[] =
+  _rawstoresSeedData.map(withStoreSearchTxt);

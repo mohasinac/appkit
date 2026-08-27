@@ -243,6 +243,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   ): Promise<FirebaseSieveResult<StoreDocument>> {
     const sieveFields = {
       [STORE_FIELDS.STORE_NAME]: { canFilter: true, canSort: true },
+      searchTxt: { canFilter: true, canSort: false },
       [STORE_FIELDS.STORE_CATEGORY]: { canFilter: true, canSort: false },
       [STORE_FIELDS.STATUS]: { canFilter: true, canSort: false },
       [STORE_FIELDS.IS_PUBLIC]: { canFilter: true, canSort: false },

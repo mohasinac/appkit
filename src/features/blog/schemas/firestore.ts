@@ -15,6 +15,9 @@ export const BlogPostStatusValues = {
 } as const;
 
 export interface BlogPostDocument extends BaseDocument {
+  /** Normalized edge-n-gram search field — see appkit/src/utils/search-txt.ts. */
+  searchTxt?: string[];
+
   title: string;
   slug: string;
   excerpt: string;
@@ -46,6 +49,7 @@ export interface BlogPostDocument extends BaseDocument {
 export const BLOG_POSTS_COLLECTION = "blogPosts" as const;
 
 export const BLOG_POSTS_INDEXED_FIELDS = [
+  "searchTxt",
   "status",
   "publishedAt",
   "isFeatured",

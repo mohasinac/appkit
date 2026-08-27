@@ -51,6 +51,11 @@ export const PUBLIC_STORE_FIELDS = [
 
 /** Everything else, with the reason it stays server-side. */
 export const PRIVATE_STORE_FIELDS = [
+  // Internal search index, not content. It is a normalized re-encoding of
+  // storeName/description/category — publishing it would leak nothing new, but
+  // it has no client reader and would bloat every store payload with a few
+  // hundred tokens.
+  "searchTxt",
   "updatedAt", // bookkeeping; no public reader
   "whatsappConfig", // Meta access token + WABA/catalog ids — secret
   "adminNotes", // schema comment: never shown to the owner or the public

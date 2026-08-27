@@ -11,6 +11,9 @@ import type { LotteryConfig } from "../../lottery/types";
 export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
 export interface EventDocument extends BaseDocument {
+  /** Normalized edge-n-gram search field — see appkit/src/utils/search-txt.ts. */
+  searchTxt?: string[];
+
   slug?: string;
   type: EventType;
   title: string;
@@ -106,6 +109,7 @@ export type EventEntryDocument = {
 }
 
 export const EVENT_INDEXED_FIELDS = [
+  "searchTxt",
   "type",
   "status",
   "startsAt",

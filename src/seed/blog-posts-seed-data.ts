@@ -15,12 +15,13 @@
  */
 
 import type { BlogPostDocument } from "../features/blog/schemas";
+import { withBlogSearchTxt } from "./_helpers/search-txt-wrappers";
 import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
+const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
 
   // ── GUIDES (6) ────────────────────────────────────────────────────────────
 
@@ -463,3 +464,10 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     updatedAt: daysAgo(60),
   },
 ];
+
+/**
+ * Tokens derived here, not per record — see _helpers/search-txt-wrappers.ts for
+ * why the wrapper form is what makes omission impossible.
+ */
+export const blogPostsSeedData: Partial<BlogPostDocument>[] =
+  _rawblogPostsSeedData.map(withBlogSearchTxt);

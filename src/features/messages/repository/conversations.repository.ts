@@ -10,6 +10,8 @@
  */
 
 import { getAdminDb } from "../../../providers/db-firebase";
+import { encryptPiiFields, decryptPiiFields } from "../../../security/pii-encrypt";
+import { CONVERSATION_PII_FIELDS } from "../../../security/pii-schemas";
 import { serverLogger } from "../../../monitoring";
 import { CONVERSATION_FIELDS } from "../../../constants/field-names";
 import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
@@ -44,7 +46,11 @@ function normaliseMessage(raw: JsonValue): ConversationMessage {
 }
 
 function normaliseDoc(id: string, raw: object): ConversationDocument {
-  const r = raw as FirestoreDocument;
+  // Decrypt here rather than at the six call sites: this is the one function
+  // every read path already goes through, so a new reader cannot forget it.
+  // `markRead` deliberately does NOT decrypt — it reads raw messages, flips
+  // isRead and writes them straight back, so ciphertext round-trips untouched.
+  const r = decryptPiiFields(raw, [...CONVERSATION_PII_FIELDS]) as FirestoreDocument;
   return {
     id,
     buyerId: String(r.buyerId ?? ""),
@@ -119,8 +125,9 @@ export class ConversationsRepository {
         createdAt: now,
         updatedAt: now,
       };
-      tx.set(ref, newDoc);
-      return normaliseDoc(stableId, newDoc);
+      const encryptedDoc = encryptPiiFields(newDoc, [...CONVERSATION_PII_FIELDS]);
+      tx.set(ref, encryptedDoc);
+      return normaliseDoc(stableId, encryptedDoc);
     });
   }
 
@@ -196,8 +203,11 @@ export class ConversationsRepository {
           unreadSeller,
           updatedAt: now,
         };
-        tx.update(ref, patch);
-        return normaliseDoc(conversationId, { ...data, ...patch });
+        // Encrypt before the write; normaliseDoc decrypts on the way back out,
+        // so the caller still receives plaintext.
+        const encryptedPatch = encryptPiiFields(patch, [...CONVERSATION_PII_FIELDS]);
+        tx.update(ref, encryptedPatch);
+        return normaliseDoc(conversationId, { ...data, ...encryptedPatch });
       });
     } catch (error) {
       serverLogger.error("ConversationsRepository.appendMessage error", {

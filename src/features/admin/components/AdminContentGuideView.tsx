@@ -46,7 +46,7 @@ export function AdminContentGuideView() {
           content: (
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">Categories</Span> and where they appear: Shipping (help + footer), Returns (help), Payments (help), Auctions (help), Pre-orders (help). Set <Code size="xs" padding="xs" rounded="default" surface="subtle">showOnHomepage: true</Code> for up to 5 FAQs shown on the public home page.</Li>
-              <Li><Span weight="bold">searchTokens[]</Span>: Must be manually filled — drives the FAQ search feature. Include synonyms, misspellings, and related keywords.</Li>
+              <Li><Span weight="bold">Search</Span>: handled automatically — search terms are derived from the question, answer, category and tags when you save. There is nothing to fill in.</Li>
               <Li><Span weight="bold">priority + order</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">priority</Code> sorts FAQs within their category; <Code size="xs" padding="xs" rounded="default" surface="subtle">order</Code> is the global absolute position. <Code size="xs" padding="xs" rounded="default" surface="subtle">isPinned: true</Code> floats the FAQ above non-pinned items in its category.</Li>
             </Ul>
           ),

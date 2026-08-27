@@ -192,6 +192,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
   }
 
   static readonly SIEVE_FIELDS = {
+    searchTxt: { canFilter: true, canSort: false },
     id: { canFilter: true, canSort: false },
     title: { canFilter: true, canSort: true },
     slug: { canFilter: true, canSort: false },

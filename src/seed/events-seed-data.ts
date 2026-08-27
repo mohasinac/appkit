@@ -19,6 +19,7 @@ import type {
   EventEntryDocument,
 } from "../features/events/schemas";
 import type { LotteryConfig } from "../features/lottery/types";
+import { withEventSearchTxt } from "./_helpers/search-txt-wrappers";
 import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
 import { seedExtMedia } from "./_helpers/media";
 
@@ -26,7 +27,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
-export const eventsSeedData: EventDocument[] = [
+const _raweventsSeedData: EventDocument[] = [
   // ── 1. ACTIVE — Poll: Favourite Blader Original Series ────────────────────
   {
     id: "event-favourite-blader-poll",
@@ -499,3 +500,10 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     createdAt: daysAgo(2),
   } as EventEntryDocument,
 ];
+
+/**
+ * Tokens derived here, not per record — see _helpers/search-txt-wrappers.ts for
+ * why the wrapper form is what makes omission impossible.
+ */
+export const eventsSeedData: EventDocument[] =
+  _raweventsSeedData.map(withEventSearchTxt);

@@ -113,9 +113,86 @@ const isEncrypted = (v) => typeof v === "string" && v.startsWith(ENC_PREFIX);
 // What to repair. Mirrors the *_PII_FIELDS / *_PII_INDEX_MAP pairs in
 // appkit/src/security/pii-schemas.ts — keep in sync when a field is added there.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Path helpers — MUST mirror appkit/src/security/pii-encrypt.ts.
+// A backfill that understands fewer path forms than the write path silently
+// skips exactly the fields most likely to be missed by hand (nested, arrays).
+// ---------------------------------------------------------------------------
+function getPath(obj, path) {
+  return path.split(".").reduce((acc, k) => (acc && typeof acc === "object" ? acc[k] : undefined), obj);
+}
+function setPath(obj, path, value) {
+  const keys = path.split(".");
+  const last = keys.pop();
+  let cur = obj;
+  for (const k of keys) {
+    if (!cur[k] || typeof cur[k] !== "object") return;
+    cur[k] = { ...cur[k] };
+    cur = cur[k];
+  }
+  cur[last] = value;
+}
+
+/**
+ * Encrypt one field spec on `doc`, in place. Supports:
+ *   "email"              top-level
+ *   "deviceInfo.ip"      dotted
+ *   "messages[].body"    every element of an array
+ * Returns true when something changed.
+ */
+function encryptField(doc, spec, indexField) {
+  if (spec.includes("[]")) {
+    const [arrayPath, rest] = spec.split("[]");
+    const itemPath = rest.replace(/^\./, "");
+    const arr = getPath(doc, arrayPath);
+    if (!Array.isArray(arr)) return false;
+    let changed = false;
+    const next = arr.map((el) => {
+      if (!el || typeof el !== "object") return el;
+      const clone = { ...el };
+      const v = itemPath ? getPath(clone, itemPath) : undefined;
+      if (typeof v !== "string" || !v || isEncrypted(v)) return clone;
+      setPath(clone, itemPath, encryptValue(v));
+      changed = true;
+      return clone;
+    });
+    if (changed) setPath(doc, arrayPath, next);
+    return changed;
+  }
+
+  const nested = spec.includes(".");
+  const v = nested ? getPath(doc, spec) : doc[spec];
+  if (typeof v !== "string" || !v || isEncrypted(v)) return false;
+
+  if (nested) {
+    setPath(doc, spec, encryptValue(v));
+  } else {
+    doc[spec] = encryptValue(v);
+    if (indexField) doc[indexField] = blindIndex(v);
+  }
+  return true;
+}
+
+// Every collection with PII declared in appkit/src/security/pii-schemas.ts.
+// Keep in sync when a field is added there.
 const TARGETS = [
   { collection: "payouts", fields: ["sellerEmail", "upiId"], indexMap: { sellerEmail: "sellerEmailIndex" } },
   { collection: "reviews", fields: ["userName"], indexMap: { userName: "userNameIndex" } },
+  { collection: "bids", fields: ["userEmail"], indexMap: {} },
+  { collection: "emailVerificationTokens", fields: ["email"], indexMap: { email: "emailIndex" } },
+  { collection: "passwordResetTokens", fields: ["email"], indexMap: { email: "emailIndex" } },
+  { collection: "newsletterSubscribers", fields: ["email"], indexMap: { email: "emailIndex" } },
+  // nested
+  { collection: "sessions", fields: ["deviceInfo.ip", "deviceInfo.userAgent", "location.city"], indexMap: {} },
+  { collection: "supportTickets", fields: ["userEmail", "userDisplayName", "assignedToName"], indexMap: {} },
+  { collection: "catalogue", fields: ["ownerEmail"], indexMap: {} },
+  { collection: "payoutMethods", fields: ["upiVpa", "accountNumber", "ifscCode"], indexMap: {} },
+  // array-of-objects + its denormalised copy
+  { collection: "conversations", fields: ["lastMessage", "messages[].body"], indexMap: {} },
+  // `users` already encrypts email/phoneNumber on write; this backfills the
+  // MAPPED index name (`phoneIndex`), which encryptPiiFields never wrote —
+  // findByPhone queried a field that only existed on seeded users.
+  { collection: "users", fields: [], indexMap: {}, reindexOnly: { phoneNumber: "phoneIndex" } },
 ];
 
 function parsePrivateKey(raw) {
@@ -157,14 +234,31 @@ for (const target of TARGETS) {
       const data = doc.data();
       const patch = {};
 
+      // Work on a shallow clone so nested/array writes do not mutate `data`.
+      const draft = JSON.parse(JSON.stringify(data));
+      let touched = false;
       for (const field of target.fields) {
-        const value = data[field];
-        // Only touch a real, non-empty, not-already-encrypted string. Anything
-        // else is either absent or already migrated.
-        if (typeof value !== "string" || !value || isEncrypted(value)) continue;
-        patch[field] = encryptValue(value);
-        const indexField = target.indexMap[field];
-        if (indexField) patch[indexField] = blindIndex(value);
+        if (encryptField(draft, field, target.indexMap[field])) touched = true;
+      }
+      if (touched) {
+        for (const field of target.fields) {
+          const root = field.split(/[.[]/)[0];
+          patch[root] = draft[root];
+        }
+        for (const idx of Object.values(target.indexMap)) {
+          if (draft[idx] !== undefined) patch[idx] = draft[idx];
+        }
+      }
+
+      // Index-only backfill: the value is already encrypted, but a blind index
+      // under the MAPPED name was never written.
+      for (const [src, idxField] of Object.entries(target.reindexOnly ?? {})) {
+        if (data[idxField] !== undefined) continue;
+        const raw = data[src];
+        // Only derivable while the source is still plaintext.
+        if (typeof raw === "string" && raw && !isEncrypted(raw)) {
+          patch[idxField] = blindIndex(raw);
+        }
       }
 
       if (Object.keys(patch).length === 0) continue;

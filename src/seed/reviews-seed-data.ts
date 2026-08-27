@@ -16,6 +16,7 @@
  */
 
 import type { ReviewDocument } from "../features/reviews/schemas/firestore";
+import { withReviewSearchTxt } from "./_helpers/search-txt-wrappers";
 import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
@@ -195,4 +196,6 @@ for (let i = 0; i < 14; i++) {
   });
 }
 
-export const reviewsSeedData = _rawReviewsSeedData as ReviewDocument[];
+export const reviewsSeedData = (_rawReviewsSeedData as ReviewDocument[]).map(
+  withReviewSearchTxt,
+);

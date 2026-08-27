@@ -65,6 +65,9 @@ export type StoreStatus =
   (typeof StoreStatusValues)[keyof typeof StoreStatusValues];
 
 export interface StoreDocument extends BaseDocument {
+  /** Normalized edge-n-gram search field — see appkit/src/utils/search-txt.ts. */
+  searchTxt?: string[];
+
   storeSlug: string;
   ownerId: string; // references users/{uid}
 

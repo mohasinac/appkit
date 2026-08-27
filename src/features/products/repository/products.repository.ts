@@ -717,13 +717,28 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       ) as typeof baseQuery;
     }
 
+    // Longest term first — only ONE may become the array-contains clause.
     const searchTxt = parseSearchTxtQuery(opts?.search ?? "");
-    if (searchTxt.length > 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
-      // Firestore cannot combine two array operators in one query
-    } else if (searchTxt.length === 1) {
-      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TXT, "array-contains", searchTxt[0]) as typeof baseQuery;
-    } else if (searchTxt.length > 1) {
-      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TXT, "array-contains-any", searchTxt) as typeof baseQuery;
+
+    if (searchTxt.length > 0) {
+      // Firestore permits a single array operator per query, so when a search
+      // and a category filter are both present the SEARCH takes the clause and
+      // the category is refined by the caller.
+      //
+      // Two shapes here have each been reverted once and are both guarded by
+      // scripts/audit-search-semantics.mjs:
+      //
+      //   1. This branch was an empty `if` body — it emitted NO clause, so a
+      //      search combined with `categoriesIn` dropped BOTH filters and
+      //      returned an unrelated superset, silently.
+      //   2. Multi-term used `array-contains-any`, which is OR — "red dranzer"
+      //      matched anything with either word. One `array-contains` on the most
+      //      selective term, remaining terms AND-refined against `searchTxt`.
+      baseQuery = baseQuery.where(
+        PRODUCT_FIELDS.SEARCH_TXT,
+        "array-contains",
+        searchTxt[0],
+      ) as typeof baseQuery;
     }
 
     if (searchTxt.length === 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {

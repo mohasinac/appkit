@@ -23,6 +23,9 @@ export interface ReviewVideoField {
 }
 
 export interface ReviewDocument extends BaseDocument {
+  /** Normalized edge-n-gram search field — see appkit/src/utils/search-txt.ts. */
+  searchTxt?: string[];
+
   productId: string;
   productTitle: string;
   /** Denormalized from the product at review-creation time — drives the correct detail-page link (e.g. prize-draw items link to /prize-draws/[slug], not /products/[slug]). */
@@ -69,6 +72,7 @@ export interface ReviewDocument extends BaseDocument {
 export const REVIEW_COLLECTION = "reviews" as const;
 
 export const REVIEW_INDEXED_FIELDS = [
+  "searchTxt",
   "productId",
   "storeId",
   "userId",

@@ -70,6 +70,22 @@ export const TOKEN_PII_INDEX_MAP: Record<string, string> = {
   email: "emailIndex",
 };
 
+/**
+ * PII fields in conversations — buyer↔seller message bodies.
+ *
+ * `messages[].body` uses the array-path form, and `lastMessage` is the
+ * denormalised copy of the newest body: encrypting one without the other would
+ * leave every conversation's latest message readable at rest, which is most of
+ * the exposure.
+ *
+ * Participant display names are deliberately NOT here — decision D1 keeps names
+ * searchable, and both sides already know who they are talking to.
+ */
+export const CONVERSATION_PII_FIELDS = [
+  "lastMessage",
+  "messages[].body",
+] as const;
+
 /** PII fields in reviews */
 export const REVIEW_PII_FIELDS = ["userName"] as const;
 

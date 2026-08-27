@@ -24,6 +24,7 @@ import { increment } from "../../../contracts/field-ops";
 
 class EventRepository extends BaseRepository<EventDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
+    searchTxt: { canFilter: true, canSort: false },
     type: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: true },
     title: { canFilter: true, canSort: true },

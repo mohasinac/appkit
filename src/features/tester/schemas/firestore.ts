@@ -28,7 +28,8 @@ export interface TesterChecklistItemDocument extends BaseDocument {
   // re-assign per item afterward via the catalog editor.
   phase: number;
   isActive: boolean;
-  searchTokens: string[];
+  /** Normalized edge-n-gram search field. Replaced `searchTokens`. */
+  searchTxt: string[];
   // true = only shown to isTester && canTestAdmin testers (or real admins) —
   // gates cases that exercise /admin/** areas.
   adminOnly?: boolean;
@@ -56,7 +57,7 @@ export const TESTER_CHECKLIST_ITEM_INDEXED_FIELDS = [
   "phase",
   "order",
   "isActive",
-  "searchTokens",
+  "searchTxt",
   "createdAt",
 ] as const;
 
@@ -64,13 +65,13 @@ export const DEFAULT_TESTER_CHECKLIST_ITEM_DATA: Partial<TesterChecklistItemDocu
   order: 0,
   phase: 1,
   isActive: true,
-  searchTokens: [],
+  searchTxt: [],
   adminOnly: false,
 };
 
 export type TesterChecklistItemCreateInput = Omit<
   TesterChecklistItemDocument,
-  "id" | "createdAt" | "updatedAt" | "searchTokens"
+  "id" | "createdAt" | "updatedAt" | "searchTxt"
 >;
 
 export type TesterChecklistItemUpdateInput = Partial<
@@ -187,7 +188,7 @@ export const TESTER_CHECKLIST_ITEM_FIELDS = {
   ORDER: "order",
   PHASE: "phase",
   IS_ACTIVE: "isActive",
-  SEARCH_TOKENS: "searchTokens",
+  SEARCH_TOKENS: "searchTxt",
   ADMIN_ONLY: "adminOnly",
   BUG_CONFIRMED: "bugConfirmed",
   BUG_HUNTER_ID: "bugHunterId",

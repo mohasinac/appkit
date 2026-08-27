@@ -406,6 +406,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   }
 
   static readonly SIEVE_FIELDS = {
+    searchTxt: { canFilter: true, canSort: false },
     id: { canFilter: true, canSort: false },
     productId: { canFilter: true, canSort: false },
     productTitle: { canFilter: true, canSort: true },
