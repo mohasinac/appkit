@@ -199,6 +199,24 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     },
     isPublic: true,
     isVacationMode: false,
+    /*
+     * Reachable, but never advertised to search engines.
+     *
+     * This is a QA store — real enough for a tester to exercise seller flows
+     * against, and not something that belongs in Google's index. `isTestData`
+     * is what the codebase already uses to express that: the sitemap's store
+     * fetcher filters it out (it has no viewer), public store listings hide
+     * it, and `canViewTestData()` keeps it visible to testers and admins — so
+     * the checklist case linking to `/stores/store-tester-qa-seller` still
+     * resolves.
+     *
+     * 🛑 NOTE the deliberate absence of `testDataExpiresAt`. Every sandbox
+     * FIXTURE carries one; this store is permanent. `getTestDataRefs` skips
+     * docs without an expiry on the force-purge path precisely so
+     * `tester:purge-sandbox --force` cannot delete it. Do not add an expiry
+     * here — that would put a permanent seed store in range of the sweep.
+     */
+    isTestData: true,
     stats: { totalProducts: 0, itemsSold: 0, totalReviews: 0, averageRating: 0 },
     capabilities: ["host_preorders", "verified_seller", "create_coupons"] as StoreCapability[],
     createdAt: daysAgo(1),
