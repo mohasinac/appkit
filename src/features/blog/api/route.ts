@@ -9,6 +9,7 @@
  * ```
  */
 
+import { blogRepository } from "../repository/blog.repository";
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import type {
@@ -42,8 +43,11 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (category) parts.push(`category==${category}`);
     const tags = param(url, "tags");
     if (tags) parts.push(`tags@=${tags}`);
+    // Token search rides OUTSIDE `filters` — array-contains is not expressible
+    // in Sieve, and as `title@=*` this was a case-SENSITIVE prefix match on the
+    // generic repository path (`base.ts`), so "Beyblade" matched and "beyblade"
+    // did not. searchTxt is normalised, so case and accents stop mattering.
     const q = param(url, "q");
-    if (q) parts.push(`title@=*${q}`);
     const featured = param(url, "featured");
     if (featured === "true") parts.push("isFeatured==true");
     const status = param(url, "status") ?? "published";
@@ -58,18 +62,23 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    const repo = db.getRepository<BlogPost>("blogPosts");
-    const result = await repo.findAll({ filters, sort, page, perPage });
+    // `blogRepository.listAll` rather than the generic `db.getRepository(...)`:
+    // only the feature repository knows how to push a searchTxt clause down and
+    // AND-refine the remaining terms.
+    const result = await blogRepository.listAll(
+      { filters, sorts: sort, page, pageSize: perPage },
+      q ? { search: q } : undefined,
+    );
 
     const meta: BlogListMeta = {
       total: result.total,
       page: result.page,
-      pageSize: result.perPage,
+      pageSize: result.pageSize,
       totalPages: result.totalPages,
-      hasMore: result.page < result.totalPages,
+      hasMore: result.hasMore,
     };
     const body: BlogListResponse = {
-      posts: result.data,
+      posts: result.items as unknown as BlogPost[],
       meta,
     };
 
