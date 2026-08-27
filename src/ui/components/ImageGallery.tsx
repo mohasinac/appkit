@@ -179,7 +179,7 @@ export default function ImageGallery({
                 aria-label="Previous image"
               >
                 <svg
-                  className="w-5 h-5 md:w-6 md:h-6"
+                  className="w-5 h-5 md:w-6 md:h-6 shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -201,7 +201,7 @@ export default function ImageGallery({
                 aria-label="Next image"
               >
                 <svg
-                  className="w-5 h-5 md:w-6 md:h-6"
+                  className="w-5 h-5 md:w-6 md:h-6 shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

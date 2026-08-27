@@ -58,7 +58,7 @@ export function MainNavbar({
         aria-label="Toggle dashboard navigation"
         className="flex items-center justify-center w-8 h-8 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-800 dark:hover:text-zinc-100 transition-colors"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v18" />
         </svg>

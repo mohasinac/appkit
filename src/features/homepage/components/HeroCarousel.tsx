@@ -509,7 +509,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             onClick={goPrev}
             aria-label="Previous slide"
           >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
           </Button>
@@ -519,7 +519,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             onClick={goNext}
             aria-label="Next slide"
           >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </Button>

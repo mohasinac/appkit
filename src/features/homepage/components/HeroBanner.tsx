@@ -135,7 +135,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 justify-[center] transition-all hover:scale-105 z-[15] w-10 h-10 bg-[rgba(255,255,255,0.12)] border border-white/20 text-white backdrop-blur-sm"
           >
             <svg
-              className="h-4 w-4 sm:h-5 sm:w-5"
+              className="h-4 w-4 sm:h-5 sm:w-5 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -157,7 +157,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 justify-[center] transition-all hover:scale-105 z-[15] w-10 h-10 bg-[rgba(255,255,255,0.12)] border border-white/20 text-white backdrop-blur-sm"
           >
             <svg
-              className="h-4 w-4 sm:h-5 sm:w-5"
+              className="h-4 w-4 sm:h-5 sm:w-5 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

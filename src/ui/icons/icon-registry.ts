@@ -44,6 +44,7 @@ import {
   Archive,
   ArrowLeft,
   Ban,
+  Bell,
   Check,
   CheckCircle,
   ChevronDown,
@@ -56,11 +57,14 @@ import {
   Filter,
   Flag,
   Gavel,
+  HelpCircle,
   Heart,
   Link as LinkIcon,
   Lock,
   Mail,
+  Menu,
   MessageSquare,
+  Moon,
   Package,
   Pause,
   Play,
@@ -76,6 +80,9 @@ import {
   ShieldCheck,
   ShoppingCart,
   Star,
+  Sun,
+  Scale,
+  Tag,
   Trash2,
   TrendingUp,
   Truck,
@@ -144,6 +151,18 @@ export const ICONS = {
   settings: Settings,
   expand: ChevronDown,
   user: User,
+  // Header chrome. Added 2026-08-27 when TitleBarLayout stopped hand-inlining
+  // ten raw <svg> elements — a raw <svg> carries no `shrink-0`, so inside a
+  // padded flex control it silently shrank rather than rendering at its stated
+  // size, and no audit could see a size it never declared.
+  notification: Bell,
+  compare: Scale,
+  help: HelpCircle,
+  menu: Menu,
+  close: X,
+  themeLight: Sun,
+  themeDark: Moon,
+  deals: Tag,
 } as const;
 
 /** Every valid `iconKey`. A typo is a compile error, not a silent blank. */

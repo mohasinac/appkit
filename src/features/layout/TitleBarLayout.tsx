@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Avatar, BlockHeader, Button, Div, Row, Section, SiteLogo, SiteMark, Span } from "../../ui";
+import { Avatar, BlockHeader, Div, Icon, IconButton, Row, Section, SiteLogo, SiteMark, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
@@ -62,9 +62,21 @@ export interface TitleBarLayoutProps {
   className?: string;
 }
 
-/** Shared icon-button class for all action buttons in the title bar. */
+/**
+ * Shared class for the LINK-wrapped icon controls (bell, wishlist, cart,
+ * compare, profile). The button-wrapped ones use `<IconButton size="touch">`,
+ * whose CSS owns its own box.
+ *
+ * 2.75rem matches `.appkit-icon-button--touch` so the two kinds sit at one
+ * size in the row. It replaced `w-9 h-9` (36px), which was the same box the
+ * four <Button size="sm"> controls claimed — except those also carried
+ * `.appkit-button--sm`'s 0.75rem horizontal padding INSIDE it, leaving a 12px
+ * content box. The raw <svg> children had no `shrink-0`, so they shrank from
+ * 20px to about 12px and rendered squashed, while these link icons rendered
+ * full size. That is the visible difference this fixes.
+ */
 const iconBtn =
-  "flex items-center justify-center w-9 h-9 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-primary-surface hover:text-primary-700 dark:hover:text-secondary-400 transition-colors";
+  "flex items-center justify-center w-11 h-11 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-primary-surface hover:text-primary-700 dark:hover:text-secondary-400 transition-colors";
 
 /** Badge counter class for wishlist/cart counts.
  *
@@ -134,68 +146,44 @@ export function TitleBarLayout({
       aria-label="Today's deals"
       className="flex items-center gap-[var(--appkit-space-1)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full text-[length:var(--appkit-text-xs)] font-bold bg-primary-100 text-primary-700 dark:bg-secondary-900/40 dark:text-secondary-400 hover:bg-primary-surface transition-colors border border-primary-200/60 dark:border-secondary-700/40"
     >
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.37.86.58 1.41.58.55 0 1.05-.21 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z" />
-      </svg>
+      <Icon name="deals" size="md" filled />
       <Span className="hidden sm:inline">Today&apos;s Deals</Span>
     </Link>
   ) : null;
 
   const themeBtn = onToggleTheme ? (
-    <Button
-      type="button"
+    <IconButton
+      size="touch"
       variant="ghost"
-      size="sm"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={onToggleTheme}
       className={iconBtn}
-    >
-      {isDark ? (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.71.71M6.34 17.66l-.71.71m12.73 0-.71-.71M6.34 6.34l-.71-.71M12 5a7 7 0 1 0 0 14A7 7 0 0 0 12 5z" />
-        </svg>
-      ) : (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z" />
-        </svg>
-      )}
-    </Button>
+      icon={<Icon name={isDark ? "themeLight" : "themeDark"} size="lg" />}
+    />
   ) : null;
 
   const tourBtn = onTourStart ? (
-    <Button
-      type="button"
+    <IconButton
+      size="touch"
       variant="ghost"
-      size="sm"
       aria-label="Start product tour"
       onClick={onTourStart}
       className={iconBtn}
-    >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    </Button>
+      icon={<Icon name="help" size="lg" />}
+    />
   ) : null;
 
   const hamburgerBtn = !hideSidebarToggle ? (
-    <Button
-      type="button"
+    <IconButton
+      size="touch"
       variant="ghost"
-      size="sm"
       aria-label={sidebarOpen ? "Close menu" : hasDashboardNav ? "Open dashboard navigation" : "Open menu"}
       aria-expanded={sidebarOpen}
       aria-controls="secondary-sidebar"
       onClick={hasDashboardNav && onToggleDashboardNav ? onToggleDashboardNav : onToggleSidebar}
       className={iconBtn}
-    >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        {sidebarOpen ? (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        ) : (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        )}
-      </svg>
-    </Button>
+      icon={<Icon name={sidebarOpen ? "close" : "menu"} size="lg" />}
+    />
   ) : null;
 
   // Compare is always lg+ (desktop-only feature, less critical on mobile)
@@ -205,27 +193,21 @@ export function TitleBarLayout({
       aria-label="Compare items"
       className={`${iconBtn} hidden lg:flex`}
     >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
+      <Icon name="compare" size="lg" />
     </Link>
   ) : null;
 
   const searchBtn = (
-    <Button
-      type="button"
+    <IconButton
+      size="touch"
       variant="ghost"
-      size="sm"
       aria-label="Search"
       aria-pressed={searchOpen}
       onClick={onSearchToggle}
       className={iconBtn}
       data-tour="nav-search"
-    >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-      </svg>
-    </Button>
+      icon={<Icon name="search" size="lg" />}
+    />
   );
 
   // Dedicated notification bell — rendered immediately before the wishlist
@@ -237,9 +219,7 @@ export function TitleBarLayout({
       aria-label={`Notifications${unreadNotificationCount > 0 ? `, ${unreadNotificationCount} unread` : ""}`}
       className={`relative ${iconBtn}`}
     >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-      </svg>
+      <Icon name="notification" size="lg" />
       {unreadNotificationCount > 0 && (
         <Span className={countBadge}>
           {unreadNotificationCount > 99 ? "99+" : unreadNotificationCount}
@@ -255,9 +235,7 @@ export function TitleBarLayout({
       className={`relative ${iconBtn}`}
       data-tour="nav-wishlist"
     >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
-      </svg>
+      <Icon name="wishlist" size="lg" />
       {wishlistCount > 0 && (
         <Span className={countBadge}>{wishlistCount > 9 ? "9+" : wishlistCount}</Span>
       )}
@@ -271,9 +249,7 @@ export function TitleBarLayout({
       className={`relative ${iconBtn}`}
       data-tour="nav-cart"
     >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0z" />
-      </svg>
+      <Icon name="cart" size="lg" />
       {cartCount > 0 && (
         <Span className={countBadge}>{cartCount > 9 ? "9+" : cartCount}</Span>
       )}

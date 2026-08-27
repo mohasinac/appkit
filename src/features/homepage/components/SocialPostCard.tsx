@@ -91,7 +91,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       {/* Play button overlay */}
       <Row className="absolute inset-0" align="center" justify="center">
         <Row className="h-14 w-14 bg-[var(--appkit-color-youtube)] transition-transform duration-200 group-hover:scale-110" align="center" justify="center" rounded="full" shadow="lg">
-          <svg className="ml-1 h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <svg className="ml-1 h-6 w-6 text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
           </svg>
         </Row>

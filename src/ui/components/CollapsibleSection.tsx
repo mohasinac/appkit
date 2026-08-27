@@ -61,7 +61,7 @@ export function CollapsibleSection({
           <Row align="center" justify="between" className="w-full">
             <Span weight="semibold" size="sm">{title}</Span>
             <svg
-              className={`w-4 h-4 transition-transform duration-150 ${isCollapsed ? "" : "rotate-180"}`}
+              className={`w-4 h-4 transition-transform duration-150 ${isCollapsed ? "" : "rotate-180"} shrink-0`}
               fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

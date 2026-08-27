@@ -174,7 +174,7 @@ export function RangeFilter({
           </Span>
           <svg
             className={cn(
-              "w-4 h-4 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
+              "w-4 h-4 shrink-0 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}
             fill="none"
@@ -201,7 +201,7 @@ export function RangeFilter({
             aria-label="Clear"
           >
             <svg
-              className="w-3 h-3"
+              className="w-3 h-3 shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

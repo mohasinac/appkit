@@ -117,7 +117,7 @@ export function AsyncFacetSection({
           </Row>
           <svg
             className={cn(
-              "w-4 h-4 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
+              "w-4 h-4 shrink-0 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               collapsed ? "" : "rotate-180",
             )}
             fill="none"
@@ -139,7 +139,7 @@ export function AsyncFacetSection({
             className={CLS_CLEAR_ICON}
             aria-label="Clear filter"
           >
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+            <svg className="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </Button>

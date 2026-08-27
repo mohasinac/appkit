@@ -291,7 +291,7 @@ export function DataTable<T extends object>({
             className={`appkit-data-table__view-btn ${activeViewMode === "table" ? "appkit-data-table__view-btn--active" : ""} hidden sm:flex`}
           >
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -316,7 +316,7 @@ export function DataTable<T extends object>({
           className={`appkit-data-table__view-btn ${activeViewMode === "grid" ? "appkit-data-table__view-btn--active" : ""}`}
         >
           <svg
-            className="w-4 h-4"
+            className="w-4 h-4 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -340,7 +340,7 @@ export function DataTable<T extends object>({
           className={`appkit-data-table__view-btn ${activeViewMode === "list" ? "appkit-data-table__view-btn--active" : ""}`}
         >
           <svg
-            className="w-4 h-4"
+            className="w-4 h-4 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -626,7 +626,7 @@ function SelectableCard({
             />
             {selected && (
               <svg
-                className="absolute inset-0 m-auto h-3 w-3 text-white pointer-events-none"
+                className="absolute inset-0 m-auto h-3 w-3 text-white pointer-events-none shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

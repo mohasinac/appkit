@@ -121,7 +121,7 @@ export function ImageEditor({
             onClick={() => handleRotate(-90)}
             aria-label={t("cropRotateLeft")}
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a4 4 0 014 4v0a4 4 0 01-4 4H3" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 6l-4 4 4 4" />
             </svg>
@@ -133,7 +133,7 @@ export function ImageEditor({
             onClick={() => handleRotate(90)}
             aria-label={t("cropRotateRight")}
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a4 4 0 00-4 4v0a4 4 0 004 4h10" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 6l4 4-4 4" />
             </svg>
@@ -145,7 +145,7 @@ export function ImageEditor({
             onClick={handleFlipH}
             aria-label={t("cropFlipH")}
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4l-4 4m0 4l4 4M17 16V4l4 4m0 4l-4 4M12 2v20" />
             </svg>
           </Button>
@@ -156,7 +156,7 @@ export function ImageEditor({
             onClick={handleFlipV}
             aria-label={t("cropFlipV")}
           >
-            <svg className="w-4 h-4 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg className="w-4 h-4 rotate-90 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4l-4 4m0 4l4 4M17 16V4l4 4m0 4l-4 4M12 2v20" />
             </svg>
           </Button>

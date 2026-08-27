@@ -182,7 +182,7 @@ function CollapsibleNavGroup({
       >
         <Span>{title}</Span>
         <svg
-          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""} shrink-0`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -253,7 +253,7 @@ function CollapsibleSidebarSection({
       >
         <Span>{section.title}</Span>
         <svg
-          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""} shrink-0`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -344,7 +344,7 @@ function SidebarUserHeader({
         onClick={onClose}
         className="flex-shrink-0 rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
@@ -369,7 +369,7 @@ function SidebarGuestHeader({
         onClick={onClose}
         className="rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>

@@ -460,7 +460,7 @@ export function ListingLayout({
 function FilterIcon() {
   return (
     <svg
-      className="w-4 h-4"
+      className="w-4 h-4 shrink-0"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"

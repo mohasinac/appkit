@@ -58,7 +58,7 @@ export function SidebarCollapseToggle({
       className={`w-9 shrink-0 ${roundedClass} shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]`}
       icon={
         <svg
-          className={`w-4 h-4 drop-shadow-sm transition-transform duration-300 ${chevronRotated ? "rotate-180" : ""}`}
+          className={`w-4 h-4 drop-shadow-sm transition-transform duration-300 ${chevronRotated ? "rotate-180" : ""} shrink-0`}
           style={CHEVRON_STYLE}
           fill="none"
           stroke="currentColor"
