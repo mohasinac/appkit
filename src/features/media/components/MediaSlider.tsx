@@ -42,7 +42,7 @@ export function MediaSlider({
       }
       className={[
         "w-full h-2 appearance-none cursor-pointer rounded-full",
-        "bg-zinc-200 bg-[var(--appkit-color-border)]",
+        " bg-[var(--appkit-color-border)]",
         "accent-primary-600 dark:accent-secondary-400",
         className,
       ]

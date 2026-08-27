@@ -8,7 +8,7 @@ import { surfaceError } from "../../client/api/surface-error";
 import { useToastSafe } from "./Toast";
 import { SHADOW_MAP } from "./surface-tokens";
 import type { ShadowKey } from "./surface-tokens";
-import { resolveIcon } from "../icons/icon-registry";
+import { resolveIcon, ICON_SIZE, type IconSizeKey } from "../icons/icon-registry";
 
 function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
   const rect = host.getBoundingClientRect();
@@ -175,10 +175,31 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
  * `aria-hidden` because the label (or `ariaLabel`) already names the action;
  * announcing the glyph as well would read it twice.
  */
-function ActionIcon({ action }: { action?: ActionDef }) {
-  const Icon = resolveIcon(action?.iconKey);
-  if (!Icon) return null;
-  return <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />;
+/**
+ * Icon size follows the BUTTON's size. It used to be hardcoded `h-4 w-4` for
+ * every size, so a `lg` button carried the same 16px glyph as an `sm` one.
+ */
+const ACTION_ICON_SIZE: Record<"sm" | "md" | "lg", IconSizeKey> = {
+  sm: "sm",
+  md: "md",
+  lg: "lg",
+};
+
+function ActionIcon({
+  action,
+  size,
+}: {
+  action?: ActionDef;
+  size: "sm" | "md" | "lg";
+}) {
+  const Glyph = resolveIcon(action?.iconKey);
+  if (!Glyph) return null;
+  return (
+    <Glyph
+      className={`${ICON_SIZE[ACTION_ICON_SIZE[size]]} shrink-0`}
+      aria-hidden="true"
+    />
+  );
 }
 
 // Map ActionKind → Button variant (caller can override via explicit variant prop)
@@ -231,7 +252,7 @@ export function Button({
    * label. If the caller passed children they have composed their own content,
    * and injecting a glyph into it would be a surprise.
    */
-  const actionIcon = children === undefined && action?.iconKey ? <ActionIcon action={action} /> : null;
+  const actionIcon = children === undefined && action?.iconKey ? <ActionIcon action={action} size={size} /> : null;
   const resolvedChildren =
     children ??
     (action ? (

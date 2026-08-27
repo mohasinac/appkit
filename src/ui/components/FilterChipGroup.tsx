@@ -89,7 +89,7 @@ export interface FilterChipGroupProps {
 const ACTIVE_CLS =
   "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]";
 const INACTIVE_CLS =
-  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
+  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover";
 const CHIP_BASE_CLS =
   "rounded-full px-3 py-1 text-xs font-medium border transition-colors";
 const LABEL_CLS =

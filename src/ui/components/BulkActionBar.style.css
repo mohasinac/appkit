@@ -76,7 +76,7 @@
   transition: background-color 0.15s ease;
 }
 
-.appkit-bulk-bar__picker-trigger:hover { background: var(--appkit-color-zinc-100); }
+.appkit-bulk-bar__picker-trigger:hover { background: var(--appkit-color-surface-hover); }
 .appkit-bulk-bar__picker-trigger--danger { color: var(--appkit-color-rose-700); }
 
 .appkit-bulk-bar__picker-icon {
@@ -182,8 +182,6 @@
   background: rgba(30, 41, 59, 0.6);
   color: var(--appkit-color-text);
 }
-
-.dark .appkit-bulk-bar__picker-trigger:hover { background: rgba(51, 65, 85, 0.6); }
 .dark .appkit-bulk-bar__picker-trigger--danger { color: var(--appkit-color-rose-300); }
 
 .dark .appkit-bulk-bar__dropdown {

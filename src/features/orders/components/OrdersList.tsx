@@ -36,7 +36,7 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
       })
     : "";
   const statusColor =
-    STATUS_COLORS[order.orderStatus] ?? "bg-[var(--appkit-color-surface)] text-neutral-700 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
+    STATUS_COLORS[order.orderStatus] ?? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
 
   // SB8-F — count unrevealed prize-draw entries to surface a "reveals pending" badge.
   const unrevealedPrizeDraws = order.items.filter(
@@ -53,7 +53,7 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
         onClick
-          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(order)
+          ? (e) => (e.key === "Enter" || e.key === "") && onClick(order)
           : undefined
       }
       onClick={onClick ? () => onClick(order) : undefined}

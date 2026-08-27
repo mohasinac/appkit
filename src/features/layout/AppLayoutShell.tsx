@@ -342,7 +342,7 @@ function SidebarUserHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="flex-shrink-0 rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="flex-shrink-0 rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -367,7 +367,7 @@ function SidebarGuestHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -445,7 +445,7 @@ function SidebarContent({
   };
 
   const navItemClass =
-    "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] dark:hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
+  "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] transition-colors hover:bg-primary-surface hover:text-primary-800 text-[var(--appkit-color-text-muted)] dark:hover:text-secondary-300";
   const navItemActiveClass =
     "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium bg-primary-50 text-primary-800 dark:bg-primary-900/25 dark:text-primary-300";
 
@@ -481,7 +481,7 @@ function SidebarContent({
               className={[
                 "block w-full rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2-5)] text-center text-[length:var(--appkit-text-sm)] font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
                 action.variant === "outline"
-                  ? "border border-zinc-300 text-zinc-700 hover:bg-zinc-50 border-[var(--appkit-color-border)] text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-elevated)]"
+                  ? "border hover:bg-surface-hover border-[var(--appkit-color-border)] text-[var(--appkit-color-text)]"
                   : "bg-primary text-white hover:bg-primary-600 dark:bg-primary dark:hover:bg-primary-600 btn-glow",
               ].join(" ")}
             >
@@ -621,7 +621,7 @@ function SidebarContent({
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex w-full items-center justify-end gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-50 hover:text-primary-800"
+              className="flex w-full items-center justify-end gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-surface hover:text-primary-800"
             >
               <Span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</Span>
               {activeThemeName}

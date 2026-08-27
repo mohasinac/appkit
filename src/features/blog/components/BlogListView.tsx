@@ -45,7 +45,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       tabIndex={onClick && !href ? 0 : undefined}
       onKeyDown={
         onClick && !href
-          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(post)
+          ? (e) => (e.key === "Enter" || e.key === "") && onClick(post)
           : undefined
       }
       onClick={onClick && !href ? () => onClick(post) : undefined}
@@ -148,7 +148,7 @@ export function BlogCategoryTabs({
         onClick={() => onSelect(null)}
         variant={!active ? "primary" : "ghost"}
         size="sm"
-        className={`whitespace-nowrap rounded-full px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+        className={`whitespace-nowrap rounded-full px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -158,7 +158,7 @@ export function BlogCategoryTabs({
           onClick={() => onSelect(cat)}
           variant={active === cat ? "primary" : "ghost"}
           size="sm"
-          className={`whitespace-nowrap rounded-full px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+          className={`whitespace-nowrap rounded-full px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover"}`}
         >
           {labels[cat] ?? cat}
         </Button>

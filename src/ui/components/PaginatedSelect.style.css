@@ -48,7 +48,7 @@
 
 .appkit-ps__chip-remove:hover {
   color: var(--appkit-color-text);
-  background-color: var(--appkit-color-zinc-100);
+  background-color: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-ps__chip-remove:hover {
@@ -167,7 +167,7 @@
 }
 
 .appkit-ps__option:hover {
-  background-color: var(--appkit-color-zinc-100);
+  background-color: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-ps__option:hover {
@@ -254,7 +254,7 @@
 }
 
 .appkit-ps__create-btn:hover {
-  background-color: var(--appkit-color-zinc-50);
+  background-color: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-ps__create-btn:hover {

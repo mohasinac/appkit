@@ -291,7 +291,7 @@ export function AdminAdsView({
                 size="xs"
                 layout="inline-flex"
                 align="center"
-                className="h-8 border border-neutral-200 border-[var(--appkit-color-border)]"
+                className="h-8 border border-[var(--appkit-color-border)]"
               >
                 Edit
               </TextLink>

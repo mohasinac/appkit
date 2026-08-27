@@ -79,7 +79,7 @@ function statusClass(s: "pending" | "open" | "closed" | undefined): string {
     case "open":
       return "bg-success-surface text-success";
     case "closed":
-      return "bg-zinc-200 text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]";
+      return " bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]";
     case "pending":
     default:
       return "bg-warning-surface text-warning";

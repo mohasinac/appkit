@@ -30,7 +30,7 @@ export function SocialAuthButtons({
           disabled={disabled}
           variant="outline"
           paddingX="md" paddingY="sm" textSize="sm" weight="medium"
-          className="inline- justify-[center] border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)] hover:bg-neutral-50 hover:bg-[var(--appkit-color-surface-elevated)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline- justify-[center] border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)] hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
             <path

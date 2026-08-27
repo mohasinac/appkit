@@ -149,6 +149,46 @@ export const ICONS = {
 /** Every valid `iconKey`. A typo is a compile error, not a silent blank. */
 export type IconKey = keyof typeof ICONS;
 
+/**
+ * The ONLY sanctioned glyph sizes.
+ *
+ * WHY: a sweep of `appkit/src` + `src` found ~217 icon sites each hand-picking
+ * a size, in two spellings with no canonical order (`h-4 w-4` ×104,
+ * `w-5 h-5` ×64, `h-3 w-3` ×23, `h-3.5 w-3.5` ×26) across 105 lucide-importing
+ * files and 63 with an inline `<svg>`. Nothing related a glyph's size to the
+ * control containing it, so a 14px heart could sit in a 44px button and read as
+ * broken — which is exactly the "the wishlist icon is very small" report.
+ *
+ * Pick by ROLE, not by eye:
+ *
+ * | key  | px | use for                                             |
+ * |------|----|-----------------------------------------------------|
+ * | `xs` | 12 | dense meta, inside a badge or a caption row          |
+ * | `sm` | 14 | chrome inside a `size="sm"` control                 |
+ * | `md` | 16 | inline with body text; a `size="md"` control        |
+ * | `lg` | 20 | a standalone icon-only control's glyph              |
+ * | `xl` | 24 | hero, empty-state, feature tile                     |
+ * | `2xl`| 28 | chrome floating on an overlay (lightbox, carousel)  |
+ *
+ * `2xl` exists because ten lightbox/carousel controls had independently and
+ * unanimously picked 28px — that agreement is a real tier, not ten mistakes.
+ * Overlay chrome sits over arbitrary imagery and needs more presence than
+ * inline UI.
+ *
+ * `<Button>` and `<IconButton>` derive their own icon size from these — prefer
+ * letting the control choose over passing a size by hand.
+ */
+export const ICON_SIZE = {
+  xs: "h-3 w-3",
+  sm: "h-3.5 w-3.5",
+  md: "h-4 w-4",
+  lg: "h-5 w-5",
+  xl: "h-6 w-6",
+  "2xl": "h-7 w-7",
+} as const;
+
+export type IconSizeKey = keyof typeof ICON_SIZE;
+
 /** Narrow an unknown string — for data that crosses a boundary the type cannot. */
 export function isIconKey(value: unknown): value is IconKey {
   return typeof value === "string" && value in ICONS;

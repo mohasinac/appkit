@@ -5,7 +5,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 const CLS_ICON_SM = "h-3 w-3 shrink-0";
-const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-error text-[var(--appkit-color-text-faint)]";
+const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 transition group-hover:text-error text-[var(--appkit-color-text-faint)]";
 const CLS_PILL_LINK = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-error-surface dark:bg-error-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-medium text-error dark:text-error hover:bg-error-surface transition-colors";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
@@ -212,7 +212,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                 {(query || scamType || sort !== "-createdAt") && (
                   <Link
                     href={ROUTES.PUBLIC.SCAMS as string}
-                    className="rounded-lg border border-[var(--appkit-color-border)] px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
+                    className="rounded-lg border border-[var(--appkit-color-border)] px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover transition-colors"
                   >
                     Clear
                   </Link>

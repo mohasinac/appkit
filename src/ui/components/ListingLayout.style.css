@@ -184,7 +184,7 @@
 
 .appkit-listing-layout__filter-btn:hover {
   border-color: var(--appkit-color-zinc-300);
-  background: var(--appkit-color-zinc-50);
+  background: var(--appkit-color-surface-hover);
 }
 
 .appkit-listing-layout__filter-btn--active {
@@ -196,10 +196,6 @@
 .dark .appkit-listing-layout__filter-btn {
   border-color: var(--appkit-color-slate-800);
   color: var(--appkit-color-slate-300);
-}
-.dark .appkit-listing-layout__filter-btn:hover {
-  border-color: var(--appkit-color-slate-700);
-  background: rgba(30, 41, 59, 0.6);
 }
 
 /* -- Filter badge ------------------------------------ */
@@ -494,9 +490,5 @@
 }
 
 .appkit-listing-layout__close-btn:hover {
-  background: var(--appkit-color-zinc-100);
-}
-
-.dark .appkit-listing-layout__close-btn:hover {
-  background: var(--appkit-color-slate-800);
+  background: var(--appkit-color-surface-hover);
 }

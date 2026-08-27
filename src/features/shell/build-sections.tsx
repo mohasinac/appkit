@@ -37,6 +37,7 @@
 
 import { Fragment, type ReactNode } from "react";
 import type { ZodTypeAny } from "zod";
+import type { FormValues } from "../../schemas/types";
 import { FormGroup } from "../../ui/components/Form";
 import { FieldInput } from "../../ui/forms/FieldInput";
 import { FieldSelect } from "../../ui/forms/FieldSelect";
@@ -223,7 +224,7 @@ export function buildSectionsFromSchema<T extends object>(
            * does not leave a gap in a two-up row.
            */
           const visible = sectionFields.filter(
-            (f) => !f.meta.when || f.meta.when(values as Record<string, unknown>),
+            (f) => !f.meta.when || f.meta.when(values as FormValues),
           );
           return (
             <>

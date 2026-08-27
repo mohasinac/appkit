@@ -3,7 +3,7 @@ const __P = {
   p8: "p-[var(--appkit-space-8)]",
 } as const;
 
-const CLS_CONTACT_CARD = "flex items-center gap-[var(--appkit-space-3)] rounded-lg border border-zinc-100 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] hover:border-primary/40 transition-colors";
+const CLS_CONTACT_CARD = "flex items-center gap-[var(--appkit-space-3)] rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] hover:border-primary/40 transition-colors";
 const CLS_CONTACT_LABEL = "text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]";
 
 interface ContactCTAProps {

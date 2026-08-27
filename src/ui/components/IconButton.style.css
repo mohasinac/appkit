@@ -36,21 +36,33 @@
   border-radius: 0.75rem;
 }
 
+/* 44px — the minimum comfortable tap target. For a control that is the ONLY
+ * affordance in its area and has no text label to widen it: a product card's
+ * wishlist heart, a media overlay control. Sits between --md and --lg because
+ * those are round numbers, not accessibility thresholds.
+ *
+ * Use IconButton, not Button, for these: `.appkit-button--sm` sets
+ * `min-height: 36px`, and under `important: true` a caller's `h-8` (2rem)
+ * loses to it — which is how the card heart rendered as a 32x36 ellipse under
+ * `rounded-full`. These boxes set `width`+`height` with no min, so they are
+ * true squares. */
+.appkit-icon-button--touch {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+}
+
 .appkit-icon-button--ghost {
   background: transparent;
   color: var(--appkit-color-zinc-600);
 }
 
 .appkit-icon-button--ghost:hover:not(:disabled) {
-  background: var(--appkit-color-zinc-100);
+  background: var(--appkit-color-surface-hover);
 }
 
 .dark .appkit-icon-button--ghost {
   color: var(--appkit-color-text-faint);
-}
-
-.dark .appkit-icon-button--ghost:hover:not(:disabled) {
-  background: var(--appkit-color-zinc-800);
 }
 
 .appkit-icon-button--outline {
@@ -60,17 +72,13 @@
 }
 
 .appkit-icon-button--outline:hover:not(:disabled) {
-  background: var(--appkit-color-zinc-50);
+  background: var(--appkit-color-surface-hover);
 }
 
 .dark .appkit-icon-button--outline {
   border-color: var(--appkit-color-border);
   background: transparent;
   color: var(--appkit-color-zinc-300);
-}
-
-.dark .appkit-icon-button--outline:hover:not(:disabled) {
-  background: var(--appkit-color-slate-800);
 }
 
 .appkit-icon-button--primary {

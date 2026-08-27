@@ -125,7 +125,7 @@
   box-shadow: 0 0 0 1px var(--appkit-color-border);
 }
 .appkit-side-drawer__close-btn:hover {
-  background-color: var(--appkit-color-zinc-100);
+  background-color: var(--appkit-color-surface-hover);
   box-shadow: 0 0 0 1px var(--appkit-color-zinc-300);
 }
 :is(.dark) .appkit-side-drawer__close-btn {

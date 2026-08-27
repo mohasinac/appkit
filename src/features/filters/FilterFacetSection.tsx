@@ -144,7 +144,7 @@ export function FilterFacetSection({
             "inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium transition-colors",
             hasValue
               ? CLS_OPTION_SELECTED
-              : "border-zinc-200 bg-[var(--appkit-color-surface)] text-zinc-700 hover:border-zinc-400 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-border)]",
+              : " bg-[var(--appkit-color-surface)] hover:border-zinc-400 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-border)]",
           )}
         >
           {title}
@@ -190,7 +190,7 @@ export function FilterFacetSection({
                       checked={isSelected}
                       onChange={() => toggle(option.value)}
                       aria-label={option.label}
-                      className="h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded border-zinc-300 text-primary-600 border-[var(--appkit-color-border)] dark:text-secondary-500"
+                      className="h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded text-primary-600 border-[var(--appkit-color-border)] dark:text-secondary-500"
                     />
                     <Span size="xs" className="flex-1 truncate" color="muted">
                       {option.label}

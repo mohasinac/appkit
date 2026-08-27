@@ -140,7 +140,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
           </Thead>
           <Tbody className="divide-y divide-neutral-100 divide-[var(--appkit-color-border)]">
             {rows.map((row) => (
-              <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 hover:bg-[var(--appkit-color-surface-elevated)]/50`}>
+              <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-surface-hover`}>
                 <Td weight="medium" padding="md">{row.category}</Td>
                 <Td className={CLS_RATE_CELL}>{row.rate}</Td>
                 <Td padding="md"><Caption>{row.who}</Caption></Td>

@@ -51,6 +51,11 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-surface": "#ffffff",
     "appkit-color-surface-elevated": "#ffffff",
     "appkit-color-surface-input": "#ffffff",
+    // Theme-inverting interactive fills. Must stay byte-identical to the
+    // matching :root block in tokens.css — audit-theme-drift compares them.
+    "appkit-color-surface-hover": "#f4f4f5",
+    "appkit-color-surface-raised": "#fafafa",
+    "appkit-color-primary-surface": "#f0fdfa",
     "appkit-color-border": "#e4e4e7",
     "appkit-color-border-subtle": "#f4f4f5",
     "appkit-color-text": "#18181b",

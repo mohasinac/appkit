@@ -66,7 +66,7 @@
   color: var(--appkit-color-zinc-700);
 }
 .appkit-dropdown__composed-item:hover {
-  background: var(--appkit-color-zinc-100);
+  background: var(--appkit-color-surface-hover);
 }
 .appkit-dropdown__composed-item:disabled {
   opacity: 0.5;
@@ -101,9 +101,6 @@
 }
 .dark .appkit-dropdown__composed-item {
   color: var(--appkit-color-text);
-}
-.dark .appkit-dropdown__composed-item:hover {
-  background: var(--appkit-color-slate-800);
 }
 .dark .appkit-dropdown__separator {
   border-color: var(--appkit-color-border);

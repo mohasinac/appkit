@@ -16,8 +16,8 @@ import { Div } from "./Div";
 import { Span } from "./Typography";
 import { StickyToolbar } from "./StickyToolbar";
 
-const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-error text-[var(--appkit-color-text-muted)] transition-colors";
-const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-[var(--appkit-color-border)] p-1.5 sm:p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] hover:text-error dark:hover:text-error transition-colors";
+const CLS_CLEAR_LINK = "text-xs hover:text-error text-[var(--appkit-color-text-muted)] transition-colors";
+const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-[var(--appkit-color-border)] p-1.5 sm:p-2 text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-error dark:hover:text-error transition-colors";
 
 export interface ListingToolbarSortOption {
   value: string;
@@ -131,7 +131,7 @@ const VIEW_BTN_BASE =
 const VIEW_BTN_ACTIVE =
   "bg-[var(--appkit-color-primary)] text-white";
 const VIEW_BTN_INACTIVE =
-  "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
+  "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover text-[var(--appkit-color-text-muted)]";
 
 export function ListingToolbar({
   filterCount = 0,
@@ -198,7 +198,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onBulkSelectAll}
-              className="flex items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-surface-hover transition-colors"
             >
               {allSelected
                 ? <CheckSquare className="h-4 w-4 text-[var(--appkit-color-primary)]" />
@@ -245,7 +245,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onFiltersClick}
-              className="relative flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
+              className="relative flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-surface-hover transition-colors"
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">{l.filters}</span>
@@ -323,7 +323,7 @@ export function ListingToolbar({
                   className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
  t.active
  ? "border-transparent bg-[var(--appkit-color-primary)] text-white"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
+ : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover"
  }`}
                 >
                   {t.label}

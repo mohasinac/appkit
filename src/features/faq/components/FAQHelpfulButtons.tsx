@@ -84,7 +84,7 @@ export function FAQHelpfulButtons({
  ? "bg-success-solid text-success-on-solid"
  : userVote
  ? "cursor-not-allowed bg-zinc-200 text-[var(--appkit-color-text-muted)] opacity-50 dark:bg-slate-600 text-[var(--appkit-color-text-muted)]"
- : "bg-[var(--appkit-color-surface)] text-zinc-800 hover:bg-green-50 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)] dark:hover:bg-green-900/20"
+ : "bg-[var(--appkit-color-surface)] hover:bg-success-surface bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]"
  }`}
         >
           <Span size="sm">{labels?.yes ?? "Yes"}</Span>
@@ -102,7 +102,7 @@ export function FAQHelpfulButtons({
  ? "bg-error-solid text-error-on-solid"
  : userVote
  ? "cursor-not-allowed bg-zinc-200 text-[var(--appkit-color-text-muted)] opacity-50 dark:bg-slate-600 text-[var(--appkit-color-text-muted)]"
- : "bg-[var(--appkit-color-surface)] text-zinc-800 hover:bg-red-50 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)] dark:hover:bg-red-900/20"
+ : "bg-[var(--appkit-color-surface)] hover:bg-error-surface bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]"
  }`}
         >
           <Span size="sm">{labels?.no ?? "No"}</Span>

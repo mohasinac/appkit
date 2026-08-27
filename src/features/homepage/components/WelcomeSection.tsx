@@ -149,7 +149,7 @@ if (isLoading) {
                 {secondaryCtaHref ? (
                   <TextLink rounded="xl"
                     href={secondaryCtaHref}
-                    className="inline-flex items-[center] justify-[center] border-2 border-cobalt/40 dark:border-cobalt-400/40 px-[2rem] py-[0.875rem] text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]" size="base" weight="semibold"
+                    className="inline-flex items-[center] justify-[center] border-2 border-cobalt/40 dark:border-cobalt-400/40 px-[2rem] py-[0.875rem] text-cobalt-700 dark:text-cobalt-300 hover:bg-primary-surface transition-all hover:scale-[1.02]" size="base" weight="semibold"
                   >
                     {secondaryCtaLabel}
                   </TextLink>

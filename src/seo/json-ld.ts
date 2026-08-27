@@ -168,7 +168,7 @@ export function productJsonLd(
     aggregateRating:
       product.rating && product.rating.count > 0 && product.rating.average > 0
         ? {
-"@type": "AggregateRating",
+            "@type": "AggregateRating",
             ratingValue: product.rating.average,
             reviewCount: product.rating.count,
             bestRating: 5,

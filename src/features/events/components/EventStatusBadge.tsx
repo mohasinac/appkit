@@ -2,7 +2,7 @@ import { Span } from "../../../ui";
 import type { EventStatus } from "../types";
 
 const STATUS_MAP: Record<EventStatus, { label: string; color: string }> = {
-  draft: { label: "Draft", color: "bg-[var(--appkit-color-surface)] text-gray-700 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]" },
+  draft: { label: "Draft", color: "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]" },
   active: { label: "Active", color: "bg-success-surface text-success" },
   paused: { label: "Paused", color: "bg-warning-surface text-warning" },
   ended: { label: "Ended", color: "bg-error-surface text-error" },

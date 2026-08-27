@@ -95,7 +95,7 @@ export function BottomSheet({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="ml-auto mt-2 p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors min-h-[44px] min-w-[44px] justify-center"
+ className="ml-auto mt-2 p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] hover:bg-surface-hover transition-colors min-h-[44px] min-w-[44px] justify-center"
           >
             {/* ✕ */}
             <svg

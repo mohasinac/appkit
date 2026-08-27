@@ -300,7 +300,7 @@ export function SellerAddressesView({
           </Row>
         ) : addresses.length === 0 ? (
           <Stack border="default" className="border-2 border-dashed" padding="y-4xl" align="center" gap="3" rounded="xl">
-            <MapPin className="h-8 w-8 text-zinc-300 text-[var(--appkit-color-text-muted)]" />
+            <MapPin className="h-8 w-8 text-[var(--appkit-color-text-muted)]" />
             <Text size="sm" color="muted">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
               Add your first address

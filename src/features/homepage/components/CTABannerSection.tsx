@@ -36,7 +36,7 @@ export function CTABannerSection({
         <Row className="mt-8" align="center" justify="start" gap="md" wrap>
           <Link
             href={primaryHref}
-            className="inline-flex items-center rounded-full bg-white px-[var(--appkit-space-8)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-semibold text-primary-700 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
+            className="inline-flex items-center rounded-full bg-white px-[var(--appkit-space-8)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-semibold text-primary-700 shadow-sm transition-all hover:bg-surface-hover hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
           >
             {primaryLabel}
           </Link>

@@ -40,6 +40,27 @@ export interface PlaceBidInput {
   autoMaxBid?: number;
 }
 
+/**
+ * The `ActionResult` envelope every server action in this app returns.
+ *
+ * 🛑 Exactly ONE level. `onPlaceBid`/`onBuyNow` used to be typed
+ * `Promise<unknown>`, and the consumer's actions returned a *doubly*-wrapped
+ * `{ ok: true, data: { ok: false, error } }`. Reading the outer `ok` therefore
+ * saw `true` for every possible outcome — including every failure — so Buy Now
+ * placed a real bid and a real locked cart line and then silently
+ * `router.refresh()`ed a page that renders nothing from the cart. Typing these
+ * props is what makes a re-introduced second envelope a compile error rather
+ * than a silent no-op button.
+ */
+export type BidActionEnvelope<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: string; code?: string; issues?: unknown[] };
+
+/** The subset of `BuyNowAuctionResult` this component actually consumes. */
+export interface BuyNowSuccess {
+  checkoutUrl?: string;
+}
+
 export interface PlaceBidFormClientProps {
   productId: string;
   currentBid: number;
@@ -52,8 +73,8 @@ export interface PlaceBidFormClientProps {
   buyNowPrice: number | null;
   bidCount: number;
   tags?: string[];
-  onPlaceBid: (input: PlaceBidInput) => Promise<unknown>;
-  onBuyNow?: () => Promise<unknown>;
+  onPlaceBid: (input: PlaceBidInput) => Promise<BidActionEnvelope<unknown>>;
+  onBuyNow?: () => Promise<BidActionEnvelope<BuyNowSuccess>>;
 }
 
 export function PlaceBidFormClient({
@@ -94,6 +115,12 @@ export function PlaceBidFormClient({
   const [isBuyNowPending, startBuyNowTransition] = useTransition();
   const [success, setSuccess] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  /**
+   * Buy Now has no field to hang an error off — it is a standalone button, not
+   * a form input — so it needs its own slot. Without one, every domain failure
+   * (`AUCTION_ENDED`, `BUY_NOW_UNAVAILABLE`, rate-limit) was silent.
+   */
+  const [buyNowError, setBuyNowError] = useState<string | null>(null);
   /** Last amount the form itself wrote — see `seedAmount` below. */
   const lastSeeded = useRef(minBid);
 
@@ -194,40 +221,65 @@ export function PlaceBidFormClient({
     }
   }
 
-  function bidErrorMessage(result: unknown): string | null {
-    if (!result || typeof result !== "object" || !("ok" in result)) return null;
-    const r = result as { ok: boolean; error?: string; code?: string };
-    if (r.ok !== false) return null;
-    return (r.code && BID_ERROR_DISPLAY[r.code]) ?? r.error ?? "Failed to place bid. Please try again.";
+  function bidErrorMessage(result: BidActionEnvelope<unknown>): string | null {
+    if (result.ok) return null;
+    return (
+      (result.code && BID_ERROR_DISPLAY[result.code]) ??
+      result.error ??
+      "Failed to place bid. Please try again."
+    );
+  }
+
+  /**
+   * Show a Buy Now failure.
+   *
+   * Every failure used to be indistinguishable from success and was discarded.
+   * An auth failure never THROWS across a server-action boundary — it arrives
+   * as a code — so `isAuthError` in the catch below could never fire for it.
+   *
+   * ONLY `UNAUTHENTICATED` (401) means "sign in". `FORBIDDEN` (403) is "signed
+   * in, but not allowed" — bidding on your own auction, or an active
+   * `place_bids` soft ban. A login prompt for those tells the buyer to fix
+   * something that is not the problem.
+   */
+  function reportBuyNowFailure(code: string | undefined, message?: string) {
+    if (code === "UNAUTHENTICATED") {
+      setShowLoginModal(true);
+      return;
+    }
+    setBuyNowError(
+      (code && BID_ERROR_DISPLAY[code]) ??
+        message ??
+        "Buy Now failed. Please try again.",
+    );
   }
 
   function handleBuyNow() {
     if (!onBuyNow) return;
     setSuccess(false);
+    setBuyNowError(null);
     startBuyNowTransition(async () => {
       try {
         const result = await onBuyNow();
-        if (
-          result &&
-          typeof result === "object" &&
-          "ok" in result &&
-          (result as { ok: boolean }).ok === false
-        ) {
-          setSuccess(false);
+        if (!result.ok) {
+          reportBuyNowFailure(result.code, result.error);
           return;
         }
+
         setSuccess(true);
         // Buy-Now writes a locked cart line, so send the buyer straight to the
-        // auction checkout lane to pay for it. This used to just call
-        // `router.refresh()` and discard the action's result entirely, leaving
-        // the buyer on the product page with no indication that anything was
-        // owed — the action returned an orderId nobody ever used.
-        const checkoutUrl = (result as { checkoutUrl?: string } | null)?.checkoutUrl;
-        if (checkoutUrl) router.push(checkoutUrl);
+        // auction checkout lane to pay for it. `buyNowAuction` deliberately
+        // never touches the product document, so falling through to
+        // `router.refresh()` re-renders a byte-identical page — which is
+        // exactly what "the button does nothing" looked like.
+        if (result.data.checkoutUrl) router.push(result.data.checkoutUrl);
         else router.refresh();
       } catch (err: unknown) {
         void normalizeError(err);
-        if (isAuthError(err)) setShowLoginModal(true);
+        reportBuyNowFailure(
+          isAuthError(err) ? "UNAUTHENTICATED" : undefined,
+          err instanceof Error ? err.message : undefined,
+        );
       }
     });
   }
@@ -396,6 +448,11 @@ export function PlaceBidFormClient({
                 >
                   {`Buy Now — ${formatCurrency(buyNowPrice!, currency)}`}
                 </Button>
+                {buyNowError && (
+                  <Text align="center" size="xs" variant="error" role="alert">
+                    {buyNowError}
+                  </Text>
+                )}
                 {/* The auction keeps running while the claim is held, so the
                     deadline is the whole point — saying "Buy Now" alone reads
                     as an instant purchase, which it deliberately is not. */}

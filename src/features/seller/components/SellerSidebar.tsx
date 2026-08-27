@@ -61,7 +61,7 @@ function NavLink({ item, isActive, onClick }: { item: StoreNavItem; isActive: bo
       className={`flex items-center justify-end gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
  ? CLS_NAV_ACTIVE
- : "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/60 hover:text-zinc-800 hover:text-[var(--appkit-color-text-muted)]"
+ : "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-800 hover:text-[var(--appkit-color-text-muted)]"
  }`}
     >
       {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}

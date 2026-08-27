@@ -589,6 +589,13 @@ export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-
 export { WishlistView, useGuestWishlist, useWishlistWithGuest } from "./features/wishlist/index";
 export type { WishlistViewProps, GuestWishlistItem, WishlistItem, WishlistResponse, WishlistProductData, EnrichedWishlistItem } from "./features/wishlist/index";
 export { WishlistCapWatcher } from "./features/wishlist/components/WishlistCapWatcher";
+// The single wishlist heart. Exported here too because it is a "use client"
+// UI component and consumer client code imports from this entry.
+export { WishlistHeartButton } from "./features/wishlist/components/WishlistHeartButton";
+export type {
+  WishlistHeartButtonProps,
+  WishlistHeartPlacement,
+} from "./features/wishlist/components/WishlistHeartButton";
 export { SyncManagerMount } from "./core/components/SyncManagerMount";
 export { useWishlistCount, useWishlistCountWithLimit, WISHLIST_CAP_EVENT } from "./features/wishlist/hooks/useWishlistCount";
 export type { WishlistCapEventDetail } from "./features/wishlist/hooks/useWishlistCount";

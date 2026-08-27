@@ -18,6 +18,7 @@ const CLS_LIMITED_BADGE = "rounded-full bg-info-solid px-[var(--appkit-space-2)]
 import { BaseListingCard, Button, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
+import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 
 export type MarketplacePreorderCardData = ProductItem;
 
@@ -199,16 +200,13 @@ export function MarketplacePreorderCard({
                 </Text>
               </TextLink>
               {wishlistActions && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className={`shrink-0 p-[0.25rem] leading-none ${inWishlist ? "text-primary" : "text-[var(--appkit-color-text-faint)]"}`}
-                  onClick={handleWishlist}
-                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
-                >
-                  {inWishlist ? "♥" : "♡"}
-                </Button>
+                <WishlistHeartButton
+                  size="inline"
+                  inWishlist={inWishlist}
+                  addLabel={mergedLabels.addToWishlist}
+                  removeLabel={mergedLabels.removeFromWishlist}
+                  onToggle={handleWishlist}
+                />
               )}
             </Row>
             <Row align="center" gap="sm" wrap>
@@ -265,16 +263,13 @@ export function MarketplacePreorderCard({
                 </Button>
               ) : null}
               {wishlistActions ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className={`${inWishlist ? "text-primary" : "text-[var(--appkit-color-text-muted)]"}`}
-                  onClick={handleWishlist}
-                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
-                >
-                  {inWishlist ? "♥" : "♡"}
-                </Button>
+                <WishlistHeartButton
+                  size="inline"
+                  inWishlist={inWishlist}
+                  addLabel={mergedLabels.addToWishlist}
+                  removeLabel={mergedLabels.removeFromWishlist}
+                  onToggle={handleWishlist}
+                />
               ) : null}
             </Row>
           </>

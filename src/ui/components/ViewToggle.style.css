@@ -26,7 +26,7 @@
 }
 
 .appkit-view-toggle__button--inactive:hover {
-  background: var(--appkit-color-zinc-100);
+  background: var(--appkit-color-surface-hover);
 }
 
 .appkit-view-toggle__icon {
@@ -43,8 +43,4 @@
 .dark .appkit-view-toggle__button--inactive {
   color: var(--appkit-color-slate-400);
   border-color: var(--appkit-color-border);
-}
-
-.dark .appkit-view-toggle__button--inactive:hover {
-  background: var(--appkit-color-slate-800);
 }

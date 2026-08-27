@@ -2,7 +2,8 @@
 import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Clock, Gavel, Heart, Play, ShoppingBag, Star } from "lucide-react";
+import { Clock, Gavel, Play, ShoppingBag, Star } from "lucide-react";
+import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { MediaImage } from "../../media";
 import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
@@ -18,8 +19,6 @@ const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
 const CLS_LIVE_BADGE = "rounded-full bg-error-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-error-on-solid";
 const CLS_ENDING_BADGE = "rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-warning-on-solid";
 const CLS_RESERVE_BADGE = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-warning-on-solid";
-const CLS_HEART_ON = "fill-error text-error";
-const CLS_HEART_OFF = "text-zinc-400";
 
 export interface MarketplaceAuctionCardData {
   id: string;
@@ -197,9 +196,14 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
           {product.title}
         </TextLink>
         {wishlistActions ? (
-          <Button rounded="full" type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="shrink-0 p-[0.25rem]">
-            <Heart className={`h-3.5 w-3.5 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
-          </Button>
+          <WishlistHeartButton
+            size="inline"
+            inWishlist={inWishlist}
+            isLoading={wishlistLoading}
+            addLabel={mergedLabels.addToWishlist}
+            removeLabel={mergedLabels.removeFromWishlist}
+            onToggle={handleWishlist}
+          />
         ) : null}
       </Row>
       <Row align="center" gap="sm" wrap>
@@ -229,9 +233,14 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
           {product.title}
         </TextLink>
         {wishlistActions ? (
-          <Button rounded="full" type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="-mt-0.5 p-[0.25rem]">
-            <Heart className={`h-4 w-4 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
-          </Button>
+          <WishlistHeartButton
+            size="inline"
+            inWishlist={inWishlist}
+            isLoading={wishlistLoading}
+            addLabel={mergedLabels.addToWishlist}
+            removeLabel={mergedLabels.removeFromWishlist}
+            onToggle={handleWishlist}
+          />
         ) : null}
       </Row>
       <Div>

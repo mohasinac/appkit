@@ -233,7 +233,7 @@ export const LAYOUT = {
   bottomNavBg:
     "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)]",
   footerBg:
-    "bg-zinc-50 bg-[var(--appkit-color-surface)] border-t border-[var(--appkit-color-border-subtle)]",
+  " bg-[var(--appkit-color-surface)] border-t border-[var(--appkit-color-border-subtle)]",
   fullScreen: "min-h-screen",
   flexCenter: "flex items-center justify-center",
   centerText: "text-center",

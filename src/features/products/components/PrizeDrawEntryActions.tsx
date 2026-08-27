@@ -38,7 +38,8 @@ export function PrizeDrawEntryActions({
   prizeGithubFileUrl,
 }: PrizeDrawEntryActionsProps) {
   const router = useRouter();
-  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
+  const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
+    useAuthGate();
   const [consentOpen, setConsentOpen] = useState(false);
 
   const closed = revealStatus === "closed" || remainingEntries === 0;
@@ -68,10 +69,10 @@ export function PrizeDrawEntryActions({
         variant="primary"
         size="md"
         className="w-full"
-        disabled={closed}
+        disabled={closed || isAuthResolving}
         onClick={handleEnter}
       >
-        {closed ? "Draw closed" : undefined}
+        {closed ? "Draw closed" : isAuthResolving ? "Checking…" : undefined}
       </Button>
 
       {prizeGithubFileUrl ? (

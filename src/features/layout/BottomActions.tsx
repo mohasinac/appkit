@@ -20,7 +20,7 @@
  * Layout rules:
  *  - Hidden on lg+ screens by default — desktop shows inline action panels. A page can
  *    opt in by passing `desktop: "after-scroll" | "always"` to `useBottomActions`;
- *    "after-scroll" brings the bar back once the primary CTA has scrolled out of view.
+ *"after-scroll" brings the bar back once the primary CTA has scrolled out of view.
  *  - The bar slides up with a 300 ms ease-out transition; `pointer-events-none`
  *    while off-screen.
  *
@@ -88,10 +88,10 @@ function BulkPickerPanel({
             className={[
               "w-full flex items-center gap-[var(--appkit-space-3)] px-[var(--appkit-space-5)] py-[var(--appkit-space-3-5)] text-left text-[length:var(--appkit-text-sm)] font-medium transition-colors rounded-none",
               i > 0 ? "border-t border-zinc-100/80 border-[var(--appkit-color-border-subtle)]" : "",
-              isSelected ? "bg-zinc-50 bg-[var(--appkit-color-surface-input)]" : "",
+              isSelected ? " bg-[var(--appkit-color-surface-input)]" : "",
               action.variant === "danger"
                 ? "text-error hover:bg-error-surface"
-                : "text-[var(--appkit-color-text)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/60",
+                : "text-[var(--appkit-color-text)] hover:bg-surface-hover",
               action.disabled || action.loading ? "opacity-50 cursor-not-allowed" : "",
             ]
               .filter(Boolean)
@@ -427,7 +427,7 @@ export default function BottomActions() {
                     type="button"
                     variant="ghost"
                     onClick={dispatchBulkClear}
-                    className="inline- flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
+                    className="inline- flex-shrink-0 bg-primary-50 hover:bg-primary-surface active:bg-primary-200 dark:bg-primary-950/30 text-primary-700 dark:text-primary-300 pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
                     aria-label="Clear selection"
                   >
                     <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
@@ -448,7 +448,7 @@ export default function BottomActions() {
                       aria-expanded={pickerOpen}
                       className={[
                         "flex-1 min-w-0 h-10 flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] rounded-lg border text-[length:var(--appkit-text-sm)] font-medium transition-colors",
-                        "bg-zinc-50 hover:bg-[var(--appkit-color-surface)] active:bg-zinc-200 bg-[var(--appkit-color-surface-input)] dark:hover:bg-slate-700/60",
+                        " hover:bg-[var(--appkit-color-surface)] active:bg-zinc-200 bg-[var(--appkit-color-surface-input)] dark:hover:bg-slate-700/60",
                         "border-[var(--appkit-color-border)]",
                         selectedAction?.variant === "danger"
                           ? "text-error"

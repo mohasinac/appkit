@@ -79,7 +79,7 @@ export async function FAQPageView({
                   paddingX="sm" paddingY="xs"
                   layout="flex" align="center" justify="between"
                   weight={!category ? "semibold" : undefined}
-                  className={`transition-colors ${ !category ? "bg-primary/10 text-primary" : "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm"
+                  className={`transition-colors ${ !category ? "bg-primary/10 text-primary" : "hover:bg-surface-hover" }`} size="sm"
                 >
                   <Span className={`${flex.row}`} gap="md">
                     <HelpCircle className="w-4 h-4" />
@@ -94,7 +94,7 @@ export async function FAQPageView({
                     paddingX="sm" paddingY="xs"
                     layout="flex" align="center" justify="between"
                     weight={category === cat.slug ? "semibold" : undefined}
-                    className={`transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary" : "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm"
+                    className={`transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary" : "hover:bg-surface-hover" }`} size="sm"
                   >
                     <Span className={`${flex.row}`} gap="md">
                       <Span>{cat.icon}</Span>

@@ -63,7 +63,7 @@
 }
 
 .appkit-data-table__th--sortable:hover {
-  background: var(--appkit-color-zinc-100);
+  background: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-data-table__th--sortable:hover {
@@ -95,7 +95,7 @@
 }
 
 .appkit-data-table__row--clickable:hover {
-  background: var(--appkit-color-zinc-50);
+  background: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-data-table__row--clickable:hover {
@@ -160,7 +160,7 @@
 }
 
 .appkit-data-table__view-btn:hover {
-  background: var(--appkit-color-zinc-100);
+  background: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-data-table__view-btn:hover {

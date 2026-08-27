@@ -57,7 +57,7 @@
 }
 
 .appkit-row-action-menu__item:hover {
-  background: var(--appkit-color-zinc-100);
+  background: var(--appkit-color-surface-hover);
 }
 
 :is(.dark) .appkit-row-action-menu__item {

@@ -13,6 +13,8 @@ import { bidRepository } from "../repository/bid.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { isAuctionListing } from "../../products/utils/listing-type";
 import { userRepository } from "../../auth/repository/user.repository";
+import { isSoftBanned } from "../../auth/server/checkSoftBan";
+import type { UserDocument } from "../../auth/schemas/firestore";
 import { unitOfWork } from "../../../core/unit-of-work";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { siteSettingsRepository } from "../../../repositories";
@@ -56,6 +58,33 @@ export interface PlaceBidResult {
 
 // --- Domain Functions ----------------------------------------------------------
 
+/**
+ * Load the bidder's profile and refuse if they carry an active `place_bids`
+ * soft ban. Returns the profile so the caller pays for exactly one read.
+ *
+ * 🛑 This belongs in the DOMAIN function, not in a route.
+ *
+ * Admins can issue a `place_bids` soft ban and `BID_ERROR_CODES.USER_BANNED`
+ * has always existed with a display-map entry and client copy — but nothing
+ * ever threw it. The only `isSoftBanned(user, "place_bids")` call in the
+ * codebase sat in `POST /api/auctions/[id]/buy-now`, a route with zero callers,
+ * while the live path (the `placeBidAction` / `buyNowAction` server actions)
+ * checked nothing. A banned user could bid and buy out freely. Enforcing it
+ * here means every caller — action, route, or job — is covered by
+ * construction.
+ */
+async function assertCanBid(userId: string): Promise<UserDocument | null> {
+  const profile = await userRepository.findById(userId);
+  if (profile && isSoftBanned(profile, "place_bids")) {
+    const ban = profile.softBans?.find((b) => b.action === "place_bids");
+    throw new AuthorizationError(
+      `Your account is restricted from bidding. Reason: ${ban?.reason ?? "Policy violation"}.`,
+      { code: BID_ERROR_CODES.USER_BANNED },
+    );
+  }
+  return profile ?? null;
+}
+
 export async function placeBid(
   userId: string,
   userEmail: string,
@@ -85,6 +114,10 @@ export async function placeBid(
       throw new AuthorizationError(ERROR_MESSAGES.BID.OWN_AUCTION);
     }
   }
+
+  // Before any write. The profile is reused below for the bid's denormalised
+  // userName/userEmail, so the ban check costs no extra read.
+  const profile = await assertCanBid(userId);
 
   // An auction with no bids yet prices off its starting bid, and that starting
   // bid is itself acceptable — see ResolveMinBidOptions.hasBids.
@@ -165,8 +198,6 @@ export async function placeBid(
     visibleBid = newCap;
     bumpedPreviousVisible = Math.min(prevCap, target);
   }
-
-  const profile = await userRepository.findById(userId);
 
   const bid = await bidRepository.create({
     productId,
@@ -325,12 +356,26 @@ export async function buyNowAuction(
   userEmail: string,
   input: BuyNowAuctionInput,
 ): Promise<BuyNowAuctionResult> {
-  const { productId } = input;
+  const { productId: productRef } = input;
 
-  const product = await productRepository.findById(productId);
+  // Auction URLs are slug-based, and this action is reachable from a route
+  // param, so accept either. Deliberately id-FIRST rather than
+  // `findByIdOrSlug`, which queries by slug first and would therefore cost two
+  // reads on the common id path (Rule #6) — here the fallback query only runs
+  // when the id lookup actually misses.
+  //
+  // This was masked because every seeded auction has `slug === id`. Any auction
+  // whose slug differs threw NotFoundError, which the caller then swallowed.
+  const product =
+    (await productRepository.findById(productRef)) ??
+    (await productRepository.findBySlug(productRef));
   if (!product) throw new NotFoundError(ERROR_MESSAGES.BID.AUCTION_NOT_FOUND);
   if (!isAuctionListing(product))
     throw new ValidationError(ERROR_MESSAGES.BID.NOT_AN_AUCTION);
+
+  // 🛑 Every downstream write (the bid, the locked cart line, the notification)
+  // must key on the canonical document id, never on the ref the caller passed.
+  const productId = String(product.id);
 
   if (product.isSold) {
     throw new ValidationError(ERROR_MESSAGES.BID.AUCTION_ENDED, { code: BID_ERROR_CODES.AUCTION_ENDED });
@@ -349,6 +394,11 @@ export async function buyNowAuction(
       throw new AuthorizationError(ERROR_MESSAGES.BID.OWN_AUCTION);
     }
   }
+
+  // Same guard as `placeBid` — a buyout IS a bid (it writes a real
+  // `BidDocument` with `isBuyout: true`), so a `place_bids` ban must block it.
+  // The profile is reused for the bid's denormalised name/email below.
+  const profile = await assertCanBid(userId);
 
   const buyNowPrice = typeof product.buyNowPrice === "number" ? product.buyNowPrice : null;
   if (buyNowPrice === null || buyNowPrice <= 0) {
@@ -396,7 +446,6 @@ export async function buyNowAuction(
   // The product's own currency, not the site default — the cart line, the bid
   // and the listing all have to agree, and settlement uses the bid's currency.
   const currency = product.currency || getDefaultCurrency();
-  const profile = await userRepository.findById(userId);
 
   // A real bid at the buy-now price — this is what "the bid placed is the
   // buyout price by the buyer" means. It starts `active`/`isWinning: false`

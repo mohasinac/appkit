@@ -6,7 +6,7 @@ const __O = {
 } as const;
 
 const SVG_PATH_SEARCH = "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z";
-const CLS_HOVER_ROW = "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]";
+const CLS_HOVER_ROW = "hover:bg-surface-hover";
 const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-[var(--appkit-color-text-muted)]";
 const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
@@ -416,7 +416,7 @@ export function Search({
               );
             }}
             placeholder={placeholder ?? labels.placeholder}
-            className="w-full rounded-lg border border-zinc-300 bg-[var(--appkit-color-surface)] pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
+            className="w-full rounded-lg border bg-[var(--appkit-color-surface)] pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
           />
           {query && (
             <Button rounded="full" textColor="faint"
@@ -659,7 +659,7 @@ export function Search({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={handleOverlayKeyDown}
-              className="w-full rounded-lg border border-zinc-300 bg-[var(--appkit-color-surface)] text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
+              className="w-full rounded-lg border bg-[var(--appkit-color-surface)] text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
             />
           </Div>
 
@@ -697,7 +697,7 @@ export function Search({
           <Button rounded="xl" 
             variant="ghost"
             onClick={() => onClose?.()}
-            className="p-[var(--appkit-space-2-5)] md:p-[var(--appkit-space-3)] transition-colors text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] flex-shrink-0"
+ className="p-[var(--appkit-space-2-5)] md:p-[var(--appkit-space-3)] transition-colors text-[var(--appkit-color-text-muted)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-[var(--appkit-color-text-muted)] flex-shrink-0"
             aria-label={labels.closeAriaLabel}
           >
             <svg

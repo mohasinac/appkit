@@ -77,7 +77,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(brand.slug)}
-      className="flex h-32 w-36 flex-col items-center justify-center gap-[var(--appkit-space-2)] rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] p-[var(--appkit-space-3)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
+      className="flex h-32 w-36 flex-col items-center justify-center gap-[var(--appkit-space-2)] rounded-xl border bg-[var(--appkit-color-surface)] p-[var(--appkit-space-3)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
     >
       {iconSrc || coverImage ? (
         <Image

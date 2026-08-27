@@ -1,5 +1,6 @@
 export { WishlistCard, WishlistPage } from "./WishlistPage";
-export { WishlistToggleButton } from "./WishlistToggleButton";
+export { WishlistHeartButton } from "./WishlistHeartButton";
+export type { WishlistHeartButtonProps, WishlistHeartPlacement } from "./WishlistHeartButton";
 export { WishlistView } from "./WishlistView";
 export type { WishlistViewProps, WishlistTab } from "./WishlistView";
 export { WishlistCapWatcher } from "./WishlistCapWatcher";

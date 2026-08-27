@@ -21,7 +21,7 @@ const ROW_CHECKED_CLASS =
 const ROW_DISABLED_CLASS =
   "border-[var(--appkit-color-border)] opacity-50 cursor-not-allowed";
 const ROW_DEFAULT_CLASS =
-  "border-[var(--appkit-color-border)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
+  "border-[var(--appkit-color-border)] hover:bg-surface-hover";
 const OVER_LIMIT_BANNER_CLASS =
   "rounded-lg border border-error/20 bg-error-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-xs)] text-error";
 const EMPTY_STATE_CLASS =

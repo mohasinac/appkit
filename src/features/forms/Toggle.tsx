@@ -80,7 +80,7 @@ export function Toggle({
           cfg.track,
           checked
             ? "bg-primary-600 dark:bg-secondary-500"
-            : "bg-zinc-200 bg-[var(--appkit-color-border)]",
+            : " bg-[var(--appkit-color-border)]",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >

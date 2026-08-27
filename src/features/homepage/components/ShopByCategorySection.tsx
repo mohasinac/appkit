@@ -50,7 +50,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
-      className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:hover:border-primary-600"
+      className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:hover:border-primary-600"
     >
       {coverImage && isImageUrl(coverImage) ? (
         <Div className={`aspect-video w-full ${__O.hidden}`} surface="subtle">

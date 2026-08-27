@@ -9077,8 +9077,10 @@ export { WishlistCard } from "./features/wishlist/index";
 // WishlistPage - Component for wishlist page.
 export { WishlistPage } from "./features/wishlist/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// WishlistToggleButton - Component for wishlist toggle button.
-export { WishlistToggleButton } from "./features/wishlist/index";
+// WishlistHeartButton - the single wishlist heart. Replaced
+// WishlistToggleButton, which was dead code with its own competing
+// LoginRequiredModal; see the component for the full rationale.
+export { WishlistHeartButton } from "./features/wishlist/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // WishlistView - Component for wishlist view.
 export { WishlistView } from "./features/wishlist/index";
@@ -9898,7 +9900,6 @@ export {
   sieveAnd,
 } from "./utils/sieve-builder";
 export type { SieveOp } from "./utils/sieve-builder";
-export { buildSearchTokens, tokenizeQuery } from "./utils/search-tokens";
 
 // searchTxt — normalized edge-n-gram search field. Supersedes search-tokens;
 // see appkit/src/utils/search-txt.ts for why it is an array and not a string.

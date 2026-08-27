@@ -26,6 +26,7 @@ import {
 } from "../../../ui";
 import { apiClient } from "../../../http";
 import { createShipmentItemSchema } from "../schemas/validation";
+import { ValidationError } from "../../../errors/validation-error";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { useShipmentItems } from "../hooks/useShipments";
@@ -98,7 +99,12 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
         price: isForSelfUse ? undefined : Math.round(Number(priceRupees) * 100) / 100,
       });
       if (!parsed.success) {
-        throw new Error(parsed.error.issues[0]?.message ?? "Check the item details.");
+        // ValidationError carries the issue list; a bare Error flattens it to
+        // one string and loses which field failed.
+        throw new ValidationError(
+          parsed.error.issues[0]?.message ?? "Check the item details.",
+          parsed.error.issues,
+        );
       }
       return apiClient.post(
         ADMIN_ENDPOINTS.SHIPMENT_LOT_ITEMS(shipmentId, lotId),

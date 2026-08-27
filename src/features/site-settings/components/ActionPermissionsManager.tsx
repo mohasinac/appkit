@@ -66,7 +66,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Messaging": "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300",
   "Seller": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Orders": "bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300",
-  "Account": "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
+  "Account": "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 const ALL_ACTION_IDS = Object.values(ACTION_ID) as ActionId[];

@@ -75,7 +75,7 @@ export function Slider({
         <div
           aria-hidden="true"
           className={[
-            "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden rounded-full bg-zinc-200 bg-[var(--appkit-color-border)]",
+            "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden rounded-full bg-[var(--appkit-color-border)]",
             SIZE_CLASSES[size],
           ].join(" ")}
          data-section="slider-div-610">

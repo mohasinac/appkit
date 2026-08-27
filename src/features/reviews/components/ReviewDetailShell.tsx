@@ -10,7 +10,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_RELATED_LINK = "group flex items-center gap-[var(--appkit-space-3)] rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] hover:border-primary hover:shadow-sm transition-all";
+const CLS_RELATED_LINK = "group flex items-center gap-[var(--appkit-space-3)] rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] hover:border-primary hover:shadow-sm transition-all";
 const CLS_RELATED_LABEL = "text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-faint)] mb-0.5";
 const CLS_RELATED_TITLE = "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text)] dark:text-white truncate group-hover:text-primary transition-colors";
 const CLS_RATING_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-warning dark:bg-warning-surface dark:text-warning";
@@ -86,8 +86,17 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
     if (voted || voting) return;
     setVoting(true);
     try {
-      await apiClient.post(`${REVIEW_ENDPOINTS.LIST}/${review.id}/vote`, {});
-      setHelpfulCount((c) => c + 1);
+      // The server is authoritative: it de-duplicates by uid, so a vote already
+      // cast returns counted:false with the unchanged total. Trusting the
+      // response instead of incrementing locally keeps the two in step when the
+      // localStorage flag is missing (new device, cleared storage).
+      const res = await apiClient.post<{ counted: boolean; helpfulCount: number }>(
+        `${REVIEW_ENDPOINTS.LIST}/${review.id}/vote`,
+        {},
+      );
+      if (typeof res?.helpfulCount === "number") {
+        setHelpfulCount(res.helpfulCount);
+      }
       setVoted(true);
       localStorage.setItem(storageKey, "1");
     } catch (_err) {
@@ -180,7 +189,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <RichText
               html={normalizeRichTextHtml(review.comment)}
               proseClass="prose prose-neutral dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:font-semibold prose-img:rounded-lg prose-a:text-primary"
-              className="text-neutral-700 text-[var(--appkit-color-text-muted)]"
+              className="text-[var(--appkit-color-text-muted)]"
             />
           </Section>
         )}

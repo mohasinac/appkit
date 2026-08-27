@@ -1,14 +1,29 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 import { ROUNDED_MAP, type RoundedKey } from "./surface-tokens";
+import type { IconSizeKey } from "../icons/icon-registry";
 
 const BASE = "appkit-icon-button";
 
 const SIZES = {
   sm: "appkit-icon-button--sm",
   md: "appkit-icon-button--md",
+  /** 44px — minimum comfortable tap target. See the CSS for when to use it. */
+  touch: "appkit-icon-button--touch",
   lg: "appkit-icon-button--lg",
 } as const;
+
+/**
+ * The glyph size each box wants. Callers should let the button decide rather
+ * than passing a size to the icon by hand — a mismatched pair (a 14px glyph in
+ * a 44px box) is the whole "the icon is very small" report.
+ */
+export const ICON_BUTTON_ICON_SIZE = {
+  sm: "sm",
+  md: "md",
+  touch: "lg",
+  lg: "lg",
+} as const satisfies Record<keyof typeof SIZES, IconSizeKey>;
 
 const VARIANTS = {
   ghost: "appkit-icon-button--ghost",

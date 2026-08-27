@@ -132,6 +132,17 @@ export { Button } from "./components/Button";
 
 export type { IconButtonProps } from "./components/IconButton";
 export { IconButton } from "./components/IconButton";
+export type { IconProps, IconTone } from "./components/Icon";
+export { Icon } from "./components/Icon";
+// The size scale + registry are part of the public contract: a caller sizing a
+// glyph by hand is the defect ICON_SIZE exists to prevent.
+export type { IconKey, IconSizeKey } from "./icons/icon-registry";
+export {
+  ICONS,
+  ICON_SIZE,
+  isIconKey,
+  resolveIcon,
+} from "./icons/icon-registry";
 
 export type { TextLinkProps } from "./components/TextLink";
 export { TextLink } from "./components/TextLink";
@@ -377,6 +388,12 @@ export type {
   TabsContentProps,
 } from "./components/Tabs";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/Tabs";
+export type {
+  TabBarShellProps,
+  TabBarButtonProps,
+  TabsNavSelectProps,
+} from "./components/TabBarShell";
+export { TabBarShell, TabBarButton, TabsNavSelect } from "./components/TabBarShell";
 
 export type { FilterDrawerProps } from "./components/FilterDrawer";
 export { FilterDrawer } from "./components/FilterDrawer";

@@ -60,7 +60,11 @@ import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
 import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
 import { PlaceBidModalButton } from "./PlaceBidFormClient";
-import type { PlaceBidInput } from "./PlaceBidFormClient";
+import type {
+  PlaceBidInput,
+  BidActionEnvelope,
+  BuyNowSuccess,
+} from "./PlaceBidFormClient";
 import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
 import { LiveBidPrice } from "./LiveBidPrice";
 import { LiveMinIncrement } from "./LiveMinIncrement";
@@ -79,8 +83,13 @@ export interface AuctionDetailPageViewProps {
    * When absent, falls back to fetching by slug/id (backward compat).
    */
   initialAuction?: import("../../products/schemas/firestore").ProductDocument | null;
-  onPlaceBid?: (input: PlaceBidInput) => Promise<unknown>;
-  onBuyNow?: () => Promise<unknown>;
+  /**
+   * Typed against the single `ActionResult` envelope — see the note on
+   * `BidActionEnvelope`. `Promise<unknown>` here is what let a doubly-wrapped
+   * result flow through to a client that read the wrong `ok`.
+   */
+  onPlaceBid?: (input: PlaceBidInput) => Promise<BidActionEnvelope<unknown>>;
+  onBuyNow?: () => Promise<BidActionEnvelope<BuyNowSuccess>>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
 }
@@ -146,14 +155,20 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Row align="center" gap="sm" className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)] bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
+          {/* This chip stated a price with no control anywhere near it, under a
+              CTA labelled "Place a bid" — which is most of why Buy Now read as
+              decorative. The real button lives inside the bid modal (it needs
+              the live SSE price to know whether the buyout is still the better
+              deal), so say where it is rather than duplicating it here. */}
+          <Span size="xs" color="faint">— in “Place a bid”</Span>
         </Row>
       )}
       <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", emiAvailable: "EMI Available", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
-          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
+          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{categoryName || category}</Link>}
           {!category && categoryName && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{categoryName}</Span>}
-          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
+          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{brand}</Link>}
           {brand && !brandSlug && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{brand}</Span>}
         </Row>
       )}
@@ -641,14 +656,27 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         {/* Store reviews section */}
         {renderAuctionStoreReviews(storeId)}
 
-        {/* Mobile actions registered via useBottomActions() */}
-        <AuctionBottomActions
-          currentBid={currentBid}
-          currency={currency}
-          bidCount={bidCount}
-          isEnded={isEnded}
-          auctionEndDate={endDate}
-        />
+        {/* Mobile actions registered via useBottomActions(). It owns its own
+            bid modal — it used to scroll to `#auction-bid-form`, which lives
+            inside the `hidden lg:block` desktop panel and is therefore
+            unreachable on the very viewport this bar serves. */}
+        {onPlaceBid && (
+          <AuctionBottomActions
+            productId={String(product.id)}
+            currentBid={currentBid}
+            startingBid={startingBid}
+            tiers={bidIncrementTiers}
+            minBidIncrementOverride={minBidIncrementOverride}
+            currency={currency}
+            isEnded={isEnded}
+            auctionEndDate={endDate}
+            buyNowPrice={buyNowPrice}
+            bidCount={bidCount}
+            tags={tags}
+            onPlaceBid={onPlaceBid}
+            onBuyNow={onBuyNow}
+          />
+        )}
       </Container>
     </Main>
   );

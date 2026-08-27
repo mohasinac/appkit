@@ -154,7 +154,7 @@ export function RichTextEditor({
     <div
       className={`appkit-rich-text-editor rounded-lg border border-zinc-200 bg-[var(--appkit-color-surface)] border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${className}`}
      data-section="richtexteditor-div-582">
-      <div className="appkit-rich-text-editor__toolbar flex flex-wrap gap-1 border-b border-zinc-200 p-2 border-[var(--appkit-color-border)]" data-section="richtexteditor-div-583">
+      <div className="appkit-rich-text-editor__toolbar flex flex-wrap gap-1 border-b p-2 border-[var(--appkit-color-border)]" data-section="richtexteditor-div-583">
         {toolbarActions.map((action) => (
           <button
             key={action.title}
@@ -162,7 +162,7 @@ export function RichTextEditor({
             title={action.title}
             onClick={action.run}
             disabled={disabled}
-            className="appkit-rich-text-editor__btn rounded px-2 py-1 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"
+            className="appkit-rich-text-editor__btn rounded px-2 py-1 text-xs font-medium transition hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50 text-[var(--appkit-color-text-muted)]"
           >
             {action.label}
           </button>

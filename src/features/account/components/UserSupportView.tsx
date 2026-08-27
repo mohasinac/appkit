@@ -8,6 +8,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { apiClient } from "../../../http";
 import { supportTicketCreateSchema } from "../../support/schemas/ticket-create-form";
+import { ValidationError } from "../../../errors/validation-error";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
@@ -65,7 +66,7 @@ const CATEGORY_OPTIONS = [
   { label: "General", value: "general" },
 ];
 
-const CLS_MSG_USER = "bg-zinc-50 border border-zinc-200 bg-[var(--appkit-color-surface)]/40 border-[var(--appkit-color-border)]";
+const CLS_MSG_USER = "border bg-[var(--appkit-color-surface)]/40 border-[var(--appkit-color-border)]";
 const CLS_MSG_STAFF = "bg-info-surface border border-info dark:bg-info-surface dark:border-info";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -132,8 +133,15 @@ export function UserSupportView(_props: UserSupportViewProps) {
         orderId: newOrderId.trim() || undefined,
       });
       if (!parsed.success) {
-        throw new Error(
+        /*
+         * ValidationError, not a bare Error — it carries the issue LIST, so
+         * the failure keeps which field caused it. A plain Error flattens the
+         * whole thing to one string, which is what `audit-unvalidated-safeparse`
+         * exists to stop. It caught this in my own code.
+         */
+        throw new ValidationError(
           parsed.error.issues[0]?.message ?? "Check the ticket details.",
+          parsed.error.issues,
         );
       }
       await apiClient.post(SUPPORT_ENDPOINTS.TICKETS, parsed.data);

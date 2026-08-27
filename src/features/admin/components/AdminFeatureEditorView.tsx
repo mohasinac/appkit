@@ -51,7 +51,7 @@ const PILL_BASE_CLASS =
   "inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium cursor-pointer transition-colors";
 const PILL_CHECKED_CLASS = "bg-primary text-white border-primary";
 const PILL_UNCHECKED_CLASS =
-  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
+  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover";
 const FIELD_LABEL_CLASS =
   "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)]";
 const DELETE_CONFIRM_TEXT =

@@ -47,6 +47,12 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-color-surface": "#0f172a",
     "appkit-color-surface-elevated": "rgba(15, 23, 42, 0.9)",
     "appkit-color-surface-input": "rgba(30, 41, 59, 0.6)",
+    // Theme-inverting interactive fills. Must stay byte-identical to the
+    // [data-theme="default-dark"] block in tokens.css — audit-theme-drift
+    // compares them.
+    "appkit-color-surface-hover": "rgba(148, 163, 184, 0.12)",
+    "appkit-color-surface-raised": "rgba(30, 41, 59, 0.7)",
+    "appkit-color-primary-surface": "rgba(239, 68, 68, 0.16)",
     "appkit-color-border": "#334155",
     "appkit-color-border-subtle": "rgba(30, 41, 59, 0.6)",
     "appkit-color-text": "#fafafa",

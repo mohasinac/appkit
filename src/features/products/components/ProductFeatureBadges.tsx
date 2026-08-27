@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import { Row, Span, TextLink } from "../../../ui";
+import { Row, Span, TextLink, Icon } from "../../../ui";
 
 interface ProductFeatureBadgeLabels {
   featured: string;
@@ -171,7 +171,7 @@ export function ProductFeatureBadges({
   if (wishlistCount && wishlistCount > 0) {
     badges.push({
       key: "wishlist",
-      icon: <Span size="xs">♥</Span>,
+      icon: <Icon name="wishlist" size="xs" filled />,
       label: labels.wishlistCount(wishlistCount),
       colorClass: "text-pink-700 dark:text-pink-300",
       bgClass:

@@ -7,7 +7,7 @@ const STATUS_MAP: Record<PreOrderStatus, { label: string; color: string }> = {
   pending: { label: "Pending", color: "bg-warning-surface text-warning" },
   confirmed: { label: "Confirmed", color: "bg-info-surface text-info" },
   ready: { label: "Ready", color: "bg-success-surface text-success" },
-  fulfilled: { label: "Fulfilled", color: "bg-[var(--appkit-color-surface)] text-gray-700 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]" },
+  fulfilled: { label: "Fulfilled", color: "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]" },
   cancelled: { label: "Cancelled", color: "bg-error-surface text-error" },
 };
 

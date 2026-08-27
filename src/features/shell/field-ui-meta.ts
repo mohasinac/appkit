@@ -57,6 +57,7 @@
  */
 
 import type { ZodTypeAny } from "zod";
+import type { FormValues } from "../../schemas/types";
 
 /** How much of a row a field claims on desktop. Everything is 1-up on mobile. */
 export type FieldRow = "full" | "pair" | "third" | "quarter";
@@ -119,7 +120,7 @@ export interface FieldUiMeta {
    * a `superRefine` that requires it under the same condition — the way
    * `supportTicketCreateSchema` handles `orderId` for `order_issue`.
    */
-  when?: (values: Record<string, unknown>) => boolean;
+  when?: (values: FormValues) => boolean;
 
   /** Row span. Drives the `<FormGroup columns>` packing. */
   row?: FieldRow;

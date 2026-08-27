@@ -169,7 +169,7 @@ export function SearchResultsSection({
               size="sm"
               onClick={() => onPageChange(urlPage - 1)}
               disabled={urlPage <= 1}
-              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] border border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] disabled:opacity-40 hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
+              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] border border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] disabled:opacity-40 hover:bg-surface-hover transition-colors"
             >
               {L.prevPage}
             </Button>
@@ -182,7 +182,7 @@ export function SearchResultsSection({
               size="sm"
               onClick={() => onPageChange(urlPage + 1)}
               disabled={urlPage >= totalPages}
-              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] border border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] disabled:opacity-40 hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
+              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] border border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] disabled:opacity-40 hover:bg-surface-hover transition-colors"
             >
               {L.nextPage}
             </Button>

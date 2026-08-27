@@ -19,6 +19,7 @@ import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -37,15 +38,11 @@ const CLS_BADGE_LIMITED = "rounded-full bg-info-solid px-[var(--appkit-space-2)]
 // inverts with the theme. `warning` because success/info/error are each already
 // taken by a sibling pill in this same stack.
 const CLS_BADGE_OFFERABLE = "rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-warning-on-solid shadow-sm";
-const CLS_HEART_ACTIVE = "bg-[var(--appkit-color-surface-elevated)]/90 text-error hover:bg-[var(--appkit-color-surface-elevated)]";
-const CLS_HEART_IDLE = "bg-[var(--appkit-color-surface-elevated)]/90 text-[var(--appkit-color-text-muted)] hover:text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_STAR = "text-[11px] text-warning";
 const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-error";
 const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-error";
 const CLS_STAR_BARE = "text-warning";
 const CLS_BID_TEXT = "text-[11px] text-error";
-const CLS_HEART_ROSE_ACTIVE = "text-error";
-const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-[var(--appkit-color-text-muted)] hover:text-error";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -107,9 +104,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       tabIndex={selectionMode || (onClick && !href) ? 0 : undefined}
       onKeyDown={
         selectionMode
-          ? (e) => (e.key === "Enter" || e.key === " ") && onSelect?.(product.id)
+          ? (e) => (e.key === "Enter" || e.key === "") && onSelect?.(product.id)
           : onClick && !href
-          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(product)
+          ? (e) => (e.key === "Enter" || e.key === "") && onClick(product)
           : undefined
       }
       onClick={handleCardClick}
@@ -229,41 +226,24 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           position="bottom-2 right-2"
         />
 
-        {/* Wishlist button — always visible */}
+        {/* Wishlist button — always visible. Was a hand-rolled inline <svg>
+            inside a `size="sm"` Button, which renders 32x36 (the --sm
+            min-height beats the caller's h-8) — an ellipse under
+            `rounded-full`. */}
         {onAddToWishlist && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
+          <WishlistHeartButton
+            size="card"
+            variant="overlay"
+            inWishlist={!!isWishlisted}
+            addLabel="Add to wishlist"
+            removeLabel="Remove from wishlist"
+            className="absolute right-2 top-2"
+            onToggle={(e) => {
               e.stopPropagation();
               e.preventDefault();
               onAddToWishlist(product.id);
             }}
-            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            className={[
-              "absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full shadow-sm",
-              "transition-all duration-150",
-              isWishlisted
-                ? CLS_HEART_ACTIVE
-                : CLS_HEART_IDLE,
-            ].join(" ")}
-          >
-            <svg
-              className="h-4 w-4"
-              fill={isWishlisted ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-              />
-            </svg>
-          </Button>
+          />
         )}
       </Div>
 
@@ -556,7 +536,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
         onClick
-          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(product)
+          ? (e) => (e.key === "Enter" || e.key === "") && onClick(product)
           : undefined
       }
       onClick={onClick ? () => onClick(product) : undefined}
@@ -632,21 +612,19 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         </Row>
       </Stack>
 
-      {/* Wishlist action */}
+      {/* Wishlist action. Was the text characters ♥/♡, which no width or
+          height utility can size — they render at the platform font fallback. */}
       {onAddToWishlist && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={(e) => {
+        <WishlistHeartButton
+          size="inline"
+          inWishlist={!!isWishlisted}
+          addLabel="Add to wishlist"
+          removeLabel="Remove from wishlist"
+          onToggle={(e) => {
             e.stopPropagation();
             onAddToWishlist(product.id);
           }}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-[length:var(--appkit-text-base)] leading-none ${isWishlisted ? CLS_HEART_ROSE_ACTIVE : CLS_HEART_ROSE_IDLE}`}
-        >
-          {isWishlisted ? "♥" : "♡"}
-        </Button>
+        />
       )}
     </Div>
   );

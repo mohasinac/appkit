@@ -58,7 +58,7 @@ function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boo
   const linkClass = `flex items-center justify-end gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
  ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
- : "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-900 dark:hover:text-zinc-100"
+ : "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 dark:hover:text-zinc-100"
  }`;
   return (
     <>

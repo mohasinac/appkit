@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Stack, LoginRequiredModal } from "../../../ui";
+import { Button, Stack, LoginRequiredModal, Icon } from "../../../ui";
 import { useToast } from "../../../ui/components/Toast";
 import { useAddToCart } from "../../cart/hooks/useAddToCart";
 import { apiClient } from "../../../http";
@@ -52,9 +52,15 @@ export function ProductDetailActions({
 }: ProductDetailActionsProps) {
   const router = useRouter();
   const { showToast } = useToast();
-  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
+  const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
+    useAuthGate();
   const [busy, setBusy] = useState<"buy" | "cart" | "wish" | null>(null);
   const [wishlisted, setWishlisted] = useState(false);
+
+  // `isAuthResolving` covers the window where the session has not settled and a
+  // click would be parked by useAuthGate rather than acted on. Without it the
+  // button looks live, swallows the click, and appears to do nothing.
+  const blocked = busy !== null || isAuthResolving;
 
   // Success toast (item + updated count/total) is now shown by useAddToCart
   // itself — centralised so every add-to-cart call site gets the same
@@ -130,24 +136,24 @@ export function ProductDetailActions({
           actions: [
             {
               id: ACTION_ID.ADD_TO_WISHLIST,
-              label: wishlisted ? "♥ Saved" : "♡ Wishlist",
+              label: wishlisted ? "Saved" : "Wishlist",
               variant: "ghost",
               grow: false,
-              disabled: busy !== null || wishlisted,
+              disabled: blocked || wishlisted,
               onClick: handleWishlist,
             },
             {
               id: ACTION_ID.ADD_TO_CART,
               label: busy === "cart" ? "Adding…" : "Add to Cart",
               variant: "outline",
-              disabled: !inStock || busy !== null,
+              disabled: !inStock || blocked,
               onClick: () => handleAddToCart(),
             },
             {
               id: ACTION_ID.BUY_NOW,
               label: !inStock ? "Out of Stock" : busy === "buy" ? "Loading…" : "Buy Now",
               variant: "primary",
-              disabled: !inStock || busy !== null,
+              disabled: !inStock || blocked,
               onClick: handleBuyNow,
             },
           ],
@@ -183,7 +189,7 @@ export function ProductDetailActions({
           variant="primary"
           size="md"
           className="w-full"
-          disabled={!inStock || busy !== null}
+          disabled={!inStock || blocked}
           onClick={handleBuyNow}
         >
           {!inStock ? "Out of Stock" : busy === "buy" ? "Loading…" : "Buy Now"}
@@ -192,7 +198,7 @@ export function ProductDetailActions({
           variant="secondary"
           size="md"
           className="w-full"
-          disabled={!inStock || busy !== null}
+          disabled={!inStock || blocked}
           onClick={() => handleAddToCart()}
         >
           {!inStock ? "Out of Stock" : busy === "cart" ? "Adding…" : "Add to Cart"}
@@ -201,10 +207,11 @@ export function ProductDetailActions({
           variant="ghost"
           size="md"
           className="w-full"
-          disabled={busy !== null || wishlisted}
+          disabled={blocked || wishlisted}
           onClick={handleWishlist}
         >
-          {wishlisted ? "♥ In Wishlist" : "♡ Add to Wishlist"}
+          <Icon name="wishlist" size="md" filled={wishlisted} />
+          {wishlisted ? "In Wishlist" : "Add to Wishlist"}
         </Button>
       </Stack>
     </>

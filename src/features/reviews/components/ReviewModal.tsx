@@ -105,7 +105,7 @@ export function ViewReviewModal({
                 rounded="lg"
                 paddingX="none"
                 paddingY="none"
-                className={`h-20 w-20 overflow-hidden transition hover:opacity-80 flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 border-[var(--appkit-color-border)]"}`}
+                className={`h-20 w-20 overflow-hidden transition hover:opacity-80 flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : " border-[var(--appkit-color-border)]"}`}
               >
                 <MediaImage src={img} alt={`Review thumbnail ${i + 1}`} size="thumbnail" />
               </Button>

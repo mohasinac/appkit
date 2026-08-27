@@ -626,7 +626,7 @@ function SelectableCard({
             />
             {selected && (
               <svg
-                className="absolute inset-0 m-auto w-2.5 h-2.5 text-white pointer-events-none"
+                className="absolute inset-0 m-auto h-3 w-3 text-white pointer-events-none"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
