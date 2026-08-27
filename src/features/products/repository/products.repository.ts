@@ -15,7 +15,11 @@ import {
 import { cacheManager } from "../../../core";
 import { serverLogger } from "../../../monitoring";
 import { generateUniqueId, slugify, generateBarcodeId } from "../../../utils";
-import { buildSearchTxt, parseSearchTxtQuery } from "../../../utils/search-txt";
+import {
+  buildSearchTxt,
+  matchesAllSearchTerms,
+  parseSearchTxtQuery,
+} from "../../../utils/search-txt";
 import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
 import type { ProductStatus } from "../types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -772,7 +776,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     model: SieveModel,
     opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string },
   ): Promise<FirebaseSieveResult<ProductDocument>> {
-    return this.sieveQuery<ProductDocument>(
+    const result = await this.sieveQuery<ProductDocument>(
       model,
       ProductRepository.SIEVE_FIELDS,
       {
@@ -782,6 +786,34 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         aliases: ProductRepository.FILTER_ALIASES,
       },
     );
+
+    // Only the most selective term became the `array-contains` clause, because
+    // Firestore permits one array operator per query. The REST of the terms
+    // were described as "AND-refined" in buildScopedQuery for a long time while
+    // nothing actually refined them — so "red dranzer" returned everything
+    // matching "dranzer" and the second word did nothing at all.
+    //
+    // Same shape as faqsRepository.list, deliberately: one implementation of
+    // "AND the remaining terms" that both collections read the same way.
+    const terms = parseSearchTxtQuery(opts?.search ?? "");
+    const extraTerms = terms.slice(1);
+    if (extraTerms.length === 0) return result;
+
+    const items = result.items.filter((p) =>
+      matchesAllSearchTerms(p.searchTxt, extraTerms),
+    );
+
+    // `total` becomes a FLOOR once rows are dropped after the page was cut —
+    // it counts this page only. That is the known post-pagination-filter debt
+    // (Phase 5), not a new invention: reporting the pre-filter total here would
+    // promise pages that render empty.
+    return {
+      ...result,
+      items,
+      total: items.length,
+      totalPages: items.length === 0 ? 0 : 1,
+      hasMore: false,
+    };
   }
 
   /**

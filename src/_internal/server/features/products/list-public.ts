@@ -196,6 +196,17 @@ export interface PublicProductQuery {
   page: number;
   pageSize: number;
   cursor?: string | null;
+  /**
+   * Free-text search, carried OUTSIDE `filters` on purpose.
+   *
+   * `searchTxt` matching is `array-contains`, which Sieve cannot express — so
+   * it travels as an opt to `productRepository.list` (and as `baseOpts.search`
+   * to the listingProcessor Function, whose products lister forwards opts
+   * wholesale). Every executor must pass it on; dropping it is silent, because
+   * a query with no search term is still a perfectly valid query that returns
+   * rows.
+   */
+  search?: string;
 }
 
 export interface ExecutorResult {
@@ -481,7 +492,19 @@ function buildFirestoreSafeFilters(input: PublicProductListInput): string {
     );
   }
 
-  if (input.q) parts.push(sieveFilter(PRODUCT_FIELDS.TITLE, SIEVE_OP.CONTAINS_CI, input.q));
+  // `input.q` is deliberately NOT a filter clause.
+  //
+  // It used to be `title@=*<q>` pushed HERE — before the features, tags,
+  // sublisting and typeFacets clauses below. The Firebase adapter throws on
+  // case-insensitive operators and `throwExceptions: false` swallowed it, so
+  // the processor returned the query as of the throw: with this clause first,
+  // NOTHING was applied. Typing a search term discarded every facet the user
+  // had selected AND the sort, and answered 200 with the whole catalogue.
+  //
+  // Search now travels as `query.search` (see PublicProductQuery) and becomes an
+  // `array-contains` on `searchTxt` inside the repository, which is the only
+  // shape Firestore can serve for token matching.
+
   // `array-contains-any` isn't supported by the Sieve Firebase adapter, so only a
   // single feature can be pushed down; multi-select falls through to the caller.
   if (input.features?.length === 1) {
@@ -538,12 +561,18 @@ function dateFieldFor(types: readonly string[] | undefined): string | null {
 }
 
 async function defaultExecutor(query: PublicProductQuery): Promise<ExecutorResult> {
-  const result = await productRepository.list({
-    filters: query.filters,
-    sorts: query.sorts,
-    page: query.page,
-    pageSize: query.pageSize,
-  });
+  const result = await productRepository.list(
+    {
+      filters: query.filters,
+      sorts: query.sorts,
+      page: query.page,
+      pageSize: query.pageSize,
+    },
+    // Without this second argument the repository's searchTxt read path is
+    // unreachable on the default executor, which is what every SSR listing view
+    // uses. It was implemented and simply never called.
+    query.search ? { search: query.search } : undefined,
+  );
   return {
     items: result.items,
     total: result.total,
@@ -637,6 +666,7 @@ export async function listPublicProducts(
       page,
       pageSize,
       cursor: input.cursor ?? null,
+      search: input.q,
     });
     if (!result) return null;
     return finish({
@@ -674,6 +704,7 @@ export async function listPublicProducts(
           page: 1,
           pageSize: PUBLIC_PRODUCT_MAX_PAGE_SIZE,
           cursor: null,
+          search: input.q,
         });
       }),
     );
@@ -744,6 +775,7 @@ export async function listPublicProducts(
     page: inMemory ? 1 : page,
     pageSize: inMemory ? PUBLIC_PRODUCT_MAX_PAGE_SIZE : pageSize,
     cursor: inMemory ? null : (input.cursor ?? null),
+    search: input.q,
   });
   if (!result) return null;
 
