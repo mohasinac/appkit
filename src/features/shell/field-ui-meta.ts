@@ -100,6 +100,27 @@ export interface FieldUiMeta {
    */
   sectionKeepMounted?: boolean;
 
+  /**
+   * Render this field only when the predicate holds.
+   *
+   * `SectionDef` has had a section-level `when` since W0; this is the
+   * per-FIELD equivalent, and without it a whole class of form cannot be
+   * derived at all — a shipping config shows "Price per kg" for a flat rate,
+   * a payment method shows bank fields for a UPI account. Those pages were
+   * stuck hand-writing their fields.
+   *
+   * A predicate is a UI concern living on a schema that the ROUTE also parses.
+   * That is already true of every key here (`section`, `row`, `kind`), and the
+   * server ignores the registry entirely — annotations key a WeakMap, they are
+   * not part of the parsed shape.
+   *
+   * 🛑 Hiding a field does NOT relax its schema. A required field hidden by
+   * `when` still fails validation, invisibly. Pair it with `.optional()` plus
+   * a `superRefine` that requires it under the same condition — the way
+   * `supportTicketCreateSchema` handles `orderId` for `order_issue`.
+   */
+  when?: (values: Record<string, unknown>) => boolean;
+
   /** Row span. Drives the `<FormGroup columns>` packing. */
   row?: FieldRow;
   /** Control kind. Picks the primitive and the default row span. */

@@ -76,17 +76,30 @@ export const shippingConfigFormSchema = z
       section: "basics", quick: true, order: 2, row: "pair",
     }),
 
+    /*
+     * Each rate field shows only for the method it belongs to. A flat-rate
+     * rule has no price-per-kg, and showing one invites a seller to fill in a
+     * number the checkout will never read.
+     *
+     * These pair with the `superRefine` below, which requires the field under
+     * the SAME condition — hiding a required field would otherwise fail
+     * validation invisibly.
+     */
     flatRate: annotate(amount("Flat rate").optional(), {
       section: "rates", sectionLabel: "Rates", order: 1, row: "pair",
+      when: (v) => v.method === "flat",
     }),
     pricePerKg: annotate(amount("Price per kg").optional(), {
       section: "rates", order: 2, row: "pair",
+      when: (v) => v.method === "weight",
     }),
     freeAbove: annotate(amount("Free above").optional(), {
       section: "rates", order: 3, row: "pair",
+      when: (v) => v.method === "free",
     }),
     expressSurcharge: annotate(amount("Express surcharge").optional(), {
       section: "rates", order: 4, row: "pair",
+      when: (v) => v.method === "express",
     }),
     estimatedDays: annotate(
       z.coerce.number().int("Estimated days must be a whole number.").min(0).max(365).optional(),

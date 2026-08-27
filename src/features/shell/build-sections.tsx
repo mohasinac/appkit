@@ -215,17 +215,28 @@ export function buildSectionsFromSchema<T extends object>(
         // in-flight media upload. Inference sets this for every media field.
         keepMounted: sectionFields.some((f) => f.meta.sectionKeepMounted),
         fields: sectionFields.map((f) => f.name),
-        render: ({ values, onChange, errors }) => (
-          <>
-            {packRows(sectionFields).map((row, i) => (
-              <FormGroup key={`${sectionId}-row-${i}`} columns={ROW_COLUMNS[row[0].meta.row ?? "pair"]}>
-                {row.map((field) =>
-                  renderField<T>(field, { values, onChange, errors }, opts),
-                )}
-              </FormGroup>
-            ))}
-          </>
-        ),
+        render: ({ values, onChange, errors }) => {
+          /*
+           * Filtered per render, not once at build time — the predicate reads
+           * the CURRENT values, so a field appears the moment its condition
+           * becomes true. Rows are packed after filtering so a hidden field
+           * does not leave a gap in a two-up row.
+           */
+          const visible = sectionFields.filter(
+            (f) => !f.meta.when || f.meta.when(values as Record<string, unknown>),
+          );
+          return (
+            <>
+              {packRows(visible).map((row, i) => (
+                <FormGroup key={`${sectionId}-row-${i}`} columns={ROW_COLUMNS[row[0].meta.row ?? "pair"]}>
+                  {row.map((field) =>
+                    renderField<T>(field, { values, onChange, errors }, opts),
+                  )}
+                </FormGroup>
+              ))}
+            </>
+          );
+        },
       } satisfies SectionDef<T>;
     });
 }
