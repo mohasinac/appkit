@@ -25,7 +25,6 @@ vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: object) => d,
   piiIndicesFor: () => ({}),
   decryptPiiFields: (d: object) => d,
-  addPiiIndices: (d: object) => d,
   piiBlindIndex: (v: string) => `blind:${v}`,
   encryptPayoutDetails: (d: object) => d,
   decryptPayoutDetails: (d: object) => d,

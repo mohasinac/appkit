@@ -94,8 +94,16 @@ interface AdapterCondition {
  * (OR semantics). The stock adapter tries `whereOr` which Firestore Admin SDK
  * doesn't support. Firestore's `.where(field, "in", [v1, v2])` is the correct
  * equivalent and supports up to 30 values.
+ *
+ * It also REPORTS every case-insensitive condition it sees, because those are
+ * the ones the stock adapter throws on — see `buildFilteredSieveQuery`.
+ * Reading `operatorIsCaseInsensitive` off the parsed condition is deliberate:
+ * re-scanning the raw filter string for a trailing `*` cannot tell an operator
+ * suffix from a `*` inside a value (`title==foo*bar`).
  */
-function createEnhancedFirebaseAdapter() {
+function createEnhancedFirebaseAdapter(
+  onCaseInsensitive?: (condition: AdapterCondition) => void,
+) {
   const base = createFirebaseAdapter();
   return {
     ...base,
@@ -103,6 +111,11 @@ function createEnhancedFirebaseAdapter() {
       query: CollectionReference | Query,
       group: AdapterCondition[],
     ): CollectionReference | Query {
+      if (onCaseInsensitive) {
+        for (const c of group) {
+          if (c.operatorIsCaseInsensitive) onCaseInsensitive(c);
+        }
+      }
       if (
         group.length > 1 &&
         group.every(
@@ -125,6 +138,9 @@ function createEnhancedFirebaseAdapter() {
 }
 
 import { FirebaseRepository } from "./base";
+// Defining module, not the barrel — `errors/index` re-exports a lot, and this
+// file is imported by every repository (Root Cause #18).
+import { ValidationError } from "../../errors/validation-error";
 import { deserializeTimestamps, getFirestoreCount } from "./helpers";
 import {
   expandFilterAliases as _expandFilterAliases,
@@ -251,6 +267,23 @@ function buildFilteredSieveQuery(
 ): Query {
   const effective = withAliasesExpanded(model, aliases);
 
+  // Case-insensitive operators (`@=*`, `_=*`, `==*`, `!=*`, `_-=*`) are the one
+  // shape the Firebase adapter throws on, and `throwExceptions: false` turns
+  // that throw into SILENCE — measured, not assumed:
+  //
+  //   filters="status==published,title==foo"      → where, where, orderBy   ✅
+  //   filters="title@=*dranzer,status==published" → NOTHING APPLIED         ✗
+  //   filters="status==published,title@=*dranzer" → where(status) only, no sort
+  //
+  // The processor catches the adapter's throw and returns the query as of that
+  // point, so the remaining clauses AND the entire sort phase are discarded.
+  // With the CI clause first that is the bare collection — every facet the user
+  // picked, gone, and a 200 carrying the whole table as "search results".
+  // `ignoreUnsupported: true` does NOT help; it drops the clause just as
+  // quietly. So the only honest options are "throw" or "keep lying", and a
+  // caller asking for an operator this backend cannot express is a 400.
+  const caseInsensitive: AdapterCondition[] = [];
+
   const processor = new SieveProcessorBase({
     // MUST be the enhanced adapter, not the stock one. This is the path
     // `BaseRepository.sieveQuery` delegates to, so it is what ProductRepository
@@ -261,15 +294,33 @@ function buildFilteredSieveQuery(
     // not implement; `throwExceptions: false` then swallowed it and the clause
     // vanished, returning the ENTIRE collection instead of the selected subset.
     // See __tests__/sieve-or-group.test.ts.
-    adapter: createEnhancedFirebaseAdapter() as never,
+    adapter: createEnhancedFirebaseAdapter((c) =>
+      caseInsensitive.push(c),
+    ) as never,
     autoLoadConfig: false,
     options: merged,
     fields,
   } as never);
 
-  return processor.apply(effective, baseQuery, {
+  const query = processor.apply(effective, baseQuery, {
     applyPagination: false,
   } as never) as unknown as Query;
+
+  // Thrown AFTER apply so the message can name every offending clause, not just
+  // the first one the adapter happened to reach.
+  if (caseInsensitive.length > 0) {
+    const clauses = caseInsensitive
+      .map((c) => `${c.field} (${c.parsedOperator})`)
+      .join(", ");
+    throw new ValidationError(
+      `Case-insensitive filter operators are not supported by Firestore. ` +
+        `Offending clause(s): ${clauses}. Use searchTxt token search instead ` +
+        `— see appkit/src/utils/search-txt.ts.`,
+      { fields: caseInsensitive.map((c) => c.field) },
+    );
+  }
+
+  return query;
 }
 
 /**

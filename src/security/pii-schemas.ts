@@ -48,11 +48,19 @@ export const PAYOUT_PII_INDEX_MAP: Record<string, string> = {
  */
 export const BID_PII_FIELDS = ["userEmail"] as const;
 
-/** PII fields in newsletter subscribers */
-export const NEWSLETTER_PII_FIELDS = [] as const;
-
-/** Blind-index mapping for newsletter subscribers */
-export const NEWSLETTER_PII_INDEX_MAP: Record<string, string> = {};
+/*
+ * NEWSLETTER_PII_FIELDS / NEWSLETTER_PII_INDEX_MAP were DELETED here.
+ *
+ * They were an empty `[]` and `{}` with no reader anywhere — only three barrel
+ * re-exports. `NewsletterRepository` does not extend `BaseRepository`; it holds
+ * its OWN module-local `NEWSLETTER_PII_FIELDS = ["email"]` and encrypts through
+ * that, so newsletter emails ARE encrypted at rest.
+ *
+ * The empty pair therefore did nothing except read, convincingly, as proof that
+ * newsletter PII was unencrypted — a shadow constant of exactly the shape in
+ * Root Cause #53, where the symbol a grep finds is not the one doing the work.
+ * Deleting it is the fix; populating it would have been a no-op.
+ */
 
 /**
  * PII fields in tokens (email verification / password reset).

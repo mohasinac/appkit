@@ -18,7 +18,6 @@ vi.mock("../../../../providers/db-firebase", async (importOriginal) => {
 vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: Record<string, unknown>) => d,
   decryptPiiFields: (d: Record<string, unknown>) => d,
-  addPiiIndices: (d: Record<string, unknown>) => d,
   piiIndicesFor: () => ({}),
   REVIEW_PII_FIELDS: ["userName", "userEmail"],
   REVIEW_PII_INDEX_MAP: {},

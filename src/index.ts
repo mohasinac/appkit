@@ -1351,12 +1351,6 @@ export { EVENT_ENTRY_PII_FIELDS } from "./security/index";
 // LOTTERY_ENTRY_PII_FIELDS - PII fields for lottery entries.
 export { LOTTERY_ENTRY_PII_FIELDS } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// NEWSLETTER_PII_FIELDS - Constant used across modules.
-export { NEWSLETTER_PII_FIELDS } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// NEWSLETTER_PII_INDEX_MAP - Constant used across modules.
-export { NEWSLETTER_PII_INDEX_MAP } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // OFFER_PII_FIELDS - Constant used across modules.
 export { OFFER_PII_FIELDS } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

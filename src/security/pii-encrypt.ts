@@ -381,11 +381,18 @@ export function piiBlindIndex(plaintext: string): string {
  * Blind-index fields ONLY — derived from `source` (which must be plaintext),
  * with none of `source`'s own keys carried along.
  *
- * Use this, never `addPiiIndices`, when merging indices onto an already-encrypted
- * object. `addPiiIndices` returns `{...source, ...indices}`, so spreading its
- * result over ciphertext silently restores the plaintext — which is exactly how
- * `payouts.sellerEmail`, `payouts.upiId` and `reviews.userName` ended up stored
- * in cleartext beside a valid index.
+ * This is the ONLY index helper. Its predecessor, `addPiiIndices`, returned
+ * `{...source, ...indices}`, so spreading its result over ciphertext silently
+ * restored the plaintext — which is how `payouts.sellerEmail`, `payouts.upiId`
+ * and `reviews.userName` ended up stored in cleartext beside a valid index, and
+ * how both token repositories wrote every verification and password-reset email
+ * in cleartext until it was deleted. Returning indices only makes that class of
+ * bug unrepresentable rather than merely documented.
+ *
+ * Merge order is still the caller's responsibility:
+ *   `{ ...encryptPiiFields(data, FIELDS), ...piiIndicesFor(data, MAP) }`
+ * — both arguments read the PLAINTEXT `data`; hashing ciphertext yields an
+ * index nothing can look up.
  *
  * @param source plaintext document — hashing ciphertext produces a useless index
  */
@@ -404,20 +411,6 @@ export function piiIndicesFor(
   return indices;
 }
 
-export function addPiiIndices<T extends object>(
-  obj: T,
-  mapping: Record<string, string>,
-): T {
-  const result = { ...obj };
-  const access = result as Record<string, FirestoreValue>;
-  for (const [sourceField, indexField] of Object.entries(mapping)) {
-    const val = access[sourceField];
-    if (typeof val === "string" && val) {
-      access[indexField] = piiBlindIndex(val);
-    }
-  }
-  return result;
-}
 
 // --- Nested-object PII helpers ----------------------------------------------
 

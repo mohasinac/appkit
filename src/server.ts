@@ -1443,7 +1443,7 @@ export { encryptPii } from "./security/index";
 export { decryptPii } from "./security/index";
 export { isPiiEncrypted } from "./security/index";
 export { piiBlindIndex } from "./security/index";
-export { addPiiIndices } from "./security/index";
+export { piiIndicesFor } from "./security/index";
 export { getPiiConfigError } from "./security/index";
 export { encryptShippingAddress } from "./security/index";
 export { decryptShippingAddress } from "./security/index";

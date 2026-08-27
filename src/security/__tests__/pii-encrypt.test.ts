@@ -19,7 +19,6 @@ import {
   decryptPiiFields,
   piiBlindIndex,
   piiIndicesFor,
-  addPiiIndices,
   getPiiConfigError,
 } from "../pii-encrypt";
 import { isPiiEncrypted } from "../pii-mask";
@@ -162,8 +161,31 @@ describe("encryptPiiFields / decryptPiiFields — round-trip symmetry", () => {
   });
 });
 
-describe("piiIndicesFor vs addPiiIndices", () => {
+describe("piiIndicesFor — and the deleted footgun it replaced", () => {
   const MAP = { userName: "userNameIndex" };
+
+  /**
+   * `addPiiIndices` was DELETED. It returned `{...source, ...indices}`, so
+   * spreading its result over ciphertext restored the plaintext — that is how
+   * `payouts.sellerEmail`, `payouts.upiId` and `reviews.userName` shipped in
+   * cleartext, and how both token repositories wrote every verification and
+   * reset email in cleartext.
+   *
+   * Reproduced LOCALLY rather than imported: the point of deleting it was that
+   * no such function should be reachable, and a test importing it would keep
+   * the export alive. This local copy is the shape the audit forbids.
+   */
+  const deletedAddPiiIndices = <T extends object>(
+    obj: T,
+    mapping: Record<string, string>,
+  ): T => {
+    const result = { ...obj } as Record<string, unknown>;
+    for (const [sourceField, indexField] of Object.entries(mapping)) {
+      const val = result[sourceField];
+      if (typeof val === "string" && val) result[indexField] = piiBlindIndex(val);
+    }
+    return result as T;
+  };
 
   it("piiIndicesFor returns ONLY index fields — no plaintext to spread back", () => {
     const indices = piiIndicesFor({ userName: "Ravi Kumar", rating: 5 }, MAP);
@@ -172,21 +194,20 @@ describe("piiIndicesFor vs addPiiIndices", () => {
     expect(indices).not.toHaveProperty("rating");
   });
 
-  it("addPiiIndices carries the source object along — the footgun it is documented as", () => {
-    const withIndices = addPiiIndices({ userName: "Ravi Kumar" }, MAP) as Record<string, unknown>;
+  it("the deleted helper carried the source object along — the footgun itself", () => {
+    const withIndices = deletedAddPiiIndices({ userName: "Ravi Kumar" }, MAP) as Record<
+      string,
+      unknown
+    >;
     expect(withIndices.userName).toBe("Ravi Kumar");
   });
 
-  /**
-   * The regression itself. `{...encrypted, ...addPiiIndices(plaintext, MAP)}`
-   * restores the plaintext; `piiIndicesFor` cannot.
-   */
   it("the broken spread order writes plaintext; the fixed one does not", () => {
     const data = { userName: "Ravi Kumar" };
 
     const broken = {
       ...encryptPiiFields(data, ["userName"]),
-      ...addPiiIndices(data, MAP),
+      ...deletedAddPiiIndices(data, MAP),
     } as Record<string, unknown>;
     expect(broken.userName).toBe("Ravi Kumar"); // ← what shipped
 

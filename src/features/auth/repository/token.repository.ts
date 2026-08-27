@@ -6,9 +6,7 @@ import { BaseRepository } from "../../../providers/db-firebase";
 import {
   TOKEN_PII_FIELDS,
   TOKEN_PII_INDEX_MAP,
-  addPiiIndices,
   decryptPiiFields,
-  encryptPiiFields,
   piiBlindIndex,
 } from "../../../security";
 import { resolveDate } from "../../../utils";
@@ -25,6 +23,23 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
     super(EMAIL_VERIFICATION_COLLECTION);
   }
 
+  /**
+   * Declared, not hand-rolled in a `create` override.
+   *
+   * The override this replaces computed `encryptPiiFields(...)` and then
+   * OVERWROTE the result with `addPiiIndices(data, MAP)` — which returns
+   * `{...plaintext, ...indices}` — so the ciphertext was discarded and every
+   * verification token's email was written to Firestore in CLEARTEXT. It was
+   * invisible because `mapDoc` decrypts on read and `decryptPiiFields` passes
+   * plaintext straight through, so reads looked identical either way.
+   *
+   * `applyWriteHooks` covers create/createWithId/update and the `*InTx` /
+   * `*InBatch` family, so no write path can skip encryption the way an
+   * override of `create` alone did.
+   */
+  protected override piiFields = TOKEN_PII_FIELDS;
+  protected override piiIndexMap = TOKEN_PII_INDEX_MAP;
+
   protected override mapDoc<D = EmailVerificationTokenDocument>(
     snap: DocumentSnapshot,
   ): D {
@@ -32,26 +47,6 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
     return decryptPiiFields(raw, [
       ...TOKEN_PII_FIELDS,
     ]) as unknown as D;
-  }
-
-  override async create(
-    data: Partial<EmailVerificationTokenDocument>,
-  ): Promise<EmailVerificationTokenDocument> {
-    let encrypted = encryptPiiFields(data,
-      [...TOKEN_PII_FIELDS],
-    );
-    encrypted = addPiiIndices(
-      data,
-      TOKEN_PII_INDEX_MAP,
-    );
-    const merged = {
-      ...encrypted,
-      ...addPiiIndices(
-        data,
-        TOKEN_PII_INDEX_MAP,
-      ),
-    };
-    return super.create(merged);
   }
 
   async findByToken(
@@ -133,6 +128,16 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
     super(PASSWORD_RESET_COLLECTION);
   }
 
+  /**
+   * Same defect as its sibling above, one spread further along: the override
+   * this replaces built `{...encrypted, ...addPiiIndices(data, MAP)}`, and
+   * because `addPiiIndices` returns `{...plaintext, ...indices}` the plaintext
+   * `email` was spread back OVER the ciphertext. Reset-token emails were
+   * written in cleartext too.
+   */
+  protected override piiFields = TOKEN_PII_FIELDS;
+  protected override piiIndexMap = TOKEN_PII_INDEX_MAP;
+
   protected override mapDoc<D = PasswordResetTokenDocument>(
     snap: DocumentSnapshot,
   ): D {
@@ -140,22 +145,6 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
     return decryptPiiFields(raw, [
       ...TOKEN_PII_FIELDS,
     ]) as unknown as D;
-  }
-
-  override async create(
-    data: Partial<PasswordResetTokenDocument>,
-  ): Promise<PasswordResetTokenDocument> {
-    let encrypted = encryptPiiFields(data,
-      [...TOKEN_PII_FIELDS],
-    );
-    encrypted = {
-      ...encrypted,
-      ...addPiiIndices(
-        data,
-        TOKEN_PII_INDEX_MAP,
-      ),
-    };
-    return super.create(encrypted);
   }
 
   async findByToken(token: string): Promise<PasswordResetTokenDocument | null> {

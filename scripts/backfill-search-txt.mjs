@@ -105,8 +105,18 @@ function buildSearchTxt(sources) {
 const stripHtml = (s) => String(s ?? "").replace(/<[^>]+>/g, " ");
 
 // ---------------------------------------------------------------------------
-// Which fields feed each collection's searchTxt. Mirrors the per-feature
-// builders (buildFaqSearchTxt, withProductSearchTxt, …).
+// Which fields feed each collection's searchTxt.
+//
+// Each entry MUST list the same sources, in the same order, as the write path
+// it mirrors — the tokenizer above being identical is not enough. A source
+// present on one side and absent on the other produces documents that are
+// findable by a term only if they happen to have been written by the right
+// path, and no error is raised on either side.
+//
+//   faqs                 → buildFaqSearchTxt      (features/faq/repository/faqs.repository.ts)
+//   products             → buildProductSearchTxt  (features/products/repository/products.repository.ts)
+//   testerChecklistItems → tester-checklist-item.repository.ts
+//
 // NOTE: PII must never appear here — searchTxt stores readable fragments, so
 // indexing an encrypted field would undo the encryption (decision D1).
 // ---------------------------------------------------------------------------
@@ -115,6 +125,11 @@ const SOURCES = {
   products: (d) => [
     d.title, d.description, d.brand, d.brandSlug,
     d.categoryNames, d.tags, d.features, d.condition,
+    // card.*/grading.* match zero documents in the current Beyblade-only
+    // catalogue, but buildProductSearchTxt indexes them: omitting them here
+    // would make the first graded or carded listing findable by set name only
+    // when written through the app, never when written by this backfill.
+    d.card?.setName, d.card?.cardNumber, d.grading?.service,
     (d.specifications ?? []).map((s) => `${s.name} ${s.value}`),
   ],
   testerChecklistItems: (d) => [d.label, d.description, d.groupLabel, d.pageLabel],

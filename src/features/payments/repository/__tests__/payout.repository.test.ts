@@ -23,7 +23,6 @@ vi.mock("../../../../security", () => ({
   // than trusting these.
   encryptPiiFields: (d: Record<string, unknown>) => d,
   decryptPiiFields: (d: Record<string, unknown>) => d,
-  addPiiIndices: (d: Record<string, unknown>) => d,
   piiIndicesFor: () => ({}),
   encryptPayoutBankAccount: (d: unknown) => d,
   decryptPayoutBankAccount: (d: unknown) => d,

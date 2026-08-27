@@ -174,7 +174,7 @@ const appkit = await import("@mohasinac/appkit");
 // client-safe barrel, only from "@mohasinac/appkit/server". The *_PII_FIELDS
 // / *_PII_INDEX_MAP constants are plain data and stay in the main barrel.
 const appkitServer = await import("@mohasinac/appkit/server");
-const { encryptPiiFields, addPiiIndices, encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig } = appkitServer;
+const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig } = appkitServer;
 
 const {
   // seed data
@@ -488,9 +488,16 @@ async function loadUsers(seed, stats) {
         await auth.setCustomUserClaims(uid, { role: u.role });
       }
 
-      let docData = stripUndefined({ ...u });
-      docData = addPiiIndices(docData, USER_PII_INDEX_MAP);
-      docData = encryptPiiFields(docData, [...USER_PII_FIELDS]);
+      // Both arguments read the PLAINTEXT `plain`: indices must be hashed from
+      // the source text, and encryption must not see an already-hashed value.
+      // The previous form relied on ordering alone (indices first, THEN
+      // encrypt) — correct, but one line-swap away from spreading plaintext
+      // back over ciphertext, which is why `addPiiIndices` no longer exists.
+      const plain = stripUndefined({ ...u });
+      let docData = {
+        ...encryptPiiFields(plain, [...USER_PII_FIELDS]),
+        ...piiIndicesFor(plain, USER_PII_INDEX_MAP),
+      };
       if (docData.payoutDetails) docData.payoutDetails = encryptPayoutDetails(docData.payoutDetails);
       if (docData.shippingConfig) docData.shippingConfig = encryptShippingConfig(docData.shippingConfig);
       await docRef.set(docData, { merge: true });
