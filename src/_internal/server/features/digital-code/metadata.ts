@@ -29,7 +29,9 @@ export function buildDigitalCodeMetadata(
 
   const image = opts?.ogImageUrl ?? (product.mainImage || product.images?.[0] || null);
   const siteUrl = opts?.siteUrl?.replace(/\/+$/, "");
-  const canonical = siteUrl ? `${siteUrl}/digital-codes/${product.id}` : undefined;
+  // Prefer `slug` — the route is `/digital-codes/[slug]`, so a canonical built
+  // from `id` names a URL the router does not serve whenever the two differ.
+  const canonical = siteUrl ? `${siteUrl}/digital-codes/${product.slug ?? product.id}` : undefined;
 
   return {
     title,

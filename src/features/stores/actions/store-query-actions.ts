@@ -5,6 +5,7 @@
  * auctions and reviews.  No auth — callers decide whether auth is needed.
  */
 
+import { cache } from "react";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { NotFoundError } from "../../../errors";
 import { filterTestDataForViewer, filterSingleTestData, type ViewerLike } from "../../../_internal/server/features/tester/visibility";
@@ -63,11 +64,35 @@ export async function listStores(
   return { ...result, items: filterTestDataForViewer(result.items, viewer) };
 }
 
+/**
+ * Request-scoped memo of the raw store fetch.
+ *
+ * CLAUDE.md § SSR Architecture requires `React.cache` on any data-fetch shared
+ * by a page and its `generateMetadata`. `stores/[storeSlug]/layout.tsx` awaits
+ * `getStoreBySlug` in BOTH — so every store page view was doing two identical
+ * Firestore reads.
+ *
+ * 🛑 The cache wraps the REPOSITORY call, not `getStoreBySlug`, and that is
+ * deliberate. `React.cache` memoises per argument list, and the two call sites
+ * pass different arguments — `getStoreBySlug(slug)` in `generateMetadata`,
+ * `getStoreBySlug(slug, viewer)` in the layout body. Wrapping the exported
+ * function would produce two cache entries and dedupe nothing.
+ *
+ * Making them match by reading the session in `generateMetadata` would be worse
+ * still: `getServerSessionUser()` is a dynamic API, and a dynamic API reached
+ * from metadata opts the route out of static rendering — the exact defect that
+ * made the whole site uncacheable (see `src/app/[locale]/layout.tsx`).
+ *
+ * So the read is cached on `storeSlug` alone and the viewer-specific
+ * `filterSingleTestData` is applied outside it, per caller.
+ */
+const fetchStoreBySlug = cache((storeSlug: string) => storeRepository.findBySlug(storeSlug));
+
 export async function getStoreBySlug(
   storeSlug: string,
   viewer?: ViewerLike | null,
 ): Promise<StoreDocument | null> {
-  const store = await storeRepository.findBySlug(storeSlug);
+  const store = await fetchStoreBySlug(storeSlug);
   return filterSingleTestData(store, viewer);
 }
 
