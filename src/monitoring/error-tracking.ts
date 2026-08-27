@@ -56,14 +56,56 @@ type GlobalWithTracker = typeof globalThis & {
   [key: string]: ErrorTrackerFn | undefined;
 };
 
-function getTracker(): ErrorTrackerFn {
-  return (
-    (globalThis as GlobalWithTracker)[TRACKER_KEY] ??
-    ((error, category, severity, context) => {
-      const msg = error instanceof Error ? error.message : error;
-      console.error(`[${severity.toUpperCase()}][${category}] ${msg}`, context);
-    })
+/**
+ * Default sink — structured, severity-tagged JSON on the server.
+ *
+ * `setErrorTracker()` is exported so an app can install Sentry or similar, and
+ * its only reference anywhere in this repo was its own doc comment: nothing ever
+ * called it. So every tracked error went out as a plain `console.error` string,
+ * which Cloud Logging files as unparsed DEFAULT severity — invisible to any
+ * severity filter or alert.
+ *
+ * Emitting `{severity, message, stack}` fixes that with no dependency and no
+ * DSN: GCP Error Reporting automatically ingests ERROR-severity log entries
+ * that carry a stack trace.
+ *
+ * The formatting is inlined rather than delegated to `serverLogger` on purpose.
+ * This module is re-exported from `client.ts`, and `server-logger` imports
+ * `next/server` — importing it here would pull server-only code along every
+ * client import chain, which is how Root Cause #24 gets reproduced. Eight lines
+ * of duplicated shape is the cheaper trade.
+ */
+function defaultTracker(
+  error: Error | string,
+  category: ErrorCategory,
+  severity: ErrorSeverity,
+  context?: ErrorContext,
+): void {
+  const isError = error instanceof Error;
+  const message = isError ? error.message : error;
+
+  // In a browser there is no log collector to parse JSON, and a readable console
+  // entry is worth more to whoever is looking at it.
+  if (typeof window !== "undefined") {
+    console.error(`[${severity.toUpperCase()}][${category}] ${message}`, context);
+    return;
+  }
+
+  console.error(
+    JSON.stringify({
+      severity: "ERROR",
+      message,
+      category,
+      errorSeverity: severity,
+      timestamp: new Date().toISOString(),
+      ...(isError && error.stack ? { stack: error.stack } : {}),
+      ...(context ? { context } : {}),
+    }),
   );
+}
+
+function getTracker(): ErrorTrackerFn {
+  return (globalThis as GlobalWithTracker)[TRACKER_KEY] ?? defaultTracker;
 }
 
 /** Override the default console-based tracker with a custom implementation. */

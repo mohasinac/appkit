@@ -44,6 +44,7 @@ vi.mock("../../../../errors/normalize", () => ({
 vi.mock("../../../../security", () => ({
   ORDER_PII_FIELDS: ["shippingAddress.phone", "shippingAddress.fullName"],
   encryptPiiFields: (data: Record<string, unknown>) => data,
+  piiIndicesFor: () => ({}),
   decryptPiiFields: (data: Record<string, unknown>) => data,
 }));
 

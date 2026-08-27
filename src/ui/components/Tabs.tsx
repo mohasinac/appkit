@@ -1,18 +1,22 @@
 "use client"
 import React, { createContext, useContext, useMemo, useState } from "react";
-import { Select } from "./Select";
+import { TabBarShell, TabsNavSelect } from "./TabBarShell";
 
 const UI_TABS = {
-  list: "appkit-tabs-list",
-  listDropdown: "appkit-tabs-list--dropdown",
   trigger: "appkit-tabs-trigger",
   content: "appkit-tabs-content",
   badge: "appkit-tabs-trigger__badge",
 } as const;
 
-/** Past this many items, TabsList renders a <Select> dropdown instead of a
- * horizontal row — a scrollable row of 6+ tabs is unreadable/unreachable on
- * mobile widths. */
+/** Past this many items, TabsList renders a dropdown instead of a horizontal
+ * row — a scrollable row of 6+ tabs is unreadable/unreachable on mobile
+ * widths.
+ *
+ * The dropdown is styled as NAVIGATION, not as a form field: see
+ * `TabsNavSelect` and the `.appkit-tabs-dropdown` rules in Tabs.style.css. It
+ * used to render a raw `<Select bare>`, which carried the full
+ * `.appkit-select__trigger` input chrome (bordered, rounded, surface-filled,
+ * 40px tall) — which is exactly why a tab bar read as an input. */
 const TABS_DROPDOWN_THRESHOLD = 5;
 
 interface TabsContextValue {
@@ -108,25 +112,21 @@ export function TabsList({ className = "", children }: TabsListProps) {
       };
     });
     return (
-      <Select
-        bare
-        aria-label="Tabs"
+      <TabsNavSelect
+        ariaLabel="Tabs"
         role="tablist"
         options={options}
         value={active}
         onValueChange={setActive}
-        className={[UI_TABS.list, UI_TABS.listDropdown, className].filter(Boolean).join(" ")}
+        className={className}
       />
     );
   }
 
   return (
-    <div
-      role="tablist"
-      className={[UI_TABS.list, className].filter(Boolean).join(" ")}
-     data-section="tabs-div-615">
+    <TabBarShell className={className} ariaLabel="Tabs" activeKey={active}>
       {children}
-    </div>
+    </TabBarShell>
   );
 }
 

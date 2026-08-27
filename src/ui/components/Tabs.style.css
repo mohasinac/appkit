@@ -1,84 +1,292 @@
-/* Tabs — tabbed navigation with list, triggers, and content panels */
+/* Tabs — tabbed navigation: shell (scroll arrows) + list + triggers + panels
+ *
+ * WHY THIS FILE LOOKS THE WAY IT DOES (2026-08-26):
+ *   The active trigger used to be `var(--color-primary, #65a30d)` — a variable
+ *   that does not exist in this token system — so EVERY active tab in the app
+ *   rendered hardcoded lime, ignoring the theme entirely. And past
+ *   TABS_DROPDOWN_THRESHOLD triggers the bar collapses to a <Select bare>,
+ *   which carried the full `.appkit-select__trigger` input chrome: a bordered,
+ *   rounded, surface-filled 40px box that read as a form field rather than as
+ *   navigation. Both are fixed below.
+ */
 
+/* ── Shell ──────────────────────────────────────────────────────────────
+   Owns the rail and the arrow gutters.
+
+   The rail lives HERE and not on .appkit-tabs-list because the list is the
+   scroll container: `overflow-y: hidden` clips anything a trigger pushes
+   past its own padding box, so the old `margin-bottom: -1px` overlap never
+   actually rendered. On the shell the rail also runs unbroken beneath the
+   arrow gutters. */
+.appkit-tabs-shell {
+  --appkit-tabs-indicator: var(--appkit-color-primary);
+  /* Fallback first, for engines without color-mix (Safari < 16.2): plain ink
+     is legible everywhere, just unbranded. */
+  --appkit-tabs-ink-active: var(--appkit-color-text);
+  /* Blend the brand toward the theme's own ink. --appkit-color-text is by
+     definition the max-contrast ink against that theme's background, so this
+     self-corrects per theme: light themes darken the brand, dark themes
+     lighten it. Using --appkit-color-primary raw for TEXT fails WCAG AA in
+     the shipped `sunset` (amber on white, ~2.2:1) and `default-light`
+     (~3.7:1) presets. The 2px indicator below stays pure brand — the mix
+     applies only to text, which is the part with a contrast requirement. */
+  --appkit-tabs-ink-active: color-mix(in srgb, var(--appkit-color-primary) 60%, var(--appkit-color-text));
+  --appkit-tabs-arrow-size: 2rem;
+  --appkit-tabs-veil: color-mix(in srgb, var(--appkit-color-text) 5%, transparent);
+
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 0; /* survives being a flex/grid item */
+  border-bottom: 1px solid var(--appkit-color-border);
+}
+
+/* ── List — the role="tablist" element, and the scroll container ──────── */
 .appkit-tabs-list {
   display: flex;
-  border-bottom: 1px solid var(--appkit-color-border);
-  /* Consumers with many tabs (e.g. AdminSiteSettingsView's 17 groups) would
-     otherwise overflow past the container with no way to reach the later
-     triggers — found via Playwright driving a real browser at 1440px wide,
-     where tabs 16-17 were positioned off-screen and unreachable even after
-     scrollIntoViewIfNeeded(). Horizontal scroll keeps every tab reachable
-     regardless of trigger count or viewport width. */
+  align-items: stretch;
+  gap: var(--appkit-space-1);
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
+  scroll-behavior: smooth;
+  /* The thin scrollbar is the no-JS / pre-hydration affordance. Once the
+     client shell mounts and stamps data-arrows="true", the arrows take over
+     and it is hidden. */
   scrollbar-width: thin;
 }
-
-/* Past TABS_DROPDOWN_THRESHOLD triggers, TabsList renders a <Select bare>
-   instead of the flex row above — override the row-specific layout rules
-   that don't apply to a native <select>. */
-.appkit-tabs-list--dropdown {
-  display: block;
-  overflow: visible;
-  border-bottom: none;
-  max-width: 20rem;
+.appkit-tabs-shell[data-arrows="true"] .appkit-tabs-list {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.appkit-tabs-shell[data-arrows="true"] .appkit-tabs-list::-webkit-scrollbar {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .appkit-tabs-list {
+    scroll-behavior: auto;
+  }
 }
 
+/* ── Trigger ─────────────────────────────────────────────────────────────
+   Applies to <button> (TabsTrigger, TabBarButton) AND <a> (StoreNavTabs,
+   EventTabBar), so `border: 0; background: transparent; font: inherit`
+   normalise the UA button styles rather than assuming one element. */
 .appkit-tabs-trigger {
-  margin-bottom: -1px;
-  border-bottom: 2px solid transparent;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+  padding: var(--appkit-space-2-5) var(--appkit-space-3);
+  border: 0;
+  border-radius: var(--appkit-radius-sm) var(--appkit-radius-sm) 0 0;
+  background-color: transparent;
+  font: inherit;
+  font-size: var(--appkit-text-base);
+  /* Weight stays 500 in EVERY state on purpose: a 500 -> 600 swap on select
+     shifts every following tab a few px and re-triggers the overflow
+     measurement in tabs-overflow.ts. */
   font-weight: 500;
-  transition: color 0.15s;
+  line-height: 1.25rem;
+  color: var(--appkit-color-text-muted);
+  text-decoration: none;
   white-space: nowrap;
-  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    color var(--appkit-duration-fast) ease,
+    box-shadow var(--appkit-duration-fast) ease,
+    background-color var(--appkit-duration-fast) ease;
 }
+
+/* The indicator is an INSET box-shadow, not a border:
+     - it paints inside the padding box, so the list's `overflow-y: hidden`
+       can never clip it (a bottom border + negative margin can, and did);
+     - it costs zero layout, so switching tabs cannot reflow the strip;
+     - it renders identically on <a> and <button>. */
 .appkit-tabs-trigger[aria-selected="true"] {
-  border-color: var(--color-primary, #65a30d);
-  color: var(--color-primary, #65a30d);
+  color: var(--appkit-tabs-ink-active);
+  box-shadow: inset 0 -2px 0 0 var(--appkit-tabs-indicator);
 }
-.appkit-tabs-trigger:not([aria-selected="true"]) {
-  color: var(--appkit-color-zinc-600);
-}
+
 .appkit-tabs-trigger:not([aria-selected="true"]):hover {
   color: var(--appkit-color-text);
-}
-.appkit-tabs-trigger:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  background-color: var(--appkit-tabs-veil);
+  box-shadow: inset 0 -2px 0 0 var(--appkit-color-border);
 }
 
+/* outline-offset MUST be negative — a positive or zero offset draws outside
+   the padding box and is clipped by the scroll container. */
+.appkit-tabs-trigger:focus-visible {
+  outline: 2px solid var(--appkit-color-focus-ring);
+  outline-offset: -2px;
+  border-radius: var(--appkit-radius-sm);
+}
+
+.appkit-tabs-trigger:disabled,
+.appkit-tabs-trigger[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+/* ── Badge ───────────────────────────────────────────────────────────── */
 .appkit-tabs-trigger__badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0.5rem;
   padding: 0 0.4rem;
   min-width: 1.25rem;
   height: 1.25rem;
   border-radius: 9999px;
   font-size: 0.6875rem;
   font-weight: 600;
-  background: var(--appkit-color-surface-elevated);
+  /* NOT --appkit-color-surface-elevated: that token is #ffffff in light mode,
+     so the inactive badge was invisible on every white card. */
+  background-color: color-mix(in srgb, var(--appkit-color-text) 8%, transparent);
   color: var(--appkit-color-text-muted);
 }
 .appkit-tabs-trigger[aria-selected="true"] .appkit-tabs-trigger__badge {
-  background: color-mix(in srgb, var(--appkit-color-primary) 15%, transparent);
-  color: var(--appkit-color-primary);
+  background-color: color-mix(in srgb, var(--appkit-color-primary) 15%, transparent);
+  color: var(--appkit-tabs-ink-active);
 }
 
-.appkit-tabs-content {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+/* ── Scroll arrows ───────────────────────────────────────────────────────
+   In-flow flex siblings of the tablist, NOT absolutely-positioned overlays.
+   An overlay would need a background matching whatever surface the bar
+   happens to sit on (bg / surface / surface-elevated all occur in this app)
+   and would cover the leftmost/rightmost tab. In-flow arrows need no
+   background at all. */
+.appkit-tabs-shell__arrow {
+  flex: none;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--appkit-tabs-arrow-size);
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--appkit-color-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--appkit-duration-fast) ease,
+    background-color var(--appkit-duration-fast) ease,
+    opacity var(--appkit-duration-fast) ease;
 }
-
-.dark .appkit-tabs-list {
-  border-color: var(--appkit-color-border);
-}
-.dark .appkit-tabs-trigger:not([aria-selected="true"]) {
-  color: var(--appkit-color-slate-400);
-}
-.dark .appkit-tabs-trigger:not([aria-selected="true"]):hover {
+.appkit-tabs-shell__arrow:hover:not([disabled]) {
   color: var(--appkit-color-text);
+  background-color: var(--appkit-tabs-veil);
+}
+.appkit-tabs-shell__arrow[disabled] {
+  opacity: 0.3;
+  cursor: default;
+}
+/* RTL: the chevron must point the way the content actually moves. */
+[dir="rtl"] .appkit-tabs-shell__arrow > svg {
+  transform: scaleX(-1);
+}
+
+/* ── Dropdown (past TABS_DROPDOWN_THRESHOLD triggers) ─────────────────────
+   The wrapper carries the sizing and the indicator rail; the <select> itself
+   is stripped back to a bare label.
+
+   What makes this read as NAVIGATION rather than as an input:
+     1. the enclosing rectangle is gone (border, radius, surface fill) — a
+        form field is legible as a field almost entirely because of its box;
+     2. the only chrome left is the same 2px brand rail an active row-tab
+        uses, so it speaks the same language as the bars beside it;
+     3. height collapses from --appkit-size-input-md (40px) to a row tab's;
+     4. weight 600 + active-tab ink — input VALUES are 400-weight plain text;
+     5. padding-left: 0 aligns the label flush with the content column below,
+        the way a section heading does (inputs are inset ~12px);
+     6. a caret finally exists — Select's chevron SVG only renders in its
+        non-`bare` branch, while `appearance-none` applies in both, so this
+        control previously had no disclosure affordance whatsoever. */
+.appkit-tabs-dropdown {
+  position: relative;
+  display: block;
+  flex: none; /* when it sits in TabBarShell's `leading` slot */
+  /* Select hardcodes a `w-full` utility, which is !important and unbeatable,
+     so the SELECT can never shrink to its content — the WRAPPER has to. With
+     `fit-content` the child's percentage width is treated as auto for
+     intrinsic sizing, so the box hugs the widest option (native <select>
+     behaviour) and the rail hugs the label rather than running a fixed 20rem
+     under a short one, which would read as an underlined input again. */
+  width: fit-content;
+  max-width: 20rem;
+  min-width: 0;
+  border-bottom: 2px solid var(--appkit-tabs-indicator);
+}
+/* StoreNavTabs' listing-type picker uses this while no listing tab is the
+   active one — same control, but making no "you are here" claim. */
+.appkit-tabs-dropdown--unselected {
+  border-bottom-color: transparent;
+}
+
+/* 🛑 The compound selectors below are sized to out-specify Select.style.css.
+   Do NOT "simplify" them to single-class selectors: the input chrome comes
+   straight back and the tie falls to @import order in index.style.css.
+     .appkit-select__trigger                                    (0,1,0)
+     .appkit-select__trigger--default:focus-visible             (0,2,0)
+     .appkit-select__trigger--enabled:hover:not(:focus-visible) (0,3,0)
+     .dark .appkit-select__trigger                              (0,2,0)  */
+.appkit-tabs-dropdown__select.appkit-select__trigger {
+  min-height: 0; /* kills --appkit-size-input-md (40px) */
+  border: 0; /* kills the 1px border               */
+  border-radius: 0; /* kills the .5rem radius             */
+  background-color: transparent; /* kills the surface fill             */
+  box-shadow: none;
+  /* padding-right is deliberately NOT set: Select hardcodes the `pr-10`
+     utility, which is !important and unbeatable. 2.5rem is exactly the caret
+     gutter we want anyway. */
+  padding-top: var(--appkit-space-2-5);
+  padding-bottom: var(--appkit-space-2-5);
+  padding-left: 0;
+  font-size: var(--appkit-text-base);
+  font-weight: 600;
+  color: var(--appkit-tabs-ink-active);
+  cursor: pointer;
+}
+.appkit-tabs-dropdown__select.appkit-select__trigger:hover:not(:focus-visible) {
+  border-color: transparent;
+  color: var(--appkit-color-text);
+}
+.appkit-tabs-dropdown__select.appkit-select__trigger:focus-visible {
+  outline: 2px solid var(--appkit-color-focus-ring);
+  outline-offset: 2px;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.appkit-tabs-dropdown__caret {
+  position: absolute;
+  top: 50%;
+  right: var(--appkit-space-2);
+  transform: translateY(-50%);
+  display: inline-flex;
+  pointer-events: none;
+  color: var(--appkit-tabs-ink-active);
+}
+
+/* ── Panels ──────────────────────────────────────────────────────────── */
+.appkit-tabs-content {
+  padding-top: var(--appkit-space-4);
+  padding-bottom: var(--appkit-space-4);
+}
+
+/* ── Dark mode ───────────────────────────────────────────────────────────
+   Exactly ONE override is needed. Every colour above is either a semantic
+   token that flips with the theme, or a color-mix against
+   --appkit-color-text / --appkit-color-primary, which flip with it too. This
+   rule exists solely because Select.style.css hardcodes a dark background at
+   (0,2,0). The old `.dark .appkit-tabs-trigger { color: slate-400 }` pair is
+   gone — it pinned a fixed ramp value that ignored the cobalt-night and
+   sunset themes. */
+.dark .appkit-tabs-dropdown__select.appkit-select__trigger {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--appkit-tabs-ink-active);
 }

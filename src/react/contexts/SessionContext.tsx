@@ -425,8 +425,16 @@ export function SessionProvider({
 
     // Server revocation and Firebase sign-out fire-and-forget (non-blocking)
     Promise.all([
-      apiClient.post(ep.logout, {}).catch((err) => logger.error("Server logout failed", { err })),
-      adapter.signOut().catch((err) => logger.error("Firebase sign-out failed", { err })),
+      apiClient
+        .post(ep.logout, {})
+        .catch((err) =>
+          logger.error("Server logout failed", { error: normalizeError(err).message }),
+        ),
+      adapter
+        .signOut()
+        .catch((err) =>
+          logger.error("Firebase sign-out failed", { error: normalizeError(err).message }),
+        ),
     ]);
   }, [ep.logout, onSignOutInvalidate, signOutInvalidationKeys]);
 

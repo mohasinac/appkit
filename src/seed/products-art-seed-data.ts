@@ -20,7 +20,7 @@
 
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
 export const productsArtSeedData: Partial<ProductDocument>[] = [
@@ -57,14 +57,14 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     tags: ["fan-art", "poster"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-17"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Dranzer Phoenix Rising — Fan Art Poster",
       "Vibrant fan-art poster of Dranzer erupting in phoenix flame.",
       "Beyblade",
       "brand-beyblade",
       ["Spinning Tops"],
       ["fan-art", "poster"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "art-valkyrie-holographic-print",
@@ -99,14 +99,14 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     tags: ["fan-art", "limited-run"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Burst Valkyrie — Holographic Art Print (Limited /100)",
       "Limited-edition holographic art print of Valkyrie, numbered out of 100.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["fan-art", "limited-run"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "art-beyblade-x-lineup-canvas",
@@ -144,14 +144,14 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     tags: ["fan-art", "canvas"],
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X Full Lineup — Canvas Print",
       "Gallery-style canvas print featuring the full current Beyblade X roster.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["fan-art", "canvas"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "art-metal-fight-vintage-poster",
@@ -183,14 +183,14 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     tags: ["fan-art", "poster", "vintage-collectible"],
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Metal Fight Beyblade — Vintage-Style Poster (Open Edition)",
       "Retro-styled poster celebrating the Metal Fight era, open edition.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade Metal Fight", "Spinning Tops"],
       ["fan-art", "poster", "vintage-collectible"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "art-original-series-anniversary-print",
@@ -225,14 +225,14 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     tags: ["fan-art", "vintage-collectible", "limited-run"],
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Original Series 25th Anniversary — Glossy Art Print",
       "Commemorative glossy print marking 25 years of the original Beyblade series.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["fan-art", "vintage-collectible", "limited-run"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Sold-out fixture. The canonical unavailable shape for a stock-only type:
@@ -270,13 +270,13 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     tags: ["fan-art", "poster", "sold-out"],
     createdAt: new Date("2026-08-24"),
     updatedAt: new Date("2026-08-24"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Dragoon Galaxy Turbo — Fan Art Print (Sold Out)",
       "A sold-out run of the Dragoon Galaxy Turbo fan-art print.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["fan-art", "poster", "sold-out"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
 ];

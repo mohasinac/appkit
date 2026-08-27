@@ -147,7 +147,7 @@ async function claimDigitalCodeForOrder(
       userName: opts.userName ?? "there",
       productTitle: opts.productTitle ?? "your product",
       orderId,
-    }).catch((e) => serverLogger.error("claimDigitalCode: email failed", e));
+    }).catch((e) => serverLogger.error("claimDigitalCode: email failed", { error: normalizeError(e).message }));
   }
 }
 
@@ -883,7 +883,7 @@ async function createOrderForGroup(
       userEmail: userEmail || undefined,
       userName,
       productTitle: firstItem.productTitle,
-    }).catch((e) => serverLogger.error("claimDigitalCode", e));
+    }).catch((e) => serverLogger.error("claimDigitalCode", { error: normalizeError(e).message }));
   }
 
   for (const code of groupCouponCodes) {
@@ -1964,7 +1964,7 @@ async function createRazorpayGroupOrder(
       userEmail: userEmail || undefined,
       userName,
       productTitle: firstItem.productTitle,
-    }).catch((e) => serverLogger.error("claimDigitalCode", e));
+    }).catch((e) => serverLogger.error("claimDigitalCode", { error: normalizeError(e).message }));
   }
 
   for (const code of groupCouponCodes) {

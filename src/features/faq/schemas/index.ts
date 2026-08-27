@@ -99,7 +99,7 @@ export const faqFirestoreSchema = z.object({
   order: z.number().int(),
   priority: z.number().int(),
   tags: z.array(z.string()),
-  searchTokens: z.array(z.string()).optional(),
+  searchTxt: z.array(z.string()).optional(),
   relatedFAQs: z.array(z.string()),
   useSiteSettings: z.boolean(),
   variables: z.record(z.string(), z.string()).optional(),

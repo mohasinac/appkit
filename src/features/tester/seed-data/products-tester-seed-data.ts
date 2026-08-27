@@ -25,7 +25,7 @@
 
 import { ProductDocument } from "../../products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { buildSearchTokens } from "../../../utils/search-tokens";
+import { buildSearchTxt } from "../../../utils/search-txt";
 import { seedExtMedia } from "../../../seed/_helpers/media";
 import { testDataExpiresAt } from "./tester-ttl";
 
@@ -46,7 +46,7 @@ function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
     storeId: TESTER_STORE_ID,
     storeName: TESTER_STORE_NAME,
     ...p,
-    searchTokens: buildSearchTokens(p.title, p.description, p.brand, p.brandSlug, p.categoryNames, p.tags),
+    searchTxt: buildSearchTxt([p.title, p.description, p.brand, p.brandSlug, p.categoryNames, p.tags]),
   };
 }
 

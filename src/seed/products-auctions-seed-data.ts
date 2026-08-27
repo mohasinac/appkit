@@ -25,7 +25,7 @@
 
 import { ProductDocument, ProductSpecification } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
@@ -36,11 +36,11 @@ function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
     stockQuantity: 1,
     availableQuantity: p.isSold ? 0 : 1,
     ...p,
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       p.title, p.description, p.brand, p.brandSlug,
       p.categoryNames, p.tags, p.features, p.condition,
       p.specifications?.map((s) => `${s.name} ${s.value}`),
-    ),
+    ]),
   };
 }
 
@@ -410,8 +410,12 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
   },
 ];
 
+// `.map(withTokens)` is applied to the WHOLE array at the end, not just to the
+// spread above. It used to wrap only the spread, so the ended-unsold fixture
+// appended after it shipped with no searchTxt — the one row that proves the
+// auction availability branch works, invisible to search.
 export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
-  ..._rawProductsAuctionsSeedData.map((a) => withTokens({
+  ..._rawProductsAuctionsSeedData.map((a) => ({
     ...a,
     listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION,
   })),
@@ -451,4 +455,4 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     createdAt: new Date("2026-08-10"),
     updatedAt: new Date("2026-08-24"),
   },
-];
+].map(withTokens);

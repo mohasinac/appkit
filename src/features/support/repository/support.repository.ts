@@ -12,6 +12,8 @@ import type {
 } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { SUPPORT_TICKET_FIELDS } from "../../../constants/field-names";
+import { decryptPiiFields } from "../../../security/pii-encrypt";
+import type { DocumentSnapshot } from "firebase-admin/firestore";
 import {
   SUPPORT_TICKET_COLLECTION,
   SUPPORT_TICKET_PII_FIELDS,
@@ -47,8 +49,24 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     updatedAt:  { canFilter: true,  canSort: true, parseValue: parseSieveDateValue  },
   };
 
+  /**
+   * Ticket PII, encrypted by BaseRepository's write hooks.
+   *
+   * `SUPPORT_TICKET_PII_FIELDS` existed but was only ever used to scrub status
+   * history — the documents themselves were never encrypted. Safe to enable:
+   * nothing queries these by equality (the admin list searches `subject`), so
+   * no read path depends on their plaintext.
+   */
+  protected override piiFields = SUPPORT_TICKET_PII_FIELDS;
+
   constructor() {
     super(SUPPORT_TICKET_COLLECTION);
+  }
+
+  /** Decrypt on read so callers see the shape they wrote. */
+  protected override mapDoc<D = SupportTicketDocument>(snap: DocumentSnapshot): D {
+    const raw = super.mapDoc<SupportTicketDocument>(snap);
+    return decryptPiiFields(raw, [...SUPPORT_TICKET_PII_FIELDS]) as unknown as D;
   }
 
   async createTicket(

@@ -1,5 +1,5 @@
 "use client"
-import { Button, Row } from "@mohasinac/appkit/ui";
+import { Tabs, TabsList, TabsTrigger } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 
@@ -62,28 +62,19 @@ export function ProductTabs({
       {renderTabBar ? (
         renderTabBar(activeTab, setActiveTab, tabs)
       ) : (
-        <Row gap="md" className="border-b mb-4">
-          {tabs.map((t) => (
-            <Button
-              variant="ghost"
-              key={t.value}
-              type="button"
-              onClick={() => setActiveTab(t.value)}
-              paddingX="none"
-              paddingY="xs"
-              textSize="sm"
-              weight="medium"
-              rounded="none"
-              className={`border-b-2 transition-colors ${
- activeTab === t.value
- ? "border-current text-current"
- : "border-transparent text-[var(--appkit-color-text-muted)]"
- }`}
-            >
-              {t.label}
-            </Button>
-          ))}
-        </Row>
+        // Was a hand-rolled <Row> of ghost <Button>s whose ACTIVE state was
+        // `border-current text-current` — the inherited colour, i.e. visually
+        // identical to inactive. It also had no role="tablist"/role="tab"/
+        // aria-selected at all; routing through Tabs supplies all three.
+        <Tabs value={activeTab} onChange={setActiveTab} className="mb-4">
+          <TabsList>
+            {tabs.map((t) => (
+              <TabsTrigger key={t.value} value={t.value}>
+                {t.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       )}
       {activeTab === "description" && renderDescription?.()}
       {activeTab === "specs" && renderSpecs?.()}

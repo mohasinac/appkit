@@ -221,17 +221,30 @@ export async function adminDeleteReview(
   await reviewRepository.delete(reviewId);
 }
 
+/**
+ * Record a helpful vote. `userId` is required — without it the endpoint has no
+ * idempotency key and a repeated POST inflates the count without limit.
+ */
 export async function voteReviewHelpful(
   reviewId: string,
   helpful: boolean,
-): Promise<void> {
+  userId: string,
+): Promise<{ counted: boolean; helpfulCount: number }> {
   if (!reviewId?.trim()) {
     throw new ValidationError(ERR_REVIEW_ID_REQUIRED);
   }
-
-  if (helpful) {
-    await reviewRepository.incrementHelpful(reviewId);
+  if (!userId?.trim()) {
+    throw new ValidationError("A signed-in user is required to vote.");
   }
+
+  if (!helpful) {
+    // Only "helpful" is recorded today; an un-vote would need its own path so
+    // it cannot be used to decrement a review it never incremented.
+    const review = await reviewRepository.findById(reviewId);
+    return { counted: false, helpfulCount: review?.helpfulCount ?? 0 };
+  }
+
+  return reviewRepository.voteHelpful(reviewId, userId);
 }
 
 export async function listReviewsByProduct(

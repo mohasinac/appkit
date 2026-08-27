@@ -38,7 +38,11 @@ const MAX_PAGE_SIZE = 100;
 
 export interface ListingRequestBody {
   collection: string;
-  q?: string;
+  // NOTE: there is deliberately no top-level `q`. One used to be declared here
+  // and `runListingProcessor` never read it, so the interface advertised a
+  // search capability the implementation did not have. Free-text search travels
+  // as `baseOpts.search` — Sieve cannot express array-contains, so it can never
+  // ride in `f`.
   f?: string;
   s?: string;
   p?: number | string;
@@ -96,6 +100,24 @@ function getBoolOpt(baseOpts: Record<string, JsonValue>, key: string, fallback: 
   return fallback;
 }
 
+function getStringOpt(
+  baseOpts: Record<string, JsonValue>,
+  key: string,
+): string | undefined {
+  const value = baseOpts[key];
+  return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function getStringArrayOpt(
+  baseOpts: Record<string, JsonValue>,
+  key: string,
+): string[] | undefined {
+  const value = baseOpts[key];
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter((v): v is string => typeof v === "string" && v.length > 0);
+  return strings.length > 0 ? strings : undefined;
+}
+
 const LISTERS: Record<string, Lister> = {
   products: (m, o) =>
     productRepository.list(m, o as Parameters<typeof productRepository.list>[1]),
@@ -114,7 +136,15 @@ const LISTERS: Record<string, Lister> = {
   payouts: (m) => payoutRepository.list(m),
   blogPosts: (m) => blogRepository.listAll(m),
   events: (m) => eventRepository.list(m),
-  faqs: (m) => faqsRepository.list(m),
+  // Forwards opts so `baseOpts.search` reaches the repository's token search.
+  // This was `(m) => faqsRepository.list(m)` — the second argument was dropped,
+  // which made FAQ token search structurally unreachable through the Function
+  // even though the repository has implemented it all along.
+  faqs: (m, o) =>
+    faqsRepository.list(m, {
+      search: getStringOpt(o, "search"),
+      tags: getStringArrayOpt(o, "tags"),
+    }),
   notifications: (m) => notificationRepository.list(m),
   scammers: (m) => scammerRepository.listAll(m),
   sublistingCategories: (m) =>

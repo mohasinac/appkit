@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button, Div, Select, TextLink } from "../../../ui";
-
-const CLS_ACTIVE_TAB = "border-primary text-primary";
+import { TabBarButton, TabBarShell, TabsNavSelect, TextLink } from "../../../ui";
 
 export interface StoreTab {
   value: string;
@@ -58,23 +56,41 @@ export function StoreNavTabs({
     handleChange(tab.value);
   };
 
+  /*
+   * The listing-type picker goes in `leading` — i.e. INSIDE the shell but
+   * OUTSIDE the role="tablist" element. It used to be a direct child of the
+   * tablist, which is invalid ARIA: a <select> is not a role="tab". Its old
+   * `max-w-[12rem] flex-shrink-0` sizing also went onto the inner <select>,
+   * the wrong element for sizing utilities (Root Cause #29); those now live
+   * on `.appkit-tabs-dropdown` in Tabs.style.css.
+   */
+  const leading =
+    dropdownTabs.length > 0 ? (
+      <TabsNavSelect
+        ariaLabel={dropdownPlaceholder}
+        options={dropdownTabs.map((tab) => ({ value: tab.value, label: tab.label }))}
+        value={activeDropdownTab?.value ?? ""}
+        placeholder={activeDropdownTab ? undefined : dropdownPlaceholder}
+        selected={Boolean(activeDropdownTab)}
+        onValueChange={handleDropdownChange}
+      />
+    ) : undefined;
+
+  /*
+   * Triggers carry `.appkit-tabs-trigger` and NOTHING else — no padding /
+   * size / weight props, no conditional colour classes. `important: true` is
+   * set in both tailwind configs, so any surviving utility would beat the
+   * component CSS unconditionally. The old inactive string also contained
+   * contradictory duplicates (`hover:text-neutral-800` immediately overridden
+   * by `hover:text-…text-muted`), so hover had been a no-op.
+   */
   return (
-    <Div layout="flex" gap="2" align="center"
-      role="tablist"
-      border="bottom"
-      className={`overflow-x-auto ${className}`}
+    <TabBarShell
+      className={className}
+      ariaLabel="Store sections"
+      leading={leading}
+      activeKey={activeValue}
     >
-      {dropdownTabs.length > 0 && (
-        <Select
-          bare
-          aria-label={dropdownPlaceholder}
-          options={dropdownTabs.map((tab) => ({ value: tab.value, label: tab.label }))}
-          value={activeDropdownTab?.value ?? ""}
-          placeholder={activeDropdownTab ? undefined : dropdownPlaceholder}
-          onValueChange={handleDropdownChange}
-          className={`max-w-[12rem] flex-shrink-0 whitespace-nowrap ${activeDropdownTab ? CLS_ACTIVE_TAB : ""}`}
-        />
-      )}
       {tabs.map((tab) =>
         tab.href ? (
           <TextLink
@@ -83,41 +99,20 @@ export function StoreNavTabs({
             href={tab.href}
             role="tab"
             aria-selected={activeValue === tab.value}
-            paddingX="md"
-            paddingY="xs"
-            size="sm"
-            weight="medium"
-            className={`whitespace-nowrap border-b-2 -mb-px transition-colors ${
- activeValue === tab.value
- ? CLS_ACTIVE_TAB
- : "border-transparent text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-800 hover:text-[var(--appkit-color-text-muted)]"
- }`}
+            className="appkit-tabs-trigger"
           >
             {tab.label}
           </TextLink>
         ) : (
-          <Button
-            variant="ghost"
+          <TabBarButton
             key={tab.value}
-            type="button"
-            role="tab"
-            aria-selected={activeValue === tab.value}
+            selected={activeValue === tab.value}
             onClick={() => handleChange(tab.value)}
-            paddingX="md"
-            paddingY="sm"
-            textSize="sm"
-            weight="medium"
-            rounded="none"
-            className={`whitespace-nowrap border-b-2 -mb-px transition-colors ${
- activeValue === tab.value
- ? CLS_ACTIVE_TAB
- : "border-transparent text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-800 hover:text-[var(--appkit-color-text-muted)]"
- }`}
           >
             {tab.label}
-          </Button>
+          </TabBarButton>
         ),
       )}
-    </Div>
+    </TabBarShell>
   );
 }

@@ -17,6 +17,7 @@ vi.mock("../../../../providers/db-firebase", async (importOriginal) => {
 
 vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: Record<string, unknown>) => d,
+  piiIndicesFor: () => ({}),
   decryptPiiFields: (d: Record<string, unknown>) => d,
   EVENT_ENTRY_PII_FIELDS: ["userEmail"],
 }));

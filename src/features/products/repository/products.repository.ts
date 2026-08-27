@@ -14,7 +14,8 @@ import {
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
 import { serverLogger } from "../../../monitoring";
-import { generateUniqueId, slugify, buildSearchTokens, tokenizeQuery, generateBarcodeId } from "../../../utils";
+import { generateUniqueId, slugify, generateBarcodeId } from "../../../utils";
+import { buildSearchTxt, parseSearchTxtQuery } from "../../../utils/search-txt";
 import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
 import type { ProductStatus } from "../types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -87,8 +88,8 @@ function buildListingKindClause(
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
 
-function buildProductSearchTokens(p: Partial<ProductDocument>): string[] {
-  return buildSearchTokens(
+function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
+  return buildSearchTxt([
     p.title,
     p.description,
     p.brand,
@@ -101,7 +102,7 @@ function buildProductSearchTokens(p: Partial<ProductDocument>): string[] {
     p.card?.cardNumber,
     p.grading?.service,
     p.specifications?.map((s) => `${s.name} ${s.value}`),
-  );
+  ]);
 }
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
@@ -163,7 +164,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const merged = { ...current, ...data } as ProductDocument;
     const updated = await super.update(id, {
       ...data,
-      searchTokens: buildProductSearchTokens(merged),
+      searchTxt: buildProductSearchTxt(merged),
     });
     this.cacheSet(updated);
     return updated;
@@ -192,7 +193,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       barcodeId,
       slug: id,
       availableQuantity: input.stockQuantity,
-      searchTokens: buildProductSearchTokens(input),
+      searchTxt: buildProductSearchTxt(input),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -529,7 +530,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // field had no entry: `throwExceptions:false` means an unknown field is
     // silently skipped. The toggle did nothing at all until 2026-08-21.
     shippingPaidBy: { canFilter: true, canSort: false },
-    searchTokens: { canFilter: true, canSort: false },
+    searchTxt: { canFilter: true, canSort: false },
     "classified.meetupArea": { canFilter: true, canSort: false },
     "classified.acceptsShipping": { canFilter: true, canSort: false },
     "classified.negotiable": { canFilter: true, canSort: false },
@@ -716,16 +717,16 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       ) as typeof baseQuery;
     }
 
-    const searchTokens = tokenizeQuery(opts?.search ?? "");
-    if (searchTokens.length > 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
+    const searchTxt = parseSearchTxtQuery(opts?.search ?? "");
+    if (searchTxt.length > 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
       // Firestore cannot combine two array operators in one query
-    } else if (searchTokens.length === 1) {
-      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TOKENS, "array-contains", searchTokens[0]) as typeof baseQuery;
-    } else if (searchTokens.length > 1) {
-      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TOKENS, "array-contains-any", searchTokens) as typeof baseQuery;
+    } else if (searchTxt.length === 1) {
+      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TXT, "array-contains", searchTxt[0]) as typeof baseQuery;
+    } else if (searchTxt.length > 1) {
+      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TXT, "array-contains-any", searchTxt) as typeof baseQuery;
     }
 
-    if (searchTokens.length === 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
+    if (searchTxt.length === 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
       let categoriesIn = opts.categoriesIn;
       if (categoriesIn.length > ProductRepository.MAX_ARRAY_CONTAINS_ANY) {
         // Products carry their FULL ancestor chain in `categorySlugs`, so a

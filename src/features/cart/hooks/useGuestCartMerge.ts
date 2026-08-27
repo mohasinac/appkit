@@ -9,6 +9,7 @@ import {
   type GuestCartItem,
 } from "../utils/guest-cart";
 import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
+import { normalizeError, type NormalizedError } from "../../../errors/normalize";
 
 export interface UseGuestCartMergeOptions {
   userId: string | null | undefined;
@@ -16,7 +17,13 @@ export interface UseGuestCartMergeOptions {
   onNavigate?: (url: string) => void;
   mergeFn?: (items: GuestCartItem[]) => Promise<void>;
   onMerged?: (count: number) => void;
-  onMergeFailed?: (error: unknown) => void;
+  /**
+   * Receives a typed NormalizedError, not the raw `unknown` — the hook is the
+   * boundary that knows how to classify the failure, so every consumer would
+   * otherwise repeat the same narrowing. Zero external consumers at the time of
+   * narrowing, so this broke nothing.
+   */
+  onMergeFailed?: (error: NormalizedError) => void;
 }
 
 /**
@@ -68,7 +75,7 @@ export function useGuestCartMerge(options: UseGuestCartMergeOptions): void {
         }
       })
       .catch((err) => {
-        options.onMergeFailed?.(err);
+        options.onMergeFailed?.(normalizeError(err));
         if (returnTo) clearGuestReturnTo();
       });
   }, [options]);

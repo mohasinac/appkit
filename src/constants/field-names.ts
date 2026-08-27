@@ -139,7 +139,7 @@ export const PRODUCT_FIELDS = {
    * matches zero documents — always map across via this constant.
    */
   SUBLISTING_CATEGORY_ID: "sublistingCategoryId",
-  SEARCH_TOKENS: "searchTokens",
+  SEARCH_TXT: "searchTxt",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 
@@ -1047,7 +1047,7 @@ export const FAQ_FIELDS = {
   ORDER: "order",
   PRIORITY: "priority",
   TAGS: "tags",
-  SEARCH_TOKENS: "searchTokens",
+  SEARCH_TXT: "searchTxt",
   RELATED_FAQS: "relatedFAQs",
   USE_SITE_SETTINGS: "useSiteSettings",
   VARIABLES: "variables",

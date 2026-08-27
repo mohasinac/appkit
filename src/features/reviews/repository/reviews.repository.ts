@@ -8,11 +8,12 @@ import {
   prepareForFirestore,
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
+import { NotFoundError } from "../../../errors";
 import { REVIEW_MAX_RATING, REVIEW_MIN_RATING } from "../../../_internal/shared/features/reviews/config";
 import {
-  addPiiIndices,
   decryptPiiFields,
   encryptPiiFields,
+  piiIndicesFor,
   REVIEW_PII_FIELDS,
   REVIEW_PII_INDEX_MAP,
 } from "../../../security";
@@ -60,21 +61,35 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     };
   }
 
+  /**
+   * Encrypt PII, then attach blind indices derived from the plaintext.
+   *
+   * Previously this reassigned `encrypted = addPiiIndices(data, …)` — which
+   * re-reads the ORIGINAL plaintext and returns `{...data, ...indices}` — and
+   * then spread that over the ciphertext, so plaintext won and `userName` was
+   * written to Firestore in the clear beside a valid index. `piiIndicesFor`
+   * returns the index fields alone, so the ciphertext cannot be overwritten.
+   * The identical bug was fixed in UserRepository and never propagated here.
+   */
   private encryptReviewData<T extends object>(data: T): T {
-    let encrypted = encryptPiiFields(data, [...REVIEW_PII_FIELDS]);
-    encrypted = addPiiIndices(data, REVIEW_PII_INDEX_MAP) as unknown as T;
-    encrypted = {
+    return {
       ...encryptPiiFields(data, [...REVIEW_PII_FIELDS]),
-      ...encrypted,
-    };
-    return encrypted;
+      ...piiIndicesFor(data, REVIEW_PII_INDEX_MAP),
+    } as T;
   }
 
   protected override mapDoc<D = ReviewDocument>(
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<ReviewDocument>(snap);
-    return decryptPiiFields(raw, [
+    // `helpfulVoterIds` is an idempotency key, not review content — publishing it
+    // would tell everyone who voted on what. Stripped here rather than in each
+    // route because `/api/reviews` returns `result.items` verbatim (REVIEW_PUBLIC_FIELDS
+    // exists but nothing projects through it), so a route-level strip is one
+    // forgotten call site away from a leak. `voteHelpful` reads the raw snapshot
+    // inside its transaction and is unaffected.
+    const { helpfulVoterIds: _voters, ...rest } = raw as ReviewDocument;
+    return decryptPiiFields(rest, [
       ...REVIEW_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -220,13 +235,45 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     });
   }
 
-  async incrementHelpful(reviewId: string): Promise<void> {
-    const review = await this.findById(reviewId);
-    if (review) {
-      await this.update(reviewId, {
-        helpfulCount: review.helpfulCount + 1,
+  /**
+   * Record one helpful vote, idempotently per user.
+   *
+   * Runs in a transaction because the read-modify-write on `helpfulCount` races
+   * itself otherwise — two concurrent votes both read N and both write N+1.
+   * `helpfulVoterIds` is what makes a repeat POST a no-op; the client's
+   * localStorage flag is advisory and cannot be trusted.
+   *
+   * @returns `counted` false when this user had already voted (not an error —
+   *          the caller reports the current count either way).
+   */
+  async voteHelpful(
+    reviewId: string,
+    userId: string,
+  ): Promise<{ counted: boolean; helpfulCount: number }> {
+    const ref = this.getCollection().doc(reviewId);
+
+    return this.db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) {
+        throw new NotFoundError(`Review not found: ${reviewId}`);
+      }
+
+      const data = snap.data() as ReviewDocument;
+      const voters = data.helpfulVoterIds ?? [];
+      const current = data.helpfulCount ?? 0;
+
+      if (voters.includes(userId)) {
+        return { counted: false, helpfulCount: current };
+      }
+
+      const next = current + 1;
+      tx.update(ref, {
+        helpfulCount: next,
+        helpfulVoterIds: [...voters, userId],
+        updatedAt: new Date(),
       });
-    }
+      return { counted: true, helpfulCount: next };
+    });
   }
 
   async incrementReportCount(reviewId: string): Promise<void> {

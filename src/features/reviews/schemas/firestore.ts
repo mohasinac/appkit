@@ -46,6 +46,12 @@ export interface ReviewDocument extends BaseDocument {
   moderatorNote?: string;
   rejectionReason?: string;
   helpfulCount: number;
+  /**
+   * UIDs that have voted this review helpful. Server-side idempotency for
+   * POST /api/reviews/[id]/vote — the client's localStorage guard is advisory
+   * only and cannot stop a repeated POST. Never returned to the public.
+   */
+  helpfulVoterIds?: string[];
   reportCount: number;
   verified: boolean;
   featured?: boolean;

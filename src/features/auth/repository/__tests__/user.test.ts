@@ -3,7 +3,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // Mock security before importing the repo
 vi.mock("../../../../security", () => ({
   USER_PII_FIELDS: ["email", "phoneNumber"],
+  // Identity stubs: this suite cannot tell encrypted from plaintext. Real-crypto
+  // coverage lives in appkit/src/security/__tests__/pii-encrypt.test.ts.
   encryptPiiFields: (data: unknown) => data,
+  piiIndicesFor: () => ({}),
+  USER_PII_INDEX_MAP: { email: "emailIndex", phoneNumber: "phoneIndex" },
   decryptPiiFields: (data: unknown) => data,
   encryptPayoutDetails: (d: unknown) => d,
   decryptPayoutDetails: (d: unknown) => d,

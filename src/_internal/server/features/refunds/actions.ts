@@ -18,6 +18,7 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 
 import { randomUUID } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
+import { normalizeError } from "../../../../errors/normalize";
 import { rupeesToPaise } from "../../../../providers/payment-razorpay/index";
 import { orderRepository } from "../../../..";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
@@ -80,7 +81,7 @@ function revokeAvailableDigitalCodes(
       .limit(1)
       .get()
       .then((snap) => revokeFirstSnapDoc(snap))
-      .catch((e) => serverLogger.error("refund: code query failed", e));
+      .catch((e) => serverLogger.error("refund: code query failed", { error: normalizeError(e).message }));
   }
 }
 
@@ -88,7 +89,7 @@ function revokeFirstSnapDoc(snap: FirebaseFirestore.QuerySnapshot): void {
   if (snap.empty) return;
   snap.docs[0].ref
     .update({ status: "revoked", updatedAt: new Date() })
-    .catch((e) => serverLogger.error("refund: code revoke failed", e));
+    .catch((e) => serverLogger.error("refund: code revoke failed", { error: normalizeError(e).message }));
 }
 
 export type ProcessRefundInput = {

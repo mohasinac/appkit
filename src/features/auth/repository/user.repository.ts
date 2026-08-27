@@ -13,6 +13,8 @@ import {
 } from "../../../providers/db-firebase";
 import {
   USER_PII_FIELDS,
+  USER_PII_INDEX_MAP,
+  piiIndicesFor,
   decryptPayoutDetails,
   decryptPiiFields,
   decryptShippingConfig,
@@ -76,7 +78,18 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // addPiiIndices is intentionally NOT called here — it spreads the original
     // plaintext `data` back into the result, which would overwrite the encrypted
     // ciphertext with the original plaintext values, defeating the encryption.
-    const encrypted = encryptPiiFields(data, [...USER_PII_FIELDS]);
+    //
+    // The mapped indices below are not optional. `encryptPiiFields` derives its
+    // sibling name mechanically as `${field}Index`, so `phoneNumber` produces
+    // `phoneNumberIndex` — but `findByPhone` queries `USER_FIELDS.PHONE_INDEX`,
+    // which is `phoneIndex`. Only the seed paths ever wrote that name, so
+    // **phone lookup could never match a user created by the app.**
+    // `piiIndicesFor` applies USER_PII_INDEX_MAP's real names and, unlike
+    // `addPiiIndices`, carries no plaintext back over the ciphertext.
+    const encrypted = {
+      ...encryptPiiFields(data, [...USER_PII_FIELDS]),
+      ...piiIndicesFor(data, USER_PII_INDEX_MAP),
+    } as T;
     const access = encrypted as { payoutDetails?: object | null; shippingConfig?: object | null };
 
     if (access.payoutDetails) {

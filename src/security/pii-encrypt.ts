@@ -119,18 +119,104 @@ export function hmacBlindIndex(value: string): string {
  * For each encrypted field, a `<field>Index` blind-index sibling is added.
  * Already-encrypted values (prefix `enc:v1:`) are left unchanged.
  */
+/** Read `a.b.c`, returning undefined if any hop is missing or not an object. */
+function getPath(obj: Record<string, unknown>, path: string): unknown {
+  return path.split(".").reduce<unknown>((acc, key) => {
+    if (acc === null || typeof acc !== "object") return undefined;
+    return (acc as Record<string, unknown>)[key];
+  }, obj);
+}
+
+/** Set `a.b.c`, cloning each object along the path so the input is untouched. */
+function setPath(obj: Record<string, unknown>, path: string, value: unknown): void {
+  const keys = path.split(".");
+  const last = keys.pop() as string;
+  let cursor: Record<string, unknown> = obj;
+  for (const key of keys) {
+    const next = cursor[key];
+    if (next === null || typeof next !== "object") return;
+    cursor[key] = { ...(next as Record<string, unknown>) };
+    cursor = cursor[key] as Record<string, unknown>;
+  }
+  cursor[last] = value;
+}
+
+/**
+ * Encrypt the named fields, adding a blind index alongside each top-level one.
+ *
+ * Supports dotted paths (`deviceInfo.ip`, `whatsappConfig.accessToken`). This
+ * was a flat top-level loop that skipped anything non-string, which is why
+ * nested PII stayed in plaintext — and why the exported
+ * `STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"]` was unusable by the
+ * very function it was written for.
+ *
+ * Idempotent: a value already carrying `enc:v1:` is left alone, so re-running
+ * over a partially-migrated document is safe.
+ */
+/**
+ * Encrypt `itemPath` on every element of the array at `arrayPath`.
+ *
+ * Spelled `messages[].body` in a PII field list. Without this, array-of-object
+ * PII — conversation message bodies, status-history notes — is written in
+ * plaintext and `mapDoc`'s decrypt never touches it on the way back out: a leak
+ * with no error and no visible symptom.
+ */
+function encryptInArray(
+  root: Record<string, unknown>,
+  arrayPath: string,
+  itemPath: string,
+): void {
+  const arr = getPath(root, arrayPath);
+  if (!Array.isArray(arr)) return;
+
+  const next = arr.map((el) => {
+    if (el === null || typeof el !== "object") return el;
+    const clone = { ...(el as Record<string, unknown>) };
+    const value = itemPath ? getPath(clone, itemPath) : undefined;
+    if (typeof value !== "string" || !value || value.startsWith(ENC_PREFIX)) {
+      return clone;
+    }
+    setPath(clone, itemPath, encryptValue(value));
+    return clone;
+  });
+
+  setPath(root, arrayPath, next);
+}
+
 export function encryptPiiFields<T extends object>(
   doc: T,
   piiFields: string[],
 ): T {
   const result = { ...doc } as Record<string, FirestoreValue>;
-  const source = doc as Record<string, FirestoreValue>;
   for (const field of piiFields) {
-    const value = source[field];
+    // `messages[].body` — encrypt one property on every element of an array.
+    if (field.includes("[]")) {
+      const [arrayPath, rest] = field.split("[]");
+      encryptInArray(
+        result as Record<string, unknown>,
+        arrayPath,
+        rest.replace(/^\./, ""),
+      );
+      continue;
+    }
+
+    const nested = field.includes(".");
+    const value = nested
+      ? getPath(result as Record<string, unknown>, field)
+      : (result as Record<string, unknown>)[field];
+
     if (typeof value !== "string" || !value) continue;
     if (value.startsWith(ENC_PREFIX)) continue; // already encrypted
-    result[field] = encryptValue(value);
-    result[`${field}Index`] = hmacBlindIndex(value);
+
+    if (nested) {
+      // Blind index deliberately omitted for nested paths: `deviceInfo.ipIndex`
+      // would be a nested sibling nothing queries, and an index only earns its
+      // storage when some lookup actually uses it.
+      setPath(result as Record<string, unknown>, field, encryptValue(value));
+    } else {
+      result[field] = encryptValue(value);
+      result[`${field}Index`] = hmacBlindIndex(value);
+    }
   }
   return result as T;
 }
@@ -144,13 +230,48 @@ export function decryptPiiFields<T extends object>(
   piiFields: string[],
 ): T {
   const result = { ...doc } as Record<string, FirestoreValue>;
-  const source = doc as Record<string, FirestoreValue>;
+
   for (const field of piiFields) {
-    const value = source[field];
+    // MUST mirror encryptPiiFields' path handling. This was a flat top-level
+    // loop while encrypt understood dotted and array paths — so a nested field
+    // would be encrypted on write and never decrypted on read, surfacing
+    // ciphertext to callers. Any path form added to one must be added to both.
+    if (field.includes("[]")) {
+      const [arrayPath, rest] = field.split("[]");
+      const itemPath = rest.replace(/^\./, "");
+      const arr = getPath(result as Record<string, unknown>, arrayPath);
+      if (!Array.isArray(arr)) continue;
+
+      setPath(
+        result as Record<string, unknown>,
+        arrayPath,
+        arr.map((el) => {
+          if (el === null || typeof el !== "object") return el;
+          const clone = { ...(el as Record<string, unknown>) };
+          const value = itemPath ? getPath(clone, itemPath) : undefined;
+          if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
+            setPath(clone, itemPath, decryptValue(value));
+          }
+          return clone;
+        }),
+      );
+      continue;
+    }
+
+    if (field.includes(".")) {
+      const value = getPath(result as Record<string, unknown>, field);
+      if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
+        setPath(result as Record<string, unknown>, field, decryptValue(value));
+      }
+      continue;
+    }
+
+    const value = result[field];
     if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
       result[field] = decryptValue(value);
     }
   }
+
   return result as T;
 }
 
@@ -183,6 +304,33 @@ export function piiBlindIndex(plaintext: string): string {
  * For each mapping entry (e.g. { email: "emailIndex" }), if the source field
  * is a non-empty string, computes the HMAC and stores it as the index field.
  */
+/**
+ * Blind-index fields ONLY — derived from `source` (which must be plaintext),
+ * with none of `source`'s own keys carried along.
+ *
+ * Use this, never `addPiiIndices`, when merging indices onto an already-encrypted
+ * object. `addPiiIndices` returns `{...source, ...indices}`, so spreading its
+ * result over ciphertext silently restores the plaintext — which is exactly how
+ * `payouts.sellerEmail`, `payouts.upiId` and `reviews.userName` ended up stored
+ * in cleartext beside a valid index.
+ *
+ * @param source plaintext document — hashing ciphertext produces a useless index
+ */
+export function piiIndicesFor(
+  source: object,
+  mapping: Record<string, string>,
+): Record<string, string> {
+  const access = source as Record<string, FirestoreValue>;
+  const indices: Record<string, string> = {};
+  for (const [sourceField, indexField] of Object.entries(mapping)) {
+    const val = access[sourceField];
+    if (typeof val === "string" && val) {
+      indices[indexField] = piiBlindIndex(val);
+    }
+  }
+  return indices;
+}
+
 export function addPiiIndices<T extends object>(
   obj: T,
   mapping: Record<string, string>,

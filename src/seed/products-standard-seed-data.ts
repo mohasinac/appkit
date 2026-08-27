@@ -25,7 +25,7 @@
 
 import { ProductDocument, ProductSpecification, CustomField, CustomSection } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
 /*
@@ -177,11 +177,11 @@ function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
     tags: [],
     featured: false,
     ...p,
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       p.title, p.description, p.brand, p.brandSlug,
       p.categoryNames, p.tags, p.features, p.condition,
       p.specifications?.map((s) => `${s.name} ${s.value}`),
-    ),
+    ]),
   };
 }
 

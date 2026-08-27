@@ -31,7 +31,7 @@ function makeFaqDoc(overrides: Partial<FAQDocument> = {}): FAQDocument {
     answer: { text: "You place a bid above the current price.", format: "plain" as const },
     category: "Auctions" as FAQDocument["category"],
     tags: ["bidding", "auctions"],
-    searchTokens: ["how", "does", "bidding", "work"],
+    searchTxt: ["how", "does", "bidding", "work"],
     relatedFAQs: [],
     seo: { slug: "how-does-bidding-work" },
     isActive: true,
@@ -92,7 +92,7 @@ describe("FirebaseFAQsRepository.createWithSlug", () => {
     expect(result.seo.slug).toMatch(/bidding/i);
   });
 
-  it("builds searchTokens from question, answer, category, and tags", async () => {
+  it("builds searchTxt from question, answer, category, and tags", async () => {
     const input = {
       question: "What is a reserve price?",
       answer: { text: "Reserve is the minimum.", format: "plain" as const },
@@ -102,9 +102,9 @@ describe("FirebaseFAQsRepository.createWithSlug", () => {
       isActive: true,
     };
     const result = await repo.createWithSlug(input as never);
-    expect(result.searchTokens).toContain("reserve");
-    expect(result.searchTokens).toContain("price");
-    expect(result.searchTokens).toContain("what");
+    expect(result.searchTxt).toContain("reserve");
+    expect(result.searchTxt).toContain("price");
+    expect(result.searchTxt).toContain("what");
   });
 
   it("sets stats.views=0, stats.helpful=0, stats.notHelpful=0", async () => {
@@ -132,7 +132,7 @@ describe("FirebaseFAQsRepository.createWithSlug", () => {
     expect(mockDocRef.set).toHaveBeenCalledOnce();
   });
 
-  it("searchTokens deduplicated and lowercased", async () => {
+  it("searchTxt deduplicated and lowercased", async () => {
     const input = {
       question: "What what what?",
       answer: { text: "Answer.", format: "plain" as const },
@@ -141,7 +141,7 @@ describe("FirebaseFAQsRepository.createWithSlug", () => {
       isActive: true,
     };
     const result = await repo.createWithSlug(input as never);
-    const whatCount = result.searchTokens!.filter((t) => t === "what").length;
+    const whatCount = result.searchTxt!.filter((t) => t === "what").length;
     expect(whatCount).toBe(1);
   });
 });

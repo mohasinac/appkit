@@ -1,11 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
-
-const __O = {
-  xAuto: "overflow-x-auto",
-} as const;
+import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 
 const STATIC_TABS = [
   { id: "description", label: "Description" },
@@ -84,28 +80,19 @@ export function ProductTabsShell({
 
   return (
     <Div className={`mt-8 ${className}`}>
-      <Div layout="flex" gap="1" border="default" className={`mb-6 ${__O.xAuto} border-b pb-px`}>
-        {allTabs.map((t) => (
-          <Button
-            variant="ghost"
-            key={t.id}
-            type="button"
-            onClick={() => setActiveId(t.id)}
-            paddingX="md"
-            paddingY="none"
-            textSize="sm"
-            weight="medium"
-            rounded="none"
-            className={`flex-shrink-0 -mb-px pb-[var(--appkit-space-3)] border-b-2 transition-colors ${
- activeId === t.id
- ? "border-[var(--appkit-color-primary)] text-[var(--appkit-color-primary)]"
- : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
- }`}
-          >
-            {t.label}
-          </Button>
-        ))}
-      </Div>
+      {/* Was a hand-rolled row of ghost <Button>s — which are not transparent
+          (border-subtle fill, 44px min-height, rounded-xl), so these tabs had
+          been rendering as grey pill chips. Routing through Tabs also supplies
+          the role="tablist"/role="tab"/aria-selected this had none of. */}
+      <Tabs value={activeId} onChange={setActiveId} className="mb-6">
+        <TabsList>
+          {allTabs.map((t) => (
+            <TabsTrigger key={t.id} value={t.id}>
+              {t.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
       <div>{activeContent}</div>
     </Div>
   );

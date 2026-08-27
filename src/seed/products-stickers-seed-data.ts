@@ -19,7 +19,7 @@
 
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
 export const productsStickersSeedData: Partial<ProductDocument>[] = [
@@ -53,14 +53,14 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     tags: ["stickers", "vintage-collectible"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-17"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Original Classic — Sticker Sheet",
       "5x5 cm sticker sheet featuring Dranzer, Driger, Draciel, and Dragoon.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["stickers", "vintage-collectible"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "stickers-beyblade-x-holographic-pack",
@@ -95,14 +95,14 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     tags: ["stickers"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X Holographic Sticker Pack",
       "Holographic-finish sticker pack featuring the current Beyblade X lineup.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["stickers"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "stickers-beyblade-burst-diecut-set",
@@ -134,14 +134,14 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     tags: ["stickers"],
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Burst Die-Cut Sticker Set (6-Pack)",
       "Individually die-cut vinyl stickers of 6 fan-favorite Burst tops.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["stickers"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "stickers-beyblade-metal-retro-sheet",
@@ -173,14 +173,14 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     tags: ["stickers", "vintage-collectible", "limited-run"],
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Metal Fight Retro Sticker Sheet — Limited /500",
       "Limited-edition retro-styled sticker sheet, numbered out of 500.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade Metal Fight", "Spinning Tops"],
       ["stickers", "vintage-collectible", "limited-run"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "stickers-beyblade-x-glow-in-dark",
@@ -215,14 +215,14 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     tags: ["stickers"],
     createdAt: new Date("2026-08-19"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X Glow-in-the-Dark Sticker Pack",
       "Charge under light and watch the Beyblade X logos glow in the dark.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["stickers"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Sold-out fixture — see the art file's equivalent for the shape rationale.
@@ -257,13 +257,13 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     tags: ["stickers", "sold-out"],
     createdAt: new Date("2026-08-24"),
     updatedAt: new Date("2026-08-24"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Metal Fight Sticker Sheet (Sold Out)",
       "The original Metal Fight sticker sheet run, now fully sold out.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Metal", "Spinning Tops"],
       ["stickers", "sold-out"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
 ];

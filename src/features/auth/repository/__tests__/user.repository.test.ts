@@ -27,6 +27,8 @@ vi.mock("../../../../contracts/field-ops", () => ({
 
 vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: object) => d,
+  piiIndicesFor: () => ({}),
+  USER_PII_INDEX_MAP: { email: "emailIndex", phoneNumber: "phoneIndex" },
   decryptPiiFields: (d: object) => d,
   addPiiIndices: (d: object) => d,
   piiBlindIndex: (v: string) => `blind:${v}`,

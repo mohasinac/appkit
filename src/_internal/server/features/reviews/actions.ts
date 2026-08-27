@@ -99,8 +99,9 @@ export async function deleteReviewAction(input: unknown): Promise<ActionResult<u
 
 export async function markReviewHelpfulAction(reviewId: string): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    await requireRoleUser(["buyer", "seller", "admin"]);
-      await getReviewOrThrow(reviewId);
-      await reviewRepository.incrementHelpful(reviewId);
+    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    await getReviewOrThrow(reviewId);
+    // Keyed on the voter so a repeated call is a no-op rather than another +1.
+    return reviewRepository.voteHelpful(reviewId, user.uid);
   });
 }

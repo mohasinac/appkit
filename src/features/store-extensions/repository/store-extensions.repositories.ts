@@ -1,13 +1,21 @@
 /**
  * S-STORE Extension Repositories
  *
- * 11 lightweight BaseRepository subclasses. None of these collections store
- * PII directly so no `createWithId` override is required (Pattern #9). Uses
- * the BaseRepository public API only: `findById`, `findBy`, `findAll`,
- * `create`, `update`, `delete`.
+ * 11 lightweight BaseRepository subclasses.
+ *
+ * This header used to claim "none of these collections store PII directly" —
+ * that was wrong: `PayoutMethodsRepository` holds `upiVpa`, `accountNumber` and
+ * `ifscCode`, which sat in cleartext because of it. It now declares `piiFields`
+ * and BaseRepository's write hooks encrypt them on every write path, so no
+ * per-method override is needed (which is the point of the hooks — Pattern #9
+ * described overrides that never existed).
+ *
+ * The other ten hold no PII and use the BaseRepository public API only.
  */
 
 import { BaseRepository } from "../../../providers/db-firebase";
+import type { DocumentSnapshot } from "firebase-admin/firestore";
+import { decryptPiiFields } from "../../../security/pii-encrypt";
 import {
   ANALYTICS_ALERTS_COLLECTION,
   ANALYTICS_CARDS_COLLECTION,
@@ -34,8 +42,23 @@ import {
 } from "../schemas/firestore";
 
 export class PayoutMethodsRepository extends BaseRepository<PayoutMethodDocument> {
+  /**
+   * Bank/UPI details, encrypted at rest by BaseRepository's write hooks.
+   *
+   * This repository had no encryption at all. Nothing queries these by equality
+   * (`listByStore` filters on `storeId`), so no read path depended on their
+   * plaintext.
+   */
+  protected override piiFields = ["upiVpa", "accountNumber", "ifscCode"] as const;
+
   constructor() {
     super(PAYOUT_METHODS_COLLECTION);
+  }
+
+  /** Decrypt on read so callers see the shape they wrote. */
+  protected override mapDoc<D = PayoutMethodDocument>(snap: DocumentSnapshot): D {
+    const raw = super.mapDoc<PayoutMethodDocument>(snap);
+    return decryptPiiFields(raw, [...this.piiFields]) as unknown as D;
   }
   async listByStore(storeId: string): Promise<{ items: PayoutMethodDocument[] }> {
     const items = await this.findBy("storeId", storeId);

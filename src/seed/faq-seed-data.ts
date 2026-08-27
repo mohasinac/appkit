@@ -18,6 +18,7 @@
  */
 
 import type { FAQDocument } from "../features/faq/schemas";
+import { buildFaqSearchTxt } from "../features/faq/repository/faqs.repository";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -25,7 +26,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const html = (text: string) => ({ text, format: "html" as const });
 const makeStats = (views = 0, helpful = 0) => ({ views, helpful, notHelpful: 0 });
 
-export const faqSeedData: Partial<FAQDocument>[] = [
+const faqSeedRecords: Partial<FAQDocument>[] = [
 
   // ── GENERAL (10) ────────────────────────────────────────────────────────────
 
@@ -1257,3 +1258,24 @@ export const faqSeedData: Partial<FAQDocument>[] = [
     updatedAt: daysAgo(1),
   },
 ];
+
+/**
+ * Derive `searchTxt` for every record from its own content.
+ *
+ * This is why FAQ search returned nothing: the seed writes documents raw via
+ * `batch.set()` (both `seed/runner.ts` and `seed-cli.mjs`), bypassing
+ * `FirebaseFAQsRepository.create()` — the only thing that built tokens. So all
+ * 63 seeded FAQs had no `searchTokens` field at all and `array-contains`
+ * matched zero documents, for every query, forever.
+ *
+ * Derived here rather than hand-written per record so a new FAQ cannot be added
+ * without tokens, and computed with the SAME `buildFaqSearchTxt` the repository
+ * uses so seeded and admin-created FAQs are byte-identical.
+ *
+ * Pure function of the record's own content — deterministic, so this does not
+ * reintroduce the `appkit-seed` idempotency problem of Root Cause #25.
+ */
+export const faqSeedData: Partial<FAQDocument>[] = faqSeedRecords.map((faq) => ({
+  ...faq,
+  searchTxt: buildFaqSearchTxt(faq),
+}));

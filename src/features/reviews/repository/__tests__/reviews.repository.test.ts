@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { makeMockDb, makeSnap, makeQuerySnap } from "../../../../../tests/helpers/mock-firestore";
 
-const { db, mockDocRef, mockCollection, mockQuery } = makeMockDb();
+const { db, mockDocRef, mockCollection, mockQuery, mockTxn } = makeMockDb();
 
 vi.mock("../../../../providers/db-firebase/admin", () => ({
   getAdminDb: () => db,
@@ -19,6 +19,7 @@ vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: Record<string, unknown>) => d,
   decryptPiiFields: (d: Record<string, unknown>) => d,
   addPiiIndices: (d: Record<string, unknown>) => d,
+  piiIndicesFor: () => ({}),
   REVIEW_PII_FIELDS: ["userName", "userEmail"],
   REVIEW_PII_INDEX_MAP: {},
 }));
@@ -215,22 +216,35 @@ describe("ReviewRepository.reject", () => {
 });
 
 // ---------------------------------------------------------------------------
-// incrementHelpful
+// voteHelpful
 // ---------------------------------------------------------------------------
-describe("ReviewRepository.incrementHelpful", () => {
-  it("increments helpfulCount by exactly 1", async () => {
+describe("ReviewRepository.voteHelpful", () => {
+  it("increments helpfulCount by exactly 1 and records the voter", async () => {
     const review = makeReviewDoc({ helpfulCount: 4 });
-    mockDocRef.get.mockResolvedValue(makeSnap(review, review.id as string));
-    await repo.incrementHelpful("review-1");
-    expect(mockDocRef.update).toHaveBeenCalledWith(
-      expect.objectContaining({ helpfulCount: 5 }),
+    mockTxn.get.mockResolvedValue(makeSnap(review, review.id as string));
+
+    const result = await repo.voteHelpful("review-1", "user-ravi");
+
+    expect(result).toEqual({ counted: true, helpfulCount: 5 });
+    expect(mockTxn.update).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ helpfulCount: 5, helpfulVoterIds: ["user-ravi"] }),
     );
   });
 
-  it("no-op when review is not found", async () => {
-    mockDocRef.get.mockResolvedValue(makeSnap(null));
-    await repo.incrementHelpful("review-ghost");
-    expect(mockDocRef.update).not.toHaveBeenCalled();
+  it("is idempotent — a repeat vote by the same user writes nothing", async () => {
+    const review = makeReviewDoc({ helpfulCount: 4, helpfulVoterIds: ["user-ravi"] });
+    mockTxn.get.mockResolvedValue(makeSnap(review, review.id as string));
+
+    const result = await repo.voteHelpful("review-1", "user-ravi");
+
+    expect(result).toEqual({ counted: false, helpfulCount: 4 });
+    expect(mockTxn.update).not.toHaveBeenCalled();
+  });
+
+  it("throws when the review is not found", async () => {
+    mockTxn.get.mockResolvedValue(makeSnap(null));
+    await expect(repo.voteHelpful("review-ghost", "user-ravi")).rejects.toThrow();
   });
 });
 

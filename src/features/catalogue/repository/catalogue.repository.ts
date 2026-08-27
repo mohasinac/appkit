@@ -1,3 +1,5 @@
+import type { DocumentSnapshot } from "firebase-admin/firestore";
+import { decryptPiiFields } from "../../../security/pii-encrypt";
 /**
  * Personal Catalogue Repository (Feature B).
  */
@@ -31,6 +33,22 @@ export interface CatalogueWriteContext {
 }
 
 export class CatalogueRepository extends BaseRepository<CatalogueItemDocument> {
+  /**
+   * `ownerEmail` only — NOT `ownerName`.
+   *
+   * Per decision D1 names stay partial-match searchable, and catalogue items are
+   * searchable by owner in the admin approvals queue. `CATALOGUE_HISTORY_PII_FIELDS`
+   * lists both, but that constant scrubs status *history*, which has no search
+   * requirement — the two lists are intentionally different.
+   */
+  protected override piiFields = ["ownerEmail"] as const;
+
+  /** Decrypt on read so callers see the shape they wrote. */
+  protected override mapDoc<D = CatalogueItemDocument>(snap: DocumentSnapshot): D {
+    const raw = super.mapDoc<CatalogueItemDocument>(snap);
+    return decryptPiiFields(raw, [...this.piiFields]) as unknown as D;
+  }
+
   constructor() {
     super(CATALOGUE_COLLECTION);
   }

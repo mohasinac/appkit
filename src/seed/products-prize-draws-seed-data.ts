@@ -20,11 +20,12 @@
  */
 
 import { ProductDocument } from "../features/products/schemas/firestore";
+import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
-export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
+const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
   {
     id: "prizedraw-beyblade-mystery-box",
     slug: "prizedraw-beyblade-mystery-box",
@@ -69,14 +70,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     tags: ["prize-draw", "mystery-box"],
     createdAt: new Date("2026-05-01"),
     updatedAt: new Date("2026-05-01"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Mystery Box — Prize Draw",
       "Buy an entry and reveal your prize instantly.",
       "Beyblade",
       "brand-beyblade",
       ["Spinning Tops"],
       ["prize-draw", "mystery-box"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "prizedraw-beyblade-scheduled-demo",
@@ -120,14 +121,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     tags: ["prize-draw", "mystery-box"],
     createdAt: new Date("2026-05-01"),
     updatedAt: new Date("2026-05-01"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Champion's Draw — Prize Draw",
       "Two entries, two prizes, revealed automatically at close or sellout.",
       "Beyblade",
       "brand-beyblade",
       ["Spinning Tops"],
       ["prize-draw", "mystery-box"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- Partially sold: prizeCurrentEntries > 0, main seed never exercised this before ---
@@ -180,14 +181,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     tags: ["prize-draw", "mystery-box", "chase-top"],
     createdAt: new Date("2026-08-15"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X Legendary Vault — Prize Draw",
       "6 entries, 6 prizes, over half already sold.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["prize-draw", "mystery-box", "chase-top"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- Closed + revealed: real winners, isWon:true — permanent-catalog example (previously only in tester sandbox) ---
@@ -234,14 +235,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     tags: ["prize-draw", "mystery-box"],
     createdAt: new Date("2026-08-05"),
     updatedAt: new Date("2026-08-12"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Metal Fight Mystery Draw — Ended (Revealed)",
       "This draw has closed and every prize has been revealed.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade Metal Fight", "Spinning Tops"],
       ["prize-draw", "mystery-box"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- Nearly sold out, scheduled reveal ---
@@ -293,14 +294,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     tags: ["prize-draw", "mystery-box"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Burst Collector's Draw — Almost Sold Out",
       "Only 1 entry left, 4 of 5 slots already claimed.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["prize-draw", "mystery-box"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- High-value vintage vault, multi-image collage per prize ---
@@ -350,14 +351,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     tags: ["prize-draw", "mystery-box", "vintage-collectible"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-18"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Original Vintage Vault — Prize Draw",
       "High-value original-series vault, multi-angle photos per prize.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["prize-draw", "mystery-box", "vintage-collectible"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Closed, but with slots still unsold and `isSold: false`.
@@ -409,3 +410,11 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     updatedAt: new Date("2026-08-24"),
   },
 ];
+
+/**
+ * Every record gains `searchTxt` here rather than inline, so a fixture added at
+ * the bottom of the array cannot ship without it — which is exactly how the
+ * sold/depleted fixture in this file ended up unsearchable.
+ */
+export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] =
+  _rawproductsPrizeDrawsSeedData.map(withProductSearchTxt);

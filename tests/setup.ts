@@ -1,6 +1,24 @@
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
+// jsdom implements none of these. TabBarShell (behind every <TabsList>) uses
+// ResizeObserver to decide whether the tab strip overflows, and scrollBy /
+// scrollIntoView to page it. useTabsOverflow guards ResizeObserver and calls
+// the two scroll methods optionally, so this stub is belt-and-braces — but
+// without it any future unguarded use fails four existing Tabs tests with an
+// error whose cause is not obvious from the message.
+if (typeof globalThis.ResizeObserver === "undefined") {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver;
+}
+if (typeof Element !== "undefined") {
+  Element.prototype.scrollBy ??= function scrollBy() {};
+  Element.prototype.scrollIntoView ??= function scrollIntoView() {};
+}
+
 // Stub firebase-admin so server-only modules can be imported in tests without
 // requiring a service account or Firestore emulator.
 vi.mock("firebase-admin/app", () => ({

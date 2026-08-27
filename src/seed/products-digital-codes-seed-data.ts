@@ -19,11 +19,12 @@
  */
 
 import { ProductDocument } from "../features/products/schemas/firestore";
+import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
-export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
+const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
   {
     id: "digitalcode-beyblade-x-app-starter-pack",
     slug: "digitalcode-beyblade-x-app-starter-pack",
@@ -62,14 +63,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "app-content"],
     createdAt: new Date("2026-05-06"),
     updatedAt: new Date("2026-05-06"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X App — Starter Pack Code",
       "Digital redemption code for the Beyblade X companion app.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["digital-code", "app-content"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "digitalcode-beyblade-x-app-legendary-pack",
@@ -107,14 +108,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "app-content"],
     createdAt: new Date("2026-08-14"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X App — Legendary Pack Code (Partially Claimed)",
       "Unlocks 3 legendary digital tops, most of the batch already claimed.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["digital-code", "app-content"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "digitalcode-beyblade-burst-app-sold-out",
@@ -156,14 +157,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "app-content", "limited-run"],
     createdAt: new Date("2026-08-01"),
     updatedAt: new Date("2026-08-10"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Burst App — Anniversary Pack Code (Sold Out)",
       "Limited-run anniversary code pack, every code claimed.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["digital-code", "app-content", "limited-run"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "digitalcode-beyblade-x-manual-tournament-pass",
@@ -204,14 +205,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "tournament-grade"],
     createdAt: new Date("2026-08-15"),
     updatedAt: new Date("2026-08-15"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X Regional Tournament — Digital Entry Pass",
       "Digital entry pass, emailed manually by the organizer.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["digital-code", "tournament-grade"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "digitalcode-beyblade-metal-app-classic-pack",
@@ -248,14 +249,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "app-content"],
     createdAt: new Date("2026-08-16"),
     updatedAt: new Date("2026-08-16"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Metal Fight App — Classic Pack Code",
       "Unlocks the Metal Fight classic-era top roster.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade Metal Fight", "Spinning Tops"],
       ["digital-code", "app-content"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "digitalcode-beyblade-burst-app-avatar-skins",
@@ -292,14 +293,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "app-content", "cosmetic"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-19"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Burst App — Avatar Skin Bundle Code",
       "Cosmetic-only code bundle, 8 exclusive player avatar skins.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["digital-code", "app-content", "cosmetic"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "digitalcode-beyblade-x-manual-coaching-session",
@@ -343,14 +344,14 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     tags: ["digital-code", "coaching"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-18"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "1-on-1 Beyblade X Coaching Session — Digital Booking Code",
       "30-minute 1-on-1 video coaching session, booking link emailed manually.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["digital-code", "coaching"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Pool drained, but `stockQuantity: 5` and `isSold: false`.
@@ -396,3 +397,11 @@ export const productsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     updatedAt: new Date("2026-08-24"),
   },
 ];
+
+/**
+ * Every record gains `searchTxt` here rather than inline, so a fixture added at
+ * the bottom of the array cannot ship without it — which is exactly how the
+ * sold/depleted fixture in this file ended up unsearchable.
+ */
+export const productsDigitalCodesSeedData: Partial<ProductDocument>[] =
+  _rawproductsDigitalCodesSeedData.map(withProductSearchTxt);

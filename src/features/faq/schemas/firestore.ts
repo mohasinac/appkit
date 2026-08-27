@@ -23,7 +23,8 @@ export interface FAQDocument extends BaseDocument {
   order: number;
   priority: number;
   tags: string[];
-  searchTokens?: string[];
+  /** Normalized edge-n-gram search field. Replaced `searchTokens`. */
+  searchTxt?: string[];
   relatedFAQs: string[];
   useSiteSettings: boolean;
   variables?: Record<string, string>;
@@ -45,7 +46,7 @@ export const FAQS_INDEXED_FIELDS = [
   "isPinned",
   "priority",
   "tags",
-  "searchTokens",
+  "searchTxt",
   "isActive",
   "stats.helpful",
   "createdBy",
@@ -70,7 +71,7 @@ export const DEFAULT_FAQ_DATA: Partial<FAQDocument> = {
   order: 0,
   priority: 0,
   tags: [],
-  searchTokens: [],
+  searchTxt: [],
   relatedFAQs: [],
   useSiteSettings: true,
   variables: {},

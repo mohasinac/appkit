@@ -407,7 +407,8 @@ export interface ProductDocument extends BaseDocument {
    *  Override by scanning a pre-printed sticker during the create/edit flow. */
   barcodeId?: string;
 
-  searchTokens?: string[];
+  /** Normalized edge-n-gram search field. Replaced `searchTokens`. */
+  searchTxt?: string[];
 }
 
 /**
@@ -450,7 +451,7 @@ export const PRODUCT_INDEXED_FIELDS = [
   "isPromoted",
   "isOnSale",
   "isSold",
-  "searchTokens",
+  "searchTxt",
   "createdAt",
   "barcodeId",
 ] as const;

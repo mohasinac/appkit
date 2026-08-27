@@ -21,6 +21,16 @@ vi.mock("../../../../contracts/field-ops", () => ({
   registerFieldOps: vi.fn(),
 }));
 
+// Session PII (deviceInfo.ip / userAgent / location.city) now encrypts via
+// BaseRepository's write hooks. Stubbed to identity here so the suite does not
+// need PII_ENCRYPTION_KEY; real-crypto coverage lives in
+// appkit/src/security/__tests__/pii-encrypt.test.ts.
+vi.mock("../../../../security/pii-encrypt", () => ({
+  encryptPiiFields: (d: unknown) => d,
+  decryptPiiFields: (d: unknown) => d,
+  piiIndicesFor: () => ({}),
+}));
+
 vi.mock("../../../../errors/normalize", () => ({ normalizeError: vi.fn() }));
 vi.mock("../../../../monitoring", () => ({
   serverLogger: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() },

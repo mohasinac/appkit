@@ -17,7 +17,7 @@ export * from "./business-day";
 export * from "./schema-ui";
 export * from "./listing-params";
 export * from "./action-response";
-export * from "./search-tokens";
+export * from "./search-txt";
 
 // Re-export order utilities for checkout flows
 export {

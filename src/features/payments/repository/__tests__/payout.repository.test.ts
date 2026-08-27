@@ -16,9 +16,15 @@ vi.mock("../../../../providers/db-firebase", async (importOriginal) => {
 });
 
 vi.mock("../../../../security", () => ({
+  // NOTE: these stubs are identity functions, so this suite cannot tell an
+  // encrypted value from a plaintext one — which is why the plaintext-write bug
+  // in encryptPayoutData went unnoticed here. Real-crypto coverage lives in
+  // appkit/src/security/__tests__/pii-encrypt.test.ts; keep it that way rather
+  // than trusting these.
   encryptPiiFields: (d: Record<string, unknown>) => d,
   decryptPiiFields: (d: Record<string, unknown>) => d,
   addPiiIndices: (d: Record<string, unknown>) => d,
+  piiIndicesFor: () => ({}),
   encryptPayoutBankAccount: (d: unknown) => d,
   decryptPayoutBankAccount: (d: unknown) => d,
   PAYOUT_PII_FIELDS: ["sellerName", "sellerEmail"],

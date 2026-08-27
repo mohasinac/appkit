@@ -30,6 +30,7 @@ export {
   decryptPii,
   piiBlindIndex,
   addPiiIndices,
+  piiIndicesFor,
   getPiiConfigError,
   encryptShippingAddress,
   decryptShippingAddress,

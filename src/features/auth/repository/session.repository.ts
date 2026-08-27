@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import type { DocumentReference } from "firebase-admin/firestore";
+import type { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
@@ -10,6 +10,7 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { generateSessionId } from "../token-helpers";
+import { decryptPiiFields } from "../../../security/pii-encrypt";
 import {
   SESSION_COLLECTION,
   SESSION_EXPIRATION_MS,
@@ -39,8 +40,32 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
+  /**
+   * Session PII, encrypted by BaseRepository's write hooks.
+   *
+   * This repository had no encryption at all — `createSession` calls
+   * `createWithId`, and before the hooks existed that method applied nothing —
+   * so device IPs, user agents and city were stored in cleartext.
+   *
+   * `deviceInfo.browser` / `deviceInfo.os` are deliberately NOT here: they are
+   * low-entropy strings the admin sessions view filters on (see SIEVE_FIELDS
+   * above), and encrypting them would break those queries while revealing
+   * nothing an IP does not.
+   */
+  protected override piiFields = [
+    "deviceInfo.ip",
+    "deviceInfo.userAgent",
+    "location.city",
+  ] as const;
+
   constructor() {
     super(SESSION_COLLECTION);
+  }
+
+  /** Decrypt on read so callers see the same shape they wrote. */
+  protected override mapDoc<D = SessionDocument>(snap: DocumentSnapshot): D {
+    const raw = super.mapDoc<SessionDocument>(snap);
+    return decryptPiiFields(raw, [...this.piiFields]) as unknown as D;
   }
 
   async list(model: SieveModel): Promise<FirebaseSieveResult<SessionDocument>> {

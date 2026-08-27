@@ -38,7 +38,29 @@ function getLogsDir(): string {
 
 const MAX_LOG_FILE_SIZE = 10 * 1024 * 1024;
 const MAX_LOG_FILES = 10;
-const isFileLoggingEnabled = !process.env.VERCEL;
+/**
+ * File logging is OPT-IN, not "anywhere that isn't Vercel".
+ *
+ * This was `!process.env.VERCEL`, which is `true` inside Cloud Functions — where
+ * `VERCEL` is simply unset and the filesystem is read-only. Every log line in
+ * every Function therefore ran mkdir/stat/appendFile, failed, and emitted a
+ * SECOND line carrying the EROFS stack: every Function log doubled, plus four
+ * wasted syscalls per line, against a log buffer that drops at ~4 KB/s
+ * (CLAUDE.md Rule #6).
+ *
+ * Serverless runtimes have no durable disk and their stdout is already
+ * collected, so the only place local files help is a developer machine.
+ * `LOG_TO_FILE=1` turns it on there; nothing else does.
+ */
+const isServerlessRuntime = Boolean(
+  process.env.VERCEL ||
+    process.env.FUNCTION_TARGET || // Cloud Functions (2nd gen)
+    process.env.K_SERVICE || // Cloud Run / Functions
+    process.env.FUNCTIONS_EMULATOR ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME,
+);
+const isFileLoggingEnabled =
+  process.env.LOG_TO_FILE === "1" && !isServerlessRuntime;
 
 type LogLevel = "debug" | "info" | "warn" | "error";
 
@@ -191,46 +213,76 @@ async function writeLog(entry: LogEntry): Promise<void> {
   }
 }
 
+/**
+ * Cloud Logging severity names. GCP parses a JSON stdout line and promotes
+ * `severity` into the real log level; a plain `[INFO] msg` string arrives as
+ * unparsed `DEFAULT`-severity text, which is what every appkit server log has
+ * been doing — invisible to any severity filter or alert.
+ */
+const GCP_SEVERITY: Record<LogLevel, string> = {
+  debug: "DEBUG",
+  info: "INFO",
+  warn: "WARNING",
+  error: "ERROR",
+};
+
+/**
+ * Emit one line. Structured JSON where a collector is reading stdout
+ * (Vercel/Cloud Functions/Cloud Run), human-readable locally.
+ */
+function emit(level: LogLevel, message: string, sanitized: unknown): void {
+  const consoleFn =
+    level === "error" ? console.error : level === "warn" ? console.warn : level === "debug" ? console.debug : console.info;
+
+  if (isServerlessRuntime) {
+    consoleFn(
+      JSON.stringify({
+        severity: GCP_SEVERITY[level],
+        message,
+        timestamp: new Date().toISOString(),
+        ...(sanitized !== undefined ? { data: sanitized } : {}),
+      }),
+    );
+    return;
+  }
+
+  consoleFn(`[${level.toUpperCase()}] ${message}`, sanitized);
+}
+
+function record(level: LogLevel, message: string, data?: unknown): void {
+  const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
+  emit(level, message, sanitized);
+  if (isFileLoggingEnabled) {
+    const entry: LogEntry = {
+      level,
+      message,
+      timestamp: new Date().toISOString(),
+      data: sanitized as FirestoreValue,
+    };
+    writeLog(entry).catch((err) => {
+      // stderr, not the logger — a logger that logs its own failure through
+      // itself recurses. normalizeError is pure classification, so it is safe
+      // to call here.
+      process.stderr.write(`log write failed: ${normalizeError(err).message}\n`);
+    });
+  }
+}
+
 export const serverLogger = {
   debug(message: string, data?: unknown): void {
-    const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
-    console.debug(`[DEBUG] ${message}`, sanitized);
+    record("debug", message, data);
   },
 
   info(message: string, data?: unknown): void {
-    const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
-    const entry: LogEntry = {
-      level: "info",
-      message,
-      timestamp: new Date().toISOString(),
-      data: sanitized as FirestoreValue,
-    };
-    console.info(`[INFO] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch((err) => { process.stderr.write(String(err) + "\n"); });
+    record("info", message, data);
   },
 
   warn(message: string, data?: unknown): void {
-    const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
-    const entry: LogEntry = {
-      level: "warn",
-      message,
-      timestamp: new Date().toISOString(),
-      data: sanitized as FirestoreValue,
-    };
-    console.warn(`[WARN] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch((err) => { process.stderr.write(String(err) + "\n"); });
+    record("warn", message, data);
   },
 
   error(message: string, data?: unknown): void {
-    const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
-    const entry: LogEntry = {
-      level: "error",
-      message,
-      timestamp: new Date().toISOString(),
-      data: sanitized as FirestoreValue,
-    };
-    console.error(`[ERROR] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch((err) => { process.stderr.write(String(err) + "\n"); });
+    record("error", message, data);
   },
 };
 

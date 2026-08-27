@@ -87,8 +87,9 @@ export function MediaPickerModal({
         if (!cancelled) setExistingFiles(data.data.files);
       })
       .catch((err) => {
-        if (!cancelled)
-          setExistingError(err instanceof Error ? err.message : "Failed to load");
+        // normalizeError covers Zod/Api/Firebase shapes an `instanceof Error`
+        // check misses, so those stop collapsing to the generic fallback.
+        if (!cancelled) setExistingError(normalizeError(err).message || "Failed to load");
       })
       .finally(() => {
         if (!cancelled) setExistingLoading(false);

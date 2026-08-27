@@ -78,7 +78,7 @@ function makeProductDoc(overrides: Record<string, unknown> = {}) {
     currentBid: 0,
     bidCount: 0,
     viewCount: 0,
-    searchTokens: ["charizard", "psa9"],
+    searchTxt: ["charizard", "psa9"],
     barcodeId: "barcode-product-charizard-psa9",
     images: [],
     tags: [],
@@ -206,7 +206,7 @@ describe("ProductRepository.create", () => {
     expect(mockCollection.doc).toHaveBeenCalledWith("product-custom-slug");
   });
 
-  it("builds and stores searchTokens", async () => {
+  it("builds and stores searchTxt", async () => {
     await repo.create({
       title: "Charizard",
       storeId: "store-1",
@@ -216,7 +216,7 @@ describe("ProductRepository.create", () => {
       listingType: "standard",
     } as never);
     const setArg = mockDocRef.set.mock.calls[0][0] as Record<string, unknown>;
-    expect(Array.isArray(setArg.searchTokens)).toBe(true);
+    expect(Array.isArray(setArg.searchTxt)).toBe(true);
   });
 
   it("sets availableQuantity from stockQuantity", async () => {

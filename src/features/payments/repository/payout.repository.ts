@@ -27,7 +27,7 @@ import type { FirestoreDocument } from "../../../schemas/types";
 import {
   encryptPiiFields,
   decryptPiiFields,
-  addPiiIndices,
+  piiIndicesFor,
   PAYOUT_PII_FIELDS,
   PAYOUT_PII_INDEX_MAP,
   encryptPayoutBankAccount,
@@ -61,14 +61,23 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     return decrypted;
   }
 
-  /** Encrypt PII fields on payout data before Firestore write */
+  /**
+   * Encrypt PII, then attach blind indices derived from the plaintext.
+   *
+   * Previously this reassigned `encrypted = addPiiIndices(data, …)` — which
+   * re-reads the ORIGINAL plaintext and returns `{...data, ...indices}` — and
+   * then spread that over the ciphertext, so plaintext won and `sellerEmail`
+   * and `upiId` were written to Firestore in the clear beside a valid index.
+   * `piiIndicesFor` returns the index fields alone, so the ciphertext cannot be
+   * overwritten. The identical bug was fixed in UserRepository and never
+   * propagated here.
+   */
   private encryptPayoutData<T extends object>(data: T): T {
-    let encrypted = encryptPiiFields(data, [...PAYOUT_PII_FIELDS]);
-    encrypted = addPiiIndices(data, PAYOUT_PII_INDEX_MAP) as T;
-    encrypted = {
+    const encrypted = {
       ...encryptPiiFields(data, [...PAYOUT_PII_FIELDS]),
-      ...encrypted,
-    };
+      ...piiIndicesFor(data, PAYOUT_PII_INDEX_MAP),
+    } as T;
+
     const access = encrypted as { bankAccount?: object | null };
     if (access.bankAccount) {
       access.bankAccount = encryptPayoutBankAccount(access.bankAccount);

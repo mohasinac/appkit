@@ -20,6 +20,7 @@ import {
 import { ERROR_MESSAGES } from "../../../errors/messages";
 import { serverLogger } from "../../../monitoring/index";
 import type { ChatRoomDocument } from "../repository/chat.repository";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface ChatRoomsResult {
   rooms: ChatRoomDocument[];
@@ -114,7 +115,10 @@ export async function sendChatMessage(
         : (room.buyerName ?? "Member");
   await msgRef.set({ userId, userName, message, timestamp: Date.now() });
   chatRepository.updateLastMessage(chatId, message).catch((err) => {
-    serverLogger.warn("Failed to update chat lastMessage", { chatId, err });
+    serverLogger.warn("Failed to update chat lastMessage", {
+      chatId,
+      error: normalizeError(err).message,
+    });
   });
 
   serverLogger.debug("sendChatMessage", { userId, chatId });

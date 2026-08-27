@@ -5,7 +5,7 @@ const {
   mockReviewCreate,
   mockReviewUpdate,
   mockReviewDelete,
-  mockReviewIncrementHelpful,
+  mockReviewVoteHelpful,
   mockProductFindById,
   mockUserFindById,
   mockAssertNotDuplicateReview,
@@ -17,7 +17,7 @@ const {
   mockReviewCreate: vi.fn(),
   mockReviewUpdate: vi.fn(),
   mockReviewDelete: vi.fn(),
-  mockReviewIncrementHelpful: vi.fn(),
+  mockReviewVoteHelpful: vi.fn(),
   mockProductFindById: vi.fn(),
   mockUserFindById: vi.fn(),
   mockAssertNotDuplicateReview: vi.fn(),
@@ -41,7 +41,7 @@ vi.mock("../../../../repositories", () => ({
     create: mockReviewCreate,
     update: mockReviewUpdate,
     delete: mockReviewDelete,
-    incrementHelpful: mockReviewIncrementHelpful,
+    voteHelpful: mockReviewVoteHelpful,
   },
   productRepository: {
     findById: mockProductFindById,
@@ -242,7 +242,7 @@ describe("markReviewHelpfulAction", () => {
     vi.clearAllMocks();
     mockRequireRoleUser.mockResolvedValue(makeBuyerUser());
     mockGetReviewOrThrow.mockResolvedValue(makeReview());
-    mockReviewIncrementHelpful.mockResolvedValue(undefined);
+    mockReviewVoteHelpful.mockResolvedValue({ counted: true, helpfulCount: 1 });
   });
 
   it("unauthenticated → { ok: false }", async () => {
@@ -257,9 +257,12 @@ describe("markReviewHelpfulAction", () => {
     expect(result.ok).toBe(false);
   });
 
-  it("valid → reviewRepository.incrementHelpful called", async () => {
+  it("valid → reviewRepository.voteHelpful called with the voter uid", async () => {
     await markReviewHelpfulAction("review-charizard-ravi-20260629");
-    expect(mockReviewIncrementHelpful).toHaveBeenCalledWith("review-charizard-ravi-20260629");
+    expect(mockReviewVoteHelpful).toHaveBeenCalledWith(
+      "review-charizard-ravi-20260629",
+      expect.any(String),
+    );
   });
 
   it("success → { ok: true }", async () => {

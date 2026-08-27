@@ -20,11 +20,12 @@
  */
 
 import { ProductDocument } from "../features/products/schemas/firestore";
+import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
-export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
+const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
   {
     id: "classified-beyblade-stadium-set",
     slug: "classified-beyblade-stadium-set",
@@ -69,14 +70,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "local-pickup"],
     createdAt: new Date("2026-05-05"),
     updatedAt: new Date("2026-05-05"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Used Beyblade Stadium Set — Local Pickup Only",
       "Well-loved Beyblade stadium with 6 tops and 2 launchers.",
       "Beyblade",
       "brand-beyblade",
       ["Spinning Tops"],
       ["classified", "local-pickup"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "classified-beyblade-burst-collection-bengaluru",
@@ -116,14 +117,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "bulk-lot"],
     createdAt: new Date("2026-08-13"),
     updatedAt: new Date("2026-08-13"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade Burst Collection (12 Tops) — Bengaluru",
       "Downsizing my Burst collection, fixed price, ships nationwide.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["classified", "bulk-lot"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "classified-beyblade-x-starter-pune",
@@ -166,14 +167,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "local-pickup", "starter-set"],
     createdAt: new Date("2026-08-14"),
     updatedAt: new Date("2026-08-14"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Beyblade X Starter Pack — Pune, Phone Contact Only",
       "Barely used Beyblade X starter pack, phone/WhatsApp only.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["classified", "local-pickup", "starter-set"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "classified-beyblade-metal-vintage-delhi",
@@ -220,14 +221,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "bulk-lot", "vintage-collectible"],
     createdAt: new Date("2026-08-15"),
     updatedAt: new Date("2026-08-16"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Vintage Metal Fight Lot (5 Tops) — Delhi NCR",
       "Well-preserved 5-top Metal Fight lot, firm price, ships anywhere.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade Metal Fight", "Spinning Tops"],
       ["classified", "bulk-lot", "vintage-collectible"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "classified-beyblade-original-grail-chennai",
@@ -267,14 +268,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "vintage-collectible", "local-pickup"],
     createdAt: new Date("2026-08-16"),
     updatedAt: new Date("2026-08-16"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Original Series Grail Piece — Chennai, Meet Up Only",
       "Genuine original-series grail piece, local meetup verification only.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["classified", "vintage-collectible", "local-pickup"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "classified-beyblade-x-tournament-kit-hyderabad",
@@ -320,14 +321,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "tournament-grade"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-17"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Tournament-Ready Beyblade X Kit — Hyderabad",
       "Complete tournament-legal kit including stadium and scorecard pad.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
       ["classified", "tournament-grade"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "classified-beyblade-burst-parts-mumbai",
@@ -370,14 +371,14 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     tags: ["classified", "spare-parts"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-18"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Spare Burst Parts Bundle — Mumbai, Ships Too",
       "Assorted spare Burst layers, discs, and drivers.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
       ["classified", "spare-parts"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Sold classified. Keeps `meetupArea.city` populated so the City facet
@@ -420,3 +421,11 @@ export const productsClassifiedsSeedData: Partial<ProductDocument>[] = [
     updatedAt: new Date("2026-08-24"),
   },
 ];
+
+/**
+ * Every record gains `searchTxt` here rather than inline, so a fixture added at
+ * the bottom of the array cannot ship without it — which is exactly how the
+ * sold/depleted fixture in this file ended up unsearchable.
+ */
+export const productsClassifiedsSeedData: Partial<ProductDocument>[] =
+  _rawproductsClassifiedsSeedData.map(withProductSearchTxt);

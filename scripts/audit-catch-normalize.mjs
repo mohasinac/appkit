@@ -57,7 +57,39 @@ function* walk(root) {
   }
 }
 
+/**
+ * `try { } catch (err) { }` — the original check.
+ *
+ * The leading `(^|\s)` is load-bearing: it is what keeps this from also matching
+ * the `.catch(` promise form, which is handled separately below because the two
+ * have different shapes (and, historically, because this regex silently skipped
+ * every promise catch in the codebase — see BOUND_PROMISE_CATCH_RE).
+ */
 const CATCH_RE = /(^|\s)catch\s*\(\s*([A-Za-z_$][\w$]*)\b/g;
+
+/**
+ * `.catch((err) => …)` / `.catch(err => …)` / `.catch(async (err) => …)`.
+ *
+ * These bind the same `unknown` a `try/catch` does and carry the same
+ * obligation, but CATCH_RE could never match them — in `.catch(` the preceding
+ * character is `.`, which fails its `(^|\s)` prefix. That hole hid every promise
+ * catch in `src/` and `appkit/src/` from this audit.
+ *
+ * NOTE: an *unbound* `.catch(() => null)` is deliberately NOT matched here.
+ * There is no error variable to normalize, so it is a different defect —
+ * a swallowed failure rather than an untyped one — and it belongs to
+ * audit-silent-degrade, which counts several hundred of them.
+ */
+const BOUND_PROMISE_CATCH_RE =
+  /\.catch\s*\(\s*(?:async\s*)?\(?\s*([A-Za-z_$][\w$]*)\s*\)?\s*=>/g;
+
+/**
+ * `catch { }` — optional catch binding. Nothing to normalize because nothing is
+ * captured, which also means the error is unconditionally discarded. Always a
+ * violation; there is no compliant form.
+ */
+const BARE_CATCH_RE = /(^|\s)catch\s*\{/g;
+
 const RAW_OK_RE = /\/\/\s*audit-catch-raw-ok\s*:/i;
 
 const violations = [];
@@ -77,14 +109,19 @@ for (const root of SCAN_ROOTS) {
     const lines = src.split(/\r?\n/);
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const m = [...line.matchAll(CATCH_RE)];
-      if (m.length === 0) continue;
-      for (const match of m) {
+      // Suppression marker on this line or the line above covers every kind.
+      const suppressed =
+        RAW_OK_RE.test(line) || (i > 0 && RAW_OK_RE.test(lines[i - 1]));
+
+      // --- bound catches: try/catch (err) and .catch(err => …) -------------
+      const bound = [
+        ...[...line.matchAll(CATCH_RE)].map((m) => m[2]),
+        ...[...line.matchAll(BOUND_PROMISE_CATCH_RE)].map((m) => m[1]),
+      ];
+
+      for (const varName of bound) {
         totalCatch++;
-        const varName = match[2];
-        // Suppression marker on this line or the line above.
-        if (RAW_OK_RE.test(line)) continue;
-        if (i > 0 && RAW_OK_RE.test(lines[i - 1])) continue;
+        if (suppressed) continue;
 
         // Look ahead 6 lines for an acceptable pattern.
         const window = lines.slice(i, i + 7).join("\n");
@@ -96,6 +133,20 @@ for (const root of SCAN_ROOTS) {
           file: relative(REPO_ROOT, file),
           line: i + 1,
           varName,
+          kind: "UNNORMALIZED_CATCH",
+          snippet: line.trim().slice(0, 120),
+        });
+      }
+
+      // --- bare `catch {` — no binding, so the error is always discarded ----
+      for (const _m of line.matchAll(BARE_CATCH_RE)) {
+        totalCatch++;
+        if (suppressed) continue;
+        violations.push({
+          file: relative(REPO_ROOT, file),
+          line: i + 1,
+          varName: "(no binding)",
+          kind: "BARE_CATCH",
           snippet: line.trim().slice(0, 120),
         });
       }

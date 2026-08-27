@@ -22,6 +22,7 @@ import {
 } from "./sieve";
 import { deserializeTimestamps, prepareForFirestore } from "./helpers";
 import { getAdminDb } from "./admin";
+import { encryptPiiFields, piiIndicesFor } from "../../security/pii-encrypt";
 
 export abstract class BaseRepository<T extends DocumentData> {
   protected collection: string;
@@ -117,10 +118,62 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
   }
 
+  /**
+   * PII fields for this collection, encrypted on every write path below.
+   *
+   * Declare it in the subclass instead of overriding `create`/`update` by hand.
+   * There were no encryption hooks here at all, so encryption was opt-in per
+   * method per repository — which meant `createWithId`, `update`, and the whole
+   * `*InTx` / `*InBatch` family were silent bypasses in any repo that had only
+   * overridden `create`. `sessions.deviceInfo.ip` sat in plaintext for exactly
+   * that reason.
+   */
+  protected piiFields: readonly string[] = [];
+
+  /** Blind-index map (plaintext field → index field) for equality lookups. */
+  protected piiIndexMap: Record<string, string> = {};
+
+  /**
+   * Build this document's `searchTxt` tokens. Return `null` to leave the field
+   * alone (the default), so a collection opts in by overriding this.
+   *
+   * MUST NOT include PII: `searchTxt` stores readable fragments of the source
+   * text, so indexing an encrypted field would undo the encryption.
+   */
+  protected buildSearchTxtFor(_data: Record<string, unknown>): string[] | null {
+    return null;
+  }
+
+  /**
+   * The one place writes are transformed. Every write path routes through here
+   * so a new method cannot silently skip encryption.
+   *
+   * `encryptPiiFields` is idempotent (it skips anything already carrying the
+   * `enc:v1:` prefix), so a subclass that still encrypts by hand before calling
+   * super is harmless rather than double-encrypted.
+   */
+  protected applyWriteHooks<D extends object>(data: D): D {
+    let out: D = data;
+
+    if (this.piiFields.length > 0) {
+      out = {
+        ...encryptPiiFields(out, [...this.piiFields]),
+        // Indices are derived from the PLAINTEXT source and must not carry it
+        // along — see piiIndicesFor's docstring for the bug that caused.
+        ...piiIndicesFor(data, this.piiIndexMap),
+      } as D;
+    }
+
+    const searchTxt = this.buildSearchTxtFor(out as Record<string, unknown>);
+    if (searchTxt) (out as Record<string, unknown>).searchTxt = searchTxt;
+
+    return out;
+  }
+
   async create(data: Partial<T> | FirestoreDocument): Promise<T> {
     try {
       const cleanData = prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -138,7 +191,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     try {
       const now = new Date();
       const cleanData = prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         createdAt: now,
         updatedAt: now,
       });
@@ -170,7 +223,7 @@ export abstract class BaseRepository<T extends DocumentData> {
   async update(id: string, data: Partial<T>): Promise<T> {
     try {
       const cleanData = prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         updatedAt: new Date(),
       });
 
@@ -322,7 +375,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     tx.set(
       docRef as FirebaseFirestore.DocumentReference,
       prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         createdAt: now,
         updatedAt: now,
       }) as DocumentData,
@@ -340,7 +393,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     tx.set(
       docRef as FirebaseFirestore.DocumentReference,
       prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         createdAt: now,
         updatedAt: now,
       }) as DocumentData,
@@ -352,7 +405,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     const docRef = this.getCollection().doc(id);
     tx.update(
       docRef,
-      prepareForFirestore({ ...data, updatedAt: new Date() }) as DocumentData,
+      prepareForFirestore({ ...this.applyWriteHooks(data as object), updatedAt: new Date() }) as DocumentData,
     );
   }
 
@@ -370,7 +423,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     batch.set(
       docRef as FirebaseFirestore.DocumentReference,
       prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         createdAt: now,
         updatedAt: now,
       }) as DocumentData,
@@ -388,7 +441,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     batch.set(
       docRef as FirebaseFirestore.DocumentReference,
       prepareForFirestore({
-        ...data,
+        ...this.applyWriteHooks(data as object),
         createdAt: now,
         updatedAt: now,
       }) as DocumentData,
@@ -399,7 +452,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     const docRef = this.getCollection().doc(id);
     batch.update(
       docRef,
-      prepareForFirestore({ ...data, updatedAt: new Date() }) as DocumentData,
+      prepareForFirestore({ ...this.applyWriteHooks(data as object), updatedAt: new Date() }) as DocumentData,
     );
   }
 

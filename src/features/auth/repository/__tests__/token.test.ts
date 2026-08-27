@@ -53,6 +53,7 @@ vi.mock("../../../../security", () => ({
   TOKEN_PII_FIELDS: ["email"],
   TOKEN_PII_INDEX_MAP: { email: "emailIndex" },
   encryptPiiFields: (data: Record<string, unknown>) => data,
+  piiIndicesFor: () => ({}),
   decryptPiiFields: (data: Record<string, unknown>) => data,
   addPiiIndices: (data: Record<string, unknown>) => data,
   piiBlindIndex: (v: string) => `idx:${v}`,

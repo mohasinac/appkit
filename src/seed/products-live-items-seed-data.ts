@@ -32,11 +32,12 @@
  */
 
 import { ProductDocument } from "../features/products/schemas/firestore";
+import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
-import { buildSearchTokens } from "../utils/search-tokens";
+import { buildSearchTxt } from "../utils/search-txt";
 import { seedExtMedia } from "./_helpers/media";
 
-export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
+const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
   {
     id: "live-golden-retriever-puppy",
     slug: "live-golden-retriever-puppy",
@@ -78,14 +79,14 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     tags: ["live-item"],
     createdAt: new Date("2026-08-16"),
     updatedAt: new Date("2026-08-16"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Golden Retriever Puppy — 6 Months, Vaccinated",
       "Friendly, vaccinated Golden Retriever puppy from a verified breeder.",
       "Beyblade Arena",
       undefined,
       [],
       ["live-item"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "live-bearded-dragon-juvenile",
@@ -126,14 +127,14 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     tags: ["live-item"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-17"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Bearded Dragon — Juvenile, Captive-Bred",
       "Healthy captive-bred bearded dragon, specialist courier transport only.",
       "Beyblade Arena",
       undefined,
       [],
       ["live-item"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     id: "live-bonsai-juniper-10yr",
@@ -175,14 +176,14 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     tags: ["live-item"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-18"),
-    searchTokens: buildSearchTokens(
+    searchTxt: buildSearchTxt([
       "Juniper Bonsai — 10 Years Trained",
       "A 10-year trained juniper bonsai in a glazed ceramic pot.",
       "Beyblade Arena",
       undefined,
       [],
       ["live-item"],
-    ),
+    ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Sold live item. Keeps species / sex / jurisdiction populated so those
@@ -227,3 +228,11 @@ export const productsLiveItemsSeedData: Partial<ProductDocument>[] = [
     updatedAt: new Date("2026-08-24"),
   },
 ];
+
+/**
+ * Every record gains `searchTxt` here rather than inline, so a fixture added at
+ * the bottom of the array cannot ship without it — which is exactly how the
+ * sold/depleted fixture in this file ended up unsearchable.
+ */
+export const productsLiveItemsSeedData: Partial<ProductDocument>[] =
+  _rawproductsLiveItemsSeedData.map(withProductSearchTxt);

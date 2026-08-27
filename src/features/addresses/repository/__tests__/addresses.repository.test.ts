@@ -28,6 +28,7 @@ vi.mock("../../../../providers/db-firebase", async (importOriginal) => {
 
 vi.mock("../../../../security", () => ({
   encryptPiiFields: mockEncryptPiiFields,
+  piiIndicesFor: () => ({}),
   decryptPiiFields: mockDecryptPiiFields,
   ADDRESS_PII_FIELDS: ["fullName", "phone", "addressLine1"],
 }));

@@ -37,8 +37,16 @@ export const PAYOUT_PII_INDEX_MAP: Record<string, string> = {
   sellerEmail: "sellerEmailIndex",
 };
 
-/** PII fields in bids */
-export const BID_PII_FIELDS = [] as const;
+/**
+ * PII fields in bids.
+ *
+ * `userEmail` only. `userName` is deliberately NOT encrypted: the seller bid
+ * search (`/api/store/bids`) does a prefix match on it, and encryption and
+ * partial-match search are mutually exclusive over the same field — ciphertext
+ * has no usable prefix. Encrypting it would silently break that search.
+ * Bidder names are already masked on the public side by `maskPublicBid`.
+ */
+export const BID_PII_FIELDS = ["userEmail"] as const;
 
 /** PII fields in newsletter subscribers */
 export const NEWSLETTER_PII_FIELDS = [] as const;
@@ -46,11 +54,21 @@ export const NEWSLETTER_PII_FIELDS = [] as const;
 /** Blind-index mapping for newsletter subscribers */
 export const NEWSLETTER_PII_INDEX_MAP: Record<string, string> = {};
 
-/** PII fields in tokens (email verification / password reset) */
-export const TOKEN_PII_FIELDS = [] as const;
+/**
+ * PII fields in tokens (email verification / password reset).
+ *
+ * Was an empty array, so the encrypt/decrypt machinery wrapped around these
+ * repositories was a no-op and every verification/reset email sat in cleartext.
+ * Safe to enable because `findByEmail` already queries the blind index first
+ * and falls back to plaintext equality, so legacy rows keep resolving while new
+ * ones are encrypted.
+ */
+export const TOKEN_PII_FIELDS = ["email"] as const;
 
 /** Blind-index mapping for token email queries */
-export const TOKEN_PII_INDEX_MAP: Record<string, string> = {};
+export const TOKEN_PII_INDEX_MAP: Record<string, string> = {
+  email: "emailIndex",
+};
 
 /** PII fields in reviews */
 export const REVIEW_PII_FIELDS = ["userName"] as const;

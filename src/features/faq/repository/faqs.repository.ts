@@ -12,6 +12,11 @@ import type {
 import { DatabaseError } from "../../../errors";
 import { increment } from "../../../contracts/field-ops";
 import { FAQ_FIELDS } from "../../../constants/field-names";
+import {
+  buildSearchTxt,
+  matchesAllSearchTerms,
+  parseSearchTxtQuery,
+} from "../../../utils/search-txt";
 import type { FAQ, FAQCategory } from "../types";
 import {
   FAQS_COLLECTION,
@@ -77,6 +82,33 @@ export class FAQsRepository {
   }
 }
 
+
+/**
+ * FAQ `searchTxt`. Exported so the seed derives byte-identical tokens — the
+ * seed writes documents raw via batch.set() and never goes through this
+ * repository, which is exactly why all 63 seeded FAQs had no tokens at all.
+ *
+ * EVERY field is prefix-expanded, including the answer body. An earlier version
+ * whole-worded the body to protect the token budget, and a seed test caught what
+ * that costs: searching "ship" returned FEWER FAQs than "shipping", because an
+ * answer mentioning shipping had only the whole word indexed. Partial match that
+ * silently excludes the body is not partial match.
+ *
+ * Measured over the real seed corpus: max 449 tokens, average 200, nothing near
+ * the 600 cap — so nothing is truncated. Re-measure before reusing this shape on
+ * a long-form collection (blog posts), where bodies are far larger.
+ */
+export function buildFaqSearchTxt(input: Partial<FAQDocument>): string[] {
+  const answer =
+    typeof input.answer === "string" ? input.answer : (input.answer?.text ?? "");
+  return buildSearchTxt([
+    input.question,
+    input.category,
+    ...(input.tags ?? []),
+    answer.replace(/<[^>]+>/g, " "),
+  ]);
+}
+
 export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     question: { canFilter: true, canSort: true },
@@ -88,7 +120,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
     order: { canFilter: true, canSort: true },
     priority: { canFilter: true, canSort: true },
     tags: { canFilter: true, canSort: false },
-    searchTokens: { canFilter: true, canSort: false },
+    searchTxt: { canFilter: true, canSort: false },
     "stats.helpful": { canFilter: false, canSort: true },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
@@ -97,43 +129,12 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
     super(FAQS_COLLECTION);
   }
 
-  private buildSearchTokens(
-    input: Pick<FAQDocument, "question" | "answer" | "tags" | "category">,
-  ): string[] {
-    const rawText = [
-      input.question,
-      typeof input.answer === "string" ? input.answer : input.answer?.text,
-      input.category,
-      ...(input.tags ?? []),
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
-
-    return Array.from(
-      new Set(
-        rawText
-          .split(/[^a-z0-9]+/i)
-          .map((token) => token.trim())
-          .filter((token) => token.length >= 2),
-      ),
-    ).slice(0, 50);
-  }
-
   override async create(data: Partial<FAQDocument>): Promise<FAQDocument> {
-    const searchTokens = this.buildSearchTokens({
-      question: data.question ?? "",
-      answer: (data.answer as FAQDocument["answer"]) ?? {
-        text: "",
-        format: "plain",
-      },
-      tags: data.tags ?? [],
-      category: (data.category ?? "general") as FAQCategory,
-    });
+    const searchTxt = buildFaqSearchTxt(data as Partial<FAQDocument>);
 
     return super.create({
       ...data,
-      searchTokens,
+      searchTxt,
     });
   }
 
@@ -153,12 +154,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
 
     return super.update(id, {
       ...data,
-      searchTokens: this.buildSearchTokens({
-        question: merged.question,
-        answer: merged.answer,
-        tags: merged.tags ?? [],
-        category: merged.category,
-      }),
+      searchTxt: buildFaqSearchTxt(merged),
     });
   }
 
@@ -168,45 +164,66 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   ): Promise<FirebaseSieveResult<FAQDocument>> {
     let baseQuery = this.getCollection();
     const tags = opts?.tags?.filter(Boolean) ?? [];
-    const searchTokens = (opts?.search ?? "")
-      .toLowerCase()
-      .split(/[^a-z0-9]+/i)
-      .map((token) => token.trim())
-      .filter((token) => token.length >= 2)
-      .slice(0, 10);
 
-    if (tags.length > 0 && searchTokens.length > 0) {
-      throw new DatabaseError(
-        "Combining FAQ tag filters and token search requires a dedicated search index",
-      );
+    // Longest term first — only ONE may become the array-contains clause
+    // (Firestore permits a single array operator per query), and the longest is
+    // the cheapest proxy for "narrows the most" without cardinality stats.
+    const terms = parseSearchTxtQuery(opts?.search ?? "");
+    const rawSearch = (opts?.search ?? "").trim();
+
+    // A query that produced no usable term must return NOTHING, not everything.
+    // The old guard dropped tokens under 2 characters, so a 1-character search
+    // silently fell through to the entire unfiltered list.
+    if (rawSearch && terms.length === 0) {
+      return { items: [], total: 0, page: 1, pageSize: 0, totalPages: 0, hasMore: false };
     }
 
-    if (tags.length === 1) {
+    // Firestore allows one array operator per query, so tags and search cannot
+    // both be pushed down. Search takes the clause and tags refine in memory —
+    // this used to throw a DatabaseError and fail the request outright.
+    const pushTags = terms.length === 0;
+    if (pushTags && tags.length === 1) {
       baseQuery = baseQuery.where(FAQ_FIELDS.TAGS, "array-contains", tags[0]) as any;
-    } else if (tags.length > 1) {
+    } else if (pushTags && tags.length > 1) {
       baseQuery = baseQuery.where(FAQ_FIELDS.TAGS,
         "array-contains-any",
         tags.slice(0, 10),
       ) as any;
     }
 
-    if (searchTokens.length === 1) {
-      baseQuery = baseQuery.where(FAQ_FIELDS.SEARCH_TOKENS,
+    if (terms.length > 0) {
+      baseQuery = baseQuery.where(
+        FAQ_FIELDS.SEARCH_TXT,
         "array-contains",
-        searchTokens[0],
-      ) as any;
-    } else if (searchTokens.length > 1) {
-      baseQuery = baseQuery.where(FAQ_FIELDS.SEARCH_TOKENS,
-        "array-contains-any",
-        searchTokens,
+        terms[0],
       ) as any;
     }
 
-    return this.sieveQuery<FAQDocument>(
+    const result = await this.sieveQuery<FAQDocument>(
       model,
       FirebaseFAQsRepository.SIEVE_FIELDS,
       { baseQuery },
     );
+
+    // Refine the remaining terms (AND) and any tags that could not be pushed
+    // down. `array-contains-any` would have been OR — "shipping cost" returning
+    // everything matching either word is why search felt like it did nothing.
+    const extraTerms = terms.slice(1);
+    if (extraTerms.length === 0 && (pushTags || tags.length === 0)) return result;
+
+    const items = result.items.filter(
+      (faq) =>
+        matchesAllSearchTerms(faq.searchTxt, extraTerms) &&
+        (pushTags || tags.length === 0 || tags.some((t) => faq.tags?.includes(t))),
+    );
+
+    return {
+      ...result,
+      items,
+      total: items.length,
+      totalPages: items.length === 0 ? 0 : 1,
+      hasMore: false,
+    };
   }
 
   async getFAQBySlug(slug: string): Promise<FAQDocument | null> {
@@ -357,12 +374,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
         ...input.seo,
         slug,
       },
-      searchTokens: this.buildSearchTokens({
-        question: input.question,
-        answer: input.answer,
-        tags: input.tags ?? [],
-        category: input.category,
-      }),
+      searchTxt: buildFaqSearchTxt(input as Partial<FAQDocument>),
       stats: {
         views: 0,
         helpful: 0,

@@ -26,6 +26,7 @@ vi.mock("../../../../errors/normalize", () => ({
 
 vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: Record<string, unknown>) => d,
+  piiIndicesFor: () => ({}),
   decryptPiiFields: (d: Record<string, unknown>) => d,
   BID_PII_FIELDS: [],
 }));

@@ -54,7 +54,20 @@ export interface NewsletterListModel {
   pageSize?: string;
 }
 
-const NEWSLETTER_PII_FIELDS: string[] = [];
+/**
+ * Subscriber email, encrypted at rest.
+ *
+ * Was an empty array, so the encrypt/decrypt calls wrapped around it were both
+ * no-ops and every subscriber address sat in cleartext — with a perfectly good
+ * `emailIndex` beside it.
+ *
+ * Safe to enable because the lookup path never depended on the plaintext:
+ * `emailIndex` is written explicitly on create and queried first on read, with
+ * a plaintext-equality fallback for rows written before this, and
+ * `decryptNewsletterDoc` already covers all eight read sites. `encryptPiiFields`
+ * derives the same `emailIndex` name, so the two agree rather than conflict.
+ */
+const NEWSLETTER_PII_FIELDS: string[] = ["email"];
 
 function resolveRepository(): IRepository<NewsletterSubscriberDocument> {
   const provider = getProviders().db;

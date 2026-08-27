@@ -21,7 +21,11 @@ describe("Tabs / TabsList", () => {
     );
     expect(screen.getByRole("tablist")).toBeTruthy();
     expect(screen.getAllByRole("tab")).toHaveLength(3);
-    expect(screen.queryByLabelText("Tabs")).toBeNull(); // no dropdown
+    // Assert the absence of the DROPDOWN, not the absence of an accessible
+    // name: since 2026-08-26 the row tablist carries aria-label="Tabs" too
+    // (it previously had no accessible name at all), so `getByLabelText`
+    // no longer discriminates between the two branches — `combobox` does.
+    expect(screen.queryByRole("combobox")).toBeNull();
   });
 
   it("collapses to a dropdown <select> once there are more than 5 triggers", () => {
