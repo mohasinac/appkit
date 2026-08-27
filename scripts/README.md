@@ -76,7 +76,7 @@ Exit: `0` success, `1` any errors during run, `2` misconfiguration.
 | `FIREBASE_ADMIN_CLIENT_EMAIL` | all | |
 | `FIREBASE_ADMIN_PRIVATE_KEY`  | all | Newlines may be `\n`-escaped — the script unescapes. |
 | `FIREBASE_ADMIN_DATABASE_URL` or `NEXT_PUBLIC_FIREBASE_DATABASE_URL` | wishlists / history / RTDB-touching | Optional but recommended. |
-| `PII_SECRET` (or `PII_ENCRYPTION_KEY`) | `load` of `users`, `addresses`, `storeAddresses`, `products`, `orders`, `reviews`, `bids`, `payouts`, `eventEntries` | Required — these collections encrypt fields at write time. |
+| `PII_ENCRYPTION_KEY` | `load` of `users`, `addresses`, `storeAddresses`, `products`, `orders`, `reviews`, `bids`, `payouts`, `eventEntries` | Required — these collections encrypt fields at write time. |
 
 Pass `--service-account <path>` to override env vars with a JSON key file.
 

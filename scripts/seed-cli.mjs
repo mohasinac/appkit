@@ -108,9 +108,17 @@ if (!SERVICE_ACCOUNT_OVERRIDE && missing.length > 0) {
 
 // PII keys are mandatory for collections that encrypt fields
 const PII_REQUIRED = ["users", "addresses", "storeAddresses", "products", "orders", "reviews", "bids", "payouts", "eventEntries"];
-const PII_KEY_PRESENT = Boolean(process.env.PII_SECRET || process.env.PII_ENCRYPTION_KEY);
+// PII_ENCRYPTION_KEY ONLY. `PII_SECRET` used to be accepted here as an
+// alternative and is read by no runtime code — so a machine with only that set
+// passed this check and then threw at the first encrypt, mid-load, with some
+// collections already written.
+const PII_KEY_PRESENT = Boolean(process.env.PII_ENCRYPTION_KEY);
 if (ACTION === "load" && !PII_KEY_PRESENT) {
-  console.warn("⚠ PII_SECRET / PII_ENCRYPTION_KEY not set — collections with PII fields will fail.");
+  // A hard stop, not a warning. Loading without the key does not skip the PII
+  // collections — it writes some and then throws, leaving a half-seeded
+  // database that looks like a successful run until someone reads it.
+  console.error("✖ PII_ENCRYPTION_KEY is not set — users, addresses, orders, reviews, bids, payouts and eventEntries all encrypt fields at write time.");
+  process.exit(2);
 }
 
 // ---------------------------------------------------------------------------
