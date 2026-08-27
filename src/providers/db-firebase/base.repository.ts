@@ -46,6 +46,23 @@ export abstract class BaseRepository<T extends DocumentData> {
     }) as unknown as D;
   }
 
+  /**
+   * How a row is mapped on a LIST read (anything through `sieveQuery`).
+   *
+   * Defaults to `mapDoc`, so a repository that overrides `mapDoc` to decrypt,
+   * project or normalise now gets that on list reads too — Sieve used to map
+   * documents itself and never call `mapDoc` at all, which is why
+   * `/api/admin/users` served ciphertext emails.
+   *
+   * It is a SEPARATE hook because a list is not a detail read. A repository
+   * whose `mapDoc` decrypts a secret must not hand that secret to a list —
+   * `StoreRepository` overrides this to drop the WhatsApp token, since
+   * `listStores(activeOnly)` backs the PUBLIC /stores page.
+   */
+  protected mapDocForList<D = T>(snap: DocumentSnapshot): D {
+    return this.mapDoc<D>(snap);
+  }
+
   async findById(id: string): Promise<T | null> {
     try {
       const doc = await this.getCollection().doc(id).get();
@@ -281,6 +298,12 @@ export abstract class BaseRepository<T extends DocumentData> {
       model,
       fields,
       options: sieveOptions,
+      // Load-bearing. Without this every Sieve-backed read silently skips the
+      // subclass's mapDoc — decryption, projection and normalisation all lost.
+      // audit-repository-fields asserts this argument stays here, because one
+      // edit removing it would unwire all 14 affected repositories at once
+      // while the per-file rule still passed.
+      mapDoc: (snap) => this.mapDocForList<TResult>(snap),
     });
   }
 

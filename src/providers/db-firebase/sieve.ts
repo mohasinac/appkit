@@ -71,6 +71,7 @@ import type {
   CollectionReference,
   DocumentData,
   Query,
+  QueryDocumentSnapshot,
 } from "firebase-admin/firestore";
 
 import { SieveProcessorBase } from "@mohasinac/sievejs/services";
@@ -303,6 +304,19 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   model: SieveModel;
   fields: SieveFields;
   options?: SieveOptions;
+  /**
+   * Row mapper. Defaults to the same plain `deserializeTimestamps({id, ...data})`
+   * this function always did — so it is a provable no-op for the ~40
+   * repositories that don't override `mapDoc`.
+   *
+   * It exists because this function mapped documents ITSELF and never called
+   * the repository's `mapDoc`, so every read that went through Sieve skipped
+   * whatever that override did: decryption, projection, normalisation. The
+   * visible consequence was `/api/admin/users` serving `enc:v1:…` ciphertext
+   * as each user's email address, since `UserRepository.mapDoc` is what
+   * decrypts and `list()` goes through here.
+   */
+  mapDoc?: (snap: QueryDocumentSnapshot) => T;
 }): Promise<SieveResult<T>> {
   const { baseQuery, model, fields, options } = params;
   const { aliases, ...rest } = options ?? {};
@@ -329,8 +343,10 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   const pagedQ = filteredQ.offset((page - 1) * pageSize).limit(pageSize);
   const snap = await pagedQ.get();
 
-  const items = snap.docs.map(
-    (d) => deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as T,
+  const items = snap.docs.map((d) =>
+    params.mapDoc
+      ? params.mapDoc(d)
+      : (deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as T),
   );
 
   const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));

@@ -67,6 +67,33 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     return this.decryptSecrets(super.mapDoc<StoreDocument>(snap)) as unknown as D;
   }
 
+  /**
+   * LIST reads never carry the WhatsApp token — not even encrypted.
+   *
+   * `mapDoc` above decrypts it, and `listStores(model, activeOnly)` backs the
+   * PUBLIC `/stores` page. Once `sieveQuery` started routing list rows through
+   * `mapDoc` (it previously mapped documents itself and skipped every
+   * override), that decrypt would have put a plaintext Meta OAuth bearer token
+   * on a public listing — the exact shape of Root Cause #70.
+   *
+   * So the list path deliberately does NOT call `decryptSecrets`, and drops
+   * `accessToken` outright: a list has no legitimate use for it, and a value
+   * that is never in the payload cannot be leaked by a projection someone
+   * forgets to write.
+   *
+   * Detail reads are unchanged — `findBySlug`/`findById` still decrypt, so the
+   * WhatsApp settings and catalog-sync routes keep working exactly as before.
+   * Removing the decrypt from `mapDoc` itself is a separate, riskier change
+   * that CLAUDE.md explicitly defers; this closes the public-exposure half
+   * without touching the encryption round-trip at all.
+   */
+  protected override mapDocForList<D = StoreDocument>(snap: DocumentSnapshot): D {
+    const doc = super.mapDoc<StoreDocument>(snap);
+    if (!doc.whatsappConfig) return doc as unknown as D;
+    const { accessToken: _dropped, ...safeConfig } = doc.whatsappConfig;
+    return { ...doc, whatsappConfig: safeConfig } as unknown as D;
+  }
+
   override async update(
     id: string,
     data: Partial<StoreDocument>,
@@ -270,6 +297,11 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       baseQuery,
       model,
       fields: sieveFields,
+      // Called DIRECTLY, not through `sieveQuery`, so the mapper has to be
+      // passed by hand — and it is the list mapper, never `mapDoc`. With
+      // `activeOnly` this is the public /stores listing; `mapDoc` decrypts the
+      // WhatsApp bearer token and a list has no use for it.
+      mapDoc: (snap) => this.mapDocForList<StoreDocument>(snap),
     });
   }
 
