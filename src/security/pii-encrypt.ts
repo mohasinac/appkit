@@ -11,7 +11,7 @@
  */
 
 import type { FirestoreValue } from "../schemas/types";
-import { ENC_PREFIX, HMAC_PREFIX, isPiiEncrypted } from "./pii-mask";
+import { ENC_PREFIX, HMAC_PREFIX, isPiiEncrypted, encEnvelopeKind } from "./pii-mask";
 import { serverLogger } from "../monitoring/server-logger";
 import { normalizeError } from "../errors/normalize";
 
@@ -64,12 +64,37 @@ function getEncKey(): Buffer {
   return Buffer.from(hex, "hex");
 }
 
+/**
+ * Blind-index key. Normalised and validated exactly like `getEncKey`.
+ *
+ * It previously read the env var RAW while `getEncKey` normalised the same
+ * value — so the two keys were derived from one variable by two different code
+ * paths. `Buffer.from(x, "hex")` does not throw on bad input; it truncates
+ * silently at the first non-hex byte. A BOM or trailing CR (a problem this repo
+ * has hit before — see scripts/_fix-vercel-env-bom.mjs) would therefore give
+ * the encryptor a 32-byte key and the indexer a 0-byte one, and every blind
+ * index written from that moment would be unmatchable against the existing
+ * ones. `findByEmail` would simply stop finding people — indistinguishable
+ * from "no such user", with nothing logged.
+ *
+ * Verified before changing: on the current environment the raw and normalised
+ * reads produce byte-identical keys, so this is a no-op for every index
+ * already in Firestore.
+ */
 function getHmacKey(): Buffer {
-  const raw =
-    process.env["PII_HMAC_KEY"] ?? process.env["PII_ENCRYPTION_KEY"] ?? "";
+  const raw = normalizePiiSecretValue(
+    process.env["PII_HMAC_KEY"] ?? process.env["PII_ENCRYPTION_KEY"] ?? "",
+  );
   if (!raw)
     throw new Error(
       "PII_HMAC_KEY env var is not set — cannot generate blind PII index",
+    );
+  if (!/^[0-9a-fA-F]{64}$/.test(raw))
+    // Fail loudly at the boundary. A startup error is recoverable; a silently
+    // truncated key is not.
+    throw new Error(
+      "PII_HMAC_KEY (or its PII_ENCRYPTION_KEY fallback) must be a 64-character hex string — " +
+        `got ${raw.length} chars. Buffer.from would truncate this silently and desync every blind index.`,
     );
   return Buffer.from(raw, "hex");
 }
@@ -88,6 +113,14 @@ export function encryptValue(plaintext: string): string {
 /** Decrypt an AES-256-GCM ciphertext produced by `encryptValue`. */
 export function decryptValue(ciphertext: string): string {
   if (!ciphertext.startsWith(ENC_PREFIX)) return ciphertext;
+  // Name the actual problem. A settings-encrypted value shares this prefix but
+  // uses dot separators and a different key; it used to fail here as a bare
+  // part-count error, which reads like corruption rather than "wrong system".
+  if (encEnvelopeKind(ciphertext) === "settings") {
+    throw new Error(
+      "Value is settings-encrypted (SETTINGS_ENCRYPTION_KEY, dot-separated), not PII-encrypted — decryptValue cannot read it",
+    );
+  }
   const inner = ciphertext.slice(ENC_PREFIX.length);
   const parts = inner.split(":");
   if (parts.length !== 3)
@@ -151,14 +184,20 @@ function setPath(obj: Record<string, unknown>, path: string, value: unknown): vo
 /**
  * Encrypt the named fields, adding a blind index alongside each top-level one.
  *
- * Supports dotted paths (`deviceInfo.ip`, `whatsappConfig.accessToken`). This
- * was a flat top-level loop that skipped anything non-string, which is why
- * nested PII stayed in plaintext — and why the exported
- * `STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"]` was unusable by the
- * very function it was written for.
+ * Supports dotted paths (`deviceInfo.ip`, `location.city`). This was a flat
+ * top-level loop that skipped anything non-string, which is why nested PII
+ * stayed in plaintext.
  *
- * Idempotent: a value already carrying `enc:v1:` is left alone, so re-running
- * over a partially-migrated document is safe.
+ * 🛑 That dotted-path support is also what made it possible to point this
+ * function at a field belonging to the OTHER crypto system. A store's
+ * `whatsappConfig.accessToken` is encrypted with SETTINGS_ENCRYPTION_KEY;
+ * passing it here would encrypt it with the PII key while
+ * `StoreRepository.decryptSecrets` kept decrypting with the settings one.
+ * Only ever pass fields from this file's own `*_PII_FIELDS` lists.
+ *
+ * Idempotent: a value already carrying `enc:v1:` is left alone — whichever
+ * system wrote it — so re-running over a partially-migrated document is safe
+ * and a settings-encrypted value is never double-wrapped.
  */
 /**
  * Encrypt `itemPath` on every element of the array at `arrayPath`.

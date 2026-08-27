@@ -4,11 +4,13 @@ import { normalizeError } from "../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit";
 import { NextResponse } from "next/server";
 import type { BaseRequestContext, Middleware } from "./types";
+import { hasEncPrefix } from "../../security/pii-mask";
 
-const ENC_PREFIX = "enc:v1:";
-
+// Scrubbing wants EVERY `enc:v1:` value gone, whichever of the two crypto
+// systems wrote it and even if malformed — so `hasEncPrefix`, not
+// `isPiiEncrypted`, which is now specifically the PII format.
 function scrubValue(value: unknown): unknown {
-  if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
+  if (hasEncPrefix(value)) {
     return "[encrypted]";
   }
   if (Array.isArray(value)) return value.map(scrubValue);

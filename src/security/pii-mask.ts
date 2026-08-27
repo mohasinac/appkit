@@ -16,9 +16,60 @@
 export const ENC_PREFIX = "enc:v1:";
 export const HMAC_PREFIX = "hmac-sha256:";
 
-/** Check if a value is encrypted by our PII system. */
-export function isPiiEncrypted(value: string): boolean {
+/**
+ * Which crypto system produced an `enc:v1:` value.
+ *
+ * TWO systems share this prefix and always have:
+ *
+ *   PII      `enc:v1:` + iv `:` ciphertext `:` tag   — PII_ENCRYPTION_KEY
+ *   settings `enc:v1:` + iv `.` tag `.` ciphertext   — SETTINGS_ENCRYPTION_KEY
+ *
+ * Different separator, different field order, different key. `isPiiEncrypted`
+ * checked only the prefix and so could not tell them apart, which made every
+ * "is this ours" test wrong for one of the two — feed a settings value to
+ * `decryptValue` and it throws on the part count; feed a PII value to
+ * `decryptSecret` and it throws on a different part count. Neither error names
+ * the actual problem.
+ *
+ * Changing either prefix is NOT an option: `enc:v1:` is stamped into every
+ * encrypted value across twelve collections, and a new prefix orphans all of
+ * it. It does not need changing. Base64's alphabet is `A-Za-z0-9+/=`, which
+ * contains neither `.` nor `:` — so the two formats are ALREADY unambiguous in
+ * the data, and this function simply reads what is there. No migration.
+ */
+export type EncEnvelopeKind = "pii" | "settings" | null;
+
+export function encEnvelopeKind(value: unknown): EncEnvelopeKind {
+  if (typeof value !== "string" || !value.startsWith(ENC_PREFIX)) return null;
+  const inner = value.slice(ENC_PREFIX.length);
+  const colons = inner.split(":").length - 1;
+  const dots = inner.split(".").length - 1;
+  if (colons === 2 && dots === 0) return "pii";
+  if (dots === 2 && colons === 0) return "settings";
+  return null; // carries the prefix but neither shape — malformed
+}
+
+/**
+ * Does this value carry the `enc:v1:` prefix at all, whichever system wrote it
+ * and even if malformed?
+ *
+ * This is the check the DISPLAY masks want. `maskName`/`maskEmail` exist so
+ * ciphertext never reaches the UI, and for that purpose "settings-encrypted"
+ * and "malformed" are just as unshowable as "PII-encrypted". Narrowing them to
+ * `kind === "pii"` would let the other two render verbatim.
+ */
+export function hasEncPrefix(value: unknown): boolean {
   return typeof value === "string" && value.startsWith(ENC_PREFIX);
+}
+
+/**
+ * Check if a value is encrypted by our PII system SPECIFICALLY.
+ *
+ * Use for crypto routing — "may I hand this to decryptValue". For "is this
+ * unshowable", use `hasEncPrefix`.
+ */
+export function isPiiEncrypted(value: string): boolean {
+  return encEnvelopeKind(value) === "pii";
 }
 
 /**
@@ -33,7 +84,7 @@ export function isPiiEncrypted(value: string): boolean {
  */
 export function maskName(name: string | null | undefined): string {
   if (!name || typeof name !== "string") return "Anonymous";
-  if (isPiiEncrypted(name)) return "Anonymous";
+  if (hasEncPrefix(name)) return "Anonymous";
   return name
     .trim()
     .split(/\s+/)
@@ -48,7 +99,7 @@ export function maskName(name: string | null | undefined): string {
  */
 export function maskEmail(email: string | null | undefined): string {
   if (!email || typeof email !== "string") return "***@***.***";
-  if (isPiiEncrypted(email)) return "***@***.***";
+  if (hasEncPrefix(email)) return "***@***.***";
   const atIdx = email.indexOf("@");
   if (atIdx < 0) return "***";
   const local = email.slice(0, atIdx);

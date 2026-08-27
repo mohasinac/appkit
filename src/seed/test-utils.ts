@@ -4,6 +4,7 @@ import type { SeedConfig } from "./types";
 import type { JsonValue } from "@mohasinac/appkit";
 import { runSeed } from "./runner";
 import { encryptPiiFields, decryptPiiFields, ENC_PREFIX } from "../security/pii-encrypt";
+import { hasEncPrefix } from "../security/pii-mask";
 import { DEFAULT_CATEGORIES } from "./defaults/categories";
 import { DEFAULT_FAQS } from "./defaults/faqs";
 import { makeProduct } from "./factories/product.factory";
@@ -40,9 +41,12 @@ export async function assertPiiRoundTrip<T extends Record<string, JsonValue>>(
 
   for (const field of piiFields) {
     const val = encrypted[field] as string;
-    if (!val.startsWith(ENC_PREFIX)) {
+    // `hasEncPrefix`, not a bare startsWith: the assertion is "this is not
+    // cleartext", which both crypto formats satisfy. And the value NEVER goes
+    // in the message — this helper runs over real fixture PII.
+    if (!hasEncPrefix(val)) {
       throw new Error(
-        `assertPiiRoundTrip: field "${String(field)}" was NOT encrypted. Got: ${val}`,
+        `assertPiiRoundTrip: field "${String(field)}" was NOT encrypted (got ${val.length} chars, no ${ENC_PREFIX} prefix).`,
       );
     }
     // Verify blind index was written

@@ -1,3 +1,4 @@
+import { ENC_PREFIX } from "./pii-mask";
 /**
  * PII Redaction Utility
  *
@@ -138,7 +139,8 @@ export function redactPii(data: unknown, depth = 0): unknown {
 // UI display helpers
 // ---------------------------------------------------------------------------
 
-const ENC_TOKEN_PREFIX = "enc:v1:";
+// One declaration of the prefix, shared with the crypto that produces it.
+const ENC_TOKEN_PREFIX = ENC_PREFIX;
 
 /**
  * Safe display name for untrusted / possibly-encrypted PII fields.

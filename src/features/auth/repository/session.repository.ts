@@ -119,8 +119,21 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
   ): Promise<void> {
     const updateData: Partial<SessionDocument> = {
       lastActivity: new Date(),
-      ...(data?.location && { location: data.location }),
     };
+
+    // Firestore `.update()` REPLACES a map field wholesale — it does not merge.
+    // Passing `location` straight through therefore destroyed whichever of
+    // `{ country, city }` the caller happened to omit, and `location.city` is
+    // PII-encrypted, so the loss is unrecoverable. Same footgun the profile
+    // route documents for `uiPreferences`.
+    //
+    // Latent rather than live: both current callers pass no `data` at all, so
+    // this branch never runs today. It costs one read, and only on the branch
+    // that supplies a location — the hot activity ping stays a single write.
+    if (data?.location) {
+      const current = await this.findById(sessionId); // mapDoc → already decrypted
+      updateData.location = { ...(current?.location ?? {}), ...data.location };
+    }
 
     try {
       await this.update(sessionId, updateData);

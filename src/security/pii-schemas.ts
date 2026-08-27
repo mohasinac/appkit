@@ -118,8 +118,22 @@ export const LOTTERY_ENTRY_PII_FIELDS = [
   "userDisplayName",
 ] as const;
 
-/** Store OAuth bearer tokens — encrypted via SETTINGS_ENCRYPTION_KEY */
-export const STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"] as const;
+// `STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"]` was deleted here.
+//
+// It had ZERO consumers, and its presence in this file was the whole hazard:
+// it sat in the PII-field registry, formatted identically to the entries above
+// that ARE assigned to a repository's `piiFields` — while its own doc-comment
+// said it was encrypted with SETTINGS_ENCRYPTION_KEY, the other key entirely.
+//
+// Wiring it into a `piiFields` override would have encrypted every store's Meta
+// bearer token with the PII key while `StoreRepository.decryptSecrets` kept
+// decrypting with the settings key: a hard throw on every store read, and
+// live seller tokens unrecoverable without a bespoke migration. Dotted-path
+// support was added to `encryptPiiFields` in 2026-08, which is exactly what
+// made that one-line mistake possible.
+//
+// The token is handled where it belongs — `encryptSecret`/`decryptSecret` in
+// `StoreRepository`. A constant does not need to exist for that.
 
 /** PII fields in savedPaymentMethods — full identifier (UPI VPA, card PAN, etc.) */
 export const PAYMENT_METHOD_PII_FIELDS = ["identifier"] as const;
