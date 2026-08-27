@@ -74,6 +74,7 @@ export function AdminScammerEditorView({
   }, [open, currentStatus, verificationNote]);
 
   const updateMutation = useApiMutation({
+    errorMessage: "Failed to update profile.",
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.SCAMMER_BY_ID(scammerId!), {
         status,
@@ -85,12 +86,10 @@ export function AdminScammerEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "scammers"] });
       onClose();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update profile.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete profile.",
     mutationFn: async () => {
       await apiClient.delete(ADMIN_ENDPOINTS.SCAMMER_BY_ID(scammerId!));
     },
@@ -98,9 +97,6 @@ export function AdminScammerEditorView({
       showToast("Scammer profile deleted.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "scammers"] });
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to delete profile.", "error");
     },
   });
 

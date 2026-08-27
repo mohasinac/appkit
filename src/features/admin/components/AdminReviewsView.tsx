@@ -49,6 +49,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
   const [replyText, setReplyText] = useState("");
 
   const patchMutation = useApiMutation({
+    errorMessage: "Failed to update review.",
     mutationFn: async ({ id, payload }: { id: string; payload: Record<string, JsonValue> }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.REVIEW_BY_ID(id), payload);
     },
@@ -56,12 +57,10 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       showToast("Review updated.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "reviews"] });
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update review.", "error");
-    },
   });
 
   const replyMutation = useApiMutation({
+    errorMessage: "Failed to save reply.",
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.REVIEW_BY_ID(replyTarget!.id), { adminReply: replyText });
     },
@@ -71,9 +70,6 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       setReplyOpen(false);
       setReplyText("");
       setReplyTarget(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save reply.", "error");
     },
   });
 

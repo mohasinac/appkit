@@ -111,6 +111,7 @@ export function AdminStoreEditorView({
   }, [open, currentStatus, currentIsVerified, currentIsFeatured, currentCapabilities]);
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to update store.",
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId!), {
         storeStatus,
@@ -125,9 +126,6 @@ export function AdminStoreEditorView({
       showToast("Store updated.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "stores"] });
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update store.", "error");
     },
   });
 

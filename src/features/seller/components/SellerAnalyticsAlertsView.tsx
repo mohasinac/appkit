@@ -165,6 +165,7 @@ export function SellerAnalyticsAlertsView({
   const alerts = data ?? [];
 
   const createMutation = useApiMutation({
+    errorMessage: "Failed to create alert",
     mutationFn: async () => {
       /*
        * Parsed against the SAME schema the route uses, before the request.
@@ -199,26 +200,25 @@ export function SellerAnalyticsAlertsView({
       setShowForm(false);
       setDraft(EMPTY_DRAFT);
     },
-    onError: (err: Error) => showToast(err?.message ?? "Failed to create alert", "error"),
   });
 
   const toggleMutation = useApiMutation({
+    errorMessage: "Failed to update alert",
     mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) =>
       apiClient.patch(SELLER_ENDPOINTS.ANALYTICS_ALERT_BY_ID(id), { isActive }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["seller", "analytics-alerts"] });
     },
-    onError: () => showToast("Failed to update alert", "error"),
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete alert",
     mutationFn: async (id: string) =>
       apiClient.delete(SELLER_ENDPOINTS.ANALYTICS_ALERT_BY_ID(id)),
     onSuccess: () => {
       showToast("Alert deleted", "success");
       void queryClient.invalidateQueries({ queryKey: ["seller", "analytics-alerts"] });
     },
-    onError: () => showToast("Failed to delete alert", "error"),
   });
 
   const toggleChannel = useCallback((ch: string) => {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 
 const priceSchema = z.number().min(0, "Price must be non-negative");
 
@@ -13,8 +14,8 @@ export const productInputSchema = z.object({
   currency: z.string().default("INR"),
   stockQuantity: z.number().int().min(0).default(0),
   availableQuantity: z.number().int().min(0).default(0),
-  mainImage: z.string().url("mainImage must be a valid URL"),
-  images: z.array(z.string().url()).max(20).default([]),
+  mainImage: mediaUrlSchema,
+  images: z.array(mediaUrlSchema).max(20).default([]),
   condition: conditionSchema.optional(),
   tags: z.array(z.string()).max(20).default([]),
   seoTitle: z.string().max(70).optional(),

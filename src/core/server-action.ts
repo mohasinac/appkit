@@ -1,4 +1,6 @@
 import { normalizeError } from "../errors/normalize";
+import { toApiIssues } from "../errors/error-envelope";
+import { HTTP_ERROR_CODES } from "../errors/error-mapping";
 /**
  * createServerAction — @mohasinac/appkit/core
  *
@@ -43,9 +45,14 @@ const logger = Logger.getInstance();
 
 // --- Result envelope ----------------------------------------------------------
 
-export type ActionResult<TOutput> =
-  | { ok: true; data: TOutput }
-  | { ok: false; error: string; code?: string; fieldErrors?: Record<string, string[]>; debug?: { stack?: string } };
+// There used to be a SECOND, narrower ActionResult declared right here, while
+// `_internal/shared/types/action-result` declared the real one. The three
+// barrels then disagreed about which a consumer got: server.ts and client.ts
+// resolved to the rich shape (with `issues`/`requestId`), index.ts to this
+// narrow one — invisibly, at every call site. Same defect as the two
+// OrderStatus types (Root Cause #36). One declaration now.
+export type { ActionResult } from "../_internal/shared/types/action-result";
+import type { ActionResult } from "../_internal/shared/types/action-result";
 
 // --- Middleware ---------------------------------------------------------------
 
@@ -101,7 +108,7 @@ export interface ServerActionOptions<TInput, TOutput> {
   name?: string;
   /**
    * Zod-compatible schema for input validation.
-   * If validation fails, returns `{ ok: false, fieldErrors }` before the handler runs.
+   * If validation fails, returns `{ ok: false, issues }` before the handler runs.
    */
   schema?: SafeParseSchema<TInput>;
   /**
@@ -143,8 +150,15 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
     if (options.schema) {
       const parsed = options.schema.safeParse(rawInput);
       if (!parsed.success) {
-        const fieldErrors = parsed.error.flatten?.().fieldErrors ?? {};
-        return { ok: false, error: "Validation failed", fieldErrors };
+        // `issues` (not the old `fieldErrors`, which had zero readers) so a
+        // server action's validation failure routes to inline field errors
+        // through the same path an HTTP route's does.
+        return {
+          ok: false,
+          error: "Validation failed",
+          code: HTTP_ERROR_CODES.VALIDATION_FAILED,
+          issues: toApiIssues(parsed.error.issues),
+        };
       }
       input = parsed.data;
     }

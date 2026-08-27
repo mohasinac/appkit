@@ -16,7 +16,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { payoutMarkPaidSchema } from "../schemas/small-forms";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 
 export interface AdminPayoutMarkPaidModalProps {
   isOpen: boolean;
@@ -31,6 +31,7 @@ export function AdminPayoutMarkPaidModal({ isOpen, payoutId, onClose, onSuccess 
   const queryClient = useQueryClient();
 
   const markPaid = useApiMutation({
+    errorMessage: "Failed to update payout.",
     mutationFn: () => {
       if (!payoutId) throw new Error("No payout selected");
       return apiClient.patch(ADMIN_ENDPOINTS.PAYOUT_BY_ID(payoutId), {
@@ -44,9 +45,6 @@ export function AdminPayoutMarkPaidModal({ isOpen, payoutId, onClose, onSuccess 
       void queryClient.invalidateQueries({ queryKey: ["admin", "payouts", "listing"] });
       onSuccess?.();
       onClose();
-    },
-    onError: () => {
-      showToast("Failed to update payout.", "error");
     },
   });
 

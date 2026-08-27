@@ -215,15 +215,6 @@ export function AdminFeatureEditorView({
       showToast(isEdit ? TOAST.UPDATED : TOAST.CREATED, "success");
       if (onSaved && id) onSaved(String(id));
     },
-    onError: (err: Error) => {
-      showToast(
-        (err as Error)?.message ??
-          (isEdit
-            ? ERROR_MESSAGES.PRODUCT_FEATURES.UPDATE_FAILED
-            : ERROR_MESSAGES.PRODUCT_FEATURES.CREATE_FAILED),
-        "error",
-      );
-    },
   });
 
   const deleteMutation = useApiMutation({
@@ -232,12 +223,6 @@ export function AdminFeatureEditorView({
       showToast(TOAST.DELETED, "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast(
-        (err as Error)?.message ??
-          ERROR_MESSAGES.PRODUCT_FEATURES.DELETE_FAILED,
-        "error",
-      ),
   });
 
   const isSubmitting = saveMutation.isPending || featureQuery.isLoading;

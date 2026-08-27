@@ -327,6 +327,7 @@ export function AdminUserEditorView({
   // --- Mutations ------------------------------------------------------------
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to update user.",
     mutationFn: async () => {
       // ST-2 — build publicProfile partial only when something changed; keeps
       // the PATCH payload minimal and avoids overwriting unrelated subkeys.
@@ -358,12 +359,10 @@ export function AdminUserEditorView({
       invalidate();
       onClose();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update user.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete user.",
     mutationFn: async () => {
       await apiClient.delete(ADMIN_ENDPOINTS.USER_BY_ID(userId!));
     },
@@ -373,12 +372,10 @@ export function AdminUserEditorView({
       setDeleteOpen(false);
       onClose();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to delete user.", "error");
-    },
   });
 
   const hardBanMutation = useApiMutation({
+    errorMessage: "Failed to ban user.",
     mutationFn: async (reason: string) => {
       await apiClient.post(ADMIN_ENDPOINTS.USER_HARD_BAN(userId!), { reason });
     },
@@ -389,12 +386,10 @@ export function AdminUserEditorView({
       setHardBanReasonInput("");
       onClose();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to ban user.", "error");
-    },
   });
 
   const unbanMutation = useApiMutation({
+    errorMessage: "Failed to unban user.",
     mutationFn: async () => {
       await apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(userId!), {});
     },
@@ -403,12 +398,10 @@ export function AdminUserEditorView({
       invalidate();
       onClose();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to unban user.", "error");
-    },
   });
 
   const softBanMutation = useApiMutation({
+    errorMessage: "Failed to apply soft ban.",
     mutationFn: async (payload: { action: string; reason: string; expiresAt?: string }) => {
       await apiClient.post(ADMIN_ENDPOINTS.USER_SOFT_BAN(userId!), payload);
     },
@@ -420,21 +413,16 @@ export function AdminUserEditorView({
       setSoftBanReason("");
       setSoftBanExpiry("");
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to apply soft ban.", "error");
-    },
   });
 
   const liftSoftBanMutation = useApiMutation({
+    errorMessage: "Failed to lift soft ban.",
     mutationFn: async (action: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.USER_SOFT_BAN_LIFT(userId!, action));
     },
     onSuccess: () => {
       showToast("Soft ban lifted.", "success");
       invalidate();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to lift soft ban.", "error");
     },
   });
 

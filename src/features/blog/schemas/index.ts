@@ -1,5 +1,6 @@
 export * from "./firestore";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../validation/schemas";
 import { mediaFieldSchema } from "../../media/types/index";
 import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
 
@@ -37,10 +38,7 @@ export type BlogPostFromSchema = z.infer<typeof blogPostFirestoreSchema>;
 const blogCoverImageSchema = z
   .union([
     mediaFieldSchema,
-    z
-      .string()
-      .url()
-      .transform((url) => ({ url, type: "image" as const })),
+    mediaUrlSchema.transform((url) => ({ url, type: "image" as const })),
   ])
   .nullable()
   .optional()

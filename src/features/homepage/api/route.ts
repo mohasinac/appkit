@@ -10,6 +10,7 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../validation/schemas";
 import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { HomepageSection } from "../types/index";
@@ -123,8 +124,8 @@ const homepageSectionCreateSchema = z
         subtitle: z.string().optional(),
         ctaLabel: z.string().optional(),
         ctaUrl: z.string().optional(),
-        imageUrl: z.string().url().optional(),
-        videoUrl: z.string().url().optional(),
+        imageUrl: mediaUrlSchema.optional(),
+        videoUrl: mediaUrlSchema.optional(),
         itemIds: z.array(z.string()).optional(),
         html: z.string().optional(),
       })

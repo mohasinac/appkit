@@ -166,6 +166,7 @@ export function AdminBlogEditorView({
 
   // --- save ---
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save post.",
     mutationFn: async () => {
       const payload: FirestoreDocument = {
         title: draft.title,
@@ -224,19 +225,18 @@ export function AdminBlogEditorView({
           setFieldError,
         );
       }
-      showToast((err as Error)?.message ?? "Failed to save post.", "error");
+      
     },
   });
 
   // --- delete ---
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete post.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.BLOG_BY_ID(postId!)),
     onSuccess: () => {
       showToast("Post deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to delete post.", "error"),
   });
 
   const isLoading = saveMutation.isPending || postQuery.isLoading;

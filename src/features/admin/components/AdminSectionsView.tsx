@@ -220,6 +220,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   }, [sections]);
 
   const saveSection = useApiMutation({
+    errorMessage: "Failed to save section.",
     mutationFn: async () => {
       let parsedConfig: Record<string, JsonValue>;
       try {
@@ -260,12 +261,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       toast.showToast(mode === "create" ? "Section created." : "Section updated.", "success");
       setIsModalOpen(false);
     },
-    onError: (error) => {
-      toast.showToast(error instanceof Error ? error.message : "Failed to save section.", "error");
-    },
   });
 
   const reorderSections = useApiMutation({
+    errorMessage: "Failed to reorder sections.",
     mutationFn: async () => {
       await Promise.all(
         reorderDraft.map((item) =>
@@ -282,9 +281,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       setReorderServerSnapshot(cloneReorderItems(reorderDraft));
       setReorderUndoStack([]);
       toast.showToast("Section order updated.", "success");
-    },
-    onError: (error) => {
-      toast.showToast(error instanceof Error ? error.message : "Failed to reorder sections.", "error");
     },
   });
 

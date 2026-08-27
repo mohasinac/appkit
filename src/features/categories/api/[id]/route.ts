@@ -11,6 +11,7 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { CategoryItem } from "../../types/index";
@@ -70,7 +71,7 @@ const categoryUpdateSchema = z
     tier: z.number().int().min(0).optional(),
     order: z.number().int().min(0).optional(),
     description: z.string().optional(),
-    imageUrl: z.string().url().optional(),
+    imageUrl: mediaUrlSchema.optional(),
     isFeatured: z.boolean().optional(),
     showOnHomepage: z.boolean().optional(),
     isActive: z.boolean().optional(),

@@ -60,6 +60,7 @@ export function AdminCarouselGroupEditorView({
   }, [existing.data]);
 
   const createMutation = useApiMutation({
+    errorMessage: "create",
     /*
      * PATCH on the edit path, not PUT. `/api/admin/carousels/[id]` exports
      * GET/PATCH/DELETE — copying `AdminFeatureEditorView`'s `apiClient.put`
@@ -81,9 +82,6 @@ export function AdminCarouselGroupEditorView({
       }
       if (onCreated) onCreated(id);
       else router.push(String(ROUTES.ADMIN.CAROUSEL_DETAIL(id)));
-    },
-    onError: (err: Error) => {
-      showToast(err?.message ?? `Failed to ${isEdit ? "update" : "create"} carousel.`, "error");
     },
   });
 

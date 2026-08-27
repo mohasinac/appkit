@@ -33,6 +33,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
 import { isEffectiveAdminUser } from "../../features/auth/role-predicates";
 import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
+import { buildErrorEnvelope, toApiIssues } from "../../errors/error-envelope";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
 import { userRepository } from "../../repositories";
 import { SCHEMAS } from "../../schemas/registry";
@@ -207,14 +208,13 @@ function errorJson(
   issues?: unknown[],
 ): Response {
   return NextResponse.json(
-    {
-      ok: false,
-      success: false, // deprecated — for compat during the migration sweep
+    buildErrorEnvelope({
+      message,
+      status,
       code,
-      error: message,
-      ...(issues ? { issues } : {}),
+      issues: toApiIssues(issues),
       requestId,
-    },
+    }),
     {
       status,
       // `no-store` on every error envelope — without this, Vercel's edge CDN

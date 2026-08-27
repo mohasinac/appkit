@@ -50,15 +50,13 @@ export function AdminAddressClustersView(_props: AdminAddressClustersViewProps) 
   });
 
   const flagMutation = useApiMutation({
+    errorMessage: "Failed to flag address.",
     mutationFn: async (id: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ADDRESS_BY_ID(id), { action: "flag_suspicious" });
     },
     onSuccess: () => {
       showToast("Address flagged as suspicious.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "address-clusters"] });
-    },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to flag address.", "error");
     },
   });
 

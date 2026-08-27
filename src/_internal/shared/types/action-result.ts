@@ -16,8 +16,6 @@ export type ActionResult<T> =
       code?: string;
       error: string;
       issues?: unknown[];
-      /** Legacy server-action shape — kept for compat. */
-      fieldErrors?: Record<string, string[]>;
       /** Legacy debug field — only populated in dev. */
       debug?: { stack?: string };
       requestId?: string;

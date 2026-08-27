@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { normalizeError } from "../errors/normalize";
 
 // ============================================
 // COMMON SCHEMAS
@@ -17,35 +16,31 @@ export const objectIdSchema = z.string().regex(/^[a-z0-9-]+$/);
 
 export const urlSchema = z.string().url().max(2048);
 
-import { FIREBASE_STORAGE_HOST, GCS_HOST } from "../utils/media-url";
+import {
+  isStoredMediaRef,
+  MEDIA_URL_MAX_LENGTH,
+  MEDIA_URL_MESSAGE,
+} from "../utils/media-url";
 
-/** Default approved media domains. Extend via `createMediaUrlSchema`. */
-export const APPROVED_MEDIA_DOMAINS = [
-  FIREBASE_STORAGE_HOST,
-  GCS_HOST,
-  "res.cloudinary.com",
-  "images.unsplash.com",
-  // Add site-specific CDN domains by calling createMediaUrlSchema(extraDomains)
-];
-
+/**
+ * A media reference we are willing to PERSIST.
+ *
+ * The rule lives in `isStoredMediaRef` (`utils/media-url.ts`) so this schema
+ * and its zod-4 twin in `src/validation/request-schemas.ts` cannot drift —
+ * the two Zod major versions mean the schema object can't be shared, but the
+ * predicate can.
+ *
+ * This used to be `.url()` + an approved-host refine, which rejected the
+ * canonical `/media/<slug>` form that `/api/media/finalize` actually mints.
+ * That is what made every avatar save fail with a bare "Validation failed".
+ *
+ * For a genuine EXTERNAL link (a brand website, a social handle, a tracking
+ * URL) use `urlSchema` above — not this.
+ */
 export const mediaUrlSchema = z
   .string()
-  .url()
-  .max(2048)
-  .refine(
-    (url) => {
-      try {
-        const { hostname } = new URL(url);
-        return APPROVED_MEDIA_DOMAINS.some(
-          (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
-        );
-      } catch (_err) {
-        void normalizeError(_err);
-        return false;
-      }
-    },
-    { message: "Image or video URL must be hosted on an approved CDN domain" },
-  );
+  .max(MEDIA_URL_MAX_LENGTH)
+  .refine(isStoredMediaRef, { message: MEDIA_URL_MESSAGE });
 
 export const dateStringSchema = z.string().datetime();
 

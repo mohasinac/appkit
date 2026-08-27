@@ -62,6 +62,7 @@ export function AdminNewsletterView({
   const [selectedRow, setSelectedRow] = useState<NewsletterRow | null>(null);
 
   const unsubscribeMutation = useApiMutation({
+    errorMessage: "Failed to unsubscribe.",
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.NEWSLETTER_BY_ID(id));
     },
@@ -70,9 +71,6 @@ export function AdminNewsletterView({
       queryClient.invalidateQueries({ queryKey: ["admin", "newsletter"] });
       setUnsubscribeOpen(false);
       setSelectedRow(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to unsubscribe.", "error");
     },
   });
 

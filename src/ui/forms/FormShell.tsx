@@ -10,6 +10,7 @@ import React, {
   type ReactNode,
 } from "react";
 import type { FormValues } from "../../schemas/types";
+import { applyZodIssues } from "./apply-zod-issues";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -147,31 +148,9 @@ export interface UseFormShellStateResult {
   markSubmitAttempted: () => void;
 }
 
-/**
- * `applyZodIssues` — pipe every issue from a Zod safeParse failure into the
- * FormShellContext error map. Use after `schema.safeParse(values)` returns
- * `success: false` to surface inline errors on `<FieldInput>` etc.
- *
- * Keys are the full dotted/indexed path (`"video.duration"`, `"images.2"`),
- * not just the top-level segment — a plain `issue.path[0]` key would collapse
- * every nested issue under one object onto the same map entry, silently
- * dropping all but the last. Top-level-only fields (the common case) are
- * unaffected: a single-segment path joins to the same string as before.
- *
- * Root-level `.refine()` issues (empty `path: []`, no owning field) are still
- * skipped — there is no field to attach them to, and no schema in this
- * codebase currently relies on one being surfaced this way.
- */
-export function applyZodIssues(
-  issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>; message: string }>,
-  setFieldError: (name: string, error: string | null) => void,
-): void {
-  for (const issue of issues) {
-    if (!issue.path || issue.path.length === 0) continue;
-    const key = issue.path.map(String).join(".");
-    setFieldError(key, issue.message);
-  }
-}
+// `applyZodIssues` lives in ./apply-zod-issues — `surface-error.ts`, which is
+// deliberately React-free, needs it to route server-side validation failures
+// to inline field errors and cannot import this "use client" module.
 
 /**
  * `useFormShellState(schema?, nav?)` — caller-owned form state with optional

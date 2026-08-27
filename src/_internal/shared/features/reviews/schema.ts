@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 import {
   REVIEW_BODY_MAX_LENGTH,
   REVIEW_BODY_MIN_LENGTH,
@@ -25,7 +26,7 @@ export const createReviewSchema = z.object({
    * never consulted it.
    */
   comment: z.string().min(REVIEW_BODY_MIN_LENGTH).max(REVIEW_BODY_MAX_LENGTH),
-  images: z.array(z.string().url()).max(REVIEW_IMAGES_MAX).default([]),
+  images: z.array(mediaUrlSchema).max(REVIEW_IMAGES_MAX).default([]),
   orderId: z.string().optional(),
 });
 

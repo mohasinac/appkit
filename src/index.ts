@@ -1253,7 +1253,7 @@ export type { ActionMiddleware } from "./core/index";
 export type { ActionMiddlewareContext } from "./core/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ActionResult - Type contract for action result.
-export type { ActionResult } from "./core/index";
+export type { ActionResult } from "./_internal/shared/types/action-result";
 // handleActionError - Maps domain errors to structured { ok: false, error, code } responses.
 export { handleActionError } from "./utils/action-response";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -2594,6 +2594,14 @@ export { createRouteMap } from "./next/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // errorResponse - Model for error response.
 export { errorResponse } from "./next/index";
+// The one error-body shape, plus the Zod-issue narrower every route needs to
+// put field errors on the wire under the key ApiClientError actually reads.
+export {
+  buildErrorEnvelope,
+  toApiIssues,
+  codeForStatus,
+  type ApiErrorEnvelope,
+} from "./errors/error-envelope";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBooleanParam - Helper for get boolean param.
 export { getBooleanParam } from "./next/index";
@@ -9418,7 +9426,17 @@ export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export { deriveContextTypeFromFilename } from "./utils/id-generators";
 export type { MediaFilenameContext } from "./utils/id-generators";
-export { resolveMediaUrl, resolveVideoUrl, FIREBASE_STORAGE_HOST, GCS_HOST } from "./utils/media-url";
+export {
+  resolveMediaUrl,
+  resolveVideoUrl,
+  FIREBASE_STORAGE_HOST,
+  GCS_HOST,
+  isStoredMediaRef,
+  MEDIA_PROXY_PREFIX,
+  MEDIA_URL_MAX_LENGTH,
+  MEDIA_URL_MESSAGE,
+  APPROVED_MEDIA_DOMAINS,
+} from "./utils/media-url";
 
 export { generateFAQId } from "./utils/id-generators";
 export type { GenerateFAQIdInput } from "./utils/id-generators";

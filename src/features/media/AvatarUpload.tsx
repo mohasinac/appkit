@@ -112,34 +112,46 @@ export function AvatarUpload({
     const firstName = nameParts[0] || userId;
     const lastName = nameParts.slice(1).join("-") || firstName;
 
+    // TWO steps, TWO owners — and that is why this try is split.
+    //
+    // `uploadMedia` is this component's own work, so this component surfaces
+    // its failure. `onUploadSuccess` is the CONSUMER's mutation (the profile
+    // PATCH), which already surfaces its own. Toasting both from one catch is
+    // what made a failed avatar save show three identical banners: the
+    // mutation's built-in surfaceError, the caller's onError, and this.
+    let downloadURL: string;
     try {
-      const downloadURL = await uploadMedia(
-        pendingUploadFile,
-        "users",
-        true,
-        {
-          type: "user-avatar",
-          firstName,
-          lastName,
-        },
-      );
-
-      const finalizedCropData: ImageCropData = { ...pendingCropData, url: downloadURL };
-      await onUploadSuccess?.(downloadURL, finalizedCropData);
-
-      setPreviewUrl(downloadURL);
-      setCropData(finalizedCropData);
-      setPendingCropData(null);
-      setPendingUploadFile(null);
-
-      showToast("Avatar uploaded", "success");
-      onSaveComplete?.();
+      downloadURL = await uploadMedia(pendingUploadFile, "users", true, {
+        type: "user-avatar",
+        firstName,
+        lastName,
+      });
     } catch (error) {
       void normalizeError(error);
       const message = error instanceof Error ? error.message : "Upload failed";
       onUploadError?.(message);
-      showToast(message, "error");
+      showToast(message, "error"); // our step, our surface
+      return;
     }
+
+    const finalizedCropData: ImageCropData = { ...pendingCropData, url: downloadURL };
+    try {
+      await onUploadSuccess?.(downloadURL, finalizedCropData);
+    } catch (error) {
+      void normalizeError(error);
+      // No toast — the consumer's mutation owns this failure. We only tell the
+      // consumer so it can reset its own UI.
+      onUploadError?.(error instanceof Error ? error.message : "Save failed");
+      return;
+    }
+
+    setPreviewUrl(downloadURL);
+    setCropData(finalizedCropData);
+    setPendingCropData(null);
+    setPendingUploadFile(null);
+
+    showToast("Avatar uploaded", "success");
+    onSaveComplete?.();
   };
 
   const handleCancelPending = () => {

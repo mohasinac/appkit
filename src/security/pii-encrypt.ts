@@ -12,6 +12,8 @@
 
 import type { FirestoreValue } from "../schemas/types";
 import { ENC_PREFIX, HMAC_PREFIX, isPiiEncrypted } from "./pii-mask";
+import { serverLogger } from "../monitoring/server-logger";
+import { normalizeError } from "../errors/normalize";
 
 // Re-exported for backward-compat with existing direct imports of these
 // symbols from this file — the actual crypto-free definitions live in
@@ -89,7 +91,12 @@ export function decryptValue(ciphertext: string): string {
   const inner = ciphertext.slice(ENC_PREFIX.length);
   const parts = inner.split(":");
   if (parts.length !== 3)
-    throw new Error(`Invalid PII ciphertext: ${ciphertext}`);
+    // NEVER interpolate the value. This used to embed the whole ciphertext,
+    // which then flowed into DatabaseError and serverLogger.error — encrypted
+    // PII sitting in the logs on every malformed row. Shape only.
+    throw new Error(
+      `Invalid PII ciphertext: expected 3 colon-separated parts after ${ENC_PREFIX}, got ${parts.length} (${ciphertext.length} chars)`,
+    );
   const [ivB64, encB64, tagB64] = parts as [string, string, string];
   const { createDecipheriv } = nodeCrypto();
   const key = getEncKey();
@@ -225,6 +232,33 @@ export function encryptPiiFields<T extends object>(
  * Decrypt specified PII fields in a Firestore document.
  * Fields that are not encrypted (no `enc:v1:` prefix) are passed through.
  */
+/**
+ * Decrypt one value, or return a sentinel and warn.
+ *
+ * A single corrupt or foreign-format row must not take out the page. Before
+ * the sieve read path started calling `mapDoc` (which is what decrypts),
+ * a bad value was merely rendered as ciphertext — cosmetic. Once decryption
+ * actually runs on list reads, an unguarded throw inside a 100-row admin page
+ * turns that cosmetic defect into a 500 for the whole list.
+ *
+ * Same fail-soft posture `SiteSettingsRepository.getDecryptedCredentials`
+ * already takes for the settings key.
+ *
+ * The warning names the FIELD, never the value.
+ */
+function decryptOrWarn(value: string, field: string): string {
+  try {
+    return decryptValue(value);
+  } catch (err) {
+    const normalized = normalizeError(err);
+    serverLogger.warn("PII decrypt failed — field left empty", {
+      field,
+      reason: normalized.message,
+    });
+    return "";
+  }
+}
+
 export function decryptPiiFields<T extends object>(
   doc: T,
   piiFields: string[],
@@ -250,7 +284,7 @@ export function decryptPiiFields<T extends object>(
           const clone = { ...(el as Record<string, unknown>) };
           const value = itemPath ? getPath(clone, itemPath) : undefined;
           if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
-            setPath(clone, itemPath, decryptValue(value));
+            setPath(clone, itemPath, decryptOrWarn(value, field));
           }
           return clone;
         }),
@@ -261,14 +295,14 @@ export function decryptPiiFields<T extends object>(
     if (field.includes(".")) {
       const value = getPath(result as Record<string, unknown>, field);
       if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
-        setPath(result as Record<string, unknown>, field, decryptValue(value));
+        setPath(result as Record<string, unknown>, field, decryptOrWarn(value, field));
       }
       continue;
     }
 
     const value = result[field];
     if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
-      result[field] = decryptValue(value);
+      result[field] = decryptOrWarn(value, field);
     }
   }
 

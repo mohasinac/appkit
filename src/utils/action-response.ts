@@ -4,7 +4,7 @@ import {
   NotFoundError,
   ValidationError,
 } from "../errors";
-import type { ActionResult } from "../core/server-action";
+import type { ActionResult } from "../_internal/shared/types/action-result";
 
 export type { ActionResult };
 

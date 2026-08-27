@@ -1,5 +1,6 @@
-import { isApiError } from "./ApiError";
+import { isApiError, type ApiIssue } from "./ApiError";
 import { ApiClientError } from "../../http/ApiClient";
+import { applyZodIssues, hasAttachableIssue } from "../../ui/forms/apply-zod-issues";
 import { normalizeError } from "../../errors/normalize";
 import { getErrorDisplay } from "../../errors/error-display-map";
 
@@ -23,6 +24,15 @@ export interface SurfaceErrorOptions {
   setFieldError?: (field: string, message: string) => void;
   /** next-intl style translator. Falls back to the raw error message when undefined. */
   translate?: (key: string) => string;
+  /**
+   * Curated copy preferred over `err.message` when the error carries no
+   * mapped display message. Lets a caller keep wording better than the raw
+   * server string WITHOUT adding a second toast of its own.
+   *
+   * Never overrides field-level `issues` — those are more specific than any
+   * caller-supplied sentence.
+   */
+  fallbackMessage?: string;
   /** Optional reporter for the clientErrors / serverErrors collection. */
   report?: (payload: {
     code: string;
@@ -40,12 +50,37 @@ function hasStableErrorCode(err: unknown): err is { code: string; message: strin
   return isApiError(err) || (err instanceof ApiClientError && typeof err.code === "string");
 }
 
+/** Field-level issues carried by either error shape, when present. */
+function issuesOf(err: unknown): ApiIssue[] | undefined {
+  if (isApiError(err)) return err.issues;
+  if (err instanceof ApiClientError) return err.issues;
+  return undefined;
+}
+
 export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
-  const { showToast, setFieldError, translate, report } = opts;
+  const { showToast, setFieldError, translate, report, fallbackMessage } = opts;
+
+  // ISSUES FIRST. A validation failure names the fields it is about, and the
+  // right place for "photoURL must be …" is under the photoURL input — not a
+  // toast that says "Validation failed" and nothing else.
+  //
+  // This branch could not fire before: `errorResponse` serialised Zod issues
+  // under a `details` key that `ApiClientError` never read, so `err.issues`
+  // was always undefined and every schema rejection on every route fell
+  // through to the generic toast below.
+  //
+  // `ERROR_DISPLAY_MAP` deliberately has no `field` for VALIDATION_FAILED —
+  // a validation failure is not tied to one fixed field, which is exactly why
+  // the routing has to come from the issues themselves.
+  const issues = issuesOf(err);
+  if (setFieldError && hasAttachableIssue(issues)) {
+    applyZodIssues(issues!, (name, message) => setFieldError(name, message ?? ""));
+    return; // inline errors only — no toast
+  }
 
   if (hasStableErrorCode(err)) {
     const display = getErrorDisplay(err.code);
-    const message = translate?.(display.messageKey) ?? err.message;
+    const message = translate?.(display.messageKey) ?? fallbackMessage ?? err.message;
 
     if (display.field && setFieldError) {
       setFieldError(display.field, message);
@@ -59,7 +94,7 @@ export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
   // Report it (workstream 13) so clientErrors picks it up.
   const message =
     err instanceof Error ? err.message : "Something went wrong. Please try again.";
-  const fallback = translate?.("errors.codes.CLIENT_UNHANDLED") ?? message;
+  const fallback = fallbackMessage ?? translate?.("errors.codes.CLIENT_UNHANDLED") ?? message;
   showToast(fallback, "error");
 
   if (report) {

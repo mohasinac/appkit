@@ -121,6 +121,7 @@ export function AdminFaqEditorView({
 
   // --- save ---
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save FAQ.",
     mutationFn: async () => {
       const payload: Record<string, JsonValue> = {
         question,
@@ -145,20 +146,16 @@ export function AdminFaqEditorView({
       showToast(isEdit ? "FAQ updated." : "FAQ created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save FAQ.", "error");
-    },
   });
 
   // --- delete ---
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete FAQ.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.FAQ_BY_ID(faqId!)),
     onSuccess: () => {
       showToast("FAQ deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to delete FAQ.", "error"),
   });
 
   const isSubmitting = saveMutation.isPending || faqQuery.isLoading;

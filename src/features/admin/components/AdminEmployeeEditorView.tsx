@@ -156,6 +156,7 @@ export function AdminEmployeeEditorView({
   };
 
   const inviteMutation = useApiMutation({
+    errorMessage: "Failed to invite employee",
     mutationFn: async () => {
       await apiClient.post(ADMIN_ENDPOINTS.TEAM, {
         email: email.trim(),
@@ -168,12 +169,10 @@ export function AdminEmployeeEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "team"] });
       onClose();
     },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to invite employee", "error");
-    },
   });
 
   const updateMutation = useApiMutation({
+    errorMessage: "Failed to update permissions",
     mutationFn: async () => {
       await apiClient.put(ADMIN_ENDPOINTS.TEAM_MEMBER(userId!), {
         permissionGroup: group,
@@ -185,12 +184,10 @@ export function AdminEmployeeEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "team"] });
       onClose();
     },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to update permissions", "error");
-    },
   });
 
   const revokeMutation = useApiMutation({
+    errorMessage: "Failed to revoke access",
     mutationFn: async () => {
       await apiClient.delete(ADMIN_ENDPOINTS.TEAM_MEMBER(userId!));
     },
@@ -199,9 +196,6 @@ export function AdminEmployeeEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "team"] });
       setRevokeOpen(false);
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to revoke access", "error");
     },
   });
 

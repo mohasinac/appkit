@@ -28,6 +28,16 @@ export interface UseApiMutationOptions<TData, TError, TVariables, TContext>
   /** When set, a `loading` toast is shown on mutate and finalized on settle. */
   loadingMessage?: string;
   successMessage?: string;
+  /**
+   * Curated failure copy, preferred over `err.message` by the ONE surface.
+   *
+   * Exists so a caller with wording better than the raw server message
+   * ("Could not mark notification as read.") does not have to add a second
+   * toast in its own `onError` to say it — which is what produced two and
+   * three stacked banners for a single failure. A server error that carries
+   * field `issues` still wins: those route to inline field errors.
+   */
+  errorMessage?: string;
   /** Translation function (next-intl style); falls back to raw message. */
   translate?: (key: string) => string;
   /** Form field error setter (FormShell context). Optional. */
@@ -55,6 +65,7 @@ export function useApiMutation<
   const {
     loadingMessage,
     successMessage,
+    errorMessage,
     translate,
     setFieldError,
     reportClientError,
@@ -78,6 +89,7 @@ export function useApiMutation<
         showToast,
         setFieldError,
         translate,
+        fallbackMessage: errorMessage,
         report: reportClientError,
       });
       onError?.(err, variables, context, ctx);

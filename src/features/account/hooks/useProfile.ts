@@ -57,11 +57,18 @@ export function useUpdateCurrentProfile(options?: {
   onSuccess?: (data: JsonValue) => void;
   onError?: (error: Error) => void;
   endpoint?: string;
+  /**
+   * Curated failure copy, forwarded to the ONE error surface. A wrapper that
+   * omits this forces its callers to add a second toast of their own, which
+   * is exactly how one failed avatar save produced three stacked banners.
+   */
+  errorMessage?: string;
 }) {
   const queryClient = useQueryClient();
   const endpoint = options?.endpoint ?? ACCOUNT_ENDPOINTS.PROFILE;
 
   return useApiMutation({
+    errorMessage: options?.errorMessage,
     mutationFn: (data: UpdateCurrentProfileInput) =>
       apiClient.patch(endpoint, data),
     onSuccess: async (data) => {

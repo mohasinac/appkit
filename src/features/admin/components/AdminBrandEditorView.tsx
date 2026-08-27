@@ -5,6 +5,7 @@ import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../validation/schemas";
 import {
   Button,
   ConfirmDeleteModal,
@@ -26,7 +27,7 @@ const brandFormSchema = z.object({
   name: z.string().min(1, "Brand name is required").max(120),
   slug: z.string().regex(/^[a-z0-9-]+$/i).optional().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
-  logoURL: z.string().url().optional().or(z.literal("")),
+  logoURL: mediaUrlSchema.optional().or(z.literal("")),
   website: z.string().url().optional().or(z.literal("")),
   country: z.string().max(80).optional().or(z.literal("")),
   founded: z.number().int().min(1800).max(new Date().getFullYear()).optional(),
@@ -121,6 +122,7 @@ export function AdminBrandEditorView({
   };
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save brand.",
     mutationFn: async () => {
       const payload: BrandPayload = {
         name,
@@ -143,18 +145,15 @@ export function AdminBrandEditorView({
       showToast(isEdit ? "Brand updated." : "Brand created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save brand.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete brand.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.BRAND_BY_ID(brandId!)),
     onSuccess: () => {
       showToast("Brand deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) => showToast((err as Error)?.message ?? "Failed to delete brand.", "error"),
   });
 
   const { upload } = useMediaUpload();

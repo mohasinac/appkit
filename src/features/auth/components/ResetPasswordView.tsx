@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
-import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 export interface ResetPasswordViewProps {

@@ -9,7 +9,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { quickCreateTaxonomySchema } from "../schemas/small-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 
 export interface BrandQuickCreateFormProps {
   onSaved: (id: string, name: string) => void;
@@ -28,6 +28,7 @@ export function BrandQuickCreateForm({ onSaved, onCancel }: BrandQuickCreateForm
   const { showToast } = useToast();
 
   const mutation = useApiMutation({
+    errorMessage: "Failed to create brand.",
     mutationFn: async () =>
       apiClient.post(ADMIN_ENDPOINTS.BRANDS, {
         name,
@@ -38,9 +39,6 @@ export function BrandQuickCreateForm({ onSaved, onCancel }: BrandQuickCreateForm
     onSuccess: (res: JsonValue) => {
       const id = (res as { data?: { id?: string } })?.data?.id ?? (res as { id?: string })?.id ?? "";
       onSaved(id as string, name);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to create brand.", "error");
     },
   });
 

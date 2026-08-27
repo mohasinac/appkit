@@ -7,7 +7,7 @@ import { isAuthError } from "../../../utils/auth-error";
 import { Button, CountdownDisplay, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
-import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { placeBidSchema } from "../schemas/bid-input";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
 import { AUCTION_BUYOUT_WINDOW_MINUTES } from "../../../_internal/shared/checkout/lanes";

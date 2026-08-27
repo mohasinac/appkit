@@ -48,26 +48,22 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const router = useRouter();
 
   const verifyStore = useApiMutation({
+    errorMessage: "Failed to verify store.",
     mutationFn: (storeId: string) =>
       apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { isVerified: true }),
     onSuccess: () => {
       toast.showToast("Store verified.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "stores", "listing"] });
     },
-    onError: () => {
-      toast.showToast("Failed to verify store.", "error");
-    },
   });
 
   const suspendStore = useApiMutation({
+    errorMessage: "Failed to suspend store.",
     mutationFn: (storeId: string) =>
       apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { storeStatus: "suspended" }),
     onSuccess: () => {
       toast.showToast("Store suspended.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "stores", "listing"] });
-    },
-    onError: () => {
-      toast.showToast("Failed to suspend store.", "error");
     },
   });
 

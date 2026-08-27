@@ -1,5 +1,6 @@
 import { sortBy } from "@mohasinac/appkit";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../validation/schemas";
 import { serverLogger } from "../../../monitoring";
 import { blogRepository } from "../repository/blog.repository";
 import { coerceMediaField, getMediaUrl, type MediaField } from "../../../utils";
@@ -23,24 +24,21 @@ import type {
 const singleImageMediaSchema = z
   .union([
     z.object({
-      url: z.string().url(),
+      url: mediaUrlSchema,
       type: z.enum(["image", "video", "file"]),
       alt: z.string().optional(),
-      thumbnailUrl: z.string().url().optional(),
+      thumbnailUrl: mediaUrlSchema.optional(),
     }),
-    z
-      .string()
-      .url()
-      .transform((url) => ({ url, type: "image" as const })),
+    mediaUrlSchema.transform((url) => ({ url, type: "image" as const })),
   ])
   .nullable()
   .optional();
 
 const mediaFieldSchema = z.object({
-  url: z.string().url(),
+  url: mediaUrlSchema,
   type: z.enum(["image", "video", "file"]),
   alt: z.string().optional(),
-  thumbnailUrl: z.string().url().optional(),
+  thumbnailUrl: mediaUrlSchema.optional(),
 });
 
 export const createBlogPostSchema = z.object({

@@ -225,6 +225,7 @@ export function AdminProductEditorView({
   };
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save product.",
     mutationFn: async () => {
       const payload = applyMode(product, mode);
       if (isEdit) {
@@ -248,18 +249,16 @@ export function AdminProductEditorView({
           setFieldError,
         );
       }
-      showToast((err as Error)?.message ?? "Failed to save product.", "error");
+      
     },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete product.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.PRODUCT_BY_ID(productId!)),
     onSuccess: () => {
       showToast("Product deleted.", "success");
       if (onDeleted) onDeleted();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to delete product.", "error");
     },
   });
 

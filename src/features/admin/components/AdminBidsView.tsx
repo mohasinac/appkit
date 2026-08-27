@@ -64,6 +64,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
   const [detail, setDetail] = useState<BidRow | null>(null);
 
   const cancelMutation = useApiMutation({
+    errorMessage: "Failed to cancel bid.",
     mutationFn: async (bidId: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.BID_BY_ID(bidId), { status: "cancelled" });
     },
@@ -72,9 +73,6 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
       queryClient.invalidateQueries({ queryKey: ["admin", "bids"] });
       setCancelOpen(false);
       setSelectedRow(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to cancel bid.", "error");
     },
   });
 

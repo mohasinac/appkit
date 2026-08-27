@@ -189,7 +189,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     },
     onError: (err: Error) => {
       const msg = err instanceof Error ? err.message : "Failed to save settings";
-      showToast(msg, "error");
+      
     },
   });
 
@@ -206,7 +206,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     },
     onError: (err: Error) => {
       const msg = err instanceof Error ? err.message : "Sync failed";
-      showToast(msg, "error");
+      
     },
   });
 

@@ -15,6 +15,7 @@ import {
   BUNDLE_KIND_SPECIAL,
   BUNDLE_KIND_BRAND,
 } from "./bundle-config";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 
 const productIdsSchema = z.array(z.string().min(1)).min(0).max(BUNDLE_MAX_ITEMS);
 
@@ -49,7 +50,7 @@ export const bundleQueryRuleSchema = z.discriminatedUnion("type", [
 ]);
 
 export const bundleDisplaySchema = z.object({
-  coverImage: z.string().url().optional(),
+  coverImage: mediaUrlSchema.optional(),
   icon: z.string().optional(),
   color: z.string().optional(),
 });

@@ -136,6 +136,7 @@ export function AdminSupportTicketDetailView({
   }, [parties]);
 
   const updateMutation = useApiMutation({
+    errorMessage: "Failed to update ticket.",
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
         status,
@@ -150,12 +151,10 @@ export function AdminSupportTicketDetailView({
       invalidate();
       onClose();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update ticket.", "error");
-    },
   });
 
   const replyMutation = useApiMutation({
+    errorMessage: "Failed to send reply.",
     mutationFn: async () => {
       await apiClient.post(
         SUPPORT_ENDPOINTS.TICKET_MESSAGES(ticketId!),
@@ -167,9 +166,6 @@ export function AdminSupportTicketDetailView({
       setReplyBody("");
       invalidate();
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to send reply.", "error");
     },
   });
 
@@ -200,6 +196,7 @@ export function AdminSupportTicketDetailView({
   });
 
   const applyStoreChange = useApiMutation({
+    errorMessage: "Failed to apply store change.",
     mutationFn: async () => {
       if (!linkedStoreId) throw new Error("No linked store on this ticket.");
       await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(linkedStoreId), {
@@ -220,9 +217,6 @@ export function AdminSupportTicketDetailView({
         .catch(console.error);
       invalidate();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to apply store change.", "error");
-    },
   });
 
   // ST-3 — Modify Order Items panel (fetches current items on demand, lets
@@ -234,6 +228,7 @@ export function AdminSupportTicketDetailView({
     category === "order_modification_request" || category === "order_issue";
 
   const loadOrderItems = useApiMutation({
+    errorMessage: "Failed to load order.",
     mutationFn: async () => {
       if (!linkedOrderId) throw new Error("No linked order on this ticket.");
       const res = await apiClient.get<{
@@ -251,9 +246,6 @@ export function AdminSupportTicketDetailView({
       );
       setOrderItemsOpen(true);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to load order.", "error");
-    },
   });
 
   // ST-5 — Lift Ban actions for unban_request tickets
@@ -261,6 +253,7 @@ export function AdminSupportTicketDetailView({
   const isUnbanRequest = category === "unban_request";
 
   const liftHardBan = useApiMutation({
+    errorMessage: "Failed to lift hard ban.",
     mutationFn: async () => {
       if (!linkedUserId) throw new Error("No linked user on this ticket.");
       await apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(linkedUserId), {});
@@ -277,12 +270,10 @@ export function AdminSupportTicketDetailView({
         .catch(console.error);
       invalidate();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to lift hard ban.", "error");
-    },
   });
 
   const liftSoftBanTickets = useApiMutation({
+    errorMessage: "Failed to lift soft ban.",
     mutationFn: async () => {
       if (!linkedUserId) throw new Error("No linked user on this ticket.");
       await apiClient.delete(
@@ -301,12 +292,10 @@ export function AdminSupportTicketDetailView({
         .catch(console.error);
       invalidate();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to lift soft ban.", "error");
-    },
   });
 
   const applyOrderItems = useApiMutation({
+    errorMessage: "Failed to update order items.",
     mutationFn: async () => {
       if (!linkedOrderId) throw new Error("No linked order on this ticket.");
       // Recalculate totalPrice per line from quantity × unitPrice so qty edits
@@ -338,9 +327,6 @@ export function AdminSupportTicketDetailView({
         .catch(console.error);
       invalidate();
       setOrderItemsOpen(false);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update order items.", "error");
     },
   });
 

@@ -190,15 +190,13 @@ export function AdminFeatureFlagsView({
     }));
 
   const saveFlags = useApiMutation({
+    errorMessage: "Failed to save feature flags.",
     mutationFn: async () => {
       await apiClient.put(ADMIN_ENDPOINTS.FEATURE_FLAGS, { flags, rollouts });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin", "feature-flags"] });
       showToast("Feature flags saved.", "success");
-    },
-    onError: () => {
-      showToast("Failed to save feature flags.", "error");
     },
   });
 

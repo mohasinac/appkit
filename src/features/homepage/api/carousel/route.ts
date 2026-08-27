@@ -10,6 +10,7 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { CarouselSlide } from "../../types/index";
@@ -117,9 +118,9 @@ const carouselSlideCreateSchema = z
     active: z.boolean().optional(),
     media: z.object({
       type: z.enum(["image", "video"]),
-      url: z.string().url(),
+      url: mediaUrlSchema,
       alt: z.string(),
-      thumbnail: z.string().url().optional(),
+      thumbnail: mediaUrlSchema.optional(),
     }),
     link: z
       .object({
@@ -130,7 +131,7 @@ const carouselSlideCreateSchema = z
     mobileMedia: z
       .object({
         type: z.enum(["image", "video"]),
-        url: z.string().url(),
+        url: mediaUrlSchema,
         alt: z.string(),
       })
       .optional(),

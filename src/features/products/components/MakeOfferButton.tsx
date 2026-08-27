@@ -13,7 +13,7 @@ import {
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { makeOfferFormSchema } from "../../seller/schemas/offer-forms";
 import {

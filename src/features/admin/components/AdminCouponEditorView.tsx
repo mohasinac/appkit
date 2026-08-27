@@ -290,6 +290,7 @@ export function AdminCouponEditorView({
 
   // --- save ---
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save coupon.",
     mutationFn: async () => {
       const payload: CouponPayload = {
         name,
@@ -337,21 +338,17 @@ export function AdminCouponEditorView({
       showToast(isEdit ? "Coupon updated." : "Coupon created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save coupon.", "error");
-    },
   });
 
   // --- delete ---
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete coupon.",
     mutationFn: () =>
       apiClient.delete(ADMIN_ENDPOINTS.COUPON_BY_ID(couponId!)),
     onSuccess: () => {
       showToast("Coupon deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to delete coupon.", "error"),
   });
 
   const isSubmitting = saveMutation.isPending || couponQuery.isLoading;

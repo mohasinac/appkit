@@ -5,7 +5,8 @@ export type {
   FormShellContextValue,
   UseFormShellStateResult,
 } from "./FormShell";
-export { FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./FormShell";
+export { FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./FormShell";
+export { applyZodIssues, hasAttachableIssue } from "./apply-zod-issues";
 
 export type { FieldInputProps } from "./FieldInput";
 export { FieldInput } from "./FieldInput";

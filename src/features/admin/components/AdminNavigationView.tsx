@@ -88,26 +88,27 @@ export function AdminNavigationView({
   const sorted = [...items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const visibilityMutation = useApiMutation({
+    errorMessage: "Failed to update visibility.",
     mutationFn: async ({ id, isVisible }: { id: string; isVisible: boolean }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(id), { isVisible });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "navigation"] });
     },
-    onError: () => showToast("Failed to update visibility.", "error"),
   });
 
   const reorderMutation = useApiMutation({
+    errorMessage: "Failed to reorder.",
     mutationFn: async ({ id, newOrder }: { id: string; newOrder: number }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(id), { order: newOrder });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "navigation"] });
     },
-    onError: () => showToast("Failed to reorder.", "error"),
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete nav item.",
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(id));
     },
@@ -116,7 +117,6 @@ export function AdminNavigationView({
       queryClient.invalidateQueries({ queryKey: ["admin", "navigation"] });
       setDeleteTarget(null);
     },
-    onError: () => showToast("Failed to delete nav item.", "error"),
   });
 
   const handleMoveUp = (idx: number) => {

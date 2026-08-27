@@ -46,7 +46,7 @@ import { Stack } from "../../../ui/components/Layout";
 import { Form } from "../../../ui/components/Form";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { useToast } from "../../../ui/components/Toast";
 import { normalizeError } from "../../../errors/normalize";
 

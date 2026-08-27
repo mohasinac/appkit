@@ -10,7 +10,81 @@ import { normalizeError } from "../errors/normalize";
 export const FIREBASE_STORAGE_HOST = "firebasestorage.googleapis.com";
 /** Google Cloud Storage host (used by public-asset URLs). */
 export const GCS_HOST = "storage.googleapis.com";
-const PROXY_PREFIX = "/media/";
+
+/**
+ * The canonical stored form of every media reference: `/media/<slug>`.
+ *
+ * `POST /api/media/finalize` mints exactly this, `next.config.js` rewrites
+ * `/media/:path*` → `/api/media/:path*`, and CLAUDE.md § Media Architecture
+ * makes it mandatory ("never write raw firebasestorage.googleapis.com URLs
+ * into Firestore"). Exported so validation can name the same prefix the
+ * resolver below branches on, instead of re-typing the literal.
+ */
+export const MEDIA_PROXY_PREFIX = "/media/";
+const PROXY_PREFIX = MEDIA_PROXY_PREFIX;
+
+/** Cap for any stored media reference. Matches the previous schema bound. */
+export const MEDIA_URL_MAX_LENGTH = 2048;
+
+/**
+ * Absolute hosts a stored media reference may point at.
+ *
+ * These exist for BACK-COMPAT only — rows written before the `/media/` proxy,
+ * and `seedExtMedia()` fixtures pointing at third-party sample assets. New
+ * writes should always be producing `/media/<slug>`. This list was previously
+ * duplicated in `appkit/src/validation/schemas.ts` and
+ * `src/validation/request-schemas.ts`; it lives here now so there is one copy.
+ */
+export const APPROVED_MEDIA_DOMAINS: readonly string[] = [
+  FIREBASE_STORAGE_HOST,
+  GCS_HOST,
+  "res.cloudinary.com",
+  "images.unsplash.com",
+];
+
+export const MEDIA_URL_MESSAGE =
+  "Must be a stored media reference (/media/<slug>) or a URL on an approved CDN domain";
+
+/**
+ * Is `value` something we are willing to PERSIST as a media reference?
+ *
+ * The single definition of that rule — `mediaUrlSchema` in both validation
+ * modules refines on it, and everything that stores an image/video URL should
+ * go through one of those.
+ *
+ * Accepts:
+ *  - `/media/<slug>` — the canonical form (`/api/media/finalize` output);
+ *  - an absolute URL on an approved host — see `APPROVED_MEDIA_DOMAINS`.
+ *
+ * Rejects:
+ *  - `blob:` / `data:` — valid only in the tab that created them. Persisting
+ *    one stores a reference that is already dead by the time anyone reads it;
+ *  - `/api/media/ext?url=…` — a RENDER-time transform produced by
+ *    `resolveMediaUrl` below. Storing it double-wraps on the next render and
+ *    pins the value to a proxy route rather than to the asset;
+ *  - anything else, including bare relative paths that are not `/media/`.
+ *
+ * NOTE this is deliberately a strict SUPERSET of the rule it replaced (which
+ * was `.url()` + an approved-host check). That old rule rejected the canonical
+ * `/media/<slug>` form outright — which is what made every avatar save fail —
+ * while happily accepting the raw Storage URLs CLAUDE.md bans. No value that
+ * validated before stops validating now.
+ */
+export function isStoredMediaRef(value: string): boolean {
+  if (!value || value.length > MEDIA_URL_MAX_LENGTH) return false;
+  if (value.startsWith(MEDIA_PROXY_PREFIX)) return true;
+  if (value.startsWith("blob:") || value.startsWith("data:")) return false;
+  if (value.startsWith(MEDIA_ENDPOINTS.EXT)) return false;
+  try {
+    const { hostname } = new URL(value);
+    return APPROVED_MEDIA_DOMAINS.some(
+      (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
+    );
+  } catch (_err) {
+    void normalizeError(_err); // not an absolute URL, and not /media/ — reject
+    return false;
+  }
+}
 
 /**
  * Our own Storage bucket, as it appears as the first path segment of a

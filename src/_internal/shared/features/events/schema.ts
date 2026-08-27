@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { EVENT_TITLE_MAX_LENGTH, EVENT_DESCRIPTION_MAX_LENGTH } from "./config";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 
 export const eventInputSchema = z.object({
   title: z.string().min(3).max(EVENT_TITLE_MAX_LENGTH),
@@ -10,7 +11,7 @@ export const eventInputSchema = z.object({
   startsAt: z.string().datetime({ offset: true }),
   endsAt: z.string().datetime({ offset: true }),
   maxEntries: z.number().int().min(1).optional(),
-  imageUrl: z.string().url().optional(),
+  imageUrl: mediaUrlSchema.optional(),
   location: z.string().max(300).optional(),
   isOnline: z.boolean().default(false),
   entryFee: z.number().min(0).default(0),

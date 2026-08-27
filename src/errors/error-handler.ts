@@ -2,6 +2,7 @@ import { NextResponse } from "next/server.js";
 import type { JsonValue } from "@mohasinac/appkit";
 import { AppError } from "./base-error";
 import { mapToHttpError } from "./error-mapping";
+import { buildErrorEnvelope, toApiIssues } from "./error-envelope";
 
 /**
  * Handle API errors with consistent response format.
@@ -27,17 +28,23 @@ export function handleApiError(error: unknown): NextResponse {
     });
   }
 
+  // `issues` go at the TOP LEVEL. They used to be nested under
+  // `data.issues`, and `ApiClientError` reads `body.issues` — so this
+  // producer's field errors were as dead as `api-response.ts`'s were.
+  //
+  // `statusCode` is dropped: it only ever duplicated the HTTP status, and
+  // nothing read it off the body.
   return NextResponse.json(
     {
-      success: false,
-      error: mapped.message,
-      code: mapped.code,
-      statusCode: mapped.status,
+      ...buildErrorEnvelope({
+        message: mapped.message,
+        status: mapped.status,
+        code: mapped.code,
+        issues: toApiIssues(mapped.issues),
+      }),
       ...(error instanceof AppError && error.data !== undefined
         ? { data: error.data }
-        : mapped.issues
-          ? { data: { issues: mapped.issues } }
-          : {}),
+        : {}),
     },
     { status: mapped.status },
   );

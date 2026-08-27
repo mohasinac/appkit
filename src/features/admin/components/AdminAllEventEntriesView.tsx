@@ -43,15 +43,13 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
   const [selected, setSelected] = React.useState<EntryRow | null>(null);
 
   const updateMutation = useApiMutation({
+    errorMessage: "Failed to update entry.",
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ADMIN_EVENT_ENTRY_BY_ID(id), { status });
     },
     onSuccess: () => {
       showToast("Entry updated.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "event-entries"] });
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update entry.", "error");
     },
   });
 

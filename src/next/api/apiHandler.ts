@@ -1,4 +1,7 @@
 import { normalizeError } from "../../errors/normalize";
+import { toApiIssues } from "../../errors/error-envelope";
+import { HTTP_ERROR_CODES } from "../../errors/error-mapping";
+import type { ApiIssue } from "../../client/api/ApiError";
 interface SafeParseSchema<TInput> {
   safeParse: (input: unknown) =>
     | { success: true; data: TInput }
@@ -111,7 +114,7 @@ export interface ApiHandlerFactoryDeps<TRole, TRateLimitConfig, TUser> {
   errorResponse: (
     message: string,
     status: number,
-    issues?: unknown,
+    opts?: { code?: string; issues?: ApiIssue[]; requestId?: string },
   ) => Response;
   handleApiError: (error: unknown) => Response;
   getRateLimitExceededMessage: () => string;
@@ -141,11 +144,25 @@ async function applyRateLimitCheck<TRateLimitConfig>(
 async function applySchemaValidation<TInput>(
   request: Request,
   schema: SafeParseSchema<TInput>,
-  errorResponse: (message: string, status: number, issues?: unknown) => Response,
+  errorResponse: (
+    message: string,
+    status: number,
+    opts?: { code?: string; issues?: ApiIssue[]; requestId?: string },
+  ) => Response,
 ): Promise<{ invalid: true; response: Response } | { invalid: false; data: TInput }> {
   const schemaResult = await validateSchema<TInput>(request, schema);
   if (schemaResult.validationError) {
-    return { invalid: true, response: errorResponse("Validation failed", 400, schemaResult.issues) };
+    // The issues travel as `issues`, which is the key ApiClientError reads.
+    // They used to be passed positionally and serialised under `details`,
+    // where nothing read them — so every schema rejection on every route
+    // reached the user as a bare "Validation failed" with no field name.
+    return {
+      invalid: true,
+      response: errorResponse("Validation failed", 400, {
+        code: HTTP_ERROR_CODES.VALIDATION_FAILED,
+        issues: toApiIssues(schemaResult.issues),
+      }),
+    };
   }
   return { invalid: false, data: schemaResult.data };
 }

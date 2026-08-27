@@ -116,6 +116,7 @@ export function AdminCategoryEditorView({
   };
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save category.",
     mutationFn: async () => {
       const payload: CategoryPayload = {
         name,
@@ -136,19 +137,15 @@ export function AdminCategoryEditorView({
       showToast(isEdit ? "Category updated." : "Category created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save category.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete category.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.CATEGORY_BY_ID(categoryId!)),
     onSuccess: () => {
       showToast("Category deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to delete category.", "error"),
   });
 
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;

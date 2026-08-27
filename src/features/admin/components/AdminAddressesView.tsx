@@ -169,15 +169,13 @@ export function AdminAddressesView(_props: AdminAddressesViewProps) {
   const { showToast } = useToast();
 
   const actionMutation = useApiMutation({
+    errorMessage: "Failed to update address.",
     mutationFn: async ({ id, action }: { id: string; action: string }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ADDRESS_BY_ID(id), { action });
     },
     onSuccess: () => {
       showToast("Address updated.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "addresses"] });
-    },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to update address.", "error");
     },
   });
 

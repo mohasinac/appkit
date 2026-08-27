@@ -43,6 +43,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
   const [selectedRow, setSelectedRow] = useState<ReturnRow | null>(null);
 
   const approveMutation = useApiMutation({
+    errorMessage: "Failed to approve return.",
     mutationFn: async (orderId: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "refunded" });
     },
@@ -53,12 +54,10 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
       setApproveOpen(false);
       setSelectedRow(null);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to approve return.", "error");
-    },
   });
 
   const rejectMutation = useApiMutation({
+    errorMessage: "Failed to reject return.",
     mutationFn: async (orderId: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "delivered" });
     },
@@ -68,9 +67,6 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
       queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
       setRejectOpen(false);
       setSelectedRow(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to reject return.", "error");
     },
   });
 

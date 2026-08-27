@@ -11,6 +11,7 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
+import { mediaUrlSchema } from "../../../../validation/schemas";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { Review } from "../../types/index";
@@ -73,8 +74,8 @@ const reviewUpdateSchema = z
       .optional(),
     title: z.string().min(1).max(100).optional(),
     comment: z.string().min(1).max(2000).optional(),
-    images: z.array(z.string().url()).max(10).optional(),
-    video: z.string().url().optional(),
+    images: z.array(mediaUrlSchema).max(10).optional(),
+    video: mediaUrlSchema.optional(),
     status: z.enum(["pending", "approved", "rejected"]).optional(),
   })
   .passthrough();

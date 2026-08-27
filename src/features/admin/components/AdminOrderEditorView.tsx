@@ -137,6 +137,7 @@ export function AdminOrderEditorView({
   }, [open, currentStatus]);
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to update order.",
     mutationFn: async () => {
       const payload: FirestoreDocument = {
         status,
@@ -154,9 +155,6 @@ export function AdminOrderEditorView({
       showToast("Order updated.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to update order.", "error");
     },
   });
 

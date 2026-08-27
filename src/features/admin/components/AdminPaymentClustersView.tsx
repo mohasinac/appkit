@@ -47,15 +47,13 @@ export function AdminPaymentClustersView(_props: AdminPaymentClustersViewProps) 
   });
 
   const flagMutation = useApiMutation({
+    errorMessage: "Failed to flag payment method.",
     mutationFn: async (id: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.PAYMENT_METHOD_BY_ID(id), { action: "flag_suspicious" });
     },
     onSuccess: () => {
       showToast("Payment method flagged as suspicious.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "payment-clusters"] });
-    },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to flag payment method.", "error");
     },
   });
 

@@ -173,15 +173,13 @@ export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
   const { showToast } = useToast();
 
   const actionMutation = useApiMutation({
+    errorMessage: "Failed to update payment method.",
     mutationFn: async ({ id, action }: { id: string; action: string }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.PAYMENT_METHOD_BY_ID(id), { action });
     },
     onSuccess: () => {
       showToast("Payment method updated.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "payment-methods"] });
-    },
-    onError: (err: Error) => {
-      showToast(err.message ?? "Failed to update payment method.", "error");
     },
   });
 

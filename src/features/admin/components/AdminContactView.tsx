@@ -57,6 +57,7 @@ export function AdminContactView({
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const actionMutation = useApiMutation({
+    errorMessage: "Action failed.",
     mutationFn: async ({ id, action }: { id: string; action: "read" | "resolved" }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.CONTACT_SUBMISSION_BY_ID(id), { action });
     },
@@ -64,12 +65,10 @@ export function AdminContactView({
       showToast(`${action === "read" ? "Marked as read" : "Archived"}.`, "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "contact"] });
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Action failed.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete.",
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.CONTACT_SUBMISSION_BY_ID(id));
     },
@@ -78,9 +77,6 @@ export function AdminContactView({
       queryClient.invalidateQueries({ queryKey: ["admin", "contact"] });
       setDeleteOpen(false);
       setSelectedRow(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to delete.", "error");
     },
   });
 

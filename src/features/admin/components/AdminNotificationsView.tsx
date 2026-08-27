@@ -65,6 +65,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete notification.",
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.ADMIN_NOTIFICATION_BY_ID(id));
     },
@@ -73,21 +74,16 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
       setDeleteTarget(null);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to delete notification.", "error");
-    },
   });
 
   const resendMutation = useApiMutation({
+    errorMessage: "Failed to resend notification.",
     mutationFn: async (id: string) => {
       await apiClient.post(ADMIN_ENDPOINTS.ADMIN_NOTIFICATION_RESEND(id), {});
     },
     onSuccess: () => {
       showToast("Notification resent.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to resend notification.", "error");
     },
   });
 

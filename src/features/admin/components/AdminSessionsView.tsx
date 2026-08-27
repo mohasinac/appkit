@@ -59,6 +59,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
   const [revokeTarget, setRevokeTarget] = useState<SessionRow | null>(null);
 
   const revokeMutation = useApiMutation({
+    errorMessage: "Failed to revoke session.",
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.SESSION_BY_ID(id));
     },
@@ -66,9 +67,6 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       showToast("Session revoked.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "sessions"] });
       setRevokeTarget(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to revoke session.", "error");
     },
   });
 

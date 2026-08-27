@@ -116,6 +116,7 @@ export function AdminTesterChecklistItemEditorView({
   };
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save checklist item.",
     mutationFn: async () => {
       const payload: Record<string, JsonValue> = {
         groupKey: groupKey || slugifyKey(groupLabel),
@@ -140,19 +141,15 @@ export function AdminTesterChecklistItemEditorView({
       showToast(isEdit ? "Checklist item updated." : "Checklist item created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save checklist item.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete checklist item.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!)),
     onSuccess: () => {
       showToast("Checklist item deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to delete checklist item.", "error"),
   });
 
   const isSubmitting = saveMutation.isPending || itemQuery.isLoading;

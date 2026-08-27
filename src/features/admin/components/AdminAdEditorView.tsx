@@ -197,6 +197,7 @@ export function AdminAdEditorView({
   }, [adQuery.data]);
 
   const saveMutation = useApiMutation({
+    errorMessage: "Save failed",
     mutationFn: async () => {
       const payload: AdPayload = {
         name,
@@ -230,9 +231,6 @@ export function AdminAdEditorView({
       if (savedId) {
         onSaved?.(savedId);
       }
-    },
-    onError: (error) => {
-      showToast(error instanceof Error ? error.message : "Save failed", "error");
     },
   });
 

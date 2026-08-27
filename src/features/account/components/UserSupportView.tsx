@@ -115,6 +115,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
     queryClient.invalidateQueries({ queryKey: ["user", "support-tickets"] });
 
   const createMutation = useApiMutation({
+    errorMessage: "Failed to create ticket.",
     mutationFn: async () => {
       /*
        * This drawer validated NOTHING. Its sibling page
@@ -155,12 +156,10 @@ export function UserSupportView(_props: UserSupportViewProps) {
       setNewOrderId("");
       invalidate();
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to create ticket.", "error");
-    },
   });
 
   const replyMutation = useApiMutation({
+    errorMessage: "Failed to send reply.",
     mutationFn: async () => {
       await apiClient.post(
         SUPPORT_ENDPOINTS.TICKET_MESSAGES(selectedTicket!.id),
@@ -171,9 +170,6 @@ export function UserSupportView(_props: UserSupportViewProps) {
       showToast("Reply sent.", "success");
       setReplyBody("");
       invalidate();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to send reply.", "error");
     },
   });
 

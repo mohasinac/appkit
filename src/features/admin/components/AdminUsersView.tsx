@@ -97,6 +97,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   }, [banJobEvent.status]);
 
   const banUser = useApiMutation({
+    errorMessage: "Failed to start hard-ban.",
     mutationFn: () => {
       if (!banTargetId) throw new Error("No user selected");
       return apiClient.post<{ jobId: string; customToken: string; uid: string }>(
@@ -106,9 +107,6 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
     },
     onSuccess: (result) => {
       banJobEvent.subscribe(result.jobId, result.customToken);
-    },
-    onError: () => {
-      toast.showToast("Failed to start hard-ban.", "error");
     },
   });
 
@@ -127,13 +125,11 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   });
 
   const unbanUser = useApiMutation({
+    errorMessage: "Failed to lift ban.",
     mutationFn: (uid: string) => apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(uid), {}),
     onSuccess: () => {
       toast.showToast("Ban lifted.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
-    },
-    onError: () => {
-      toast.showToast("Failed to lift ban.", "error");
     },
   });
 

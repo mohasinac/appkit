@@ -95,6 +95,7 @@ export function AdminNavEditorView({
   const { showToast } = useToast();
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save nav item.",
     mutationFn: async () => {
       const payload = {
         label,
@@ -113,9 +114,6 @@ export function AdminNavEditorView({
       showToast(isEdit ? "Nav item updated." : "Nav item created.", "success");
       onSaved();
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save nav item.", "error");
     },
   });
 

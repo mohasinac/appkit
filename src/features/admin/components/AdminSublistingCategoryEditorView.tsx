@@ -75,6 +75,7 @@ export function AdminSublistingCategoryEditorView({
   }, [categoryQuery.data]);
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save category.",
     mutationFn: async () => {
       const payload: CategoryPayload = {
         name,
@@ -92,20 +93,15 @@ export function AdminSublistingCategoryEditorView({
       showToast(isEdit ? "Category updated." : "Category created.", "success");
       if (onSaved && id) onSaved(String(id));
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save category.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete category.",
     mutationFn: () =>
       apiClient.delete(ADMIN_ENDPOINTS.SUBLISTING_CATEGORY_BY_ID(categoryId!)),
     onSuccess: () => {
       showToast("Category deleted. All linked listings were unlinked.", "success");
       if (onDeleted) onDeleted();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to delete category.", "error");
     },
   });
 

@@ -750,6 +750,7 @@ export function AdminSiteSettingsView({
   }
 
   const saveAllMutation = useApiMutation({
+    errorMessage: "Failed to save site settings.",
     mutationFn: async () => {
       await apiClient.put(ADMIN_ENDPOINTS.ADMIN_SITE, buildFullPayload());
     },
@@ -760,8 +761,6 @@ export function AdminSiteSettingsView({
       // shared useSiteSettings() hook under a different key — must invalidate both.
       queryClient.invalidateQueries({ queryKey: ["site-settings"] });
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to save site settings.", "error"),
   });
 
   const BG_TYPE_OPTIONS: SelectOption[] = [

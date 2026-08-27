@@ -117,6 +117,7 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
   };
 
   const cancelMutation = useApiMutation({
+    errorMessage: "Failed to cancel offer.",
     mutationFn: async ({ offerId, reason }: { offerId: string; reason: string }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.OFFER_BY_ID(offerId), {
         status: "expired",
@@ -128,9 +129,6 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
       queryClient.invalidateQueries({ queryKey: ["admin", "offers"] });
       setCancelOpen(false);
       setSelectedRow(null);
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to cancel offer.", "error");
     },
   });
 

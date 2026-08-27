@@ -107,6 +107,7 @@ export function AdminAddressEditorView({
   });
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save address.",
     mutationFn: async () => {
       const payload: AddressPayload = {
         ...form,
@@ -123,20 +124,16 @@ export function AdminAddressEditorView({
       showToast(isEdit ? "Address updated." : "Address created.", "success");
       if (onSaved && id) onSaved(String(id));
     },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Failed to save address.", "error");
-    },
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete address.",
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.ADDRESS_BY_ID(addressId!)),
     onSuccess: () => {
       showToast("Address deleted.", "success");
       setDeleteOpen(false);
       if (onDeleted) onDeleted();
     },
-    onError: (err: Error) =>
-      showToast((err as Error)?.message ?? "Failed to delete address.", "error"),
   });
 
   const isSubmitting = saveMutation.isPending || isLoading;

@@ -41,6 +41,7 @@ export function AdminContactEditorView({
   const { showToast } = useToast();
 
   const actionMutation = useApiMutation({
+    errorMessage: "Action failed.",
     mutationFn: async (action: "read" | "resolved") => {
       await apiClient.patch(ADMIN_ENDPOINTS.CONTACT_SUBMISSION_BY_ID(submissionId!), { action });
     },
@@ -49,9 +50,6 @@ export function AdminContactEditorView({
       showToast(`${label}.`, "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "contact"] });
       onClose();
-    },
-    onError: (err: Error) => {
-      showToast((err as Error)?.message ?? "Action failed.", "error");
     },
   });
 
