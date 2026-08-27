@@ -1,4 +1,4 @@
-import { buildSearchTxt } from "../../utils/search-txt";
+import { buildProductSearchTxt } from "../../utils/search-txt-builders";
 import type { ProductDocument } from "../../features/products/schemas";
 
 /**
@@ -20,18 +20,8 @@ import type { ProductDocument } from "../../features/products/schemas";
 export function withProductSearchTxt(
   p: Partial<ProductDocument>,
 ): Partial<ProductDocument> {
-  return {
-    ...p,
-    searchTxt: buildSearchTxt([
-      p.title,
-      p.description,
-      p.brand,
-      p.brandSlug,
-      p.categoryNames,
-      p.tags,
-      p.features,
-      p.condition,
-      p.specifications?.map((s) => `${s.name} ${s.value}`),
-    ]),
-  };
+  // Delegates rather than re-deriving. This wrapper listed 9 sources while the
+  // write path indexed 12, so a seeded product was findable by fewer terms than
+  // the identical product created through the app — with no error on either side.
+  return { ...p, searchTxt: buildProductSearchTxt(p) };
 }

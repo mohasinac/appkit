@@ -128,6 +128,8 @@ export const EVENT_ENTRY_INDEXED_FIELDS = [
 ] as const;
 
 export const EVENT_FIELDS = {
+  /** Word-prefix search tokens. Derived on write by `buildSearchTxtFor`. */
+  SEARCH_TXT: "searchTxt",
   ID: "id",
   SLUG: "slug",
   TYPE: "type",

@@ -230,6 +230,8 @@ export type { StoreCapability } from "../../auth/permissions/constants";
 export const STORE_COLLECTION = "stores" as const;
 
 export const STORE_FIELDS = {
+  /** Word-prefix search tokens. Derived on write by `buildSearchTxtFor`. */
+  SEARCH_TXT: "searchTxt",
   ID: "id",
   STORE_SLUG: "storeSlug",
   OWNER_ID: "ownerId",

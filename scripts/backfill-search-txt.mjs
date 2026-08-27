@@ -133,6 +133,14 @@ const SOURCES = {
     (d.specifications ?? []).map((s) => `${s.name} ${s.value}`),
   ],
   testerChecklistItems: (d) => [d.label, d.description, d.groupLabel, d.pageLabel],
+  stores: (d) => [d.storeName, stripHtml(d.storeDescription), d.storeCategory],
+  events: (d) => [d.title, stripHtml(d.description), d.type, d.tags ?? []],
+  // `content` is deliberately excluded — see buildBlogSearchTxt. Blog bodies
+  // are an order of magnitude past the 600-token cap, and buildSearchTxt
+  // truncates SILENTLY, so the tail of every post would be unsearchable.
+  blogPosts: (d) => [d.title, stripHtml(d.excerpt), d.category, d.tags ?? []],
+  // `userName` is PII and encrypted — indexing it would undo the encryption (D1).
+  reviews: (d) => [d.title, stripHtml(d.comment), d.productTitle],
 };
 
 function parsePrivateKey(raw) {

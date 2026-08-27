@@ -16,10 +16,12 @@ import { cacheManager } from "../../../core";
 import { serverLogger } from "../../../monitoring";
 import { generateUniqueId, slugify, generateBarcodeId } from "../../../utils";
 import {
-  buildSearchTxt,
   matchesAllSearchTerms,
   parseSearchTxtQuery,
 } from "../../../utils/search-txt";
+// One definition of "which fields feed searchTxt", shared with the seed
+// wrapper. Three copies existed and two were missing the same three fields.
+import { buildProductSearchTxt } from "../../../utils/search-txt-builders";
 import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
 import type { ProductStatus } from "../types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -92,22 +94,6 @@ function buildListingKindClause(
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
 
-function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
-  return buildSearchTxt([
-    p.title,
-    p.description,
-    p.brand,
-    p.brandSlug,
-    p.categoryNames,
-    p.tags,
-    p.features,
-    p.condition,
-    p.card?.setName,
-    p.card?.cardNumber,
-    p.grading?.service,
-    p.specifications?.map((s) => `${s.name} ${s.value}`),
-  ]);
-}
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;

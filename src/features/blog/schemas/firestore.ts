@@ -58,6 +58,8 @@ export const BLOG_POSTS_INDEXED_FIELDS = [
 ] as const;
 
 export const BLOG_POST_FIELDS = {
+  /** Word-prefix search tokens. Derived on write by `buildSearchTxtFor`. */
+  SEARCH_TXT: "searchTxt",
   ID: "id",
   TITLE: "title",
   SLUG: "slug",

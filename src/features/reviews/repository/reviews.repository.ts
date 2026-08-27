@@ -1,3 +1,4 @@
+import type { JsonValue } from "../../../schemas/types";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -24,8 +25,16 @@ import {
   type ReviewDocument,
 } from "../schemas";
 import type { ReviewStatus } from "../types";
+import { buildReviewSearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 
 const REVIEW_FIELDS = {
+  /** Word-prefix search tokens. Derived on write by `buildSearchTxtFor`. */
+  SEARCH_TXT: "searchTxt",
   PRODUCT_ID: "productId",
   USER_ID: "userId",
   STORE_ID: "storeId",
@@ -473,18 +482,46 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return this.decryptSieveResult(result);
   }
 
+  /**
+   * Derived on every write path via `applyWriteHooks`.
+   *
+   * `userName` is PII and is deliberately absent from the token source — a
+   * searchTxt for a person's name IS that name, re-encoded (D1).
+   */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildReviewSearchTxt(data as Partial<ReviewDocument>);
+  }
+
   async listAll(
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<ReviewDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<ReviewDocument>();
+
+    let baseQuery = this.getCollection();
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        REVIEW_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
     const result = await this.sieveQuery<ReviewDocument>(
       model,
       ReviewRepository.SIEVE_FIELDS,
       {
+        baseQuery,
         defaultPageSize: 50,
         maxPageSize: 200,
       },
     );
-    return this.decryptSieveResult(result);
+    // Refine BEFORE decrypting: the refine reads `searchTxt`, which is never
+    // encrypted, and decrypting rows that are about to be dropped is waste.
+    return this.decryptSieveResult(refineSearchTxt(result, plan.rest));
   }
 }
 

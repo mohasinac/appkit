@@ -1,3 +1,4 @@
+import type { JsonValue } from "../../../schemas/types";
 import { DatabaseError } from "../../../errors";
 import type {
   FirebaseSieveResult,
@@ -19,6 +20,12 @@ import {
 import type { BlogPostCategory, BlogPostStatus } from "../types";
 import { createBlogPostId } from "../schemas";
 import { increment } from "../../../contracts/field-ops";
+import { buildBlogSearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 
 class BlogRepository extends BaseRepository<BlogPostDocument> {
   constructor() {
@@ -246,17 +253,39 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     );
   }
 
+  /** Derived on every write path via `applyWriteHooks`. */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildBlogSearchTxt(data as Partial<BlogPostDocument>);
+  }
+
   async listAll(
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<BlogPostDocument>> {
-    return this.sieveQuery<BlogPostDocument>(
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<BlogPostDocument>();
+
+    let baseQuery = this.getCollection();
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        BLOG_POST_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<BlogPostDocument>(
       model,
       BlogRepository.SIEVE_FIELDS,
       {
+        baseQuery,
         defaultPageSize: 50,
         maxPageSize: 200,
       },
     );
+    return refineSearchTxt(result, plan.rest);
   }
 }
 

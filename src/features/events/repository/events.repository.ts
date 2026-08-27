@@ -1,3 +1,4 @@
+import type { JsonValue } from "../../../schemas/types";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import { slugify } from "../../../utils";
@@ -21,6 +22,12 @@ import {
   type EventUpdateInput,
 } from "../schemas";
 import { increment } from "../../../contracts/field-ops";
+import { buildEventSearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 
 class EventRepository extends BaseRepository<EventDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
@@ -54,8 +61,40 @@ class EventRepository extends BaseRepository<EventDocument> {
     super(EVENTS_COLLECTION);
   }
 
-  async list(model: SieveModel): Promise<FirebaseSieveResult<EventDocument>> {
-    return this.sieveQuery<EventDocument>(model, EventRepository.SIEVE_FIELDS);
+  /**
+   * Derived on every write path via `applyWriteHooks`. The field, its index and
+   * its seed tokens all existed before this — but nothing wrote it for a
+   * document created through the app, so only seeded events were searchable.
+   */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildEventSearchTxt(data as Partial<EventDocument>);
+  }
+
+  async list(
+    model: SieveModel,
+    opts?: { search?: string },
+  ): Promise<FirebaseSieveResult<EventDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    // A search that yielded no usable term must return NOTHING, not everything.
+    if (plan.empty) return emptySearchResult<EventDocument>();
+
+    let baseQuery = this.getCollection();
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        EVENT_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<EventDocument>(
+      model,
+      EventRepository.SIEVE_FIELDS,
+      { baseQuery },
+    );
+    return refineSearchTxt(result, plan.rest);
   }
 
   /**

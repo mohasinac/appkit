@@ -23,6 +23,7 @@ import {
 import { deserializeTimestamps, prepareForFirestore } from "./helpers";
 import { getAdminDb } from "./admin";
 import { encryptPiiFields, piiIndicesFor } from "../../security/pii-encrypt";
+import type { JsonValue } from "../../schemas/types";
 
 export abstract class BaseRepository<T extends DocumentData> {
   protected collection: string;
@@ -157,7 +158,7 @@ export abstract class BaseRepository<T extends DocumentData> {
    * MUST NOT include PII: `searchTxt` stores readable fragments of the source
    * text, so indexing an encrypted field would undo the encryption.
    */
-  protected buildSearchTxtFor(_data: Record<string, unknown>): string[] | null {
+  protected buildSearchTxtFor(_data: Record<string, JsonValue>): string[] | null {
     return null;
   }
 
@@ -181,8 +182,8 @@ export abstract class BaseRepository<T extends DocumentData> {
       } as D;
     }
 
-    const searchTxt = this.buildSearchTxtFor(out as Record<string, unknown>);
-    if (searchTxt) (out as Record<string, unknown>).searchTxt = searchTxt;
+    const searchTxt = this.buildSearchTxtFor(out as Record<string, JsonValue>);
+    if (searchTxt) (out as Record<string, JsonValue>).searchTxt = searchTxt;
 
     return out;
   }

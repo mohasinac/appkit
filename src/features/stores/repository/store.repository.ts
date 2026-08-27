@@ -31,6 +31,13 @@ import {
 } from "../../../security/settings-encryption";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import { buildStoreSearchTxt } from "../../../utils/search-txt-builders";
+import type { JsonValue } from "../../../schemas/types";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 
 /** Who/why for a store write that lands in `statusHistory`. */
 export interface StoreWriteContext {
@@ -264,9 +271,17 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
    * Paginated list of stores with Sieve filtering/sorting.
    * Filters to active + public stores for the public listing.
    */
+  /** Derived on every write path via `applyWriteHooks`. */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildStoreSearchTxt(data as Partial<StoreDocument>);
+  }
+
   async listStores(
     model: SieveModel,
     activeOnly = true,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<StoreDocument>> {
     const sieveFields = {
       [STORE_FIELDS.STORE_NAME]: { canFilter: true, canSort: true },
@@ -286,14 +301,25 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       "stats.totalProducts": { canFilter: true, canSort: false },
     };
 
+    const plan = planSearchTxt(opts?.search);
+    // A search that yielded no usable term must return NOTHING, not everything.
+    if (plan.empty) return emptySearchResult<StoreDocument>();
+
     let baseQuery = this.getCollection() as FirebaseFirestore.Query;
     if (activeOnly) {
       baseQuery = baseQuery
         .where(STORE_FIELDS.STATUS, "==", "active")
         .where(STORE_FIELDS.IS_PUBLIC, "==", true);
     }
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        STORE_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      );
+    }
 
-    return applySieveToFirestore<StoreDocument>({
+    const result = await applySieveToFirestore<StoreDocument>({
       baseQuery,
       model,
       fields: sieveFields,
@@ -303,6 +329,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       // WhatsApp bearer token and a list has no use for it.
       mapDoc: (snap) => this.mapDocForList<StoreDocument>(snap),
     });
+    return refineSearchTxt(result, plan.rest);
   }
 
   /**
