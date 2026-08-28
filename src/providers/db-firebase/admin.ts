@@ -13,6 +13,7 @@
  */
 import type { App } from "firebase-admin/app";
 import { normalizeError } from "../../errors/normalize";
+import { resolveRtdbUrl } from "./rtdb-url";
 import type { Auth } from "firebase-admin/auth";
 import type { Firestore } from "firebase-admin/firestore";
 import type { Storage } from "firebase-admin/storage";
@@ -108,6 +109,8 @@ function set<T>(key: keyof typeof globalThis, value: T): void {
 
 // --- App ----------------------------------------------------------------------
 
+
+
 export function getAdminApp(): App {
   const cached = get<App>("__mohasinac_firebase_admin_app__");
   if (cached) return cached;
@@ -129,9 +132,9 @@ export function getAdminApp(): App {
   try {
     if (nodeFs().existsSync(keyPath)) {
       const sa = JSON.parse(nodeFs().readFileSync(keyPath, "utf8"));
-      const dbUrl =
-        process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
-        `https://${sa.project_id}-default-rtdb.firebaseio.com`;
+      // Was NEXT_PUBLIC-only here while the other two branches honoured
+      // FIREBASE_ADMIN_DATABASE_URL, so setting it had no effect on this path.
+      const dbUrl = resolveRtdbUrl();
 
       app = initializeApp({ credential: cert(keyPath), databaseURL: dbUrl, ...(storageBucket && { storageBucket }) });
     } else if (
@@ -140,10 +143,7 @@ export function getAdminApp(): App {
       process.env.FIREBASE_ADMIN_PRIVATE_KEY
     ) {
       const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID.trim();
-      const dbUrl =
-        process.env.FIREBASE_ADMIN_DATABASE_URL?.trim() ??
-        process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL?.trim() ??
-        `https://${projectId}-default-rtdb.firebaseio.com`;
+      const dbUrl = resolveRtdbUrl();
 
       app = initializeApp({
         credential: cert({
@@ -174,13 +174,9 @@ export function getAdminApp(): App {
         : {};
       const projectId =
         firebaseConfig.projectId ?? process.env.GCLOUD_PROJECT ?? "";
-      const dbUrl =
-        firebaseConfig.databaseURL ??
-        process.env.FIREBASE_ADMIN_DATABASE_URL ??
-        process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
-        (projectId
-          ? `https://${projectId}-default-rtdb.firebaseio.com`
-          : undefined);
+      // FIREBASE_CONFIG is injected by the Functions runtime and is
+      // authoritative there; env vars are the fallback for other runtimes.
+      const dbUrl = firebaseConfig.databaseURL || resolveRtdbUrl();
 
       app = initializeApp({
         ...(dbUrl && { databaseURL: dbUrl }),

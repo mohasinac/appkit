@@ -100,37 +100,6 @@ export async function acquireRealtimeSession(
   };
 }
 
-/**
- * Take a lease WITHOUT signing in — for a consumer that manages its own
- * sign-in but must still participate in the reference count.
- *
- * `useRealtimeEvent` is the case: its token carries a job-scoped `bulkJobId`
- * claim it receives from the caller, so it cannot use `acquireRealtimeSession`'s
- * fetcher. It still must not be able to sign the shared app out from under
- * another channel, which is precisely what its `cleanup()` used to do.
- */
-export function acquireExternalRealtimeLease(): () => void {
-  leases++;
-  // Its own sign-in has replaced whatever scope was active; forget the cached
-  // one so the next acquire() re-authenticates rather than trusting a token
-  // that is no longer installed.
-  currentScope = null;
-  expiresAt = 0;
-
-  let released = false;
-  return () => {
-    if (released) return;
-    released = true;
-    leases = Math.max(0, leases - 1);
-    if (leases > 0) return;
-    getClientRealtimeProvider()
-      .signOut()
-      .catch((err: unknown) => {
-        void normalizeError(err);
-      });
-  };
-}
-
 /** Test/diagnostic only. */
 export function activeRealtimeLeases(): number {
   return leases;

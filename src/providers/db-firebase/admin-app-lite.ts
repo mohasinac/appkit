@@ -1,4 +1,9 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
+// One resolver, not a second copy — this file duplicated admin.ts's URL
+// logic byte-for-byte, so the region-wrong fallback bug existed twice.
+// Imported from its own dependency-free module, NOT from ./admin, because the
+// whole point of admin-app-lite is not pulling the full admin module in.
+import { resolveRtdbUrl } from "./rtdb-url";
 
  
 function nodePath() { return require("path") as typeof import("path"); }
@@ -41,9 +46,7 @@ export function getAdminAppLite(): App {
 
   if (nodeFs().existsSync(keyPath)) {
     const sa = JSON.parse(nodeFs().readFileSync(keyPath, "utf8"));
-    const dbUrl =
-      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
-      `https://${sa.project_id}-default-rtdb.firebaseio.com`;
+    const dbUrl = resolveRtdbUrl();
 
     app = initializeApp({ credential: cert(keyPath), databaseURL: dbUrl, ...(storageBucket && { storageBucket }) });
   } else if (
@@ -52,10 +55,7 @@ export function getAdminAppLite(): App {
     process.env.FIREBASE_ADMIN_PRIVATE_KEY
   ) {
     const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID.trim();
-    const dbUrl =
-      process.env.FIREBASE_ADMIN_DATABASE_URL?.trim() ??
-      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL?.trim() ??
-      `https://${projectId}-default-rtdb.firebaseio.com`;
+    const dbUrl = resolveRtdbUrl();
 
     app = initializeApp({
       credential: cert({
@@ -88,9 +88,7 @@ export function getAdminAppLite(): App {
       firebaseConfig.projectId ?? process.env.GCLOUD_PROJECT ?? "";
     const dbUrl =
       firebaseConfig.databaseURL ??
-      process.env.FIREBASE_ADMIN_DATABASE_URL ??
-      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
-      (projectId ? `https://${projectId}-default-rtdb.firebaseio.com` : undefined);
+      resolveRtdbUrl();
 
     app = initializeApp({
       ...(dbUrl && { databaseURL: dbUrl }),

@@ -6,7 +6,7 @@ import {
   type IClientRealtimeProvider,
   type Unsubscribe,
 } from "../../contracts/client-realtime";
-import { acquireExternalRealtimeLease } from "../../contracts/realtime-session";
+import { acquireRealtimeSession } from "../../contracts/realtime-session";
 import {
   RealtimeEventType,
   RealtimeEventStatus,
@@ -132,12 +132,31 @@ export function useRealtimeEvent<TData = undefined>(
 
       (async () => {
         try {
-          await provider.signInWithToken(customToken);
-          // Hold a lease for as long as this subscription lives. This hook owns
-          // its own sign-in (the token carries a job-scoped `bulkJobId` claim),
-          // but it must still participate in the ref-count so its cleanup
-          // cannot end a session another channel is relying on.
-          releaseSessionRef.current = acquireExternalRealtimeLease();
+          // Sign in THROUGH the session so the shared app's current scope is
+          // recorded, and take a lease so cleanup cannot end a session another
+          // channel is still using.
+          //
+          // 🛑 What this does and does not protect — the earlier comment here
+          // claimed the clobbering bug was fixed, and it was only half fixed.
+          //   ✔ Ref-counting means this hook's cleanup never signs out a shared
+          //     app another subscriber is relying on.
+          //   ✔ Recording the scope means the NEXT `acquireRealtimeSession` for
+          //     a different scope re-authenticates instead of trusting a token
+          //     that is no longer installed — so other channels self-heal.
+          //   ✘ It does NOT protect an ALREADY-OPEN subscription. This token
+          //     carries only `{ bulkJobId }`, so a messages subscription that is
+          //     live right now loses `conversationIds` the moment this runs and
+          //     starts getting denied until it resubscribes.
+          //
+          // The durable fix is one Firebase app per claim scope rather than one
+          // shared app re-signed in place; `FirebaseClientRealtimeProvider`
+          // already takes an `appName`, so the seam exists. Doing it here would
+          // mean changing the provider-registry contract, which is its own
+          // change — see the RTDB follow-ups.
+          releaseSessionRef.current = await acquireRealtimeSession(
+            `event:${type}:${eventId}`,
+            () => Promise.resolve({ customToken, expiresAt: Date.now() + 3_600_000 }),
+          );
         } catch (authErr) {
           void normalizeError(authErr);
           onLogError?.(

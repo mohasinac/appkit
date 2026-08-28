@@ -12,6 +12,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
 import { acquireRealtimeSession } from "../../../contracts/realtime-session";
+// One scope for both message hooks, deliberately: /api/realtime/token issues a
+// SINGLE token covering all of this user's conversationIds, so a per-id scope
+// would make the list and the detail hook re-sign against each other on the
+// same page for no gain.
+//
+// 🛑 Known limitation, not fixed here: because the scope is constant, a
+// conversation created AFTER sign-in is not in the cached token's claims and
+// its subscription is denied until the token's expiry skew forces a re-sign.
+// The denial is now surfaced (see the error callback below) rather than
+// swallowed. The durable fix is to re-acquire on a permission denial.
+const MESSAGES_SCOPE = "messages";
 import {
   conversationPingPath,
   userConversationsPingPath,
@@ -105,7 +116,7 @@ export function useConversation(conversationId: string | null): UseConversationR
     // because `send()` calls `refetch()` directly.
     void (async () => {
       try {
-        release = await acquireRealtimeSession("messages", () =>
+        release = await acquireRealtimeSession(MESSAGES_SCOPE, () =>
           apiClient.post<{ customToken: string; expiresAt: number }>(
             ADMIN_ENDPOINTS.REALTIME_TOKEN,
             {},
