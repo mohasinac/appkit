@@ -34,6 +34,7 @@ import type { StoreDocument } from "../features/stores/schemas/firestore";
 import type { EventDocument } from "../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../features/reviews/schemas/firestore";
+import type { OrderDocument } from "../features/orders/schemas/firestore";
 
 const stripHtml = (s: string | undefined | null): string =>
   (s ?? "").replace(/<[^>]+>/g, " ");
@@ -96,4 +97,22 @@ export function buildBlogSearchTxt(b: Partial<BlogPostDocument>): string[] {
 /** reviews — title, comment, productTitle. `userName` is PII and excluded. */
 export function buildReviewSearchTxt(r: Partial<ReviewDocument>): string[] {
   return buildSearchTxt([r.title, stripHtml(r.comment), r.productTitle]);
+}
+
+/**
+ * orders — what an admin or seller actually looks an order up BY: the product,
+ * the store, the tracking number.
+ *
+ * 🛑 `userName`, `userEmail` and `sellerEmail` are ORDER_PII_FIELDS and are
+ * absent. `shippingAddress` is absent too — it is not in that registry, but it
+ * is an address, and a searchTxt for an address IS that address re-encoded.
+ * Indexing any of them would undo the encryption they are stored under (D1).
+ */
+export function buildOrderSearchTxt(o: Partial<OrderDocument>): string[] {
+  return buildSearchTxt([
+    o.productTitle,
+    o.storeName,
+    o.trackingNumber,
+    (o.items ?? []).map((i) => i.productTitle),
+  ]);
 }

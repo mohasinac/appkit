@@ -230,6 +230,8 @@ export const PRODUCT_STATUS_TRANSITIONS: Record<string, readonly string[]> = {
 // ============================================================================
 
 export const ORDER_FIELDS = {
+  /** Word-prefix search tokens. Derived on write by `buildSearchTxtFor`. */
+  SEARCH_TXT: "searchTxt",
   ID: "id",
   PRODUCT_ID: "productId",
   PRODUCT_TITLE: "productTitle",

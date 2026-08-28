@@ -1,3 +1,10 @@
+import type { JsonValue } from "../../../schemas/types";
+import { buildOrderSearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 import { normalizeError } from "../../../errors/normalize";
 
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
@@ -491,6 +498,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   }
 
   static readonly ADMIN_SIEVE_FIELDS = {
+    searchTxt: { canFilter: true, canSort: false },
     id: { canFilter: true, canSort: false },
     userId: { canFilter: true, canSort: false },
     userName: { canFilter: true, canSort: true },
@@ -522,17 +530,45 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     couponCode: { canFilter: true, canSort: false },
   };
 
+  /**
+   * Derived on every write path via `applyWriteHooks`.
+   *
+   * Fed by product/store/tracking only — the three ORDER_PII_FIELDS and the
+   * shipping address are deliberately absent (see buildOrderSearchTxt).
+   */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildOrderSearchTxt(data as Partial<OrderDocument>);
+  }
+
   async listAll(
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<OrderDocument>> {
-    return this.sieveQuery<OrderDocument>(
+    const plan = planSearchTxt(opts?.search);
+    // A search that yielded no usable term must return NOTHING, not everything.
+    if (plan.empty) return emptySearchResult<OrderDocument>();
+
+    let baseQuery = this.getCollection();
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        ORDER_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<OrderDocument>(
       model,
       OrderRepository.ADMIN_SIEVE_FIELDS,
       {
+        baseQuery,
         defaultPageSize: 50,
         maxPageSize: 200,
       },
     );
+    return refineSearchTxt(result, plan.rest);
   }
 
   /**

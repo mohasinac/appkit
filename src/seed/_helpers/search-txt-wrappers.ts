@@ -12,11 +12,13 @@ import type { StoreDocument } from "../../features/stores/schemas/firestore";
 import type { EventDocument } from "../../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../../features/reviews/schemas/firestore";
+import type { OrderDocument } from "../../features/orders/schemas/firestore";
 import {
   buildStoreSearchTxt,
   buildEventSearchTxt,
   buildBlogSearchTxt,
   buildReviewSearchTxt,
+  buildOrderSearchTxt,
 } from "../../utils/search-txt-builders";
 
 export function withStoreSearchTxt<T extends Partial<StoreDocument>>(p: T): T {
@@ -33,4 +35,8 @@ export function withBlogSearchTxt<T extends Partial<BlogPostDocument>>(p: T): T 
 
 export function withReviewSearchTxt<T extends Partial<ReviewDocument>>(p: T): T {
   return { ...p, searchTxt: buildReviewSearchTxt(p) };
+}
+
+export function withOrderSearchTxt<T extends Partial<OrderDocument>>(p: T): T {
+  return { ...p, searchTxt: buildOrderSearchTxt(p) };
 }

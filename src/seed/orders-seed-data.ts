@@ -37,6 +37,7 @@
  * @tag sideEffects:none
  */
 
+import { withOrderSearchTxt } from "./_helpers/search-txt-wrappers";
 import type { OrderDocument } from "../features/orders/schemas/firestore";
 import type { StatusChangeEntry } from "../_internal/shared/history/index";
 import { seedExtMedia } from "./_helpers/media";
@@ -760,4 +761,6 @@ export const ordersSeedData = [
   // it used to be 48 for the two manual-payment orders, and now also absorbs
   // the six acquisition-path orders.
   ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 42),
-].map(withOrderImages) as OrderDocument[];
+// Derived through the wrapper, never written per record — an inline literal
+// is how five product seed files shipped their last fixture with no tokens.
+].map(withOrderImages).map(withOrderSearchTxt) as OrderDocument[];

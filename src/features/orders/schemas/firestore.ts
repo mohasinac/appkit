@@ -282,6 +282,8 @@ export interface AppliedOrderDiscount {
 }
 
 export interface OrderDocument extends BaseDocument {
+  /** Word-prefix search tokens. Derived on write; never fed by a PII field. */
+  searchTxt?: string[];
   productId: string;
   productTitle: string;
   userId: string;
@@ -598,6 +600,7 @@ export interface OrderPaymentRecord {
 export const ORDER_COLLECTION = "orders" as const;
 
 export const ORDER_INDEXED_FIELDS = [
+  "searchTxt",
   "userId",
   "productId",
   "storeId",

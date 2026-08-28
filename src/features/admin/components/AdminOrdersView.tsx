@@ -136,7 +136,17 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const config: ListingViewConfig<AdminOrdersResponse, OrderRow> = {
     portal: "admin",
     title: "Orders",
-    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
+    // Restored: `orders` has searchTxt and `/api/admin/orders` reads `q`.
+    //
+    // Matches the product, the store and the tracking number — deliberately NOT
+    // the buyer's name or email. Those are ORDER_PII_FIELDS, encrypted at rest,
+    // and a searchTxt for a name IS that name re-encoded (D1). The placeholder
+    // says what it matches so it does not promise the buyer lookup it cannot do.
+    search: {
+      placeholder: "Product, store, or tracking number",
+      mode: "partial",
+      fields: ["productTitle", "storeName", "trackingNumber"],
+    },
     emptyLabel: "No orders found",
     filterKeys: ["status", "paymentReview"],
     defaultSort: sortBy("createdAt", "DESC"),

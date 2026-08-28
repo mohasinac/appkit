@@ -141,6 +141,12 @@ const SOURCES = {
   blogPosts: (d) => [d.title, stripHtml(d.excerpt), d.category, d.tags ?? []],
   // `userName` is PII and encrypted — indexing it would undo the encryption (D1).
   reviews: (d) => [d.title, stripHtml(d.comment), d.productTitle],
+  // userName/userEmail/sellerEmail are ORDER_PII_FIELDS and shippingAddress
+  // is address-shaped — none may feed searchTxt (D1).
+  orders: (d) => [
+    d.productTitle, d.storeName, d.trackingNumber,
+    (d.items ?? []).map((i) => i.productTitle),
+  ],
 };
 
 function parsePrivateKey(raw) {
