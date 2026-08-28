@@ -253,6 +253,13 @@ for (const target of TARGETS) {
       if (touched) {
         for (const field of target.fields) {
           const root = field.split(/[.[]/)[0];
+          // A nested target (`location.city`, `deviceInfo.ip`) whose ROOT is
+          // absent on this document yields `undefined`, and Firestore rejects
+          // an update containing one — aborting the whole batch. There is
+          // nothing to write for a field the document does not have, so skip
+          // it. Sessions without `location` and payout methods that are bank
+          // accounts rather than UPI both land here.
+          if (draft[root] === undefined) continue;
           patch[root] = draft[root];
         }
         for (const idx of Object.values(target.indexMap)) {
@@ -272,6 +279,20 @@ for (const target of TARGETS) {
       }
 
       if (Object.keys(patch).length === 0) continue;
+
+      // Validate the patch HERE, so a dry run rejects a shape the real run
+      // would reject. Without this the dry run never touches batch.update and
+      // reports a clean plan for writes that cannot execute — the same
+      // looks-successful failure as the zero-scan case above.
+      for (const [k, v] of Object.entries(patch)) {
+        if (v === undefined) {
+          throw new Error(
+            `patch for ${doc.id} carries undefined at "${k}" — Firestore ` +
+            `rejects that and it would abort the whole batch`,
+          );
+        }
+      }
+
       repaired += 1;
       pending.push({ ref: doc.ref, patch });
 
