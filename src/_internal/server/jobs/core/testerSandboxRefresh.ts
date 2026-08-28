@@ -1,6 +1,11 @@
 import type { JobContext } from "../runtime/types";
 import { batchDelete, getTestDataRefs } from "../handlers/_helpers";
 import { BID_FIELDS } from "../../../../constants/field-names";
+import { encryptPiiFields } from "../../../../security/pii-encrypt";
+import {
+  BID_PII_FIELDS,
+  OFFER_PII_FIELDS,
+} from "../../../../security/pii-schemas";
 import { SANDBOX_COLLECTIONS } from "./testerSandboxCleanup";
 // Direct imports from each defining module (not the seed-data barrel) —
 // this is internal appkit code, not part of the package's public API surface.
@@ -11,6 +16,31 @@ import { blogTesterSeedData } from "../../../../features/tester/seed-data/blog-t
 import { eventsTesterSeedData } from "../../../../features/tester/seed-data/events-tester-seed-data";
 import { offersTesterSeedData } from "../../../../features/tester/seed-data/offers-tester-seed-data";
 import { bidsTesterSeedData } from "../../../../features/tester/seed-data/bids-tester-seed-data";
+
+/**
+ * PII per sandbox collection — the same map `seed-cli.mjs` applies.
+ *
+ * This job wrote every document with a bare `batch.set(...)`, while its own
+ * comment claimed to mirror seed-cli's loadGeneric. loadGeneric ENCRYPTS;
+ * this did not. So the 4-hourly refresh re-seeded sandbox PII in plaintext and
+ * quietly undid the backfill for those fixtures — caught by reading the raw
+ * documents after a deploy, where `bids` had 37 encrypted rows and one
+ * plaintext one that had not existed at backfill time.
+ *
+ * A scheduled job writing straight to Firestore bypasses `applyWriteHooks`
+ * exactly like the hand-rolled repository overrides did. Same defect, one
+ * level up.
+ */
+const SANDBOX_PII: Partial<Record<string, readonly string[]>> = {
+  offers: OFFER_PII_FIELDS,
+  bids: BID_PII_FIELDS,
+  products: ["sellerName", "sellerEmail"],
+};
+
+function encryptForSandbox<T extends object>(collection: string, data: T): T {
+  const fields = SANDBOX_PII[collection];
+  return fields ? (encryptPiiFields(data, [...fields]) as T) : data;
+}
 
 type SandboxCollection = (typeof SANDBOX_COLLECTIONS)[number];
 
@@ -51,7 +81,7 @@ export async function runTesterSandboxRefresh(ctx: JobContext): Promise<void> {
         // merge:true mirrors seed-cli.mjs's loadGeneric — the seed payload
         // carries every canonical field, so this fully overwrites anything
         // a tester edited through the UI.
-        batch.set(ctx.db.collection(collection).doc(id), data, { merge: true });
+        batch.set(ctx.db.collection(collection).doc(id), encryptForSandbox(collection, data), { merge: true });
         reverted++;
       }
       await batch.commit();
@@ -75,7 +105,7 @@ export async function runTesterSandboxRefresh(ctx: JobContext): Promise<void> {
     for (const bid of bidsTesterSeedData) {
       const { id, ...data } = bid;
       if (!id) continue;
-      bidBatch.set(ctx.db.collection("bids").doc(id), data, { merge: true });
+      bidBatch.set(ctx.db.collection("bids").doc(id), encryptForSandbox("bids", data), { merge: true });
       reverted++;
     }
     await bidBatch.commit();
