@@ -70,7 +70,7 @@ const COLUMNS: AdminTableColumn<CategoryRow>[] = [
 const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, CategoryRow> = {
   portal: "admin",
   title: "Categories",
-  searchPlaceholder: "Search categories, slugs, or parent category",
+  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
   emptyLabel: "No categories found",
   filterKeys: ["isActive", "isFeatured"],
   defaultSort: sortBy("name", "ASC"),

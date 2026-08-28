@@ -131,7 +131,7 @@ export function AdminNewsletterView({
   const config: ListingViewConfig<AdminNewsletterResponse, NewsletterRow> = {
     portal: "admin",
     title: "Newsletter",
-    searchPlaceholder: "Search by email or source",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No subscribers found",
     filterKeys: ["status"],
     defaultSort: sortBy("subscribedAt", "DESC"),

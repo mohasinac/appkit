@@ -136,7 +136,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const config: ListingViewConfig<AdminOrdersResponse, OrderRow> = {
     portal: "admin",
     title: "Orders",
-    searchPlaceholder: "Search orders, buyers, or tracking IDs",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No orders found",
     filterKeys: ["status", "paymentReview"],
     defaultSort: sortBy("createdAt", "DESC"),

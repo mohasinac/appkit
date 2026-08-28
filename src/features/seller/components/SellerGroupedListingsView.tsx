@@ -101,7 +101,7 @@ export function SellerGroupedListingsView({
   const config: ListingViewConfig<GroupedListingsResponse, GroupedRow> = {
     portal: "seller",
     title: "Grouped Listings",
-    searchPlaceholder: "Search grouped listings",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No grouped listings yet",
     filterKeys: [],
     defaultSort: sortBy("createdAt", "DESC"),

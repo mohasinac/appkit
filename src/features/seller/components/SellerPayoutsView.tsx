@@ -262,7 +262,7 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
   const config: ListingViewConfig<SellerPayoutsResponse, PayoutRow> = {
     portal: "seller",
     title: "Payouts",
-    searchPlaceholder: "Search payouts by payout # or amount",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No payouts found",
     filterKeys: ["status", "showAllPayouts"],
     defaultSort: sortBy("createdAt", "DESC"),

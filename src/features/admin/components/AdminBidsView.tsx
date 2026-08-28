@@ -87,7 +87,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
   const config: ListingViewConfig<AdminBidsResponse, BidRow> = {
     portal: "admin",
     title: "Bids",
-    searchPlaceholder: "Search bids, products, or bidder IDs",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No bids found",
     filterKeys: ["status"],
     defaultSort: sortBy("bidDate", "DESC"),

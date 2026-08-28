@@ -99,7 +99,7 @@ export function AdminTesterFeedbackListView(_props: AdminTesterFeedbackListViewP
   const config: ListingViewConfig<AdminTesterFeedbackResponse, FeedbackRow> = {
     portal: "admin",
     title: "All Submissions",
-    searchPlaceholder: "Search tester, comment, or case",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No feedback submitted yet",
     filterKeys: ["answer", "status"],
     defaultSort: sortBy(TESTER_CHECKLIST_RESPONSE_FIELDS.CREATED_AT, "DESC"),

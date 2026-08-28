@@ -55,7 +55,7 @@ function toCartItemEntries(raw: Record<string, JsonValue>): RecordDetailItem[] {
 const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   portal: "admin",
   title: "Carts",
-  searchPlaceholder: "Search by user ID or session",
+  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
   emptyLabel: "No carts found",
   filterKeys: ["ownership"],
   defaultSort: sortBy("updatedAt", "DESC"),

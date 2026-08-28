@@ -38,7 +38,7 @@ export function AdminSublistingCategoriesView({
   const config: ListingViewConfig<SublistingCategoriesResponse, SublistingRow> = {
     portal: "admin",
     title: "Sub-listing Categories",
-    searchPlaceholder: "Search sub-listing categories…",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No sub-listing categories found",
     filterKeys: [],
     defaultSort: sortBy("name", "ASC"),

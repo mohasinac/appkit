@@ -61,7 +61,7 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
   const config: ListingViewConfig<AdminEventsApiResponse, EventRow> = {
     portal: "admin",
     title: "Events",
-    searchPlaceholder: "Search events by title or type",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No events found",
     filterKeys: ["status", "type"],
     defaultSort: sortBy("startsAt", "DESC"),

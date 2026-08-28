@@ -29,7 +29,7 @@ interface StoreAddressRow {
 const ADMIN_STORE_ADDRESSES_CONFIG: ListingViewConfig<AdminStoreAddressesResponse, StoreAddressRow> = {
   portal: "admin",
   title: "Store Addresses",
-  searchPlaceholder: "Search by label, city, or store ID",
+  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
   emptyLabel: "No store addresses found",
   filterKeys: [],
   defaultSort: sortBy("storeId", "ASC"),

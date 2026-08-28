@@ -78,7 +78,7 @@ function buildAddressConfig(
   return {
     portal: "admin",
     title: "Address Management",
-    searchPlaceholder: "Search by city or owner",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No addresses found",
     // URL-synced via filterKeys (2026-08-21). The ban-status chips used to
     // live outside this config in local useState, so the selection was not in

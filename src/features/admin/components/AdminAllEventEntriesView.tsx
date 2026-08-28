@@ -64,7 +64,7 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
   const config: ListingViewConfig<AdminEventEntriesResponse, EntryRow> = {
     portal: "admin",
     title: "Event Entries",
-    searchPlaceholder: "Search by user name or event ID",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No entries found",
     filterKeys: ["status"],
     defaultSort: sortBy("submittedAt", "DESC"),

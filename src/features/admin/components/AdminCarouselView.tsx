@@ -225,7 +225,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder="Search slide titles"
+        // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         showTableView

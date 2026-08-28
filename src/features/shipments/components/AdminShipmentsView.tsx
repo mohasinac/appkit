@@ -59,7 +59,7 @@ export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewPro
   const config: ListingViewConfig<AdminShipmentsApiResponse, ShipmentRow> = {
     portal: "admin",
     title: "Procurement Shipments",
-    searchPlaceholder: "Search by shipment number or supplier",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No shipments found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

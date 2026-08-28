@@ -33,7 +33,7 @@ interface WishlistRow {
 const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, WishlistRow> = {
   portal: "admin",
   title: "Wishlists",
-  searchPlaceholder: "Search by user ID",
+  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
   emptyLabel: "No user wishlists found",
   filterKeys: [],
   defaultSort: sortBy("updatedAt", "DESC"),

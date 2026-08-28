@@ -108,7 +108,7 @@ export function SellerStoreCategoriesView({
   const config: ListingViewConfig<StoreCategoriesResponse, CategoryRow> = {
     portal: "seller",
     title: "Store Categories",
-    searchPlaceholder: "Search categories by label...",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No categories yet — add your first storefront category",
     filterKeys: [],
     defaultSort: DEFAULT_SORT,

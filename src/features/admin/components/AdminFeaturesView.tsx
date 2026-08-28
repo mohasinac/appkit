@@ -75,7 +75,7 @@ export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps
   const config: ListingViewConfig<AdminFeaturesResponse, FeatureRow> = {
     portal: "admin",
     title: "Features",
-    searchPlaceholder: "Search features by label",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No features found",
     filterKeys: [],
     defaultSort: sortBy("displayOrder", "ASC"),

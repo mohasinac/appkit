@@ -69,7 +69,7 @@ export function AdminCatalogueApprovalsView() {
   const config: ListingViewConfig<AdminCatalogueApiResponse, CatalogueApprovalRow> = {
     portal: "admin",
     title: "Catalogue Approvals",
-    searchPlaceholder: "Search by title",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No pending catalogue requests",
     filterKeys: [],
     defaultSort: sortBy("createdAt", "DESC"),

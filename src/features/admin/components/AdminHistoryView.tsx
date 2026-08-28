@@ -37,7 +37,7 @@ interface HistoryRow {
 const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> = {
   portal: "admin",
   title: "History",
-  searchPlaceholder: "Search by user ID",
+  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
   emptyLabel: "No user history records found",
   filterKeys: [],
   defaultSort: sortBy("updatedAt", "DESC"),

@@ -89,7 +89,7 @@ function buildConfig(
   return {
     portal: "admin",
     title: "Payment Methods",
-    searchPlaceholder: "Search by type or owner",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No payment methods found",
     // URL-synced via filterKeys (2026-08-21) — see the matching note in
     // AdminAddressesView. banStatus is a query param, not a Sieve clause,

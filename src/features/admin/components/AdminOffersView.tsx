@@ -143,7 +143,7 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
   const config: ListingViewConfig<AdminOffersResponse, OfferRow> = {
     portal: "admin",
     title: "Offers",
-    searchPlaceholder: "Search offers by product, buyer, or store",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No offers found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

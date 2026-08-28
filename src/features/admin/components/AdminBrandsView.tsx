@@ -70,7 +70,7 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
 const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
   portal: "admin",
   title: "Brands",
-  searchPlaceholder: "Search brands by name or slug",
+  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
   emptyLabel: "No brands found",
   filterKeys: ["isActive"],
   defaultSort: sortBy("order", "ASC"),

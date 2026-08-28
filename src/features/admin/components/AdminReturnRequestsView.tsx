@@ -73,7 +73,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
   const config: ListingViewConfig<AdminOrdersResponse, ReturnRow> = {
     portal: "admin",
     title: "Return Requests",
-    searchPlaceholder: "Search by order ID or buyer",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No return requests",
     filterKeys: [],
     defaultSort: sortBy("createdAt", "DESC"),

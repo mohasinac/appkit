@@ -129,7 +129,7 @@ export function AdminGroupedListingsView({
       () => ({
         portal: "admin",
         title: "Grouped Listings",
-        searchPlaceholder: "Search grouped listings by title or seller",
+        // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
         emptyLabel: "No grouped listings",
         filterKeys: [],
         defaultSort: sortBy("createdAt", "DESC"),

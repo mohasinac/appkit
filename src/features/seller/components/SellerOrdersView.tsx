@@ -593,7 +593,7 @@ export function SellerOrdersView({
   const config: ListingViewConfig<SellerOrdersResponse, OrderRow> = {
     portal: "seller",
     title: "Orders",
-    searchPlaceholder: "Search by order ID or buyer name",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No orders yet",
     filterKeys: ["status"],
     defaultSort: DEFAULT_SORT,

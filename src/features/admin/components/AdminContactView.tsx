@@ -91,7 +91,7 @@ export function AdminContactView({
   const config: ListingViewConfig<AdminContactResponse, ContactRow> = {
     portal: "admin",
     title: "Contact Submissions",
-    searchPlaceholder: "Search by subject, name, or email",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No contact submissions found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

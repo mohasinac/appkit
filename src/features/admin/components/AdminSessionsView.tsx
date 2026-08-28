@@ -81,7 +81,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
   const config: ListingViewConfig<AdminSessionsResponse, SessionRow> = {
     portal: "admin",
     title: "Sessions",
-    searchPlaceholder: "Search by user or device",
+    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
     emptyLabel: "No sessions found",
     filterKeys: ["isActive"],
     defaultSort: sortBy("lastActivity", "DESC"),
