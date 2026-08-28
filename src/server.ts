@@ -886,8 +886,6 @@ export { enterEvent } from "./features/events/server";
 // eventIdGET - Shared export for event id get.
 export { eventIdGET } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// eventsGET - Shared export for events get.
-export { eventsGET } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventLeaderboard - Helper for get event leaderboard.
 export { getEventLeaderboard } from "./features/events/server";
@@ -957,8 +955,6 @@ export { deleteFaq } from "./features/faq/server";
 // faqCreateSchema - Model for faq create schema.
 export { faqCreateSchema } from "./features/faq/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// faqGET - Shared export for faq get.
-export { faqGET } from "./features/faq/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqUpdateSchema - Model for faq update schema.
 export { faqUpdateSchema } from "./features/faq/server";
@@ -1224,8 +1220,6 @@ export { reviewItemGET } from "./features/reviews/server";
 // reviewItemPATCH - Shared export for review item patch.
 export { reviewItemPATCH } from "./features/reviews/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// reviewsGET - Shared export for reviews get.
-export { reviewsGET } from "./features/reviews/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateReview - Helper for update review.
 export { updateReview } from "./features/reviews/server";
@@ -1363,8 +1357,6 @@ export { storeReviewsGET } from "./features/stores/server";
 // storeSlugGET - Shared export for store slug get.
 export { storeSlugGET } from "./features/stores/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// storesGET - Shared export for stores get.
-export { storesGET } from "./features/stores/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateStoreAddressForSeller - Helper for update store address for seller.
 export { updateStoreAddressForSeller } from "./features/stores/server";
@@ -1447,8 +1439,6 @@ export { piiIndicesFor } from "./security/index";
 export { reserveUserSlug, userSlugBase, USER_SLUGS_COLLECTION } from "./features/auth/actions/user-slug";
 export { resolveProfileUser } from "./features/auth/actions/profile-actions";
 export { getPiiConfigError } from "./security/index";
-export { encryptShippingAddress } from "./security/index";
-export { decryptShippingAddress } from "./security/index";
 export { encryptPayoutDetails } from "./security/index";
 export { decryptPayoutDetails } from "./security/index";
 export { encryptShippingConfig } from "./security/index";

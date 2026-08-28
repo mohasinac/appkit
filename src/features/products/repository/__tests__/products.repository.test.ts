@@ -41,7 +41,6 @@ vi.mock("../../../../monitoring", () => ({
   serverLogger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
-// buildSearchTokens returns an array of tokens — mock as passthrough
 vi.mock("../../../../utils", () => ({
   generateUniqueId: vi.fn(async (gen: (n: number) => string, exists: (id: string) => Promise<boolean>) => {
     const candidate = gen(0);
@@ -49,8 +48,6 @@ vi.mock("../../../../utils", () => ({
     return taken ? gen(1) : candidate;
   }),
   slugify: (s: string) => s.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
-  buildSearchTokens: (...args: unknown[]) => args.flat().filter(Boolean) as string[],
-  tokenizeQuery: (q: string) => q.trim() ? q.trim().toLowerCase().split(/\s+/) : [],
   generateBarcodeId: (id: string) => Promise.resolve(`barcode-${id}`),
 }));
 

@@ -10,7 +10,6 @@ export * from "./array.helper";
 export * from "./object.helper";
 export * from "./pagination.helper";
 export * from "./sorting.helper";
-export * from "./filter.helper";
 export * from "./animation.helper";
 export * from "./color.helper";
 export * from "./business-day";

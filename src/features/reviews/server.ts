@@ -10,7 +10,6 @@ export {
   reviewRepository,
 } from "./repository/reviews.repository";
 
-export { GET as reviewsGET, GET, POST } from "./api/route";
 export {
   reviewItemGET,
   reviewItemPATCH,

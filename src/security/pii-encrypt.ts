@@ -415,46 +415,6 @@ export function piiIndicesFor(
 // --- Nested-object PII helpers ----------------------------------------------
 
 /**
- * Encrypt PII inside a shipping address stored in an order.
- * Supports string and object address shapes.
- */
-export function encryptShippingAddress<T>(
-  addr: T | undefined | null,
-): T | undefined | null {
-  if (!addr) return addr;
-  if (typeof addr === "string") {
-    return encryptPii(addr) as T;
-  }
-  if (typeof addr !== "object") return addr;
-  return encryptPiiFields(addr as object, [
-    "fullName",
-    "phone",
-    "addressLine1",
-    "addressLine2",
-  ]) as T;
-}
-
-/**
- * Decrypt PII inside a shipping address read from an order.
- * Supports string and object address shapes.
- */
-export function decryptShippingAddress<T>(
-  addr: T | undefined | null,
-): T | undefined | null {
-  if (!addr) return addr;
-  if (typeof addr === "string") {
-    return decryptPii(addr) as T;
-  }
-  if (typeof addr !== "object") return addr;
-  return decryptPiiFields(addr as object, [
-    "fullName",
-    "phone",
-    "addressLine1",
-    "addressLine2",
-  ]) as T;
-}
-
-/**
  * Encrypt PII inside seller payoutDetails before writing to Firestore.
  */
 export function encryptPayoutDetails<T extends object>(

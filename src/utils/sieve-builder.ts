@@ -11,11 +11,13 @@ export const SIEVE_OP = {
   NOT_CONTAINS: "!@=",
   NOT_STARTS: "!_=",
   NOT_ENDS: "!_-=",
-  CONTAINS_CI: "@=*",
-  STARTS_CI: "_=*",
-  ENDS_CI: "_-=*",
-  EQ_CI: "==*",
-  NEQ_CI: "!=*",
+  // The five case-insensitive operators (@=* _=* _-=* ==* !=*) were
+  // DELETED. Firestore has no case-insensitive comparison, so the adapter
+  // threw on every one — and with `throwExceptions: false` that throw
+  // returned a PARTIALLY-BUILT query rather than an error, so the clause,
+  // and every clause after it, was silently dropped. They read as working
+  // search operators and did the opposite. `searchTxt` + `array-contains`
+  // is the replacement.
 } as const;
 
 export type SieveOp = (typeof SIEVE_OP)[keyof typeof SIEVE_OP];
@@ -25,9 +27,6 @@ export const SIEVE_PIPE_OPS = new Set<SieveOp>([
   SIEVE_OP.CONTAINS,
   SIEVE_OP.STARTS,
   SIEVE_OP.ENDS,
-  SIEVE_OP.CONTAINS_CI,
-  SIEVE_OP.STARTS_CI,
-  SIEVE_OP.ENDS_CI,
 ]);
 
 /** Single Sieve clause: sieveFilter("status", "==", "published") → "status==published" */

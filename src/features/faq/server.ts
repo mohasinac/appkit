@@ -11,4 +11,3 @@ export {
   faqsRepository,
 } from "./repository/faqs.repository";
 
-export { GET as faqGET, GET } from "./api/route";

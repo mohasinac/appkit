@@ -16,5 +16,4 @@ export {
   eventEntryRepository,
 } from "./repository/event-entry.repository";
 
-export { GET as eventsGET, GET } from "./api/route";
 export { GET as eventIdGET } from "./api/[id]/route";

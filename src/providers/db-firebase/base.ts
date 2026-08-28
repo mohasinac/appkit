@@ -96,23 +96,19 @@ export class FirebaseRepository<
     }
 
     // -- Basic Sieve filter parsing --------------------------------------------
-    // Supports: ==, !=, <, <=, >, >=, @= (array-contains), @=* (prefix/starts-with)
+    // Supports: ==, !=, <, <=, >, >=, @= (array-contains).
+    //
+    // The `@=*` prefix arm was DELETED. It built a >= / <= range against a
+    //  sentinel, which is a real prefix match — but only over a field
+    // stored verbatim and case-sensitively, so it never matched what callers
+    // used it for, and pairing an inequality with an unrelated orderBy demanded
+    // an index nobody declared. `searchTxt` + `array-contains` replaces it.
     if (query?.filters) {
       const clauses = query.filters
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
       for (const clause of clauses) {
-        // Try @=* (string prefix) before the generic @= match
-        const prefixMatch = clause.match(/^([^<>=!@]+)\s*@=\*\s*(.+)$/);
-        if (prefixMatch) {
-          const field = prefixMatch[1].trim();
-          const prefix = prefixMatch[2].trim();
-          q = (q as Query)
-            .where(field, ">=", prefix)
-            .where(field, "<=", prefix + "");
-          continue;
-        }
         const match = clause.match(
           /^([^<>=!@]+)\s*(==|!=|<=|>=|<|>|@=)\s*(.+)$/,
         );

@@ -5689,8 +5689,6 @@ export { enterEvent } from "./features/events/server";
 // eventIdGET - Shared export for event id get.
 export { eventIdGET } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// eventsGET - Shared export for events get.
-export { eventsGET } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventLeaderboard - Helper for get event leaderboard.
 export { getEventLeaderboard } from "./features/events/server";
@@ -5830,11 +5828,7 @@ export { isPopularFAQ } from "./features/faq/index";
 // slugifyQuestion - Shared export for slugify question.
 export { slugifyQuestion } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useFAQ - React hook for use faq.
-export { useFAQ } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useFAQs - React hook for use faqs.
-export { useFAQs } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useFaqList - React hook for use faq list.
 export { useFaqList } from "./features/faq/index";
@@ -5910,8 +5904,6 @@ export { deleteFaq } from "./features/faq/server";
 // faqCreateSchema - Model for faq create schema.
 export { faqCreateSchema } from "./features/faq/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// faqGET - Shared export for faq get.
-export { faqGET } from "./features/faq/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqUpdateSchema - Model for faq update schema.
 export { faqUpdateSchema } from "./features/faq/server";
@@ -8141,8 +8133,6 @@ export { reviewItemGET } from "./features/reviews/server";
 // reviewItemPATCH - Shared export for review item patch.
 export { reviewItemPATCH } from "./features/reviews/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// reviewsGET - Shared export for reviews get.
-export { reviewsGET } from "./features/reviews/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateReview - Helper for update review.
 export { updateReview } from "./features/reviews/server";
@@ -9000,8 +8990,6 @@ export { storeReviewsGET } from "./features/stores/server";
 // storeSlugGET - Shared export for store slug get.
 export { storeSlugGET } from "./features/stores/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// storesGET - Shared export for stores get.
-export { storesGET } from "./features/stores/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateStoreAddressForSeller - Helper for update store address for seller.
 export { updateStoreAddressForSeller } from "./features/stores/server";
@@ -9412,7 +9400,6 @@ export {
 } from "./features/orders/index";
 
 // -- Missing utils
-export { buildSieveFilters } from "./utils/filter.helper";
 export { formatCurrency, formatFileSize } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";

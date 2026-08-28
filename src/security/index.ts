@@ -31,8 +31,6 @@ export {
   piiBlindIndex,
   piiIndicesFor,
   getPiiConfigError,
-  encryptShippingAddress,
-  decryptShippingAddress,
   encryptPayoutDetails,
   decryptPayoutDetails,
   encryptShippingConfig,
