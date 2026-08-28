@@ -1,4 +1,5 @@
 "use client"
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { AsyncFacetSection } from "../../filters/AsyncFacetSection";
@@ -103,6 +104,23 @@ export interface ProductFiltersProps {
   sublistingCategoryOptions?: FacetOption[];
   /** Feature badge options for filtering by product features */
   featureOptions?: FacetOption[];
+  /**
+   * Listing-type facet options — `{ value: <canonical ListingType>, label }`.
+   *
+   * Opt-in: only the combined browse pages (`/products`, `/art`) span more than
+   * one listing type, so every other caller leaves this empty and the section
+   * does not render. Derive the options from `PRODUCT_TYPE_FILTER_TABS` /
+   * `ART_STICKERS_TYPE_FILTER_TABS` — never a hand-written list, which is what
+   * `audit-listing-type-tab-coverage.mjs` exists to prevent (Root Cause #61).
+   */
+  listingTypeOptions?: FacetOption[];
+  /**
+   * Rendered directly beneath the listing-type section. The caller owns it so
+   * this shared component does not have to know about the listing-type plugin
+   * registry — `/products` uses it for the "Full <type> filters →" link to a
+   * single selected type's dedicated browse page.
+   */
+  listingTypeFooter?: ReactNode;
   showStatus?: boolean;
   variant?: ProductFilterVariant;
   statusOptions?: FacetOption[];
@@ -122,6 +140,8 @@ export function ProductFilters({
   tagOptions = [],
   sublistingCategoryOptions = [],
   featureOptions = [],
+  listingTypeOptions = [],
+  listingTypeFooter,
   showStatus = false,
   variant,
   statusOptions,
@@ -171,9 +191,37 @@ export function ProductFilters({
   const selectedStatuses = splitPipe(TABLE_KEYS.STATUS);
   const selectedSublistings = splitPipe(TABLE_KEYS.SUBLISTING_CATEGORY);
   const selectedFeatures = splitPipe(TABLE_KEYS.FEATURES);
+  const selectedListingTypes = splitPipe(TABLE_KEYS.LISTING_TYPE);
 
   return (
     <Div>
+      {/* Listing type — first, because it is the broadest scope: it decides
+          which listing types the rest of the facets are narrowing within. */}
+      {listingTypeOptions.length > 0 && (
+        <>
+          <FilterFacetSection
+            title="Listing type"
+            options={listingTypeOptions}
+            selected={selectedListingTypes}
+            onChange={(vals) =>
+              // Serialise in the OPTIONS' order, not the order the boxes were
+              // ticked — `auction|art` and `art|auction` are the same result
+              // set but two different React Query keys and two different URLs.
+              table.set(
+                TABLE_KEYS.LISTING_TYPE,
+                listingTypeOptions
+                  .filter((o) => vals.includes(o.value))
+                  .map((o) => o.value)
+                  .join("|"),
+              )
+            }
+            searchable={false}
+            defaultCollapsed={false}
+          />
+          {listingTypeFooter}
+        </>
+      )}
+
       {loadCategoryOptions ? (
         <AsyncFacetSection
           title={t("category")}

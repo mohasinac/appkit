@@ -4,7 +4,7 @@ import { ShoppingCart, Heart, Columns } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { BulkActionBar, Div, FilterChipGroup, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -46,7 +46,26 @@ const __O = {
 type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
-const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS, TABLE_KEYS.FEATURES, TABLE_KEYS.IS_PART_OF_BUNDLE];
+// `LISTING_TYPE` is a managed filter key like any other: it stages in the
+// drawer, counts toward the filter badge, and is cleared by Reset. It used to
+// be driven by a separate always-visible chip row that wrote the URL directly,
+// which was the one facet bypassing the Apply model everything else uses.
+const FILTER_KEYS = [TABLE_KEYS.LISTING_TYPE, TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS, TABLE_KEYS.FEATURES, TABLE_KEYS.IS_PART_OF_BUNDLE];
+
+/**
+ * The dedicated per-type browse page for a selection, when there is exactly
+ * one type and that type has its own page — which carries facets this generic
+ * one can't (bid range, delivery-date window, reveal status).
+ */
+function dedicatedPageFor(types: readonly string[]) {
+  if (types.length !== 1) return null;
+  const plugin = pluginFor(types[0] as ListingType);
+  if (!plugin.browseRoute) return null;
+  return {
+    href: plugin.browseRoute as string,
+    label: `Full ${plugin.pluralLabel} filters →`,
+  };
+}
 
 export interface ProductsIndexListingProps {
   initialData?: any;
@@ -55,8 +74,10 @@ export interface ProductsIndexListingProps {
    * (e.g. `["art", "stickers"]`) to reuse this component for a different
    * combined browse page. */
   listingTypes?: readonly string[];
-  /** Type-filter chip tabs shown above the grid. Defaults to the generic
-   * Products tabs; pass a matching set when overriding `listingTypes`. */
+  /** Options for the "Listing type" checkbox facet in the filter drawer. `id`
+   * must be the canonical `ListingType` — it is passed straight into
+   * `sieveFilter("listingType", EQ, id)`. Defaults to the generic Products set;
+   * pass a matching set when overriding `listingTypes`. */
   typeTabs?: readonly { id: string; label: string }[];
   searchPlaceholder?: string;
 }
@@ -110,19 +131,18 @@ export function ProductsIndexListing({
     (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
     AVAILABILITY_VALUES.AVAILABLE;
 
-  // "Full <type> filters →" — a single selected type with a dedicated browse
-  // page gets a link to it, since that page carries facets this generic one
-  // can't (bid range, delivery-date window, reveal status).
-  const dedicatedPage =
-    selectedTypes.length === 1 && pluginFor(selectedTypes[0]).browseRoute
-      ? {
-          href: pluginFor(selectedTypes[0]).browseRoute as string,
-          label: `Full ${pluginFor(selectedTypes[0]).pluralLabel} filters →`,
-        }
-      : null;
-
   const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
+
+  // The drawer's own, uncommitted type selection. The "Full <type> filters →"
+  // link tracks THIS rather than the applied URL value, so it appears the
+  // moment the user ticks a single type instead of only after Apply.
+  const pendingTypes = parseSelectedListingTypes(
+    pendingTable.get(TABLE_KEYS.LISTING_TYPE),
+  ).filter((t) => listingTypes.includes(t));
+  const dedicatedPage = dedicatedPageFor(pendingTypes);
+
+  const listingTypeOptions = typeTabs.map((t) => ({ value: t.id, label: t.label }));
 
   const openFilters = useCallback(() => {
     onFilterReset();
@@ -130,23 +150,29 @@ export function ProductsIndexListing({
   }, [onFilterReset]);
 
   const applyFilters = useCallback(() => {
-    onFilterApply();
+    // A sort valid for the old type selection (say -auctionEndDate) can be
+    // invalid for the new one, so it is blanked in the SAME setMany as the
+    // filters — a follow-up table.set would read stale searchParams and
+    // overwrite this update (Root Cause #13).
+    const key = (types: readonly string[]) => [...types].sort().join("|");
+    const typesChanged = key(pendingTypes) !== key(selectedTypes);
+    onFilterApply(typesChanged ? { [TABLE_KEYS.SORT]: "" } : undefined);
     setFilterOpen(false);
-  }, [onFilterApply]);
+  }, [onFilterApply, pendingTypes, selectedTypes]);
 
   const resetAll = useCallback(() => {
+    // `listingType` is a managed filter key now, so onResetAll clears it —
+    // repeating it here would be a second write of the same value.
     onResetAll({
       [TABLE_KEYS.QUERY]: "",
       [TABLE_KEYS.SORT]: "",
       [TABLE_KEYS.AVAILABILITY]: "",
-      [TABLE_KEYS.LISTING_TYPE]: "",
     });
     setSearchInput("");
   }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
     availability !== AVAILABILITY_VALUES.AVAILABLE ||
-    !!typeParam ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     filterActiveCount > 0;
 
@@ -353,34 +379,6 @@ export function ProductsIndexListing({
         <AvailabilityTabs types={effectiveTypes} />
       </Div>
 
-      {/* ── Product-type chips — multi-select, spans every listing type ──── */}
-      <Div padding="y-sm">
-        <Row justify="between" align="center" wrap gap="sm">
-          <FilterChipGroup
-            multiple
-            label="Type"
-            tabs={typeTabs}
-            value={selectedTypes.join("|")}
-            onChange={(next) => {
-              // Clear `sort` alongside the type change: a sort valid for the
-              // old selection (say -auctionEndDate) can be invalid for the new
-              // one, and useUrlTable's single router.replace means we must set
-              // both in ONE call — a follow-up setPage/set would read stale
-              // searchParams and overwrite this update (Root Cause #13).
-              table.setMany({
-                [TABLE_KEYS.LISTING_TYPE]: next,
-                [TABLE_KEYS.SORT]: "",
-              });
-            }}
-          />
-          {dedicatedPage && (
-            <TextLink href={dedicatedPage.href} size="sm" weight="medium">
-              {dedicatedPage.label}
-            </TextLink>
-          )}
-        </Row>
-      </Div>
-
       {/* ── Bulk action bar (inline, replaces fixed bottom bar) ────────── */}
       <BulkActionBar
         selectedCount={selection.selectedCount}
@@ -506,6 +504,16 @@ export function ProductsIndexListing({
         <ProductFilters
           table={pendingTable as any}
           currencyPrefix="₹"
+          listingTypeOptions={listingTypeOptions}
+          listingTypeFooter={
+            dedicatedPage ? (
+              <Div padding="x-md" paddingY="b-sm">
+                <TextLink href={dedicatedPage.href} size="sm" weight="medium">
+                  {dedicatedPage.label}
+                </TextLink>
+              </Div>
+            ) : null
+          }
           categoryOptions={categoryOptions}
           brandOptions={brandOptions}
           featureOptions={featureOptions}

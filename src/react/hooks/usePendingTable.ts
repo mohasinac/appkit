@@ -19,8 +19,15 @@ export interface UsePendingTableReturn {
   pendingTable: PendingTable;
   /** Count of applied (URL) filter values — use for the filter badge */
   filterActiveCount: number;
-  /** Commit all pending changes to the URL (resets page to 1) */
-  onFilterApply: () => void;
+  /**
+   * Commit all pending changes to the URL (resets page to 1).
+   *
+   * Pass `extras` to write non-filter keys in the SAME `router.replace` —
+   * e.g. blanking `sort` when the applied filters invalidate it. A follow-up
+   * `table.set` would read stale searchParams and clobber this one
+   * (Root Cause #13).
+   */
+  onFilterApply: (extras?: Record<string, string>) => void;
   /** Clear all filter keys from pending state and URL */
   onFilterClear: () => void;
   /**

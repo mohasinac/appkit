@@ -24,8 +24,18 @@ export interface UsePendingFiltersReturn {
   appliedCount: number;
   /** Update one key in pending state (does NOT write to URL) */
   set: (key: string, values: string[]) => void;
-  /** Write all pending keys to the URL (resets page to 1) */
-  apply: () => void;
+  /**
+   * Write all pending keys to the URL (resets page to 1).
+   *
+   * `extras` piggy-backs non-filter keys onto the SAME `router.replace` —
+   * the escape hatch `clearAll` already has, for the same reason. A caller
+   * that needs to blank `sort` alongside a filter change (a sort valid for
+   * one selection can be FAILED_PRECONDITION for the next) must not issue a
+   * second `set`: it would read stale searchParams and overwrite this update
+   * (Root Cause #13). Filter keys are written last, so `extras` can never
+   * shadow one.
+   */
+  apply: (extras?: Record<string, string>) => void;
   /** Discard pending, revert to applied (URL) state */
   reset: () => void;
   /** Clear all keys in both pending state and the URL */
@@ -105,8 +115,8 @@ export function usePendingFilters({
     setPending((prev) => ({ ...prev, [key]: values }));
   }, []);
 
-  const apply = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
+  const apply = useCallback((extras?: Record<string, string>) => {
+    const updates: Record<string, string> = { page: "1", ...extras };
     for (const k of keys) {
       updates[k] = (pending[k] ?? []).join(",");
     }

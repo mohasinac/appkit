@@ -33,6 +33,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
 import { isEffectiveAdminUser } from "../../features/auth/role-predicates";
 import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
+import { describeCauseChain } from "../../errors/describe-cause";
 import { buildErrorEnvelope, toApiIssues } from "../../errors/error-envelope";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
 import { userRepository } from "../../repositories";
@@ -171,9 +172,19 @@ const LOG_AS_INCIDENT_CODES = new Set<string>([
   HTTP_ERROR_CODES.PAYMENT_ROLLBACK_FAILED,
 ]);
 
-function shouldPersist(status: number, code: string): boolean {
-  if (status >= 500) return true;
-  return LOG_AS_INCIDENT_CODES.has(code);
+function shouldPersist(mapped: {
+  status: number;
+  code: string;
+  infrastructure?: boolean;
+}): boolean {
+  if (mapped.status >= 500) return true;
+  // Firestore itself refused. `permission-denied` (expired service-account
+  // key) and `resource-exhausted` (quota blown) map to 403/429, which sit
+  // below the 5xx threshold — so these were previously recorded nowhere.
+  // Keyed on provenance rather than code, because our own RBAC guard and rate
+  // limiter emit those same codes in normal operation.
+  if (mapped.infrastructure) return true;
+  return LOG_AS_INCIDENT_CODES.has(mapped.code);
 }
 
 /**
@@ -410,16 +421,28 @@ export function createRouteHandler<
         isProduction: process.env.NODE_ENV === "production",
       });
 
-      // -- Persisted log (5xx + selected 4xx) --------------------------------
-      if (shouldPersist(mapped.status, mapped.code)) {
-        void serverErrorsRepository().record({
+      // -- Persisted log (5xx + infrastructure + selected 4xx) ---------------
+      // AWAITED, not fire-and-forget. `void record(...)` raced the response:
+      // the lambda can be frozen or reclaimed the moment we return, and
+      // `record()` swallows its own failures, so a lost write left no trace
+      // anywhere — indistinguishable from "the error never happened".
+      // `record()` is documented never to throw, so awaiting it cannot turn a
+      // logging failure into a request failure; the cost is one Firestore
+      // round-trip on an already-failed request.
+      if (shouldPersist(mapped)) {
+        await serverErrorsRepository().record({
           source: "vercel",
           route: new URL(request.url).pathname,
           method: request.method,
           ...(user?.uid ? { userId: user.uid } : {}),
           code: mapped.code,
-          message: mapped.message,
+          // internalMessage ?? message — `mapped.message` is scrubbed to a
+          // generic string for 5xx in production so it is safe to send to a
+          // browser. The store must get the real one, or the scrub would have
+          // traded a UI leak for blindness.
+          message: mapped.internalMessage ?? mapped.message,
           stack: err instanceof Error ? err.stack : undefined,
+          cause: describeCauseChain(err),
           requestId,
           userAgent: request.headers.get("user-agent") ?? undefined,
         });
