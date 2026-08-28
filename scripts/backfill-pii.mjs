@@ -38,6 +38,12 @@ function flag(name, fallback = undefined) {
   return v && !v.startsWith("--") ? v : true;
 }
 const DRY_RUN = flag("dry-run", false) === true;
+// A scan of zero documents is indistinguishable from a wrong collection
+// name, and it prints as a clean pass. That is how the `catalogue` typo
+// above survived. Empty is now an ERROR unless the caller says it is
+// expected — which turns this whole class of typo from silent to
+// unmissable, for every target, permanently.
+const ALLOW_EMPTY = flag("allow-empty", false) === true;
 const SERVICE_ACCOUNT_OVERRIDE =
   typeof flag("service-account") === "string" ? flag("service-account") : null;
 const ONLY = typeof flag("collections") === "string" ? flag("collections").split(",") : null;
@@ -185,7 +191,11 @@ const TARGETS = [
   // nested
   { collection: "sessions", fields: ["deviceInfo.ip", "deviceInfo.userAgent", "location.city"], indexMap: {} },
   { collection: "supportTickets", fields: ["userEmail", "userDisplayName", "assignedToName"], indexMap: {} },
-  { collection: "catalogue", fields: ["ownerEmail"], indexMap: {} },
+  // `catalogueItems`, matching CATALOGUE_COLLECTION. This said "catalogue"
+  // — a collection that does not exist — so `db.collection(...).get()`
+  // returned empty without error and the script printed a clean
+  // `scanned 0 · repaired 0`. See the empty-scan guard below.
+  { collection: "catalogueItems", fields: ["ownerEmail"], indexMap: {} },
   { collection: "payoutMethods", fields: ["upiVpa", "accountNumber", "ifscCode"], indexMap: {} },
   // array-of-objects + its denormalised copy
   { collection: "conversations", fields: ["lastMessage", "messages[].body"], indexMap: {} },
@@ -283,6 +293,16 @@ for (const target of TARGETS) {
 
     const verb = DRY_RUN ? "would repair" : "repaired";
     console.log(`${target.collection.padEnd(12)} scanned ${String(scanned).padStart(5)} · ${verb} ${repaired}`);
+
+    if (scanned === 0 && !ALLOW_EMPTY) {
+      hadError = true;
+      console.error(
+        `✗ ${target.collection}: scanned 0 documents. Either the collection` +
+        ` name is wrong or it is genuinely empty — this script cannot tell` +
+        ` the two apart, so it refuses to report success. Pass --allow-empty` +
+        ` if you have confirmed it is empty.`,
+      );
+    }
   } catch (err) {
     hadError = true;
     console.error(`✗ ${target.collection}: ${err instanceof Error ? err.message : String(err)}`);
