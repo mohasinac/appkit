@@ -25,6 +25,27 @@
  * `??` only falls through on null/undefined.
  */
 export function resolveRtdbUrl(): string | undefined {
+  // 🛑 Emulator first.
+  //
+  // `firebase.json` has declared a database emulator on port 9000 for a long
+  // time and NOTHING ever connected to it. Client writes were shielded only
+  // because every rule is `.write: false`; server writes use the Admin SDK and
+  // bypass rules entirely — so `npm run dev` wrote to PRODUCTION. A local bid
+  // overwrote the prod `auction-bids` node that live auction pages subscribe to,
+  // and a local message send wrote prod `chats/**`.
+  //
+  // `FIREBASE_DATABASE_EMULATOR_HOST` is the standard variable the Firebase CLI
+  // exports for exactly this, so honouring it costs one branch and makes
+  // `firebase emulators:start` do what everyone already assumed it did.
+  const emulatorHost = process.env.FIREBASE_DATABASE_EMULATOR_HOST?.trim();
+  if (emulatorHost) {
+    const ns =
+      process.env.FIREBASE_ADMIN_PROJECT_ID?.trim() ||
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim() ||
+      "default";
+    return `http://${emulatorHost}?ns=${ns}`;
+  }
+
   return (
     process.env.FIREBASE_ADMIN_DATABASE_URL?.trim() ||
     process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL?.trim() ||
