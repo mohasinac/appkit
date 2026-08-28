@@ -34,7 +34,11 @@ import { normalizeError } from "../../../../errors/normalize";
 const DEFAULT_SORT = "-createdAt";
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 20;
-const MAX_PAGE_SIZE = 100;
+// 50, matching the app's own ceiling. This was 100, so a caller reaching the
+// Function could ask for twice what every route permits — and the routes are
+// where Rule #6's `pageSize <= 50` is enforced. A limit that only one of two
+// entry points applies is not a limit.
+const MAX_PAGE_SIZE = 50;
 
 export interface ListingRequestBody {
   collection: string;

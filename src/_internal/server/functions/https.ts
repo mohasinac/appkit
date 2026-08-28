@@ -79,8 +79,23 @@ export const listingProcessor = defineFunction({
   handler: listingProcessorHandler,
   options: {
     region: REGION,
-    timeoutSeconds: 30,
-    memory: "256MiB",
+    // Matched to the `gateway` function's budget ON PURPOSE, and this is not
+    // over-provisioning.
+    //
+    // `listingProcessorHandler` is reachable two ways: this direct function,
+    // and `gateway` with `action: "listingProcessor"` (it is in
+    // GATEWAY_HANDLERS). `src/lib/listing-processor.ts` chooses between them on
+    // whether FIREBASE_FUNCTION_GATEWAY_URL is set — so an ENVIRONMENT VARIABLE
+    // decided which limits the same query ran under. At 30s/256MiB here against
+    // the gateway's 120s/512MiB, a heavy listing query could succeed through
+    // one path and time out through the other, with nothing at the call site
+    // saying which path served it. That is the shape of a production bug nobody
+    // can reproduce.
+    //
+    // Cloud Functions bill on use, not on the declared ceiling, so aligning the
+    // two costs nothing while idle and removes the non-determinism.
+    timeoutSeconds: 120,
+    memory: "512MiB",
     maxInstances: 20,
     minInstances: 0,
     cors: false,
