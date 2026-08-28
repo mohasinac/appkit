@@ -56,8 +56,8 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-color-border": "#334155",
     "appkit-color-border-subtle": "rgba(30, 41, 59, 0.6)",
     "appkit-color-text": "#fafafa",
-    "appkit-color-text-muted": "#a1a1aa",
-    "appkit-color-text-faint": "#71717a",
+    "appkit-color-text-muted": "#b4b4bd",
+    "appkit-color-text-faint": "#8b8b94",
 
     "appkit-color-success": "#34d399",
     "appkit-color-success-surface": "rgba(6, 78, 59, 0.25)",

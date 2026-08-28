@@ -111,12 +111,30 @@
   color: var(--appkit-color-text);
 }
 
+/* 🛑 The dimmed-text ladder reads THEME tokens, never the raw zinc ramp.
+ *
+ * `--appkit-color-zinc-*` is declared once under `:root` and is NOT overridden
+ * by any theme block, so anything reading it is theme-INVARIANT — the same
+ * near-white grey in `sunset` as in `default-dark`. `--appkit-color-text-muted`
+ * and `-text-faint` are declared per theme and already invert correctly, which
+ * is why the `.dark` overrides these rules used to carry are gone: the token
+ * does that job, and a second mechanism could only disagree with it.
+ *
+ * `--muted` also read `--appkit-color-text-FAINT`, one step lighter than its own
+ * name, for all ~1,039 `color="muted"` call sites — while the 597
+ * `className="text-muted"` sites resolved correctly through Tailwind. Two
+ * idioms, one intent, two different colours on screen.
+ */
 .appkit-color--secondary {
-  color: var(--appkit-color-zinc-500);
+  color: var(--appkit-color-text-muted);
 }
 
 .appkit-color--muted {
-  color: var(--appkit-color-text-faint);
+  color: var(--appkit-color-text-muted);
+  /* Muted carries no weight of its own elsewhere, so at these contrast ratios
+   * it read as washed out rather than deliberate. 450 is enough to hold the
+   * line without competing with `weight="medium"` (500). */
+  font-weight: 450;
 }
 
 .appkit-color--error {
@@ -132,7 +150,7 @@
 }
 
 .appkit-color--faint {
-  color: var(--appkit-color-zinc-400);
+  color: var(--appkit-color-text-faint);
 }
 
 .appkit-color--warning {
@@ -151,14 +169,12 @@
   color: var(--appkit-color-text);
 }
 
-.dark .appkit-color--secondary {
-  color: var(--appkit-color-zinc-400);
-}
-
-.dark .appkit-color--muted {
-  color: var(--appkit-color-zinc-500);
-}
-
+/* `.dark` IS live — ThemeProvider.tsx:92 adds the class alongside
+ * `data-theme` — so these are real overrides, not dead CSS. The three that
+ * used to sit here (`--secondary`, `--muted`, `--faint`) are gone because the
+ * tokens they now read already invert per theme. Keeping them would have
+ * re-broken exactly what the base rules fix: `.dark .appkit-color--faint`
+ * resolved to zinc-600 (#52525b) on a near-black page. */
 .dark .appkit-color--error {
   color: var(--appkit-color-rose-400);
 }
@@ -169,10 +185,6 @@
 
 .dark .appkit-color--accent {
   color: var(--appkit-color-primary-400);
-}
-
-.dark .appkit-color--faint {
-  color: var(--appkit-color-zinc-600);
 }
 
 .dark .appkit-color--warning {
@@ -188,11 +200,10 @@
   margin-bottom: 0.375rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--appkit-color-zinc-500);
-}
-
-.dark .appkit-label {
-  color: var(--appkit-color-slate-300);
+  /* Was zinc-500 with a `.dark` slate-300 override — a hand-rolled light/dark
+   * pair off the raw ramp, which no theme overrides. Every form label in the
+   * app renders through this rule. */
+  color: var(--appkit-color-text-muted);
 }
 
 .appkit-label__required {
@@ -217,10 +228,8 @@
   color: var(--appkit-color-secondary-600);     /* dark green — readable on white */
 }
 
-.dark .appkit-caption--default {
-  color: var(--appkit-color-zinc-500);
-}
-
+/* `.appkit-caption--default` reads `--appkit-color-text-faint`, which already
+ * inverts per theme; this override pinned it back to a fixed grey in dark. */
 .dark .appkit-caption--accent {
   color: var(--appkit-color-primary-400);
 }
