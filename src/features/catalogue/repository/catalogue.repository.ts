@@ -63,7 +63,18 @@ export class CatalogueRepository extends BaseRepository<CatalogueItemDocument> {
       createdAt: now,
       updatedAt: now,
     };
-    await this.getCollection().doc(id).set(prepareForFirestore(data));
+    // `applyWriteHooks`, NOT a bare `.set(data)`.
+    //
+    // This wrote the document directly, bypassing the hook entirely — so
+    // `ownerEmail` was persisted in CLEARTEXT on every create despite
+    // `piiFields` being declared above. `mapDoc` then calls `decryptPiiFields`,
+    // which passes a non-`enc:v1:` string straight through, so reads looked
+    // correct and nothing ever errored.
+    //
+    // Deliberately not `this.createWithId(id, data)`: that does a
+    // read-after-write, costing a Firestore read on every create (Rule #6) and
+    // changing the return from this plaintext echo to a `mapDoc` round-trip.
+    await this.getCollection().doc(id).set(prepareForFirestore(this.applyWriteHooks(data)));
     return { id, ...data };
   }
 

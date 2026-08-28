@@ -205,15 +205,27 @@ class OfferRepository extends BaseRepository<OfferDocument> {
   async findByStore(
     storeId: string,
     model?: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<OfferDocument>> {
     if (model) {
-      return this.sieveQuery(model, OfferRepository.SIEVE_FIELDS, {
-        baseQuery: this.getCollection().where(
-          OFFER_FIELDS.STORE_ID,
-          "==",
-          storeId,
-        ),
+      const plan = planSearchTxt(opts?.search);
+      // A search that yielded no usable term must return NOTHING, not the
+      // store's whole offer list.
+      if (plan.empty) return emptySearchResult<OfferDocument>();
+
+      let baseQuery = this.getCollection().where(
+        OFFER_FIELDS.STORE_ID,
+        "==",
+        storeId,
+      );
+      if (plan.head) {
+        baseQuery = baseQuery.where(OFFER_FIELDS.SEARCH_TXT, "array-contains", plan.head);
+      }
+
+      const result = await this.sieveQuery(model, OfferRepository.SIEVE_FIELDS, {
+        baseQuery,
       });
+      return refineSearchTxt(result, plan.rest);
     }
     const snap = await this.getCollection()
       .where(OFFER_FIELDS.STORE_ID, "==", storeId)

@@ -37,7 +37,6 @@ export interface BidWriteContext {
   note?: string;
 }
 import {
-  encryptPiiFields,
   decryptPiiFields,
   BID_PII_FIELDS,
 } from "../../../security";
@@ -47,6 +46,26 @@ export class BidRepository extends BaseRepository<BidDocument> {
   constructor() {
     super(BID_COLLECTION);
   }
+
+  /**
+   * Declared, not hand-rolled.
+   *
+   * `create` encrypted `userEmail` while nothing else did, and there was no
+   * `update` override — so `adminUpdateBid`, whose input type is
+   * `Partial<Omit<BidDocument,"id"|"createdAt">>` and therefore INCLUDES
+   * `userEmail`, routed to `BaseRepository.update` -> `applyWriteHooks` with
+   * `piiFields = []` and wrote plaintext back over the ciphertext.
+   *
+   * Declaring it covers all nine mutating methods, including the `*InTx` /
+   * `*InBatch` family that had no encryption at all.
+   *
+   * 🛑 It does NOT cover `setWinningBid`, `endAuction`, `cancelProductBids` or
+   * the `markWon`/`markLost`/`markOutbid`/`markWinning` cluster — those call
+   * `batch.update(ref, …)` DIRECTLY and always will. They do not touch
+   * `userEmail` today, so there is no leak; the next PII-shaped field added to
+   * one of those patches would inherit the bypass.
+   */
+  protected override piiFields = BID_PII_FIELDS;
 
   /** Override mapDoc to auto-decrypt PII on every bid read */
   protected override mapDoc<D = BidDocument>(
@@ -78,10 +97,9 @@ export class BidRepository extends BaseRepository<BidDocument> {
       updatedAt: new Date(),
     };
 
-    // Encrypt PII before persisting
-    const encrypted = encryptPiiFields(bidData,
-      [...BID_PII_FIELDS],
-    );
+    // The SAME hook every other write path uses, rather than a second
+    // hand-rolled call that has to stay in agreement with it.
+    const encrypted = this.applyWriteHooks(bidData);
 
     await this.db
       .collection(this.collection)
@@ -597,7 +615,12 @@ export class BidRepository extends BaseRepository<BidDocument> {
     productTitle: { canFilter: true, canSort: true },
     userId: { canFilter: true, canSort: false },
     userName: { canFilter: true, canSort: true },
-    userEmail: { canFilter: true, canSort: true },
+    // Encrypted (BID_PII_FIELDS). Filtering compares plaintext against
+    // `enc:v1:…` and matches ZERO rows with a 200; sorting orders by base64
+    // noise. It appeared to work only because the column was still
+    // plaintext. There is no blind index for bids (`indexMap: {}`), so the
+    // fix is to close it, not to add one — same as payout.sellerEmail.
+    userEmail: { canFilter: false, canSort: false },
     bidAmount: { canFilter: true, canSort: true },
     status: { canFilter: true, canSort: true },
     isWinning: { canFilter: true, canSort: false },

@@ -164,6 +164,8 @@ export const OFFER_FIELDS = {
   COUNTER_ROUND: "counterRound",
   CANCELLED_BY_ADMIN_UID: "cancelledByAdminUid",
   CANCEL_REASON: "cancelReason",
+  /** Word-prefix n-grams for `array-contains` search. Derived by `buildOfferSearchTxt`. */
+  SEARCH_TXT: "searchTxt",
 } as const;
 
 export type OfferCreateInput = Pick<
