@@ -114,9 +114,9 @@ function write<T>(key: string, items: T[]): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(key, JSON.stringify(items));
+  // Quota exceeded or storage blocked. Losing pending ops costs a retry, never data: the cart is canonical in Firestore.
   } catch (_err) {
     void normalizeError(_err);
-    // storage quota exceeded — best effort
   }
 }
 

@@ -292,9 +292,11 @@ export function createRouteHandler<
       } else if (options.authOptional) {
         try {
           user = await verifySession(request);
+        // Deliberate: this is the OPTIONAL-auth path. A bad or absent session means
+        // anonymous, which is a legitimate outcome here — routes that require a
+        // user use `auth: true`, which throws instead.
         } catch (_err) {
           void normalizeError(_err);
-          // anonymous
         }
       }
 

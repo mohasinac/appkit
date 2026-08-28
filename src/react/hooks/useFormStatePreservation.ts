@@ -53,9 +53,11 @@ export function useFormStatePreservation<TValues extends Record<string, JsonValu
     try {
       const decoded = JSON.parse(atob(encoded)) as TValues;
       onRestore(decoded);
+    // The payload is user-supplied via the URL, so corrupt input is expected
+    // rather than exceptional. Discarding it restores the empty form, which is
+    // the same state as arriving without one.
     } catch (_err) {
       void normalizeError(_err);
-      // ignore corrupt payloads
     }
   }, [paramName, onRestore]);
 

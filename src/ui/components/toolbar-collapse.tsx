@@ -49,10 +49,9 @@ export function readCollapsedPref(id: string): boolean | null {
 export function writeCollapsedPref(id: string, value: boolean): void {
   try {
     window.sessionStorage.setItem(STORAGE_PREFIX + id, value ? "1" : "0");
+  // sessionStorage blocked (private browsing). Collapsing still works this render, it just will not survive a re-mount.
   } catch (_err) {
     void normalizeError(_err);
-    // sessionStorage unavailable (private browsing, etc.) — collapsing still
-    // works for the current render, it just doesn't survive a re-mount.
   }
 }
 
