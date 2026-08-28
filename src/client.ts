@@ -509,10 +509,16 @@ export { NotificationPreferencesPanel } from "./features/account/components/Noti
 export type { NotificationPreferencesPanelProps } from "./features/account/components/NotificationPreferencesPanel";
 export { LinkedAccountsSection } from "./features/account/components/LinkedAccountsSection";
 export type { LinkedAccountsSectionProps } from "./features/account/components/LinkedAccountsSection";
-export { useCollapsedSections } from "./features/account/hooks/useCollapsedSections";
+export {
+  useCollapsedSections,
+  useSectionState,
+} from "./features/account/hooks/useCollapsedSections";
 export type {
   UseCollapsedSectionsOptions,
   UseCollapsedSectionsResult,
+  UseSectionStateOptions,
+  UseSectionStateResult,
+  SectionExpandMode,
 } from "./features/account/hooks/useCollapsedSections";
 export { PageViewTracker } from "./features/analytics/components/PageViewTracker";
 export type { PageViewTrackerProps } from "./features/analytics/components/PageViewTracker";

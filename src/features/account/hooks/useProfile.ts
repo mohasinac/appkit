@@ -17,7 +17,11 @@ export interface UserProfile {
   googleLinked?: boolean;
   googleLinkedEmail?: string | null;
   uiPreferences?: {
+    /** @deprecated Superseded by `sectionState`. Still written during the
+     * migration window so an existing user's layout carries over. */
     collapsedSections?: string[];
+    /** scope -> ids that are OPEN. See useSectionState. */
+    sectionState?: Record<string, string[]>;
     dataViewMode?: "table" | "grid" | "list";
     handMode?: "left" | "right";
   };
@@ -35,7 +39,11 @@ export interface UpdateCurrentProfileInput {
   bio?: string;
   profileIsPublic?: boolean;
   uiPreferences?: {
+    /** @deprecated Superseded by `sectionState`. Still written during the
+     * migration window so an existing user's layout carries over. */
     collapsedSections?: string[];
+    /** scope -> ids that are OPEN. See useSectionState. */
+    sectionState?: Record<string, string[]>;
     dataViewMode?: "table" | "grid" | "list";
     handMode?: "left" | "right";
   };

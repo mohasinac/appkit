@@ -190,6 +190,28 @@ export interface UserDocument extends BaseDocument {
      * stay unique). Absent/missing IDs default to collapsed for a section the
      * user has never interacted with. See useCollapsedSections. */
     collapsedSections?: string[];
+    /**
+     * Which sections are OPEN, namespaced per surface: `scope -> openIds[]`.
+     *
+     * Supersedes `collapsedSections`, and the polarity flip is the point.
+     * Storing what is COLLAPSED cannot express "section 1 open by default"
+     * without a sentinel, and an unseen scope has to be guessed at; storing
+     * what is OPEN makes a never-seen scope default correctly *by absence*.
+     *
+     * Namespaced because the flat list was global: every page's ids shared one
+     * array and were kept apart only by a naming convention. The scope key is
+     * `"{portal}:{surface}"` — deliberately NOT a hash of the section ids,
+     * which would change the moment a section is added and silently reset
+     * every user's layout.
+     *
+     * `collapsedSections` is still written during the migration window; see
+     * `useSectionState`'s one-way dual-read.
+     */
+    sectionState?: Record<string, string[]>;
+    /** Preferred density for list surfaces that offer a view switch.
+     * Was written by the route, the API type and useDataViewMode while being
+     * absent from this interface — declared 2026-08-29. */
+    dataViewMode?: "table" | "grid" | "list";
     /** Which side CTA panels/drawers/sidebars dock to and where close buttons
      * sit. Absent/"right" = default (right-docked). "left" = left-hand mode. */
     handMode?: "left" | "right";
