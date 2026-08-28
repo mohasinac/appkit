@@ -12,7 +12,7 @@ import {
 import type { OrderDocument } from "../../../../features/orders/schemas";
 
 export async function assertOrderOwnership(orderId: string, userId: string): Promise<OrderDocument> {
-  const order = await orderRepository.findById(orderId).catch(() => null);
+  const order = await orderRepository.findById(orderId);
   if (!order) throw new OrderNotFoundError(orderId);
   if (order.userId !== userId) throw new OrderOwnershipError(orderId);
   return order;

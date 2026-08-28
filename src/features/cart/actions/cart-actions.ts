@@ -24,6 +24,7 @@ import {
   validateCartItemStock,
 } from "../../../_internal/server/features/checkout/bundle-expansion";
 import type { ProductDocument } from "../../products/schemas/firestore";
+import { safeRead } from "../../../errors/safe-read";
 import type {
   AddToCartInput,
   CartDocument,
@@ -45,7 +46,9 @@ import type {
  */
 async function resolveStoreName(storeId: string, candidate: string | undefined): Promise<string> {
   if (candidate) return candidate;
-  const store = await storeRepository.findById(storeId).catch(() => null);
+  const store = await safeRead(() => storeRepository.findById(storeId), {
+    route: "/cart", key: "stores.findById", fallback: null,
+  });
   return store?.storeName ?? storeId;
 }
 
@@ -151,7 +154,11 @@ export async function addGroupLineToCart(
   // One batched read for the whole selection — capped at 20 above, so well
   // inside the per-request Firestore budget.
   const docs = await Promise.all(
-    members.map((m) => productRepository.findById(m.productId).catch(() => null)),
+    members.map((m) =>
+      safeRead(() => productRepository.findById(m.productId), {
+        route: "/cart", key: "products.findById", fallback: null,
+      }),
+    ),
   );
   const productById = new Map(members.map((m, i) => [m.productId, docs[i]]));
 
@@ -287,7 +294,9 @@ async function isGroupedListingMember(groupId: string, productId: string): Promi
   const { groupedListingsRepository } = await import(
     "../../grouped/repository/grouped-listings.repository"
   );
-  const group = await groupedListingsRepository.findById(groupId).catch(() => null);
+  const group = await safeRead(() => groupedListingsRepository.findById(groupId), {
+    route: "/cart", key: "groupedListings.findById", fallback: null,
+  });
   return Boolean(group?.productIds?.includes(productId));
 }
 
@@ -301,7 +310,9 @@ async function resolveGroupTitle(
     const { groupedListingsRepository } = await import(
       "../../grouped/repository/grouped-listings.repository"
     );
-    const group = await groupedListingsRepository.findById(groupId).catch(() => null);
+    const group = await safeRead(() => groupedListingsRepository.findById(groupId), {
+      route: "/cart", key: "groupedListings.title", fallback: null,
+    });
     if (group?.title) return group.title;
   }
   return sample?.groupTitle ?? "Selected items";

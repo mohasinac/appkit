@@ -58,7 +58,7 @@ export async function updateOrderStatusAction(input: unknown): Promise<ActionRes
     const user = await requireRoleUser(["seller", "admin"]);
       const parsed = updateOrderStatusSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
-      const order = await orderRepository.findById(parsed.data.orderId).catch(() => null);
+      const order = await orderRepository.findById(parsed.data.orderId);
       if (!order) throw new OrderNotFoundError(parsed.data.orderId);
       if (!isAdminUser(user) && order.storeId !== user.uid) {
         throw new OrderOwnershipError(parsed.data.orderId);
@@ -148,7 +148,7 @@ export async function attachPaymentProofAction(
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
-    const order = await orderRepository.findById(orderId).catch(() => null);
+    const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
     if (!isAdminUser(user) && order.userId !== user.uid) throw new OrderOwnershipError(orderId);
     // Use the shared predicate rather than re-inlining the method list — this
@@ -211,7 +211,7 @@ export async function adminVerifyPaymentAction(orderId: string): Promise<ActionR
     if (!isAdminUser(user) && !isModeratorUser(user)) {
       throw new ValidationError("Only admin or moderator can verify payments");
     }
-    const order = await orderRepository.findById(orderId).catch(() => null);
+    const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
     if (order.paymentStatus === "paid") return; // idempotent
     await orderRepository.update(orderId, {
@@ -251,7 +251,7 @@ export async function adminRequestProofReuploadAction(
       throw new ValidationError("Only admin or moderator can request a proof re-upload");
     }
     if (!note.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
-    const order = await orderRepository.findById(orderId).catch(() => null);
+    const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
     if (order.paymentStatus === "paid") {
       throw new ValidationError("This order's payment is already verified");
@@ -302,7 +302,7 @@ export async function adminRejectPaymentAsFraudAction(
       throw new ValidationError("Only admin or moderator can reject a payment as fraudulent");
     }
     if (!note.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
-    const order = await orderRepository.findById(orderId).catch(() => null);
+    const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
     if (order.paymentStatus === "paid") {
       throw new ValidationError("This order's payment is already verified");
@@ -348,13 +348,13 @@ export async function raiseOrderDisputeAction(
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
     if (!reason.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
-    const order = await orderRepository.findById(orderId).catch(() => null);
+    const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
 
     const isBuyer = order.userId === user.uid;
     let isSeller = false;
     if (!isBuyer && !isAdminUser(user) && !isModeratorUser(user) && order.storeId) {
-      const store = await storeRepository.findById(order.storeId).catch(() => null);
+      const store = await storeRepository.findById(order.storeId);
       isSeller = store?.ownerId === user.uid;
     }
     if (!isBuyer && !isSeller && !isAdminUser(user) && !isModeratorUser(user)) {
