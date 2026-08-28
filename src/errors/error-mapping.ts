@@ -43,9 +43,41 @@ export type HttpErrorCode =
 export interface MappedError {
   status: number;
   code: string;
+  /**
+   * The CLIENT-FACING message. For any `status >= 500` in production this is a
+   * generic string — never the thrown error's own text.
+   */
   message: string;
+  /**
+   * The unscrubbed message, present only when `message` was replaced.
+   *
+   * 🛑 Recorders (serverErrors, logs) MUST use `internalMessage ?? message`.
+   * Responses MUST use `message`. The whole point of the split is that
+   * scrubbing the UI must not blind the log store — before this existed, the
+   * raw text was the only copy of the fault and it was being shipped to the
+   * browser instead (a `/var/task/...` path leaked to end users), while
+   * scrubbing it naively would have left nothing anywhere.
+   */
+  internalMessage?: string;
   issues?: unknown[];
+  /**
+   * True when the status/code came from the FIRESTORE error map — i.e. the
+   * datastore itself refused, rather than our own business logic deciding.
+   *
+   * Needed because the two are indistinguishable by code alone. Firestore
+   * `permission-denied` (an expired service-account key) and
+   * `resource-exhausted` (quota blown) map to 403/429 — exactly the codes our
+   * RBAC guard and rate limiter emit in normal operation. Before this flag,
+   * those infrastructure failures fell below the `status >= 500` persist
+   * threshold and were recorded nowhere; adding their CODES to
+   * `LOG_AS_INCIDENT_CODES` instead would have persisted every ordinary 404
+   * and every rate-limited request along with them.
+   */
+  infrastructure?: boolean;
 }
+
+/** Shown to users for any 5xx in production. */
+const GENERIC_5XX_MESSAGE = "An internal error occurred";
 
 interface ZodLikeError {
   issues: unknown[];
@@ -112,6 +144,7 @@ function mapFirestore(err: FirestoreLikeError): MappedError | null {
     status: mapped.status,
     code: mapped.code,
     message: err.message ?? mapped.code,
+    infrastructure: true,
   };
 }
 
@@ -123,9 +156,12 @@ function mapFirestore(err: FirestoreLikeError): MappedError | null {
  *  - DatabaseError unwraps its `data` to look for a wrapped FirestoreError
  *  - FirestoreError (numeric .code or string .code) maps via the table above
  *  - ZodError shape maps to 400 VALIDATION_FAILED + issues
- *  - Unknown Error → 500 INTERNAL; message scrubbed when isProduction
+ *  - Unknown Error → 500 INTERNAL
+ *
+ * Production scrubbing of 5xx messages is applied ONCE, by `mapToHttpError`
+ * below — deliberately not inside these branches. See the note there.
  */
-export function mapToHttpError(
+function classifyError(
   err: unknown,
   opts?: { isProduction?: boolean },
 ): MappedError {
@@ -231,17 +267,56 @@ export function mapToHttpError(
     }
   }
 
-  // Unknown — keep message in dev, scrub in prod
+  // Unknown
+  void isProduction; // scrubbing happens once, in mapToHttpError
   const rawMessage =
     err instanceof Error
       ? err.message
       : typeof err === "string"
         ? err
-        : "An internal error occurred";
+        : GENERIC_5XX_MESSAGE;
 
   return {
     status: 500,
     code: HTTP_ERROR_CODES.INTERNAL,
-    message: isProduction ? "An internal error occurred" : rawMessage,
+    message: rawMessage,
+  };
+}
+
+/**
+ * Classify a thrown value AND make the result safe to send to a browser.
+ *
+ * 🛑 The scrub is keyed on **status**, not on which branch matched.
+ *
+ * It used to be the other way round: `isProduction` was consulted in exactly
+ * one place — the unknown-error tail at the bottom of `classifyError` — while
+ * the `DatabaseError`, `AppError` and `ApiError` branches above it returned
+ * `err.message` verbatim, in production. Since almost every real 500 in this
+ * codebase is a `DatabaseError`, the scrub essentially never ran. That is how
+ * a Node `MODULE_NOT_FOUND` — including the absolute server path
+ * `/var/task/.next/server/chunks/...` and its full require stack — was rendered
+ * as user-facing copy inside the "Place your bid" modal.
+ *
+ * Keying on status means a branch added later cannot reintroduce the leak by
+ * forgetting to check a flag.
+ *
+ * 4xx messages are NOT scrubbed: they are deliberate, user-actionable copy
+ * ("Bid too low", "Coupon expired") produced by our own validation, and
+ * replacing them with a generic string would make the product worse.
+ */
+export function mapToHttpError(
+  err: unknown,
+  opts?: { isProduction?: boolean },
+): MappedError {
+  const isProduction = opts?.isProduction ?? false;
+  const mapped = classifyError(err, opts);
+
+  if (!isProduction || mapped.status < 500) return mapped;
+  if (mapped.message === GENERIC_5XX_MESSAGE) return mapped;
+
+  return {
+    ...mapped,
+    message: GENERIC_5XX_MESSAGE,
+    internalMessage: mapped.message,
   };
 }

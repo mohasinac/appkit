@@ -193,6 +193,27 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "search", label: "Search returns relevant results", href: "/search" },
         { key: "filters", label: "Search/listing filters (price, brand, condition) work correctly" },
         {
+          key: "grid-one-card-per-row-on-phone",
+          label: "On a phone, a product listing shows exactly ONE card per row — not two narrow ones",
+          description:
+            "BEFORE (until 2026-08-28): every listing put 2 cards per row at 375px, so each card was ~170px wide and its title/price squeezed. AFTER: 1 card per row on a phone, 2 on a tablet (~768px), 3–4 on a desktop. Check /products, /stores, /blog and an admin listing in card view. Resize slowly through 375 / 768 / 1024 / 1440 — the count should go 1, 2, 3, 4 and the cards should always fill the full width between the page margins, never leave a gap on the right.",
+          href: "/products",
+        },
+        {
+          key: "grid-short-last-row-not-stretched",
+          label: "A listing whose last row is short does NOT stretch that card across the page",
+          description:
+            "Find a listing showing e.g. 4 items while 3 fit per row (add filters until the count is not a multiple of the row size). The single card left over on the last row must be exactly as wide as the cards above it, sitting on the left with empty space to its right. If it stretches to full width, the grid was switched from `auto-fill` to `auto-fit` — report it, this is the specific bug the layout was rebuilt to fix.",
+          href: "/products",
+        },
+        {
+          key: "grid-follows-sidebar-not-viewport",
+          label: "Opening the desktop filter sidebar drops ONE column and keeps the cards the same size",
+          description:
+            "On a wide desktop (~1440px) open /products and toggle the filter sidebar. The card count per row should drop by one while each card stays roughly the same width — the grid measures its own container, not the window. If the cards instead shrink to squeeze the same number in, report it.",
+          href: "/products",
+        },
+        {
           key: "homepage-prize-draws-section",
           label: "The homepage shows a \"Prize Draws\" strip with real cards — NOT an empty gap and NOT a \"Something went wrong\" block",
           description:
@@ -211,6 +232,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Open the browser console on /products and confirm there are NO \"MISSING_MESSAGE\" errors",
           description:
             "Press F12 → Console tab, then load the page. A missing translation key logs 'MISSING_MESSAGE: <key>' and renders the raw key text instead of a readable label. Report the exact key name if you see one.",
+          href: "/products",
+        },
+        {
+          key: "listing-toolbar-collapsed-on-mobile",
+          label: "On a phone, a listing opens with the search/filter toolbar COLLAPSED to a single \"Show Toolbar\" strip",
+          description:
+            "BEFORE (until 2026-08-28): every listing opened with two stacked toolbar rows — search + Filter, then a scrolling sort/view chip row — roughly 100px of chrome above the first card. AFTER: a phone gets one thin \"Show Toolbar\" strip instead. Tap it: search, Filter and sort appear. Navigate to another listing and back — it should stay expanded, because you chose that. On a desktop (~1440px) the toolbar must still be open by default, exactly as before. Also confirm the toolbar is never simply GONE — there must always be a visible strip to tap.",
+          href: "/products",
+        },
+        {
+          key: "listing-toolbar-forced-open-on-selection",
+          label: "Selecting rows on a phone force-opens the toolbar so the bulk actions are reachable",
+          description:
+            "In an admin or seller listing on a phone, collapse the toolbar, then select a row (long-press or the checkbox). The toolbar must open by itself, because the bulk-action bar lives inside it — if it stays collapsed you can select rows but have no way to act on them. Report if the bulk bar is invisible or cut off.",
           href: "/products",
         },
         {
@@ -242,51 +277,69 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/products",
         },
         {
+          key: "product-type-filter-lives-in-drawer",
+          label: "There is NO standalone \"TYPE\" chip row on /products — the listing-type filter is a \"Listing type\" checkbox section at the TOP of the Filters drawer",
+          description: "Changed 2026-08-28. BEFORE: a full-width band of pill chips (Standard / Auctions / Pre-Orders / …) sat between the Available-Sold-All tabs and the product grid, and clicking one filtered instantly. AFTER: that band is gone — the availability tabs sit directly above the grid — and the same options appear as checkboxes under \"Listing type\" when you press Filters. Report it if you can still see the old chip band anywhere.",
+          href: "/products",
+        },
+        {
           key: "product-type-chips-cover-all-types",
-          label: "The TYPE chip row on /products lists ALL nine listing types — Standard, Auctions, Pre-Orders, Prize Draws, Classifieds, Digital Codes, Live Items, Art and Stickers",
-          description: "Fixed 2026-08-21 — the row used to show only 5 chips (All / Standard / Classified / Digital Codes / Live Items), so auctions, pre-orders, prize draws, art and stickers were unreachable from the main catalogue even though items of those types existed. Count the chips: there should be nine, and none labelled \"Bundles\" (bundles are not a listing type).",
+          label: "The \"Listing type\" section in the /products Filters drawer lists ALL nine listing types — Standard, Auctions, Pre-Orders, Prize Draws, Classifieds, Digital Codes, Live Items, Art and Stickers",
+          description: "Open Filters and count the checkboxes under \"Listing type\": there should be nine, and none labelled \"Bundles\" (bundles are not a listing type). A type missing here is unreachable from the main catalogue even when items of that type exist.",
           href: "/products",
         },
         {
           key: "product-type-chips-multi-select",
-          label: "The TYPE chips behave as CHECKBOXES, not radio buttons — several can be ticked at once, and ticking Auctions + Pre-Orders shows both types in one grid",
-          description: "Tick Auctions, then tick Pre-Orders WITHOUT unticking Auctions. Both must stay highlighted and the grid must contain items of both types. Untick both and the grid returns to showing every type.",
+          label: "The \"Listing type\" boxes are CHECKBOXES, not radio buttons — ticking Auctions + Pre-Orders and pressing Apply shows both types in one grid",
+          description: "Tick Auctions, then tick Pre-Orders WITHOUT unticking Auctions, then press Apply. Both must stay ticked when you reopen the drawer, and the grid must contain items of both types. Untick both, Apply, and the grid returns to showing every type.",
           href: "/products",
         },
         {
           key: "product-type-chips-none-means-all",
-          label: "With NO type chip ticked, /products shows a mix of listing types — check the coloured type badges on the cards",
+          label: "With NO \"Listing type\" box ticked, /products shows a mix of listing types — check the coloured type badges on the cards",
           description: "\"Nothing ticked\" means \"every type\", so you should be able to spot at least two different badges (e.g. an \"Auction\" and a \"Digital Code\") within the first page without filtering.",
           href: "/products",
         },
         {
+          key: "product-type-filter-counts-in-badge",
+          label: "Ticking a \"Listing type\" box and pressing Apply increases the number on the Filters button, and \"Reset all\" in the drawer clears the type selection again",
+          description: "Changed 2026-08-28 — the type filter used to sit outside the drawer and was invisible to both the badge and Reset. BEFORE: pick a type, badge stays where it was, Reset all leaves the type selection in place. AFTER: the badge goes up by one, and Reset all unticks every type box and repopulates the grid with all types.",
+          href: "/products",
+        },
+        {
           key: "product-type-chip-drives-sort-options",
-          label: "Ticking exactly ONE type changes the Sort dropdown to that type's own sorts — Auctions alone offers \"Ending Soon\", Pre-Orders alone offers \"Earliest Delivery\"",
-          description: "Tick only Auctions and open Sort: \"Ending Soon\" must be present. Untick it, tick only Pre-Orders: \"Earliest Delivery\" must be present and \"Ending Soon\" gone. With two types ticked only the sorts valid for both remain (Newest / Price / Name) — that is correct, not a bug.",
+          label: "Applying exactly ONE listing type changes the Sort dropdown to that type's own sorts — Auctions alone offers \"Ending Soon\", Pre-Orders alone offers \"Earliest Delivery\"",
+          description: "Filters → tick only Auctions → Apply, then open Sort: \"Ending Soon\" must be present. Swap to only Pre-Orders and Apply: \"Earliest Delivery\" must be present and \"Ending Soon\" gone. With two types applied only the sorts valid for both remain (Newest / Price / Name) — that is correct, not a bug.",
           href: "/products",
         },
         {
           key: "product-type-chip-sort-resets-no-empty-page",
           label: "Choosing a type-specific sort and THEN changing the type selection never leaves an empty grid or an error",
-          description: "The important regression check. Tick Auctions, sort by \"Ending Soon\", then untick Auctions and tick Standard instead. The grid must repopulate with products. A blank page here means a stale sort leaked into the new query.",
+          description: "The important regression check. Apply Auctions, sort by \"Ending Soon\", then reopen Filters, untick Auctions, tick Standard, Apply. The grid must repopulate with products and the Sort dropdown must fall back to Newest. A blank page here means a stale sort leaked into the new query.",
           href: "/products",
         },
         {
           key: "product-type-toggles-follow-selection",
-          label: "The toolbar toggles follow the type selection — \"Show ended\" appears only when a time-limited type is in play, \"Show sold\" only when a sellable type is",
-          description: "Tick only Auctions: a \"Show ended\" toggle appears. Tick only Standard instead: \"Show ended\" disappears and \"Show sold\" remains. With nothing ticked (= all types) both may appear, which is correct.",
+          label: "The middle availability tab is worded for the applied types — \"Ended\" for Auctions alone, \"Sold\" for Standard alone, \"Sold & Ended\" with nothing applied",
+          description: "Apply only Auctions and read the middle tab above the grid; then swap to only Standard and read it again. It must re-word itself, and switching to that tab must list the unavailable items of the applied type.",
           href: "/products",
         },
         {
           key: "product-type-chip-dedicated-page-link",
-          label: "Ticking exactly one type that has its own browse page shows a \"Full <type> filters\" link that lands on the right page",
-          description: "Tick only Auctions — a \"Full Auctions filters\" link should appear beside the chips and open /auctions. Repeat for Pre-Orders and Prize Draws.",
+          label: "Ticking exactly one type that has its own browse page shows a \"Full <type> filters\" link, inside the drawer under the Listing type section, that lands on the right page",
+          description: "Changed 2026-08-28 — the link used to sit beside the old chip row. Open Filters, tick only Auctions: a \"Full Auctions filters →\" link appears directly under the Listing type checkboxes (before you press Apply) and opens /auctions. Repeat for Pre-Orders and Prize Draws. With two types ticked, or none, the link must NOT appear.",
           href: "/products",
         },
         {
           key: "product-type-selection-survives-reload",
-          label: "The ticked type chips are reflected in the URL and survive a reload and the browser Back button",
-          description: "Tick Auctions + Art, copy the URL, open it in a new tab: the same two chips must come back ticked with the same grid. Then press Back and confirm the previous selection returns.",
+          label: "The applied listing types are reflected in the URL and survive a reload and the browser Back button",
+          description: "Apply Auctions + Art, copy the URL, open it in a new tab: the grid must match and reopening Filters must show those two boxes already ticked. Then press Back and confirm the previous selection returns.",
+          href: "/products",
+        },
+        {
+          key: "product-type-pending-until-apply",
+          label: "Ticking a \"Listing type\" box does NOT change the grid until you press Apply — and closing the drawer with the X discards the change",
+          description: "Changed 2026-08-28 — the old chips filtered on every click. Tick Auctions and watch the grid behind the drawer: it must not change. Press Apply and it does. Reopen, tick Art, close the drawer with the X (not Apply), and reopen: Art must be unticked again, matching what is actually applied.",
           href: "/products",
         },
         {
@@ -303,8 +356,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "pre-orders-reachable-from-products",
-          label: "Pre-orders are reachable from /products — tick the Pre-Orders chip and confirm real pre-order items appear with a \"Pre-Order\" badge",
-          description: "This was the original report: pre-orders (and auctions, prize draws, art, stickers) had no chip at all, so they could only be found via their own dedicated pages.",
+          label: "Pre-orders are reachable from /products — Filters → Listing type → tick Pre-Orders → Apply, and confirm real pre-order items appear with a \"Pre-Order\" badge",
+          description: "This was the original report: pre-orders (and auctions, prize draws, art, stickers) had no entry in the type filter at all, so they could only be found via their own dedicated pages.",
           href: "/products",
         },
         {
@@ -315,7 +368,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "art-stickers-type-chips-narrow",
-          label: "On /art, the \"Art\" and \"Stickers\" type chips each narrow the grid to only that type — neither chip nor \"All\" ever returns zero rows",
+          label: "On /art, the Filters drawer's \"Listing type\" section offers exactly two boxes — Art and Stickers — and each one alone narrows the grid to that type without ever returning zero rows",
+          description: "This page spans only two of the nine listing types, so its Listing type section must show only those two. Tick Art → Apply, then Stickers → Apply, then untick both → Apply; all three states must return rows.",
           href: "/art",
         },
         {
@@ -692,6 +746,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "bid-increment-override-floor-raising",
           label: "A seller's per-listing \"Minimum Bid Increment\" can require MORE than the admin tier, but can never let a bid undercut the tier",
           description: "Set a listing's \"Minimum Bid Increment\" below the current tier's value (e.g. 1) and confirm the effective minimum bid still enforces the tier, not the smaller override. Then set it above the tier (e.g. 500 when the tier is 100) and confirm the higher override is now enforced instead.",
+        },
+        {
+          key: "bid-succeeds-and-outbids-previous-winner",
+          label: "Placing a valid bid actually records it — the current bid rises and the previous high bid flips to \"outbid\"",
+          description:
+            "Fixed 2026-08-28. BEFORE: every bid failed and the modal showed the raw text \"Batch write failed: Cannot find module '../providers/db-firebase' Require stack: - /var/task/.next/server/chunks/ssr/...\" in the amount field. AFTER: the bid is accepted, \"Current bid\" rises by at least the minimum increment, and the previous winner's row in Bid History reads \"outbid\". Note the failure returned a normally-rendered modal and an HTTP 200, so \"the page loaded\" and \"no error in the network tab\" both prove nothing — read the actual numbers. Root cause: a relative-path runtime require inside appkit that only breaks once bundled into a Lambda chunk.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
+        },
+        {
+          key: "server-error-copy-is-never-raw",
+          label: "A server failure shows plain-English copy — never a file path, stack trace or \"Cannot find module\"",
+          description:
+            "Fixed 2026-08-28. BEFORE: any 500 printed its own internal message to the user, including absolute server paths under /var/task/. AFTER: the user sees \"A database error occurred. Please try again\" (or \"Something went wrong. Please try again.\"), while the FULL original text plus its cause chain appears in Admin → Maintenance → Server errors. Check both halves: generic in the browser, specific in the admin list. Seeing the raw text in either the bid modal or any toast is a regression.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
         },
         {
           key: "bid-increment-live-tier-change",
@@ -1761,7 +1829,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "start-conversation", label: "Starting a conversation with a seller works" },
         { key: "receive-reply", label: "Receiving and reading a seller's reply works" },
-        { key: "message-realtime-update", label: "A new message appears in the recipient's thread without a manual page refresh (realtime ping-channel)", href: "/user/messages" },
+        {
+          key: "message-realtime-update",
+          label: "A new message appears in the RECIPIENT's thread without a manual page refresh (realtime ping-channel)",
+          description:
+            "Fixed 2026-08-28. BEFORE: only the SENDER saw their own message, because the send handler calls refetch() directly — the recipient saw nothing until they reloaded. Two stacked faults: the hooks subscribed without ever signing in to the realtime database, AND the `conversationIds` claim the security rule requires had no issuer anywhere (the token route only sent `chatIds`, from an unrelated collection). Both errors were swallowed, one into a literal `// ignore`. AFTER: open the same conversation as buyer in one browser and seller in another, send from one, and the other updates on its own. Test it from BOTH directions — testing only the sender's own window is what let this pass before.",
+          href: "/user/messages",
+        },
+        {
+          key: "message-live-updates-survive-bulk-job",
+          label: "Running a bulk admin action while a message thread is open does not kill that thread's live updates",
+          description:
+            "Fixed 2026-08-28. BEFORE: the realtime app is a single shared connection, and finishing a bulk job signed it out globally — so an open chat or message thread silently stopped updating, and vice versa (opening a chat killed an in-flight bulk job's progress). AFTER: open a message thread, run any bulk action from an admin listing until it completes, then send a message from the other account — the thread must still update live without a reload.",
+          href: "/user/messages",
+        },
         { key: "messages-list-thread", label: "The messages list and individual thread view both load correctly", href: "/user/messages" },
       ],
     },

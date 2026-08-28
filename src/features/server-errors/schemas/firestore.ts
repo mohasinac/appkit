@@ -18,6 +18,15 @@ export type ServerErrorDocument = {
   message: string;
   /** Truncated stack (≤4 KB) — never the raw request body. */
   stack?: string;
+  /**
+   * Flattened `Error.cause` chain (≤4 KB), one `caused by: …` block per link.
+   *
+   * Load-bearing, not a nicety: every AppError in this codebase is a WRAP, and
+   * `AppError` calls `Error.captureStackTrace(this, this.constructor)` — so
+   * `stack` above begins at the catch block that did the wrapping and the
+   * frames naming the real fault exist ONLY here.
+   */
+  cause?: string;
   /** React error boundary componentStack (client source only). */
   componentStack?: string;
   requestId: string;

@@ -154,6 +154,64 @@ export class ConversationsRepository {
   }
 
   /**
+   * Conversation ids this user may subscribe to, for the RTDB `conversationIds`
+   * custom-token claim.
+   *
+   * 🛑 This claim previously had NO ISSUER ANYWHERE. The `chats/$conversationId`
+   * rule requires `auth.token.conversationIds[$conversationId] == true`, but
+   * `/api/realtime/token` only ever issued `chatIds`, built by
+   * `chatRepository.getChatIdsForUser()` over the **`chatRooms`** collection —
+   * a different collection with different document ids. So the buyer↔seller
+   * live-message channel was denied for every user, and both subscribing hooks
+   * swallowed the permission error (one into `setIsConnected(false)`, one into
+   * a literal `// ignore`). Messages only ever appeared for the sender, via an
+   * unrelated `refetch()` after send.
+   *
+   * `.select()` with no fields fetches ids only — the document bodies are not
+   * needed and this runs on every token issue.
+   *
+   * @param limit hard cap. Firebase custom claims are limited to 1000 BYTES
+   *   total; each entry costs roughly `"<20-char id>":true,` ≈ 28 bytes, so a
+   *   user in hundreds of conversations would make `createCustomToken` throw
+   *   and take the whole route down (see the route's own comment).
+   */
+  async getConversationIdsForUser(
+    userId: string,
+    storeIds: readonly string[] = [],
+    limit = 25,
+  ): Promise<string[]> {
+    const queries = [
+      this.collection()
+        .where(CONVERSATION_FIELDS.BUYER_ID, "==", userId)
+        .orderBy(CONVERSATION_FIELDS.LAST_MESSAGE_AT, "desc")
+        .limit(limit)
+        .select()
+        .get(),
+      // Firestore `in` caps at 30 values; a seller with more stores than that
+      // is not a shape this app produces.
+      ...(storeIds.length > 0
+        ? [
+            this.collection()
+              .where(CONVERSATION_FIELDS.STORE_ID, "in", storeIds.slice(0, 30))
+              .orderBy(CONVERSATION_FIELDS.LAST_MESSAGE_AT, "desc")
+              .limit(limit)
+              .select()
+              .get(),
+          ]
+        : []),
+    ];
+
+    const snaps = await Promise.all(queries);
+    const ids = new Set<string>();
+    for (const snap of snaps) {
+      for (const doc of snap.docs) ids.add(doc.id);
+    }
+    // Most-recent-first is already the sort order; truncating here keeps the
+    // claim inside the byte budget when a user is both buyer and seller.
+    return [...ids].slice(0, limit);
+  }
+
+  /**
    * Append a message to a conversation in a transaction. Bumps the counterparty
    * unread counter; updates lastMessage / lastMessageAt / updatedAt.
    */

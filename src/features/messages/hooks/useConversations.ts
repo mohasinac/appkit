@@ -6,11 +6,12 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
+import { acquireRealtimeSession } from "../../../contracts/realtime-session";
 import { userConversationsPingPath } from "../realtime";
 import type { ConversationDocument } from "../schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
 import { apiClient } from "../../../http/ApiClient";
-import { CONVERSATION_ENDPOINTS } from "../../../constants/api-endpoints";
+import { CONVERSATION_ENDPOINTS, ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const LIST_ENDPOINT = CONVERSATION_ENDPOINTS.LIST;
 
@@ -68,22 +69,50 @@ export function useConversations(
   // user's conversations bumps this and triggers a fresh list fetch.
   useEffect(() => {
     if (!userId) return;
-    try {
-      const unsubscribe = getClientRealtimeProvider().subscribe(
-        userConversationsPingPath(userId),
-        () => {
-          void refetch();
-        },
-        () => {
-          // ignore — list will refresh on next focus / explicit refetch
-        },
-      );
-      return unsubscribe;
-    } catch (_err) {
-      void normalizeError(_err);
-      // Realtime provider not registered — non-fatal; list still works.
-      return undefined;
-    }
+    let unsubscribe: (() => void) | undefined;
+    let release: (() => void) | undefined;
+    let cancelled = false;
+
+    // 🛑 Sign in BEFORE subscribing. This hook used to call subscribe() with no
+    // authenticated session at all, so `auth == null` and the
+    // `chats/user/$userId` rule (`auth.uid == $userId`) could never pass. Every
+    // update was permission-denied and the error handler below was a literal
+    // `// ignore`, so the whole live-list channel was inert while looking wired.
+    void (async () => {
+      try {
+        release = await acquireRealtimeSession("messages", () =>
+          apiClient.post<{ customToken: string; expiresAt: number }>(
+            ADMIN_ENDPOINTS.REALTIME_TOKEN,
+            {},
+          ),
+        );
+        if (cancelled) {
+          release?.();
+          return;
+        }
+        unsubscribe = getClientRealtimeProvider().subscribe(
+          userConversationsPingPath(userId),
+          () => {
+            void refetch();
+          },
+          (err: unknown) => {
+            // Surfaced, not ignored. A denied subscription is a real defect and
+            // silence here is what hid it for months.
+            void normalizeError(err);
+          },
+        );
+      } catch (_err) {
+        void normalizeError(_err);
+        // Provider unregistered or token fetch failed — non-fatal; the list
+        // still works via the one-shot fetch above, just without live updates.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+      release?.();
+    };
   }, [userId, refetch]);
 
   const totalUnread = conversations.reduce(

@@ -2,7 +2,8 @@ import { isApiError, type ApiIssue } from "./ApiError";
 import { ApiClientError } from "../../http/ApiClient";
 import { applyZodIssues, hasAttachableIssue } from "../../ui/forms/apply-zod-issues";
 import { normalizeError } from "../../errors/normalize";
-import { getErrorDisplay } from "../../errors/error-display-map";
+import { getErrorDisplay, toUserMessage } from "../../errors/error-display-map";
+import { HTTP_ERROR_CODES } from "../../errors/error-mapping";
 
 /**
  * Public surface for the client-side error router.
@@ -22,12 +23,14 @@ import { getErrorDisplay } from "../../errors/error-display-map";
 export interface SurfaceErrorOptions {
   showToast: (message: string, variant?: "error" | "warning" | "info" | "success" | "loading") => void;
   setFieldError?: (field: string, message: string) => void;
-  /** next-intl style translator. Falls back to the raw error message when undefined. */
+  /**
+   * next-intl style translator. When undefined the chain degrades to
+   * `fallbackMessage` and then to generic copy — NEVER to `err.message`.
+   */
   translate?: (key: string) => string;
   /**
-   * Curated copy preferred over `err.message` when the error carries no
-   * mapped display message. Lets a caller keep wording better than the raw
-   * server string WITHOUT adding a second toast of its own.
+   * Curated copy used when the code resolves to no translation. Must be
+   * authored text; never a value derived from an error object.
    *
    * Never overrides field-level `issues` — those are more specific than any
    * caller-supplied sentence.
@@ -80,7 +83,13 @@ export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
 
   if (hasStableErrorCode(err)) {
     const display = getErrorDisplay(err.code);
-    const message = translate?.(display.messageKey) ?? fallbackMessage ?? err.message;
+    // `?? err.message` used to terminate this chain. With no `translate` and no
+    // `fallbackMessage` — the shape most call sites use — that surfaced the
+    // SERVER's own message, which for a 5xx is its internals. `toUserMessage`
+    // ends at `errors.codes.UNKNOWN` instead.
+    const message = toUserMessage(err.code, translate, {
+      fallback: fallbackMessage,
+    });
 
     if (display.field && setFieldError) {
       setFieldError(display.field, message);
@@ -90,18 +99,26 @@ export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
     return;
   }
 
-  // Non-ApiError — this is a programming error or unhandled exception.
-  // Report it (workstream 13) so clientErrors picks it up.
-  const message =
-    err instanceof Error ? err.message : "Something went wrong. Please try again.";
-  const fallback = fallbackMessage ?? translate?.("errors.codes.CLIENT_UNHANDLED") ?? message;
-  showToast(fallback, "error");
+  // Non-ApiError — a programming error or unhandled exception.
+  //
+  // The raw text is REPORTED (below) but never SHOWN. That split is the point:
+  // this branch is where a raw Node/DOM string arrives, and it used to be
+  // toasted verbatim whenever no translator was supplied.
+  const internalMessage =
+    err instanceof Error ? err.message : String(err ?? "unknown error");
+
+  showToast(
+    toUserMessage(HTTP_ERROR_CODES.CLIENT_UNHANDLED, translate, {
+      fallback: fallbackMessage,
+    }),
+    "error",
+  );
 
   if (report) {
     try {
       report({
         code: "CLIENT_UNHANDLED",
-        message,
+        message: internalMessage,
         stack: err instanceof Error ? err.stack : undefined,
       });
     } catch (_err) {

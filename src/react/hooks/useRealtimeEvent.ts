@@ -6,6 +6,7 @@ import {
   type IClientRealtimeProvider,
   type Unsubscribe,
 } from "../../contracts/client-realtime";
+import { acquireExternalRealtimeLease } from "../../contracts/realtime-session";
 import {
   RealtimeEventType,
   RealtimeEventStatus,
@@ -75,6 +76,8 @@ export function useRealtimeEvent<TData = undefined>(
   const unsubscribeRef = useRef<Unsubscribe | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const eventIdRef = useRef<string | null>(null);
+  /** Lease on the shared realtime session — see cleanup() for why. */
+  const releaseSessionRef = useRef<(() => void) | null>(null);
 
   const cleanup = useCallback(() => {
     if (unsubscribeRef.current) {
@@ -86,11 +89,20 @@ export function useRealtimeEvent<TData = undefined>(
       timeoutRef.current = null;
     }
 
-    const provider =
-      configRef.current.realtimeProvider ?? getClientRealtimeProvider();
-    provider.signOut().catch(() => {
-      // no-op
-    });
+    // 🛑 Deliberately NO provider.signOut() here.
+    //
+    // `FirebaseClientRealtimeProvider` is a SINGLETON on the shared
+    // "letitrip-realtime" app, so signing out is a global act. When a bulk job
+    // finished, this line tore the session out from under any admin chat or
+    // conversation subscription that was still open — and in reverse, those
+    // channels' tokens overwrote an in-flight bulk token. Whoever finished
+    // last broke whoever was still working.
+    //
+    // Sessions are reference-counted now (contracts/realtime-session.ts); the
+    // release returned by `acquireRealtimeSession` is the only thing that may
+    // end one, and only once the last consumer has let go.
+    releaseSessionRef.current?.();
+    releaseSessionRef.current = null;
   }, []);
 
   const subscribe = useCallback(
@@ -121,6 +133,11 @@ export function useRealtimeEvent<TData = undefined>(
       (async () => {
         try {
           await provider.signInWithToken(customToken);
+          // Hold a lease for as long as this subscription lives. This hook owns
+          // its own sign-in (the token carries a job-scoped `bulkJobId` claim),
+          // but it must still participate in the ref-count so its cleanup
+          // cannot end a session another channel is relying on.
+          releaseSessionRef.current = acquireExternalRealtimeLease();
         } catch (authErr) {
           void normalizeError(authErr);
           onLogError?.(

@@ -67,3 +67,7 @@ export type {
   NormalizedZodError,
 } from "./normalize";
 export * from "./degraded";
+// Flattens Error.cause into a persistable string. Required by every recorder:
+// AppError rebases its own stack onto the wrap site, so the frames naming the
+// real fault exist only on the cause.
+export { describeCauseChain } from "./describe-cause";

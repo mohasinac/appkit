@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
 import { Button, CountdownDisplay, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
@@ -22,17 +23,27 @@ import {
 
 import { normalizeError } from "../../../errors/normalize";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { toUserMessage } from "../../../errors/error-display-map";
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;
 
-const BID_ERROR_DISPLAY: Record<string, string> = {
-  BID_AUCTION_ENDED: "This auction has closed. No more bids are accepted.",
-  BID_AMOUNT_TOO_LOW: "Your bid must exceed the current winning bid.",
-  BID_INCREMENT_TOO_LOW: "Your bid does not meet the minimum increment requirement.",
-  BID_SELF_BID: "You cannot bid on your own listing.",
-  BID_USER_BANNED: "Your account is currently restricted from bidding. Contact support.",
-};
+// The local `BID_ERROR_DISPLAY` map that used to live here is gone.
+//
+// It covered 5 of the ~78 codes the server can emit, and — the actual defect —
+// fell back to `result.error`, the server's own message. `result.error` is
+// always a string, so the safe literal after it was unreachable, and a 500
+// therefore printed its raw internals into the bid field: this component is
+// where `Cannot find module '../providers/db-firebase' Require stack: -
+// /var/task/.next/server/chunks/...` was shown to users.
+//
+// Its five strings already existed as `errors.codes.BID_*` in messages/en.json,
+// so nothing was lost by deleting it. `toUserMessage` resolves every code and
+// terminates in `errors.codes.UNKNOWN` — never in server text.
+
+/** Feature-specific last resort. Authored copy, never derived from an error. */
+const BID_FALLBACK = "Failed to place bid. Please try again.";
+const BUY_NOW_FALLBACK = "Buy Now failed. Please try again.";
 
 export interface PlaceBidInput {
   productId: string;
@@ -114,6 +125,10 @@ export function PlaceBidFormClient({
   const [isPending, startTransition] = useTransition();
   const [isBuyNowPending, startBuyNowTransition] = useTransition();
   const [success, setSuccess] = useState(false);
+  // Root translator (no namespace) — `toUserMessage` passes fully-qualified
+  // `errors.codes.*` keys, and resolves them itself, so a missing key degrades
+  // to generic copy rather than throwing MISSING_MESSAGE at render time.
+  const t = useTranslations();
   const [showLoginModal, setShowLoginModal] = useState(false);
   /**
    * Buy Now has no field to hang an error off — it is a standalone button, not
@@ -213,21 +228,17 @@ export function PlaceBidFormClient({
       if (isAuthError(err)) {
         setShowLoginModal(true);
       } else {
-        setFieldError(
-          "bidAmount",
-          err instanceof Error ? err.message : "Failed to place bid. Please try again.",
-        );
+        // `err.message` deliberately NOT used — a thrown error here can carry
+        // server internals just as an envelope can.
+        setFieldError("bidAmount", BID_FALLBACK);
       }
     }
   }
 
   function bidErrorMessage(result: BidActionEnvelope<unknown>): string | null {
     if (result.ok) return null;
-    return (
-      (result.code && BID_ERROR_DISPLAY[result.code]) ??
-      result.error ??
-      "Failed to place bid. Please try again."
-    );
+    // No `?? result.error` tail. That is what leaked the require stack.
+    return toUserMessage(result.code, t, { fallback: BID_FALLBACK });
   }
 
   /**
@@ -242,16 +253,16 @@ export function PlaceBidFormClient({
    * `place_bids` soft ban. A login prompt for those tells the buyer to fix
    * something that is not the problem.
    */
-  function reportBuyNowFailure(code: string | undefined, message?: string) {
+  function reportBuyNowFailure(code: string | undefined, _message?: string) {
     if (code === "UNAUTHENTICATED") {
       setShowLoginModal(true);
       return;
     }
-    setBuyNowError(
-      (code && BID_ERROR_DISPLAY[code]) ??
-        message ??
-        "Buy Now failed. Please try again.",
-    );
+    // `_message` is the SERVER's message and is intentionally ignored — it was
+    // the `?? message` tail here, same defect as bidErrorMessage above. Kept in
+    // the signature so callers need no change and the omission is visible.
+    void _message;
+    setBuyNowError(toUserMessage(code, t, { fallback: BUY_NOW_FALLBACK }));
   }
 
   function handleBuyNow() {

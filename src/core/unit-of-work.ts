@@ -5,15 +5,21 @@ import type {
   WriteBatch,
 } from "firebase-admin/firestore";
 
- 
-const getAdminDb: () => Firestore = () =>
-  (
-    (module as any).require(
-      "../providers/db-firebase",
-    ) as typeof import("../providers/db-firebase")
-  ).getAdminDb();
+// Static import, deliberately. This used to be
+// `(module as any).require("../providers/db-firebase")` — the bundler-evasion
+// idiom used correctly elsewhere in appkit (admin.ts's firebase-admin loaders),
+// but every OTHER use passes a BARE specifier, which Node resolves from
+// node_modules at any depth. A RELATIVE one is resolved against the emitted
+// chunk, not this source file, so in a bundled Lambda it became
+// `.next/server/chunks/providers/db-firebase` → MODULE_NOT_FOUND, and every
+// runBatch/runTransaction threw before touching Firestore.
+//
+// The lazy form also bought nothing: the 19 repository imports below already
+// pull this module into the graph statically (bid.repository.ts et al), and
+// db-firebase reaches firebase-admin only through `import type` plus its own
+// bare-specifier runtime requires. See CLAUDE.md Root Cause #24.
+import { getAdminDb } from "../providers/db-firebase";
 import { DatabaseError } from "../errors";
-import { serverLogger } from "../monitoring";
 
 import {
   userRepository,
@@ -103,33 +109,29 @@ export class UnitOfWork {
   async runTransaction<TResult>(
     fn: (tx: Transaction) => Promise<TResult>,
   ): Promise<TResult> {
-    serverLogger.debug("[UnitOfWork] Starting transaction");
     try {
-      const result = await this.db.runTransaction(fn);
-      serverLogger.debug("[UnitOfWork] Transaction committed successfully");
-      return result;
+      return await this.db.runTransaction(fn);
     } catch (error) {
       void normalizeError(error);
-      serverLogger.error("[UnitOfWork] Transaction failed", {
-        error: error instanceof Error ? error.message : String(error),
-      });
-      throw new DatabaseError("Transaction failed", error);
+      // Interpolate the underlying message. Without it the persisted
+      // serverErrors row reads only "Transaction failed" and the real cause
+      // survives nowhere the store can see — `cause` carries the stack, but
+      // the message is what the admin list actually renders.
+      const detail = error instanceof Error ? error.message : String(error);
+      throw new DatabaseError(`Transaction failed: ${detail}`, error);
     }
   }
 
   async runBatch(
     fn: (batch: WriteBatch) => void | Promise<void>,
   ): Promise<void> {
-    serverLogger.debug("[UnitOfWork] Starting batch write");
     try {
       const batch = this.db.batch();
       await fn(batch);
       await batch.commit();
-      serverLogger.debug("[UnitOfWork] Batch write committed successfully");
     } catch (error) {
       void normalizeError(error);
       const detail = error instanceof Error ? error.message : String(error);
-      serverLogger.error("[UnitOfWork] Batch write failed", { error: detail });
       throw new DatabaseError(`Batch write failed: ${detail}`, error);
     }
   }

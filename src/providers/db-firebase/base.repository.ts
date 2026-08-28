@@ -25,6 +25,18 @@ import { getAdminDb } from "./admin";
 import { encryptPiiFields, piiIndicesFor } from "../../security/pii-encrypt";
 import type { JsonValue } from "../../schemas/types";
 
+/**
+ * The underlying failure's message, for interpolation into a DatabaseError.
+ *
+ * Every wrap below used to read `"Failed to update document: abc123"` and
+ * nothing else, so the persisted serverErrors row — whose `message` is what the
+ * admin list renders — said only which method failed, never why. `cause` now
+ * carries the stack, but a human scanning the list needs the reason on the row.
+ */
+function detailOf(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 export abstract class BaseRepository<T extends DocumentData> {
   protected collection: string;
 
@@ -75,7 +87,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return this.mapDoc(doc);
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(`Failed to find document by ID: ${id}`, error);
+      throw new DatabaseError(`Failed to find document by ID: ${id}: ${detailOf(error)}`, error);
     }
   }
 
@@ -98,7 +110,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return snapshot.docs.map((doc) => this.mapDoc(doc));
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(`Failed to find documents by ${field}`, error);
+      throw new DatabaseError(`Failed to find documents by ${field}: ${detailOf(error)}`, error);
     }
   }
 
@@ -116,7 +128,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return this.mapDoc(snapshot.docs[0]);
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(`Failed to find document by ${field}`, error);
+      throw new DatabaseError(`Failed to find document by ${field}: ${detailOf(error)}`, error);
     }
   }
 
@@ -132,7 +144,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return snapshot.docs.map((doc) => this.mapDoc(doc));
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError("Failed to fetch all documents", error);
+      throw new DatabaseError(`Failed to fetch all documents: ${detailOf(error)}`, error);
     }
   }
 
@@ -201,7 +213,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return this.mapDoc(doc);
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError("Failed to create document", error);
+      throw new DatabaseError(`Failed to create document: ${detailOf(error)}`, error);
     }
   }
 
@@ -214,27 +226,20 @@ export abstract class BaseRepository<T extends DocumentData> {
         updatedAt: now,
       });
 
-      serverLogger.debug(
-        `Creating document with ID: ${id} in collection: ${this.collection}`,
-      );
-
+      // No success-path logging. This emitted one debug + one info line for
+      // EVERY document written, against Rule #6's ~4 KB/s log budget, and the
+      // failure path below already carries everything the success path did.
       await this.getCollection().doc(id).set(cleanData);
-
-      serverLogger.info(`Document created successfully: ${id}`);
 
       const doc = await this.getCollection().doc(id).get();
       return this.mapDoc(doc);
-    } catch (error: any) {
+    } catch (error) {
       void normalizeError(error);
-      serverLogger.error(`Failed to create document with ID: ${id}`, {
-        collection: this.collection,
-        error: error.message,
-        code: error.code,
-      });
-      throw new DatabaseError(
-        `Failed to create document with ID: ${id}`,
-        error,
-      );
+      // No serverLogger.error here either — this method was the only one of the
+      // ten wraps that logged AND rethrew, so its failures were recorded twice
+      // (once here, once by createRouteHandler), the first copy strictly less
+      // informative. The DatabaseError below now carries the same detail.
+      throw new DatabaseError(`Failed to create document with ID: ${id}: ${detailOf(error)}`, error);
     }
   }
 
@@ -250,7 +255,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return this.findByIdOrFail(id);
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(`Failed to update document: ${id}`, error);
+      throw new DatabaseError(`Failed to update document: ${id}: ${detailOf(error)}`, error);
     }
   }
 
@@ -259,7 +264,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       await this.getCollection().doc(id).delete();
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(`Failed to delete document: ${id}`, error);
+      throw new DatabaseError(`Failed to delete document: ${id}: ${detailOf(error)}`, error);
     }
   }
 
@@ -269,10 +274,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return doc.exists;
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(
-        `Failed to check document existence: ${id}`,
-        error,
-      );
+      throw new DatabaseError(`Failed to check document existence: ${id}: ${detailOf(error)}`, error);
     }
   }
 
@@ -294,7 +296,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       return snapshot.data().count;
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError("Failed to count documents", error);
+      throw new DatabaseError(`Failed to count documents: ${detailOf(error)}`, error);
     }
   }
 
@@ -379,8 +381,14 @@ export abstract class BaseRepository<T extends DocumentData> {
           return [value, await this.sieveCount({ filters }, fields, rest)] as const;
         } catch (error) {
           void normalizeError(error);
-          serverLogger.warn(
+          // ERROR, not warn, and WITH the error object. A count failing here is
+          // almost always a missing composite index — a permanent, silent
+          // degradation of every facet on the listing page, not a transient
+          // blip. Logging it at warn with no error attached meant the actual
+          // FAILED_PRECONDITION (which names the index to create) was discarded.
+          serverLogger.error(
             `facetCounts: count failed for ${this.collection}.${field}==${value}; facet will stay visible`,
+            { collection: this.collection, field, value, error },
           );
           return [value, undefined] as const;
         }

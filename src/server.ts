@@ -36,6 +36,19 @@ export {
 } from "./_internal/shared/types/action-result";
 export type { ActionResult } from "./_internal/shared/types/action-result";
 
+// [SERVER-ONLY] Registration seam for recording server-action failures.
+// Must be called once from src/instrumentation.ts — see the module docstring
+// for why it is a hook rather than a direct import, and why it is registered
+// server-side rather than from a client bootstrap.
+export {
+  setActionErrorReporter,
+  hasActionErrorReporter,
+} from "./_internal/shared/types/action-error-reporter";
+export type {
+  ActionErrorReport,
+  ActionErrorReporter,
+} from "./_internal/shared/types/action-error-reporter";
+
 // [SERVER-ONLY] P-1 manual payment proof server actions.
 export {
   attachPaymentProofAction,

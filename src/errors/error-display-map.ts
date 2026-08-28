@@ -1,3 +1,4 @@
+import { normalizeError } from "./normalize";
 import { ERROR_CODES, BID_ERROR_CODES, OFFER_ERROR_CODES } from "./error-codes";
 import { HTTP_ERROR_CODES } from "./error-mapping";
 
@@ -6,7 +7,12 @@ import { HTTP_ERROR_CODES } from "./error-mapping";
  *  - `field`: when present + a FormShellContext is in scope, the client wrapper
  *    routes the error inline as a field error instead of a toast.
  *  - `messageKey`: a `next-intl` key under `errors.codes.*` resolved at render time.
- *    Falls back to `errors.codes.UNKNOWN` then to the raw `Error.message` if absent.
+ *    Falls back to `errors.codes.UNKNOWN`, and then to `GENERIC_USER_MESSAGE`.
+ *
+ * 🛑 The chain terminates in a CONSTANT. It used to end "…then to the raw
+ * `Error.message` if absent", and that tail is what printed a Node require
+ * stack into the bid modal. Resolve codes through `toUserMessage` below; never
+ * re-add a raw-message fallback.
  */
 export interface ErrorDisplayEntry {
   field?: string;
@@ -264,4 +270,53 @@ export const ERROR_DISPLAY_MAP: Record<string, ErrorDisplayEntry> = {
 /** Look up display metadata; returns a generic entry when the code is unknown. */
 export function getErrorDisplay(code: string): ErrorDisplayEntry {
   return ERROR_DISPLAY_MAP[code] ?? { messageKey: "errors.codes.UNKNOWN" };
+}
+
+/** Last-resort copy when no translator is available. Never a server string. */
+export const GENERIC_USER_MESSAGE = "Something went wrong. Please try again.";
+
+/**
+ * The user-facing message for an error code. **Never returns server text.**
+ *
+ * 🛑 This is the whole point: every previous way of doing this ended in a raw
+ * fallback. `ERROR_DISPLAY_MAP[code] ?? error` — the pattern CLAUDE.md Rule #9
+ * §6 itself documented — falls through to the server's own message, and that
+ * is how a Node `MODULE_NOT_FOUND`, complete with
+ * `/var/task/.next/server/chunks/...` and its full require stack, was rendered
+ * as copy inside the "Place your bid" modal. `surfaceError` had the same tail.
+ * There was no shared helper that did this correctly, which is why ~60 call
+ * sites each invented `err.message`.
+ *
+ * The chain is: code -> messageKey -> translation -> `errors.codes.UNKNOWN` ->
+ * `GENERIC_USER_MESSAGE`. It terminates in a constant, deliberately.
+ *
+ * @param code    stable error code from an `ActionResult` / error envelope
+ * @param t       a next-intl translator; omitted, the generic string is used
+ * @param options `fallback` overrides the generic string with FEATURE-SPECIFIC
+ *                copy you have authored ("Could not place your bid"). It must
+ *                never be a value derived from an error object.
+ */
+export function toUserMessage(
+  code: string | undefined,
+  t?: (key: string) => string,
+  options?: { fallback?: string },
+): string {
+  const generic = options?.fallback ?? GENERIC_USER_MESSAGE;
+  if (!code) return generic;
+
+  const { messageKey } = getErrorDisplay(code);
+  if (!t) return generic;
+
+  try {
+    const translated = t(messageKey);
+    // next-intl returns the key itself (or throws) when a message is missing;
+    // either way that is not something to show a user.
+    if (translated && translated !== messageKey) return translated;
+    // next-intl throws MISSING_MESSAGE for an absent key. This function's whole
+    // contract is to degrade to generic copy rather than let ANY internal
+    // string — including an i18n internal — reach the user.
+  } catch (translateErr) {
+    void normalizeError(translateErr);
+  }
+  return generic;
 }

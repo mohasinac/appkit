@@ -11,13 +11,17 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
+import { acquireRealtimeSession } from "../../../contracts/realtime-session";
 import {
   conversationPingPath,
   userConversationsPingPath,
 } from "../realtime";
 import { normalizeError } from "../../../errors/normalize";
 import { apiClient, ApiClientError } from "../../../http/ApiClient";
-import { CONVERSATION_ENDPOINTS } from "../../../constants/api-endpoints";
+import {
+  CONVERSATION_ENDPOINTS,
+  ADMIN_ENDPOINTS,
+} from "../../../constants/api-endpoints";
 import type { ConversationDocument } from "../schemas/firestore";
 
 /**
@@ -87,25 +91,55 @@ export function useConversation(conversationId: string | null): UseConversationR
       setIsConnected(false);
       return;
     }
-    try {
-      const unsubscribe = getClientRealtimeProvider().subscribe(
-        conversationPingPath(conversationId),
-        () => {
-          setIsConnected(true);
-          void refetch();
-        },
-        () => setIsConnected(false),
-      );
-      return () => {
+    let unsubscribe: (() => void) | undefined;
+    let release: (() => void) | undefined;
+    let cancelled = false;
+
+    // 🛑 Sign in BEFORE subscribing. Without a session `auth == null`, and the
+    // `chats/$conversationId` rule requires
+    // `auth.token.conversationIds[$conversationId]` — a claim that, until this
+    // change, NOTHING issued (the token route only ever sent `chatIds`, from
+    // the unrelated `chatRooms` collection). Two stacked faults on one channel:
+    // no sign-in, and a claim with no issuer. The recipient of a message never
+    // saw it until they manually refreshed; the sender only saw their own
+    // because `send()` calls `refetch()` directly.
+    void (async () => {
+      try {
+        release = await acquireRealtimeSession("messages", () =>
+          apiClient.post<{ customToken: string; expiresAt: number }>(
+            ADMIN_ENDPOINTS.REALTIME_TOKEN,
+            {},
+          ),
+        );
+        if (cancelled) {
+          release?.();
+          return;
+        }
+        unsubscribe = getClientRealtimeProvider().subscribe(
+          conversationPingPath(conversationId),
+          () => {
+            setIsConnected(true);
+            void refetch();
+          },
+          (err: unknown) => {
+            void normalizeError(err);
+            setIsConnected(false);
+          },
+        );
+      } catch (_err) {
+        void normalizeError(_err);
+        // Provider unregistered or token fetch failed — falls back to the
+        // one-shot fetch above.
         setIsConnected(false);
-        unsubscribe();
-      };
-    } catch (_err) {
-      void normalizeError(_err);
-      // Realtime provider not registered — falls back to one-shot fetch above.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
       setIsConnected(false);
-      return undefined;
-    }
+      unsubscribe?.();
+      release?.();
+    };
   }, [conversationId, refetch]);
 
   const sendMessage = useCallback(
