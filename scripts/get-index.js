@@ -19,6 +19,13 @@ const CODE_EXTENSIONS = new Set([
 
 const IGNORE_DIRS = new Set([
   ".git",
+  // Agent worktrees are separate checkouts of THIS repo, so indexing them
+  // catalogued a second (and third) copy of every file — 3,807 lines of the
+  // root index.md pointed into `.claude/worktrees/agent-*`, including test
+  // files that had been deleted from the real tree. A code index that lists
+  // another session's working copy is worse than noise: it answers "does this
+  // symbol exist?" with a file nobody can open.
+  ".claude",
   ".next",
   ".turbo",
   "node_modules",
