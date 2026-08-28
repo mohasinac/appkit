@@ -47,11 +47,37 @@ export async function getUserSessions(userId: string) {
   return sessionRepository.findAllByUser(userId);
 }
 
+/**
+ * Resolve a profile by slug, then document id, then Auth uid.
+ *
+ * ONE function because the page and `GET /api/profile/[userId]` had already
+ * diverged: the page fell back to `findByUid`, the route did not, so the same
+ * identifier resolved on one surface and 404'd on the other. Adding slug
+ * resolution to each of them separately would have made that three variants.
+ *
+ * Order matters. The slug is the canonical public identifier, so it is tried
+ * first; `id` is next because for every app-created account `id === uid`, which
+ * makes the third lookup a no-op for them. The uid fallback exists for seeded
+ * personas (whose document id is a `user-*` slug, not their uid) and for links
+ * shared before slugs existed — dropping it would 404 URLs already in the wild,
+ * including ones inside sent notification emails.
+ */
+export async function resolveProfileUser(
+  identifier: string,
+): Promise<UserDocument | null> {
+  const bySlug = await userRepository.findBySlug(identifier);
+  if (bySlug) return bySlug;
+  const byId = await userRepository.findById(identifier);
+  if (byId) return byId;
+  return userRepository.findByUid(identifier);
+}
+
 export async function getPublicUserProfile(
   userId: string,
 ): Promise<Pick<
   UserDocument,
   | "id"
+  | "slug"
   | "displayName"
   | "photoURL"
   | "role"
@@ -61,12 +87,11 @@ export async function getPublicUserProfile(
   | "publicProfile"
   | "stats"
 > | null> {
-  let user = await userRepository.findById(userId);
-  // Fallback: userId may be a Firebase Auth UID rather than the document slug
-  if (!user) user = await userRepository.findByUid(userId);
+  const user = await resolveProfileUser(userId);
   if (!user) return null;
   return {
     id: user.id,
+    slug: user.slug,
     displayName: user.displayName,
     photoURL: user.photoURL,
     role: user.role,

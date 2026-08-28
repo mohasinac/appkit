@@ -4439,8 +4439,6 @@ export { UserSchemaDefaults } from "./features/auth/schemas/index";
 // authUserSchema - Model for auth user schema.
 export { authUserSchema } from "./features/auth/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// createUserId - Helper for create user id.
-export { createUserId } from "./features/auth/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // forgotPasswordSchema - Model for forgot password schema.
 export { forgotPasswordSchema } from "./features/auth/schemas/index";

@@ -27,13 +27,13 @@ import type { UserRole } from "../types";
 import {
   USER_COLLECTION,
   USER_FIELDS,
-  createUserId,
   type UserDocument,
 } from "../schemas";
 
 export class UserRepository extends BaseRepository<UserDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     uid: { canFilter: true, canSort: false },
+    slug: { canFilter: true, canSort: false },
     emailIndex: { canFilter: true, canSort: false },
     displayName: { canFilter: true, canSort: true },
     role: { canFilter: true, canSort: true },
@@ -127,11 +127,18 @@ export class UserRepository extends BaseRepository<UserDocument> {
   override async create(
     input: Omit<UserDocument, "id" | "createdAt" | "updatedAt">,
   ): Promise<UserDocument> {
-    const firstName = input.displayName?.split(" ")[0] || "user";
-    const lastName =
-      input.displayName?.split(" ").slice(1).join(" ") || "account";
-    const email = input.email || "noemail@example.com";
-    const id = createUserId({ firstName, lastName, email });
+    // A Firestore auto-id, NOT a derived one.
+    //
+    // This used to call `createUserId({firstName, lastName, email})`, which
+    // built `user-{first}-{last}-{emailPrefix8}` — putting the local-part of a
+    // real email address into the document id, and therefore into the public
+    // profile URL. That generator is deleted.
+    //
+    // No real signup path reaches here (all three call `createWithId` with the
+    // Firebase Auth uid, because `id === uid` is what makes an auth-gated
+    // request an O(1) lookup). The readable public identifier is `slug`, minted
+    // by `reserveUserSlug` from displayName only.
+    const id = this.db.collection(this.collection).doc().id;
 
     const userData: Omit<UserDocument, "id"> = {
       ...input,
@@ -151,6 +158,17 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   async findByUid(uid: string): Promise<UserDocument | null> {
     return this.findOneBy(USER_FIELDS.UID, uid);
+  }
+
+  /**
+   * Resolve a public profile slug.
+   *
+   * Separate from `findById` because the slug is a FIELD, not the document key
+   * — `id === uid` is what keeps every auth-gated request an O(1) lookup from
+   * the verified token claim, so the key could not be repurposed for this.
+   */
+  async findBySlug(slug: string): Promise<UserDocument | null> {
+    return this.findOneBy(USER_FIELDS.SLUG, slug);
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {

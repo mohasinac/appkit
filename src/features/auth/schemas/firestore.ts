@@ -12,8 +12,6 @@ import type {
   Permission,
 } from "../permissions/constants";
 import {
-  generateUserId,
-  type GenerateUserIdInput,
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
@@ -53,6 +51,25 @@ export interface AvatarMetadata {
 
 export interface UserDocument extends BaseDocument {
   uid: string;
+  /**
+   * Public URL identifier — `/profile/{slug}`.
+   *
+   * NOT the document key. `id === uid` is what makes every auth-gated request an
+   * O(1) lookup from the verified token claim, and Firebase assigns that uid, so
+   * the app could not override it for organic signups even if it wanted to.
+   *
+   * Derived from `displayName` ONLY. Never from email or phone: a slug is public,
+   * and the local-part of an email address in a URL is a PII leak (D1 keeps
+   * displayName unencrypted precisely so it CAN be used this way).
+   *
+   * Immutable once set — categories, brands and bundles all treat slug that way,
+   * and a mutable public slug means link rot plus a freed slug someone else can
+   * claim, which is an impersonation vector.
+   *
+   * Optional because documents created before this field existed have none;
+   * profile resolution falls back to id and then uid.
+   */
+  slug?: string;
   email: string | null;
   phoneNumber: string | null;
   phoneVerified?: boolean;
@@ -277,6 +294,7 @@ export const USER_INDEXED_FIELDS = [
   "storeSlug",
   "storeStatus",
   "isTester",
+  "slug",
 ] as const;
 
 export const USER_PUBLIC_FIELDS = [
@@ -329,15 +347,14 @@ export const userQueryHelpers = {
   disabled: () => ["disabled", "==", true] as const,
 } as const;
 
-export function createUserId(input: GenerateUserIdInput): string {
-  return generateUserId(input);
-}
 
 // -- User field name constants ------------------------------------------------
 
 export const USER_FIELDS = {
   ID: "id",
   UID: "uid",
+  /** Public URL identifier. Derived from displayName; never from PII. */
+  SLUG: "slug",
   EMAIL: "email",
   PHONE_NUMBER: "phoneNumber",
   PHONE_VERIFIED: "phoneVerified",

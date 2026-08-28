@@ -39,20 +39,16 @@ export function generateCategoryId(input: GenerateCategoryIdInput): string {
 
 // â”€â”€â”€ User â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export interface GenerateUserIdInput {
-  firstName: string;
-  lastName: string;
-  email: string;
-  customId?: string;
-}
-export function generateUserId(input: GenerateUserIdInput): string {
-  if (input.customId?.trim()) return input.customId.trim();
-  const firstSlug = slugify(input.firstName);
-  const lastSlug = slugify(input.lastName);
-  const emailPrefix = input.email.split("@")[0].toLowerCase().substring(0, 8);
-  const emailSlug = slugify(emailPrefix);
-  return `user-${firstSlug}-${lastSlug}-${emailSlug}`;
-}
+// `GenerateUserIdInput` / `generateUserId` were DELETED here.
+//
+// They built `user-{first}-{last}-{emailPrefix8}` from
+// `email.split("@")[0].substring(0, 8)` — the local-part of a real email
+// address, in a document id, and therefore in a public profile URL.
+//
+// A user's readable public identifier is `UserDocument.slug`, minted by
+// `reserveUserSlug` from displayName ONLY (and guarded against the two signup
+// paths that set displayName to the email local-part). The document id stays
+// the Firebase Auth uid.
 
 // â”€â”€â”€ Product â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 

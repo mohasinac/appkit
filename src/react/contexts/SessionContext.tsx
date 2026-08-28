@@ -52,6 +52,12 @@ export interface SessionUser {
   phoneNumber: string | null;
 
   // Profile fields from server
+  /**
+   * Public profile slug, so the user's own "View public profile" links show the
+   * readable URL rather than their raw Firebase uid. Optional: accounts created
+   * before slugs existed have none, and `/profile/{uid}` still resolves.
+   */
+  slug?: string;
   role: string;
   disabled?: boolean;
   createdAt?: Date;
