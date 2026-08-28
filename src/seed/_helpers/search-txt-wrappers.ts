@@ -13,12 +13,16 @@ import type { EventDocument } from "../../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../../features/reviews/schemas/firestore";
 import type { OrderDocument } from "../../features/orders/schemas/firestore";
+import type { CouponDocument } from "../../features/promotions/schemas/firestore";
+import type { OfferDocument } from "../../features/seller/schemas/firestore";
 import {
   buildStoreSearchTxt,
   buildEventSearchTxt,
   buildBlogSearchTxt,
   buildReviewSearchTxt,
   buildOrderSearchTxt,
+  buildCouponSearchTxt,
+  buildOfferSearchTxt,
 } from "../../utils/search-txt-builders";
 
 export function withStoreSearchTxt<T extends Partial<StoreDocument>>(p: T): T {
@@ -39,4 +43,12 @@ export function withReviewSearchTxt<T extends Partial<ReviewDocument>>(p: T): T 
 
 export function withOrderSearchTxt<T extends Partial<OrderDocument>>(p: T): T {
   return { ...p, searchTxt: buildOrderSearchTxt(p) };
+}
+
+export function withCouponSearchTxt<T extends Partial<CouponDocument>>(p: T): T {
+  return { ...p, searchTxt: buildCouponSearchTxt(p) };
+}
+
+export function withOfferSearchTxt<T extends Partial<OfferDocument>>(p: T): T {
+  return { ...p, searchTxt: buildOfferSearchTxt(p) };
 }

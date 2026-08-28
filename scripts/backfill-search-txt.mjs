@@ -143,6 +143,10 @@ const SOURCES = {
   reviews: (d) => [d.title, stripHtml(d.comment), d.productTitle],
   // userName/userEmail/sellerEmail are ORDER_PII_FIELDS and shippingAddress
   // is address-shaped — none may feed searchTxt (D1).
+  coupons: (d) => [d.code, d.name, d.description],
+  // buyerName/buyerEmail/sellerName are OFFER_PII_FIELDS; sellerNote is
+  // private correspondence and has no business being substring-findable.
+  offers: (d) => [d.productTitle, d.productSlug, d.storeName],
   orders: (d) => [
     d.productTitle, d.storeName, d.trackingNumber,
     (d.items ?? []).map((i) => i.productTitle),

@@ -36,6 +36,7 @@
  * @tag sideEffects:none
  */
 
+import { withOfferSearchTxt } from "./_helpers/search-txt-wrappers";
 import type { OfferDocument } from "../features/seller/schemas/firestore";
 import { OfferStatusValues } from "../features/seller/schemas/firestore";
 import type { StatusChangeEntry } from "../_internal/shared/history/index";
@@ -414,4 +415,6 @@ export const offersSeedData: Partial<OfferDocument>[] = [
       }, { actorUid: BUYER_ADMIN, note: "Interested in this piece. Would you accept ₹950?" }),
     ],
   },
-];
+// Derived through the wrapper, never per record — an inline literal is how
+// five product seed files shipped their last fixture with no tokens.
+].map(withOfferSearchTxt);

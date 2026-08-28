@@ -30,6 +30,8 @@ export const OfferStatusValues = {
 } as const satisfies Record<string, OfferStatus>;
 
 export interface OfferDocument extends BaseDocument {
+  /** Word-prefix search tokens. Derived on write; never fed by a PII field. */
+  searchTxt?: string[];
   productId: string;
   productTitle: string;
   productSlug?: string;
@@ -118,6 +120,7 @@ export const OFFER_TRACKED_FIELDS = [
 export const OFFER_COLLECTION = "offers" as const;
 
 export const OFFER_INDEXED_FIELDS = [
+  "searchTxt",
   "buyerUid",
   "storeId",
   "productId",

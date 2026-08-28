@@ -13,6 +13,7 @@
  * @tag sideEffects:none
  */
 
+import { withCouponSearchTxt } from "./_helpers/search-txt-wrappers";
 import type { CouponDocument } from "../features/promotions/schemas";
 import { COUPON_FIELDS } from "../constants/field-names";
 
@@ -237,4 +238,6 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     updatedAt: daysAgo(2),
     stats: { totalUses: 41, totalRevenue: 205000, totalDiscount: 20500 },
   },
-];
+// Derived through the wrapper, never per record — an inline literal is how
+// five product seed files shipped their last fixture with no tokens.
+].map(withCouponSearchTxt);

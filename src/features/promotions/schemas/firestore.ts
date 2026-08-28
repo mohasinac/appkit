@@ -54,6 +54,8 @@ export interface CouponStats {
 }
 
 export interface CouponDocument extends BaseDocument {
+  /** Word-prefix search tokens. Derived on write; never fed by a PII field. */
+  searchTxt?: string[];
   code: string;
   name: string;
   description: string;
@@ -142,6 +144,7 @@ export const COUPONS_COLLECTION = "coupons" as const;
 export const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
 
 export const COUPONS_INDEXED_FIELDS = [
+  "searchTxt",
   "code",
   "validity.isActive",
   "validity.startDate",

@@ -35,6 +35,8 @@ import type { EventDocument } from "../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../features/reviews/schemas/firestore";
 import type { OrderDocument } from "../features/orders/schemas/firestore";
+import type { CouponDocument } from "../features/promotions/schemas/firestore";
+import type { OfferDocument } from "../features/seller/schemas/firestore";
 
 const stripHtml = (s: string | undefined | null): string =>
   (s ?? "").replace(/<[^>]+>/g, " ");
@@ -115,4 +117,21 @@ export function buildOrderSearchTxt(o: Partial<OrderDocument>): string[] {
     o.trackingNumber,
     (o.items ?? []).map((i) => i.productTitle),
   ]);
+}
+
+/** coupons — code, name, description. Nothing here is PII. */
+export function buildCouponSearchTxt(c: Partial<CouponDocument>): string[] {
+  return buildSearchTxt([c.code, c.name, c.description]);
+}
+
+/**
+ * offers — the product and the store the negotiation is about.
+ *
+ * 🛑 `buyerName`, `buyerEmail` and `sellerName` are OFFER_PII_FIELDS and are
+ * absent. `sellerNote` is free text a seller wrote to one buyer; it is not in
+ * the PII registry, but it is private correspondence and has no business being
+ * findable by substring from an admin list.
+ */
+export function buildOfferSearchTxt(o: Partial<OfferDocument>): string[] {
+  return buildSearchTxt([o.productTitle, o.productSlug, o.storeName]);
 }

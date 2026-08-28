@@ -1,3 +1,10 @@
+import type { JsonValue } from "../../../schemas/types";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
+import { buildCouponSearchTxt } from "../../../utils/search-txt-builders";
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
 import type { ListingType } from "../../products/types";
@@ -641,6 +648,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
   // ---------------------------------------------------------------------------
 
   static readonly SIEVE_FIELDS = {
+    searchTxt: { canFilter: true, canSort: false },
     id: { canFilter: true, canSort: false },
     code: { canFilter: true, canSort: true },
     name: { canFilter: true, canSort: true },
@@ -695,15 +703,39 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
  * });
  * ```
    */
-  async list(model: SieveModel): Promise<FirebaseSieveResult<CouponDocument>> {
-    return this.sieveQuery<CouponDocument>(
+  /** Derived on every write path via `applyWriteHooks`. */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildCouponSearchTxt(data as Partial<CouponDocument>);
+  }
+
+  async list(
+    model: SieveModel,
+    opts?: { search?: string },
+  ): Promise<FirebaseSieveResult<CouponDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<CouponDocument>();
+
+    let baseQuery = this.getCollection();
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        "searchTxt",
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<CouponDocument>(
       model,
       CouponsRepository.SIEVE_FIELDS,
       {
+        baseQuery,
         defaultPageSize: 50,
         maxPageSize: 200,
       },
     );
+    return refineSearchTxt(result, plan.rest);
   }
 
   /**
