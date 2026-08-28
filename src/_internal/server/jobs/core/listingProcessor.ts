@@ -129,13 +129,21 @@ const LISTERS: Record<string, Lister> = {
         ? `${m.filters},categoryType==brand`
         : "categoryType==brand",
     }),
-  orders: (m) => orderRepository.listAll(m),
-  reviews: (m) => reviewRepository.listAll(m),
+  orders: (m, o) => orderRepository.listAll(m, { search: getStringOpt(o, "search") }),
+  reviews: (m, o) => reviewRepository.listAll(m, { search: getStringOpt(o, "search") }),
   coupons: (m) => couponsRepository.list(m),
   bids: (m) => bidRepository.list(m),
   payouts: (m) => payoutRepository.list(m),
-  blogPosts: (m) => blogRepository.listAll(m),
-  events: (m) => eventRepository.list(m),
+  blogPosts: (m, o) => blogRepository.listAll(m, { search: getStringOpt(o, "search") }),
+  events: (m, o) => eventRepository.list(m, { search: getStringOpt(o, "search") }),
+  // 🛑 EVERY lister whose repository accepts a `search` opt MUST forward it.
+  // `baseOpts.search` is how token search reaches the repository — Sieve cannot
+  // express array-contains, so it can never ride inside `filters`. A lister
+  // written `(m) => repo.list(m)` silently drops it and the Function returns an
+  // UNFILTERED page with a 200, while the same route's local fallback filters
+  // correctly — so it only reproduces in production, and only when the Function
+  // is reachable. That is how it survived here for orders, reviews, blogPosts,
+  // events and stores after their routes and repositories were both wired.
   // Forwards opts so `baseOpts.search` reaches the repository's token search.
   // This was `(m) => faqsRepository.list(m)` — the second argument was dropped,
   // which made FAQ token search structurally unreachable through the Function
@@ -157,7 +165,10 @@ const LISTERS: Record<string, Lister> = {
   productFeatures: (m) => productFeaturesRepository.list(m),
   homepageSections: (m) => homepageSectionsRepository.list(m),
   users: (m) => userRepository.list(m),
-  stores: (m, o) => storeRepository.listStores(m, getBoolOpt(o, "activeOnly", true)),
+  stores: (m, o) =>
+    storeRepository.listStores(m, getBoolOpt(o, "activeOnly", true), {
+      search: getStringOpt(o, "search"),
+    }),
   eventEntries: (m, o) => {
     const eventId = requireOpt(o, "eventId", "eventEntries");
     return eventEntryRepository.listForEvent(eventId, m);
