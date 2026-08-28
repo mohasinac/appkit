@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
+import { Div, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
@@ -155,8 +155,6 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
-
   return (
     <Div className="min-h-[200px]">
       <ListingToolbar
@@ -200,7 +198,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
 
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
@@ -214,12 +212,11 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : (
           <MarketplaceAuctionGrid
             auctions={auctions as any[]}
             variant={view === "list" ? "list" : "grid"}
-            gridClassName={view === "list" ? "flex flex-col gap-[var(--appkit-space-4)]" : gridClass}
             wishlistActions={wishlistActions}
             labels={{
               emptyTitle: "No auctions yet",

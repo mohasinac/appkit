@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
+import { Div, Grid, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import type { ViewMode } from "../../../ui";
@@ -33,7 +33,7 @@ function renderCategoryProductGrid(props: { isLoading: boolean; products: any[];
   const { isLoading, products, view, getProductHref, onWishlistToggle, wishlistedIds, onAddToCart } = props;
   if (isLoading) {
     return (
-      <Div layout="grid" gap="6" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+      <Grid cols="cards" gap="lg">
         {Array.from({ length: 8 }).map((_, i) => (
           <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-square" surface="subtle" />
@@ -44,7 +44,7 @@ function renderCategoryProductGrid(props: { isLoading: boolean; products: any[];
             </Stack>
           </Div>
         ))}
-      </Div>
+      </Grid>
     );
   }
   return (

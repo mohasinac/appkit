@@ -17,7 +17,7 @@
 
 import { Row } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
-import { Button, Div, Scrim, Text } from "../../../ui";
+import { Button, Div, Grid, Scrim, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
@@ -114,7 +114,7 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
 
   return (
     <>
-      <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+      <Grid cols="categoryCards" gap="3">
         {items.map((it, idx) => {
           const cover = it.images?.[0];
           const isHighlight = highlightItemNumber === it.itemNumber;
@@ -189,7 +189,7 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
             </Button>
           );
         })}
-      </Div>
+      </Grid>
 
       <ImageLightbox
         images={galleryImages}

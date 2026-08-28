@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Text, TextLink } from "../../../ui";
+import { Div, Grid, Heading, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { LAYOUT } from "../../../tokens";
 import type { CollectionListItem } from "../types";
@@ -57,10 +57,10 @@ interface CollectionGridProps {
 
 export function CollectionGrid({ collections, getHref }: CollectionGridProps) {
   return (
-    <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <Grid cols="cards" gap="lg">
       {collections.map((c) => (
         <CollectionCard key={c.slug} collection={c} href={getHref(c.slug)} />
       ))}
-    </Div>
+    </Grid>
   );
 }

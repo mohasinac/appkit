@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { Columns, Heart, ShoppingCart } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, Text, useToast, StickyToolbar } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, Text, useToast, StickyToolbar } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -168,7 +168,6 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, [localCart, showToast]);
 
   const selection = useBulkSelection({ items: preOrders as any[], keyExtractor: (p: any) => p.id });
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
 
   const handleBulkAddToCart = useCallback(() => {
     const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
@@ -319,7 +318,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {Array.from({ length: 10 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
@@ -331,7 +330,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : preOrders.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
             No pre-orders found.
@@ -353,7 +352,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             ))}
           </Stack>
         ) : (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -367,7 +366,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 onSelect={(id) => selection.toggle(id)}
               />
             ))}
-          </Div>
+          </Grid>
         )}
 
       </Div>

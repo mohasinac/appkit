@@ -6,7 +6,7 @@ import type { JsonValue } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Div, FilterChipGroup, ListingLayout, Text, useToast } from "../../../ui";
+import { Div, Grid, FilterChipGroup, ListingLayout, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID, ADMIN_BULK_ACTIONS } from "../../products/constants/action-defs";
@@ -172,7 +172,7 @@ export function AdminCouponsView({
     renderCards: (rows, _view, selectionCtx, isLoading) => {
       rowsRef.current = rows;
       return isLoading ? (
-        <Div gap="3" className="fluid-grid-card">
+        <Grid cols="cardsWide" gap="3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Stack border="skeleton"
               key={i}
@@ -183,13 +183,13 @@ export function AdminCouponsView({
               <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
             </Stack>
           ))}
-        </Div>
+        </Grid>
       ) : rows.length === 0 ? (
         <Div className="text-center" padding="y-4xl">
           <Text color="faint">No coupons found</Text>
         </Div>
       ) : (
-        <Div gap="3" className="fluid-grid-card">
+        <Grid cols="cardsWide" gap="3">
           {rows.map((row) => (
             <CouponCard
               key={row.id}
@@ -199,7 +199,7 @@ export function AdminCouponsView({
               onDelete={handleDelete}
             />
           ))}
-        </Div>
+        </Grid>
       );
     },
     renderEditor: ({ editId, closePanel }) => (

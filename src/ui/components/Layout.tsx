@@ -101,6 +101,14 @@ export type ContainerSize = keyof typeof CONTAINER_MAP;
 export type ContainerSizeValue = (typeof CONTAINER_MAP)[ContainerSize];
 
 /**
+ * The canonical card ladder, and its wide-floor variant. Named because several
+ * `GRID_MAP` keys are deliberate aliases of them — see the `@deprecated`
+ * entries below.
+ */
+const CARDS_LADDER = "appkit-grid appkit-grid--cards";
+const CARDS_WIDE_LADDER = `${CARDS_LADDER} appkit-grid--cards-wide`;
+
+/**
  * Responsive grid column presets.
  * Mirrors THEME_CONSTANTS.grid in the host app.
  */
@@ -118,26 +126,30 @@ export const GRID_MAP = {
   /** 2 → 3 → 4 → 5 → 6 */
   6: "appkit-grid appkit-grid--6",
   /**
-   * Generic card grid — 1 col on portrait mobile → 5 on ultrawide.
-   * Starts at 1 so product cards are readable even on 320 px handsets.
+   * THE canonical card grid — use this for every listing surface.
+   * 1 column on phones → 2 from md → auto-fill (3 at lg, 4 at xl) above,
+   * so the column count follows the grid's own width rather than the
+   * viewport's. See the "Canonical card grid" block in Layout.style.css.
    */
-  cards: "appkit-grid appkit-grid--cards",
-  /** Auto-fill product cards — min 200 px */
-  productCards: "appkit-grid appkit-grid--product-cards",
-  /** Auto-fill product cards (compact) — min 220 px */
-  productCardsCompact: "appkit-grid appkit-grid--product-cards-compact",
-  /** Auto-fill store cards — min 220 px */
-  storeCards: "appkit-grid appkit-grid--store-cards",
-  /** Auto-fill category tiles — min 130 px */
-  categoryCards: "appkit-grid appkit-grid--category-cards",
-  /** Auto-fill coupon/promo cards — min 264 px */
-  couponCards: "appkit-grid appkit-grid--coupon-cards",
-  /** Auto-fill address / wide cards — min 300 px */
-  addressCards: "appkit-grid appkit-grid--address-cards",
-  /** Auto-fill KPI/stat tiles — min 180 px */
-  statTiles: "appkit-grid appkit-grid--stat-tiles",
-  /** Auto-fill account nav tiles — min 160 px */
-  navTiles: "appkit-grid appkit-grid--nav-tiles",
+  cards: CARDS_LADDER,
+  /** Card ladder at a 300 px floor — wide cards (addresses, coupons). */
+  cardsWide: CARDS_WIDE_LADDER,
+  /** @deprecated alias of `cards` — kept so existing callers keep compiling. */
+  productCards: CARDS_LADDER,
+  /** @deprecated alias of `cards` */
+  productCardsCompact: CARDS_LADDER,
+  /** @deprecated alias of `cards` */
+  storeCards: CARDS_LADDER,
+  /** Card ladder at a 130 px floor — category tiles. */
+  categoryCards: `${CARDS_LADDER} appkit-grid--cards-tile`,
+  /** @deprecated alias of `cardsWide` */
+  couponCards: CARDS_WIDE_LADDER,
+  /** @deprecated alias of `cardsWide` */
+  addressCards: CARDS_WIDE_LADDER,
+  /** Card ladder at a 180 px floor — KPI/stat tiles. */
+  statTiles: `${CARDS_LADDER} appkit-grid--cards-stat`,
+  /** Card ladder at a 160 px floor — account nav tiles. */
+  navTiles: `${CARDS_LADDER} appkit-grid--cards-nav`,
   /** Equal halves on md+ */
   halves: "appkit-grid appkit-grid--halves",
   /** 2fr / 1fr split on md+ */
@@ -548,6 +560,10 @@ export function Row({
 export interface GridProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /**
    * Column preset.
+   * - **`"cards"` → the canonical card grid. Use it for every listing surface**
+   *   (1 col on phones → 2 from md → auto-fill 3–4 above). `"cardsWide"`,
+   *   `"categoryCards"`, `"statTiles"` and `"navTiles"` are the same ladder at
+   *   a different minmax() floor.
    * - Numbers `1`–`6` → mobile-first responsive stacks
    * - `"halves"` → equal 2-col on md+
    * - `"sidebar"` / `"sidebarRight"` / `"sidebarWide"` → fixed+flexible splits
@@ -556,6 +572,11 @@ export interface GridProps extends React.HTMLAttributes<HTMLElement>, SurfacePro
    * - Omit (or `undefined`) to use a raw `grid` base and supply columns via
    *   the `className` prop directly (e.g. `className="grid-cols-2"`). Useful
    *   for fixed non-responsive column counts (form field pairs, button rows).
+   *
+   * 🛑 A `grid-cols-*` className BEATS `cols`. appkit's dist/styles.css is
+   * unlayered and both tailwind configs set `important: true`, so a Tailwind
+   * utility in `@layer utilities` outranks the preset's own rule. Passing both
+   * silently ignores `cols` — pass one or the other, never both.
    */
   cols?: GridCols;
   /** Space between grid cells. Defaults to `"md"` (`gap-4`). */

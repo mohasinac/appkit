@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBlogPosts } from "../hooks/useBlog";
-import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
@@ -26,7 +26,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   const { isLoading, posts, view } = props;
   if (isLoading) {
     return (
-      <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <Grid cols="cards" gap="lg">
         {Array.from({ length: 6 }).map((_, i) => (
           <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-video" surface="subtle" />
@@ -38,7 +38,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
             </Stack>
           </Div>
         ))}
-      </Div>
+      </Grid>
     );
   }
   if (posts.length === 0) {
@@ -52,9 +52,9 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     );
   }
   return (
-    <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <Grid cols="cards" gap="lg">
       {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
-    </Div>
+    </Grid>
   );
 }
 

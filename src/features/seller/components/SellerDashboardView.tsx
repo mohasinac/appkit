@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { StackedViewShell, Div, Text } from "../../../ui";
+import { StackedViewShell, Div, Grid, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 
 export interface SellerDashboardViewProps extends Omit<
@@ -18,7 +18,7 @@ export interface SellerDashboardViewProps extends Omit<
 
 function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
   return (
-    <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-4">
+    <Grid cols="statTiles" gap="md">
       {[1, 2, 3, 4].map((i) => (
         <Div padding="5" 
           key={i}
@@ -39,20 +39,20 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
           )}
         </Div>
       ))}
-    </Div>
+    </Grid>
   );
 }
 
 function DefaultQuickActionsPlaceholder() {
   return (
-    <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-4">
+    <Grid cols="statTiles" gap="3">
       {[1, 2, 3, 4].map((i) => (
         <Div
           key={i}
           className="h-12 animate-pulse border border-[var(--appkit-color-border)] bg-[var(--appkit-color-border)]" rounded="xl"
         />
       ))}
-    </Div>
+    </Grid>
   );
 }
 

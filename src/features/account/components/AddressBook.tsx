@@ -1,6 +1,6 @@
 import type { UserAddress } from "../types";
 import type { JsonValue } from "@mohasinac/appkit";
-import { Button, Div, Span, Stack, Text } from "../../../ui";
+import { Button, Div, Grid, Span, Stack, Text } from "../../../ui";
 
 export interface AddressCardAddress {
   id: string;
@@ -127,7 +127,7 @@ export function AddressBook({
       {addresses.length === 0 && (
         <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{emptyLabel}</Text>
       )}
-      <Div layout="grid" gap="4" className="sm:grid-cols-2">
+      <Grid cols="cardsWide" gap="md">
         {addresses.map((addr) => (
           <AddressCard
             key={addr.id}
@@ -137,7 +137,7 @@ export function AddressBook({
             onSetDefault={onSetDefault}
           />
         ))}
-      </Div>
+      </Grid>
       {onAdd && (
         <Button rounded="lg"
           onClick={onAdd}

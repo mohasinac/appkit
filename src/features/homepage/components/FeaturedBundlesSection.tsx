@@ -11,7 +11,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Badge, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Badge, Div, Grid, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -76,11 +76,11 @@ export function FeaturedBundlesSection({
           </Link>
         </Row>
 
-        <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+        <Grid cols="cards" gap="3">
           {items.map((bundle) => (
             <FeaturedBundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
           ))}
-        </Div>
+        </Grid>
       </Stack>
     </Section>
   );

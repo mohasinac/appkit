@@ -501,12 +501,6 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
   onToggleSelect?: (id: string) => void;
 }
 
-// --- Grid class maps ---------------------------------------------------------
-
-const GRID_CLASSES: Record<"card", string> = {
-  card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-6)]",
-};
-
 // --- ProductListRow (list-mode row) ------------------------------------------
 
 interface ProductListRowProps<T extends ProductItem = ProductItem> {
@@ -713,7 +707,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
 
     if (view === "fluid") {
       return (
-        <Grid cols="productCardsCompact" className={className}>
+        <Grid cols="cards" className={className}>
           {products.map((p, i) => {
             const ctx = buildProductCardContext(p);
             const cardRenderer = renderCard ?? slots?.renderCard;
@@ -743,9 +737,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       );
     }
 
-    const gridClass = GRID_CLASSES.card;
     return (
-      <Div className={`${gridClass} ${className}`}>
+      <Grid cols="cards" gap="lg" className={className}>
         {products.map((p, i) => {
           const ctx = buildProductCardContext(p);
           const cardRenderer = renderCard ?? slots?.renderCard;
@@ -771,7 +764,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
             />
           );
         })}
-      </Div>
+      </Grid>
     );
   };
 

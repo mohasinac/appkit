@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../hooks/useProducts";
-import { Div, FilterDrawer, Label, ListingToolbar, Pagination, Row, Select, Stack, Text, StickyToolbar } from "../../../ui";
+import { Div, FilterDrawer, Grid, Label, ListingToolbar, Pagination, Row, Select, Stack, Text, StickyToolbar } from "../../../ui";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
@@ -123,8 +123,6 @@ export function PrizeDrawsIndexListing({
     if (e.key === "Enter") commitSearch();
   };
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
-
   return (
     <Div className="min-h-screen">
       <ListingToolbar
@@ -169,7 +167,7 @@ export function PrizeDrawsIndexListing({
 
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
@@ -183,13 +181,13 @@ export function PrizeDrawsIndexListing({
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : filteredDraws.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
             No prize draws found.
           </Text>
         ) : (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {filteredDraws.map((product: any) => (
               <MarketplacePrizeDrawCard
                 key={product.id}
@@ -197,7 +195,7 @@ export function PrizeDrawsIndexListing({
                 variant={view}
               />
             ))}
-          </Div>
+          </Grid>
         )}
       </Div>
 

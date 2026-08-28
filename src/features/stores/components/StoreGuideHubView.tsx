@@ -11,7 +11,7 @@ import {
   BookOpen,
   MessageSquare,
 } from "lucide-react";
-import { Div, Heading, Progress, Row, Section, Stack, Text, TextLink } from "../../../ui";
+import { Div, Grid, Heading, Progress, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -155,7 +155,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Guides
           </Heading>
-          <Div layout="grid" gap="4" className="grid-cols-1 sm:grid-cols-2">
+          <Grid cols="cardsWide" gap="md">
             {GUIDE_CARDS.map(({ Icon, title, description, href }) => (
               <TextLink
                 key={title}
@@ -187,7 +187,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                 </Text>
               </TextLink>
             ))}
-          </Div>
+          </Grid>
         </Stack>
 
         {/* Getting started checklist — 1/3 width on lg */}

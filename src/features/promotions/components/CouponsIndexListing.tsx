@@ -254,7 +254,7 @@ export function CouponsIndexListing({
       {/* ── Coupon grid ─────────────────────────────────────────────────── */}
       <Div paddingY="y-lg" paddingX="x-md">
         {isLoading ? (
-          <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cardsWide" gap="sm">
             {Array.from({ length: 6 }).map((_, i) => (
               <Stack border="skeleton"
                 key={i}
@@ -274,7 +274,7 @@ export function CouponsIndexListing({
             <Text color="faint">No coupons match your search.</Text>
           </Div>
         ) : (
-          <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cardsWide" gap="sm">
             {displayCoupons.map((coupon: any) => (
               <CouponCard
                 key={coupon.id}

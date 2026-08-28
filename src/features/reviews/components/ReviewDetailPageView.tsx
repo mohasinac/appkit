@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { reviewRepository } from "../../../repositories";
-import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
+import { Container, Div, Grid, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
@@ -82,11 +82,11 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
             <Heading level={2} className="mb-4" size="lg" weight="semibold">
               More reviews for {review.productTitle ?? "this product"}
             </Heading>
-            <Div layout="grid" gap="4" className="sm:grid-cols-2">
+            <Grid cols="cardsWide" gap="md">
               {sameProductReviews.map((r) => (
                 <ReviewCard key={r.id} review={r} context="listing" />
               ))}
-            </Div>
+            </Grid>
           </Container>
         </Section>
       )}
@@ -97,11 +97,11 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
             <Heading level={2} className="mb-4" size="lg" weight="semibold">
               More reviews for {review.storeName ?? "this store"}
             </Heading>
-            <Div layout="grid" gap="4" className="sm:grid-cols-2">
+            <Grid cols="cardsWide" gap="md">
               {sameStoreReviews.map((r) => (
                 <ReviewCard key={r.id} review={r} context="store" />
               ))}
-            </Div>
+            </Grid>
           </Container>
         </Section>
       )}

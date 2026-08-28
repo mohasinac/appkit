@@ -125,10 +125,7 @@ const sectionRef = useRef<HTMLElement>(null);
         </Div>
 
         {/* Cards grid */}
-        <Grid
-          gap="xl"
-          className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
-        >
+        <Grid cols="cards" gap="xl">
           {items.map((item, index) => (
             <SecurityCard
               key={item.key}

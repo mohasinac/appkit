@@ -147,10 +147,7 @@ export function TrustFeaturesSection({
             </Heading>
           </Div>
         )}
-        <Grid
-          gap="lg"
-          className="grid-cols-2 sm:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4"
-        >
+        <Grid cols="statTiles" gap="lg">
           {items.map((item, index) => (
             <TrustFeatureCard
               key={item.iconName}

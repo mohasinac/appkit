@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Row, Section, Stack, Text } from "../../../ui";
+import { Div, Grid, Row, Section, Stack, Text } from "../../../ui";
 import type { TrustBadge, TrustBadgeIconKey } from "../types";
 
 const BADGE_ICONS: Record<TrustBadgeIconKey, React.ReactNode> = {
@@ -112,7 +112,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
       className="bg-[var(--section-bg)] [border-top:var(--section-border)] [border-bottom:var(--section-border)]"
     >
       <Div className="mx-auto max-w-7xl sm:py-[2.5rem]" paddingY="y-lg" paddingX="x-md">
-        <Div layout="grid" gap="6" className="grid-cols-2 sm:grid-cols-4">
+        <Grid cols="statTiles" gap="lg">
           {items.map((badge) => (
             <Stack
               key={badge.id}
@@ -136,7 +136,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
               </Div>
             </Stack>
           ))}
-        </Div>
+        </Grid>
       </Div>
     </Section>
   );

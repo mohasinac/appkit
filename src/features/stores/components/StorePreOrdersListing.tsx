@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Div, FilterDrawer, Grid, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { ROUTES } from "../../../next";
@@ -101,8 +101,6 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
     table.set("q", searchInput.trim());
   }, [searchInput, table]);
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[var(--appkit-space-4)]";
-
   return (
     <Div className="min-h-[200px]">
       <ListingToolbar
@@ -146,7 +144,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
 
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
@@ -160,7 +158,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : preOrders.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
             This store has no pre-orders yet.
@@ -177,7 +175,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
             ))}
           </Stack>
         ) : (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -186,7 +184,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
               />
             ))}
-          </Div>
+          </Grid>
         )}
       </Div>
 

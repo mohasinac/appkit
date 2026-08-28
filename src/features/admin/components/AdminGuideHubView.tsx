@@ -13,7 +13,7 @@ import {
   MessageSquare,
   CreditCard,
 } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
+import { Alert, Div, Grid, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-[var(--appkit-space-6)]";
@@ -164,7 +164,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
           <Heading level={2} className="text-[var(--appkit-color-text)] mb-4" size="lg" weight="semibold">
             Guides
           </Heading>
-          <Div layout="grid" gap="4" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cards" gap="md">
             {visibleCards.map(({ Icon, title, description, href }) => (
               <TextLink
                 key={title}
@@ -196,7 +196,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
                 </Text>
               </TextLink>
             ))}
-          </Div>
+          </Grid>
         </Section>
       )}
 

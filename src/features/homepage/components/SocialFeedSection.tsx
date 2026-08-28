@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import { Anchor, Div, Heading, HandModeRow, Row, Section, Stack, Text } from "../../../ui";
+import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Row, Section, Stack, Text } from "../../../ui";
 import { SocialPostCard } from "./SocialPostCard";
 import {
   fetchInstagramPosts,
@@ -118,7 +118,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
       ? "flex gap-[var(--appkit-space-3)] overflow-x-auto pb-[var(--appkit-space-2)] snap-x snap-mandatory"
       : layout === "masonry"
         ? "columns-2 sm:columns-3 lg:columns-4 gap-[var(--appkit-space-3)] space-y-3"
-        : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-3)]";
+        : `${GRID_MAP.cards} gap-[var(--appkit-space-3)]`;
 
   const cardClass =
     layout === "carousel"

@@ -11,7 +11,7 @@
 
 import { Row, Stack, sortBy } from "@mohasinac/appkit/client";
 import React, { useMemo, useCallback, useState } from "react";
-import { Div, Label, Span, Text, Toggle, StickyToolbar } from "../../../ui";
+import { Div, Grid, Label, Span, Text, Toggle, StickyToolbar } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import type { CategoryDocument } from "../schemas";
@@ -162,7 +162,7 @@ export function CategoryBundlesListing({
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (
-          <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cards" gap="lg">
             {pageItems.map((bundle) => (
               <Stack key={bundle.id}>
                 <MarketplaceBundleCard bundle={bundle} />
@@ -178,7 +178,7 @@ export function CategoryBundlesListing({
                 )}
               </Stack>
             ))}
-          </Div>
+          </Grid>
         )}
       </Div>
 

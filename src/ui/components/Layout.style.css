@@ -110,15 +110,16 @@
 .appkit-grid--4 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--5 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.appkit-grid--cards { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.appkit-grid--product-cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
-.appkit-grid--product-cards-compact { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card), 1fr)); gap: 1rem; }
-.appkit-grid--store-cards { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card), 1fr)); gap: 1.5rem; }
-.appkit-grid--category-cards { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card-xs), 1fr)); gap: 1rem; }
-.appkit-grid--coupon-cards { grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 1.5rem; }
-.appkit-grid--address-cards { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card-lg), 1fr)); gap: 1rem; }
-.appkit-grid--stat-tiles { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-.appkit-grid--nav-tiles { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card-sm), 1fr)); gap: 1rem; }
+/* .appkit-grid--cards and its density modifiers live in the "Canonical card
+   grid" block at the end of this file — they are a three-step ladder, not a
+   one-liner, and the flat rules that used to sit here (--product-cards,
+   --product-cards-compact, --store-cards, --coupon-cards, --address-cards,
+   --category-cards, --stat-tiles, --nav-tiles) are now GRID_MAP aliases of it.
+
+   Their hardcoded `gap` went with them deliberately: it sat AFTER
+   .appkit-gap--md at equal specificity in this same unlayered file, so it
+   silently beat the `gap` prop. Density belongs in the minmax() floor, not in
+   a gap the caller thinks they control. */
 .appkit-grid--halves { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--two-third { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--one-third { grid-template-columns: repeat(1, minmax(0, 1fr)); }
@@ -154,8 +155,7 @@
   .appkit-grid--2,
   .appkit-grid--3,
   .appkit-grid--4,
-  .appkit-grid--5,
-  .appkit-grid--cards {
+  .appkit-grid--5 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -165,8 +165,7 @@
 }
 
 @media (min-width: 768px) {
-  .appkit-grid--5,
-  .appkit-grid--cards {
+  .appkit-grid--5 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -190,8 +189,7 @@
 @media (min-width: 1024px) {
   .appkit-grid--3,
   .appkit-grid--4,
-  .appkit-grid--5,
-  .appkit-grid--cards {
+  .appkit-grid--5 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -238,8 +236,7 @@
   }
 
   .appkit-grid--4,
-  .appkit-grid--5,
-  .appkit-grid--cards {
+  .appkit-grid--5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
@@ -249,6 +246,68 @@
 
   .appkit-grid--product-detail-triplet {
     grid-template-columns: 1fr 1fr 320px;
+  }
+}
+
+/* === Canonical card grid ===================================================
+   ONE ladder for every "cards laid out in a grid" surface — product, store,
+   event, blog, coupon, review, address, category tile, KPI tile, and the
+   admin/seller card views:
+
+     base       1 column   — the card takes the whole content width
+     >= 768px   2 columns
+     >= 1024px  repeat(auto-fill, minmax(--appkit-grid-cards-min, 1fr))
+
+   🛑 `auto-fill`, NEVER `auto-fit`. `auto-fit` collapses the empty tracks in a
+   short final row and lets `1fr` absorb the freed space, so a row holding a
+   single leftover card stretches it across the entire container. `auto-fill`
+   keeps the empty tracks at their computed size, so the lone card in the last
+   row is exactly as wide as its siblings in the row above. That is the whole
+   reason the >=1024px tier is auto-fill rather than a fixed column count — do
+   not "optimise" it to auto-fit.
+
+   auto-fill resolves against the GRID's own content box, not the viewport, so
+   this one class self-corrects inside ListingLayout's desktop filter sidebar
+   (15/16/18rem at lg/xl/2xl — .appkit-listing-layout__content is
+   `flex:1; min-width:0`) and inside the dashboard content rail. No
+   sidebar-aware breakpoints and no container queries are needed. The 1->2 step
+   stays viewport-based on purpose: a phone gets one card whatever its
+   container says.
+
+   Column counts for the default 260px floor:
+     lg  (1024px vp -> 960px content)              -> 3
+     xl+ (max-w-screen-xl caps content at 1216px)  -> 4
+   i.e. "3 or 4 based on the available width" on every public page. Dashboards
+   are capped by max-w-screen-2xl instead and reach 5 on an ultrawide monitor —
+   a wider container genuinely earning another column, at ~275px per card.
+
+   🛑 CASCADE: appkit's dist/styles.css is UNLAYERED and both tailwind configs
+   set `important: true`, so a `.lg\:grid-cols-4` utility in @layer utilities
+   BEATS these rules. A call site using cols="cards" must NOT also carry a
+   grid-cols-* className — it would silently win and this ladder would do
+   nothing. scripts/audit-card-grid-cols.mjs enforces that. */
+
+.appkit-grid--cards {
+  --appkit-grid-cards-min: var(--appkit-grid-min-card);
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+/* Density modifiers — each overrides ONLY the local floor; the ladder above is
+   shared, so every card grid changes shape together. */
+.appkit-grid--cards-wide { --appkit-grid-cards-min: var(--appkit-grid-min-card-lg); }
+.appkit-grid--cards-stat { --appkit-grid-cards-min: 180px; }
+.appkit-grid--cards-nav  { --appkit-grid-cards-min: var(--appkit-grid-min-card-sm); }
+.appkit-grid--cards-tile { --appkit-grid-cards-min: var(--appkit-grid-min-card-xs); }
+
+@media (min-width: 768px) {
+  .appkit-grid--cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .appkit-grid--cards {
+    grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-cards-min), 1fr));
   }
 }
 

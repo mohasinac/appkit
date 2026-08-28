@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Div, Row, Span, Stack, Text } from "../../../ui";
+import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 
@@ -142,7 +142,7 @@ export function CategoryGrid({
   }
 
   return (
-    <Div layout="grid" gap="4" className={`grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ${className}`}>
+    <Grid cols="categoryCards" gap="md" className={className}>
       {categories.map((cat) => (
         <CategoryCard
           key={cat.id}
@@ -151,6 +151,6 @@ export function CategoryGrid({
           onClick={!getHref ? onCategoryClick : undefined}
         />
       ))}
-    </Div>
+    </Grid>
   );
 }

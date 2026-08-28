@@ -757,10 +757,15 @@
 
 /* --- Grid ------------------------------------------------------------------ */
 :root {
-  /* Minimum column widths for auto-fill grid layouts (used in minmax()) */
+  /* Minimum column widths for auto-fill grid layouts (used in minmax()).
+     `--appkit-grid-min-card` is the canonical card-grid minimum consumed by
+     .appkit-grid--cards. At 260px the lg tier (960px of content inside the
+     max-w-screen-xl container) resolves to 3 columns and the xl tier
+     (1216px, that container's cap) to 4 — i.e. "3 or 4 depending on the
+     available width". Changing it re-columns every listing in the app. */
   --appkit-grid-min-card-xs: 130px;
   --appkit-grid-min-card-sm: 160px;
-  --appkit-grid-min-card:    220px;
+  --appkit-grid-min-card:    260px;
   --appkit-grid-min-card-lg: 300px;
 }
 

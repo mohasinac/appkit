@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Alert, Button, Div, Input, Row, Select, Stack, StackedViewShell, Text, useToast } from "../../../ui";
+import { Alert, Button, Div, Grid, Input, Row, Select, Stack, StackedViewShell, Text, useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -112,7 +112,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           {error}
         </Alert>
       )}
-      <Div layout="grid" gap="2" className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+      <Grid cols="navTiles" gap="sm">
         {filtered.map((f) => {
           const isImage = (f.contentType ?? "").startsWith("image/");
           return (
@@ -155,7 +155,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
             No files found.
           </Text>
         )}
-      </Div>
+      </Grid>
       <Row align="center" justify="between">
         <Text size="xs" color="muted">
           {filtered.length} file(s){nextPageToken ? " · more available" : ""}

@@ -5,7 +5,7 @@ import { sortBy } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Div, FilterChipGroup, ListingLayout, useToast } from "../../../ui";
+import { Div, Grid, FilterChipGroup, ListingLayout, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -139,7 +139,7 @@ export function SellerCouponsView({
     ),
     renderCards: (rows, _view, _selection, isLoading) =>
       isLoading ? (
-        <Div gap="3" className="fluid-grid-card">
+        <Grid cols="cardsWide" gap="3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Stack border="skeleton"
               key={i}
@@ -150,9 +150,9 @@ export function SellerCouponsView({
               <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
             </Stack>
           ))}
-        </Div>
+        </Grid>
       ) : (
-        <Div gap="3" className="fluid-grid-card">
+        <Grid cols="cardsWide" gap="3">
           {rows.map((row) => (
             <CouponCard
               key={row.id}
@@ -167,7 +167,7 @@ export function SellerCouponsView({
               }
             />
           ))}
-        </Div>
+        </Grid>
       ),
   };
 

@@ -21,6 +21,8 @@
 
 import { ReactNode, useState } from "react";
 import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
+import { CollapseStrip, useToolbarCollapse } from "./toolbar-collapse";
 import { useBottomChromeSlot } from "./bottom-chrome-slot";
 import { Aside, Nav } from "./Semantic";
 import { Text, Span } from "./Typography";
@@ -39,6 +41,8 @@ export interface ListingLayoutLabels {
   showFilters?: string;
   hideFilters?: string;
   filterActiveCount?: (count: number) => string;
+  /** Noun in the mobile toolbar's "Show/Hide …" collapse strip. */
+  toolbarLabel?: string;
 }
 
 export interface ListingLayoutProps {
@@ -112,6 +116,7 @@ const DEFAULT_LABELS: Required<ListingLayoutLabels> = {
   showFilters: "Show filters",
   hideFilters: "Hide filters",
   filterActiveCount: (count) => `${count} active`,
+  toolbarLabel: "Toolbar",
 };
 
 export function ListingLayout({
@@ -162,6 +167,19 @@ export function ListingLayout({
   const effectiveIsDashboard =
     isDashboard ?? (portal === "admin" || portal === "seller");
   const l = { ...DEFAULT_LABELS, ...labels };
+
+  /* The mobile toolbar is two stacked rows — search + Filter, then a scrolling
+     sort/view/actions chip row — roughly 100px of chrome above the first card.
+     It opens collapsed below `lg` and stays as the user left it thereafter.
+     `forceExpanded` on a selection is load-bearing: the bulk-action bar renders
+     INSIDE this toolbar, so a collapsed one would leave the user no way to act
+     on rows they had just selected. */
+  const toolbarPathname = usePathname();
+  const { collapsed: mobileToolbarCollapsed, toggle: toggleMobileToolbar } =
+    useToolbarCollapse({
+      id: `listing-layout${toolbarPathname ? `:${toolbarPathname}` : ""}`,
+      forceExpanded: selectedCount > 0,
+    });
 
   const hasFilter = Boolean(filterContent);
   const panelTitle = filterTitle ?? l.filtersTitle;
@@ -253,6 +271,8 @@ export function ListingLayout({
         </Div>
 
         {/* Mobile/Tablet (< lg): two stacked rows */}
+        {/* Mobile (<lg): collapsible — see useToolbarCollapse above */}
+        {!mobileToolbarCollapsed && (
         <Div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--mobile">
           <Div className="appkit-listing-layout__mobile-row-1">
             {hasFilter && (
@@ -296,6 +316,20 @@ export function ListingLayout({
             </Div>
           )}
         </Div>
+        )}
+
+        {/* `lg:hidden` and not a CSS media query: globals.css declares `.flex`
+            un-layered + `!important` (a Turbopack chunking workaround), which
+            a plain `display:none` in appkit's own stylesheet would lose to.
+            `.lg\:hidden` is declared later in that same block, so it wins. */}
+        {selectedCount === 0 && (
+          <CollapseStrip
+            collapsed={mobileToolbarCollapsed}
+            label={l.toolbarLabel}
+            onToggle={toggleMobileToolbar}
+            className="lg:hidden"
+          />
+        )}
 
         {/* Bulk action bar — desktop, inside toolbar */}
         {selectedCount > 0 && (

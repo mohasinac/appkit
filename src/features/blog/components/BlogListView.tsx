@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { Article, Button, Div, Heading, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Article, Button, Div, Grid, Heading, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -193,7 +193,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
 }: BlogListViewProps<T>) {
   if (isLoading) {
     return (
-      <Div layout="grid" gap="6" className="sm:grid-cols-2 lg:grid-cols-3">
+      <Grid cols="cards" gap="lg">
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
@@ -207,7 +207,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
             </Stack>
           </Div>
         ))}
-      </Div>
+      </Grid>
     );
   }
 
@@ -227,7 +227,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <Div layout="grid" gap="6" className="sm:grid-cols-2 lg:grid-cols-3">
+      <Grid cols="cards" gap="lg">
         {posts.map((post, i) =>
           slots?.renderCard ? (
             <React.Fragment key={post.id}>
@@ -241,7 +241,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
             />
           ),
         )}
-      </Div>
+      </Grid>
       {slots?.renderFooter ? (
         (slots.renderFooter({
           page: currentPage,

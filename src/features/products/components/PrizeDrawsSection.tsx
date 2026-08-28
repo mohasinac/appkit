@@ -3,14 +3,7 @@
 // a client-reference proxy and calling it throws during the server render
 // (Root Cause #18). That is exactly what took `section-prize-draws` down.
 import { sortBy } from "../../../constants/sort";
-import {
-  Container,
-  Div,
-  Heading,
-  Section,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Container, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { PrizeDrawsSectionConfig } from "../../homepage/schemas/firestore";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
@@ -73,7 +66,7 @@ export async function PrizeDrawsSection({
             ) : null}
           </Stack>
 
-          <Div gap="3" className="fluid-grid-card">
+          <Grid cols="cardsWide" gap="3">
             {draws.map((draw) => (
               <InteractiveProductCard
                 key={draw.id}
@@ -81,7 +74,7 @@ export async function PrizeDrawsSection({
                 href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(draw.slug ?? draw.id ?? ""))}
               />
             ))}
-          </Div>
+          </Grid>
         </Stack>
       </Container>
     </Section>

@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Text, StickyToolbar } from "../../../ui";
+import { Div, FilterDrawer, Grid, ListingToolbar, Pagination, Row, Text, StickyToolbar } from "../../../ui";
 import { LiveItemFilters } from "../../live/components/LiveItemFilters";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -82,8 +82,6 @@ export function StoreLiveItemsListing({ storeId, initialData }: StoreLiveItemsLi
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
-
   return (
     <Div className="min-h-[200px]">
       <ListingToolbar
@@ -114,7 +112,7 @@ export function StoreLiveItemsListing({ storeId, initialData }: StoreLiveItemsLi
       )}
 
       <Div padding="y-lg">
-        <Div className={gridClass}>
+        <Grid cols="cards" gap="md">
           {isLoading
             ? Array.from({ length: 8 }).map((_, i) => <Div key={i} surface="muted" rounded="xl" className="aspect-square animate-pulse" />)
             : products.length === 0
@@ -127,7 +125,7 @@ export function StoreLiveItemsListing({ storeId, initialData }: StoreLiveItemsLi
                   />
                 ))
           }
-        </Div>
+        </Grid>
       </Div>
 
       <FilterDrawer

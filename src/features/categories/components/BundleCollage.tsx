@@ -11,7 +11,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Button, Div, Row, Text } from "../../../ui";
+import { Button, Div, Grid, Row, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
@@ -61,7 +61,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
 
   return (
     <>
-      <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+      <Grid cols="categoryCards" gap="3">
         {members.map((p, idx) => {
           const cover = p.mainImage ?? p.images?.[0];
           const href = String(
@@ -129,7 +129,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
             </Div>
           );
         })}
-      </Div>
+      </Grid>
 
       <ImageLightbox
         images={galleryImages}

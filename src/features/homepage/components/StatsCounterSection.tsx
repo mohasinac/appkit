@@ -101,10 +101,7 @@ export function StatsCounterSection({
       className={`border-y ${className}`} paddingX="x-md" surface="default"
     >
       <Div className="mx-auto max-w-5xl">
-        <Grid
-          gap="none"
-          className="grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4"
-        >
+        <Grid cols="statTiles" gap="none">
           {stats.map((stat, i) => (
             <StatCard
               key={stat.key}

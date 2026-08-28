@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 
 import { useAddresses } from "../hooks/useAddresses";
-import { Div, ListingFilterDrawer, ListingToolbar, Stack, Text } from "../../../ui";
+import { Div, Grid, ListingFilterDrawer, ListingToolbar, Stack, Text } from "../../../ui";
 
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
@@ -117,7 +117,7 @@ export function AddressesIndexListing({
       {/* ── Address list ────────────────────────────────────────────────── */}
       <Div className="sm:px-[1rem]" padding="x-sm">
         {isLoading ? (
-          <Div layout="grid" gap="4" className="sm:grid-cols-2">
+          <Grid cols="cardsWide" gap="md">
             {Array.from({ length: 4 }).map((_, i) => (
               <Stack
                 key={i}
@@ -132,7 +132,7 @@ export function AddressesIndexListing({
                 <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
               </Stack>
             ))}
-          </Div>
+          </Grid>
         ) : addresses.length === 0 ? (
           <Text paddingY="xl" color="muted" size="sm" align="start">
             {table.get(TABLE_KEYS.QUERY) ? `No addresses matching "${table.get(TABLE_KEYS.QUERY)}"` : "No saved addresses."}

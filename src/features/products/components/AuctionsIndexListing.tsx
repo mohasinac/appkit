@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -147,8 +147,6 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-[var(--appkit-space-4)]";
-
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
           {
             id: ACTION_ID.WATCH_AUCTION,
@@ -246,7 +244,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
       {/* ── Auction grid ───────────────────────────────────────────────── */}
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className={gridClass}>
+          <Grid cols="cards" gap="md">
             {Array.from({ length: 8 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
@@ -258,12 +256,11 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : (
           <MarketplaceAuctionGrid
             auctions={auctions as any[]}
             variant={view === "list" ? "list" : "grid"}
-            gridClassName={view === "list" ? "flex flex-col gap-[var(--appkit-space-4)]" : gridClass}
             wishlistActions={wishlistActions}
           />
         )}

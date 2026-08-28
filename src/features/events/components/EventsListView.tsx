@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Pagination, Row, Stack, Text } from "../../../ui";
+import { Div, Grid, Pagination, Row, Stack, Text } from "../../../ui";
 import type { LayoutSlots } from "../../../contracts";
 import type { EventItem } from "../types";
 import { EventCard } from "./EventCard";
@@ -34,7 +34,7 @@ export function EventsListView<T extends EventItem = EventItem>({
 }: EventsListViewProps<T>) {
   if (isLoading) {
     return (
-      <Div layout="grid" gap="6" className="sm:grid-cols-2 lg:grid-cols-3">
+      <Grid cols="cards" gap="lg">
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
@@ -48,7 +48,7 @@ export function EventsListView<T extends EventItem = EventItem>({
             </Stack>
           </Div>
         ))}
-      </Div>
+      </Grid>
     );
   }
 
@@ -68,7 +68,7 @@ export function EventsListView<T extends EventItem = EventItem>({
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <Div layout="grid" gap="6" className="sm:grid-cols-2 lg:grid-cols-3">
+      <Grid cols="cards" gap="lg">
         {events.map((event, i) =>
           slots?.renderCard ? (
             <React.Fragment key={event.id}>
@@ -84,7 +84,7 @@ export function EventsListView<T extends EventItem = EventItem>({
             />
           ),
         )}
-      </Div>
+      </Grid>
       {slots?.renderFooter ? (
         (slots.renderFooter({
           page: currentPage,

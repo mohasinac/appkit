@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ChevronDown } from "lucide-react";
-import { normalizeError } from "../../errors/normalize";
+import { useEffect, useRef, type ReactNode } from "react";
+import { CollapseStrip, useToolbarCollapse } from "./toolbar-collapse";
 
 /**
  * StickyToolbar — primitive for the recurrent translucent sticky bar pattern
@@ -121,65 +120,6 @@ function resolveOffsetClass(offset: StickyToolbarOffset): string {
  */
 const TOOLBAR_HEIGHT_VAR = "--appkit-toolbar-height";
 
-const STORAGE_PREFIX = "appkit:sticky-toolbar-collapsed:";
-
-function readCollapsed(id: string): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    return window.sessionStorage.getItem(STORAGE_PREFIX + id) === "1";
-  } catch (_err) {
-    void normalizeError(_err);
-    return false;
-  }
-}
-
-function writeCollapsed(id: string, value: boolean): void {
-  try {
-    if (value) window.sessionStorage.setItem(STORAGE_PREFIX + id, "1");
-    else window.sessionStorage.removeItem(STORAGE_PREFIX + id);
-  } catch (_err) {
-    void normalizeError(_err);
-    // sessionStorage unavailable (private browsing, etc.) — collapse still
-    // works for the current render, just doesn't survive a re-mount.
-  }
-}
-
-/**
- * The collapse/expand control — one component for both states so the two
- * halves of the affordance can't drift apart (the collapsed strip read
- * "Show Toolbar" while the expanded one was a bare, unlabelled chevron
- * pinned to the far right until 2026-08-24).
- */
-function CollapseStrip({
-  collapsed,
-  label,
-  onToggle,
-  className,
-}: {
-  collapsed: boolean;
-  label: string;
-  onToggle: () => void;
-  className?: string;
-}) {
-  return (
-    <div className={`flex justify-center ${className ?? ""}`}>
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-label={`${collapsed ? "Show" : "Hide"} ${label}`}
-        aria-expanded={!collapsed}
-        className="flex items-center gap-1 px-4 py-0.5 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
-      >
-        <ChevronDown
-          className={`h-3.5 w-3.5 transition-transform duration-150 ${collapsed ? "" : "rotate-180"}`}
-          aria-hidden="true"
-        />
-        {collapsed ? "Show" : "Hide"} {label}
-      </button>
-    </div>
-  );
-}
-
 export function StickyToolbar({
   children,
   offset = "header",
@@ -194,12 +134,8 @@ export function StickyToolbar({
   id,
   label = "Toolbar",
 }: StickyToolbarProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, toggle } = useToolbarCollapse({ id, enabled: dismissible });
   const rootRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (dismissible && id) setCollapsed(readCollapsed(id));
-  }, [dismissible, id]);
 
   // Publish the rendered height so a bar stacked below (sticky pagination,
   // bulk-action bar) can offset itself against what's actually on screen.
@@ -230,12 +166,6 @@ export function StickyToolbar({
   const offsetStyle = typeof offset === "number" ? { top: `${offset}px` } : undefined;
   const borderCls = border ? "border-b border-[var(--appkit-color-border)]" : "";
   const zCls = z === "above-toolbar" ? "z-20" : z === "above-content" ? "z-10" : "z-[5]";
-
-  const toggle = () => {
-    const next = !collapsed;
-    setCollapsed(next);
-    if (id) writeCollapsed(id, next);
-  };
 
   if (dismissible && id && collapsed) {
     return (

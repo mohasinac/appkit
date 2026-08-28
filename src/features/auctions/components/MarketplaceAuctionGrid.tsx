@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { Gavel } from "lucide-react";
 import type { WishlistToggleActions } from "../../wishlist";
-import { Div, Row, Stack, Text } from "../../../ui";
+import { Div, Grid, Row, Stack, Text } from "../../../ui";
 import {
   MarketplaceAuctionCard,
   type MarketplaceAuctionCardData,
@@ -30,7 +30,6 @@ export interface MarketplaceAuctionGridProps {
   selectable?: boolean;
   selectedIds?: string[];
   onSelectionChange?: (ids: string[]) => void;
-  gridClassName?: string;
   emptyIcon?: ReactNode;
   labels?: MarketplaceAuctionGridLabels;
   cardLabels?: MarketplaceAuctionCardLabels;
@@ -94,7 +93,6 @@ export function MarketplaceAuctionGrid({
   selectable = false,
   selectedIds = [],
   onSelectionChange,
-  gridClassName,
   emptyIcon,
   labels,
   cardLabels,
@@ -111,21 +109,26 @@ export function MarketplaceAuctionGrid({
     onSelectionChange(selectedIds.filter((selectedId) => selectedId !== id));
   };
 
-  const containerClass =
-    variant === "list"
-      ? "flex flex-col gap-[var(--appkit-space-4)]"
-      : `${gridClassName ?? "grid grid-cols-1 gap-[var(--appkit-space-6)] sm:grid-cols-2 xl:grid-cols-4"}`;
+  /* The container is either the canonical card ladder or a plain stack — the
+     caller no longer supplies a grid className, so a store's auctions tab and
+     /auctions can no longer drift apart in column count. */
+  const Container = ({ children }: { children: ReactNode }) =>
+    variant === "list" ? (
+      <Stack gap="md">{children}</Stack>
+    ) : (
+      <Grid cols="cards" gap="lg">{children}</Grid>
+    );
 
   if (loading) {
     return (
-      <Div className={containerClass}>
+      <Container>
         {Array.from({ length: skeletonCount }).map((_, index) => (
           <AuctionCardSkeleton
             key={`auction-skeleton-${index}`}
             variant={variant}
           />
         ))}
-      </Div>
+      </Container>
     );
   }
 
@@ -148,7 +151,7 @@ export function MarketplaceAuctionGrid({
   }
 
   return (
-    <Div className={containerClass}>
+    <Container>
       {auctions.map((auction) => (
         <MarketplaceAuctionCard
           key={auction.id}
@@ -161,6 +164,6 @@ export function MarketplaceAuctionGrid({
           wishlistActions={wishlistActions}
         />
       ))}
-    </Div>
+    </Container>
   );
 }

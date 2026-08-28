@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useEvents } from "../hooks/useEvents";
-import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { EventCard } from "./EventCard";
 import { EventFilters, EVENT_PUBLIC_SORT_OPTIONS } from "./EventFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -184,7 +184,7 @@ export function EventsIndexListing({ initialData, facetCounts }: EventsIndexList
       {/* ── Event grid ─────────────────────────────────────────────────── */}
       <Div padding="y-lg">
         {isLoading ? (
-          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cards" gap="lg">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-video" surface="subtle" />
@@ -196,7 +196,7 @@ export function EventsIndexListing({ initialData, facetCounts }: EventsIndexList
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : events.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
             No events found.
@@ -208,11 +208,11 @@ export function EventsIndexListing({ initialData, facetCounts }: EventsIndexList
             ))}
           </Stack>
         ) : (
-          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cards" gap="lg">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
-          </Div>
+          </Grid>
         )}
       </Div>
 

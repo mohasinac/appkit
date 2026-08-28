@@ -4,7 +4,7 @@ import { ShoppingCart, Heart, Columns } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { BulkActionBar, Div, FilterChipGroup, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
+import { BulkActionBar, Div, FilterChipGroup, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -449,7 +449,7 @@ export function ProductsIndexListing({
       {/* ── Product grid ───────────────────────────────────────────────── */}
       <Div padding="y-lg">
         {isLoading ? (
-          <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          <Grid cols="cards" gap="md">
             {Array.from({ length: 10 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
@@ -460,7 +460,7 @@ export function ProductsIndexListing({
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : (
           <ProductGrid
             products={products as any[]}

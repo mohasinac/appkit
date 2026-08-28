@@ -1,17 +1,7 @@
 "use client";
 import React, { useCallback, useMemo, useState } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import {
-  Div,
-  ListingFilterDrawer,
-  ListingToolbar,
-  Pagination,
-  Row,
-  Span,
-  Stack,
-  StickyToolbar,
-  Text,
-} from "../../../ui";
+import { Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Span, Stack, StickyToolbar, Text } from "../../../ui";
 import { ReviewCard } from "./ReviewsList";
 import { ReviewFilters, REVIEW_PUBLIC_SORT_OPTIONS } from "./ReviewFilters";
 import { useReviews } from "../hooks/useReviews";
@@ -384,7 +374,7 @@ export function ReviewsListingPanel({
 
       <Div padding="y-lg">
         {isLoading ? (
-          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cards" gap="lg">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Stack className={`${__P.p4}`} gap="3">
@@ -394,7 +384,7 @@ export function ReviewsListingPanel({
                 </Stack>
               </Div>
             ))}
-          </Div>
+          </Grid>
         ) : reviews.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
             {emptyLabel}
@@ -410,11 +400,11 @@ export function ReviewsListingPanel({
             ))}
           </Stack>
         ) : (
-          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <Grid cols="cards" gap="lg">
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review} context={context} />
             ))}
-          </Div>
+          </Grid>
         )}
       </Div>
 

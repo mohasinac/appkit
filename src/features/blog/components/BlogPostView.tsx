@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
+import { Div, Grid, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
 import { Iframe } from "../../../ui/components/Iframe";
 import { MediaImage } from "../../media/MediaImage";
 import { useBlogPost } from "../hooks/useBlog";
@@ -90,7 +90,7 @@ function renderBlogPostRelated(related: BlogPost[], title: string, renderRelated
   return (
     <Div>
       <Heading level={2} className="mb-6" size="xl" weight="semibold">{title}</Heading>
-      <Div layout="grid" gap="6" className="sm:grid-cols-3">
+      <Grid cols="cards" gap="lg">
         {related.map((rel, i) =>
           renderRelatedCard ? (
             <React.Fragment key={rel.id}>{renderRelatedCard(rel, i)}</React.Fragment>
@@ -98,7 +98,7 @@ function renderBlogPostRelated(related: BlogPost[], title: string, renderRelated
             <BlogCard key={rel.id} post={rel} href={String(ROUTES.BLOG.ARTICLE(rel.slug))} />
           ),
         )}
-      </Div>
+      </Grid>
     </Div>
   );
 }

@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
-import { Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Button, Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -32,7 +32,7 @@ function renderCategoryGrid(props: {
   const isBrandView = activeTab === "brands" || brandsOnly;
   if (isLoading) {
     return (
-      <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <Grid cols="categoryCards" gap="md">
         {Array.from({ length: 10 }).map((_, i) => (
           <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-[4/3]" surface="subtle" />
@@ -42,7 +42,7 @@ function renderCategoryGrid(props: {
             </Stack>
           </Div>
         ))}
-      </Div>
+      </Grid>
     );
   }
   if (categories.length === 0) {
@@ -60,9 +60,9 @@ function renderCategoryGrid(props: {
     );
   }
   return (
-    <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <Grid cols="categoryCards" gap="md">
       {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
-    </Div>
+    </Grid>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Div, Heading, Stack } from "../../../ui";
+import { Div, Grid, Heading, Stack } from "../../../ui";
 import { Alert } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -92,16 +92,16 @@ export function AdminAnalyticsView({
       {renderSummaryCards ? (
         renderSummaryCards()
       ) : busy ? (
-        <Div layout="grid" gap="4" className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <Grid cols="statTiles" gap="md">
           {Array.from({ length: 4 }).map((_, index) => (
             <Div
               key={index}
               className="h-28 border border-[var(--appkit-color-border-subtle)] animate-pulse" surface="default" rounded="xl"
             />
           ))}
-        </Div>
+        </Grid>
       ) : summary ? (
-        <Div layout="grid" gap="4" className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <Grid cols="statTiles" gap="md">
           <AdminStatCard
             label={labels.totalRevenue ?? "Total Revenue"}
             value={formatRevenue(summary.totalRevenue)}
@@ -118,7 +118,7 @@ export function AdminAnalyticsView({
             label={labels.ordersThisMonth ?? "Orders This Month"}
             value={String(summary.newOrdersThisMonth)}
           />
-        </Div>
+        </Grid>
       ) : null}
 
       {renderCharts ? (

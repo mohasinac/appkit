@@ -221,7 +221,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
  
 function renderProfileStatsRow(flex: ProfileFlex, statItems: { icon: any; label: string; value: string }[]) {
   return (
-    <Grid gap="md" className="grid-cols-2 sm:grid-cols-4">
+    <Grid cols="statTiles" gap="md">
       {statItems.map(({ icon: Icon, label, value }) => (
         <Div key={label} rounded="xl" className={`${__P.p4} text-center`} border="default" surface="muted">
           <Row centered className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></Row>
@@ -271,7 +271,7 @@ function renderProfileListingsSection(t: ProfileT, products: ProfileProduct[], s
           <Text variant="secondary" size="sm">{t("noListings")}</Text>
         </Div>
       ) : (
-        <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+        <Grid cols="cards" gap="md">
           {products.slice(0, 8).map((p: ProfileProduct) => <ProductCard key={p.id} product={toProductItem(p)} href={getProductHref(p)} />)}
         </Grid>
       )}
@@ -294,7 +294,7 @@ function renderAuthoredReviewsSection(t: ProfileT, reviews: ProfileReview[], dis
           <Text variant="secondary" size="sm">{t("noReviewsAuthored", { name: displayName })}</Text>
         </Div>
       ) : (
-        <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
+        <Grid cols="cardsWide" gap="md">
           {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
         </Grid>
       )}
@@ -306,7 +306,7 @@ function renderBuyerReceivedReviewsSection(t: ProfileT, reviews: ProfileReview[]
   return (
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsReceivedAsBuyerTitle") as string || "Reviews Received"}</Heading>
-      <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
+      <Grid cols="cardsWide" gap="md">
         {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
       </Grid>
     </Section>

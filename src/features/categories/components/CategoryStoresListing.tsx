@@ -2,7 +2,7 @@
 import React from "react";
 import { InteractiveStoreCard } from "../../stores/components/InteractiveStoreCard";
 import { ROUTES } from "../../../next";
-import { Div, Stack, Text } from "../../../ui";
+import { Div, Grid, Stack, Text } from "../../../ui";
 import type { StoreListItem } from "../../stores/types";
 
 export interface CategoryStoresListingProps {
@@ -21,7 +21,7 @@ export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
   }
 
   return (
-    <Div layout="grid" gap="5" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <Grid cols="cards" gap="lg">
       {stores.map((store) => (
         <InteractiveStoreCard
           key={store.id}
@@ -29,6 +29,6 @@ export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
           href={String(ROUTES.PUBLIC.STORE_DETAIL(store.storeSlug))}
         />
       ))}
-    </Div>
+    </Grid>
   );
 }

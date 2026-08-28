@@ -633,7 +633,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     renderGrid={() => (
                       <MarketplaceAuctionGrid
                         auctions={related}
-                        gridClassName="grid grid-cols-2 gap-[var(--appkit-space-4)] sm:grid-cols-3 lg:grid-cols-4"
                       />
                     )}
                   />

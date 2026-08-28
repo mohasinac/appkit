@@ -249,7 +249,7 @@ export function AdminViewCards({
       );
     }
     return (
-      <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+      <Grid cols="cards" gap="md">
         {Array.from({ length: count }).map((_, i) => <SkeletonCard key={i} view="grid" />)}
       </Grid>
     );
@@ -281,7 +281,7 @@ export function AdminViewCards({
   }
 
   return (
-    <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+    <Grid cols="cards" gap="md">
       {rows.map((row) => (
         <AdminCardItem
           key={row.id}

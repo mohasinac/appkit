@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import React from "react";
-import { Anchor, Div, Heading, HandModeRow, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
@@ -196,7 +196,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
   const gridClass =
     layout === "carousel"
       ? "flex gap-[var(--appkit-space-4)] overflow-x-auto pb-[var(--appkit-space-2)] snap-x snap-mandatory"
-      : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--appkit-space-4)]";
+      : `${GRID_MAP.cards} gap-[var(--appkit-space-4)]`;
 
   const cardClass = layout === "carousel" ? "flex-shrink-0 w-[85%] sm:w-72 snap-start" : "";
 

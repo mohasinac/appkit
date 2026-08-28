@@ -7,14 +7,7 @@ import { serverLogger } from "../../../monitoring/server-logger";
 // this section silently rendered nothing instead of failing loudly.
 import { sieveFilter, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
 import { sortBy } from "../../../constants/sort";
-import {
-  Container,
-  Div,
-  Heading,
-  Section,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Container, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import type { EventRafflesSectionConfig } from "../../homepage/schemas/firestore";
 import { eventRepository } from "../repository/events.repository";
 import { EventCard } from "./EventCard";
@@ -73,11 +66,11 @@ export async function EventRafflesSection({
             ) : null}
           </Stack>
 
-          <Div gap="3" className="fluid-grid-card">
+          <Grid cols="cardsWide" gap="3">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
-          </Div>
+          </Grid>
         </Stack>
       </Container>
     </Section>
