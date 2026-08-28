@@ -34,14 +34,15 @@ export async function placeBidAction(input: unknown): Promise<ActionResult<unkno
       });
       const userName = profile?.displayName ?? user.name ?? "Anonymous";
 
-      // Mark all current bids for this auction as outbid, then set new winning bid.
-      // `__placeholder__` is not a real bid id, so this call ALWAYS throws at
-      // batch.commit(): the swallow is the mechanism, not a swallowed diagnostic.
-      // The outbid marking that matters is done by the real setWinningBid below,
-      // which sets every other bid for this product to "outbid" anyway.
-      // audit-silent-degrade-ok: the throw is the expected, load-bearing outcome here
-      await bidRepository.setWinningBid("__placeholder__", auctionId).catch(() => null);
-    
+      // (Removed: a `setWinningBid("__placeholder__", auctionId)` call whose
+      // rejection was swallowed. It accomplished NOTHING. setWinningBid builds a
+      // single batch — mark every bid for the product `outbid`, then update the
+      // winning bid's own doc — and `__placeholder__` is not a real bid id, so
+      // `batch.commit()` always threw and DISCARDED the whole batch, outbid
+      // marking included. It cost a full-collection query and an exception per
+      // bid placed, and the real `setWinningBid(bid.id, …)` below already marks
+      // every other bid for this product as outbid.)
+
       const bid = await bidRepository.create({
         productId: auctionId,
         productTitle: (product as any).title ?? auctionId,

@@ -104,7 +104,15 @@ export async function getScammerProfilePageData(
   return { scammer, incidents, comments, relatedScammers, similarScamReports };
 }
 
-export type SellerTrustStatus = "clear" | "flagged";
+/**
+ * `unknown` exists because `clear` is a POSITIVE SAFETY CLAIM — it renders as
+ * "✓ Verified Safe" next to a seller's name. Every read in
+ * `getSellerTrustStatus` used to fail open to `clear`, so a scam-registry
+ * outage actively endorsed a seller nobody had checked. Failing open is still
+ * right (an outage must not brand a legitimate seller a scammer), but the
+ * honest failure state is "we could not check", not "we checked and it's fine".
+ */
+export type SellerTrustStatus = "clear" | "flagged" | "unknown";
 
 export interface SellerTrustResult {
   status: SellerTrustStatus;
@@ -113,6 +121,27 @@ export interface SellerTrustResult {
 }
 
 const TRUST_STATUS_CLEAR: SellerTrustResult = { status: "clear", matchedProfileSlugs: [] };
+const TRUST_STATUS_UNKNOWN: SellerTrustResult = { status: "unknown", matchedProfileSlugs: [] };
+
+/**
+ * Wrap a read so a FAILURE is distinguishable from a legitimate empty result.
+ *
+ * `safeRead` alone cannot express this: its fallback has the same type as a
+ * successful read, so `null` from a failed store lookup and `null` from a store
+ * that does not exist are the same value. Tagging the outcome is what lets the
+ * caller answer "unknown" instead of "clear".
+ */
+async function readTagged<T>(
+  fn: () => Promise<T>,
+  key: string,
+): Promise<{ ok: true; value: T } | { ok: false; value: null }> {
+  type Tagged = { ok: true; value: T } | { ok: false; value: null };
+  return safeRead<Tagged>(async () => ({ ok: true as const, value: await fn() }), {
+    route: "sellerTrust",
+    key,
+    fallback: { ok: false as const, value: null },
+  });
+}
 
 /**
  * P-12 — resolves a store owner's phone/email against the verified (admin-published)
@@ -124,31 +153,42 @@ export async function getSellerTrustStatus(storeId: string): Promise<SellerTrust
   // registry outage must not brand a legitimate seller a scammer. But "clear"
   // is a positive safety claim, so a failure that produces one has to be
   // recorded rather than inferred from a silent null.
-  const store = await safeRead(() => storeRepository.findById(storeId), {
-    route: "sellerTrust", key: "sellerTrust.store", fallback: null,
-  });
-  if (!store?.ownerId) return TRUST_STATUS_CLEAR;
+  const store = await readTagged(
+    () => storeRepository.findById(storeId),
+    "sellerTrust.store",
+  );
+  if (!store.ok) return TRUST_STATUS_UNKNOWN;
+  if (!store.value?.ownerId) return TRUST_STATUS_CLEAR;
 
-  const owner = await safeRead(() => userRepository.findById(store.ownerId!), {
-    route: "sellerTrust", key: "sellerTrust.owner", fallback: null,
-  });
-  if (!owner) return TRUST_STATUS_CLEAR;
+  const ownerId = store.value.ownerId;
+  const owner = await readTagged(
+    () => userRepository.findById(ownerId),
+    "sellerTrust.owner",
+  );
+  if (!owner.ok) return TRUST_STATUS_UNKNOWN;
+  if (!owner.value) return TRUST_STATUS_CLEAR;
 
-  const lookups: Array<Promise<ScammerDocument[]>> = [];
-  if (owner.phoneNumber) lookups.push(scammerRepository.findByContactField("phones", owner.phoneNumber));
-  if (owner.email) lookups.push(scammerRepository.findByContactField("emails", owner.email));
+  const ownerDoc = owner.value;
+  const lookups: Array<() => Promise<ScammerDocument[]>> = [];
+  if (ownerDoc.phoneNumber) {
+    const phone = ownerDoc.phoneNumber;
+    lookups.push(() => scammerRepository.findByContactField("phones", phone));
+  }
+  if (ownerDoc.email) {
+    const email = ownerDoc.email;
+    lookups.push(() => scammerRepository.findByContactField("emails", email));
+  }
   if (lookups.length === 0) return TRUST_STATUS_CLEAR;
 
   const results = await Promise.all(
-    lookups.map((p) =>
-      safeRead(() => p, {
-        route: "sellerTrust",
-        key: "sellerTrust.registryLookup",
-        fallback: [] as ScammerDocument[],
-      }),
-    ),
+    lookups.map((fn) => readTagged(fn, "sellerTrust.registryLookup")),
   );
-  const verified = results.flat().filter((s) => s.status === "verified");
+  // A partial answer is not an answer: if ANY registry lookup failed we cannot
+  // say the seller is clear, only that we could not check.
+  if (results.some((r) => !r.ok)) return TRUST_STATUS_UNKNOWN;
+  const verified = results
+    .flatMap((r) => r.value ?? [])
+    .filter((s) => s.status === "verified");
   if (verified.length === 0) return TRUST_STATUS_CLEAR;
 
   return {

@@ -19,6 +19,19 @@ export interface SellerTrustBadgeProps {
  * features/homepage/index.ts (marketing trust-badge icons row).
  */
 export function SellerTrustBadge({ trust, className = "" }: SellerTrustBadgeProps) {
+  // 🛑 `unknown` MUST be handled before the flagged fallthrough below, and must
+  // never render as "Verified Safe".
+  //
+  // Every read in getSellerTrustStatus used to fail open to "clear", so a
+  // scam-registry outage produced an explicit safety endorsement for a seller
+  // nobody had checked. Failing open is still right — an outage must not brand
+  // a legitimate seller a scammer — but the honest failure state is "we could
+  // not check", which is neither of the two claims this badge otherwise makes.
+  // Rendering nothing is deliberate: a neutral badge would still be a statement,
+  // and the absence of a badge already means "no verified match" everywhere the
+  // registry is not consulted.
+  if (trust.status === "unknown") return null;
+
   if (trust.status === "clear") {
     return (
       <Badge variant="success" className={className}>
