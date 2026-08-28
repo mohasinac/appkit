@@ -92,7 +92,14 @@ export function AdminCouponsView({
     portal: "admin",
     title: "Coupons",
     // buildCouponSearchTxt indexes code + name + description — nothing else.
-    searchPlaceholder: "Search by code, name or description…",
+    // buildCouponSearchTxt indexes exactly these three. Partial prefix
+    // matching, so debounce is the right commit here.
+    search: {
+      placeholder: "Search by code, name or description…",
+      mode: "partial",
+      fields: ["code", "name", "description"],
+      commit: "debounce",
+    },
     emptyLabel: "No coupons found",
     filterKeys: ["type", "showExpired"],
     defaultSort: sortBy("createdAt", "DESC"),

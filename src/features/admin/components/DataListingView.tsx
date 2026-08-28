@@ -121,8 +121,29 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
     placeholder: string;
     /** `exact` for a field resolved through an HMAC blind index. */
     mode?: "partial" | "exact";
-    /** Fields the endpoint actually matches on. */
+    /**
+     * Fields the endpoint actually matches on.
+     *
+     * Not decoration: this is what lets the audit check that the placeholder
+     * does not promise a match the corpus cannot make. A box reading "search
+     * by buyer" over an index built from productTitle/storeName/trackingNumber
+     * is the same lie as a box the endpoint ignores entirely — just harder to
+     * notice, because it returns a plausible empty list instead of nothing.
+     */
     fields?: readonly string[];
+    /**
+     * When the term reaches the URL. Defaults to `"enter"`, which is the
+     * behaviour every existing box already had.
+     *
+     * 🛑 `"debounce"` is invalid with `mode: "exact"` and the audit blocks the
+     * pairing. An exact search resolves an HMAC blind index or a whole-value
+     * equality, so every keystroke before the last is a query GUARANTEED to
+     * match nothing — the user watches "no results" while typing a value that
+     * is in fact present, and each of those round trips is a billed read.
+     */
+    commit?: "enter" | "debounce";
+    /** Debounce delay in ms. Ignored unless `commit: "debounce"`. */
+    debounceMs?: number;
   };
   emptyLabel?: string;
 
@@ -222,6 +243,13 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
   const listing = useAdminListing<TResponse, TRow>({
     ...config,
     initialView: effectiveInitialView,
+    // Mapped explicitly: `...config` cannot reach these, they live one level
+    // down under `search`. An exact-match search is never debounced — every
+    // keystroke before the last is a query guaranteed to match nothing — so
+    // the mode forces "enter" regardless of what the view asked for, and the
+    // audit blocks the pairing at author time rather than relying on this.
+    searchCommit: config.search?.mode === "exact" ? "enter" : config.search?.commit,
+    searchDebounceMs: config.search?.debounceMs,
   });
   const {
     view,

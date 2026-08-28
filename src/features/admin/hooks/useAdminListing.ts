@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
@@ -29,6 +29,15 @@ export interface AdminListingConfig<TResponse, TRow extends { id: string }> {
    * a non-"All" filter state (e.g. hide inactive rows) on first load, while
    * "Clear filters" (which writes an explicit "") still shows everything. */
   filterDefaults?: Record<string, string>;
+  /**
+   * When a typed term reaches the URL. `"enter"` (the default) is what every
+   * box already did — commit on Enter or the button, never on keystroke.
+   *
+   * Passed down from `ListingViewConfig.search.commit`; see the 🛑 there for
+   * why `"debounce"` is invalid with `mode: "exact"`.
+   */
+  searchCommit?: "enter" | "debounce";
+  searchDebounceMs?: number;
 }
 
 export function useAdminListing<TResponse, TRow extends { id: string }>(
@@ -45,6 +54,8 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     buildFilters,
     buildExtraParams,
     filterDefaults = {},
+    searchCommit = "enter",
+    searchDebounceMs = 350,
   } = config;
 
   // Persisted, viewport-aware view-mode: below 768px defaults to "list"
@@ -101,6 +112,31 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
   }, [searchInput, table]);
+
+  // Debounced commit, opt-in per view.
+  //
+  // Two things here are load-bearing:
+  //
+  // 1. It compares against what is ALREADY in the URL and skips a no-op.
+  //    `table.set` issues a router.replace, and replacing the URL with the
+  //    value it already holds re-runs the query for nothing — on mount, on
+  //    every unrelated re-render, and on the render caused by the previous
+  //    commit. That is the double-navigation shape of Root Cause #13.
+  //
+  // 2. The timer is cleared on every keystroke AND on unmount, so a term is
+  //    never committed by a view the user has already navigated away from.
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const committed = table.get("q") ?? "";
+  useEffect(() => {
+    if (searchCommit !== "debounce") return;
+    const next = searchInput.trim();
+    if (next === committed) return;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => table.set("q", next), searchDebounceMs);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [searchInput, committed, searchCommit, searchDebounceMs, table]);
 
   const activeFilterCount = filterKeys.filter((k) => !!table.get(k)).length;
   const hasActiveState = !!table.get("q") || table.get("sort") !== defaultSort || activeFilterCount > 0;

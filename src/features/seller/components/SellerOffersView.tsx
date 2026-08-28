@@ -75,7 +75,14 @@ export function SellerOffersView({
     title: "Offers",
     // buildOfferSearchTxt indexes productTitle + productSlug + storeName — never
     // the buyer's name or email.
-    searchPlaceholder: "Search by product or store…",
+    // buildOfferSearchTxt indexes productTitle + productSlug + storeName —
+    // never the buyer's name or email.
+    search: {
+      placeholder: "Search by product or store…",
+      mode: "partial",
+      fields: ["productTitle", "productSlug", "storeName"],
+      commit: "debounce",
+    },
     emptyLabel: "No offers received",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

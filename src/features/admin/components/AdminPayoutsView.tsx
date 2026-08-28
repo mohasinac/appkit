@@ -120,7 +120,15 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
   const config: ListingViewConfig<AdminPayoutsResponse, PayoutRow> = {
     portal: "admin",
     title: "Payouts",
-    searchPlaceholder: "Search stores, payout IDs, or order groups",
+    // 🛑 This said "Search stores, payout IDs, or order groups". The route
+    // resolves `q` as `sellerEmailIndex == piiBlindIndex(q)` when it contains
+    // an "@", else `sellerName == q` — both EXACT, and neither is a store, a
+    // payout id or an order group. All three promised things were unmatchable.
+    search: {
+      placeholder: "Seller email or name (exact match)",
+      mode: "exact",
+      fields: ["sellerEmail", "sellerName"],
+    },
     emptyLabel: "No payouts found",
     filterKeys: ["status", "showAllPayouts"],
     defaultSort: sortBy("createdAt", "DESC"),

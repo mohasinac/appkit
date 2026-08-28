@@ -146,7 +146,15 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
     // buildOfferSearchTxt indexes productTitle + productSlug + storeName. It does
     // NOT index buyerName or buyerEmail — those are PII, and the placeholder
     // must not promise a match it will never make.
-    searchPlaceholder: "Search by product or store…",
+    // buildOfferSearchTxt indexes productTitle + productSlug + storeName.
+    // NOT buyerName or buyerEmail — those are PII (D1), and a placeholder
+    // naming them would promise a match this corpus cannot make.
+    search: {
+      placeholder: "Search by product or store…",
+      mode: "partial",
+      fields: ["productTitle", "productSlug", "storeName"],
+      commit: "debounce",
+    },
     emptyLabel: "No offers found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

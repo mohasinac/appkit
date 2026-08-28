@@ -596,7 +596,14 @@ export function SellerOrdersView({
     // buildOrderSearchTxt indexes productTitle, storeName and trackingNumber.
     // It does NOT index the buyer's name, email or address — those are PII,
     // and the placeholder must not promise a match it will never make.
-    searchPlaceholder: "Search by product, store or tracking number…",
+    // buildOrderSearchTxt indexes productTitle, storeName and trackingNumber.
+    // NOT the buyer's name, email or address — those are PII (D1).
+    search: {
+      placeholder: "Search by product, store or tracking number…",
+      mode: "partial",
+      fields: ["productTitle", "storeName", "trackingNumber"],
+      commit: "debounce",
+    },
     emptyLabel: "No orders yet",
     filterKeys: ["status"],
     defaultSort: DEFAULT_SORT,

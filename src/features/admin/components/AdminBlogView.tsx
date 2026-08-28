@@ -52,7 +52,14 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
     title: "Blog Posts",
     // buildBlogSearchTxt indexes title + excerpt + category + tags — NOT the post
     // body, which is not tokenised.
-    searchPlaceholder: "Search by title, excerpt, category or tag…",
+    // buildBlogSearchTxt indexes title + excerpt + category + tags — NOT the
+    // post body, which is not tokenised.
+    search: {
+      placeholder: "Search by title, excerpt, category or tag…",
+      mode: "partial",
+      fields: ["title", "excerpt", "category", "tags"],
+      commit: "debounce",
+    },
     emptyLabel: "No blog posts found",
     filterKeys: ["status", "isFeatured"],
     defaultSort: sortBy("publishedAt", "DESC"),

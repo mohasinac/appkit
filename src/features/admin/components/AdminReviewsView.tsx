@@ -104,7 +104,20 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
   const config: ListingViewConfig<AdminReviewsResponse, ReviewRow> = {
     portal: "admin",
     title: "Reviews",
-    searchPlaceholder: "Search reviews, products, or seller names",
+    // 🛑 This said "Search reviews, products, or seller names". The route
+    // resolves `q` as `userNameIndex == piiBlindIndex(q)` — an EXACT match on
+    // the REVIEWER's name, and nothing else. It matched no review text, no
+    // product and no seller, so a partial name returned an empty list that was
+    // indistinguishable from "no such reviewer".
+    //
+    // `mode: "exact"` is not a limitation to apologise for: the field is
+    // encrypted and ciphertext has no usable prefix (D1). Say so in the
+    // placeholder instead of promising what the corpus cannot do.
+    search: {
+      placeholder: "Reviewer name (exact match)",
+      mode: "exact",
+      fields: ["userName"],
+    },
     emptyLabel: "No reviews found",
     filterKeys: ["status", "rating"],
     defaultSort: sortBy("createdAt", "DESC"),

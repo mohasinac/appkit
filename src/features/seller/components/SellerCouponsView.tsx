@@ -94,7 +94,13 @@ export function SellerCouponsView({
     portal: "seller",
     title: "Coupons",
     // buildCouponSearchTxt indexes code + name + description — nothing else.
-    searchPlaceholder: "Search by code, name or description…",
+    // buildCouponSearchTxt indexes exactly these three.
+    search: {
+      placeholder: "Search by code, name or description…",
+      mode: "partial",
+      fields: ["code", "name", "description"],
+      commit: "debounce",
+    },
     emptyLabel: "No coupons found — create your first coupon",
     filterKeys: ["isActive"],
     defaultSort: sortBy("createdAt", "DESC"),

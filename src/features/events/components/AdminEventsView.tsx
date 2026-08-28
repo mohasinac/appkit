@@ -62,7 +62,13 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
     portal: "admin",
     title: "Events",
     // buildEventSearchTxt indexes title + description + type + tags.
-    searchPlaceholder: "Search by title, description, type or tag…",
+    // buildEventSearchTxt indexes title + description + type + tags.
+    search: {
+      placeholder: "Search by title, description, type or tag…",
+      mode: "partial",
+      fields: ["title", "description", "type", "tags"],
+      commit: "debounce",
+    },
     emptyLabel: "No events found",
     filterKeys: ["status", "type"],
     defaultSort: sortBy("startsAt", "DESC"),
