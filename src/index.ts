@@ -2756,8 +2756,6 @@ export { verifySessionCookie } from "./providers/auth-firebase/index";
 
 // ./providers/db-firebase/index
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// FirebaseRealtimeRepository - Shared export for firebase realtime repository.
-export { FirebaseRealtimeRepository } from "./providers/db-firebase/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // FirebaseRepository - Shared export for firebase repository.
 export { FirebaseRepository } from "./providers/db-firebase/index";

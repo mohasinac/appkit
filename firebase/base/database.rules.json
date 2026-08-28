@@ -9,17 +9,20 @@
     // Clients may ONLY subscribe (read) to paths they are
     // explicitly authorised to read via a server-issued custom
     // token.  The custom token encodes:
-    //   { uid, sessionId, role, chatIds: { [chatId]: true } }
+    //   { uid, role, chatIds: {...}, conversationIds: {...} }
+    //
+    // NOTE: `role` is issued but NO rule below reads it — it is Firestore/API
+    // RBAC riding along, and it consumes part of the 1000-byte claims budget.
     //
     // /api/realtime/token  —  issues the custom token
     //   - Verifies active session cookie before issuing
     //   - Token lifetime ≤ 1 hour (matches session TTL)
     //   - Client calls this endpoint before the token expires
     //
-    // Custom token auth flow (client-side):
-    //   import { realtimeApp } from '@/lib/firebase/realtime'
-    //   await signInWithCustomToken(getAuth(realtimeApp), tok.customToken)
-    //   onValue(ref(getDatabase(realtimeApp), `chat/${id}/messages`), ...)
+    // Custom token auth flow (client-side): go through the registered provider,
+    // src/lib/client-providers-init.ts -> FirebaseClientRealtimeProvider, and
+    // take a lease via appkit/src/contracts/realtime-session.ts. Never sign in
+    // to the shared app directly — sessions are reference-counted.
     // ============================================================
     ".read": false,
     ".write": false,
@@ -48,61 +51,24 @@
         }
       }
     },
-
-    "notifications": {
-      "$uid": {
-        // User may read only their own notifications (uid in custom token must match)
-        ".read": "auth != null && auth.uid == $uid",
-        // ALL writes are Admin-only (backend pushes notifications)
-        ".write": false,
-        "$notificationId": {
-          ".validate": "newData.hasChildren(['title', 'message', 'type', 'timestamp', 'read'])",
-          "title": { ".validate": "newData.isString()" },
-          "message": { ".validate": "newData.isString()" },
-          "type": {
-            ".validate": "newData.isString() && (newData.val() == 'info' || newData.val() == 'success' || newData.val() == 'warning' || newData.val() == 'error')"
-          },
-          "timestamp": {
-            ".validate": "newData.isNumber() || newData.val() == '.sv'"
-          },
-          "read": { ".validate": "newData.isBoolean()" }
-        }
-      }
-    },
-
-    "live_updates": {
-      "$updateType": {
-        // Public broadcast channel — anyone may subscribe, only backend writes
-        ".read": true,
-        ".write": false,
-        ".validate": "newData.hasChildren(['timestamp'])",
-        "timestamp": {
-          ".validate": "newData.isNumber() || newData.val() == '.sv'"
-        }
-      }
-    },
-
-    "presence": {
-      "$uid": {
-        // Online-presence node — client reads own node only after auth,
-        // server writes via Admin SDK when session is established/expired
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": false,
-        ".validate": "newData.hasChildren(['online', 'lastSeen'])",
-        "online": { ".validate": "newData.isBoolean()" },
-        "lastSeen": {
-          ".validate": "newData.isNumber() || newData.val() == '.sv'"
-        }
-      }
-    },
-
     "auction-bids": {
       "$productId": {
-        // Public real-time bid feed — no auth required.
-        // The hook useRealtimeBids uses the unauthenticated public RTDB instance
-        // so any visitor can watch live bids on an auction product page.
+        // Server-relayed bid feed. NOT client-readable.
+        //
+        // This was ".read": true, justified by a comment claiming "the hook
+        // useRealtimeBids uses the unauthenticated public RTDB instance". That
+        // was false: useRealtimeBids opens an EventSource against
+        // /api/realtime/bids/{id}, which reads through the Admin SDK and
+        // bypasses these rules entirely. No client-SDK reader of auction-bids
+        // exists anywhere in the codebase.
+        //
+        // So the grant was dead AND leaking: $productId is a public URL segment,
+        // which made {currentBid, bidCount, lastBid.amount, lastBid.bidderName}
+        // — a real bidder display name — readable by anyone, harvestable by
+        // looping product ids. Closing it has zero client impact.
+        //
         // All writes are Admin-only via the backend bid placement API route.
-        ".read": true,
+        ".read": false,
         ".write": false,
         ".validate": "newData.hasChildren(['currentBid', 'bidCount'])",
         "currentBid": {
@@ -121,26 +87,6 @@
         }
       }
     },
-
-    "order_tracking": {
-      "$orderId": {
-        // Only the order owner may subscribe to live order tracking updates.
-        // The custom token must contain an orderId claim matching this $orderId.
-        // Token is issued by POST /api/realtime/token?orderId=<id> after verifying ownership.
-        // All writes are Admin-only via backend order management routes.
-        ".read": "auth != null && auth.token.orderId == $orderId",
-        ".write": false,
-        "$event": {
-          ".validate": "newData.hasChildren(['status', 'timestamp'])",
-          "status": { ".validate": "newData.isString()" },
-          "timestamp": {
-            ".validate": "newData.isNumber() || newData.val() == '.sv'"
-          },
-          "message": { ".validate": "!newData.exists() || newData.isString()" }
-        }
-      }
-    },
-
     // ============================================================
     // Buyer↔Seller Conversation Ping Channel (D5 + VC7)
     // ============================================================
@@ -186,8 +132,8 @@
     //   4. Client RTDB handler fires → calls router.refresh() to load session.
     //
     // The custom token encodes ONLY the specific eventId — no other paths.
-    // Cleanup: Firebase Function cleanupAuthEvents runs every 5 min to
-    // delete events older than 3 min, preventing RTDB accumulation.
+    // Cleanup: the `cleanupRtdbEvents` scheduled Function runs every 5 min and
+    // deletes auth_events older than 3 min.
     // ============================================================
     "auth_events": {
       "$eventId": {
@@ -205,11 +151,11 @@
     // Same pattern as auth_events but for payment confirmations.
     //
     // Flow:
-    //   1. Client calls POST /api/payments/event/init (requires session)
+    //   1. Client calls POST /api/payment/event/init (requires session)
     //      → server creates /payment_events/{eventId} { status:'pending' }
     //      → issues custom token with { paymentEventId: eventId }
     //   2. Client subscribes read-only to /payment_events/{eventId}
-    //   3. Razorpay webhook hits /api/payments/webhook
+    //   3. Razorpay webhook hits /api/payment/webhook
     //      → verifies HMAC → updates Firestore order
     //      → writes { status:'success', orderId } to /payment_events/{eventId}
     //   4. Client RTDB handler fires → navigates to order confirmation.
@@ -245,22 +191,6 @@
     "bulk_events": {
       "$jobId": {
         ".read": "auth != null && auth.token.bulkJobId == $jobId",
-        ".write": false
-      }
-    },
-
-    // ============================================================
-    // Seed Run Progress Channel — admin-only demo seed UI
-    // ============================================================
-    // POST /api/demo/seed/event/init creates the node, issues a custom
-    // token with { seedRunId: runId }. POST /api/demo/seed writes
-    // per-collection progress under /seed_events/{runId}/cols/{name}
-    // and overall meta under /seed_events/{runId}/meta as it runs.
-    // The SeedPanel subscribes for real-time updates.
-    // ============================================================
-    "seed_events": {
-      "$runId": {
-        ".read": "auth != null && auth.token.seedRunId == $runId",
         ".write": false
       }
     }

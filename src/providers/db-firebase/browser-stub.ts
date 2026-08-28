@@ -43,18 +43,13 @@ export function deserializeTimestamps<T>(data: any): T {
 }
 export const FirebaseRepository: any = null;
 export const FirebaseSieveRepository: any = null;
-export const FirebaseRealtimeRepository: any = null;
 export const firebaseDbProvider: any = null;
-export const RTDB_PATHS = {
-  PRESENCE: "presence",
-  CHAT: "chat",
-  NOTIFICATIONS: "notifications",
-  LIVE_UPDATES: "live_updates",
-  AUTH_EVENTS: "auth_events",
-  PAYMENT_EVENTS: "payment_events",
-  BULK_EVENTS: "bulk_events",
-  SEED_EVENTS: "seed_events",
-} as const;
+// Re-exported, NOT re-declared. This file is the `browser` resolution target, so
+// the byte-for-byte copy that used to live here meant client code and server
+// code read two independently-maintained definitions of the same constant, with
+// nothing guarding the drift. `rtdb-paths.ts` has no imports, so it is safe to
+// pull into a browser bundle directly.
+export { RTDB_PATHS } from "./rtdb-paths";
 // Client config builder � safe in all environments
 export { buildFirebaseClientConfig, normalizeFirebaseConfigValue } from './client-config';
 export type { FirebaseClientConfig } from './client-config';

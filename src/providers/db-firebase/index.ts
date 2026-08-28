@@ -47,7 +47,6 @@ export type { DocumentSnapshot } from "firebase-admin/firestore";
 export { FirebaseRepository } from "./base";
 export { BaseRepository } from "./base.repository";
 export { FirebaseSieveRepository } from "./sieve";
-export { FirebaseRealtimeRepository } from "./realtime";
 
 // Re-export RTDB paths
 export { RTDB_PATHS } from "./rtdb-paths";

@@ -107,18 +107,13 @@ export async function handleOrderStatusChange(
       orderWhatsappAddonPaid: after.whatsappNotifyAddon === true,
     });
 
-    try {
-      await getAdminRealtimeDb().ref(`notifications/${after.userId}`).push({
-        type: config.type,
-        title: config.title,
-        message: messageText,
-        timestamp: Date.now(),
-        read: false,
-      });
-    } catch (rtdbError) {
-      void normalizeError(rtdbError);
-      ctx.logger.error("Realtime DB push failed (non-fatal)", rtdbError);
-    }
+    // The RTDB mirror that used to live here has been removed. `sendNotification`
+    // above is the real path (in-app + email + WhatsApp); the extra
+    // `notifications/{uid}` push was a duplicate that NOTHING read — no client
+    // subscription to that node has ever existed — and nothing pruned, so it
+    // accumulated one node per order transition per user forever. Its rule's
+    // `.type` validator also only allowed `info|success|warning|error`, none of
+    // which are the values written here (`order_confirmed`, `order_shipped`, …).
 
     ctx.logger.info(`Order ${orderId} status → ${newStatus}`, { userId: after.userId });
   } catch (error) {

@@ -45,7 +45,6 @@ export {
   FirebaseRepository,
   BaseRepository,
   FirebaseSieveRepository,
-  FirebaseRealtimeRepository,
   RTDB_PATHS,
   firebaseFieldOps,
   removeUndefined,
