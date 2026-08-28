@@ -66,3 +66,4 @@ export type {
   NormalizedUnknownThrownValue,
   NormalizedZodError,
 } from "./normalize";
+export * from "./degraded";

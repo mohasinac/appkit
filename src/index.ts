@@ -963,6 +963,10 @@ export { ApiError } from "./errors/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // AppError - Model for app error.
 export { AppError } from "./errors/index";
+// withDegraded / DegradedNotice / SORT_DROPPED_FOR_EXACT_SEARCH — a response
+// that is honest about a compromise the handler made deliberately.
+export { withDegraded, SORT_DROPPED_FOR_EXACT_SEARCH } from "./errors/index";
+export type { DegradedNotice } from "./errors/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // AuthenticationError - Model for authentication error.
 export { AuthenticationError } from "./errors/index";
