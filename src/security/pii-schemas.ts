@@ -6,7 +6,25 @@
  */
 
 /** PII fields in the users collection (top-level string fields) */
-export const USER_PII_FIELDS = ["email", "phoneNumber"] as const;
+/**
+ * `googleLinkedEmail` was added 2026-08-28, found by audit-pii-coverage.
+ *
+ * It is a real email address, written in cleartext by the Google OAuth callback
+ * (`api/auth/google/callback`, three write sites) and stored on the user
+ * document beside `email` — which has always been encrypted. So one user's two
+ * email addresses sat in the same document, one ciphertext and one plaintext,
+ * and nothing pointed at the difference.
+ *
+ * No blind index: nothing queries by it. Its only reader is the account
+ * holder's own profile ("Signed in as …"), which is a legitimate plaintext read.
+ *
+ * Existing rows stay plaintext until backfilled and keep reading correctly —
+ * `decryptValue` passes a non-`enc:v1:` string through unchanged — so new
+ * writes encrypt while old rows converge, never diverge. Add
+ * `googleLinkedEmail` to the `users` target in `backfill-pii.mjs` when that
+ * backfill is next run.
+ */
+export const USER_PII_FIELDS = ["email", "phoneNumber", "googleLinkedEmail"] as const;
 
 /** Blind-index mapping for queryable user PII: source → index field name */
 export const USER_PII_INDEX_MAP: Record<string, string> = {

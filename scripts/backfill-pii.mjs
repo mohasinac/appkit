@@ -202,7 +202,11 @@ const TARGETS = [
   // `users` already encrypts email/phoneNumber on write; this backfills the
   // MAPPED index name (`phoneIndex`), which encryptPiiFields never wrote —
   // findByPhone queried a field that only existed on seeded users.
-  { collection: "users", fields: [], indexMap: {}, reindexOnly: { phoneNumber: "phoneIndex" } },
+  // `googleLinkedEmail` joined USER_PII_FIELDS on 2026-08-28 (found by
+  // audit-pii-coverage): a real email written cleartext by the Google OAuth
+  // callback, sitting beside the already-encrypted `email` on the same
+  // document. New writes encrypt it; this backfills the rows written before.
+  { collection: "users", fields: ["googleLinkedEmail"], indexMap: {}, reindexOnly: { phoneNumber: "phoneIndex" } },
 ];
 
 function parsePrivateKey(raw) {
