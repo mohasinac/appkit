@@ -29,6 +29,16 @@ export interface UseFormBottomActionsOptions {
    * the primary action.
    */
   destructiveAction?: { label: string; onClick: () => void; disabled?: boolean };
+  /**
+   * Further actions this form offers, spliced between the destructive one and
+   * Submit so the ordering rule survives: destructive furthest from the thumb,
+   * submit under it.
+   *
+   * Exists because the bar was hard-capped at three. `/admin/users` needs five
+   * (three forms plus soft-ban and hard-ban), so its extra actions had nowhere
+   * to go and stayed as an inline row the pinned bar then competed with.
+   */
+  extraActions?: BottomAction[];
   ctx?: FormShellContextValue;
 }
 
@@ -76,6 +86,7 @@ export function useFormBottomActions({
   disabled = false,
   enabled = true,
   destructiveAction,
+  extraActions,
   ctx: ctxProp,
 }: UseFormBottomActionsOptions) {
   const ambient = useContext(FormShellContext);
@@ -91,14 +102,20 @@ export function useFormBottomActions({
     const list: BottomAction[] = [];
     /*
      * Destructive FIRST, so it is furthest from the thumb's resting position
-     * on the primary action. It never grows, so Save keeps the width.
+     * on the primary action, which BottomActions renders last.
+     *
+     * None of these set `grow` any more. They used to — destructive and cancel
+     * were `grow: false` — and because BottomActions collapsed `grow: false`
+     * into the same branch as "icon-only", both were rendered as a fixed 44px
+     * square, so "Cancel" truncated while Save took the rest of the bar. With
+     * the branch split, letting flex decide gives 50/50 for two actions and an
+     * even share for more, which is what the row should have done all along.
      */
     if (destructiveAction) {
       list.push({
         id: "form-destructive",
         label: destructiveAction.label,
         variant: "danger",
-        grow: false,
         onClick: destructiveAction.onClick,
         disabled: destructiveAction.disabled || isLoading,
       });
@@ -108,11 +125,13 @@ export function useFormBottomActions({
         id: "form-cancel",
         label: cancelLabel,
         variant: "outline",
-        grow: false,
         onClick: onCancel,
         disabled: isLoading,
       });
     }
+    if (extraActions?.length) list.push(...extraActions);
+    // Submit LAST: BottomActions treats the final action as the primary and
+    // gives it its own full-width line once the bar holds three or more.
     list.push({
       id: "form-submit",
       label: submitLabel,
@@ -123,7 +142,7 @@ export function useFormBottomActions({
       onClick: () => void onSubmit(),
     });
     return list;
-  }, [active, onCancel, cancelLabel, submitLabel, isLoading, disabled, onSubmit, destructiveAction]);
+  }, [active, onCancel, cancelLabel, submitLabel, isLoading, disabled, onSubmit, destructiveAction, extraActions]);
 
   useBottomActions({
     actions,

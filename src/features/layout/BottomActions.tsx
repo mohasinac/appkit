@@ -156,20 +156,45 @@ function InfoPanel({
   );
 }
 
-function PageActionsRow({
-  pageActions,
+/**
+ * How many actions fit on one line before the row splits in two.
+ *
+ * 🛑 Row count is a function of `pageActions.length` and NOTHING else — never
+ * of validation state. `BottomChrome`'s ResizeObserver faithfully republishes
+ * `--bottom-chrome-height` on any height change, and every consumer
+ * (BackToTop, the pagination bar, the footer's clearance) reflows with it. A
+ * bar that grew a row when an error appeared would shift the whole page while
+ * the user was typing. The error count lives in `infoLabel`, which sits in the
+ * absolutely-positioned panel and is excluded from the published height by
+ * construction.
+ */
+const SINGLE_ROW_MAX_ACTIONS = 2;
+
+function ActionButtons({
+  actions,
   dispatchAction,
 }: {
-  pageActions: BottomAction[];
+  actions: BottomAction[];
   dispatchAction: (id: string) => void;
 }) {
   return (
     <>
-      {pageActions.map((action) => {
+      {actions.map((action) => {
         const isIconOnly = !action.label;
-        const growClass =
-          isIconOnly || action.grow === false
-            ? "flex-shrink-0 w-11"
+        /*
+         * `grow: false` and "icon-only" used to share one branch whose output
+         * was a fixed 44px square — so a LABELLED action asking not to grow got
+         * 44px and truncated. That is the reported "Cancel is cut off while
+         * Save takes 80% of the width": useFormBottomActions set grow:false on
+         * Cancel, and a two-button bar rendered 44px + everything else.
+         *
+         * They are different intents. Icon-only is a square tap target;
+         * grow:false means "size me to my content" and must keep its padding.
+         */
+        const growClass = isIconOnly
+          ? "flex-shrink-0 w-11"
+          : action.grow === false
+            ? "flex-shrink-0 basis-auto px-[var(--appkit-space-3)]"
             : "flex-1 min-w-0";
         return (
           <Button
@@ -209,6 +234,60 @@ function PageActionsRow({
         );
       })}
     </>
+  );
+}
+
+/**
+ * Lays a form's or a page's actions out across one or two lines.
+ *
+ * | n    | layout                                                          |
+ * |------|-----------------------------------------------------------------|
+ * | 1    | one row, full-width primary                                     |
+ * | 2    | one row, 50/50                                                  |
+ * | 3+   | two rows — secondaries above, primary full-width below           |
+ *
+ * The LAST action is treated as the primary. That holds for every producer:
+ * `useFormBottomActions` appends submit last, and the checkout/cart bars build
+ * `[back, primary]`. Putting it on its own line keeps the thumb target the same
+ * size no matter how many secondary actions a screen has, which is the whole
+ * reason a 5-action form (3 forms + soft-ban + hard-ban on the admin user
+ * editor) was unrepresentable before.
+ *
+ * Secondaries WRAP rather than overflowing into a menu. Wrapping keeps the
+ * height a pure function of the action count — the invariant above — whereas a
+ * popover would add a second interaction to reach an action that is already
+ * only one line away. No current caller exceeds five.
+ */
+function PageActionsRow({
+  pageActions,
+  dispatchAction,
+}: {
+  pageActions: BottomAction[];
+  dispatchAction: (id: string) => void;
+}) {
+  if (pageActions.length === 0) return null;
+
+  if (pageActions.length <= SINGLE_ROW_MAX_ACTIONS) {
+    return <ActionButtons actions={pageActions} dispatchAction={dispatchAction} />;
+  }
+
+  const secondaries = pageActions.slice(0, -1);
+  const primary = pageActions[pageActions.length - 1]!;
+
+  return (
+    <Div className="flex w-full flex-col gap-[var(--appkit-space-2)]">
+      <Div className="flex w-full flex-wrap gap-[var(--appkit-space-2)]">
+        <ActionButtons actions={secondaries} dispatchAction={dispatchAction} />
+      </Div>
+      <Div className="flex w-full">
+        {/* Forced to grow regardless of what the producer asked for: on its own
+            line there is nothing to share the width with. */}
+        <ActionButtons
+          actions={[{ ...primary, grow: true }]}
+          dispatchAction={dispatchAction}
+        />
+      </Div>
+    </Div>
   );
 }
 
@@ -419,7 +498,10 @@ export default function BottomActions() {
             )}
 
             {/* -- Main action row -------------------------------------------------- */}
-            <Row className={`${BOTTOM_NAV_HEIGHT}`} gap="sm" padding="x-sm">
+            {/* `min-h`, not `h`: a 3+-action form lays out on two lines and the
+                container has to grow with it. For one line the result is
+                identical to the old fixed h-14 (h-10 buttons, centred). */}
+            <Row className={`min-${BOTTOM_NAV_HEIGHT} py-[var(--appkit-space-2)]`} gap="sm" padding="x-sm">
               {isBulkMode && bulk ? (
                 <>
                   {/* Selection count pill — tap to clear ----------------------- */}
