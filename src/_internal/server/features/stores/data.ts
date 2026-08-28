@@ -12,7 +12,7 @@ import { makeGetStoreListingsInitial } from "../shared/listing-data-factory";
 /** Full store document by slug — deduped per request via React.cache(). */
 export const getStoreForDetail = cache(
   async (slug: string): Promise<StoreDocument | null> => {
-    return (await storeRepository.findBySlug(slug).catch(() => undefined)) ?? null;
+    return (await storeRepository.findBySlug(slug)) ?? null;
   },
 );
 

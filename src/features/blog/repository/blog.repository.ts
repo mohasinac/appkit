@@ -109,9 +109,11 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
         .collection(this.collection)
         .doc(id)
         .update({ [BLOG_POST_FIELDS.VIEWS]: increment(1) });
+      // Fire-and-forget analytics: a lost view increment changes nothing that
+      // renders and cannot usefully be retried, so it must never fail the blog
+      // post read that triggered it — the count is approximate by design.
     } catch (_err) {
       void normalizeError(_err);
-      // Fire-and-forget by design.
     }
   }
 

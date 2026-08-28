@@ -9,7 +9,7 @@ import type { CategoryDocument } from "../../../../features/categories/schemas/f
  */
 export const getBrandForDetail = cache(
   async (slug: string): Promise<CategoryDocument | null> => {
-    return categoriesRepository.findBySlugAndType(slug, "brand").catch(() => null);
+    return categoriesRepository.findBySlugAndType(slug, "brand");
   },
 );
 

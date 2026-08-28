@@ -11,7 +11,7 @@ import {
 import type { ApplyCouponInput } from "../../../shared/features/promotions/schema";
 
 export async function validateCoupon(input: ApplyCouponInput, userId: string) {
-  const coupon = await couponsRepository.getCouponByCode(input.code).catch(() => null);
+  const coupon = await couponsRepository.getCouponByCode(input.code);
   if (!coupon) throw new CouponNotFoundError(input.code);
   if (!coupon.validity?.isActive) throw new CouponExpiredError(input.code);
 

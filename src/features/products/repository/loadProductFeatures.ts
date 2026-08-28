@@ -4,15 +4,23 @@
  * pages to hand `productFeatures` down as a prop and avoid per-card waterfalls.
  */
 import { productFeaturesRepository } from "./product-features.repository";
+import { safeRead } from "../../../errors/safe-read";
 import type { ProductFeatureDocument } from "../schemas/product-features";
 
 export async function loadProductFeaturesForStore(
   storeId?: string | null,
 ): Promise<ProductFeatureDocument[]> {
+  // Feature badges decorate a card; a page without them is still correct, so
+  // both reads degrade — but a failure here silently strips "Free shipping" /
+  // "Authenticity guaranteed" from every card, which nobody would notice.
   const [platform, store] = await Promise.all([
-    productFeaturesRepository.listPlatform().catch(() => []),
+    safeRead(() => productFeaturesRepository.listPlatform(), {
+      route: "productFeatures", key: "productFeatures.platform", fallback: [],
+    }),
     storeId
-      ? productFeaturesRepository.listForStore(storeId).catch(() => [])
+      ? safeRead(() => productFeaturesRepository.listForStore(storeId), {
+          route: "productFeatures", key: "productFeatures.store", fallback: [],
+        })
       : Promise.resolve([]),
   ]);
   const seen = new Set<string>();

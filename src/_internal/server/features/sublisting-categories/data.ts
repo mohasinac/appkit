@@ -3,6 +3,6 @@ import { categoriesRepository } from "../../../../repositories";
 
 export const getSublistingCategoryForDetail = cache(
   async (slug: string) => {
-    return categoriesRepository.findBySlugAndType(slug, "sublisting").catch(() => null);
+    return categoriesRepository.findBySlugAndType(slug, "sublisting");
   },
 );

@@ -11,7 +11,7 @@ export async function enterPrizeDrawAction(input: unknown): Promise<ActionResult
     const { prizeDrawId } = input as { prizeDrawId: string };
     if (!prizeDrawId) throw new Error("prizeDrawId is required.");
 
-    const product = await productRepository.findByIdOrSlug(prizeDrawId).catch(() => null);
+    const product = await productRepository.findByIdOrSlug(prizeDrawId);
     if (!product) throw new Error("Prize draw not found.");
 
     assertPrizeDrawOpen(product);

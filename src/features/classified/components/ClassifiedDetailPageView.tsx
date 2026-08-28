@@ -39,6 +39,7 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { ClassifiedContactSellerPanel } from "./ClassifiedContactSellerPanel";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
 import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
@@ -74,7 +75,10 @@ function toDescriptionHtml(raw: unknown): string {
 export async function ClassifiedDetailPageView({ slug, initialProduct, renderOfferAction }: ClassifiedDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
-    : await getClassifiedForDetail(slug).catch(() => undefined);
+    // The listing IS this page's subject — a read failure must surface rather
+    // than become the same `undefined` a removed listing produces, which the
+    // "Not Found" branch below already handles.
+    : await getClassifiedForDetail(slug);
 
   if (!product) {
     return (
@@ -117,7 +121,11 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
   const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
-    getSiteSettingsGlobal().catch(() => null),
+    safeRead(() => getSiteSettingsGlobal(), {
+      route: "/classified/[slug]",
+      key: "classified.siteSettings",
+      fallback: null,
+    }),
   ]);
 
   // Classifieds are the one non-standard type where haggling is the norm, so

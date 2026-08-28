@@ -1,6 +1,7 @@
 "use client";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 import { Badge, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
@@ -94,8 +95,11 @@ export function SellerStoreCategoriesView({
     try {
       await performDelete(id);
     } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to delete category", "error");
+      const e = normalizeError(err);
+      showToast(
+        toUserMessage(e.code, undefined, { fallback: "Failed to delete category." }),
+        "error",
+      );
     }
     setDeleteTargetId(null);
   }, [onDelete, performDelete, showToast]);

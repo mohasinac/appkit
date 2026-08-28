@@ -60,7 +60,10 @@ function toDescriptionHtml(raw: unknown): string {
 export async function LiveItemDetailPageView({ slug, initialProduct, renderActions }: LiveItemDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
-    : await getLiveItemForDetail(slug).catch(() => undefined);
+    // The listing IS this page's subject — a read failure must surface rather
+    // than become the same `undefined` a removed listing produces, which the
+    // "Not Found" branch below already handles.
+    : await getLiveItemForDetail(slug);
 
   if (!product) {
     return (

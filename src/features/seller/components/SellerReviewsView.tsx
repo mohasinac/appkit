@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Badge, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea } from "../../../ui";
+import { Alert, Badge, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
@@ -75,6 +75,7 @@ export function SellerReviewsView({
   replyApiBase = SELLER_ENDPOINTS.REVIEWS,
 }: SellerReviewsViewProps) {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
   const refetchReviews = useCallback(
     () => queryClient.invalidateQueries({ queryKey: ["seller", "reviews", "listing"] }),
     [queryClient],
@@ -125,48 +126,74 @@ export function SellerReviewsView({
     }
   };
 
+  // The three submits below all closed their modal unconditionally, so a
+  // rejected or unsent request looked exactly like a successful one — the
+  // seller believed the contest/feedback/reply had been filed.
   const submitContest = useCallback(async (onDone: () => void) => {
     if (!contestTarget) return;
-    await fetch(SELLER_ENDPOINTS.REVIEW_CONTEST(contestTarget.id), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reason: contestReason }),
-    }).catch(() => null);
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.REVIEW_CONTEST(contestTarget.id), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: contestReason }),
+      });
+      if (!res.ok) throw new Error(`Could not submit the contest (${res.status})`);
+    } catch (err) {
+      showToast(normalizeError(err).message, "error");
+      return;
+    }
     setContestTarget(null);
     setContestReason("");
     onDone();
-  }, [contestTarget, contestReason]);
+  }, [contestTarget, contestReason, showToast]);
 
   const submitFeedback = useCallback(async () => {
     if (!feedbackTarget) return;
-    await fetch(SELLER_ENDPOINTS.REVIEW_FEEDBACK(feedbackTarget.id), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ feedback: feedbackText }),
-    }).catch(() => null);
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.REVIEW_FEEDBACK(feedbackTarget.id), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ feedback: feedbackText }),
+      });
+      if (!res.ok) throw new Error(`Could not send the feedback (${res.status})`);
+    } catch (err) {
+      showToast(normalizeError(err).message, "error");
+      return;
+    }
     setFeedbackTarget(null);
     setFeedbackText("");
-  }, [feedbackTarget, feedbackText]);
+  }, [feedbackTarget, feedbackText, showToast]);
 
   const submitBulkReply = useCallback(async () => {
     if (!bulkReplyText.trim() || bulkTargetIds.length === 0) return;
     setBulkSaving(true);
-    await Promise.all(
+    // Partial success is the normal outcome of a bulk write, so report the
+    // count that failed rather than throwing away the whole batch's result.
+    const outcomes = await Promise.all(
       bulkTargetIds.map((id) =>
         fetch(`${replyApiBase}/${id}/reply`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ reply: bulkReplyText }),
-        }).catch(() => null),
+        })
+          .then((res) => res.ok)
+          .catch((err: unknown) => {
+            void normalizeError(err);
+            return false;
+          }),
       ),
     );
+    const failed = outcomes.filter((ok) => !ok).length;
+    if (failed > 0) {
+      showToast(`${failed} of ${outcomes.length} replies could not be saved.`, "error");
+    }
     setBulkSaving(false);
     setBulkReplyOpen(false);
     setBulkReplyText("");
     bulkClearSelection?.();
     setBulkTargetIds([]);
     await refetchReviews();
-  }, [bulkReplyText, bulkTargetIds, replyApiBase, bulkClearSelection, refetchReviews]);
+  }, [bulkReplyText, bulkTargetIds, replyApiBase, bulkClearSelection, refetchReviews, showToast]);
 
   const config: ListingViewConfig<ReviewsListResponse, ReviewItem> = {
     portal: "seller",

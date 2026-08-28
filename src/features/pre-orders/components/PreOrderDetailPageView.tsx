@@ -380,7 +380,10 @@ function PreOrderBuyBarPanel({
 export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow, productFeatures }: PreOrderDetailPageViewProps) {
   const product = initialPreOrder !== undefined
     ? (initialPreOrder ?? undefined)
-    : await productRepository.findByIdOrSlug(id).catch(() => undefined);
+    // The pre-order IS this page's subject — a read failure must surface rather
+    // than become the same `undefined` a removed listing produces, which the
+    // "Not Found" branch below already handles.
+    : await productRepository.findByIdOrSlug(id);
 
   if (!product) {
     return (

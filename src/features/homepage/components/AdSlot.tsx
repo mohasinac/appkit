@@ -37,9 +37,11 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
       ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
         {},
       );
+      // adsbygoogle is injected by a third-party script that ad blockers and
+      // consent walls routinely prevent from loading. The <ins> below simply
+      // stays unfilled — there is no failure the site can act on.
     } catch (_err) {
       void normalizeError(_err);
-      // AdSense not loaded yet — no-op
     }
   }, []);
 

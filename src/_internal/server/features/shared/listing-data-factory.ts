@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { productRepository } from "../../../../repositories";
+import { safeRead } from "../../../../errors/safe-read";
 import { loadProductFeaturesForStore } from "../../../../features/products/repository/loadProductFeatures";
 import type { ListingType } from "../../../../features/products/types";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
@@ -12,7 +13,7 @@ export function makeGetListingForDetail(
 ): (slugOrId: string) => Promise<ProductDocument | null> {
   return cache(async (slugOrId: string): Promise<ProductDocument | null> => {
     if (!slugOrId) return null;
-    const product = await productRepository.findByIdOrSlug(slugOrId).catch(() => undefined);
+    const product = await productRepository.findByIdOrSlug(slugOrId);
     if (!product || product.listingType !== type) return null;
     return product;
   });
@@ -22,7 +23,11 @@ export function makeGetListingForDetail(
 // Per-type data.ts files re-export this under a type-specific name.
 export const getProductFeaturesForStore = cache(
   async (storeId: string | null): Promise<ProductFeatureDocument[]> =>
-    loadProductFeaturesForStore(storeId).catch(() => []),
+    safeRead(() => loadProductFeaturesForStore(storeId), {
+      route: "/products",
+      key: "products.getProductFeaturesForStore",
+      fallback: [],
+    }),
 );
 
 // Returns a React.cache()-wrapped function for store SSR first-page data.

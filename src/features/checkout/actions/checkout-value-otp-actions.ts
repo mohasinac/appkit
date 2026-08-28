@@ -10,6 +10,7 @@
 import { timingSafeEqual } from "crypto";
 import { ValidationError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
+import { safeRead } from "../../../errors/safe-read";
 import { serverLogger } from "../../../monitoring";
 import { sendEmail } from "../../contact/email";
 import { getAdminDb } from "../../../providers/db-firebase";
@@ -68,7 +69,15 @@ export async function sendCheckoutValueOtp(
     if (!addressId) {
       throw new ValidationError("Select a delivery address before sending the code via WhatsApp.");
     }
-    const settings = await siteSettingsRepository.getSingleton().catch(() => null);
+    // A failed settings read makes the WhatsApp channel look deliberately
+    // switched off ("send the code by email instead") — a defensible fallback,
+    // but one an operator has to be able to see, since it is indistinguishable
+    // from an admin having disabled it.
+    const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+      route: "checkout/value-otp",
+      key: "checkoutValueOtp.siteSettings",
+      fallback: null,
+    });
     const creds = settings?.credentials ?? {};
     const whatsappOtpEnabled = settings?.notificationChannels?.whatsapp?.otpEnabled === true;
     const phoneNumberId = creds.whatsappPhoneNumberId?.trim() ?? "";

@@ -7,6 +7,8 @@ import { eventInputSchema, eventUpdateSchema, registerForEventSchema } from "../
 import { assertEventActive } from "./service";
 import { AlreadyRegisteredError, EventNotFoundError } from "../../../shared/features/events/errors";
 import { ValidationError } from "../../../shared/errors/index";
+import { normalizeError } from "../../../../errors/normalize";
+import { serverLogger } from "../../../../monitoring/server-logger";
 
 export async function createEventAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -25,7 +27,7 @@ export async function createEventAction(input: unknown): Promise<ActionResult<un
 export async function updateEventAction(eventId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser(["admin", "moderator"]);
-      const event = await eventRepository.findById(eventId).catch(() => null);
+      const event = await eventRepository.findById(eventId);
       if (!event) throw new EventNotFoundError(eventId);
       const parsed = eventUpdateSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid event input");
@@ -55,8 +57,19 @@ export async function registerForEventAction(input: unknown): Promise<ActionResu
         submittedAt: new Date(),
       } as any);
     
-      // Increment entry count
-      await eventRepository.incrementTotalEntries(eventId).catch(() => null);
+      // Increment entry count. The entry document is already written and is the
+      // authoritative record, so a failed counter bump must not fail the
+      // registration — but it leaves `stats.totalEntries` under-reporting, and
+      // the capacity check in assertEventActive reads that mirror, so it has to
+      // be visible to an operator rather than dropped (Root Cause #42).
+      await eventRepository.incrementTotalEntries(eventId).catch((err) => {
+        void normalizeError(err);
+        serverLogger.warn("events: incrementTotalEntries failed — stats.totalEntries is now stale", {
+          eventId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        return null;
+      });
     
       return entry;
   });
@@ -65,7 +78,7 @@ export async function registerForEventAction(input: unknown): Promise<ActionResu
 export async function cancelEventRegistrationAction(entryId: string): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
-      const entry = await eventEntryRepository.findById(entryId).catch(() => null);
+      const entry = await eventEntryRepository.findById(entryId);
       if (!entry || (entry as any).userId !== user.uid) {
         throw new ValidationError("Registration not found or does not belong to you");
       }

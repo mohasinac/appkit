@@ -53,6 +53,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue } from "../../../schemas/types";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import {
@@ -243,7 +244,7 @@ export function GroupedListingEditorView({
         );
     } catch (err) {
       const e = normalizeError(err);
-      showToast(e.message || "Failed to save the group.", "error");
+      showToast(toUserMessage(e.code, undefined, { fallback: "Failed to save the group." }), "error");
     } finally {
       setSaving(false);
     }

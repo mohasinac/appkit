@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../../../errors/normalize";
+import { toUserMessage } from "../../../../../errors/error-display-map";
 
 import * as React from "react";
 import { Button, Div, Heading, Input, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit/client";
@@ -33,8 +34,12 @@ export function AnalysisRunnerView(): React.JSX.Element {
       }
       setReport(body.data);
     } catch (err) {
-      void normalizeError(err);
-      setError(err instanceof Error ? err.message : String(err));
+      const e = normalizeError(err);
+      setError(
+        toUserMessage(e.code, undefined, {
+          fallback: "Could not run the analysis. Check the server logs for detail.",
+        }),
+      );
     } finally {
       setRunning(false);
     }

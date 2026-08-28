@@ -6,6 +6,7 @@
  */
 
 import { maskPublicReview } from "../../../security";
+import { safeRead } from "../../../errors/safe-read";
 import { finalizeStagedMediaField } from "../../media/finalize";
 import { userRepository } from "../repository/user.repository";
 import { sessionRepository } from "../repository/session.repository";
@@ -105,7 +106,10 @@ export async function getPublicUserProfile(
 
 /** Fetch approved reviews for a store. storeId === storeSlug in this project. */
 export async function getSellerReviews(storeId: string) {
-  const snapshot = await reviewRepository.findApprovedByStore(storeId).catch(() => []);
+  const snapshot = await safeRead(
+    () => reviewRepository.findApprovedByStore(storeId),
+    { route: "/profile/[userId]", key: "reviews.findApprovedByStore", fallback: [] },
+  );
   return snapshot.map((r): Review => ({
     id: r.id,
     productId: r.productId,
@@ -136,7 +140,10 @@ export async function getProfileStoreProducts(storeId: string) {
 
 /** Approved product reviews written by this user as a buyer. Excludes seller→buyer ratings. */
 export async function getReviewsAuthoredBy(userId: string) {
-  const all = await reviewRepository.findApprovedByUser(userId).catch(() => []);
+  const all = await safeRead(
+    () => reviewRepository.findApprovedByUser(userId),
+    { route: "/profile/[userId]", key: "reviews.findApprovedByUser", fallback: [] },
+  );
   // reviewerRole:"seller" means this user rated a buyer — not a product review
   const snapshot = all.filter((r) => r.reviewerRole !== "seller");
   return snapshot.map((r): Review => ({
@@ -164,7 +171,10 @@ export async function getReviewsAuthoredBy(userId: string) {
 
 /** Approved seller→buyer reviews received by this buyer. */
 export async function getReviewsReceivedBy(userId: string) {
-  const snapshot = await reviewRepository.findByReviewee(userId).catch(() => []);
+  const snapshot = await safeRead(
+    () => reviewRepository.findByReviewee(userId),
+    { route: "/profile/[userId]", key: "reviews.findByReviewee", fallback: [] },
+  );
   return snapshot.map((r): Review => ({
     id: r.id,
     productId: r.productId,

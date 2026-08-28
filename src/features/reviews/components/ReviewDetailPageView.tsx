@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { reviewRepository } from "../../../repositories";
+import { safeRead } from "../../../errors/safe-read";
 import { Container, Div, Grid, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { Review } from "../types";
@@ -12,7 +13,10 @@ export interface ReviewDetailPageViewProps {
 }
 
 export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
-  const doc = await reviewRepository.findById(id).catch(() => null);
+  // The review IS this page's subject — a read failure must surface rather than
+  // become the same `null` a removed review produces, which the "Review not
+  // found" branch below already handles.
+  const doc = await reviewRepository.findById(id);
   const review = doc as Review | null;
 
   // storeId === storeSlug for stores in this project (pure slug IDs)
@@ -46,8 +50,14 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
 
   const [sameProductDocs, sameStoreDocs] = await Promise.all([
     // 12 = the 6 rendered below, with headroom for the current review + any filtered out.
-    reviewRepository.findApprovedByProduct(review.productId, 12).catch(() => []),
-    storeSlug ? reviewRepository.findApprovedByStore(storeSlug).catch(() => []) : Promise.resolve([]),
+    safeRead(() => reviewRepository.findApprovedByProduct(review.productId, 12), {
+      route: "/reviews/[id]", key: "review.sameProduct", fallback: [],
+    }),
+    storeSlug
+      ? safeRead(() => reviewRepository.findApprovedByStore(storeSlug), {
+          route: "/reviews/[id]", key: "review.sameStore", fallback: [],
+        })
+      : Promise.resolve([]),
   ]);
   const sameProductReviews = (sameProductDocs as unknown as Review[]).filter((r) => r.id !== review.id).slice(0, 6);
   const sameStoreReviews = (sameStoreDocs as unknown as Review[]).filter((r) => r.id !== review.id).slice(0, 6);

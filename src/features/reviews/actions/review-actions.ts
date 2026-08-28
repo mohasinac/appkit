@@ -20,6 +20,7 @@ import {
   finalizeStagedMediaUrl,
 } from "../../media/finalize";
 import { reviewRepository } from "../repository/reviews.repository";
+import { safeRead } from "../../../errors/safe-read";
 import { productRepository } from "../../products/repository/products.repository";
 import { ProductStatusValues } from "../../products/schemas";
 import { userRepository } from "../../auth/repository/user.repository";
@@ -295,7 +296,15 @@ export async function listReviewsBySeller(
   const reviewBatches = await Promise.all(
     productIds
       .slice(0, 20)
-      .map((id) => reviewRepository.findApprovedByProduct(id, 50).catch(() => [])),
+      // One product's reviews failing must not empty the whole seller feed —
+      // but it silently thins it, so each miss is recorded.
+      .map((id) =>
+        safeRead(() => reviewRepository.findApprovedByProduct(id, 50), {
+          route: "reviews.bySeller",
+          key: "reviews.findApprovedByProduct",
+          fallback: [],
+        }),
+      ),
   );
 
   // Each per-product batch is newest-first, but concatenating them yields product order,

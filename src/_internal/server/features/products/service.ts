@@ -27,7 +27,7 @@ export async function assertProductOwnership(
   productId: string,
   sellerId: string,
 ): Promise<ProductDocument> {
-  const product = await productRepository.findById(productId).catch(() => null);
+  const product = await productRepository.findById(productId);
   if (!product) throw new ProductNotFoundError(productId);
   if (product.storeId !== sellerId) throw new ProductOwnershipError(productId);
   return product;

@@ -32,9 +32,11 @@ export function EventBanner({
     try {
       const stored = sessionStorage.getItem(storageKey);
       if (stored) setDismissedIds(JSON.parse(stored));
+      // sessionStorage is unavailable in private mode and over quota in some
+      // embedded browsers. Losing the dismissal list only means the banner
+      // reappears — nothing an operator can act on, and nothing the user loses.
     } catch (_err) {
       void normalizeError(_err);
-      // ignore session storage failures
     }
     setMounted(true);
   }, [storageKey]);
@@ -69,9 +71,10 @@ export function EventBanner({
     setDismissedIds(next);
     try {
       sessionStorage.setItem(storageKey, JSON.stringify(next));
+      // Same as the read above: the banner is already hidden in local state, so
+      // a failed persist only means it returns on the next page load.
     } catch (_err) {
       void normalizeError(_err);
-      // ignore
     }
   };
 

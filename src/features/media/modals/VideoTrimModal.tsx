@@ -12,6 +12,7 @@ import { MediaSlider } from "../components/MediaSlider";
 import { useMediaTrim } from "../hooks/useMedia";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 export interface VideoTrimModalProps {
   isOpen: boolean;
   /** Already-uploaded video URL on an approved CDN/Storage domain. */
@@ -85,8 +86,10 @@ export function VideoTrimModal({
       onSave(result.url);
       onClose();
     } catch (err) {
-      void normalizeError(err);
-      setError(err instanceof Error ? err.message : t("trimError"));
+      const e = normalizeError(err);
+      // `t` is namespaced ("mediaEditor"), so it cannot resolve the absolute
+      // `errors.codes.*` keys — omit it and let the authored copy stand.
+      setError(toUserMessage(e.code, undefined, { fallback: t("trimError") }));
     }
   };
 

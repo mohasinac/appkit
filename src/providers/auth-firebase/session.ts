@@ -92,8 +92,10 @@ export const firebaseSessionProvider: ISessionProvider = {
       );
       await getAdminAuthLite().revokeRefreshTokens(decoded.uid);
     } catch (_err) {
+      // Best-effort teardown: an expired/revoked/malformed cookie cannot be
+      // verified, and that is the state destroySession is trying to reach —
+      // reporting it would alarm on the success case.
       void normalizeError(_err);
-      // Best-effort: if cookie is already invalid, treat as already destroyed
     }
   },
 };

@@ -67,6 +67,7 @@ import { computeRelatedItems, getReviewPageForProduct } from "../../../_internal
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
 import { normalizeListingType } from "../utils/listing-type";
 import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
@@ -181,7 +182,10 @@ export async function ProductDetailPageView({
   // generateMetadata() and this component share the same in-flight promise.
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
-    : await productRepository.findByIdOrSlug(slug).catch(() => undefined);
+    // The product IS this page's subject — a read failure must surface rather
+    // than become the same `undefined` a removed listing produces, which the
+    // "Not Found" branch below already handles.
+    : await productRepository.findByIdOrSlug(slug);
 
   if (!product) {
     return (
@@ -348,7 +352,9 @@ export async function ProductDetailPageView({
     getReviewPageForProduct(product.id),
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
-    getSiteSettingsGlobal().catch(() => null),
+    safeRead(() => getSiteSettingsGlobal(), {
+      route: "/products/[slug]", key: "product.siteSettings", fallback: null,
+    }),
   ]);
 
   // Site-wide kill switch. Absent/unreadable settings mean ON — a failed

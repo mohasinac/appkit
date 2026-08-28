@@ -1,5 +1,6 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 import React, { useCallback, useRef, useState } from "react";
 import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul, useToast } from "../../../ui";
 import { useClickOutside, useMessage } from "../../../react";
@@ -135,11 +136,11 @@ export function NotificationBell({
       refetch();
       emitSuccess(labels.markAllRead);
     } catch (err) {
-      void normalizeError(err);
+      const e = normalizeError(err);
       if (onMarkAllReadError) {
         onMarkAllReadError(labels.error);
       } else {
-        showToast(err instanceof Error ? err.message : labels.error, "error");
+        showToast(toUserMessage(e.code, undefined, { fallback: labels.error }), "error");
       }
     }
   }, [

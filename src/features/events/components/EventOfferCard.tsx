@@ -42,9 +42,11 @@ export function EventOfferCard({
       await navigator.clipboard.writeText(couponCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      // Clipboard access is denied outright on insecure origins and by user
+      // permission. The button simply never flips to "Copied", and the code is
+      // still visible on screen to select by hand.
     } catch (_err) {
       void normalizeError(_err);
-      /* clipboard unavailable — leave button as-is */
     }
   };
 

@@ -2,6 +2,7 @@ import { cache } from "react";
 import type { JsonValue } from "@mohasinac/appkit";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { normalizeError } from "../../../../errors/normalize";
+import { safeRead } from "../../../../errors/safe-read";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import {
   GROUPED_LISTINGS_COLLECTION,
@@ -95,7 +96,10 @@ export const getGroupedListingWithItems = cache(
     if (!doc) return null;
     const items: ProductDocument[] = [];
     for (const productId of doc.productIds) {
-      const product = await productRepository.findByIdOrSlug(productId).catch(() => null);
+      const product = await safeRead(
+        () => productRepository.findByIdOrSlug(productId),
+        { route: "/groups", key: "grouped.getGroupedListingWithItems.member", fallback: null },
+      );
       if (product) items.push(product);
     }
     return { ...doc, items };
@@ -169,7 +173,13 @@ export const getGroupsWithItemsForProduct = cache(
       groups.map(async (group) => {
         const otherIds = group.productIds.filter((id) => id !== productId);
         const items = await Promise.all(
-          otherIds.map((id) => productRepository.findByIdOrSlug(id).catch(() => null)),
+          otherIds.map((id) =>
+            safeRead(() => productRepository.findByIdOrSlug(id), {
+              route: "/products",
+              key: "grouped.getGroupsWithItemsForProduct.member",
+              fallback: null,
+            }),
+          ),
         );
         return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
       }),

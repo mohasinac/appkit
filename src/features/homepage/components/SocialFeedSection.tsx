@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { safeRead } from "../../../errors/safe-read";
 import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Row, Section, Stack, Text } from "../../../ui";
 import { SocialPostCard } from "./SocialPostCard";
 import {
@@ -70,7 +71,12 @@ async function loadPosts(config: SocialFeedSectionConfig): Promise<{ posts: Soci
   if (!handle) return { posts: [], error: `A handle is required for ${PLATFORM_LABELS[platform]}.` };
 
   try {
-    const credentials = await siteSettingsRepository.getDecryptedCredentials().catch(() => null);
+    // A failed credentials read is reported below as "token not configured in
+    // Site Settings", which is actionable but wrong — record the real cause.
+    const credentials = await safeRead(
+      () => siteSettingsRepository.getDecryptedCredentials(),
+      { route: "/", key: "homepage.socialFeed.credentials", fallback: null },
+    );
     switch (platform) {
       case "instagram": {
         const token = credentials?.metaPageAccessToken;

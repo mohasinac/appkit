@@ -5,6 +5,7 @@ import { Button, Div, Heading, Span, Table, Tbody, Td, Text, Th, Thead, Tr } fro
 import type { CloudLogEntry } from "../../../../server/features/maintenance/cloud-logs-data";
 import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";
 import { normalizeError } from "../../../../../errors/normalize";
+import { toUserMessage } from "../../../../../errors/error-display-map";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
 
@@ -62,8 +63,12 @@ export function CloudLogsListView({
       setEntries((prev) => [...prev, ...body.data.entries]);
       setNextPageToken(body.data.nextPageToken);
     } catch (err) {
-      void normalizeError(err);
-      setError(err instanceof Error ? err.message : String(err));
+      const e = normalizeError(err);
+      setError(
+        toUserMessage(e.code, undefined, {
+          fallback: "Could not load more log entries. Please try again.",
+        }),
+      );
     } finally {
       setLoadingMore(false);
     }
@@ -112,12 +117,16 @@ export function CloudLogsListView({
                 </Td>
               </Tr>
             ) : (
-              entries.map((e) => (
-                <Tr key={e.id} style={{ borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
-                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top", whiteSpace: "nowrap" }}>{fmt(e.timestamp)}</Td>
-                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>{e.severity}</Td>
-                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>{e.resourceType}</Td>
-                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top", fontFamily: "monospace" }}>{e.message}</Td>
+              // Named `entry`, not `e`: this is a Cloud Logging record, not a
+              // caught error, and rendering its `.message` is the entire point
+              // of this admin viewer. The short name read as the defect
+              // audit-raw-error-text exists to catch.
+              entries.map((entry) => (
+                <Tr key={entry.id} style={{ borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
+                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top", whiteSpace: "nowrap" }}>{fmt(entry.timestamp)}</Td>
+                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>{entry.severity}</Td>
+                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>{entry.resourceType}</Td>
+                  <Td style={{ padding: "0.5rem 0.75rem", verticalAlign: "top", fontFamily: "monospace" }}>{entry.message}</Td>
                 </Tr>
               ))
             )}

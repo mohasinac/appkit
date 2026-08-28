@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../../errors/normalize";
+import { toUserMessage } from "../../../../errors/error-display-map";
 
 import React, { useState } from "react";
 import { Button, Div, Row, Span, Stack, Text } from "../../../../ui";
@@ -38,8 +39,12 @@ export function CodeRevealPanel({
       const data = await fetchCode(orderId);
       setRevealed(data);
     } catch (e) {
-      void normalizeError(e);
-      setError(e instanceof Error ? e.message : "Could not retrieve code");
+      const normalized = normalizeError(e);
+      setError(
+        toUserMessage(normalized.code, undefined, {
+          fallback: "Could not retrieve your code. Please try again.",
+        }),
+      );
     } finally {
       setPending(false);
     }

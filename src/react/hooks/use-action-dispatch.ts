@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../errors/normalize";
+import { toUserMessage } from "../../errors/error-display-map";
 import type { JsonValue } from "@mohasinac/appkit/client";
 
 import { useCallback } from "react";
@@ -48,9 +49,14 @@ export function useActionDispatch(options?: UseActionDispatchOptions) {
             await action.handler();
             if (action.successMessage) showToast(action.successMessage, "success");
           } catch (err) {
-            void normalizeError(err);
+            const e = normalizeError(err);
+            // The action's own errorMessage still wins — it is the most
+            // specific authored copy available. Only the tail changed: it now
+            // resolves the error's CODE and ends in a constant, instead of
+            // ending in the thrown value's developer-facing text.
             showToast(
-              action.errorMessage ?? (err instanceof Error ? err.message : "Something went wrong."),
+              action.errorMessage ??
+                toUserMessage(e.code, undefined, { fallback: "Something went wrong." }),
               "error",
             );
           }

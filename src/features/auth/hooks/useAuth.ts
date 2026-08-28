@@ -449,6 +449,9 @@ export function useRegister(options?: {
       // fail registration — the user can re-request verification later.
       try {
         await authProvider.sendEmailVerification();
+        // Non-fatal by design: the account already exists, and the user can
+        // re-request verification from Settings at any time. Firebase surfaces
+        // its own send failures; failing registration here would be worse.
       } catch (err) {
         void normalizeError(err);
       }

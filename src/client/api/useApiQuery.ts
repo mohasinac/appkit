@@ -9,7 +9,14 @@ import {
 } from "@tanstack/react-query";
 import { useToast } from "../../ui/components/Toast";
 import { ApiError } from "./ApiError";
-import { getErrorDisplay } from "../../errors/error-display-map";
+import { toUserMessage } from "../../errors/error-display-map";
+
+/**
+ * Appended to the "stale data" warning. Authored copy, never derived from the
+ * failure — a background refetch that dies on a `MODULE_NOT_FOUND` must not
+ * print a require stack into a toast (audit-raw-error-text).
+ */
+const REFRESH_HINT = "Please check your connection and try again.";
 
 /**
  * Wrap @tanstack/react-query's useQuery so background refetch failures are
@@ -56,9 +63,10 @@ export function useApiQuery<
 
     const err = result.error as unknown;
     if (err instanceof ApiError) {
-      const display = getErrorDisplay(err.code);
-      const message = translate?.(display.messageKey) ?? err.message;
-      showToast(`Couldn't refresh latest data: ${message}`, "warning");
+      const message = toUserMessage(err.code, translate, {
+        fallback: REFRESH_HINT,
+      });
+      showToast(`Couldn't refresh latest data. ${message}`, "warning");
       if (reportClientError) {
         try {
           reportClientError({
@@ -71,9 +79,12 @@ export function useApiQuery<
         }
       }
     } else {
-      const message =
-        err instanceof Error ? err.message : "Unknown error";
-      showToast(`Couldn't refresh latest data: ${message}`, "warning");
+      // No stable code on a non-ApiError rejection, so there is nothing to
+      // resolve — go straight to the authored hint rather than the raw text.
+      const message = toUserMessage(undefined, translate, {
+        fallback: REFRESH_HINT,
+      });
+      showToast(`Couldn't refresh latest data. ${message}`, "warning");
     }
   }, [
     result.isError,

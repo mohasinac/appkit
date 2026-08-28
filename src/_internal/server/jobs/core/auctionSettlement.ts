@@ -6,6 +6,7 @@ import {
 } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { normalizeError } from "../../../../errors/normalize";
+import { safeRead } from "../../../../errors/safe-read";
 import type { JobContext } from "../runtime/types";
 import { AUCTION_MESSAGES, BID_MESSAGES } from "../handlers/messages";
 import { ROUTES } from "../../../../next/routing/route-map";
@@ -119,7 +120,11 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
     await batch.commit();
 
     const reserveStore = product.storeId
-      ? await storeRepository.findById(product.storeId).catch(() => null)
+      ? await safeRead(() => storeRepository.findById(product.storeId!), {
+          route: "job:auctionSettlement",
+          key: "auctionSettlement.reserveNotMet.store",
+          fallback: null,
+        })
       : null;
     if (reserveStore?.ownerId) {
       await sendNotification({

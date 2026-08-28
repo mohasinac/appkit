@@ -22,6 +22,7 @@ import {
   OFFER_ERROR_CODES,
 } from "../../../errors";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
+import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { OfferStatusValues } from "../schemas";
@@ -76,7 +77,11 @@ export async function makeOffer(
    * without stranding in-flight ones, so accept/decline/counter/withdraw and
    * `checkoutOffer` deliberately stay open.
    */
-  const settings = await siteSettingsRepository.getSingleton().catch(() => null);
+  // Fails OPEN — a settings read that dies must not block offers site-wide. But
+  // `null` here is indistinguishable from "the flag is on", so it is recorded.
+  const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+    route: "offers.makeOffer", key: "makeOffer.siteSettings", fallback: null,
+  });
   if (settings?.featureFlags?.offers === false) {
     throw new ValidationError(ERROR_MESSAGES.OFFER.DISABLED, {
       code: OFFER_ERROR_CODES.DISABLED,

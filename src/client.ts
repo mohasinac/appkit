@@ -7,6 +7,9 @@
 export { HTTP_ERROR_CODES, mapToHttpError } from "./errors/error-mapping";
 export type { HttpErrorCode, MappedError } from "./errors/error-mapping";
 export { ERROR_DISPLAY_MAP, getErrorDisplay } from "./errors/error-display-map";
+// toUserMessage — the only sanctioned path from a failure to user-facing copy.
+// It terminates in a constant, so a thrown value's own .message never surfaces.
+export { toUserMessage, GENERIC_USER_MESSAGE } from "./errors/error-display-map";
 export type { ErrorDisplayEntry } from "./errors/error-display-map";
 export { RazorpayUnreachableError } from "./errors/razorpay-unreachable";
 

@@ -4,6 +4,7 @@ import { useApiMutation, useBulkEvent, RTDB_PATHS } from "@mohasinac/appkit/clie
 import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -230,9 +231,12 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         showToast("Failed to start catalog import.", "error");
       }
     } catch (err) {
-      void normalizeError(err);
+      const e = normalizeError(err);
       setImporting(false);
-      showToast(err instanceof Error ? err.message : "Import failed", "error");
+      showToast(
+        toUserMessage(e.code, undefined, { fallback: "Failed to start catalog import." }),
+        "error",
+      );
     }
   };
 

@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
@@ -100,7 +101,14 @@ export async function PolicyPageView({
     adminHtml = settings.legalPages?.[meta.firestoreField] ?? "";
   } catch (_err) {
     void normalizeError(_err);
-    // Firestore unavailable — fall back to i18n
+    // Falls back to the bundled i18n copy below, which is a complete policy in
+    // its own right — but an admin who has overridden this page would silently
+    // see the old text, so the failure has to be visible to an operator.
+    serverLogger.warn("about.policyPageView: siteSettings.legalPages read failed", {
+      policy,
+      field: meta.firestoreField,
+      error: normalizeError(_err).message,
+    });
   }
 
   // i18n fallback sections

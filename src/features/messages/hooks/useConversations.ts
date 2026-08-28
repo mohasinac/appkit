@@ -109,15 +109,22 @@ export function useConversations(
             void refetch();
           },
           (err: unknown) => {
-            // Surfaced, not ignored. A denied subscription is a real defect and
-            // silence here is what hid it for months.
+            // A denied subscription is a real defect — silence is what hid this
+            // channel being dead for months — so it is logged, not swallowed.
+            // (This comment previously claimed "Surfaced, not ignored" while the
+            // body only called normalizeError, which classifies without
+            // reporting. That was the same documentation-that-lies pattern this
+            // workstream exists to remove, so it now actually logs.)
             void normalizeError(err);
+            console.warn(
+              "[messages] conversations live-update subscription denied; list falls back to fetch-on-load",
+            );
           },
         );
-      } catch (_err) {
-        void normalizeError(_err);
         // Provider unregistered or token fetch failed — non-fatal; the list
         // still works via the one-shot fetch above, just without live updates.
+      } catch (_err) {
+        void normalizeError(_err);
       }
     })();
 

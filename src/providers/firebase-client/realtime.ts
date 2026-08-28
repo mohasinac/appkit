@@ -78,8 +78,9 @@ export class FirebaseClientRealtimeProvider implements IClientRealtimeProvider {
     try {
       await signOut(getAuth(this.app));
     } catch (_err) {
+      // A secondary Firebase app that was never signed in has nothing to sign
+      // out of; the caller's goal (no credential on this app) already holds.
       void normalizeError(_err);
-      // no-op — signing out of a secondary app can fail harmlessly
     }
   }
 

@@ -2,6 +2,7 @@
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { scammerRepository } from "../repository/scammer.repository";
+import { safeRead } from "../../../errors/safe-read";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { safeFireAndForget } from "../../../utils/safe-fire-forget";
@@ -68,9 +69,12 @@ export async function listVerifiedScammers(
  */
 export async function getPublicScammerById(id: string): Promise<ScammerDocument | null> {
   // Try direct id lookup first; fall back to seoSlug query.
-  let doc = await scammerRepository.findById(id).catch(() => null);
+  // The profile IS the caller's subject, and both lookups already return null
+  // for "no such id/slug" — swallowing a read failure into that same null would
+  // report a real outage as a missing profile.
+  let doc = await scammerRepository.findById(id);
   if (!doc) {
-    doc = await scammerRepository.findBySeoSlug(id).catch(() => null);
+    doc = await scammerRepository.findBySeoSlug(id);
   }
   if (!doc || doc.status !== "verified") return null;
 
@@ -116,10 +120,18 @@ const TRUST_STATUS_CLEAR: SellerTrustResult = { status: "clear", matchedProfileS
  * that hasn't been verified must not damage a seller's storefront reputation.
  */
 export async function getSellerTrustStatus(storeId: string): Promise<SellerTrustResult> {
-  const store = await storeRepository.findById(storeId).catch(() => null);
+  // Every read below fails OPEN to "clear" — a deliberate choice, because a
+  // registry outage must not brand a legitimate seller a scammer. But "clear"
+  // is a positive safety claim, so a failure that produces one has to be
+  // recorded rather than inferred from a silent null.
+  const store = await safeRead(() => storeRepository.findById(storeId), {
+    route: "sellerTrust", key: "sellerTrust.store", fallback: null,
+  });
   if (!store?.ownerId) return TRUST_STATUS_CLEAR;
 
-  const owner = await userRepository.findById(store.ownerId).catch(() => null);
+  const owner = await safeRead(() => userRepository.findById(store.ownerId!), {
+    route: "sellerTrust", key: "sellerTrust.owner", fallback: null,
+  });
   if (!owner) return TRUST_STATUS_CLEAR;
 
   const lookups: Array<Promise<ScammerDocument[]>> = [];
@@ -127,7 +139,15 @@ export async function getSellerTrustStatus(storeId: string): Promise<SellerTrust
   if (owner.email) lookups.push(scammerRepository.findByContactField("emails", owner.email));
   if (lookups.length === 0) return TRUST_STATUS_CLEAR;
 
-  const results = await Promise.all(lookups.map((p) => p.catch(() => [] as ScammerDocument[])));
+  const results = await Promise.all(
+    lookups.map((p) =>
+      safeRead(() => p, {
+        route: "sellerTrust",
+        key: "sellerTrust.registryLookup",
+        fallback: [] as ScammerDocument[],
+      }),
+    ),
+  );
   const verified = results.flat().filter((s) => s.status === "verified");
   if (verified.length === 0) return TRUST_STATUS_CLEAR;
 

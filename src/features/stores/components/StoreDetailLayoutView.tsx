@@ -2,6 +2,7 @@ import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import React, { cache } from "react";
 import type { ReactNode } from "react";
 import { storeRepository, siteSettingsRepository, reviewRepository, couponsRepository } from "../../../repositories";
+import { safeRead } from "../../../errors/safe-read";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section, Text } from "../../../ui";
 import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
@@ -35,8 +36,11 @@ const STORE_LISTING_HREF: Record<
   art: (slug) => String(ROUTES.PUBLIC.STORE_ART(slug)),
 };
 
+// The store IS this layout's subject, and `findBySlug` already returns null for
+// "no such slug" — swallowing a read failure into the same value would render
+// the "Store not found." branch below for a live store during an outage.
 export const getStoreBySlug = cache((slug: string) =>
-  storeRepository.findBySlug(slug).catch(() => undefined),
+  storeRepository.findBySlug(slug),
 );
 
 export interface StoreDetailLayoutViewProps {
@@ -81,9 +85,17 @@ export async function StoreDetailLayoutView({
   const storeId = (store as Record<string, any>)?.id;
 
   const [settings, trust] = await Promise.all([
-    siteSettingsRepository.findById("global").catch(() => null),
+    safeRead(() => siteSettingsRepository.findById("global"), {
+      route: "/stores/[slug]", key: "store.siteSettings", fallback: null,
+    }),
     scamRegistryEnabled && storeId
-      ? getSellerTrustStatus(storeId).catch(() => undefined)
+      // Fails open to "no trust verdict", which hides the badge entirely rather
+      // than asserting a seller is clear — but that has to be recorded, since a
+      // missing badge is exactly what a clean seller looks like.
+      ? safeRead<Awaited<ReturnType<typeof getSellerTrustStatus>> | undefined>(
+          () => getSellerTrustStatus(storeId),
+          { route: "/stores/[slug]", key: "store.sellerTrust", fallback: undefined },
+        )
       : Promise.resolve(undefined),
   ]);
 

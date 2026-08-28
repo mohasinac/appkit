@@ -22,6 +22,7 @@ import {
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
 import { siteSettingsRepository } from "../../../repositories";
+import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
 
 const __O = {
@@ -34,9 +35,11 @@ export interface CategoryDetailPageViewProps {
 }
 
 export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewProps) {
-  const category = await categoriesRepository
-    .getCategoryBySlug(slug)
-    .catch(() => undefined) as CategoryItem | undefined;
+  // The category IS this page's subject — a read failure must surface rather
+  // than render an anonymous, empty category page. `undefined` still means
+  // "no such category slug".
+  const category = ((await categoriesRepository
+    .getCategoryBySlug(slug)) ?? undefined) as CategoryItem | undefined;
 
   // Products carry their FULL ancestor chain in `categorySlugs`, so matching on
   // this category's own id already returns the whole subtree — no descendant
@@ -49,17 +52,19 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
   const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings] = await Promise.all([
     categoriesIn
-      ? productRepository
-          .list(
-            {
-              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
-              sorts: sortBy("createdAt", "DESC"),
-              page: 1,
-              pageSize: 24,
-            },
-            { categoriesIn },
-          )
-          .catch(() => null)
+      ? safeRead<Awaited<ReturnType<typeof productRepository.list>> | null>(
+          () =>
+            productRepository.list(
+              {
+                filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
+                sorts: sortBy("createdAt", "DESC"),
+                page: 1,
+                pageSize: 24,
+              },
+              { categoriesIn },
+            ),
+          { route: "/categories/[slug]", key: "category.products", fallback: null },
+        )
       : Promise.resolve(null),
     // One count per tab, derived from CATEGORY_PAGE_TABS itself — so every
     // listing type is counted and a type with nothing in this category hides.
@@ -70,24 +75,43 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     // SB-UNI-D — bundles fetched from the categories collection. We pull
     // all active bundle rows; the carousel filters by category affinity.
     categoriesIn
-      ? categoriesRepository
-          .listByType("bundle", { activeOnly: true, limit: 50 })
-          .catch(() => [])
+      ? safeRead(
+          () => categoriesRepository.listByType("bundle", { activeOnly: true, limit: 50 }),
+          { route: "/categories/[slug]", key: "category.bundles", fallback: [] },
+        )
       : Promise.resolve([]),
     category?.id
-      ? categoriesRepository.getChildren(category.id).catch(() => []) as Promise<CategoryItem[]>
+      ? safeRead(() => categoriesRepository.getChildren(category.id), {
+          route: "/categories/[slug]",
+          key: "category.children",
+          fallback: [],
+        }) as unknown as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
     // Related categories — every other category sharing this category's root
     // (siblings + cousins across the tree, up to the tier-0/1/2 depth the
     // catalog actually uses), not just direct children.
     category?.rootId
-      ? categoriesRepository.getCategoriesByRootId(category.rootId).catch(() => []) as Promise<CategoryItem[]>
+      ? safeRead(() => categoriesRepository.getCategoriesByRootId(category.rootId!), {
+          route: "/categories/[slug]",
+          key: "category.rootSiblings",
+          fallback: [],
+        }) as unknown as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
-    category?.slug ? getGroupsForCategory(category.slug).catch(() => []) : Promise.resolve([]),
+    category?.slug
+      ? safeRead(() => getGroupsForCategory(category.slug), {
+          route: "/categories/[slug]",
+          key: "category.groupedListings",
+          fallback: [] as Awaited<ReturnType<typeof getGroupsForCategory>>,
+        })
+      : Promise.resolve([]),
     // Listing/category-type feature flags. This page accepted the props all
     // along but never passed them, so an admin disabling a listing type still
     // saw its tab here while the store page correctly hid it.
-    siteSettingsRepository.findById("global").catch(() => null),
+    safeRead(() => siteSettingsRepository.findById("global"), {
+      route: "/categories/[slug]",
+      key: "category.siteSettings",
+      fallback: null,
+    }),
   ]);
 
   const relatedCategories = rootSiblingCategories.filter(
@@ -105,9 +129,11 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // which caps at 30 values, hence the chunking.
   const storeCategorySlugs = [
     slug,
-    ...(await categoriesRepository
-      .getDescendantIds(category?.id ?? "")
-      .catch(() => [] as string[])),
+    ...(await safeRead(() => categoriesRepository.getDescendantIds(category?.id ?? ""), {
+      route: "/categories/[slug]",
+      key: "category.descendantIds",
+      fallback: [] as string[],
+    })),
   ].filter(Boolean);
   const SLUG_CHUNK = 30;
   const slugChunks: string[][] = [];
@@ -116,9 +142,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   }
   const storeResults = await Promise.all(
     slugChunks.map((chunk) =>
-      storeRepository
-        .listStores({ filters: sieveFilter("storeCategory", SIEVE_OP.EQ, chunk.join("|")), page: 1, pageSize: 50 }, true)
-        .catch(() => null),
+      safeRead<Awaited<ReturnType<typeof storeRepository.listStores>> | null>(
+        () =>
+          storeRepository.listStores(
+            { filters: sieveFilter("storeCategory", SIEVE_OP.EQ, chunk.join("|")), page: 1, pageSize: 50 },
+            true,
+          ),
+        { route: "/categories/[slug]", key: "category.stores", fallback: null },
+      ),
     ),
   );
   const seen = new Set<string>();

@@ -1011,6 +1011,11 @@ export type { MappedError, HttpErrorCode } from "./errors/index";
 // [UTIL]-Pure utility — client-safe lookup of inline-field + i18n key per error code.
 // ERROR_DISPLAY_MAP - CLAUDE.md Rule #9 source-of-truth for client error rendering.
 export { ERROR_DISPLAY_MAP, getErrorDisplay } from "./errors/index";
+// [UTIL]-Pure utility — the ONLY sanctioned way to turn a failure into user copy.
+// toUserMessage - resolves a stable error code through errors.codes.*; terminates
+// in a constant, so a thrown value's own .message can never reach a user
+// (audit-raw-error-text).
+export { toUserMessage, GENERIC_USER_MESSAGE } from "./errors/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 export type { ErrorDisplayEntry } from "./errors/index";
 

@@ -6,6 +6,7 @@ import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 const CLS_WHEEL = "relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-warning bg-[image:var(--appkit-gradient-promotion)]";
 // audit-content-alignment-ok: self-contained circular spin-wheel game widget, all text centered under the wheel by design
 const CLS_PRIZE_BOX = "rounded-xl border border-success bg-success-surface dark:border-success p-[var(--appkit-space-4)] text-center";
@@ -106,13 +107,13 @@ export function SpinWheelView({
         }
       }, ANIMATION_MS);
     } catch (err) {
-      void normalizeError(err);
+      const e = normalizeError(err);
       setSpinning(false);
       if (isAuthError(err)) {
         setShowLoginModal(true);
       } else {
         setError(l.errorFallback);
-        showToast(err instanceof Error ? err.message : l.errorFallback, "error");
+        showToast(toUserMessage(e.code, undefined, { fallback: l.errorFallback }), "error");
       }
     }
   }, [disabled, eventId, l.errorFallback, onSpin, showToast]);

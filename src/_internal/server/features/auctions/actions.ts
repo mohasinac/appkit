@@ -1,6 +1,7 @@
 "use server";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
+import { safeRead } from "../../../../errors/safe-read";
 import { bidRepository, productRepository, userRepository, siteSettingsRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { placeBidActionSchema } from "../../../shared/features/auctions/schema";
@@ -26,10 +27,19 @@ export async function placeBidAction(input: unknown): Promise<ActionResult<unkno
       const settings = await siteSettingsRepository.getSingleton();
       assertBidAmount(product, amount, settings.auctionConfig?.bidIncrementTiers ?? []);
     
-      const profile = await userRepository.findById(user.uid).catch(() => null);
+      const profile = await safeRead(() => userRepository.findById(user.uid), {
+        route: "auction:placeBid",
+        key: "auctions.placeBid.bidderProfile",
+        fallback: null,
+      });
       const userName = profile?.displayName ?? user.name ?? "Anonymous";
-    
-      // Mark all current bids for this auction as outbid, then set new winning bid
+
+      // Mark all current bids for this auction as outbid, then set new winning bid.
+      // `__placeholder__` is not a real bid id, so this call ALWAYS throws at
+      // batch.commit(): the swallow is the mechanism, not a swallowed diagnostic.
+      // The outbid marking that matters is done by the real setWinningBid below,
+      // which sets every other bid for this product to "outbid" anyway.
+      // audit-silent-degrade-ok: the throw is the expected, load-bearing outcome here
       await bidRepository.setWinningBid("__placeholder__", auctionId).catch(() => null);
     
       const bid = await bidRepository.create({

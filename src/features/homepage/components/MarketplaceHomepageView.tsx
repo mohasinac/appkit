@@ -3,6 +3,7 @@ import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Main } from "../../../ui";
 import { carouselRepository, faqsRepository, siteSettingsRepository } from "../../../repositories";
+import { safeRead } from "../../../errors/safe-read";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
@@ -54,16 +55,27 @@ export async function MarketplaceHomepageView({
   newsletterFormSlot,
   onBannerDismiss,
 }: MarketplaceHomepageViewProps = {}) {
-  const slides = await carouselRepository.getActiveSlides().catch(() => []);
-  const siteSettings = await siteSettingsRepository.getSingleton().catch(() => null);
+  // Every read on this page is a RAIL: the homepage must still render when one
+  // fails, but a failure has to be distinguishable from an empty catalogue —
+  // that is exactly Root Cause #59, and safeRead is what records it.
+  const slides = await safeRead(() => carouselRepository.getActiveSlides(), {
+    route: "/", key: "homepage.carouselSlides", fallback: [],
+  });
+  const siteSettings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+    route: "/", key: "homepage.siteSettings", fallback: null,
+  });
   const announcementMessage =
     siteSettings?.announcementBar?.message?.trim() ||
     "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15";
   const showAnnouncement = siteSettings?.announcementBar?.enabled ?? true;
 
   const [allSections, rawFaqItems] = await Promise.all([
-    homepageSectionsRepository.getEnabledSections().catch(() => [] as HomepageSectionDocument[]),
-    faqsRepository.getHomepageFAQs().catch(() => []),
+    safeRead(() => homepageSectionsRepository.getEnabledSections(), {
+      route: "/", key: "homepage.enabledSections", fallback: [] as HomepageSectionDocument[],
+    }),
+    safeRead(() => faqsRepository.getHomepageFAQs(), {
+      route: "/", key: "homepage.faqs", fallback: [],
+    }),
   ]);
 
   // Respect the feature flags. This gate existed but lived inside a function
@@ -131,12 +143,36 @@ export async function MarketplaceHomepageView({
     activeTypes.has("products") ? getFeaturedProducts(12) : null,
     activeTypes.has("auctions") ? getFeaturedAuctions(12) : null,
     activeTypes.has("pre-orders") ? getFeaturedPreOrders(12) : null,
-    activeTypes.has("categories") ? listTopLevelCategories(12).catch(() => null) : null,
-    activeTypes.has("brands") ? listBrandCategories(12).catch(() => null) : null,
-    activeTypes.has("featured-bundles") ? listFeaturedBundles(8).catch(() => null) : null,
-    activeTypes.has("stores") ? listStores({ pageSize: 8, sorts: sortBy("averageRating", "DESC") }).catch(() => null) : null,
-    activeTypes.has("blog-articles") ? getFeaturedBlogPosts(6).catch(() => null) : null,
-    activeTypes.has("events") ? listPublicEvents({ filters: sieveFilter("status", SIEVE_OP.EQ, "active"), pageSize: 6 }).catch(() => null) : null,
+    activeTypes.has("categories")
+      ? safeRead<Awaited<ReturnType<typeof listTopLevelCategories>> | null>(
+          () => listTopLevelCategories(12),
+          { route: "/", key: "homepage.categories", fallback: null })
+      : null,
+    activeTypes.has("brands")
+      ? safeRead<Awaited<ReturnType<typeof listBrandCategories>> | null>(
+          () => listBrandCategories(12),
+          { route: "/", key: "homepage.brands", fallback: null })
+      : null,
+    activeTypes.has("featured-bundles")
+      ? safeRead<Awaited<ReturnType<typeof listFeaturedBundles>> | null>(
+          () => listFeaturedBundles(8),
+          { route: "/", key: "homepage.featuredBundles", fallback: null })
+      : null,
+    activeTypes.has("stores")
+      ? safeRead<Awaited<ReturnType<typeof listStores>> | null>(
+          () => listStores({ pageSize: 8, sorts: sortBy("averageRating", "DESC") }),
+          { route: "/", key: "homepage.stores", fallback: null })
+      : null,
+    activeTypes.has("blog-articles")
+      ? safeRead<Awaited<ReturnType<typeof getFeaturedBlogPosts>> | null>(
+          () => getFeaturedBlogPosts(6),
+          { route: "/", key: "homepage.blogPosts", fallback: null })
+      : null,
+    activeTypes.has("events")
+      ? safeRead<Awaited<ReturnType<typeof listPublicEvents>> | null>(
+          () => listPublicEvents({ filters: sieveFilter("status", SIEVE_OP.EQ, "active"), pageSize: 6 }),
+          { route: "/", key: "homepage.events", fallback: null })
+      : null,
   ]);
 
   // ProductDocument / BlogDocument / EventDocument have Date fields and extra Firestore-only

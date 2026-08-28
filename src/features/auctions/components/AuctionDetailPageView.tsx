@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
+import { safeRead } from "../../../errors/safe-read";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -221,11 +222,17 @@ function renderAuctionStoreReviews(storeSlug: string | undefined) {
 }
 
 export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, onBuyNow, productFeatures }: AuctionDetailPageViewProps) {
+  // The auction IS this page's subject. A read failure must surface rather than
+  // become the same `undefined` a genuinely missing slug produces — the
+  // "Auction Not Found" branch below still handles that real case.
   const product = initialAuction !== undefined
     ? (initialAuction ?? undefined)
-    : await productRepository.findByIdOrSlug(id).catch(() => undefined);
+    : await productRepository.findByIdOrSlug(id);
   const bidsResult = product
-    ? await listBidsByProduct(String(product.id), { pageSize: 5 }).catch(() => null)
+    ? await safeRead<Awaited<ReturnType<typeof listBidsByProduct>> | null>(
+        () => listBidsByProduct(String(product.id), { pageSize: 5 }),
+        { route: "/auctions/[slug]", key: "auction.bidHistory", fallback: null },
+      )
     : null;
 
   const storeId = (product as unknown as FirestoreDocument)?.storeId as string | undefined;

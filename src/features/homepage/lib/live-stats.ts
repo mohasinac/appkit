@@ -130,7 +130,14 @@ export async function fetchLiveStats(
           result[key] = String(count);
         } catch (_err) {
           void normalizeError(_err);
-          // silently fall back to static value
+          // Falling back to the admin-authored static value is correct — but a
+          // stale number that looks live is exactly the failure this must not
+          // hide, so name the collection that could not be counted.
+          serverLogger.warn("homepage.liveStats: collection count failed", {
+            statKey: key,
+            collection,
+            error: normalizeError(_err).message,
+          });
         }
       })(),
     );

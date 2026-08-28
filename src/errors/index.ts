@@ -27,6 +27,8 @@ export {
 export {
   ERROR_DISPLAY_MAP,
   getErrorDisplay,
+  toUserMessage,
+  GENERIC_USER_MESSAGE,
   type ErrorDisplayEntry,
 } from "./error-display-map";
 // safeRead is server-only (uses the persisted log reporter)

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPublicUserProfile, getProfileStoreProducts, getReviewsAuthoredBy, getReviewsReceivedBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
+import { safeRead } from "../../../errors/safe-read";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { FLEX_CENTER } from "../../../_internal/shared/styles/themed";
@@ -87,14 +88,31 @@ export async function PublicProfileView({
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("publicProfile");
 
-  const profile = await getPublicUserProfile(userId).catch(() => null);
+  // The profile IS this page's subject — a read failure must surface, not turn
+  // into the same `null` a genuinely missing user produces. The `null` return
+  // from getPublicUserProfile still means "no such user".
+  const profile = await getPublicUserProfile(userId);
   const storeId = profile?.storeSlug ?? null;
 
   const [products, store, reviewsAuthored, reviewsReceivedAsBuyer] = await Promise.all([
-    storeId ? getProfileStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
-    storeId ? storeRepository.findById(storeId).catch(() => null) : Promise.resolve(null),
-    getReviewsAuthoredBy(userId).catch(() => []),
-    getReviewsReceivedBy(userId).catch(() => []),
+    storeId
+      ? safeRead(() => getProfileStoreProducts(storeId), {
+          route: "/profile/[userId]",
+          key: "profile.storeProducts",
+          fallback: [] as Awaited<ReturnType<typeof getProfileStoreProducts>>,
+        })
+      : Promise.resolve([]),
+    storeId
+      ? safeRead(() => storeRepository.findById(storeId), {
+          route: "/profile/[userId]",
+          key: "profile.store",
+          fallback: null,
+        })
+      : Promise.resolve(null),
+    // Both already degrade internally via safeRead — anything still thrown here
+    // is a mapping bug, which should surface rather than render an empty rail.
+    getReviewsAuthoredBy(userId),
+    getReviewsReceivedBy(userId),
   ]);
 
   const isSeller = isSellerUser(profile) || isAdminUser(profile);

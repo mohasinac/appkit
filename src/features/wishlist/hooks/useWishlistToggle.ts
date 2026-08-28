@@ -1,6 +1,8 @@
 "use client"
 import { useCallback, useState } from "react";
 import { useToast } from "../../../ui";
+import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 export interface WishlistToggleActions {
   addToWishlist: (productId: string) => Promise<unknown>;
@@ -44,8 +46,16 @@ export function useWishlistToggle(
         showToast("Added to wishlist.", "success");
       }
     } catch (err) {
+      const e = normalizeError(err);
       setInWishlist(prev);
-      showToast(err instanceof Error ? err.message : "Something went wrong.", "error");
+      showToast(
+        toUserMessage(e.code, undefined, {
+          fallback: prev
+            ? "Could not remove this item from your wishlist."
+            : "Could not add this item to your wishlist.",
+        }),
+        "error",
+      );
       throw err;
     } finally {
       setIsLoading(false);

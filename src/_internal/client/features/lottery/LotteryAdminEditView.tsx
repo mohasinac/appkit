@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import { normalizeError } from "../../../../errors/normalize";
+import { toUserMessage } from "../../../../errors/error-display-map";
 import {
   Stack,
   Row,
@@ -154,8 +155,10 @@ export function LotteryAdminEditView({
 
         await onSubmit({ title, description, type: "lottery", lotteryConfig: parsed.data });
       } catch (err) {
-        void normalizeError(err);
-        setError(err instanceof Error ? err.message : "Failed to save lottery");
+        const e = normalizeError(err);
+        setError(
+          toUserMessage(e.code, undefined, { fallback: "Failed to save lottery." }),
+        );
       }
     });
   };

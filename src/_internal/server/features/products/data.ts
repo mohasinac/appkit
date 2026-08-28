@@ -8,6 +8,7 @@ import { productRepository } from "../../../../repositories";
 import { reviewRepository } from "../../../../repositories";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { normalizeError } from "../../../../errors/normalize";
+import { safeRead } from "../../../../errors/safe-read";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
@@ -31,7 +32,7 @@ import { REVIEWS_DETAIL_PAGE_SIZE } from "../../../shared/features/reviews/confi
 /** Fetch a single product by slug or id, deduped per request. */
 export const getProductForDetail = cache(
   async (slugOrId: string): Promise<ProductDocument | null> => {
-    const product = (await productRepository.findByIdOrSlug(slugOrId).catch(() => undefined)) ?? null;
+    const product = (await productRepository.findByIdOrSlug(slugOrId)) ?? null;
     // Fire-and-forget viewCount increment — must not affect response time
     if (product) void productRepository.incrementViewCount(product.id);
     return product;
@@ -41,7 +42,11 @@ export const getProductForDetail = cache(
 /** Fetch the first page of approved reviews for a product, deduped per request. */
 export const getReviewsForProduct = cache(
   async (productId: string, limit = REVIEWS_DETAIL_PAGE_SIZE): Promise<unknown[]> => {
-    return reviewRepository.findApprovedByProduct(productId, limit).catch(() => []);
+    return safeRead(() => reviewRepository.findApprovedByProduct(productId, limit), {
+      route: "/products",
+      key: "products.getReviewsForProduct",
+      fallback: [],
+    });
   },
 );
 

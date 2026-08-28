@@ -17,7 +17,7 @@ import type { ProductDocument } from "../../../shared/features/products/types";
 
 /** Assert an auction exists, is published, and is still active. Returns the product. */
 export async function assertAuctionActive(auctionId: string): Promise<ProductDocument> {
-  const product = await productRepository.findByIdOrSlug(auctionId).catch(() => null);
+  const product = await productRepository.findByIdOrSlug(auctionId);
   if (!product || !isAuctionListing(product)) throw new AuctionNotFoundError(auctionId);
 
   const endDate = product.auctionEndDate instanceof Date

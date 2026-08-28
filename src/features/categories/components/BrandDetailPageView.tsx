@@ -22,6 +22,7 @@ import {
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
 import { siteSettingsRepository } from "../../../repositories";
+import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
 
@@ -35,22 +36,26 @@ export interface BrandDetailPageViewProps {
 }
 
 export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPageViewProps) {
+  // The brand IS this page's subject — a read failure must surface rather than
+  // render an anonymous, empty brand page. `undefined` still means "no such
+  // brand slug".
   const brand = (initialBrand ?? (await categoriesRepository
-    .getCategoryBySlug(slug)
-    .catch(() => undefined))) as CategoryItem | undefined;
+    .getCategoryBySlug(slug)) ?? undefined) as CategoryItem | undefined;
 
   const brandName = brand?.name;
 
   const [productsResult, tabCounts, allBundles, activeBrands, groupedListings, settings] = await Promise.all([
     brandName
-      ? productRepository
-          .list({
-            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
-            sorts: sortBy("createdAt", "DESC"),
-            page: 1,
-            pageSize: 24,
-          })
-          .catch(() => null)
+      ? safeRead<Awaited<ReturnType<typeof productRepository.list>> | null>(
+          () =>
+            productRepository.list({
+              filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
+              sorts: sortBy("createdAt", "DESC"),
+              page: 1,
+              pageSize: 24,
+            }),
+          { route: "/brands/[slug]", key: "brand.products", fallback: null },
+        )
       : Promise.resolve(null),
     // One count per tab, derived from CATEGORY_PAGE_TABS. Four of the nine tabs
     // (classifieds, digital codes, live, art) had no count at all and could
@@ -64,16 +69,34 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     // We pull all bundle categories and filter client-side by brandSlug —
     // no dedicated repository query needed at this catalog's bundle volume.
     brand?.slug
-      ? categoriesRepository
-          .listByType("bundle", { activeOnly: true, limit: 50 })
-          .catch(() => [])
+      ? safeRead(
+          () => categoriesRepository.listByType("bundle", { activeOnly: true, limit: 50 }),
+          { route: "/brands/[slug]", key: "brand.bundles", fallback: [] },
+        )
       : Promise.resolve([]),
     // Related brands — every other active brand row, excluding this one.
-    categoriesRepository.findActiveBrands().catch(() => []) as Promise<CategoryItem[]>,
-    brand?.slug ? getGroupsForBrand(brand.slug).catch(() => []) : Promise.resolve([]),
+    // `as unknown` is load-bearing only because CategoryDocument.createdAt is a
+    // Date while CategoryItem.createdAt is a string — a pre-existing mismatch
+    // the old `.catch(() => [])` union happened to paper over.
+    safeRead(() => categoriesRepository.findActiveBrands(), {
+      route: "/brands/[slug]",
+      key: "brand.relatedBrands",
+      fallback: [],
+    }) as unknown as Promise<CategoryItem[]>,
+    brand?.slug
+      ? safeRead(() => getGroupsForBrand(brand.slug!), {
+          route: "/brands/[slug]",
+          key: "brand.groupedListings",
+          fallback: [] as Awaited<ReturnType<typeof getGroupsForBrand>>,
+        })
+      : Promise.resolve([]),
     // Feature flags — accepted by BrandDetailTabs all along but never passed,
     // so a disabled listing type still showed its tab here.
-    siteSettingsRepository.findById("global").catch(() => null),
+    safeRead(() => siteSettingsRepository.findById("global"), {
+      route: "/brands/[slug]",
+      key: "brand.siteSettings",
+      fallback: null,
+    }),
   ]);
 
   const brandBundles = brand?.slug

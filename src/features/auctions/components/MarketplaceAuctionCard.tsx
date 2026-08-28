@@ -445,8 +445,10 @@ export function MarketplaceAuctionCard({
       try {
         await toggle();
       } catch (_err) {
+        // useWishlistToggle rolls back its optimistic state and raises its own
+        // toast on failure, so the heart returns to its true value on screen.
+        // Reporting again here would double-notify for one user action.
         void normalizeError(_err);
-        // The hook rolls back optimistic state when the mutation fails.
       }
     },
     [toggle],

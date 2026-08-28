@@ -16,6 +16,7 @@ import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/of
 import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 /**
  * "bundle" is a categoryType, not a ListingType, so it can't live in
@@ -155,6 +156,11 @@ const sellerProductSchema = z.object({
 /** Shape returned by `onSave`/`onPublish` — structurally compatible with appkit's `ActionResult<T>` failure/success arms, without importing the server-only type into this client component. */
 export interface ProductActionResult {
   ok: boolean;
+  /**
+   * Stable error code. This is what the failure toast resolves — `error` is the
+   * server's own sentence and is reported, never shown (audit-raw-error-text).
+   */
+  code?: string;
   error?: string;
   issues?: unknown[];
 }
@@ -1283,7 +1289,14 @@ export function SellerProductShell({
         (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
         setFieldError,
       );
-      if (!silent) showToast(result.error || "Fix the highlighted errors and try again.", "error");
+      if (!silent) {
+        showToast(
+          toUserMessage(result.code, undefined, {
+            fallback: "Fix the highlighted errors and try again.",
+          }),
+          "error",
+        );
+      }
     } catch (err) {
       void normalizeError(err);
       if (!silent) showToast("Failed to save.", "error");
@@ -1292,6 +1305,10 @@ export function SellerProductShell({
   const handleAutoSave = useCallback(async () => {
     try {
       await handleSave(true);
+      // handleSave was called with silent=true, which is the whole point of
+      // auto-save: it has already applied the field errors and populated
+      // FormErrorSummary, so a toast every two seconds while the seller is
+      // still typing would be worse than saying nothing at all here.
     } catch (err) {
       void normalizeError(err);
     }
@@ -1320,7 +1337,12 @@ export function SellerProductShell({
         (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
         setFieldError,
       );
-      showToast(result.error || "Fix the highlighted errors and try again.", "error");
+      showToast(
+        toUserMessage(result.code, undefined, {
+          fallback: "Fix the highlighted errors and try again.",
+        }),
+        "error",
+      );
     } catch (err) {
       void normalizeError(err);
       showToast("Failed to publish.", "error");

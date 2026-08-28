@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
 import { sortBy } from "@mohasinac/appkit/client";
@@ -115,8 +116,11 @@ export function SellerShippingConfigsView({
     try {
       await performDelete(id);
     } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to delete shipping config", "error");
+      const e = normalizeError(err);
+      showToast(
+        toUserMessage(e.code, undefined, { fallback: "Failed to delete shipping config." }),
+        "error",
+      );
     }
     setDeleteTargetId(null);
   }, [performDelete, showToast]);
@@ -136,8 +140,11 @@ export function SellerShippingConfigsView({
       }
       showToast("Default shipping config updated.", "success");
     } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to update default.", "error");
+      const e = normalizeError(err);
+      showToast(
+        toUserMessage(e.code, undefined, { fallback: "Failed to update default." }),
+        "error",
+      );
     } finally {
       setSettingDefaultId(null);
     }

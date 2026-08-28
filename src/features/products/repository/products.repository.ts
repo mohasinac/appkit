@@ -842,9 +842,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         .update({
           [PRODUCT_FIELDS.VIEW_COUNT]: increment(1),
         });
+      // Fire-and-forget analytics: a lost view increment changes no rendered
+      // content, so it must never break the product read path it rides with.
     } catch (_err) {
       void normalizeError(_err);
-      // View analytics must not break product read path.
     }
   }
 

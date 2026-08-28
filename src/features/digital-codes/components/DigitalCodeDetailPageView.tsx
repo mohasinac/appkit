@@ -67,7 +67,10 @@ function toDescriptionHtml(raw: unknown): string {
 export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPrimaryActions }: DigitalCodeDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
-    : await getDigitalCodeForDetail(slug).catch(() => undefined);
+    // The listing IS this page's subject — a read failure must surface rather
+    // than become the same `undefined` a removed listing produces, which the
+    // "Not Found" branch below already handles.
+    : await getDigitalCodeForDetail(slug);
 
   if (!product) {
     return (

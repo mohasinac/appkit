@@ -48,9 +48,11 @@ export async function finalizeStagedMediaUrl(url: string): Promise<string> {
       const finalPath = await moveToFinalPath(asset.storagePath);
       await mediaAssetsRepository.promoteToFinalized(shortId, finalPath);
     }
+    // Non-fatal by construction: the returned URL is the same before and after
+    // the move, so a failed promotion leaves the asset in tmp/ and the proxy
+    // keeps serving it from there until the tmp-cleanup job reclaims it.
   } catch (_err) {
     void normalizeError(_err);
-    // Non-fatal: URL is still valid; proxy will serve whatever storagePath points to.
   }
   return url; // URL is stable — same before and after the file move
 }

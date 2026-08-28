@@ -99,9 +99,11 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
       }
       setVoted(true);
       localStorage.setItem(storageKey, "1");
+      // The button stays un-voted and the count unchanged, so the user can
+      // simply press it again — this shell has no toast host of its own, and a
+      // failed helpful-vote costs nothing.
     } catch (_err) {
       void normalizeError(_err);
-      // silently fail
     } finally {
       setVoting(false);
     }

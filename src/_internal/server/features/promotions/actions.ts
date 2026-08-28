@@ -46,7 +46,7 @@ export async function createCouponAction(input: unknown): Promise<ActionResult<u
 export async function updateCouponAction(couponId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser(["admin", "seller"]);
-      const coupon = await couponsRepository.findById(couponId).catch(() => null);
+      const coupon = await couponsRepository.findById(couponId);
       if (!coupon) throw new CouponNotFoundError(couponId);
       const parsed = updateCouponSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? ERR_INVALID_COUPON_INPUT);

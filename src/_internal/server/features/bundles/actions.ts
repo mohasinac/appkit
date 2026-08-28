@@ -14,6 +14,7 @@
  */
 
 import { NotFoundError, ValidationError } from "../../../../errors";
+import { safeRead } from "../../../../errors/safe-read";
 import { categoriesRepository } from "../../../../repositories";
 import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 import { assertCanAddNewItems } from "../../../../features/cart/actions/cart-actions";
@@ -64,7 +65,13 @@ export async function addBundleToCartAction(
   // prize-draw member decrements, which the stock fan-out has never done.
   const memberIds = bundle.bundleProductIds ?? [];
   const memberDocs = await Promise.all(
-    memberIds.map((id) => productRepository.findById(id).catch(() => null)),
+    memberIds.map((id) =>
+      safeRead(() => productRepository.findById(id), {
+        route: "/bundles",
+        key: "bundles.addBundleToCart.member",
+        fallback: null,
+      }),
+    ),
   );
   const groupMembers: CartLineMember[] = memberDocs
     .filter((p): p is NonNullable<typeof p> => p !== null)

@@ -124,7 +124,7 @@ function useResponsiveDrawer(storageKey: string) {
   const open = useCallback(() => {
     startTransition(() => {
       if (isDesktop()) {
-        try { localStorage.setItem(storageKey, "true"); } catch (_err) { void normalizeError(_err); }
+        try { localStorage.setItem(storageKey, "true"); } catch (_err) { void normalizeError(_err); /* localStorage unavailable (private-browse / quota) — the sidebar still opens, only the preference is not remembered */ }
         setDesktopOpen(true);
       } else setMobileOpen(true);
     });
@@ -133,7 +133,7 @@ function useResponsiveDrawer(storageKey: string) {
   const close = useCallback(() => {
     startTransition(() => {
       if (isDesktop()) {
-        try { localStorage.setItem(storageKey, "false"); } catch (_err) { void normalizeError(_err); }
+        try { localStorage.setItem(storageKey, "false"); } catch (_err) { void normalizeError(_err); /* localStorage unavailable (private-browse / quota) — the sidebar still closes, only the preference is not remembered */ }
         setDesktopOpen(false);
       } else setMobileOpen(false);
     });
@@ -149,7 +149,7 @@ function useResponsiveDrawer(storageKey: string) {
       if (isDesktop()) {
         setDesktopOpen((prev) => {
           const next = !prev;
-          try { localStorage.setItem(storageKey, String(next)); } catch (_err) { void normalizeError(_err); }
+          try { localStorage.setItem(storageKey, String(next)); } catch (_err) { void normalizeError(_err); /* localStorage unavailable (private-browse / quota) — the toggle still applies, only the preference is not remembered */ }
           return next;
         });
       } else setMobileOpen((prev) => !prev);

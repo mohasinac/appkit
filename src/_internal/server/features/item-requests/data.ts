@@ -26,6 +26,6 @@ export const getItemRequestForDetail = cache(
   ): Promise<ItemRequestDocument | null> => {
     void _opts;
     if (!id) return null;
-    return (await itemRequestsRepository.findById(id).catch(() => null)) ?? null;
+    return (await itemRequestsRepository.findById(id)) ?? null;
   },
 );

@@ -109,7 +109,10 @@ export async function PrizeDrawDetailPageView({
   const product =
     initialPrizeDraw !== undefined
       ? initialPrizeDraw ?? undefined
-      : await productRepository.findByIdOrSlug(id).catch(() => undefined);
+      // The prize draw IS this page's subject — a read failure must surface
+      // rather than become the same `undefined` a removed listing produces,
+      // which the "Not Found" branch below already handles.
+      : await productRepository.findByIdOrSlug(id);
 
   if (!product) {
     return (

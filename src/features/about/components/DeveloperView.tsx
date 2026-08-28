@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 import { Anchor, Avatar, Badge, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
@@ -32,8 +33,12 @@ export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
     teamMembers = Array.isArray(aboutContent.teamMembers) ? aboutContent.teamMembers : [];
     milestones = Array.isArray(aboutContent.milestones) ? aboutContent.milestones : [];
   } catch (_err) {
-    void normalizeError(_err);
-    // Firestore unavailable — render the empty state below rather than crash.
+    // Firestore unavailable — render the empty state below rather than crash,
+    // but say so: an empty Developers page is indistinguishable from a settings
+    // document that genuinely has no `isDeveloper` members.
+    serverLogger.warn("about.developerView: siteSettings.aboutContent read failed", {
+      error: normalizeError(_err).message,
+    });
   }
 
   const developers = teamMembers.filter((m) => m.isDeveloper);

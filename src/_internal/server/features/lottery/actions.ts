@@ -59,7 +59,7 @@ export async function submitLotteryPullAction(
     // Load the event/product to get the lotteryConfig
     let lotteryConfig: LotteryConfig;
     if (data.sourceType === "event") {
-      const event = await eventRepository.findById(sourceId).catch(() => null);
+      const event = await eventRepository.findById(sourceId);
       if (!event || event.type !== "lottery") {
         throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Lottery event not found or not of type lottery.");
       }
@@ -71,7 +71,7 @@ export async function submitLotteryPullAction(
       }
       lotteryConfig = event.lotteryConfig;
     } else {
-      const product = await productRepository.findById(sourceId).catch(() => null);
+      const product = await productRepository.findById(sourceId);
       if (!product || product.listingType !== "prize-draw") {
         throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Prize-draw product not found.");
       }

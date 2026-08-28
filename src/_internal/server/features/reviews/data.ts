@@ -1,10 +1,15 @@
 import { cache } from "react";
 import { reviewRepository, orderRepository } from "../../../../repositories";
+import { safeRead } from "../../../../errors/safe-read";
 import { REVIEWS_DETAIL_PAGE_SIZE } from "../../../shared/features/reviews/config";
 
 export const getReviewsForProduct = cache(
   async (productId: string, limit = REVIEWS_DETAIL_PAGE_SIZE) => {
-    return reviewRepository.findApprovedByProduct(productId, limit).catch(() => []);
+    return safeRead(() => reviewRepository.findApprovedByProduct(productId, limit), {
+      route: "/products",
+      key: "reviews.getReviewsForProduct",
+      fallback: [],
+    });
   },
 );
 

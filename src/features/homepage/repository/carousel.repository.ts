@@ -323,9 +323,10 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
           "stats.views": increment(1),
           "stats.lastViewed": new Date(),
         });
+      // Fire-and-forget analytics: a lost view increment changes nothing that
+      // renders, and it must never break the carousel read it rides along with.
     } catch (_e) {
       void normalizeError(_e);
-      // Swallow errors — analytics failures must not break the carousel response
     }
   }
 }

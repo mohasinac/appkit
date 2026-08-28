@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 import React from "react";
 import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
@@ -189,8 +190,13 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
     aggregateRating = result.aggregateRating;
     totalRatings = result.totalRatings;
   } catch (_err) {
-    void normalizeError(_err);
-    // Fail silently — empty state shown
+    // The section renders its empty state below, which is indistinguishable
+    // from a place that genuinely has no reviews — and Google Places calls are
+    // billed, so a persistent failure is worth an operator seeing.
+    serverLogger.warn("homepage.googleReviews: Places fetch failed", {
+      placeId,
+      error: normalizeError(_err).message,
+    });
   }
 
   const gridClass =

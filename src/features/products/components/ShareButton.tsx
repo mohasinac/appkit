@@ -20,9 +20,11 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
       try {
         await navigator.share({ title: title ?? document.title, text, url });
         return;
+        // navigator.share rejects on user cancellation exactly as it does on a
+        // real failure, so this is unreportable by construction — either way the
+        // clipboard fallback below still gives the user the link.
       } catch (_err) {
         void normalizeError(_err);
-        // user cancelled or browser blocked — fall through to clipboard
       }
     }
 

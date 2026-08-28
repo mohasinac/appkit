@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit/client";
@@ -250,13 +251,19 @@ export function SellerProductsView({
   };
 
   const handleDuplicate = async (row: ProductRow) => {
-    const res = await fetch(SELLER_ENDPOINTS.PRODUCT_DUPLICATE(row.id), {
-      method: "POST",
-    }).catch(() => null);
-    if (res && res.ok) {
+    // A swallowed failure here does nothing at all and says nothing — the
+    // seller clicks Duplicate and no copy appears, with no way to tell whether
+    // the request even left the browser.
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCT_DUPLICATE(row.id), {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Duplicate failed (${res.status})`);
       const json = await res.json().catch(() => null);
       const newId: string | undefined = json?.data?.id;
       if (newId) handleEdit({ ...row, id: newId });
+    } catch (err) {
+      showToast(normalizeError(err).message, "error");
     }
   };
 
@@ -269,10 +276,13 @@ export function SellerProductsView({
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
-      }).catch(() => null);
-      if (res?.ok) {
-        setStatusOverrides((prev) => new Map([...prev, [row.id, newStatus]]));
-      }
+      });
+      if (!res.ok) throw new Error(`Could not change status (${res.status})`);
+      setStatusOverrides((prev) => new Map([...prev, [row.id, newStatus]]));
+    } catch (err) {
+      // The row silently snapped back to its old status before this — a seller
+      // could not tell a rejected publish from a UI that had not repainted.
+      showToast(normalizeError(err).message, "error");
     } finally {
       setPublishingId(null);
     }
@@ -292,8 +302,11 @@ export function SellerProductsView({
       showToast("Location updated.", "success");
       setSetLocationOpen(false);
     } catch (err) {
-      void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
+      const e = normalizeError(err);
+      showToast(
+        toUserMessage(e.code, undefined, { fallback: "Failed to update location." }),
+        "error",
+      );
     }
   }, [showToast]);
 

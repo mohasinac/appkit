@@ -670,9 +670,11 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .collection(this.collection)
         .doc(categoryId)
         .update({ [CATEGORY_FIELDS.VIEW_COUNT]: increment(1) });
+      // Fire-and-forget analytics: a lost view increment changes nothing that
+      // renders, so it must never break the category read path it rides along
+      // with — the count is approximate by design.
     } catch (_err) {
       void normalizeError(_err);
-      // View analytics must not break category read path.
     }
   }
 

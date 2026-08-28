@@ -67,34 +67,29 @@ async function postAuthTrack(args: TrackArgs): Promise<void> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(args),
     });
+    // Recently-viewed tracking is a side effect of browsing, fired from a
+    // debounced timer with no UI attached. A lost entry costs the user nothing
+    // and there is no caller in a position to retry or report it.
   } catch (_err) {
     void normalizeError(_err);
-    // best-effort tracking
   }
 }
 
+// Both deletes below are user-initiated and deliberately let failures throw:
+// swallowing them made `remove`/`clear` report success for a DELETE that never
+// landed, and the row would silently return on the next load.
 async function deleteAuthItem(productId: string): Promise<void> {
-  try {
-    await fetch(ACCOUNT_ENDPOINTS.HISTORY_ITEM(productId), {
-      method: "DELETE",
-      credentials: "include",
-    });
-  } catch (_err) {
-    void normalizeError(_err);
-    // ignore
-  }
+  await fetch(ACCOUNT_ENDPOINTS.HISTORY_ITEM(productId), {
+    method: "DELETE",
+    credentials: "include",
+  });
 }
 
 async function deleteAuthAll(): Promise<void> {
-  try {
-    await fetch(ACCOUNT_ENDPOINTS.HISTORY, {
-      method: "DELETE",
-      credentials: "include",
-    });
-  } catch (_err) {
-    void normalizeError(_err);
-    // ignore
-  }
+  await fetch(ACCOUNT_ENDPOINTS.HISTORY, {
+    method: "DELETE",
+    credentials: "include",
+  });
 }
 
 export function useHistory(userId: string | null | undefined): UseHistoryReturn {
@@ -110,6 +105,9 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
       } else {
         setItems(getGuestHistory());
       }
+      // fetchAuthHistory already degrades to [] on its own, and getGuestHistory
+      // is a localStorage read that fails only in private mode — either way the
+      // list stays as it was, which is the correct visible outcome here.
     } catch (err: unknown) {
       void normalizeError(err);
     }
@@ -161,14 +159,19 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
 
   const remove = useCallback(
     async (productId: string) => {
-      if (isAuth) {
-        await deleteAuthItem(productId);
-        await loadItems();
-      } else {
-        setItems(removeGuestHistoryItem(productId));
+      try {
+        if (isAuth) {
+          await deleteAuthItem(productId);
+          await loadItems();
+        } else {
+          setItems(removeGuestHistoryItem(productId));
+        }
+      } catch (_err) {
+        void normalizeError(_err);
+        showToast("Failed to remove this item from history.", "error");
       }
     },
-    [isAuth, loadItems],
+    [isAuth, loadItems, showToast],
   );
 
   const clear = useCallback(async () => {

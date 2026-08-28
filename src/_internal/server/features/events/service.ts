@@ -8,7 +8,7 @@ import {
 } from "../../../shared/features/events/errors";
 
 export async function assertEventActive(eventId: string) {
-  const event = await eventRepository.findById(eventId).catch(() => null);
+  const event = await eventRepository.findById(eventId);
   if (!event) throw new EventNotFoundError(eventId);
 
   const status = (event as any).status as string | undefined;

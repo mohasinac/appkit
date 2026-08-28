@@ -9,6 +9,7 @@
 import { cache } from "react";
 import { categoriesRepository } from "../../../../repositories";
 import { productRepository } from "../../../../repositories";
+import { safeRead } from "../../../../errors/safe-read";
 import type { CategoryDocument } from "../../../../features/categories/schemas";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
@@ -63,7 +64,13 @@ export const listBundleMembers = cache(
     const ids = resolveBundleMemberIds(bundle);
     if (ids.length === 0) return [];
     const results = await Promise.all(
-      ids.map((id) => productRepository.findById(id).catch(() => null)),
+      ids.map((id) =>
+        safeRead(() => productRepository.findById(id), {
+          route: "/bundles",
+          key: "bundles.listBundleMembers.member",
+          fallback: null,
+        }),
+      ),
     );
     return results.filter((p): p is ProductDocument => p !== null);
   },
@@ -83,7 +90,13 @@ export async function resolveBundleOriginalTotal(
 ): Promise<number | undefined> {
   if (productIds.length === 0) return undefined;
   const results = await Promise.all(
-    productIds.map((id) => productRepository.findById(id).catch(() => null)),
+    productIds.map((id) =>
+      safeRead(() => productRepository.findById(id), {
+        route: "/bundles",
+        key: "bundles.resolveBundleOriginalTotal.member",
+        fallback: null,
+      }),
+    ),
   );
   const prices: number[] = [];
   for (const p of results) {
@@ -115,7 +128,13 @@ export async function resolveBundleOriginalTotal(
 export async function findBundleMemberStores(productIds: string[]): Promise<string[]> {
   if (productIds.length === 0) return [];
   const results = await Promise.all(
-    productIds.map((id) => productRepository.findById(id).catch(() => null)),
+    productIds.map((id) =>
+      safeRead(() => productRepository.findById(id), {
+        route: "/bundles",
+        key: "bundles.findBundleMemberStores.member",
+        fallback: null,
+      }),
+    ),
   );
   const stores = new Set<string>();
   for (const p of results) {
@@ -147,7 +166,13 @@ export async function resolveBundleCategorySlugs(
 ): Promise<string[]> {
   if (productIds.length === 0) return [];
   const results = await Promise.all(
-    productIds.map((id) => productRepository.findById(id).catch(() => null)),
+    productIds.map((id) =>
+      safeRead(() => productRepository.findById(id), {
+        route: "/bundles",
+        key: "bundles.resolveBundleCategorySlugs.member",
+        fallback: null,
+      }),
+    ),
   );
   const slugs = new Set<string>();
   for (const p of results) {

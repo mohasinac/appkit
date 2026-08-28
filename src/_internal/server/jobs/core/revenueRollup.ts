@@ -15,7 +15,13 @@ import { analyticsRollupRepository } from "../../../../repositories";
 import type { JobContext } from "../runtime/types";
 
 export async function runRevenueRollup(ctx: JobContext): Promise<void> {
-  const deliveredOrders = await orderRepository.findByStatus("delivered").catch(() => []);
+  // No `.catch(() => [])` here on purpose: an empty list is a legitimate
+  // outcome that writes `totalRevenue: 0`, so swallowing a query failure would
+  // overwrite yesterday's correct rollup with a confident zero that the
+  // dashboard has no way to distinguish from "no delivered orders". Let it
+  // throw — the job runner records the failure and the stale-but-correct
+  // singleton stays put.
+  const deliveredOrders = await orderRepository.findByStatus("delivered");
   const totalRevenue = deliveredOrders.reduce(
     (sum, order) => sum + (Number((order as { totalPrice?: number }).totalPrice ?? 0) || 0),
     0,

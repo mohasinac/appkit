@@ -215,9 +215,11 @@ export function CouponCard({
           credentials: "include",
           body: JSON.stringify({ couponCode: n.code, source: claimSource }),
         });
+        // An anonymous visitor gets a 401 here by design, so a failure cannot
+        // be distinguished from the expected case. The redirect below still
+        // pre-fills the code, which is what the user actually asked for.
       } catch (_err) {
         void normalizeError(_err);
-        /* anon/network — non-fatal */
       }
       if (typeof window !== "undefined") {
         window.location.href = `/cart?coupon=${encodeURIComponent(n.code)}`;

@@ -2,13 +2,14 @@
 
 import { cache } from "react";
 import { categoriesRepository } from "../../../../repositories";
+import { safeRead } from "../../../../errors/safe-read";
 import type { CategoryDocument, CategoryTreeNode } from "../../../../features/categories/schemas/firestore";
 import { CATEGORIES_FEATURED_LIMIT, CATEGORIES_MENU_LIMIT, CATEGORIES_SITEMAP_LIMIT } from "../../../shared/features/categories/config";
 
 /** Full category document by slug — deduped per request via React.cache(). */
 export const getCategoryForDetail = cache(
   async (slug: string): Promise<CategoryDocument | null> => {
-    const category = (await categoriesRepository.getCategoryBySlug(slug).catch(() => undefined)) ?? null;
+    const category = (await categoriesRepository.getCategoryBySlug(slug)) ?? null;
     if (category) void categoriesRepository.incrementViewCount(category.id);
     return category;
   },
@@ -17,7 +18,11 @@ export const getCategoryForDetail = cache(
 /** Flat list of all categories at tier 1 (roots) — for nav/sitemap. */
 export const listRootCategories = cache(
   async (): Promise<CategoryDocument[]> => {
-    return categoriesRepository.getCategoriesByTier(1).catch(() => []);
+    return safeRead(() => categoriesRepository.getCategoriesByTier(1), {
+      route: "/categories",
+      key: "categories.listRootCategories",
+      fallback: [],
+    });
   },
 );
 
@@ -44,7 +49,11 @@ export const listMenuCategories = cache(
 /** Full category tree rooted at a given rootId — for sidebar navigation. */
 export const getCategoryTree = cache(
   async (rootId?: string): Promise<CategoryTreeNode[]> => {
-    return categoriesRepository.buildTree(rootId).catch(() => []);
+    return safeRead(() => categoriesRepository.buildTree(rootId), {
+      route: "/categories",
+      key: "categories.getCategoryTree",
+      fallback: [],
+    });
   },
 );
 

@@ -60,9 +60,11 @@ function ProductLabel({ product }: { product: PrintCenterProduct }) {
           fontSize: 12,
           margin: 8,
         });
+        // JsBarcode throws on a value CODE128 cannot encode. The <svg> is left
+        // empty and the label still prints its title and price — there is no
+        // recovery beyond fixing the barcodeId on the product itself.
       } catch (_err) {
         void normalizeError(_err);
-        // Invalid barcode value — render nothing
       }
     }
   }, [product.barcodeId]);

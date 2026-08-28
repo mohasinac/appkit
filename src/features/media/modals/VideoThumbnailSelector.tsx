@@ -10,6 +10,7 @@ import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Alert, Button, Div, Modal, Row, Span, Spinner, Stack, Text } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -67,8 +68,10 @@ export function VideoThumbnailSelector({
       onSelect(url);
       onClose();
     } catch (err) {
-      void normalizeError(err);
-      setError(err instanceof Error ? err.message : t("thumbnailError"));
+      const e = normalizeError(err);
+      // `t` is namespaced ("mediaEditor"), so it cannot resolve the absolute
+      // `errors.codes.*` keys — omit it and let the authored copy stand.
+      setError(toUserMessage(e.code, undefined, { fallback: t("thumbnailError") }));
     } finally {
       setIsCapturing(false);
     }

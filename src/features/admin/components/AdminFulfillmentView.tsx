@@ -63,11 +63,14 @@ export function AdminFulfillmentView({
       );
       setOrders(res.orders ?? []);
     } catch (err: unknown) {
-      void normalizeError(err);
+      // An empty fulfilment queue is a normal, expected state, so a swallowed
+      // failure here reads as "nothing to pack" — matching the rest of this
+      // file, surface it instead.
+      showToast(normalizeError(err).message, "error");
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [showToast]);
 
   useEffect(() => {
     if (storeId) void fetchOrders(storeId);

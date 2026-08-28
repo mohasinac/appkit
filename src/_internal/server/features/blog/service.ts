@@ -2,14 +2,14 @@ import { blogRepository } from "../../../../repositories";
 import { BlogPostNotFoundError, BlogSlugConflictError } from "../../../shared/features/blog/errors";
 
 export async function assertBlogPostExists(slugOrId: string) {
-  const post = await blogRepository.findBySlug(slugOrId).catch(() => null)
-    ?? await blogRepository.findById(slugOrId).catch(() => null);
+  const post = await blogRepository.findBySlug(slugOrId)
+    ?? await blogRepository.findById(slugOrId);
   if (!post) throw new BlogPostNotFoundError(slugOrId);
   return post;
 }
 
 export async function assertBlogSlugUnique(slug: string): Promise<void> {
-  const existing = await blogRepository.findBySlug(slug).catch(() => null);
+  const existing = await blogRepository.findBySlug(slug);
   if (existing) throw new BlogSlugConflictError(slug);
 }
 

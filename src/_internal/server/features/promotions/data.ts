@@ -3,6 +3,6 @@ import { couponsRepository } from "../../../../repositories";
 
 export const getCouponByCode = cache(
   async (code: string) => {
-    return (await couponsRepository.getCouponByCode(code).catch(() => undefined)) ?? null;
+    return (await couponsRepository.getCouponByCode(code)) ?? null;
   },
 );

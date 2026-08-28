@@ -225,8 +225,11 @@ export function getAdminDb(): Firestore {
     // HMR reloads and duplicate module instances.
     db.settings({ ignoreUndefinedProperties: true });
   } catch (_err) {
+    // Firestore rejects a second settings() call on an already-initialised
+    // instance, which is the only way this throws (HMR reload / duplicate
+    // module instance re-entering the memoised bootstrap). The instance is
+    // fully usable either way, so there is nothing degraded to report.
     void normalizeError(_err);
-    // Already configured — safe to ignore.
   }
   set("__mohasinac_firebase_admin_db__", db);
   return db;

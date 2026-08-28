@@ -14,7 +14,7 @@ export type LotteryEventClient = Omit<EventDocument, "lotteryConfig"> & {
 
 /** Fetch a lottery-type event with price/weight stripped for client use. */
 export const getLotteryEventCached = cache(async (id: string): Promise<LotteryEventClient | null> => {
-  const event = await eventRepository.findById(id).catch(() => null);
+  const event = await eventRepository.findById(id);
   if (!event || event.type !== "lottery") return null;
   return {
     ...event,

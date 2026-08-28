@@ -18,6 +18,7 @@ import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-co
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { OrderDocument } from "../schemas";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 export interface RefundRequestViewProps {
   order: Pick<OrderDocument, "id" | "totalPrice" | "currency" | "isNonRefundable" | "refunds" | "contestable">;
@@ -74,8 +75,12 @@ export function RefundRequestView({
     try {
       await onSubmitRequest(reason.trim());
     } catch (err) {
-      void normalizeError(err);
-      setError(err instanceof Error ? err.message : REFUND_COPY.request.errorFallback);
+      const e = normalizeError(err);
+      setError(
+        toUserMessage(e.code, undefined, {
+          fallback: REFUND_COPY.request.errorFallback,
+        }),
+      );
     }
   };
 

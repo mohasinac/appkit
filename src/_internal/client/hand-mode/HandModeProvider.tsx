@@ -83,6 +83,8 @@ export function HandModeProvider({ initialHand, children }: HandModeProviderProp
         return initialHand ?? stored;
       }
     } catch (_err) {
+      // localStorage unavailable (private-browse) — fall through to the value
+      // readHandPreference() already resolved; there is no preference to honour.
       void normalizeError(_err);
     }
     return stored;
