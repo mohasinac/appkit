@@ -44,7 +44,7 @@ export function PreOrderActionsClient({
         if (isAuthError(err)) {
           setShowLoginModal(true);
         } else {
-          setError(err instanceof Error ? err.message : "Failed to reserve. Please try again.");
+          setError("Failed to reserve. Please try again.");
         }
       }
     });

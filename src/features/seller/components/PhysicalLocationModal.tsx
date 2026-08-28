@@ -35,7 +35,7 @@ export function PhysicalLocationModal({ count, onSave, onClose }: PhysicalLocati
       onClose();
     } catch (e) {
       void normalizeError(e);
-      setError(e instanceof Error ? e.message : "Failed to save location");
+      setError("Failed to save location");
     } finally {
       setSaving(false);
     }

@@ -133,7 +133,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       selection.clearSelection();
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to cancel bids.", "error");
+      showToast("Failed to cancel bids.", "error");
     }
   }, [showToast]);
 

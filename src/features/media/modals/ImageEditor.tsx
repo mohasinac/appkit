@@ -89,7 +89,7 @@ export function ImageEditor({
       onSave(file);
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to save image.", "error");
+      showToast("Failed to save image.", "error");
     } finally {
       setSaving(false);
     }

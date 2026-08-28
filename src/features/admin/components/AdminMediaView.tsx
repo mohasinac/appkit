@@ -67,7 +67,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
         setNextPageToken(data.data.nextPageToken ?? null);
       } catch (err) {
         void normalizeError(err);
-        setError(err instanceof Error ? err.message : "Failed to load");
+        setError("Failed to load");
       } finally {
         setIsLoading(false);
       }
@@ -346,7 +346,7 @@ export function AdminMediaView({
     } catch (err) {
       void normalizeError(err);
       setOperationMessage("Failed to discard staged media uploads.");
-      showToast(err instanceof Error ? err.message : "Failed to clear uploads.", "error");
+      showToast("Failed to clear uploads.", "error");
     }
   }, [cleanup, stagedUrls, showToast]);
 
@@ -359,7 +359,7 @@ export function AdminMediaView({
     } catch (err) {
       void normalizeError(err);
       setOperationMessage("Could not copy URL to clipboard.");
-      showToast(err instanceof Error ? err.message : "Failed to copy.", "error");
+      showToast("Failed to copy.", "error");
     }
   }, [showToast]);
 

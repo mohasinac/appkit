@@ -66,7 +66,7 @@ export function SellerCouponsView({
         showToast("Coupon updated.", "success");
       } catch (err) {
         void normalizeError(err);
-        showToast(err instanceof Error ? err.message : "Failed to update coupon.", "error");
+        showToast("Failed to update coupon.", "error");
       } finally {
         setTogglingId(null);
       }

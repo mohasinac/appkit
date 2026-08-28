@@ -154,7 +154,7 @@ export function AddressForm({
         await onSubmit(formData);
       } catch (err) {
         void normalizeError(err);
-        showToast(err instanceof Error ? err.message : "Failed to save address", "error");
+        showToast("Failed to save address", "error");
       }
     },
     [formData, onSubmit, showToast, setFieldError, clearErrors, markSubmitAttempted],

@@ -144,7 +144,7 @@ export function NotificationPreferencesPanel({
       onSave?.(prefs);
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to save preferences.", "error");
+      showToast("Failed to save preferences.", "error");
     } finally {
       setSaving(false);
     }

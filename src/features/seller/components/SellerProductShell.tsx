@@ -1286,7 +1286,7 @@ export function SellerProductShell({
       if (!silent) showToast(result.error || "Fix the highlighted errors and try again.", "error");
     } catch (err) {
       void normalizeError(err);
-      if (!silent) showToast(err instanceof Error ? err.message : "Failed to save.", "error");
+      if (!silent) showToast("Failed to save.", "error");
     }
   }, [draft, onSave, markClean, clearErrors, setFieldError, showToast]);
   const handleAutoSave = useCallback(async () => {
@@ -1323,7 +1323,7 @@ export function SellerProductShell({
       showToast(result.error || "Fix the highlighted errors and try again.", "error");
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to publish.", "error");
+      showToast("Failed to publish.", "error");
     }
   }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast]);
 

@@ -73,7 +73,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         if (isAuthError(err)) {
           onNeedsLogin();
         } else {
-          setError(err instanceof Error ? err.message : "Something went wrong.");
+          setError("Something went wrong.");
         }
       }
     });

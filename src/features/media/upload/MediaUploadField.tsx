@@ -585,7 +585,7 @@ export function MediaUploadField({
       }
     } catch (err) {
       void normalizeError(err);
-      setError(err instanceof Error ? err.message : "Upload failed");
+      setError("Upload failed");
     } finally {
       setIsLoading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -626,7 +626,7 @@ export function MediaUploadField({
       afterUpload(url, blob.type || mimeType, poster?.posterUrl, poster?.duration);
     } catch (err) {
       void normalizeError(err);
-      setError(err instanceof Error ? err.message : "Upload failed");
+      setError("Upload failed");
     } finally {
       setIsLoading(false);
     }

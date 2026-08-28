@@ -130,7 +130,7 @@ export function LoginForm({
                     await onSubmit(values);
                   } catch (err) {
                     void normalizeError(err);
-                    showToast(err instanceof Error ? err.message : "Sign in failed", "error");
+                    showToast("Sign in failed", "error");
                   }
                 }}
               >

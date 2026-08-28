@@ -179,7 +179,7 @@ export function RegisterForm({
                     await onSubmit(values);
                   } catch (err) {
                     void normalizeError(err);
-                    showToast(err instanceof Error ? err.message : "Registration failed", "error");
+                    showToast("Registration failed", "error");
                   }
                 }}
               >

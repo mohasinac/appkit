@@ -97,7 +97,7 @@ export function SellerGoogleReviewsView({
     } catch (err) {
       void normalizeError(err);
       setSaveMessage({ text: "Save failed. Please try again.", ok: false });
-      showToast(err instanceof Error ? err.message : "Failed to save settings.", "error");
+      showToast("Failed to save settings.", "error");
     } finally {
       setSaving(false);
     }
@@ -120,7 +120,7 @@ export function SellerGoogleReviewsView({
     } catch (err) {
       void normalizeError(err);
       setSaveMessage({ text: "Sync failed. Please try again.", ok: false });
-      showToast(err instanceof Error ? err.message : "Failed to sync reviews.", "error");
+      showToast("Failed to sync reviews.", "error");
     } finally {
       setSyncing(false);
     }

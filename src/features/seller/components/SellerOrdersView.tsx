@@ -483,7 +483,7 @@ export function SellerOrdersView({
       setSelectedOrderId(null);
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to mark order shipped.", "error");
+      showToast("Failed to mark order shipped.", "error");
     } finally {
       setShippingRowId(null);
     }
@@ -504,7 +504,7 @@ export function SellerOrdersView({
       setSetLocationOpen(false);
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
+      showToast("Failed to update location.", "error");
     }
   }, [showToast]);
 
@@ -524,7 +524,7 @@ export function SellerOrdersView({
       selection.clearSelection();
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to request payout.", "error");
+      showToast("Failed to request payout.", "error");
     }
   }, [showToast]);
 

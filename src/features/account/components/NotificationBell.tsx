@@ -121,7 +121,7 @@ export function NotificationBell({
         refetch();
       } catch (err) {
         void normalizeError(err);
-        showToast(err instanceof Error ? err.message : "Failed to mark notification as read", "error");
+        showToast("Failed to mark notification as read", "error");
       }
     },
     [markRead, refetch, showToast],

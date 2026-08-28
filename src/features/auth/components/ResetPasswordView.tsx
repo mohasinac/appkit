@@ -64,7 +64,7 @@ export function ResetPasswordView({
         await onSubmit(oobCode, parsed.data.password);
       } catch (err) {
         void normalizeError(err);
-        showToast(err instanceof Error ? err.message : "Password reset failed", "error");
+        showToast("Password reset failed", "error");
       }
     };
   }

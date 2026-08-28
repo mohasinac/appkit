@@ -49,7 +49,7 @@ export function ForgotPasswordView({
         await onSubmit(parsed.data.email);
       } catch (err) {
         void normalizeError(err);
-        showToast(err instanceof Error ? err.message : "Failed to send reset link", "error");
+        showToast("Failed to send reset link", "error");
       }
     };
   }

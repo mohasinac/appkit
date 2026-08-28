@@ -114,7 +114,7 @@ export function SellerPayoutMethodsView({
       await performDelete(id);
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to delete payout method", "error");
+      showToast("Failed to delete payout method", "error");
     }
     setDeleteTargetId(null);
   }, [performDelete, showToast]);
@@ -135,7 +135,7 @@ export function SellerPayoutMethodsView({
       showToast("Default payout method updated.", "success");
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to update default.", "error");
+      showToast("Failed to update default.", "error");
     } finally {
       setSettingDefaultId(null);
     }

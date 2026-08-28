@@ -42,7 +42,7 @@ export function ClassifiedContactSellerPanel({ productId, onContactSeller }: Cla
       }
     } catch (e) {
       void normalizeError(e);
-      setError(e instanceof Error ? e.message : "Something went wrong");
+      setError("Something went wrong");
     } finally {
       setPending(false);
     }
