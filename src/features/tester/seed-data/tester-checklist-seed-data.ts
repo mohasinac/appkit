@@ -3819,7 +3819,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             href: "/admin/site",
           },
           { key: "admin-dashboard-widgets", label: "Admin dashboard widgets show accurate data", href: "/admin/dashboard" },
-          { key: "analytics-admin", label: "Admin analytics dashboard shows accurate data", href: "/admin/analytics" },
+          {
+            key: "analytics-admin",
+            label: "Admin analytics dashboard shows accurate data",
+            href: "/admin/analytics",
+          },
+          {
+            key: "analytics-traffic-card-has-numbers",
+            label: "The \"Traffic today\" card shows a real number, and it MATCHES the Page Views tab beside it",
+            description:
+              "Fixed 2026-08-29. BEFORE: the card showed an em-dash forever — never even a 0. It subscribed to two Realtime Database paths written by a presence hook whose writes had been denied since the day it shipped (the RTDB rules are backend-write-only), and both subscriptions passed no error callback, so a permission denial fired nothing at all and the tiles simply never left their initial state. AFTER: the card reads the same Firestore pageview counter that backs the Page Views tab in the same tab strip, so the two figures must agree — compare them. If the card errors it now SAYS so instead of showing a dash.",
+          },
+          {
+            key: "analytics-no-permission-denied",
+            label: "Opening /admin/analytics logs no PERMISSION_DENIED in the browser console",
+            description:
+              "Fixed 2026-08-29. BEFORE: every admin page load produced two Firebase permission_denied warnings from the dead presence/analytics subscriptions. AFTER: none — those subscriptions are gone entirely. Open devtools, hard-reload the page, and confirm the console is clean of Firebase permission errors.",
+            href: "/admin/analytics",
+          },
           {
             key: "pageviews-report-listing-standard",
             label: "The \"Page Views\" tab in Admin Analytics is a full standard listing — a search box (by entity id or URL), an entity-type filter drawer, a \"Most views\"/\"Fewest views\" sort dropdown, and real pagination — not a bare unsearchable table",
