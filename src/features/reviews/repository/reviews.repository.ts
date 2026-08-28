@@ -13,8 +13,6 @@ import { NotFoundError } from "../../../errors";
 import { REVIEW_MAX_RATING, REVIEW_MIN_RATING } from "../../../_internal/shared/features/reviews/config";
 import {
   decryptPiiFields,
-  encryptPiiFields,
-  piiIndicesFor,
   REVIEW_PII_FIELDS,
   REVIEW_PII_INDEX_MAP,
 } from "../../../security";
@@ -71,21 +69,18 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   }
 
   /**
-   * Encrypt PII, then attach blind indices derived from the plaintext.
+   * Declared, not hand-rolled.
    *
-   * Previously this reassigned `encrypted = addPiiIndices(data, …)` — which
-   * re-reads the ORIGINAL plaintext and returns `{...data, ...indices}` — and
-   * then spread that over the ciphertext, so plaintext won and `userName` was
-   * written to Firestore in the clear beside a valid index. `piiIndicesFor`
-   * returns the index fields alone, so the ciphertext cannot be overwritten.
-   * The identical bug was fixed in UserRepository and never propagated here.
+   * `BaseRepository.applyWriteHooks` already does exactly what the private
+   * `encryptReviewData` did — encrypt the listed fields, then add the mapped blind
+   * indices derived from the PLAINTEXT source. Declaring the fields means all
+   * nine mutating methods get it, including the `createWithId` / `*InTx` /
+   * `*InBatch` family that inherited unhooked base implementations while the
+   * encryption lived in a private method only three call sites remembered to
+   * call.
    */
-  private encryptReviewData<T extends object>(data: T): T {
-    return {
-      ...encryptPiiFields(data, [...REVIEW_PII_FIELDS]),
-      ...piiIndicesFor(data, REVIEW_PII_INDEX_MAP),
-    } as T;
-  }
+  protected override piiFields = REVIEW_PII_FIELDS;
+  protected override piiIndexMap = REVIEW_PII_INDEX_MAP;
 
   protected override mapDoc<D = ReviewDocument>(
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
@@ -117,7 +112,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       updatedAt: new Date(),
     };
 
-    const encrypted = this.encryptReviewData(
+    const encrypted = this.applyWriteHooks(
       reviewData,
     );
 
@@ -133,7 +128,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     reviewId: string,
     data: Partial<ReviewDocument>,
   ): Promise<ReviewDocument> {
-    const encrypted = this.encryptReviewData(
+    const encrypted = this.applyWriteHooks(
       data,
     );
     return super.update(reviewId, encrypted as Partial<ReviewDocument>);

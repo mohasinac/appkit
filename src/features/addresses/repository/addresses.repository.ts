@@ -22,7 +22,6 @@ import {
 import {
   ADDRESS_PII_FIELDS,
   decryptPiiFields,
-  encryptPiiFields,
 } from "../../../security";
 import {
   ADDRESS_FIELDS,
@@ -43,9 +42,18 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     return decryptPiiFields(doc, [...ADDRESS_PII_FIELDS]) as AddressDocument;
   }
 
-  private encryptAddressData<T extends object>(data: T): T {
-    return encryptPiiFields(data, [...ADDRESS_PII_FIELDS]);
-  }
+  /**
+   * Declared, not hand-rolled.
+   *
+   * `BaseRepository.applyWriteHooks` already does exactly what the private
+   * `encryptAddressData` did — encrypt the listed fields, then add the mapped blind
+   * indices derived from the PLAINTEXT source. Declaring the fields means all
+   * nine mutating methods get it, including the `createWithId` / `*InTx` /
+   * `*InBatch` family that inherited unhooked base implementations while the
+   * encryption lived in a private method only three call sites remembered to
+   * call.
+   */
+  protected override piiFields = ADDRESS_PII_FIELDS;
 
   protected override mapDoc<D = AddressDocument>(snap: DocumentSnapshot): D {
     const raw = super.mapDoc<AddressDocument>(snap);
@@ -56,7 +64,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     id: string,
     data: Partial<AddressDocument>,
   ): Promise<AddressDocument> {
-    const encrypted = this.encryptAddressData(data);
+    const encrypted = this.applyWriteHooks(data);
     return super.createWithId(id, encrypted);
   }
 
@@ -64,7 +72,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     id: string,
     data: Partial<AddressDocument>,
   ): Promise<AddressDocument> {
-    const encrypted = this.encryptAddressData(data);
+    const encrypted = this.applyWriteHooks(data);
     return super.update(id, encrypted);
   }
 
@@ -152,7 +160,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         updatedAt: now,
       };
 
-      const encrypted = this.encryptAddressData(addressData);
+      const encrypted = this.applyWriteHooks(addressData);
       await docRef.set(prepareForFirestore(encrypted));
 
       serverLogger.info("Address created", {

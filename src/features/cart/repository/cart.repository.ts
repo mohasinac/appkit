@@ -1,7 +1,6 @@
 import { randomUUID } from "crypto";
 
 import { FieldValue, type DocumentReference } from "firebase-admin/firestore";
-import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";
 import { CART_FIELDS } from "../../../constants/field-names";
 
@@ -50,19 +49,21 @@ export class CartRepository extends BaseRepository<CartDocument> {
     return this.sieveQuery<CartDocument>(model, CartRepository.SIEVE_FIELDS);
   }
 
-  protected override mapDoc<D = CartDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<CartDocument>(snap);
-    return {
-      ...raw,
-      items: (raw.items ?? []).map((item) => ({
-        ...item,
-        storeName:
-          typeof item.storeName === "string"
-            ? (decryptPii(item.storeName) ?? item.storeName)
-            : item.storeName,
-      })),
-    } as unknown as D;
-  }
+  /**
+   * `mapDoc` is deliberately NOT overridden.
+   *
+   * It used to decrypt `items[].storeName` on every read — and nothing has
+   * ever encrypted that field. `CartRepository` declares no `piiFields`, and
+   * `storeName` appears nowhere in pii-schemas.ts. `decryptPii` passes a
+   * non-`enc:v1:` string straight through, so the call was a no-op on every
+   * document while reading as protection — the most expensive kind of dead
+   * code, because it answers the question "is this handled?" wrongly.
+   *
+   * A store name is not PII: it is the seller's public shopfront name, shown
+   * on every listing. If a genuinely private field is added to a cart line,
+   * declare it in `piiFields` so `applyWriteHooks` encrypts it on all nine
+   * write paths — do not reintroduce a decrypt with no matching encrypt.
+   */
 
   async findByUserId(userId: string): Promise<CartDocument | null> {
     return this.findById(userId);

@@ -276,10 +276,22 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
   }
 
+  /**
+   * Server-side aggregation — never a full read.
+   *
+   * This used to be `getCollection().get()` then `.size`, which downloads every
+   * document in the collection to learn how many there are. On `products` or
+   * `orders` that is the entire collection billed as reads, and the payload is
+   * discarded immediately. Straight Rule #6 violation, and it scales with the
+   * data rather than staying flat.
+   *
+   * `count()` is a Firestore aggregation query: the server returns a number,
+   * billed at one read per 1000 documents matched rather than one per document.
+   */
   async count(): Promise<number> {
     try {
-      const snapshot = await this.getCollection().get();
-      return snapshot.size;
+      const snapshot = await this.getCollection().count().get();
+      return snapshot.data().count;
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError("Failed to count documents", error);

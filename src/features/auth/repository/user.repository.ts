@@ -14,12 +14,10 @@ import {
 import {
   USER_PII_FIELDS,
   USER_PII_INDEX_MAP,
-  piiIndicesFor,
   decryptPayoutDetails,
   decryptPiiFields,
   decryptShippingConfig,
   encryptPayoutDetails,
-  encryptPiiFields,
   encryptShippingConfig,
   piiBlindIndex,
 } from "../../../security";
@@ -72,35 +70,34 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return decrypted;
   }
 
-  private encryptUserData<T extends object>(data: T): T {
-    // encryptPiiFields encrypts each PII field in-place AND adds the corresponding
-    // blind-index sibling (e.g. email → emailIndex) from the plaintext value.
-    // addPiiIndices is intentionally NOT called here — it spreads the original
-    // plaintext `data` back into the result, which would overwrite the encrypted
-    // ciphertext with the original plaintext values, defeating the encryption.
-    //
-    // The mapped indices below are not optional. `encryptPiiFields` derives its
-    // sibling name mechanically as `${field}Index`, so `phoneNumber` produces
-    // `phoneNumberIndex` — but `findByPhone` queries `USER_FIELDS.PHONE_INDEX`,
-    // which is `phoneIndex`. Only the seed paths ever wrote that name, so
-    // **phone lookup could never match a user created by the app.**
-    // `piiIndicesFor` applies USER_PII_INDEX_MAP's real names and, unlike
-    // `addPiiIndices`, carries no plaintext back over the ciphertext.
-    const encrypted = {
-      ...encryptPiiFields(data, [...USER_PII_FIELDS]),
-      ...piiIndicesFor(data, USER_PII_INDEX_MAP),
-    } as T;
-    const access = encrypted as { payoutDetails?: object | null; shippingConfig?: object | null };
+  /**
+   * Declared, not hand-rolled.
+   *
+   * `BaseRepository.applyWriteHooks` already does exactly what the private
+   * `encryptUserData` did — encrypt the listed fields, then add the mapped blind
+   * indices derived from the PLAINTEXT source. Declaring the fields means all
+   * nine mutating methods get it, including the `createWithId` / `*InTx` /
+   * `*InBatch` family that inherited unhooked base implementations while the
+   * encryption lived in a private method only three call sites remembered to
+   * call.
+   */
+  protected override piiFields = USER_PII_FIELDS;
+  protected override piiIndexMap = USER_PII_INDEX_MAP;
 
-    if (access.payoutDetails) {
-      access.payoutDetails = encryptPayoutDetails(access.payoutDetails);
-    }
-
-    if (access.shippingConfig) {
-      access.shippingConfig = encryptShippingConfig(access.shippingConfig);
-    }
-
-    return encrypted;
+  /**
+   * The base hook, plus the nested objects it cannot see.
+   *
+   * `piiFields` is a flat list of top-level names, so a nested blob has to be
+   * encrypted separately. Calling `super.applyWriteHooks` FIRST keeps a single
+   * encryption path with one extra step on top, rather than two parallel paths
+   * that have to agree — which is what the hand-rolled override was.
+   */
+  protected override applyWriteHooks<D extends object>(data: D): D {
+    const out = super.applyWriteHooks(data);
+    const access = out as { payoutDetails?: object | null; shippingConfig?: object | null };
+    if (access.payoutDetails) access.payoutDetails = encryptPayoutDetails(access.payoutDetails);
+    if (access.shippingConfig) access.shippingConfig = encryptShippingConfig(access.shippingConfig);
+    return out;
   }
 
   protected override mapDoc<D = UserDocument>(snap: DocumentSnapshot): D {
@@ -120,7 +117,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // check with no error anywhere (found via a live RBAC bug where an
     // admin account created this way couldn't access /admin).
     const withUid: Partial<UserDocument> = { uid: id, ...data };
-    const encrypted = this.encryptUserData(withUid);
+    const encrypted = this.applyWriteHooks(withUid);
     return super.createWithId(id, encrypted);
   }
 
@@ -146,7 +143,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
       updatedAt: new Date(),
     };
 
-    const encrypted = this.encryptUserData(userData);
+    const encrypted = this.applyWriteHooks(userData);
 
     await this.db
       .collection(this.collection)
@@ -242,7 +239,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
     uid: string,
     data: Partial<UserDocument>,
   ): Promise<UserDocument> {
-    const encrypted = this.encryptUserData(data);
+    const encrypted = this.applyWriteHooks(data);
     return super.update(uid, encrypted);
   }
 

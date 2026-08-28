@@ -20,7 +20,6 @@ import {
 } from "../../../providers/db-firebase";
 import {
   decryptPiiFields,
-  encryptPiiFields,
   ORDER_PII_FIELDS,
 } from "../../../security";
 import { serverTimestamp, arrayUnion } from "../../../contracts/field-ops";
@@ -86,9 +85,18 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     ]) as unknown as OrderDocument;
   }
 
-  private encryptOrderData<T extends object>(data: T): T {
-    return encryptPiiFields(data, [...ORDER_PII_FIELDS]);
-  }
+  /**
+   * Declared, not hand-rolled.
+   *
+   * `BaseRepository.applyWriteHooks` already does exactly what the private
+   * `encryptOrderData` did — encrypt the listed fields, then add the mapped blind
+   * indices derived from the PLAINTEXT source. Declaring the fields means all
+   * nine mutating methods get it, including the `createWithId` / `*InTx` /
+   * `*InBatch` family that inherited unhooked base implementations while the
+   * encryption lived in a private method only three call sites remembered to
+   * call.
+   */
+  protected override piiFields = ORDER_PII_FIELDS;
 
   protected override mapDoc<D = OrderDocument>(
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
@@ -108,7 +116,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       updatedAt: new Date(),
     };
 
-    const encrypted = this.encryptOrderData(
+    const encrypted = this.applyWriteHooks(
       orderData,
     );
 

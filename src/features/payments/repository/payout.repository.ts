@@ -25,9 +25,7 @@ import { withHistory, type HistoryActor } from "../../../_internal/shared/histor
 import type { FirestoreDocument } from "../../../schemas/types";
 
 import {
-  encryptPiiFields,
   decryptPiiFields,
-  piiIndicesFor,
   PAYOUT_PII_FIELDS,
   PAYOUT_PII_INDEX_MAP,
   encryptPayoutBankAccount,
@@ -62,27 +60,32 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   }
 
   /**
-   * Encrypt PII, then attach blind indices derived from the plaintext.
+   * Declared, not hand-rolled.
    *
-   * Previously this reassigned `encrypted = addPiiIndices(data, …)` — which
-   * re-reads the ORIGINAL plaintext and returns `{...data, ...indices}` — and
-   * then spread that over the ciphertext, so plaintext won and `sellerEmail`
-   * and `upiId` were written to Firestore in the clear beside a valid index.
-   * `piiIndicesFor` returns the index fields alone, so the ciphertext cannot be
-   * overwritten. The identical bug was fixed in UserRepository and never
-   * propagated here.
+   * `BaseRepository.applyWriteHooks` already does exactly what the private
+   * `encryptPayoutData` did — encrypt the listed fields, then add the mapped blind
+   * indices derived from the PLAINTEXT source. Declaring the fields means all
+   * nine mutating methods get it, including the `createWithId` / `*InTx` /
+   * `*InBatch` family that inherited unhooked base implementations while the
+   * encryption lived in a private method only three call sites remembered to
+   * call.
    */
-  private encryptPayoutData<T extends object>(data: T): T {
-    const encrypted = {
-      ...encryptPiiFields(data, [...PAYOUT_PII_FIELDS]),
-      ...piiIndicesFor(data, PAYOUT_PII_INDEX_MAP),
-    } as T;
+  protected override piiFields = PAYOUT_PII_FIELDS;
+  protected override piiIndexMap = PAYOUT_PII_INDEX_MAP;
 
-    const access = encrypted as { bankAccount?: object | null };
-    if (access.bankAccount) {
-      access.bankAccount = encryptPayoutBankAccount(access.bankAccount);
-    }
-    return encrypted;
+  /**
+   * The base hook, plus the nested objects it cannot see.
+   *
+   * `piiFields` is a flat list of top-level names, so a nested blob has to be
+   * encrypted separately. Calling `super.applyWriteHooks` FIRST keeps a single
+   * encryption path with one extra step on top, rather than two parallel paths
+   * that have to agree — which is what the hand-rolled override was.
+   */
+  protected override applyWriteHooks<D extends object>(data: D): D {
+    const out = super.applyWriteHooks(data);
+    const access = out as { bankAccount?: object | null };
+    if (access.bankAccount) access.bankAccount = encryptPayoutBankAccount(access.bankAccount);
+    return out;
   }
 
   /** Override mapDoc to auto-decrypt PII on every Firestore read */
@@ -109,7 +112,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     };
 
     // Encrypt PII before persisting
-    const encrypted = this.encryptPayoutData(
+    const encrypted = this.applyWriteHooks(
       data,
     );
 
@@ -126,7 +129,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     payoutId: string,
     data: Partial<PayoutDocument>,
   ): Promise<PayoutDocument> {
-    const encrypted = this.encryptPayoutData(
+    const encrypted = this.applyWriteHooks(
       data,
     );
     return super.update(payoutId, encrypted as Partial<PayoutDocument>);
