@@ -159,7 +159,17 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const config: ListingViewConfig<AdminUsersResponse, UserRow> = {
     portal: "admin",
     title: "Users",
-    searchPlaceholder: "Search users, email, or seller handles",
+    // Exact match, and the copy has to say so. `/api/admin/users` branches on
+    // whether the term contains "@": an email resolves through
+    // `emailIndex == piiBlindIndex(q)` and a name through `displayName == q`.
+    // BOTH are equality. Email cannot be partial-matched at all — it is
+    // encrypted, and ciphertext has no usable prefix (D1) — and "seller
+    // handles" were never matched by anything.
+    search: {
+      placeholder: "Full name or email (exact match)",
+      mode: "exact",
+      fields: ["displayName", "email"],
+    },
     emptyLabel: "No users found",
     filterKeys: ["status", "role"],
     defaultSort: sortBy("createdAt", "DESC"),

@@ -94,7 +94,36 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
   // -- Header
   title: string;
   subtitle?: string;
-  searchPlaceholder: string;
+  /**
+   * Search box copy. OPTIONAL — declaring it is what makes the box exist.
+   *
+   * It was REQUIRED, and `DataListingView` passed `onSearchChange`
+   * unconditionally, so a developer could not build a listing view without
+   * rendering a search box. `ListingToolbar` has always gated the box on
+   * `onSearchChange` being supplied; nothing ever declined to supply it.
+   *
+   * That is the structural cause of the dead boxes: ~39 views render a search
+   * input whose endpoint never reads `q`. The box accepts typing, the request
+   * carries the term, and the results do not change — no error anywhere.
+   *
+   * Omit it when the endpoint cannot search. Do not pass a placeholder
+   * describing a capability the endpoint lacks.
+   */
+  searchPlaceholder?: string;
+  /**
+   * Explicit search capability. Prefer this over a bare `searchPlaceholder`
+   * when the match semantics matter to the user — PII-backed fields are
+   * exact-match by construction (encryption and partial-match search are
+   * mutually exclusive), and a placeholder promising "search by email" over a
+   * blind index is a promise the backend cannot keep.
+   */
+  search?: {
+    placeholder: string;
+    /** `exact` for a field resolved through an HMAC blind index. */
+    mode?: "partial" | "exact";
+    /** Fields the endpoint actually matches on. */
+    fields?: readonly string[];
+  };
   emptyLabel?: string;
 
   // -- Sort options for the toolbar dropdown
@@ -284,15 +313,21 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           }
         : undefined;
 
+  // A box exists only when the config asks for one.
+  const searchEnabled = Boolean(config.search ?? config.searchPlaceholder);
+
   return (
     <Div className={config.className ?? "min-h-screen"}>
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder={config.searchPlaceholder}
-        onSearchChange={setSearchInput}
-        onSearchCommit={commitSearch}
+        searchPlaceholder={config.search?.placeholder ?? config.searchPlaceholder}
+        // Passing this is what renders the box — ListingToolbar gates on it.
+        // Undefined when the config declares no search, so a view whose
+        // endpoint cannot search no longer shows an input that does nothing.
+        onSearchChange={searchEnabled ? setSearchInput : undefined}
+        onSearchCommit={searchEnabled ? commitSearch : undefined}
         sortValue={table.get("sort") || config.defaultSort}
         sortOptions={config.sortOptions}
         onSortChange={(v) => table.set("sort", v)}
