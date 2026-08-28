@@ -2385,6 +2385,151 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "tabs-mobile-dropdown", label: "Tabs on category/brand/product/event detail pages collapse into a colored dropdown on mobile once there are more than 5 tabs" },
       ],
     },
+    {
+      pageKey: "search",
+      pageLabel: "Search",
+      href: "/products",
+      cases: [
+        {
+          key: "search-typeahead-differs",
+          label: "Typing \"dranzer\" and then \"dragoon\" in the header search gives DIFFERENT suggestions",
+          description:
+            "WAS: the same 5 newest rows appeared for every keystroke, because no search term reached the query at all. If both terms give an identical list, the term is still being ignored.",
+        },
+        {
+          key: "search-typeahead-no-drafts",
+          label: "Header search suggestions contain no draft or archived listings",
+          description:
+            "WAS: the suggestion query applied no status filter, so unpublished drafts were visible to the public.",
+        },
+        {
+          key: "search-prefix-match",
+          label: "Searching \"dran\" finds Dranzer products on /products",
+          description:
+            "WAS: no match at all - only whole words matched, so a partial term found nothing.",
+          href: "/products",
+        },
+        {
+          key: "search-both-words-required",
+          label: "Searching \"red dranzer\" returns only items matching BOTH words, not either one",
+          description:
+            "WAS: array-contains-any made multi-word search an OR, so adding a second word made the list LONGER instead of narrower. Check the count drops versus \"dranzer\" alone.",
+          href: "/products",
+        },
+        {
+          key: "search-plus-category-filter",
+          label: "A search term AND a category filter apply together on /products",
+          description:
+            "WAS: an empty if-body dropped BOTH, so the page ignored the search and the filter simultaneously and showed everything. Apply one, note the count, then add the other and confirm it narrows again.",
+          href: "/products",
+        },
+        {
+          key: "search-keeps-sort",
+          label: "Changing the sort while a search term is active re-orders the results and keeps the term",
+          description:
+            "WAS: the sort was silently discarded whenever a term was present, so the dropdown said \"Oldest\" over unsorted rows.",
+          href: "/products",
+        },
+        {
+          key: "search-keeps-facets",
+          label: "On /products, searching keeps the price, tag and availability facets working",
+          description:
+            "WAS: the old case-insensitive operator threw inside the query builder, and because exceptions were suppressed the throw aborted every clause AFTER it - so one search term silently disabled the rest of the filter bar.",
+          href: "/products",
+        },
+        {
+          key: "search-case-and-accents",
+          label: "\"POKEMON\" with an accent, without one, and capitalised all return the same results",
+          description:
+            "WAS: matching was case- and accent-sensitive, so only the exact stored spelling matched.",
+          href: "/products",
+        },
+        {
+          key: "search-single-char-narrows",
+          label: "A single-character query narrows the list instead of showing everything",
+          description:
+            "WAS: a 1-char term was discarded as too short and the unfiltered collection came back - indistinguishable from a search that matched everything.",
+          href: "/products",
+        },
+        {
+          key: "search-faqs",
+          label: "Searching on /faqs returns matching questions",
+          description:
+            "WAS: this is the report that started the whole migration - 63 FAQs existed, none had search tokens, so every query returned empty.",
+          href: "/faqs",
+        },
+        {
+          key: "search-faq-category-page",
+          label: "Opening a FAQ category page renders its questions",
+          description:
+            "WAS: a missing index threw FAILED_PRECONDITION, which was swallowed, leaving a blank page with no error.",
+          href: "/faqs",
+        },
+        {
+          key: "search-scams-listing",
+          label: "/scams lists the verified scammer profiles",
+          description:
+            "WAS: \"No verified scammers yet\" always, because the query needed an index that did not exist.",
+          href: "/scams",
+        },
+        {
+          key: "search-scam-partial-and-upi",
+          label: "On /admin/scammers, searching \"Vikram\" finds \"Vikram Mehta\", and searching a UPI id also finds its profile",
+          description:
+            "WAS: the query matched a WHOLE array element, so \"Vikram\" found nothing against a list holding \"Vikram M\" and \"Vikram Mehta\" - and phones and UPI ids were never searched at all despite the box promising them.",
+          href: "/admin/scammers",
+        },
+        {
+          key: "search-store-event-blog-review",
+          label: "Store, event, blog and review searches each return matches",
+          description:
+            "WAS: never implemented for any of the four - the box existed and the endpoint ignored the term.",
+          href: "/blog",
+        },
+        {
+          key: "search-admin-exact-match",
+          label: "On /admin/reviews a FULL reviewer name matches, a partial one matches nothing, and the box says \"exact match\"",
+          description:
+            "This asserts a DELIBERATE decision, not a bug: the field is encrypted, and ciphertext has no usable prefix, so it is resolved through a blind index that matches exactly. What was wrong was the placeholder - it read \"Search reviews, products, or seller names\" and matched none of those three.",
+          href: "/admin/reviews",
+        },
+        {
+          key: "search-admin-degraded-sort",
+          label: "Searching on /admin/payouts shows a notice that results are not sorted while searching",
+          description:
+            "Preserving the sort would need 14 more composite indexes to order a result an exact email match bounds at one row, so the sort is dropped on purpose. WAS: dropped SILENTLY - the sort dropdown kept displaying \"Oldest\" over unsorted rows.",
+          href: "/admin/payouts",
+        },
+        {
+          key: "search-admin-team-filter-chip",
+          label: "On /admin/team, applying any filter chip still returns employees",
+          description:
+            "WAS: the filter string was CONCATENATED rather than joined, producing one malformed clause that matched nothing - so the team list silently emptied the moment anyone filtered it.",
+          href: "/admin/team",
+        },
+        {
+          key: "search-no-empty-toolbar-gap",
+          label: "A listing page whose search box was removed shows no empty gap in its toolbar",
+          description:
+            "31 boxes were removed because their endpoints ignored the term. The toolbar should close up, not leave a hole where the input was.",
+          href: "/admin/coupons",
+        },
+        {
+          key: "search-nonsense-term-returns-nothing",
+          label: "Searching \"zzzznope\" anywhere returns ZERO results",
+          description:
+            "The single most important case here. Every bug above returned HTTP 200 with plausible-looking rows, so a real term matching something proves nothing - only a nonsense term returning nothing distinguishes \"filtering\" from \"returning everything\". Try it on /products, /faqs, /blog and /admin/scammers.",
+          href: "/products",
+        },
+        {
+          key: "search-finds-older-records",
+          label: "An OLDER listing - one that existed before this feature shipped - is findable by name",
+          description:
+            "Write this one carefully. Every other case here passes on freshly seeded data while real production documents stay invisible, because search tokens are only written when a record is saved. Pick a listing that has NOT been edited recently and confirm it is findable; if it is not, the backfill did not cover it.",
+          href: "/products",
+        },
+      ],
+    },
   ]),
 
   ...group("community-support", "Community & Support", [
