@@ -1,8 +1,15 @@
 import { normalizeError } from "../errors/normalize";
-import { getClientRealtimeProvider } from "./client-realtime";
+import {
+  getClientRealtimeProvider,
+  type IClientRealtimeProvider,
+} from "./client-realtime";
 
 /**
- * Shared, REFERENCE-COUNTED sign-in for the one client realtime app.
+ * PER-SCOPE, reference-counted sign-in for the client realtime channels.
+ *
+ * Each claim scope gets its own Firebase app (via `provider.forScope`), because
+ * Firebase Auth state is per-app and two channels legitimately need two
+ * different claim sets at the same time.
  *
  * WHY THIS EXISTS — two distinct bugs, one cause.
  *
@@ -22,25 +29,40 @@ import { getClientRealtimeProvider } from "./client-realtime";
  *    bulk token (carrying `bulkJobId`), killing an in-flight job subscription.
  *    Whoever finished last broke whoever was still working.
  *
- * The fix for (2) is not "sign out more carefully" — it is that **no individual
- * consumer may decide to sign out at all**. Each acquires a lease and releases
- * it; the session ends only when the last lease is gone.
+ * (2) needed BOTH halves, and only one was done at first:
+ *   - sign-OUT: no consumer may decide to sign out. Each takes a lease; the
+ *     session ends only when the last lease for that scope is gone.
+ *   - sign-IN: ref-counting cannot help here, because nothing is being shared
+ *     by agreement — a bulk job and a message thread need different claims
+ *     simultaneously. The answer is separate apps, not coordination.
  *
- * Tokens differ per channel (different claims), so `acquire` takes a fetcher and
- * re-signs when the token it holds is for a different scope or has expired.
+ * 🛑 Subscribe through `lease.provider`, never `getClientRealtimeProvider()`.
+ * The global one is the root app; the lease's is the app your scope actually
+ * authenticated on.
  */
 
 /** Refresh a little early — a token that expires mid-subscription is a silent drop. */
 const EXPIRY_SKEW_MS = 60_000;
 
-interface Lease {
-  scope: string;
+interface ScopeState {
+  leases: number;
+  expiresAt: number;
+  inFlight: Promise<void> | null;
+  provider: IClientRealtimeProvider;
 }
 
-let leases = 0;
-let currentScope: string | null = null;
-let expiresAt = 0;
-let inFlight: Promise<void> | null = null;
+/**
+ * One entry per claim scope, each on its OWN Firebase app.
+ *
+ * 🛑 This used to be three module-level singletons — `currentScope`,
+ * `expiresAt`, `leases` — describing ONE shared app. That shape could not
+ * express the real situation: two channels legitimately need two different
+ * claim sets at the same time, and Firebase Auth state is per-app, so every
+ * sign-in replaced the previous one's claims. Ref-counting only stopped a
+ * finishing channel from signing the others OUT; it could not stop a starting
+ * channel from signing itself IN over them.
+ */
+const scopes = new Map<string, ScopeState>();
 
 export interface RealtimeToken {
   customToken: string;
@@ -57,50 +79,76 @@ export interface RealtimeToken {
  * @returns a release function. **Always call it** — the session is only torn
  *          down when every lease is released.
  */
+export interface RealtimeLease {
+  /**
+   * Subscribe through THIS provider, not the global one — it is bound to the
+   * app this scope signed in on. Using the global provider would read from an
+   * app with someone else's claims.
+   */
+  provider: IClientRealtimeProvider;
+  release: () => void;
+}
+
 export async function acquireRealtimeSession(
   scope: string,
   getToken: () => Promise<RealtimeToken>,
-): Promise<() => void> {
-  const lease: Lease = { scope };
-  leases++;
+): Promise<RealtimeLease> {
+  const root = getClientRealtimeProvider();
+  let state = scopes.get(scope);
+  if (!state) {
+    // `forScope` is optional on the contract: a provider that cannot isolate
+    // falls back to the shared app, which is the old behaviour rather than a
+    // crash.
+    state = {
+      leases: 0,
+      expiresAt: 0,
+      inFlight: null,
+      provider: root.forScope?.(scope) ?? root,
+    };
+    scopes.set(scope, state);
+  }
+  state.leases++;
 
-  const needsSignIn =
-    currentScope !== lease.scope || Date.now() > expiresAt - EXPIRY_SKEW_MS;
-
-  if (needsSignIn) {
-    // Collapse concurrent acquires — several hooks mount in the same tick and
-    // would otherwise each fetch a token and race to sign in.
-    inFlight ??= (async () => {
+  if (Date.now() > state.expiresAt - EXPIRY_SKEW_MS) {
+    // Collapse concurrent acquires for the SAME scope — several hooks mount in
+    // one tick and would otherwise each fetch a token and race to sign in.
+    state.inFlight ??= (async () => {
       try {
         const token = await getToken();
-        await getClientRealtimeProvider().signInWithToken(token.customToken);
-        currentScope = lease.scope;
-        expiresAt = token.expiresAt;
+        await state!.provider.signInWithToken(token.customToken);
+        state!.expiresAt = token.expiresAt;
       } finally {
-        inFlight = null;
+        state!.inFlight = null;
       }
     })();
-    await inFlight;
+    await state.inFlight;
   }
 
   let released = false;
-  return () => {
-    if (released) return; // React StrictMode double-invokes cleanups
-    released = true;
-    leases = Math.max(0, leases - 1);
-    if (leases > 0) return;
+  return {
+    provider: state.provider,
+    release: () => {
+      if (released) return; // React StrictMode double-invokes cleanups
+      released = true;
+      const cur = scopes.get(scope);
+      if (!cur) return;
+      cur.leases = Math.max(0, cur.leases - 1);
+      if (cur.leases > 0) return;
 
-    currentScope = null;
-    expiresAt = 0;
-    getClientRealtimeProvider()
-      .signOut()
-      .catch((err: unknown) => {
+      // Last holder of THIS scope. Signing out touches only this scope's app,
+      // so it cannot disturb any other channel.
+      cur.expiresAt = 0;
+      scopes.delete(scope);
+      cur.provider.signOut().catch((err: unknown) => {
         void normalizeError(err);
       });
+    },
   };
 }
 
-/** Test/diagnostic only. */
+/** Test/diagnostic only — total leases across every scope. */
 export function activeRealtimeLeases(): number {
-  return leases;
+  let total = 0;
+  for (const s of scopes.values()) total += s.leases;
+  return total;
 }

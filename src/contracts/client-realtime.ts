@@ -16,6 +16,12 @@ export interface RealtimeSnapshot {
 export type Unsubscribe = () => void;
 
 export interface IClientRealtimeProvider {
+  /**
+   * A provider on its own Firebase app for this claim scope, so concurrent
+   * channels do not overwrite each other's auth. Optional: a provider that
+   * cannot isolate returns itself, keeping the old shared-app behaviour.
+   */
+  forScope?(scope: string): IClientRealtimeProvider;
   /** Authenticate the realtime connection with a custom token */
   signInWithToken(token: string): Promise<void>;
 

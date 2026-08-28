@@ -91,17 +91,19 @@ export function useConversations(
     // `// ignore`, so the whole live-list channel was inert while looking wired.
     void (async () => {
       try {
-        release = await acquireRealtimeSession(MESSAGES_SCOPE, () =>
+        const lease = await acquireRealtimeSession(MESSAGES_SCOPE, () =>
           apiClient.post<{ customToken: string; expiresAt: number }>(
             ADMIN_ENDPOINTS.REALTIME_TOKEN,
             {},
           ),
         );
+        release = lease.release;
         if (cancelled) {
-          release?.();
+          release();
           return;
         }
-        unsubscribe = getClientRealtimeProvider().subscribe(
+        // Subscribe through the LEASE's provider — see useConversation.
+        unsubscribe = lease.provider.subscribe(
           userConversationsPingPath(userId),
           () => {
             void refetch();

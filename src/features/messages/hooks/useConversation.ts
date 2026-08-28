@@ -116,17 +116,21 @@ export function useConversation(conversationId: string | null): UseConversationR
     // because `send()` calls `refetch()` directly.
     void (async () => {
       try {
-        release = await acquireRealtimeSession(MESSAGES_SCOPE, () =>
+        const lease = await acquireRealtimeSession(MESSAGES_SCOPE, () =>
           apiClient.post<{ customToken: string; expiresAt: number }>(
             ADMIN_ENDPOINTS.REALTIME_TOKEN,
             {},
           ),
         );
+        release = lease.release;
         if (cancelled) {
-          release?.();
+          release();
           return;
         }
-        unsubscribe = getClientRealtimeProvider().subscribe(
+        // Subscribe through the LEASE's provider — it is bound to the app this
+        // scope authenticated on. The global provider may be on a different app
+        // carrying another channel's claims.
+        unsubscribe = lease.provider.subscribe(
           conversationPingPath(conversationId),
           () => {
             setIsConnected(true);

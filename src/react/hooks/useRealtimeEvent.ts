@@ -76,8 +76,10 @@ export function useRealtimeEvent<TData = undefined>(
   const unsubscribeRef = useRef<Unsubscribe | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const eventIdRef = useRef<string | null>(null);
-  /** Lease on the shared realtime session — see cleanup() for why. */
+  /** Lease on this event's realtime session — see cleanup() for why. */
   const releaseSessionRef = useRef<(() => void) | null>(null);
+  /** Provider bound to THIS scope's app; subscribe through it, not the global. */
+  const scopedProviderRef = useRef<IClientRealtimeProvider | null>(null);
 
   const cleanup = useCallback(() => {
     if (unsubscribeRef.current) {
@@ -103,6 +105,7 @@ export function useRealtimeEvent<TData = undefined>(
     // end one, and only once the last consumer has let go.
     releaseSessionRef.current?.();
     releaseSessionRef.current = null;
+    scopedProviderRef.current = null;
   }, []);
 
   const subscribe = useCallback(
@@ -132,31 +135,23 @@ export function useRealtimeEvent<TData = undefined>(
 
       (async () => {
         try {
-          // Sign in THROUGH the session so the shared app's current scope is
-          // recorded, and take a lease so cleanup cannot end a session another
-          // channel is still using.
+          // Sign in through the session, which gives this event its OWN Firebase
+          // app for the `event:*` scope.
           //
-          // 🛑 What this does and does not protect — the earlier comment here
-          // claimed the clobbering bug was fixed, and it was only half fixed.
-          //   ✔ Ref-counting means this hook's cleanup never signs out a shared
-          //     app another subscriber is relying on.
-          //   ✔ Recording the scope means the NEXT `acquireRealtimeSession` for
-          //     a different scope re-authenticates instead of trusting a token
-          //     that is no longer installed — so other channels self-heal.
-          //   ✘ It does NOT protect an ALREADY-OPEN subscription. This token
-          //     carries only `{ bulkJobId }`, so a messages subscription that is
-          //     live right now loses `conversationIds` the moment this runs and
-          //     starts getting denied until it resubscribes.
-          //
-          // The durable fix is one Firebase app per claim scope rather than one
-          // shared app re-signed in place; `FirebaseClientRealtimeProvider`
-          // already takes an `appName`, so the seam exists. Doing it here would
-          // mean changing the provider-registry contract, which is its own
-          // change — see the RTDB follow-ups.
-          releaseSessionRef.current = await acquireRealtimeSession(
+          // That isolation is the fix. Firebase Auth state is per-app, so while
+          // every channel shared one app, this hook's `{ bulkJobId }`-only token
+          // replaced the claims of any live messages or chat subscription the
+          // moment a job started — and theirs replaced this one's in return.
+          // Ref-counting had only stopped a FINISHING channel from signing the
+          // others out; it could not stop a STARTING one from signing itself in
+          // over them, because there was nothing to coordinate: two channels
+          // legitimately need two different claim sets at the same time.
+          const lease = await acquireRealtimeSession(
             `event:${type}:${eventId}`,
             () => Promise.resolve({ customToken, expiresAt: Date.now() + 3_600_000 }),
           );
+          releaseSessionRef.current = lease.release;
+          scopedProviderRef.current = lease.provider;
         } catch (authErr) {
           void normalizeError(authErr);
           onLogError?.(
@@ -186,7 +181,7 @@ export function useRealtimeEvent<TData = undefined>(
 
         setStatus(RealtimeEventStatus.PENDING);
 
-        unsubscribeRef.current = provider.subscribe(
+        unsubscribeRef.current = (scopedProviderRef.current ?? provider).subscribe(
           `${rtdbPath}/${eventId}`,
           (snapshot) => {
             if (!snapshot.exists()) return;
