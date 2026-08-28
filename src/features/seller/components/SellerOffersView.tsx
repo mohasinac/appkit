@@ -73,7 +73,9 @@ export function SellerOffersView({
   const config: ListingViewConfig<SellerOffersResponse, OfferRow> = {
     portal: "seller",
     title: "Offers",
-    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
+    // buildOfferSearchTxt indexes productTitle + productSlug + storeName — never
+    // the buyer's name or email.
+    searchPlaceholder: "Search by product or store…",
     emptyLabel: "No offers received",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

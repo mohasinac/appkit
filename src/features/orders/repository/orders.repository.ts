@@ -447,7 +447,13 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   async listForSeller(
     productIds: string[],
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<OrderDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    // A search that yielded no usable term must return NOTHING, not the
+    // seller's whole order list.
+    if (plan.empty) return emptySearchResult<OrderDocument>();
+
     if (productIds.length === 0) {
       const page = Math.max(1, Number(model.page ?? 1));
       const pageSize = Math.max(1, Number(model.pageSize ?? 20));
@@ -461,12 +467,26 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       };
     }
 
-    const baseQuery = this.getCollection().where(
+    let baseQuery = this.getCollection().where(
       ORDER_FIELDS.PRODUCT_ID,
       "in",
       productIds,
     );
-    return this.sieveQuery<OrderDocument>(
+    if (plan.head) {
+      // `array-contains` alongside `in` is legal — Firestore's one-per-query
+      // limits are on `array-contains` and on the `in`/`not-in`/
+      // `array-contains-any` family separately, so one of each is fine.
+      // Verified against production data before this shipped, and the
+      // matching composite index is declared in firestore.indexes.json;
+      // the query happened to plan without one, which is not a guarantee.
+      baseQuery = baseQuery.where(
+        ORDER_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<OrderDocument>(
       model,
       OrderRepository.SELLER_SIEVE_FIELDS,
       {
@@ -475,6 +495,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         maxPageSize: 100,
       },
     );
+    return refineSearchTxt(result, plan.rest);
   }
 
   async listForUser(

@@ -50,7 +50,9 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
   const config: ListingViewConfig<AdminBlogResponse, BlogRow> = {
     portal: "admin",
     title: "Blog Posts",
-    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
+    // buildBlogSearchTxt indexes title + excerpt + category + tags — NOT the post
+    // body, which is not tokenised.
+    searchPlaceholder: "Search by title, excerpt, category or tag…",
     emptyLabel: "No blog posts found",
     filterKeys: ["status", "isFeatured"],
     defaultSort: sortBy("publishedAt", "DESC"),

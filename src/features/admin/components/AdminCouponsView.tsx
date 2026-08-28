@@ -91,7 +91,8 @@ export function AdminCouponsView({
   const config: ListingViewConfig<AdminCouponsResponse, CouponRow> = {
     portal: "admin",
     title: "Coupons",
-    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
+    // buildCouponSearchTxt indexes code + name + description — nothing else.
+    searchPlaceholder: "Search by code, name or description…",
     emptyLabel: "No coupons found",
     filterKeys: ["type", "showExpired"],
     defaultSort: sortBy("createdAt", "DESC"),
