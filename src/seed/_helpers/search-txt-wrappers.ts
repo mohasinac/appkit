@@ -9,6 +9,7 @@
  * no third copy for it to have to check.
  */
 import type { StoreDocument } from "../../features/stores/schemas/firestore";
+import type { ScammerDocument } from "../../features/scams/schemas/firestore";
 import type { EventDocument } from "../../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../../features/reviews/schemas/firestore";
@@ -23,6 +24,7 @@ import {
   buildOrderSearchTxt,
   buildCouponSearchTxt,
   buildOfferSearchTxt,
+  buildScammerSearchTxt,
 } from "../../utils/search-txt-builders";
 
 export function withStoreSearchTxt<T extends Partial<StoreDocument>>(p: T): T {
@@ -51,4 +53,8 @@ export function withCouponSearchTxt<T extends Partial<CouponDocument>>(p: T): T 
 
 export function withOfferSearchTxt<T extends Partial<OfferDocument>>(p: T): T {
   return { ...p, searchTxt: buildOfferSearchTxt(p) };
+}
+
+export function withScammerSearchTxt<T extends Partial<ScammerDocument>>(p: T): T {
+  return { ...p, searchTxt: buildScammerSearchTxt(p) };
 }

@@ -19,6 +19,7 @@
  */
 
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
+import { withScammerSearchTxt } from "./_helpers/search-txt-wrappers";
 import { SCAMMER_FIELDS } from "../constants/field-names";
 import { seedExtMedia } from "./_helpers/media";
 import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
@@ -44,7 +45,12 @@ function entry(
   return { at, actorRole, trigger, changes, ...extra };
 }
 
-export const scammersSeedData: Partial<ScammerDocument>[] = [
+// Annotated HERE, not on the export, so the literal is contextually typed as
+// Partial<ScammerDocument> before `.map` sees it. Without this TS infers a
+// union of the individual object shapes and rejects the wrapper's generic —
+// and the error points at the map call rather than at the field that actually
+// diverged.
+const scammerRows: Partial<ScammerDocument>[] = [
   // ── 1. Verified — advance payment ghost ──────────────────────────────────────
   {
     id: "scammer-fake-lob-seller",
@@ -252,3 +258,8 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     updatedAt: daysAgo(9),
   },
 ];
+
+// Derived through the wrapper, never per record — an inline literal is how
+// five product seed files shipped their last fixture with no tokens.
+export const scammersSeedData: Partial<ScammerDocument>[] =
+  scammerRows.map(withScammerSearchTxt);

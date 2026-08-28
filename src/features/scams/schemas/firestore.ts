@@ -140,6 +140,16 @@ export interface ScammerDocument extends BaseDocument {
   /** Email addresses used by the scammer. Stored plaintext for SEO. */
   emails: string[];
 
+  /**
+   * Word-prefix n-grams over the identity fields, for `array-contains`
+   * search. Derived by `buildScammerSearchTxt` on every write.
+   *
+   * Optional because documents written before this field existed do not have
+   * it. Never filter with an inequality on it — that would exclude exactly
+   * those rows, which is the whole pre-existing registry.
+   */
+  searchTxt?: string[];
+
   /** Social media profiles where the scammer operated. */
   socialMedia: ScammerSocialMedia[];
 
@@ -589,6 +599,7 @@ export type ScammerAdminUpdateInput = Partial<
 export const SCAMMER_FIELDS = {
   ID: "id",
   SEO_SLUG: "seoSlug",
+  SEARCH_TXT: "searchTxt",
   DISPLAY_NAMES: "displayNames",
   PHONES: "phones",
   UPI_IDS: "upiIds",

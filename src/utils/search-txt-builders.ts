@@ -30,6 +30,7 @@
 
 import { buildSearchTxt } from "./search-txt";
 import type { ProductDocument } from "../features/products/schemas/firestore";
+import type { ScammerDocument } from "../features/scams/schemas/firestore";
 import type { StoreDocument } from "../features/stores/schemas/firestore";
 import type { EventDocument } from "../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../features/blog/schemas/firestore";
@@ -134,4 +135,25 @@ export function buildCouponSearchTxt(c: Partial<CouponDocument>): string[] {
  */
 export function buildOfferSearchTxt(o: Partial<OfferDocument>): string[] {
   return buildSearchTxt([o.productTitle, o.productSlug, o.storeName]);
+}
+
+/**
+ * The scam registry's identity fields are stored PLAINTEXT on purpose — a
+ * victim googles a UPI ID before paying, so SEO is the feature (see the field
+ * comments on ScammerDocument). Indexing them is therefore aligned with the
+ * feature rather than a PII risk, and it is why this collection can have a
+ * partial-match box where users/reviews/payouts cannot.
+ *
+ * `description` is the reporter's narrative and is NOT indexed: it is free
+ * text naming victims and third parties, and the 600-token cap would let one
+ * long report crowd out every identity token in the same document.
+ */
+export function buildScammerSearchTxt(s: Partial<ScammerDocument>): string[] {
+  return buildSearchTxt([
+    s.displayNames ?? [],
+    s.phones ?? [],
+    s.upiIds ?? [],
+    s.emails ?? [],
+    s.scamType,
+  ]);
 }

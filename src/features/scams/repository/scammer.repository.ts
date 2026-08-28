@@ -11,7 +11,13 @@ import { serverLogger } from "../../../monitoring/server-logger";
 import { increment } from "../../../contracts/field-ops";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
 import { SCAMMER_TRACKED_FIELDS, SCAMMER_HISTORY_PII_FIELDS } from "../schemas/firestore";
-import type { FirestoreDocument } from "../../../schemas/types";
+import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
+import { buildScammerSearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 
 /** Who/why for a scammer write that lands in `statusHistory`. */
 export interface ScammerWriteContext {
@@ -40,6 +46,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
   }
 
   static readonly SIEVE_FIELDS = {
+    searchTxt:     { canFilter: true,  canSort: false },
     id:            { canFilter: true,  canSort: false },
     status:        { canFilter: true,  canSort: true  },
     scamType:      { canFilter: true,  canSort: true  },
@@ -66,11 +73,37 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
     });
   }
 
-  async listAll(model: SieveModel): Promise<FirebaseSieveResult<ScammerDocument>> {
-    return this.sieveQuery<ScammerDocument>(model, ScammerRepository.SIEVE_FIELDS, {
+  /** Derived on every write path via `applyWriteHooks`. */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildScammerSearchTxt(data as Partial<ScammerDocument>);
+  }
+
+  async listAll(
+    model: SieveModel,
+    opts?: { search?: string },
+  ): Promise<FirebaseSieveResult<ScammerDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    // A search that narrowed to no usable term must return NOTHING, not the
+    // entire scam registry.
+    if (plan.empty) return emptySearchResult<ScammerDocument>();
+
+    let baseQuery = this.getCollection();
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        SCAMMER_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<ScammerDocument>(model, ScammerRepository.SIEVE_FIELDS, {
+      baseQuery,
       defaultPageSize: 50,
       maxPageSize: 200,
     });
+    return refineSearchTxt(result, plan.rest);
   }
 
   async findBySeoSlug(seoSlug: string): Promise<ScammerDocument | null> {

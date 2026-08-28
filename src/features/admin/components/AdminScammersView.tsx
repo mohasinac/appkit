@@ -96,7 +96,21 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
   const config: ListingViewConfig<AdminScammersResponse, ScammerRow> = {
     portal: "admin",
     title: "Scammers",
-    searchPlaceholder: "Search by name, phone, UPI ID",
+    // buildScammerSearchTxt indexes all four identity arrays plus scamType.
+    // They are stored PLAINTEXT on purpose — a victim googles a UPI id before
+    // paying, so SEO is the feature — which is why this collection can have a
+    // partial-match box where users/reviews/payouts cannot.
+    //
+    // The old box promised the same three fields but ran `displayNames@=q`,
+    // i.e. array-contains on a WHOLE element: "Vikram" matched nothing
+    // against ["Vikram M", "Vikram Mehta"], and phone/UPI were never
+    // searched at all.
+    search: {
+      placeholder: "Search by name, phone, UPI ID or email…",
+      mode: "partial",
+      fields: ["displayNames", "phones", "upiIds", "emails", "scamType"],
+      commit: "debounce",
+    },
     emptyLabel: "No scammer profiles found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),
