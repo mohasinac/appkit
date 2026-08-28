@@ -32,13 +32,32 @@ const SUGGESTION_TYPE_PARAM_MAP: Record<string, string> = {
 };
 
 /**
+ * The shortest query that reaches the network.
+ *
+ * 🛑 Entity suggestions cost a real Firestore round trip — the route reads
+ * products, categories, blog posts and events. Below this length the result is
+ * dominated by whatever happens to sort first, so the request buys noise at the
+ * price of two round trips per typed word, on every page, for every visitor.
+ *
+ * This gate is for the ENTITY band only. Action/nav suggestions match an
+ * in-memory index and should stay available from the first character — typing
+ * "s" and seeing "Settings" is genuinely useful and costs nothing.
+ */
+const DEFAULT_MIN_CHARS = 3;
+
+/**
  * W1-19 — wired to `/api/search/suggestions` 2026-05-23. Fetches up to 20
  * matches (5 per resource type) and surfaces them as typeahead rows.
+ *
+ * `minChars` is trailing and defaulted because this hook is part of appkit's
+ * public API (`appkit/src/index.ts`); existing 2-argument callers keep working
+ * and inherit the gate.
  */
 export function useNavSuggestions(
   query: string,
   selectedType?: string,
   debounceMs = 250,
+  minChars = DEFAULT_MIN_CHARS,
 ) {
   const [suggestions, setSuggestions] = useState<NavSuggestionRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +69,10 @@ export function useNavSuggestions(
     if (abortRef.current) abortRef.current.abort();
 
     const trimmed = query.trim();
-    if (!trimmed) {
+    // Below the gate is a deliberate no-op, not a failure: clear the rows and
+    // report not-loading, so the dropdown shows its action band rather than a
+    // spinner that never resolves.
+    if (trimmed.length < minChars) {
       setSuggestions([]);
       setIsLoading(false);
       return;
@@ -94,7 +116,7 @@ export function useNavSuggestions(
       if (timerRef.current) clearTimeout(timerRef.current);
       if (abortRef.current) abortRef.current.abort();
     };
-  }, [query, selectedType, debounceMs]);
+  }, [query, selectedType, debounceMs, minChars]);
 
   return { suggestions, isLoading };
 }
