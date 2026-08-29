@@ -1,0 +1,145 @@
+/*
+ * ActionRow — the single layout law for every CTA / footer action row.
+ *
+ * SIZING: `flex: 1 1 auto`. `flex-basis: auto` resolves against the button's
+ * own max-content width, and only the LEFTOVER is shared out. That is the
+ * whole fix. Tailwind's `flex-1` is `flex: 1 1 0%`, and that ZERO basis throws
+ * the content width away — which is why "Back" and "Continue to payment" came
+ * out the same width regardless of their labels, and why the escape hatch from
+ * that (`grow: false`) had to be a hug that rendered a 44px stub reading "Ba".
+ *
+ * OVERFLOW: the row wraps. Flex line-breaking runs on the hypothetical main
+ * size — the base size clamped by `min-width` — BEFORE any shrinking happens,
+ * so an action that does not fit moves to the next line instead of being
+ * crushed. `--appkit-size-action-min` is the switch that decides when.
+ *
+ * TRUNCATION: none, anywhere. A label that cannot fit its line wraps and the
+ * button grows taller. Every height here is therefore `min-height`, never
+ * `height`, and no descendant may carry `truncate` / `leading-none`.
+ *
+ * WHY A STYLESHEET AND NOT TAILWIND CLASSES ON THE CHILDREN: all sizing lands
+ * via `.appkit-action-row__group > *`, a rule on the PARENT's selector. Putting
+ * a bare `flex` / `block` / `hidden` utility on a `<Button>` breaks its own
+ * flex contract, because the consumer's globals.css declares those three
+ * un-layered and `!important` — Recurrent Root Cause #68, which collapsed
+ * twelve image-tile buttons to 0x0.
+ *
+ * NOT FOR: BulkActionBar, and the bulk row inside BottomActions. Those are a
+ * fixed three-control composite — count pill | picker | Apply — where the
+ * picker is MEANT to eat all the slack and the pill must stay pill-sized.
+ * Content-proportional sizing there would let a long selected-action label
+ * push Apply off the line.
+ */
+
+.appkit-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  /* gap comes from the .appkit-gap--* class the component applies */
+}
+
+/*
+ * The inner group is load-bearing, not decoration. With a flat row, a footer
+ * that wants "meta left, buttons right" reaches for `space-between` — and with
+ * three children that opens the gulf BETWEEN the two buttons. Nesting keeps the
+ * outer row at exactly two items so the split is clean, and lets the group
+ * carry the alignment of the actions among themselves.
+ */
+.appkit-action-row__group {
+  display: flex;
+  flex-wrap: wrap;
+  /* Equal heights when one action wraps to two lines and its neighbour does
+     not — ragged button heights in one row read as broken. */
+  align-items: stretch;
+  gap: inherit;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* --- the actions ---------------------------------------------------------- */
+
+.appkit-action-row__group > * {
+  flex: 1 1 auto;
+  /*
+   * The wrap threshold. `min()` with 100% so a panel narrower than the floor
+   * degrades to one action per line instead of overflowing its own container.
+   */
+  min-width: min(var(--appkit-size-action-min), 100%);
+  min-height: var(--appkit-size-action-height);
+  /* Beats any fixed height inherited from a button size variant, so a wrapped
+     second line can actually grow the box. */
+  height: auto;
+  white-space: normal;
+  text-align: center;
+  /*
+   * `.appkit-button` declares `line-height: 1`, which collides two wrapped
+   * lines into one smear. This selector is (0,2,0) and beats its (0,1,0).
+   */
+  line-height: 1.25;
+}
+
+/*
+ * A non-button action — a bare TextLink or a Text — has no intrinsic button
+ * height. Don't stretch it into a 40px block; centre it against the buttons.
+ */
+.appkit-action-row__group > *:not(.appkit-button) {
+  align-self: center;
+  min-height: 0;
+}
+
+/*
+ * Icon-only actions stay square tap targets. The caller opts in, because a
+ * stylesheet cannot know a child has no label.
+ */
+.appkit-action-row__group > .appkit-action-row__icon-only {
+  flex: 0 0 var(--appkit-size-input-lg);
+  min-width: var(--appkit-size-input-lg);
+  padding-inline: 0;
+}
+
+/* --- alignment ------------------------------------------------------------ */
+
+/* `fill` is the base rule above: the actions absorb the leftover. */
+
+.appkit-action-row--end > .appkit-action-row__group {
+  justify-content: flex-end;
+}
+.appkit-action-row--start > .appkit-action-row__group {
+  justify-content: flex-start;
+}
+
+/* Same content-proportional basis; the free space simply isn't handed out. */
+.appkit-action-row--end > .appkit-action-row__group > *,
+.appkit-action-row--start > .appkit-action-row__group > * {
+  flex-grow: 0;
+}
+
+/* --- the anchor ----------------------------------------------------------- */
+
+.appkit-action-row > .appkit-action-row__anchor {
+  flex: 0 1 auto;
+  /* Deliberately NOT the action floor — meta text may ellipsise, an action
+     may not. */
+  min-width: 0;
+  align-self: center;
+}
+
+/* --- narrow collapse ------------------------------------------------------ */
+/*
+ * Below 30rem there is no leftover worth leaving empty: a right-packed footer
+ * at 360px is a ragged clump against the edge. Every alignment becomes `fill`,
+ * which is what the pinned bottom bar already does at every width, and the
+ * anchor takes its own line above the actions.
+ */
+@media (max-width: 30rem) {
+  .appkit-action-row > .appkit-action-row__anchor {
+    flex-basis: 100%;
+  }
+  .appkit-action-row > .appkit-action-row__group {
+    justify-content: flex-start;
+  }
+  .appkit-action-row > .appkit-action-row__group > * {
+    flex-grow: 1;
+  }
+}

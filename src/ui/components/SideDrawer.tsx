@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, ReactNode, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button } from "./Button";
+import { ActionRow } from "./ActionRow";
 import { Row } from "./Layout";
 import { Heading, Span } from "./Typography";
 import { useSwipe } from "../../react";
@@ -43,6 +44,14 @@ export interface SideDrawerProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
+  /**
+   * Action buttons for the drawer's footer. Pass them bare — the slot supplies
+   * the row itself via `<ActionRow>`, so each button is sized from its own
+   * label and the group wraps rather than overflowing.
+   *
+   * 🛑 Do not wrap them in your own flex container or put `flex-1` on them:
+   * `important: true` makes a caller's utility beat ActionRow's CSS.
+   */
   footer?: ReactNode;
   /** Drawer mode controls header styling and unsaved-changes behaviour */
   mode?: DrawerMode;
@@ -271,7 +280,11 @@ export function SideDrawer({
             <div className={UI_SIDE_DRAWER.content} data-section="sidedrawer-div-599">{children}</div>
 
             {/* Footer */}
-            {footer && <div className={UI_SIDE_DRAWER.footer} data-section="sidedrawer-div-600">{footer}</div>}
+            {footer && (
+              <div className={UI_SIDE_DRAWER.footer} data-section="sidedrawer-div-600">
+                <ActionRow>{footer}</ActionRow>
+              </div>
+            )}
           </motion.div>
 
           {/* Unsaved changes warning overlay */}
@@ -299,14 +312,14 @@ export function SideDrawer({
                     </Text>
                   </div>
                 </div>
-                <div className={UI_SIDE_DRAWER.warnActions} data-section="sidedrawer-div-605">
+                <ActionRow align="end" gap="md" className={UI_SIDE_DRAWER.warnActions}>
                   <Button variant="outline" onClick={cancelClose} size="sm">
                     {tActions("keepEditing")}
                   </Button>
                   <Button variant="danger" onClick={confirmClose} size="sm">
                     {tActions("discardChanges")}
                   </Button>
-                </div>
+                </ActionRow>
               </div>
             </>
           )}

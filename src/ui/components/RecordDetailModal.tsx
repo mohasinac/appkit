@@ -28,7 +28,7 @@
  */
 
 import type { ReactNode } from "react";
-import { Anchor, Badge, Code, Div, Modal, Row, Stack, Text } from "../index";
+import { ActionRow, Anchor, Badge, Code, Div, Modal, Row, Stack, Text } from "../index";
 import { MediaImage } from "../../features/media/MediaImage";
 import type { JsonValue } from "../../schemas/types";
 
@@ -184,7 +184,11 @@ export function RecordDetailModal({
           </Div>
         )}
 
-        {footer && <Row justify="end" gap="sm">{footer}</Row>}
+        {/* `align="end"` keeps a dialog's actions compact and right-packed;
+            ActionRow still sizes each from its own label, and collapses them to
+            full-width below 30rem. This is also what gives every caller that
+            passes a bare fragment (AdminCatalogueApprovalsView) a real row. */}
+        {footer && <ActionRow align="end">{footer}</ActionRow>}
       </Stack>
     </Modal>
   );

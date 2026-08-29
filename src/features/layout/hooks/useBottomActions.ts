@@ -78,13 +78,13 @@ export function useBottomActions(options: UseBottomActionsOptions = {}) {
 
   const actionKey = (options.actions ?? [])
     .map(
-      ({ id, label, variant, badge, disabled, loading, grow }) =>
-        `${id}|${label}|${variant}|${badge}|${disabled}|${loading}|${grow}`,
+      ({ id, label, variant, badge, disabled, loading }) =>
+        `${id}|${label}|${variant}|${badge}|${disabled}|${loading}`,
     )
     .join(",");
 
   const bulkCountKey = options.bulk
-    ? `${options.bulk.selectedCount}|${options.bulk.actions.map((a) => `${a.id}|${a.label}|${a.variant}|${a.badge}|${a.disabled}|${a.loading}|${a.grow}`).join(",")}`
+    ? `${options.bulk.selectedCount}|${options.bulk.actions.map((a) => `${a.id}|${a.label}|${a.variant}|${a.badge}|${a.disabled}|${a.loading}`).join(",")}`
     : "";
 
   useEffect(() => {

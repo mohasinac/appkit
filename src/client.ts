@@ -473,6 +473,8 @@ export { TextLink } from "./ui/components/TextLink";
 export type { TextLinkProps } from "./ui/components/TextLink";
 export { Anchor } from "./ui/components/Anchor";
 export { IconButton } from "./ui/index";
+export { ActionRow } from "./ui/components/ActionRow";
+export type { ActionRowProps, ActionRowAlign } from "./ui/components/ActionRow";
 export { Textarea } from "./ui/components/Textarea";
 export { GlobalError } from "./next/components/GlobalError";
 export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, useBottomActions, DashboardNavProvider, LayoutClient } from "./features/layout/index";

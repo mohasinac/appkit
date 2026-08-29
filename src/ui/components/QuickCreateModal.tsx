@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
 import { createPortal } from "react-dom";
+import { ActionRow } from "./ActionRow";
 import { Button } from "./Button";
 import { Div } from "./Div";
 import { Heading } from "./Typography";
-import { Row } from "./Layout";
 import { TextLink } from "./TextLink";
 
 export interface QuickCreateModalProps<T = unknown> {
@@ -104,40 +104,46 @@ export function QuickCreateModal<T = unknown>({
           </Button>
         </Div>
         <Div className="appkit-quick-create-modal__body">{children}</Div>
-        <Div className="appkit-quick-create-modal__footer">
-          {fullPageHref ? (
-            <TextLink
-              variant="none"
-              href={fullPageHref}
-              target="_blank"
-              rel="noreferrer"
-              className="appkit-quick-create-modal__full-link"
-            >
-              Add more details →
-            </TextLink>
-          ) : (
-            <span />
-          )}
-          <Row className="appkit-quick-create-modal__actions">
-            <Button
-              variant="ghost"
-              type="button"
-              onClick={onCancel}
-              disabled={saving}
-            >
-              {cancelLabel}
-            </Button>
-            <Button
-              variant="primary"
-              type="button"
-              onClick={handleSave}
-              disabled={saving || saveDisabled}
-              isLoading={saving}
-            >
-              {saveLabel}
-            </Button>
-          </Row>
-        </Div>
+        {/* The link goes in `anchor`, not beside the buttons. That is what
+            retires the empty-span spacer this footer used to need: with a flat
+            `justify-between` row and three children, the gap opened BETWEEN
+            Cancel and Save rather than beside them. */}
+        <ActionRow
+          align="end"
+          gap="md"
+          className="appkit-quick-create-modal__footer"
+          anchor={
+            fullPageHref ? (
+              <TextLink
+                variant="none"
+                href={fullPageHref}
+                target="_blank"
+                rel="noreferrer"
+                className="appkit-quick-create-modal__full-link"
+              >
+                Add more details →
+              </TextLink>
+            ) : undefined
+          }
+        >
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={onCancel}
+            disabled={saving}
+          >
+            {cancelLabel}
+          </Button>
+          <Button
+            variant="primary"
+            type="button"
+            onClick={handleSave}
+            disabled={saving || saveDisabled}
+            isLoading={saving}
+          >
+            {saveLabel}
+          </Button>
+        </ActionRow>
       </Div>
     </Div>,
     document.body,

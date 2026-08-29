@@ -138,7 +138,6 @@ export function ProductDetailActions({
               id: ACTION_ID.ADD_TO_WISHLIST,
               label: wishlisted ? "Saved" : "Wishlist",
               variant: "ghost",
-              grow: false,
               disabled: blocked || wishlisted,
               onClick: handleWishlist,
             },

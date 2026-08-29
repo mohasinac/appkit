@@ -5,7 +5,7 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
-import { Div, Row, Span, Stack, Text } from "../../ui";
+import { ActionRow, Div, Row, Span, Stack, Text } from "../../ui";
 
 /**
  * Carries the `schema` prop passed to `<FormShell>` down to any nested
@@ -392,37 +392,45 @@ export function FormShell({
                 {footerTopSlot}
               </Div>
             )}
-            <Row justify="between" paddingX="x-5" padding="y-sm"
+            {/* Discard is the `anchor`, not a third sibling. With a flat
+                `justify-between` row and three children the gap opened BETWEEN
+                Save draft and Publish instead of beside Discard — the same
+                defect QuickCreateModal's empty-span spacer worked around.
+                `align="end"` keeps the pair compact on a wide editor. */}
+            <ActionRow
+              align="end"
+              paddingX="x-5"
+              padding="y-sm"
               style={{ paddingBottom: "calc(var(--appkit-space-3) + var(--keyboard-inset-height, 0px))" }}
+              anchor={
+                <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
+                  {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
+                </Button>
+              }
             >
-              <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
-                {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
-              </Button>
-              <Row gap="xs">
-                {onSaveDraft && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSaveDraft}
-                    disabled={isLoading || savingDraft || publishing}
-                    isLoading={savingDraft}
-                  >
-                    {saveLabel}
-                  </Button>
-                )}
-                {onPublish && (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={handlePublish}
-                    disabled={isLoading || savingDraft || publishing}
-                    isLoading={publishing}
-                  >
-                    {publishLabel} →
-                  </Button>
-                )}
-              </Row>
-            </Row>
+              {onSaveDraft && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSaveDraft}
+                  disabled={isLoading || savingDraft || publishing}
+                  isLoading={savingDraft}
+                >
+                  {saveLabel}
+                </Button>
+              )}
+              {onPublish && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handlePublish}
+                  disabled={isLoading || savingDraft || publishing}
+                  isLoading={publishing}
+                >
+                  {publishLabel} →
+                </Button>
+              )}
+            </ActionRow>
           </Stack>
         ) : null}
       </Div>

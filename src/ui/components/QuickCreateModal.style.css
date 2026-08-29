@@ -48,11 +48,9 @@
   padding: 1.25rem;
 }
 
+/* Chrome only — layout comes from ActionRow. Re-adding `display: flex` or
+   `justify-content` here would fight the row this class now decorates. */
 .appkit-quick-create-modal__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
   padding: 1rem 1.25rem;
   border-top: 1px solid var(--appkit-color-border, rgb(0 0 0 / 0.1));
 }
@@ -61,10 +59,6 @@
   font-size: 0.875rem;
   color: var(--appkit-color-primary, #6366f1);
   text-decoration: underline;
-}
-
-.appkit-quick-create-modal__actions {
-  gap: 0.5rem;
 }
 
 @media (max-width: 640px) {

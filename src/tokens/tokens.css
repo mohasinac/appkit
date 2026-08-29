@@ -748,6 +748,26 @@
   --appkit-size-input-md: 2.5rem;   /*  40px */
   --appkit-size-input-lg: 2.75rem;  /*  44px */
 
+  /*
+   * CTA sizing — consumed by ActionRow (appkit/src/ui/components/ActionRow.style.css).
+   *
+   * --appkit-size-action-min is the width below which an action WRAPS to the
+   * next line instead of being squeezed. 7.5rem is fixed from both ends:
+   *   upper — the narrowest supported viewport is 280px; the pinned bottom bar
+   *           spends 12px padding a side plus an 8px gap, leaving 248px for two
+   *           actions, i.e. 124px each. 120px is the largest 8px-grid value that
+   *           still lets a two-action bar share one line there.
+   *   lower — 120px is 2.7x the 44px tap-target minimum and holds ~15 characters
+   *           at 14px, so every CTA string resolves in at most two lines.
+   *
+   * SINGLE_ROW_MAX_ACTIONS in features/layout/BottomActions.tsx is COUPLED to
+   * this value. Raising either without re-checking that
+   * 2 x action-min + gap is under 280px reintroduces device-dependent row
+   * flipping, which the bar's row-count invariant forbids.
+   */
+  --appkit-size-action-min: 7.5rem;    /* 120px */
+  --appkit-size-action-height: 2.5rem; /*  40px — CTA tap target, was a literal h-10 */
+
   /* Avatar sizes */
   --appkit-size-avatar-xs: 1.5rem;  /*  24px */
   --appkit-size-avatar-sm: 2rem;    /*  32px */

@@ -150,6 +150,9 @@ export { TextLink } from "./components/TextLink";
 export type { TooltipProps } from "./components/Tooltip";
 export { Tooltip } from "./components/Tooltip";
 
+export type { ActionRowProps, ActionRowAlign } from "./components/ActionRow";
+export { ActionRow } from "./components/ActionRow";
+
 export type {
   AccordionProps,
   AccordionItemProps,

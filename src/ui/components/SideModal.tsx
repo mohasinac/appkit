@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button, Div, Heading } from "..";
+import { ActionRow } from "./ActionRow";
 import { SPRING_SNAPPY } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";
 
@@ -16,6 +17,16 @@ export interface SideModalProps {
   /** Width on desktop. Default: "60vw" clamped to max-w-2xl. */
   width?: string;
   children: React.ReactNode;
+  /**
+   * Action buttons pinned below the scrollable body. Pass them bare — the slot
+   * supplies the row itself via `<ActionRow>`, so each is sized from its own
+   * label and the group wraps rather than overflowing.
+   *
+   * This slot exists so a CTA inside a SideModal does not have to be hand-rolled
+   * in the body, which is what every other footer in the codebase did before
+   * they were unified.
+   */
+  footer?: React.ReactNode;
   /** Extra class on the panel Div. */
   className?: string;
 }
@@ -36,6 +47,7 @@ export function SideModal({
   title,
   side,
   children,
+  footer,
   className = "",
 }: SideModalProps) {
   const { hand } = useHandMode();
@@ -142,6 +154,13 @@ export function SideModal({
 
             {/* Body — scrollable */}
             <Div className="appkit-side-modal__body">{children}</Div>
+
+            {/* Footer — pinned below the body */}
+            {footer && (
+              <Div className="appkit-side-modal__footer">
+                <ActionRow>{footer}</ActionRow>
+              </Div>
+            )}
           </motion.div>
         </Div>
       )}

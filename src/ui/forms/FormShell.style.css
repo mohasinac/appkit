@@ -228,74 +228,23 @@
 }
 
 @media (max-width: 639px) {
-  .appkit-formshell__step-content,
-  .appkit-formshell__footer {
+  .appkit-formshell__step-content {
     padding: 0.5rem 0.875rem;
   }
 }
-
-/* ─── Footer ──────────────────────────────────────────────────────────────── */
+/* --- Footer --------------------------------------------------------------- */
 
 /*
- * Sticky footer — always visible regardless of scroll position.
- * Uses var(--appkit-z-dropdown, 30) so it stays above card content but below
- * the site header (which uses var(--appkit-z-modal, 50)).
+ * `.appkit-formshell__footer`, `__step-nav` and `__actions` were deleted here:
+ * `ui/forms/FormShell.tsx` is context/state only and renders no footer JSX, so
+ * nothing had referenced them for a long time. The real form footer lives in
+ * `features/shell/FormShell.tsx` and is an ActionRow now.
  *
- * Bottom offset accounts for:
- *   - Mobile: bottom nav (--bottom-nav-height, 56px fallback) + iOS safe area
- *   - Desktop (lg+): no bottom nav, just standard padding
+ * Worth recording: this dead block held the ONLY `flex-wrap: wrap` on any
+ * action row in the codebase. Every live footer had lost it.
  */
-.appkit-formshell__footer {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--appkit-z-dropdown, 30);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--appkit-spacing-3, 0.75rem);
-  padding: 0.75rem 1.25rem;
-  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--appkit-color-border);
-  background: var(--appkit-color-surface);
-  flex-wrap: wrap;
-  /* Offset for mobile bottom nav (--bottom-nav-height set by AppLayoutShell) */
-  margin-bottom: 0;
-}
-
-/* On mobile, lift the footer above the bottom nav bar */
-@media (max-width: 1023px) {
-  .appkit-formshell__footer {
-    bottom: var(--bottom-nav-height, 64px);
-    box-shadow: 0 -2px 8px 0 rgb(0 0 0 / 0.08);
-  }
-}
-
-/* On desktop the bottom nav is gone — reset to viewport bottom */
-@media (min-width: 1024px) {
-  .appkit-formshell__footer {
-    bottom: 0;
-    box-shadow: 0 -1px 0 0 var(--appkit-color-border);
-  }
-}
-
-.appkit-formshell__step-nav {
-  display: flex;
-  gap: var(--appkit-spacing-2, 0.5rem);
-}
-
-.appkit-formshell__actions {
-  display: flex;
-  gap: var(--appkit-spacing-2, 0.5rem);
-  margin-left: auto;
-}
 
 /* ─── Dark mode ──────────────────────────────────────────────────────────── */
-
-.dark .appkit-formshell__footer {
-  background: var(--appkit-color-surface-dark, var(--appkit-color-surface));
-}
 
 .dark .appkit-formshell__title {
   color: var(--appkit-color-text-primary-dark, inherit);

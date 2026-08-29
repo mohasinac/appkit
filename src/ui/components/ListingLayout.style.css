@@ -463,19 +463,12 @@
   gap: 1rem;
 }
 
-.appkit-listing-layout__mobile-overlay-footer {
-  flex-shrink: 0;
-  display: flex;
-  gap: 0.75rem;
-  padding: 1rem;
-  border-top: 1px solid var(--appkit-color-zinc-100);
-  background: var(--appkit-color-surface);
-}
-
-.dark .appkit-listing-layout__mobile-overlay-footer {
-  border-top-color: var(--appkit-color-slate-800);
-  background: var(--appkit-color-bg);
-}
+/*
+ * `.appkit-listing-layout__mobile-overlay-footer` was deleted: the mobile
+ * filter panel is a `<Drawer>`, whose footer slot now supplies both the chrome
+ * (`.appkit-drawer__footer`) and the action layout (`<ActionRow>`). The class
+ * existed only to hand-roll a flex row the slot should always have provided.
+ */
 
 /* -- Close button in mobile overlay ----------------- */
 

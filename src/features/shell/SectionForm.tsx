@@ -8,6 +8,7 @@ import { Badge } from "../../ui/components/Badge";
 import { Div, Row, Span, Stack } from "../../ui";
 import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
 import { useFormBottomActions } from "../layout/hooks/useFormBottomActions";
+import { useSectionState } from "../account/hooks/useCollapsedSections";
 import { FormSchemaContext } from "./FormShell";
 
 /**
@@ -135,6 +136,15 @@ export function buildFieldToSectionIndex<T extends object>(
   return map;
 }
 
+export interface UseSectionFormNavOptions {
+  /**
+   * `"{portal}:{surface}"` — persists this form's open set to the user's
+   * profile. Omit for in-memory-only, which is the default and what every
+   * pre-existing call site gets.
+   */
+  scope?: string;
+}
+
 export interface UseSectionFormNavResult<T extends object> {
   /** Sections in render order — required first. */
   ordered: SectionDef<T>[];
@@ -155,6 +165,7 @@ export interface UseSectionFormNavResult<T extends object> {
 export function useSectionFormNav<T extends object = Record<string, JsonValue>>(
   sections: SectionDef<T>[],
   values?: T,
+  opts?: UseSectionFormNavOptions,
 ): UseSectionFormNavResult<T> {
   const ordered = useMemo(() => {
     const visible = values
@@ -163,9 +174,26 @@ export function useSectionFormNav<T extends object = Record<string, JsonValue>>(
     return orderSections(visible);
   }, [sections, values]);
 
-  const [openIds, setOpenIds] = useState<string[]>(() =>
-    orderSections(sections).filter((s) => s.required).map((s) => s.id),
+  const sectionIds = useMemo(() => ordered.map((s) => s.id), [ordered]);
+  const defaultOpen = useMemo(
+    () => ordered.filter((s) => s.required).map((s) => s.id),
+    [ordered],
   );
+
+  /*
+   * The open set is `useSectionState`, not a local `useState` — which is what
+   * makes "expand section 3, reload, find it still expanded" true. `scope: ""`
+   * (the default) is EPHEMERAL: identical in-memory behaviour to the previous
+   * `useState`, so the seven existing call sites are unchanged until each names
+   * a durable scope. Without that opt-out every unnamed form would share one
+   * `sectionState[""]` entry and fight over it.
+   */
+  const { openIds, setOpenIds, open } = useSectionState({
+    scope: opts?.scope ?? "",
+    sectionIds,
+    defaultOpen,
+    mode: "multi",
+  });
 
   const fieldToSectionIndex = useMemo(() => buildFieldToSectionIndex(ordered), [ordered]);
 
@@ -177,16 +205,9 @@ export function useSectionFormNav<T extends object = Record<string, JsonValue>>(
   const goToSection = useCallback((index: number) => {
     const target = ordered[index];
     if (!target) return;
-    setOpenIds((prev) => (prev.includes(target.id) ? prev : [...prev, target.id]));
-    // The panel must MOUNT before it can be scrolled to — expanding is a state
-    // update, so defer a frame. Without this the scroll lands on a zero-height
-    // collapsed header and the offending field stays off-screen.
-    requestAnimationFrame(() => {
-      const el = document.getElementById(sectionAnchorId(target.id));
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
-      el?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
-    });
-  }, [ordered]);
+    open(target.id);
+    scrollToSection(target.id);
+  }, [ordered, open]);
 
   return { ordered, openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta };
 }
@@ -194,6 +215,24 @@ export function useSectionFormNav<T extends object = Record<string, JsonValue>>(
 /** DOM id for a section panel — kept in one place so nav and render agree. */
 export function sectionAnchorId(id: string): string {
   return `section-${id}`;
+}
+
+/**
+ * Scroll a section into view and focus the first invalid control inside it.
+ *
+ * Deliberately module-level and shared by `goToSection` and `SectionForm`'s own
+ * submit handler: the deferred frame is the load-bearing part and is easy to
+ * drop when copying. The panel must MOUNT before it can be scrolled to —
+ * expanding is a state update, so without the deferral the scroll lands on a
+ * zero-height collapsed header and the offending field stays off-screen.
+ */
+export function scrollToSection(id: string): void {
+  if (typeof document === "undefined") return;
+  requestAnimationFrame(() => {
+    const el = document.getElementById(sectionAnchorId(id));
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    el?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+  });
 }
 
 export function SectionForm<T extends object = Record<string, JsonValue>>({
@@ -226,6 +265,18 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   const [uncontrolledOpenIds, setUncontrolledOpenIds] = useState<string[]>(() =>
     orderSections(sections).filter((s) => s.required).map((s) => s.id),
   );
+  /*
+   * Sections held open because they hold a validation error, kept SEPARATE
+   * from `openIds`.
+   *
+   * Under `expandMode: "single"` the open set is an accordion — opening any
+   * other section replaces it — so a section revealed by a failed submit would
+   * be collapsed again by the user's very next click, hiding the error they
+   * were sent to fix. This set is unioned into the rendered state and is pruned
+   * per-section as each one's errors clear (below), so it can never wedge a
+   * section open once it is valid.
+   */
+  const [forceOpenIds, setForceOpenIds] = useState<string[]>([]);
 
   const ordered = useMemo(
     () => orderSections(sections.filter((s) => (s.when ? s.when(values) : true))),
@@ -246,6 +297,15 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   const onValidationChangeRef = useRef(onValidationChange);
   onValidationChangeRef.current = onValidationChange;
 
+  /** Section ids holding at least one error, in render order. */
+  const erroringSectionIds = useCallback((errs: Record<string, string>): string[] => {
+    const keys = Object.keys(errs);
+    if (keys.length === 0) return [];
+    return ordered
+      .filter((s) => s.fields?.some((f) => keys.some((k) => k === f || k.startsWith(`${f}.`))))
+      .map((s) => s.id);
+  }, [ordered]);
+
   const runValidation = useCallback((nextValues: T) => {
     const activeSchema = schema ?? inheritedSchema;
     if (!activeSchema) return;
@@ -255,6 +315,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     const parsed = activeSchema.safeParse(nextValues);
     if (parsed.success) {
       setFieldErrors({});
+      setForceOpenIds([]);
       onValidationChangeRef.current?.({}, fieldToSectionIndex);
       return;
     }
@@ -264,8 +325,16 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
       next[issue.path.map(String).join(".")] = issue.message;
     }
     setFieldErrors(next);
+    // Release a force-opened section as soon as ITS OWN errors clear, rather
+    // than waiting for the whole form to become valid — otherwise fixing
+    // section 1 leaves it pinned open while the user works through section 5.
+    const stillBad = new Set(erroringSectionIds(next));
+    setForceOpenIds((prev) => {
+      const kept = prev.filter((id) => stillBad.has(id));
+      return kept.length === prev.length ? prev : kept;
+    });
     onValidationChangeRef.current?.(next, fieldToSectionIndex);
-  }, [schema, inheritedSchema, fieldToSectionIndex]);
+  }, [schema, inheritedSchema, fieldToSectionIndex, erroringSectionIds]);
 
   useEffect(() => {
     runValidation(values);
@@ -284,8 +353,29 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    */
   const handleSubmit = useCallback(() => {
     shellCtx?.markSubmitAttempted();
+
+    /*
+     * Reveal the FIRST offending section — only the first. Expanding all five
+     * at once loses the user's place, and the per-section error badge already
+     * points at the rest.
+     *
+     * This is additive: `onSubmit` still fires exactly as before, so a caller
+     * that does its own parse or lets the server decide is unaffected. Blocking
+     * here would change behaviour for all thirteen call sites, and `fieldErrors`
+     * is only ever populated when a schema is present — a schema-less form
+     * finds nothing to expand and falls straight through.
+     */
+    const [firstBadId] = erroringSectionIds(fieldErrors);
+    if (firstBadId) {
+      setForceOpenIds((prev) => (prev.includes(firstBadId) ? prev : [...prev, firstBadId]));
+      if (!openIds.includes(firstBadId)) {
+        setOpenIds(expandMode === "single" ? [firstBadId] : [...openIds, firstBadId]);
+      }
+      scrollToSection(firstBadId);
+    }
+
     void onSubmit();
-  }, [shellCtx, onSubmit]);
+  }, [shellCtx, onSubmit, erroringSectionIds, fieldErrors, openIds, setOpenIds, expandMode]);
 
   useFormBottomActions({
     onSubmit: handleSubmit,
@@ -298,13 +388,22 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   });
 
   const toggle = useCallback((id: string) => {
-    const isOpen = openIds.includes(id);
+    /*
+     * A DIRECT click on the header always wins. `forceOpenIds` exists to
+     * survive an INDIRECT collapse — the accordion closing this section because
+     * a sibling was opened — not to make the header unresponsive. Leaving the
+     * id in the set here would mean clicking a section holding an error does
+     * visibly nothing, which reads as a broken control and is worse than the
+     * hidden error it was protecting against.
+     */
+    setForceOpenIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : prev));
+    const isOpen = openIds.includes(id) || forceOpenIds.includes(id);
     if (expandMode === "single") {
       setOpenIds(isOpen ? [] : [id]);
       return;
     }
     setOpenIds(isOpen ? openIds.filter((x) => x !== id) : [...openIds, id]);
-  }, [openIds, expandMode, setOpenIds]);
+  }, [openIds, forceOpenIds, expandMode, setOpenIds]);
 
   const errorCountFor = useCallback((section: SectionDef<T>): number => {
     if (!section.fields?.length) return 0;
@@ -319,7 +418,9 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
         const isRequired = section.required === true;
         // A required section is always open — it holds the fields without
         // which the record cannot be saved, so hiding it is never useful.
-        const isCollapsed = isRequired ? false : !openIds.includes(section.id);
+        const isCollapsed = isRequired
+          ? false
+          : !(openIds.includes(section.id) || forceOpenIds.includes(section.id));
         const errorCount = errorCountFor(section);
 
         return (

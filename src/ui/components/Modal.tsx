@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
+import { ActionRow } from "./ActionRow";
 import { SPRING_GENTLE } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";
 import { OverlayContext } from "./overlay-context";
@@ -182,23 +183,42 @@ export function Modal({
   );
 }
 
+/**
+ * A dialog's action row.
+ *
+ * `align="end"` on purpose: a dialog is at most 32rem wide, and stretching
+ * Cancel/Confirm across it reads as a banner rather than a pair of controls.
+ * The buttons are still sized from their own labels — they simply don't take
+ * the leftover — and ActionRow's own narrow breakpoint collapses this to
+ * full-width below 30rem, where a right-packed clump would read badly.
+ *
+ * `anchor` is available for a footer that needs meta on the left (a link, a
+ * count). Use it instead of reintroducing `justify-between`, which with three
+ * children opens the gulf BETWEEN the two buttons rather than beside them.
+ */
 export function ModalFooter({
   children,
+  anchor,
   className = "",
 }: {
   children: React.ReactNode;
+  anchor?: React.ReactNode;
   className?: string;
 }) {
   return (
-    <div
+    <ActionRow
+      align="end"
+      gap="md"
+      anchor={anchor}
       className={[
-        "flex items-center justify-end gap-3 border-t px-6 py-4 border-[var(--appkit-color-border-subtle)]",
+        "border-t px-6 py-4 border-[var(--appkit-color-border-subtle)]",
         className,
       ]
         .filter(Boolean)
         .join(" ")}
-     data-section="modal-div-565">
+      data-section="modal-div-565"
+    >
       {children}
-    </div>
+    </ActionRow>
   );
 }

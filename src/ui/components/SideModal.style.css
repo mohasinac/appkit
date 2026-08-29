@@ -71,3 +71,17 @@
   overflow-y: auto;
   padding: 1.25rem;
 }
+
+/* -- Footer ------------------------------------------ */
+/* Chrome only — the action layout itself comes from ActionRow. */
+
+.appkit-side-modal__footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--appkit-color-border);
+  padding: 1rem 1.25rem;
+  padding-bottom: calc(1rem + var(--keyboard-inset-height, 0px));
+}
+
+.dark .appkit-side-modal__footer {
+  border-top-color: var(--appkit-color-zinc-700);
+}

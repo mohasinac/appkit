@@ -99,7 +99,9 @@ export function FilterDrawer({
         size={size}
         className="appkit-drawer__panel--filter"
         footer={
-          <div className="appkit-filter-drawer__footer" data-section="filterdrawer-div-494">
+          /* Bare buttons — the Drawer's footer slot supplies the ActionRow.
+             The old `__footer` wrapper existed only to hand-roll a flex row. */
+          <>
             <Button type="button" variant="ghost" onClick={onReset}>
               Reset all
             </Button>
@@ -108,7 +110,7 @@ export function FilterDrawer({
                 ? `Apply (${pendingCount})`
                 : "Apply"}
             </Button>
-          </div>
+          </>
         }
       >
         <div

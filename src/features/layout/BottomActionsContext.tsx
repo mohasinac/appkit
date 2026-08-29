@@ -16,7 +16,7 @@
  * ```tsx
  * useBottomActions({
  * actions: [
- * { id: "wishlist", icon: <Heart className="w-4 h-4" />, label: t("wishlist"), variant: "ghost", grow: false, onClick: handleWishlist },
+ * { id: "wishlist", icon: <Heart className="w-4 h-4" />, label: t("wishlist"), variant: "ghost", onClick: handleWishlist },
  * { id: "cart", label: t("addToCart"), variant: "outline", onClick: handleAddToCart },
  * { id: "buy", label: t("buyNow"), variant: "primary", onClick: handleBuyNow },
  * ],
@@ -66,11 +66,18 @@ export interface BottomAction {
   disabled?: boolean;
   /** Show spinner inside the button. */
   loading?: boolean;
-  /**
-   * When true (default) the button grows to fill remaining space.
-   * Set to false for compact icon-only buttons.
+  /*
+   * 🛑 There is deliberately no `grow` here.
+   *
+   * It used to mean "size me to my content" (false) or "take the leftover"
+   * (true). Under ActionRow's content-proportional sizing BOTH are the
+   * default: every action starts at its own label's width and shares only what
+   * is left over. The one residual meaning — "refuse a share of the leftover" —
+   * is a ROW-level decision (`<ActionRow align="end">`), not a per-action one.
+   * Letting a single action opt out while its neighbours did not is exactly how
+   * `Back` came to render as a 44px stub reading "Ba" beside a full-width
+   * "Continue to payment". Removing the field is what stops it recurring.
    */
-  grow?: boolean;
 }
 
 export interface BottomBulkConfig {

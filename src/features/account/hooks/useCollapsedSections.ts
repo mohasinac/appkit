@@ -97,7 +97,15 @@ function writeLocalScope(scope: string, openIds: string[]): void {
 export type SectionExpandMode = "multi" | "single";
 
 export interface UseSectionStateOptions {
-  /** `"{portal}:{surface}"`, e.g. `"admin:dashboard"` or `"store:product-form"`. */
+  /**
+   * `"{portal}:{surface}"`, e.g. `"admin:dashboard"` or `"store:product-form"`.
+   *
+   * **The empty string means EPHEMERAL** — in-memory only, no profile read, no
+   * profile write, no localStorage. It exists so a surface can adopt this hook
+   * before it has chosen a durable scope name, without every such surface
+   * writing junk under `sectionState[""]` and without the legacy-derivation
+   * branch below reading another page's `collapsedSections` into it.
+   */
   scope: string;
   /** Every section id this surface manages, in display order. */
   sectionIds: string[];
@@ -118,6 +126,10 @@ export interface UseSectionStateResult {
   /** Force a section open without closing anything — what a validation error
    * needs. Never collapses, even under `mode: "single"`. */
   open: (id: string) => void;
+  /** Replace the whole open set. For a caller that already computes the next
+   * array itself (`SectionForm`'s controlled/uncontrolled `setOpenIds`
+   * contract) rather than expressing the change as a per-id toggle. */
+  setOpenIds: (ids: string[]) => void;
   openIds: string[];
 }
 
@@ -149,14 +161,18 @@ export function useSectionState({
   const legacyCollapsedRef = useRef<string[] | undefined>(undefined);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /** `scope: ""` opts out of every durable store — see the option's docstring. */
+  const persistent = scope !== "";
+
   // Seeded synchronously from localStorage so first paint is already correct.
   const [localOpen, setLocalOpen] = useState<Set<string> | null>(() => {
+    if (!persistent) return null;
     const cached = readLocalScopes()[scope];
     return cached ? new Set(cached) : null;
   });
 
   useEffect(() => {
-    if (!profile) return;
+    if (!persistent || !profile) return;
     const prefs = profile.uiPreferences;
     savedScopesRef.current = prefs?.sectionState ?? {};
     legacyCollapsedRef.current = prefs?.collapsedSections;
@@ -178,7 +194,7 @@ export function useSectionState({
     } else {
       setLocalOpen(new Set(fallbackOpenRef.current));
     }
-  }, [profile, scope]);
+  }, [profile, scope, persistent]);
 
   useEffect(
     () => () => {
@@ -189,6 +205,7 @@ export function useSectionState({
 
   const persist = useCallback(
     (next: Set<string>) => {
+      if (!persistent) return;
       const openIds = sectionIdsRef.current.filter((id) => next.has(id));
       writeLocalScope(scope, openIds);
 
@@ -213,7 +230,7 @@ export function useSectionState({
         });
       }, PERSIST_DEBOUNCE_MS);
     },
-    [scope, updateProfile],
+    [scope, persistent, updateProfile],
   );
 
   const effectiveOpen = localOpen ?? new Set(fallbackOpen);
@@ -257,6 +274,17 @@ export function useSectionState({
     [persist],
   );
 
+  const setOpenIds = useCallback(
+    (ids: string[]) => {
+      setLocalOpen(() => {
+        const next = new Set(ids);
+        persist(next);
+        return next;
+      });
+    },
+    [persist],
+  );
+
   const openIds = useMemo(
     () => sectionIds.filter((id) => effectiveOpen.has(id)),
     // effectiveOpen is derived from localOpen; depending on the Set identity
@@ -265,7 +293,7 @@ export function useSectionState({
     [sectionIds, localOpen, fallbackOpen],
   );
 
-  return { isOpen, toggle, open, openIds };
+  return { isOpen, toggle, open, setOpenIds, openIds };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

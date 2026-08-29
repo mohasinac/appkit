@@ -393,12 +393,15 @@ export function SellerAddressesView({
         onClose={closeDrawer}
         title={editingId ? "Edit Address" : "Add Address"}
         footer={
-          <Row gap="xs">
-            <Button variant="outline" onClick={closeDrawer} className="flex-1">Cancel</Button>
-            <Button onClick={handleSave} disabled={saving} className="flex-1">
+          /* Bare buttons — the SideDrawer footer slot supplies the ActionRow.
+             The `flex-1` these carried would have beaten its sizing under
+             `important: true`. */
+          <>
+            <Button variant="outline" onClick={closeDrawer}>Cancel</Button>
+            <Button onClick={handleSave} disabled={saving}>
               {saving ? "Saving…" : editingId ? "Save Changes" : "Add Address"}
             </Button>
-          </Row>
+          </>
         }
       >
         <Stack gap="md" padding="y-2xs">

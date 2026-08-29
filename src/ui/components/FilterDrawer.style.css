@@ -35,18 +35,12 @@
   color: var(--appkit-color-text-on-primary);
 }
 
-.appkit-filter-drawer__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  border-top: 1px solid var(--appkit-color-border);
-  padding: 0.75rem 1rem;
-}
-
-:is(.dark) .appkit-filter-drawer__footer {
-  border-top-color: var(--appkit-color-border);
-}
+/*
+ * `.appkit-filter-drawer__footer` was deleted. Its border and padding are
+ * already supplied by `.appkit-drawer__footer` (the slot it rendered inside),
+ * and its flex rules are now ActionRow's job — the wrapper existed only to
+ * hand-roll a row the slot should always have provided.
+ */
 
 .appkit-filter-drawer__body {
   & > * + * {

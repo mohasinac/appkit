@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
+import { ActionRow } from "./ActionRow";
 import { useHandMode } from "../../_internal/client/hand-mode";
 
 /**
@@ -18,6 +19,16 @@ export interface DrawerProps {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
+  /**
+   * Action buttons for the drawer's footer. Pass them bare — the slot supplies
+   * the row itself via `<ActionRow>`, so each button is sized from its own
+   * label and the group wraps rather than overflowing.
+   *
+   * 🛑 Do not wrap them in your own flex container or put `flex-1` on them:
+   * `important: true` makes a caller's utility beat ActionRow's CSS. The slot
+   * used to be a padding-only block, which silently gave inline-flow layout and
+   * made every caller invent its own row.
+   */
   footer?: React.ReactNode;
   side?: "left" | "right" | "bottom";
   /** Width for left/right drawers. Default: 'md' */
@@ -164,7 +175,11 @@ export function Drawer({
         <div className="appkit-drawer__body" data-section="drawer-div-484">{children}</div>
 
         {/* Footer */}
-        {footer && <div className="appkit-drawer__footer" data-section="drawer-div-485">{footer}</div>}
+        {footer && (
+          <div className="appkit-drawer__footer" data-section="drawer-div-485">
+            <ActionRow>{footer}</ActionRow>
+          </div>
+        )}
       </div>
     </div>,
     document.body,

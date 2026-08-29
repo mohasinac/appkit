@@ -4148,6 +4148,72 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
   ]),
+  ...group("cta-layout", "CTA & Action Rows", [
+    {
+      pageKey: "checkout-bottom-bar",
+      pageLabel: "Checkout — bottom action bar",
+      href: "/checkout",
+      cases: [
+        {
+          key: "back-not-squeezed",
+          label: "Back and Continue to payment are BOTH readable at 320px width",
+          description:
+            "Narrow the browser to 320px and reach the Extras step. BEFORE: Back rendered as a ~44px box clipped to 'Ba' while Continue to payment took ~80% of the row. AFTER: each button is as wide as its own label needs, Continue to payment is visibly the wider of the two, and neither shows a cut-off word or an ellipsis.",
+        },
+        {
+          key: "no-truncation-anywhere",
+          label: "No CTA label is ever cut off — long ones wrap to two lines",
+          description:
+            "Check the payment step, whose primary reads 'Pay Online (Razorpay)'. BEFORE: a label too long for its share was clipped with an ellipsis. AFTER: the button grows taller and shows the whole label on two lines. An ellipsis anywhere in the bar is a failure.",
+        },
+      ],
+    },
+    {
+      pageKey: "product-bottom-bar",
+      pageLabel: "Product detail — three-action bar",
+      href: "/products/product-beyblade-original-dranzer-s",
+      cases: [
+        {
+          key: "three-actions-wrap-to-second-row",
+          label: "Wishlist / Add to Cart / Buy Now use two rows, none squeezed",
+          description:
+            "On a phone-width viewport. Wishlist and Add to Cart share the upper row, Buy Now gets the full-width row beneath. BEFORE: Wishlist was pinned to its content width and the row read lopsided. AFTER: the two secondaries share the upper row proportionally. Tap Add to Cart and watch the label become 'Adding…' — the number of ROWS must not change while it does.",
+        },
+      ],
+    },
+    {
+      pageKey: "editor-action-bar",
+      pageLabel: "Editor bar — four actions",
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "four-buttons-wrap-not-overflow",
+          label: "Discard / Preview / Save draft / Publish wrap instead of overflowing",
+          description:
+            "Open a product editor at 375px width with unsaved changes so Discard appears. BEFORE: all four buttons were flex-shrink:0 in a non-wrapping row, so the group ran off the right edge of the bar. AFTER: they wrap onto a second line and every one stays fully on screen. Nothing should scroll sideways.",
+        },
+      ],
+    },
+    {
+      pageKey: "dialog-footers",
+      pageLabel: "Dialog & drawer footers",
+      href: "/admin/products",
+      cases: [
+        {
+          key: "modal-footer-stays-compact-on-desktop",
+          label: "A dialog's buttons stay compact and right-aligned at 1280px",
+          description:
+            "Open any admin confirm dialog on a desktop viewport. The buttons must remain content-width and packed to the right — they must NOT stretch across the whole dialog like banners. This is the deliberate difference between a dialog footer and a mobile bar; a stretched pair here is a regression.",
+        },
+        {
+          key: "filter-drawer-footer-stacks-when-narrow",
+          label: "Filter drawer's Reset all / Apply stack rather than shrink when narrow",
+          description:
+            "Open the mobile filter drawer on a narrow phone. Both buttons stay fully readable; if there is not room for both side by side they stack one per line. Neither may be crushed below its label.",
+        },
+      ],
+    },
+  ]),
 ];
 
 const defaultPhases = assignDefaultPhases(

@@ -6,7 +6,7 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
-import { Div, Form, Row, Stack, Text } from "../../ui";
+import { ActionRow, Div, Form, Row, Stack, Text } from "../../ui";
 import { FormShellContext, FormErrorSummary, type FormShellContextValue } from "../../ui/forms";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
 import { useHandMode } from "../../_internal/client/hand-mode";
@@ -339,7 +339,10 @@ export function QuickFormDrawer({
           <Div paddingX="x-md" padding="t-sm">
             <FormErrorSummary />
           </Div>
-          <Row padding="md" align="center" justify="between" gap="sm">
+          {/* `fill`, not `end`: this is a mobile-first drawer with exactly two
+              actions, so they should share the width rather than clump against
+              the right edge with a gulf between them. */}
+          <ActionRow padding="md">
             <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
               {cancelLabel}
             </Button>
@@ -352,7 +355,7 @@ export function QuickFormDrawer({
             >
               {submitLabel} →
             </Button>
-          </Row>
+          </ActionRow>
         </Div>
       </Div>
     </>

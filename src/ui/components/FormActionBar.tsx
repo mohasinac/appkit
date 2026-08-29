@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ChevronRight } from "lucide-react";
+import { ActionRow } from "./ActionRow";
 import { Button } from "./Button";
 import { TextLink } from "./TextLink";
 
@@ -41,38 +42,51 @@ export function FormActionBar({
   className,
 }: FormActionBarProps) {
   return (
-    <div className={`appkit-form-action-bar${className ? ` ${className}` : ""}`}>
-      {/* Left: title / breadcrumbs */}
-      <div className="appkit-form-action-bar__meta">
-        {breadcrumbs && breadcrumbs.length > 0 && (
-          <div className="appkit-form-action-bar__breadcrumbs">
-            {breadcrumbs.map((crumb, i) => (
-              <React.Fragment key={i}>
-                {i > 0 && <ChevronRight className="h-3 w-3 flex-shrink-0" />}
-                {crumb.href ? (
-                  <TextLink href={crumb.href} variant="inherit" truncate>
-                    {crumb.label}
-                  </TextLink>
-                ) : (
-                  <span className="truncate">{crumb.label}</span>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        )}
-        {title && (
-          <div className="appkit-form-action-bar__title">
-            {isDirty && (
-              <span className="appkit-form-action-bar__dirty-dot mr-1.5" aria-label="Unsaved changes" />
-            )}
-            {title}
-          </div>
-        )}
-      </div>
-
-      {/* Right: action buttons */}
-      <div className="appkit-form-action-bar__actions">
-        {isDirty && onDiscard && (
+    /*
+     * Up to four actions live here (Discard / Preview / Save draft / Publish),
+     * and every one of them used to be `flex-shrink: 0` inside a non-wrapping
+     * row — so on a narrow viewport the group simply overflowed the bar. As an
+     * ActionRow they wrap instead.
+     *
+     * `align="end"` keeps the desktop look: an editor bar spans the full page
+     * width, and stretching four buttons across it would read as a toolbar of
+     * banners. The title/breadcrumb block is the `anchor`, which is what lets
+     * it shrink and ellipsise while the actions never do.
+     */
+    <ActionRow
+      align="end"
+      gap="sm"
+      className={`appkit-form-action-bar${className ? ` ${className}` : ""}`}
+      anchor={
+        <div className="appkit-form-action-bar__meta">
+          {breadcrumbs && breadcrumbs.length > 0 && (
+            <div className="appkit-form-action-bar__breadcrumbs">
+              {breadcrumbs.map((crumb, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <ChevronRight className="h-3 w-3 flex-shrink-0" />}
+                  {crumb.href ? (
+                    <TextLink href={crumb.href} variant="inherit" truncate>
+                      {crumb.label}
+                    </TextLink>
+                  ) : (
+                    <span className="truncate">{crumb.label}</span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+          {title && (
+            <div className="appkit-form-action-bar__title">
+              {isDirty && (
+                <span className="appkit-form-action-bar__dirty-dot mr-1.5" aria-label="Unsaved changes" />
+              )}
+              {title}
+            </div>
+          )}
+        </div>
+      }
+    >
+      {isDirty && onDiscard && (
           <Button
             type="button"
             variant="ghost"
@@ -115,7 +129,6 @@ export function FormActionBar({
         >
           {publishLabel}
         </Button>
-      </div>
-    </div>
+    </ActionRow>
   );
 }

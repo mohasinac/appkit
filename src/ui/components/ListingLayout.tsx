@@ -460,11 +460,17 @@ export function ListingLayout({
               : panelTitle
           }
           footer={
-            <Div className="appkit-listing-layout__mobile-overlay-footer">
+            /* Bare buttons: the Drawer's footer slot supplies the ActionRow.
+               🛑 `flex-1` used to be on both of these, and under
+               `important: true` it beats ActionRow's content-proportional
+               basis — so this was the one row where the fix would have been
+               silently defeated. Only `rounded-xl` (a shape, not a width)
+               stays. */
+            <>
               <Button
                 type="button"
                 variant="secondary"
-                className="flex-1 rounded-xl"
+                className="rounded-xl"
                 onClick={() => onFilterClear?.()}
               >
                 {l.clearAll}
@@ -472,14 +478,14 @@ export function ListingLayout({
               <Button
                 type="button"
                 variant="primary"
-                className="flex-1 rounded-xl"
+                className="rounded-xl"
                 onClick={handleMobileApply}
               >
                 {filterPendingCount != null && filterPendingCount > 0
                   ? `${l.applyFilters} (${filterPendingCount})`
                   : l.applyFilters}
               </Button>
-            </Div>
+            </>
           }
         >
           {filterContent}

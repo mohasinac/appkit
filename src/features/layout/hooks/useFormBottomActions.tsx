@@ -104,12 +104,10 @@ export function useFormBottomActions({
      * Destructive FIRST, so it is furthest from the thumb's resting position
      * on the primary action, which BottomActions renders last.
      *
-     * None of these set `grow` any more. They used to — destructive and cancel
-     * were `grow: false` — and because BottomActions collapsed `grow: false`
-     * into the same branch as "icon-only", both were rendered as a fixed 44px
-     * square, so "Cancel" truncated while Save took the rest of the bar. With
-     * the branch split, letting flex decide gives 50/50 for two actions and an
-     * even share for more, which is what the row should have done all along.
+     * None of these set a width. `grow` no longer exists on BottomAction —
+     * ActionRow sizes every action from its own label and shares only the
+     * leftover, so "Cancel" and "Save" each get a width that fits their text
+     * instead of Cancel collapsing to a 44px square while Save took the rest.
      */
     if (destructiveAction) {
       list.push({
@@ -136,7 +134,6 @@ export function useFormBottomActions({
       id: "form-submit",
       label: submitLabel,
       variant: "primary",
-      grow: true,
       loading: isLoading,
       disabled: disabled || isLoading,
       onClick: () => void onSubmit(),

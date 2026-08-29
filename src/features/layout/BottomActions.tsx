@@ -35,7 +35,7 @@ import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import type { BottomAction } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
-import { Div, Row, Span, Text, Button } from "../../ui";
+import { ActionRow, Div, Row, Span, Text, Button } from "../../ui";
 
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =
@@ -159,14 +159,32 @@ function InfoPanel({
 /**
  * How many actions fit on one line before the row splits in two.
  *
- * 🛑 Row count is a function of `pageActions.length` and NOTHING else — never
- * of validation state. `BottomChrome`'s ResizeObserver faithfully republishes
- * `--bottom-chrome-height` on any height change, and every consumer
- * (BackToTop, the pagination bar, the footer's clearance) reflows with it. A
- * bar that grew a row when an error appeared would shift the whole page while
- * the user was typing. The error count lives in `infoLabel`, which sits in the
- * absolutely-positioned panel and is excluded from the published height by
- * construction.
+ * 🛑 ROW COUNT is a function of `pageActions.length` and NOTHING else — never
+ * of validation state, and never of measured width. `BottomChrome`'s
+ * ResizeObserver faithfully republishes `--bottom-chrome-height` on any height
+ * change, and every consumer (BackToTop, the pagination bar, the footer's
+ * clearance) reflows with it. A bar that grew a row when an error appeared
+ * would shift the whole page while the user was typing. The error count lives
+ * in `infoLabel`, which sits in the absolutely-positioned panel and is excluded
+ * from the published height by construction.
+ *
+ * The invariant is about ROW COUNT, not pixel height. `ActionRow` lets a long
+ * label wrap to a second line, which changes the bar's height by ~16px,
+ * monotonically, and the observer handles that correctly. What must never
+ * happen is a row count that FLIPS: that is a ~48px step and it is reversible
+ * mid-interaction.
+ *
+ * Which is exactly why the count split stays primary and `flex-wrap` is only an
+ * overflow net. In this app LABELS ARE STATE — "Add to Cart" becomes "Adding…",
+ * "Buy Now" becomes "Out of Stock", "Apply" becomes "Apply (3)". If width alone
+ * decided rows, tapping Add to Cart would shorten the label, free ~40px,
+ * un-wrap a row and shift the page under the user's thumb at the exact moment
+ * they committed to the tap.
+ *
+ * 🛑 This constant is COUPLED to `--appkit-size-action-min` (tokens.css).
+ * Two actions per line is safe only while `2 × action-min + gap` fits the
+ * narrowest supported viewport (280px). Raising either without re-checking that
+ * sum reintroduces device-dependent row flipping.
  */
 const SINGLE_ROW_MAX_ACTIONS = 2;
 
@@ -182,20 +200,20 @@ function ActionButtons({
       {actions.map((action) => {
         const isIconOnly = !action.label;
         /*
-         * `grow: false` and "icon-only" used to share one branch whose output
-         * was a fixed 44px square — so a LABELLED action asking not to grow got
-         * 44px and truncated. That is the reported "Cancel is cut off while
-         * Save takes 80% of the width": useFormBottomActions set grow:false on
-         * Cancel, and a two-button bar rendered 44px + everything else.
+         * Width is ActionRow's job now, not this component's — every action is
+         * sized from its own label by `.appkit-action-row__group > *`, and only
+         * the leftover is shared out. There is deliberately NO per-action width
+         * class here: the old `grow` ternary is what produced a 44px stub
+         * reading "Ba" next to a full-width "Continue to payment".
          *
-         * They are different intents. Icon-only is a square tap target;
-         * grow:false means "size me to my content" and must keep its padding.
+         * The one thing a stylesheet cannot infer is that a child has no label,
+         * so icon-only opts into its square tap target explicitly.
+         *
+         * 🛑 Never add `flex-1`, `flex-shrink-0`, `basis-*`, `w-*`, `h-*`,
+         * `truncate` or `leading-none` below. Both tailwind configs set
+         * `important: true`, so any of them beats ActionRow's CSS and silently
+         * reverts this bar to the squeezed behaviour with no visible error.
          */
-        const growClass = isIconOnly
-          ? "flex-shrink-0 w-11"
-          : action.grow === false
-            ? "flex-shrink-0 basis-auto px-[var(--appkit-space-3)]"
-            : "flex-1 min-w-0";
         return (
           <Button
             key={action.id}
@@ -206,9 +224,8 @@ function ActionButtons({
             disabled={action.disabled}
             onClick={() => dispatchAction(action.id)}
             className={[
-              "h-10 relative",
-              growClass,
-              isIconOnly ? "px-[var(--appkit-space-0)] justify-center" : "",
+              "relative",
+              isIconOnly ? "appkit-action-row__icon-only justify-center" : "",
             ]
               .filter(Boolean)
               .join(" ")}
@@ -221,7 +238,7 @@ function ActionButtons({
                 {action.icon}
               </Span>
             )}
-            {action.label && <Span className="truncate leading-none">{action.label}</Span>}
+            {action.label && <Span>{action.label}</Span>}
             {action.badge !== undefined && (
               <Span
                 className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] ${CLS_COUNT_BADGE} text-[10px] ${FLEX_CENTER} px-[var(--appkit-space-1)] pointer-events-none select-none`} rounded="full" weight="bold"
@@ -243,7 +260,7 @@ function ActionButtons({
  * | n    | layout                                                          |
  * |------|-----------------------------------------------------------------|
  * | 1    | one row, full-width primary                                     |
- * | 2    | one row, 50/50                                                  |
+ * | 2    | one row, each sized from its own label                          |
  * | 3+   | two rows — secondaries above, primary full-width below           |
  *
  * The LAST action is treated as the primary. That holds for every producer:
@@ -268,7 +285,11 @@ function PageActionsRow({
   if (pageActions.length === 0) return null;
 
   if (pageActions.length <= SINGLE_ROW_MAX_ACTIONS) {
-    return <ActionButtons actions={pageActions} dispatchAction={dispatchAction} />;
+    return (
+      <ActionRow>
+        <ActionButtons actions={pageActions} dispatchAction={dispatchAction} />
+      </ActionRow>
+    );
   }
 
   const secondaries = pageActions.slice(0, -1);
@@ -276,17 +297,14 @@ function PageActionsRow({
 
   return (
     <Div className="flex w-full flex-col gap-[var(--appkit-space-2)]">
-      <Div className="flex w-full flex-wrap gap-[var(--appkit-space-2)]">
+      <ActionRow>
         <ActionButtons actions={secondaries} dispatchAction={dispatchAction} />
-      </Div>
-      <Div className="flex w-full">
-        {/* Forced to grow regardless of what the producer asked for: on its own
-            line there is nothing to share the width with. */}
-        <ActionButtons
-          actions={[{ ...primary, grow: true }]}
-          dispatchAction={dispatchAction}
-        />
-      </Div>
+      </ActionRow>
+      {/* On its own line there is nothing to share the width with, so a single
+          `flex: 1 1 auto` child already fills it — no override needed. */}
+      <ActionRow>
+        <ActionButtons actions={[primary]} dispatchAction={dispatchAction} />
+      </ActionRow>
     </Div>
   );
 }
@@ -455,7 +473,7 @@ export default function BottomActions() {
 
             {/* -- Secondary label row (page mode only) — stacked ABOVE infoLabel -- */}
             {secondaryLabel && !isBulkMode && (
-              <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
+              <Div className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b border-[var(--appkit-color-border-subtle)]" padding="x-md">
                 <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
                   {secondaryLabel}
                 </Text>
@@ -464,7 +482,7 @@ export default function BottomActions() {
 
             {/* -- Info label row (page mode only) --------------------------------- */}
             {infoLabel && !isBulkMode && !hasInfoPanel && (
-              <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
+              <Div className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b border-[var(--appkit-color-border-subtle)]" padding="x-md">
                 <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
                   {infoLabel}
                 </Text>
@@ -499,8 +517,15 @@ export default function BottomActions() {
 
             {/* -- Main action row -------------------------------------------------- */}
             {/* `min-h`, not `h`: a 3+-action form lays out on two lines and the
-                container has to grow with it. For one line the result is
-                identical to the old fixed h-14 (h-10 buttons, centred). */}
+                container has to grow with it — as does a single action whose
+                label wraps. For one line the result is identical to the old
+                fixed h-14 (40px buttons, centred).
+
+                This Row supplies the bar's own chrome (height floor, padding)
+                and lays out BULK mode directly. Page mode delegates entirely to
+                PageActionsRow, which emits its own ActionRow — the bulk row is
+                deliberately NOT an ActionRow, being a fixed three-control
+                composite where the picker must eat the slack. */}
             <Row className={`min-${BOTTOM_NAV_HEIGHT} py-[var(--appkit-space-2)]`} gap="sm" padding="x-sm">
               {isBulkMode && bulk ? (
                 <>

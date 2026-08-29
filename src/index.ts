@@ -9235,6 +9235,8 @@ export type { WhatsAppCommunitySectionConfig } from "./features/homepage/schemas
 export { Button } from "./ui/index";
 export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination, PageLoader } from "./ui/index";
 export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
+export { ActionRow } from "./ui/index";
+export type { ActionRowProps, ActionRowAlign } from "./ui/index";
 export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
 export { CountdownDisplay, ItemRow, HorizontalScroller } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
