@@ -77,23 +77,21 @@ export {
   maskSecret,
 } from "./settings-encryption";
 
-// RBAC system
-export type {
-  Permission,
-  RoleDefinition,
-  RbacConfig,
-  ResolvedUser,
-  RbacHookReturn,
-} from "./rbac";
-export {
-  DEFAULT_ROLES,
-  resolvePermissions,
-  hasPermission,
-  hasAllPermissions,
-  hasAnyPermission,
-  createRbacHook,
-  Can,
-  createRequirePermission,
-  createRequirePermissionSync,
-  createRbacMiddleware,
-} from "./rbac";
+// RBAC system — DELETED 2026-08-29.
+//
+// `security/rbac/**` was a complete second permission system: DEFAULT_ROLES,
+// resolvePermissions, createRbacHook, createRequirePermission(Sync),
+// createRbacMiddleware, <Can>, and its own `Permission` type. It had ZERO
+// consumers outside its own directory and these barrels, and it looked alive on
+// a grep only because its permission strings coincidentally overlapped the real
+// union (a hazard action-defs.ts:129 already warned about).
+//
+// It was worse than inert. `appkit/src/index.ts` re-exported ITS `Permission`
+// and ITS `hasPermission` — so a consumer importing either from the package
+// root silently got the dead 6-role model instead of the live 130-member union
+// and its helpers. Root Cause #53's exact shape, one module over.
+//
+// The live system is `features/auth/permissions/constants.ts` (the union,
+// PERMISSION_GROUPS, hasPermission/hasAny/hasAll) plus
+// `_internal/server/features/auth/permissions.ts` (getServerPermissions,
+// checkPermission). Import from there.

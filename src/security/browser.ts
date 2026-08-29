@@ -30,20 +30,7 @@ export {
   EVENT_ENTRY_PII_FIELDS,
 } from "./pii-schemas";
 
-export type {
-  Permission,
-  RoleDefinition,
-  RbacConfig,
-  ResolvedUser,
-  RbacHookReturn,
-} from "./rbac";
-export {
-  DEFAULT_ROLES,
-  resolvePermissions,
-  hasPermission,
-  hasAllPermissions,
-  hasAnyPermission,
-  createRbacHook,
-  Can,
-  createRbacMiddleware,
-} from "./rbac";
+// The `security/rbac/**` re-exports were deleted 2026-08-29 — see the note in
+// ./index.ts. The live permission surface is
+// `features/auth/permissions/constants.ts`; nothing client-side consumed the
+// dead one.

@@ -8,4 +8,3 @@ export * from "./components";
 export * from "./schemas";
 export * from "./columns";
 export { manifest } from "./manifest";
-export { SELLER_PAGE_PERMISSIONS } from "./permission-map";

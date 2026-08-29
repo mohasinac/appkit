@@ -1350,10 +1350,7 @@ export { BID_PII_FIELDS } from "./security/index";
 export { CHAT_PII_FIELDS } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // Can - Shared export for can.
-export { Can } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// DEFAULT_ROLES - Constant used across modules.
-export { DEFAULT_ROLES } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EVENT_ENTRY_PII_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_PII_FIELDS } from "./security/index";
@@ -1405,17 +1402,9 @@ export { canChangeRole } from "./security/index";
 // clearRateLimitStore - Shared export for clear rate limit store.
 export { clearRateLimitStore } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// createRbacHook - Helper for create rbac hook.
-export { createRbacHook } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// createRbacMiddleware - Helper for create rbac middleware.
-export { createRbacMiddleware } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// createRequirePermission - Helper for create require permission.
-export { createRequirePermission } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// createRequirePermissionSync - Helper for create require permission sync.
-export { createRequirePermissionSync } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // decryptSecret - Helper for decrypt secret.
 export { decryptSecret } from "./security/index";
@@ -1430,13 +1419,13 @@ export { generateNonce } from "./security/index";
 export { getRoleLevel } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // hasAllPermissions - Shared export for has all permissions.
-export { hasAllPermissions } from "./security/index";
+export { hasAllPermissions } from "./features/auth/permissions/constants";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // hasAnyPermission - Model for has any permission.
-export { hasAnyPermission } from "./security/index";
+export { hasAnyPermission } from "./features/auth/permissions/constants";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // hasPermission - Model for has permission.
-export { hasPermission } from "./security/index";
+export { hasPermission } from "./features/auth/permissions/constants";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // isSecretEncrypted - Shared export for is secret encrypted.
 export { isSecretEncrypted } from "./security/index";
@@ -1480,11 +1469,9 @@ export { requireOwnership } from "./security/index";
 // requireRole - Model for require role.
 export { requireRole } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// resolvePermissions - Helper for resolve permissions.
-export { resolvePermissions } from "./security/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // Permission - Type contract for permission.
-export type { Permission } from "./security/index";
+export type { Permission } from "./features/auth/permissions/constants";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // RateLimitConfig - Type contract for rate limit config.
 export type { RateLimitConfig } from "./security/index";
@@ -1492,17 +1479,9 @@ export type { RateLimitConfig } from "./security/index";
 // RateLimitResult - Type contract for rate limit result.
 export type { RateLimitResult } from "./security/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RbacConfig - Type contract for rbac config.
-export type { RbacConfig } from "./security/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RbacHookReturn - Type contract for rbac hook return.
-export type { RbacHookReturn } from "./security/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ResolvedUser - Type contract for resolved user.
-export type { ResolvedUser } from "./security/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RoleDefinition - Type contract for role definition.
-export type { RoleDefinition } from "./security/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserRole - Type contract for user role.
 export type { UserRole } from "./security/index";
@@ -3428,8 +3407,6 @@ export { updateAddressForUser } from "./features/account/server";
 
 // ./features/admin/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ADMIN_PAGE_PERMISSIONS - Constant used across modules.
-export { ADMIN_PAGE_PERMISSIONS } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ADMIN_PRODUCT_STATUS_OPTIONS - Constant used across modules.
 export { ADMIN_PRODUCT_STATUS_OPTIONS } from "./features/admin/index";
@@ -8252,8 +8229,6 @@ export { OFFER_INDEXED_FIELDS } from "./features/seller/index";
 // OfferStatusValues - Model for offer status values.
 export { OfferStatusValues } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SELLER_PAGE_PERMISSIONS - Constant used across modules.
-export { SELLER_PAGE_PERMISSIONS } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerAddressesView - Component for seller addresses view.
 export { SellerAddressesView } from "./features/seller/index";

@@ -10,4 +10,3 @@ export type {
   ChatRoomCreateInput,
 } from "./repository/chat.repository";
 export { manifest } from "./manifest";
-export { ADMIN_PAGE_PERMISSIONS } from "./permission-map";
