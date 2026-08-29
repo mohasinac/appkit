@@ -211,7 +211,7 @@ const {
   // crypto functions themselves come from appkitServer above)
   USER_PII_FIELDS, USER_PII_INDEX_MAP,
   ADDRESS_PII_FIELDS, ORDER_PII_FIELDS, BID_PII_FIELDS, PAYOUT_PII_FIELDS,
-  REVIEW_PII_FIELDS, OFFER_PII_FIELDS, EVENT_ENTRY_PII_FIELDS, CHAT_PII_FIELDS,
+  REVIEW_PII_FIELDS, OFFER_PII_FIELDS, EVENT_ENTRY_PII_FIELDS,
   // misc
   generateFAQId,
 } = appkit;
@@ -341,7 +341,6 @@ function encryptSeedPii(collection, data) {
     products: ["sellerName", "sellerEmail"],
     offers: OFFER_PII_FIELDS,
     eventEntries: EVENT_ENTRY_PII_FIELDS,
-    chatRooms: CHAT_PII_FIELDS,
   };
   const fields = PII_MAP[collection];
   if (!fields) return data;

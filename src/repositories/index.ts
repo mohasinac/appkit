@@ -62,7 +62,6 @@ export { siteSettingsRepository } from "../features/admin/repository/site-settin
 export { analyticsRollupRepository } from "../features/admin/repository/analytics-rollup.repository";
 export type { AnalyticsRollupDocument } from "../features/admin/repository/analytics-rollup.repository";
 export { notificationRepository } from "../features/admin/repository/notification.repository";
-export { chatRepository } from "../features/admin/repository/chat.repository";
 export { carouselRepository } from "../features/homepage/repository/carousel.repository";
 export { carouselsRepository, CarouselsRepository } from "../features/homepage/repository/carousels.repository";
 export { homepageSectionsRepository } from "../features/homepage/repository/homepage-sections.repository";

@@ -6,7 +6,6 @@
  */
 
 import { getAdminAuth } from "../../../providers/db-firebase/index";
-import { chatRepository } from "../../admin/repository/chat.repository";
 import { conversationsRepository } from "../../messages/repository/conversations.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { serverLogger } from "../../../monitoring/index";
@@ -21,15 +20,6 @@ export async function issueRealtimeToken(
   userId: string,
   userRole: string,
 ): Promise<RealtimeTokenResult> {
-  let chatIds: Record<string, boolean> = {};
-  try {
-    const userChatIds = await chatRepository.getChatIdsForUser(userId);
-    chatIds = Object.fromEntries(userChatIds.map((id) => [id, true]));
-  } catch (err) {
-    void normalizeError(err);
-    serverLogger.warn("Could not resolve chatIds for realtime token", { userId, err });
-  }
-
   const conversationIds: Record<string, boolean> = {};
   try {
     const buyerConvs = await conversationsRepository.listByBuyer(userId);
@@ -49,13 +39,12 @@ export async function issueRealtimeToken(
 
   const customToken = await getAdminAuth().createCustomToken(userId, {
     role: userRole,
-    chatIds,
     conversationIds,
   });
 
   serverLogger.info("issueRealtimeToken: token issued", {
     userId,
-    chatCount: Object.keys(chatIds).length,
+    conversationCount: Object.keys(conversationIds).length,
   });
 
   return { customToken, expiresAt: Date.now() + 3_600_000 };

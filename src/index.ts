@@ -1141,8 +1141,6 @@ export { CopilotLogRepository } from "./core/index";
 // EventBus - Shared export for event bus.
 export { EventBus } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// FEATURE_FLAGS - Constant used across modules.
-export { FEATURE_FLAGS } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // Logger - Shared export for logger.
 export { Logger } from "./core/index";
@@ -1346,8 +1344,6 @@ export { ADDRESS_PII_FIELDS } from "./security/index";
 // BID_PII_FIELDS - Constant used across modules.
 export { BID_PII_FIELDS } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// CHAT_PII_FIELDS - Constant used across modules.
-export { CHAT_PII_FIELDS } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // Can - Shared export for can.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -1747,8 +1743,6 @@ export { cartRepository } from "./repositories/index";
 // categoriesRepository - Shared export for categories repository.
 export { categoriesRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// chatRepository - Shared export for chat repository.
-export { chatRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // couponsRepository - Shared export for coupons repository.
 export { couponsRepository } from "./repositories/index";
@@ -3648,17 +3642,9 @@ export { AdminTopProductsTable } from "./features/admin/index";
 // AdminUsersView - Component for admin users view.
 export { AdminUsersView } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// CHAT_ROOM_COLLECTION - Constant used across modules.
-export { CHAT_ROOM_COLLECTION } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// CHAT_ROOM_FIELDS - Constant used across modules.
-export { CHAT_ROOM_FIELDS } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// CHAT_ROOM_INDEXED_FIELDS - Constant used across modules.
-export { CHAT_ROOM_INDEXED_FIELDS } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// DEFAULT_CHAT_ROOM_DATA - Constant used across modules.
-export { DEFAULT_CHAT_ROOM_DATA } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_NOTIFICATION_CHANNELS - Default channel config (inApp always on, others off).
 export { DEFAULT_NOTIFICATION_CHANNELS } from "./features/admin/index";
@@ -3720,26 +3706,16 @@ export { SITE_SETTINGS_INDEXED_FIELDS } from "./features/admin/index";
 // SITE_SETTINGS_PUBLIC_FIELDS - Constant used across modules.
 export { SITE_SETTINGS_PUBLIC_FIELDS } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// chatRoomQueryHelpers - Shared export for chat room query helpers.
-export { chatRoomQueryHelpers } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // notificationQueryHelpers - Shared export for notification query helpers.
 export { notificationQueryHelpers } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useChat - React hook for use chat.
-export { useChat } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useChatRooms - React hook for use chat rooms.
-export { useChatRooms } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useCreateChatRoom - React hook for use create chat room.
-export { useCreateChatRoom } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useDashboardStats - React hook for use dashboard stats.
 export { useDashboardStats } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useDeleteChatRoom - React hook for use delete chat room.
-export { useDeleteChatRoom } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useAdminListingData - React hook for admin listing data fetching.
 export { useAdminListingData } from "./features/admin/index";
@@ -3885,17 +3861,9 @@ export type { AnalyticsSummary } from "./features/admin/index";
 // AnalyticsTopProduct - Type contract for analytics top product.
 export type { AnalyticsTopProduct } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatMessage - Type contract for chat message.
-export type { ChatMessage } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatRoomCreateInput - Type contract for chat room create input.
-export type { ChatRoomCreateInput } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatRoomDocument - Type contract for chat room document.
-export type { ChatRoomDocument } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatRoomUpdateInput - Type contract for chat room update input.
-export type { ChatRoomUpdateInput } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // DashboardStats - Type contract for dashboard stats.
 export type { DashboardStats } from "./features/admin/index";
@@ -3959,8 +3927,6 @@ export type { SiteSettingsUpdateInput } from "./features/admin/index";
 // TrustBarItem - Type contract for trust bar item.
 export type { TrustBarItem } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UseChatReturn - Type contract for use chat return.
-export type { UseChatReturn } from "./features/admin/index";
 
 // ./features/admin/server
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -4009,11 +3975,7 @@ export { adminUpdateStoreStatus } from "./features/admin/server";
 // adminUpdateUser - Shared export for admin update user.
 export { adminUpdateUser } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createOrGetChatRoom - Helper for create or get chat room.
-export { createOrGetChatRoom } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// deleteChatRoom - Helper for delete chat room.
-export { deleteChatRoom } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteNotification - Helper for delete notification.
 export { deleteNotification } from "./features/admin/server";
@@ -4024,8 +3986,6 @@ export { getAdminAnalytics } from "./features/admin/server";
 // getAdminDashboardStats - Helper for get admin dashboard stats.
 export { getAdminDashboardStats } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getChatRooms - Helper for get chat rooms.
-export { getChatRooms } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSiteSettings - Helper for get site settings.
 export { getSiteSettings } from "./features/admin/server";
@@ -4078,8 +4038,6 @@ export { revokeSession } from "./features/admin/server";
 // revokeUserSessions - Shared export for revoke user sessions.
 export { revokeUserSessions } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendChatMessage - Shared export for send chat message.
-export { sendChatMessage } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateSiteSettings - Helper for update site settings.
 export { updateSiteSettings } from "./features/admin/server";
@@ -4087,14 +4045,8 @@ export { updateSiteSettings } from "./features/admin/server";
 // AdminActor - Type contract for admin actor.
 export type { AdminActor } from "./features/admin/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatRoomsResult - Type contract for chat rooms result.
-export type { ChatRoomsResult } from "./features/admin/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CreateRoomInput - Type contract for create room input.
-export type { CreateRoomInput } from "./features/admin/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CreateRoomResult - Type contract for create room result.
-export type { CreateRoomResult } from "./features/admin/server";
 
 // ./features/auctions/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

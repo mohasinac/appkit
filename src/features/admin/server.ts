@@ -6,14 +6,7 @@
 export * from "./actions";
 
 export { notificationRepository } from "./repository/notification.repository";
-export { chatRepository } from "./repository/chat.repository";
 export { contactSubmissionsRepository } from "../../core/contact-submissions.repository";
-export type { ContactSubmissionDocument, ContactSubmissionCreateInput } from "../../core/contact-submissions.repository";
-export { newsletterRepository } from "../../core/newsletter.repository";
-export type {
-  ChatRoomDocument,
-  ChatRoomCreateInput,
-} from "./repository/chat.repository";
 export { siteSettingsRepository } from "./repository/site-settings.repository";
 
 export { GET as adminProductsGET } from "./api/products/route";

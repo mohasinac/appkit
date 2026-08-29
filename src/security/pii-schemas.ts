@@ -127,9 +127,6 @@ export const OFFER_PII_FIELDS = [
   "sellerName",
 ] as const;
 
-/** PII fields in chat rooms */
-export const CHAT_PII_FIELDS = ["buyerName", "sellerName"] as const;
-
 /** PII fields in event entries */
 export const EVENT_ENTRY_PII_FIELDS = [
   "userDisplayName",

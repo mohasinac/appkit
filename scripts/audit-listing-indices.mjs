@@ -167,7 +167,6 @@ const REPO_TO_COLLECTION = {
   // schemas/firestore.ts (or schemas/rbac.ts), not guessed from the
   // repository's variable name.
   sessionRepository:           "sessions",
-  chatRepository:              "chatRooms",
   carouselRepository:          "carouselSlides",
   jobsRepository:              "jobs",
   offerRepository:             "offers",

@@ -26,7 +26,6 @@ export {
   REVIEW_PII_FIELDS,
   REVIEW_PII_INDEX_MAP,
   OFFER_PII_FIELDS,
-  CHAT_PII_FIELDS,
   EVENT_ENTRY_PII_FIELDS,
 } from "./pii-schemas";
 

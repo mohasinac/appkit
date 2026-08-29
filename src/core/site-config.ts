@@ -81,10 +81,6 @@ export const SITE_CONFIG: RuntimeSiteConfig = {
   },
 };
 
-export const FEATURE_FLAGS = {
-  CHAT_ENABLED: false,
-} as const;
-
 export function createSiteConfig(
   overrides: Partial<RuntimeSiteConfig>,
 ): RuntimeSiteConfig {

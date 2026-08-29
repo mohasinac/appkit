@@ -22,7 +22,6 @@ export type { CacheOptions, CacheEntry } from "./CacheManager";
 
 export {
   SITE_CONFIG,
-  FEATURE_FLAGS,
   createSiteConfig,
   resolveSiteConfig,
 } from "./site-config";

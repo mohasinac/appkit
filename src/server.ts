@@ -569,11 +569,7 @@ export { adminUpdateStoreStatus } from "./features/admin/server";
 // adminUpdateUser - Shared export for admin update user.
 export { adminUpdateUser } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createOrGetChatRoom - Helper for create or get chat room.
-export { createOrGetChatRoom } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// deleteChatRoom - Helper for delete chat room.
-export { deleteChatRoom } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteNotification - Helper for delete notification.
 export { deleteNotification } from "./features/admin/server";
@@ -584,8 +580,6 @@ export { getAdminAnalytics } from "./features/admin/server";
 // getAdminDashboardStats - Helper for get admin dashboard stats.
 export { getAdminDashboardStats } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getChatRooms - Helper for get chat rooms.
-export { getChatRooms } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSiteSettings - Helper for get site settings.
 export { getSiteSettings } from "./features/admin/server";
@@ -635,8 +629,6 @@ export { revokeSession } from "./features/admin/server";
 // revokeUserSessions - Shared export for revoke user sessions.
 export { revokeUserSessions } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendChatMessage - Shared export for send chat message.
-export { sendChatMessage } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateSiteSettings - Helper for update site settings.
 export { updateSiteSettings } from "./features/admin/server";

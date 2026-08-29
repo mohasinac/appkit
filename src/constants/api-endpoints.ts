@@ -12,7 +12,6 @@
 // ---------------------------------------------------------------------------
 
 export const CONFIG_ENDPOINTS = {
-  FEATURE_FLAGS: "/api/config/feature-flags",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -242,7 +241,6 @@ export const ADMIN_ENDPOINTS = {
   ADMIN_WISHLISTS: "/api/admin/wishlists",
   ADMIN_HISTORY: "/api/admin/history",
   NEWSLETTER_EXPORT: "/api/admin/newsletter/export",
-  FEATURE_FLAGS: "/api/admin/feature-flags",
   STORE_ADDRESSES: "/api/admin/store-addresses",
   CAROUSEL: "/api/admin/carousel",
   CAROUSEL_BY_ID: (id: string) => `/api/admin/carousel/${id}`,
