@@ -10,6 +10,7 @@
  */
 
 import { AuthenticationError, AuthorizationError } from "../errors";
+import { isAccountDisabled } from "../features/auth/role-predicates";
 import { ERROR_MESSAGES } from "../errors/messages";
 import type { UserRole } from "../features/auth/types";
 import type { JsonValue } from "../schemas/types";
@@ -76,7 +77,7 @@ export function requireActiveAccount(
   user: Record<string, JsonValue> | null | undefined,
 ): void {
   if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
-  if (user.disabled) throw new AuthorizationError(ERROR_MESSAGES.AUTH.ACCOUNT_DISABLED);
+  if (isAccountDisabled(user)) throw new AuthorizationError(ERROR_MESSAGES.AUTH.ACCOUNT_DISABLED);
 }
 
 /**

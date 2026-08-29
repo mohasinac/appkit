@@ -100,3 +100,36 @@ type EffectiveAdminCarrier = TesterCarrier;
 
 export const isEffectiveAdminUser = (input: EffectiveAdminCarrier): boolean =>
   isAdminUser(input) || (isTesterUser(input) && canTestAdminSurfaces(input));
+
+/**
+ * ── Is this account blocked? ─────────────────────────────────────────────────
+ *
+ * 🛑 There are TWO ban fields on `UserDocument` and, until 2026-08-29, no ban
+ * path wrote the one every guard reads.
+ *
+ *   `disabled`   — required, and read by EVERY server-side guard:
+ *                  auth-server, api-handler, authorization.requireActiveUser,
+ *                  Guards.requireActiveAccount, SessionContext.
+ *                  Its only writers, `userRepository.disable()/enable()`, had
+ *                  ZERO callers.
+ *   `isDisabled` — optional, and what `hardBanCascade` and the bulk-suspend
+ *                  route actually set, alongside the Firebase Auth record.
+ *
+ * The consequence was that **no ban terminated an existing session.** A hard
+ * ban set Firebase Auth `disabled: true`, which blocks a fresh login — and
+ * nothing else. Every authenticated request from a session cookie the user
+ * already held kept passing, because each guard consulted a Firestore field
+ * the ban never touched. Silent, and invisible to anyone testing a ban by
+ * logging out first.
+ *
+ * This predicate reads BOTH so already-banned accounts are enforced from the
+ * moment it ships, without waiting on a backfill. Every write path now sets
+ * both fields too; `isDisabled` is removed once the data is reconciled.
+ */
+type BanCarrier =
+  | { disabled?: boolean | null; isDisabled?: boolean | null }
+  | null
+  | undefined;
+
+export const isAccountDisabled = (input: BanCarrier): boolean =>
+  input?.disabled === true || input?.isDisabled === true;

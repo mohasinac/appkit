@@ -1,4 +1,5 @@
 import { normalizeError } from "../errors/normalize";
+import { isAccountDisabled } from "../features/auth/role-predicates";
 import { createApiHandlerFactory } from "../next";
 import { applyRateLimit } from "../security";
 import {
@@ -105,7 +106,7 @@ async function requireAuthFromRequest(request: Request): Promise<UserDocument> {
   if (!user) {
     throw new AuthenticationError(ERROR_MESSAGES.USER.NOT_AUTHENTICATED);
   }
-  if (user.disabled) {
+  if (isAccountDisabled(user)) {
     throw new AuthenticationError(ERROR_MESSAGES.AUTH.ACCOUNT_DISABLED);
   }
   return user;

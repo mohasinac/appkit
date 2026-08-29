@@ -7523,6 +7523,7 @@ export {
   isTesterUser,
   canTestAdminSurfaces,
   isStrictSellerUser,
+  isAccountDisabled,
 } from "./features/auth/role-predicates";
 // [SERVER-ONLY]-Safe in browser but intended for server routes.
 // sanitizeProductForPublic - Strip sellerId/sellerName/sellerEmail/ownerId before returning a product in a public response.

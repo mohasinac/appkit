@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useMemo } from "react";
+import { isAccountDisabled } from "../role-predicates";
 import { Button, Div, Heading, Row, Text } from "../../../ui";
 import type { UserRole } from "../types";
 
@@ -148,7 +149,7 @@ export function ProtectedRoute({
 
     if (user) {
       // Check account status
-      if (requireActiveAccount && user.disabled) {
+      if (requireActiveAccount && isAccountDisabled(user)) {
         return { isAuthorized: false, redirectPath: unauthorizedPath };
       }
 

@@ -111,6 +111,10 @@ export async function runHardBanCascade(
   // ban to take effect. Left unguarded so a failure here marks the whole job
   // failed (matches the original route's behavior of surfacing a 500).
   await userRepository.update(uid, {
+    // BOTH fields: every server-side guard reads `disabled`, and until
+    // 2026-08-29 no ban path wrote it — so a hard ban blocked a fresh login and
+    // left every existing session fully authenticated.
+    disabled: true,
     isDisabled: true,
     hardBanReason: reason,
     hardBannedAt: new Date(),
