@@ -38,7 +38,8 @@ const orderStatusSchema = z.enum(
 
 export const adminOrderUpdateSchema = z.object({
   status: annotate(orderStatusSchema, {
-    section: "status", sectionLabel: "Order", sectionRequired: true, quick: true, order: 1, row: "pair",
+    section: "status", sectionLabel: "Order", sectionRequired: true, quick: true,
+    order: 1, row: "pair", kind: "select",
   }),
   trackingNumber: annotate(z.string().trim().max(120).optional(), {
     section: "shipping", sectionLabel: "Shipping", order: 1, row: "pair",
@@ -58,7 +59,12 @@ export const adminOrderUpdateSchema = z.object({
       .positive("A refund must be greater than zero.")
       .max(10_000_000, "That looks like a typo — check the decimal point.")
       .optional(),
-    { section: "shipping", order: 3, row: "pair", kind: "number" },
+    {
+      section: "shipping", order: 3, row: "pair", kind: "number",
+      // Only meaningful on a refunding status, which is the condition the page
+      // already used to decide whether to render the input.
+      when: (v) => v.status === "refunded" || v.status === "return_requested",
+    },
   ),
   notes: annotate(z.string().trim().max(2000).optional(), {
     section: "shipping", order: 4, row: "full", kind: "textarea",

@@ -14,6 +14,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { toCurrency } from "../hooks/useAdminListingData";
 import { adminOrderUpdateSchema } from "../schemas/admin-ops-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { ValidationError } from "../../../errors/validation-error";
 
 // --- Types -------------------------------------------------------------------
 
@@ -106,7 +107,15 @@ export function AdminOrderEditorView({
   const [notes, setNotes] = React.useState("");
   const [refundAmount, setRefundAmount] = React.useState("");
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  /*
+   * 🛑 `reviewNote` belongs to the PAYMENT REVIEW actions, not to "Save
+   * changes". It is not in `adminOrderUpdateSchema` and never reaches the
+   * order-update payload — an admin who typed a note and pressed Save lost it
+   * silently. The label and the panel heading now say which buttons consume it;
+   * the structural fix (two forms, two surfaces) is the tabbing in W8.
+   */
   const [reviewNote, setReviewNote] = React.useState("");
+  const [reviewNoteError, setReviewNoteError] = React.useState<string | null>(null);
   const [isRequestingReupload, setIsRequestingReupload] = useState(false);
   const [isRejectingFraud, setIsRejectingFraud] = useState(false);
 
@@ -145,9 +154,21 @@ export function AdminOrderEditorView({
       };
       if (trackingNumber) payload.trackingNumber = trackingNumber;
       if (carrier) payload.carrier = carrier;
-      if (refundAmount) {
-        const amount = Math.round(parseFloat(refundAmount) * 100) / 100;
-        if (!isNaN(amount) && amount > 0) payload.refundAmount = amount;
+      if (refundAmount.trim()) {
+        /*
+         * Parsed through the schema, which coerces, requires > 0 and caps the
+         * magnitude. It used to be `parseFloat` guarded by `!isNaN && > 0` with
+         * no else — so typing "abc" or "-5" DROPPED the refund silently and the
+         * save reported success with nothing recorded. A refund that does not
+         * parse must stop the save, not disappear from it.
+         */
+        const parsed = adminOrderUpdateSchema.shape.refundAmount.safeParse(refundAmount);
+        if (!parsed.success) {
+          throw new ValidationError(
+            parsed.error.issues[0]?.message ?? "Enter the refund amount as a number.",
+          );
+        }
+        payload.refundAmount = Math.round((parsed.data as number) * 100) / 100;
       }
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId!), payload);
     },
@@ -157,6 +178,12 @@ export function AdminOrderEditorView({
       onClose();
     },
   });
+
+  /** Typing clears the "note required" error the two review actions raise. */
+  const handleReviewNoteChange = (value: string) => {
+    setReviewNote(value);
+    if (reviewNoteError) setReviewNoteError(null);
+  };
 
   const handleVerifyPayment = async () => {
     if (!orderId) return;
@@ -168,14 +195,21 @@ export function AdminOrderEditorView({
       onClose();
     } catch (err) {
       void normalizeError(err);
-      showToast((err as Error)?.message ?? "Failed to verify payment.", "error");
+      showToast("Failed to verify payment.", "error");
     } finally {
       setIsVerifyingPayment(false);
     }
   };
 
   const handleRequestReupload = async () => {
-    if (!orderId || !reviewNote.trim()) return;
+    if (!orderId) return;
+    // Both review actions used to `return` silently on an empty note, so the
+    // button did nothing and said nothing. Say what is missing.
+    if (!reviewNote.trim()) {
+      setReviewNoteError("Write a note explaining what the buyer needs to re-upload.");
+      return;
+    }
+    setReviewNoteError(null);
     setIsRequestingReupload(true);
     try {
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_PAYMENT_REUPLOAD(orderId), { note: reviewNote });
@@ -184,14 +218,20 @@ export function AdminOrderEditorView({
       onClose();
     } catch (err) {
       void normalizeError(err);
-      showToast((err as Error)?.message ?? "Failed to request re-upload.", "error");
+      // Authored copy. `err.message` is server text — Root Cause #86.
+      showToast("Failed to request re-upload.", "error");
     } finally {
       setIsRequestingReupload(false);
     }
   };
 
   const handleRejectFraud = async () => {
-    if (!orderId || !reviewNote.trim()) return;
+    if (!orderId) return;
+    if (!reviewNote.trim()) {
+      setReviewNoteError("Record why this payment is being rejected as fraud.");
+      return;
+    }
+    setReviewNoteError(null);
     setIsRejectingFraud(true);
     try {
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_PAYMENT_REJECT_FRAUD(orderId), { note: reviewNote });
@@ -200,7 +240,7 @@ export function AdminOrderEditorView({
       onClose();
     } catch (err) {
       void normalizeError(err);
-      showToast((err as Error)?.message ?? "Failed to reject payment.", "error");
+      showToast("Failed to reject payment.", "error");
     } finally {
       setIsRejectingFraud(false);
     }
@@ -334,14 +374,28 @@ export function AdminOrderEditorView({
                     </Text>
                     <Stack gap="xs">
                       <Label size="sm" weight="medium" color="primary">
-                        Review note (required for re-upload / reject)
+                        Review note
                       </Label>
+                      {/*
+                        Says which buttons consume it. It is NOT part of "Save
+                        changes" — that saves the order fields above and has
+                        never carried this note.
+                      */}
+                      <Text size="xs" color="muted">
+                        Sent with <Text as="span" size="xs" weight="medium">Request re-upload</Text> or{" "}
+                        <Text as="span" size="xs" weight="medium">Reject as fraud</Text> below. Not saved by
+                        &ldquo;Save changes&rdquo;.
+                      </Text>
                       <Textarea
                         value={reviewNote}
-                        onChange={(e) => setReviewNote(e.target.value)}
+                        onChange={(e) => handleReviewNoteChange(e.target.value)}
                         rows={2}
+                        aria-invalid={reviewNoteError ? true : undefined}
                         placeholder="e.g. Screenshot is blurry — amount not readable / UPI ID doesn't match order"
                       />
+                      {reviewNoteError && (
+                        <Text size="xs" color="error" role="alert">{reviewNoteError}</Text>
+                      )}
                     </Stack>
                     <Button
                       type="button"
@@ -357,7 +411,7 @@ export function AdminOrderEditorView({
                       action={ACTIONS.ADMIN["request-payment-reupload"]}
                       onClick={handleRequestReupload}
                       isLoading={isRequestingReupload}
-                      disabled={isRequestingReupload || !reviewNote.trim()}
+                      disabled={isRequestingReupload}
                       variant="secondary"
                       className="w-full"
                     />
@@ -366,7 +420,7 @@ export function AdminOrderEditorView({
                       action={ACTIONS.ADMIN["reject-payment-fraud"]}
                       onClick={handleRejectFraud}
                       isLoading={isRejectingFraud}
-                      disabled={isRejectingFraud || !reviewNote.trim()}
+                      disabled={isRejectingFraud}
                       variant="danger"
                       className="w-full"
                     />
