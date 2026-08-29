@@ -126,7 +126,20 @@ export function resolveFields(schema: ZodTypeAny): ResolvedField[] {
 export function groupFieldsBySection(fields: ResolvedField[]): Map<string, ResolvedField[]> {
   const bySection = new Map<string, ResolvedField[]>();
   for (const field of fields) {
-    if (field.meta.derived) continue; // server-owned — never an input
+    // A derived field is never a bare input, but "never an input" and "never
+    // shown" are different questions and the tier answers them differently:
+    //
+    //   t2-server / t3-mirror / t4-aggregate — the client cannot know the value
+    //     at edit time (an id, a timestamp, a rollup). Omitted entirely; a blank
+    //     read-only box for a value that does not exist yet is noise.
+    //   t1-derive — the client CAN compute it, live, from a field on this same
+    //     form (slug from title). Kept, and rendered read-only by renderField,
+    //     so the user can see what will be saved and cannot desync it from its
+    //     source by typing.
+    //
+    // Absent `tier` keeps the original behaviour of dropping the field: that is
+    // what every existing `derived: true` annotation was written against.
+    if (field.meta.derived && field.meta.tier !== "t1-derive") continue;
     const key = field.meta.section || "advanced";
     const bucket = bySection.get(key);
     if (bucket) bucket.push(field);
@@ -274,6 +287,32 @@ function renderField<T extends object>(
   const value = (ctx.values as Record<string, unknown>)[name];
   const set = (v: unknown) => ctx.onChange({ [name]: v } as Partial<T>);
 
+  /*
+   * A t1-derive field — a slug computed from a title — is a live PREVIEW of
+   * what will be saved, not an input.
+   *
+   * Read-only rather than merely discouraged, because the two are only equal
+   * while the user behaves: an editable slug beside its source lets them be
+   * desynced, and slug immutability after creation is this codebase's
+   * established convention (categories, brands, bundles — Root Cause #39).
+   * `required` is deliberately NOT passed on: the user cannot fill it, so
+   * marking it required would put a permanent asterisk on a field they are not
+   * allowed to touch, and the error summary would name it.
+   */
+  if (meta.derived) {
+    return (
+      <FieldInput
+        key={name}
+        name={name}
+        label={label}
+        hint={meta.help ?? "Generated automatically — not editable."}
+        readOnly
+        value={typeof value === "string" ? value : value == null ? "" : String(value)}
+        onChange={() => {}}
+      />
+    );
+  }
+
   switch (meta.kind) {
     case "toggle":
       return (
@@ -368,6 +407,10 @@ function renderField<T extends object>(
         <FieldInput
           key={name}
           name={name}
+          // Defaults to "text". Without the passthrough a password field
+          // renders in PLAINTEXT, and an email field gets the wrong mobile
+          // keyboard and no autofill — see FieldUiMeta.inputType.
+          type={meta.inputType ?? "text"}
           label={label}
           hint={meta.help}
           required={required}

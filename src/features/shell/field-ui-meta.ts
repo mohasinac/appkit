@@ -155,6 +155,19 @@ export interface FieldUiMeta {
 
   label?: string;
   help?: string;
+  /**
+   * The native `<input type>` for a `kind: "text"` field.
+   *
+   * `FieldKind` deliberately stays a small set of CONTROL kinds — it picks
+   * which primitive renders, and `email`/`password`/`tel`/`url` all render the
+   * same `<FieldInput>`. What they change is the browser's keyboard, autofill
+   * and masking, which is a property of the field rather than of the control.
+   *
+   * 🛑 Without this the generator emits a bare `<FieldInput>` with no `type`,
+   * so a password field renders **in plaintext**. Any schema with a password,
+   * an email or a phone number must set it.
+   */
+  inputType?: "text" | "email" | "password" | "tel" | "url" | "search";
 }
 
 /**

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { annotate } from "../../shell/field-ui-meta";
 import { mediaFieldSchema } from "../../media/types/index";
 import { MAX_ITEMS_PER_LOT } from "./firestore";
 
@@ -40,19 +41,49 @@ const listingTypeSchema = z.enum([
 ]);
 
 export const createShipmentSchema = z.object({
-  shipmentNumber: z.string().min(1, "Shipment number is required"),
-  supplierName: z.string().min(1, "Supplier name is required"),
-  originCountry: z.string().optional(),
-  status: shipmentStatusSchema,
-  trackingNumber: z.string().optional(),
-  carrier: z.string().optional(),
-  etaDate: z.union([z.string(), z.date()]).optional(),
-  receivedDate: z.union([z.string(), z.date()]).optional(),
-  notes: z.string().optional(),
-  customsTotal: z.number().min(0),
-  shippingTotal: z.number().min(0),
-  laborHoursSpent: z.number().min(0).optional(),
-  laborRatePerHour: z.number().min(0).optional(),
+  shipmentNumber: annotate(z.string().min(1, "Shipment number is required"), {
+    section: "basics", sectionLabel: "Shipment", sectionRequired: true,
+    order: 1, row: "pair", label: "Shipment number",
+  }),
+  supplierName: annotate(z.string().min(1, "Supplier name is required"), {
+    section: "basics", order: 2, row: "pair", label: "Supplier",
+  }),
+  originCountry: annotate(z.string().optional(), {
+    section: "basics", order: 3, row: "pair", label: "Origin country",
+  }),
+  status: annotate(shipmentStatusSchema, {
+    section: "basics", order: 4, row: "pair", kind: "select", label: "Status",
+  }),
+  trackingNumber: annotate(z.string().optional(), {
+    section: "logistics", sectionLabel: "Tracking & dates",
+    order: 1, row: "pair", label: "Tracking number",
+  }),
+  carrier: annotate(z.string().optional(), {
+    section: "logistics", order: 2, row: "pair", label: "Carrier",
+  }),
+  etaDate: annotate(z.union([z.string(), z.date()]).optional(), {
+    section: "logistics", order: 3, row: "pair", kind: "date", label: "ETA",
+  }),
+  receivedDate: annotate(z.union([z.string(), z.date()]).optional(), {
+    section: "logistics", order: 4, row: "pair", kind: "date", label: "Received on",
+  }),
+  customsTotal: annotate(z.number().min(0), {
+    section: "pricing", sectionLabel: "Landed cost",
+    order: 1, row: "pair", kind: "number", label: "Customs total (₹)",
+  }),
+  shippingTotal: annotate(z.number().min(0), {
+    section: "pricing", order: 2, row: "pair", kind: "number", label: "Shipping total (₹)",
+  }),
+  laborHoursSpent: annotate(z.number().min(0).optional(), {
+    section: "pricing", order: 3, row: "pair", kind: "number", label: "Labour hours",
+  }),
+  laborRatePerHour: annotate(z.number().min(0).optional(), {
+    section: "pricing", order: 4, row: "pair", kind: "number", label: "Labour rate (₹/hr)",
+  }),
+  notes: annotate(z.string().optional(), {
+    section: "detail", sectionLabel: "Notes", order: 1, row: "full", kind: "textarea",
+    label: "Notes",
+  }),
 });
 export const updateShipmentSchema = createShipmentSchema.partial();
 
