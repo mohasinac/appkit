@@ -227,7 +227,12 @@ export function AdminBundleEditorView({
       hasError = true;
     }
     if (price === null) {
-      setFieldError("price", BUNDLE_COPY.adminEditor.errors.priceInvalid);
+      // Keyed on the SCHEMA field name, not "price". The draft, the schema and
+      // the state all call it priceRupees; only the control was named "price",
+      // so the day the schema is actually executed (it is declared and never
+      // parsed today) applyZodIssues would write to priceRupees and this input
+      // would never show it.
+      setFieldError("priceRupees", BUNDLE_COPY.adminEditor.errors.priceInvalid);
       hasError = true;
     }
     if (hasError) return;
@@ -388,7 +393,7 @@ export function AdminBundleEditorView({
 
               <Stack gap="xs">
                 <FieldInput
-                  name="price"
+                  name="priceRupees"
                   label={BUNDLE_COPY.adminEditor.fields.priceLabel}
                   type="number"
                   inputMode="decimal"

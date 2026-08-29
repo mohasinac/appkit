@@ -296,10 +296,25 @@ export function AdminCouponEditorView({
         name,
         description: description || undefined,
         type,
+        /*
+         * Each of these is sent only for the types whose form actually shows
+         * it — the cap for a percentage, the minimum for percentage or fixed.
+         *
+         * They used to be sent unconditionally while their inputs rendered
+         * conditionally (lines 128 / 139), so a cap typed on a percentage
+         * coupon persisted after switching to free-shipping or buy-x-get-y,
+         * with nothing on screen to reveal it. Same defect the seller-side
+         * editor carried; the rule there is stated once in `coupon-form.ts`
+         * next to the `when` predicates it mirrors.
+         */
         discount: {
           value: discountValue !== "" ? Number(discountValue) : 0,
-          maxDiscount: maxDiscount !== "" ? Number(maxDiscount) : undefined,
-          minPurchase: minPurchase !== "" ? Number(minPurchase) : undefined,
+          maxDiscount:
+            type === "percentage" && maxDiscount !== "" ? Number(maxDiscount) : undefined,
+          minPurchase:
+            (type === "percentage" || type === "fixed") && minPurchase !== ""
+              ? Number(minPurchase)
+              : undefined,
         },
         ...(type === "buy_x_get_y" && {
           bxgy: {
