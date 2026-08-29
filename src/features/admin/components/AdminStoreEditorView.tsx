@@ -1,14 +1,38 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Checkbox, Details, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, StackedViewShell, Summary, Textarea, Toggle, useToast } from "../../../ui";
+import { Checkbox, Details, Div, SideDrawer, Span, Stack, Summary, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { StoreCapability } from "../../auth/permissions/constants";
 import { adminStoreUpdateSchema } from "../schemas/admin-editor-forms";
+import type { StoreStatus } from "../../stores/schemas/firestore";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { SectionForm, useSectionFormNav, buildSectionsFromSchema } from "../../shell";
+
+/** Matches `adminStoreUpdateSchema`; the draft always holds a concrete value. */
+interface AdminStoreFormValues {
+  [key: string]: JsonValue;
+  storeStatus: StoreStatus;
+  isVerified: boolean;
+  isFeatured: boolean;
+  suspensionReason: string;
+  capabilities: string[];
+  adminNotes: string;
+}
+
+const DEFAULT_CAPABILITIES = ["suggest_brands", "create_coupons"];
+
+/** Add or remove one capability, returning the new list. */
+function toggleCapability(current: string[], key: string): string[] {
+  const next = new Set(current);
+  if (next.has(key)) next.delete(key);
+  else next.add(key);
+  return Array.from(next);
+}
 
 // --- Types -------------------------------------------------------------------
 
@@ -66,6 +90,60 @@ const STATUS_OPTIONS = [
   { label: "Rejected", value: "rejected" },
 ];
 
+/**
+ * The grouped capability grid.
+ *
+ * Module scope, not inlined in the `renderers` map: three nested `.map`s inside
+ * a renderer inside a `useMemo` reach the nesting threshold, and the rule is
+ * right that it is unreadable there.
+ */
+function CapabilityPicker({
+  selected,
+  onToggle,
+}: {
+  selected: Set<string>;
+  onToggle: (key: string) => void;
+}) {
+  return (
+    <Stack gap="sm">
+      <Span size="sm" weight="medium" color="muted">
+        Capabilities
+        <Span size="xs" weight="normal" className="ml-2" color="muted">
+          ({selected.size} active)
+        </Span>
+      </Span>
+      <Div className="divide-y divide-[var(--appkit-color-border)]" rounded="xl" border="default">
+        {CAPABILITY_GROUPS.map((group) => (
+          <Details key={group.label} className="group">
+            <Summary paddingX="x-sm" paddingY="y-xs" weight="semibold" color="muted" layout="flex" align="center" justify="between" className="uppercase tracking-wide hover:bg-[var(--appkit-color-bg)] transition-colors">
+              <Span size="xs">{group.label}</Span>
+              <Span size="xs" weight="normal" className="normal-case" color="faint">
+                {group.caps.filter((c) => selected.has(c.key)).length}/{group.caps.length}
+              </Span>
+            </Summary>
+            <Div layout="grid" paddingY="y-xs-tall" className="grid-cols-2 gap-x-2 gap-y-1.5" surface="muted" padding="x-sm">
+              {group.caps.map((cap) => (
+                <label
+                  key={cap.key}
+                  className="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
+                >
+                  <Checkbox
+                    bare
+                    checked={selected.has(cap.key)}
+                    onChange={() => onToggle(cap.key)}
+                    className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"
+                  />
+                  {cap.label}
+                </label>
+              ))}
+            </Div>
+          </Details>
+        ))}
+      </Div>
+    </Stack>
+  );
+}
+
 
 // --- Component ---------------------------------------------------------------
 
@@ -82,44 +160,55 @@ export function AdminStoreEditorView({
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const [storeStatus, setStoreStatus] = React.useState(currentStatus ?? "pending");
-  const [adminNotes, setAdminNotes] = React.useState("");
-  const [isFeatured, setIsFeatured] = React.useState(currentIsFeatured ?? false);
-  const [isVerified, setIsVerified] = React.useState(currentIsVerified ?? false);
-  const [suspensionReason, setSuspensionReason] = React.useState("");
-  const [capabilities, setCapabilities] = React.useState<Set<string>>(
-    new Set(currentCapabilities ?? ["suggest_brands", "create_coupons"]),
+  const [values, setValues] = React.useState<AdminStoreFormValues>(() => ({
+    storeStatus: (currentStatus as StoreStatus) ?? "pending",
+    isVerified: currentIsVerified ?? false,
+    isFeatured: currentIsFeatured ?? false,
+    suspensionReason: "",
+    capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
+    adminNotes: "",
+  }));
+
+  const handleChange = React.useCallback(
+    (partial: Partial<AdminStoreFormValues>) => {
+      setValues((prev) => Object.assign({}, prev, partial));
+    },
+    [],
   );
 
-  const toggleCapability = (key: string) => {
-    setCapabilities((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key); else next.add(key);
-      return next;
-    });
-  };
-
   React.useEffect(() => {
-    if (open) {
-      setStoreStatus(currentStatus ?? "pending");
-      setAdminNotes("");
-      setIsFeatured(currentIsFeatured ?? false);
-      setIsVerified(currentIsVerified ?? false);
-      setSuspensionReason("");
-      setCapabilities(new Set(currentCapabilities ?? ["suggest_brands", "create_coupons"]));
-    }
+    if (!open) return;
+    setValues({
+      storeStatus: (currentStatus as StoreStatus) ?? "pending",
+      isVerified: currentIsVerified ?? false,
+      isFeatured: currentIsFeatured ?? false,
+      suspensionReason: "",
+      capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
+      adminNotes: "",
+    });
   }, [open, currentStatus, currentIsVerified, currentIsFeatured, currentCapabilities]);
 
   const saveMutation = useApiMutation({
     errorMessage: "Failed to update store.",
     mutationFn: async () => {
+      /*
+       * Built from the PARSED draft, so a field the form hid is a field the
+       * payload cannot carry.
+       *
+       * `suspensionReason` used to be typed into a live textarea and then
+       * dropped unless the status was exactly "suspended" — choose "rejected",
+       * write the reason, save, and it vanished with no feedback. Now the
+       * schema's `when` hides it outside suspension and its own superRefine
+       * REQUIRES it during suspension, so the two can no longer disagree.
+       */
+      const parsed = adminStoreUpdateSchema.parse(values);
       await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId!), {
-        storeStatus,
-        adminNotes: adminNotes || undefined,
-        isFeatured,
-        isVerified,
-        suspensionReason: storeStatus === "suspended" ? (suspensionReason || undefined) : undefined,
-        capabilities: Array.from(capabilities),
+        storeStatus: parsed.storeStatus,
+        adminNotes: parsed.adminNotes || undefined,
+        isFeatured: parsed.isFeatured,
+        isVerified: parsed.isVerified,
+        suspensionReason: parsed.suspensionReason || undefined,
+        capabilities: parsed.capabilities ?? [],
       });
     },
     onSuccess: () => {
@@ -129,103 +218,30 @@ export function AdminStoreEditorView({
     },
   });
 
-  const renderStatusSection = () => (
-    <Select
-      label="Store status"
-      options={STATUS_OPTIONS}
-      value={storeStatus}
-      onValueChange={setStoreStatus}
-    />
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<AdminStoreFormValues>(adminStoreUpdateSchema, {
+        options: { storeStatus: STATUS_OPTIONS },
+        renderers: {
+          capabilities: ({ values: v, onChange }) => (
+            <CapabilityPicker
+              selected={new Set((v.capabilities as string[]) ?? [])}
+              onToggle={(key) =>
+                onChange({ capabilities: toggleCapability((v.capabilities as string[]) ?? [], key) })
+              }
+            />
+          ),
+        },
+      }),
+    [],
   );
 
-  const renderNotesSection = () => (
-    <Stack gap="xs">
-      <Label>Admin notes (optional)</Label>
-      <Textarea
-        value={adminNotes}
-        onChange={(e) => setAdminNotes(e.target.value)}
-        rows={3}
-        placeholder="e.g. Reason for suspension, approval notes…"
-      />
-    </Stack>
-  );
-
-  const renderTogglesSection = () => (
-    <>
-      <Toggle label="Verified store" checked={isVerified} onChange={setIsVerified} />
-      <Toggle label="Featured store" checked={isFeatured} onChange={setIsFeatured} />
-    </>
-  );
-
-  const renderSuspensionSection = () =>
-    storeStatus === "suspended" ? (
-      <Stack gap="xs">
-        <Label>Suspension reason (optional)</Label>
-        <Textarea
-          value={suspensionReason}
-          onChange={(e) => setSuspensionReason(e.target.value)}
-          rows={2}
-          placeholder="e.g. Policy violation, fraudulent activity…"
-        />
-      </Stack>
-    ) : null;
-
-  const renderCapabilitiesSection = () => (
-    <Stack gap="sm">
-      <Span size="sm" weight="medium" color="muted">
-        Capabilities
-        <Span size="xs" weight="normal" className="ml-2" color="muted">
-          ({capabilities.size} active)
-        </Span>
-      </Span>
-      <Div className="divide-y divide-zinc-100 divide-[var(--appkit-color-border)]" rounded="xl" border="default">
-        {CAPABILITY_GROUPS.map((group) => {
-          const checked = group.caps.filter((c) => capabilities.has(c.key)).length;
-          return (
-            <Details key={group.label} className="group">
-              <Summary paddingX="x-sm" paddingY="y-xs" weight="semibold" color="muted" layout="flex" align="center" justify="between" className="uppercase tracking-wide hover:bg-[var(--appkit-color-bg)] transition-colors">
-                <Span size="xs">{group.label}</Span>
-                <Span size="xs" weight="normal" className="normal-case" color="faint">
-                  {checked}/{group.caps.length}
-                </Span>
-              </Summary>
-              <Div layout="grid" paddingY="y-xs-tall" className="grid-cols-2 gap-x-2 gap-y-1.5" surface="muted" padding="x-sm">
-                {group.caps.map((cap) => (
-                  <label
-                    key={cap.key}
-                    className="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
-                  >
-                    <Checkbox
-                      bare
-                      checked={capabilities.has(cap.key)}
-                      onChange={() => toggleCapability(cap.key)}
-                      className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"
-                    />
-                    {cap.label}
-                  </label>
-                ))}
-              </Div>
-            </Details>
-          );
-        })}
-      </Div>
-    </Stack>
-  );
-
-  const renderActionsSection = () => (
-    <FormActions align="right">
-      <Button type="button" variant="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        type="submit"
-        isLoading={saveMutation.isPending}
-        disabled={!storeId || saveMutation.isPending}
-      >
-        Save changes
-      </Button>
-    </FormActions>
-  );
+  const nav = useSectionFormNav(sections, values);
+  const { shellCtx } = useFormShellState(adminStoreUpdateSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
   return (
     <SideDrawer
@@ -233,25 +249,24 @@ export function AdminStoreEditorView({
       onClose={onClose}
       title={storeName ? `Manage: ${storeName}` : "Manage Store"}
     >
-      <Form schema={adminStoreUpdateSchema}
-        onSubmit={(e) => {
-          e.preventDefault();
-          saveMutation.mutate();
-        }} padding="md">
-      <FormErrorSummary />
-        <StackedViewShell
-          portal="admin"
-          className="space-y-4"
-          sections={[
-            renderStatusSection,
-            renderNotesSection,
-            renderTogglesSection,
-            renderSuspensionSection,
-            renderCapabilitiesSection,
-            renderActionsSection,
-          ]}
-        />
-      </Form>
+      <FormShellContext.Provider value={shellCtx}>
+        <Div padding="md">
+          <FormErrorSummary />
+          <SectionForm<AdminStoreFormValues>
+            sections={sections}
+            values={values}
+            onChange={handleChange}
+            onSubmit={() => saveMutation.mutate()}
+            schema={adminStoreUpdateSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            isLoading={saveMutation.isPending}
+            submitLabel="Save changes"
+            onCancel={onClose}
+            cancelLabel="Cancel"
+          />
+        </Div>
+      </FormShellContext.Provider>
     </SideDrawer>
   );
 }

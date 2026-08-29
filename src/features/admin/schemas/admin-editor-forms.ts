@@ -28,6 +28,7 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
+import { StoreStatusValues, type StoreStatus } from "../../stores/schemas/firestore";
 
 const PHONE_RE = /^(\+?91[-\s]?)?[6-9]\d{9}$/;
 /** Indian PIN: six digits, never starting at zero. */
@@ -97,17 +98,46 @@ export type AdminAddressFormValues = z.infer<typeof adminAddressFormSchema>;
  */
 export const adminStoreUpdateSchema = z
   .object({
-    storeStatus: annotate(z.enum(["pending", "active", "suspended", "closed"]), {
-      section: "standing", sectionLabel: "Store standing", sectionRequired: true, quick: true, order: 1, row: "pair",
-    }),
+    /*
+     * 🛑 DERIVED from `StoreStatusValues`, never hand-written.
+     *
+     * This was `["pending","active","suspended","closed"]` — and `"closed"` is
+     * not a store status. The real union (`stores/schemas/firestore.ts:57`) is
+     * pending · active · suspended · **rejected**, which is what
+     * `AdminStoreEditorView`'s dropdown has always offered and what the API
+     * has always stored. So the schema declared a value nothing can produce and
+     * omitted the one the UI actually sends.
+     *
+     * It went unnoticed because the `<Form schema>` prop was never parsed —
+     * selecting "Rejected" reached the API unchecked. Under `<SectionForm>`,
+     * which parses on every change, it would have become a hard failure on a
+     * legitimate value. A fifth hand-written copy of this union is exactly how
+     * that happens again.
+     */
+    storeStatus: annotate(
+      z.enum(
+        Object.values(StoreStatusValues) as [StoreStatus, ...StoreStatus[]],
+      ),
+      {
+        section: "standing", sectionLabel: "Store standing", sectionRequired: true,
+        quick: true, order: 1, row: "pair", kind: "select",
+      },
+    ),
     isVerified: annotate(z.boolean().optional(), {
       section: "standing", order: 2, row: "quarter",
     }),
     isFeatured: annotate(z.boolean().optional(), {
       section: "standing", order: 3, row: "quarter",
     }),
+    /*
+     * `when` mirrors the superRefine below, which is what stops the two from
+     * disagreeing. The page used to keep this textarea live at all times and
+     * then drop its value unless the status was exactly "suspended" — choose
+     * "rejected", write the reason, save, and it vanished silently.
+     */
     suspensionReason: annotate(z.string().trim().max(500).optional(), {
       section: "standing", order: 4, row: "full", kind: "textarea",
+      when: (v) => v.storeStatus === "suspended",
     }),
     capabilities: annotate(z.array(z.string().min(1)).max(50).optional(), {
       section: "capabilities", sectionLabel: "Capabilities", order: 1, row: "full", kind: "list",
