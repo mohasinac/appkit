@@ -214,8 +214,17 @@ export function AdminAdEditorView({
           imageUrl: imageUrl || undefined,
           ctaLabel: ctaLabel || undefined,
           ctaHref: ctaHref || undefined,
-          adsenseSlot: adsenseSlot || undefined,
-          thirdPartyUrl: thirdPartyUrl || undefined,
+          /*
+           * Provider-specific, and sent only for the provider whose input is
+           * actually rendered.
+           *
+           * Both used to go out unconditionally while their inputs unmount on a
+           * provider switch — so an ad created as AdSense and switched to
+           * "manual" shipped carrying a stale `adsenseSlot` that nothing on
+           * screen could show or clear.
+           */
+          adsenseSlot: provider === "adsense" ? adsenseSlot || undefined : undefined,
+          thirdPartyUrl: provider === "thirdParty" ? thirdPartyUrl || undefined : undefined,
         },
       };
 
