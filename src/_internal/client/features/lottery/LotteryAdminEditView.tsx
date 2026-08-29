@@ -16,7 +16,6 @@ import {
 } from "../../../../ui";
 import { Form, FieldInput, FieldSelect, Input } from "../../../../ui";
 import type { UseFormShellStateResult } from "../../../../ui/forms";
-import { lotteryConfigFormSchema } from "../../../shared/features/lottery/config-form";
 import { lotteryConfigWriteSchema } from "../../../../features/lottery/schemas/config-write";
 import type { LotteryConfigWriteInput } from "../../../../features/lottery/schemas/config-write";
 import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
@@ -129,7 +128,18 @@ export function LotteryAdminEditView({
             slotNumber: s.slotNumber,
             name: s.name,
             image: s.image?.trim() || undefined,
-            price: s.price,
+            /*
+             * Only under VARIABLE pricing, because that is the only mode where
+             * the Price column is rendered.
+             *
+             * It used to be sent for every slot in both modes, so a per-slot
+             * price loaded from `initialData` survived a switch to uniform —
+             * unreachable on screen, still written on save, and still there if
+             * the admin switched back. Under uniform pricing the price of a
+             * slot is `uniformPrice`, so a per-slot figure is not just hidden,
+             * it is meaningless.
+             */
+            price: pricingMode === "variable" ? s.price : 0,
           })),
           pricingMode,
           uniformPrice:
@@ -223,7 +233,13 @@ export function LotteryAdminEditView({
   return (
     <Container>
       <Section>
-        <Form schema={lotteryConfigFormSchema} onSubmit={(e) => e.preventDefault()} className="space-y-6">
+        {/*
+          The schema this form is VALIDATED against, so the two agree. It used
+          to declare lotteryConfigFormSchema here and parse
+          lotteryConfigWriteSchema in the submit handler — two schemas, one of
+          which never ran, which is why its free-lottery rule sat unenforced.
+        */}
+        <Form schema={lotteryConfigWriteSchema} onSubmit={(e) => e.preventDefault()} className="space-y-6">
           {({ clearErrors }: UseFormShellStateResult) => (
             <Stack gap="xl">
               <FormErrorSummary />

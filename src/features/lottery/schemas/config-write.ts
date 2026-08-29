@@ -82,10 +82,26 @@ export const lotteryConfigWriteSchema = z
     (c) => new Set(c.slots.map((s) => s.slotNumber)).size === c.slots.length,
     { message: "Two slots share a slot number.", path: ["slots"] },
   )
-  .refine((c) => c.pricingMode !== "uniform" || typeof c.uniformPrice === "number", {
-    message: "Uniform pricing needs a price.",
-    path: ["uniformPrice"],
-  });
+  /*
+   * ABOVE zero, not merely present.
+   *
+   * This read `typeof c.uniformPrice === "number"`, so `0` passed — and the
+   * editor's payload builds the value as
+   * `Math.round(parseFloat(uniformPrice) * 100) / 100 || 0`, which turns
+   * "12,00" or "twelve" into exactly that. A typo became a FREE lottery,
+   * indistinguishable from deliberately pricing one at zero.
+   *
+   * `lotteryConfigFormSchema` has carried the correct `> 0` rule all along and
+   * has never executed: the editor passes it to `<Form>` and parses THIS schema
+   * instead. The rule belongs on the schema that runs.
+   */
+  .refine(
+    (c) => c.pricingMode !== "uniform" || (typeof c.uniformPrice === "number" && c.uniformPrice > 0),
+    {
+      message: "Set a slot price above zero, or switch to variable pricing.",
+      path: ["uniformPrice"],
+    },
+  );
 
 export type LotteryConfigWriteInput = z.infer<typeof lotteryConfigWriteSchema>;
 

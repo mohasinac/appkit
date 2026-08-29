@@ -139,8 +139,14 @@ export function LotteryPullForm({
             onChange={(v: string) => { setPaymentTime(v); clearErrors(); }}
           />
 
+          {/*
+            Named for the SCHEMA key, not the local state variable. The payload
+            sends `purchasedItemNumber`, so an error keyed on that path — which
+            is what applyZodIssues and FormErrorSummary produce — had no control
+            to land on while this said `itemNumber`.
+          */}
           <FieldInput
-            name="itemNumber"
+            name="purchasedItemNumber"
             label={`Slot Number (1 – ${totalSlots})`}
             type="number"
             placeholder={`Enter a number between 1 and ${totalSlots}`}
@@ -176,7 +182,7 @@ export function LotteryPullForm({
                 valid = false;
               }
               if (isNaN(num) || num < 1 || num > totalSlots) {
-                setFieldError("itemNumber", `Slot number must be between 1 and ${totalSlots}`);
+                setFieldError("purchasedItemNumber", `Slot number must be between 1 and ${totalSlots}`);
                 valid = false;
               }
               if (!userPhone || userPhone.replace(/\D/g, "").length < 10) {
