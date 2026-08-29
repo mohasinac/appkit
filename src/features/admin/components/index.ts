@@ -167,8 +167,6 @@ export type {
   AdminTopProductsTableLabels,
 } from "./analytics/AdminTopProductsTable";
 export { AdminPageViewsReportView } from "./analytics/AdminPageViewsReportView";
-export { AdminFeatureFlagsView } from "./AdminFeatureFlagsView";
-export type { AdminFeatureFlagsViewProps } from "./AdminFeatureFlagsView";
 export { AdminNewsletterView } from "./AdminNewsletterView";
 export type { AdminNewsletterViewProps } from "./AdminNewsletterView";
 export { AdminContactView } from "./AdminContactView";

@@ -8,7 +8,7 @@ import { ALL_LISTING_TYPES } from "../../_internal/shared/listing-types/feature-
  * W1-43 — useListingTypeFlags
  *
  * Returns the enabled-state for each listing type as configured in
- * `siteSettings.featureFlags.listingTypes`. Consumers should hide nav items,
+ * `siteSettings.listings.listingTypes`. Consumers should hide nav items,
  * filter TypeDropdown options, and reject API requests for disabled types.
  *
  * Defaults to all-enabled when settings haven't loaded yet — match the
@@ -31,10 +31,10 @@ export type ListingTypeFlags = Record<ListingType, boolean> & {
 
 export function useListingTypeFlags(): ListingTypeFlags {
   const { data } = useSiteSettings<{
-    featureFlags?: { listingTypes?: ListingTypeFlagsShape };
+    listings?: { listingTypes?: ListingTypeFlagsShape };
   }>();
 
-  const lt = data?.featureFlags?.listingTypes;
+  const lt = data?.listings?.listingTypes;
 
   // A type is disabled only when EXPLICITLY set to false — a missing flag (or
   // settings that haven't loaded) means enabled.

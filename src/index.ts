@@ -3494,8 +3494,6 @@ export type { BugHunterLeaderboardViewProps } from "./features/tester/index";
 export { AdminNavEditorView } from "./features/admin/index";
 export type { AdminNavEditorViewProps, NavItemData } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminFeatureFlagsView - Component for admin feature flags view.
-export { AdminFeatureFlagsView } from "./features/admin/index";
 // AdminNewsletterView - Admin view for newsletter subscribers.
 export { AdminNewsletterView } from "./features/admin/index";
 // AdminContactView - Admin view for contact form submissions.
@@ -3700,8 +3698,6 @@ export { AdminSupportTicketDetailView } from "./features/admin/index";
 // DrawerFormFooter - Shared export for drawer form footer.
 export { DrawerFormFooter } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// FEATURE_FLAG_META - Constant used across modules.
-export { FEATURE_FLAG_META } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // NOTIFICATIONS_COLLECTION - Constant used across modules.
 export { NOTIFICATIONS_COLLECTION } from "./features/admin/index";
@@ -3795,8 +3791,6 @@ export type { AdminDashboardViewProps } from "./features/admin/index";
 // AdminFaqsViewProps - Type contract for admin faqs view props.
 export type { AdminFaqsViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AdminFeatureFlagsViewProps - Type contract for admin feature flags view props.
-export type { AdminFeatureFlagsViewProps } from "./features/admin/index";
 export type { AdminNewsletterViewProps } from "./features/admin/index";
 export type { AdminContactViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -3927,11 +3921,7 @@ export type { AdminScammerEditorViewProps } from "./features/admin/index";
 // DrawerFormFooterProps - Type contract for drawer form footer props.
 export type { DrawerFormFooterProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FeatureFlagKey - Type contract for feature flag key.
-export type { FeatureFlagKey } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FeatureFlagMeta - Type contract for feature flag meta.
-export type { FeatureFlagMeta } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FeaturedResult - Type contract for featured result.
 export type { FeaturedResult } from "./features/admin/index";

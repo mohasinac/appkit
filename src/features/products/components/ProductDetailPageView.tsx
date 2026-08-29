@@ -84,9 +84,10 @@ export interface ProductDetailPageViewProps {
   /**
    * Render prop for offer UI. Receives the resolved product fields.
    *
-   * Called only when all three offer gates pass: the site-wide
-   * `featureFlags.offers`, the listing type's `canMakeOffer` capability, and the
-   * seller's own `product.allowOffers` opt-in.
+   * Called only when both offer gates pass: the listing type's `canMakeOffer`
+   * capability and the seller's own `product.allowOffers` opt-in. The site-wide
+   * `featureFlags.offers` kill switch went with the rest of that group on
+   * 2026-08-29 — the two gates that remain are the ones a seller actually sets.
    */
   renderOfferAction?: (opts: {
     productId: string;
@@ -356,10 +357,6 @@ export async function ProductDetailPageView({
       route: "/products/[slug]", key: "product.siteSettings", fallback: null,
     }),
   ]);
-
-  // Site-wide kill switch. Absent/unreadable settings mean ON — a failed
-  // settings read must not silently remove a working feature.
-  const offersEnabled = siteSettings?.featureFlags?.offers !== false;
 
   const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
 
@@ -680,7 +677,7 @@ export async function ProductDetailPageView({
                     </Button>
                   </>
                 )}
-                {allowOffers && offerableType && offersEnabled && price !== null && renderOfferAction?.({
+                {allowOffers && offerableType && price !== null && renderOfferAction?.({
                   productId: product.id,
                   price,
                   currency,

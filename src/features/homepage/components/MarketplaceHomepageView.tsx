@@ -7,7 +7,20 @@ import { safeRead } from "../../../errors/safe-read";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
-import { filterSectionsByFeatureFlags } from "../../../_internal/shared/features/homepage/section-gate";
+import { isListingTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
+import type { ListingType } from "../../products/types/index";
+import type { SectionType } from "../schemas/firestore";
+
+/**
+ * Homepage sections that advertise a specific listing type, and must therefore
+ * disappear when the site stops offering it. A section type absent from this
+ * map always renders.
+ */
+const HOMEPAGE_SECTION_LISTING_TYPE: Partial<Record<SectionType, ListingType>> = {
+  auctions: "auction",
+  "pre-orders": "pre-order",
+  "prize-draws": "prize-draw",
+};
 import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
 import { listFeaturedBundles } from "../../../_internal/server/features/bundles/data";
@@ -78,13 +91,19 @@ export async function MarketplaceHomepageView({
     }),
   ]);
 
-  // Respect the feature flags. This gate existed but lived inside a function
-  // with no call sites, so until 2026-08-24 turning off `auctions` hid auctions
-  // everywhere EXCEPT the homepage, which went on advertising them.
-  const enabledSections = filterSectionsByFeatureFlags(
-    allSections,
-    siteSettings?.featureFlags,
-  );
+  // A homepage section must not advertise a listing type the site does not
+  // offer. This gate previously read `featureFlags.{auctions,preOrders,events,
+  // blog}`; that group was deleted on 2026-08-29, and only the listing-type
+  // half of it had a real successor (`settings.listings.listingTypes`).
+  //
+  // So auctions / pre-orders / prize-draws are gated by the same control that
+  // hides them on every other surface, and the `events` / `blog` sections are
+  // now unconditional — there is no product control for "we don't run events",
+  // and there never was one that anything but this line read.
+  const enabledSections = allSections.filter((section) => {
+    const gated = HOMEPAGE_SECTION_LISTING_TYPE[section.type as SectionType];
+    return !gated || isListingTypeEnabled(gated, siteSettings);
+  });
 
   // Collect live metric requests from all enabled stats sections
   const liveStatRequests: import("../lib/live-stats").LiveStatRequest[] = [];

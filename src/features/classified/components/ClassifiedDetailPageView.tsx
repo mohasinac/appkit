@@ -54,9 +54,8 @@ export interface ClassifiedDetailPageViewProps {
    *
    * Deliberately the SAME shape `ProductDetailPageView.renderOfferAction` uses,
    * so both detail views share one contract and both consumer pages share one
-   * snippet. Called only when all three offer gates pass: `featureFlags.offers`,
-   * the classified type's `canMakeOffer` capability, and the seller's own
-   * `allowOffers` opt-in.
+   * snippet. Called only when both offer gates pass: the classified type's
+   * `canMakeOffer` capability and the seller's own `allowOffers` opt-in.
    */
   renderOfferAction?: (opts: {
     productId: string;
@@ -132,7 +131,6 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
   // `canMakeOffer` is true for them — but the seller still opts in per listing
   // (`allowOffers`, usually alongside `classified.negotiable`).
   const offersAvailable =
-    siteSettings?.featureFlags?.offers !== false &&
     canMakeOffer("classified") &&
     p.allowOffers === true &&
     price !== null &&

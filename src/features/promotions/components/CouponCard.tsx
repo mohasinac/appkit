@@ -7,7 +7,6 @@ import { Badge, BaseListingCard, Button, ConfirmDeleteModal, Div, IconButton, Ro
 import type { JsonValue } from "../../../schemas/types";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
-import { useFeatureFlags } from "../../../client/api/useFeatureFlags";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const CLS_TOGGLE_ON = "h-4 w-4 text-success dark:text-success";
@@ -186,12 +185,14 @@ export function CouponCard({
   const discountLabel = formatDiscount(n, labels);
   const hasAdminActions = Boolean(onEdit || onToggleActive || onDelete);
   // Show Claim by default on public surfaces; hide automatically when this
-  // card is being rendered with admin/CRUD actions wired. Also hidden
-  // whenever the COUPONS feature is disabled — the claim endpoint 404s in
-  // that state, and previously that 404 was silently swallowed (see
-  // handleClaim below) instead of the CTA simply not being offered.
-  const { flags: featureFlags } = useFeatureFlags();
-  const showClaim = (hideClaim === undefined ? !hasAdminActions : !hideClaim) && featureFlags.COUPONS === true;
+  // card is being rendered with admin/CRUD actions wired.
+  //
+  // This also consulted the `COUPONS` env feature flag, because the claim
+  // endpoint 404'd when it was off. Both flag systems were deleted 2026-08-29 —
+  // the flag was `true` in every environment, and the endpoint now answers
+  // unconditionally under its own auth — so the fetch that backed this check
+  // is gone too, along with a network request on every coupon card render.
+  const showClaim = hideClaim === undefined ? !hasAdminActions : !hideClaim;
 
   const handleCopy = () => {
     if (!n.code) return;

@@ -447,32 +447,19 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     featuredSlotFee: 999,
     promotedSlotFee: 499,
   },
-  featureFlags: {
-    chats: true,
-    // Real per-SMS cost via the Firebase phone-auth quota — the one flag
-    // that stays off by default; every other flag is enabled.
-    smsVerification: false,
-    translations: true,
-    wishlists: true,
-    auctions: true,
-    reviews: true,
-    events: true,
-    blog: true,
-    coupons: true,
-    notifications: true,
-    sellerRegistration: true,
-    preOrders: true,
-    offers: true,
-    adminCheckoutBypass: false,
+  // Was `featureFlags` — 14 toggles of which 11 had no reader. Deleted
+  // 2026-08-29; the two that were never flags live here instead.
+  listings: {
     listingTypes: {
       standard: true,
       auction: true,
       "pre-order": true,
       "prize-draw": true,
-      bundle: true,
       classified: true,
       "digital-code": true,
       live: true,
+      art: true,
+      stickers: true,
     },
     categoryTypes: {
       category: true,

@@ -1152,21 +1152,14 @@ export const SITE_SETTINGS_FIELDS = {
   EMAIL_SETTINGS: "emailSettings",
   SEO: "seo",
   FEATURES: "features",
-  FEATURE_FLAGS: "featureFlags",
-  FEATURE_FLAGS_FIELDS: {
-    CHATS: "featureFlags.chats",
-    SMS_VERIFICATION: "featureFlags.smsVerification",
-    TRANSLATIONS: "featureFlags.translations",
-    WISHLISTS: "featureFlags.wishlists",
-    AUCTIONS: "featureFlags.auctions",
-    REVIEWS: "featureFlags.reviews",
-    EVENTS: "featureFlags.events",
-    BLOG: "featureFlags.blog",
-    COUPONS: "featureFlags.coupons",
-    NOTIFICATIONS: "featureFlags.notifications",
-    SELLER_REGISTRATION: "featureFlags.sellerRegistration",
-    PRE_ORDERS: "featureFlags.preOrders",
-    OFFERS: "featureFlags.offers",
+  // FEATURE_FLAGS / FEATURE_FLAGS_FIELDS were deleted 2026-08-29 along with the
+  // group itself — 11 of its 14 keys had no reader anywhere. The survivors that
+  // were never flags live under LISTINGS below; the two with real behaviour
+  // moved to `payment.smsVerification` and `payment.adminCheckoutBypass`.
+  LISTINGS: "listings",
+  LISTINGS_FIELDS: {
+    LISTING_TYPES: "listings.listingTypes",
+    CATEGORY_TYPES: "listings.categoryTypes",
   },
   LEGAL_PAGES: "legalPages",
   SHIPPING: "shipping",

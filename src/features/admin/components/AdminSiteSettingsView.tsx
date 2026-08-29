@@ -13,7 +13,6 @@ import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
-import { FEATURE_FLAG_META, type FeatureFlagKey } from "../schemas/firestore";
 import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
 import {
   ThemeManagerView,
@@ -289,8 +288,6 @@ export function AdminSiteSettingsView({
   const [codEnabled, setCodEnabled] = React.useState(true);
   const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
 
-  // Feature flags — generic, data-driven off FEATURE_FLAG_META (12 boolean platform flags).
-  const [featureFlags, setFeatureFlags] = React.useState<Record<string, boolean>>({});
   // Per-listing-type / per-category-type visibility flags.
   const [listingTypeFlags, setListingTypeFlags] = React.useState<Record<string, boolean>>({});
   const [categoryTypeFlags, setCategoryTypeFlags] = React.useState<Record<string, boolean>>({});
@@ -517,9 +514,8 @@ export function AdminSiteSettingsView({
     setCodEnabled(s.payment?.codEnabled ?? true);
     setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
 
-    setFeatureFlags((s.featureFlags as Record<string, boolean> | undefined) ?? {});
-    setListingTypeFlags((s.featureFlags?.listingTypes as Record<string, boolean> | undefined) ?? {});
-    setCategoryTypeFlags((s.featureFlags?.categoryTypes as Record<string, boolean> | undefined) ?? {});
+    setListingTypeFlags((s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {});
+    setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
     setNotifEmailTypes(s.notificationChannels?.email?.types ?? []);
     setNotifWhatsappTypes(s.notificationChannels?.whatsapp?.types ?? []);
 
@@ -734,12 +730,11 @@ export function AdminSiteSettingsView({
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
-      // Spreading the raw `featureFlags` object captured at load (not hand-picking keys)
-      // preserves `adminCheckoutBypass` through this save even though it's not editable
-      // here — Firestore's update() replaces nested maps wholesale, so omitting a key
-      // here would silently wipe it (it's edited exclusively via its own dedicated,
-      // audit-logged route — see the note above the Feature Flags tab).
-      featureFlags: { ...featureFlags, listingTypes: listingTypeFlags, categoryTypes: categoryTypeFlags },
+      // Both keys are always sent: Firestore's update() replaces a nested map
+      // wholesale, so omitting one here would wipe it. The load-time spread this
+      // used to carry existed to preserve `adminCheckoutBypass`, which is now a
+      // permission rather than a stored flag.
+      listings: { listingTypes: listingTypeFlags, categoryTypes: categoryTypeFlags },
       notificationChannels: {
         inApp: { enabled: true, readOnly: true },
         email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority, types: notifEmailTypes },
@@ -818,7 +813,7 @@ export function AdminSiteSettingsView({
               ["procurement", "⑮ Procurement"],
               ["emi", "⑯ EMI"],
               ["gst", "⑰ GST"],
-              ["featureflags", "⑱ Feature Flags"],
+              ["listings", "⑱ Listings"],
             ].map(([value, label]) => (
               <TabsTrigger key={value} value={value}>
                 {label}
@@ -1385,31 +1380,23 @@ export function AdminSiteSettingsView({
             </Form>
           </TabsContent>
 
-          {/* ⑱ Feature Flags */}
-          <TabsContent value="featureflags">
+          {/* ⑱ Listings — what the marketplace offers */}
+          <TabsContent value="listings">
             <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
               <Text size="xs" color="muted">
-                Site-wide platform feature toggles. Disabling a flag hides that feature's nav entries
-                and pages — existing data is untouched, it just becomes unreachable until re-enabled.
+                Which listing and category types the marketplace offers. A disabled type is hidden
+                from every browse surface and rejected on create and add-to-cart — existing data is
+                untouched, it just becomes unreachable until re-enabled.
               </Text>
-              <Grid cols={2} gap="md">
-                {FEATURE_FLAG_META.map((flag) => (
-                  <Stack key={flag.key} gap="xs">
-                    <Toggle
-                      label={`${flag.icon} ${flag.labelKey}`}
-                      checked={featureFlags[flag.key] ?? false}
-                      onChange={(v) => setFeatureFlags((prev) => ({ ...prev, [flag.key]: v }))}
-                    />
-                    <Text size="xs" color="muted">{flag.descKey}</Text>
-                  </Stack>
-                ))}
-              </Grid>
 
-              {/* Admin checkout bypass is intentionally NOT editable here — it has its
-                  own dedicated, audit-logged toggle on the Admin Dashboard page (Quick
-                  Actions → Dev Settings), which calls a route that logs actorUid+reason
-                  on every use. audit-checkout-bypass.mjs enforces that flag exclusively
-                  through that route; a second write path here would violate it. */}
+              {/* This tab was "Feature Flags" until 2026-08-29 and carried 12 more
+                  toggles. Eleven of them had no reader anywhere in the codebase, so
+                  an admin could switch "Wishlists" or "Reviews" off and watch
+                  nothing happen; the twelfth (`offers`) is now governed by the two
+                  gates a person actually sets — the listing type's capability and
+                  the seller's own per-listing opt-in. What is left here are the two
+                  controls that were never flags: standing decisions about the
+                  catalogue. */}
 
               <Stack gap="xs">
                 <Text size="sm" weight="semibold">Listing types</Text>

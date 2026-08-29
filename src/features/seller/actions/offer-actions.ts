@@ -72,22 +72,16 @@ export async function makeOffer(
   const { productId, offerAmount, buyerNote } = input;
 
   /**
-   * Three independent gates, checked in widening-to-narrowing order. Only
-   * `makeOffer` is guarded — switching the site flag off must stop NEW offers
-   * without stranding in-flight ones, so accept/decline/counter/withdraw and
-   * `checkoutOffer` deliberately stay open.
+   * Two independent gates, checked in widening-to-narrowing order: the listing
+   * type's `canMakeOffer` capability, then the seller's own `allowOffers`
+   * opt-in.
+   *
+   * There was a third — the site-wide `featureFlags.offers` kill switch — which
+   * cost a Firestore singleton read on every offer attempt. It went with the
+   * rest of that group on 2026-08-29. The two that remain are the ones somebody
+   * actually sets: a per-type capability and a per-listing choice by the seller
+   * who owns the item.
    */
-  // Fails OPEN — a settings read that dies must not block offers site-wide. But
-  // `null` here is indistinguishable from "the flag is on", so it is recorded.
-  const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
-    route: "offers.makeOffer", key: "makeOffer.siteSettings", fallback: null,
-  });
-  if (settings?.featureFlags?.offers === false) {
-    throw new ValidationError(ERROR_MESSAGES.OFFER.DISABLED, {
-      code: OFFER_ERROR_CODES.DISABLED,
-    });
-  }
-
   const product = await productRepository.findById(productId);
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);
 

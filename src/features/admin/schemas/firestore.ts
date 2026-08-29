@@ -578,6 +578,32 @@ export interface SiteSettingsDocument extends BaseDocument {
     codEnabled: boolean;
     /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. Optional — falls back to no OTP gate when unset. */
     otpCheckoutThreshold?: number;
+    /**
+     * Phone-number OTP verification during signup/checkout. Real per-SMS cost
+     * via the Firebase phone-auth quota, so it stays OFF by default.
+     *
+     * Toggling it false->true resets every user's `phoneVerified` and clears
+     * rate-limit state via the `resetOtpVerification` job — a verification that
+     * happened while the gate was off was not a verification.
+     *
+     * Was `featureFlags.smsVerification`. It is a real setting with real cost
+     * and a real side effect, which is why it survived that group's deletion.
+     */
+    smsVerification?: boolean;
+    /**
+     * Lets an admin place an order skipping OTP and payment capture.
+     *
+     * Kept as a SETTING rather than folded into the `admin:checkout:bypass`
+     * permission, and the distinction matters: admins bypass every permission
+     * check (`isEffectiveAdminUser`), so a permission alone would turn this on
+     * for every admin the moment it shipped. Two independent gates — the
+     * permission decides WHO may use it, this decides WHETHER it is available
+     * at all — preserve the default-off posture a checkout bypass needs.
+     *
+     * Writable only through `/api/admin/checkout-bypass`, which logs actorUid
+     * and reason on every use (audit-checkout-bypass rule 1).
+     */
+    adminCheckoutBypass?: boolean;
   };
   /** Site-wide EMI (installment) settings. A seller must ALSO have `StoreDocument.emiEnabled` on for EMI to appear at checkout for their items. */
   emi: {
@@ -696,49 +722,28 @@ export interface SiteSettingsDocument extends BaseDocument {
     icon: string;
     enabled: boolean;
   }[];
-  featureFlags: {
-    chats: boolean;
-    smsVerification: boolean;
-    translations: boolean;
-    wishlists: boolean;
-    auctions: boolean;
-    reviews: boolean;
-    events: boolean;
-    blog: boolean;
-    coupons: boolean;
-    notifications: boolean;
-    sellerRegistration: boolean;
-    preOrders: boolean;
-    /**
-     * Buyer price negotiation (Make an Offer / counter-offer).
-     *
-     * The global kill switch. Per-listing opt-in still applies on top of it via
-     * `ProductDocument.allowOffers`, and only certain listing types support
-     * offers at all (`LISTING_TYPE_CAPABILITIES.canMakeOffer`) — a product needs
-     * all three to show the CTA.
-     *
-     * Guards NEW offers only. Switching it off must not strand in-flight ones:
-     * sellers keep responding, buyers keep checking out accepted offers, and
-     * both dashboards stay reachable.
-     */
-    offers: boolean;
-    /** When true, admin users see a bypass button in checkout that skips OTP and payment. Server-enforced. */
-    adminCheckoutBypass?: boolean;
-    // Single-source flag-key constant so consumers don't reference the field
-    // name by string literal (audit-checkout-bypass rule 1).
-    // SB-UNI-X4 2026-05-13 — per-type feature flags. Disabled types are
-    // hidden from listings + reject create/add-to-cart via the
-    // isListingTypeEnabled / isCategoryTypeEnabled helpers.
-    listingTypes?: {
-      standard?: boolean;
-      auction?: boolean;
-      "pre-order"?: boolean;
-      "prize-draw"?: boolean;
-      bundle?: boolean;
-      classified?: boolean;
-      "digital-code"?: boolean;
-      live?: boolean;
-    };
+  /**
+   * Which listing and category types the marketplace offers.
+   *
+   * 🛑 This is a PRODUCT CONTROL, not a feature flag. It was
+   * `featureFlags.listingTypes` / `.categoryTypes` until 2026-08-29, when the
+   * `featureFlags` group was deleted: 11 of its 14 keys had zero readers, and
+   * the survivors were not flags at all. A flag is a temporary switch around
+   * unfinished work; "we don't sell live animals" is a standing decision about
+   * the catalogue, and it belongs somewhere an admin can find it.
+   *
+   * Disabled types are hidden from every listing surface and rejected on
+   * create/add-to-cart via `isListingTypeEnabled` / `isCategoryTypeEnabled`.
+   *
+   * ⚠️ `listingTypes` is DELIBERATELY optional-per-key and absent-means-enabled.
+   * `ALL_LISTING_TYPES_MAP` (`_internal/shared/listing-types/feature-flags.ts`)
+   * is the `Record<ListingType, true>` that makes omitting a union member a
+   * compile error — this interface is not, and historically drifted: it still
+   * listed 8 types after the union reached 10 (`art` and `stickers` missing),
+   * which is Root Cause #58's shape. Add new types to that Record, not here.
+   */
+  listings?: {
+    listingTypes?: Partial<Record<string, boolean>>;
     categoryTypes?: {
       category?: boolean;
       sublisting?: boolean;
@@ -890,15 +895,11 @@ export interface SiteSettingsDocument extends BaseDocument {
   notificationChannels?: NotificationChannelConfig;
 }
 
-export type FeatureFlagKey = keyof SiteSettingsDocument["featureFlags"];
-
-export interface FeatureFlagMeta {
-  key: FeatureFlagKey;
-  labelKey: string;
-  descKey: string;
-  icon: string;
-  category: "platform" | "payment";
-}
+// `FeatureFlagKey` / `FeatureFlagMeta` / `FEATURE_FLAG_META` were deleted with
+// the `featureFlags` group on 2026-08-29. They described 14 toggles of which 11
+// had no reader anywhere — an admin could switch "Wishlists" or "Reviews" off
+// and watch nothing happen, which is worse than the feature not being
+// configurable at all.
 
 export const SITE_SETTINGS_COLLECTION = "siteSettings" as const;
 export const SITE_SETTINGS_INDEXED_FIELDS = [] as const;
@@ -925,6 +926,8 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,
+    smsVerification: false,
+    adminCheckoutBypass: false,
   },
   emi: {
     enabled: false,
@@ -983,35 +986,22 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     autoExtendWindowMinutes: 5,
     settlementGracePeriodHours: 24,
   },
-  featureFlags: {
-    chats: true,
-    // Real per-SMS cost via the Firebase phone-auth quota — kept off by
-    // default even though every other flag defaults on. Admin opts in
-    // explicitly; PATCH /api/site-settings resets all users' phoneVerified +
-    // rate-limit state on the false->true transition (resetOtpVerification job).
-    smsVerification: false,
-    translations: true,
-    wishlists: true,
-    auctions: true,
-    reviews: true,
-    events: true,
-    blog: true,
-    coupons: true,
-    notifications: true,
-    sellerRegistration: true,
-    preOrders: true,
-    offers: true,
-    // W1-37 2026-05-23 — Phase 2 listing types enabled by default; all per-type
-    // surfaces (seller + admin via W1-29 + public) are now shipped.
+  // Every type on by default. `isListingTypeEnabled` treats a MISSING key as
+  // enabled, so this block is documentation of the full set rather than the
+  // mechanism — a type absent here still renders. `art` and `stickers` were
+  // missing from the old `featureFlags.listingTypes` literal for exactly that
+  // reason: nothing broke, so nobody noticed (Root Cause #58).
+  listings: {
     listingTypes: {
       standard: true,
       auction: true,
       "pre-order": true,
       "prize-draw": true,
-      bundle: true,
       classified: true,
       "digital-code": true,
       live: true,
+      art: true,
+      stickers: true,
     },
     categoryTypes: {
       category: true,
@@ -1068,89 +1058,4 @@ export const DEFAULT_TRUST_BAR_ITEMS: TrustBarItem[] = [
 // NOTE: labelKey/descKey hold plain display text (not i18n message keys) —
 // this feature-flag list has no matching next-intl namespace, so the admin
 // UI reads these two fields directly rather than through getTranslations().
-export const FEATURE_FLAG_META: FeatureFlagMeta[] = [
-  {
-    key: "chats",
-    labelKey: "In-app chats",
-    descKey: "Buyer/seller direct messaging.",
-    icon: "\u{1F4AC}",
-    category: "platform",
-  },
-  {
-    key: "smsVerification",
-    labelKey: "SMS verification",
-    descKey: "Phone-number OTP verification during signup/checkout.",
-    icon: "\u{1F4F1}",
-    category: "platform",
-  },
-  {
-    key: "translations",
-    labelKey: "Translations",
-    descKey: "Locale switcher and translated UI strings.",
-    icon: "\u{1F310}",
-    category: "platform",
-  },
-  {
-    key: "auctions",
-    labelKey: "Auctions",
-    descKey: "Auction listings and bidding.",
-    icon: "\u{1F528}",
-    category: "platform",
-  },
-  {
-    key: "reviews",
-    labelKey: "Reviews",
-    descKey: "Product and store reviews.",
-    icon: "⭐",
-    category: "platform",
-  },
-  {
-    key: "notifications",
-    labelKey: "Notifications",
-    descKey: "In-app notification bell and inbox.",
-    icon: "\u{1F514}",
-    category: "platform",
-  },
-  {
-    key: "sellerRegistration",
-    labelKey: "Seller registration",
-    descKey: "\"Become a seller\" signup flow.",
-    icon: "\u{1F3EA}",
-    category: "platform",
-  },
-  {
-    key: "preOrders",
-    labelKey: "Pre-orders",
-    descKey: "Pre-order listings and deposit checkout.",
-    icon: "\u{1F4E6}",
-    category: "platform",
-  },
-  {
-    key: "wishlists",
-    labelKey: "Wishlists",
-    descKey: "Save-for-later wishlist feature.",
-    icon: "❤️",
-    category: "platform",
-  },
-  {
-    key: "events",
-    labelKey: "Events",
-    descKey: "Sales, raffles, spin-wheel, and lottery events.",
-    icon: "\u{1F389}",
-    category: "platform",
-  },
-  {
-    key: "blog",
-    labelKey: "Blog",
-    descKey: "Blog posts section.",
-    icon: "\u{1F4DD}",
-    category: "platform",
-  },
-  {
-    key: "coupons",
-    labelKey: "Coupons",
-    descKey: "Coupon codes and discounts.",
-    icon: "\u{1F3AB}",
-    category: "platform",
-  },
-] as const;
+

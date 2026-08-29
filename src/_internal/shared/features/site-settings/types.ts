@@ -29,9 +29,18 @@ export interface PublicSiteSettings {
   payment: {
     otpCheckoutThreshold?: number;
   };
-  /** Deliberately NOT the full `featureFlags` — `adminCheckoutBypass` must never be advertised publicly. */
-  featureFlags: {
-    listingTypes?: SiteSettingsDocument["featureFlags"]["listingTypes"];
+  /**
+   * Which listing types the site offers — the client needs this to avoid
+   * rendering a browse tab for a type nothing will return.
+   *
+   * Deliberately NOT the whole `listings` block: `categoryTypes` has no client
+   * reader. This was `featureFlags.listingTypes` until that group was deleted
+   * on 2026-08-29; the projection stayed narrow for the same reason it always
+   * was — a public payload carries what a client demonstrably reads, nothing
+   * more (Root Cause #70).
+   */
+  listings: {
+    listingTypes?: NonNullable<SiteSettingsDocument["listings"]>["listingTypes"];
   };
   notificationChannels?: NotificationChannelConfig;
   announcementBar?: SiteSettingsDocument["announcementBar"];

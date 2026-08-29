@@ -1,10 +1,15 @@
 /**
  * Listing-type / category-type feature flag helpers — SB-UNI-X4 2026-05-13.
  *
- * Reads from `siteSettings.featureFlags.{listingTypes,categoryTypes}` and
- * collapses missing fields to a "type is enabled" default. The capability
- * registry decides what each type CAN do; these flags decide whether the
- * site exposes the type at all.
+ * Reads from `siteSettings.listings.{listingTypes,categoryTypes}` and collapses
+ * missing fields to a "type is enabled" default. The capability registry
+ * decides what each type CAN do; these decide whether the site exposes the type
+ * at all.
+ *
+ * Moved out of `featureFlags` on 2026-08-29 when that group was deleted — 11 of
+ * its 14 keys had no readers, and these two were never flags: "we don't sell
+ * live animals" is a standing catalogue decision, not a switch around
+ * unfinished work.
  *
  * Consumer pattern:
  *   const settings = await siteSettingsRepository.findById("global");
@@ -18,7 +23,7 @@ import type { ListingType } from "../../../features/products/types/index";
 import type { CategoryType } from "../../../features/categories/types/index";
 
 interface FeatureFlagSnapshot {
-  featureFlags?: {
+  listings?: {
     listingTypes?: Partial<Record<ListingType, boolean>>;
     categoryTypes?: Partial<Record<CategoryType, boolean>>;
   };
@@ -33,7 +38,7 @@ export function isListingTypeEnabled(
   type: ListingType,
   settings: FeatureFlagSnapshot | null | undefined,
 ): boolean {
-  const flag = settings?.featureFlags?.listingTypes?.[type];
+  const flag = settings?.listings?.listingTypes?.[type];
   return flag !== false;
 }
 
@@ -41,7 +46,7 @@ export function isCategoryTypeEnabled(
   type: CategoryType,
   settings: FeatureFlagSnapshot | null | undefined,
 ): boolean {
-  const flag = settings?.featureFlags?.categoryTypes?.[type];
+  const flag = settings?.listings?.categoryTypes?.[type];
   return flag !== false;
 }
 

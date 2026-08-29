@@ -13,7 +13,7 @@
  * `legalPages`), which meant everything else was public by default and
  * edge-cached for 300s. That shipped `gst.gstin` + the registered legal name
  * and address, all 25 `commissions.*` fields, `laborRate.hourlyRate`,
- * `emi.surchargeSellerSharePercent`, `featureFlags.adminCheckoutBypass`, and —
+ * `emi.surchargeSellerSharePercent`, `payment.adminCheckoutBypass`, and —
  * because they weren't even declared on the interface —
  * `adSettings.providerCredentials` (which the ADMIN ads endpoint bothers to
  * mask) plus every draft/paused/scheduled ad in `adSettings.inventory`.
@@ -41,7 +41,7 @@ import type { PublicSiteSettings } from "../../../shared/features/site-settings/
 export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "contact", // user/orders/[id]/payment — contact.whatsappNumber (narrowed: no address/upiVpa)
   "payment", // CheckoutRouteClient — payment.otpCheckoutThreshold (narrowed)
-  "featureFlags", // useListingTypeFlags — featureFlags.listingTypes (narrowed: no adminCheckoutBypass)
+  "listings", // useListingTypeFlags — narrowed to listings.listingTypes; categoryTypes has no client reader
   "notificationChannels", // NotificationPreferencesPanel + CheckoutRouteClient (whatsapp.otpEnabled)
   "announcementBar", // AdminSiteView; also the homepage banner
   "navConfig", // NavbarWithSettings, DashboardLayoutClient
@@ -100,8 +100,11 @@ export function toPublicSiteSettings(
 ): PublicSiteSettings {
   return {
     // Explicit sub-literals, never spreads. These two are the ones that carry
-    // real weight: `contact` drops `address` + `upiVpa`, and `featureFlags`
-    // drops `adminCheckoutBypass` — the flag that turns off payment and OTP.
+    // real weight: `contact` drops `address` + `upiVpa`, and `payment` emits
+    // ONLY `otpCheckoutThreshold` — it also holds `adminCheckoutBypass` (the
+    // setting that skips OTP and payment capture) and `smsVerification`, both
+    // of which must never reach a client. `listings` is narrowed too:
+    // `categoryTypes` has no client reader.
     contact: {
       email: doc.contact?.email ?? "",
       phone: doc.contact?.phone ?? "",
@@ -110,8 +113,8 @@ export function toPublicSiteSettings(
     payment: {
       otpCheckoutThreshold: doc.payment?.otpCheckoutThreshold,
     },
-    featureFlags: {
-      listingTypes: doc.featureFlags?.listingTypes,
+    listings: {
+      listingTypes: doc.listings?.listingTypes,
     },
     notificationChannels: doc.notificationChannels,
     announcementBar: doc.announcementBar,

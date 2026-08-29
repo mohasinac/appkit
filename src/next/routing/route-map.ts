@@ -362,7 +362,6 @@ export const DEFAULT_ROUTE_MAP = {
     EVENT_ENTRIES: (id: string) => `/admin/events/${id}/entries`,
     STORES: "/admin/stores",
     STORE_DETAIL: (id: string) => `/admin/stores/${id}/view`,
-    FEATURE_FLAGS: "/admin/feature-flags",
     COPILOT: "/admin/copilot",
     ADS: "/admin/ads",
     ADS_NEW: "/admin/ads/new",
