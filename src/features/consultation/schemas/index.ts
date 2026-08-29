@@ -70,10 +70,16 @@ export const bookConsultationSchema = z.object({
    * would reject every submission the form can produce. The admin-side booking
    * path is where it is set.
    */
+  /*
+   * NOT `derived`. An earlier annotation here marked it server-owned on the
+   * strength of the comment above — and the form does render a picker for it
+   * (`ConsultationForm.tsx:92`), conditional on a `concerns` prop rather than
+   * on anything the schema can see. `kind: "list"` so the generator asks for a
+   * renderer instead of guessing, which is the honest answer for a control
+   * whose options arrive from outside the schema.
+   */
   concern: annotate(z.array(z.string()).optional(), {
-    // The public form renders no concern picker (see the note above), so it is
-    // not part of any section a visitor sees.
-    section: "advanced", derived: true, tier: "t2-server",
+    section: "who", order: 4, row: "full", kind: "list", label: "What do you need help with?",
   }),
   preferredDate: annotate(z.string().optional(), {
     section: "schedule", sectionLabel: "When suits you",

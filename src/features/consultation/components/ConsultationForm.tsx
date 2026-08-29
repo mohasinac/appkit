@@ -119,6 +119,8 @@ export function ConsultationForm({
           className="flex-1"
         />
         <Select
+          name="preferredTime"
+          label="Preferred time"
           value={form.preferredTime}
           onValueChange={(value) => handleValueChange("preferredTime", value)}
           options={TIME_SLOTS.map((t) => ({ value: t, label: t }))}
@@ -126,6 +128,8 @@ export function ConsultationForm({
         />
       </Row>
       <Select
+        name="mode"
+        label="How would you like to meet?"
         value={form.mode}
         onValueChange={(value) => handleValueChange("mode", value)}
         options={[

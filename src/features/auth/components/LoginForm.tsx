@@ -10,10 +10,23 @@ import { loginSchema } from "../schemas";
 import { SocialAuthButtons } from "./SocialAuthButtons";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
+/*
+ * 🛑 There is deliberately no `rememberMe`.
+ *
+ * The form used to collect one and nothing consumed it: a repo-wide grep found
+ * six references, all inside this file. It never reached `onSubmit`'s caller,
+ * it was absent from `loginSchema`, and `useLogin` reads only email and
+ * password. So the checkbox made a promise about session lifetime that the app
+ * did not keep.
+ *
+ * Deleted rather than implemented: making it real means changing session
+ * persistence, which is a deliberate decision about how long a stolen cookie
+ * stays valid — not something to infer from an orphaned control. Same call as
+ * the bulk-cancel action whose onClick only called clearSelection().
+ */
 export interface LoginFormValues {
   email: string;
   password: string;
-  rememberMe?: boolean;
 }
 
 export interface LoginFormProps {
@@ -29,7 +42,6 @@ export interface LoginFormProps {
     emailPlaceholder?: string;
     passwordLabel?: string;
     passwordPlaceholder?: string;
-    rememberMe?: string;
     forgotPasswordLabel?: string;
     submitLabel?: string;
     submittingLabel?: string;
@@ -56,7 +68,6 @@ export function LoginForm({
   const [values, setValues] = useState<LoginFormValues>({
     email: "",
     password: "",
-    rememberMe: false,
   });
 
   return (
@@ -108,15 +119,7 @@ export function LoginForm({
                 value={values.password}
                 onChange={(v) => setValues({ ...values, password: v })}
               />
-              <Row justify="between">
-                <FieldCheckbox
-                  name="rememberMe"
-                  label={labels.rememberMe ?? "Remember me"}
-                  checked={values.rememberMe ?? false}
-                  onChange={(c) => setValues({ ...values, rememberMe: c })}
-                />
-                {renderForgotPasswordLink?.()}
-              </Row>
+              <Row justify="end">{renderForgotPasswordLink?.()}</Row>
               <Button
                 type="submit"
                 isLoading={isLoading}
