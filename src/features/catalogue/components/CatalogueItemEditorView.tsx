@@ -1,32 +1,79 @@
 "use client";
 
+/**
+ * Add or edit an item in a user's personal catalogue.
+ *
+ * Fields come from `createCatalogueItemSchema`'s annotations. Three need a
+ * `renderers` entry: the photo list (a real uploader, not the generator's
+ * disabled placeholder), and the two taxonomy selects, which are searchable
+ * because 47 categories is well past the 5-option threshold.
+ *
+ * ## `categorySlugs` and `brandSlug` were declared, read, and never collected
+ *
+ * Both are inherited from `ProductDraftFields` and both are read by
+ * `product-from-item.ts`, which builds the marketplace listing when an item is
+ * promoted. The hand-rolled form had no control for either, so every promoted
+ * listing carried `categorySlugs: []` — and per the Category Tree rules a
+ * product with an empty chain is invisible on every category and brand page it
+ * should appear under. A schema field with a reader and no control is the
+ * inverse of a dead control, and just as silent.
+ *
+ * `mainImage` is `t1-derive` — the first photo, not a field anyone types. It
+ * renders as a read-only preview rather than a text box that could be desynced
+ * from the gallery it is supposed to mirror.
+ */
+
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useApiMutation } from "@mohasinac/appkit/client";
-import { Alert, Button, FieldInput, FieldSelect, FieldTextarea, Form, Grid, Row, Span, Stack, Toggle } from "../../../ui";
-import { FormErrorSummary } from "../../../ui/forms";
-import { MediaUploadList } from "../../media/upload/MediaUploadList";
-import { useMediaUpload } from "../../media";
-import type { MediaField } from "../../media/types";
-import { apiClient } from "../../../http";
-import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
-import { createCatalogueItemSchema } from "../schemas/validation";
-import type { CatalogueItemDocument } from "../schemas/firestore";
 
-const CONDITION_OPTIONS = [
-  { label: "New", value: "new" },
-  { label: "Like new", value: "like_new" },
-  { label: "Good", value: "good" },
-  { label: "Fair", value: "fair" },
-  { label: "Poor", value: "poor" },
-  { label: "Used", value: "used" },
-  { label: "Refurbished", value: "refurbished" },
-];
+import { useApiMutation } from "@mohasinac/appkit/client";
+import { ACCOUNT_ENDPOINTS, BRAND_ENDPOINTS, CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
+import { apiClient } from "../../../http";
+import { Alert, PaginatedSelect, Stack } from "../../../ui";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { buildSectionsFromSchema } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import { useMediaUpload } from "../../media";
+import { MediaUploadList } from "../../media/upload/MediaUploadList";
+import type { MediaField } from "../../media/types";
+import type { CatalogueItemDocument } from "../schemas/firestore";
+import { createCatalogueItemSchema } from "../schemas/validation";
 
 export interface CatalogueItemEditorViewProps {
   item?: CatalogueItemDocument;
   onSaved?: (id: string) => void;
 }
+
+interface Values {
+  [key: string]: unknown;
+  title: string;
+  description: string;
+  condition: string;
+  quantity: number;
+  price: number;
+  images: string[];
+  mainImage: string;
+  categorySlugs: string[];
+  brandSlug: string;
+  visibility: "public" | "private";
+}
+
+/** PUBLIC endpoints — this is a buyer surface; the admin ones would 403. */
+async function loadOptionsFrom(endpoint: string, query: string, page: number) {
+  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
+  if (query) params.set("q", query);
+  const res = await apiClient.get(`${endpoint}?${params.toString()}`);
+  const data = (res as { items?: { id: string; name: string }[]; hasMore?: boolean }) ?? {};
+  return {
+    items: (data.items ?? []).map((c) => ({ value: c.id, label: c.name })),
+    hasMore: data.hasMore ?? false,
+  };
+}
+
+const loadCategoryOptions = (q: string, p: number) => loadOptionsFrom(CATEGORY_ENDPOINTS.LIST, q, p);
+const loadBrandOptions = (q: string, p: number) => loadOptionsFrom(BRAND_ENDPOINTS.LIST, q, p);
 
 export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorViewProps) {
   const isCreate = !item;
@@ -34,40 +81,111 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
   const { upload } = useMediaUpload();
   const uploadIndexRef = React.useRef(0);
 
-  const [title, setTitle] = React.useState(item?.title ?? "");
-  const [description, setDescription] = React.useState(item?.description ?? "");
-  const [condition, setCondition] = React.useState(item?.condition ?? "");
-  const [price, setPrice] = React.useState(item?.price ? String(item.price) : "0");
-  const [quantity, setQuantity] = React.useState(String(item?.quantity ?? 1));
-  const [visibility, setVisibility] = React.useState<"public" | "private">(item?.visibility ?? "public");
-  const [images, setImages] = React.useState<string[]>(item?.images ?? []);
+  const [form, setForm] = React.useState<Values>({
+    title: item?.title ?? "",
+    description: item?.description ?? "",
+    condition: item?.condition ?? "",
+    quantity: item?.quantity ?? 1,
+    price: item?.price ?? 0,
+    images: item?.images ?? [],
+    mainImage: item?.mainImage ?? item?.images?.[0] ?? "",
+    categorySlugs: item?.categorySlugs ?? [],
+    brandSlug: item?.brandSlug ?? "",
+    visibility: item?.visibility ?? "public",
+  });
 
-  const galleryFields: MediaField[] = images.map((url) => ({ url, type: "image" }));
+  const handleUpload = React.useCallback(
+    async (file: File): Promise<string> => {
+      uploadIndexRef.current += 1;
+      return upload(file, "catalogue", true, {
+        type: "catalogue-image",
+        item: form.title || "item",
+        index: uploadIndexRef.current,
+      });
+    },
+    [upload, form.title],
+  );
 
-  const handleUpload = async (file: File): Promise<string> => {
-    uploadIndexRef.current += 1;
-    return upload(file, "catalogue", true, {
-      type: "catalogue-image",
-      item: title || "item",
-      index: uploadIndexRef.current,
-    });
-  };
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(createCatalogueItemSchema, {
+        renderers: {
+          images: ({ values, onChange }) => (
+            <MediaUploadList
+              label="Photos"
+              value={(values.images as string[]).map((url) => ({ url, type: "image" }) as MediaField)}
+              onChange={(fields) => {
+                const urls = fields.map((f) => f.url);
+                // `mainImage` is derived, so it moves with the gallery rather
+                // than pointing at a photo the user has since removed.
+                onChange({ images: urls, mainImage: urls[0] ?? "" });
+              }}
+              onUpload={handleUpload}
+              accept="image/*"
+              maxItems={8}
+              helperText="Photos older than 30 days must be refreshed before this item can be listed."
+            />
+          ),
+          categorySlugs: ({ values, onChange }) => (
+            // Explicit `<string>`: with `multiple`, `value` is `V[]`, so an
+            // inferred V reads the array itself as the option type.
+            <PaginatedSelect<string>
+              multiple
+              value={values.categorySlugs as string[]}
+              onChange={(v) => onChange({ categorySlugs: (v as string[]) ?? [] })}
+              loadOptions={loadCategoryOptions}
+              placeholder="Search categories…"
+              searchPlaceholder="Type a category name…"
+              noResultsText="No categories found"
+              ariaLabel="Categories"
+            />
+          ),
+          brandSlug: ({ values, onChange }) => (
+            <PaginatedSelect
+              value={(values.brandSlug as string) || null}
+              onChange={(v) => onChange({ brandSlug: (v as string) ?? "" })}
+              loadOptions={loadBrandOptions}
+              placeholder="Search brands…"
+              searchPlaceholder="Type a brand name…"
+              noResultsText="No brands found"
+              ariaLabel="Brand"
+            />
+          ),
+        },
+      }),
+    [handleUpload],
+  );
+
+  const nav = useSectionFormNav(sections, form, { scope: "user:catalogue-item" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(createCatalogueItemSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
   const saveMutation = useApiMutation<CatalogueItemDocument>({
     successMessage: isCreate ? "Added to your catalogue" : "Catalogue item updated",
+    errorMessage: isCreate ? "Could not add this item." : "Could not save your changes.",
     mutationFn: async () => {
       const payload = {
-        title,
-        description: description || undefined,
-        condition: condition || undefined,
-        price: Math.round(Number(price) * 100) / 100,
-        quantity: Number(quantity),
-        visibility,
-        images,
-        mainImage: images[0],
+        title: form.title,
+        description: form.description || undefined,
+        condition: form.condition || undefined,
+        price: Math.round(Number(form.price) * 100) / 100,
+        quantity: Number(form.quantity),
+        visibility: form.visibility,
+        images: form.images,
+        mainImage: form.images[0],
+        categorySlugs: form.categorySlugs,
+        brandSlug: form.brandSlug || undefined,
       };
-      if (isCreate) return apiClient.post<CatalogueItemDocument>(ACCOUNT_ENDPOINTS.CATALOGUE, payload);
-      return apiClient.patch<CatalogueItemDocument>(ACCOUNT_ENDPOINTS.CATALOGUE_BY_ID(item!.id), payload);
+      if (isCreate) {
+        return apiClient.post<CatalogueItemDocument>(ACCOUNT_ENDPOINTS.CATALOGUE, payload);
+      }
+      return apiClient.patch<CatalogueItemDocument>(
+        ACCOUNT_ENDPOINTS.CATALOGUE_BY_ID(item!.id),
+        payload,
+      );
     },
     onSuccess: (saved) => {
       queryClient.invalidateQueries({ queryKey: ["user", "catalogue"] });
@@ -75,65 +193,45 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
     },
   });
 
+  const onSubmit = () => {
+    clearErrors();
+    const parsed = createCatalogueItemSchema.safeParse({
+      ...form,
+      price: Math.round(Number(form.price) * 100) / 100,
+      quantity: Number(form.quantity),
+      brandSlug: form.brandSlug || undefined,
+    });
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
+
   return (
-    <Form schema={createCatalogueItemSchema} spacing="md">
-      {({ setFieldError, markSubmitAttempted }) => (
-        <Stack gap="md">
-          {item?.listingStatus && item.listingStatus !== "not_listed" && (
-            <Alert variant="info">
-              This item is {item.listingStatus.replace(/_/g, " ")}
-              {item.listingStatus === "rejected" && item.rejectionReason ? `: ${item.rejectionReason}` : "."}
-            </Alert>
-          )}
-          <Grid cols={2} gap="md">
-            <FieldInput name="title" label="Title" required value={title} onChange={setTitle} />
-            <FieldSelect name="condition" label="Condition" value={condition} onChange={setCondition} options={CONDITION_OPTIONS} />
-            <FieldInput name="price" label="Estimated resale price (₹)" type="number" min="0" value={price} onChange={setPrice} />
-            <FieldInput name="quantity" label="Quantity" type="number" min="1" value={quantity} onChange={setQuantity} />
-          </Grid>
-          <FieldTextarea name="description" label="Description" value={description} onChange={setDescription} rows={3} />
-
-          <MediaUploadList
-            label="Photos"
-            value={galleryFields}
-            onChange={(fields) => setImages(fields.map((f) => f.url))}
-            onUpload={handleUpload}
-            accept="image/*"
-            maxItems={8}
-            helperText="Photos older than 30 days must be refreshed before this item can be listed."
-          />
-
-          <Row gap="sm" align="center">
-            <Toggle checked={visibility === "public"} onChange={(checked) => setVisibility(checked ? "public" : "private")} size="sm" />
-            <Span>{visibility === "public" ? "Public — visible on your profile" : "Private — only you can see it"}</Span>
-          </Row>
-
-          <FormErrorSummary />
-
-          <Button
-            type="button"
-            isLoading={saveMutation.isPending}
-            onClick={() => {
-              // type="button" — no native submit, so unhide the summary here.
-              markSubmitAttempted();
-              const parsed = createCatalogueItemSchema.safeParse({
-                title,
-                images,
-                price: Math.round(Number(price) * 100) / 100,
-                quantity: Number(quantity),
-                visibility,
-              });
-              if (!parsed.success) {
-                for (const issue of parsed.error.issues) setFieldError(String(issue.path[0]), issue.message);
-                return;
-              }
-              saveMutation.mutate();
-            }}
-          >
-            {isCreate ? "Add to Catalogue" : "Save Changes"}
-          </Button>
-        </Stack>
+    <Stack gap="md">
+      {item?.listingStatus && item.listingStatus !== "not_listed" && (
+        <Alert variant="info">
+          This item is {item.listingStatus.replace(/_/g, " ")}
+          {item.listingStatus === "rejected" && item.rejectionReason
+            ? `: ${item.rejectionReason}`
+            : "."}
+        </Alert>
       )}
-    </Form>
+      <FormShellContext.Provider value={shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<Values>
+          sections={sections}
+          values={form}
+          onChange={(partial) => setForm((prev) => Object.assign({}, prev, partial))}
+          onSubmit={onSubmit}
+          schema={createCatalogueItemSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={saveMutation.isPending}
+          submitLabel={isCreate ? "Add to Catalogue" : "Save Changes"}
+        />
+      </FormShellContext.Provider>
+    </Stack>
   );
 }

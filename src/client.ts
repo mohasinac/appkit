@@ -276,7 +276,7 @@ export { lotteryConfigWriteSchema, lotterySlotWriteSchema } from "./features/lot
 // consumer forms need these and the bare package resolves to the SERVER entry.
 export { SectionForm, useSectionFormNav } from "./features/shell/SectionForm";
 export type { SectionDef, SectionFormProps } from "./features/shell/SectionForm";
-export { buildSectionsFromSchema } from "./features/shell/build-sections";
+export { buildSectionsFromSchema, visibleValues } from "./features/shell/build-sections";
 export { FORM_SECTION_GROUP, SECTION_GROUP_DEFAULTS, groupRank, resolveSectionGroup } from "./features/shell/form-sections";
 export type { FormSectionGroup } from "./features/shell/form-sections";
 export { reportCreateSchema } from "./features/store-extensions/schemas/report-create-form";

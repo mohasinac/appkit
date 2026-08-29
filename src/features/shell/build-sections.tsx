@@ -192,6 +192,41 @@ export function packRows(fields: ResolvedField[]): ResolvedField[][] {
 }
 
 /**
+ * The draft, minus every field whose `when` predicate says it is not on screen.
+ *
+ * ## Why this exists, and why it is not optional
+ *
+ * A `when` predicate hides a CONTROL; it does not clear the value behind it.
+ * So a form that renders conditionally and submits `{...draft}` sends whatever
+ * the user typed before they switched the option away — the control is gone
+ * from the screen and its value is still in the payload.
+ *
+ * That is not hypothetical. Four of the twenty dead controls found in the W3c
+ * sweep were exactly this: a cap typed on a percentage coupon persisted after
+ * switching to free-shipping; a lottery slot price written under uniform
+ * pricing; an AdSense slot shipped with a manually-authored ad. Each looked
+ * right on screen and saved something else.
+ *
+ * Build the payload from THIS, not from the draft, and hidden-implies-not-sent
+ * holds by construction rather than by remembering.
+ *
+ * Fields with no `when` are always kept, so a schema with no conditionals gets
+ * its draft back unchanged and the call is free.
+ */
+export function visibleValues<T extends object>(schema: ZodTypeAny, values: T): Partial<T> {
+  const fields = resolveFields(schema);
+  if (!fields.some((f) => f.meta.when)) return values;
+
+  const out: Partial<T> = {};
+  for (const field of fields) {
+    if (field.meta.when && !field.meta.when(values as never)) continue;
+    const key = field.name as keyof T;
+    if (key in values) out[key] = values[key];
+  }
+  return out;
+}
+
+/**
  * Build the `SectionDef[]` a `<SectionForm>` renders.
  *
  * Section order: `sectionRequired` first (there is normally exactly one — the

@@ -37,8 +37,14 @@ export const createCatalogueItemSchema = z.object({
     section: "media", sectionLabel: "Photos", order: 1, row: "full", kind: "media",
     sectionKeepMounted: true, label: "Photos",
   }),
+  /*
+   * Derived from `images[0]`, never typed. Rendering it as an editable box
+   * lets a user point it at a photo they have since removed from the gallery —
+   * the field would then name an image that does not exist on the item.
+   */
   mainImage: annotate(z.string().optional(), {
     section: "media", order: 2, row: "full", kind: "media", label: "Main photo",
+    derived: true, tier: "t1-derive", help: "The first photo in the gallery.",
   }),
   categorySlugs: annotate(z.array(z.string()).optional(), {
     section: "classification", sectionLabel: "Filing", order: 1, row: "pair",

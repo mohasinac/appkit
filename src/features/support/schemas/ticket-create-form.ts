@@ -76,6 +76,13 @@ export const supportTicketCreateSchema = z
       order: 4,
       row: "pair",
       help: "Required when the category is an order issue.",
+      /*
+       * Only meaningful for an order complaint, and paired with `visibleValues`
+       * at the payload so an id typed before switching category is not sent
+       * with a ticket that has nothing to do with an order. The `superRefine`
+       * below makes it required in the one case where it shows.
+       */
+      when: (v) => (v as { category?: string }).category === TicketCategoryValues.ORDER_ISSUE,
     }),
   })
   .superRefine((v, ctx) => {
