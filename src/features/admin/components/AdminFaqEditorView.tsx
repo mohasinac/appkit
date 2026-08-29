@@ -1,26 +1,74 @@
 "use client";
 
-import { Row } from "@mohasinac/appkit/ui";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, Input, RichTextEditor, Select, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormErrorSummary } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+/**
+ * Matches the draft this form actually holds, and the payload it actually
+ * sends.
+ *
+ * `answer` was declared as `{ text, format }` while both the state and the
+ * request body are a plain HTML string — the route wraps it (see CLAUDE.md
+ * Root Cause #39). Nothing ever called `validate()`, so the mismatch was
+ * invisible; under `<SectionForm>`, which parses the draft on every change, it
+ * would have produced a permanent error on a field the user cannot fix.
+ * `.passthrough()` similarly hid seven unvalidated fields.
+ */
 const faqFormSchema = z.object({
   question: z.string().min(5, "Question must be at least 5 characters").max(500),
-  answer: z.object({
-    text: z.string().min(1, "Answer is required"),
-    format: z.enum(["html", "markdown", "text"]).optional(),
-  }).passthrough(),
+  slug: z
+    .string()
+    .regex(/^faq-[a-z0-9-]*$/, "Must start with 'faq-' and use lowercase letters, digits and hyphens")
+    .optional()
+    .or(z.literal("")),
+  answer: z.string().min(1, "Answer is required"),
   category: z.string().min(1, "Category is required"),
+  tags: z.array(z.string()).optional(),
+  order: z.number().int().min(0).optional(),
+  priority: z.number().int().min(0).optional(),
   isActive: z.boolean().optional(),
-}).passthrough();
+  isPinned: z.boolean().optional(),
+  showOnHomepage: z.boolean().optional(),
+  showInFooter: z.boolean().optional(),
+});
+
+interface FaqFormValues {
+  [key: string]: JsonValue;
+  question: string;
+  slug: string;
+  answer: string;
+  category: string;
+  tags: string[];
+  order: number;
+  priority: number;
+  isActive: boolean;
+  isPinned: boolean;
+  showOnHomepage: boolean;
+  showInFooter: boolean;
+}
+
+const EMPTY_FAQ: FaqFormValues = {
+  question: "",
+  slug: "",
+  answer: "",
+  category: "general",
+  tags: [],
+  order: 0,
+  priority: 0,
+  isActive: true,
+  isPinned: false,
+  showOnHomepage: false,
+  showInFooter: false,
+};
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -71,19 +119,17 @@ export function AdminFaqEditorView({
 }: AdminFaqEditorViewProps) {
   const isEdit = Boolean(faqId);
 
-  const [question, setQuestion] = React.useState("");
-  const [slug, setSlug] = React.useState("");
+  const [values, setValues] = React.useState<FaqFormValues>(EMPTY_FAQ);
   const [slugManual, setSlugManual] = React.useState(false);
-  const [answer, setAnswer] = React.useState("");
-  const [category, setCategory] = React.useState("general");
-  const [tags, setTags] = React.useState<string[]>([]);
-  const [order, setOrder] = React.useState(0);
-  const [priority, setPriority] = React.useState(0);
-  const [isActive, setIsActive] = React.useState(true);
-  const [isPinned, setIsPinned] = React.useState(false);
-  const [showOnHomepage, setShowOnHomepage] = React.useState(false);
-  const [showInFooter, setShowInFooter] = React.useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+
+  const handleChange = React.useCallback((partial: Partial<FaqFormValues>) => {
+    setValues((prev) => {
+      const next: FaqFormValues = Object.assign({}, prev, partial);
+      if (partial.question !== undefined && !slugManual) next.slug = toSlug(String(partial.question));
+      return next;
+    });
+  }, [slugManual]);
 
   const { showToast } = useToast();
 
@@ -100,41 +146,38 @@ export function AdminFaqEditorView({
   React.useEffect(() => {
     const f = faqQuery.data as any;
     if (!f) return;
-    setQuestion(f.question ?? "");
-    setSlug(f["seo.slug"] ?? f.id ?? "");
     setSlugManual(true);
-    setAnswer(typeof f.answer === "object" ? (f.answer?.text ?? "") : (f.answer ?? ""));
-    setCategory(f.category ?? "general");
-    setTags(Array.isArray(f.tags) ? f.tags : []);
-    setOrder(typeof f.order === "number" ? f.order : 0);
-    setPriority(typeof f.priority === "number" ? f.priority : 0);
-    setIsActive(f.isActive ?? true);
-    setIsPinned(f.isPinned ?? false);
-    setShowOnHomepage(f.showOnHomepage ?? false);
-    setShowInFooter(f.showInFooter ?? false);
+    setValues({
+      question: f.question ?? "",
+      slug: f["seo.slug"] ?? f.id ?? "",
+      answer: typeof f.answer === "object" ? (f.answer?.text ?? "") : (f.answer ?? ""),
+      category: f.category ?? "general",
+      tags: Array.isArray(f.tags) ? f.tags : [],
+      order: typeof f.order === "number" ? f.order : 0,
+      priority: typeof f.priority === "number" ? f.priority : 0,
+      isActive: f.isActive ?? true,
+      isPinned: f.isPinned ?? false,
+      showOnHomepage: f.showOnHomepage ?? false,
+      showInFooter: f.showInFooter ?? false,
+    });
   }, [faqQuery.data]);
-
-  const handleQuestionChange = (value: string) => {
-    setQuestion(value);
-    if (!slugManual) setSlug(toSlug(value));
-  };
 
   // --- save ---
   const saveMutation = useApiMutation({
     errorMessage: "Failed to save FAQ.",
     mutationFn: async () => {
       const payload: Record<string, JsonValue> = {
-        question,
-        slug: slug || toSlug(question),
-        answer,
-        category,
-        tags,
-        order,
-        priority,
-        isActive,
-        isPinned,
-        showOnHomepage,
-        showInFooter,
+        question: values.question,
+        slug: values.slug || toSlug(values.question),
+        answer: values.answer,
+        category: values.category,
+        tags: values.tags,
+        order: values.order,
+        priority: values.priority,
+        isActive: values.isActive,
+        isPinned: values.isPinned,
+        showOnHomepage: values.showOnHomepage,
+        showInFooter: values.showInFooter,
       };
       if (isEdit) {
         return apiClient.put(ADMIN_ENDPOINTS.FAQ_BY_ID(faqId!), payload);
@@ -157,119 +200,160 @@ export function AdminFaqEditorView({
       if (onDeleted) onDeleted();
     },
   });
-
   const isSubmitting = saveMutation.isPending || faqQuery.isLoading;
-  const canSave = Boolean(question.trim()) && Boolean(answer.trim());
 
-  const formSection = (
-    <>
-    <Form
-      key="faq-form"
-      schema={faqFormSchema}
-      onSubmit={(e) => e.preventDefault()}
-      spacing="md"
-    >{({ setFieldError, clearErrors }) => (
-      <>
+  const sections = React.useMemo<SectionDef<FaqFormValues>[]>(() => [
+    {
+      id: "basics",
+      label: "Question & answer",
+      required: true,
+      fields: ["question", "slug", "answer"],
+      // The rich-text editor holds an uncommitted buffer.
+      keepMounted: true,
+      render: ({ values: v, onChange, errors }) => (
+        <Stack gap="md">
           <FieldInput
             name="question"
             label="Question"
-            value={question}
-            onChange={(v) => handleQuestionChange(v)}
+            value={String(v.question ?? "")}
+            onChange={(val) => onChange({ question: val })}
             required
             placeholder="e.g. How does bidding work on LetItRip?"
+            error={errors.question}
           />
-
           <Input
             label="Slug"
-            value={slug}
+            value={String(v.slug ?? "")}
             onChange={(e) => {
-              setSlug(e.target.value);
               setSlugManual(true);
+              onChange({ slug: e.target.value });
             }}
             placeholder="faq-how-does-bidding-work"
-            helperText="Auto-generated from question. Must start with 'faq-'."
+            helperText="Auto-generated from the question until you edit it. Must start with 'faq-'."
+            error={errors.slug}
           />
-
           <Stack gap="xs">
             <Text size="sm" weight="medium" color="muted">
               Answer
             </Text>
             <RichTextEditor
-              value={answer}
-              onChange={setAnswer}
+              value={String(v.answer ?? "")}
+              onChange={(val) => onChange({ answer: val })}
               placeholder="Write a clear, helpful answer..."
               minHeightClassName="min-h-[200px]"
             />
+            {errors.answer && (
+              <Text size="xs" color="error" role="alert">{errors.answer}</Text>
+            )}
           </Stack>
-
+        </Stack>
+      ),
+    },
+    {
+      id: "classification",
+      label: "Filing & ordering",
+      fields: ["category", "tags", "order", "priority"],
+      render: ({ values: v, onChange, errors }) => (
+        <Stack gap="md">
           <Div layout="grid" gap="4" className="grid-cols-2">
             <Select
               label="Category"
               options={CATEGORY_OPTIONS}
-              value={category}
-              onValueChange={setCategory}
+              value={String(v.category ?? "general")}
+              onValueChange={(val) => onChange({ category: val })}
+              error={errors.category}
             />
             <Input
               label="Display order"
-              value={String(order)}
-              onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
+              value={String(v.order ?? 0)}
+              onChange={(e) => onChange({ order: parseInt(e.target.value, 10) || 0 })}
               type="number"
               min={0}
               helperText="Lower = shown first within category."
+              error={errors.order}
             />
           </Div>
-
           <Input
             label="Priority"
-            value={String(priority)}
-            onChange={(e) => setPriority(parseInt(e.target.value, 10) || 0)}
+            value={String(v.priority ?? 0)}
+            onChange={(e) => onChange({ priority: parseInt(e.target.value, 10) || 0 })}
             type="number"
             min={0}
             helperText="Higher priority FAQs appear first in search results."
+            error={errors.priority}
           />
-
           <TagInput
             label="Tags"
-            value={tags}
-            onChange={setTags}
+            value={Array.isArray(v.tags) ? (v.tags as string[]) : []}
+            onChange={(val) => onChange({ tags: val })}
             placeholder="e.g. shipping, pokemon, returns"
           />
+        </Stack>
+      ),
+    },
+    {
+      id: "visibility",
+      label: "Visibility",
+      fields: ["isActive", "isPinned", "showOnHomepage", "showInFooter"],
+      render: ({ values: v, onChange }) => (
+        <Stack gap="3">
+          <Toggle
+            label="Active (visible to users)"
+            checked={v.isActive ?? true}
+            onChange={(c) => onChange({ isActive: c })}
+          />
+          <Toggle
+            label="Pinned (always shown at top)"
+            checked={v.isPinned ?? false}
+            onChange={(c) => onChange({ isPinned: c })}
+          />
+          <Toggle
+            label="Show on homepage FAQ section"
+            checked={v.showOnHomepage ?? false}
+            onChange={(c) => onChange({ showOnHomepage: c })}
+          />
+          <Toggle
+            label="Show in footer FAQ links"
+            checked={v.showInFooter ?? false}
+            onChange={(c) => onChange({ showInFooter: c })}
+          />
+        </Stack>
+      ),
+    },
+  ], []);
 
-          <Stack className={`${__P.p4}`} gap="3" rounded="lg" border="default">
-            <Text size="sm" weight="medium" color="muted">Visibility</Text>
-            <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
-            <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />
-            <Toggle label="Show on homepage FAQ section" checked={showOnHomepage} onChange={setShowOnHomepage} />
-            <Toggle label="Show in footer FAQ links" checked={showInFooter} onChange={setShowInFooter} />
-          </Stack>
+  const nav = useSectionFormNav(sections, values);
+  const { shellCtx } = useFormShellState(faqFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
-          <FormErrorSummary />
-          <Row gap="3" padding="t-xs">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              disabled={!canSave || isSubmitting}
-              onClick={() => {
-                clearErrors();
-                if (!question.trim()) { setFieldError("question", "Question is required"); return; }
-                saveMutation.mutate();
-              }}
-            >
-              {isEdit ? "Save changes" : "Create FAQ"}
-            </Button>
-            {isEdit && (
-              <Button
-                type="button"
-                variant="danger"
-                isLoading={deleteMutation.isPending}
-                onClick={() => setDeleteConfirmOpen(true)}
-              >
-                Delete FAQ
-              </Button>
-            )}
-          </Row>
-      </>
-    )}</Form>
+  const formSection = (
+    <>
+    <FormShellContext.Provider value={shellCtx}>
+      <FormErrorSummary />
+      <SectionForm<FaqFormValues>
+        sections={sections}
+        values={values}
+        onChange={handleChange}
+        onSubmit={() => saveMutation.mutate()}
+        schema={faqFormSchema}
+        openIds={nav.openIds}
+        onOpenChange={nav.setOpenIds}
+        isLoading={isSubmitting}
+        submitLabel={isEdit ? "Save changes" : "Create FAQ"}
+        destructiveAction={
+          isEdit
+            ? {
+                label: "Delete FAQ",
+                onClick: () => setDeleteConfirmOpen(true),
+                disabled: deleteMutation.isPending,
+              }
+            : undefined
+        }
+      />
+    </FormShellContext.Provider>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal
         isOpen
