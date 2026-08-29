@@ -261,6 +261,22 @@ export function encryptPiiFields<T extends object>(
       setPath(result as Record<string, unknown>, field, encryptValue(value));
     } else {
       result[field] = encryptValue(value);
+      /*
+       * 🛑 The derived name is not always the name readers query.
+       *
+       * `phoneNumber` yields `phoneNumberIndex`, and NOTHING in this codebase
+       * reads that — every lookup uses `phoneIndex` (`USER_PII_INDEX_MAP`,
+       * `byPhoneIndex`, `USER_FIELDS.PHONE_INDEX`). `BaseRepository` patches
+       * around it by *additionally* spreading `piiIndicesFor(data,
+       * piiIndexMap)`, so a user document has carried BOTH the correct
+       * `phoneIndex` and a dead `phoneNumberIndex` on every write.
+       *
+       * The derivation stays, because `email` -> `emailIndex` is right and
+       * several callers depend on it, and because removing it would silently
+       * drop indices for every field whose repository has no `piiIndexMap`
+       * entry. Where a field's index name differs, the MAP is the authority —
+       * which is why `scripts/lib/pii-seed.mjs` indexes only from the map.
+       */
       result[`${field}Index`] = hmacBlindIndex(value);
     }
   }
