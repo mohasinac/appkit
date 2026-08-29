@@ -56,9 +56,16 @@ export const navItemFormSchema = z.object({
     section: "basics", sectionLabel: "Nav item", sectionRequired: true,
     quick: true, order: 1, row: "pair",
   }),
-  href: annotate(hrefSchema, { section: "basics", quick: true, order: 2, row: "pair" }),
+  href: annotate(hrefSchema, {
+    section: "basics", quick: true, order: 2, row: "pair",
+    label: "URL / href",
+    // On the schema rather than the control, so every surface that renders this
+    // field gets it — the editor used to carry it as a local `helperText`.
+    help: "Use relative paths (e.g. /products) or full URLs.",
+  }),
   icon: annotate(z.string().max(60).optional(), {
-    section: "basics", order: 3, row: "pair",
+    section: "basics", order: 3, row: "pair", kind: "select",
+    label: "Icon (optional)",
   }),
   order: annotate(
     z.coerce.number().int("Order must be a whole number.").min(0, "Order cannot be negative.").optional(),

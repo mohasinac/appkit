@@ -3,21 +3,33 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 
-import {
-  Button,
-  Form,
-  FormActions,
-  Input,
-  Select,
-  SideDrawer,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Div, SideDrawer, useToast } from "../../../ui";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { SectionForm, useSectionFormNav, buildSectionsFromSchema } from "../../shell";
+
+/** Matches `navItemFormSchema`; the draft always holds a concrete value. */
+interface NavItemFormValues {
+  [key: string]: string | number | boolean;
+  label: string;
+  href: string;
+  icon: string;
+  order: number;
+  parentId: string;
+  isVisible: boolean;
+}
+
+const EMPTY_NAV_ITEM: NavItemFormValues = {
+  label: "",
+  href: "",
+  icon: "",
+  order: 0,
+  parentId: "",
+  isVisible: true,
+};
 import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
 import { navItemFormSchema } from "../schemas/nav-item-form";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ROUTES } from "../../../next/routing/route-map";
 
 // --- Types -------------------------------------------------------------------
 
@@ -67,28 +79,24 @@ export function AdminNavEditorView({
 }: AdminNavEditorViewProps) {
   const isEdit = Boolean(item?.id);
 
-  const [label, setLabel] = React.useState("");
-  const [href, setHref] = React.useState("");
-  const [icon, setIcon] = React.useState("");
-  const [order, setOrder] = React.useState(0);
-  const [parentId, setParentId] = React.useState("");
-  const [isVisible, setIsVisible] = React.useState(true);
+  const [values, setValues] = React.useState<NavItemFormValues>(EMPTY_NAV_ITEM);
+
+  const handleChange = React.useCallback((partial: Partial<NavItemFormValues>) => {
+    setValues((prev) => Object.assign({}, prev, partial));
+  }, []);
 
   React.useEffect(() => {
     if (open && item) {
-      setLabel(item.label ?? "");
-      setHref(item.href ?? "");
-      setIcon(item.icon ?? "");
-      setOrder(item.order ?? 0);
-      setParentId(item.parentId ?? "");
-      setIsVisible(item.isVisible ?? true);
+      setValues({
+        label: item.label ?? "",
+        href: item.href ?? "",
+        icon: item.icon ?? "",
+        order: item.order ?? 0,
+        parentId: item.parentId ?? "",
+        isVisible: item.isVisible ?? true,
+      });
     } else if (!open) {
-      setLabel("");
-      setHref("");
-      setIcon("");
-      setOrder(0);
-      setParentId("");
-      setIsVisible(true);
+      setValues(EMPTY_NAV_ITEM);
     }
   }, [open, item]);
 
@@ -98,12 +106,12 @@ export function AdminNavEditorView({
     errorMessage: "Failed to save nav item.",
     mutationFn: async () => {
       const payload = {
-        label,
-        href,
-        icon: icon || undefined,
-        order,
-        parentId: parentId || undefined,
-        isVisible,
+        label: values.label,
+        href: values.href,
+        icon: values.icon || undefined,
+        order: values.order,
+        parentId: values.parentId || undefined,
+        isVisible: values.isVisible,
       };
       if (isEdit) {
         return apiClient.patch(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(item!.id!), payload);
@@ -117,12 +125,49 @@ export function AdminNavEditorView({
     },
   });
 
-  const canSave = Boolean(label.trim()) && Boolean(href.trim());
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<NavItemFormValues>(navItemFormSchema, {
+        options: {
+          icon: ICON_OPTIONS,
+          // Injected by the caller, so it cannot come from the schema.
+          parentId: [{ label: "None (top-level)", value: "" }, ...parentOptions],
+        },
+      }),
+    [parentOptions],
+  );
 
-  const parentSelectOptions = [
-    { label: "None (top-level)", value: "" },
-    ...parentOptions,
-  ];
+  const nav = useSectionFormNav(sections, values);
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(navItemFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
+  /*
+   * The routes already validated a nav item; this form did not, so an invalid
+   * href surfaced as a 400 banner after a round-trip instead of an error on the
+   * field. Same schema both sides now — and since it actually runs, the
+   * hand-rolled `canSave` that used to sit here is gone. It restated two of the
+   * schema's rules, disagreed with it on the rest, and was not even wired to
+   * the button's `disabled`.
+   */
+  const onSubmit = () => {
+    clearErrors();
+    const parsed = navItemFormSchema.safeParse({
+      label: values.label,
+      href: values.href,
+      icon: values.icon || undefined,
+      order: values.order,
+      parentId: values.parentId || undefined,
+      isVisible: values.isVisible,
+    });
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
 
   return (
     <SideDrawer
@@ -130,95 +175,24 @@ export function AdminNavEditorView({
       onClose={onClose}
       title={isEdit ? "Edit Nav Item" : "New Nav Item"}
     >
-      <Form
-        schema={navItemFormSchema}
-        onSubmit={(e) => e.preventDefault()}
-        spacing="md"
-        padding="md"
-      >
-        {({ setFieldError, clearErrors }) => (
-        <>
-        {/*
-          The routes already validated a nav item; this form did not, so an
-          invalid href surfaced as a 400 banner after a round-trip instead of
-          an error on the field. Same schema both sides now.
-        */}
-        <FormErrorSummary />
-        <Input
-          label="Label"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          required
-          placeholder="e.g. Products"
-        />
-
-        <Input
-          label="URL / href"
-          value={href}
-          onChange={(e) => setHref(e.target.value)}
-          required
-          placeholder={String(ROUTES.PUBLIC.PRODUCTS)}
-          helperText="Use relative paths (e.g. /products) or full URLs."
-        />
-
-        <Select
-          label="Icon (optional)"
-          options={ICON_OPTIONS}
-          value={icon}
-          onValueChange={setIcon}
-        />
-
-        {parentOptions.length > 0 && (
-          <Select
-            label="Parent item (for nested nav)"
-            options={parentSelectOptions}
-            value={parentId}
-            onValueChange={setParentId}
-          />
-        )}
-
-        <Input
-          label="Order"
-          value={String(order)}
-          onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
-          type="number"
-          min={0}
-          helperText="Lower numbers appear first."
-        />
-
-        <Toggle
-          label="Visible in navigation"
-          checked={isVisible}
-          onChange={setIsVisible}
-        />
-
-        <FormActions align="right">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
+      <FormShellContext.Provider value={shellCtx}>
+        <Div padding="md">
+          <FormErrorSummary />
+          <SectionForm<NavItemFormValues>
+            sections={sections}
+            values={values}
+            onChange={handleChange}
+            onSubmit={onSubmit}
+            schema={navItemFormSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
             isLoading={saveMutation.isPending}
-            disabled={saveMutation.isPending}
-            onClick={() => {
-              clearErrors();
-              const parsed = navItemFormSchema.safeParse({
-                label, href, icon: icon || undefined, order,
-                parentId: parentId || undefined, isVisible,
-              });
-              if (!parsed.success) {
-                applyZodIssues(parsed.error.issues, setFieldError);
-                return;
-              }
-              saveMutation.mutate();
-            }}
-          >
-            {isEdit ? "Save changes" : "Create item"}
-          </Button>
-        </FormActions>
-        </>
-        )}
-      </Form>
+            submitLabel={isEdit ? "Save changes" : "Create item"}
+            onCancel={onClose}
+            cancelLabel="Cancel"
+          />
+        </Div>
+      </FormShellContext.Provider>
     </SideDrawer>
   );
 }
