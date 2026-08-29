@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { Button, Checkbox, FormField, FormGroup, Row, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
-import { useFormShellState, FormErrorSummary, type UseFormShellStateResult } from "../../../ui/forms";
+import { useFormShellState, FormErrorSummary, applyZodIssues, type UseFormShellStateResult } from "../../../ui/forms";
 import type { AddressFormData } from "../hooks/useAddresses";
 
 // Local form-input schema — `userAddressSchema` (account schemas) uses
@@ -139,15 +139,21 @@ export function AddressForm({
       const clear = h?.clearErrors ?? clearErrors;
       markSubmitAttempted();
       clear();
-      const errs: Record<string, string> = {};
-      if (!formData.fullName.trim()) errs["fullName"] = "Full name is required";
-      if (!formData.phone.trim()) errs["phone"] = "Phone number is required";
-      if (!formData.addressLine1.trim()) errs["addressLine1"] = "Address is required";
-      if (!formData.city.trim()) errs["city"] = "City is required";
-      if (!formData.state.trim()) errs["state"] = "State is required";
-      if (!formData.postalCode.trim()) errs["postalCode"] = "Postal code is required";
-      if (Object.keys(errs).length > 0) {
-        Object.entries(errs).forEach(([k, v]) => setErr(k, v));
+      /*
+       * The SCHEMA decides, not a hand-rolled restatement of it.
+       *
+       * This was six `if (!x.trim())` checks reproducing the schema's six
+       * `.min(1)` rules and nothing else — so `landmark`'s 100-character bound
+       * never ran, and the two fields rendered with a `required` asterisk
+       * (`label`, `country`) were checked by neither: both are `.optional()`
+       * here and neither appeared in the guard. The asterisk was decoration.
+       *
+       * Same argument as AdminFeatureEditorView:240 — a partial restatement
+       * agrees with the schema on the rules it copied and disagrees on the rest.
+       */
+      const parsed = addressFormSchema.safeParse(formData);
+      if (!parsed.success) {
+        applyZodIssues(parsed.error.issues, setErr);
         return;
       }
       try {
@@ -192,7 +198,6 @@ export function AddressForm({
         value={formData.label}
         onChange={(value) => handleChange("label", value)}
         placeholder={mergedPlaceholders.label}
-        required
       />
 
       <FormField
@@ -290,7 +295,6 @@ export function AddressForm({
         value={formData.country}
         onChange={(value) => handleChange("country", value)}
         placeholder={mergedPlaceholders.country}
-        required
       />
 
       <Checkbox
