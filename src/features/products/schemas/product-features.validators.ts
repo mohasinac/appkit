@@ -120,6 +120,9 @@ export const productFeatureFormSchema = z.object({
   storeId: annotate(productFeatureAdminCreateSchema.shape.storeId, {
     section: "scope", order: 4, row: "pair",
     help: "Only used when scope is \"store\".",
+    // Hidden for a global feature, and paired with visibleValues at the
+    // payload so a store id chosen and then abandoned is not saved.
+    when: (v) => (v as { scope?: string }).scope === "store",
   }),
 
   isActive: annotate(productFeatureAdminCreateSchema.shape.isActive, {

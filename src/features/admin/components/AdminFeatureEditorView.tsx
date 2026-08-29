@@ -25,6 +25,9 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ERROR_MESSAGES } from "../../../errors/messages";
 import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { productFeatureFormSchema } from "../../products/schemas/product-features.validators";
 import {
   PRODUCT_FEATURE_CATEGORY_OPTIONS,
@@ -56,6 +59,20 @@ const FIELD_LABEL_CLASS =
   "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)]";
 const DELETE_CONFIRM_TEXT =
   "Delete this feature? It will fail if any product still references it.";
+
+interface Values {
+  [key: string]: unknown;
+  label: string;
+  description: string;
+  icon: string;
+  iconColor: string;
+  category: ProductFeatureCategory;
+  scope: ProductFeatureScope;
+  productTypes: ProductFeatureProductType[];
+  storeId: string;
+  isActive: boolean;
+  displayOrder: string;
+}
 
 const TOAST = {
   CREATED: "Feature created.",
@@ -113,24 +130,21 @@ export function AdminFeatureEditorView({
   const isEdit = Boolean(featureId);
   const { showToast } = useToast();
 
-  const [label, setLabel] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [icon, setIcon] = React.useState("");
-  const [iconColor, setIconColor] = React.useState("");
-  const [category, setCategory] =
-    React.useState<ProductFeatureCategory>("platform");
-  const [scope, setScope] = React.useState<ProductFeatureScope>(
-    fixedScope ?? "platform",
-  );
-  const [productTypes, setProductTypes] = React.useState<
-    ProductFeatureProductType[]
-  >(["all"]);
-  const [storeId, setStoreId] = React.useState<string>(fixedStoreId ?? "");
-  const [isActive, setIsActive] = React.useState(true);
+  const [form, setForm] = React.useState<Values>({
+    label: "",
+    description: "",
+    icon: "",
+    iconColor: "",
+    category: "platform",
+    scope: fixedScope ?? "platform",
+    productTypes: ["all"],
+    storeId: fixedStoreId ?? "",
+    isActive: true,
+    displayOrder: String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
+  });
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
-  const [displayOrder, setDisplayOrder] = React.useState<string>(
-    String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
-  );
+  const patch = (partial: Partial<Values>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
 
   const createEndpoint =
     endpointOverride?.create ?? ADMIN_ENDPOINTS.PRODUCT_FEATURES;
@@ -155,53 +169,61 @@ export function AdminFeatureEditorView({
       const body = (res as { data?: JsonValue })?.data ?? res;
       return (body as { items?: StoreOption[] })?.items ?? [];
     },
-    enabled: scope === "store" && !fixedStoreId,
+    enabled: form.scope === "store" && !fixedStoreId,
   });
 
   React.useEffect(() => {
     const f = featureQuery.data as AdminFeaturePayload | undefined;
     if (!f) return;
-    setLabel(f.label ?? "");
-    setDescription(f.description ?? "");
-    setIcon(f.icon ?? "");
-    setIconColor(f.iconColor ?? "");
-    setCategory(f.category ?? "platform");
-    if (!fixedScope) setScope(f.scope ?? "platform");
-    setProductTypes(f.productTypes ?? ["all"]);
-    if (!fixedStoreId) setStoreId(f.storeId ?? "");
-    setIsActive(f.isActive ?? true);
-    setDisplayOrder(
-      f.displayOrder !== undefined
-        ? String(f.displayOrder)
-        : String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
-    );
+    patch({
+      label: f.label ?? "",
+      description: f.description ?? "",
+      icon: f.icon ?? "",
+      iconColor: f.iconColor ?? "",
+      category: f.category ?? "platform",
+      // A fixed scope/store comes from the mounting page and outranks the record.
+      ...(fixedScope ? {} : { scope: f.scope ?? "platform" }),
+      productTypes: f.productTypes ?? ["all"],
+      ...(fixedStoreId ? {} : { storeId: f.storeId ?? "" }),
+      isActive: f.isActive ?? true,
+      displayOrder:
+        f.displayOrder !== undefined
+          ? String(f.displayOrder)
+          : String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
+    });
   }, [featureQuery.data, fixedScope, fixedStoreId]);
 
   const toggleProductType = (value: ProductFeatureProductType) => {
-    setProductTypes((prev) => {
-      if (value === "all") return ["all"];
-      const next = prev.filter((v) => v !== "all");
-      return next.includes(value)
-        ? next.filter((v) => v !== value)
-        : [...next, value];
+    setForm((prev) => {
+      if (value === "all") return { ...prev, productTypes: ["all"] };
+      const next = prev.productTypes.filter((v) => v !== "all");
+      return {
+        ...prev,
+        productTypes: next.includes(value)
+          ? next.filter((v) => v !== value)
+          : [...next, value],
+      };
     });
   };
 
   const saveMutation = useApiMutation({
     errorMessage: "Failed to save feature.",
     mutationFn: async () => {
+      // `visibleValues` drops `storeId` when the scope is not "store", so a
+      // store picked and then abandoned cannot ride along on a platform feature.
+      const draft = visibleValues(productFeatureFormSchema, form) as Partial<Values>;
       const payload: AdminFeaturePayload = {
-        label,
-        description: description || undefined,
-        icon,
-        iconColor: iconColor || undefined,
-        category,
-        scope,
-        productTypes: productTypes.length === 0 ? ["all"] : productTypes,
-        storeId: scope === "store" ? storeId || undefined : undefined,
-        isActive,
+        label: form.label,
+        description: form.description || undefined,
+        icon: form.icon,
+        iconColor: form.iconColor || undefined,
+        category: form.category,
+        scope: form.scope,
+        productTypes: form.productTypes.length === 0 ? ["all"] : form.productTypes,
+        storeId: draft.storeId || undefined,
+        isActive: form.isActive,
         displayOrder:
-          Number(displayOrder) || PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
+          Number(form.displayOrder) || PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
       };
       if (isEdit) {
         return apiClient.put(byIdEndpoint(featureId!), payload);
@@ -250,159 +272,100 @@ export function AdminFeatureEditorView({
    */
   const isDisabled = isSubmitting;
 
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(productFeatureFormSchema, {
+        options: {
+          iconColor: [...PRODUCT_FEATURE_ICON_COLOR_OPTIONS],
+          category: [...PRODUCT_FEATURE_CATEGORY_OPTIONS],
+          scope: [...PRODUCT_FEATURE_SCOPE_OPTIONS],
+          storeId: storeOptions,
+        },
+        renderers: {
+          /*
+           * A pill group, not a list editor. `kind: "list"` renders the
+           * generator's disabled placeholder, which for a required multi-select
+           * would be an unsubmittable form.
+           */
+          productTypes: ({ values }) => (
+            <Div>
+              <Text className={FIELD_LABEL_CLASS}>Applies to</Text>
+              <Row gap="sm" wrap className="mt-2">
+                {PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS.map((opt) => {
+                  const checked = (values.productTypes as ProductFeatureProductType[]).includes(
+                    opt.value,
+                  );
+                  const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;
+                  return (
+                    <Label key={opt.value} className={pillClass}>
+                      <Checkbox
+                        bare
+                        className="sr-only"
+                        checked={checked}
+                        onChange={() => toggleProductType(opt.value)}
+                      />
+                      {opt.label}
+                    </Label>
+                  );
+                })}
+              </Row>
+            </Div>
+          ),
+          /*
+           * `fixedScope` / `fixedStoreId` come from the MOUNTING PAGE, not from
+           * the draft, so they cannot be `when` predicates — those see values
+           * only. Returning null is how a prop-driven hide is expressed.
+           */
+          ...(fixedScope ? { scope: () => null } : {}),
+          ...(fixedStoreId ? { storeId: () => null } : {}),
+        },
+      }),
+    [storeOptions, fixedScope, fixedStoreId],
+  );
+
+  const nav = useSectionFormNav(sections, form, { scope: "admin:feature-editor" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(productFeatureFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
+  const onSubmit = () => {
+    clearErrors();
+    const draft = visibleValues(productFeatureFormSchema, form) as Partial<Values>;
+    const parsed = productFeatureFormSchema.safeParse({
+      ...draft,
+      description: form.description || undefined,
+      iconColor: form.iconColor || undefined,
+      productTypes: form.productTypes.length === 0 ? ["all"] : form.productTypes,
+      storeId: draft.storeId || undefined,
+      displayOrder: Number(form.displayOrder) || PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
+    });
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
+
   const formSection = (
-    <Form
-      key="feature-form"
-      schema={productFeatureFormSchema}
-      onSubmit={(e) => e.preventDefault()}
-    >
-      {({ setFieldError, clearErrors }) => (
-      <Stack gap="md">
-        <FormErrorSummary />
-        <Input
-          label="Label"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          required
-          placeholder="e.g. Free Shipping"
-          helperText="Shown on product cards and detail pages."
-        />
-
-        <Input
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Optional — shown as a tooltip on the badge."
-        />
-
-        <Grid cols="halves" gap="md">
-          <Input
-            label="Icon"
-            value={icon}
-            onChange={(e) => setIcon(e.target.value)}
-            required
-            placeholder="truck"
-            helperText="Icon-set name key (e.g. truck, star, trophy) OR an SVG path starting with M."
-          />
-
-          <Select
-            label="Icon colour"
-            value={iconColor}
-            onChange={(e) => setIconColor(e.target.value)}
-            options={PRODUCT_FEATURE_ICON_COLOR_OPTIONS}
-          />
-        </Grid>
-
-        <Grid cols="halves" gap="md">
-          <Select<ProductFeatureCategory>
-            label="Category"
-            value={category}
-            onChange={(e) =>
-              setCategory(e.target.value as ProductFeatureCategory)
-            }
-            options={PRODUCT_FEATURE_CATEGORY_OPTIONS}
-            required
-          />
-
-          <Input
-            label="Display order"
-            value={displayOrder}
-            onChange={(e) => setDisplayOrder(e.target.value)}
-            type="number"
-            min={0}
-          />
-        </Grid>
-
-        <Div>
-          <Text className={FIELD_LABEL_CLASS}>Applies to</Text>
-          <Row gap="sm" wrap className="mt-2">
-            {PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS.map((opt) => {
-              const checked = productTypes.includes(opt.value);
-              const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;
-              return (
-                <Label key={opt.value} className={pillClass}>
-                  <Checkbox
-                    bare
-                    className="sr-only"
-                    checked={checked}
-                    onChange={() => toggleProductType(opt.value)}
-                  />
-                  {opt.label}
-                </Label>
-              );
-            })}
-          </Row>
-        </Div>
-
-        {!fixedScope && (
-          <Select<ProductFeatureScope>
-            label="Scope"
-            value={scope}
-            onChange={(e) =>
-              setScope(e.target.value as ProductFeatureScope)
-            }
-            options={PRODUCT_FEATURE_SCOPE_OPTIONS}
-          />
-        )}
-
-        {scope === "store" && !fixedStoreId && (
-          <Select
-            label="Store"
-            value={storeId}
-            onChange={(e) => setStoreId(e.target.value)}
-            options={storeOptions}
-            required
-            helperText="Store-scope features are visible only on this store's listings."
-          />
-        )}
-
-        <Toggle label="Active" checked={isActive} onChange={setIsActive} />
-
-        <Row gap="3" padding="t-xs">
-          <Button
-            type="submit"
-            isLoading={isSubmitting}
-            disabled={isDisabled}
-            onClick={() => {
-              // Parse before saving. This form had NO validation at all: the
-              // only guard was `required` on the inputs, an HTML attribute
-              // that any programmatic submit bypasses, and the max lengths /
-              // displayOrder bounds / productTypes minimum were never checked
-              // client-side at all.
-              clearErrors();
-              const parsed = productFeatureFormSchema.safeParse({
-                label, description: description || undefined,
-                icon, iconColor: iconColor || undefined,
-                category, scope,
-                productTypes: productTypes.length === 0 ? ["all"] : productTypes,
-                storeId: scope === "store" ? storeId || undefined : undefined,
-                isActive,
-                displayOrder:
-                  Number(displayOrder) || PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
-              });
-              if (!parsed.success) {
-                applyZodIssues(parsed.error.issues, setFieldError);
-                return;
-              }
-              saveMutation.mutate();
-            }}
-          >
-            {isEdit ? "Save changes" : "Create feature"}
-          </Button>
-          {isEdit && (
-            <Button
-              type="button"
-              variant="danger"
-              isLoading={deleteMutation.isPending}
-              onClick={() => setDeleteConfirmOpen(true)}
-            >
-              Delete
-            </Button>
-          )}
-        </Row>
-      </Stack>
-      )}
-    </Form>
+    <FormShellContext.Provider value={shellCtx}>
+      <FormErrorSummary />
+      <SectionForm<Values>
+        sections={sections}
+        values={form}
+        onChange={patch}
+        onSubmit={onSubmit}
+        schema={productFeatureFormSchema}
+        openIds={nav.openIds}
+        onOpenChange={nav.setOpenIds}
+        isLoading={isSubmitting}
+        submitLabel={isEdit ? "Save changes" : "Create feature"}
+        destructiveAction={
+          isEdit ? { label: "Delete", onClick: () => setDeleteConfirmOpen(true) } : undefined
+        }
+      />
+    </FormShellContext.Provider>
   );
 
   const deleteModal = deleteConfirmOpen && (
