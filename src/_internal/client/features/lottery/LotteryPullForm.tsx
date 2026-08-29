@@ -1,19 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Stack,
-  Row,
-  Text,
-  Heading,
-  Span,
-} from "../../../../ui";
-import { Form, FieldInput, Button } from "../../../../ui";
-import type { UseFormShellStateResult } from "../../../../ui/forms";
+/**
+ * User-facing lottery pull form — claim a slot with a UPI reference.
+ *
+ * Fields come from `lotteryPullSchema`. Two need a `renderers` entry because
+ * their labels depend on `totalSlots`, which a static annotation cannot know,
+ * and one needs `datetime-local` rather than a plain date.
+ *
+ * ## The upper bound stays a runtime check, on purpose
+ *
+ * `purchasedItemNumber` is `.min(1)` in the schema and has no `.max()`: the
+ * ceiling is `totalSlots`, a prop that varies per lottery. A schema shared with
+ * the route cannot carry it, so it is checked after the parse rather than
+ * pretended into the annotation. Everything else the hand-written validation
+ * used to duplicate — the reference length, the phone shape, the date — now
+ * comes from the schema, which is where those rules already lived.
+ */
+
+import React, { useMemo, useState } from "react";
+
 import { useApiMutation } from "../../../../client/api/useApiMutation";
-import { apiClient } from "../../../../http";
 import { lotteryPullSchema } from "../../../../features/admin/schemas/admin-user-form";
+import { buildSectionsFromSchema } from "../../../../features/shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../../../features/shell/SectionForm";
+import { apiClient } from "../../../../http";
+import { FieldInput, Heading, Row, Span, Stack, Text } from "../../../../ui";
+import { applyZodIssues } from "../../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../../ui/forms/FormShell";
 
 interface LotteryPullFormProps {
   sourceType: "event" | "product";
@@ -21,7 +35,11 @@ interface LotteryPullFormProps {
   productId?: string;
   totalSlots: number;
   maxPullsPerUser: number;
-  onSuccess?: (result: { userLotteryNumber: number; assignedPrizeSlotNumber: number; slotName: string }) => void;
+  onSuccess?: (result: {
+    userLotteryNumber: number;
+    assignedPrizeSlotNumber: number;
+    slotName: string;
+  }) => void;
 }
 
 interface PullResult {
@@ -30,11 +48,15 @@ interface PullResult {
   slotName: string;
 }
 
-/**
- * User-facing lottery pull form.
- * Submits TX ID + phone + payment time + item number.
- * On success, shows the user their lottery number and assigned prize slot.
- */
+interface Values {
+  [key: string]: unknown;
+  sourceType: "event" | "product";
+  transactionId: string;
+  paymentTime: string;
+  purchasedItemNumber: string;
+  userPhone: string;
+}
+
 export function LotteryPullForm({
   sourceType,
   eventId,
@@ -44,26 +66,70 @@ export function LotteryPullForm({
   onSuccess,
 }: LotteryPullFormProps) {
   const [result, setResult] = useState<PullResult | null>(null);
-
-  const [transactionId, setTransactionId] = useState("");
-  const [paymentTime, setPaymentTime] = useState("");
-  const [itemNumber, setItemNumber] = useState("");
-  const [userPhone, setUserPhone] = useState("");
+  const [form, setForm] = useState<Values>({
+    sourceType,
+    transactionId: "",
+    paymentTime: "",
+    purchasedItemNumber: "",
+    userPhone: "",
+  });
 
   const apiRoute =
     sourceType === "event"
       ? `/api/events/${eventId ?? ""}/lottery-pull`
       : `/api/products/${productId ?? ""}/lottery-pull`;
 
+  const sections = useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(lotteryPullSchema, {
+        renderers: {
+          paymentTime: ({ values, onChange, errors }) => (
+            <FieldInput
+              name="paymentTime"
+              label="Payment Date & Time"
+              // `datetime-local`, not `date` — the pull is matched against a
+              // bank timestamp, so the time of day is part of the evidence.
+              type="datetime-local"
+              required
+              value={values.paymentTime as string}
+              error={errors.paymentTime}
+              onChange={(v: string) => onChange({ paymentTime: v })}
+            />
+          ),
+          purchasedItemNumber: ({ values, onChange, errors }) => (
+            <FieldInput
+              name="purchasedItemNumber"
+              label={`Slot Number (1 – ${totalSlots})`}
+              type="number"
+              placeholder={`Enter a number between 1 and ${totalSlots}`}
+              required
+              value={values.purchasedItemNumber as string}
+              error={errors.purchasedItemNumber}
+              onChange={(v: string) => onChange({ purchasedItemNumber: v })}
+            />
+          ),
+        },
+      }),
+    [totalSlots],
+  );
+
+  const nav = useSectionFormNav(sections, form, { scope: "lottery:pull" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(lotteryPullSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
   const mutation = useApiMutation<{ data: PullResult }, Error, void>({
+    errorMessage: "Could not submit your entry.",
     mutationFn: () =>
       apiClient.post<{ data: PullResult }>(apiRoute, {
         sourceType,
         ...(sourceType === "event" ? { eventId } : { productId }),
-        transactionId,
-        paymentTime: new Date(paymentTime).toISOString(),
-        purchasedItemNumber: parseInt(itemNumber, 10),
-        userPhone,
+        transactionId: form.transactionId,
+        paymentTime: new Date(form.paymentTime).toISOString(),
+        purchasedItemNumber: parseInt(form.purchasedItemNumber, 10),
+        userPhone: form.userPhone,
       }),
     successMessage: "Your lottery entry has been submitted!",
     onSuccess: (data) => {
@@ -73,6 +139,21 @@ export function LotteryPullForm({
       }
     },
   });
+
+  const onSubmit = () => {
+    clearErrors();
+    const parsed = lotteryPullSchema.safeParse(form);
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    // Data-dependent ceiling — see the header.
+    if (parsed.data.purchasedItemNumber > totalSlots) {
+      setFieldError("purchasedItemNumber", `This lottery has ${totalSlots} slots.`);
+      return;
+    }
+    mutation.mutate();
+  };
 
   if (result) {
     return (
@@ -109,94 +190,28 @@ export function LotteryPullForm({
   }
 
   return (
-    <Form schema={lotteryPullSchema} onSubmit={(e) => e.preventDefault()} className="space-y-4">
-      {({ setFieldError, clearErrors }: UseFormShellStateResult) => (
-        <Stack gap="md">
-          <FormErrorSummary />
-          <Heading level={3} size="lg" weight="semibold">
-            Submit Your Entry
-          </Heading>
-          <Text size="sm" color="muted">
-            Enter your UPI Transaction ID and payment details to claim your slot.
-            {" "}You may enter up to {maxPullsPerUser} time{maxPullsPerUser === 1 ? "" : "s"}.
-          </Text>
-
-          <FieldInput
-            name="transactionId"
-            label="Transaction ID (UPI Ref / Payment Ref)"
-            placeholder="e.g. 123456789012"
-            required
-            value={transactionId}
-            onChange={(v: string) => { setTransactionId(v); clearErrors(); }}
-          />
-
-          <FieldInput
-            name="paymentTime"
-            label="Payment Date & Time"
-            type="datetime-local"
-            required
-            value={paymentTime}
-            onChange={(v: string) => { setPaymentTime(v); clearErrors(); }}
-          />
-
-          {/*
-            Named for the SCHEMA key, not the local state variable. The payload
-            sends `purchasedItemNumber`, so an error keyed on that path — which
-            is what applyZodIssues and FormErrorSummary produce — had no control
-            to land on while this said `itemNumber`.
-          */}
-          <FieldInput
-            name="purchasedItemNumber"
-            label={`Slot Number (1 – ${totalSlots})`}
-            type="number"
-            placeholder={`Enter a number between 1 and ${totalSlots}`}
-            required
-            value={itemNumber}
-            onChange={(v: string) => { setItemNumber(v); clearErrors(); }}
-          />
-
-          <FieldInput
-            name="userPhone"
-            label="Your Phone Number"
-            type="tel"
-            placeholder="e.g. 9876543210"
-            required
-            value={userPhone}
-            onChange={(v: string) => { setUserPhone(v); clearErrors(); }}
-          />
-
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={mutation.isPending}
-            onClick={() => {
-              clearErrors();
-              const num = parseInt(itemNumber, 10);
-              let valid = true;
-              if (!transactionId || transactionId.length < 4) {
-                setFieldError("transactionId", "Transaction ID must be at least 4 characters");
-                valid = false;
-              }
-              if (!paymentTime) {
-                setFieldError("paymentTime", "Payment date & time is required");
-                valid = false;
-              }
-              if (isNaN(num) || num < 1 || num > totalSlots) {
-                setFieldError("purchasedItemNumber", `Slot number must be between 1 and ${totalSlots}`);
-                valid = false;
-              }
-              if (!userPhone || userPhone.replace(/\D/g, "").length < 10) {
-                setFieldError("userPhone", "Enter a valid phone number (minimum 10 digits)");
-                valid = false;
-              }
-              if (valid) mutation.mutate();
-            }}
-            className="w-full"
-          >
-            {mutation.isPending ? "Submitting…" : "Submit Entry"}
-          </Button>
-        </Stack>
-      )}
-    </Form>
+    <Stack gap="md">
+      <Heading level={3} size="lg" weight="semibold">
+        Submit Your Entry
+      </Heading>
+      <Text size="sm" color="muted">
+        Enter your UPI Transaction ID and payment details to claim your slot. You may enter up to{" "}
+        {maxPullsPerUser} time{maxPullsPerUser === 1 ? "" : "s"}.
+      </Text>
+      <FormShellContext.Provider value={shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<Values>
+          sections={sections}
+          values={form}
+          onChange={(partial) => setForm((prev) => Object.assign({}, prev, partial))}
+          onSubmit={onSubmit}
+          schema={lotteryPullSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={mutation.isPending}
+          submitLabel="Submit Entry"
+        />
+      </FormShellContext.Provider>
+    </Stack>
   );
 }

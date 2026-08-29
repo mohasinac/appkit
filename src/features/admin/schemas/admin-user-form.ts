@@ -113,8 +113,15 @@ export type WhatsappSettingsValues = z.infer<typeof whatsappSettingsSchema>;
  * `NaN` written to the entry.
  */
 export const lotteryPullSchema = z.object({
+  /*
+   * Context, not input. Whether this pull belongs to an event or a product is
+   * decided by the page that mounts the form, so rendering a picker for it
+   * would offer the user a choice that can only be wrong. `t2-server` keeps it
+   * in the parsed payload and out of the UI.
+   */
   sourceType: annotate(z.enum(["event", "product"]), {
     section: "entry", sectionLabel: "Entry", sectionRequired: true, quick: true, order: 1, row: "pair",
+    derived: true, tier: "t2-server",
   }),
   transactionId: annotate(
     z.string().trim().min(4, "Enter the payment reference from your app.").max(120),
