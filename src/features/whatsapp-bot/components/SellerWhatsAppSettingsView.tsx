@@ -50,6 +50,12 @@ export interface SellerWhatsAppSettingsViewProps {
 // Sub-components
 // ---------------------------------------------------------------------------
 
+/**
+ * What the server sends in place of a stored access token. It is a SENTINEL,
+ * not a value — the real token never leaves the server.
+ */
+const MASKED_TOKEN = "••••••";
+
 function MaskedTokenInput({
   label,
   value,
@@ -64,25 +70,38 @@ function MaskedTokenInput({
   helperText?: string;
 }) {
   const [revealed, setRevealed] = React.useState(false);
+  /*
+   * There is nothing to reveal while the field still holds the sentinel: the
+   * button used to un-mask six bullet characters, which reads as "the token is
+   * literally ••••••". Offer it only once the seller has typed something, which
+   * is the only case where the field contains a real value.
+   */
+  const isSentinel = value === MASKED_TOKEN;
   return (
     <Div className="relative">
       <Input
         label={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        type={revealed ? "text" : "password"}
+        type={revealed && !isSentinel ? "text" : "password"}
         placeholder={placeholder}
-        helperText={helperText}
+        helperText={
+          isSentinel
+            ? "A token is saved. Type a new one to replace it — the stored value is never sent back."
+            : helperText
+        }
       />
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => setRevealed((r) => !r)}
-        className="absolute right-3 top-8 text-[length:var(--appkit-text-xs)]"
-      >
-        {revealed ? "Hide" : "Reveal"}
-      </Button>
+      {!isSentinel && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setRevealed((r) => !r)}
+          className="absolute right-3 top-8 text-[length:var(--appkit-text-xs)]"
+        >
+          {revealed ? "Hide" : "Reveal"}
+        </Button>
+      )}
     </Div>
   );
 }
@@ -171,31 +190,58 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     setSyncEnabled(cfg.catalogSyncEnabled ?? false);
   }, [cfg]);
 
-  // Save mutation
+  /*
+   * The CONNECTION form. Credentials only.
+   *
+   * 🛑 It used to also send `catalogSyncEnabled` — the one key it sent
+   * unconditionally — while the toggle for it lives in Section 3, outside this
+   * form and below its Save button. A seller flipped the sync toggle, saw it
+   * move, pressed the Sync button beside it, and the setting was never
+   * persisted: the only control that saved it was "Save & Connect", two cards
+   * up and labelled for credentials.
+   *
+   * The toggle now owns its own write (`syncToggleMutation`), so the control
+   * and the thing that persists it are in the same place.
+   */
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save settings.",
     mutationFn: async () => {
-      const payload: Record<string, JsonValue> = {
-        catalogSyncEnabled: syncEnabled,
-      };
+      const payload: Record<string, JsonValue> = {};
       if (phoneNumber) payload.phoneNumber = phoneNumber;
       if (wabaId) payload.wabaId = wabaId;
       if (catalogId) payload.catalogId = catalogId;
       // Only send accessToken if user has typed a new value (not the masked placeholder)
-      if (accessToken && accessToken !== "••••••") payload.accessToken = accessToken;
+      if (accessToken && accessToken !== MASKED_TOKEN) payload.accessToken = accessToken;
       return apiClient.put(WHATSAPP_SELLER_ENDPOINTS.SETTINGS, payload);
     },
     onSuccess: () => {
       showToast("WhatsApp settings saved", "success");
       void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
     },
-    onError: (err: Error) => {
-      const msg = err instanceof Error ? err.message : "Failed to save settings";
-      
+  });
+
+  /** Persists the catalog-sync toggle on flip — see the note above. */
+  const syncToggleMutation = useApiMutation({
+    errorMessage: "Could not change the catalog-sync setting.",
+    mutationFn: async (next: boolean) =>
+      apiClient.put(WHATSAPP_SELLER_ENDPOINTS.SETTINGS, { catalogSyncEnabled: next }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
+    },
+    onError: () => {
+      // Put the switch back where the server still has it.
+      setSyncEnabled((prev) => !prev);
     },
   });
 
+  const handleSyncToggle = (next: boolean) => {
+    setSyncEnabled(next);
+    syncToggleMutation.mutate(next);
+  };
+
   // Catalog sync mutation (push: site → WhatsApp)
   const syncMutation = useApiMutation({
+    errorMessage: "Catalog sync failed.",
     mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_SYNC, {}),
     onSuccess: (res: JsonValue) => {
       const r = (res as any) ?? {};
@@ -204,10 +250,6 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         "success",
       );
       void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
-    },
-    onError: (err: Error) => {
-      const msg = err instanceof Error ? err.message : "Sync failed";
-      
     },
   });
 
@@ -371,8 +413,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </Div>
           <Toggle
             checked={syncEnabled}
-            onChange={setSyncEnabled}
-            disabled={!cfg?.connected}
+            onChange={handleSyncToggle}
+            disabled={!cfg?.connected || syncToggleMutation.isPending}
           />
         </Row>
 
