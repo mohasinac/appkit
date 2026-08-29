@@ -193,9 +193,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               )}
               {/* "Taking Offers" pill — the seller accepts price negotiation on
                   this listing (`allowOffers`). Deliberately NOT gated on the
-                  site-wide featureFlags.offers: that would mean threading the
-                  settings doc into every card data path, which is the
-                  mirror-drift trap of Root Cause #42. The badge states a
+                  site-wide offers kill switch (itself deleted 2026-08-29): that
+                  would have meant threading the settings doc into every card
+                  data path — the mirror-drift trap of Root Cause #42. The badge states a
                   LISTING attribute; the flag gates the ACTION, and the detail
                   page's CTA is where that gate lives. */}
               {product.allowOffers && (

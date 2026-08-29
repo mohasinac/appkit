@@ -54,8 +54,6 @@ export { useApiMutation } from "./client/api/useApiMutation";
 export type { UseApiMutationOptions } from "./client/api/useApiMutation";
 export { useApiQuery } from "./client/api/useApiQuery";
 export type { UseApiQueryOptions } from "./client/api/useApiQuery";
-export { useFeatureFlags } from "./client/api/useFeatureFlags";
-export type { FeatureFlagState } from "./client/api/useFeatureFlags";
 
 // [CLIENT-ONLY] Maintenance UI — listing + detail + dashboard + analysis runner.
 // Consumed by the /admin/maintenance/* page shims.
