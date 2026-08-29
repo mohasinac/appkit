@@ -527,12 +527,21 @@ function buildFirestoreSafeFilters(input: PublicProductListInput): string {
   // `array-contains` on `searchTxt` inside the repository, which is the only
   // shape Firestore can serve for token matching.
 
-  // `array-contains-any` isn't supported by the Sieve Firebase adapter, so only a
-  // single feature can be pushed down; multi-select falls through to the caller.
+  /*
+   * `array-contains-any` isn't supported by the Sieve Firebase adapter, so one
+   * value pushes down as `array-contains` and several cannot.
+   *
+   * "Falls through to the caller" was the old comment here, and no caller ever
+   * caught it — a two-tag selection filtered NOTHING while the chips stayed lit
+   * and the badge counted them. The multi-value case now runs as a per-row
+   * predicate over the bounded window (see `hasArrayMultiSelect` below), which
+   * is the same trade the per-type facets make. A partial pushdown is not an
+   * option: `array-contains` on the first value would return a strict SUBSET
+   * for OR semantics, quietly hiding rows that match only the second.
+   */
   if (input.features?.length === 1) {
     parts.push(sieveFilter(PRODUCT_FIELDS.FEATURES, SIEVE_OP.CONTAINS, input.features[0]));
   }
-  // `tags` is an array field, so the same one-value limit applies.
   if (input.tags?.length === 1) {
     parts.push(sieveFilter(PRODUCT_FIELDS.TAGS, SIEVE_OP.CONTAINS, input.tags[0]));
   }
@@ -798,7 +807,10 @@ export async function listPublicProducts(
    * someone chose "Name: A–Z".
    */
   const hasTypeFacet = Object.keys(input.typeFacets ?? {}).length > 0;
-  const inMemory = wantAvailable || hasTypeFacet || (hasDateRange && !canPushDate);
+  /** Multi-value `tags`/`features` — no `array-contains-any`, so per-row. */
+  const hasArrayMultiSelect = (input.tags?.length ?? 0) > 1 || (input.features?.length ?? 0) > 1;
+  const inMemory =
+    wantAvailable || hasTypeFacet || hasArrayMultiSelect || (hasDateRange && !canPushDate);
 
   // When a date range stays in memory, fetch in whichever direction front-loads
   // the rows that will PASS it: `dateFrom` (">=", still live) wants the most
@@ -834,8 +846,25 @@ export async function listPublicProducts(
 
   if (inMemory) {
     truncated = items.length >= PUBLIC_PRODUCT_MAX_PAGE_SIZE;
+    /** OR semantics, matching the single-value `array-contains` pushdown. */
+    const matchesAny = (raw: unknown, wanted: readonly string[]): boolean => {
+      if (!Array.isArray(raw)) return false;
+      return wanted.some((w) => raw.includes(w));
+    };
+
     const filtered = items.filter((item) => {
       if (wantAvailable && !isListingRowAvailable(item, now)) return false;
+      if (hasArrayMultiSelect) {
+        if ((input.tags?.length ?? 0) > 1 && !matchesAny(item[PRODUCT_FIELDS.TAGS], input.tags!)) {
+          return false;
+        }
+        if (
+          (input.features?.length ?? 0) > 1 &&
+          !matchesAny(item[PRODUCT_FIELDS.FEATURES], input.features!)
+        ) {
+          return false;
+        }
+      }
       if (hasDateRange && !canPushDate && dateField) {
         const raw = item[dateField];
         if (!raw) return false;
