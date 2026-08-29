@@ -1,0 +1,37 @@
+
+  if (embedded) {
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formContent}</Div>;
+  }
+
+  const twoPanel = (
+    <Div layout="grid" gap="6" lgAlign="start" className="lg:grid-cols-[1fr_280px]">
+      <CardBody className="min-w-0 space-y-6 p-[var(--appkit-space-0)]">{formContent}</CardBody>
+      <Show above="lg">
+        <StickyToolbar offset="header" tone="default" border={false} padding="none">
+          {actionSidebar}
+        </StickyToolbar>
+      </Show>
+    </Div>
+  );
+
+  return (
+    <>
+      <StackedViewShell
+        portal="admin"
+        {...rest}
+        title={isEdit ? "Edit Category" : "Create Category"}
+        sections={[twoPanel]}
+      />
+      <ConfirmDeleteModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => deleteMutation.mutate()}
+        isDeleting={deleteMutation.isPending}
+        title="Delete this category?"
+        message="Products in this category will become uncategorized. This action cannot be undone."
+        confirmText="Delete category"
+        variant="danger"
+      />
+    </>
+  );
+}
