@@ -429,16 +429,23 @@ export function inferFieldUiMeta(name: string, schema: ZodTypeAny): Partial<Fiel
     meta.tier = meta.tier ?? "t2-server";
   }
 
-  // >5 options is the standing PaginatedSelect threshold. Recorded as `help`
-  // rather than a separate flag so the renderer can decide without a second
-  // source of truth about what "many options" means.
-  const options = enumOptions(inner);
-  if (meta.kind === "select" && options != null && options.length > 5) {
-    meta.help = meta.help ?? "paginated";
-  }
-
   return meta;
 }
+
+/**
+ * Above this many options a select becomes a searchable `<PaginatedSelect>`.
+ * The standing UI rule (CLAUDE.md § UI Primitive Rules): more than five options
+ * and a plain dropdown is unscannable.
+ *
+ * 🛑 This is the WHOLE mechanism — there is deliberately no `paginated` flag on
+ * `FieldUiMeta`. It used to be smuggled through `help` as the literal string
+ * `"paginated"`, which broke in both directions: the assignment was
+ * `meta.help ?? "paginated"`, so a select that had real help text never became
+ * paginated; and the renderer had to blank `help` to avoid printing the
+ * sentinel, so one that DID become paginated could never show help. Counting
+ * the options at render time needs neither.
+ */
+export const PAGINATED_SELECT_THRESHOLD = 5;
 
 /**
  * The field's final metadata: inference first, explicit registration on top.

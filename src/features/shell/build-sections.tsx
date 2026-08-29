@@ -40,6 +40,9 @@ import { Fragment, type ReactNode } from "react";
 import type { ZodTypeAny } from "zod";
 import type { FormValues } from "../../schemas/types";
 import { FormGroup } from "../../ui/components/Form";
+import { PaginatedSelect } from "../../ui/components/PaginatedSelect";
+import { Stack } from "../../ui/components/Layout";
+import { Text } from "../../ui/components/Typography";
 import { FieldInput } from "../../ui/forms/FieldInput";
 import { FieldSelect } from "../../ui/forms/FieldSelect";
 import { FieldTextarea } from "../../ui/forms/FieldTextarea";
@@ -53,6 +56,7 @@ import {
   schemaEnumOptions,
   schemaIsOptional,
   ui,
+  PAGINATED_SELECT_THRESHOLD,
   type FieldRow,
   type FieldUiMeta,
 } from "./field-ui-meta";
@@ -341,12 +345,41 @@ function renderField<T extends object>(
 
     case "select": {
       const options = opts.options?.[name] ?? selectOptions(field.schema) ?? [];
+      /*
+       * More than five options and a native dropdown is unscannable — the
+       * standing rule in CLAUDE.md § UI Primitive Rules. Decided here, by
+       * counting, so it holds for a caller-supplied `opts.options` list too:
+       * inference can only see a Zod enum, and the long lists (categories,
+       * brands, stores) all arrive through `opts.options`, which is exactly the
+       * case that most needs searching.
+       */
+      if (options.length > PAGINATED_SELECT_THRESHOLD) {
+        return (
+          <Stack key={name} gap="xs">
+            <Text size="sm" weight="medium" color="muted">
+              {label}
+              {required ? " *" : ""}
+            </Text>
+            <PaginatedSelect
+              value={typeof value === "string" ? value : null}
+              onChange={(v) => set(v ?? "")}
+              options={options}
+              ariaLabel={label}
+              placeholder={`Select ${label.toLowerCase()}…`}
+            />
+            {meta.help && <Text size="xs" color="muted">{meta.help}</Text>}
+            {ctx.errors[name] && (
+              <Text size="xs" color="error" role="alert">{ctx.errors[name]}</Text>
+            )}
+          </Stack>
+        );
+      }
       return (
         <FieldSelect
           key={name}
           name={name}
           label={label}
-          hint={meta.help === "paginated" ? undefined : meta.help}
+          hint={meta.help}
           required={required}
           value={typeof value === "string" ? value : ""}
           options={options}

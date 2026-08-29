@@ -60,22 +60,36 @@ export const payoutMethodFormSchema = z
       section: "method", quick: true, order: 2, row: "pair",
     }),
 
+    /*
+     * `when` carries the branching the PAGE used to hold as JSX conditionals,
+     * so the generated form is the same form.
+     *
+     * Every one of these is already `.optional()` at the type level and made
+     * conditionally required by the `superRefine` below — which is the pairing
+     * `FieldUiMeta.when` demands, because hiding a field does NOT relax its
+     * schema. A required field hidden by `when` fails validation invisibly.
+     */
     upiVpa: annotate(z.string().max(256).optional(), {
       section: "method", order: 3, row: "full",
       help: "For UPI methods, e.g. name@bank.",
+      when: (v) => v.type === "upi",
     }),
 
     accountHolderName: annotate(z.string().max(120).optional(), {
       section: "bank", sectionLabel: "Bank Account", order: 1, row: "full",
+      when: (v) => v.type === "bank",
     }),
     accountNumber: annotate(z.string().max(34).optional(), {
       section: "bank", order: 2, row: "pair",
+      when: (v) => v.type === "bank",
     }),
     ifscCode: annotate(z.string().max(11).optional(), {
       section: "bank", order: 3, row: "pair",
+      when: (v) => v.type === "bank",
     }),
     bankName: annotate(z.string().max(120).optional(), {
       section: "bank", order: 4, row: "pair",
+      when: (v) => v.type === "bank",
     }),
 
     isDefault: annotate(z.boolean(), {
