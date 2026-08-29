@@ -35,6 +35,7 @@
  * @tag sideEffects:none
  */
 
+import { groupRank, resolveSectionGroup } from "./form-sections";
 import { Fragment, type ReactNode } from "react";
 import type { ZodTypeAny } from "zod";
 import type { FormValues } from "../../schemas/types";
@@ -189,11 +190,26 @@ export function buildSectionsFromSchema<T extends object>(
 
   const declarationOrder = [...bySection.keys()];
   const explicitOrder = opts.sectionOrder ?? [];
+
+  /**
+   * Order is: required first, then an explicit `sectionOrder` if the caller
+   * gave one, then the section's GROUP band, then declaration order.
+   *
+   * The group band is what makes "required → additional → … → least important
+   * last" hold without every form maintaining its own `sectionOrder`. It cannot
+   * come from the section id, because ids are free-form and form-specific —
+   * see the note on `FieldUiMeta.group`. An explicit `sectionOrder` still wins,
+   * so a form with a genuine bespoke sequence keeps it.
+   */
   const rank = (id: string) => {
     const bucket = bySection.get(id) ?? [];
-    if (bucket.some((f) => f.meta.sectionRequired)) return -1;
+    if (bucket.some((f) => f.meta.sectionRequired)) return -1000;
     const i = explicitOrder.indexOf(id);
-    return i === -1 ? explicitOrder.length + declarationOrder.indexOf(id) : i;
+    if (i !== -1) return i;
+    const group = resolveSectionGroup(id, bucket.find((f) => f.meta.group)?.meta.group);
+    // Band first, declaration order inside the band. The multiplier just has to
+    // exceed any plausible section count in one form.
+    return explicitOrder.length + groupRank(group) * 1000 + declarationOrder.indexOf(id);
   };
 
   return declarationOrder

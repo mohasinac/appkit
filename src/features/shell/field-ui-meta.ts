@@ -56,6 +56,7 @@
  * @tag sideEffects:none
  */
 
+import type { FormSectionGroup } from "./form-sections";
 import type { ZodTypeAny } from "zod";
 import type { FormValues } from "../../schemas/types";
 
@@ -90,6 +91,22 @@ export interface FieldUiMeta {
    * handful of schemas and quietly mis-group the rest.
    */
   section: string;
+  /**
+   * Priority band this section belongs to — drives ORDER and default-open,
+   * never identity.
+   *
+   * Deliberately separate from `section`, which stays free-form. Collapsing the
+   * 58 section ids in use onto a closed 12-value set was measured first and
+   * would have MERGED sections in 7 files: the scam report's `who` + `what` +
+   * `declare` into one blob, coupons' `limits` + `validity`, blog's `content` +
+   * `seo`. The id is the rendered unit and supplies the visible heading (144 of
+   * 228 annotations have no `sectionLabel`, so `humaniseFieldName(id)` IS their
+   * heading); the group is only "how early does this appear".
+   *
+   * Omit it and `SECTION_GROUP_DEFAULTS` resolves one from the id. A brand-new
+   * id with no default must declare its own.
+   */
+  group?: FormSectionGroup;
   /** Human label for the section. The first field to declare it wins. */
   sectionLabel?: string;
   /** Marks its section required-first, open on mount, non-collapsible. */

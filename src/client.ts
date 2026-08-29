@@ -277,6 +277,8 @@ export { lotteryConfigWriteSchema, lotterySlotWriteSchema } from "./features/lot
 export { SectionForm, useSectionFormNav } from "./features/shell/SectionForm";
 export type { SectionDef, SectionFormProps } from "./features/shell/SectionForm";
 export { buildSectionsFromSchema } from "./features/shell/build-sections";
+export { FORM_SECTION_GROUP, SECTION_GROUP_DEFAULTS, groupRank, resolveSectionGroup } from "./features/shell/form-sections";
+export type { FormSectionGroup } from "./features/shell/form-sections";
 export { reportCreateSchema } from "./features/store-extensions/schemas/report-create-form";
 export { itemRequestCreateSchema } from "./features/store-extensions/schemas/item-request-create-form";
 export { supportTicketCreateSchema } from "./features/support/schemas/ticket-create-form";
