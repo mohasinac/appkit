@@ -5,13 +5,17 @@ import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import { Button, ConfirmDeleteModal, Div, Form, IconButton, Input, Label, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, IconButton, Span, Stack, StackedViewShell, Text, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { CouponType } from "../../promotions/types";
+import { adminCouponFormSchema } from "../../seller/schemas/coupon-form";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 
@@ -25,15 +29,33 @@ const __O = {
 
 // --- Types -------------------------------------------------------------------
 
-const couponFormSchema = z.object({
-  code: z.string().min(2, "Coupon code is required").max(40).regex(/^[A-Z0-9_-]+$/i),
-  name: z.string().min(1).max(120),
-  type: z.enum(["percentage", "fixed", "free_shipping", "buy_x_get_y"]),
-  scope: z.enum(["admin", "seller"]),
-  validity: z.object({
-    isActive: z.boolean(),
-  }).passthrough(),
-}).passthrough();
+/**
+ * The draft this form edits — flat, matching the shape the schema annotations
+ * describe. The nested `discount` / `usage` / `validity` / `restrictions`
+ * groups the API wants are assembled in the payload builder.
+ */
+interface Values {
+  [key: string]: unknown;
+  code: string;
+  name: string;
+  description: string;
+  type: CouponType;
+  value: string;
+  maxDiscount: string;
+  minPurchase: string;
+  buyQuantity: string;
+  getQuantity: string;
+  totalLimit: string;
+  perUserLimit: string;
+  currentUsage: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  firstTimeUserOnly: boolean;
+  appliesToAuctions: boolean;
+  applicableProducts: string[];
+  applicableCategories: string[];
+}
 
 export interface AdminCouponEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -49,6 +71,24 @@ export interface AdminCouponEditorViewProps
    * changes made elsewhere.
    */
   initialData?: Record<string, JsonValue>;
+}
+
+/** What the API returns for one coupon — replaces an `as any` at the read. */
+interface CouponRecord {
+  code?: string;
+  name?: string;
+  description?: string;
+  type?: CouponType;
+  discount?: { value?: number; maxDiscount?: number; minPurchase?: number };
+  bxgy?: { buyQuantity?: number; getQuantity?: number };
+  usage?: { totalLimit?: number; perUserLimit?: number; currentUsage?: number };
+  validity?: { startDate?: string | Date; endDate?: string | Date; isActive?: boolean };
+  restrictions?: {
+    firstTimeUserOnly?: boolean;
+    applicableProducts?: string[];
+    applicableCategories?: string[];
+  };
+  applicableToAuctions?: boolean;
 }
 
 interface CouponPayload {
@@ -91,106 +131,58 @@ function toDateInputValue(val: Date | string | undefined): string {
   }
 }
 
-// --- Sub-components ----------------------------------------------------------
-
-interface CouponDiscountFieldsProps {
-  type: CouponType;
-  discountValue: string;
-  setDiscountValue: (v: string) => void;
-  maxDiscount: string;
-  setMaxDiscount: (v: string) => void;
-  minPurchase: string;
-  setMinPurchase: (v: string) => void;
-  buyQty: string;
-  setBuyQty: (v: string) => void;
-  getQty: string;
-  setGetQty: (v: string) => void;
-  discountLabel: string;
-}
-
-function CouponDiscountFields({
-  type, discountValue, setDiscountValue, maxDiscount, setMaxDiscount,
-  minPurchase, setMinPurchase, buyQty, setBuyQty, getQty, setGetQty, discountLabel,
-}: CouponDiscountFieldsProps) {
+/**
+ * The category multi-select, as a component rather than an inline renderer.
+ *
+ * `CategoryInlineSelect` is single-select, so the list is kept as chips around
+ * it — the picker adds one, each chip removes one. It lives at module level
+ * because an inline renderer's handler sits six braces deep inside `useMemo`,
+ * which is what `audit-code-quality`'s DEEP_NESTING rule exists to stop.
+ */
+function CategoryChipPicker({
+  selected,
+  onSelectedChange,
+}: {
+  selected: string[];
+  onSelectedChange: (next: string[]) => void;
+}) {
+  const add = (id: string) => {
+    if (!id || selected.includes(id)) return;
+    onSelectedChange([...selected, id]);
+  };
   return (
-    <>
-      {type !== "free_shipping" && type !== "buy_x_get_y" && (
-        <Input
-          label={discountLabel}
-          value={discountValue}
-          onChange={(e) => setDiscountValue(e.target.value)}
-          type="number"
-          min={0}
-          required
-          placeholder={type === "percentage" ? "e.g. 20" : "e.g. 5000"}
-        />
+    <Stack gap="xs">
+      <CategoryInlineSelect value="" onChange={add} allowCreate placeholder="Add a category…" />
+      {selected.length > 0 && (
+        <Row wrap gap="sm" padding="t-2xs">
+          {selected.map((cid) => (
+            <Span
+              layout="inline-flex"
+              gap="xs"
+              key={cid}
+              border="strong"
+              padding="pill-sm"
+              rounded="full"
+              surface="muted"
+              color="primary"
+              size="xs"
+            >
+              {cid}
+              <IconButton
+                aria-label={`Remove ${cid}`}
+                variant="ghost"
+                size="sm"
+                onClick={() => onSelectedChange(selected.filter((c) => c !== cid))}
+                icon="×"
+              />
+            </Span>
+          ))}
+        </Row>
       )}
-      {type === "percentage" && (
-        <Input
-          label="Max discount cap (₹, optional)"
-          value={maxDiscount}
-          onChange={(e) => setMaxDiscount(e.target.value)}
-          type="number"
-          min={0}
-          placeholder="e.g. 200"
-          helperText="Leave blank for no cap."
-        />
-      )}
-      {(type === "percentage" || type === "fixed") && (
-        <Input
-          label="Min order value (₹, optional)"
-          value={minPurchase}
-          onChange={(e) => setMinPurchase(e.target.value)}
-          type="number"
-          min={0}
-          placeholder="e.g. 500"
-          helperText="Leave blank for no minimum."
-        />
-      )}
-      {type === "buy_x_get_y" && (
-        <Div layout="grid" gap="4" className="grid-cols-2">
-          <Input label="Buy quantity" value={buyQty} onChange={(e) => setBuyQty(e.target.value)} type="number" min={1} required />
-          <Input label="Get quantity" value={getQty} onChange={(e) => setGetQty(e.target.value)} type="number" min={1} required />
-        </Div>
-      )}
-    </>
-  );
-}
-
-interface CouponValidityFieldsProps {
-  startDate: string;
-  setStartDate: (v: string) => void;
-  endDate: string;
-  setEndDate: (v: string) => void;
-  isActive: boolean;
-  setIsActive: (v: boolean) => void;
-  totalLimit: string;
-  setTotalLimit: (v: string) => void;
-  perUserLimit: string;
-  setPerUserLimit: (v: string) => void;
-  isEdit: boolean;
-  currentUsage: number;
-}
-
-function CouponValidityFields({
-  startDate, setStartDate, endDate, setEndDate, isActive, setIsActive,
-  totalLimit, setTotalLimit, perUserLimit, setPerUserLimit, isEdit, currentUsage,
-}: CouponValidityFieldsProps) {
-  return (
-    <>
-      <Div layout="grid" gap="4" className="grid-cols-2">
-        <Input label="Total usage limit (optional)" value={totalLimit} onChange={(e) => setTotalLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
-        <Input label="Per-user limit (optional)" value={perUserLimit} onChange={(e) => setPerUserLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
-      </Div>
-      {isEdit && (
-        <Input label="Current usage" value={String(currentUsage)} disabled helperText="Read-only — updated by orders." />
-      )}
-      <Div layout="grid" gap="4" className="grid-cols-2">
-        <Input label="Start date" value={startDate} onChange={(e) => setStartDate(e.target.value)} type="date" required />
-        <Input label="End date (optional)" value={endDate} onChange={(e) => setEndDate(e.target.value)} type="date" helperText="Leave blank for no expiry." />
-      </Div>
-      <Toggle label="Active" checked={isActive} onChange={setIsActive} />
-    </>
+      <Text size="xs" color="muted">
+        Leave empty to apply the coupon to every category.
+      </Text>
+    </Stack>
   );
 }
 
@@ -206,40 +198,31 @@ export function AdminCouponEditorView({
 }: AdminCouponEditorViewProps) {
   const isEdit = Boolean(couponId);
 
-  // --- form state ---
-  const [code, setCode] = React.useState("");
+  const [form, setForm] = React.useState<Values>({
+    code: "",
+    name: "",
+    description: "",
+    type: "percentage",
+    value: "",
+    maxDiscount: "",
+    minPurchase: "",
+    buyQuantity: "1",
+    getQuantity: "1",
+    totalLimit: "",
+    perUserLimit: "",
+    currentUsage: 0,
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: "",
+    isActive: true,
+    firstTimeUserOnly: false,
+    appliesToAuctions: false,
+    applicableProducts: [],
+    applicableCategories: [],
+  });
   const [codeManual, setCodeManual] = React.useState(false);
-  const [name, setName] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [type, setType] = React.useState<CouponType>("percentage");
-
-  // discount
-  const [discountValue, setDiscountValue] = React.useState("");
-  const [maxDiscount, setMaxDiscount] = React.useState("");
-  const [minPurchase, setMinPurchase] = React.useState("");
-
-  // bxgy (buy_x_get_y only)
-  const [buyQty, setBuyQty] = React.useState("1");
-  const [getQty, setGetQty] = React.useState("1");
-
-  // usage
-  const [totalLimit, setTotalLimit] = React.useState("");
-  const [perUserLimit, setPerUserLimit] = React.useState("");
-  const [currentUsage, setCurrentUsage] = React.useState(0);
-
-  // validity
-  const [startDate, setStartDate] = React.useState(
-    new Date().toISOString().split("T")[0],
-  );
-  const [endDate, setEndDate] = React.useState("");
-  const [isActive, setIsActive] = React.useState(true);
-
-  // restrictions
-  const [firstTimeOnly, setFirstTimeOnly] = React.useState(false);
-  const [appliesToAuctions, setAppliesToAuctions] = React.useState(false);
-  const [applicableProducts, setApplicableProducts] = React.useState<string[]>([]);
-  const [applicableCategories, setApplicableCategories] = React.useState<string[]>([]);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+  const patch = (partial: Partial<Values>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
 
   const { showToast } = useToast();
 
@@ -259,92 +242,96 @@ export function AdminCouponEditorView({
   });
 
   React.useEffect(() => {
-    const c = couponQuery.data as any;
+    const c = couponQuery.data as CouponRecord | undefined;
     if (!c) return;
-    setCode(c.code ?? "");
     setCodeManual(true);
-    setName(c.name ?? "");
-    setDescription(c.description ?? "");
-    setType(c.type ?? "percentage");
-    setDiscountValue(c.discount?.value !== undefined ? String(c.discount.value) : "");
-    setMaxDiscount(c.discount?.maxDiscount !== undefined ? String(c.discount.maxDiscount) : "");
-    setMinPurchase(c.discount?.minPurchase !== undefined ? String(c.discount.minPurchase) : "");
-    setBuyQty(c.bxgy?.buyQuantity !== undefined ? String(c.bxgy.buyQuantity) : "1");
-    setGetQty(c.bxgy?.getQuantity !== undefined ? String(c.bxgy.getQuantity) : "1");
-    setTotalLimit(c.usage?.totalLimit !== undefined ? String(c.usage.totalLimit) : "");
-    setPerUserLimit(c.usage?.perUserLimit !== undefined ? String(c.usage.perUserLimit) : "");
-    setCurrentUsage(c.usage?.currentUsage ?? 0);
-    setStartDate(toDateInputValue(c.validity?.startDate));
-    setEndDate(toDateInputValue(c.validity?.endDate));
-    setIsActive(c.validity?.isActive ?? false);
-    setFirstTimeOnly(c.restrictions?.firstTimeUserOnly ?? false);
-    setApplicableProducts(Array.isArray(c.restrictions?.applicableProducts) ? c.restrictions.applicableProducts : []);
-    setApplicableCategories(Array.isArray(c.restrictions?.applicableCategories) ? c.restrictions.applicableCategories : []);
-    setAppliesToAuctions(c.applicableToAuctions ?? false);
+    patch({
+      code: c.code ?? "",
+      name: c.name ?? "",
+      description: c.description ?? "",
+      type: c.type ?? "percentage",
+      value: c.discount?.value !== undefined ? String(c.discount.value) : "",
+      maxDiscount: c.discount?.maxDiscount !== undefined ? String(c.discount.maxDiscount) : "",
+      minPurchase: c.discount?.minPurchase !== undefined ? String(c.discount.minPurchase) : "",
+      buyQuantity: c.bxgy?.buyQuantity !== undefined ? String(c.bxgy.buyQuantity) : "1",
+      getQuantity: c.bxgy?.getQuantity !== undefined ? String(c.bxgy.getQuantity) : "1",
+      totalLimit: c.usage?.totalLimit !== undefined ? String(c.usage.totalLimit) : "",
+      perUserLimit: c.usage?.perUserLimit !== undefined ? String(c.usage.perUserLimit) : "",
+      currentUsage: c.usage?.currentUsage ?? 0,
+      startDate: toDateInputValue(c.validity?.startDate),
+      endDate: toDateInputValue(c.validity?.endDate),
+      isActive: c.validity?.isActive ?? false,
+      firstTimeUserOnly: c.restrictions?.firstTimeUserOnly ?? false,
+      applicableProducts: Array.isArray(c.restrictions?.applicableProducts)
+        ? c.restrictions.applicableProducts
+        : [],
+      applicableCategories: Array.isArray(c.restrictions?.applicableCategories)
+        ? c.restrictions.applicableCategories
+        : [],
+      appliesToAuctions: c.applicableToAuctions ?? false,
+    });
   }, [couponQuery.data]);
 
   const handleNameChange = (value: string) => {
-    setName(value);
-    if (!codeManual) setCode(toCouponCode(value));
+    patch(codeManual ? { name: value } : { name: value, code: toCouponCode(value) });
   };
 
   // --- save ---
   const saveMutation = useApiMutation({
     errorMessage: "Failed to save coupon.",
     mutationFn: async () => {
+      /*
+       * `visibleValues` is what makes hidden-implies-not-sent structural here.
+       * The cap, the minimum and the buy/get pair each render only for certain
+       * types and used to be filtered again by a hand-written ternary in this
+       * builder — correct, but a second statement of the same rule, which is
+       * how it drifted on the seller side and then here.
+       */
+      const draft = visibleValues(adminCouponFormSchema, form) as Partial<Values>;
+      const num = (v: string | undefined) => (v && v.trim() !== "" ? Number(v) : undefined);
+
       const payload: CouponPayload = {
-        name,
-        description: description || undefined,
-        type,
-        /*
-         * Each of these is sent only for the types whose form actually shows
-         * it — the cap for a percentage, the minimum for percentage or fixed.
-         *
-         * They used to be sent unconditionally while their inputs rendered
-         * conditionally (lines 128 / 139), so a cap typed on a percentage
-         * coupon persisted after switching to free-shipping or buy-x-get-y,
-         * with nothing on screen to reveal it. Same defect the seller-side
-         * editor carried; the rule there is stated once in `coupon-form.ts`
-         * next to the `when` predicates it mirrors.
-         */
+        name: form.name,
+        description: form.description || undefined,
+        type: form.type,
         discount: {
-          value: discountValue !== "" ? Number(discountValue) : 0,
-          maxDiscount:
-            type === "percentage" && maxDiscount !== "" ? Number(maxDiscount) : undefined,
-          minPurchase:
-            (type === "percentage" || type === "fixed") && minPurchase !== ""
-              ? Number(minPurchase)
-              : undefined,
+          value: num(draft.value) ?? 0,
+          maxDiscount: num(draft.maxDiscount),
+          minPurchase: num(draft.minPurchase),
         },
-        ...(type === "buy_x_get_y" && {
+        ...(form.type === "buy_x_get_y" && {
           bxgy: {
-            buyQuantity: Number(buyQty) || 1,
-            getQuantity: Number(getQty) || 1,
+            buyQuantity: num(draft.buyQuantity) ?? 1,
+            getQuantity: num(draft.getQuantity) ?? 1,
           },
         }),
         usage: {
-          totalLimit: totalLimit !== "" ? Number(totalLimit) : undefined,
-          perUserLimit: perUserLimit !== "" ? Number(perUserLimit) : undefined,
-          currentUsage,
+          totalLimit: num(form.totalLimit),
+          perUserLimit: num(form.perUserLimit),
+          currentUsage: form.currentUsage,
         },
         validity: {
-          startDate,
-          endDate: endDate || undefined,
-          isActive,
+          startDate: form.startDate,
+          endDate: form.endDate || undefined,
+          isActive: form.isActive,
         },
         restrictions: {
-          firstTimeUserOnly: firstTimeOnly,
-          ...(applicableProducts.length > 0 && { applicableProducts }),
-          ...(applicableCategories.length > 0 && { applicableCategories }),
+          firstTimeUserOnly: form.firstTimeUserOnly,
+          ...(form.applicableProducts.length > 0 && {
+            applicableProducts: form.applicableProducts,
+          }),
+          ...(form.applicableCategories.length > 0 && {
+            applicableCategories: form.applicableCategories,
+          }),
         },
-        applicableToAuctions: appliesToAuctions,
+        applicableToAuctions: form.appliesToAuctions,
       };
       if (isEdit) {
         return apiClient.patch(ADMIN_ENDPOINTS.COUPON_BY_ID(couponId!), payload);
       }
       return apiClient.post(ADMIN_ENDPOINTS.COUPONS, {
         ...payload,
-        code: code || toCouponCode(name),
+        code: form.code || toCouponCode(form.name),
         createdBy: "admin",
       });
     },
@@ -367,213 +354,145 @@ export function AdminCouponEditorView({
   });
 
   const isSubmitting = saveMutation.isPending || couponQuery.isLoading;
-  const canSave = Boolean(
-    name && (isEdit ? true : code) && discountValue !== "" && startDate,
+
+  /*
+   * `canSave` is gone.
+   *
+   * It was `name && (isEdit || code) && discountValue !== "" && startDate` — a
+   * hand-rolled restatement of four rules that disagreed with the schema on
+   * every other one, disabling the button with no way to tell WHICH field it
+   * was waiting on. Safe to delete only now, in the same commit that makes the
+   * schema actually execute: before this the form parsed a five-field
+   * `.passthrough()` stub, so removing the gate would have replaced a
+   * too-strict check with none at all.
+   */
+
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(adminCouponFormSchema, {
+        options: { type: TYPE_OPTIONS.map((o) => ({ value: String(o.value), label: o.label })) },
+        renderers: {
+          // Typing the campaign name fills the code until the admin edits it.
+          name: ({ values, errors }) => (
+            <FieldInput
+              name="name"
+              label="Campaign name"
+              required
+              value={values.name as string}
+              error={errors.name}
+              onChange={handleNameChange}
+            />
+          ),
+          code: ({ values, onChange, errors }) => (
+            <FieldInput
+              name="code"
+              label="Coupon code"
+              required
+              disabled={isEdit}
+              hint={isEdit ? "A code cannot change once customers have it." : undefined}
+              value={values.code as string}
+              error={errors.code}
+              onChange={(v) => {
+                setCodeManual(true);
+                onChange({ code: toCouponCode(v) });
+              }}
+            />
+          ),
+          // The label names the unit, which the type decides.
+          value: ({ values, onChange, errors }) => (
+            <FieldInput
+              name="value"
+              label={
+                values.type === "percentage"
+                  ? "Discount percentage (%)"
+                  : values.type === "fixed"
+                    ? "Discount amount (₹)"
+                    : "Discount value"
+              }
+              type="number"
+              required
+              value={values.value as string}
+              error={errors.value}
+              onChange={(v) => onChange({ value: v })}
+            />
+          ),
+          applicableProducts: ({ values, onChange }) => (
+            <ProductInlineSelect
+              multiple
+              scope="admin"
+              value={values.applicableProducts as string[]}
+              onChange={(ids: string[]) => onChange({ applicableProducts: ids })}
+            />
+          ),
+          /*
+           * `CategoryInlineSelect` is single-select, so the multi-value list is
+           * kept as chips around it — the picker adds one, each chip removes
+           * one. Unchanged from the hand-rolled version; only the surrounding
+           * form is generated.
+           */
+          applicableCategories: ({ values, onChange }) => (
+            <CategoryChipPicker
+              selected={values.applicableCategories as string[]}
+              onSelectedChange={(next) => onChange({ applicableCategories: next })}
+            />
+          ),
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isEdit, codeManual],
   );
 
-  // discount label varies by type
-  const discountLabel =
-    type === "percentage"
-      ? "Discount percentage (%)"
-      : type === "fixed"
-        ? "Discount amount (₹)"
-        : "Discount value";
+  const nav = useSectionFormNav(sections, form, { scope: "admin:coupon-editor" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(adminCouponFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
+  const onSubmit = () => {
+    clearErrors();
+    const parsed = adminCouponFormSchema.safeParse(
+      visibleValues(adminCouponFormSchema, form),
+    );
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
 
   const formSection = (
     <>
-    <Form
-      key="coupon-form"
-      schema={couponFormSchema}
-      onSubmit={(e) => e.preventDefault()}
-      spacing="md"
-    >{({ setFieldError, clearErrors }) => (
-      <>
-          {/* Basic info */}
-          <Select
-            label="Coupon type"
-            options={TYPE_OPTIONS}
-            value={type}
-            onValueChange={(v) => setType(v as CouponType)}
-            required
-          />
-
-          <FieldInput
-            name="name"
-            label="Campaign name"
-            value={name}
-            onChange={(v) => handleNameChange(v)}
-            required
-            placeholder="e.g. Summer Sale 20%"
-          />
-
-          {!isEdit && (
-            <Input
-              label="Coupon code"
-              value={code}
-              onChange={(e) => {
-                setCode(toCouponCode(e.target.value));
-                setCodeManual(true);
-              }}
-              required
-              placeholder="e.g. SUMMER20"
-              helperText="Auto-generated from name. Uppercase alphanumeric + hyphens only."
-            />
-          )}
-          {isEdit && (
-            <Input
-              label="Coupon code"
-              value={code}
-              disabled
-              helperText="Code cannot be changed after creation."
-            />
-          )}
-
-          <Input
-            label="Description (optional)"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Internal notes about this coupon"
-          />
-
-          {/* Discount config — conditional on type */}
-          <CouponDiscountFields
-            type={type}
-            discountValue={discountValue}
-            setDiscountValue={setDiscountValue}
-            maxDiscount={maxDiscount}
-            setMaxDiscount={setMaxDiscount}
-            minPurchase={minPurchase}
-            setMinPurchase={setMinPurchase}
-            buyQty={buyQty}
-            setBuyQty={setBuyQty}
-            getQty={getQty}
-            setGetQty={setGetQty}
-            discountLabel={discountLabel}
-          />
-
-          {/* Usage limits + Validity */}
-          <CouponValidityFields
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            isActive={isActive}
-            setIsActive={setIsActive}
-            totalLimit={totalLimit}
-            setTotalLimit={setTotalLimit}
-            perUserLimit={perUserLimit}
-            setPerUserLimit={setPerUserLimit}
-            isEdit={isEdit}
-            currentUsage={currentUsage}
-          />
-
-          {/* Restrictions */}
-          <Toggle
-            label="First-time users only"
-            checked={firstTimeOnly}
-            onChange={setFirstTimeOnly}
-          />
-          <Toggle
-            label="Applies to auctions"
-            checked={appliesToAuctions}
-            onChange={setAppliesToAuctions}
-          />
-
-          {/* Applicability — restrict the coupon to a specific set of products or categories. */}
-          <Stack gap="xs">
-            <Label size="sm" weight="medium" color="primary">
-              Applicable products (optional)
-            </Label>
-            <ProductInlineSelect
-              scope="admin"
-              multiple
-              value={applicableProducts}
-              onChange={setApplicableProducts}
-              placeholder="Restrict to specific products…"
-            />
-            <Text size="xs" color="muted">
-              Leave empty to apply the coupon to every eligible product.
-            </Text>
-          </Stack>
-
-          <Stack gap="xs">
-            <Label size="sm" weight="medium" color="primary">
-              Applicable categories (optional)
-            </Label>
-            {/* CategoryInlineSelect is single-select today; we maintain a chip list around it. */}
-            <CategoryInlineSelect
-              value=""
-              onChange={(id) => {
-                if (!id || applicableCategories.includes(id)) return;
-                setApplicableCategories([...applicableCategories, id]);
-              }}
-              allowCreate
-              placeholder="Add a category…"
-            />
-            {applicableCategories.length > 0 && (
-              <Row wrap gap="sm" padding="t-2xs">
-                {applicableCategories.map((cid) => (
-                  <Span layout="inline-flex" gap="xs"
-                    key={cid}
-                    border="strong" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
-                  >
-                    {cid}
-                    <IconButton
-                      aria-label={`Remove ${cid}`}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() =>
-                        setApplicableCategories(applicableCategories.filter((c) => c !== cid))
-                      }
-                      icon="×"
-                    />
-                  </Span>
-                ))}
-              </Row>
-            )}
-            <Text size="xs" color="muted">
-              Leave empty to apply the coupon to every category.
-            </Text>
-          </Stack>
-
-          {/* Actions */}
-          <FormErrorSummary />
-          <Row gap="3" padding="t-xs">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              disabled={!canSave || isSubmitting}
-              onClick={() => {
-                clearErrors();
-                if (!name.trim()) { setFieldError("name", "Campaign name is required"); return; }
-                saveMutation.mutate();
-              }}
-            >
-              {isEdit ? "Save changes" : "Create coupon"}
-            </Button>
-            {isEdit && (
-              <Button
-                type="button"
-                variant="danger"
-                isLoading={deleteMutation.isPending}
-                onClick={() => setDeleteConfirmOpen(true)}
-              >
-                Delete coupon
-              </Button>
-            )}
-          </Row>
-      </>
-    )}</Form>
-    {deleteConfirmOpen && (
-      <ConfirmDeleteModal
-        isOpen
-        title="Delete Coupon"
-        message="Delete this coupon? This cannot be undone."
-        onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
-        onClose={() => setDeleteConfirmOpen(false)}
-        isDeleting={deleteMutation.isPending}
-      />
-    )}
+      <FormShellContext.Provider value={shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<Values>
+          sections={sections}
+          values={form}
+          onChange={patch}
+          onSubmit={onSubmit}
+          schema={adminCouponFormSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={isSubmitting}
+          submitLabel={isEdit ? "Save changes" : "Create coupon"}
+          destructiveAction={
+            isEdit ? { label: "Delete coupon", onClick: () => setDeleteConfirmOpen(true) } : undefined
+          }
+        />
+      </FormShellContext.Provider>
+      {deleteConfirmOpen && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete Coupon"
+          message="Delete this coupon? This cannot be undone."
+          onConfirm={() => {
+            deleteMutation.mutate();
+            setDeleteConfirmOpen(false);
+          }}
+          onClose={() => setDeleteConfirmOpen(false)}
+          isDeleting={deleteMutation.isPending}
+        />
+      )}
     </>
   );
 

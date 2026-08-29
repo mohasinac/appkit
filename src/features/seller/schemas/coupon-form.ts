@@ -48,7 +48,16 @@ const numericString = (label: string) =>
  * 🛑 `annotate()` must be the OUTERMOST call on each field — it keys a WeakMap
  * by schema instance and every zod wrapper returns a new one.
  */
-export const sellerCouponFormSchema = z
+/**
+ * The fields both coupon editors share, before either adds its own rules.
+ *
+ * Split out of `sellerCouponFormSchema` so the ADMIN editor can extend it.
+ * It could not before: that schema ends in `.superRefine`, which returns a
+ * ZodEffects with no `.extend()` — which is a large part of why the admin
+ * editor ended up declaring its own five-field `.passthrough()` stub locally
+ * and validating nothing at all.
+ */
+export const couponFormBase = z
   .object({
     code: annotate(
       z
@@ -109,8 +118,25 @@ export const sellerCouponFormSchema = z
     applicableCategories: annotate(z.array(z.string()), {
       section: "scope", order: 2, row: "full", kind: "list",
     }),
-  })
-  .superRefine((v, ctx) => {
+  });
+
+/**
+ * The cross-field rules both editors need. Shared for the same reason the
+ * fields are: a percentage over 100 is the store paying the customer whichever
+ * portal typed it.
+ */
+export function refineCouponCommon(
+  v: {
+    type: string;
+    value: string;
+    startDate: string;
+    endDate: string;
+    totalLimit: string;
+    perUserLimit: string;
+  },
+  ctx: z.RefinementCtx,
+): void {
+  {
     const issue = (path: string, message: string) =>
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: [path], message });
 
@@ -137,7 +163,10 @@ export const sellerCouponFormSchema = z
     if (v.totalLimit.trim() && v.perUserLimit.trim() && perUser > total) {
       issue("perUserLimit", "Uses per customer cannot exceed the total uses.");
     }
-  });
+  }
+}
+
+export const sellerCouponFormSchema = couponFormBase.superRefine(refineCouponCommon);
 
 export type SellerCouponFormValues = z.infer<typeof sellerCouponFormSchema>;
 
@@ -196,3 +225,80 @@ export function couponDraftToPayload(draft: SellerCouponFormValues): SellerCoupo
       : {}),
   };
 }
+
+/**
+ * A coupon as an ADMIN edits it — the seller's fields plus the ones only the
+ * platform can set.
+ *
+ * `AdminCouponEditorView` declared its own schema locally: five fields, two of
+ * them `.passthrough()`, against nineteen rendered controls. It was passed to
+ * `<Form schema>` and never parsed, so none of the seventeen unlisted controls
+ * was checked by anything — `value` could be 500%, `endDate` could precede
+ * `startDate`, and `buyQuantity` could be zero.
+ *
+ * Extending the shared base rather than restating it is what keeps the two
+ * portals' rules from drifting; that they had already drifted is Root Cause
+ * #59's shape on the validation axis.
+ */
+export const adminCouponFormSchema = couponFormBase
+  .extend({
+    /*
+     * Widened past the seller's three. Only the platform runs buy-x-get-y —
+     * a seller offering one would be spending another seller's stock.
+     */
+    type: annotate(z.enum(["percentage", "fixed", "free_shipping", "buy_x_get_y"]), {
+      section: "basics", quick: true, order: 2, row: "pair", label: "Coupon type",
+    }),
+    name: annotate(z.string().min(1, "Give the campaign a name.").max(120), {
+      section: "basics", quick: true, order: 4, row: "pair", label: "Campaign name",
+    }),
+    description: annotate(z.string().max(500).optional().or(z.literal("")), {
+      section: "basics", order: 5, row: "full", kind: "textarea",
+    }),
+
+    buyQuantity: annotate(numericString("Buy quantity"), {
+      section: "basics", order: 6, row: "pair", kind: "number",
+      when: (v) => v.type === "buy_x_get_y",
+    }),
+    getQuantity: annotate(numericString("Get quantity"), {
+      section: "basics", order: 7, row: "pair", kind: "number",
+      when: (v) => v.type === "buy_x_get_y",
+    }),
+
+    /*
+     * Written by orders, never by this form. `t3-mirror` renders it read-only
+     * instead of as a box an admin could set to whatever they liked — which is
+     * what "Current usage" was, `disabled` by an attribute a programmatic
+     * submit ignores.
+     */
+    currentUsage: annotate(z.number().int().min(0).optional(), {
+      section: "limits", order: 5, row: "pair", derived: true, tier: "t3-mirror",
+      label: "Current usage", help: "Updated by orders.",
+    }),
+
+    firstTimeUserOnly: annotate(z.boolean(), {
+      section: "scope", order: 3, row: "quarter", label: "First-time users only",
+    }),
+    appliesToAuctions: annotate(z.boolean(), {
+      section: "scope", order: 4, row: "quarter", label: "Applies to auctions",
+    }),
+  })
+  .superRefine((v, ctx) => {
+    refineCouponCommon(v, ctx);
+
+    // A buy-x-get-y with a zero on either side is not an offer.
+    if (v.type === "buy_x_get_y") {
+      for (const key of ["buyQuantity", "getQuantity"] as const) {
+        const n = Number(v[key]);
+        if (v[key].trim() === "" || !Number.isFinite(n) || n < 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: [key],
+            message: "Enter a whole number of one or more.",
+          });
+        }
+      }
+    }
+  });
+
+export type AdminCouponFormValues = z.infer<typeof adminCouponFormSchema>;
