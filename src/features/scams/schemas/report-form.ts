@@ -61,8 +61,17 @@ export const scamReportFormSchema = z
     scamType: annotate(z.string().trim().min(1, "Choose what kind of scam this was."), {
       section: "what", sectionLabel: "What happened", sectionRequired: true, quick: true, order: 1, row: "pair",
     }),
-    scamPlatform: annotate(z.string().trim().max(120).optional(), {
-      section: "what", order: 2, row: "pair",
+    /*
+     * Required, matching `POST /api/scams/reports` (`z.string().min(1)`).
+     *
+     * It was `.optional()` here, so a report with no platform passed every
+     * client check and came back a 400. The page papered over it with a
+     * hand-written `if (!form.scamType || !form.scamPlatform)` guard — which is
+     * the same drift as the address postal rule: two rules for one field, and
+     * the looser one is the client's.
+     */
+    scamPlatform: annotate(z.string().trim().min(1, "Choose where this happened.").max(120), {
+      section: "what", order: 2, row: "pair", kind: "select",
     }),
     /*
      * Coerced and bounded. It arrives from a text input and is rendered on the
@@ -81,11 +90,17 @@ export const scamReportFormSchema = z
     itemInvolved: annotate(z.string().trim().max(200).optional(), {
       section: "what", order: 4, row: "pair",
     }),
+    /*
+     * 100, matching the route. It was 30 here, so a 31-character description
+     * satisfied every client check and came back a 400 — and the page's own
+     * hand-written guard used 100, which is the number that was actually
+     * enforced. Two rules, three values.
+     */
     description: annotate(
       z
         .string()
         .trim()
-        .min(30, "Describe what happened in at least 30 characters — this is the evidence.")
+        .min(100, "Describe what happened in at least 100 characters — this is the evidence.")
         .max(5000, "Keep the description under 5000 characters."),
       { section: "what", order: 5, row: "full", kind: "textarea" },
     ),

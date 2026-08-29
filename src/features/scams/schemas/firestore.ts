@@ -183,6 +183,21 @@ export interface ScammerDocument extends BaseDocument {
    */
   reportedByAnon: boolean;
 
+  /**
+   * The reporter ticked "I confirm this report is truthful and accurate".
+   *
+   * 🛑 The form has always REQUIRED this — a `z.literal(true)` in
+   * `scamReportFormSchema` and a hard gate on submit — and never sent it. On a
+   * surface where a false report gets someone listed publicly and has account
+   * consequences for the reporter, the attestation is precisely the record you
+   * want to keep, and it existed only as a client-side gate that any direct
+   * call to the route bypassed entirely.
+   *
+   * Optional on the document so the rows written before 2026-08-29 stay valid;
+   * absent means "not recorded", which is honest, and is NOT the same as false.
+   */
+  reporterAttested?: boolean;
+
   status: ScammerStatus;
 
   /** UID of admin/employee who verified or rejected. */
@@ -571,6 +586,7 @@ export type ScammerCreateInput = Pick<
   | "evidence"
   | "reportedBy"
   | "reportedByAnon"
+  | "reporterAttested"
 >;
 
 export type ScammerAdminUpdateInput = Partial<
