@@ -1,13 +1,11 @@
 import type { UserRole } from "./types";
 import { getTokenTimeRemaining, isTokenExpired } from "./token-helpers";
 
-const ROLE_HIERARCHY: Record<UserRole, number> = {
-  user: 0,
-  seller: 1,
-  employee: 2,
-  moderator: 2,
-  admin: 3,
-};
+// Was a SECOND, disagreeing copy of the hierarchy (employee and moderator both
+// ranked 2, where the canonical one puts moderator above employee), so
+// `hasRole` gave a different answer depending on which module you imported.
+// Deleted 2026-08-29 in favour of the one in security/authorization.
+import { ROLE_HIERARCHY } from "../../security/authorization";
 
 export interface DefaultRoleOptions {
   adminEmails?: string[];

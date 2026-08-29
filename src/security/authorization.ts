@@ -16,11 +16,24 @@ import type { JsonValue } from "../schemas/types";
 
 export type { UserRole };
 
-const ROLE_HIERARCHY: Record<UserRole, number> = {
+/**
+ * 🛑 THE role hierarchy. There were two until 2026-08-29 — this one and a copy
+ * in `features/auth/auth-helpers.ts` — and they DISAGREED: that copy ranked
+ * `employee` and `moderator` equal (both 2), while this one puts moderator
+ * above employee. So `hasRole(employeeUser, "moderator")` answered `true` or
+ * `false` depending on which module the caller happened to import. Exported now
+ * so there is one answer.
+ */
+export const ROLE_HIERARCHY: Record<UserRole, number> = {
   admin: 5,
   moderator: 4,
   employee: 3,
+  // Peers on purpose: a QA tester owns a real store and must clear every seller
+  // gate. What a tester has BEYOND a seller is the `tester:admin-surfaces`
+  // permission, not a higher rank — this chain is linear, so any level meaning
+  // "seller plus admin read" would also outrank moderator and employee.
   seller: 2,
+  tester: 2,
   user: 1,
 };
 

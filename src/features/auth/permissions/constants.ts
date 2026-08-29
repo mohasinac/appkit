@@ -134,6 +134,18 @@ export type Permission =
    */
   | "admin:checkout:bypass"
 
+  /**
+   * Lets a `tester` reach `/admin/**` with real read/write access.
+   *
+   * Replaces the `canTestAdmin` boolean. Not a second role: the hierarchy is
+   * linear, so there is no level meaning "seller-level, plus read admin" that
+   * would not also outrank moderator and employee. Granted through the same
+   * `permissions[]` array employees already use, so there is one grant
+   * mechanism — and revoking it is a permission change, which the admin audit
+   * log already records.
+   */
+  | "tester:admin-surfaces"
+
   // Events
   | "admin:events:read"
   | "admin:events:write"

@@ -74,7 +74,15 @@ export function checkAnyPermission(
 // ── RSC layout factory ────────────────────────────────────────────────────────
 
 type GetUser = () => Promise<
-  { uid: string; role: string; isTester?: boolean; canTestAdmin?: boolean } | null
+  | {
+      uid: string;
+      role: string;
+      permissions?: readonly string[] | null;
+      /** @deprecated Legacy tester flags; still read during the migration window. */
+      isTester?: boolean;
+      canTestAdmin?: boolean;
+    }
+  | null
 >;
 
 export interface AdminSectionLayoutOpts {
@@ -111,8 +119,9 @@ export function makeAdminSectionLayout(
       return null;
     }
 
-    // admin role, or a tester explicitly flagged to test admin areas
-    // (isTester && canTestAdmin), passes without a permission check
+    // Admin role, or a tester cleared for admin surfaces (the `tester` role
+    // plus `tester:admin-surfaces`, or the legacy isTester/canTestAdmin pair),
+    // passes without a permission check.
     if (isEffectiveAdminUser(user)) return children;
 
     // non-employee non-admin roles have no business in /admin

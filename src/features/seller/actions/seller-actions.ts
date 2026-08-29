@@ -10,7 +10,7 @@
  */
 
 import { serverLogger } from "../../../monitoring";
-import { isAdminUser, isSellerUser } from "../../auth/role-predicates";
+import { isAdminUser, isSellerUser, isStrictSellerUser, isTesterUser } from "../../auth/role-predicates";
 import {
   ApiError,
   AuthorizationError,
@@ -187,7 +187,28 @@ export async function becomeSeller(
   userId: string,
 ): Promise<BecomeSellerResult> {
   const profile = await userRepository.findById(userId);
-  if (profile && (isSellerUser(profile) || isAdminUser(profile))) {
+  const isTester = isTesterUser(profile);
+
+  /*
+   * 🛑 `isStrictSellerUser`, not `isSellerUser`.
+   *
+   * `isSellerUser` now answers true for the `tester` role — testers own real
+   * stores and must clear every seller gate. But that makes it the WRONG test
+   * here: a brand-new tester has role `tester` from the moment they are
+   * flagged, so an early return keyed on it would send them straight back with
+   * `storeStatus: "pending"` and they would never reach the auto-approve below.
+   * The tester sandbox depends on that approval.
+   *
+   * A tester who HAS already onboarded is caught by the `storeStatus` clause,
+   * so this stays idempotent for them.
+   */
+  const alreadyOnboarded =
+    profile &&
+    (isStrictSellerUser(profile) ||
+      isAdminUser(profile) ||
+      (isTester && Boolean(profile.storeStatus)));
+
+  if (alreadyOnboarded) {
     return {
       alreadySeller: true,
       storeStatus:
@@ -196,9 +217,15 @@ export async function becomeSeller(
     };
   }
 
-  const storeStatus = profile?.isTester ? "approved" : "pending";
+  const storeStatus = isTester ? "approved" : "pending";
   await userRepository.update(userId, {
-    role: "seller",
+    // 🛑 A tester must NOT be demoted to `seller` here. `tester` is a peer of
+    // `seller` in the hierarchy and already clears every seller gate
+    // (`isSellerUser` returns true for it), so overwriting the role would
+    // silently strip their tester identity — and with it the Tester Hub and
+    // the test-data visibility their whole programme depends on — the first
+    // time they opened a store.
+    ...(isTester ? {} : { role: "seller" as const }),
     storeStatus,
   } as Partial<UserDocument>);
 
@@ -231,7 +258,7 @@ export async function createStore(
   }
 
   const profile = await userRepository.findById(userId);
-  const isTester = profile?.isTester === true;
+  const isTester = isTesterUser(profile);
 
   const store = await storeRepository.create({
     storeSlug,

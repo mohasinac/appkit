@@ -881,6 +881,9 @@ export {
   isEmployeeUser,
   isBuyerUser,
   isEffectiveAdminUser,
+  isTesterUser,
+  canTestAdminSurfaces,
+  isStrictSellerUser,
 } from "./features/auth/role-predicates";
 
 // Layout feature — client islands (unifies admin/store/user dashboard layouts).

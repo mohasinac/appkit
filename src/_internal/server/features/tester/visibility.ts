@@ -7,20 +7,21 @@
  * (a `!=` clause) would silently exclude every pre-existing document that doesn't have
  * the field set at all, which is worse than the problem it solves.
  */
-import { isAdminUser } from "../../../../features/auth/role-predicates";
+import { isAdminUser, isTesterUser } from "../../../../features/auth/role-predicates";
 
 export interface TestDataFlagged {
   isTestData?: boolean;
 }
 
 export interface ViewerLike {
-  isTester?: boolean;
   role?: string | null;
+  /** @deprecated Legacy flag; read via isTesterUser during the migration window. */
+  isTester?: boolean;
 }
 
 /** True when the viewer is allowed to see isTestData:true documents. */
 export function canViewTestData(viewer: ViewerLike | null | undefined): boolean {
-  return Boolean(viewer?.isTester) || isAdminUser(viewer);
+  return isTesterUser(viewer) || isAdminUser(viewer);
 }
 
 /** Strips isTestData:true items from a list unless the viewer is a tester or admin. */

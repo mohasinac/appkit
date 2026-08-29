@@ -31,7 +31,7 @@ import { normalizeError } from "../../errors/normalize";
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
-import { isEffectiveAdminUser } from "../../features/auth/role-predicates";
+import { isEffectiveAdminUser, isTesterUser, canTestAdminSurfaces } from "../../features/auth/role-predicates";
 import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
 import { describeCauseChain } from "../../errors/describe-cause";
 import { buildErrorEnvelope, toApiIssues } from "../../errors/error-envelope";
@@ -252,10 +252,11 @@ async function isTesterEligibleForAdminRoute(
 ): Promise<boolean> {
   if (!user || !effectiveRoles.includes("admin")) return false;
   const profile = await userRepository.findById(user.uid);
-  return Boolean(
-    (profile as { isTester?: boolean; canTestAdmin?: boolean } | null)?.isTester &&
-      (profile as { isTester?: boolean; canTestAdmin?: boolean } | null)?.canTestAdmin,
-  );
+  // Reads the `tester` role + `tester:admin-surfaces` permission first, and the
+  // legacy `isTester`/`canTestAdmin` booleans second — see role-predicates.
+  // The live Firestore read is required either way: none of these reach the
+  // session-cookie claims, which carry only `role`.
+  return isTesterUser(profile) && canTestAdminSurfaces(profile);
 }
 
 export function createRouteHandler<
