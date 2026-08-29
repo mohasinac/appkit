@@ -64,15 +64,27 @@ export const sellerCouponFormSchema = z
     type: annotate(z.enum(["percentage", "fixed", "free_shipping"]), {
       section: "basics", quick: true, order: 2, row: "pair",
     }),
+    /*
+     * `when` carries what the editor held as JSX conditionals, so a field the
+     * form hides is one the payload cannot carry — see `couponDraftToPayload`.
+     */
     value: annotate(numericString("The discount value"), {
       section: "basics", quick: true, order: 3, row: "pair",
+      when: (v) => v.type !== "free_shipping",
     }),
 
     minPurchase: annotate(numericString("Minimum purchase"), {
       section: "limits", sectionLabel: "Limits", order: 1, row: "pair",
     }),
+    /*
+     * A percentage cap is meaningless on a fixed or free-shipping coupon. The
+     * input was already hidden for those, and the value was SENT anyway — so a
+     * cap typed while the type was "percentage" persisted after switching to
+     * free shipping, invisibly.
+     */
     maxDiscount: annotate(numericString("Maximum discount"), {
       section: "limits", order: 2, row: "pair",
+      when: (v) => v.type === "percentage",
     }),
     totalLimit: annotate(numericString("Total uses"), {
       section: "limits", order: 3, row: "pair",
@@ -128,3 +140,59 @@ export const sellerCouponFormSchema = z
   });
 
 export type SellerCouponFormValues = z.infer<typeof sellerCouponFormSchema>;
+
+/**
+ * What `POST /api/store/coupons` accepts.
+ *
+ * The index signature is what lets it pass as a JSON body without a cast at the
+ * callsite — the named fields still constrain what may be set.
+ */
+export interface SellerCouponPayload {
+  [key: string]: string | number | boolean | string[] | undefined;
+  code: string;
+  type: SellerCouponFormValues["type"];
+  value: number;
+  minPurchase?: number;
+  maxDiscount?: number;
+  totalLimit: number;
+  perUserLimit: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  applicableProducts?: string[];
+  applicableCategories?: string[];
+}
+
+/**
+ * The draft, as the route wants it.
+ *
+ * 🛑 One implementation because the conditions have to match the form's, and a
+ * per-callsite conversion is how they stopped matching: the create client
+ * correctly zeroed `value` for a free-shipping coupon and then sent
+ * `maxDiscount` for EVERY type — so a cap typed while the type was
+ * "percentage" survived a switch to fixed or free-shipping, invisibly, because
+ * the input that would have shown it was no longer rendered.
+ *
+ * The rule is now stated once, here, next to the `when` predicates it mirrors:
+ * a field the form hides is a field the payload omits.
+ */
+export function couponDraftToPayload(draft: SellerCouponFormValues): SellerCouponPayload {
+  const isPercentage = draft.type === "percentage";
+  const hasValue = draft.type !== "free_shipping";
+  return {
+    code: draft.code,
+    type: draft.type,
+    value: hasValue ? Number(draft.value) || 0 : 0,
+    minPurchase: draft.minPurchase ? Number(draft.minPurchase) : undefined,
+    maxDiscount: isPercentage && draft.maxDiscount ? Number(draft.maxDiscount) : undefined,
+    totalLimit: Number(draft.totalLimit) || 0,
+    perUserLimit: Number(draft.perUserLimit) || 0,
+    startDate: draft.startDate,
+    endDate: draft.endDate,
+    isActive: draft.isActive,
+    ...(draft.applicableProducts?.length ? { applicableProducts: draft.applicableProducts } : {}),
+    ...(draft.applicableCategories?.length
+      ? { applicableCategories: draft.applicableCategories }
+      : {}),
+  };
+}
