@@ -60,12 +60,10 @@ export {
 } from "./middleware/chain";
 export type { CreateApiMiddlewareConfig } from "./middleware/chain";
 export { piiScrubberMiddleware } from "./middleware/pii-scrubber";
-export { createPiiRedactorMiddleware } from "./middleware/pii-redactor";
 export type {
   BaseRequestContext,
   AuthRequestContext,
   Middleware,
-  PiiRedactionRule,
 } from "./middleware";
 
 // Standardized API response helpers

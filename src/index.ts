@@ -2565,8 +2565,6 @@ export { createApiHandlerFactory } from "./next/index";
 // createApiMiddleware - Helper for create api middleware.
 export { createApiMiddleware } from "./next/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createPiiRedactorMiddleware - Helper for create pii redactor middleware.
-export { createPiiRedactorMiddleware } from "./next/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createRouteHandler - Helper for create route handler.
 export { createRouteHandler } from "./next/index";
@@ -2669,8 +2667,6 @@ export type { Middleware } from "./next/index";
 // NotFoundViewProps - Type contract for not found view props.
 export type { NotFoundViewProps } from "./next/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PiiRedactionRule - Type contract for pii redaction rule.
-export type { PiiRedactionRule } from "./next/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // RouteMap - Type contract for route map.
 export type { RouteMap } from "./next/index";

@@ -19,8 +19,12 @@
  * it grants nothing — it silently never matches — so a role built from typos
  * looks configured and does nothing, which is worse than being rejected.
  *
- * `"*"` is accepted deliberately: `security/rbac/types.ts` defines it as the
- * wildcard, and rejecting it here would break a legitimate super-role.
+ * `"*"` is accepted deliberately as a super-role wildcard. It used to be
+ * defined by `security/rbac/types.ts`, which was deleted 2026-08-29 as a dead
+ * second permission system — so today NOTHING expands it: `checkPermission`
+ * does a plain `includes()`. A role carrying `"*"` therefore grants exactly
+ * nothing. Kept accepted so existing stored roles still validate; make it
+ * expand, or reject it, before advertising it as a feature.
  *
  * ## What is NOT accepted from the body
  *

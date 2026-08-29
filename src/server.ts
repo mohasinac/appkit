@@ -366,8 +366,6 @@ export { createApiHandlerFactory } from "./next/index";
 // createApiMiddleware - Helper for create api middleware.
 export { createApiMiddleware } from "./next/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createPiiRedactorMiddleware - Helper for create pii redactor middleware.
-export { createPiiRedactorMiddleware } from "./next/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createRouteHandler - Helper for create route handler.
 export { createRouteHandler } from "./next/index";

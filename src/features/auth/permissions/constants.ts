@@ -111,6 +111,28 @@ export type Permission =
   | "admin:newsletter:read"
   | "admin:newsletter:write"
   | "admin:contact:read"
+  /** Destructive/mutating contact-submission actions. Added 2026-08-29 —
+   * `DELETE /api/admin/contact-submissions/[id]` declared `admin:contact:delete`,
+   * which is not a member of this union and therefore could never be granted. */
+  | "admin:contact:write"
+
+  // Moderation — the nav entries and the guide hub referenced these long before
+  // they existed here, so those items rendered for an employee who could never
+  // be given the permission that gates them.
+  | "admin:moderation:read"
+  | "admin:roles:read"
+
+  /**
+   * Skip OTP + payment when placing an order. Replaces
+   * `siteSettings.featureFlags.adminCheckoutBypass`: a capability granted to a
+   * person belongs in the permission system, not in a site-wide toggle that is
+   * either on for every admin or off for all of them.
+   *
+   * Named `admin:checkout:bypass` rather than the bare `checkout:bypass` so it
+   * matches the `admin:resource:action` convention every other member follows
+   * and is picked up by PERMISSION_DOMAINS prefix matching.
+   */
+  | "admin:checkout:bypass"
 
   // Events
   | "admin:events:read"
