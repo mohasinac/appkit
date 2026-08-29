@@ -270,7 +270,7 @@ function ShipmentLotsSection({
                     size="sm"
                     variant="ghost"
                     type="button"
-                    action={ACTIONS.SHIPMENT["delete"]}
+                    action={ACTIONS.SHIPMENT["delete-lot"]}
                     isLoading={deleteLotMutation.isPending}
                     onClick={() => deleteLotMutation.mutate(lot.id)}
                   >

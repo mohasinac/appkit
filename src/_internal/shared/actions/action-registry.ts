@@ -991,6 +991,26 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    /*
+     * The alerts list rendered a bare `<Button variant="ghost">Delete</Button>`
+     * with a raw onClick — no ActionDef, so no confirmation, so one misplaced
+     * click silently removed an alert with nothing to undo it (Rule #7).
+     */
+    "delete-analytics-alert": {
+      iconKey: "delete",
+      id: "store.delete-analytics-alert",
+      label: "Delete",
+      ariaLabel: "Delete this analytics alert",
+      description: "Permanently removes this alert rule. Past notifications are unaffected.",
+      kind: "danger",
+      permissions: ["seller", "admin"],
+      confirmation: {
+        title: "Delete this alert?",
+        body: "You will stop being notified when this rule matches. Alerts already sent are unaffected. This cannot be undone.",
+        confirmLabel: "Delete alert",
+        confirmKind: "danger",
+      },
+    },
     "cancel-form": {
       iconKey: "cancel",
       id: "store.cancel-form",
@@ -1306,6 +1326,30 @@ export const ACTIONS: ActionTree = {
         title: "Delete this shipment?",
         body: "This permanently removes the shipment and all its lots and items. This cannot be undone. Items still linked to a product must be unlinked first.",
         confirmLabel: "Delete shipment",
+        confirmKind: "danger",
+      },
+    },
+    /*
+     * A LOT, not the whole shipment.
+     *
+     * The lot row's delete button used `shipment.delete`, so the dialog asked
+     * "Delete this shipment?" and warned about removing every lot — while the
+     * handler deleted one lot. A confirmation that names the wrong object is
+     * worse than none: it is either ignored, or it stops someone doing
+     * something harmless.
+     */
+    "delete-lot": {
+      iconKey: "delete",
+      id: "shipment.delete-lot",
+      label: "Delete",
+      ariaLabel: "Delete this lot and its items",
+      description: "Permanently deletes this lot and every item in it.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this lot?",
+        body: "This permanently removes the lot and every item in it. The rest of the shipment is untouched. Items still linked to a product must be unlinked first.",
+        confirmLabel: "Delete lot",
         confirmKind: "danger",
       },
     },

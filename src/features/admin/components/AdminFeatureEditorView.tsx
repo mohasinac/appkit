@@ -188,6 +188,7 @@ export function AdminFeatureEditorView({
   };
 
   const saveMutation = useApiMutation({
+    errorMessage: "Failed to save feature.",
     mutationFn: async () => {
       const payload: AdminFeaturePayload = {
         label,
@@ -218,6 +219,7 @@ export function AdminFeatureEditorView({
   });
 
   const deleteMutation = useApiMutation({
+    errorMessage: "Failed to delete feature.",
     mutationFn: () => apiClient.delete(byIdEndpoint(featureId!)),
     onSuccess: () => {
       showToast(TOAST.DELETED, "success");

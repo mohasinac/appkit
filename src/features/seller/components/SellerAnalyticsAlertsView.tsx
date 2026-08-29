@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Select, Stack, Text, Toggle, useToast } from "../../../ui";
@@ -10,6 +10,7 @@ import type { AnalyticsAlertDocument } from "../../store-extensions/schemas/fire
 import { analyticsAlertCreateSchema } from "../../store-extensions/schemas/analytics-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { ValidationError } from "../../../errors/validation-error";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -107,14 +108,18 @@ function AlertCard({
           onChange={(v) => onToggle(alert.id, v)}
           size="sm"
         />
+        {/*
+          Via the registry, so the confirmation is not optional — this was a
+          bare ghost button with a raw onClick, and one misplaced click removed
+          an alert with nothing to undo it.
+        */}
         <Button
           variant="ghost"
           size="sm"
+          action={ACTIONS.STORE["delete-analytics-alert"]}
           onClick={() => onDelete(alert.id)}
           className="text-error hover:text-error"
-        >
-          Delete
-        </Button>
+        />
       </Row>
     </Row>
   );
@@ -158,7 +163,7 @@ export function SellerAnalyticsAlertsView({
     queryKey: ["seller", "analytics-alerts"],
     queryFn: async () => {
       const res = await apiClient.get(SELLER_ENDPOINTS.ANALYTICS_ALERTS);
-      return ((res as Record<string, unknown>)?.items ?? []) as AnalyticsAlertDocument[];
+      return ((res as Record<string, JsonValue>)?.items ?? []) as unknown as AnalyticsAlertDocument[];
     },
   });
 
