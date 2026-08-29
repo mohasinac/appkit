@@ -5,6 +5,7 @@ import { FilterFacetSection } from "./FilterFacetSection";
 import type { FacetOption } from "./FilterFacetSection";
 import { RangeFilter } from "./RangeFilter";
 import { SwitchFilter } from "./SwitchFilter";
+import { joinFilterValues, splitFilterValues } from "../../constants/table-keys";
 
 // --- UrlTable interface -------------------------------------------------------
 
@@ -127,8 +128,7 @@ export function FilterPanel({
           }
 
           case "facet-multi": {
-            const raw = table.get(item.key);
-            const selected = raw ? raw.split(",").filter(Boolean) : [];
+            const selected = splitFilterValues(table.get(item.key));
             return (
               <FilterFacetSection
                 key={`${item.type}-${item.key}`}
@@ -142,7 +142,7 @@ export function FilterPanel({
                 onToggle={() => handleToggle(idx)}
                 onClear={() => table.set(item.key, "")}
                 onChange={(vals: string[]) =>
-                  table.set(item.key, vals.join(","))
+                  table.set(item.key, joinFilterValues(vals))
                 }
               />
             );

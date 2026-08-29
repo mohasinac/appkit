@@ -17,6 +17,19 @@ interface DualSliderProps {
   prefix?: string;
 }
 
+/**
+ * Parse a filter value, distinguishing "not set" from a legitimate zero.
+ *
+ * 🛑 NOT `parseFloat(v) || bound`. `parseFloat("")` is NaN and falsy, which is
+ * the intended case — but so is `parseFloat("0")`, so a user asking for a max
+ * of 0 got the 500000 bound instead, and the filter they could see in the
+ * inputs was not the one being applied.
+ */
+function rawNum(value: string): number | null {
+  const n = Number.parseFloat(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 function DualSlider({
   minValue,
   maxValue,
@@ -27,14 +40,29 @@ function DualSlider({
   step = 1,
   prefix = "",
 }: DualSliderProps) {
-  const minNum = Math.max(
-    minBound,
-    Math.min(parseFloat(minValue) || minBound, maxBound),
-  );
-  const maxNum = Math.min(
-    maxBound,
-    Math.max(parseFloat(maxValue) || maxBound, minBound),
-  );
+  const minRaw = rawNum(minValue);
+  const maxRaw = rawNum(maxValue);
+
+  /*
+   * Display only. An unset side shows its bound so the track reads sensibly —
+   * but the bound is never what gets WRITTEN, which is the distinction the old
+   * `|| bound` collapsed.
+   */
+  const minNum = Math.min(Math.max(minRaw ?? minBound, minBound), maxBound);
+  const maxNum = Math.max(Math.min(maxRaw ?? maxBound, maxBound), minBound);
+
+  /*
+   * Each slider spans the FULL range and clamps itself on write.
+   *
+   * It used to derive its opposite end from the other thumb — the min slider's
+   * `max` was `maxNum - step` — so with max unset, `maxNum` collapsed to the
+   * bound, and any later change to one side silently re-scaled and appeared to
+   * reset the other. Clamping on write instead of on range means dragging one
+   * thumb can never move or clear the other, and a value that would cross is
+   * pinned rather than the whole control rescaling underneath the user.
+   */
+  const writeMin = (v: number) => onMinChange(String(Math.min(v, maxRaw ?? maxBound)));
+  const writeMax = (v: number) => onMaxChange(String(Math.max(v, minRaw ?? minBound)));
 
   return (
     <Stack gap="sm" className="w-full">
@@ -54,16 +82,16 @@ function DualSlider({
         <Slider
           value={minNum}
           min={minBound}
-          max={Math.max(minBound, maxNum - step)}
+          max={maxBound}
           step={step}
-          onChange={(v) => onMinChange(String(v))}
+          onChange={writeMin}
         />
         <Slider
           value={maxNum}
-          min={Math.min(maxBound, minNum + step)}
+          min={minBound}
           max={maxBound}
           step={step}
-          onChange={(v) => onMaxChange(String(v))}
+          onChange={writeMax}
         />
       </Stack>
 
@@ -101,6 +129,16 @@ export interface RangeFilterProps {
   className?: string;
   isOpen?: boolean;
   onToggle?: () => void;
+  /**
+   * Override the clear behaviour. **Rarely needed** — clearing a range is
+   * `onMinChange("") + onMaxChange("")`, which is now the default, so the X
+   * appears on every range filter without a call site opting in.
+   *
+   * It used to be required-in-practice: 18 of the 19 call sites passed nothing
+   * and therefore rendered no clear button at all, leaving a range you could
+   * set and not unset. Pass this only when clearing must ALSO reset something
+   * outside the two values (`FilterPanel` clears its own pending map).
+   */
   onClear?: () => void;
 }
 
@@ -141,6 +179,14 @@ export function RangeFilter({
     minBound !== undefined &&
     maxBound !== undefined;
   const hasValue = !!(minValue || maxValue);
+
+  // Clearing a range needs nothing a caller has to supply. See `onClear` above.
+  const handleClear =
+    onClear ??
+    (() => {
+      onMinChange("");
+      onMaxChange("");
+    });
 
   const inputClass =
     "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 ";
@@ -191,10 +237,10 @@ export function RangeFilter({
           </svg>
         </Button>
 
-        {onClear && hasValue && (
+        {hasValue && (
           <Button
             type="button"
-            onClick={onClear}
+            onClick={handleClear}
             variant="ghost"
             size="sm"
             className={CLS_CLEAR_BTN}

@@ -73,6 +73,37 @@ export const TABLE_KEYS = {
 
 export type TableKey = (typeof TABLE_KEYS)[keyof typeof TABLE_KEYS];
 
+/**
+ * The one delimiter joining several values of ONE filter key in a URL.
+ *
+ * 🛑 `"|"`, never `","`. sievejs reads same-field `|` as an OR-group, which the
+ * Firestore adapter upgrades to an `in` query. A comma is a clause SEPARATOR —
+ * `condition==new,condition==used` is an AND of two equalities on one field and
+ * can never match a document.
+ *
+ * Two filter systems disagreed on this. `ProductFilters` and the 11 sites like
+ * it wrote `vals.join("|")`; `usePendingFilters` and `FilterPanel` split and
+ * joined on `","` for the SAME URL keys. Nothing broke visibly, because a
+ * pipe-joined string survives a comma split as a single element and round-trips
+ * intact — but it counts as ONE, so the active-filter badge reported 1 for a
+ * three-category selection, and `usePendingTable.get`'s `[0]` returned the
+ * whole `"a|b|c"` string and appeared correct for the same wrong reason.
+ *
+ * Split and join through the two helpers below rather than inlining either
+ * character; that is what keeps the count, the wire format and Sieve agreeing.
+ */
+export const FILTER_VALUE_DELIMITER = "|";
+
+/** Parse a multi-value filter param. Empty string → no values, never `[""]`. */
+export function splitFilterValues(raw: string | null | undefined): string[] {
+  return raw ? raw.split(FILTER_VALUE_DELIMITER).filter(Boolean) : [];
+}
+
+/** Serialise a multi-value filter param for the URL. */
+export function joinFilterValues(values: readonly string[]): string {
+  return values.filter(Boolean).join(FILTER_VALUE_DELIMITER);
+}
+
 export const VIEW_MODE = {
   GRID: "grid",
   LIST: "list",

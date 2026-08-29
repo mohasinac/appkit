@@ -272,6 +272,16 @@ function num(raw: string): number | undefined {
  * declared these keys in their FILTER_KEYS (so they counted toward the
  * filter badge) and rendered the controls, but never put them on the wire.
  */
+/*
+ * Facet key → the Firestore field path it filters.
+ *
+ * 🛑 Every value here MUST have an entry in the products `SIEVE_FIELDS`, and
+ * a `(status, listingType, <field>, createdAt DESC)` composite index. Miss the
+ * first and sievejs drops the clause silently; miss the second and the query
+ * throws FAILED_PRECONDITION, which `runQuery` logs and turns into an empty
+ * grid. Both read to the user as "this filter matches nothing".
+ * `scripts/audit-type-facet-wiring.mjs` checks all three ends.
+ */
 const TYPE_FACET_FIELD: Record<string, string> = {
   [TABLE_KEYS.CITY]: "classified.meetupArea.city",
   [TABLE_KEYS.NEGOTIABLE]: "classified.negotiable",
@@ -280,7 +290,19 @@ const TYPE_FACET_FIELD: Record<string, string> = {
   [TABLE_KEYS.SPECIES]: "liveItem.species",
   [TABLE_KEYS.LIVE_SEX]: "liveItem.sex",
   [TABLE_KEYS.JURISDICTION]: "liveItem.jurisdictionAllowed",
+  [TABLE_KEYS.LIVE_TRANSPORT_METHOD]: "liveItem.transport.method",
 };
+
+/** Every field path a per-type facet can filter on. Read by the wiring audit. */
+export const TYPE_FACET_FIELD_PATHS = Object.values(TYPE_FACET_FIELD);
+
+/**
+ * The ONE sort a per-type facet query is fetched at, so each facet needs one
+ * composite index instead of one per offered sort. The user's chosen sort is
+ * applied in memory afterwards. Changing this string invalidates all 8 indexes
+ * — the audit derives its expected shapes from it, so it will say so.
+ */
+export const FACET_FETCH_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 /** Read every known per-type facet present in the params. */
 function readTypeFacets(
@@ -755,7 +777,28 @@ export async function listPublicProducts(
   // ── Path A ("all") and the dense "available" case share one query. The only
   //    difference is whether a per-row predicate runs afterwards.
   const filters = sieveAnd(safeFilters, ...dateClauses);
-  const inMemory = wantAvailable || (hasDateRange && !canPushDate);
+
+  /*
+   * A per-type facet IS pushed down — it is a sparse equality, which is the
+   * side of the availability asymmetry that belongs in the query. What is not
+   * tractable is the SORT cross-product: `(status, listingType, <facet>,
+   * <sort>)` over 8 facets and the 7 publicly-offered sorts is 56 composite
+   * indexes, and every sort added later costs 8 more.
+   *
+   * So the facet goes down and the SORT comes back up: fetch a bounded window
+   * ordered by the one sort we index for every facet, then re-order in memory.
+   * 56 indexes become 8, a new sort costs none, and `truncated` keeps the
+   * pager honest — the same trade `fetchSorts` already makes for a date range
+   * that cannot ride its own sort.
+   *
+   * Before this, none of the 8 had a public index at all: every facet on
+   * /classified, /live and /digital-codes threw FAILED_PRECONDITION, which
+   * `runQuery` logs and returns as null, i.e. an empty grid. The store-scoped
+   * copies were indexed for 3 of the 7 sorts, so those pages worked until
+   * someone chose "Name: A–Z".
+   */
+  const hasTypeFacet = Object.keys(input.typeFacets ?? {}).length > 0;
+  const inMemory = wantAvailable || hasTypeFacet || (hasDateRange && !canPushDate);
 
   // When a date range stays in memory, fetch in whichever direction front-loads
   // the rows that will PASS it: `dateFrom` (">=", still live) wants the most
@@ -767,7 +810,9 @@ export async function listPublicProducts(
       ? input.dateFrom
         ? sortBy(dateField, "DESC")
         : sortBy(dateField, "ASC")
-      : sorts;
+      : hasTypeFacet
+        ? FACET_FETCH_SORT
+        : sorts;
 
   const result = await runQuery(executor, {
     filters,
@@ -906,10 +951,28 @@ export async function listStoreProducts(
   });
 }
 
+/**
+ * Comparable primitive for one row value.
+ *
+ * 🛑 The `Date` branch is load-bearing. Without it a Date falls through to
+ * `String(value)` — `"Wed Aug 30 2026 …"` — and a lexical compare of those
+ * orders by WEEKDAY NAME. Every in-memory date sort was wrong: the "Sold &
+ * Ended" tab ordered by `createdAt`/`auctionEndDate`, and now every per-type
+ * facet under "Oldest First". A Firestore Timestamp arrives here as a Date via
+ * `mapDoc`, so the ISO-string case is only for a row that has already been
+ * serialised; both are handled.
+ */
+function sortKey(value: unknown): number | string | null {
+  if (value == null) return null;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === "number" || typeof value === "string") return value;
+  return String(value);
+}
+
 function sortRows(rows: Row[], field: string, desc: boolean): Row[] {
   return [...rows].sort((a, b) => {
-    const av = a[field];
-    const bv = b[field];
+    const av = sortKey(a[field]);
+    const bv = sortKey(b[field]);
     if (av == null && bv == null) return 0;
     if (av == null) return 1;
     if (bv == null) return -1;

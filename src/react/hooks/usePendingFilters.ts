@@ -1,6 +1,7 @@
 "use client"
 import { useCallback, useMemo, useState } from "react";
 import type { useUrlTable } from "./useUrlTable";
+import { joinFilterValues, splitFilterValues } from "../../constants/table-keys";
 
 type UrlTable = ReturnType<typeof useUrlTable>;
 
@@ -78,8 +79,9 @@ export function usePendingFilters({
 }: UsePendingFiltersOptions): UsePendingFiltersReturn {
   const parseValues = useCallback(
     (key: string): string[] => {
-      const raw = table.get(key);
-      return raw ? raw.split(",").filter(Boolean) : [];
+      // `|`, not `,` — see FILTER_VALUE_DELIMITER. Splitting on a comma
+      // made a 3-value selection one element, so the badge read 1.
+      return splitFilterValues(table.get(key));
     },
     [table],
   );
@@ -118,7 +120,7 @@ export function usePendingFilters({
   const apply = useCallback((extras?: Record<string, string>) => {
     const updates: Record<string, string> = { page: "1", ...extras };
     for (const k of keys) {
-      updates[k] = (pending[k] ?? []).join(",");
+      updates[k] = joinFilterValues(pending[k] ?? []);
     }
     table.setMany(updates);
   }, [keys, pending, table]);

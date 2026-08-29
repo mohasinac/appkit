@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { usePendingFilters } from "./usePendingFilters";
 import type { useUrlTable } from "./useUrlTable";
+import { joinFilterValues, splitFilterValues } from "../../constants/table-keys";
 
 type UrlTable = ReturnType<typeof useUrlTable>;
 
@@ -70,15 +71,26 @@ export function usePendingTable(
 ): UsePendingTableReturn {
   const filters = usePendingFilters({ table, keys });
 
+  /*
+   * `PendingTable` is a one-string-per-key view over an array-per-key buffer,
+   * so both directions have to go through the delimiter.
+   *
+   * `get` was `filters.pending[key]?.[0]` and `set` wrapped the whole string in
+   * a single-element array. That round-tripped a pipe-joined multi-select ONLY
+   * because `usePendingFilters` was splitting on a comma, which never divided
+   * it — `["a|b|c"]` in, `"a|b|c"` out. The moment that split became `|` (as it
+   * had to, for the badge to count), `[0]` would have started returning `"a"`
+   * and silently dropped every value after the first.
+   */
   const pendingTable = useMemo<PendingTable>(
     () => ({
-      get: (key: string): string => filters.pending[key]?.[0] ?? "",
+      get: (key: string): string => joinFilterValues(filters.pending[key] ?? []),
       set: (key: string, value: string): void => {
-        filters.set(key, value ? [value] : []);
+        filters.set(key, splitFilterValues(value));
       },
       setMany: (updates: Record<string, string>): void => {
         for (const [k, v] of Object.entries(updates)) {
-          filters.set(k, v ? [v] : []);
+          filters.set(k, splitFilterValues(v));
         }
       },
     }),

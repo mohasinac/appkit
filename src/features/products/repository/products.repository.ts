@@ -521,7 +521,22 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // silently skipped. The toggle did nothing at all until 2026-08-21.
     shippingPaidBy: { canFilter: true, canSort: false },
     searchTxt: { canFilter: true, canSort: false },
-    "classified.meetupArea": { canFilter: true, canSort: false },
+    /*
+     * `classified.meetupArea.city`, NOT `classified.meetupArea`.
+     *
+     * `meetupArea` is an OBJECT (`{city, locality, pincode}`), so an equality
+     * on the parent could never match anything a user typed. The city facet
+     * emits `classified.meetupArea.city` (TYPE_FACET_FIELD), `findField` is an
+     * exact-key lookup, and `throwExceptions:false` drops what it cannot
+     * resolve — so the /classified city filter rendered, counted toward the
+     * badge, and changed nothing. Both halves of Root Cause #62 in one entry:
+     * an orphan key that matches no field, beside a real field with no entry.
+     *
+     * The schema's own docstring already named the right path ("drives the
+     * (listingType, classified.meetupArea.city, createdAt) index"), and the
+     * store-scoped index has always been on `.city`.
+     */
+    "classified.meetupArea.city": { canFilter: true, canSort: false },
     "classified.acceptsShipping": { canFilter: true, canSort: false },
     "classified.negotiable": { canFilter: true, canSort: false },
     "digitalCode.codeDeliveryMethod": { canFilter: true, canSort: false },
@@ -530,6 +545,13 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     "liveItem.sex": { canFilter: true, canSort: false },
     "liveItem.jurisdictionAllowed": { canFilter: true, canSort: false },
     "liveItem.cites": { canFilter: true, canSort: false },
+    /*
+     * The live-items transport facet. `StoreLiveItemsListing` has listed
+     * `liveTransportMethod` in its FILTER_KEYS — so ticking it inflated the
+     * active-filter badge — while the key had no TYPE_FACET_FIELD mapping and
+     * this field had no entry, so it never reached Firestore from either end.
+     */
+    "liveItem.transport.method": { canFilter: true, canSort: false },
   };
 
   /**
