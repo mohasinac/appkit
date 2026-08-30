@@ -10068,3 +10068,12 @@ export {
   isSiteSettingsTabId,
 } from "./features/admin/constants/site-settings-tabs";
 export type { SiteSettingsTab, SiteSettingsTabId } from "./features/admin/constants/site-settings-tabs";
+
+export {
+  validateActionIndexEntry,
+  normaliseRoute,
+} from "./features/search/action-index/validate-entry";
+export type {
+  ActionIndexValidationContext,
+  ActionIndexValidationIssue,
+} from "./features/search/action-index/validate-entry";

@@ -1821,3 +1821,17 @@ export {
 } from "./constants/geo/countries";
 export type { CountryDef } from "./constants/geo/countries";
 export { SUBDIVISIONS, subdivisionsFor } from "./constants/geo/subdivisions";
+
+export {
+  validateActionIndexEntry,
+  normaliseRoute,
+} from "./features/search/action-index/validate-entry";
+export type {
+  ActionIndexValidationContext,
+  ActionIndexValidationIssue,
+} from "./features/search/action-index/validate-entry";
+export {
+  ActionIndexRepository,
+  actionIndexRepository,
+} from "./features/search/action-index/repository";
+export type { ActionIndexDocument } from "./features/search/action-index/repository";
