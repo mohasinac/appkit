@@ -1,31 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { Badge, Button, Checkbox, Div, Form, Heading, IconButton, Input, Label, Row, Select, Span, Stack, Text } from "../../../ui";
-import type { SelectOption } from "../../../ui";
-import { ProductInlineSelect } from "./ProductInlineSelect";
-import { CategoryInlineSelect } from "./CategoryInlineSelect";
+/**
+ * SellerCouponEditorView — sectionised 2026-08-30.
+ *
+ * ## The schema ran and could not be seen
+ *
+ * Unusually for this sweep, `sellerCouponFormSchema` was genuinely parsed on
+ * submit. What it could not do was report: every control was a raw `<Input>`
+ * with **no `name`**, so `applyZodIssues` wrote errors keyed on schema paths
+ * that no control on the page displayed. A percentage over 100 produced a line
+ * in `FormErrorSummary` and nothing at all on the field that caused it.
+ *
+ * Generating the controls from the schema is what fixes that: the field name
+ * IS the schema key, by construction.
+ *
+ * The local error banner is gone too. It carried two different kinds of
+ * failure — schema issues (already listed by `FormErrorSummary`, so a second
+ * copy) and the caller's save error (which has no field to land on, and so is
+ * a toast). One surface each.
+ */
 
+import React from "react";
+import { Badge, Div, Heading, Row, Stack, useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
-import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { toUserMessage } from "../../../errors/error-display-map";
+import { FieldInput, FormErrorSummary, applyZodIssues } from "../../../ui/forms";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { sellerCouponFormSchema } from "../schemas/coupon-form";
+import { ProductInlineSelect } from "./ProductInlineSelect";
+import { CategoryChipPicker } from "./CategoryChipPicker";
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-const CLS_SECTION_LABEL = "font-medium text-[var(--appkit-color-text-secondary)] mb-3";
-
-const TYPE_OPTIONS: SelectOption[] = [
-  { value: "percentage", label: "Percentage off (e.g. 10%)" },
-  { value: "fixed", label: "Fixed amount off (e.g. ₹50)" },
-  { value: "free_shipping", label: "Free shipping" },
-];
-
 export interface CouponEditorDraft {
+  [key: string]: unknown;
   code: string;
   type: "percentage" | "fixed" | "free_shipping";
   value: string;
@@ -62,9 +74,11 @@ const EMPTY_DRAFT: CouponEditorDraft = {
   applicableCategories: [],
 };
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
+const TYPE_OPTIONS = [
+  { value: "percentage", label: "Percentage off (e.g. 10%)" },
+  { value: "fixed", label: "Fixed amount off (e.g. ₹50)" },
+  { value: "free_shipping", label: "Free shipping" },
+];
 
 export function SellerCouponEditorView({
   couponId,
@@ -72,291 +86,185 @@ export function SellerCouponEditorView({
   onSave,
   onCancel,
 }: SellerCouponEditorViewProps) {
-  const [draft, setDraft] = useState<CouponEditorDraft>({ ...EMPTY_DRAFT, ...initial });
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const isEdit = Boolean(couponId);
+  const { showToast } = useToast();
+  const [draft, setDraft] = React.useState<CouponEditorDraft>({
+    ...EMPTY_DRAFT,
+    ...initial,
+  });
+  const [saving, setSaving] = React.useState(false);
+  const patch = (partial: Partial<CouponEditorDraft>) =>
+    setDraft((prev) => Object.assign({}, prev, partial));
 
-  const set = <K extends keyof CouponEditorDraft>(key: K, value: CouponEditorDraft[K]) =>
-    setDraft((d) => ({ ...d, [key]: value }));
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<CouponEditorDraft>(sellerCouponFormSchema, {
+        options: { type: TYPE_OPTIONS },
+        renderers: {
+          /*
+           * A code identifies the coupon to customers who already have it, so
+           * it is fixed after creation — a prop-driven hide, which is a
+           * `renderer` rather than a `when`: predicates see the draft only.
+           */
+          code: ({ values, onChange, errors }) => (
+            <FieldCode
+              value={values.code}
+              error={errors.code}
+              disabled={isEdit}
+              onChange={(v) => onChange({ code: v })}
+            />
+          ),
+          applicableProducts: ({ values, onChange }) => (
+            <ProductInlineSelect
+              scope="store"
+              multiple
+              value={values.applicableProducts}
+              onChange={(ids: string[]) => onChange({ applicableProducts: ids })}
+              placeholder="Restrict to specific products…"
+            />
+          ),
+          applicableCategories: ({ values, onChange }) => (
+            <CategoryChipPicker
+              selected={values.applicableCategories}
+              onSelectedChange={(next) => onChange({ applicableCategories: next })}
+              emptyHint="Leave both empty to apply the coupon to every product in your store."
+            />
+          ),
+        },
+      }),
+    [isEdit],
+  );
 
-  const handleSubmit = async (
-    e: React.FormEvent,
-    setFieldError?: (name: string, error: string | null) => void,
-  ) => {
-    e.preventDefault();
-    // Replaces four hand-rolled `if` checks that covered presence and date
-    // order and nothing else — a 500% percentage discount, a non-numeric
-    // value, a negative minimum spend and a per-customer limit above the
-    // total all passed. Errors now land on the field, not in one banner.
-    const parsed = sellerCouponFormSchema.safeParse(draft);
+  const nav = useSectionFormNav(sections, draft, { scope: "store:coupon-editor" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(
+    sellerCouponFormSchema,
+    {
+      sections: nav.sectionMeta,
+      onGoToSection: nav.goToSection,
+      fieldToSectionIndex: nav.fieldToSectionIndex,
+    },
+  );
+
+  const handleSubmit = async () => {
+    clearErrors();
+    /*
+     * Replaces four hand-rolled `if` checks that covered presence and date
+     * order and nothing else — a 500% percentage discount, a non-numeric
+     * value, a negative minimum spend and a per-customer limit above the
+     * total all passed.
+     */
+    const parsed = sellerCouponFormSchema.safeParse(
+      visibleValues(sellerCouponFormSchema, draft),
+    );
     if (!parsed.success) {
-      if (setFieldError) {
-        applyZodIssues(parsed.error.issues, setFieldError);
-      } else {
-        setError(parsed.error.issues[0]?.message ?? "Please check the form.");
-      }
+      applyZodIssues(parsed.error.issues, setFieldError);
       return;
     }
 
-    setError(null);
     setSaving(true);
     try {
       await onSave(draft, couponId);
     } catch (err) {
-      void normalizeError(err);
-      setError((err as Error).message ?? "Failed to save coupon");
+      const normalized = normalizeError(err);
+      // The CODE, never the thrown message. `err.message` is written for a
+      // developer, and rendering it is how a Node require stack ended up inside
+      // the bid modal (Root Cause #86). `toUserMessage` terminates in a
+      // constant, so the authored sentence below is all a user can ever see.
+      showToast(
+        toUserMessage(normalized.code, undefined, {
+          fallback: "Could not save the coupon. Try again.",
+        }),
+        "error",
+      );
     } finally {
       setSaving(false);
     }
   };
 
-  const isEdit = Boolean(couponId);
-
   return (
-    <Form schema={sellerCouponFormSchema} onSubmit={(e) => e.preventDefault()}>
-      {({ setFieldError }) => (
-      <Stack gap="none" className={`max-w-lg mx-auto border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl" shadow="sm">
-        <Div
-          className="h-[3px] w-full [background:linear-gradient(to_right,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_55%,var(--appkit-color-secondary-400)_100%)]"
-          aria-hidden="true"
-        />
-        <Div border="bottom" paddingY="y-md-lg" padding="x-lg">
-          <Row justify="between" gap="3">
-            <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
-              {isEdit ? "Edit Coupon" : "Create Coupon"}
-            </Heading>
-            {isEdit && (
-              <Badge variant={draft.isActive ? "success" : "default"}>
-                {draft.isActive ? "Active" : "Inactive"}
-              </Badge>
-            )}
-          </Row>
-        </Div>
+    <Stack
+      gap="none"
+      className={`max-w-lg mx-auto border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`}
+      rounded="xl"
+      shadow="sm"
+    >
+      <Div
+        className="h-[3px] w-full [background:linear-gradient(to_right,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_55%,var(--appkit-color-secondary-400)_100%)]"
+        aria-hidden="true"
+      />
+      <Div border="bottom" paddingY="y-md-lg" padding="x-lg">
+        <Row justify="between" gap="3">
+          <Heading
+            level={2}
+            className="text-[var(--appkit-color-text)]"
+            size="lg"
+            weight="semibold"
+          >
+            {isEdit ? "Edit Coupon" : "Create Coupon"}
+          </Heading>
+          {isEdit && (
+            <Badge variant={draft.isActive ? "success" : "default"}>
+              {draft.isActive ? "Active" : "Inactive"}
+            </Badge>
+          )}
+        </Row>
+      </Div>
 
-        <Stack gap="5" padding="lg">
-          {/*
-            Lists every current field error and, in a step wizard, links to the
-            owning step. It SUPPLEMENTS the banner below — that one carries
-            save failures from the server, this one carries schema failures
-            from the fields.
-          */}
+      <Stack gap="5" padding="lg">
+        <FormShellContext.Provider value={shellCtx}>
           <FormErrorSummary />
-          {error && (
-            <Div textSize="sm" className="border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="lg">
-              {error}
-            </Div>
-          )}
-
-          {/* Code */}
-          <Input
-            label="Coupon Code"
-            value={draft.code}
-            onChange={(e) => set("code", e.target.value.toUpperCase().replace(/\s+/g, ""))}
-            placeholder="e.g. WELCOME10"
-            required
-            disabled={isEdit}
-            helperText={isEdit ? "Code cannot be changed after creation" : "Customers enter this at checkout"}
+          <SectionForm<CouponEditorDraft>
+            sections={sections}
+            values={draft}
+            onChange={patch}
+            onSubmit={() => void handleSubmit()}
+            schema={sellerCouponFormSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            isLoading={saving}
+            submitLabel={isEdit ? "Save changes" : "Create coupon"}
+            onCancel={onCancel}
+            cancelLabel="Cancel"
           />
-
-          {/* Type */}
-          <Select
-            label="Discount Type"
-            value={draft.type}
-            options={TYPE_OPTIONS}
-            onChange={(e) => set("type", e.target.value as CouponEditorDraft["type"])}
-          />
-
-          {/* Value — hidden for free_shipping */}
-          {draft.type !== "free_shipping" && (
-            <Input
-              label={draft.type === "percentage" ? "Discount Percentage (%)" : "Discount Amount (₹)"}
-              type="number"
-              min={1}
-              max={draft.type === "percentage" ? 100 : undefined}
-              value={draft.value}
-              onChange={(e) => set("value", e.target.value)}
-              placeholder={draft.type === "percentage" ? "e.g. 10" : "e.g. 50"}
-              required
-              helperText={
-                draft.type === "percentage"
-                  ? "Enter a value between 1 and 100"
-                  : "Fixed rupee discount applied to the order"
-              }
-            />
-          )}
-
-          {/* Max discount cap — only for percentage */}
-          {draft.type === "percentage" && (
-            <Input
-              label="Max Discount Cap (₹, optional)"
-              type="number"
-              min={0}
-              value={draft.maxDiscount}
-              onChange={(e) => set("maxDiscount", e.target.value)}
-              placeholder="Leave blank for no cap"
-              helperText="Maximum rupee discount regardless of percentage"
-            />
-          )}
-
-          {/* Min purchase */}
-          <Input
-            label="Minimum Order Amount (₹, optional)"
-            type="number"
-            min={0}
-            value={draft.minPurchase}
-            onChange={(e) => set("minPurchase", e.target.value)}
-            placeholder="Leave blank for no minimum"
-          />
-
-          {/* Usage limits */}
-          <Div>
-            <Text size="sm" className={CLS_SECTION_LABEL}>
-              Usage Limits
-            </Text>
-            <Div layout="grid" gap="3" className="grid-cols-2">
-              <Input
-                label="Total Uses"
-                type="number"
-                min={0}
-                value={draft.totalLimit}
-                onChange={(e) => set("totalLimit", e.target.value)}
-                placeholder="0 = unlimited"
-              />
-              <Input
-                label="Per Customer"
-                type="number"
-                min={0}
-                value={draft.perUserLimit}
-                onChange={(e) => set("perUserLimit", e.target.value)}
-                placeholder="0 = unlimited"
-              />
-            </Div>
-          </Div>
-
-          {/* Dates */}
-          <Div>
-            <Text size="sm" className={CLS_SECTION_LABEL}>
-              Validity Period
-            </Text>
-            <Div layout="grid" gap="3" className="grid-cols-2">
-              <Input
-                label="Start Date"
-                type="date"
-                value={draft.startDate}
-                onChange={(e) => set("startDate", e.target.value)}
-                required
-              />
-              <Input
-                label="End Date"
-                type="date"
-                value={draft.endDate}
-                onChange={(e) => set("endDate", e.target.value)}
-                required
-              />
-            </Div>
-          </Div>
-
-          {/* Applicability — restrict to specific products / categories */}
-          <Div>
-            <Text size="sm" className={CLS_SECTION_LABEL}>
-              Applicability (optional)
-            </Text>
-            <Stack gap="sm">
-              <Div>
-                <Text size="xs" className="mb-1 text-[var(--appkit-color-text-secondary)]">
-                  Applicable products
-                </Text>
-                <ProductInlineSelect
-                  scope="store"
-                  multiple
-                  value={draft.applicableProducts}
-                  onChange={(v) => set("applicableProducts", v)}
-                  placeholder="Restrict to specific products…"
-                />
-              </Div>
-              <Div>
-                <Text size="xs" className="mb-1 text-[var(--appkit-color-text-secondary)]">
-                  Applicable categories
-                </Text>
-                <CategoryInlineSelect
-                  value=""
-                  onChange={(id) => {
-                    if (!id || draft.applicableCategories.includes(id)) return;
-                    set("applicableCategories", [...draft.applicableCategories, id]);
-                  }}
-                  placeholder="Add a category…"
-                />
-                {draft.applicableCategories.length > 0 && (
-                  <Row wrap gap="sm" padding="t-xs">
-                    {draft.applicableCategories.map((cid) => (
-                      <Span layout="inline-flex" gap="xs"
-                        key={cid}
-                        border="strong" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
-                      >
-                        {cid}
-                        <IconButton
-                          type="button"
-                          aria-label={`Remove ${cid}`}
-                          variant="ghost"
-                          className="text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
-                          onClick={() =>
-                            set("applicableCategories", draft.applicableCategories.filter((c) => c !== cid))
-                          }
-                        >
-                          ×
-                        </IconButton>
-                      </Span>
-                    ))}
-                  </Row>
-                )}
-              </Div>
-              <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">
-                Leave both empty to apply the coupon to every product in your store.
-              </Text>
-            </Stack>
-          </Div>
-
-          {/* Active toggle */}
-          <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)]" padding="inline" align="center" gap="3" rounded="lg">
-            <Label layout="flex" gap="lg" className="cursor-pointer w-full">
-              <Checkbox
-                bare
-                checked={draft.isActive}
-                onChange={(e) => set("isActive", e.target.checked)}
-                className="h-4 w-4 rounded border-[var(--appkit-color-border)] text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
-              />
-              <Div className="flex-1 min-w-0">
-                <Text size="sm" className="text-[var(--appkit-color-text-primary)]" weight="medium">
-                  Active
-                </Text>
-                <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">
-                  Customers can apply this coupon at checkout
-                </Text>
-              </Div>
-            </Label>
-          </Row>
-        </Stack>
-
-        {/* Footer actions */}
-        <Div className="border-t border-[var(--appkit-color-border)]" padding="inlineLg">
-          <Row justify="end" gap="3">
-            {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
-                Cancel
-              </Button>
-            )}
-            <Button
-              type="submit"
-              isLoading={saving}
-              disabled={saving}
-              onClick={(e) => void handleSubmit(e, setFieldError)}
-            >
-              {isEdit ? "Save Changes" : "Create Coupon"}
-            </Button>
-          </Row>
-        </Div>
+        </FormShellContext.Provider>
       </Stack>
-      )}
-    </Form>
+    </Stack>
+  );
+}
+
+/**
+ * The coupon code input.
+ *
+ * Its own component rather than an inline renderer for the DEEP_NESTING reason
+ * — and because the uppercase-and-strip-spaces normalisation is a rule about
+ * the field, not about this form.
+ */
+function FieldCode({
+  value,
+  error,
+  disabled,
+  onChange,
+}: {
+  value: string;
+  error?: string;
+  disabled: boolean;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <FieldInput
+      name="code"
+      label="Coupon code"
+      required
+      disabled={disabled}
+      value={value}
+      error={error}
+      placeholder="e.g. WELCOME10"
+      hint={
+        disabled
+          ? "A code cannot change once customers have it."
+          : "Customers enter this at checkout."
+      }
+      onChange={(v: string) => onChange(v.toUpperCase().replace(/\s+/g, ""))}
+    />
   );
 }

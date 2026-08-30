@@ -28,7 +28,7 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
-import { firestoreValueSchema } from "../../../schemas/firestore-value";
+import { normalizeError } from "../../../errors/normalize";
 import { OrderStatusValues } from "../../orders/schemas/firestore";
 
 /** Derived from the real 9-value union, never restated (Root Cause #36). */
@@ -88,6 +88,20 @@ export const employeeInviteSchema = z.object({
 });
 
 export type EmployeeInviteValues = z.infer<typeof employeeInviteSchema>;
+
+/**
+ * Editing an existing team member's access.
+ *
+ * Derived by omission rather than declared, so the two cannot drift: it is the
+ * invite form minus the one field that only makes sense while inviting. The
+ * editor rendered the email input under `mode === "invite"` and parsed the
+ * full schema regardless, so an edit could only ever have failed validation on
+ * a control that was not on screen — which nothing noticed, because nothing
+ * parsed it.
+ */
+export const employeePermissionsSchema = employeeInviteSchema.omit({ email: true });
+
+export type EmployeePermissionsValues = z.infer<typeof employeePermissionsSchema>;
 
 /**
  * The reason recorded against a hard ban.
@@ -152,29 +166,100 @@ export const adminAdFormSchema = z
     endAt: annotate(z.string().optional(), {
       section: "schedule", order: 2, row: "pair", kind: "date",
     }),
-    // Creative shape varies by provider, so it stays open — an AdSense slot and
-    // a manual banner share almost no fields. Open to a Firestore VALUE tree,
-    // not to anything: `z.unknown()` would pass a function straight to the
-    // driver, which then throws at write time rather than at parse time.
-    creative: annotate(z.record(firestoreValueSchema).optional(), {
-      section: "creative", sectionLabel: "Creative", order: 1, row: "full", kind: "list",
+    /*
+     * The creative, FLAT.
+     *
+     * It was one open `z.record(firestoreValueSchema)` — "the shape varies by
+     * provider, so it stays open" — which is true of the STORED shape and was
+     * the wrong conclusion for the FORM. Open meant the seven inputs the
+     * editor renders were validated by nothing, and the two provider-specific
+     * ones were filtered out of the payload by a hand-written ternary instead
+     * of by the predicate that hides them. The nested shape is reassembled at
+     * the payload boundary, where the API wants it.
+     */
+    creativeTitle: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+      section: "creative", sectionLabel: "Creative", order: 1, row: "pair",
+      label: "Creative title",
+    }),
+    creativeBody: annotate(z.string().trim().max(500).optional().or(z.literal("")), {
+      section: "creative", order: 2, row: "pair", label: "Creative body",
+    }),
+    creativeImageUrl: annotate(z.string().trim().max(2000).optional().or(z.literal("")), {
+      section: "creative", order: 3, row: "pair", label: "Image URL", inputType: "url",
+    }),
+    ctaLabel: annotate(z.string().trim().max(80).optional().or(z.literal("")), {
+      section: "creative", order: 4, row: "pair", label: "CTA label",
+    }),
+    ctaHref: annotate(z.string().trim().max(2000).optional().or(z.literal("")), {
+      section: "creative", order: 5, row: "pair", label: "CTA URL",
+    }),
+    adsenseSlot: annotate(z.string().trim().max(120).optional().or(z.literal("")), {
+      section: "creative", order: 6, row: "pair", label: "AdSense slot",
+      when: (v) => v.provider === "adsense",
+    }),
+    thirdPartyUrl: annotate(z.string().trim().max(2000).optional().or(z.literal("")), {
+      section: "creative", order: 7, row: "pair", label: "Third-party URL",
+      when: (v) => v.provider === "thirdParty",
     }),
   })
   .superRefine((v, ctx) => {
+    const issue = (path: string, message: string) =>
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: [path], message });
+
     // A scheduled ad with no start date never runs, and nothing would say so.
     if (v.status === "scheduled" && !v.startAt) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["startAt"],
-        message: "A scheduled ad needs a start date.",
-      });
+      issue("startAt", "A scheduled ad needs a start date.");
     }
     if (v.startAt && v.endAt && v.endAt <= v.startAt) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["endAt"],
-        message: "The end date must be after the start date.",
-      });
+      issue("endAt", "The end date must be after the start date.");
+    }
+
+    /*
+     * The three provider rules, moved off the page's `publishIssues` list.
+     *
+     * There they were strings in a warning banner that only appeared once the
+     * status was already `active` or `scheduled` — so a DRAFT AdSense ad could
+     * be saved with no slot, and the omission surfaced later, as a block on
+     * publishing, far from the empty field. Stated here they reach the field
+     * that is wrong, whatever the status.
+     *
+     * The rest of that list stays on the page: it depends on the live
+     * placements and on whether the provider's credentials are configured,
+     * neither of which a schema can see.
+     */
+    if (v.provider === "manual") {
+      const hasCreative =
+        v.creativeTitle?.trim() ||
+        v.creativeBody?.trim() ||
+        v.creativeImageUrl?.trim() ||
+        v.ctaHref?.trim();
+      if (!hasCreative) {
+        issue(
+          "creativeTitle",
+          "A manual ad needs at least one of: title, body, image or CTA URL.",
+        );
+      }
+    }
+    if (v.provider === "adsense" && !v.adsenseSlot?.trim()) {
+      issue("adsenseSlot", "An AdSense ad needs a slot id.");
+    }
+    if (v.provider === "thirdParty") {
+      const url = v.thirdPartyUrl?.trim();
+      if (!url) {
+        issue("thirdPartyUrl", "A third-party ad needs a URL.");
+      } else {
+        let parsed: URL | null = null;
+        try {
+          parsed = new URL(url);
+        } catch (err) {
+          void normalizeError(err);
+          parsed = null;
+        }
+        if (!parsed) issue("thirdPartyUrl", "That is not a valid URL.");
+        else if (parsed.protocol !== "https:") {
+          issue("thirdPartyUrl", "A third-party ad URL must use https.");
+        }
+      }
     }
   });
 

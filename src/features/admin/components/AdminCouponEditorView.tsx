@@ -5,7 +5,7 @@ import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ConfirmDeleteModal, Div, IconButton, Span, Stack, StackedViewShell, Text, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, StackedViewShell, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -17,7 +17,7 @@ import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
-import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
+import { CategoryChipPicker } from "../../seller/components/CategoryChipPicker";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -129,61 +129,6 @@ function toDateInputValue(val: Date | string | undefined): string {
     void normalizeError(_err);
     return "";
   }
-}
-
-/**
- * The category multi-select, as a component rather than an inline renderer.
- *
- * `CategoryInlineSelect` is single-select, so the list is kept as chips around
- * it — the picker adds one, each chip removes one. It lives at module level
- * because an inline renderer's handler sits six braces deep inside `useMemo`,
- * which is what `audit-code-quality`'s DEEP_NESTING rule exists to stop.
- */
-function CategoryChipPicker({
-  selected,
-  onSelectedChange,
-}: {
-  selected: string[];
-  onSelectedChange: (next: string[]) => void;
-}) {
-  const add = (id: string) => {
-    if (!id || selected.includes(id)) return;
-    onSelectedChange([...selected, id]);
-  };
-  return (
-    <Stack gap="xs">
-      <CategoryInlineSelect value="" onChange={add} allowCreate placeholder="Add a category…" />
-      {selected.length > 0 && (
-        <Row wrap gap="sm" padding="t-2xs">
-          {selected.map((cid) => (
-            <Span
-              layout="inline-flex"
-              gap="xs"
-              key={cid}
-              border="strong"
-              padding="pill-sm"
-              rounded="full"
-              surface="muted"
-              color="primary"
-              size="xs"
-            >
-              {cid}
-              <IconButton
-                aria-label={`Remove ${cid}`}
-                variant="ghost"
-                size="sm"
-                onClick={() => onSelectedChange(selected.filter((c) => c !== cid))}
-                icon="×"
-              />
-            </Span>
-          ))}
-        </Row>
-      )}
-      <Text size="xs" color="muted">
-        Leave empty to apply the coupon to every category.
-      </Text>
-    </Stack>
-  );
 }
 
 // --- Component ---------------------------------------------------------------
@@ -425,10 +370,10 @@ export function AdminCouponEditorView({
             />
           ),
           /*
-           * `CategoryInlineSelect` is single-select, so the multi-value list is
-           * kept as chips around it — the picker adds one, each chip removes
-           * one. Unchanged from the hand-rolled version; only the surrounding
-           * form is generated.
+           * `CategoryInlineSelect` is single-select, so the multi-value list
+           * needs an add-one/remove-one chip arrangement around it. That was
+           * written identically here and in the SELLER coupon editor, so it is
+           * now one shared `CategoryChipPicker`.
            */
           applicableCategories: ({ values, onChange }) => (
             <CategoryChipPicker

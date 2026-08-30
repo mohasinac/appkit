@@ -1,35 +1,22 @@
 "use client";
-import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Alert, Button, Checkbox, Div, Form, FormActions, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Checkbox, Div, Span, Stack, StackedViewShell, Text, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { adminAdFormSchema } from "../schemas/admin-ops-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
-
-function validateThirdPartyUrl(url: string, issues: string[]): void {
-  if (!url.trim()) {
-    issues.push("Third-party ads require a third-party URL");
-    return;
-  }
-  try {
-    const parsed = new URL(url.trim());
-    if (parsed.protocol !== "https:") {
-      issues.push("Third-party ad URL must be https");
-    }
-  } catch (_err) {
-    void normalizeError(_err);
-    issues.push("Third-party ad URL must be a valid URL");
-  }
-}
 
 export interface AdminAdEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   adId?: string;
@@ -82,60 +69,96 @@ interface AdsListResponse {
   };
 }
 
-interface AdScheduleSectionProps {
-  startAt: string; setStartAt: (v: string) => void;
-  endAt: string; setEndAt: (v: string) => void;
-}
+const PROVIDER_OPTIONS = [
+  { label: "Manual", value: "manual" },
+  { label: "AdSense", value: "adsense" },
+  { label: "Third Party", value: "thirdParty" },
+];
 
-function renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt }: AdScheduleSectionProps) {
-  return (
-    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-2">
-      <Input
-        label="Start at (ISO)"
-        value={startAt}
-        onChange={(event) => setStartAt(event.target.value)}
-        placeholder="2026-05-01T00:00:00.000Z"
-      />
-      <Input
-        label="End at (ISO)"
-        value={endAt}
-        onChange={(event) => setEndAt(event.target.value)}
-        placeholder="2026-05-30T23:59:59.000Z"
-      />
-    </Div>
-  );
-}
+const STATUS_OPTIONS = [
+  { label: "Draft", value: "draft" },
+  { label: "Active", value: "active" },
+  { label: "Scheduled", value: "scheduled" },
+  { label: "Paused", value: "paused" },
+];
 
-interface AdCreativeSectionProps {
-  title: string; setTitle: (v: string) => void;
-  body: string; setBody: (v: string) => void;
-  imageUrl: string; setImageUrl: (v: string) => void;
-  ctaLabel: string; setCtaLabel: (v: string) => void;
-  ctaHref: string; setCtaHref: (v: string) => void;
-  adsenseSlot: string; setAdsenseSlot: (v: string) => void;
-  thirdPartyUrl: string; setThirdPartyUrl: (v: string) => void;
+/**
+ * The draft this form edits — FLAT, matching the schema.
+ *
+ * The creative used to be a nested object in state and an open
+ * `z.record(...)` in the schema, so its seven inputs were validated by nothing
+ * and the two provider-specific ones were filtered at the payload by hand.
+ */
+interface AdValues {
+  [key: string]: unknown;
+  name: string;
   provider: "manual" | "adsense" | "thirdParty";
+  status: "draft" | "active" | "scheduled" | "paused";
+  priority: number;
+  placementIds: string[];
+  requiresConsent: boolean;
+  startAt: string;
+  endAt: string;
+  creativeTitle: string;
+  creativeBody: string;
+  creativeImageUrl: string;
+  ctaLabel: string;
+  ctaHref: string;
+  adsenseSlot: string;
+  thirdPartyUrl: string;
 }
 
-function renderAdCreativeSection({
-  title, setTitle, body, setBody, imageUrl, setImageUrl,
-  ctaLabel, setCtaLabel, ctaHref, setCtaHref,
-  adsenseSlot, setAdsenseSlot, thirdPartyUrl, setThirdPartyUrl, provider,
-}: AdCreativeSectionProps) {
+const EMPTY_AD: AdValues = {
+  name: "",
+  provider: "manual",
+  status: "draft",
+  priority: 0,
+  placementIds: [],
+  requiresConsent: false,
+  startAt: "",
+  endAt: "",
+  creativeTitle: "",
+  creativeBody: "",
+  creativeImageUrl: "",
+  ctaLabel: "",
+  ctaHref: "",
+  adsenseSlot: "",
+  thirdPartyUrl: "",
+};
+
+/**
+ * The placement checkboxes.
+ *
+ * Its options come from a live query, so it cannot be a generated select;
+ * module level rather than inline for the DEEP_NESTING reason.
+ */
+function PlacementChecklist({
+  placements,
+  selected,
+  onToggle,
+}: {
+  placements: Placement[];
+  selected: string[];
+  onToggle: (id: string) => void;
+}) {
   return (
-    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-2">
-      <Input label="Creative title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Catch the mega sale" />
-      <Input label="Creative body" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Up to 40% off this weekend" />
-      <Input label="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
-      <Input label="CTA label" value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} placeholder="Shop now" />
-      <Input label="CTA URL" value={ctaHref} onChange={(e) => setCtaHref(e.target.value)} placeholder="/promotions/deals" />
-      {provider === "adsense" ? (
-        <Input label="AdSense slot" value={adsenseSlot} onChange={(e) => setAdsenseSlot(e.target.value)} placeholder="1234567890" />
-      ) : null}
-      {provider === "thirdParty" ? (
-        <Input label="Third-party URL" value={thirdPartyUrl} onChange={(e) => setThirdPartyUrl(e.target.value)} placeholder="https://adnetwork.example/slot" />
-      ) : null}
-    </Div>
+    <Stack gap="sm">
+      <Div layout="grid" gap="2" className="grid-cols-1 md:grid-cols-2">
+        {placements.map((placement) => (
+          <label
+            key={placement.id}
+            className="flex items-center gap-[var(--appkit-space-2)] rounded-md border border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]"
+          >
+            <Checkbox
+              bare
+              checked={selected.includes(placement.id)}
+              onChange={() => onToggle(placement.id)}
+            />
+            <Span size="sm">{placement.label}</Span>
+          </label>
+        ))}
+      </Div>
+    </Stack>
   );
 }
 
@@ -146,21 +169,9 @@ export function AdminAdEditorView({
   onSaved,
   ...rest
 }: AdminAdEditorViewProps) {
-  const [name, setName] = React.useState("");
-  const [provider, setProvider] = React.useState<"manual" | "adsense" | "thirdParty">("manual");
-  const [status, setStatus] = React.useState<"draft" | "active" | "scheduled" | "paused">("draft");
-  const [priority, setPriority] = React.useState(0);
-  const [requiresConsent, setRequiresConsent] = React.useState(false);
-  const [selectedPlacements, setSelectedPlacements] = React.useState<string[]>([]);
-  const [startAt, setStartAt] = React.useState("");
-  const [endAt, setEndAt] = React.useState("");
-  const [title, setTitle] = React.useState("");
-  const [body, setBody] = React.useState("");
-  const [imageUrl, setImageUrl] = React.useState("");
-  const [ctaLabel, setCtaLabel] = React.useState("");
-  const [ctaHref, setCtaHref] = React.useState("");
-  const [adsenseSlot, setAdsenseSlot] = React.useState("");
-  const [thirdPartyUrl, setThirdPartyUrl] = React.useState("");
+  const [form, setForm] = React.useState<AdValues>(EMPTY_AD);
+  const patch = (partial: Partial<AdValues>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
   const { showToast } = useToast();
 
   const metaQuery = useQuery<AdsListResponse>({
@@ -177,54 +188,59 @@ export function AdminAdEditorView({
   });
 
   React.useEffect(() => {
-    if (!adQuery.data?.item) return;
-    const item = adQuery.data.item;
-    setName(item.name || "");
-    setProvider(item.provider || "manual");
-    setStatus(item.status || "draft");
-    setPriority(item.priority ?? 0);
-    setRequiresConsent(Boolean(item.requiresConsent));
-    setSelectedPlacements(item.placementIds ?? []);
-    setStartAt(item.startAt || "");
-    setEndAt(item.endAt || "");
-    setTitle(item.creative?.title || "");
-    setBody(item.creative?.body || "");
-    setImageUrl(item.creative?.imageUrl || "");
-    setCtaLabel(item.creative?.ctaLabel || "");
-    setCtaHref(item.creative?.ctaHref || "");
-    setAdsenseSlot(item.creative?.adsenseSlot || "");
-    setThirdPartyUrl(item.creative?.thirdPartyUrl || "");
+    const item = adQuery.data?.item;
+    if (!item) return;
+    patch({
+      name: item.name || "",
+      provider: item.provider || "manual",
+      status: item.status || "draft",
+      priority: item.priority ?? 0,
+      requiresConsent: Boolean(item.requiresConsent),
+      placementIds: item.placementIds ?? [],
+      startAt: item.startAt || "",
+      endAt: item.endAt || "",
+      creativeTitle: item.creative?.title || "",
+      creativeBody: item.creative?.body || "",
+      creativeImageUrl: item.creative?.imageUrl || "",
+      ctaLabel: item.creative?.ctaLabel || "",
+      ctaHref: item.creative?.ctaHref || "",
+      adsenseSlot: item.creative?.adsenseSlot || "",
+      thirdPartyUrl: item.creative?.thirdPartyUrl || "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adQuery.data]);
 
   const saveMutation = useApiMutation({
     errorMessage: "Save failed",
     mutationFn: async () => {
+      /*
+       * `visibleValues` is what keeps a provider-specific field out of the
+       * payload when its input is not on screen.
+       *
+       * Both `adsenseSlot` and `thirdPartyUrl` used to go out unconditionally
+       * while their inputs unmount on a provider switch — so an ad created as
+       * AdSense and switched to "manual" shipped a stale slot nothing could
+       * show or clear. The rule was then restated as a ternary right here; it
+       * now lives once, on the schema, as the same predicate that hides them.
+       */
+      const draft = visibleValues(adminAdFormSchema, form) as AdValues;
       const payload: AdPayload = {
-        name,
-        provider,
-        status,
-        priority,
-        requiresConsent,
-        placementIds: selectedPlacements,
-        startAt: startAt || undefined,
-        endAt: endAt || undefined,
+        name: draft.name,
+        provider: draft.provider,
+        status: draft.status,
+        priority: draft.priority,
+        requiresConsent: draft.requiresConsent,
+        placementIds: draft.placementIds,
+        startAt: draft.startAt || undefined,
+        endAt: draft.endAt || undefined,
         creative: {
-          title: title || undefined,
-          body: body || undefined,
-          imageUrl: imageUrl || undefined,
-          ctaLabel: ctaLabel || undefined,
-          ctaHref: ctaHref || undefined,
-          /*
-           * Provider-specific, and sent only for the provider whose input is
-           * actually rendered.
-           *
-           * Both used to go out unconditionally while their inputs unmount on a
-           * provider switch — so an ad created as AdSense and switched to
-           * "manual" shipped carrying a stale `adsenseSlot` that nothing on
-           * screen could show or clear.
-           */
-          adsenseSlot: provider === "adsense" ? adsenseSlot || undefined : undefined,
-          thirdPartyUrl: provider === "thirdParty" ? thirdPartyUrl || undefined : undefined,
+          title: draft.creativeTitle || undefined,
+          body: draft.creativeBody || undefined,
+          imageUrl: draft.creativeImageUrl || undefined,
+          ctaLabel: draft.ctaLabel || undefined,
+          ctaHref: draft.ctaHref || undefined,
+          adsenseSlot: draft.adsenseSlot || undefined,
+          thirdPartyUrl: draft.thirdPartyUrl || undefined,
         },
       };
 
@@ -246,61 +262,41 @@ export function AdminAdEditorView({
   const placements = adQuery.data?.placements ?? metaQuery.data?.placements ?? [];
   const providerCredentialStatus = metaQuery.data?.providerCredentialStatus;
 
+  /*
+   * What remains of `publishIssues` after the schema took its share.
+   *
+   * The name, the placement count, the date order, "a scheduled ad needs a
+   * start date" and the three provider rules all moved to the schema, where
+   * they reach the field that is wrong instead of a warning banner that only
+   * appeared once the status was already publish-ready. What is left cannot
+   * live there: it depends on the LIVE placement list and on whether the
+   * provider's credentials are configured in site settings — neither of which
+   * a schema can see.
+   */
   const publishIssues = React.useMemo(() => {
     const issues: string[] = [];
     const now = Date.now();
-
-    if (!name.trim()) {
-      issues.push("Ad name is required");
-    }
-
-    if (selectedPlacements.length === 0) {
-      issues.push("Select at least one placement");
-    }
 
     const knownPlacementIds = new Set(placements.map((placement) => placement.id));
     const enabledPlacementIds = new Set(
       placements.filter((placement) => placement.enabled).map((placement) => placement.id),
     );
 
-    const unknownPlacements = selectedPlacements.filter((placementId) => !knownPlacementIds.has(placementId));
-    if (unknownPlacements.length > 0) {
-      issues.push(`Unknown placements: ${unknownPlacements.join(", ")}`);
+    const unknown = form.placementIds.filter((id) => !knownPlacementIds.has(id));
+    if (unknown.length > 0) issues.push(`Unknown placements: ${unknown.join(", ")}`);
+
+    const disabled = form.placementIds.filter((id) => !enabledPlacementIds.has(id));
+    if (disabled.length > 0) {
+      issues.push(`Selected placements are disabled: ${disabled.join(", ")}`);
     }
 
-    const disabledPlacements = selectedPlacements.filter((placementId) => !enabledPlacementIds.has(placementId));
-    if (disabledPlacements.length > 0) {
-      issues.push(`Selected placements are disabled: ${disabledPlacements.join(", ")}`);
-    }
+    const startMs = form.startAt ? new Date(form.startAt).getTime() : null;
+    const endMs = form.endAt ? new Date(form.endAt).getTime() : null;
 
-    const startMs = startAt ? new Date(startAt).getTime() : null;
-    const endMs = endAt ? new Date(endAt).getTime() : null;
-
-    if (startAt && Number.isNaN(startMs)) {
-      issues.push("Start date must be a valid ISO timestamp");
+    if (form.status === "scheduled" && startMs !== null && !Number.isNaN(startMs) && startMs <= now) {
+      issues.push("Scheduled ads must start in the future");
     }
-    if (endAt && Number.isNaN(endMs)) {
-      issues.push("End date must be a valid ISO timestamp");
-    }
-    if (
-      startMs !== null &&
-      endMs !== null &&
-      !Number.isNaN(startMs) &&
-      !Number.isNaN(endMs) &&
-      endMs <= startMs
-    ) {
-      issues.push("End date must be after start date");
-    }
-
-    if (status === "scheduled") {
-      if (!startAt || startMs === null || Number.isNaN(startMs)) {
-        issues.push("Scheduled ads require a valid start date");
-      } else if (startMs <= now) {
-        issues.push("Scheduled ads must start in the future");
-      }
-    }
-
-    if (status === "active") {
+    if (form.status === "active") {
       if (startMs !== null && !Number.isNaN(startMs) && startMs > now) {
         issues.push("Active ads cannot have a future start date");
       }
@@ -309,64 +305,80 @@ export function AdminAdEditorView({
       }
     }
 
-    if (provider === "manual") {
-      if (!title.trim() && !body.trim() && !imageUrl.trim() && !ctaHref.trim()) {
-        issues.push("Manual ads need at least one creative field (title, body, image, or CTA URL)");
-      }
+    if (form.provider === "adsense" && !providerCredentialStatus?.hasAdsenseClientId) {
+      issues.push("AdSense provider credentials are missing in ad settings");
     }
-
-    if (provider === "adsense") {
-      if (!adsenseSlot.trim()) {
-        issues.push("AdSense ads require an AdSense slot id");
-      }
-      if (!providerCredentialStatus?.hasAdsenseClientId) {
-        issues.push("AdSense provider credentials are missing in ad settings");
-      }
-    }
-
-    if (provider === "thirdParty") {
-      validateThirdPartyUrl(thirdPartyUrl, issues);
-      if (!providerCredentialStatus?.hasThirdPartyScriptUrl) {
-        issues.push("Third-party provider script URL is missing in ad settings");
-      }
+    if (form.provider === "thirdParty" && !providerCredentialStatus?.hasThirdPartyScriptUrl) {
+      issues.push("Third-party provider script URL is missing in ad settings");
     }
 
     return issues;
   }, [
-    adsenseSlot,
-    body,
-    ctaHref,
-    endAt,
-    imageUrl,
-    name,
+    form.endAt,
+    form.placementIds,
+    form.provider,
+    form.startAt,
+    form.status,
     placements,
-    provider,
     providerCredentialStatus?.hasAdsenseClientId,
     providerCredentialStatus?.hasThirdPartyScriptUrl,
-    selectedPlacements,
-    startAt,
-    status,
-    thirdPartyUrl,
-    title,
   ]);
 
-  const publishHardeningRequired = status === "active" || status === "scheduled";
+  const publishHardeningRequired = form.status === "active" || form.status === "scheduled";
   const blockedByPublishValidation = publishHardeningRequired && publishIssues.length > 0;
 
-  const togglePlacement = (placementId: string) => {
-    setSelectedPlacements((prev) =>
-      prev.includes(placementId)
-        ? prev.filter((id) => id !== placementId)
-        : [...prev, placementId],
-    );
-  };
+  const togglePlacement = (placementId: string) =>
+    setForm((prev) => ({
+      ...prev,
+      placementIds: prev.placementIds.includes(placementId)
+        ? prev.placementIds.filter((id) => id !== placementId)
+        : [...prev.placementIds, placementId],
+    }));
 
-  const scheduleSection = renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt });
-  const creativeSection = renderAdCreativeSection({
-    title, setTitle, body, setBody, imageUrl, setImageUrl,
-    ctaLabel, setCtaLabel, ctaHref, setCtaHref,
-    adsenseSlot, setAdsenseSlot, thirdPartyUrl, setThirdPartyUrl, provider,
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<AdValues>(adminAdFormSchema, {
+        options: {
+          provider: PROVIDER_OPTIONS,
+          status: STATUS_OPTIONS,
+        },
+        renderers: {
+          placementIds: ({ values }) => (
+            <PlacementChecklist
+              placements={placements}
+              selected={values.placementIds}
+              onToggle={togglePlacement}
+            />
+          ),
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [placements],
+  );
+
+  const nav = useSectionFormNav(sections, form, { scope: "admin:ad-editor" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(adminAdFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
   });
+
+  const handleSubmit = () => {
+    clearErrors();
+    const parsed = adminAdFormSchema.safeParse(visibleValues(adminAdFormSchema, form));
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    if (blockedByPublishValidation) {
+      showToast(
+        "Cannot save in publish-ready status until the readiness issues are fixed.",
+        "warning",
+      );
+      return;
+    }
+    saveMutation.mutate();
+  };
 
   return (
     <StackedViewShell
@@ -384,101 +396,39 @@ export function AdminAdEditorView({
             {adQuery.error instanceof Error ? adQuery.error.message : "Unknown error"}
           </Alert>
         ) : null,
-        <Form schema={adminAdFormSchema}
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (blockedByPublishValidation) {
-              showToast("Cannot save in publish-ready status until validation issues are fixed.", "warning");
-              return;
+        <FormShellContext.Provider value={shellCtx} key="ad-form">
+          <FormErrorSummary />
+          <SectionForm<AdValues>
+            sections={sections}
+            values={form}
+            onChange={patch}
+            onSubmit={handleSubmit}
+            schema={adminAdFormSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            isLoading={saveMutation.isPending}
+            submitLabel={
+              form.status === "active" ? "Publish ad" : adId ? "Save changes" : "Create ad"
             }
-            saveMutation.mutate();
-          }} spacing="md">
-      <FormErrorSummary />
-          <Input
-            label="Ad name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Summer Campaign"
           />
-          <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-3">
-            <Select
-              label="Provider"
-              value={provider}
-              options={[
-                { label: "Manual", value: "manual" },
-                { label: "AdSense", value: "adsense" },
-                { label: "Third Party", value: "thirdParty" },
-              ]}
-              onChange={(event) => setProvider(event.target.value as "manual" | "adsense" | "thirdParty")}
-            />
-            <Select
-              label="Status"
-              value={status}
-              options={[
-                { label: "Draft", value: "draft" },
-                { label: "Active", value: "active" },
-                { label: "Scheduled", value: "scheduled" },
-                { label: "Paused", value: "paused" },
-              ]}
-              onChange={(event) => setStatus(event.target.value as "draft" | "active" | "scheduled" | "paused")}
-            />
-            <Input
-              label="Priority"
-              type="number"
-              value={String(priority)}
-              onChange={(event) => setPriority(Number(event.target.value || 0))}
-            />
-          </Div>
+        </FormShellContext.Provider>,
 
-          <Toggle
-            checked={requiresConsent}
-            onChange={setRequiresConsent}
-            label="Require user ad-consent for this ad"
-          />
-
-          <Stack gap="sm">
-            <Text size="sm" weight="medium">Placements</Text>
-            <Div layout="grid" gap="2" className="grid-cols-1 md:grid-cols-2">
-              {placements.map((placement) => (
-                <label
-                  key={placement.id}
-                  className="flex items-center gap-[var(--appkit-space-2)] rounded-md border border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]"
-                >
-                  <Checkbox
-                    bare
-                    checked={selectedPlacements.includes(placement.id)}
-                    onChange={() => togglePlacement(placement.id)}
-                  />
-                  <Span size="sm">{placement.label}</Span>
-                </label>
-              ))}
-            </Div>
-          </Stack>
-
-          {scheduleSection}
-          {creativeSection}
-
-          <Div border="default" className={__P.p3} rounded="lg">
-            <Text className="mb-1" size="sm" weight="medium">Preview</Text>
-            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
-              {title || name || "Untitled ad"}
-            </Text>
-            {body ? <Text className="mt-1" size="sm">{body}</Text> : null}
-            {ctaLabel ? <Text className="mt-1" size="xs">CTA: {ctaLabel} ({ctaHref || "#"})</Text> : null}
-          </Div>
-
-          {publishHardeningRequired && publishIssues.length > 0 ? (
-            <Alert variant="warning" title="Publish readiness issues">
-              {publishIssues.join("; ")}
-            </Alert>
+        <Div border="default" className={__P.p3} rounded="lg" key="ad-preview">
+          <Text className="mb-1" size="sm" weight="medium">Preview</Text>
+          <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
+            {form.creativeTitle || form.name || "Untitled ad"}
+          </Text>
+          {form.creativeBody ? <Text className="mt-1" size="sm">{form.creativeBody}</Text> : null}
+          {form.ctaLabel ? (
+            <Text className="mt-1" size="xs">CTA: {form.ctaLabel} ({form.ctaHref || "#"})</Text>
           ) : null}
+        </Div>,
 
-          <FormActions align="right">
-            <Button type="submit" disabled={saveMutation.isPending || blockedByPublishValidation || !name.trim() || selectedPlacements.length === 0}>
-              {saveMutation.isPending ? "Saving..." : status === "active" ? "Publish ad" : adId ? "Save changes" : "Create ad"}
-            </Button>
-          </FormActions>
-        </Form>,
+        publishHardeningRequired && publishIssues.length > 0 ? (
+          <Alert variant="warning" title="Publish readiness issues" key="ad-publish-issues">
+            {publishIssues.join("; ")}
+          </Alert>
+        ) : null,
       ]}
     />
   );

@@ -3,13 +3,19 @@
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Select, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AnalyticsAlertDocument } from "../../store-extensions/schemas/firestore";
-import { analyticsAlertCreateSchema } from "../../store-extensions/schemas/analytics-forms";
+import {
+  analyticsAlertCreateSchema,
+  ANALYTICS_ALERT_OPERATORS,
+} from "../../store-extensions/schemas/analytics-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { ValidationError } from "../../../errors/validation-error";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const __P = {
@@ -20,13 +26,27 @@ const __P = {
 // Config
 // ---------------------------------------------------------------------------
 
-const OPERATOR_OPTIONS = [
-  { value: ">", label: "Greater than (>)" },
-  { value: "<", label: "Less than (<)" },
-  { value: ">=", label: "≥" },
-  { value: "<=", label: "≤" },
-  { value: "==", label: "Equals (==)" },
-];
+/**
+ * Operators, DERIVED from the schema's own list.
+ *
+ * The hand-written array had five of the six — `!=` was missing, so "not equal
+ * to" could never be chosen although `ALERT_OPERATOR_MAP` declares it and the
+ * route accepts it. That map is a `Record<AlertOperator, true>` precisely so
+ * the union cannot drift; the drift moved into the UI copy instead.
+ */
+const OPERATOR_LABELS: Record<string, string> = {
+  ">": "Greater than (>)",
+  "<": "Less than (<)",
+  ">=": "At least (≥)",
+  "<=": "At most (≤)",
+  "==": "Equals (==)",
+  "!=": "Not equal to (≠)",
+};
+
+const OPERATOR_OPTIONS = ANALYTICS_ALERT_OPERATORS.map((value) => ({
+  value,
+  label: OPERATOR_LABELS[value] ?? value,
+}));
 
 const METRIC_OPTIONS = [
   { value: "daily_revenue", label: "Daily Revenue (₹)" },
@@ -134,12 +154,14 @@ export interface SellerAnalyticsAlertsViewProps {
 }
 
 interface CreateAlertDraft {
+  [key: string]: unknown;
   label: string;
   metric: string;
   operator: string;
   threshold: string;
   windowHours: string;
   notifyChannels: string[];
+  isActive: boolean;
 }
 
 const EMPTY_DRAFT: CreateAlertDraft = {
@@ -149,7 +171,46 @@ const EMPTY_DRAFT: CreateAlertDraft = {
   threshold: "",
   windowHours: "24",
   notifyChannels: ["in-app"],
+  isActive: true,
 };
+
+/**
+ * The delivery-channel chips.
+ *
+ * Module level rather than an inline renderer — an inline one's handler sits
+ * six braces deep inside `useMemo`, which is DEEP_NESTING's whole subject.
+ */
+function ChannelChips({
+  selected,
+  onToggle,
+}: {
+  selected: string[];
+  onToggle: (channel: string) => void;
+}) {
+  return (
+    <Stack gap="xs">
+      <Text color="muted" size="xs" weight="medium">
+        Notify via
+      </Text>
+      <Row gap="sm" wrap>
+        {CHANNEL_OPTIONS.map((ch) => (
+          <Button
+            variant={selected.includes(ch.value) ? "primary" : "outline"}
+            key={ch.value}
+            type="button"
+            onClick={() => onToggle(ch.value)}
+            rounded="full"
+            paddingX="sm"
+            paddingY="xs"
+            textSize="xs"
+          >
+            {ch.label}
+          </Button>
+        ))}
+      </Row>
+    </Stack>
+  );
+}
 
 export function SellerAnalyticsAlertsView({
   labels = {},
@@ -171,34 +232,8 @@ export function SellerAnalyticsAlertsView({
 
   const createMutation = useApiMutation({
     errorMessage: "Failed to create alert",
-    mutationFn: async () => {
-      /*
-       * Parsed against the SAME schema the route uses, before the request.
-       *
-       * This form used to hand-build its payload and included `scope: "seller"`
-       * — a field the route pins from the session and the schema does not
-       * declare. Once that schema became `.strict()`, every "Create Alert"
-       * became a 400, and nothing local could have caught it: the client had
-       * no schema to check against. Parsing here is the structural fix, not
-       * the deletion of one key.
-       */
-      const parsed = analyticsAlertCreateSchema.safeParse({
-        label: draft.label,
-        metric: draft.metric,
-        operator: draft.operator,
-        threshold: draft.threshold,
-        windowHours: draft.windowHours,
-        notifyChannels: draft.notifyChannels,
-        isActive: true,
-      });
-      if (!parsed.success) {
-        throw new ValidationError(
-          parsed.error.issues[0]?.message ?? "Invalid alert",
-          parsed.error.issues,
-        );
-      }
-      return apiClient.post(SELLER_ENDPOINTS.ANALYTICS_ALERTS, parsed.data);
-    },
+    mutationFn: async (values: JsonValue) =>
+      apiClient.post(SELLER_ENDPOINTS.ANALYTICS_ALERTS, values),
     onSuccess: () => {
       showToast("Alert created", "success");
       void queryClient.invalidateQueries({ queryKey: ["seller", "analytics-alerts"] });
@@ -235,6 +270,56 @@ export function SellerAnalyticsAlertsView({
     }));
   }, []);
 
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<CreateAlertDraft>(analyticsAlertCreateSchema, {
+        options: {
+          metric: METRIC_OPTIONS,
+          operator: OPERATOR_OPTIONS,
+          windowHours: WINDOW_OPTIONS,
+        },
+        renderers: {
+          notifyChannels: ({ values }) => (
+            <ChannelChips selected={values.notifyChannels} onToggle={toggleChannel} />
+          ),
+        },
+      }),
+    [toggleChannel],
+  );
+
+  const nav = useSectionFormNav(sections, draft, { scope: "store:analytics-alert" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(
+    analyticsAlertCreateSchema,
+    {
+      sections: nav.sectionMeta,
+      onGoToSection: nav.goToSection,
+      fieldToSectionIndex: nav.fieldToSectionIndex,
+    },
+  );
+
+  const submitAlert = () => {
+    clearErrors();
+    /*
+     * Parsed against the SAME schema the route uses, before the request.
+     *
+     * This form used to hand-build its payload and included `scope: "seller"`
+     * — a field the route pins from the session and the schema does not
+     * declare. Once that schema became `.strict()`, every "Create Alert"
+     * became a 400, and nothing local could have caught it: the client had no
+     * schema to check against. The parse is the structural fix; what changed
+     * here is only that its issues now reach the fields instead of being
+     * flattened into one thrown message.
+     */
+    const parsed = analyticsAlertCreateSchema.safeParse(
+      visibleValues(analyticsAlertCreateSchema, draft),
+    );
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    createMutation.mutate(parsed.data as JsonValue);
+  };
+
   return (
     <Stack gap="lg">
       <Row justify="between">
@@ -255,84 +340,27 @@ export function SellerAnalyticsAlertsView({
           <Heading level={3} size="sm" weight="semibold" color="primary">
             Create Alert
           </Heading>
-          <Form
-            schema={analyticsAlertCreateSchema}
-            onSubmit={(e) => {
-              e.preventDefault();
-              createMutation.mutate();
-            }}
-          >
-            <Div layout="grid" gap="4" className="sm:grid-cols-2">
-              <Input
-                label="Alert label"
-                value={draft.label}
-                onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))}
-                placeholder="e.g. Low daily orders"
-                required
-              />
-              <Select
-                label="Metric"
-                value={draft.metric}
-                onValueChange={(v) => setDraft((d) => ({ ...d, metric: v }))}
-                options={METRIC_OPTIONS}
-              />
-              <Select
-                label="Operator"
-                value={draft.operator}
-                onValueChange={(v) => setDraft((d) => ({ ...d, operator: v }))}
-                options={OPERATOR_OPTIONS}
-              />
-              <Input
-                label="Threshold"
-                type="number"
-                value={draft.threshold}
-                onChange={(e) => setDraft((d) => ({ ...d, threshold: e.target.value }))}
-                placeholder="e.g. 10"
-                required
-              />
-              <Select
-                label="Check window"
-                value={draft.windowHours}
-                onValueChange={(v) => setDraft((d) => ({ ...d, windowHours: v }))}
-                options={WINDOW_OPTIONS}
-              />
-            </Div>
-
-            <Div className="mt-3">
-              <Text className="mb-2" color="muted" size="xs" weight="medium">
-                Notify via
-              </Text>
-              <Row gap="sm" wrap>
-                {CHANNEL_OPTIONS.map((ch) => (
-                  <Button
-                    variant="outline"
-                    key={ch.value}
-                    type="button"
-                    onClick={() => toggleChannel(ch.value)}
-                    rounded="full"
-                    paddingX="sm"
-                    paddingY="xs"
-                    textSize="xs"
-                    className={
- draft.notifyChannels.includes(ch.value)
- ? "bg-[var(--appkit-color-primary)] text-white border-transparent"
- : "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] border-[var(--appkit-color-border)]"
- }
-                  >
-                    {ch.label}
-                  </Button>
-                ))}
-              </Row>
-            </Div>
-
+          <FormShellContext.Provider value={shellCtx}>
             <FormErrorSummary />
-
-            <FormActions align="right" className="mt-4">
-              <Button type="submit" isLoading={createMutation.isPending}>
-                {createMutation.isPending ? "Creating…" : "Create Alert"}
-              </Button>
-            </FormActions>
-          </Form>
+            <SectionForm<CreateAlertDraft>
+              sections={sections}
+              values={draft}
+              onChange={(partial) => setDraft((prev) => ({ ...prev, ...partial }))}
+              onSubmit={submitAlert}
+              schema={analyticsAlertCreateSchema}
+              openIds={nav.openIds}
+              onOpenChange={nav.setOpenIds}
+              isLoading={createMutation.isPending}
+              submitLabel="Create alert"
+              onCancel={() => setShowForm(false)}
+              /*
+               * This panel is one card inside a longer analytics page, not the
+               * page's own form — a viewport-pinned Save would claim the
+               * bottom tier for a control the reader may have scrolled past.
+               */
+              bottomBar={false}
+            />
+          </FormShellContext.Provider>
         </Section>
       )}
 

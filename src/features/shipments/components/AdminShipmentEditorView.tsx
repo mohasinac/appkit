@@ -7,10 +7,7 @@ import {
   Alert,
   Button,
   Div,
-  Form,
   FieldInput,
-  FieldSelect,
-  FieldTextarea,
   Grid,
   Heading,
   Stack,
@@ -24,6 +21,10 @@ import {
   TextLink,
   FormErrorSummary,
 } from "../../../ui";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -34,21 +35,57 @@ import type { ShipmentDocument, ShipmentLot } from "../schemas/firestore";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 
-const STATUS_OPTIONS = [
-  { label: "Planning", value: "planning" },
-  { label: "Ordered", value: "ordered" },
-  { label: "In Transit", value: "in_transit" },
-  { label: "Customs", value: "customs" },
-  { label: "Received", value: "received" },
-  { label: "Processing", value: "processing" },
-  { label: "Completed", value: "completed" },
-  { label: "Cancelled", value: "cancelled" },
-];
-
 export interface AdminShipmentEditorViewProps {
   shipmentId?: string;
   onSaved?: (id: string) => void;
   embedded?: boolean;
+}
+
+/**
+ * The draft this form edits.
+ *
+ * Money and hours are NUMBERS here, not the strings the hand-rolled version
+ * kept, because `createShipmentSchema` declares them `z.number()` — the old
+ * code coerced at the payload and passed a different shape to the parse than
+ * to the API.
+ */
+interface ShipmentValues {
+  [key: string]: unknown;
+  shipmentNumber: string;
+  supplierName: string;
+  originCountry: string;
+  status: string;
+  trackingNumber: string;
+  carrier: string;
+  etaDate: string;
+  receivedDate: string;
+  customsTotal: number;
+  shippingTotal: number;
+  laborHoursSpent: number;
+  laborRatePerHour: number;
+  notes: string;
+}
+
+const EMPTY_SHIPMENT: ShipmentValues = {
+  shipmentNumber: "",
+  supplierName: "",
+  originCountry: "",
+  status: "planning",
+  trackingNumber: "",
+  carrier: "",
+  etaDate: "",
+  receivedDate: "",
+  customsTotal: 0,
+  shippingTotal: 0,
+  laborHoursSpent: 0,
+  laborRatePerHour: 0,
+  notes: "",
+};
+
+/** A Firestore date, as a `<input type="date">` value. */
+function toDateInput(value: string | Date | undefined): string {
+  if (!value) return "";
+  return new Date(value).toISOString().slice(0, 10);
 }
 
 export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEditorViewProps) {
@@ -56,48 +93,52 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
   const queryClient = useQueryClient();
   const { shipment, lots, refetchLots } = useShipment(shipmentId);
 
-  const [shipmentNumber, setShipmentNumber] = React.useState("");
-  const [supplierName, setSupplierName] = React.useState("");
-  const [originCountry, setOriginCountry] = React.useState("");
-  const [status, setStatus] = React.useState("planning");
-  const [trackingNumber, setTrackingNumber] = React.useState("");
-  const [carrier, setCarrier] = React.useState("");
-  const [etaDate, setEtaDate] = React.useState("");
-  const [notes, setNotes] = React.useState("");
-  const [customsTotalRupees, setCustomsTotalRupees] = React.useState("0");
-  const [shippingTotalRupees, setShippingTotalRupees] = React.useState("0");
-  const [laborHoursSpent, setLaborHoursSpent] = React.useState("0");
+  const [form, setForm] = React.useState<ShipmentValues>(EMPTY_SHIPMENT);
+  const patch = (partial: Partial<ShipmentValues>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
 
   React.useEffect(() => {
     if (!shipment) return;
-    setShipmentNumber(shipment.shipmentNumber);
-    setSupplierName(shipment.supplierName);
-    setOriginCountry(shipment.originCountry ?? "");
-    setStatus(shipment.status);
-    setTrackingNumber(shipment.trackingNumber ?? "");
-    setCarrier(shipment.carrier ?? "");
-    setEtaDate(shipment.etaDate ? new Date(shipment.etaDate).toISOString().slice(0, 10) : "");
-    setNotes(shipment.notes ?? "");
-    setCustomsTotalRupees(String(shipment.customsTotal));
-    setShippingTotalRupees(String(shipment.shippingTotal));
-    setLaborHoursSpent(String(shipment.laborHoursSpent ?? 0));
+    const doc = shipment as ShipmentDocument & {
+      receivedDate?: string | Date;
+      laborRatePerHour?: number;
+    };
+    patch({
+      shipmentNumber: doc.shipmentNumber,
+      supplierName: doc.supplierName,
+      originCountry: doc.originCountry ?? "",
+      status: doc.status,
+      trackingNumber: doc.trackingNumber ?? "",
+      carrier: doc.carrier ?? "",
+      etaDate: toDateInput(doc.etaDate as string | Date | undefined),
+      receivedDate: toDateInput(doc.receivedDate),
+      customsTotal: doc.customsTotal,
+      shippingTotal: doc.shippingTotal,
+      laborHoursSpent: doc.laborHoursSpent ?? 0,
+      laborRatePerHour: doc.laborRatePerHour ?? 0,
+      notes: doc.notes ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shipment]);
 
   const saveMutation = useApiMutation<ShipmentDocument>({
     successMessage: isCreate ? "Shipment created" : "Shipment updated",
     mutationFn: async () => {
+      const draft = visibleValues(createShipmentSchema, form) as ShipmentValues;
       const payload = {
-        shipmentNumber,
-        supplierName,
-        originCountry: originCountry || undefined,
-        status,
-        trackingNumber: trackingNumber || undefined,
-        carrier: carrier || undefined,
-        etaDate: etaDate || undefined,
-        notes: notes || undefined,
-        customsTotal: Math.round(Number(customsTotalRupees) * 100) / 100,
-        shippingTotal: Math.round(Number(shippingTotalRupees) * 100) / 100,
-        laborHoursSpent: Number(laborHoursSpent),
+        shipmentNumber: draft.shipmentNumber,
+        supplierName: draft.supplierName,
+        originCountry: draft.originCountry || undefined,
+        status: draft.status,
+        trackingNumber: draft.trackingNumber || undefined,
+        carrier: draft.carrier || undefined,
+        etaDate: draft.etaDate || undefined,
+        receivedDate: draft.receivedDate || undefined,
+        notes: draft.notes || undefined,
+        customsTotal: draft.customsTotal,
+        shippingTotal: draft.shippingTotal,
+        laborHoursSpent: draft.laborHoursSpent,
+        laborRatePerHour: draft.laborRatePerHour || undefined,
       };
       if (isCreate) {
         return apiClient.post<ShipmentDocument>(ADMIN_ENDPOINTS.SHIPMENTS, payload);
@@ -110,70 +151,73 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
     },
   });
 
+  const sections = React.useMemo(
+    () => buildSectionsFromSchema<ShipmentValues>(createShipmentSchema),
+    [],
+  );
+  const nav = useSectionFormNav(sections, form, { scope: "admin:shipment-editor" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(createShipmentSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
+  const handleSubmit = () => {
+    clearErrors();
+    /*
+     * The whole draft, not six of its thirteen fields.
+     *
+     * The hand-rolled parse passed a literal covering `shipmentNumber`,
+     * `supplierName`, `status` and the three money fields — so `originCountry`,
+     * `trackingNumber`, `carrier`, `etaDate` and `notes` were never checked by
+     * anything, and `receivedDate` / `laborRatePerHour` had no control at all
+     * although the schema declares them and the route accepts them.
+     */
+    const parsed = createShipmentSchema.safeParse(
+      visibleValues(createShipmentSchema, form),
+    );
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
+
   return (
-    <Form schema={createShipmentSchema} spacing="md">
-      {({ setFieldError, markSubmitAttempted }) => (
-        <>
-          <Grid cols={2} gap="md">
-            <FieldInput name="shipmentNumber" label="Shipment Number" required value={shipmentNumber} onChange={setShipmentNumber} placeholder="SH-2026-0001" />
-            <FieldInput name="supplierName" label="Supplier Name" required value={supplierName} onChange={setSupplierName} />
-            <FieldInput name="originCountry" label="Origin Country" value={originCountry} onChange={setOriginCountry} />
-            <FieldSelect name="status" label="Status" required value={status} onChange={setStatus} options={STATUS_OPTIONS} />
-            <FieldInput name="trackingNumber" label="Tracking Number" value={trackingNumber} onChange={setTrackingNumber} />
-            <FieldInput name="carrier" label="Carrier" value={carrier} onChange={setCarrier} />
-            <FieldInput name="etaDate" label="ETA Date" type="date" value={etaDate} onChange={setEtaDate} />
-            <FieldInput name="laborHoursSpent" label="Labor Hours Spent" type="number" min="0" value={laborHoursSpent} onChange={setLaborHoursSpent} />
-            <FieldInput name="customsTotal" label="Customs Total (₹)" type="number" min="0" value={customsTotalRupees} onChange={setCustomsTotalRupees} hint="Split across lots by declared value" />
-            <FieldInput name="shippingTotal" label="Shipping Total (₹)" type="number" min="0" value={shippingTotalRupees} onChange={setShippingTotalRupees} hint="Split across lots by weight" />
-          </Grid>
-          <FieldTextarea name="notes" label="Notes" value={notes} onChange={setNotes} rows={3} />
+    <Stack gap="md">
+      <FormShellContext.Provider value={shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<ShipmentValues>
+          sections={sections}
+          values={form}
+          onChange={patch}
+          onSubmit={handleSubmit}
+          schema={createShipmentSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={saveMutation.isPending}
+          submitLabel={isCreate ? "Create shipment" : "Save changes"}
+        />
+      </FormShellContext.Provider>
 
-          <FormErrorSummary />
-
-          <Button
-            type="button"
-            isLoading={saveMutation.isPending}
-            onClick={() => {
-              // type="button" — no native submit, so unhide the summary here.
-              markSubmitAttempted();
-              const parsed = createShipmentSchema.safeParse({
-                shipmentNumber,
-                supplierName,
-                status,
-                customsTotal: Math.round(Number(customsTotalRupees) * 100) / 100,
-                shippingTotal: Math.round(Number(shippingTotalRupees) * 100) / 100,
-                laborHoursSpent: Number(laborHoursSpent),
-              });
-              if (!parsed.success) {
-                for (const issue of parsed.error.issues) setFieldError(String(issue.path[0]), issue.message);
-                return;
-              }
-              saveMutation.mutate();
-            }}
-          >
-            {isCreate ? "Create Shipment" : "Save Changes"}
-          </Button>
-
-          {!isCreate && shipmentId && (
-            <ShipmentLotsSection shipmentId={shipmentId} lots={lots} onLotsChanged={refetchLots} />
-          )}
-
-          {/*
-            "How many times did the ETA slip before this landed" — each slip
-            overwrites `etaDate`, so the timeline is the only place the
-            earlier promises survive.
-          */}
-          {!isCreate && (
-            <RecordStatusTimeline
-              entries={(shipment as { statusHistory?: never[] } | undefined)?.statusHistory}
-              truncatedCount={
-                (shipment as { statusHistoryTruncated?: number } | undefined)?.statusHistoryTruncated
-              }
-            />
-          )}
-        </>
+      {!isCreate && shipmentId && (
+        <ShipmentLotsSection shipmentId={shipmentId} lots={lots} onLotsChanged={refetchLots} />
       )}
-    </Form>
+
+      {/*
+        "How many times did the ETA slip before this landed" — each slip
+        overwrites `etaDate`, so the timeline is the only place the
+        earlier promises survive.
+      */}
+      {!isCreate && (
+        <RecordStatusTimeline
+          entries={(shipment as { statusHistory?: never[] } | undefined)?.statusHistory}
+          truncatedCount={
+            (shipment as { statusHistoryTruncated?: number } | undefined)?.statusHistoryTruncated
+          }
+        />
+      )}
+    </Stack>
   );
 }
 
