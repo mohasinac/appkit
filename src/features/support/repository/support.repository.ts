@@ -40,6 +40,10 @@ export interface TicketWriteContext {
 export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     userId:     { canFilter: true,  canSort: false },
+    // The store a ticket is ABOUT. Filterable so a seller can list their own —
+    // `relatedParties.storeId` is not in this map and never was, which is why
+    // no seller-scoped query was possible.
+    storeId:    { canFilter: true,  canSort: false },
     status:     { canFilter: true,  canSort: false },
     category:   { canFilter: true,  canSort: false },
     priority:   { canFilter: true,  canSort: false },
@@ -96,6 +100,31 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   ): Promise<FirebaseSieveResult<SupportTicketDocument>> {
     const model: SieveModel = {
       filters: `userId==${userId}`,
+      sorts: "-createdAt",
+      page,
+      pageSize,
+    };
+    return this.sieveQuery<SupportTicketDocument>(
+      model,
+      SupportRepository.SIEVE_FIELDS,
+      { defaultPageSize: pageSize, maxPageSize: 50 },
+    );
+  }
+
+  /**
+   * Every ticket ABOUT one store.
+   *
+   * Keyed on the top-level `storeId`, not `relatedParties.storeId` — the
+   * nested one is unindexed and unqueryable, which is the whole reason a
+   * seller had no way to see the tickets raised against their own store.
+   */
+  async getStoreTickets(
+    storeId: string,
+    page = 1,
+    pageSize = 20,
+  ): Promise<FirebaseSieveResult<SupportTicketDocument>> {
+    const model: SieveModel = {
+      filters: `storeId==${storeId}`,
       sorts: "-createdAt",
       page,
       pageSize,

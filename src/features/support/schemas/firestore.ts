@@ -135,6 +135,22 @@ export interface SupportTicketDocument extends BaseDocument {
   orderId?: string;
 
   /**
+   * The store this ticket is ABOUT, when it is about one.
+   *
+   * 🛑 Top-level and indexed, unlike `relatedParties.storeId`. That field
+   * exists and cannot serve a query: it is not in
+   * `SUPPORT_TICKET_INDEXED_FIELDS`, not in the repository's `SIEVE_FIELDS`,
+   * and has no composite index — so "every ticket about my store" was
+   * unanswerable, which is why no seller support surface existed.
+   *
+   * `relatedParties.storeId` stays as what it always was: the admin's
+   * after-the-fact linkage, set through the ST-6 panel. This one is set at
+   * creation, by the seller-facing route, and is what the seller's own list
+   * queries on.
+   */
+  storeId?: string;
+
+  /**
    * ST-6 — subjects of the ticket. Admin/support assignable. `orderId` is
    * mirrored here for consistency when set via the linked-parties panel.
    */
@@ -223,6 +239,7 @@ export type SupportTicketCreateInput = Pick<
   | "subject"
   | "description"
   | "orderId"
+  | "storeId"
 >;
 
 export type SupportTicketUpdateInput = Partial<
@@ -254,6 +271,7 @@ export const SUPPORT_TICKET_ID_PREFIX = "ticket-" as const;
 
 export const SUPPORT_TICKET_INDEXED_FIELDS = [
   "userId",
+  "storeId",
   "status",
   "category",
   "priority",

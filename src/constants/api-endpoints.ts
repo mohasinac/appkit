@@ -632,6 +632,8 @@ export const SELLER_ENDPOINTS = {
     `/api/store/products/scan?barcode=${encodeURIComponent(barcode)}`,
   ORDERS_FULFILLMENT: "/api/store/fulfillment",
   BUNDLES: "/api/store/bundles",
+  /** Tickets raised ABOUT this store (W11). */
+  SUPPORT: "/api/store/support",
   BUNDLE_BY_ID: (id: string) => `/api/store/bundles/${id}`,
   CONVERSATIONS: "/api/store/conversations",
   ORDERS_ASSIGN: (orderId: string) => `/api/store/orders/${orderId}/assign`,

@@ -229,6 +229,8 @@ export const DEFAULT_ROUTE_MAP = {
     FEATURES_NEW: "/store/features/new",
     FEATURES_EDIT: (id: string) => `/store/features/${id}/edit`,
     SLUG: "/store/slug",
+    /** Tickets raised ABOUT this store (W11). Read-only for the seller. */
+    SUPPORT: "/store/support",
     // SB1-J — bundles + prize draws
     BUNDLES: "/store/bundles",
     BUNDLES_NEW: "/store/bundles/new",

@@ -139,3 +139,6 @@ export { BarcodeField } from "./BarcodeField";
 export type { BarcodeFieldProps } from "./BarcodeField";
 export { FulfillmentView } from "./FulfillmentView";
 export type { FulfillmentViewProps } from "./FulfillmentView";
+
+export { SellerSupportView } from "./SellerSupportView";
+export type { SellerSupportViewProps } from "./SellerSupportView";

@@ -1370,3 +1370,6 @@ export type {
 
 export { AdminActionIndexView } from "./features/admin/components/AdminActionIndexView";
 export type { AdminActionIndexViewProps } from "./features/admin/components/AdminActionIndexView";
+
+export { SellerSupportView } from "./features/seller/components/SellerSupportView";
+export type { SellerSupportViewProps } from "./features/seller/components/SellerSupportView";
