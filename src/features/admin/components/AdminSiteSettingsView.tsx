@@ -15,6 +15,11 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
 import {
+  SITE_SETTINGS_TABS,
+  isSiteSettingsTabId,
+  type SiteSettingsTabId,
+} from "../constants/site-settings-tabs";
+import {
   ThemeManagerView,
   type ThemeManagerValue,
 } from "../../site-settings/components/ThemeManagerView";
@@ -123,6 +128,22 @@ export function AdminSiteSettingsView({
 }: AdminSiteSettingsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
+
+  /*
+   * The open tab comes from `?tab=`, so a deep link can reach a specific
+   * control. It was `defaultValue="branding"` with no URL involvement at all,
+   * which is why "search for the maintenance toggle" had nowhere to land: the
+   * index could name the destination and the page could not honour it.
+   *
+   * Validated against the union rather than trusted — an unknown `?tab=` opens
+   * the default tab, which looks like the search simply missed rather than
+   * like a bad link.
+   */
+  const [activeTab, setActiveTab] = React.useState<SiteSettingsTabId>(() => {
+    if (typeof window === "undefined") return "branding";
+    const requested = new URLSearchParams(window.location.search).get("tab");
+    return isSiteSettingsTabId(requested) ? requested : "branding";
+  });
   const { upload } = useMediaUpload();
 
   const { data, isLoading, error } = useQuery({
@@ -791,32 +812,22 @@ export function AdminSiteSettingsView({
             {error instanceof Error ? error.message : "Unknown error"}
           </Alert>
         ) : null,
-        <Tabs key="tabs" defaultValue="branding">
+        <Tabs
+          key="tabs"
+          value={activeTab}
+          /*
+           * `Tabs` hands back a bare string, so it is narrowed here rather
+           * than cast. An unknown value is ignored instead of being written
+           * into state — the same reason `?tab=` is validated on the way in.
+           */
+          onChange={(next) => {
+            if (isSiteSettingsTabId(next)) setActiveTab(next);
+          }}
+        >
           <TabsList>
-            {[
-              ["about", "⓪ About"],
-              ["branding", "① Branding"],
-              ["appearance", "② Appearance"],
-              ["themes", "②ᵃ Themes"],
-              ["announcement", "③ Announcement"],
-              ["seo", "④ SEO"],
-              ["contact", "⑤ Contact & Social"],
-              ["watermark", "⑥ Watermark"],
-              ["fees", "⑦ Fees"],
-              ["integrations", "⑧ Integrations"],
-              ["shipping", "⑨ Shipping"],
-              ["auction", "⑩ Auction"],
-              ["limits", "⑪ Limits"],
-              ["legal", "⑫ Legal"],
-              ["whatsapp", "⑬ WhatsApp"],
-              ["notifications", "⑭ Notifications"],
-              ["procurement", "⑮ Procurement"],
-              ["emi", "⑯ EMI"],
-              ["gst", "⑰ GST"],
-              ["listings", "⑱ Listings"],
-            ].map(([value, label]) => (
-              <TabsTrigger key={value} value={value}>
-                {label}
+            {SITE_SETTINGS_TABS.map((tab) => (
+              <TabsTrigger key={tab.id} value={tab.id}>
+                {tab.label}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -930,7 +941,7 @@ export function AdminSiteSettingsView({
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
               <ImageUpload label="Favicon" currentImage={faviconUrl} onUpload={(file) => upload(file, "store")} onChange={setFaviconUrl} />
               <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} />
+                <Div id="setting-maintenance-mode"><Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} /></Div>
                 <Input label="Maintenance message" value={maintenanceMessage} onChange={(e) => setMaintenanceMessage(e.target.value)} placeholder="We're back soon." disabled={!maintenanceMode} />
               </Stack>
             </Form>
@@ -1051,7 +1062,7 @@ export function AdminSiteSettingsView({
           {/* ③ Announcement */}
           <TabsContent value="announcement">
             <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
-              <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
+              <Div id="setting-announcement-bar"><Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} /></Div>
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
               <Stack gap="none">
@@ -1068,7 +1079,7 @@ export function AdminSiteSettingsView({
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
               <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder="https://letitrip.in" />
-              <Toggle label="Robots noindex (disables search indexing — use carefully)" checked={seoNoIndex} onChange={setSeoNoIndex} />
+              <Div id="setting-robots-noindex"><Toggle label="Robots noindex (disables search indexing — use carefully)" checked={seoNoIndex} onChange={setSeoNoIndex} /></Div>
             </Form>
           </TabsContent>
 
@@ -1501,9 +1512,9 @@ export function AdminSiteSettingsView({
           <TabsContent value="shipping">
             <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
-              <Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} />
-              <Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} />
-              <Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} />
+              <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
+              <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
+              <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
               <Select label="Default carrier" options={CARRIER_OPTIONS} value={defaultCarrier} onValueChange={setDefaultCarrier} />
               <Input label="Max delivery radius (km, 0 = no limit)" value={String(maxDeliveryRadius)} onChange={(e) => setMaxDeliveryRadius(parseInt(e.target.value) || 0)} type="number" min={0} />
@@ -1680,7 +1691,7 @@ export function AdminSiteSettingsView({
 
               {/* Email channel */}
               <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Toggle label="Email notifications" checked={notifEmailEnabled} onChange={setNotifEmailEnabled} />
+                <Div id="setting-email-notifications"><Toggle label="Email notifications" checked={notifEmailEnabled} onChange={setNotifEmailEnabled} /></Div>
                 {notifEmailEnabled && (
                   <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
                     <Select
@@ -1709,7 +1720,7 @@ export function AdminSiteSettingsView({
 
               {/* Daily status digest */}
               <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Toggle label="Daily status digest" checked={digestEnabled} onChange={setDigestEnabled} />
+                <Div id="setting-daily-digest"><Toggle label="Daily status digest" checked={digestEnabled} onChange={setDigestEnabled} /></Div>
                 {digestEnabled && (
                   <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
                     <Text size="xs" color="muted">
@@ -1737,7 +1748,7 @@ export function AdminSiteSettingsView({
 
               {/* WhatsApp channel */}
               <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Toggle label="WhatsApp notifications" checked={notifWhatsappEnabled} onChange={setNotifWhatsappEnabled} />
+                <Div id="setting-whatsapp-notifications"><Toggle label="WhatsApp notifications" checked={notifWhatsappEnabled} onChange={setNotifWhatsappEnabled} /></Div>
                 {notifWhatsappEnabled && (
                   <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
                     <Select

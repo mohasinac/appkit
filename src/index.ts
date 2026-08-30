@@ -10056,3 +10056,15 @@ export {
 export type { PortalNavGroups, QuickActionSource } from "./features/search/action-index/derive";
 export { matchesNavQuery } from "./_internal/shared/features/layout/matchesNavQuery";
 export type { NavSearchable } from "./_internal/shared/features/layout/matchesNavQuery";
+
+export {
+  SITE_SETTINGS_ENTRIES,
+  deriveSettingsEntries,
+} from "./features/search/action-index/settings-entries";
+export type { SettingsIndexSource } from "./features/search/action-index/settings-entries";
+export {
+  SITE_SETTINGS_TABS,
+  SITE_SETTINGS_TAB_IDS,
+  isSiteSettingsTabId,
+} from "./features/admin/constants/site-settings-tabs";
+export type { SiteSettingsTab, SiteSettingsTabId } from "./features/admin/constants/site-settings-tabs";
