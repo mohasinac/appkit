@@ -12,6 +12,10 @@ import type {
 } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { SUPPORT_TICKET_FIELDS } from "../../../constants/field-names";
+import { buildSearchTxt } from "../../../utils/search-txt";
+import { planSearchTxt, emptySearchResult } from "../../../utils/search-txt-query";
+import { sieveAnd, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
+import type { JsonValue } from "../../../schemas/types";
 import { decryptPiiFields } from "../../../security/pii-encrypt";
 import type { DocumentSnapshot } from "firebase-admin/firestore";
 import {
@@ -44,6 +48,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     // `relatedParties.storeId` is not in this map and never was, which is why
     // no seller-scoped query was possible.
     storeId:    { canFilter: true,  canSort: false },
+    searchTxt:  { canFilter: true,  canSort: false },
     status:     { canFilter: true,  canSort: false },
     category:   { canFilter: true,  canSort: false },
     priority:   { canFilter: true,  canSort: false },
@@ -65,6 +70,21 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
 
   constructor() {
     super(SUPPORT_TICKET_COLLECTION);
+  }
+
+  /**
+   * Derived on every write path via `applyWriteHooks`.
+   *
+   * 🛑 `subject` only. `description` and every message body are PII-encrypted
+   * at rest, and a plaintext prefix index over an encrypted field gives back
+   * precisely what the encryption withheld — the same reason an email is an
+   * exact-match blind index rather than a searchable corpus.
+   */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    const subject = typeof data.subject === "string" ? data.subject : "";
+    return subject ? buildSearchTxt([subject]) : null;
   }
 
   /** Decrypt on read so callers see the shape they wrote. */
@@ -122,9 +142,47 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     storeId: string,
     page = 1,
     pageSize = 20,
+    opts?: { search?: string; status?: string },
   ): Promise<FirebaseSieveResult<SupportTicketDocument>> {
+    /*
+     * The term is tokenised the same way the index was built, and only the
+     * FIRST token is pushed down — Firestore allows one `array-contains` per
+     * query. The rest are applied in memory by `sieveQuery`'s own pass, which
+     * is what keeps a two-word search from silently matching on the first word
+     * alone (the partial-pushdown trap in Root Cause #62).
+     */
+    const clauses = [
+      sieveFilter(SUPPORT_TICKET_FIELDS.STORE_ID, SIEVE_OP.EQ, storeId),
+      ...(opts?.status
+        ? [sieveFilter(SUPPORT_TICKET_FIELDS.STATUS, SIEVE_OP.EQ, opts.status)]
+        : []),
+    ];
+
+    const plan = planSearchTxt(opts?.search);
+    /*
+     * A search that narrowed to no usable term returns NOTHING, not every
+     * ticket about the store. The alternative — falling through to the
+     * unfiltered list — is the shape where a user types a real subject,
+     * sees every row, and concludes the search is broken rather than that
+     * their term was stripped.
+     */
+    if (plan.empty) return emptySearchResult<SupportTicketDocument>();
+
+    let baseQuery = this.getCollection().where(
+      SUPPORT_TICKET_FIELDS.STORE_ID,
+      "==",
+      storeId,
+    );
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        SUPPORT_TICKET_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
     const model: SieveModel = {
-      filters: `storeId==${storeId}`,
+      filters: sieveAnd(...clauses.slice(1)),
       sorts: "-createdAt",
       page,
       pageSize,
@@ -132,7 +190,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     return this.sieveQuery<SupportTicketDocument>(
       model,
       SupportRepository.SIEVE_FIELDS,
-      { defaultPageSize: pageSize, maxPageSize: 50 },
+      { defaultPageSize: pageSize, maxPageSize: 50, baseQuery },
     );
   }
 

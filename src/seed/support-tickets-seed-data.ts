@@ -15,6 +15,7 @@
 
 import type { SupportTicketDocument, TicketMessage } from "../features/support/schemas/firestore";
 import { SUPPORT_TICKET_FIELDS } from "../constants/field-names";
+import { buildSearchTxt } from "../utils/search-txt";
 import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 function msg(
@@ -50,7 +51,7 @@ function entry(
   return { at, actorRole, trigger, changes, ...extra };
 }
 
-export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
+const supportTicketRecords: Partial<SupportTicketDocument>[] = [
   // ── 1. Order issue — in progress ─────────────────────────────────────────
   {
     id: "ticket-yugi-order-001",
@@ -342,3 +343,23 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     updatedAt: daysBack(1),
   },
 ];
+
+/**
+ * Derive `searchTxt` for every record from its own subject.
+ *
+ * The seed writes documents raw via `batch.set()` — both `seed/runner.ts` and
+ * `seed-cli.mjs` — bypassing the repository, which is the only thing that
+ * builds tokens. Without this every seeded ticket would have no `searchTxt` at
+ * all and `array-contains` would match zero documents, for every query,
+ * forever. That is exactly how FAQ search was found broken.
+ *
+ * Computed with the SAME `buildSearchTxt` over the SAME field the repository
+ * uses, so a seeded ticket and a user-created one are byte-identical. Pure
+ * function of the record's own content, so it stays deterministic and does not
+ * reintroduce the `appkit-seed` idempotency problem of Root Cause #25.
+ */
+export const supportTicketsSeedData: Partial<SupportTicketDocument>[] =
+  supportTicketRecords.map((ticket) => ({
+    ...ticket,
+    searchTxt: ticket.subject ? buildSearchTxt([ticket.subject]) : [],
+  }));

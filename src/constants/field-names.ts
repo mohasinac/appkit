@@ -921,6 +921,8 @@ export const SUPPORT_TICKET_FIELDS = {
   ID: "id",
   USER_ID: "userId",
   STORE_ID: "storeId",
+  /** Word-prefix tokens over `subject` only — see the repository's hook. */
+  SEARCH_TXT: "searchTxt",
   SUBJECT: "subject",
   CATEGORY: "category",
   STATUS: "status",

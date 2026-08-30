@@ -87,12 +87,19 @@ export function SellerSupportView({ labels = {} }: SellerSupportViewProps) {
           title: labels.title ?? "Support",
           subtitle: "Tickets buyers and staff have raised about your store.",
           /*
-           * No search box. The endpoint filters on `storeId` and sorts by
-           * `createdAt`; it does not read `q`, and `supportTickets` has no
-           * `searchTxt` corpus yet. A box the endpoint ignores is the exact
-           * defect `ListingViewConfig.searchPlaceholder` was made optional to
-           * prevent — it accepts typing, carries the term, and changes nothing.
+           * The box is declared only because the endpoint now serves it —
+           * `supportTickets` gained a `searchTxt` corpus in this same commit.
+           * `fields` names what is actually matched, and it is SUBJECT ONLY:
+           * the description and every message body are PII-encrypted at rest,
+           * so they are not in the index and a placeholder promising them
+           * would be a promise the backend cannot keep.
            */
+          search: {
+            placeholder: "Search by subject…",
+            mode: "partial",
+            fields: ["subject"],
+            commit: "debounce",
+          },
           emptyLabel: "No tickets have been raised about your store.",
           queryKey: ["store", "support-tickets"],
           endpoint: SELLER_ENDPOINTS.SUPPORT,

@@ -174,6 +174,17 @@ export interface SupportTicketDocument extends BaseDocument {
   messages: TicketMessage[];
 
   /**
+   * Word-prefix search tokens. Derived on write by `buildSearchTxtFor`.
+   *
+   * 🛑 Built from `subject` ONLY — not `description`, and not the message
+   * bodies. Those are PII-encrypted at rest (`SUPPORT_TICKET_PII_FIELDS`), and
+   * a plaintext token index over an encrypted field hands back exactly what
+   * the encryption was there to withhold. The subject is what an admin scans a
+   * list by, and it is not encrypted.
+   */
+  searchTxt?: string[];
+
+  /**
    * Stamped by the repository the first time `status` becomes `resolved` /
    * `closed`. Both were declared, given `SUPPORT_TICKET_FIELDS` constants and
    * listed in `SupportTicketUpdateInput` — and **nothing ever wrote either**
@@ -272,6 +283,7 @@ export const SUPPORT_TICKET_ID_PREFIX = "ticket-" as const;
 export const SUPPORT_TICKET_INDEXED_FIELDS = [
   "userId",
   "storeId",
+  "searchTxt",
   "status",
   "category",
   "priority",
