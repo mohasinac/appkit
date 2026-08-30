@@ -1,4 +1,5 @@
 "use client";
+import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -15,13 +16,16 @@ const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
-export interface AdminNavItem {
-  href: string;
-  label: string;
-  icon?: React.ReactNode;
-  /** Permission required to see this item. If omitted, always visible. */
-  requiredPermission?: string;
-}
+/**
+ * An admin sidebar entry.
+ *
+ * Extends `SidebarNavItem` rather than restating it. There were EIGHT
+ * divergent nav-item interfaces in the tree and they had drifted on which
+ * fields even existed — this one carried `requiredPermission`, the store one
+ * carried `badge`, the user one `confirm`, and none of the three had the `id`
+ * that `filterNavItems` keys everything off.
+ */
+export type AdminNavItem = SidebarNavItem;
 
 export interface AdminNavGroup {
   title: string;

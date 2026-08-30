@@ -1,4 +1,5 @@
 "use client";
+import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -23,12 +24,8 @@ const CLS_NAV_ACTIVE = "bg-warning-surface dark:bg-warning-surface text-warning 
 const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-solid px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)] text-[10px] text-warning-on-solid leading-none";
 const CLS_NAV_ICON_ACTIVE = "text-warning dark:text-warning";
 
-export interface StoreNavItem {
-  href: string;
-  label: string;
-  icon?: React.ReactNode;
-  badge?: number;
-}
+/** A store sidebar entry. `badge` comes from `SidebarNavItem`. */
+export type StoreNavItem = SidebarNavItem;
 
 export interface StoreNavGroup {
   title: string;

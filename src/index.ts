@@ -10022,3 +10022,12 @@ export type {
   HistoryActorRole,
   FieldChange,
 } from "./_internal/shared/history/index";
+
+/*
+ * Nav item ids are DERIVED from the href (W6). Exported from the MAIN entry as
+ * well as `/client` because `store/layout.tsx` is a Server Component: a
+ * binding taken from the `"use client"` entry is a client-reference proxy
+ * there, and CALLING one throws as an opaque React #441 (Root Cause #76).
+ */
+export { navItemId } from "./_internal/shared/features/layout/types";
+export type { NavPortal } from "./_internal/shared/features/layout/types";

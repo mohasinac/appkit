@@ -1,4 +1,5 @@
 "use client";
+import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
 import React, { useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -16,10 +17,8 @@ const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
-export interface UserNavItem {
-  href: string;
-  label: string;
-  icon?: React.ReactNode;
+/** A user sidebar entry, plus the one field only this portal has. */
+export interface UserNavItem extends SidebarNavItem {
   /** When set, intercepts navigation with a confirmation prompt. */
   confirm?: { title?: string; message: string };
 }

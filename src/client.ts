@@ -1312,3 +1312,9 @@ export {
 } from "./constants/geo/countries";
 export type { CountryDef } from "./constants/geo/countries";
 export { SUBDIVISIONS, subdivisionsFor } from "./constants/geo/subdivisions";
+
+// Nav item ids are DERIVED from the href (W6). A hand-written id drifts from
+// the route it names, and because it is also the `navConfig` key, a drifted id
+// silently un-toggles the item.
+export { navItemId } from "./_internal/shared/features/layout/types";
+export type { NavPortal } from "./_internal/shared/features/layout/types";

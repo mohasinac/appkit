@@ -30,11 +30,59 @@ export interface SidebarNavItem {
   badge?: number;
   /**
    * Stable nav-* slug used as the key in siteSettings.navConfig.
-   * If absent, item is always visible (no admin toggle, no permission check).
+   *
+   * 🛑 **Derived from the href, never hand-written** — `navItemId(portal, href)`.
+   * A hand-written id drifts from the route it names, and because it is also
+   * the `navConfig` key, a drifted id silently un-toggles the item: the admin
+   * hides "Payouts", the toggle writes a key nothing reads, and the entry
+   * stays.
+   *
+   * If absent, the item is always visible — no admin toggle and **no
+   * permission check**, which is why every admin item having no id meant
+   * `requiredPermission` had never once been enforced.
    */
   id?: string;
   /** RBAC permission key — item only shows to users with this permission. */
   requiredPermission?: string;
+  /**
+   * One sentence on what this screen is FOR, in the user's words rather than
+   * the entity's. "Refund a buyer, or check why a payout is late" finds its
+   * screen; "Payouts" only finds itself.
+   *
+   * Consumed by the sidebar search and, in W7, by the action index.
+   */
+  description?: string;
+  /**
+   * Words someone might search for that are not in the label — synonyms
+   * ("postcode" for PIN), the old name of a renamed screen, the noun the rest
+   * of the industry uses.
+   */
+  keywords?: string[];
+  /** Which dashboard this belongs to. Set by the helper alongside `id`. */
+  portal?: NavPortal;
+}
+
+/** The three dashboards a sidebar item can belong to. */
+export type NavPortal = "admin" | "store" | "user";
+
+/**
+ * The `navConfig` key for a nav item: `nav-{portal}-{slug-of-href}`.
+ *
+ * Derived rather than authored so an id cannot disagree with the route it
+ * points at. Locale prefixes and dynamic segments are stripped, so
+ * `/en/admin/orders` and `/admin/orders` produce the same key — otherwise a
+ * localised build would write a second set of toggles nobody can find.
+ */
+export function navItemId(portal: NavPortal, href: string): string {
+  const path = href
+    .replace(/^https?:\/\/[^/]+/, "")
+    .replace(/^\/[a-z]{2}(-[A-Z]{2})?(?=\/)/, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/[^a-zA-Z0-9/-]+/g, "-")
+    .replace(/\//g, "-")
+    .toLowerCase();
+  return `nav-${portal}-${path || "root"}`;
 }
 
 /** Sidebar group with title + items + default-open state. */
