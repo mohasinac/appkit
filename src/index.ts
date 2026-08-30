@@ -10031,3 +10031,28 @@ export type {
  */
 export { navItemId } from "./_internal/shared/features/layout/types";
 export type { NavPortal } from "./_internal/shared/features/layout/types";
+
+/*
+ * The action index (W7). Its base is DERIVED from the nav groups, so an entry
+ * cannot exist without its nav item and cannot go stale when one is renamed.
+ */
+export {
+  mergeActionIndex,
+  projectActionIndexForViewer,
+  ACTION_INDEX_COLLECTION,
+  ACTION_INDEX_DOC_ID,
+} from "./features/search/action-index/types";
+export type {
+  ActionIndexEntry,
+  ActionIndexKind,
+  ActionIndexControl,
+  ActionIndexOverride,
+} from "./features/search/action-index/types";
+export {
+  deriveNavEntries,
+  deriveQuickActionEntries,
+  buildActionIndexBase,
+} from "./features/search/action-index/derive";
+export type { PortalNavGroups, QuickActionSource } from "./features/search/action-index/derive";
+export { matchesNavQuery } from "./_internal/shared/features/layout/matchesNavQuery";
+export type { NavSearchable } from "./_internal/shared/features/layout/matchesNavQuery";

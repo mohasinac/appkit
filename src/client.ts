@@ -1318,3 +1318,31 @@ export { SUBDIVISIONS, subdivisionsFor } from "./constants/geo/subdivisions";
 // silently un-toggles the item.
 export { navItemId } from "./_internal/shared/features/layout/types";
 export type { NavPortal } from "./_internal/shared/features/layout/types";
+
+/*
+ * The action index (W7), on the CLIENT entry too.
+ *
+ * `LayoutShellClient` is a client component, so it must not reach the bare
+ * `@mohasinac/appkit` entry — that is the Turbopack client-bundle leak
+ * (Root Cause #6), and its audit caught exactly that in the commit that wired
+ * this up. The main entry keeps its own copy for Server Components, which have
+ * the opposite constraint (Root Cause #76).
+ */
+export {
+  mergeActionIndex,
+  projectActionIndexForViewer,
+} from "./features/search/action-index/types";
+export type {
+  ActionIndexEntry,
+  ActionIndexKind,
+  ActionIndexControl,
+  ActionIndexOverride,
+} from "./features/search/action-index/types";
+export {
+  deriveNavEntries,
+  deriveQuickActionEntries,
+  buildActionIndexBase,
+} from "./features/search/action-index/derive";
+export type { PortalNavGroups, QuickActionSource } from "./features/search/action-index/derive";
+export { matchesNavQuery } from "./_internal/shared/features/layout/matchesNavQuery";
+export type { NavSearchable } from "./_internal/shared/features/layout/matchesNavQuery";
