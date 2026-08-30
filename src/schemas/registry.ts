@@ -154,7 +154,7 @@ import { siteSettingsFormSchema } from "../features/admin/schemas/site-settings-
 import { orderCancelSchema, paymentProofSchema } from "../features/orders/schemas/buyer-forms";
 import { scamReportFormSchema } from "../features/scams/schemas/report-form";
 import { sublistingCategoryFormSchema } from "../features/store-extensions/schemas/sublisting-category-form";
-import { lotteryConfigFormSchema } from "../_internal/shared/features/lottery/config-form";
+import { lotteryConfigWriteSchema } from "../features/lottery/schemas/config-write";
 import { reportCreateSchema } from "../features/store-extensions/schemas/report-create-form";
 import { itemRequestCreateSchema } from "../features/store-extensions/schemas/item-request-create-form";
 import {
@@ -197,7 +197,7 @@ const forms = {
   paymentProof: paymentProofSchema,
   scamReport: scamReportFormSchema,
   sublistingCategory: sublistingCategoryFormSchema,
-  lotteryConfig: lotteryConfigFormSchema,
+  lotteryConfig: lotteryConfigWriteSchema,
   lotteryPull: lotteryPullSchema,
 } as const;
 

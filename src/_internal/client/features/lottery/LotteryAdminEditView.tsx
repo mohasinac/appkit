@@ -1,31 +1,65 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
-import { normalizeError } from "../../../../errors/normalize";
-import { toUserMessage } from "../../../../errors/error-display-map";
+/**
+ * LotteryAdminEditView — the slot configuration for one lottery. Sectionised
+ * 2026-08-30.
+ *
+ * ## Two schemas became one
+ *
+ * It declared `lotteryConfigFormSchema` on `<Form>` and parsed
+ * `lotteryConfigWriteSchema` in the submit handler, so the form schema's
+ * duplicate-slot and free-lottery rules had never executed. The form schema is
+ * deleted; `lotteryConfigWriteSchema` carries the annotations now and is both
+ * what this form renders from and what the route parses.
+ *
+ * ## Title and description are gone, not moved
+ *
+ * They were editable here and reached nothing: `LotteryConfigClient` posts
+ * `data.lotteryConfig` to `PUT .../lottery-config` and ignores the rest, and
+ * that route accepts only the config. An event's title, dates, status and
+ * media are edited in the ordinary event editor — this page is the slots. Two
+ * inputs that saved silently into nowhere are worse than their absence, which
+ * is the same call made on `rememberMe`. The title still appears, as the
+ * heading, so it is obvious which lottery is open.
+ */
+
+import React from "react";
 import {
-  Stack,
-  Row,
-  Text,
-  Heading,
-  Section,
-  Container,
   Button,
   DataTable,
+  Input,
+  Row,
+  Stack,
+  Text,
   type DataTableColumn,
 } from "../../../../ui";
-import { Form, FieldInput, FieldSelect, Input } from "../../../../ui";
-import type { UseFormShellStateResult } from "../../../../ui/forms";
+import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../../ui/forms/apply-zod-issues";
+import { StackedViewShell } from "../../../../ui";
+import { buildSectionsFromSchema, visibleValues } from "../../../../features/shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../../../features/shell/SectionForm";
 import { lotteryConfigWriteSchema } from "../../../../features/lottery/schemas/config-write";
 import type { LotteryConfigWriteInput } from "../../../../features/lottery/schemas/config-write";
-import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 
+/** One editable row of the slot table. */
 interface LotterySlotRow {
   slotNumber: number;
   name: string;
   price: number;
   /** Prize photo — rendered publicly in the prize collage on the detail page. */
   image?: string;
+}
+
+/** The draft this form edits — the write contract's own field set, verbatim. */
+interface Values {
+  [key: string]: unknown;
+  pricingMode: "uniform" | "variable";
+  uniformPrice: number;
+  drawWindowDurationMinutes: number;
+  maxPullsPerTransaction: number;
+  maxPullsPerUser: number;
+  slots: LotterySlotRow[];
 }
 
 /**
@@ -43,9 +77,6 @@ interface LotterySlotRow {
  * fullness check reads.
  */
 interface LotteryEventFormData {
-  title: string;
-  description?: string;
-  type: "lottery";
   lotteryConfig: LotteryConfigWriteInput;
 }
 
@@ -65,124 +96,170 @@ interface LotteryAdminEditViewProps {
   onSubmit: (data: LotteryEventFormData) => Promise<void>;
 }
 
+const MAX_SLOTS = 200;
+
 export function LotteryAdminEditView({
   eventId,
   initialData,
   onSubmit,
 }: LotteryAdminEditViewProps) {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = React.useTransition();
 
-  const [title, setTitle] = useState(initialData?.title ?? "");
-  const [description, setDescription] = useState(initialData?.description ?? "");
-  const [pricingMode, setPricingMode] = useState<"uniform" | "variable">(initialData?.pricingMode ?? "uniform");
-  const [uniformPrice, setUniformPrice] = useState(String(initialData?.uniformPrice ?? 0));
-  const [drawWindowMinutes, setDrawWindowMinutes] = useState(String(initialData?.drawWindowDurationMinutes ?? 5));
-  const [maxPullsPerTx, setMaxPullsPerTx] = useState(String(initialData?.maxPullsPerTransaction ?? 1));
-  const [maxPullsPerUser, setMaxPullsPerUser] = useState(String(initialData?.maxPullsPerUser ?? 1));
-  const [slots, setSlots] = useState<LotterySlotRow[]>(
-    initialData?.slots ?? [{ slotNumber: 1, name: "", price: 0 }],
+  const [form, setForm] = React.useState<Values>({
+    pricingMode: initialData?.pricingMode ?? "uniform",
+    uniformPrice: initialData?.uniformPrice ?? 0,
+    drawWindowDurationMinutes: initialData?.drawWindowDurationMinutes ?? 5,
+    maxPullsPerTransaction: initialData?.maxPullsPerTransaction ?? 1,
+    maxPullsPerUser: initialData?.maxPullsPerUser ?? 1,
+    slots: initialData?.slots ?? [{ slotNumber: 1, name: "", price: 0 }],
+  });
+
+  const patch = (partial: Partial<Values>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
+
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(lotteryConfigWriteSchema, {
+        renderers: {
+          slots: ({ values, onChange }) => (
+            <SlotTable
+              slots={values.slots}
+              showPrice={values.pricingMode === "variable"}
+              onSlotsChange={(next) => onChange({ slots: next })}
+            />
+          ),
+        },
+      }),
+    [],
   );
 
-  const addSlot = () => {
-    setSlots((prev) => [
-      ...prev,
-      { slotNumber: prev.length + 1, name: "", price: 0 },
-    ]);
-  };
-
-  const removeSlot = (idx: number) => {
-    setSlots((prev) =>
-      prev.filter((_, i) => i !== idx).map((s, i) => ({ ...s, slotNumber: i + 1 })),
-    );
-  };
-
-  const updateSlot = (idx: number, field: "name" | "price" | "image", value: string) => {
-    setSlots((prev) =>
-      prev.map((s, i) =>
-        i === idx
-          ? { ...s, [field]: field === "price" ? Math.round(parseFloat(value) * 100) / 100 || 0 : value }
-          : s,
-      ),
-    );
-  };
+  const nav = useSectionFormNav(sections, form, { scope: "admin:lottery-config" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(
+    lotteryConfigWriteSchema,
+    {
+      sections: nav.sectionMeta,
+      onGoToSection: nav.goToSection,
+      fieldToSectionIndex: nav.fieldToSectionIndex,
+    },
+  );
 
   const handleSubmit = () => {
-    setError(null);
+    clearErrors();
+    /*
+     * Per-slot prices are dropped under uniform pricing, where the price of a
+     * slot IS `uniformPrice`. They used to be sent in both modes, so a figure
+     * loaded from `initialData` survived a switch to uniform — unreachable on
+     * screen, still written on save. `visibleValues` cannot reach inside an
+     * array, so this one masking stays explicit.
+     */
+    const draft = visibleValues(lotteryConfigWriteSchema, form) as Partial<Values>;
+    const candidate = {
+      ...draft,
+      slots: form.slots.map((s) => ({
+        slotNumber: s.slotNumber,
+        name: s.name,
+        image: s.image?.trim() || undefined,
+        price: form.pricingMode === "variable" ? s.price : 0,
+      })),
+    };
+
+    const parsed = lotteryConfigWriteSchema.safeParse(candidate);
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+
     startTransition(async () => {
-      try {
-        /*
-         * 🛑 This used to send `isBooked: false` and `weight: 0` on every slot,
-         * and drop `bookedByUserId` / `bookedByDisplayName` /
-         * `bookedByUserLotteryNumber` entirely — against a `.passthrough()`
-         * PATCH, which made the first save of a live lottery erase every
-         * purchased slot, silently, with a 200.
-         *
-         * The write shape now has NO booking fields at all and is `.strict()`,
-         * so a slot's buyer is not something this form can express, let alone
-         * overwrite. `PUT /lottery-config` merges by `slotNumber` against the
-         * stored config and is the only writer.
-         */
-        const candidate = {
-          slots: slots.map((s) => ({
-            slotNumber: s.slotNumber,
-            name: s.name,
-            image: s.image?.trim() || undefined,
-            /*
-             * Only under VARIABLE pricing, because that is the only mode where
-             * the Price column is rendered.
-             *
-             * It used to be sent for every slot in both modes, so a per-slot
-             * price loaded from `initialData` survived a switch to uniform —
-             * unreachable on screen, still written on save, and still there if
-             * the admin switched back. Under uniform pricing the price of a
-             * slot is `uniformPrice`, so a per-slot figure is not just hidden,
-             * it is meaningless.
-             */
-            price: pricingMode === "variable" ? s.price : 0,
-          })),
-          pricingMode,
-          uniformPrice:
-            pricingMode === "uniform"
-              ? Math.round(parseFloat(uniformPrice) * 100) / 100 || 0
-              : undefined,
-          drawWindowDurationMinutes: parseInt(drawWindowMinutes, 10) || 5,
-          maxPullsPerTransaction: parseInt(maxPullsPerTx, 10) || 1,
-          maxPullsPerUser: parseInt(maxPullsPerUser, 10) || 1,
-        };
-
-        /*
-         * The schema was passed to `<Form>` and never actually run — so the
-         * `parseFloat(x) || 0` coercions above, which it exists to catch, were
-         * still live. Parsed here so a bad slot is refused on the client
-         * rather than discovered as a 400.
-         */
-        const parsed = lotteryConfigWriteSchema.safeParse(candidate);
-        if (!parsed.success) {
-          setError(parsed.error.issues[0]?.message ?? "Check the lottery settings.");
-          return;
-        }
-
-        await onSubmit({ title, description, type: "lottery", lotteryConfig: parsed.data });
-      } catch (err) {
-        const e = normalizeError(err);
-        setError(
-          toUserMessage(e.code, undefined, { fallback: "Failed to save lottery." }),
-        );
-      }
+      await onSubmit({ lotteryConfig: parsed.data });
     });
   };
 
-  // Slot table columns
-  const slotColumns: DataTableColumn<LotterySlotRow & { _idx: number }>[] = [
+  return (
+    <StackedViewShell
+      portal="admin"
+      title={
+        eventId
+          ? `Edit lottery${initialData?.title ? ` — ${initialData.title}` : ""}`
+          : "Create lottery"
+      }
+      sections={[
+        <FormShellContext.Provider value={shellCtx} key="lottery-config-form">
+          <FormErrorSummary />
+          <SectionForm<Values>
+            sections={sections}
+            values={form}
+            onChange={patch}
+            onSubmit={handleSubmit}
+            schema={lotteryConfigWriteSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            isLoading={isPending}
+            submitLabel={eventId ? "Update lottery" : "Create lottery"}
+          />
+        </FormShellContext.Provider>,
+      ]}
+    />
+  );
+}
+
+/**
+ * The repeatable slot rows.
+ *
+ * A module-level component rather than an inline renderer: its handlers would
+ * otherwise sit six braces deep inside `useMemo`, which is what
+ * `audit-code-quality`'s DEEP_NESTING rule exists to stop.
+ */
+function SlotTable({
+  slots,
+  showPrice,
+  onSlotsChange,
+}: {
+  slots: LotterySlotRow[];
+  showPrice: boolean;
+  onSlotsChange: (next: LotterySlotRow[]) => void;
+}) {
+  const addSlot = () =>
+    onSlotsChange([...slots, { slotNumber: slots.length + 1, name: "", price: 0 }]);
+
+  const removeSlot = (idx: number) =>
+    onSlotsChange(
+      slots.filter((_, i) => i !== idx).map((s, i) => ({ ...s, slotNumber: i + 1 })),
+    );
+
+  const updateSlot = (
+    idx: number,
+    field: "name" | "price" | "image",
+    value: string,
+  ) =>
+    onSlotsChange(
+      slots.map((s, i) =>
+        i === idx
+          ? {
+              ...s,
+              [field]:
+                field === "price"
+                  ? Math.round(parseFloat(value) * 100) / 100 || 0
+                  : value,
+            }
+          : s,
+      ),
+    );
+
+  const rows = slots.map((s, i) => ({ ...s, _idx: i }));
+
+  const columns: DataTableColumn<LotterySlotRow & { _idx: number }>[] = [
     {
       key: "slotNumber",
       header: "#",
-      render: (s) => <Text size="xs" color="muted" family="mono">{s.slotNumber}</Text>,
+      render: (s) => (
+        <Text size="xs" color="muted" family="mono">
+          {s.slotNumber}
+        </Text>
+      ),
     },
     {
       key: "name",
-      header: "Prize Name",
+      header: "Prize name",
       render: (s) => (
         <Input
           type="text"
@@ -208,7 +285,7 @@ export function LotteryAdminEditView({
         />
       ),
     },
-    ...(pricingMode === "variable"
+    ...(showPrice
       ? [
           {
             key: "price" as const,
@@ -228,82 +305,41 @@ export function LotteryAdminEditView({
       : []),
   ];
 
-  const slotsWithIdx = slots.map((s, i) => ({ ...s, _idx: i }));
-
   return (
-    <Container>
-      <Section>
-        {/*
-          The schema this form is VALIDATED against, so the two agree. It used
-          to declare lotteryConfigFormSchema here and parse
-          lotteryConfigWriteSchema in the submit handler — two schemas, one of
-          which never ran, which is why its free-lottery rule sat unenforced.
-        */}
-        <Form schema={lotteryConfigWriteSchema} onSubmit={(e) => e.preventDefault()} className="space-y-6">
-          {({ clearErrors }: UseFormShellStateResult) => (
-            <Stack gap="xl">
-              <FormErrorSummary />
-              <Heading level={1} size="2xl" weight="bold">
-                {eventId ? "Edit Lottery" : "Create Lottery"}
-              </Heading>
-
-              <Stack gap="md">
-                <Heading level={2} size="lg" weight="semibold">Basic Info</Heading>
-                <FieldInput name="title" label="Title" required value={title} onChange={(v: string) => { setTitle(v); clearErrors(); }} />
-                <FieldInput name="description" label="Description" value={description} onChange={(v: string) => { setDescription(v); clearErrors(); }} />
-              </Stack>
-
-              <Stack gap="md">
-                <Heading level={2} size="lg" weight="semibold">Configuration</Heading>
-                <FieldSelect
-                  name="pricingMode"
-                  label="Pricing Mode"
-                  value={pricingMode}
-                  options={[
-                    { label: "Uniform (all slots same price)", value: "uniform" },
-                    { label: "Variable (per-slot pricing)", value: "variable" },
-                  ]}
-                  onChange={(v: string) => setPricingMode(v as "uniform" | "variable")}
-                />
-                {pricingMode === "uniform" && (
-                  <FieldInput name="uniformPrice" label="Price per Slot (₹)" type="number" value={uniformPrice} onChange={(v: string) => setUniformPrice(v)} />
-                )}
-                <FieldInput name="drawWindowMinutes" label="Draw Window (minutes)" type="number" value={drawWindowMinutes} onChange={(v: string) => setDrawWindowMinutes(v)} />
-                <FieldInput name="maxPullsPerTx" label="Max Pulls per Transaction" type="number" value={maxPullsPerTx} onChange={(v: string) => setMaxPullsPerTx(v)} />
-                <FieldInput name="maxPullsPerUser" label="Max Pulls per User" type="number" value={maxPullsPerUser} onChange={(v: string) => setMaxPullsPerUser(v)} />
-              </Stack>
-
-              <Stack gap="md">
-                <Row align="center" justify="between">
-                  <Heading level={2} size="lg" weight="semibold">Slots ({slots.length})</Heading>
-                  <Button type="button" variant="secondary" size="sm" onClick={addSlot} disabled={slots.length >= 200}>
-                    + Add Slot
-                  </Button>
-                </Row>
-                <DataTable
-                  data={slotsWithIdx}
-                  columns={slotColumns}
-                  keyExtractor={(s) => String(s.slotNumber)}
-                  emptyMessage="No slots yet."
-                  actions={(s) =>
-                    slots.length > 1 ? (
-                      <Button type="button" variant="ghost" size="sm" onClick={() => removeSlot(s._idx)} aria-label={`Remove slot ${s.slotNumber}`}>
-                        ×
-                      </Button>
-                    ) : null
-                  }
-                />
-              </Stack>
-
-              {error && <Text className="text-error" size="sm" role="alert">{error}</Text>}
-
-              <Button type="submit" variant="primary" isLoading={isPending} onClick={handleSubmit} className="w-full sm:w-auto">
-                {isPending ? "Saving…" : eventId ? "Update Lottery" : "Create Lottery"}
-              </Button>
-            </Stack>
-          )}
-        </Form>
-      </Section>
-    </Container>
+    <Stack gap="md">
+      <Row align="center" justify="between">
+        <Text size="sm" color="muted">
+          {slots.length} slot{slots.length === 1 ? "" : "s"}
+        </Text>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={addSlot}
+          disabled={slots.length >= MAX_SLOTS}
+        >
+          + Add slot
+        </Button>
+      </Row>
+      <DataTable
+        data={rows}
+        columns={columns}
+        keyExtractor={(s) => String(s.slotNumber)}
+        emptyMessage="No slots yet."
+        actions={(s) =>
+          slots.length > 1 ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => removeSlot(s._idx)}
+              aria-label={`Remove slot ${s.slotNumber}`}
+            >
+              ×
+            </Button>
+          ) : null
+        }
+      />
+    </Stack>
   );
 }

@@ -1,51 +1,54 @@
 "use client";
-import { normalizeError } from "../../../errors/normalize";
 
 /**
- * AdminBundleEditorView — S-SBUNI-4 2026-05-13.
+ * AdminBundleEditorView — S-SBUNI-4 2026-05-13, sectionised 2026-08-30.
  *
  * Unified create + edit view for categoryType:"bundle" rows. When `bundleId`
  * is set, loads + edits; when omitted, runs as a "new" form. Delegates to
- * /api/admin/bundles. Owns: name + description + bundlePrice +
- * static-only product picker + isActive. Dynamic-rule editing is out of scope
- * for this session (the API accepts dynamic rules but the form only writes
- * static rules; admins editing a pre-existing dynamic bundle see its members
- * in the picker but the rule itself stays unchanged until they switch to
- * static).
+ * /api/admin/bundles (or /api/store/bundles under `scope="store"`).
+ *
+ * ## The schema now runs
+ *
+ * It used to declare a seven-field `.passthrough()` stub inside this file,
+ * hand it to `<Form schema>`, and validate with two `if` statements instead.
+ * So the member-count bounds the picker DISPLAYS — `min 3, max 16` — were red
+ * hint text under the control that nothing enforced, and a two-member bundle
+ * saved cleanly. The real schema lives in `../../categories/schemas/bundle-form`
+ * and is parsed on every change.
+ *
+ * Static vs dynamic rules are both editable: the rule-type select swaps which
+ * member source is on screen, and `visibleValues` makes the payload follow it.
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import {
-  Button,
-  Checkbox,
-  ConfirmDeleteModal,
-  Container,
-  Form,
-  Heading,
-  Input,
-  Row,
-  Section,
-  Select,
-  Stack,
-  Text,
-  Textarea,
-  useToast,
-} from "../../../ui";
-import { FieldInput, FormErrorSummary } from "../../../ui/forms";
-import type { UseFormShellStateResult } from "../../../ui/forms/FormShell";
+import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
+import { ConfirmDeleteModal, Div, StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
+import { FormErrorSummary } from "../../../ui/forms";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
+import { BUNDLE_KIND_SPECIAL } from "../../../_internal/shared/features/categories/bundle-config";
 import {
-  BUNDLE_MIN_ITEMS,
-  BUNDLE_MAX_ITEMS,
-  BUNDLE_KIND_SPECIAL,
-} from "../../../_internal/shared/features/categories/bundle-config";
+  bundleFormSchema,
+  BUNDLE_RULE_TYPE_OPTIONS,
+} from "../../categories/schemas/bundle-form";
 import type { BundleQueryRule, CategoryDocument } from "../../categories/schemas";
+
+const __P = {
+  p4: "p-[var(--appkit-space-4)]",
+} as const;
+
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
 
 type DynamicRule = Extract<BundleQueryRule, { type: "dynamic" }>;
 
@@ -56,15 +59,11 @@ const DEFAULT_DYNAMIC_RULE: DynamicRule = {
   limit: 6,
 };
 
-const RULE_TYPE_OPTIONS: Array<{
-  label: string;
-  value: "static" | "dynamic";
-}> = [
-  { label: BUNDLE_COPY.adminEditor.ruleTypeStatic, value: "static" },
-  { label: BUNDLE_COPY.adminEditor.ruleTypeDynamic, value: "dynamic" },
-];
+/** No brand is the empty string — `brandSlug: undefined` in the payload. */
+const NO_BRAND_OPTION_VALUE = "";
 
-export interface AdminBundleEditorViewProps {
+export interface AdminBundleEditorViewProps
+  extends Omit<StackedViewShellProps, "sections"> {
   /** When set, the form loads an existing bundle; otherwise it runs as "new". */
   bundleId?: string;
   /** Called after a successful create with the new bundle id. */
@@ -78,45 +77,38 @@ export interface AdminBundleEditorViewProps {
    * products.
    */
   scope?: "admin" | "store";
+  /** Render bare, for a drawer that supplies its own chrome. */
+  embedded?: boolean;
 }
 
-interface FormState {
+/** The draft this form edits — flat, matching the schema's shape. */
+interface Values {
+  [key: string]: unknown;
   name: string;
-  description: string;
   priceRupees: string;
+  description: string;
   ruleType: "static" | "dynamic";
   productIds: string[];
   dynamicRule: DynamicRule;
-  isActive: boolean;
   coverImage: string;
   brandSlug: string;
+  isActive: boolean;
 }
 
-const EMPTY_FORM: FormState = {
+const EMPTY_FORM: Values = {
   name: "",
-  description: "",
   priceRupees: "",
+  description: "",
   ruleType: "static",
   productIds: [],
   dynamicRule: DEFAULT_DYNAMIC_RULE,
-  isActive: true,
   coverImage: "",
   brandSlug: "",
+  isActive: true,
 };
 
-const NO_BRAND_OPTION_VALUE = "";
-
-const bundleFormSchema = z.object({
-  name: z.string().min(1, "Bundle name is required").max(150),
-  description: z.string().max(2000).optional().or(z.literal("")),
-  priceRupees: z.string().regex(/^\d+(\.\d{1,2})?$/, "Enter a valid price"),
-  ruleType: z.enum(["static", "dynamic"]),
-  productIds: z.array(z.string()),
-  isActive: z.boolean(),
-  coverImage: z.string().optional().or(z.literal("")),
-}).passthrough();
-
-function bundleToForm(bundle: CategoryDocument | null): FormState {
+/** What the API returns for one bundle — replaces an `as any` at the read. */
+function bundleToForm(bundle: CategoryDocument | null): Values {
   if (!bundle) return EMPTY_FORM;
   const rule = bundle.bundleQueryRule;
   const isDynamic = rule?.type === "dynamic";
@@ -124,26 +116,16 @@ function bundleToForm(bundle: CategoryDocument | null): FormState {
   const idsFromMirror = bundle.bundleProductIds ?? [];
   return {
     name: bundle.name ?? "",
-    description: bundle.description ?? "",
     priceRupees:
-      typeof bundle.bundlePrice === "number"
-        ? String(bundle.bundlePrice)
-        : "",
+      typeof bundle.bundlePrice === "number" ? String(bundle.bundlePrice) : "",
+    description: bundle.description ?? "",
     ruleType: isDynamic ? "dynamic" : "static",
     productIds: fromRule.length ? fromRule : idsFromMirror,
     dynamicRule: isDynamic ? (rule as DynamicRule) : DEFAULT_DYNAMIC_RULE,
-    isActive: bundle.isActive !== false,
     coverImage: bundle.display?.coverImage ?? "",
     brandSlug: bundle.brandSlug ?? "",
+    isActive: bundle.isActive !== false,
   };
-}
-
-function parsePriceRupees(input: string): number | null {
-  const trimmed = input.trim();
-  if (!trimmed) return null;
-  const n = Number(trimmed);
-  if (!Number.isFinite(n) || n <= 0) return null;
-  return Math.round(n * 100) / 100;
 }
 
 export function AdminBundleEditorView({
@@ -151,6 +133,8 @@ export function AdminBundleEditorView({
   onSaved,
   onDeleted,
   scope = "admin",
+  embedded,
+  ...rest
 }: AdminBundleEditorViewProps) {
   const isEdit = Boolean(bundleId);
   const endpoints = React.useMemo(
@@ -161,106 +145,76 @@ export function AdminBundleEditorView({
     [scope],
   );
 
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
-  const [loading, setLoading] = useState(isEdit);
-  const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
-  const formHelpersRef = React.useRef<UseFormShellStateResult | null>(null);
-  const setFieldError = (path: string, message: string) =>
-    formHelpersRef.current?.setFieldError(path, message);
-  const clearErrors = () => formHelpersRef.current?.clearErrors();
-  const { showToast } = useToast();
+  const [form, setForm] = React.useState<Values>(EMPTY_FORM);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+  const patch = (partial: Partial<Values>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
 
   const brandsQuery = useQuery({
     queryKey: ["admin", "brands", "picker"],
     queryFn: async () => {
-      const res = (await apiClient.get(ADMIN_ENDPOINTS.BRANDS)) as { data?: { items?: CategoryDocument[] } };
+      const res = (await apiClient.get(ADMIN_ENDPOINTS.BRANDS)) as {
+        data?: { items?: CategoryDocument[] };
+      };
       return res?.data?.items ?? [];
     },
   });
-  const brandOptions = [
-    { label: "No specific brand", value: NO_BRAND_OPTION_VALUE },
-    ...(brandsQuery.data ?? []).map((b) => ({ label: b.name, value: b.slug ?? b.id })),
-  ];
 
-  // Load existing bundle on mount when editing
-  useEffect(() => {
-    if (!bundleId) return;
-    let cancelled = false;
-    setLoading(true);
-    apiClient
-      .get(endpoints.byId(encodeURIComponent(bundleId)))
-      .then((res) => {
-        if (cancelled) return;
-        const json = res as { data?: CategoryDocument };
-        const doc = json?.data ?? null;
-        setForm(bundleToForm(doc));
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        setApiError(
-          err instanceof Error
-            ? err.message
-            : BUNDLE_COPY.adminEditor.errors.loadFailed,
-        );
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [bundleId, endpoints]);
+  const brandOptions = React.useMemo(
+    () => [
+      { label: "No specific brand", value: NO_BRAND_OPTION_VALUE },
+      ...(brandsQuery.data ?? []).map((b) => ({
+        label: b.name,
+        value: b.slug ?? b.id,
+      })),
+    ],
+    [brandsQuery.data],
+  );
 
-  const handleSave = useCallback(async () => {
-    // Save is a type="button" onClick — <Form>'s native submit never fires,
-    // so the error summary has to be unhidden explicitly.
-    formHelpersRef.current?.markSubmitAttempted();
-    clearErrors();
-    setApiError(null);
-    const price = parsePriceRupees(form.priceRupees);
-    let hasError = false;
-    if (!form.name.trim()) {
-      setFieldError("name", BUNDLE_COPY.adminEditor.errors.nameRequired);
-      hasError = true;
-    }
-    if (price === null) {
-      // Keyed on the SCHEMA field name, not "price". The draft, the schema and
-      // the state all call it priceRupees; only the control was named "price",
-      // so the day the schema is actually executed (it is declared and never
-      // parsed today) applyZodIssues would write to priceRupees and this input
-      // would never show it.
-      setFieldError("priceRupees", BUNDLE_COPY.adminEditor.errors.priceInvalid);
-      hasError = true;
-    }
-    if (hasError) return;
+  const bundleQuery = useQuery({
+    queryKey: ["bundle", scope, bundleId],
+    queryFn: async () => {
+      const res = (await apiClient.get(
+        endpoints.byId(encodeURIComponent(bundleId!)),
+      )) as { data?: CategoryDocument };
+      return res?.data ?? null;
+    },
+    enabled: isEdit,
+  });
 
-    setSaving(true);
-    try {
-      // SB-UNI-5 2026-05-13 — static vs dynamic rule branching.
-      const bundleQueryRule: BundleQueryRule =
-        form.ruleType === "dynamic"
-          ? form.dynamicRule
-          : {
-              type: "static",
-              productIds: form.productIds,
-            };
-      // For static rules, the mirror equals the picker selection. For dynamic
-      // rules, the Function resolver writes the mirror; we send an empty list
-      // on create + leave it untouched on update so we don't clobber the
-      // resolver's cache.
-      const bundleProductIds =
-        form.ruleType === "static" ? form.productIds : [];
+  React.useEffect(() => {
+    if (bundleQuery.data === undefined) return;
+    setForm(bundleToForm(bundleQuery.data));
+  }, [bundleQuery.data]);
+
+  const saveMutation = useApiMutation({
+    errorMessage: BUNDLE_COPY.adminEditor.errors.saveFailed,
+    successMessage: isEdit ? "Bundle saved." : "Bundle created.",
+    mutationFn: async () => {
+      /*
+       * `visibleValues` decides which member source is sent: the picker is on
+       * screen for a static rule and the query editor for a dynamic one, and
+       * whichever is hidden is absent from the draft rather than filtered out
+       * again here by a second copy of the same condition.
+       */
+      const draft = visibleValues(bundleFormSchema, form) as Partial<Values>;
+      const isStatic = form.ruleType === "static";
+      const bundleQueryRule: BundleQueryRule = isStatic
+        ? { type: "static", productIds: draft.productIds ?? [] }
+        : (draft.dynamicRule ?? DEFAULT_DYNAMIC_RULE);
 
       const body = {
         name: form.name.trim(),
         description: form.description.trim() || undefined,
         bundleKind: BUNDLE_KIND_SPECIAL,
-        bundlePrice: price,
+        bundlePrice: Number(form.priceRupees),
         bundleQueryRule,
-        bundleProductIds,
+        /*
+         * For a static rule the mirror equals the picker selection. For a
+         * dynamic one the Function resolver owns the mirror; an empty list on
+         * create leaves it for the resolver rather than clobbering its cache.
+         */
+        bundleProductIds: isStatic ? (draft.productIds ?? []) : [],
         display: form.coverImage.trim()
           ? { coverImage: form.coverImage.trim() }
           : undefined,
@@ -269,248 +223,125 @@ export function AdminBundleEditorView({
       };
 
       if (isEdit && bundleId) {
-        await apiClient.put(
-          endpoints.byId(encodeURIComponent(bundleId)),
-          body,
-        );
-        showToast("Bundle saved.", "success");
-        onSaved?.(bundleId);
-      } else {
-        const res = (await apiClient.post(endpoints.collection, body)) as {
-          data?: CategoryDocument;
-        };
-        const newId = res?.data?.id;
-        showToast("Bundle created.", "success");
-        if (newId) onSaved?.(newId);
+        return apiClient.put(endpoints.byId(encodeURIComponent(bundleId)), body);
       }
-    } catch (err) {
-      void normalizeError(err);
-      const msg = err instanceof Error ? err.message : BUNDLE_COPY.adminEditor.errors.saveFailed;
-      setApiError(msg);
-      showToast(msg, "error");
-    } finally {
-      setSaving(false);
-    }
-  }, [form, bundleId, isEdit, onSaved, clearErrors, setFieldError, showToast, endpoints]);
+      return apiClient.post(endpoints.collection, body);
+    },
+    onSuccess: (res: JsonValue) => {
+      const created = (res as { data?: { id?: string } })?.data?.id;
+      const id = bundleId ?? created;
+      if (onSaved && id) onSaved(id);
+    },
+  });
 
-  const handleDelete = useCallback(async () => {
-    if (!bundleId) return;
-    setDeleting(true);
-    setApiError(null);
-    try {
-      await apiClient.delete(
-        endpoints.byId(encodeURIComponent(bundleId)),
-      );
-      showToast("Bundle deleted.", "success");
-      setDeleteConfirmOpen(false);
-      onDeleted?.();
-    } catch (err) {
-      void normalizeError(err);
-      const msg = err instanceof Error ? err.message : BUNDLE_COPY.adminEditor.errors.deleteFailed;
-      setApiError(msg);
-      showToast(msg, "error");
-    } finally {
-      setDeleting(false);
-    }
-  }, [bundleId, onDeleted, showToast, endpoints]);
+  const deleteMutation = useApiMutation({
+    errorMessage: BUNDLE_COPY.adminEditor.errors.deleteFailed,
+    successMessage: "Bundle deleted.",
+    mutationFn: () =>
+      apiClient.delete(endpoints.byId(encodeURIComponent(bundleId!))),
+    onSuccess: () => {
+      if (onDeleted) onDeleted();
+    },
+  });
 
-  if (loading) {
-    return (
-      <Section padding="y-2xl">
-        <Container size="lg">
-          <Text>{BUNDLE_COPY.adminEditor.loading}</Text>
-        </Container>
-      </Section>
-    );
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(bundleFormSchema, {
+        options: { brandSlug: brandOptions, ruleType: BUNDLE_RULE_TYPE_OPTIONS },
+        renderers: {
+          productIds: ({ values, onChange }) => (
+            <ProductInlineSelect
+              scope={scope}
+              multiple
+              value={values.productIds}
+              onChange={(ids: string[]) => onChange({ productIds: ids })}
+              placeholder="Search and select products…"
+            />
+          ),
+          dynamicRule: ({ values, onChange }) => (
+            <BundleDynamicRuleEditor
+              value={values.dynamicRule}
+              onChange={(next: DynamicRule) => onChange({ dynamicRule: next })}
+            />
+          ),
+        },
+      }),
+    [brandOptions, scope],
+  );
+
+  const nav = useSectionFormNav(sections, form, { scope: "admin:bundle-editor" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(bundleFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
+  const onSubmit = () => {
+    clearErrors();
+    const parsed = bundleFormSchema.safeParse(visibleValues(bundleFormSchema, form));
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
+
+  const isSubmitting = saveMutation.isPending || bundleQuery.isLoading;
+
+  const formSection = (
+    <>
+      <FormShellContext.Provider value={shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<Values>
+          sections={sections}
+          values={form}
+          onChange={patch}
+          onSubmit={onSubmit}
+          schema={bundleFormSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={isSubmitting}
+          submitLabel={BUNDLE_COPY.adminEditor.saveButton(false, isEdit)}
+          destructiveAction={
+            isEdit
+              ? {
+                  label: BUNDLE_COPY.adminEditor.deleteButton(false),
+                  onClick: () => setDeleteConfirmOpen(true),
+                }
+              : undefined
+          }
+        />
+      </FormShellContext.Provider>
+      {deleteConfirmOpen && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete this bundle?"
+          message={BUNDLE_COPY.adminEditor.deleteConfirm}
+          onConfirm={() => {
+            deleteMutation.mutate();
+            setDeleteConfirmOpen(false);
+          }}
+          onClose={() => setDeleteConfirmOpen(false)}
+          isDeleting={deleteMutation.isPending}
+        />
+      )}
+    </>
+  );
+
+  if (embedded) {
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formSection}</Div>;
   }
 
   return (
-    <Form schema={bundleFormSchema} onSubmit={(e) => e.preventDefault()}>{(helpers) => {
-      formHelpersRef.current = helpers;
-      return (
-      <Section padding="y-2xl">
-        <Container size="lg">
-          <Stack gap="lg">
-            <Row gap="sm" align="center" justify="between" wrap>
-              <Heading
-                level={1} size="2xl" weight="semibold" color="primary">
-                {isEdit
-                  ? BUNDLE_COPY.adminEditorTitleEdit
-                  : BUNDLE_COPY.adminEditorTitleNew}
-              </Heading>
-              {isEdit && (
-                <Button
-                  variant="danger"
-                  onClick={() => setDeleteConfirmOpen(true)}
-                  disabled={deleting}
-                >
-                  {BUNDLE_COPY.adminEditor.deleteButton(deleting)}
-                </Button>
-              )}
-            </Row>
-            <ConfirmDeleteModal
-              isOpen={deleteConfirmOpen}
-              onClose={() => setDeleteConfirmOpen(false)}
-              onConfirm={handleDelete}
-              title="Delete this bundle?"
-              message={BUNDLE_COPY.adminEditor.deleteConfirm}
-              isDeleting={deleting}
-            />
-
-            {apiError && (
-              <Text color="danger" role="alert">
-                {apiError}
-              </Text>
-            )}
-
-            <Stack gap="md">
-              <FieldInput
-                name="name"
-                label={BUNDLE_COPY.adminEditor.fields.nameLabel}
-                value={form.name}
-                onChange={(v) => setForm((f) => ({ ...f, name: v }))}
-                placeholder={BUNDLE_COPY.adminEditor.fields.namePlaceholder}
-                disabled={saving}
-                required
-              />
-
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">
-                  {BUNDLE_COPY.adminEditor.fields.descriptionLabel}
-                </Text>
-                <Textarea
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, description: e.target.value }))
-                  }
-                  placeholder={
-                    BUNDLE_COPY.adminEditor.fields.descriptionPlaceholder
-                  }
-                  rows={4}
-                  disabled={saving}
-                />
-              </Stack>
-
-              <Stack gap="xs">
-                <FieldInput
-                  name="priceRupees"
-                  label={BUNDLE_COPY.adminEditor.fields.priceLabel}
-                  type="number"
-                  inputMode="decimal"
-                  min={1}
-                  step={1}
-                  value={form.priceRupees}
-                  onChange={(v) =>
-                    setForm((f) => ({ ...f, priceRupees: v }))
-                  }
-                  placeholder={BUNDLE_COPY.adminEditor.fields.pricePlaceholder}
-                  disabled={saving}
-                  required
-                />
-              </Stack>
-
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">
-                  {BUNDLE_COPY.adminEditor.fields.coverImageLabel}
-                </Text>
-                <Input
-                  type="url"
-                  value={form.coverImage}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, coverImage: e.target.value }))
-                  }
-                  placeholder="https://…"
-                  disabled={saving}
-                />
-              </Stack>
-
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">
-                  Brand
-                </Text>
-                <Select<string>
-                  options={brandOptions}
-                  value={form.brandSlug}
-                  onValueChange={(next) => setForm((f) => ({ ...f, brandSlug: next }))}
-                  disabled={saving || brandsQuery.isLoading}
-                  aria-label="Brand"
-                />
-              </Stack>
-
-              <Checkbox
-                checked={form.isActive}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, isActive: e.target.checked }))
-                }
-                disabled={saving}
-                label={BUNDLE_COPY.adminEditor.fields.activeLabel}
-              />
-
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">
-                  {BUNDLE_COPY.adminEditor.ruleTypeLabel}
-                </Text>
-                <Select<"static" | "dynamic">
-                  options={RULE_TYPE_OPTIONS}
-                  value={form.ruleType}
-                  onValueChange={(next) =>
-                    setForm((f) => ({ ...f, ruleType: next }))
-                  }
-                  disabled={saving}
-                  aria-label={BUNDLE_COPY.adminEditor.ruleTypeLabel}
-                />
-              </Stack>
-
-              {form.ruleType === "static" ? (
-                <Stack gap="xs">
-                  <Text size="sm" weight="semibold">
-                    {BUNDLE_COPY.adminEditor.ruleTypeStatic} products ({BUNDLE_MIN_ITEMS}–{BUNDLE_MAX_ITEMS})
-                  </Text>
-                  <ProductInlineSelect
-                    scope={scope}
-                    multiple
-                    value={form.productIds}
-                    onChange={(ids) => setForm((f) => ({ ...f, productIds: ids }))}
-                    disabled={saving}
-                    placeholder="Search and select products…"
-                  />
-                  {form.productIds.length > 0 && form.productIds.length < BUNDLE_MIN_ITEMS && (
-                    <Text size="xs" color="danger">
-                      Select at least {BUNDLE_MIN_ITEMS} products (currently {form.productIds.length}).
-                    </Text>
-                  )}
-                  {form.productIds.length > BUNDLE_MAX_ITEMS && (
-                    <Text size="xs" color="danger">
-                      Maximum {BUNDLE_MAX_ITEMS} products allowed (currently {form.productIds.length}).
-                    </Text>
-                  )}
-                </Stack>
-              ) : (
-                <BundleDynamicRuleEditor
-                  value={form.dynamicRule}
-                  onChange={(next) =>
-                    setForm((f) => ({ ...f, dynamicRule: next }))
-                  }
-                  disabled={saving}
-                />
-              )}
-            </Stack>
-
-            <FormErrorSummary />
-            <Row gap="sm" align="center" justify="end">
-              <Button
-                variant="primary"
-                onClick={handleSave}
-                disabled={saving}
-                aria-busy={saving}
-              >
-                {BUNDLE_COPY.adminEditor.saveButton(saving, isEdit)}
-              </Button>
-            </Row>
-          </Stack>
-        </Container>
-      </Section>
-      );
-    }}</Form>
+    <StackedViewShell
+      portal={scope === "store" ? "seller" : "admin"}
+      {...rest}
+      title={
+        isEdit
+          ? BUNDLE_COPY.adminEditorTitleEdit
+          : BUNDLE_COPY.adminEditorTitleNew
+      }
+      sections={[formSection]}
+    />
   );
 }

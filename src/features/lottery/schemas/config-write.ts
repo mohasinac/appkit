@@ -23,6 +23,17 @@
  * `weight` is absent for the same reason: it is derived from price
  * server-side and is never client input.
  *
+ * ## One schema, not two
+ *
+ * There was a second one — `lotteryConfigFormSchema`, in
+ * `_internal/shared/features/lottery/config-form.ts`. `LotteryAdminEditView`
+ * passed THAT to `<Form>` and parsed THIS in its submit handler, so the form
+ * schema's rules (the duplicate-slot check, the free-lottery check) had never
+ * once executed. It was deleted 2026-08-30 and its annotations moved here:
+ * `annotate()` keys a WeakMap by schema instance and the server ignores the
+ * registry entirely, so carrying layout metadata on the write contract costs
+ * the route nothing and removes the opportunity for the two to disagree.
+ *
  * ## Merging is BY `slotNumber`, not by index
  *
  * Array position is not identity. An admin who deletes slot 3 shifts every
@@ -47,6 +58,7 @@
  */
 
 import { z } from "zod";
+import { annotate } from "../../shell/field-ui-meta";
 import type { LotteryConfig, LotterySlot } from "../types/index";
 
 /** Mirrors `LotteryPricingMode`. */
@@ -65,17 +77,58 @@ export const lotterySlotWriteSchema = z
   })
   .strict();
 
+/**
+ * 🛑 `annotate()` must be the OUTERMOST call on each field — it keys a WeakMap
+ * by schema instance and every zod wrapper returns a new one.
+ */
 export const lotteryConfigWriteSchema = z
   .object({
-    slots: z
-      .array(lotterySlotWriteSchema)
-      .min(1, "A lottery needs at least one slot.")
-      .max(200, "A lottery cannot exceed 200 slots."),
-    pricingMode: pricingModeSchema,
-    uniformPrice: z.coerce.number().min(0).optional(),
-    drawWindowDurationMinutes: z.coerce.number().int().min(1).max(1440),
-    maxPullsPerTransaction: z.coerce.number().int().min(1).max(200),
-    maxPullsPerUser: z.coerce.number().int().min(1).max(200),
+    pricingMode: annotate(pricingModeSchema, {
+      section: "pricing", sectionLabel: "Pricing", sectionRequired: true,
+      quick: true, order: 1, row: "pair", label: "Pricing mode",
+    }),
+    /*
+     * Hidden under variable pricing, and therefore not sent — `visibleValues`
+     * drops it, and the refine below only demands it in uniform mode. The two
+     * halves have to agree or a hidden field fails validation invisibly.
+     */
+    uniformPrice: annotate(z.coerce.number().min(0).optional(), {
+      section: "pricing", order: 2, row: "pair", kind: "number",
+      label: "Price per slot (₹)",
+      when: (v) => v.pricingMode === "uniform",
+    }),
+    drawWindowDurationMinutes: annotate(
+      z.coerce.number().int().min(1).max(1440),
+      {
+        section: "limits", sectionLabel: "Draw rules", order: 1, row: "third",
+        kind: "number", label: "Draw window (minutes)",
+        help: "How long a buyer has to complete a pull once it starts.",
+      },
+    ),
+    maxPullsPerTransaction: annotate(z.coerce.number().int().min(1).max(200), {
+      section: "limits", order: 2, row: "third", kind: "number",
+      label: "Max pulls per transaction",
+    }),
+    maxPullsPerUser: annotate(z.coerce.number().int().min(1).max(200), {
+      section: "limits", order: 3, row: "third", kind: "number",
+      label: "Max pulls per user",
+    }),
+    slots: annotate(
+      z
+        .array(lotterySlotWriteSchema)
+        .min(1, "A lottery needs at least one slot.")
+        .max(200, "A lottery cannot exceed 200 slots."),
+      {
+        section: "slots", sectionLabel: "Slots", sectionRequired: true,
+        order: 1, row: "full", kind: "list", label: "Prize slots",
+        /*
+         * The slot table holds uncommitted rows — a name half-typed, an image
+         * URL pasted but not yet saved. `<Collapse>` unmounts its children, so
+         * without this a collapse discards them.
+         */
+        sectionKeepMounted: true,
+      },
+    ),
   })
   .strict()
   .refine(

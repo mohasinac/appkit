@@ -1,36 +1,37 @@
 "use client";
 
+/**
+ * AdminTesterChecklistItemEditorView — sectionised 2026-08-30.
+ *
+ * ## What changed, and why it was invisible
+ *
+ * The schema used to be a five-field `.passthrough()` stub declared in this
+ * file, handed to `<Form schema>`, and never parsed — a hand-rolled `canSave`
+ * ran instead. Two of the five fields (`groupKey`, `pageKey`) were raw
+ * `<Input>` with no `name`, so an error could not have reached them anyway,
+ * and `href` — the "Go test this →" deep link — was accepted unchecked while
+ * `audit-tester-checklist-hrefs` guards the seeded ones.
+ *
+ * `canSave` is gone with it. It tested three of eleven fields and disabled the
+ * button with no way to tell which one it was waiting on; the schema now
+ * reports what is wrong, on the field.
+ */
+
 import type { JsonValue } from "@mohasinac/appkit/client";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import {
-  Button,
-  ConfirmDeleteModal,
-  Div,
-  Form,
-  Input,
-  Row,
-  Stack,
-  StackedViewShell,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { ConfirmDeleteModal, Div, StackedViewShell, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FieldTextarea, FormErrorSummary } from "../../../ui/forms";
+import { FieldInput, FormErrorSummary } from "../../../ui/forms";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-
-const checklistItemFormSchema = z.object({
-  groupKey: z.string().min(1, "Group key is required").max(100),
-  groupLabel: z.string().min(1, "Group label is required").max(200),
-  pageKey: z.string().min(1, "Page key is required").max(100),
-  pageLabel: z.string().min(1, "Page label is required").max(200),
-  label: z.string().min(3, "Label must be at least 3 characters").max(500),
-}).passthrough();
+import { checklistItemFormSchema } from "../../tester/schemas/checklist-item-form";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -46,6 +47,51 @@ export interface AdminTesterChecklistItemEditorViewProps
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
+}
+
+/** The draft this form edits — flat, matching the schema's shape. */
+interface Values {
+  [key: string]: unknown;
+  label: string;
+  description: string;
+  href: string;
+  groupLabel: string;
+  groupKey: string;
+  pageLabel: string;
+  pageKey: string;
+  order: number;
+  phase: number;
+  isActive: boolean;
+  adminOnly: boolean;
+}
+
+const EMPTY_FORM: Values = {
+  label: "",
+  description: "",
+  href: "",
+  groupLabel: "",
+  groupKey: "",
+  pageLabel: "",
+  pageKey: "",
+  order: 0,
+  phase: 1,
+  isActive: true,
+  adminOnly: false,
+};
+
+/** What the API returns for one checklist item. */
+interface ChecklistItemRecord {
+  label?: string;
+  description?: string;
+  href?: string;
+  groupLabel?: string;
+  groupKey?: string;
+  pageLabel?: string;
+  pageKey?: string;
+  order?: number;
+  phase?: number;
+  isActive?: boolean;
+  adminOnly?: boolean;
 }
 
 function slugifyKey(str: string): string {
@@ -65,87 +111,84 @@ export function AdminTesterChecklistItemEditorView({
 }: AdminTesterChecklistItemEditorViewProps) {
   const isEdit = Boolean(itemId);
 
-  const [groupKey, setGroupKey] = React.useState("");
-  const [groupLabel, setGroupLabel] = React.useState("");
-  const [pageKey, setPageKey] = React.useState("");
-  const [pageLabel, setPageLabel] = React.useState("");
-  const [label, setLabel] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [href, setHref] = React.useState("");
-  const [order, setOrder] = React.useState(0);
-  const [phase, setPhase] = React.useState(1);
-  const [isActive, setIsActive] = React.useState(true);
-  const [adminOnly, setAdminOnly] = React.useState(false);
+  const [form, setForm] = React.useState<Values>(EMPTY_FORM);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
+  const patch = (partial: Partial<Values>) =>
+    setForm((prev) => Object.assign({}, prev, partial));
 
   const { showToast } = useToast();
 
   const itemQuery = useQuery({
     queryKey: ["admin", "tester-checklist-items", itemId],
     queryFn: async () => {
-      const res = await apiClient.get(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!));
-      return (res as any)?.data ?? res;
+      const res = await apiClient.get(
+        ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!),
+      );
+      return ((res as { data?: ChecklistItemRecord })?.data ??
+        res) as ChecklistItemRecord;
     },
     enabled: isEdit,
   });
 
   React.useEffect(() => {
-    const item = itemQuery.data as any;
+    const item = itemQuery.data;
     if (!item) return;
-    setGroupKey(item.groupKey ?? "");
-    setGroupLabel(item.groupLabel ?? "");
-    setPageKey(item.pageKey ?? "");
-    setPageLabel(item.pageLabel ?? "");
-    setLabel(item.label ?? "");
-    setDescription(item.description ?? "");
-    setHref(item.href ?? "");
-    setOrder(typeof item.order === "number" ? item.order : 0);
-    setPhase(typeof item.phase === "number" ? item.phase : 1);
-    setIsActive(item.isActive ?? true);
-    setAdminOnly(item.adminOnly ?? false);
+    patch({
+      label: item.label ?? "",
+      description: item.description ?? "",
+      href: item.href ?? "",
+      groupLabel: item.groupLabel ?? "",
+      groupKey: item.groupKey ?? "",
+      pageLabel: item.pageLabel ?? "",
+      pageKey: item.pageKey ?? "",
+      order: typeof item.order === "number" ? item.order : 0,
+      phase: typeof item.phase === "number" ? item.phase : 1,
+      isActive: item.isActive ?? true,
+      adminOnly: item.adminOnly ?? false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemQuery.data]);
-
-  const handleGroupLabelChange = (value: string) => {
-    setGroupLabel(value);
-    if (!isEdit) setGroupKey(slugifyKey(value));
-  };
-
-  const handlePageLabelChange = (value: string) => {
-    setPageLabel(value);
-    if (!isEdit) setPageKey(slugifyKey(value));
-  };
 
   const saveMutation = useApiMutation({
     errorMessage: "Failed to save checklist item.",
     mutationFn: async () => {
+      const draft = visibleValues(checklistItemFormSchema, form) as Values;
       const payload: Record<string, JsonValue> = {
-        groupKey: groupKey || slugifyKey(groupLabel),
-        groupLabel,
-        pageKey: pageKey || slugifyKey(pageLabel),
-        pageLabel,
-        label,
-        description: description || "",
-        href: href || "",
-        order,
-        phase,
-        isActive,
-        adminOnly,
+        groupKey: draft.groupKey,
+        groupLabel: draft.groupLabel,
+        pageKey: draft.pageKey,
+        pageLabel: draft.pageLabel,
+        label: draft.label,
+        description: draft.description,
+        href: draft.href,
+        order: draft.order,
+        phase: draft.phase,
+        isActive: draft.isActive,
+        adminOnly: draft.adminOnly,
       };
       if (isEdit) {
-        return apiClient.put(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!), payload);
+        return apiClient.put(
+          ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!),
+          payload,
+        );
       }
       return apiClient.post(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEMS, payload);
     },
     onSuccess: (res: JsonValue) => {
-      const id = (res as any)?.data?.id ?? (res as any)?.id ?? itemId;
-      showToast(isEdit ? "Checklist item updated." : "Checklist item created.", "success");
+      const created = (res as { data?: { id?: string }; id?: string })?.data?.id;
+      const id = itemId ?? created;
+      showToast(
+        isEdit ? "Checklist item updated." : "Checklist item created.",
+        "success",
+      );
       if (onSaved && id) onSaved(id);
     },
   });
 
   const deleteMutation = useApiMutation({
     errorMessage: "Failed to delete checklist item.",
-    mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!)),
+    mutationFn: () =>
+      apiClient.delete(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!)),
     onSuccess: () => {
       showToast("Checklist item deleted.", "success");
       if (onDeleted) onDeleted();
@@ -153,148 +196,118 @@ export function AdminTesterChecklistItemEditorView({
   });
 
   const isSubmitting = saveMutation.isPending || itemQuery.isLoading;
-  const canSave = Boolean(groupLabel.trim()) && Boolean(pageLabel.trim()) && Boolean(label.trim());
+
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<Values>(checklistItemFormSchema, {
+        renderers: {
+          /*
+           * The two keys stay editable, and typing a LABEL fills the matching
+           * key until the item exists — after that a key is what responses are
+           * grouped by, so an edit would orphan them.
+           */
+          groupLabel: ({ values, onChange, errors }) => (
+            <FieldInput
+              name="groupLabel"
+              label="Group"
+              required
+              hint="Top-level accordion section on the Tester Hub."
+              value={values.groupLabel}
+              error={errors.groupLabel}
+              onChange={(v) =>
+                onChange(
+                  isEdit
+                    ? { groupLabel: v }
+                    : { groupLabel: v, groupKey: slugifyKey(v) },
+                )
+              }
+            />
+          ),
+          pageLabel: ({ values, onChange, errors }) => (
+            <FieldInput
+              name="pageLabel"
+              label="Page"
+              required
+              hint="Sub-accordion within the group."
+              value={values.pageLabel}
+              error={errors.pageLabel}
+              onChange={(v) =>
+                onChange(
+                  isEdit
+                    ? { pageLabel: v }
+                    : { pageLabel: v, pageKey: slugifyKey(v) },
+                )
+              }
+            />
+          ),
+        },
+      }),
+    [isEdit],
+  );
+
+  const nav = useSectionFormNav(sections, form, {
+    scope: "admin:tester-checklist-item-editor",
+  });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(
+    checklistItemFormSchema,
+    {
+      sections: nav.sectionMeta,
+      onGoToSection: nav.goToSection,
+      fieldToSectionIndex: nav.fieldToSectionIndex,
+    },
+  );
+
+  const onSubmit = () => {
+    clearErrors();
+    const parsed = checklistItemFormSchema.safeParse(
+      visibleValues(checklistItemFormSchema, form),
+    );
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  };
 
   const formSection = (
     <>
-      <Form
-        key="tester-checklist-item-form"
-        schema={checklistItemFormSchema}
-        onSubmit={(e) => e.preventDefault()}
-        spacing="md"
-      >
-        {({ setFieldError, clearErrors }) => (
-          <>
-            <Div layout="grid" gap="4" className="grid-cols-2">
-              <FieldInput
-                name="groupLabel"
-                label="Group"
-                value={groupLabel}
-                onChange={handleGroupLabelChange}
-                required
-                placeholder="e.g. Buying"
-                hint="Top-level accordion section on the Tester Hub."
-              />
-              <Input
-                label="Group key"
-                value={groupKey}
-                onChange={(e) => setGroupKey(e.target.value)}
-                placeholder="buying"
-                helperText="Auto-generated from the group name."
-              />
-            </Div>
-
-            <Div layout="grid" gap="4" className="grid-cols-2">
-              <FieldInput
-                name="pageLabel"
-                label="Page"
-                value={pageLabel}
-                onChange={handlePageLabelChange}
-                required
-                placeholder="e.g. Checkout"
-                hint="Sub-accordion within the group."
-              />
-              <Input
-                label="Page key"
-                value={pageKey}
-                onChange={(e) => setPageKey(e.target.value)}
-                placeholder="checkout"
-                helperText="Auto-generated from the page name."
-              />
-            </Div>
-
-            <FieldInput
-              name="label"
-              label="Test case (Yes/No question)"
-              value={label}
-              onChange={setLabel}
-              required
-              placeholder="e.g. Coupon discount is correctly reflected in the order total"
-            />
-
-            <FieldTextarea
-              name="description"
-              label="Description (optional)"
-              value={description}
-              onChange={setDescription}
-              placeholder="Extra context for the tester."
-            />
-
-            <FieldInput
-              name="href"
-              label="Deep link (optional)"
-              value={href}
-              onChange={setHref}
-              placeholder="/cart"
-              hint="Jumps the tester straight to the feature being tested."
-            />
-
-            <Div layout="grid" gap="4" className="grid-cols-2">
-              <Input
-                label="Display order"
-                value={String(order)}
-                onChange={(e) => setOrder(parseInt(e.target.value, 10) || 0)}
-                type="number"
-                min={0}
-                helperText="Lower = shown first within the page."
-              />
-              <Input
-                label="Phase"
-                value={String(phase)}
-                onChange={(e) => setPhase(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                type="number"
-                min={1}
-                helperText="Test batch this case belongs to — testers work through one phase at a time."
-              />
-            </Div>
-
-            <Stack className={`${__P.p4}`} gap="3" rounded="lg" border="default">
-              <Text size="sm" weight="medium" color="muted">Visibility</Text>
-              <Toggle label="Active (visible to testers)" checked={isActive} onChange={setIsActive} />
-              <Toggle
-                label="Admin-only (requires canTestAdmin)"
-                checked={adminOnly}
-                onChange={setAdminOnly}
-              />
-            </Stack>
-
-            <FormErrorSummary />
-            <Row gap="3" padding="t-xs">
-              <Button
-                type="submit"
-                isLoading={isSubmitting}
-                disabled={!canSave || isSubmitting}
-                onClick={() => {
-                  clearErrors();
-                  if (!label.trim()) { setFieldError("label", "Test case label is required"); return; }
-                  saveMutation.mutate();
-                }}
-              >
-                {isEdit ? "Save changes" : "Create checklist item"}
-              </Button>
-              {isEdit && (
-                <Button
-                  type="button"
-                  variant="danger"
-                  isLoading={deleteMutation.isPending}
-                  onClick={() => setDeleteConfirmOpen(true)}
-                >
-                  Delete
-                </Button>
-              )}
-            </Row>
-          </>
-        )}
-      </Form>
+      <FormShellContext.Provider value={shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<Values>
+          sections={sections}
+          values={form}
+          onChange={patch}
+          onSubmit={onSubmit}
+          schema={checklistItemFormSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={isSubmitting}
+          submitLabel={isEdit ? "Save changes" : "Create checklist item"}
+          destructiveAction={
+            isEdit
+              ? {
+                  label: "Delete checklist item",
+                  onClick: () => setDeleteConfirmOpen(true),
+                }
+              : undefined
+          }
+        />
+      </FormShellContext.Provider>
       {deleteConfirmOpen && (
         <ConfirmDeleteModal
           isOpen
-          title={ACTIONS.ADMIN["delete-checklist-item"].confirmation?.title ?? "Delete checklist item"}
+          title={
+            ACTIONS.ADMIN["delete-checklist-item"].confirmation?.title ??
+            "Delete checklist item"
+          }
           message={
             ACTIONS.ADMIN["delete-checklist-item"].confirmation?.body ??
             "Delete this checklist item? This cannot be undone."
           }
-          onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
+          onConfirm={() => {
+            deleteMutation.mutate();
+            setDeleteConfirmOpen(false);
+          }}
           onClose={() => setDeleteConfirmOpen(false)}
           isDeleting={deleteMutation.isPending}
         />
