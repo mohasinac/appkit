@@ -66,13 +66,45 @@ export type OrderCancelValues = z.infer<typeof orderCancelSchema>;
  * a `false` in it, it is a form that must not send.
  */
 export const paymentProofSchema = z.object({
+  /*
+   * The screenshot. It was the ONE thing the route hard-required
+   * (`MISSING_PROOF_URL`) and the one field this schema did not declare, so
+   * the page gated it with a toast instead of a field error — and the schema
+   * could never have reported the form's most important omission.
+   */
+  proofUrl: annotate(
+    z.string().min(1, "Upload a screenshot of the payment confirmation."),
+    {
+      section: "proof", sectionLabel: "Your payment", sectionRequired: true,
+      order: 1, row: "full", kind: "media",
+      label: "Payment screenshot (JPG/PNG/PDF)",
+      help: "A screenshot of the payment confirmation from your UPI app.",
+    },
+  ),
+  /*
+   * Optional, and format-checked when present.
+   *
+   * It was `.min(4)` REQUIRED here while the route never checked it and the
+   * page labelled it "(optional)" — three answers, and the schema's was
+   * unreachable because nothing parsed it. Required is wrong: `cash` is a
+   * manual payment method too and has no UTR, so demanding one would block
+   * every cash order. A short-but-non-empty reference is still a typo worth
+   * catching, which is what the refine keeps.
+   */
   transactionId: annotate(
     z
       .string()
       .trim()
-      .min(4, "Enter the UTR or reference number from your payment app.")
-      .max(120, "Keep the reference under 120 characters."),
-    { section: "proof", sectionLabel: "Your payment", sectionRequired: true, quick: true, order: 1, row: "pair" },
+      .max(120, "Keep the reference under 120 characters.")
+      .refine(
+        (v) => v === "" || v.length >= 4,
+        "Enter the full UTR or reference number from your payment app.",
+      )
+      .optional()
+      .or(z.literal("")),
+    { section: "proof", quick: true, order: 2, row: "pair",
+      label: "UTR / transaction ID",
+      help: "The reference shown in your UPI app. Leave blank for a cash payment." },
   ),
   /*
    * The UPI ID the buyer actually sent to. Compared against the store's
@@ -86,7 +118,9 @@ export const paymentProofSchema = z.object({
       .regex(/^[\w.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Enter the UPI ID you paid to, e.g. name@bank.")
       .optional()
       .or(z.literal("")),
-    { section: "proof", order: 2, row: "pair" },
+    { section: "proof", order: 3, row: "pair",
+      label: "UPI ID you paid from",
+      help: "Shown in your UPI app's confirmation — it helps us verify faster." },
   ),
   buyerMarkedPaid: annotate(
     z.literal(true, { errorMap: () => ({ message: "Confirm that you have sent the payment." }) }),

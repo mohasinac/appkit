@@ -1,6 +1,7 @@
 export * from "./firestore";
 
 import { z } from "zod";
+import { annotate } from "../../shell/field-ui-meta";
 
 // --- Sub-schemas --------------------------------------------------------------
 
@@ -58,10 +59,26 @@ export const userProfileSchema = z.object({
  * validation too.
  */
 export const updateProfileSchema = z.object({
-  displayName: z.string().min(1, "Enter your name").optional(),
-  phoneNumber: z.string().optional(),
-  bio: z.string().max(500, "Bio must be 500 characters or fewer").optional(),
-  profileIsPublic: z.boolean().optional(),
+  displayName: annotate(z.string().min(1, "Enter your name").optional(), {
+    section: "profile", sectionLabel: "Your details", sectionRequired: true,
+    quick: true, order: 1, row: "pair", label: "Display name",
+  }),
+  phoneNumber: annotate(z.string().optional(), {
+    section: "profile", quick: true, order: 2, row: "pair",
+    label: "Phone number", inputType: "tel",
+  }),
+  bio: annotate(
+    z.string().max(500, "Bio must be 500 characters or fewer").optional(),
+    {
+      section: "profile", order: 3, row: "full", kind: "textarea",
+      label: "Bio", help: "Up to 500 characters. Buyers see this on your public profile.",
+    },
+  ),
+  profileIsPublic: annotate(z.boolean().optional(), {
+    section: "visibility", sectionLabel: "Visibility", order: 1, row: "full",
+    label: "Public profile",
+    help: "When on, your profile is visible to other LetItRip users.",
+  }),
 });
 
 /**
@@ -77,13 +94,31 @@ export const updateProfileSchema = z.object({
  * credential, not chosen here.
  */
 export const changeEmailSchema = z.object({
-  newEmail: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(1, "Enter the new email address.")
-    .email("That doesn't look like an email address."),
-  emailPassword: z.string().min(1, "Enter your current password to confirm."),
+  newEmail: annotate(
+    z
+      .string()
+      .trim()
+      .toLowerCase()
+      .min(1, "Enter the new email address.")
+      .email("That doesn't look like an email address."),
+    {
+      section: "basics", sectionLabel: "Change email", sectionRequired: true,
+      order: 1, row: "full", label: "New email address", inputType: "email",
+    },
+  ),
+  /*
+   * 🛑 `inputType: "password"` is not cosmetic. Without it the generated
+   * control is a bare `<FieldInput>` with no `type`, which renders a password
+   * IN PLAINTEXT — the defect found the first time this generator met a
+   * credential field.
+   */
+  emailPassword: annotate(
+    z.string().min(1, "Enter your current password to confirm."),
+    {
+      section: "basics", order: 2, row: "full", label: "Current password",
+      inputType: "password",
+    },
+  ),
 });
 
 export type ChangeEmailValues = z.infer<typeof changeEmailSchema>;

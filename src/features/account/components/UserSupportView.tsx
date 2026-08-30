@@ -1,14 +1,18 @@
 "use client";
 
-import { Li, useApiMutation } from "@mohasinac/appkit/client";
-import React, { useState } from "react";
+import { Li, useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
+import React, { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Div, FormActions, Row, Select, SideDrawer, Span, Stack, Text, Ul, useToast } from "../../../ui";
-import { FieldInput } from "../../../ui/forms/FieldInput";
+import { Button, Div, Row, SideDrawer, Span, Stack, Text, Ul, useToast } from "../../../ui";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { apiClient } from "../../../http";
 import { supportTicketCreateSchema } from "../../support/schemas/ticket-create-form";
-import { ValidationError } from "../../../errors/validation-error";
+import { TicketCategoryValues } from "../../support/schemas/firestore";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
@@ -48,23 +52,45 @@ interface UserSupportResponse {
 
 // --- Constants ---------------------------------------------------------------
 
-const CATEGORY_OPTIONS = [
-  { label: "Order Issue", value: "order_issue" },
-  { label: "Billing / Payment", value: "billing_payment" },
-  { label: "Account", value: "account" },
-  { label: "Listing Dispute", value: "listing_dispute" },
-  { label: "Refund Request", value: "refund_request" },
-  { label: "Auction Dispute", value: "auction_dispute" },
+/**
+ * Category labels.
+ *
+ * Keyed off `TicketCategoryValues` rather than written as a parallel array, so
+ * a twelfth category cannot be added to the schema and silently omitted here —
+ * Root Cause #61, which the schema itself already guards on its own side.
+ *
+ * There are ten, so the generator renders this as a `PaginatedSelect`: it was
+ * a native `<Select>` with no `name`, which is over the five-option threshold
+ * AND unreachable by `applyZodIssues`.
+ */
+const CATEGORY_LABELS: Record<string, string> = {
+  [TicketCategoryValues.ORDER_ISSUE]: "Order issue",
+  [TicketCategoryValues.BILLING_PAYMENT]: "Billing / payment",
+  [TicketCategoryValues.ACCOUNT]: "Account",
+  [TicketCategoryValues.LISTING_DISPUTE]: "Listing dispute",
+  /*
+   * The hand-written array this replaced had TEN entries and the schema has
+   * ELEVEN — `scam_report` was simply missing, so a user could never file one
+   * from this drawer even though the route accepts it.
+   */
+  [TicketCategoryValues.SCAM_REPORT]: "Report a scam",
+  [TicketCategoryValues.REFUND_REQUEST]: "Refund request",
+  [TicketCategoryValues.AUCTION_DISPUTE]: "Auction dispute",
   // ST-4 — sellers use this to request changes to admin-controlled
   // store fields (status, capabilities, verification badge).
-  { label: "Store Change Request (sellers)", value: "store_change_request" },
+  [TicketCategoryValues.STORE_CHANGE_REQUEST]: "Store change request (sellers)",
   // ST-3 — buyers/sellers request mutation of order line items
-  { label: "Order Modification Request", value: "order_modification_request" },
+  [TicketCategoryValues.ORDER_MODIFICATION_REQUEST]: "Order modification request",
   // ST-5 — appeal a soft or hard ban; bypasses the create_support_tickets
   // soft-ban guard server-side.
-  { label: "Appeal a ban (unban request)", value: "unban_request" },
-  { label: "General", value: "general" },
-];
+  [TicketCategoryValues.UNBAN_REQUEST]: "Appeal a ban (unban request)",
+  [TicketCategoryValues.GENERAL]: "General",
+};
+
+const CATEGORY_OPTIONS = Object.values(TicketCategoryValues).map((value) => ({
+  value,
+  label: CATEGORY_LABELS[value] ?? value.replace(/_/g, " "),
+}));
 
 const CLS_MSG_USER = "border bg-[var(--appkit-color-surface)]/40 border-[var(--appkit-color-border)]";
 const CLS_MSG_STAFF = "bg-info-surface border border-info dark:bg-info-surface dark:border-info";
@@ -87,6 +113,22 @@ const ROLE_LABEL: Record<string, string> = {
 
 export type UserSupportViewProps = Record<string, never>;
 
+/** The new-ticket draft — flat, matching `supportTicketCreateSchema`. */
+interface TicketValues {
+  [key: string]: unknown;
+  category: string;
+  subject: string;
+  description: string;
+  orderId: string;
+}
+
+const EMPTY_TICKET: TicketValues = {
+  category: TicketCategoryValues.GENERAL,
+  subject: "",
+  description: "",
+  orderId: "",
+};
+
 export function UserSupportView(_props: UserSupportViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -95,11 +137,9 @@ export function UserSupportView(_props: UserSupportViewProps) {
   const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null);
   const [newTicketOpen, setNewTicketOpen] = useState(false);
 
-  // New ticket form state
-  const [newSubject, setNewSubject] = useState("");
-  const [newCategory, setNewCategory] = useState("general");
-  const [newDescription, setNewDescription] = useState("");
-  const [newOrderId, setNewOrderId] = useState("");
+  const [newTicket, setNewTicket] = useState<TicketValues>(EMPTY_TICKET);
+  const patchTicket = (partial: Partial<TicketValues>) =>
+    setNewTicket((prev) => Object.assign({}, prev, partial));
 
   // Reply state
   const [replyBody, setReplyBody] = useState("");
@@ -116,47 +156,57 @@ export function UserSupportView(_props: UserSupportViewProps) {
 
   const createMutation = useApiMutation({
     errorMessage: "Failed to create ticket.",
-    mutationFn: async () => {
-      /*
-       * This drawer validated NOTHING. Its sibling page
-       * (`/user/support/new`) hand-rolled a `canSubmit` boolean that required
-       * an order id for an `order_issue` ticket — a real rule, since an order
-       * complaint with no order is unactionable — and the route did not
-       * enforce it either. So the same ticket was acceptable or not purely
-       * depending on which surface the user happened to open.
-       *
-       * One schema now, across both surfaces and the route.
-       */
-      const parsed = supportTicketCreateSchema.safeParse({
-        subject: newSubject.trim(),
-        category: newCategory,
-        description: newDescription.trim(),
-        orderId: newOrderId.trim() || undefined,
-      });
-      if (!parsed.success) {
-        /*
-         * ValidationError, not a bare Error — it carries the issue LIST, so
-         * the failure keeps which field caused it. A plain Error flattens the
-         * whole thing to one string, which is what `audit-unvalidated-safeparse`
-         * exists to stop. It caught this in my own code.
-         */
-        throw new ValidationError(
-          parsed.error.issues[0]?.message ?? "Check the ticket details.",
-          parsed.error.issues,
-        );
-      }
-      await apiClient.post(SUPPORT_ENDPOINTS.TICKETS, parsed.data);
-    },
+    mutationFn: async (values: Record<string, JsonValue>) =>
+      apiClient.post(SUPPORT_ENDPOINTS.TICKETS, values),
     onSuccess: () => {
       showToast("Support ticket created.", "success");
       setNewTicketOpen(false);
-      setNewSubject("");
-      setNewCategory("general");
-      setNewDescription("");
-      setNewOrderId("");
+      setNewTicket(EMPTY_TICKET);
       invalidate();
     },
   });
+
+  /*
+   * This drawer validated NOTHING before the schema landed, and its sibling
+   * page (`/user/support/new`) hand-rolled a `canSubmit` that required an
+   * order id for an `order_issue` ticket — a real rule the route did not
+   * enforce either, so the same ticket was acceptable or not depending purely
+   * on which surface the user opened. One schema now covers both and the
+   * route; the parse below is what reports it, per field.
+   */
+  const sections = useMemo(
+    () =>
+      buildSectionsFromSchema<TicketValues>(supportTicketCreateSchema, {
+        options: { category: CATEGORY_OPTIONS },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, newTicket, { scope: "user:support-ticket" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(
+    supportTicketCreateSchema,
+    {
+      sections: nav.sectionMeta,
+      onGoToSection: nav.goToSection,
+      fieldToSectionIndex: nav.fieldToSectionIndex,
+    },
+  );
+
+  const submitTicket = () => {
+    clearErrors();
+    /*
+     * `visibleValues` is what keeps an order id typed before switching
+     * category out of a ticket that has nothing to do with an order — the
+     * `when` on that field hides the control and never clears it.
+     */
+    const parsed = supportTicketCreateSchema.safeParse(
+      visibleValues(supportTicketCreateSchema, newTicket),
+    );
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    createMutation.mutate(parsed.data as Record<string, JsonValue>);
+  };
 
   const replyMutation = useApiMutation({
     errorMessage: "Failed to send reply.",
@@ -182,7 +232,35 @@ export function UserSupportView(_props: UserSupportViewProps) {
         </Row>
         {renderTicketListArea({ isLoading, error, tickets, setSelectedTicket, setDetailOpen })}
       </Div>
-      {renderNewTicketDrawer({ newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation })}
+      <SideDrawer
+        isOpen={newTicketOpen}
+        onClose={() => setNewTicketOpen(false)}
+        title="Open a support ticket"
+      >
+        <Stack className={`${__P.p4}`} gap="md">
+          <FormShellContext.Provider value={shellCtx}>
+            <FormErrorSummary />
+            <SectionForm<TicketValues>
+              sections={sections}
+              values={newTicket}
+              onChange={patchTicket}
+              onSubmit={submitTicket}
+              schema={supportTicketCreateSchema}
+              openIds={nav.openIds}
+              onOpenChange={nav.setOpenIds}
+              isLoading={createMutation.isPending}
+              submitLabel="Submit ticket"
+              onCancel={() => setNewTicketOpen(false)}
+              /*
+               * A drawer owns its own footer — `useIsInsideOverlay` already
+               * suppresses the viewport-fixed bar, which would otherwise
+               * render BEHIND the backdrop. Stated rather than relied on.
+               */
+              bottomBar={false}
+            />
+          </FormShellContext.Provider>
+        </Stack>
+      </SideDrawer>
       {renderTicketDetailDrawer({ detailOpen, setDetailOpen, selectedTicket, replyBody, setReplyBody, replyMutation })}
     </>
   );
@@ -229,49 +307,7 @@ function renderTicketListArea(props: {
   );
 }
 
- 
-function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen: (v: boolean) => void; newCategory: string; setNewCategory: (v: string) => void; newSubject: string; setNewSubject: (v: string) => void; newOrderId: string; setNewOrderId: (v: string) => void; newDescription: string; setNewDescription: (v: string) => void; createMutation: any }) {
-  const { newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation } = props;
-  return (
-    <SideDrawer isOpen={newTicketOpen} onClose={() => setNewTicketOpen(false)} title="Open a support ticket">
-      <Stack className={`${__P.p4}`} gap="md">
-        <Select label="Category" options={CATEGORY_OPTIONS} value={newCategory} onValueChange={setNewCategory} />
-        <FieldInput
-          name="subject"
-          label="Subject"
-          type="text"
-          value={newSubject}
-          onChange={setNewSubject}
-          placeholder="Brief description of the issue"
-        />
-        {newCategory === "order_issue" && (
-          <FieldInput
-            name="orderId"
-            label="Order ID"
-            type="text"
-            value={newOrderId}
-            onChange={setNewOrderId}
-            placeholder="e.g. order-3-20260508-a1b2c3"
-          />
-        )}
-        <FieldTextarea
-          name="description"
-          label="Description"
-          value={newDescription}
-          onChange={setNewDescription}
-          rows={4}
-          placeholder="Describe the issue in detail…"
-        />
-        <FormActions align="right">
-          <Button type="button" variant="secondary" onClick={() => setNewTicketOpen(false)}>Cancel</Button>
-          <Button type="button" isLoading={createMutation.isPending} disabled={!newSubject.trim() || !newDescription.trim() || createMutation.isPending} onClick={() => createMutation.mutate()}>Submit ticket</Button>
-        </FormActions>
-      </Stack>
-    </SideDrawer>
-  );
-}
 
- 
 function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (v: boolean) => void; selectedTicket: SupportTicket | null; replyBody: string; setReplyBody: (v: string) => void; replyMutation: any }) {
   const { detailOpen, setDetailOpen, selectedTicket, replyBody, setReplyBody, replyMutation } = props;
   return (
