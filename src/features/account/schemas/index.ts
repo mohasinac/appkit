@@ -5,19 +5,15 @@ import { annotate } from "../../shell/field-ui-meta";
 
 // --- Sub-schemas --------------------------------------------------------------
 
-export const userAddressSchema = z.object({
-  id: z.string(),
-  label: z.string().optional(),
-  line1: z.string(),
-  line2: z.string().optional(),
-  city: z.string(),
-  state: z.string(),
-  postalCode: z.string(),
-  country: z.string(),
-  isDefault: z.boolean().optional(),
-  phone: z.string().optional(),
-});
-
+/*
+ * `userAddressSchema` is DELETED (W5 / D19).
+ *
+ * It carried the `line1`/`line2` naming — one of the eleven address shapes,
+ * and the only one that disagreed with `AddressDocument` on field NAMES rather
+ * than just on rules. Zero consumers outside the barrel that re-exported it.
+ * The one shape is `addressFormSchema` in
+ * `features/addresses/schemas/address-form.ts`.
+ */
 export const notificationPreferencesSchema = z.object({
   orderUpdates: z.boolean().optional(),
   promotions: z.boolean().optional(),
@@ -46,7 +42,6 @@ export const userProfileSchema = z.object({
   phone: z.string().optional(),
   photoURL: z.string().optional(),
   bio: z.string().optional(),
-  addresses: z.array(userAddressSchema).optional(),
   notificationPreferences: notificationPreferencesSchema.optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),

@@ -1,10 +1,26 @@
 import { z } from "zod";
 import {
+  DEFAULT_COUNTRY,
+  isValidPostalCode,
+  postalLabelFor,
+} from "../../../../constants/geo/countries";
+import {
   ORDER_CANCEL_REASON_MAX_LENGTH,
   ORDER_NOTE_MAX_LENGTH,
   ORDER_TRACKING_NUMBER_MAX_LENGTH,
 } from "./config";
 
+/*
+ * The order's own SNAPSHOT of where it shipped, denormalised onto the order
+ * document at creation. Its field names (`pincode`) are stored on every
+ * existing order, so renaming them to match `AddressDocument` is a data
+ * migration rather than a refactor — and a snapshot deliberately does NOT
+ * follow the address it was copied from.
+ *
+ * The postal RULE is shared, which is the half that was wrong: `/^\d{6}$/`
+ * is India-only, on an order whose country is whatever the buyer chose.
+ */
+// audit-address-shape-ok: an order's frozen shipping snapshot, not the address entity
 const addressSchema = z.object({
   fullName: z.string().min(1),
   phone: z.string().min(10).max(15),
@@ -12,8 +28,16 @@ const addressSchema = z.object({
   addressLine2: z.string().optional(),
   city: z.string().min(1),
   state: z.string().min(1),
-  pincode: z.string().regex(/^\d{6}$/, "Pincode must be 6 digits"),
-  country: z.string().default("India"),
+  pincode: z.string().trim().min(1, "A postal code is required."),
+  country: z.string().default(DEFAULT_COUNTRY),
+}).superRefine((v, ctx) => {
+  if (!isValidPostalCode(v.country, v.pincode)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["pincode"],
+      message: `That is not a valid ${postalLabelFor(v.country)}.`,
+    });
+  }
 });
 
 export const createOrderSchema = z.object({

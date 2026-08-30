@@ -119,29 +119,14 @@ export const phoneSchema = z
 
 export const emailSchema = z.string().email().max(255);
 
-export const addressSchema = z.object({
- street: z
- .string()
- .min(5, "Street address too short")
- .max(100, "Street address too long")
- .refine(
- (street) => !/^[\d\s]+$/.test(street),
- "Street must contain non-numeric characters",
- ),
- city: z
- .string()
- .min(2, "City name too short")
- .regex(/^[a-zA-Z\s\-']+$/, "Invalid city name"),
- state: z.string().min(2, "State code required").max(50, "Invalid state"),
- pincode: z
- .string()
- .refine((pin) => /^\d{5,6}$/.test(pin), "Invalid pincode format"),
- country: z
- .string()
- .length(2, "Country code must be 2 characters")
- .toUpperCase(),
-});
-
+/*
+ * `addressSchema` is DELETED (W5 / D19).
+ *
+ * A third naming again — `street`, `pincode`, and a country constrained to a
+ * 2-letter code while every stored address holds "India". Its postal rule was
+ * `/^\d{5,6}$/`, one of the fifteen that disagreed. Zero consumers outside the
+ * barrel.
+ */
 // ============================================
 // AUTH / PROFILE SCHEMAS
 // ============================================

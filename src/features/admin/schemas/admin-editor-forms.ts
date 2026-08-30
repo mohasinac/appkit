@@ -15,7 +15,7 @@
  * WHAT: One schema per editor.
  *
  * EXPORTS:
- *   adminAddressFormSchema, adminStoreUpdateSchema, announcementBarSchema,
+ *   adminStoreUpdateSchema, announcementBarSchema,
  *   and their inferred value types
  *
  * @tag domain:admin
@@ -32,63 +32,15 @@ import { mediaUrlSchema } from "../../../validation/schemas";
 import { StoreStatusValues, type StoreStatus } from "../../stores/schemas/firestore";
 
 const PHONE_RE = /^(\+?91[-\s]?)?[6-9]\d{9}$/;
-/** Indian PIN: six digits, never starting at zero. */
-const PIN_RE = /^[1-9]\d{5}$/;
-
-/**
- * An address written by an admin on someone's behalf.
+/*
+ * `adminAddressFormSchema` is DELETED (W5 / D19).
  *
- * Shapes match `AddressDocument` (`addressLine1`, not `line1`) — deliberately
- * NOT `userAddressSchema`, which is the account-side view of the same data
- * under different field names. Reusing that one here would have meant
- * translating on every write.
+ * It was a twelfth restatement of the same eleven address fields, with an
+ * India-only `postalCode: /^\d{6}$/` on a form whose `country` was free text.
+ * The one address shape and the one country-aware postal rule now live in
+ * `features/addresses/schemas/address-form.ts`, and this editor imports
+ * `adminAddressCreateSchema` from there.
  */
-export const adminAddressFormSchema = z.object({
-  ownerType: annotate(z.enum(["user", "store"]), {
-    section: "owner", sectionLabel: "Belongs to", sectionRequired: true, quick: true, order: 1, row: "pair",
-  }),
-  ownerId: annotate(z.string().trim().min(1, "Choose who this address belongs to."), {
-    section: "owner", quick: true, order: 2, row: "pair",
-  }),
-
-  label: annotate(z.string().trim().max(60, "Keep the label short — e.g. Home, Warehouse.").optional(), {
-    section: "address", sectionLabel: "Address", order: 1, row: "pair",
-  }),
-  fullName: annotate(z.string().trim().min(2, "A recipient name is required.").max(120), {
-    section: "address", sectionRequired: true, quick: true, order: 2, row: "pair",
-  }),
-  phone: annotate(z.string().trim().regex(PHONE_RE, "Enter a 10-digit Indian mobile number."), {
-    section: "address", quick: true, order: 3, row: "pair",
-  }),
-  addressLine1: annotate(z.string().trim().min(3, "Street address is required.").max(200), {
-    section: "address", quick: true, order: 4, row: "full",
-  }),
-  addressLine2: annotate(z.string().trim().max(200).optional(), {
-    section: "address", order: 5, row: "full",
-  }),
-  landmark: annotate(z.string().trim().max(120).optional(), {
-    section: "address", order: 6, row: "pair",
-  }),
-  city: annotate(z.string().trim().min(2, "City is required.").max(80), {
-    section: "address", order: 7, row: "pair",
-  }),
-  state: annotate(z.string().trim().min(2, "State is required.").max(80), {
-    section: "address", order: 8, row: "pair",
-  }),
-  // A wrong PIN is the single most common reason a parcel is undeliverable,
-  // and it was previously any string at all.
-  postalCode: annotate(z.string().trim().regex(PIN_RE, "Enter a 6-digit PIN code."), {
-    section: "address", order: 9, row: "pair",
-  }),
-  country: annotate(z.string().trim().min(2).max(60), {
-    section: "address", order: 10, row: "pair",
-  }),
-  isDefault: annotate(z.boolean().optional(), {
-    section: "address", order: 11, row: "quarter",
-  }),
-});
-
-export type AdminAddressFormValues = z.infer<typeof adminAddressFormSchema>;
 
 /**
  * An admin changing a store's standing.

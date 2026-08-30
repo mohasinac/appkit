@@ -7,7 +7,6 @@ export {
   passwordSchema,
   phoneSchema,
   emailSchema,
-  addressSchema,
   resetPasswordSchema,
   sendVerificationSchema,
   addPhoneSchema,

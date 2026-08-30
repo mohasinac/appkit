@@ -10,7 +10,12 @@ import { AddressFilters } from "./AddressFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 
-const FILTER_KEYS = ["addressType", "verified", "activeOnly"];
+/*
+ * The two facets that read fields `AddressDocument` actually has. It was
+ * `["addressType", "verified", "activeOnly"]` — three keys the document has
+ * never carried, so every one of them inflated this badge and matched nothing.
+ */
+const FILTER_KEYS = ["defaultOnly", "banStatus"];
 
 export interface AddressesIndexListingProps {
   onAdd?: () => void;
@@ -92,9 +97,8 @@ export function AddressesIndexListing({
   const { data: addresses = [], isLoading } = useAddresses({
     filters: {
       q: table.get(TABLE_KEYS.QUERY) || undefined,
-      addressType: table.get("addressType") || undefined,
-      verified: table.get("verified") === "true" || undefined,
-      activeOnly: table.get("activeOnly") === "true" || undefined,
+      defaultOnly: table.get("defaultOnly") === "true" || undefined,
+      banStatus: table.get("banStatus") || undefined,
     },
   });
 

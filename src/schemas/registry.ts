@@ -147,7 +147,8 @@ import { sellerCouponFormSchema } from "../features/seller/schemas/coupon-form";
 import { customRoleFormSchema } from "../features/store-extensions/schemas/custom-role-form";
 import { moderationReviewFormSchema } from "../features/store-extensions/schemas/moderation-review-form";
 import { reportReviewFormSchema } from "../features/store-extensions/schemas/report-review-form";
-import { adminAddressFormSchema, adminStoreUpdateSchema } from "../features/admin/schemas/admin-editor-forms";
+import { adminStoreUpdateSchema } from "../features/admin/schemas/admin-editor-forms";
+import { adminAddressCreateSchema } from "../features/addresses/schemas/address-form";
 import { adminOrderUpdateSchema, employeeInviteSchema, adminAdFormSchema } from "../features/admin/schemas/admin-ops-forms";
 import { adminUserUpdateSchema, whatsappSettingsSchema, lotteryPullSchema } from "../features/admin/schemas/admin-user-form";
 import { siteSettingsFormSchema } from "../features/admin/schemas/site-settings-form";
@@ -185,7 +186,7 @@ const forms = {
   storeGoogleConfig: storeGoogleConfigUpdateSchema,
   adminNotification: adminNotificationCreateSchema,
   homepageSection: homepageSectionCreateSchema,
-  adminAddress: adminAddressFormSchema,
+  adminAddress: adminAddressCreateSchema,
   adminStore: adminStoreUpdateSchema,
   adminOrder: adminOrderUpdateSchema,
   adminUser: adminUserUpdateSchema,

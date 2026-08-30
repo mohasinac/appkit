@@ -1268,7 +1268,6 @@ export {
 export { scamReportFormSchema } from "./features/scams/schemas/report-form";
 export { sublistingCategoryFormSchema } from "./features/store-extensions/schemas/sublisting-category-form";
 export {
-  adminAddressFormSchema,
   adminStoreUpdateSchema,
   announcementBarSchema,
 } from "./features/admin/schemas/admin-editor-forms";
@@ -1286,3 +1285,30 @@ export {
   lotteryPullSchema,
 } from "./features/admin/schemas/admin-user-form";
 export { siteSettingsFormSchema } from "./features/admin/schemas/site-settings-form";
+
+// The ONE address shape and the ONE postal rule (W5 / D19). Eleven field
+// shapes and fifteen disagreeing postal rules collapsed to these.
+export {
+  refineAddressPostal,
+  addressFormSchema,
+  addressUpdateSchema,
+  adminAddressCreateSchema,
+  adminAddressUpdateSchema,
+  addressUnbanRequestSchema,
+} from "./features/addresses/schemas/address-form";
+export type {
+  AddressFormValues,
+  AddressUpdateValues,
+  AdminAddressCreateValues,
+} from "./features/addresses/schemas/address-form";
+export {
+  COUNTRIES,
+  COUNTRY_CODES,
+  DEFAULT_COUNTRY,
+  countryFor,
+  postalPatternFor,
+  postalLabelFor,
+  isValidPostalCode,
+} from "./constants/geo/countries";
+export type { CountryDef } from "./constants/geo/countries";
+export { SUBDIVISIONS, subdivisionsFor } from "./constants/geo/subdivisions";

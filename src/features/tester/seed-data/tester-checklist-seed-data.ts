@@ -4214,6 +4214,104 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
   ]),
+
+  ...group("addresses", "Addresses", [
+    {
+      pageKey: "postal-lookup",
+      pageLabel: "Postal code lookup",
+      href: "/user/addresses/new",
+      cases: [
+        {
+          key: "pin-fills-city-and-state",
+          label: "Typing a complete PIN code fills City and State",
+          description:
+            "BEFORE: there was no lookup anywhere in the app — two dead modules carried the shape of one that had been removed, which is why it looked built. AFTER: leave City and State empty, choose India, and type 560001 into the PIN code box. Within about half a second City and State fill themselves in. Nothing else on the form changes.",
+        },
+        {
+          key: "lookup-never-overwrites",
+          label: "The lookup never overwrites a city you typed yourself",
+          description:
+            "Type your own City FIRST — something deliberately unusual, e.g. 'Whitefield' — then type a PIN code that resolves to a different city. Your text must survive untouched. Autofill only ever lands in an EMPTY field; a lookup that corrects a deliberate entry is a bug the user cannot even report, because they just watch their own typing vanish.",
+        },
+        {
+          key: "lookup-miss-is-a-non-event",
+          label: "An unrecognised PIN code leaves the form usable",
+          description:
+            "Type a valid-format but unknown PIN code, e.g. 999999. Nothing must break: no error banner, no red field, no disabled Save. City and State simply stay empty and editable, and the address still saves. Coverage for India is thinner than India Post's, so a miss is the COMMON case and has to be a non-event.",
+        },
+      ],
+    },
+    {
+      pageKey: "postal-validation",
+      pageLabel: "Postal code validation",
+      href: "/user/addresses/new",
+      cases: [
+        {
+          key: "letters-rejected-on-the-field",
+          label: "A non-numeric PIN code is rejected ON THE FIELD, not by the server",
+          description:
+            "Enter 'abcdef' as the PIN code for an Indian address and press Save. BEFORE: the client rule was min-length-1, so this passed every check you could see and came back a server 400 with nothing marked — and one admin route checked LENGTH ONLY, so 'abcdef' was a valid PIN code as far as it was concerned. AFTER: the error appears under the PIN code field before any request is sent.",
+        },
+        {
+          key: "country-decides-the-rule",
+          label: "Switching country switches the postal rule and its label",
+          description:
+            "Choose Canada. BEFORE: the rule was India-only six-digits, so a real Canadian postcode like K1A 0B1 could not be saved from any surface. AFTER: the field reads 'Postal code' rather than 'PIN code', K1A 0B1 is accepted, and 560001 is now the one rejected. Switch back to India and the reverse holds.",
+        },
+        {
+          key: "unknown-country-never-blocks",
+          label: "A country with no known format accepts anything plausible",
+          description:
+            "Choose United Arab Emirates, which has no postal format. Any 3-12 character code must save. A postal rule exists to catch a typo, never to block a real address we have no pattern for.",
+        },
+      ],
+    },
+    {
+      pageKey: "state-picker",
+      pageLabel: "State picker",
+      href: "/user/addresses/new",
+      cases: [
+        {
+          key: "state-is-a-picker-for-india",
+          label: "State is a searchable picker for India, free text for countries without one",
+          description:
+            "BEFORE: this form and the seller drawer both wrote FREE TEXT into the same field the admin editor filled from a 36-option list, so the column held 'Karnataka', 'karnataka' and 'KA' depending on which screen created the row. AFTER: with India chosen, State is a searchable picker of the 36 states and union territories. Choose United Arab Emirates and it becomes a plain text box, because we do not enumerate its regions.",
+        },
+        {
+          key: "changing-country-clears-state",
+          label: "Changing country clears the state you had chosen",
+          description:
+            "Pick India, then Karnataka, then switch the country to Canada. State must be empty — 'Karnataka' is not a Canadian province, and an address whose state does not belong to its country is a row nothing can group or ship.",
+        },
+      ],
+    },
+    {
+      pageKey: "address-filters",
+      pageLabel: "Address filters",
+      href: "/user/addresses",
+      cases: [
+        {
+          key: "filters-actually-filter",
+          label: "Every filter in the drawer changes the list",
+          description:
+            "BEFORE: all three facets — Address Type, Verified, Active — read fields the address document has never had, so each compared against an empty string. They rendered, they counted toward the filter badge, and not one could ever match a row. AFTER: only Default and Standing are offered, and each visibly changes which addresses are listed.",
+        },
+      ],
+    },
+    {
+      pageKey: "unban-request",
+      pageLabel: "Unban request",
+      href: "/user/addresses",
+      cases: [
+        {
+          key: "empty-note-says-why",
+          label: "Submitting an empty unban request explains what is missing",
+          description:
+            "On a banned address, open Request Unban and press Submit with the box empty. BEFORE: the button was disabled and the handler was a bare return — nothing was said, and that note is the ENTIRE case a reviewer reads. AFTER: the button is enabled and pressing it puts an error on the field naming the 20-character minimum.",
+        },
+      ],
+    },
+  ]),
 ];
 
 const defaultPhases = assignDefaultPhases(

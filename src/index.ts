@@ -812,8 +812,6 @@ export { ZodSetup } from "./validation/index";
 // addPhoneSchema - Helper for add phone schema.
 export { addPhoneSchema } from "./validation/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// addressSchema - Model for address schema.
-export { addressSchema } from "./validation/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // calculatePasswordStrength - Helper for calculate password strength.
 export { calculatePasswordStrength } from "./validation/index";
@@ -3044,8 +3042,6 @@ export { ADDRESS_PUBLIC_FIELDS } from "./features/account/index";
 // ADDRESS_SUBCOLLECTION - Constant used across modules.
 export { ADDRESS_SUBCOLLECTION } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ADDRESS_TYPES - Constant used across modules.
-export { ADDRESS_TYPES } from "./features/account/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // ADDRESS_UPDATABLE_FIELDS - Constant used across modules.
 export { ADDRESS_UPDATABLE_FIELDS } from "./features/account/index";
@@ -3074,8 +3070,6 @@ export { ChatWindow } from "./features/account/index";
 // DEFAULT_ADDRESS_DATA - Constant used across modules.
 export { DEFAULT_ADDRESS_DATA } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// INDIAN_STATES - Constant used across modules.
-export { INDIAN_STATES } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // MessagesView - Component for messages view.
 export { MessagesView } from "./features/account/index";
@@ -3134,8 +3128,6 @@ export { updateProfileSchema } from "./features/account/index";
 // useAddress - React hook for use address.
 export { useAddress } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useAddressForm - React hook for use address form.
-export { useAddressForm } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useAddressSelector - React hook for use address selector.
 export { useAddressSelector } from "./features/account/index";
@@ -3170,14 +3162,10 @@ export { useUpdateAddress } from "./features/account/index";
 // useUpdateProfile - React hook for use update profile.
 export { useUpdateProfile } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// userAddressSchema - Model for user address schema.
-export { userAddressSchema } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // userProfileSchema - Model for user profile schema.
 export { userProfileSchema } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// validateAddressForm - Helper for validate address form.
-export { validateAddressForm } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // Address - Type contract for address.
 export type { Address } from "./features/account/index";
@@ -3200,11 +3188,7 @@ export type { AddressFormData } from "./features/account/index";
 // AddressFormLabels - Type contract for address form labels.
 export type { AddressFormLabels } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AddressFormPlaceholders - Type contract for address form placeholders.
-export type { AddressFormPlaceholders } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AddressFormStateData - Type contract for address form state data.
-export type { AddressFormStateData } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AddressSelectorCreateLabels - Type contract for address selector create labels.
 export type { AddressSelectorCreateLabels } from "./features/account/index";
@@ -3212,17 +3196,11 @@ export type { AddressSelectorCreateLabels } from "./features/account/index";
 // AddressSelectorCreateProps - Type contract for address selector create props.
 export type { AddressSelectorCreateProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AddressType - Type contract for address type.
-export type { AddressType } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AddressUpdateInput - Type contract for address update input.
 export type { AddressUpdateInput } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AddressValidationFormData - Type contract for address validation form data.
-export type { AddressValidationFormData } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AddressValidationOptions - Type contract for address validation options.
-export type { AddressValidationOptions } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BaseNotificationItem - Type contract for base notification item.
 export type { BaseNotificationItem } from "./features/account/index";
@@ -3245,8 +3223,6 @@ export type { ChatWindowLabels } from "./features/account/index";
 // ChatWindowProps - Type contract for chat window props.
 export type { ChatWindowProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// IndianState - Type contract for indian state.
-export type { IndianState } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MessagesViewLabels - Type contract for messages view labels.
 export type { MessagesViewLabels } from "./features/account/index";
@@ -9995,7 +9971,6 @@ export {
 export { scamReportFormSchema } from "./features/scams/schemas/report-form";
 export { sublistingCategoryFormSchema } from "./features/store-extensions/schemas/sublisting-category-form";
 export {
-  adminAddressFormSchema,
   adminStoreUpdateSchema,
   announcementBarSchema,
 } from "./features/admin/schemas/admin-editor-forms";

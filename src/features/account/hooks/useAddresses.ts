@@ -55,9 +55,10 @@ const DEFAULT_ENDPOINTS = {
 
 export interface AddressFilterParams {
   q?: string;
-  addressType?: string;
-  verified?: boolean;
-  activeOnly?: boolean;
+  /** Only the owner's default address. */
+  defaultOnly?: boolean;
+  /** Pipe-joined `AddressBanStatus` values. */
+  banStatus?: string;
 }
 
 export function useAddresses(options?: {
@@ -67,9 +68,8 @@ export function useAddresses(options?: {
 }) {
   const sp = new URLSearchParams();
   if (options?.filters?.q) sp.set("q", options.filters.q);
-  if (options?.filters?.addressType) sp.set("addressType", options.filters.addressType);
-  if (options?.filters?.verified) sp.set("verified", "true");
-  if (options?.filters?.activeOnly) sp.set("activeOnly", "true");
+  if (options?.filters?.defaultOnly) sp.set("defaultOnly", "true");
+  if (options?.filters?.banStatus) sp.set("banStatus", options.filters.banStatus);
   const qs = sp.toString();
   const base = options?.listEndpoint ?? DEFAULT_ENDPOINTS.list;
   const endpoint = qs ? `${base}?${qs}` : base;

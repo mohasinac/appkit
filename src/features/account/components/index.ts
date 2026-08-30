@@ -3,7 +3,7 @@ export type { UserSidebarProps, UserNavItem } from "./UserSidebar";
 export { AddressCard, AddressBook } from "./AddressBook";
 export type { AddressCardAddress, AddressCardProps } from "./AddressBook";
 export { AddressForm } from "./AddressForm";
-export type { AddressFormLabels, AddressFormPlaceholders } from "./AddressForm";
+export type { AddressFormLabels } from "./AddressForm";
 export { AddressSelectorCreate } from "./AddressSelectorCreate";
 export { NotificationBell } from "./NotificationBell";
 export type {

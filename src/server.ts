@@ -1793,3 +1793,31 @@ export {
   resolveNotificationActionUrl,
 } from "./_internal/shared/features/notifications/action-url";
 export type { NotificationAudience } from "./_internal/shared/features/notifications/action-url";
+
+// The ONE address shape and the ONE postal rule (W5 / D19). Eleven field
+// shapes and fifteen disagreeing postal rules collapsed to these.
+export {
+  refineAddressPostal,
+  addressFormSchema,
+  addressUpdateSchema,
+  adminAddressCreateSchema,
+  adminAddressUpdateSchema,
+  addressUnbanRequestSchema,
+  adminAddressPatchSchema,
+} from "./features/addresses/schemas/address-form";
+export type {
+  AddressFormValues,
+  AddressUpdateValues,
+  AdminAddressCreateValues,
+} from "./features/addresses/schemas/address-form";
+export {
+  COUNTRIES,
+  COUNTRY_CODES,
+  DEFAULT_COUNTRY,
+  countryFor,
+  postalPatternFor,
+  postalLabelFor,
+  isValidPostalCode,
+} from "./constants/geo/countries";
+export type { CountryDef } from "./constants/geo/countries";
+export { SUBDIVISIONS, subdivisionsFor } from "./constants/geo/subdivisions";
