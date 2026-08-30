@@ -126,6 +126,8 @@ export { AdminSessionsManager } from "./AdminSessionsManager";
 export type { AdminSessionsManagerProps } from "./AdminSessionsManager";
 export { AdminNavigationView } from "./AdminNavigationView";
 export type { AdminNavigationViewProps } from "./AdminNavigationView";
+export { AdminActionIndexView } from "./AdminActionIndexView";
+export type { AdminActionIndexViewProps } from "./AdminActionIndexView";
 export { AdminAdsView } from "./AdminAdsView";
 export type { AdminAdsViewProps, AdminAdItem, AdminAdProvider, AdminAdStatus } from "./AdminAdsView";
 export { AdminAdEditorView } from "./AdminAdEditorView";

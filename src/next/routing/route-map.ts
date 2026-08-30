@@ -310,6 +310,14 @@ export const DEFAULT_ROUTE_MAP = {
     CAROUSELS_EDIT: (id: string) => `/admin/carousels/${id}/edit`,
     SECTIONS: "/admin/sections",
     NAVIGATION: "/admin/navigation",
+    /*
+     * The action index (W7 / D7) — one control plane for every page, setting
+     * and toggle a user can reach. It supersedes NAVIGATION and
+     * SETTINGS_NAVIGATION, neither of whose data ever reached a sidebar:
+     * `filterNavItems` short-circuits on a missing `id`, and no nav item had
+     * one until W6.
+     */
+    ACTION_INDEX: "/admin/action-index",
     NAVIGATION_NEW: "/admin/navigation/new",
     NAVIGATION_EDIT: (id: string) => `/admin/navigation/${id}/edit`,
     CATEGORIES: "/admin/categories",

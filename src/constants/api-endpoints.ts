@@ -143,6 +143,8 @@ export const ADMIN_ENDPOINTS = {
   ANALYTICS: "/api/admin/analytics",
   ANALYTICS_PAGE_VIEWS: "/api/admin/analytics/pageviews",
   ADS: "/api/admin/ads",
+  /** The action-index control plane (W7 / D7) — GET the whole index, PATCH one override. */
+  ACTION_INDEX: "/api/admin/action-index",
   AD_BY_ID: (id: string) => `/api/admin/ads/${id}`,
   REALTIME_TOKEN: "/api/realtime/token",
   PAYMENTS_SETTINGS: "/api/admin/payments/settings",

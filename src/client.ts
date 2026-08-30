@@ -1367,3 +1367,6 @@ export type {
   ActionIndexValidationContext,
   ActionIndexValidationIssue,
 } from "./features/search/action-index/validate-entry";
+
+export { AdminActionIndexView } from "./features/admin/components/AdminActionIndexView";
+export type { AdminActionIndexViewProps } from "./features/admin/components/AdminActionIndexView";
