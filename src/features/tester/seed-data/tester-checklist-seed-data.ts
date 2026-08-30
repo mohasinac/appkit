@@ -4312,6 +4312,91 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
   ]),
+
+  ...group("search-and-nav", "Search & navigation", [
+    {
+      pageKey: "header-search",
+      pageLabel: "Header search",
+      href: "/",
+      cases: [
+        {
+          key: "search-finds-maintenance-toggle",
+          label: "Searching 'maintenance' reaches the maintenance TOGGLE, not just Site Settings",
+          description:
+            "As an admin, open the header search and type 'maintenance'. BEFORE: nothing at all — the search matched nav labels only, and no nav item is called Maintenance. AFTER: a quick link appears, and clicking it opens Site Settings ON the Branding tab with the Maintenance mode toggle scrolled into view. Landing on tab 1 of nineteen and having to hunt is a FAIL.",
+        },
+        {
+          key: "search-finds-by-what-it-does",
+          label: "Words that appear nowhere in a label still find their screen",
+          description:
+            "Type 'refund'. BEFORE: no results — the screen is called Payouts. AFTER: Payouts appears. Repeat with 'postcode' (reaches Addresses) and 'cod' (reaches the Cash on delivery toggle). None of those words is in the label of what they find; that is the point.",
+        },
+        {
+          key: "search-ranks-exact-first",
+          label: "An exact match sorts above a mention",
+          description:
+            "Type 'orders'. The entry actually CALLED Orders must be first — above the guide whose description merely mentions orders. BEFORE there was no ranking at all, so alphabetical order decided and the exact match could land ninth.",
+        },
+        {
+          key: "search-never-shows-what-you-cannot-reach",
+          label: "A buyer's search surfaces nothing admin-shaped",
+          description:
+            "Sign in as an ordinary buyer and search 'users', 'payouts' and 'maintenance'. Not one admin entry may appear. The labels alone are a site map of the admin panel, so an entry you cannot act on is one you must not be shown.",
+        },
+      ],
+    },
+    {
+      pageKey: "sidebar-search",
+      pageLabel: "Sidebar search",
+      href: "/admin",
+      cases: [
+        {
+          key: "sidebar-search-matches-description",
+          label: "The sidebar filter matches what a screen is FOR",
+          description:
+            "In the admin sidebar's search box type 'fraud'. BEFORE: `item.label.includes(q)` — so only a screen with 'fraud' in its name matched. AFTER: Scam Registry, Address Clusters and Payment Clusters all appear, because their descriptions and keywords say so. Groups keep their normal order; only their contents narrow.",
+        },
+      ],
+    },
+    {
+      pageKey: "employee-permissions",
+      pageLabel: "Employee sidebar",
+      href: "/admin/team",
+      cases: [
+        {
+          key: "employee-sees-only-their-permissions",
+          label: "An employee's sidebar shows only what their permissions allow",
+          description:
+            "🛑 THE BIG ONE. Invite an employee with the 'Blog poster' preset and sign in as them. BEFORE: they saw all 91 admin entries — `filterNavItems` short-circuits on a missing `id`, and no nav item had one, so every requiredPermission was decorative. AFTER: about five entries, and groups with nothing left in them (Finance, Procurement, Catalog, Testing, Site, Events, Trust & Safety, System, Maintenance) disappear entirely rather than showing an empty heading. Check a second preset too — 'Trust & Safety' should see roughly 24.",
+        },
+        {
+          key: "employee-sidebar-never-empty",
+          label: "No permission preset produces a completely empty sidebar",
+          description:
+            "Work through the presets in the Team editor. Every one must leave at least one entry visible. An employee whose sidebar is blank cannot tell a permissions problem from a broken account, and will file it as the latter.",
+        },
+      ],
+    },
+    {
+      pageKey: "settings-deep-links",
+      pageLabel: "Settings deep links",
+      href: "/admin/site",
+      cases: [
+        {
+          key: "tab-query-param-opens-that-tab",
+          label: "?tab= opens the named tab",
+          description:
+            "Visit /admin/site?tab=fees directly. The Fees tab must be the open one. BEFORE the page ignored the URL entirely (`defaultValue=\"branding\"`), so every deep link landed on Branding.",
+        },
+        {
+          key: "unknown-tab-falls-back-quietly",
+          label: "An unknown ?tab= falls back to the default without an error",
+          description:
+            "Visit /admin/site?tab=nonsense. The page opens on Branding and shows no error. A rejected value must not look like a broken page — it looks like a stale bookmark, which is what it is.",
+        },
+      ],
+    },
+  ]),
 ];
 
 const defaultPhases = assignDefaultPhases(
