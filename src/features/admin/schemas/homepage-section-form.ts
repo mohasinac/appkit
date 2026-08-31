@@ -75,3 +75,13 @@ function isParsableJson(value: string): boolean {
 }
 
 export type HomepageSectionFormValues = z.infer<typeof homepageSectionFormSchema>;
+
+/**
+ * What the FORM holds, as distinct from what the schema produces.
+ *
+ * `order` is a `z.coerce.number()`, so the parsed value is a number while the
+ * control that feeds it is a text input holding a string — including the empty
+ * string, which means "auto-place". The draft is the INPUT side; only the save
+ * path sees the output.
+ */
+export type HomepageSectionFormInput = z.input<typeof homepageSectionFormSchema>;

@@ -9,7 +9,23 @@ import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 import { Button, Checkbox, Div, Form, FormActions, Input, Modal, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
 import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
-import { homepageSectionFormSchema } from "../schemas/homepage-section-form";
+import {
+  homepageSectionFormSchema,
+  type HomepageSectionFormInput,
+} from "../schemas/homepage-section-form";
+
+/**
+ * The modal's own draft shape.
+ *
+ * `order` is the raw string a text input holds — including `""`, which means
+ * "auto-place". It is NOT `HomepageSectionFormInput["order"]`: `z.coerce`
+ * schemas in zod 3 report their input type as the OUTPUT type (`number` here),
+ * which is a known typing gap in the library rather than a claim about what the
+ * control produces. The coercion is real and happens at parse time.
+ */
+type SectionModalDraft = Omit<HomepageSectionFormInput, "order"> & { order: string };
+import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -2425,6 +2441,125 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   );
   const canUndoReorderChanges = reorderUndoStack.length > 0;
 
+  /**
+   * The modal's fields, as three hand-written sections.
+   *
+   * The envelope (type / order / enabled) could derive from
+   * `homepageSectionFormSchema`, but the builder cannot: it is 22 discriminated
+   * shapes rendered by `renderTypedBuilder()`, and `configJson` is annotated
+   * `kind: "list"`, which has no control. So all three are hand-written and the
+   * schema stays what VALIDATES rather than what renders — the
+   * `AdminCategoryEditorView` arrangement.
+   *
+   * The builder section is `when`-gated on the chosen type having one, which is
+   * what makes it disappear for a raw-JSON section type instead of rendering an
+   * empty panel.
+   */
+  const modalSections = React.useMemo<SectionDef<SectionModalDraft>[]>(() => [
+    {
+      id: "basics",
+      label: "Section",
+      required: true,
+      fields: ["sectionType", "order", "enabled"],
+      render: () => (
+        <Stack gap="md">
+          <Select
+            label="Mode"
+            value={mode}
+            onValueChange={(value) => setMode(value as "create" | "edit")}
+            options={[
+              { label: "Create new section", value: "create" },
+              { label: "Edit existing section", value: "edit" },
+            ]}
+          />
+          {mode === "edit" ? (
+            <Select
+              label="Section"
+              value={selectedSectionId}
+              onValueChange={setSelectedSectionId}
+              placeholder="Select section"
+              options={sections.map((section) => ({
+                label: `${section.type} (#${section.order})`,
+                value: section.id,
+              }))}
+            />
+          ) : null}
+          <Select
+            label="Section type"
+            value={sectionType}
+            onValueChange={(value) => {
+              setSectionType(value as SectionType);
+              if (mode === "create") {
+                setSelectedSectionId("");
+              }
+            }}
+            options={SECTION_TYPE_OPTIONS.map((type) => ({
+              label: type,
+              value: type,
+            }))}
+            disabled={mode === "edit"}
+          />
+          <Input
+            label="Order"
+            type="number"
+            value={order}
+            onChange={(event) => setOrder(event.target.value)}
+            placeholder="Leave empty to auto-place"
+          />
+          <Select
+            label="Enabled"
+            value={enabled ? "true" : "false"}
+            onValueChange={(value) => setEnabled(value === "true")}
+            options={[
+              { label: "Enabled", value: "true" },
+              { label: "Disabled", value: "false" },
+            ]}
+          />
+        </Stack>
+      ),
+    },
+    {
+      id: "builder",
+      label: "Content",
+      when: () => isTypedBuilder,
+      render: () => <>{renderTypedBuilder()}</>,
+    },
+    {
+      id: "config",
+      label: isTypedBuilder ? "Generated config" : "Section config (JSON)",
+      fields: ["configJson"],
+      render: () => (
+        <Textarea
+          label={isTypedBuilder ? "Generated config (JSON preview)" : "Section config (JSON)"}
+          value={configJson}
+          onChange={(event) => setConfigJson(event.target.value)}
+          rows={10}
+          readOnly={isTypedBuilder}
+          helperText={
+            isTypedBuilder
+              ? "This JSON is generated from typed controls above."
+              : "Provide section config JSON for this section type."
+          }
+        />
+      ),
+    },
+  ], [
+    mode, selectedSectionId, sections, sectionType, order, enabled,
+    isTypedBuilder, configJson, renderTypedBuilder,
+  ]);
+
+  /** What the nav and the error summary key on. */
+  const draft = React.useMemo<SectionModalDraft>(
+    () => ({ sectionType, order, enabled, configJson }),
+    [sectionType, order, enabled, configJson],
+  );
+  const nav = useSectionFormNav(modalSections, draft, { scope: "admin:homepage-sections" });
+  const form = useFormShellState(homepageSectionFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
   return (
     <>
       <Div paddingX="x-sm-md" padding="y-md">
@@ -2550,112 +2685,43 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           so a bad order or malformed config came back as a 400 banner instead
           of an error on the field that caused it.
         */}
-        <Form
-          schema={homepageSectionFormSchema}
-          onSubmit={(event) => event.preventDefault()}
-          spacing="md"
-        >
-          {({ setFieldError, clearErrors }) => (
-          <>
+        <FormShellContext.Provider value={form.shellCtx}>
           <FormErrorSummary />
-          <Select
-            label="Mode"
-            value={mode}
-            onValueChange={(value) => setMode(value as "create" | "edit")}
-            options={[
-              { label: "Create new section", value: "create" },
-              { label: "Edit existing section", value: "edit" },
-            ]}
-          />
-
-          {mode === "edit" ? (
-            <Select
-              label="Section"
-              value={selectedSectionId}
-              onValueChange={setSelectedSectionId}
-              placeholder="Select section"
-              options={sections.map((section) => ({
-                label: `${section.type} (#${section.order})`,
-                value: section.id,
-              }))}
-            />
-          ) : null}
-
-          <Select
-            label="Section type"
-            value={sectionType}
-            onValueChange={(value) => {
-              setSectionType(value as SectionType);
-              if (mode === "create") {
-                setSelectedSectionId("");
+          <SectionForm<SectionModalDraft>
+            sections={modalSections}
+            values={draft}
+            /*
+             * Each control writes through its own setter — `setMode`,
+             * `setSectionType`, `setOrder` — and several of them do more than
+             * store a value (choosing a type in create mode also clears the
+             * selected section). So this routes nothing generically.
+             */
+            onChange={() => undefined}
+            onSubmit={() => {
+              form.clearErrors();
+              const parsed = homepageSectionFormSchema.safeParse(draft);
+              if (!parsed.success) {
+                applyZodIssues(parsed.error.issues, form.setFieldError);
+                return;
               }
+              saveSection.mutate();
             }}
-            options={SECTION_TYPE_OPTIONS.map((type) => ({
-              label: type,
-              value: type,
-            }))}
-            disabled={mode === "edit"}
-          />
-
-          <Input
-            label="Order"
-            type="number"
-            value={order}
-            onChange={(event) => setOrder(event.target.value)}
-            placeholder="Leave empty to auto-place"
-          />
-
-          <Select
-            label="Enabled"
-            value={enabled ? "true" : "false"}
-            onValueChange={(value) => setEnabled(value === "true")}
-            options={[
-              { label: "Enabled", value: "true" },
-              { label: "Disabled", value: "false" },
-            ]}
-          />
-
-          {isTypedBuilder ? renderTypedBuilder() : null}
-
-          <Textarea
-            label={isTypedBuilder ? "Generated config (JSON preview)" : "Section config (JSON)"}
-            value={configJson}
-            onChange={(event) => setConfigJson(event.target.value)}
-            rows={10}
-            readOnly={isTypedBuilder}
-            helperText={
-              isTypedBuilder
-                ? "This JSON is generated from typed controls above."
-                : "Provide section config JSON for this section type."
+            onValidationChange={() => form.validate(draft)}
+            schema={homepageSectionFormSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            submitLabel={
+              saveSection.isPending
+                ? "Saving..."
+                : mode === "create"
+                  ? "Create section"
+                  : "Update section"
             }
+            cancelLabel="Cancel"
+            onCancel={() => setIsModalOpen(false)}
+            isLoading={saveSection.isPending}
           />
-
-          <FormActions align="right">
-            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={saveSection.isPending}
-              onClick={() => {
-                clearErrors();
-                const parsed = homepageSectionFormSchema.safeParse({
-                  sectionType, order, enabled, configJson,
-                });
-                if (!parsed.success) {
-                  applyZodIssues(parsed.error.issues, setFieldError);
-                  return;
-                }
-                saveSection.mutate();
-              }}
-            >
-              {saveSection.isPending ? "Saving..." : mode === "create" ? "Create section" : "Update section"}
-            </Button>
-          </FormActions>
-          </>
-          )}
-        </Form>
+        </FormShellContext.Provider>
       </Modal>
     </>
   );
