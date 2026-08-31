@@ -294,6 +294,8 @@ export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.
 export { BottomSheet } from "./features/layout/index";
+export { PageTabs } from "./features/layout/PageTabs";
+export type { PageTabDef, PageTabsProps } from "./features/layout/PageTabs";
 export { ImageUpload } from "./features/media/index";
 export type { ImageUploadProps } from "./features/media/index";
 export { AvatarUpload } from "./features/media/index";
@@ -325,6 +327,8 @@ export { SessionProvider, useSession } from "./react/contexts/SessionContext";
 export type { SessionProviderProps } from "./react/contexts/SessionContext";
 // ThemeProvider — exported above alongside the registry-aware variant.
 export { useUrlTable } from "./react/hooks/useUrlTable";
+export { useTabParam } from "./react/hooks/useTabParam";
+export type { UseTabParamOptions } from "./react/hooks/useTabParam";
 export type { UseUrlTableOptions } from "./react/hooks/useUrlTable";
 export { useBulkSelection } from "./react/hooks/useBulkSelection";
 export type { UseBulkSelectionOptions, UseBulkSelectionReturn } from "./react/hooks/useBulkSelection";
@@ -494,6 +498,14 @@ export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsVi
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
 // S-ADMIN-7 — permission catalog data, shared by AdminEmployeeEditorView and the read-only /admin/permissions page.
 export { PERMISSION_GROUPS, PERMISSION_DOMAINS, getPermissionsForDomain, formatPermLabel } from "./features/auth/permissions/constants";
+/*
+ * The permissions CATALOGUE renders these, and it became a client-graph module
+ * in W8 C2 when it moved from its own page into a tab on /admin/roles. Its
+ * previous comment — "Details/Summary aren't re-exported from client.ts" — was
+ * accurate and is now the reason the bare-entry import would be a Turbopack
+ * leak (Root Cause #6).
+ */
+export { Details, Summary } from "./ui/components/Details";
 export { ADMIN_ENDPOINTS } from "./constants/index";
 export { SELLER_ENDPOINTS } from "./constants/index";
 // P-16 — Tour system (driver.js-backed onboarding walkthrough).
@@ -1335,6 +1347,22 @@ export {
   isSiteSettingsTabId,
 } from "./features/admin/constants/site-settings-tabs";
 export type { SiteSettingsTab, SiteSettingsTabId } from "./features/admin/constants/site-settings-tabs";
+export {
+  PAYOUTS_TABS, isPayoutsTabId,
+  SHIPPING_TABS, isShippingTabId,
+  FULFILLMENT_TABS, isFulfillmentTabId,
+  STOREFRONT_TABS, isStorefrontTabId,
+} from "./features/seller/constants/store-tabs";
+export type {
+  StoreDashboardTab, PayoutsTabId, ShippingTabId, FulfillmentTabId, StorefrontTabId,
+} from "./features/seller/constants/store-tabs";
+export {
+  ROLES_TABS, isRolesTabId,
+  ADMIN_SETTINGS_TABS, isAdminSettingsTabId,
+} from "./features/admin/constants/admin-page-tabs";
+export type {
+  AdminPageTab, RolesTabId, AdminSettingsTabId,
+} from "./features/admin/constants/admin-page-tabs";
 
 export {
   validateActionIndexEntry,

@@ -124,6 +124,14 @@ export {
 } from "../features/search/action-index/derive";
 export { deriveSettingsEntries } from "../features/search/action-index/settings-entries";
 export {
+  deriveConsolidatedTabEntries,
+  CONSOLIDATED_TAB_SURFACES,
+} from "../features/search/action-index/tab-entries";
+export type {
+  ConsolidatedTabSurface,
+  ConsolidatedTabHrefs,
+} from "../features/search/action-index/tab-entries";
+export {
   mergeActionIndex,
   projectActionIndexForViewer,
 } from "../features/search/action-index/types";

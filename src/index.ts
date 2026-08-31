@@ -9952,6 +9952,22 @@ export {
   isSiteSettingsTabId,
 } from "./features/admin/constants/site-settings-tabs";
 export type { SiteSettingsTab, SiteSettingsTabId } from "./features/admin/constants/site-settings-tabs";
+export {
+  PAYOUTS_TABS, isPayoutsTabId,
+  SHIPPING_TABS, isShippingTabId,
+  FULFILLMENT_TABS, isFulfillmentTabId,
+  STOREFRONT_TABS, isStorefrontTabId,
+} from "./features/seller/constants/store-tabs";
+export type {
+  StoreDashboardTab, PayoutsTabId, ShippingTabId, FulfillmentTabId, StorefrontTabId,
+} from "./features/seller/constants/store-tabs";
+export {
+  ROLES_TABS, isRolesTabId,
+  ADMIN_SETTINGS_TABS, isAdminSettingsTabId,
+} from "./features/admin/constants/admin-page-tabs";
+export type {
+  AdminPageTab, RolesTabId, AdminSettingsTabId,
+} from "./features/admin/constants/admin-page-tabs";
 
 export {
   validateActionIndexEntry,

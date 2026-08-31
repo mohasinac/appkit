@@ -2116,6 +2116,76 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "shipping-configs-crud", label: "Creating, editing, and listing shipping configs works", href: "/store/shipping-configs" },
         { key: "payout-methods-crud", label: "Adding, editing, and listing payout methods works", href: "/store/payout-methods" },
         { key: "payout-settings-page", label: "Payout settings page saves correctly", href: "/store/payout-settings" },
+        {
+          key: "consolidated-tabs-old-urls",
+          label: "Each absorbed URL still lands on the right TAB, not just the right page",
+          description:
+            "W8 C2 folded six sibling pages into tabs. BEFORE: /store/payout-methods, /store/payout-settings, /store/shipping-configs, /store/print-center, /store/slug, /admin/permissions and /admin/settings/navigation were each their own page with their own sidebar entry. AFTER: each redirects to its host with ?tab= set, and the sidebar entry is gone. Visit all seven old URLs. Each must land on the host page with the CORRECT tab already selected — a landing on the host's FIRST tab is the failure, and it looks like success unless you check which tab is active.",
+          href: "/store/payout-methods",
+        },
+        {
+          key: "consolidated-tabs-url-writeback",
+          label: "Clicking a tab updates ?tab= in the address bar",
+          description:
+            "BEFORE: the settings page read ?tab= once on load and never wrote it back, so copying the URL after clicking a tab shared the DEFAULT tab. AFTER: every tabbed page writes the tab into the URL on click. On /store/payouts click through all three tabs, watch ?tab= change, then copy the address and open it in a new tab — it must reopen on the same panel. Back must leave the page rather than walking back through the tabs.",
+          href: "/store/payouts",
+        },
+        {
+          key: "print-center-selection-deeplink",
+          label: "Print labels for a selection still carries the selection through the redirect",
+          description:
+            "/store/print-center is now a redirect, and it is deep-linked from the orders and products lists as ?type=order&ids=…&autoprint=1. Select two orders on /store/orders, use the print action, and confirm the Print Centre tab opens with those two orders loaded. Arriving at an EMPTY Print Centre is the failure — it looks like a normal empty state, which is why this case names the before.",
+          href: "/store/orders",
+        },
+        {
+          key: "consolidated-tabs-command-palette",
+          label: "The absorbed surfaces are still findable by name in search",
+          description:
+            "Their sidebar entries were deleted, and the action index is derived from the sidebar — so without a deliberate entry they would vanish from search on the day they became easier to reach. Search for \"upi\", \"threshold\", \"barcode\", \"slug\" and \"permissions catalogue\". Each must return a result that opens the right TAB.",
+          href: "/store/payouts",
+        },
+      ],
+    },
+    {
+      pageKey: "sectionised-forms",
+      pageLabel: "Forms — sections, error summary and the mobile bar",
+      href: "/admin/orders",
+      cases: [
+        {
+          key: "form-sections-save-unchanged",
+          label: "Every migrated form still saves exactly the fields it saved before",
+          description:
+            "W8 C3 moved 16 hand-rolled forms onto <SectionForm>. The risk is a field that renders but no longer reaches the payload. On each of these, change EVERY field, save, reload, and confirm each value came back: the admin order editor (status, tracking number, carrier, notes), the admin user editor (role, email verified, display name, phone, tester flags, admin notes, bio, location, website, four social links), WhatsApp settings, the seller order panel, and the ad settings panel. A field that silently reverts is the failure, and nothing errors when it happens.",
+          href: "/admin/orders",
+        },
+        {
+          key: "form-error-summary-jumps",
+          label: "A validation error names its section and jumps to it",
+          description:
+            "BEFORE: an invalid field produced a banner listing the problem with no way to reach it, and on the site-settings page the summary was mounted outside every form context and so displayed NOTHING at all. AFTER: submit a form with a bad value (a negative refund on an order, a non-https third-party ad URL, an AdSense id that is not ca-pub-…) and the summary must list it, tag it with its section, collapse open that section when clicked, and show a count badge on the section header.",
+          href: "/admin/ads",
+        },
+        {
+          key: "form-mobile-action-bar",
+          label: "Save and Cancel appear in the pinned mobile bar, once",
+          description:
+            "On a phone-width viewport, a page-level form publishes its actions into the bottom chrome tier. Open /admin/products/new and confirm exactly ONE Save row is visible — not one in the page and one pinned. Inside a drawer or modal (the admin order editor, the review reply modal) the pinned bar must NOT appear: an overlay owns its own footer, and a viewport-fixed bar renders behind the backdrop.",
+          href: "/admin/products/new",
+        },
+        {
+          key: "form-conditional-fields-drop-values",
+          label: "A field hidden by a condition does not submit a stale value",
+          description:
+            "BEFORE: hiding a control left its last value in the payload. AFTER: on the admin user editor, switch \"Is Tester\" ON, tick \"Can test admin areas\", switch \"Is Tester\" back OFF, save, reload — the admin-test flag must be false. Same shape on a shipment item: enter a price, tick \"for self use\", save; the price must not be stored.",
+          href: "/admin/users",
+        },
+        {
+          key: "site-settings-save-still-writes-everything",
+          label: "Site settings still saves every tab's fields in one Save",
+          description:
+            "Its 20 tabs write ONE document through one payload, and its schema is deliberately passthrough because that payload carries keys the TypeScript interface does not declare. A closed schema here would silently strip them. Change one field on each of three different tabs, press \"Save all changes\" once, reload, and confirm all three persisted — and that fields on tabs you did NOT touch are unchanged.",
+          href: "/admin/site",
+        },
       ],
     },
     {
