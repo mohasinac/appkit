@@ -31,17 +31,31 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
-import { firestoreValueSchema } from "../../../schemas/firestore-value";
+import type { JsonValue } from "../../../schemas/types";
 
 const PHONE_RE = /^(\+?91[-\s]?)?[6-9]\d{9}$/;
 
 export const adminUserUpdateSchema = z.object({
+  /*
+   * Role and email-verification lead, because they are what an admin opens this
+   * drawer for. They were controls with no schema entry at all — the form
+   * declared a schema covering six of its twelve fields, so `Role` and
+   * `Email verified` were validated by nothing.
+   */
+  role: annotate(z.enum(["user", "seller", "admin", "moderator"]).optional(), {
+    section: "profile", sectionLabel: "Profile", sectionRequired: true, quick: true,
+    order: 1, row: "pair", kind: "select",
+  }),
+  emailVerified: annotate(z.boolean().optional(), {
+    section: "profile", quick: true, order: 2, row: "quarter",
+    label: "Email verified",
+  }),
   displayName: annotate(z.string().trim().min(1).max(120).optional(), {
-    section: "profile", sectionLabel: "Profile", sectionRequired: true, quick: true, order: 1, row: "pair",
+    section: "profile", quick: true, order: 3, row: "pair",
   }),
   phoneNumber: annotate(
     z.string().trim().regex(PHONE_RE, "Enter a 10-digit Indian mobile number.").optional().or(z.literal("")),
-    { section: "profile", order: 2, row: "pair" },
+    { section: "profile", order: 4, row: "pair" },
   ),
   /*
    * The tester flags. Kept OPTIONAL rather than defaulted, deliberately: a
@@ -54,17 +68,77 @@ export const adminUserUpdateSchema = z.object({
   }),
   canTestAdmin: annotate(z.boolean().optional(), {
     section: "access", order: 2, row: "quarter",
+    // The drawer already hid this behind `isTester`; stating it here is what
+    // makes `visibleValues()` drop a stale `true` when the flag is switched off.
+    when: (v) => Boolean((v as { isTester?: boolean }).isTester),
   }),
   adminNotes: annotate(z.string().trim().max(2000).optional(), {
     section: "access", order: 3, row: "full", kind: "textarea",
     help: "Internal only — never shown to the user.",
   }),
-  // Open: the public profile carries per-user social links and bio fields that
-  // are added over time, and a closed shape would strip a newly-added one.
-  publicProfile: annotate(z.record(firestoreValueSchema).optional(), {
-    section: "access", order: 4, row: "full", kind: "list",
+  /*
+   * The public profile, FLAT — the same call the ad form makes.
+   *
+   * The STORED shape is an open record (`publicProfileSchema` on the route),
+   * because per-user profile keys are added over time and a closed shape would
+   * strip a newly-added one. That was the right conclusion for the document and
+   * the wrong one for the FORM: as one `kind: "list"` field it renders as a
+   * disabled placeholder, while the drawer has always offered seven discrete
+   * inputs — bio, location, website and four social handles — validated by
+   * nothing. The nested shape is reassembled at the payload boundary, where the
+   * API wants it, by `toPublicProfilePayload()` below.
+   */
+  bio: annotate(z.string().trim().max(1000).optional().or(z.literal("")), {
+    section: "public", sectionLabel: "Public profile", order: 1, row: "full",
+    kind: "textarea", help: "Shown on the user's public profile page.",
+  }),
+  location: annotate(z.string().trim().max(120).optional().or(z.literal("")), {
+    section: "public", order: 2, row: "pair",
+  }),
+  website: annotate(z.string().trim().max(2000).optional().or(z.literal("")), {
+    section: "public", order: 3, row: "pair", inputType: "url",
+  }),
+  twitter: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "social", sectionLabel: "Social links", order: 1, row: "pair",
+    label: "Twitter / X",
+  }),
+  instagram: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "social", order: 2, row: "pair",
+  }),
+  facebook: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "social", order: 3, row: "pair",
+  }),
+  linkedin: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "social", order: 4, row: "pair", label: "LinkedIn",
   }),
 });
+
+/**
+ * The flat social/profile fields, reassembled into the nested shape the PATCH
+ * route stores.
+ *
+ * Empty strings are dropped rather than written: the drawer sends a partial
+ * PATCH so an untouched field must leave the stored subkey alone, and writing
+ * `""` would erase it. Returns `undefined` when nothing was filled in, so the
+ * key is omitted from the payload entirely.
+ */
+export function toPublicProfilePayload(v: {
+  bio?: string; location?: string; website?: string;
+  twitter?: string; instagram?: string; facebook?: string; linkedin?: string;
+}): Record<string, JsonValue> | undefined {
+  const socialLinks: Record<string, string> = {};
+  for (const key of ["twitter", "instagram", "facebook", "linkedin"] as const) {
+    const value = v[key]?.trim();
+    if (value) socialLinks[key] = value;
+  }
+  const publicProfile: Record<string, JsonValue> = {};
+  for (const key of ["bio", "location", "website"] as const) {
+    const value = v[key]?.trim();
+    if (value) publicProfile[key] = value;
+  }
+  if (Object.keys(socialLinks).length > 0) publicProfile.socialLinks = socialLinks;
+  return Object.keys(publicProfile).length > 0 ? publicProfile : undefined;
+}
 
 export type AdminUserUpdateValues = z.infer<typeof adminUserUpdateSchema>;
 

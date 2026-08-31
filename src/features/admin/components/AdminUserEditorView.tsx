@@ -7,7 +7,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Avatar, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { adminUserUpdateSchema } from "../schemas/admin-user-form";
+import {
+  adminUserUpdateSchema,
+  toPublicProfilePayload,
+  type AdminUserUpdateValues,
+} from "../schemas/admin-user-form";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 // --- Types -------------------------------------------------------------------
@@ -254,23 +266,10 @@ export function AdminUserEditorView({
   const { showToast } = useToast();
 
   // --- General fields -------------------------------------------------------
-  const [role, setRole] = React.useState(currentRole ?? "user");
-  const [emailVerified, setEmailVerified] = React.useState(currentEmailVerified ?? false);
-  const [isTester, setIsTester] = React.useState(currentIsTester ?? false);
-  const [canTestAdmin, setCanTestAdmin] = React.useState(currentCanTestAdmin ?? false);
-  const [adminNotes, setAdminNotes] = React.useState("");
+  const [draft, setDraft] = React.useState<AdminUserUpdateValues>({});
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   // --- ST-2 profile fields --------------------------------------------------
-  const [editDisplayName, setEditDisplayName] = React.useState(displayName ?? "");
-  const [phoneNumber, setPhoneNumber] = React.useState(currentPhoneNumber ?? "");
-  const [bio, setBio] = React.useState(currentBio ?? "");
-  const [location, setLocation] = React.useState(currentLocation ?? "");
-  const [website, setWebsite] = React.useState(currentWebsite ?? "");
-  const [twitter, setTwitter] = React.useState(currentSocialLinks?.twitter ?? "");
-  const [instagram, setInstagram] = React.useState(currentSocialLinks?.instagram ?? "");
-  const [facebook, setFacebook] = React.useState(currentSocialLinks?.facebook ?? "");
-  const [linkedin, setLinkedin] = React.useState(currentSocialLinks?.linkedin ?? "");
 
   // --- Hard ban form --------------------------------------------------------
   const [showHardBanForm, setShowHardBanForm] = React.useState(false);
@@ -284,20 +283,22 @@ export function AdminUserEditorView({
 
   React.useEffect(() => {
     if (open) {
-      setRole(currentRole ?? "user");
-      setEmailVerified(currentEmailVerified ?? false);
-      setIsTester(currentIsTester ?? false);
-      setCanTestAdmin(currentCanTestAdmin ?? false);
-      setAdminNotes("");
-      setEditDisplayName(displayName ?? "");
-      setPhoneNumber(currentPhoneNumber ?? "");
-      setBio(currentBio ?? "");
-      setLocation(currentLocation ?? "");
-      setWebsite(currentWebsite ?? "");
-      setTwitter(currentSocialLinks?.twitter ?? "");
-      setInstagram(currentSocialLinks?.instagram ?? "");
-      setFacebook(currentSocialLinks?.facebook ?? "");
-      setLinkedin(currentSocialLinks?.linkedin ?? "");
+      setDraft({
+        role: (currentRole ?? "user") as AdminUserUpdateValues["role"],
+        emailVerified: currentEmailVerified ?? false,
+        isTester: currentIsTester ?? false,
+        canTestAdmin: currentCanTestAdmin ?? false,
+        adminNotes: "",
+        displayName: displayName ?? "",
+        phoneNumber: currentPhoneNumber ?? "",
+        bio: currentBio ?? "",
+        location: currentLocation ?? "",
+        website: currentWebsite ?? "",
+        twitter: currentSocialLinks?.twitter ?? "",
+        instagram: currentSocialLinks?.instagram ?? "",
+        facebook: currentSocialLinks?.facebook ?? "",
+        linkedin: currentSocialLinks?.linkedin ?? "",
+      });
       setShowHardBanForm(false);
       setHardBanReasonInput("");
       setShowAddSoftBan(false);
@@ -322,6 +323,20 @@ export function AdminUserEditorView({
     currentSocialLinks?.linkedin,
   ]);
 
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<AdminUserUpdateValues>(adminUserUpdateSchema, {
+        options: { role: ROLE_OPTIONS },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "admin:user-editor" });
+  const form = useFormShellState(adminUserUpdateSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
 
   // --- Mutations ------------------------------------------------------------
@@ -329,29 +344,20 @@ export function AdminUserEditorView({
   const saveMutation = useApiMutation({
     errorMessage: "Failed to update user.",
     mutationFn: async () => {
-      // ST-2 — build publicProfile partial only when something changed; keeps
-      // the PATCH payload minimal and avoids overwriting unrelated subkeys.
-      const socialLinks: Record<string, string> = {};
-      if (twitter.trim()) socialLinks.twitter = twitter.trim();
-      if (instagram.trim()) socialLinks.instagram = instagram.trim();
-      if (facebook.trim()) socialLinks.facebook = facebook.trim();
-      if (linkedin.trim()) socialLinks.linkedin = linkedin.trim();
-      const publicProfile: Record<string, JsonValue> = {};
-      if (bio.trim()) publicProfile.bio = bio.trim();
-      if (location.trim()) publicProfile.location = location.trim();
-      if (website.trim()) publicProfile.website = website.trim();
-      if (Object.keys(socialLinks).length > 0) publicProfile.socialLinks = socialLinks;
-
+      const v = visibleValues(adminUserUpdateSchema, draft) as AdminUserUpdateValues;
       await apiClient.patch(ADMIN_ENDPOINTS.USER_BY_ID(userId!), {
-        role,
-        emailVerified,
-        isTester,
-        canTestAdmin: isTester ? canTestAdmin : false,
-        adminNotes: adminNotes || undefined,
-        displayName: editDisplayName.trim() || undefined,
-        phoneNumber: phoneNumber.trim() || undefined,
-        publicProfile:
-          Object.keys(publicProfile).length > 0 ? publicProfile : undefined,
+        role: v.role,
+        emailVerified: v.emailVerified,
+        isTester: v.isTester,
+        // `when` already drops this once `isTester` is off; the `?? false` is
+        // what CLEARS a previously-granted flag rather than omitting the key.
+        canTestAdmin: v.canTestAdmin ?? false,
+        adminNotes: v.adminNotes || undefined,
+        displayName: v.displayName?.trim() || undefined,
+        phoneNumber: v.phoneNumber?.trim() || undefined,
+        // ST-2 — a partial: only the subkeys that were filled in, so an
+        // untouched field never overwrites what is stored.
+        publicProfile: toPublicProfilePayload(v),
       });
     },
     onSuccess: () => {
@@ -456,142 +462,38 @@ export function AdminUserEditorView({
       </Div>
     ) : null;
 
-  const renderRoleSection = () => (
-    <Select
-      label="Role"
-      options={ROLE_OPTIONS}
-      value={role}
-      onValueChange={setRole}
+  const renderFieldsSection = () => (
+    <SectionForm<AdminUserUpdateValues>
+      sections={sections}
+      values={draft}
+      onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+      onSubmit={() => {
+        // SectionForm scrolls to the first erroring section and then submits
+        // regardless, so the guard lives here.
+        form.clearErrors();
+        const parsed = adminUserUpdateSchema.safeParse(
+          visibleValues(adminUserUpdateSchema, draft),
+        );
+        if (!parsed.success) {
+          applyZodIssues(parsed.error.issues, form.setFieldError);
+          return;
+        }
+        saveMutation.mutate();
+      }}
+      onValidationChange={() => form.validate(draft)}
+      schema={adminUserUpdateSchema}
+      openIds={nav.openIds}
+      onOpenChange={nav.setOpenIds}
+      submitLabel="Save changes"
+      cancelLabel="Cancel"
+      onCancel={onClose}
+      isLoading={saveMutation.isPending}
+      destructiveAction={{
+        label: "Delete user",
+        onClick: () => setDeleteOpen(true),
+        disabled: !userId,
+      }}
     />
-  );
-
-  const renderEmailVerifiedSection = () => (
-    <Toggle
-      label="Email verified"
-      checked={emailVerified}
-      onChange={setEmailVerified}
-    />
-  );
-
-  const renderIsTesterSection = () => (
-    <Stack gap="sm">
-      <Toggle
-        label="Is Tester"
-        checked={isTester}
-        onChange={(next) => {
-          setIsTester(next);
-          if (!next) setCanTestAdmin(false);
-        }}
-      />
-      {isTester && (
-        <Toggle
-          label="Can Test Admin Areas"
-          checked={canTestAdmin}
-          onChange={setCanTestAdmin}
-        />
-      )}
-    </Stack>
-  );
-
-  const renderProfileSection = () => (
-    <Stack border="default" as="section" gap="sm" className="border-t" padding="t-sm">
-      <Heading level={3} className="mb-1" color="muted" size="sm" weight="semibold">
-        Profile details
-      </Heading>
-      <Input
-        label="Display name"
-        value={editDisplayName}
-        onChange={(e) => setEditDisplayName(e.target.value)}
-        placeholder="Full name shown on profile"
-      />
-      <Input
-        label="Phone number"
-        type="tel"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        placeholder="+91 90000 00000"
-      />
-      <Textarea
-        label="Bio"
-        value={bio}
-        onChange={(e) => setBio(e.target.value)}
-        rows={3}
-        placeholder="Short bio shown on the public profile…"
-      />
-      <Input
-        label="Location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        placeholder="City, Country"
-      />
-      <Input
-        label="Website"
-        type="url"
-        value={website}
-        onChange={(e) => setWebsite(e.target.value)}
-        placeholder="https://"
-      />
-      <Text size="xs" color="muted">
-        Social links
-      </Text>
-      <Input
-        label="Twitter / X"
-        value={twitter}
-        onChange={(e) => setTwitter(e.target.value)}
-        placeholder="@handle or full URL"
-      />
-      <Input
-        label="Instagram"
-        value={instagram}
-        onChange={(e) => setInstagram(e.target.value)}
-        placeholder="@handle or full URL"
-      />
-      <Input
-        label="Facebook"
-        value={facebook}
-        onChange={(e) => setFacebook(e.target.value)}
-        placeholder="https://facebook.com/…"
-      />
-      <Input
-        label="LinkedIn"
-        value={linkedin}
-        onChange={(e) => setLinkedin(e.target.value)}
-        placeholder="https://linkedin.com/in/…"
-      />
-    </Stack>
-  );
-
-  const renderAdminNotesSection = () => (
-    <Textarea
-      label="Admin notes (optional)"
-      value={adminNotes}
-      onChange={(e) => setAdminNotes(e.target.value)}
-      rows={3}
-      placeholder="Internal notes about this user…"
-    />
-  );
-
-  const renderActionsSection = () => (
-    <FormActions align="right">
-      <Button
-        type="button"
-        variant="danger"
-        onClick={() => setDeleteOpen(true)}
-        disabled={!userId}
-      >
-        Delete user
-      </Button>
-      <Button type="button" variant="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        type="submit"
-        isLoading={saveMutation.isPending}
-        disabled={!userId || saveMutation.isPending}
-      >
-        Save changes
-      </Button>
-    </FormActions>
   );
 
   const renderModerationSection = () => (
@@ -639,28 +541,21 @@ export function AdminUserEditorView({
         onClose={onClose}
         title={displayName ? `Manage: ${displayName}` : "Manage User"}
       >
-        <Form schema={adminUserUpdateSchema}
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveMutation.mutate();
-          }} padding="md">
-      <FormErrorSummary />
+        <FormShellContext.Provider value={form.shellCtx}>
+          <Div padding="md">
+          <FormErrorSummary />
           <StackedViewShell
             portal="admin"
             className="space-y-4"
             sections={[
               renderAvatarHeader,
               renderInfoCard,
-              renderRoleSection,
-              renderEmailVerifiedSection,
-              renderIsTesterSection,
-              renderProfileSection,
-              renderAdminNotesSection,
-              renderActionsSection,
+              renderFieldsSection,
               renderModerationSection,
             ]}
           />
-        </Form>
+          </Div>
+        </FormShellContext.Provider>
       </SideDrawer>
 
       <ConfirmDeleteModal
