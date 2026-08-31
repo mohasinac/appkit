@@ -487,7 +487,27 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Added 2026-08-21 — this carousel previously had no test case of its own outside the category/brand check. It is DIFFERENT from the \"Part of / Parts in this group\" set panel: this one is a horizontal themed scroller (titled by the group's theme, e.g. \"Same character\" / \"From the same set\"), it sits lower down near the related-items carousels, and it only shows for products that belong to an active, visible group. Confirm the cards show real titles and images (not placeholders) and that clicking one lands on that item's own detail page.",
           href: "/products/product-tester-standard-1",
         },
-        { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button", href: "/classified/classified-tester-sandbox-1" },
+        {
+          key: "classified-offer-is-the-purchase-path",
+          label: "EVERY classified listing offers a way to transact — either \"Make Offer\" or \"Request to Buy\" — and none offers Add to Cart or Buy Now",
+          description:
+            "Changed 2026-08-31. BEFORE: the button was \"Contact Seller\" and opened a chat thread; the offer form appeared only on listings where the seller had ticked `allowOffers`, so on the other half the page showed a price and a chat box. AFTER: chat is gone and the offer IS the purchase path, so the panel is never empty. Check BOTH kinds — `classified-beyblade-stadium-set` (negotiable, allowOffers on) must read \"Make Offer\"; `classified-beyblade-burst-collection-bengaluru` (not negotiable) must read \"Request to Buy\". A classified with NO button at all is the regression this case exists to catch.",
+          href: "/classified/classified-beyblade-stadium-set",
+        },
+        {
+          key: "classified-buy-request-pinned-to-price",
+          label: "On a NON-negotiable classified, the Request-to-Buy amount is fixed at the asking price and cannot be edited down",
+          description:
+            "The amount field is read-only and pre-filled at the listed price. Try to submit a lower number (via the browser's dev tools if the field won't take it) — the server must reject it with \"This seller is not taking lower offers\". BEFORE 2026-08-31 this listing accepted no offer at all: `allowOffers` was unset, so the form never rendered.",
+          href: "/classified/classified-beyblade-burst-collection-bengaluru",
+        },
+        {
+          key: "classified-full-price-offer-accepted",
+          label: "On a NEGOTIABLE classified, an offer at exactly the asking price is ACCEPTED, not rejected",
+          description:
+            "BEFORE: the shared rule rejected any offer >= the listed price with \"use Add to Cart instead\" — advice that named a button a classified does not have, so a buyer willing to pay full price had no route at all. AFTER: the ceiling is inclusive on a listing with no cart. Enter exactly the listed price and submit; it must succeed. On an ORDINARY product (/products/...) the same amount must still be rejected — that is the half of the rule which did not change.",
+          href: "/classified/classified-beyblade-stadium-set",
+        },
         { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase", href: "/digital-codes/digitalcode-tester-sandbox-1" },
         { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly", href: "/live/live-tester-sandbox-1" },
         {
@@ -1823,30 +1843,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
-      pageKey: "messaging",
-      pageLabel: "Messaging a Seller",
-      href: "/user/messages",
-      cases: [
-        { key: "start-conversation", label: "Starting a conversation with a seller works" },
-        { key: "receive-reply", label: "Receiving and reading a seller's reply works" },
-        {
-          key: "message-realtime-update",
-          label: "A new message appears in the RECIPIENT's thread without a manual page refresh (realtime ping-channel)",
-          description:
-            "Fixed 2026-08-28. BEFORE: only the SENDER saw their own message, because the send handler calls refetch() directly — the recipient saw nothing until they reloaded. Two stacked faults: the hooks subscribed without ever signing in to the realtime database, AND the `conversationIds` claim the security rule requires had no issuer anywhere (the token route only sent `chatIds`, from an unrelated collection). Both errors were swallowed, one into a literal `// ignore`. AFTER: open the same conversation as buyer in one browser and seller in another, send from one, and the other updates on its own. Test it from BOTH directions — testing only the sender's own window is what let this pass before.",
-          href: "/user/messages",
-        },
-        {
-          key: "message-live-updates-survive-bulk-job",
-          label: "Running a bulk admin action while a message thread is open does not kill that thread's live updates",
-          description:
-            "Fixed 2026-08-28. BEFORE: the realtime app is a single shared connection, and finishing a bulk job signed it out globally — so an open chat or message thread silently stopped updating, and vice versa (opening a chat killed an in-flight bulk job's progress). AFTER: open a message thread, run any bulk action from an admin listing until it completes, then send a message from the other account — the thread must still update live without a reload.",
-          href: "/user/messages",
-        },
-        { key: "messages-list-thread", label: "The messages list and individual thread view both load correctly", href: "/user/messages" },
-      ],
-    },
-    {
       pageKey: "user-dashboard-extras",
       pageLabel: "User Dashboard — Addresses, Catalogue, Settings, My Orders-by-Type",
       href: "/user",
@@ -2251,11 +2247,10 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       pageKey: "seller-ops-comms",
-      pageLabel: "Seller Addresses, Messages, Fulfillment & Print",
+      pageLabel: "Seller Addresses, Fulfillment & Print",
       href: "/store/addresses",
       cases: [
         { key: "seller-addresses-crud", label: "Seller can add and edit store addresses", href: "/store/addresses" },
-        { key: "seller-messages", label: "Seller messages list and thread view both work", href: "/store/messages" },
         { key: "seller-fulfillment-queue", label: "Seller fulfillment queue shows accurate pending items", href: "/store/fulfillment" },
         { key: "seller-print-center", label: "Seller print-center generates labels/invoices correctly", href: "/store/print-center" },
         { key: "seller-inventory-print", label: "Seller inventory print view works", href: "/store/print-center" },
@@ -2736,7 +2731,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "classified-bar-no-cart",
           label: "A classified listing's sticky bar offers \"Make an Offer\" and does NOT offer Add to Cart or Buy Now — classifieds are arranged directly with the seller",
-          description: "Tapping it should jump to the contact-seller panel. An Add to Cart button appearing here is a real bug.",
+          description: "Tapping it should jump to the offer panel, and that panel must contain a real form (see classified-offer-is-the-purchase-path). An Add to Cart button appearing here is a real bug; so is the bar scrolling to an empty box.",
           href: "/classified/classified-tester-sandbox-1",
         },
         {
@@ -2795,9 +2790,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "notification-count-bubbles-readable",
-          label: "The unread-count bubbles (the small number circles on the header bell icon, the Messages nav item, and the cart/bottom action bar) show a readable number in BOTH light and dark mode — not a colored blob with an invisible digit",
-          description: "You need at least one unread notification or message for the bubble to appear. Check both themes.",
-          href: "/user/messages",
+          label: "The unread-count bubbles (the small number circles on the header bell icon and the cart/bottom action bar) show a readable number in BOTH light and dark mode — not a colored blob with an invisible digit",
+          description: "You need at least one unread notification, or an item in the cart, for the bubble to appear. Check both themes. (This case used to also name the Messages nav item; buyer↔seller messaging was removed 2026-08-31.)",
+          href: "/user/notifications",
         },
         {
           key: "admin-status-chips-colored",

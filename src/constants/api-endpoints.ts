@@ -105,17 +105,6 @@ export const ACCOUNT_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Conversations (buyer messaging)
-// ---------------------------------------------------------------------------
-
-export const CONVERSATION_ENDPOINTS = {
-  LIST: "/api/user/conversations",
-  BY_ID: (id: string) => `/api/user/conversations/${encodeURIComponent(id)}`,
-  MESSAGES: (id: string) => `/api/user/conversations/${encodeURIComponent(id)}/messages`,
-  READ: (id: string) => `/api/user/conversations/${encodeURIComponent(id)}/read`,
-} as const;
-
-// ---------------------------------------------------------------------------
 // Notifications
 // ---------------------------------------------------------------------------
 
@@ -146,7 +135,6 @@ export const ADMIN_ENDPOINTS = {
   /** The action-index control plane (W7 / D7) — GET the whole index, PATCH one override. */
   ACTION_INDEX: "/api/admin/action-index",
   AD_BY_ID: (id: string) => `/api/admin/ads/${id}`,
-  REALTIME_TOKEN: "/api/realtime/token",
   PAYMENTS_SETTINGS: "/api/admin/payments/settings",
   PRODUCTS: "/api/admin/products",
   PRODUCT_BY_ID: (id: string) => `/api/admin/products/${id}`,
@@ -280,16 +268,6 @@ export const ADMIN_ENDPOINTS = {
   MAINTENANCE_ANALYSIS: "/api/admin/maintenance/analysis",
   MAINTENANCE_CLOUD_LOGS: "/api/admin/maintenance/cloud-logs",
   MEDIA_LIST: "/api/admin/media",
-} as const;
-
-// ---------------------------------------------------------------------------
-// Chat
-// ---------------------------------------------------------------------------
-
-export const CHAT_ENDPOINTS = {
-  LIST: "/api/chat",
-  BY_ID: (chatId: string) => `/api/chat/${chatId}`,
-  MESSAGES: (chatId: string) => `/api/chat/${chatId}/messages`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -635,7 +613,6 @@ export const SELLER_ENDPOINTS = {
   /** Tickets raised ABOUT this store (W11). */
   SUPPORT: "/api/store/support",
   BUNDLE_BY_ID: (id: string) => `/api/store/bundles/${id}`,
-  CONVERSATIONS: "/api/store/conversations",
   ORDERS_ASSIGN: (orderId: string) => `/api/store/orders/${orderId}/assign`,
   PRODUCT_BY_ID: (id: string) => `/api/store/products/${id}`,
   PRODUCT_DUPLICATE: (id: string) => `/api/store/products/${id}/duplicate`,
@@ -758,11 +735,9 @@ export const API_ENDPOINTS = {
   CLIENT_ERRORS: CLIENT_ERROR_ENDPOINTS,
   AUTH: AUTH_ENDPOINTS,
   ACCOUNT: ACCOUNT_ENDPOINTS,
-  CONVERSATIONS: CONVERSATION_ENDPOINTS,
   NOTIFICATIONS: NOTIFICATIONS_ENDPOINTS,
   SITE_SETTINGS: SITE_SETTINGS_ENDPOINTS,
   ADMIN: ADMIN_ENDPOINTS,
-  CHAT: CHAT_ENDPOINTS,
   AUCTIONS: AUCTION_ENDPOINTS,
   BIDS: BID_ENDPOINTS,
   CART: CART_ENDPOINTS,

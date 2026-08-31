@@ -55,7 +55,6 @@ import { storeAddressesSeedData } from "./store-addresses-seed-data";
 import { cartsSeedData } from "./cart-seed-data";
 import { wishlistsSeedData } from "./wishlists-seed-data";
 import { historySeedData } from "./history-seed-data";
-import { conversationsSeedData } from "./conversations-seed-data";
 // SB-UNI-B — sublistingCategoriesSeedData absorbed into categoriesSeedData.
 import { groupedListingsSeedData } from "./grouped-listings-seed-data";
 // SB-UNI-V — bundlesSeedData absorbed into categoriesSeedData.
@@ -91,7 +90,7 @@ export type SeedCollectionName =
   | "reviews" | "bids" | "coupons" | "carousels" | "carouselSlides"
   | "homepageSections" | "siteSettings" | "faqs" | "notifications" | "payouts"
   | "blogPosts" | "events" | "eventEntries" | "sessions" | "carts" | "wishlists"
-  | "history" | "conversations" | "groupedListings" | "scammerProfiles"
+  | "history" | "groupedListings" | "scammerProfiles"
   | "supportTickets" | "productFeatures" | "offers" | "couponUsage" | "claimedCoupons"
   | "payoutMethods" | "shippingConfigs" | "analyticsCards" | "analyticsAlerts"
   | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
@@ -264,12 +263,6 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(historySeedData).map((h) => ({
       ...h,
       name: h.userId ?? h.id,
-    })),
-  ),
-  conversations: pick(
-    asArr(conversationsSeedData).map((c) => ({
-      ...c,
-      name: c.productTitle ?? c.id,
     })),
   ),
   groupedListings: pick(

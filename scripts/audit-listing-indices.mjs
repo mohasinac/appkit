@@ -153,7 +153,6 @@ const REPO_TO_COLLECTION = {
   userRepository:              "users",
   adminAuditLogRepository:     "adminAuditLog",
   addressesRepository:         "addresses",
-  conversationsRepository:     "conversations",
   // Previously UNKNOWN_REPO (informational-only, unscanned).
   newsletterRepository:        "newsletterSubscribers",
   contactSubmissionsRepository: "contactSubmissions",

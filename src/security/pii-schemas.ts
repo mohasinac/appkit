@@ -96,21 +96,15 @@ export const TOKEN_PII_INDEX_MAP: Record<string, string> = {
   email: "emailIndex",
 };
 
-/**
- * PII fields in conversations — buyer↔seller message bodies.
+/*
+ * `CONVERSATION_PII_FIELDS` (`lastMessage`, `messages[].body`) was removed with
+ * the conversations feature on 2026-08-31.
  *
- * `messages[].body` uses the array-path form, and `lastMessage` is the
- * denormalised copy of the newest body: encrypting one without the other would
- * leave every conversation's latest message readable at rest, which is most of
- * the exposure.
- *
- * Participant display names are deliberately NOT here — decision D1 keeps names
- * searchable, and both sides already know who they are talking to.
+ * 🛑 Its array-path form was the ONLY user of `encryptPiiFields`' `[]` syntax
+ * outside status history. If a future schema needs to encrypt a field inside an
+ * array, check that machinery still works before relying on it — a path that no
+ * caller exercises is a path nothing proves.
  */
-export const CONVERSATION_PII_FIELDS = [
-  "lastMessage",
-  "messages[].body",
-] as const;
 
 /** PII fields in reviews */
 export const REVIEW_PII_FIELDS = ["userName"] as const;

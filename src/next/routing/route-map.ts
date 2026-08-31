@@ -167,7 +167,6 @@ export const DEFAULT_ROUTE_MAP = {
     ORDER_INVOICE: (id: string) => `/user/orders/${id}/invoice`,
     ORDER_PAYMENT: (id: string) => `/user/orders/${id}/payment`,
     NOTIFICATIONS: "/user/notifications",
-    MESSAGES: "/user/messages",
     /** Plan §10 — claimed-coupons wallet (Active / Expired / Used tabs). */
     CLAIMED_COUPONS: "/user/coupons",
     BECOME_SELLER: "/user/become-seller",
@@ -193,7 +192,6 @@ export const DEFAULT_ROUTE_MAP = {
   },
   STORE: {
     DASHBOARD: "/store",
-    MESSAGES: "/store/messages",
     PRODUCTS: "/store/products",
     PRODUCTS_NEW: "/store/products/new",
     PRODUCTS_EDIT: (id: string) => `/store/products/${id}/edit`,

@@ -30,7 +30,6 @@ import type { SchemaRegistry } from "./types";
 import { addressFirestoreSchema } from "../features/addresses/schemas";
 import { blogPostFirestoreSchema } from "../features/blog/schemas";
 import { categoryFirestoreSchema } from "../features/categories/schemas";
-import { conversationFirestoreSchema } from "../features/messages/schemas";
 import {
   carouselFirestoreSchema,
   carouselSlideFirestoreSchema,
@@ -72,7 +71,6 @@ const firestore = {
   carouselSlides: carouselSlideFirestoreSchema,              // W2
   categories: categoryFirestoreSchema,                       // W2
   claimedCoupons: claimedCouponFirestoreSchema,              // W2
-  conversations: conversationFirestoreSchema,                // W2
   coupons: couponFirestoreSchema,                            // W2
   couponUsage: couponUsageFirestoreSchema,                   // W2
   faqs: faqFirestoreSchema,                                  // W2

@@ -13,6 +13,13 @@ import {
  *
  * WHY THIS EXISTS — two distinct bugs, one cause.
  *
+ * 🛑 Both examples below are HISTORICAL: buyer↔seller messaging was deleted
+ * 2026-08-31, so `useConversation` / `useConversations` / `useChat` and the
+ * `chats/*` and `chat/*` RTDB paths no longer exist — don't go looking for
+ * them. The mechanism is not historical. `auth_events`, `payment_events` and
+ * `bulk_events` are all still live, still concurrent, and still each need their
+ * own claim scope, which is the whole reason this file is here.
+ *
  * 1. **Nobody signed in for messaging.** `useConversation` and
  *    `useConversations` subscribed to `chats/...` without ever calling
  *    `signInWithToken`, so `auth == null` and both RTDB rules evaluated false.

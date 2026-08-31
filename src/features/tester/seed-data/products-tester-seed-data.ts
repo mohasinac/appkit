@@ -638,7 +638,6 @@ export const productsTesterSeedData: Partial<ProductDocument>[] = [
     isOnSale: false,
     classified: {
       meetupArea: { city: "Bengaluru", locality: "Test Locality", pincode: "560001" },
-      contactMethod: "both" as const,
       acceptsShipping: false,
       negotiable: true,
     },

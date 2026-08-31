@@ -16,10 +16,7 @@ import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { makeOfferFormSchema } from "../../seller/schemas/offer-forms";
-import {
-  DEFAULT_MIN_OFFER_PERCENT,
-  minOfferAmount,
-} from "../../../_internal/shared/features/offers/config";
+import { minOfferAmount, type OfferBounds } from "../../../_internal/shared/features/offers/config";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -29,7 +26,17 @@ export interface MakeOfferButtonProps {
   productId: string;
   listedPrice: number;
   currency?: string;
-  minOfferPercent?: number;
+  /**
+   * The amounts this listing accepts, from `resolveOfferBounds()`.
+   *
+   * 🛑 Required, and deliberately not derivable here. This component used to
+   * compute its own floor from `minOfferPercent`, which is a second copy of a
+   * rule the server also owns — and a listing whose only purchase path is an
+   * offer has bounds that no percentage can express (`min === max === price`
+   * for a request to buy). Passing the resolved object means whatever this
+   * form accepts, `makeOffer` accepts.
+   */
+  bounds: OfferBounds;
   /** Called with (productId, offerAmount, note?). Must return void or throw on error. */
   onMakeOffer: (productId: string, amount: number, note?: string) => Promise<void>;
   className?: string;
@@ -60,7 +67,7 @@ export function MakeOfferButton({
   productId,
   listedPrice,
   currency,
-  minOfferPercent = DEFAULT_MIN_OFFER_PERCENT,
+  bounds,
   onMakeOffer,
   className = "",
 }: MakeOfferButtonProps) {
@@ -70,13 +77,22 @@ export function MakeOfferButton({
 
   const fmt = (n: number) => (currency ? formatCurrency(n, currency) : `₹${n.toLocaleString()}`);
 
-  // The SAME floor the server enforces — shared so the input can never seed or
-  // accept an amount `makeOffer` would then reject.
-  const minOffer = minOfferAmount(listedPrice, minOfferPercent);
-  const schema = makeOfferFormSchema({ listedPrice, minOffer, formatAmount: fmt });
+  // The SAME bounds the server enforces — passed in, never recomputed, so the
+  // input can neither seed nor accept an amount `makeOffer` would reject.
+  const schema = makeOfferFormSchema({ listedPrice, bounds, formatAmount: fmt });
 
+  /*
+   * A buy request has one legal amount, so it is seeded at the price and the
+   * field is read-only — an editable box whose every other value is invalid is
+   * a trap, not a choice. Otherwise open at 90% of the asking price, clamped
+   * into the listing's own floor and ceiling.
+   */
   const [offerAmount, setOfferAmount] = useState(
-    String(Math.max(minOfferAmount(listedPrice, 90), minOffer)),
+    String(
+      bounds.isBuyRequest
+        ? bounds.min
+        : Math.min(Math.max(minOfferAmount(listedPrice, 90), bounds.min), bounds.max),
+    ),
   );
   const [buyerNote, setBuyerNote] = useState("");
 
@@ -122,10 +138,11 @@ export function MakeOfferButton({
       <Div className={`${CLS_SUCCESS_BOX} ${className}`}>
         <Span size="lg">🎉</Span>
         <Text className="text-success" size="sm" weight="medium">
-          Offer sent!
+          {bounds.isBuyRequest ? "Request sent!" : "Offer sent!"}
         </Text>
         <Text className="text-success" size="xs">
-          The seller will review your offer and respond shortly.
+          The seller will review your {bounds.isBuyRequest ? "request" : "offer"} and
+          respond shortly.
         </Text>
       </Div>
     );
@@ -135,9 +152,12 @@ export function MakeOfferButton({
     return (
       <Div className={`${CLS_PENDING_BOX} ${className}`}>
         <Span size="lg">⏳</Span>
-        <Text className={CLS_PENDING_TITLE}>Offer Pending</Text>
+        <Text className={CLS_PENDING_TITLE}>
+          {bounds.isBuyRequest ? "Request Pending" : "Offer Pending"}
+        </Text>
         <Text className={CLS_PENDING_BODY}>
-          You already have an offer on this item. Check My Offers for updates.
+          You already have {bounds.isBuyRequest ? "a request" : "an offer"} on this
+          item. Check My Offers for updates.
         </Text>
       </Div>
     );
@@ -157,34 +177,48 @@ export function MakeOfferButton({
         className={`w-full ${className}`}
         onClick={() => setState("open")}
       >
-        Make Offer
+        {bounds.isBuyRequest ? "Request to Buy" : "Make Offer"}
       </Button>
-      <Modal isOpen={state === "open"} onClose={() => setState("idle")} size="md" title="Make an offer">
+      <Modal
+        isOpen={state === "open"}
+        onClose={() => setState("idle")}
+        size="md"
+        title={bounds.isBuyRequest ? "Request to buy" : "Make an offer"}
+      >
         <Form schema={schema} onSubmit={(e) => e.preventDefault()}>
           {({ setFieldError, clearErrors, markSubmitAttempted }) => (
             <Stack gap="md">
               <Text size="xs" color="muted">
-                Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
+                {bounds.isBuyRequest
+                  ? `Listed at ${fmt(listedPrice)} · this seller is not taking lower offers`
+                  : `Listed at ${fmt(listedPrice)} · Minimum offer: ${fmt(bounds.min)}`}
               </Text>
 
               <FieldInput
                 name="offerAmount"
                 type="number"
-                label="Your offer amount"
+                label={bounds.isBuyRequest ? "Amount" : "Your offer amount"}
                 required
                 value={offerAmount}
                 onChange={(value) => {
                   setOfferAmount(value);
                   clearErrors();
                 }}
-                min={minOffer}
-                max={listedPrice - 1}
+                min={bounds.min}
+                max={bounds.max}
                 step={1}
-                aria-label="Offer amount"
+                /*
+                 * One legal amount, so the field is read-only rather than an
+                 * editable box that rejects every value but its default.
+                 */
+                readOnly={bounds.isBuyRequest}
+                aria-label={bounds.isBuyRequest ? "Amount" : "Offer amount"}
               />
-              <Text size="xs" color="faint">
-                Must be between {fmt(minOffer)} and {fmt(listedPrice - 1)}
-              </Text>
+              {!bounds.isBuyRequest && (
+                <Text size="xs" color="faint">
+                  Must be between {fmt(bounds.min)} and {fmt(bounds.max)}
+                </Text>
+              )}
 
               <FieldInput
                 name="buyerNote"
@@ -192,13 +226,19 @@ export function MakeOfferButton({
                 label="Note to seller (optional)"
                 value={buyerNote}
                 onChange={setBuyerNote}
-                placeholder="E.g. Bundle deal, long-time fan…"
+                placeholder={
+                  bounds.isBuyRequest
+                    ? "E.g. when and where you can collect it…"
+                    : "E.g. Bundle deal, long-time fan…"
+                }
                 maxLength={300}
                 aria-label="Note to seller"
               />
 
               <Text size="xs" color="muted">
-                The seller will accept, decline, or suggest a counter price.
+                {bounds.isBuyRequest
+                  ? "The seller will accept or decline. Accepting reserves the item for you to check out."
+                  : "The seller will accept, decline, or suggest a counter price."}
               </Text>
 
               <FormErrorSummary />
@@ -213,7 +253,11 @@ export function MakeOfferButton({
                   disabled={isPending}
                   onClick={() => submit(setFieldError, clearErrors, markSubmitAttempted)}
                 >
-                  {isPending ? "Sending…" : `Send offer of ${fmt(Number(offerAmount) || 0)}`}
+                  {isPending
+                    ? "Sending…"
+                    : bounds.isBuyRequest
+                      ? `Send request to buy at ${fmt(Number(offerAmount) || 0)}`
+                      : `Send offer of ${fmt(Number(offerAmount) || 0)}`}
                 </Button>
                 <Button variant="ghost" size="sm" type="button" onClick={() => setState("idle")} disabled={isPending}>
                   Cancel

@@ -78,8 +78,15 @@ export interface ProductCardMetadata {
 }
 
 // SB-UNI-I 2026-05-13 — Classified-listing fields (OLX / Facebook Marketplace pattern).
-// Add-to-cart is rejected at the capability layer; the PDP CTA routes to
-// `conversations` chat with product context attached.
+// Add-to-cart is rejected at the capability layer. The purchase path is the
+// Make-an-Offer flow, which for this type is always available — see
+// `offerIsOnlyPurchasePath` in `_internal/shared/features/offers/config`.
+//
+// 🛑 `contactMethod?: "chat" | "phone" | "both"` was removed 2026-08-31. It had
+// two read sites, both of which merely PRINTED it — so a buyer read the literal
+// word "chat" on the page — and it was never branched on anywhere. `"phone"` was
+// unimplementable in any case: no phone number field exists on this meta, on
+// `ProductDocument`, or on the public store projection.
 export interface ProductClassifiedMeta {
   /** Where the item is — drives the (listingType, classified.meetupArea.city, createdAt) index. */
   meetupArea: {
@@ -87,11 +94,15 @@ export interface ProductClassifiedMeta {
     locality?: string;
     pincode?: string;
   };
-  /** How the buyer reaches the seller (chat | phone | both). */
-  contactMethod?: "chat" | "phone" | "both";
   /** Seller offers shipping in addition to meetup. */
   acceptsShipping?: boolean;
-  /** Price is negotiable — UI hints "₹X (negotiable)". */
+  /**
+   * Price is negotiable — UI hints "₹X (negotiable)".
+   *
+   * Its sibling `allowOffers` is what actually gates the offer FLOOR on this
+   * type: unset means the buyer may still request to buy, but only at the
+   * asking price.
+   */
   negotiable?: boolean;
 }
 

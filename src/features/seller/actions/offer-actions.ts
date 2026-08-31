@@ -29,7 +29,9 @@ import { OfferStatusValues } from "../schemas";
 import type { OfferDocument } from "../schemas";
 import {
   DEFAULT_MIN_OFFER_PERCENT,
-  minOfferAmount,
+  offerIsOnlyPurchasePath,
+  offersEnabledFor,
+  resolveOfferBounds,
 } from "../../../_internal/shared/features/offers/config";
 
 /**
@@ -81,30 +83,58 @@ export async function makeOffer(
    * rest of that group on 2026-08-29. The two that remain are the ones somebody
    * actually sets: a per-type capability and a per-listing choice by the seller
    * who owns the item.
+   *
+   * Both now go through `offersEnabledFor` / `resolveOfferBounds`, which the
+   * buyer's form reads too — the whole point of moving the rule into the shared
+   * config. A second copy here is how the form came to advertise a 50% floor
+   * this function then rejected (see the config's own header).
    */
   const product = await productRepository.findById(productId);
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);
+
+  const listingType = normalizeListingType(product);
 
   // Some listing types cannot be negotiated at all — an auction already has
   // bidding, a prize-draw sells fixed-price entries. This was never checked, so
   // an offer could be (and in seed data was) attached to an auction, producing
   // a cart line that claims `listingType: "standard"` in the offer lane.
-  if (!canMakeOffer(normalizeListingType(product))) {
+  if (!canMakeOffer(listingType)) {
     throw new ValidationError("Offers aren't available for this kind of listing.");
   }
 
-  if (!product.allowOffers)
+  if (!offersEnabledFor(listingType, product.allowOffers))
     throw new ValidationError("This product does not accept offers.");
 
-  const minAllowed = minOfferAmount(product.price, product.minOfferPercent);
-  if (offerAmount < minAllowed)
-    throw new ValidationError(
-      `Minimum offer is ₹${minAllowed} (${product.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT}% of listing price).`,
-    );
-  if (offerAmount >= product.price)
-    throw new ValidationError(
-      "Your offer must be below the listed price. Use Add to Cart instead.",
-    );
+  const bounds = resolveOfferBounds({
+    listingType,
+    listedPrice: product.price,
+    minOfferPercent: product.minOfferPercent,
+    allowOffers: product.allowOffers,
+  });
+
+  if (bounds.isBuyRequest) {
+    // No cart on this type and the seller has not opted into haggling, so the
+    // asking price is the only legal amount. Naming that plainly beats a
+    // "minimum offer is ₹X" message where X happens to equal the price.
+    if (offerAmount !== bounds.max)
+      throw new ValidationError(
+        `This seller is not taking lower offers — send a request to buy at ₹${bounds.max}.`,
+      );
+  } else {
+    if (offerAmount < bounds.min)
+      throw new ValidationError(
+        `Minimum offer is ₹${bounds.min} (${product.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT}% of listing price).`,
+      );
+    if (offerAmount > bounds.max)
+      throw new ValidationError(
+        // Deliberately NOT "use Add to Cart instead" unconditionally: on a
+        // listing whose only purchase path is an offer there is no cart button,
+        // so that advice named a control the page does not have.
+        offerIsOnlyPurchasePath(listingType)
+          ? `Your offer cannot exceed the asking price of ₹${product.price}.`
+          : "Your offer must be below the listed price. Use Add to Cart instead.",
+      );
+  }
 
   const offerCount = await offerRepository.countByBuyerAndProduct(
     userId,

@@ -873,20 +873,6 @@ export const COUPON_USAGE_FIELDS = {
 } as const;
 
 // ============================================================================
-// CONVERSATION FIELDS
-// ============================================================================
-
-export const CONVERSATION_FIELDS = {
-  ID: "id",
-  BUYER_ID: "buyerId",
-  STORE_ID: "storeId",
-  LAST_MESSAGE_AT: "lastMessageAt",
-  LAST_MESSAGE: "lastMessage",
-  CREATED_AT: "createdAt",
-  UPDATED_AT: "updatedAt",
-} as const;
-
-// ============================================================================
 // SCAMMER FIELDS
 // ============================================================================
 

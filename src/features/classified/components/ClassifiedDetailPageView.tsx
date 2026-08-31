@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { getClassifiedForDetail } from "../../../_internal/server/features/classified/data";
-import { startClassifiedConversationAction } from "../../../_internal/server/features/classified/actions";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_CLASSIFIED_BADGE = "inline-block rounded-full bg-cyan-100 dark:bg-cyan-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-cyan-700 dark:text-cyan-300";
@@ -37,11 +36,14 @@ import { RelatedItemsSection } from "../../products/components/RelatedItemsSecti
 import { computeRelatedItems } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
-import { ClassifiedContactSellerPanel } from "./ClassifiedContactSellerPanel";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import { safeRead } from "../../../errors/safe-read";
-import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
-import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
+import {
+  DEFAULT_MIN_OFFER_PERCENT,
+  offersEnabledFor,
+  resolveOfferBounds,
+  type OfferBounds,
+} from "../../../_internal/shared/features/offers/config";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
 import type { CustomSection, ProductDocument } from "../../products/schemas/firestore";
 
@@ -50,18 +52,19 @@ export interface ClassifiedDetailPageViewProps {
   /** Pre-fetched product document — dedupes with generateMetadata() via React.cache(). */
   initialProduct?: ProductDocument | null;
   /**
-   * Render prop for offer UI, mounted inside the contact-seller panel.
+   * Render prop for the offer UI — which, on a classified, IS the purchase path.
    *
    * Deliberately the SAME shape `ProductDetailPageView.renderOfferAction` uses,
    * so both detail views share one contract and both consumer pages share one
-   * snippet. Called only when both offer gates pass: the classified type's
-   * `canMakeOffer` capability and the seller's own `allowOffers` opt-in.
+   * snippet. `bounds` comes from `resolveOfferBounds()`, the same function
+   * `makeOffer` enforces server-side.
    */
   renderOfferAction?: (opts: {
     productId: string;
     price: number;
     currency: string;
     minOfferPercent: number;
+    bounds: OfferBounds;
   }) => React.ReactNode;
 }
 
@@ -127,14 +130,33 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
     }),
   ]);
 
-  // Classifieds are the one non-standard type where haggling is the norm, so
-  // `canMakeOffer` is true for them — but the seller still opts in per listing
-  // (`allowOffers`, usually alongside `classified.negotiable`).
+  /*
+   * The offer IS the purchase path here — classified has `cartLine: "blocked"`,
+   * and until 2026-08-31 the only other route to the seller was a `conversations`
+   * chat thread, which no longer exists.
+   *
+   * So `offersEnabledFor` does NOT require `allowOffers` on a type with no cart:
+   * unchecking it would leave the page showing a price and no way to act on it.
+   * What it controls instead is the FLOOR — a seller who did not opt into
+   * haggling gets requests to buy at their asking price, never below it. Both
+   * facts come from `resolveOfferBounds`, which `makeOffer` re-derives.
+   */
+  // Narrowed, not cast: the document's fields are `FirestoreValue`, which
+  // includes `null`, and `allowOffers` decides a money rule.
+  const allowOffers = p.allowOffers === true;
+
   const offersAvailable =
-    canMakeOffer("classified") &&
-    p.allowOffers === true &&
-    price !== null &&
-    !!renderOfferAction;
+    offersEnabledFor("classified", allowOffers) && price !== null && !!renderOfferAction;
+
+  const offerBounds: OfferBounds | null =
+    price !== null
+      ? resolveOfferBounds({
+          listingType: "classified",
+          listedPrice: price,
+          minOfferPercent: typeof p.minOfferPercent === "number" ? p.minOfferPercent : undefined,
+          allowOffers,
+        })
+      : null;
 
   return (
     <Main>
@@ -200,12 +222,6 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                 </Row>
               )}
 
-              {meta?.contactMethod && (
-                <Text size="xs" color="muted">
-                  Contact via: {meta.contactMethod === "both" ? "chat or phone" : meta.contactMethod}
-                </Text>
-              )}
-
               {descriptionHtml && (
                 <RichText
                   html={descriptionHtml}
@@ -266,20 +282,36 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
           )}
           renderBuyBar={() => (
             <Stack id="classified-contact-bar" className="p-[var(--appkit-space-5)]" border="subtle" gap="md" rounded="xl" surface="muted">
-              {/* Above the chat panel on purpose: the sticky CTA below is
-                  labelled "Make an Offer" and scrolls here, so the offer form
-                  has to be the first thing in view when it lands. */}
-              {offersAvailable &&
-                renderOfferAction!({
-                  productId: String(product.id),
-                  price: price!,
-                  currency,
-                  minOfferPercent:
-                    typeof p.minOfferPercent === "number"
-                      ? (p.minOfferPercent as number)
-                      : DEFAULT_MIN_OFFER_PERCENT,
-                })}
-              <ClassifiedContactSellerPanel productId={String(product.id)} onContactSeller={startClassifiedConversationAction} />
+              {offersAvailable && offerBounds ? (
+                <>
+                  {renderOfferAction!({
+                    productId: String(product.id),
+                    price: price!,
+                    currency,
+                    minOfferPercent:
+                      typeof p.minOfferPercent === "number"
+                        ? (p.minOfferPercent as number)
+                        : DEFAULT_MIN_OFFER_PERCENT,
+                    bounds: offerBounds,
+                  })}
+                  <Text size="xs" color="muted">
+                    {offerBounds.isBuyRequest
+                      ? "Send a request to buy and the seller will confirm. Payment and collection are arranged after they accept."
+                      : "Offer what you think it's worth — the seller can accept, decline or counter."}
+                  </Text>
+                </>
+              ) : (
+                /*
+                 * Reachable only when the listing has no price at all: a
+                 * classified always accepts offers otherwise (see the gate
+                 * above). Saying so beats an empty bordered box, which is what
+                 * this bar rendered while the contact panel was being removed.
+                 */
+                <Text size="sm" color="muted">
+                  This listing doesn&apos;t have a price yet, so it isn&apos;t
+                  accepting offers. Check back shortly.
+                </Text>
+              )}
             </Stack>
           )}
           renderRelated={() => (

@@ -45,9 +45,9 @@ export type ActionResource =
   | "AUCTION"
   | "PRE_ORDER"
   | "PRIZE_DRAW"
-  | "CLASSIFIED"
+  // "CLASSIFIED" and "LIVE" were removed 2026-08-31 — both buckets held a
+  // single consumerless action naming the deleted conversations feature.
   | "DIGITAL_CODE"
-  | "LIVE"
   | "BUNDLE"
   | "GROUP"
   | "CATEGORY"
@@ -283,9 +283,17 @@ export const ACTIONS: ActionTree = {
       iconKey: "message",
       id: "product.make-offer",
       label: "Make an offer",
-      description: "Propose a price to the seller for a classified listing.",
+      /*
+       * Scope corrected 2026-08-31: this was `["classified"]`, but the button it
+       * labels (`MakeOfferButton`) mounts on every type whose capability says
+       * `canMakeOffer` — which is standard, art and stickers as well. On
+       * classified specifically it is the ONLY purchase path, and a seller who
+       * has not opted into haggling receives a request to buy at the asking
+       * price rather than a lower offer.
+       */
+      description: "Propose a price to the seller, or request to buy at the asking price.",
       kind: "secondary",
-      listingTypeScope: ["classified"],
+      listingTypeScope: ["standard", "classified", "art", "stickers"],
     },
   },
   AUCTION: {
@@ -383,16 +391,15 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["prize-draw"],
     },
   },
-  CLASSIFIED: {
-    "contact-seller": {
-      iconKey: "message",
-      id: "classified.contact-seller",
-      label: "Contact seller",
-      description: "Open a conversations thread with the seller — classified flow (SB-UNI-M).",
-      kind: "primary",
-      listingTypeScope: ["classified"],
-    },
-  },
+  /*
+   * `CLASSIFIED` held one entry, "contact-seller", whose description read
+   * "Open a conversations thread with the seller". It had ZERO consumers — the
+   * button on the classified PDP was hand-written — and the feature it named was
+   * deleted 2026-08-31. `PRODUCT["make-offer"]` below is the action that is
+   * actually wired (`MakeOfferButton`), and on a classified it is now the only
+   * purchase path, so a second bucket duplicating it would be exactly the drift
+   * Rule #7 exists to prevent.
+   */
   DIGITAL_CODE: {
     "claim-code": {
       iconKey: "confirm",
@@ -403,16 +410,12 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["digital-code"],
     },
   },
-  LIVE: {
-    "inquire": {
-      iconKey: "message",
-      id: "live.inquire",
-      label: "Inquire",
-      description: "Open a conversation with the seller about a live-item listing.",
-      kind: "primary",
-      listingTypeScope: ["live"],
-    },
-  },
+  /*
+   * `LIVE.inquire` ("Open a conversation with the seller about a live-item
+   * listing") went the same way and for the same two reasons: no consumer, and
+   * the conversations feature is gone. It was never needed either — a live item
+   * has `canAddToCart: true`, so unlike classified it has a real checkout.
+   */
   BUNDLE: {
     "buy-now": {
       iconKey: "cart",

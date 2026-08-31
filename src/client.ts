@@ -663,28 +663,6 @@ export {
 export type { ListingHideDefault } from "./_internal/shared/listing-types/_registry";
 export type { SortOption } from "./features/products/constants/sieve";
 
-// Messages — RTDB-pinged Firestore conversations (D5 + VC7)
-export { MessagesView } from "./features/account/components/MessagesView";
-export type { MessagesViewProps, MessagesViewLabels } from "./features/account/components/MessagesView";
-export { ChatList } from "./features/account/components/ChatList";
-export type { ChatListProps, ChatListLabels } from "./features/account/components/ChatList";
-export { ChatWindow } from "./features/account/components/ChatWindow";
-export type { ChatWindowProps, ChatWindowLabels } from "./features/account/components/ChatWindow";
-export { useConversations, useConversation } from "./features/messages/index";
-export {
-  CONVERSATIONS_COLLECTION,
-  CONVERSATIONS_INDEXED_FIELDS,
-} from "./features/messages/index";
-export type {
-  ConversationDocument,
-  ConversationMessage,
-  UseConversationsReturn,
-  UseConversationReturn,
-} from "./features/messages/index";
-export {
-  CONVERSATIONS_PING_PATH,
-  CONVERSATIONS_PING_USER_PATH,
-} from "./features/messages/hooks/useConversation";
 // Product / listing actions
 export { ACTION_ID, ACTION_META, DETAIL_ACTIONS, MOBILE_PRIMARY_ACTIONS, LISTING_BULK_ACTIONS } from "./features/products/index";
 export type { ActionId, ActionMeta, ActionVariant } from "./features/products/index";
@@ -1225,7 +1203,6 @@ export {
   NOTIFICATION_FIELDS,
   SESSION_FIELDS,
   COUPON_USAGE_FIELDS,
-  CONVERSATION_FIELDS,
   SCAMMER_FIELDS,
   SUPPORT_TICKET_FIELDS,
   CAROUSEL_FIELDS,

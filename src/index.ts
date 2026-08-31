@@ -2184,8 +2184,6 @@ export { usersSeedData } from "./seed/index";
 export { wishlistsSeedData } from "./seed/index";
 // historySeedData - Model for history (recently-viewed) seed data.
 export { historySeedData } from "./seed/index";
-// conversationsSeedData - Model for conversations seed data.
-export { conversationsSeedData } from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 // groupedListingsSeedData - Model for grouped listings seed data.
 export { groupedListingsSeedData } from "./seed/index";
@@ -3060,19 +3058,9 @@ export { AddressSelectorCreate } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BecomeSellerView - Component for become seller view.
 export { BecomeSellerView } from "./features/account/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ChatList - Shared export for chat list.
-export { ChatList } from "./features/account/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ChatWindow - Shared export for chat window.
-export { ChatWindow } from "./features/account/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_ADDRESS_DATA - Constant used across modules.
 export { DEFAULT_ADDRESS_DATA } from "./features/account/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// MessagesView - Component for messages view.
-export { MessagesView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // NotificationBell - Shared export for notification bell.
 export { NotificationBell } from "./features/account/index";
@@ -3210,25 +3198,6 @@ export type { BecomeSellerViewLabels } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BecomeSellerViewProps - Type contract for become seller view props.
 export type { BecomeSellerViewProps } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatListLabels - Type contract for chat list labels.
-export type { ChatListLabels } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatListProps - Type contract for chat list props.
-export type { ChatListProps } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatWindowLabels - Type contract for chat window labels.
-export type { ChatWindowLabels } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ChatWindowProps - Type contract for chat window props.
-export type { ChatWindowProps } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MessagesViewLabels - Type contract for messages view labels.
-export type { MessagesViewLabels } from "./features/account/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MessagesViewProps - Type contract for messages view props.
-export type { MessagesViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NotificationBellLabels - Type contract for notification bell labels.
 export type { NotificationBellLabels } from "./features/account/index";
@@ -4230,9 +4199,6 @@ export { getUserProfile } from "./features/auth/server";
 // getUserSessions - Helper for get user sessions.
 export { getUserSessions } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// issueRealtimeToken - Shared export for issue realtime token.
-export { issueRealtimeToken } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markPasswordResetTokenAsUsed - Shared export for mark password reset token as used.
 export { markPasswordResetTokenAsUsed } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -4247,9 +4213,6 @@ export { verifyPasswordResetToken } from "./features/auth/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PasswordResetTokenData - Type contract for password reset token data.
 export type { PasswordResetTokenData } from "./features/auth/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RealtimeTokenResult - Type contract for realtime token result.
-export type { RealtimeTokenResult } from "./features/auth/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // TokenData - Type contract for token data.
 export type { TokenData } from "./features/auth/server";
@@ -9185,7 +9148,7 @@ export { isAuthError } from "./utils/auth-error";
 // -- Missing constants ----------------------------------------------------------
 export {
   API_ENDPOINTS, API_ROUTES, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
-  NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, CHAT_ENDPOINTS, AUCTION_ENDPOINTS,
+  NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, AUCTION_ENDPOINTS,
   BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
   PAYMENT_ENDPOINTS, COPILOT_ENDPOINTS, CORPORATE_ENDPOINTS, EVENT_ENDPOINTS,
   FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, LOYALTY_ENDPOINTS, ANALYTICS_ENDPOINTS, MEDIA_ENDPOINTS,
@@ -9323,30 +9286,10 @@ export { generateFAQId } from "./utils/id-generators";
 export type { GenerateFAQIdInput } from "./utils/id-generators";
 export { generateCroppedImageFilename } from "./utils/id-generators";
 
-// Messages / Conversations feature schemas
-export { CONVERSATIONS_COLLECTION } from "./features/messages/schemas/firestore";
-export type { ConversationDocument, ConversationMessage } from "./features/messages/schemas/firestore";
-// Messages server-side (D5 + VC7) â€" repository + actions
-export {
-  conversationsRepository,
-  ConversationsRepository,
-  ConversationFullError,
-  listConversationsForBuyer,
-  listConversationsForStore,
-  getConversation,
-  sendMessage,
-  markConversationRead,
-  MESSAGE_MAX_LENGTH,
-  pingConversationRtdb,
-} from "./features/messages/server";
-export type { SendMessageInput } from "./features/messages/server";
-// Messages realtime channel â€" shared between client + server (D5 + VC7)
-export {
- conversationPingPath,
- userConversationsPingPath,
- buildConversationPingPaths,
-} from "./features/messages/realtime";
-export type { ConversationPingTargets } from "./features/messages/realtime";
+// D5 + VC7 buyer↔seller conversations were deleted 2026-08-31 (W11/D16). The
+// feature had two pages, five API routes and a repository, and one live CTA
+// anywhere in the product — the classified PDP's "Contact Seller" — which now
+// opens the offer form instead. See `offerIsOnlyPurchasePath`.
 // SB-UNI-B â€" SublistingCategoryDocument deleted; sublistings are CategoryDocument with categoryType:"sublisting".
 // Product features feature schemas (FI1)
 export {
@@ -9771,7 +9714,6 @@ export {
   WISHLIST_FIELDS,
   HISTORY_FIELDS,
   COUPON_USAGE_FIELDS,
-  CONVERSATION_FIELDS,
   CAROUSEL_FIELDS,
   FAQ_FIELDS,
   HOMEPAGE_SECTION_FIELDS,
@@ -9824,7 +9766,6 @@ export type { NavPermissionsManagerProps, NavGroup as NavPermissionsGroup, NavIt
 
 // ── Classified listing feature ─────────────────────────────────────────────────
 export { getClassifiedForDetail } from "./_internal/server/features/classified/data";
-export { startClassifiedConversationAction } from "./_internal/server/features/classified/actions";
 
 // ── Digital-code listing feature ──────────────────────────────────────────────
 export { getDigitalCodeForDetail } from "./_internal/server/features/digital-code/data";

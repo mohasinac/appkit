@@ -681,9 +681,6 @@ export { getUserProfile } from "./features/auth/server";
 // getUserSessions - Helper for get user sessions.
 export { getUserSessions } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// issueRealtimeToken - Shared export for issue realtime token.
-export { issueRealtimeToken } from "./features/auth/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markPasswordResetTokenAsUsed - Shared export for mark password reset token as used.
 export { markPasswordResetTokenAsUsed } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

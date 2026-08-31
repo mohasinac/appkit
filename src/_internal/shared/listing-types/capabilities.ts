@@ -29,9 +29,15 @@ export interface ListingTypeCapability {
   /**
    * Buyers can negotiate the price via the Make-an-Offer flow.
    *
-   * A per-listing `allowOffers` flag is still required on top of this — the
+   * A per-listing `allowOffers` flag is normally required on top of this — the
    * capability says the TYPE can support offers at all, the flag says this
-   * particular seller opted in. `makeOffer` checks both.
+   * particular seller opted in. `offersEnabledFor()` checks both.
+   *
+   * 🛑 One exception, and it is structural: on a type with `canAddToCart: false`
+   * the offer is the only way to buy, so `allowOffers` cannot decide whether an
+   * offer may be sent — it decides whether the buyer may propose a price BELOW
+   * the asking one. Otherwise unchecking one flag would render a price with no
+   * path to it.
    *
    * False wherever a negotiated price would collide with the type's own pricing
    * mechanism: an auction already has bidding, a prize-draw sells fixed-price
@@ -81,7 +87,12 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
   },
   // SB-UNI-F 2026-05-13 — Phase 2 union extension.
   classified: {
-    canAddToCart: false,        // chat-only (OLX / Facebook Marketplace pattern)
+    // No cart (OLX / Facebook Marketplace pattern). Paired with
+    // `canMakeOffer: true` this is the ONLY combination in the table where the
+    // offer is the purchase path rather than an alternative to one — which is
+    // what `offerIsOnlyPurchasePath()` detects, and why `allowOffers` cannot
+    // gate whether an offer may be sent on this type at all.
+    canAddToCart: false,
     canBid: false,
     supportsShipping: false,    // local meetup; shipping is a "negotiable" flag, not a flow
     requiresVendorVerified: false,

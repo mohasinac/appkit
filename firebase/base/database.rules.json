@@ -8,16 +8,24 @@
     //
     // Clients may ONLY subscribe (read) to paths they are
     // explicitly authorised to read via a server-issued custom
-    // token.  The custom token encodes:
-    //   { uid, role, chatIds: {...}, conversationIds: {...} }
+    // token. Every token is PER-EVENT and encodes exactly one claim:
+    //   { authEventId } | { paymentEventId } | { bulkJobId }
+    // minted by /api/auth/event/init, /api/payment/event/init and
+    // enqueueJob() respectively — each next to the node it grants.
     //
-    // NOTE: `role` is issued but NO rule below reads it — it is Firestore/API
-    // RBAC riding along, and it consumes part of the 1000-byte claims budget.
+    // There is deliberately NO general-purpose token endpoint. There was one,
+    // /api/realtime/token, which minted { uid, role, chatIds, conversationIds }.
+    // It was deleted 2026-08-31 with the conversations feature: `chatIds` had
+    // had no reader since the `chat/*` path went, `conversationIds` lost its
+    // reader with `chats/*`, and `role` was never read by any rule here — so the
+    // token granted nothing while spending part of the 1000-byte claims budget
+    // and a Firestore query per issue. Its route and server action had no
+    // callers either.
     //
-    // /api/realtime/token  —  issues the custom token
-    //   - Verifies active session cookie before issuing
-    //   - Token lifetime ≤ 1 hour (matches session TTL)
-    //   - Client calls this endpoint before the token expires
+    // 🛑 If a future path needs client reads, mint its claim at the endpoint
+    // that creates the node, as the three below do. A broad token that enumerates
+    // everything a user may see is a Firestore fan-out on every refresh and a
+    // claims-budget ceiling waiting to be hit.
     //
     // Custom token auth flow (client-side): go through the registered provider,
     // src/lib/client-providers-init.ts -> FirebaseClientRealtimeProvider, and
@@ -27,30 +35,6 @@
     ".read": false,
     ".write": false,
 
-    "chat": {
-      "$chatId": {
-        // Client may read only if the custom token grants access to this chatId
-        ".read": "auth != null && auth.token.chatIds != null && auth.token.chatIds[$chatId] == true",
-        // ALL writes are Admin-only (backend API routes)
-        ".write": false,
-        "messages": {
-          "$messageId": {
-            ".validate": "newData.hasChildren(['userId', 'message', 'timestamp'])",
-            "userId": { ".validate": "newData.isString()" },
-            "message": {
-              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000"
-            },
-            "timestamp": {
-              ".validate": "newData.isNumber() || newData.val() == '.sv'"
-            }
-          }
-        },
-        "metadata": {
-          // metadata readable alongside messages; server-written only
-          ".read": "auth != null && auth.token.chatIds != null && auth.token.chatIds[$chatId] == true"
-        }
-      }
-    },
     "auction-bids": {
       "$productId": {
         // Server-relayed bid feed. NOT client-readable.
@@ -84,33 +68,6 @@
           "timestamp": {
             ".validate": "newData.isNumber() || newData.val() == '.sv'"
           }
-        }
-      }
-    },
-    // ============================================================
-    // Buyer↔Seller Conversation Ping Channel (D5 + VC7)
-    // ============================================================
-    // The server writes Date.now() to these paths on every message send /
-    // mark-read mutation. Clients subscribe and refetch from Firestore on each
-    // tick. Zero RTDB schema duplication — Firestore is the canonical store.
-    //
-    // Paths:
-    //   chats/{conversationId}/lastUpdate — per-conversation ping
-    //   chats/user/{userId}/lastUpdate    — per-user fan-out ping
-    //
-    // Token claims required:
-    //   conversationIds: { [conversationId]: true }  (issued by /api/realtime/token)
-    //   uid                                          (matches $userId)
-    // ============================================================
-    "chats": {
-      "$conversationId": {
-        ".read": "auth != null && auth.token.conversationIds != null && auth.token.conversationIds[$conversationId] == true",
-        ".write": false
-      },
-      "user": {
-        "$userId": {
-          ".read": "auth != null && auth.uid == $userId",
-          ".write": false
         }
       }
     },

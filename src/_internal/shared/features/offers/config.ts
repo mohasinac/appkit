@@ -11,15 +11,23 @@
  *       Same discipline as `resolveMinBid` in the auctions config next door.
  *
  * EXPORTS:
- *   DEFAULT_MIN_OFFER_PERCENT, minOfferAmount, isOfferAmountValid
+ *   DEFAULT_MIN_OFFER_PERCENT, minOfferAmount, isOfferAmountValid,
+ *   offerIsOnlyPurchasePath, offersEnabledFor, resolveOfferBounds,
+ *   type OfferBounds
  *
  * @tag domain:offers,seller
  * @tag layer:shared
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:offer-actions,MakeOfferButton,ProductDetailPageView,ProductForm,SellerProductShell
+ * @tag consumers:offer-actions,MakeOfferButton,ProductDetailPageView,ClassifiedDetailPageView,ProductForm,SellerProductShell
  * @tag sideEffects:none
  */
+
+import type { ListingType } from "../../../../features/products/types/index";
+import {
+  canAddToCart,
+  canMakeOffer,
+} from "../../listing-types/capabilities";
 
 /**
  * The floor, as a percentage of the listed price, below which an offer is
@@ -64,4 +72,102 @@ export function isOfferAmountValid(
   percent?: number | null,
 ): boolean {
   return amount >= minOfferAmount(listedPrice, percent) && amount < listedPrice;
+}
+
+/* -------------------------------------------------------------------------
+ * Listings whose ONLY purchase path is an offer
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Is Make-an-Offer the only way to buy this listing type?
+ *
+ * True exactly when the type can be offered on but has no cart line — today
+ * that is `classified` alone (`canAddToCart: false`, `canMakeOffer: true`).
+ *
+ * Derived from the capability registry rather than testing for `"classified"`,
+ * so a future type that lands in the same shape inherits the rule instead of
+ * silently becoming unbuyable. That is not hypothetical: this function exists
+ * because classified's actual purchase path was a `conversations` chat thread,
+ * and when that feature was deleted the listing type would have been left with
+ * no way to transact at all.
+ */
+export function offerIsOnlyPurchasePath(listingType: ListingType): boolean {
+  return canMakeOffer(listingType) && !canAddToCart(listingType);
+}
+
+/**
+ * May a buyer send an offer on this listing at all?
+ *
+ * The two ordinary gates are the type's `canMakeOffer` capability and the
+ * seller's own `allowOffers` opt-in. The third clause is the point:
+ *
+ * 🛑 **`allowOffers` is an opt-in to NEGOTIATION, not to being contactable.**
+ * On a listing with no cart, unchecking it would mean the buyer has no way to
+ * transact whatsoever — the page would render a price and no path to it. So
+ * where the offer IS the purchase path, an offer is always permitted; what
+ * `allowOffers` then controls is whether the buyer may propose a price *below*
+ * the asking one. See `resolveOfferBounds`.
+ */
+export function offersEnabledFor(
+  listingType: ListingType,
+  allowOffers?: boolean,
+): boolean {
+  if (!canMakeOffer(listingType)) return false;
+  return allowOffers === true || offerIsOnlyPurchasePath(listingType);
+}
+
+export interface OfferBounds {
+  /** Lowest legal amount, inclusive. */
+  min: number;
+  /** Highest legal amount, inclusive. */
+  max: number;
+  /**
+   * The offer is pinned to the asking price — the buyer is requesting to buy,
+   * not negotiating. True when the offer is the only purchase path and the
+   * seller has not opted into haggling.
+   *
+   * Callers use this for COPY, never for a second bounds calculation: `min`
+   * and `max` are already equal when it is true.
+   */
+  isBuyRequest: boolean;
+}
+
+/**
+ * The amounts this listing will accept, as one answer for the form, the schema
+ * and the server.
+ *
+ * Two cases beyond the ordinary one, both driven by there being no cart:
+ *
+ * - **No haggling opted in** → `min === max === listedPrice`. A "request to buy".
+ * - **Haggling opted in** → the usual floor, but the ceiling is the asking price
+ *   **inclusive**. On a cartable listing an offer at full price is rejected with
+ *   "use Add to Cart instead", which on a classified is advice the buyer cannot
+ *   take — there is no cart button to use. That rejection was already a dead end
+ *   before this change.
+ */
+export function resolveOfferBounds(opts: {
+  listingType: ListingType;
+  listedPrice: number;
+  minOfferPercent?: number | null;
+  allowOffers?: boolean;
+}): OfferBounds {
+  const { listingType, listedPrice, minOfferPercent, allowOffers } = opts;
+  const onlyPath = offerIsOnlyPurchasePath(listingType);
+
+  if (onlyPath && allowOffers !== true) {
+    return { min: listedPrice, max: listedPrice, isBuyRequest: true };
+  }
+
+  return {
+    min: minOfferAmount(listedPrice, minOfferPercent),
+    // `- 0.01` and not `- 1`: money is decimal rupees, and this is the exact
+    // ceiling `makeOfferFormSchema` has always enforced.
+    max: onlyPath ? listedPrice : Math.round((listedPrice - 0.01) * 100) / 100,
+    isBuyRequest: false,
+  };
+}
+
+/** Whether `amount` falls within `bounds`. The one comparison, shared. */
+export function isWithinOfferBounds(amount: number, bounds: OfferBounds): boolean {
+  return amount >= bounds.min && amount <= bounds.max;
 }

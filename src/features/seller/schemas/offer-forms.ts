@@ -24,6 +24,8 @@
 
 import { z } from "zod";
 
+import type { OfferBounds } from "../../../_internal/shared/features/offers/config";
+
 export const counterOfferFormSchema = z.object({
   counterAmount: z.coerce
     .number({ invalid_type_error: "Enter a counter amount." })
@@ -36,28 +38,47 @@ export type CounterOfferFormValues = z.infer<typeof counterOfferFormSchema>;
 /**
  * Buyer-side Make-an-Offer form.
  *
- * A factory rather than a constant because both bounds depend on the listing:
- * the floor is `minOfferAmount(listedPrice, minOfferPercent)` and the ceiling is
- * the listed price itself. Both are re-checked server-side in `makeOffer` — this
- * exists so the buyer is told before submitting, using the SAME
- * `minOfferAmount()` the server uses, rather than a second rounding rule that
- * could disagree by a rupee.
+ * A factory rather than a constant because both bounds depend on the listing.
+ * It takes the already-resolved `OfferBounds` rather than recomputing them:
+ * `resolveOfferBounds()` is what `makeOffer` enforces, so anything this schema
+ * accepts, the server accepts. Deriving a second floor here is exactly how the
+ * forms came to advertise a 50% minimum the server rejected at 70 (see the
+ * offers config header).
+ *
+ * Three shapes, all from the same bounds object:
+ *
+ * - **Buy request** (`isBuyRequest`) — no cart on this type and no haggling
+ *   opted in, so `min === max` and the only legal amount is the asking price.
+ * - **Offer, no cart** — floor to asking price *inclusive*: with no Add to Cart
+ *   button, refusing a full-price offer would leave the buyer nowhere to go.
+ * - **Offer, cartable** — the original rule, ceiling exclusive of the price.
  */
 export function makeOfferFormSchema(opts: {
   listedPrice: number;
-  minOffer: number;
+  bounds: OfferBounds;
   formatAmount: (n: number) => string;
 }) {
-  const { listedPrice, minOffer, formatAmount } = opts;
+  const { listedPrice, bounds, formatAmount } = opts;
+
+  const amount = z.coerce
+    .number({ invalid_type_error: "Enter an offer amount." })
+    .positive("Offer amount must be greater than zero.");
+
+  const bounded = bounds.isBuyRequest
+    ? amount
+        .min(bounds.min, `This seller is not taking lower offers — the price is ${formatAmount(bounds.min)}.`)
+        .max(bounds.max, `This seller is not taking lower offers — the price is ${formatAmount(bounds.max)}.`)
+    : amount
+        .min(bounds.min, `Minimum offer is ${formatAmount(bounds.min)}.`)
+        .max(
+          bounds.max,
+          bounds.max >= listedPrice
+            ? `Your offer cannot exceed the asking price of ${formatAmount(listedPrice)}.`
+            : `Offer must be below the listed price of ${formatAmount(listedPrice)} — use Add to Cart to buy at that price.`,
+        );
+
   return z.object({
-    offerAmount: z.coerce
-      .number({ invalid_type_error: "Enter an offer amount." })
-      .positive("Offer amount must be greater than zero.")
-      .min(minOffer, `Minimum offer is ${formatAmount(minOffer)}.`)
-      .max(
-        listedPrice - 0.01,
-        `Offer must be below the listed price of ${formatAmount(listedPrice)} — use Add to Cart to buy at that price.`,
-      ),
+    offerAmount: bounded,
     buyerNote: z.string().max(300, "Keep your note under 300 characters.").optional(),
   });
 }

@@ -197,8 +197,10 @@ const TARGETS = [
   // `scanned 0 · repaired 0`. See the empty-scan guard below.
   { collection: "catalogueItems", fields: ["ownerEmail"], indexMap: {} },
   { collection: "payoutMethods", fields: ["upiVpa", "accountNumber", "ifscCode"], indexMap: {} },
-  // array-of-objects + its denormalised copy
-  { collection: "conversations", fields: ["lastMessage", "messages[].body"], indexMap: {} },
+  // `conversations` lived here until 2026-08-31 and was the only
+  // array-of-objects (`messages[].body`) entry. Removed with the feature —
+  // leaving it would print the clean `scanned 0 · repaired 0` this file's
+  // own comment above warns is indistinguishable from success.
   // `users` already encrypts email/phoneNumber on write; this backfills the
   // MAPPED index name (`phoneIndex`), which encryptPiiFields never wrote —
   // findByPhone queried a field that only existed on seeded users.

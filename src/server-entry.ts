@@ -348,7 +348,6 @@ export { toClient, clientInitial } from "./_internal/shared/serialization/index"
 // S7 server feature shims (data + actions) — canonical _internal/ entries
 export * as accountServer from "./_internal/server/features/account/index";
 export * as authServer from "./_internal/server/features/auth/index";
-export * as messagesServer from "./_internal/server/features/messages/index";
 export * as scamsServer from "./_internal/server/features/scams/index";
 
 // Shared domain errors.

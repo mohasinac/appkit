@@ -70,7 +70,11 @@ import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
 import { normalizeListingType } from "../utils/listing-type";
-import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
+import {
+  DEFAULT_MIN_OFFER_PERCENT,
+  resolveOfferBounds,
+  type OfferBounds,
+} from "../../../_internal/shared/features/offers/config";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -94,6 +98,8 @@ export interface ProductDetailPageViewProps {
     price: number;
     currency: string;
     minOfferPercent: number;
+    /** Resolved by `resolveOfferBounds()` — the same rule `makeOffer` enforces. */
+    bounds: OfferBounds;
   }) => React.ReactNode;
   /**
    * Renders the primary action buttons (Buy Now / Add to Cart / Wishlist).
@@ -682,6 +688,12 @@ export async function ProductDetailPageView({
                   price,
                   currency,
                   minOfferPercent,
+                  bounds: resolveOfferBounds({
+                    listingType: normalizeListingType(p as never),
+                    listedPrice: price,
+                    minOfferPercent,
+                    allowOffers,
+                  }),
                 })}
               </Stack>
 

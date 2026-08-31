@@ -31,7 +31,6 @@ const W2_REQUIRED_COLLECTIONS = [
   "carouselSlides",
   "categories",
   "claimedCoupons",
-  "conversations",
   "coupons",
   "couponUsage",
   "faqs",

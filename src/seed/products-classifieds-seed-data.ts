@@ -1,12 +1,18 @@
 /*
  * WHY: Seeds a Beyblade classifieds catalog with real geographic and meta-field variety.
- *      The original 1-fixture file only ever exercised one city (Mumbai), one
- *      `contactMethod` ("both"), and always `acceptsShipping:false`/`negotiable:true` —
- *      no variety to exercise the classifieds filter UI or the contact-method-specific
- *      copy on the detail page (see CLAUDE.md seed-data blandness sweep, 2026-08-20).
+ *      The original 1-fixture file only ever exercised one city (Mumbai) and always
+ *      `acceptsShipping:false`/`negotiable:true` — no variety to exercise the
+ *      classifieds filter UI (see CLAUDE.md seed-data blandness sweep, 2026-08-20).
  * WHAT: Exports 8 classified listings on Beyblade Arena — local meetups across 5 Indian
- *       cities, covering all 3 contactMethod values and both true/false states of
- *       acceptsShipping/negotiable.
+ *       cities, covering both true/false states of acceptsShipping/negotiable.
+ *
+ *       🛑 The `allowOffers` split is the point of this file now. A classified has
+ *       no cart, so the offer IS the purchase path: the 4 fixtures WITH
+ *       `allowOffers: true` exercise the negotiate flow (floor at
+ *       `minOfferPercent`), and the 4 WITHOUT it exercise the request-to-buy
+ *       flow (amount pinned to the asking price). Keep both sets populated —
+ *       drop either and half of `resolveOfferBounds` becomes untestable by hand.
+ *       A `contactMethod` field was removed 2026-08-31; see ProductClassifiedMeta.
  *
  * EXPORTS:
  *   productsClassifiedsSeedData — Array of 8 Partial<ProductDocument> with listingType:"classified"
@@ -58,7 +64,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Mumbai", locality: "Andheri West", pincode: "400058" },
-      contactMethod: "both" as const,
       acceptsShipping: false,
       negotiable: true,
     },
@@ -105,7 +110,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Bengaluru", locality: "Koramangala", pincode: "560034" },
-      contactMethod: "chat" as const,
       acceptsShipping: true,
       negotiable: false,
     },
@@ -155,7 +159,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Pune", locality: "Kothrud", pincode: "411038" },
-      contactMethod: "phone" as const,
       acceptsShipping: false,
       negotiable: true,
     },
@@ -203,7 +206,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "New Delhi", locality: "Rajouri Garden", pincode: "110027" },
-      contactMethod: "both" as const,
       acceptsShipping: true,
       negotiable: false,
     },
@@ -256,7 +258,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Chennai", locality: "T. Nagar", pincode: "600017" },
-      contactMethod: "chat" as const,
       acceptsShipping: false,
       negotiable: false,
     },
@@ -309,7 +310,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Hyderabad", locality: "Banjara Hills", pincode: "500034" },
-      contactMethod: "phone" as const,
       acceptsShipping: true,
       negotiable: true,
     },
@@ -359,7 +359,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Mumbai", locality: "Powai", pincode: "400076" },
-      contactMethod: "both" as const,
       acceptsShipping: true,
       negotiable: true,
     },
@@ -407,7 +406,6 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Mumbai", locality: "Dadar", pincode: "400014" },
-      contactMethod: "chat" as const,
       acceptsShipping: false,
       negotiable: false,
     },
