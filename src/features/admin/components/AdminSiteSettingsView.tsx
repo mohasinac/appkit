@@ -4,7 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import type { FirestoreDocument } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, BackgroundRenderer, Button, Div, Form, FormActions, Grid, Input, PaginatedSelect, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
+import { Alert, BackgroundRenderer, Button, Div, FormActions, Grid, Input, PaginatedSelect, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
@@ -31,6 +31,8 @@ import {
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
 import { siteSettingsFormSchema } from "../schemas/site-settings-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { SectionForm } from "../../shell";
+import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -104,6 +106,47 @@ const PRIORITY_OPTIONS: SelectOption[] = [
 /** Single persistent save action for the whole settings form — every tab writes
  * into the same combined payload, so one save covers whichever tabs were edited
  * regardless of which one is currently active. */
+/**
+ * One tab panel's fields, as a SectionForm.
+ *
+ * 🛑 `hideActions`, and one section per tab rather than one form for the page.
+ *
+ * Tabs here are TASKS — "set up EMI", "configure the watermark" — and sections
+ * are the fields within a task, so a SectionForm inside a tab panel is the
+ * right nesting rather than tabs-inside-a-form. But the save is NOT per tab:
+ * `buildFullPayload()` writes the whole `siteSettings` singleton every time, so
+ * twenty Save rows would be twenty buttons each appearing to save its own tab
+ * while all of them save everything. The single "Save all changes" bar below
+ * the tabs stays the only submit, and it carries the one `FormErrorSummary`.
+ */
+function SettingsTabForm({
+  id,
+  label,
+  children,
+}: {
+  id: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <SectionForm<FirestoreDocument>
+      sections={[{ id, label, render: () => <>{children}</> }]}
+      values={EMPTY_TAB_VALUES}
+      // Every control in these panels writes through its own `useState` setter;
+      // there is no generic path to route.
+      onChange={() => undefined}
+      onSubmit={() => undefined}
+      hideActions
+    />
+  );
+}
+
+/**
+ * A stable empty object, so `SectionForm`'s `values` identity does not change
+ * on every render of a 20-tab page.
+ */
+const EMPTY_TAB_VALUES: FirestoreDocument = {};
+
 function SaveAllBar({ isPending, onSave }: { isPending: boolean; onSave: () => void }) {
   return (
     <>
@@ -765,6 +808,19 @@ export function AdminSiteSettingsView({
     };
   }
 
+  /*
+   * 🛑 ONE FormShellContext for the page, mounted below around both the tabs and
+   * the save bar.
+   *
+   * There was none. Each of the twenty `<Form schema={siteSettingsFormSchema}>`
+   * tags mounted its OWN provider inside its own tab panel, and `SaveAllBar` —
+   * which renders the only `<FormErrorSummary />` — sits outside all twenty. So
+   * the summary read the default context and could never display anything, and
+   * nothing ever called `validate`: the schema was mounted twenty times and
+   * inert every time.
+   */
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(siteSettingsFormSchema);
+
   const saveAllMutation = useApiMutation({
     errorMessage: "Failed to save site settings.",
     mutationFn: async () => {
@@ -796,6 +852,25 @@ export function AdminSiteSettingsView({
   const CATEGORY_TYPE_KEYS = ["category", "sublisting", "brand", "bundle"] as const;
   const NOTIF_TYPE_OPTIONS = NOTIFICATION_TYPE_TABS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label }));
 
+  /*
+   * Validate the payload that is actually sent, then save.
+   *
+   * The parsed OUTPUT is deliberately discarded — `siteSettingsFormSchema` is
+   * `.passthrough()` precisely because `buildFullPayload()` writes keys the
+   * TypeScript interface does not declare, and saving the parsed object instead
+   * of the payload would be the closed-schema data loss that comment exists to
+   * prevent. This reads the issues and sends the original.
+   */
+  const handleSaveAll = () => {
+    clearErrors();
+    const parsed = siteSettingsFormSchema.safeParse(buildFullPayload());
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveAllMutation.mutate();
+  };
+
   return (
     <StackedViewShell
       portal="admin"
@@ -812,8 +887,8 @@ export function AdminSiteSettingsView({
             {error instanceof Error ? error.message : "Unknown error"}
           </Alert>
         ) : null,
+        <FormShellContext.Provider key="settings-form" value={shellCtx}>
         <Tabs
-          key="tabs"
           value={activeTab}
           /*
            * `Tabs` hands back a bare string, so it is narrowed here rather
@@ -834,7 +909,7 @@ export function AdminSiteSettingsView({
 
           {/* ⓪ About Page */}
           <TabsContent value="about">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="about" label="About">
               <Text size="xs" color="muted">
                 Override the About page content. Leave blank to use the platform defaults.
               </Text>
@@ -930,12 +1005,12 @@ export function AdminSiteSettingsView({
               <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />
               <Input label="Sell CTA copy" value={aboutCtaSell} onChange={(e) => setAboutCtaSell(e.target.value)} placeholder="Start selling in minutes" />
               <Input label="Shop CTA copy" value={aboutCtaShop} onChange={(e) => setAboutCtaShop(e.target.value)} placeholder="Browse the marketplace" />
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ① Branding */}
           <TabsContent value="branding">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="branding" label="Branding">
               <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetItRip" />
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
@@ -944,12 +1019,12 @@ export function AdminSiteSettingsView({
                 <Div id="setting-maintenance-mode"><Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} /></Div>
                 <Input label="Maintenance message" value={maintenanceMessage} onChange={(e) => setMaintenanceMessage(e.target.value)} placeholder="We're back soon." disabled={!maintenanceMode} />
               </Stack>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}
           <TabsContent value="appearance">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="appearance" label="Appearance">
               <Text size="xs" color="muted">
                 Sets the background behind the public shell, dashboard sidebars, and any
                 Section/Card that opts into it. Leave the value blank for a plain surface.
@@ -1039,29 +1114,23 @@ export function AdminSiteSettingsView({
                   </Div>
                 </Stack>
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ②ᵃ Themes — admin-authored theme records */}
           <TabsContent value="themes">
-            <Form schema={siteSettingsFormSchema}
-              onSubmit={(e) => {
-                e.preventDefault();
-                saveAllMutation.mutate();
-              }}
-              className="pt-[var(--appkit-space-4)]" spacing="md"
-            >
+            <SettingsTabForm id="themes" label="Themes">
               <ThemeManagerView
                 value={themeRegistry}
                 onChange={setThemeRegistry}
                 previewOrigin="/"
               />
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ③ Announcement */}
           <TabsContent value="announcement">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="announcement" label="Announcement">
               <Div id="setting-announcement-bar"><Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} /></Div>
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
@@ -1069,23 +1138,23 @@ export function AdminSiteSettingsView({
                 <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
                 <Input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 cursor-pointer" bare disabled={!announcementEnabled} /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
               </Stack>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ④ SEO */}
           <TabsContent value="seo">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="seo" label="Seo">
               <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetItRip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
               <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder="https://letitrip.in" />
               <Div id="setting-robots-noindex"><Toggle label="Robots noindex (disables search indexing — use carefully)" checked={seoNoIndex} onChange={setSeoNoIndex} /></Div>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑤ Contact & Social */}
           <TabsContent value="contact">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="contact" label="Contact">
               <Grid cols={2} gap="md">
                 <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder="support@letitrip.in" />
                 <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
@@ -1102,12 +1171,12 @@ export function AdminSiteSettingsView({
                 <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/letitrip" />
                 <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/letitrip" />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑥ Watermark */}
           <TabsContent value="watermark">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="watermark" label="Watermark">
               <Select
                 label="Watermark type"
                 options={[{ label: "Text", value: "text" }, { label: "Image", value: "image" }]}
@@ -1173,12 +1242,12 @@ export function AdminSiteSettingsView({
                   </Span>
                 </Row>
               </Stack>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑦ Fees & Commissions */}
           <TabsContent value="fees">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="fees" label="Fees">
               <Grid cols={2} gap="md">
                 <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
@@ -1252,12 +1321,12 @@ export function AdminSiteSettingsView({
                   disabled={!shipmentProtectionFeeEnabled}
                 />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑮ Procurement — labor rate feeding Feature A shipment cost calc */}
           <TabsContent value="procurement">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="procurement" label="Procurement">
               <Text size="xs" color="muted">
                 Used to compute each procurement shipment's labor cost (hours spent × hourly rate) and its
                 estimated processing time (hours spent ÷ max hours/day).
@@ -1281,12 +1350,12 @@ export function AdminSiteSettingsView({
                   max={24}
                 />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑯ EMI — site-wide installment financing settings */}
           <TabsContent value="emi">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="emi" label="Emi">
               <Text size="xs" color="muted">
                 A seller must also opt in via their own Payout Settings for EMI to appear at
                 checkout on their items. See the "How EMI Works" public page for buyer-facing copy.
@@ -1347,12 +1416,12 @@ export function AdminSiteSettingsView({
                   max={100}
                 />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑰ GST — Indian tax compliance settings */}
           <TabsContent value="gst">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="gst" label="Gst">
               <Text size="xs" color="muted">
                 Required before enabling GST-inclusive checkout (P-8). Also set a GST rate + HSN
                 code on each taxable product for the tax breakdown to appear.
@@ -1388,12 +1457,12 @@ export function AdminSiteSettingsView({
                   rows={3}
                 />
               </Stack>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑱ Listings — what the marketplace offers */}
           <TabsContent value="listings">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
+            <SettingsTabForm id="listings" label="Listings">
               <Text size="xs" color="muted">
                 Which listing and category types the marketplace offers. A disabled type is hidden
                 from every browse surface and rejected on create and add-to-cart — existing data is
@@ -1437,12 +1506,12 @@ export function AdminSiteSettingsView({
                   ))}
                 </Grid>
               </Stack>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="integrations" label="Integrations">
               <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">Razorpay</Text>
@@ -1505,12 +1574,12 @@ export function AdminSiteSettingsView({
                   <MaskedInput label="Client Secret" value={deviantartClientSecret} onChange={setDeviantartClientSecret} placeholder="••••••••" />
                 </Grid>
               </Stack>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑨ Shipping Defaults */}
           <TabsContent value="shipping">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="shipping" label="Shipping">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
               <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
               <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
@@ -1532,12 +1601,12 @@ export function AdminSiteSettingsView({
                 <Input label="Platform shipping (%)" helperText="Platform's own shipping markup, as a % of order value." value={String(platformShippingPercent)} onChange={(e) => setPlatformShippingPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="Platform shipping minimum (₹)" helperText="Floor for the platform shipping markup." value={String(platformShippingFixedMin)} onChange={(e) => setPlatformShippingFixedMin(parseFloat(e.target.value) || 0)} type="number" min={0} />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑩ Auction Config */}
           <TabsContent value="auction">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="auction" label="Auction">
               <Stack gap="sm" rounded="lg" border="default" padding="sm">
                 <Text size="xs" weight="medium" color="muted">Bid increment tiers</Text>
                 <Text size="xs" color="muted">
@@ -1601,12 +1670,12 @@ export function AdminSiteSettingsView({
               </Stack>
               <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend auction end time if a bid arrives within this window." />
               <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the auction is re-listed." />
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑪ Platform Limits */}
           <TabsContent value="limits">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="limits" label="Limits">
               <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max images per product" value={String(maxImagesPerProduct)} onChange={(e) => setMaxImagesPerProduct(parseInt(e.target.value) || 0)} type="number" min={1} />
@@ -1615,12 +1684,12 @@ export function AdminSiteSettingsView({
                 <Input label="Max custom sections per product" value={String(maxCustomSections)} onChange={(e) => setMaxCustomSections(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑬ WhatsApp Business Cloud API */}
           <TabsContent value="whatsapp">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="whatsapp" label="Whatsapp">
               <Text size="xs" color="muted">
                 Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
                 announcements to admin numbers when orders are placed. Store owners configure their
@@ -1669,12 +1738,12 @@ export function AdminSiteSettingsView({
                 <Input label="Order cancelled template name" value={waTemplateOrderCancelled} onChange={(e) => setWaTemplateOrderCancelled(e.target.value)} placeholder="order_cancelled_update" />
                 <Input label="Refund initiated template name" value={waTemplateRefundInitiated} onChange={(e) => setWaTemplateRefundInitiated(e.target.value)} placeholder="refund_initiated_update" />
               </Grid>
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑭ Notification Channels */}
           <TabsContent value="notifications">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
+            <SettingsTabForm id="notifications" label="Notifications">
               <Text size="xs" color="muted">
                 In-app notifications are always on. Enable external channels below to let the platform
                 fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
@@ -1795,12 +1864,12 @@ export function AdminSiteSettingsView({
                 )}
               </Stack>
 
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
 
           {/* ⑫ Legal Policies */}
           <TabsContent value="legal">
-            <Form schema={siteSettingsFormSchema} onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <SettingsTabForm id="legal" label="Legal">
               {[
                 ["Terms of Service", termsHtml, setTermsHtml],
                 ["Privacy Policy", privacyHtml, setPrivacyHtml],
@@ -1820,10 +1889,11 @@ export function AdminSiteSettingsView({
                   className="font-mono"
                 />
               ))}
-            </Form>
+            </SettingsTabForm>
           </TabsContent>
-        </Tabs>,
-        <SaveAllBar key="save-all" isPending={saveAllMutation.isPending} onSave={() => saveAllMutation.mutate()} />,
+        </Tabs>
+        <SaveAllBar isPending={saveAllMutation.isPending} onSave={handleSaveAll} />
+        </FormShellContext.Provider>,
       ]}
     />
   );
