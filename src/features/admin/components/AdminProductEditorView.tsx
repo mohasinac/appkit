@@ -27,6 +27,7 @@ import {
   useToast,
  Show, StickyToolbar, } from "../../../ui";
 import { useFormShellState, applyZodIssues, FormErrorSummary, FormShellContext } from "../../../ui/forms";
+import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 import type { StackedViewShellProps } from "../../../ui";
 
 // Admin form-input validation — deliberately a small local schema, not the
@@ -180,13 +181,6 @@ export function AdminProductEditorView({
   const [mode, setMode] = React.useState<ProductMode>("standard");
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, validate } = useFormShellState(adminProductFormSchema);
-
-  // Live validation — re-run on every product change, not just on submit.
-  React.useEffect(() => {
-    validate(product);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product, validate]);
 
   const productQuery = useQuery({
     queryKey: ["admin", "product", productId],
@@ -264,6 +258,232 @@ export function AdminProductEditorView({
 
   const isSubmitting = saveMutation.isPending || productQuery.isLoading;
 
+  /*
+   * 🛑 `ProductForm` is a FIELD GROUP, not a form — its parent owns the submit,
+   * which is why it renders inside a section here rather than mounting a
+   * SectionForm of its own. `SellerProductShell` composes the same child the
+   * same way; nesting one SectionForm inside another would give the page two
+   * action rows and two mobile bars.
+   */
+  const sections = React.useMemo<SectionDef<ProductFormValue>[]>(() => [
+    {
+      id: "type",
+      label: "Listing type",
+      required: true,
+      fields: ["listingType"],
+      render: () => (
+        <Stack gap="md">
+            {/* ── Listing type ── */}
+            <Card variant="outlined" padding="lg">
+              <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
+                Listing Type
+              </Text>
+              <Tabs value={mode} onChange={handleModeChange}>
+                <TabsList>
+                  {(!enabledListingTypes || enabledListingTypes.includes("standard")) && (
+                    <TabsTrigger value="standard">Standard</TabsTrigger>
+                  )}
+                  {(!enabledListingTypes || enabledListingTypes.includes("auction")) && (
+                    <TabsTrigger value="auction">Auction</TabsTrigger>
+                  )}
+                  {(!enabledListingTypes || enabledListingTypes.includes("pre-order")) && (
+                    <TabsTrigger value="preorder">Pre-order</TabsTrigger>
+                  )}
+                  {(!enabledListingTypes || enabledListingTypes.includes("prize-draw")) && (
+                    <TabsTrigger value="prize-draw">Prize Draw</TabsTrigger>
+                  )}
+                  {(!enabledListingTypes || enabledListingTypes.includes("classified")) && (
+                    <TabsTrigger value="classified">Classified</TabsTrigger>
+                  )}
+                  {(!enabledListingTypes || enabledListingTypes.includes("digital-code")) && (
+                    <TabsTrigger value="digital-code">Digital Code</TabsTrigger>
+                  )}
+                  {(!enabledListingTypes || enabledListingTypes.includes("live")) && (
+                    <TabsTrigger value="live">Live Item</TabsTrigger>
+                  )}
+                </TabsList>
+                <TabsContent value="standard" />
+                <TabsContent value="auction" />
+                <TabsContent value="preorder" />
+                <TabsContent value="prize-draw" />
+                <TabsContent value="classified" />
+                <TabsContent value="digital-code" />
+                <TabsContent value="live" />
+              </Tabs>
+            </Card>
+        </Stack>
+      ),
+    },
+    {
+      id: "classification",
+      label: "Details",
+      required: true,
+      fields: ["title", "price", "storeId", "categorySlug", "brandSlug"],
+      render: () => (
+        <Stack gap="md">
+            {/* ── Classification (store + category + brand) ── */}
+            <Card variant="outlined" padding="lg">
+              <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
+                Classification
+              </Text>
+              <Stack gap="md">
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium" color="primary">
+                    Store
+                  </Text>
+                  <PaginatedSelect
+                    value={product.storeId ?? null}
+                    onChange={handleStoreSelect}
+                    loadOptions={loadStoreOptions}
+                    placeholder="Search stores…"
+                    searchPlaceholder="Type store name…"
+                    noResultsText="No stores found"
+                    ariaLabel="Store"
+                  />
+                </Stack>
+                <ProductForm
+                  product={product}
+                  onChange={setProduct}
+                  renderGroupSettings={
+                    isEdit && productId
+                      ? (p) => (
+                          <GroupSettingsPanel
+                            productId={productId}
+                            productSlug={p.slug ?? productId}
+                            groupId={p.groupId}
+                            isGroupParent={p.isGroupParent}
+                            groupParentSlug={p.groupParentSlug}
+                            groupChildSlugs={p.groupChildSlugs}
+                            groupTitle={p.groupTitle}
+                            isAuction={modeFromProduct(p) === "auction"}
+                            storeProductsEndpoint={ADMIN_ENDPOINTS.PRODUCTS}
+                            onGroupChanged={() => productQuery.refetch()}
+                          />
+                        )
+                      : undefined
+                  }
+                  renderGroupJoinField={({ label, value, onChange, disabled }) => (
+                    <GroupInlineSelect
+                      scope="admin"
+                      value={value ?? ""}
+                      onChange={(id) => onChange(id || undefined)}
+                      disabled={disabled}
+                      label={label}
+                      placeholder="None (standalone product)"
+                      allowCreate={false}
+                    />
+                  )}
+                  renderCategorySelector={({ label, value, onChange, disabled }) => (
+                    <Stack gap="xs">
+                      <Text size="sm" weight="medium" color="primary">
+                        {label}
+                      </Text>
+                      <PaginatedSelect
+                        value={value || null}
+                        onChange={(v) => onChange(v ?? "")}
+                        loadOptions={loadCategoryOptions}
+                        placeholder="Search categories…"
+                        searchPlaceholder="Type category name…"
+                        noResultsText="No categories found"
+                        ariaLabel={label}
+                        disabled={disabled}
+                        createLabel="Category"
+                        renderCreateForm={({ onCreated, onCancel }) => (
+                          <CategoryQuickCreateForm
+                            onSaved={(id, name) => onCreated({ value: id, label: name })}
+                            onCancel={onCancel}
+                          />
+                        )}
+                      />
+                    </Stack>
+                  )}
+                  renderBrandSelector={(args: BrandSelectorRenderArgs) => (
+                    <Stack gap="xs">
+                      <Text size="sm" weight="medium" color="primary">
+                        {args.label}
+                      </Text>
+                      <PaginatedSelect
+                        value={args.multi ? null : (args.value || null)}
+                        onChange={(v) => args.onValueChange(v ?? "")}
+                        loadOptions={loadBrandOptions}
+                        placeholder="Search brands…"
+                        searchPlaceholder="Type brand name…"
+                        noResultsText="No brands found"
+                        ariaLabel={args.label}
+                        disabled={args.disabled}
+                        createLabel="Brand"
+                        renderCreateForm={({ onCreated, onCancel }) => (
+                          <BrandQuickCreateForm
+                            onSaved={(id, name) => onCreated({ value: id, label: name })}
+                            onCancel={onCancel}
+                          />
+                        )}
+                      />
+                    </Stack>
+                  )}
+                />
+              </Stack>
+            </Card>
+        </Stack>
+      ),
+    },
+    {
+      id: "inventory",
+      label: "Inventory",
+      fields: ["barcodeId"],
+      render: () => (
+        <Stack gap="md">
+            {/* ── Inventory / Barcode ── */}
+            <Card variant="outlined" padding="lg">
+              <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
+                Inventory
+              </Text>
+              <BarcodeField
+                value={product.barcodeId ?? ""}
+                onChange={(v) => setProduct((prev) => ({ ...prev, barcodeId: v || undefined }))}
+                onScan={(v) => setProduct((prev) => ({ ...prev, barcodeId: v }))}
+                helperText="Leave blank to auto-generate. Scan a pre-printed sticker to link it."
+              />
+            </Card>
+        </Stack>
+      ),
+    },
+  ], [product, mode, enabledListingTypes, isEdit, productId]);
+
+  const nav = useSectionFormNav(sections, product, { scope: "admin:product-editor" });
+  /*
+   * Declared AFTER the sections, so the error summary's jump links and the
+   * per-section error badges have a field map to resolve against. Wired the
+   * other way round it still validates and still lists the errors — it just
+   * cannot say which panel each one is in, which is the whole point of the
+   * summary on a form this long.
+   */
+  const { shellCtx, setFieldError, validate } = useFormShellState(adminProductFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
+  // Live validation — re-run on every product change, not just on submit.
+  React.useEffect(() => {
+    validate(product);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product, validate]);
+
+  /*
+   * ONE submit path. The sidebar button used `form="product-editor-form"` to
+   * reach across the two-panel layout into the form element; with no form
+   * element to associate with, both callers call this instead.
+   */
+  const handleSubmit = React.useCallback(() => {
+    const parsed = adminProductFormSchema.safeParse(product);
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+    saveMutation.mutate();
+  }, [product, saveMutation, setFieldError]);
+
   const actionSidebar = (
     <FormShellContext.Provider value={shellCtx}>
       <Card variant="outlined" padding="md" spacing="sm">
@@ -275,9 +495,9 @@ export function AdminProductEditorView({
         </Text>
         <FormErrorSummary />
         <Button
-          type="submit"
-          form="product-editor-form"
+          type="button"
           className="w-full"
+          onClick={handleSubmit}
           isLoading={isSubmitting}
           disabled={!product.title || isSubmitting}
         >
@@ -299,192 +519,32 @@ export function AdminProductEditorView({
   );
 
   const formContent = (
-    <Form
-      id="product-editor-form"
-      key="product-form"
-      shellCtx={shellCtx}
-      onSubmit={(e) => {
-        e.preventDefault();
-        saveMutation.mutate();
-      }} spacing="lg">
-      {/* ── Listing type ── */}
-      <Card variant="outlined" padding="lg">
-        <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
-          Listing Type
-        </Text>
-        <Tabs value={mode} onChange={handleModeChange}>
-          <TabsList>
-            {(!enabledListingTypes || enabledListingTypes.includes("standard")) && (
-              <TabsTrigger value="standard">Standard</TabsTrigger>
-            )}
-            {(!enabledListingTypes || enabledListingTypes.includes("auction")) && (
-              <TabsTrigger value="auction">Auction</TabsTrigger>
-            )}
-            {(!enabledListingTypes || enabledListingTypes.includes("pre-order")) && (
-              <TabsTrigger value="preorder">Pre-order</TabsTrigger>
-            )}
-            {(!enabledListingTypes || enabledListingTypes.includes("prize-draw")) && (
-              <TabsTrigger value="prize-draw">Prize Draw</TabsTrigger>
-            )}
-            {(!enabledListingTypes || enabledListingTypes.includes("classified")) && (
-              <TabsTrigger value="classified">Classified</TabsTrigger>
-            )}
-            {(!enabledListingTypes || enabledListingTypes.includes("digital-code")) && (
-              <TabsTrigger value="digital-code">Digital Code</TabsTrigger>
-            )}
-            {(!enabledListingTypes || enabledListingTypes.includes("live")) && (
-              <TabsTrigger value="live">Live Item</TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent value="standard" />
-          <TabsContent value="auction" />
-          <TabsContent value="preorder" />
-          <TabsContent value="prize-draw" />
-          <TabsContent value="classified" />
-          <TabsContent value="digital-code" />
-          <TabsContent value="live" />
-        </Tabs>
-      </Card>
-
-      {/* ── Classification (store + category + brand) ── */}
-      <Card variant="outlined" padding="lg">
-        <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
-          Classification
-        </Text>
-        <Stack gap="md">
-          <Stack gap="xs">
-            <Text size="sm" weight="medium" color="primary">
-              Store
-            </Text>
-            <PaginatedSelect
-              value={product.storeId ?? null}
-              onChange={handleStoreSelect}
-              loadOptions={loadStoreOptions}
-              placeholder="Search stores…"
-              searchPlaceholder="Type store name…"
-              noResultsText="No stores found"
-              ariaLabel="Store"
-            />
-          </Stack>
-          <ProductForm
-            product={product}
-            onChange={setProduct}
-            renderGroupSettings={
-              isEdit && productId
-                ? (p) => (
-                    <GroupSettingsPanel
-                      productId={productId}
-                      productSlug={p.slug ?? productId}
-                      groupId={p.groupId}
-                      isGroupParent={p.isGroupParent}
-                      groupParentSlug={p.groupParentSlug}
-                      groupChildSlugs={p.groupChildSlugs}
-                      groupTitle={p.groupTitle}
-                      isAuction={modeFromProduct(p) === "auction"}
-                      storeProductsEndpoint={ADMIN_ENDPOINTS.PRODUCTS}
-                      onGroupChanged={() => productQuery.refetch()}
-                    />
-                  )
-                : undefined
-            }
-            renderGroupJoinField={({ label, value, onChange, disabled }) => (
-              <GroupInlineSelect
-                scope="admin"
-                value={value ?? ""}
-                onChange={(id) => onChange(id || undefined)}
-                disabled={disabled}
-                label={label}
-                placeholder="None (standalone product)"
-                allowCreate={false}
-              />
-            )}
-            renderCategorySelector={({ label, value, onChange, disabled }) => (
-              <Stack gap="xs">
-                <Text size="sm" weight="medium" color="primary">
-                  {label}
-                </Text>
-                <PaginatedSelect
-                  value={value || null}
-                  onChange={(v) => onChange(v ?? "")}
-                  loadOptions={loadCategoryOptions}
-                  placeholder="Search categories…"
-                  searchPlaceholder="Type category name…"
-                  noResultsText="No categories found"
-                  ariaLabel={label}
-                  disabled={disabled}
-                  createLabel="Category"
-                  renderCreateForm={({ onCreated, onCancel }) => (
-                    <CategoryQuickCreateForm
-                      onSaved={(id, name) => onCreated({ value: id, label: name })}
-                      onCancel={onCancel}
-                    />
-                  )}
-                />
-              </Stack>
-            )}
-            renderBrandSelector={(args: BrandSelectorRenderArgs) => (
-              <Stack gap="xs">
-                <Text size="sm" weight="medium" color="primary">
-                  {args.label}
-                </Text>
-                <PaginatedSelect
-                  value={args.multi ? null : (args.value || null)}
-                  onChange={(v) => args.onValueChange(v ?? "")}
-                  loadOptions={loadBrandOptions}
-                  placeholder="Search brands…"
-                  searchPlaceholder="Type brand name…"
-                  noResultsText="No brands found"
-                  ariaLabel={args.label}
-                  disabled={args.disabled}
-                  createLabel="Brand"
-                  renderCreateForm={({ onCreated, onCancel }) => (
-                    <BrandQuickCreateForm
-                      onSaved={(id, name) => onCreated({ value: id, label: name })}
-                      onCancel={onCancel}
-                    />
-                  )}
-                />
-              </Stack>
-            )}
-          />
-        </Stack>
-      </Card>
-
-      {/* ── Inventory / Barcode ── */}
-      <Card variant="outlined" padding="lg">
-        <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
-          Inventory
-        </Text>
-        <BarcodeField
-          value={product.barcodeId ?? ""}
-          onChange={(v) => setProduct((prev) => ({ ...prev, barcodeId: v || undefined }))}
-          onScan={(v) => setProduct((prev) => ({ ...prev, barcodeId: v }))}
-          helperText="Leave blank to auto-generate. Scan a pre-printed sticker to link it."
-        />
-      </Card>
-
-      {/* Mobile-only action buttons */}
-      <FormErrorSummary />
-      <Row gap="3" className="lg:hidden">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          disabled={!product.title || isSubmitting}
-        >
-          {isEdit ? "Save changes" : "Create product"}
-        </Button>
-        {isEdit && (
-          <Button
-            type="button"
-            variant="danger"
-            isLoading={deleteMutation.isPending}
-            onClick={() => setDeleteOpen(true)}
-          >
-            Delete product
-          </Button>
-        )}
-      </Row>
-    </Form>
+    <FormShellContext.Provider value={shellCtx}>
+      <SectionForm<ProductFormValue>
+        sections={sections}
+        values={product}
+        /*
+         * The sections write through `setProduct` directly - `ProductForm` and
+         * the type tabs each own their own state updates - so this exists only
+         * for anything a section chooses to route generically.
+         */
+        onChange={(partial) => setProduct((prev) => ({ ...prev, ...partial }))}
+        onSubmit={handleSubmit}
+        openIds={nav.openIds}
+        onOpenChange={nav.setOpenIds}
+        submitLabel={isEdit ? "Save changes" : "Create product"}
+        isLoading={isSubmitting}
+        destructiveAction={
+          isEdit
+            ? {
+                label: "Delete product",
+                onClick: () => setDeleteOpen(true),
+                disabled: deleteMutation.isPending,
+              }
+            : undefined
+        }
+      />
+    </FormShellContext.Provider>
   );
 
   if (embedded) {
