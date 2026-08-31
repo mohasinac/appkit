@@ -25,7 +25,19 @@ import {
   Textarea,
 } from "../../../ui";
 import { apiClient } from "../../../http";
-import { createShipmentItemSchema } from "../schemas/validation";
+import {
+  createShipmentItemSchema,
+  shipmentItemFormSchema,
+  type ShipmentItemFormValues,
+} from "../schemas/validation";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { ValidationError } from "../../../errors/validation-error";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -71,10 +83,22 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
   const { items, meta, isLoading, refetch } = useShipmentItems(shipmentId, lotId, { page, pageSize });
 
   const [showAddItem, setShowAddItem] = React.useState(false);
-  const [title, setTitle] = React.useState("");
-  const [quantity, setQuantity] = React.useState("1");
-  const [priceRupees, setPriceRupees] = React.useState("0");
-  const [isForSelfUse, setIsForSelfUse] = React.useState(false);
+  const [itemDraft, setItemDraft] = React.useState<ShipmentItemFormValues>({
+    title: "",
+    quantity: 1,
+    isForSelfUse: false,
+    price: 0,
+  });
+  const itemSections = React.useMemo(
+    () => buildSectionsFromSchema<ShipmentItemFormValues>(shipmentItemFormSchema),
+    [],
+  );
+  const itemNav = useSectionFormNav(itemSections, itemDraft, { scope: "admin:shipment-item" });
+  const itemForm = useFormShellState(shipmentItemFormSchema, {
+    sections: itemNav.sectionMeta,
+    onGoToSection: itemNav.goToSection,
+    fieldToSectionIndex: itemNav.fieldToSectionIndex,
+  });
 
   const [showBulkImport, setShowBulkImport] = React.useState(false);
   const [bulkText, setBulkText] = React.useState("");
@@ -92,11 +116,19 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
        * named no field. `Number(priceRupees)` also yields NaN on a typo,
        * which the schema rejects and the old payload sent.
        */
+      /*
+       * Built from `visibleValues`, so a price typed before "for self use" was
+       * ticked is dropped rather than submitted — the control is hidden by a
+       * `when` predicate, and a hidden control's value must not travel.
+       */
+      const draft = visibleValues(shipmentItemFormSchema, itemDraft) as ShipmentItemFormValues;
       const parsed = createShipmentItemSchema.safeParse({
-        title,
-        quantity: Number(quantity),
-        isForSelfUse,
-        price: isForSelfUse ? undefined : Math.round(Number(priceRupees) * 100) / 100,
+        title: draft.title,
+        quantity: Number(draft.quantity),
+        isForSelfUse: draft.isForSelfUse,
+        price: draft.isForSelfUse
+          ? undefined
+          : Math.round(Number(draft.price ?? 0) * 100) / 100,
       });
       if (!parsed.success) {
         // ValidationError carries the issue list; a bare Error flattens it to
@@ -112,10 +144,7 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
       );
     },
     onSuccess: () => {
-      setTitle("");
-      setQuantity("1");
-      setPriceRupees("0");
-      setIsForSelfUse(false);
+      setItemDraft({ title: "", quantity: 1, isForSelfUse: false, price: 0 });
       setShowAddItem(false);
       refetch();
     },
@@ -177,28 +206,37 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
       </Alert>
 
       {showAddItem && (
-        <Grid cols={4} gap="sm">
-          <FieldInput name="title" label="Title" required value={title} onChange={setTitle} />
-          <FieldInput name="quantity" label="Quantity" type="number" min="1" value={quantity} onChange={setQuantity} />
-          <FieldInput
-            name="price"
-            label="Projected Sale Price (₹)"
-            type="number"
-            min="0"
-            value={priceRupees}
-            onChange={setPriceRupees}
-            disabled={isForSelfUse}
-          />
-          <FieldCheckbox name="isForSelfUse" label="For self use (no resale)" checked={isForSelfUse} onChange={setIsForSelfUse} />
-          <Button
-            size="sm"
+        <FormShellContext.Provider value={itemForm.shellCtx}>
+          <FormErrorSummary />
+          <SectionForm<ShipmentItemFormValues>
+            sections={itemSections}
+            values={itemDraft}
+            onChange={(partial) => setItemDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => {
+              /*
+               * The guard lives here: SectionForm surfaces errors and scrolls to
+               * them, then calls onSubmit unconditionally.
+               */
+              itemForm.clearErrors();
+              const parsed = shipmentItemFormSchema.safeParse(
+                visibleValues(shipmentItemFormSchema, itemDraft),
+              );
+              if (!parsed.success) {
+                applyZodIssues(parsed.error.issues, itemForm.setFieldError);
+                return;
+              }
+              addItemMutation.mutate();
+            }}
+            onValidationChange={() => itemForm.validate(itemDraft)}
+            schema={shipmentItemFormSchema}
+            openIds={itemNav.openIds}
+            onOpenChange={itemNav.setOpenIds}
+            submitLabel="Save Item"
+            cancelLabel="Cancel"
+            onCancel={() => setShowAddItem(false)}
             isLoading={addItemMutation.isPending}
-            disabled={!title || (!isForSelfUse && Number(priceRupees) <= 0)}
-            onClick={() => addItemMutation.mutate()}
-          >
-            Save Item
-          </Button>
-        </Grid>
+          />
+        </FormShellContext.Provider>
       )}
 
       {isLoading ? (

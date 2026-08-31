@@ -1,23 +1,15 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import React, { useCallback, useEffect, useState } from "react";
-import { z } from "zod";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshCw } from "lucide-react";
-import { Alert, Button, Div, FormField, Heading, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Section, Stack, Text, useToast } from "../../../ui";
 import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { SectionForm, useSectionFormNav, buildSectionsFromSchema, visibleValues } from "../../shell";
+import { sellerGoogleReviewsFormSchema } from "../../store-extensions/schemas/google-config-form";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-
-const googleReviewsDraftSchema = z.object({
-  isConnected: z.boolean(),
-  placeId: z.string(),
-  businessName: z.string(),
-}).superRefine((v, ctx) => {
-  if (v.isConnected && !v.placeId.trim()) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["placeId"], message: "A Place ID is required to show Google reviews on your store page" });
-  }
-});
 
 interface GoogleConfigDraft {
   placeId: string;
@@ -49,12 +41,25 @@ export function SellerGoogleReviewsView({
   const [syncing, setSyncing] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const { showToast } = useToast();
-  const { shellCtx, validate } = useFormShellState(googleReviewsDraftSchema);
-
-  useEffect(() => {
-    validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, validate]);
+  /*
+   * Three fields, all derived. The stats below (average rating, total reviews,
+   * last sync) are SYNC OUTPUT, not configuration — the schema deliberately
+   * omits them, per its own header, so a seller cannot type the review count
+   * their storefront displays.
+   */
+  const sections = useMemo(
+    () => buildSectionsFromSchema<GoogleConfigDraft>(sellerGoogleReviewsFormSchema),
+    [],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "seller:google-reviews" });
+  const { shellCtx, setFieldError, clearErrors, validate } = useFormShellState(
+    sellerGoogleReviewsFormSchema,
+    {
+      sections: nav.sectionMeta,
+      onGoToSection: nav.goToSection,
+      fieldToSectionIndex: nav.fieldToSectionIndex,
+    },
+  );
 
   useEffect(() => {
     fetch(SELLER_ENDPOINTS.GOOGLE_REVIEWS, { credentials: "include" })
@@ -75,6 +80,19 @@ export function SellerGoogleReviewsView({
   }, []);
 
   const handleSave = useCallback(async () => {
+    /*
+     * 🛑 The guard is here because `SectionForm.handleSubmit` scrolls to the
+     * first erroring section and then calls `onSubmit()` UNCONDITIONALLY — it
+     * surfaces errors, it does not block on them.
+     */
+    clearErrors();
+    const parsed = sellerGoogleReviewsFormSchema.safeParse(
+      visibleValues(sellerGoogleReviewsFormSchema, draft),
+    );
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
     setSaving(true);
     setSaveMessage(null);
     try {
@@ -101,7 +119,7 @@ export function SellerGoogleReviewsView({
     } finally {
       setSaving(false);
     }
-  }, [draft, onSave, showToast]);
+  }, [draft, onSave, showToast, clearErrors, setFieldError]);
 
   const handleSync = useCallback(async () => {
     setSyncing(true);
@@ -152,38 +170,6 @@ export function SellerGoogleReviewsView({
     <FormShellContext.Provider value={shellCtx}>
     <Div paddingX="x-sm-md" className="max-w-2xl" padding="y-md">
       <Stack gap="lg">
-        {/* Settings */}
-        <Section>
-          <Heading level={3} className="mb-1">Google Business Settings</Heading>
-          <Text className="text-[var(--appkit-color-text-muted)] mb-4" size="sm">
-            Connect your Google Business profile to sync reviews to your storefront.
-          </Text>
-          <Stack gap="md">
-            <Toggle
-              checked={draft.isConnected}
-              onChange={(v) => setDraft((d) => ({ ...d, isConnected: v }))}
-              label="Show Google reviews on my store page"
-            />
-            <FormField
-              name="placeId"
-              label="Google Place ID"
-              type="text"
-              value={draft.placeId}
-              onChange={(v) => setDraft((d) => ({ ...d, placeId: v }))}
-              placeholder="ChIJ…"
-              helpText="Find your Place ID at developers.google.com/maps/documentation/places/web-service/place-id"
-            />
-            <FormField
-              name="businessName"
-              label="Business name"
-              type="text"
-              value={draft.businessName}
-              onChange={(v) => setDraft((d) => ({ ...d, businessName: v }))}
-              placeholder="Pokémon Palace"
-            />
-          </Stack>
-        </Section>
-
         {/* Stats */}
         {(draft.averageRating !== undefined || draft.totalReviews !== undefined) && (
           <Section>
@@ -227,26 +213,35 @@ export function SellerGoogleReviewsView({
 
         <FormErrorSummary />
 
-        {/* Actions */}
-        <Row className="border-t border-[var(--appkit-color-border)]" padding="t-md" align="center" justify="between" gap="3">
-          <Button gap="sm" 
+        <SectionForm<GoogleConfigDraft>
+          sections={sections}
+          values={draft}
+          onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+          onSubmit={handleSave}
+          onValidationChange={() => validate(draft)}
+          schema={sellerGoogleReviewsFormSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          submitLabel={ACTIONS.STORE["save-google-settings"].label}
+          isLoading={saving}
+        />
+
+        {/*
+          Sync is an ACTION, not a field, so it stays outside the form: it calls
+          a different endpoint, writes nothing the seller typed, and must not be
+          gated by form validity.
+        */}
+        <Row padding="t-md" className="border-t border-[var(--appkit-color-border)]" align="center" justify="start">
+          <Button
+            gap="sm"
             variant="outline"
             size="sm"
             onClick={handleSync}
             isLoading={syncing}
-            disabled={saving || !draft.placeId.trim()}
+            disabled={saving || !(draft.placeId ?? "").trim()}
           >
             <RefreshCw className="h-3.5 w-3.5" />
             {ACTIONS.STORE["google-reviews-sync"].label}
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleSave}
-            isLoading={saving}
-            disabled={syncing}
-          >
-            {ACTIONS.STORE["save-google-settings"].label}
           </Button>
         </Row>
       </Stack>

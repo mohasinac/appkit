@@ -64,6 +64,10 @@ export {
   resolveFields,
   groupFieldsBySection,
   packRows,
+  // The payload builder. A `when` predicate hides a CONTROL, not a VALUE, so a
+  // draft can still carry a field the user can no longer see — build the
+  // submitted object from this, never from the raw draft.
+  visibleValues,
 } from "./build-sections";
 
 // Field-group primitives (W1-15)

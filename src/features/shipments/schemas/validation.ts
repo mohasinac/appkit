@@ -113,6 +113,58 @@ export const createShipmentItemSchema = shipmentItemBaseSchema.refine(
   (item) => item.isForSelfUse || typeof item.price === "number",
   { message: "Projected sale price is required unless the item is for self use", path: ["price"] },
 );
+
+/**
+ * The four fields the add-item form actually offers, annotated for
+ * `buildSectionsFromSchema`.
+ *
+ * 🛑 A separate object rather than `shipmentItemBaseSchema.pick(...)`, for two
+ * reasons. `.pick()` returns NEW field instances and the annotation registry is
+ * a WeakMap keyed by instance, so the meta would not survive. And deriving the
+ * form from the full base schema would render `categorySlugs` (an array) and
+ * `condition` as controls the add-item row has never had — an array has no
+ * `FieldKind`, so it would appear as a disabled placeholder telling the user to
+ * supply a renderer.
+ *
+ * The base schema stays the API contract; this is the form's subset of it.
+ */
+export const shipmentItemFormSchema = z
+  .object({
+    title: annotate(z.string().min(1, "Item title is required"), {
+      section: "item", sectionLabel: "Add item", sectionRequired: true,
+      order: 1, row: "pair", label: "Title",
+    }),
+    quantity: annotate(z.coerce.number().int().min(1, "At least one"), {
+      section: "item", order: 2, row: "quarter", kind: "number", label: "Quantity",
+    }),
+    isForSelfUse: annotate(z.boolean(), {
+      section: "item", order: 3, row: "quarter", kind: "toggle",
+      label: "For self use (no resale)",
+    }),
+    /*
+     * Hidden — not disabled — when the item is for self use. A self-use item has
+     * no projected sale price by definition, and `visibleValues()` then drops
+     * the value so a price typed before ticking the box cannot be submitted.
+     */
+    price: annotate(z.coerce.number().min(0).optional(), {
+      section: "item", order: 4, row: "pair", kind: "number",
+      label: "Projected sale price (₹)",
+      when: (v) => !(v as { isForSelfUse?: boolean }).isForSelfUse,
+    }),
+  })
+  .superRefine((item, ctx) => {
+    // Mirrors `createShipmentItemSchema`'s refine. `when` hides the control; it
+    // does NOT relax the rule, so the rule has to tolerate the hidden case.
+    if (!item.isForSelfUse && typeof item.price !== "number") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["price"],
+        message: "Projected sale price is required unless the item is for self use",
+      });
+    }
+  });
+
+export type ShipmentItemFormValues = z.infer<typeof shipmentItemFormSchema>;
 export const updateShipmentItemSchema = shipmentItemBaseSchema.partial().extend({
   // Link/unlink fields — written by the link route and by the unlink action
   // (PATCH with `null` to clear). Not part of item creation, so kept out of

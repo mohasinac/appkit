@@ -76,6 +76,33 @@ export const storeGoogleConfigUpdateSchema = z
 export type StoreGoogleConfigFormValues = z.infer<typeof storeGoogleConfigUpdateSchema>;
 
 /**
+ * The seller-facing form schema — the same annotated fields, plus the one rule
+ * the server does not need.
+ *
+ * 🛑 `.superRefine()` wraps and returns a NEW schema instance, which is exactly
+ * why the annotations live on the FIELDS above rather than being applied here:
+ * the registry is a WeakMap keyed by instance, so `annotate()` must be the
+ * outermost call on each field, and any wrapper around the whole object is
+ * transparent to it. `objectShape()` sees through `.superRefine()` when
+ * `buildSectionsFromSchema` resolves the fields.
+ *
+ * The rule itself is a form-level one: a Place ID is only required once the
+ * seller has actually switched the feature on. Requiring it unconditionally
+ * would make an untouched, disconnected settings page fail validation on load.
+ */
+export const sellerGoogleReviewsFormSchema = storeGoogleConfigUpdateSchema.superRefine(
+  (v, ctx) => {
+    if (v.isConnected && !(v.placeId ?? "").trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["placeId"],
+        message: "A Place ID is required to show Google reviews on your store page",
+      });
+    }
+  },
+);
+
+/**
  * What the seller's own settings page may see.
  *
  * An ALLOW-list, built as a new object — never the document with keys deleted.
