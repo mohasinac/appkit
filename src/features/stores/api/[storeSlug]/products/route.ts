@@ -30,6 +30,8 @@ interface StoreEntity {
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 
 import { parseListingParams } from "../../../../../utils/listing-params";
+import { SIEVE_OP, sieveFilter } from "../../../../../utils/sieve-builder";
+import { PRODUCT_FIELDS } from "../../../../../constants/field-names";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 24;
@@ -95,7 +97,7 @@ export async function GET(
     const filterParts = [
       `storeId==${store.id}`,
       "status==published",
-      "listingType==standard",
+      sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "standard"),
     ];
     if (std.filters) {
       const safe = validateSieveFilters(

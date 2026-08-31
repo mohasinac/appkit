@@ -4,6 +4,8 @@ import type {
   PagedResult,
 } from "../../../contracts";
 import type { SearchProductItem, SearchQuery, SearchResponse } from "../types";
+import { SIEVE_OP, sieveFilter } from "../../../utils/sieve-builder";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 /**
  * SearchRepository
@@ -29,7 +31,7 @@ export class SearchRepository {
     if (query.condition) filterParts.push(`condition==${query.condition}`);
     // SB1-G Phase 4 — canonical listingType discriminator.
     if (query.listingType) {
-      filterParts.push(`listingType==${query.listingType}`);
+      filterParts.push(sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, query.listingType));
     }
     if (query.inStock === true) filterParts.push("availableQuantity>0");
     if (query.minRating !== undefined)

@@ -9,6 +9,8 @@ import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
+import { SIEVE_OP, sieveFilter } from "../../../utils/sieve-builder";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 const groupTitleSchema = z.object({
   groupTitle: z.string().min(1, "Group title is required"),
@@ -569,7 +571,7 @@ function AddChildContent({
             <ProductInlineSelect
               scope="store"
               endpoint={storeProductsEndpoint}
-              filters="listingType==standard"
+              filters={sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "standard")}
               multiple
               value={linkTargets}
               onChange={setLinkTargets}

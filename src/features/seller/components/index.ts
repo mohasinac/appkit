@@ -1,13 +1,9 @@
 export { SellerDashboardView } from "./SellerDashboardView";
 export type { SellerDashboardViewProps } from "./SellerDashboardView";
 export { SellerProductsView } from "./SellerProductsView";
+export { SellerListingTypeView, SELLER_LISTING_TYPE_SPECS } from "./SellerListingTypeView";
+export type { SellerListingTypeViewProps, SellerListingTypeSpec, SellerListingTypeKey, SellerListingRow } from "./SellerListingTypeView";
 export type { SellerProductsViewProps } from "./SellerProductsView";
-export { SellerAuctionsView } from "./SellerAuctionsView";
-export type { SellerAuctionsViewProps } from "./SellerAuctionsView";
-export { SellerPreOrdersView } from "./SellerPreOrdersView";
-export type { SellerPreOrdersViewProps } from "./SellerPreOrdersView";
-export { SellerPrizeDrawsView } from "./SellerPrizeDrawsView";
-export type { SellerPrizeDrawsViewProps } from "./SellerPrizeDrawsView";
 export { PrintCenterView } from "./PrintCenterView";
 export { SellerOrdersView, SellerOrderDetailPanel } from "./SellerOrdersView";
 export type { SellerOrdersViewProps } from "./SellerOrdersView";
@@ -68,8 +64,6 @@ export type { SellerDashboardViewProps as StoreDashboardViewProps } from "./Sell
 // SellerProductsView aliased as StoreProductListingsView (StoreProductsView is the public customer-facing store listing)
 export { SellerProductsView as StoreProductListingsView } from "./SellerProductsView";
 export type { SellerProductsViewProps as StoreProductListingsViewProps } from "./SellerProductsView";
-export { SellerAuctionsView as StoreAuctionsView } from "./SellerAuctionsView";
-export type { SellerAuctionsViewProps as StoreAuctionsViewProps } from "./SellerAuctionsView";
 export { SellerOrdersView as StoreOrdersView } from "./SellerOrdersView";
 export type { SellerOrdersViewProps as StoreOrdersViewProps } from "./SellerOrdersView";
 export { SellerOffersView as StoreOffersView } from "./SellerOffersView";

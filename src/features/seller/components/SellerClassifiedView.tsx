@@ -1,208 +1,25 @@
 "use client";
 
-import { Badge, sortBy, type JsonArray } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit/client";
-import React, { useState, useCallback } from "react";
-import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
-import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { ROUTES } from "../../../constants/index";
+/**
+ * SellerClassifiedView — seller browse/manage of classified listings.
+ *
+ * A named wrapper, kept so the page, the barrel and every existing import path
+ * stay unchanged. All behaviour is `SellerListingTypeView`; everything this
+ * type does differently is one entry in `SELLER_LISTING_TYPE_SPECS`.
+ *
+ * This file was 208 lines of a component that four siblings also contained
+ * verbatim — see that file's header for why the duplication mattered rather
+ * than merely being untidy.
+ */
+
+import React from "react";
 import {
-  toRecordArray,
-  toRelativeDate,
-  toCurrency,
-  toStringValue,
-} from "../../admin/hooks/useAdminListingData";
-import { DataListingView } from "../../admin/components/DataListingView";
-import type { ListingViewConfig } from "../../admin/components/DataListingView";
-import type { AdminTableColumn } from "../../admin/types";
-import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
-import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
-import type { ListingType } from "../../products/types";
+  SellerListingTypeView,
+  type SellerListingTypeViewProps,
+} from "./SellerListingTypeView";
 
-const LISTING_TYPES: readonly ListingType[] = ["classified"];
+export type SellerClassifiedViewProps = SellerListingTypeViewProps;
 
-interface ClassifiedRow {
-  id: string;
-  title: string;
-  price: string;
-  city: string;
-  acceptsShipping: boolean;
-  status: string;
-  createdAt: string;
-}
-
-interface ProductsResponse {
-  products?: JsonArray;
-  meta?: { total: number };
-}
-
-const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
-  { key: "title", header: "Listing", render: (row) => <Text size="sm" weight="medium">{row.title}</Text> },
-  { key: "price", header: "Price", render: (row) => <Text className="tabular-nums" size="sm">{row.price}</Text> },
-  {
-    key: "city",
-    header: "Location",
-    render: (row) => (
-      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{row.city || "—"}</Text>
-    ),
-  },
-  {
-    key: "acceptsShipping",
-    header: "Shipping",
-    render: (row) => (
-      <Badge variant={row.acceptsShipping ? "active" : "inactive"} size="xs">
-        {row.acceptsShipping ? "Ships" : "Meetup only"}
-      </Badge>
-    ),
-  },
-  {
-    key: "status",
-    header: "Status",
-    render: (row) => (
-      <Badge variant={row.status === "active" ? "active" : "inactive"} size="xs" className="capitalize">
-        {row.status}
-      </Badge>
-    ),
-  },
-  {
-    key: "createdAt",
-    header: "Created",
-    render: (row) => (
-      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{row.createdAt}</Text>
-    ),
-  },
-];
-
-export interface SellerClassifiedViewProps {
-  onCreateClick?: () => void;
-  onEditClick?: (id: string) => void;
-  onDelete?: (id: string) => Promise<void>;
-  onBulkDelete?: (ids: string[]) => Promise<void>;
-}
-
-export function SellerClassifiedView({
-  onCreateClick,
-  onEditClick,
-  onDelete,
-  onBulkDelete,
-}: SellerClassifiedViewProps) {
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const { deletingId, handleDelete: performDelete } = useEntityDelete({
-    endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
-    deleteFn: onDelete,
-    successMessage: "Listing deleted.",
-    fetchOptions: { credentials: "include" },
-  });
-
-  const handleDelete = useCallback(
-    async (id: string) => {
-      await performDelete(id);
-      setDeleteTargetId(null);
-    },
-    [performDelete],
-  );
-
-  const handleEdit = useCallback(
-    (id: string) => {
-      if (onEditClick) onEditClick(id);
-      else window.location.href = String(ROUTES.STORE.CLASSIFIED_EDIT(id));
-    },
-    [onEditClick],
-  );
-
-  const handleCreate = useCallback(() => {
-    if (onCreateClick) onCreateClick();
-    else window.location.href = String(ROUTES.STORE.CLASSIFIED_NEW);
-  }, [onCreateClick]);
-
-  const scope = useAvailabilityScope(LISTING_TYPES);
-
-
-  const config: ListingViewConfig<ProductsResponse, ClassifiedRow> = {
-    portal: "seller",
-    title: "Classified",
-    searchPlaceholder: "Search classified listings...",
-    emptyLabel: "No classified listings yet — post your first buy/sell/trade ad",
-    filterKeys: [],
-    defaultSort: sortBy("createdAt", "DESC"),
-    queryKey: ["seller", "classified"],
-    endpoint: SELLER_ENDPOINTS.PRODUCTS,
-    sortOptions: [
-      { value: sortBy("createdAt", "DESC"), label: "Newest" },
-      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
-      { value: "title", label: "Name A–Z" },
-      { value: sortBy("price", "ASC"), label: "Price: Low–High" },
-      { value: sortBy("price", "DESC"), label: "Price: High–Low" },
-    ],
-    columns: COLUMNS,
-    mapRows: (response) =>
-      toRecordArray(response.products).map((item, index) => {
-        const classified = (item.classified ?? {}) as Record<string, JsonValue>;
-        const meetupArea = (classified.meetupArea ?? {}) as Record<string, JsonValue>;
-        return {
-          id: toStringValue(item.id, `classified-${index}`),
-          title: toStringValue(item.productTitle ?? item.title, "Untitled"),
-          price: toCurrency(item.price),
-          city: toStringValue(meetupArea.city ?? classified.city, ""),
-          acceptsShipping: Boolean(classified.acceptsShipping),
-          status: toStringValue(item.status, "draft"),
-          createdAt: toRelativeDate(item.createdAt),
-        };
-      }),
-    getTotal: (response, mappedRows) =>
-      typeof response.meta?.total === "number"
-        ? response.meta.total
-        : mappedRows.length,
-    buildFilters: () => "listingType==classified",
-    buildExtraParams: () => scope.extraParams,
-    renderAboveContent: scope.renderAboveContent,
-    primaryAction: { label: "New Classified", onClick: () => handleCreate() },
-    // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
-    onRowClick: (row) => handleEdit(row.id),
-    // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
-    buildBulkActions: onBulkDelete
-      ? (selection): BulkActionItem[] =>
-          SELLER_BULK_ACTIONS.classified.map((id) => ({
-            id,
-            label: ROW_ACTION_META[id].label,
-            destructive: ROW_ACTION_META[id].destructive,
-            onClick: async () => {
-              await onBulkDelete(selection.selectedIds);
-              selection.clearSelection();
-            },
-          }))
-      : undefined,
-    renderRowActions: (row) => (
-      <RowActionMenu
-        actions={[
-          { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
-          {
-            label: ACTIONS.STORE["delete-listing"].label,
-            destructive: true,
-            onClick: () => setDeleteTargetId(row.id),
-            disabled: deletingId === row.id,
-          },
-        ]}
-      />
-    ),
-  };
-
-  return (
-    <>
-      <DataListingView config={config} />
-      {deleteTargetId && (
-        <ConfirmDeleteModal
-          isOpen
-          title="Delete Classified Listing"
-          message="Are you sure you want to delete this classified listing? This cannot be undone."
-          onConfirm={() => handleDelete(deleteTargetId)}
-          onClose={() => setDeleteTargetId(null)}
-          isDeleting={deletingId === deleteTargetId}
-        />
-      )}
-    </>
-  );
+export function SellerClassifiedView(props: SellerClassifiedViewProps) {
+  return <SellerListingTypeView type="classified" {...props} />;
 }

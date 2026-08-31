@@ -8123,9 +8123,6 @@ export { SellerAnalyticsStats } from "./features/seller/index";
 // SellerAnalyticsView - Component for seller analytics view.
 export { SellerAnalyticsView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerAuctionsView - Component for seller auctions view.
-export { SellerAuctionsView } from "./features/seller/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerCouponsView - Component for seller coupons view.
 export { SellerCouponsView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -8179,14 +8176,6 @@ export { SellerPayoutStats } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerPayoutsView - Component for seller payouts view.
 export { SellerPayoutsView } from "./features/seller/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerPreOrdersView - Component for seller pre-orders listing view (SB4-E).
-export { SellerPreOrdersView } from "./features/seller/index";
-export type { SellerPreOrdersViewProps } from "./features/seller/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerPrizeDrawsView - Component for seller prize draws listing view (SB4-E).
-export { SellerPrizeDrawsView } from "./features/seller/index";
-export type { SellerPrizeDrawsViewProps } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerProductsView - Component for seller products view.
 export { SellerProductsView } from "./features/seller/index";
@@ -8340,9 +8329,6 @@ export type { SellerAnalyticsTopProduct } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SellerAnalyticsViewProps - Type contract for seller analytics view props.
 export type { SellerAnalyticsViewProps } from "./features/seller/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SellerAuctionsViewProps - Type contract for seller auctions view props.
-export type { SellerAuctionsViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SellerCouponsViewProps - Type contract for seller coupons view props.
 export type { SellerCouponsViewProps } from "./features/seller/index";

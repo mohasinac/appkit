@@ -21,6 +21,7 @@ import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingVi
 import type { AdminTableColumn } from "../types";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import type { ListingType } from "../../products/types";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 const PRIZE_DRAW_TYPES: readonly ListingType[] = ["prize-draw"];
 
@@ -98,6 +99,19 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
 export type AdminPrizeDrawsViewProps = ListingLayoutProps;
 
 export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewProps) {
+  /*
+   * 🛑 Before the early return, not after.
+   *
+   * This hook used to sit BELOW the `React.Children.count` branch, so the
+   * component called a different number of hooks depending on whether it was
+   * given children — a rules-of-hooks violation that React only reports once
+   * the branch actually flips at runtime. The page renders `<AdminPrizeDrawsView />`
+   * with no children, so the violating path was the one always taken and the
+   * bug stayed latent. `SellerPreOrdersView` had the identical shape and was
+   * deleted in the same commit for being unreachable.
+   */
+  const scope = useAvailabilityScope(PRIZE_DRAW_TYPES);
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -105,8 +119,6 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       </ListingLayout>
     );
   }
-
-  const scope = useAvailabilityScope(PRIZE_DRAW_TYPES);
 
 
   const config: ListingViewConfig<AdminProductsResponse, PrizeDrawAdminRow> = {
@@ -146,7 +158,9 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) => {
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
-      return ["listingType==prize-draw", status].filter(Boolean).join(",");
+      return [sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "prize-draw"), status]
+        .filter(Boolean)
+        .join(",");
     },
     buildExtraParams: () => scope.extraParams,
     renderAboveContent: scope.renderAboveContent,

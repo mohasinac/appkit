@@ -20,6 +20,7 @@ import { reviewRepository } from "../../reviews/repository/reviews.repository";
 import type { StoreDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas";
 import type { ReviewDocument } from "../../reviews/schemas";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -115,7 +116,7 @@ export async function getStoreProducts(
   const filtersArr = [
     sieveFilter("storeId", SIEVE_OP.EQ, storeDoc.id),
     "status==published",
-    "listingType==standard",
+    sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "standard"),
   ];
   if (filters) filtersArr.push(filters);
 
@@ -146,7 +147,7 @@ export async function getStoreAuctions(
   const filtersArr = [
     sieveFilter("storeId", SIEVE_OP.EQ, storeDoc.id),
     "status==published",
-    "listingType==auction",
+    sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "auction"),
   ];
   if (filters) filtersArr.push(filters);
 

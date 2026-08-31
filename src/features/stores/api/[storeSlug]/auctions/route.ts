@@ -44,6 +44,8 @@ function validateSieveFilters(
 }
 
 import { parseListingParams } from "../../../../../utils/listing-params";
+import { SIEVE_OP, sieveFilter } from "../../../../../utils/sieve-builder";
+import { PRODUCT_FIELDS } from "../../../../../constants/field-names";
 
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 
@@ -90,7 +92,7 @@ export async function GET(
     const filterParts = [
       `storeId==${store.id}`,
       "status==published",
-      "listingType==auction",
+      sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "auction"),
     ];
     if (std.filters) {
       const safe = validateSieveFilters(
