@@ -54,15 +54,15 @@ export interface WithTransformOpts<Base, Target extends Base = Base> {
  * Convenience helper: build a response type for list endpoints that mirrors
  * the package's standard list-response shape but with a generic item type.
  */
-export interface GenericListResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize?: number;
-  perPage?: number;
-  totalPages: number;
-  hasMore?: boolean;
-}
+/*
+ * `GenericListResponse<T>` was removed 2026-08-31. It had ZERO importers, and
+ * it declared BOTH `pageSize?` and `perPage?` — optional, with no
+ * discriminator — so a value could satisfy the type while supplying neither.
+ * It was dead code presenting itself as a standard.
+ *
+ * The canonical envelope is `SieveResult<T>` in providers/db-firebase/sieve.ts,
+ * which every repository already returns.
+ */
 
 // --- Table column type (shared across feat packages) -------------------------
 

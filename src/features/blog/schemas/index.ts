@@ -102,6 +102,8 @@ export const blogListParamsSchema = z.object({
   tags: z.string().optional(),
   q: z.string().optional(),
   page: z.coerce.number().optional(),
+  pageSize: z.coerce.number().optional(),
+  /** Accepted, never emitted — a link built before the 2026-08-31 rename. */
   perPage: z.coerce.number().optional(),
   sort: z.string().optional(),
   featured: z.coerce.boolean().optional(),

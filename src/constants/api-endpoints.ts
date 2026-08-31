@@ -636,8 +636,8 @@ export const BRAND_ENDPOINTS = {
 export const BLOG_ENDPOINTS = {
   LIST: "/api/blog",
   BY_SLUG: (slug: string) => `/api/blog/${slug}`,
-  FEATURED: (perPage?: number) =>
-    `/api/blog?featured=true${perPage !== undefined ? `&perPage=${perPage}` : ""}`,
+  FEATURED: (pageSize?: number) =>
+    `/api/blog?featured=true${pageSize !== undefined ? `&pageSize=${pageSize}` : ""}`,
   SORTED: (sort: string) => `/api/blog?sort=${sort}`,
 } as const;
 

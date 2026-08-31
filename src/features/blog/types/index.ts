@@ -54,7 +54,7 @@ export interface BlogListParams {
   tags?: string;
   q?: string;
   page?: number;
-  perPage?: number;
+  pageSize?: number;
   sort?: string;
   featured?: boolean;
 }

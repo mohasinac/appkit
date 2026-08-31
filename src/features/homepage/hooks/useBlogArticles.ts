@@ -39,7 +39,7 @@ export function useBlogArticles(options?: {
 
       const remaining = MIN_BLOG_COUNT - featured.length;
       const latestResult = await apiClient.get<BlogListResponse>(
-        `${BLOG_ENDPOINTS.SORTED("-publishedAt")}&perPage=${MIN_BLOG_COUNT + remaining}`,
+        `${BLOG_ENDPOINTS.SORTED("-publishedAt")}&pageSize=${MIN_BLOG_COUNT + remaining}`,
       );
 
       const existingIds = new Set(featured.map((p) => p.id));

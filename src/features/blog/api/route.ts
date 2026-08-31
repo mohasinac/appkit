@@ -35,7 +35,15 @@ export async function GET(request: Request): Promise<NextResponse> {
   try {
     const url = new URL(request.url);
     const page = numParam(url, "page", 1);
-    const perPage = numParam(url, "perPage", 20);
+    /*
+     * `pageSize` is canonical; `perPage` is still read because this is a public
+     * GET and a link built before 2026-08-31 carries the old spelling. Ignoring
+     * it would silently serve the default page size with a 200 — the shape of
+     * failure this codebase keeps paying for.
+     */
+    const pageSize = url.searchParams.has("perPage")
+      ? numParam(url, "perPage", 20)
+      : numParam(url, "pageSize", 20);
     const sort = param(url, "sort") ?? "-publishedAt";
 
     const parts: string[] = [];
@@ -66,7 +74,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     // only the feature repository knows how to push a searchTxt clause down and
     // AND-refine the remaining terms.
     const result = await blogRepository.listAll(
-      { filters, sorts: sort, page, pageSize: perPage },
+      { filters, sorts: sort, page, pageSize },
       q ? { search: q } : undefined,
     );
 

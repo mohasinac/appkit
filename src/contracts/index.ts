@@ -110,7 +110,6 @@ export type { SiteConfig, NavItem } from "./config";
 // Extensibility utilities
 export type {
   WithTransformOpts,
-  GenericListResponse,
   TableColumn,
   ColumnPriority,
   ColumnExtensionOpts,

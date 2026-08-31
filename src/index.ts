@@ -648,9 +648,6 @@ export type { FilterType } from "./contracts/index";
 // GatewayPaymentResponse - Type contract for gateway payment response.
 export type { GatewayPaymentResponse } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// GenericListResponse - Type contract for generic list response.
-export type { GenericListResponse } from "./contracts/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // IAuthProvider - Type contract for iauth provider.
 export type { IAuthProvider } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -3720,9 +3717,6 @@ export type { AdminFilterBarProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AdminListParams - Type contract for admin list params.
 export type { AdminListParams } from "./features/admin/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AdminListResponse - Type contract for admin list response.
-export type { AdminListResponse } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AdminMediaViewProps - Type contract for admin media view props.
 export type { AdminMediaViewProps } from "./features/admin/index";

@@ -8,7 +8,6 @@ export * from "./id-generators";
 export * from "./media-field";
 export * from "./array.helper";
 export * from "./object.helper";
-export * from "./pagination.helper";
 export * from "./sorting.helper";
 export * from "./animation.helper";
 export * from "./color.helper";

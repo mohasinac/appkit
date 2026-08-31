@@ -22,7 +22,7 @@ export function useBlogPosts(
   if (params.q) searchParams.set("q", params.q);
   if (params.tags) searchParams.set("tags", params.tags);
   if (params.page) searchParams.set("page", String(params.page));
-  if (params.perPage) searchParams.set("perPage", String(params.perPage));
+  if (params.pageSize) searchParams.set("pageSize", String(params.pageSize));
   if (params.sort) searchParams.set("sort", params.sort);
   if (params.featured !== undefined)
     searchParams.set("featured", String(params.featured));

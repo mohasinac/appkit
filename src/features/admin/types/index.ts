@@ -41,13 +41,13 @@ export interface AdminListParams {
   filters?: string;
 }
 
-export interface AdminListResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  perPage: number;
-  totalPages: number;
-}
+/*
+ * `AdminListResponse<T>` was removed 2026-08-31. Zero importers — and the name
+ * is ALSO declared in `src/lib/api/types.ts` with an INCOMPATIBLE shape
+ * (`{ data: { items, total } }` vs this file's flat `{ items, total }`), while
+ * this one was the copy re-exported from appkit's public barrel. Two same-named
+ * types where the barrel silently picks one is Root Cause #36 exactly.
+ */
 
 // --- Analytics Types ----------------------------------------------------------
 

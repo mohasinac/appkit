@@ -161,7 +161,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
     tags: table.get(TABLE_KEYS.TAGS) || undefined,
     sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
-    perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),
+    pageSize: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),
   };
 
   const { posts, totalPages, isLoading } = useBlogPosts(params, { initialData });

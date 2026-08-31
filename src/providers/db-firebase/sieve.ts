@@ -216,6 +216,28 @@ export interface SieveOptions {
   aliases?: SieveFilterAliases;
 }
 
+/**
+ * 🛑 THE canonical list envelope. Every repository returns this shape.
+ *
+ * A list endpoint should emit it unchanged — `return successResponse(result)` —
+ * and a listing view should read `response.items`. Where a route instead
+ * destructures `result.items` and re-emits it as `products` / `orders` /
+ * `tickets`, the view has to rename it back in `mapRows`, and the two renames
+ * are a pair that can drift. Fifteen such keys exist; `audit-list-envelope`
+ * names them and refuses a sixteenth.
+ *
+ * Nothing type-errors when they drift, which is why they accumulated:
+ * `ListingViewConfig<TResponse, TRow>` treats `TResponse` as opaque and
+ * delegates the read to a per-view callback.
+ *
+ * **`pageSize`, never `perPage`.** Three other spellings existed and all three
+ * were dead on 2026-08-31 — `GenericListResponse` (which declared BOTH, each
+ * optional, so a value could supply neither), appkit's `AdminListResponse`, and
+ * the whole `pagination.helper.ts` module. All deleted. `PagedResult` in
+ * contracts/repository.ts still spells it `perPage` and is genuinely live in 14
+ * repositories via `IReadRepository.findAll`; converging that is a change to the
+ * repository contract itself, not to an envelope.
+ */
 export interface SieveResult<T> {
   items: T[];
   total: number;
