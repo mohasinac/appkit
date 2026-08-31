@@ -13,6 +13,7 @@ import type { SiteSettingsCredentials } from "../schemas/firestore";
 import type { NotificationType } from "../schemas/firestore";
 import {
   resolveNotificationActionUrl,
+  TYPE_AUDIENCE,
   type NotificationAudience,
 } from "../../../_internal/shared/features/notifications/action-url";
 import { renderNotificationEmail } from "../../email/notification-templates";
@@ -147,46 +148,6 @@ export interface SendNotificationInput extends NotificationCreateInput {
   audience?: NotificationAudience;
 }
 
-/**
- * Which portal each notification type belongs to.
- *
- * `Record<NotificationType, …>`, so a new type cannot compile without an
- * answer — the same discipline `typeToPrefsKey` needed after it silently
- * omitted three types and ignored those users' opt-outs.
- */
-const TYPE_AUDIENCE: Record<NotificationType, NotificationAudience> = {
-  // Buyer-facing: the order lifecycle they are waiting on.
-  order_placed: "buyer",
-  order_confirmed: "buyer",
-  order_shipped: "buyer",
-  order_delivered: "buyer",
-  order_cancelled: "buyer",
-  refund_initiated: "buyer",
-  payment_review: "buyer",
-  emi_installment_due_soon: "buyer",
-  emi_installment_overdue: "buyer",
-  prize_won: "buyer",
-  prize_reveal_expired: "buyer",
-  product_available: "buyer",
-  bid_placed: "buyer",
-  bid_outbid: "buyer",
-  bid_won: "buyer",
-  bid_lost: "buyer",
-  offer_responded: "buyer",
-  offer_counter_accepted: "buyer",
-  offer_expired: "buyer",
-  review_replied: "buyer",
-  catalogue_images_stale: "buyer",
-  // Seller-facing.
-  auction_ended: "seller", // "your auction closed with no winner"
-  offer_received: "seller",
-  review_approved: "seller",
-  // Account-level, which lives in the user portal for everyone.
-  welcome: "buyer",
-  account_action: "buyer",
-  system: "buyer",
-  promotion: "buyer",
-};
 
 export interface SendNotificationResult {
   notification: NotificationDocument;

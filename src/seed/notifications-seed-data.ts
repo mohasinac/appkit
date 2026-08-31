@@ -16,12 +16,17 @@
 import type { NotificationDocument } from "../features/admin/schemas";
 import { NOTIFICATION_FIELDS } from "../features/admin/schemas";
 import { ROUTES } from "../next/routing/route-map";
+import {
+  resolveNotificationActionUrl,
+  TYPE_AUDIENCE,
+} from "../_internal/shared/features/notifications/action-url";
+import type { NotificationType } from "../features/admin/schemas";
 
 const NOW = new Date();
 const hoursAgo = (n: number) => new Date(NOW.getTime() - n * 3_600_000);
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const notificationsSeedData: Partial<NotificationDocument>[] = [
+const notificationRecords: Partial<NotificationDocument>[] = [
   // ── Rehan's notifications (10) — buyer-focused ────────────────────────────
 
   {
@@ -591,3 +596,28 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: hoursAgo(1),
   },
 ];
+
+/*
+ * `actionUrl` is DERIVED, not hand-written per fixture.
+ *
+ * 17 of these 39 records carried no `actionUrl` and so arrived in the bell as
+ * text with nothing to click — the exact defect the central resolver was built
+ * to end, reappearing here because the seed writes documents straight to
+ * Firestore and never passes through `sendNotification`.
+ *
+ * Deriving it also means a fixture cannot drift from the rule: the seed and the
+ * runtime now answer "where does this notification go" with the same function.
+ * A record that sets its own `actionUrl` keeps it, matching `sendNotification`,
+ * where a caller-supplied value also wins.
+ */
+export const notificationsSeedData: Partial<NotificationDocument>[] =
+  notificationRecords.map((n) => ({
+    ...n,
+    actionUrl:
+      n.actionUrl ??
+      resolveNotificationActionUrl(
+        n.relatedType,
+        n.relatedId,
+        TYPE_AUDIENCE[n.type as NotificationType] ?? "buyer",
+      ),
+  }));
