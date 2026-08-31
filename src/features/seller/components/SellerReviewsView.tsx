@@ -1,6 +1,21 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
+import type { ZodTypeAny } from "zod";
+import {
+  reviewReplySchema, reviewBulkReplySchema, reviewContestSchema, reviewFeedbackSchema,
+  type ReviewReplyValues, type ReviewBulkReplyValues,
+  type ReviewContestValues, type ReviewFeedbackValues,
+} from "../schemas/review-forms";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
@@ -70,6 +85,69 @@ function statusBadge(status: string) {
   return <Badge variant={map[status] ?? "default"}>{status}</Badge>;
 }
 
+/**
+ * The four write surfaces on this page are each ONE textarea, and four
+ * copies of the same twenty lines of SectionForm wiring is exactly the Rule of
+ * Three trigger. It stays local: the shape is "a single-field modal form", not
+ * a generally useful primitive, and `QuickFormDrawer` already owns the
+ * generalised version for drawers.
+ *
+ * `hideActions` is deliberately NOT used — each modal's own footer buttons are
+ * removed in favour of this row, so there is one Save and one Cancel per form.
+ */
+function ReviewTextForm<T extends object>({
+  schema, values, onChange, onSubmit, submitLabel, onCancel, isLoading, scope,
+}: {
+  schema: ZodTypeAny;
+  values: T;
+  onChange: (partial: Partial<T>) => void;
+  onSubmit: () => void;
+  submitLabel: string;
+  onCancel: () => void;
+  isLoading?: boolean;
+  scope: string;
+}) {
+  const sections = React.useMemo(
+    () => buildSectionsFromSchema<T>(schema),
+    [schema],
+  );
+  const nav = useSectionFormNav(sections, values, { scope });
+  const form = useFormShellState(schema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+  return (
+    <FormShellContext.Provider value={form.shellCtx}>
+      <FormErrorSummary />
+      <SectionForm<T>
+        sections={sections}
+        values={values}
+        onChange={onChange}
+        onSubmit={() => {
+          // SectionForm scrolls to the first erroring section and then submits
+          // regardless, so the guard lives here.
+          form.clearErrors();
+          const parsed = schema.safeParse(visibleValues(schema, values));
+          if (!parsed.success) {
+            applyZodIssues(parsed.error.issues, form.setFieldError);
+            return;
+          }
+          onSubmit();
+        }}
+        onValidationChange={() => form.validate(values)}
+        schema={schema}
+        openIds={nav.openIds}
+        onOpenChange={nav.setOpenIds}
+        submitLabel={submitLabel}
+        cancelLabel="Cancel"
+        onCancel={onCancel}
+        isLoading={isLoading}
+      />
+    </FormShellContext.Provider>
+  );
+}
+
 export function SellerReviewsView({
   reviewsApiBase = SELLER_ENDPOINTS.REVIEWS,
   replyApiBase = SELLER_ENDPOINTS.REVIEWS,
@@ -83,24 +161,24 @@ export function SellerReviewsView({
 
   // Reply drawer
   const [replyTarget, setReplyTarget] = useState<ReviewItem | null>(null);
-  const [replyText, setReplyText] = useState("");
+  const [replyDraft, setReplyDraft] = useState<ReviewReplyValues>({ reply: "" });
   const [replySaving, setReplySaving] = useState(false);
   const [replyError, setReplyError] = useState<string | null>(null);
 
   // S-STORE-4-C — bulk reply + contest + feedback selection
   const [bulkReplyOpen, setBulkReplyOpen] = useState(false);
-  const [bulkReplyText, setBulkReplyText] = useState("");
+  const [bulkDraft, setBulkDraft] = useState<ReviewBulkReplyValues>({ reply: "" });
   const [bulkSaving, setBulkSaving] = useState(false);
   const [bulkTargetIds, setBulkTargetIds] = useState<string[]>([]);
   const [bulkClearSelection, setBulkClearSelection] = useState<(() => void) | null>(null);
   const [contestTarget, setContestTarget] = useState<ReviewItem | null>(null);
-  const [contestReason, setContestReason] = useState("");
+  const [contestDraft, setContestDraft] = useState<ReviewContestValues>({ reason: "" });
   const [feedbackTarget, setFeedbackTarget] = useState<ReviewItem | null>(null);
-  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackDraft, setFeedbackDraft] = useState<ReviewFeedbackValues>({ feedback: "" });
 
   const openReply = (review: ReviewItem) => {
     setReplyTarget(review);
-    setReplyText(review.sellerReply ?? "");
+    setReplyDraft({ reply: review.sellerReply ?? "" });
     setReplyError(null);
   };
 
@@ -112,7 +190,7 @@ export function SellerReviewsView({
       const res = await fetch(`${replyApiBase}/${replyTarget.id}/reply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reply: replyText }),
+        body: JSON.stringify({ reply: replyDraft.reply }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error ?? "Failed to save reply");
@@ -135,7 +213,7 @@ export function SellerReviewsView({
       const res = await fetch(SELLER_ENDPOINTS.REVIEW_CONTEST(contestTarget.id), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reason: contestReason }),
+        body: JSON.stringify({ reason: contestDraft.reason }),
       });
       if (!res.ok) throw new Error(`Could not submit the contest (${res.status})`);
     } catch (err) {
@@ -143,9 +221,9 @@ export function SellerReviewsView({
       return;
     }
     setContestTarget(null);
-    setContestReason("");
+    setContestDraft({ reason: "" });
     onDone();
-  }, [contestTarget, contestReason, showToast]);
+  }, [contestTarget, contestDraft, showToast]);
 
   const submitFeedback = useCallback(async () => {
     if (!feedbackTarget) return;
@@ -153,7 +231,7 @@ export function SellerReviewsView({
       const res = await fetch(SELLER_ENDPOINTS.REVIEW_FEEDBACK(feedbackTarget.id), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ feedback: feedbackText }),
+        body: JSON.stringify({ feedback: feedbackDraft.feedback }),
       });
       if (!res.ok) throw new Error(`Could not send the feedback (${res.status})`);
     } catch (err) {
@@ -161,11 +239,11 @@ export function SellerReviewsView({
       return;
     }
     setFeedbackTarget(null);
-    setFeedbackText("");
-  }, [feedbackTarget, feedbackText, showToast]);
+    setFeedbackDraft({ feedback: "" });
+  }, [feedbackTarget, feedbackDraft, showToast]);
 
   const submitBulkReply = useCallback(async () => {
-    if (!bulkReplyText.trim() || bulkTargetIds.length === 0) return;
+    if (!bulkDraft.reply.trim() || bulkTargetIds.length === 0) return;
     setBulkSaving(true);
     // Partial success is the normal outcome of a bulk write, so report the
     // count that failed rather than throwing away the whole batch's result.
@@ -174,7 +252,7 @@ export function SellerReviewsView({
         fetch(`${replyApiBase}/${id}/reply`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reply: bulkReplyText }),
+          body: JSON.stringify({ reply: bulkDraft.reply }),
         })
           .then((res) => res.ok)
           .catch((err: unknown) => {
@@ -189,11 +267,11 @@ export function SellerReviewsView({
     }
     setBulkSaving(false);
     setBulkReplyOpen(false);
-    setBulkReplyText("");
+    setBulkDraft({ reply: "" });
     bulkClearSelection?.();
     setBulkTargetIds([]);
     await refetchReviews();
-  }, [bulkReplyText, bulkTargetIds, replyApiBase, bulkClearSelection, refetchReviews, showToast]);
+  }, [bulkDraft, bulkTargetIds, replyApiBase, bulkClearSelection, refetchReviews, showToast]);
 
   const config: ListingViewConfig<ReviewsListResponse, ReviewItem> = {
     portal: "seller",
@@ -333,32 +411,16 @@ export function SellerReviewsView({
             </Div>
           )}
           {replyError && <Alert variant="error">{replyError}</Alert>}
-          <Div>
-            <Text className="mb-1.5" size="sm" weight="medium">Store reply</Text>
-            <Textarea
-              rows={5}
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              maxLength={1000}
-              placeholder="Write your response to this review…"
-            />
-            <Text className="text-[var(--appkit-color-text-muted)] mt-1" size="xs" align="end">
-              {replyText.length}/1000
-            </Text>
-          </Div>
-          <Row justify="end" gap="sm">
-            <Button variant="outline" onClick={() => setReplyTarget(null)} disabled={replySaving}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => handleReplySave(refetchReviews)}
-              disabled={replySaving || !replyText.trim()}
-              isLoading={replySaving}
-            >
-              {replyTarget?.sellerReply ? "Update Reply" : "Post Reply"}
-            </Button>
-          </Row>
+          <ReviewTextForm<ReviewReplyValues>
+            schema={reviewReplySchema}
+            values={replyDraft}
+            onChange={(partial) => setReplyDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => void handleReplySave(refetchReviews)}
+            submitLabel={replyTarget?.sellerReply ? "Update Reply" : "Post Reply"}
+            onCancel={() => setReplyTarget(null)}
+            isLoading={replySaving}
+            scope="store:review-reply"
+          />
         </Stack>
       </SideDrawer>
 
@@ -366,30 +428,17 @@ export function SellerReviewsView({
         isOpen={bulkReplyOpen}
         onClose={() => setBulkReplyOpen(false)}
         title="Bulk reply to selected reviews"
-        actions={
-          <Row gap="sm">
-            <Button variant="ghost" onClick={() => setBulkReplyOpen(false)} disabled={bulkSaving}>Cancel</Button>
-            <Button
-              variant="primary"
-              onClick={() => void submitBulkReply()}
-              disabled={!bulkReplyText.trim() || bulkSaving}
-              isLoading={bulkSaving}
-            >
-              Send reply
-            </Button>
-          </Row>
-        }
       >
         <Stack gap="md" padding="2xs">
-          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-            The same reply will be posted on all selected reviews.
-          </Text>
-          <Textarea
-            value={bulkReplyText}
-            onChange={(e) => setBulkReplyText(e.target.value)}
-            rows={5}
-            placeholder="Thanks for your review…"
-            label="Reply"
+          <ReviewTextForm<ReviewBulkReplyValues>
+            schema={reviewBulkReplySchema}
+            values={bulkDraft}
+            onChange={(partial) => setBulkDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => void submitBulkReply()}
+            submitLabel="Send reply"
+            onCancel={() => setBulkReplyOpen(false)}
+            isLoading={bulkSaving}
+            scope="store:review-bulk-reply"
           />
         </Stack>
       </Modal>
@@ -398,24 +447,19 @@ export function SellerReviewsView({
         isOpen={!!contestTarget}
         onClose={() => setContestTarget(null)}
         title="Contest this review"
-        actions={
-          <Row gap="sm">
-            <Button variant="ghost" onClick={() => setContestTarget(null)}>Cancel</Button>
-            <Button variant="primary" onClick={() => void submitContest(refetchReviews)} disabled={!contestReason.trim()}>
-              Submit
-            </Button>
-          </Row>
-        }
       >
         <Stack gap="md" padding="2xs">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-            Flag this review for admin investigation. Provide a clear reason — fake, abusive, off-topic, etc.
+            Flag this review for admin investigation.
           </Text>
-          <Textarea
-            value={contestReason}
-            onChange={(e) => setContestReason(e.target.value)}
-            rows={4}
-            label="Reason"
+          <ReviewTextForm<ReviewContestValues>
+            schema={reviewContestSchema}
+            values={contestDraft}
+            onChange={(partial) => setContestDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => void submitContest(refetchReviews)}
+            submitLabel="Submit"
+            onCancel={() => setContestTarget(null)}
+            scope="store:review-contest"
           />
         </Stack>
       </Modal>
@@ -424,24 +468,16 @@ export function SellerReviewsView({
         isOpen={!!feedbackTarget}
         onClose={() => setFeedbackTarget(null)}
         title="Send feedback to buyer"
-        actions={
-          <Row gap="sm">
-            <Button variant="ghost" onClick={() => setFeedbackTarget(null)}>Cancel</Button>
-            <Button variant="primary" onClick={() => void submitFeedback()} disabled={!feedbackText.trim()}>
-              Send
-            </Button>
-          </Row>
-        }
       >
         <Stack gap="md" padding="2xs">
-          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-            Private message sent to the buyer's notification inbox. Does not appear on the public review.
-          </Text>
-          <Textarea
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            rows={4}
-            label="Feedback"
+          <ReviewTextForm<ReviewFeedbackValues>
+            schema={reviewFeedbackSchema}
+            values={feedbackDraft}
+            onChange={(partial) => setFeedbackDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => void submitFeedback()}
+            submitLabel="Send"
+            onCancel={() => setFeedbackTarget(null)}
+            scope="store:review-feedback"
           />
         </Stack>
       </Modal>

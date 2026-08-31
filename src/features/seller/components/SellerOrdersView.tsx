@@ -18,6 +18,19 @@ import { OrderStatusValues } from "../../orders/schemas/firestore";
 import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import {
+  sellerOrderUpdateSchema,
+  type SellerOrderUpdateValues,
+} from "../schemas/order-forms";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
@@ -177,13 +190,26 @@ export function SellerOrderDetailPanel({
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [newStatus, setNewStatus] = useState("");
-  const [trackingNumber, setTrackingNumber] = useState("");
-  const [carrier, setCarrier] = useState("");
-  const [trackingUrl, setTrackingUrl] = useState("");
+  const [draft, setDraft] = useState<SellerOrderUpdateValues>({
+    status: "", trackingNumber: "", carrier: "", trackingUrl: "",
+  });
   const [markingPaidIndex, setMarkingPaidIndex] = useState<number | null>(null);
   const [emiError, setEmiError] = useState<string | null>(null);
   const { showToast } = useToast();
+
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SellerOrderUpdateValues>(sellerOrderUpdateSchema, {
+        options: { status: UPDATE_STATUS_OPTIONS },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "store:order-update" });
+  const form = useFormShellState(sellerOrderUpdateSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
   React.useEffect(() => {
     setLoading(true);
@@ -193,9 +219,12 @@ export function SellerOrderDetailPanel({
       .then((json) => {
         const o = (json?.data ?? json) as OrderDetail;
         setOrder(o);
-        setTrackingNumber(o.trackingNumber ?? "");
-        setCarrier(o.carrier ?? "");
-        setTrackingUrl(o.trackingUrl ?? "");
+        setDraft({
+          status: "",
+          trackingNumber: o.trackingNumber ?? "",
+          carrier: o.carrier ?? "",
+          trackingUrl: o.trackingUrl ?? "",
+        });
       })
       .catch(() => setFetchError("Failed to load order details"))
       .finally(() => setLoading(false));
@@ -229,11 +258,15 @@ export function SellerOrderDetailPanel({
     setSaving(true);
     setSaveError(null);
     try {
+      const v = visibleValues(sellerOrderUpdateSchema, draft) as SellerOrderUpdateValues;
       const payload: Record<string, JsonValue> = {};
-      if (newStatus) payload.status = newStatus;
-      if (trackingNumber !== (order.trackingNumber ?? "")) payload.trackingNumber = trackingNumber;
-      if (carrier !== (order.carrier ?? "")) payload.shippingCarrier = carrier;
-      if (trackingUrl !== (order.trackingUrl ?? "")) payload.trackingUrl = trackingUrl;
+      // A DIFF, not a snapshot: the panel writes only what the seller changed,
+      // so re-saving an untouched field cannot clobber a value another path
+      // (the shipping provider, a support agent) has since written.
+      if (v.status) payload.status = v.status;
+      if ((v.trackingNumber ?? "") !== (order.trackingNumber ?? "")) payload.trackingNumber = v.trackingNumber ?? "";
+      if ((v.carrier ?? "") !== (order.carrier ?? "")) payload.shippingCarrier = v.carrier ?? "";
+      if ((v.trackingUrl ?? "") !== (order.trackingUrl ?? "")) payload.trackingUrl = v.trackingUrl ?? "";
 
       if (Object.keys(payload).length === 0) { onClose(); return; }
 
@@ -247,8 +280,16 @@ export function SellerOrderDetailPanel({
         throw new Error((d as { error?: string })?.error ?? "Failed to update order");
       }
       const updated = await res.json();
-      setOrder((updated?.data ?? updated) as OrderDetail);
-      setNewStatus("");
+      const next = (updated?.data ?? updated) as OrderDetail;
+      setOrder(next);
+      // Reset to "keep current" and re-seed the shipment fields from what the
+      // server actually stored, so the next diff is against the saved state.
+      setDraft({
+        status: "",
+        trackingNumber: next.trackingNumber ?? "",
+        carrier: next.carrier ?? "",
+        trackingUrl: next.trackingUrl ?? "",
+      });
     } catch (err) {
       void normalizeError(err);
       setSaveError((err as Error).message);
@@ -418,11 +459,35 @@ export function SellerOrderDetailPanel({
             )}
 
             <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
-              <Heading level={4} size="sm" weight="semibold">Update order</Heading>
-              <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
-              <Input label="Tracking number" value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. 12345678901234" />
-              <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
-              <Input label="Tracking URL (optional)" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://..." type="url" />
+              <FormShellContext.Provider value={form.shellCtx}>
+                <FormErrorSummary />
+                <SectionForm<SellerOrderUpdateValues>
+                  sections={sections}
+                  values={draft}
+                  onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+                  onSubmit={() => {
+                    // SectionForm scrolls to the first erroring section and then
+                    // submits regardless, so the guard lives here.
+                    form.clearErrors();
+                    const parsed = sellerOrderUpdateSchema.safeParse(
+                      visibleValues(sellerOrderUpdateSchema, draft),
+                    );
+                    if (!parsed.success) {
+                      applyZodIssues(parsed.error.issues, form.setFieldError);
+                      return;
+                    }
+                    void handleSave();
+                  }}
+                  onValidationChange={() => form.validate(draft)}
+                  schema={sellerOrderUpdateSchema}
+                  openIds={nav.openIds}
+                  onOpenChange={nav.setOpenIds}
+                  submitLabel="Save"
+                  cancelLabel="Close"
+                  onCancel={onClose}
+                  isLoading={saving}
+                />
+              </FormShellContext.Provider>
               {saveError && (
                 <Div textSize="xs" className="border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
                   {saveError}
@@ -430,7 +495,6 @@ export function SellerOrderDetailPanel({
               )}
             </Stack>
           </Stack>
-
           <Row border="top" paddingY="y-sm-tall" padding="x-md" align="center" justify="end" gap="3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
