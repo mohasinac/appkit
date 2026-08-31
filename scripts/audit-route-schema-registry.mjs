@@ -23,7 +23,18 @@
  *       (GET with no query — rare; mark with the suppression marker).
  *
  * Currently REPORT MODE — exits 0 with a stderr summary of missing
- * routes. W8 wires it strict via MIGRATE=strict.
+ * 🛑 NOT flippable, and the reason matters more than the number.
+ *
+ * 554 of 560 routes are unregistered — SIX have adopted `SCHEMAS.api`. That is
+ * not a migration backlog winding down, it is a registry almost nothing uses,
+ * which is the same unadopted-layer shape this audit was written to police one
+ * level down. Flipping it to strict would fail every build for a convention the
+ * codebase has not taken up.
+ *
+ * The header used to say "W8 wires it strict via MIGRATE=strict". W8 came, and
+ * the ratio is 6/560. A dated promise that outlives its date reads as a live
+ * plan; the honest statement is that adoption has to come first, and adoption
+ * is 548 routes of work with no forcing function behind it yet.
  */
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -125,7 +136,8 @@ if (STRICT && MISSING > 0) {
 
 if (MISSING > 0) {
   console.warn(`audit-route-schema-registry: REPORT MODE — ${MISSING}/${totalVerbs} routes await SCHEMAS.api registration.`);
-  console.warn(`  Run with MIGRATE=strict to fail. Wired into npm run check at W8.`);
+  console.warn(`  Run with MIGRATE=strict to fail. NOT wired into npm run check — see the header:`);
+  console.warn(`  six routes have adopted SCHEMAS.api, so strict mode would fail every build.`);
   console.warn(`  Currently registered: ${registered.size} routes.`);
   console.warn(`  Sample missing (first 10):`);
   for (const v of missing.slice(0, 10)) {

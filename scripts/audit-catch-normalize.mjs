@@ -166,8 +166,12 @@ if (STRICT && VIOLATIONS > 0) {
 }
 
 if (VIOLATIONS > 0) {
-  console.warn(`audit-catch-normalize: REPORT MODE — ${VIOLATIONS}/${totalCatch} catch sites await migration.`);
-  console.warn(`  Run with MIGRATE=strict to fail. Wired into npm run check at W8.`);
+  // Reachable only via MIGRATE=report. The default has been strict since the
+  // backlog drained; the line that used to sit here promised "wired into
+  // npm run check at W8", which was true when written and stale the moment it
+  // happened. A dated promise that outlives its date reads as a live plan.
+  console.warn(`audit-catch-normalize: REPORT MODE — ${VIOLATIONS}/${totalCatch} catch sites unmigrated.`);
+  console.warn(`  This audit is STRICT by default; you asked for report mode.`);
   console.warn(`  Top 10 sites:`);
   for (const v of violations.slice(0, 10)) {
     console.warn(`    • ${v.file}:${v.line} — catch (${v.varName})`);
