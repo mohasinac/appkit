@@ -423,6 +423,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "standard-detail", label: "Standard product detail page loads correctly", href: "/products/product-tester-standard-1" },
         {
+          key: "tester-fixtures-hidden-from-the-public",
+          label: "SIGNED OUT, no product on /products has an id containing \"tester\" — the sandbox is invisible to the public",
+          description:
+            "Fixed 2026-09-01. BEFORE: the public products endpoint had no viewer concept, so an ANONYMOUS caller got 25 tester fixtures in its first 40 rows — stickers-tester-sandbox-1, prizedraw-tester-sandbox-closed, live-tester-sandbox-1 — and they filled the public marketplace. AFTER: open /products in a private window and scan the grid; nothing should be named \"Tester …\". Then sign in AS A TESTER and reload — the sandbox items must come back. Both halves matter: hiding them from everyone would break the tester programme, and a fixture that never reappears is the opposite bug.",
+          href: "/products",
+        },
+        {
           key: "seed-images-are-labelled-tiles",
           label: "Every seeded product image is a readable tile showing the item's own name — NOT a broken-image icon and NOT an empty grey box",
           description:

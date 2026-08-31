@@ -35,6 +35,7 @@
  */
 
 import { productRepository } from "../../../../repositories";
+import { filterTestDataForViewer, type ViewerLike } from "../tester/visibility";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
@@ -241,6 +242,23 @@ export interface PublicProductListOptions {
    * so tests can pin it.
    */
   now?: Date;
+  /**
+   * Who is asking, for tester-sandbox visibility.
+   *
+   * 🛑 Omitting it means ANONYMOUS, and anonymous never sees `isTestData` rows.
+   * Deliberately fail-closed: an undefined viewer is the default a caller gets
+   * by forgetting, and forgetting must not publish the sandbox.
+   *
+   * On 2026-08-31 the public `/api/products` returned **25 tester fixtures in
+   * its first 40 rows** to an unauthenticated caller — `stickers-tester-sandbox-1`,
+   * `prizedraw-tester-sandbox-closed`, `live-tester-sandbox-1` — because this
+   * function had no viewer concept at all. CLAUDE.md had already recorded that
+   * `filterTestDataForViewer` was wired into the STORE read paths only, and that
+   * the other listing routes "need the identical one-line treatment when touched
+   * next". This is that treatment, applied at the one shared implementation
+   * rather than at each of its callers.
+   */
+  viewer?: ViewerLike | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -712,6 +730,7 @@ export async function listPublicProducts(
       filters,
       sorts,
       enabled: opts?.enabledListingTypes,
+    viewer: opts?.viewer,
     });
   }
 
@@ -780,6 +799,7 @@ export async function listPublicProducts(
       filters: clauses.map((c) => sieveAnd(safeFilters, clauseToSieve(c, now))).join(" OR "),
       sorts,
       enabled: opts?.enabledListingTypes,
+    viewer: opts?.viewer,
     });
   }
 
@@ -899,6 +919,7 @@ export async function listPublicProducts(
     filters,
     sorts,
     enabled: opts?.enabledListingTypes,
+    viewer: opts?.viewer,
   });
 }
 
@@ -926,19 +947,42 @@ async function runQuery(
   }
 }
 
-/** Apply the feature-flag post-filter and assemble the result. */
+/** Apply the tester-visibility and feature-flag post-filters, then assemble. */
 function finish(
-  draft: PublicProductListResult & { enabled?: ReadonlySet<string> },
+  draft: PublicProductListResult & {
+    enabled?: ReadonlySet<string>;
+    viewer?: ViewerLike | null;
+  },
 ): PublicProductListResult {
-  const { enabled, ...result } = draft;
-  if (!enabled || enabled.size === 0) return result;
+  const { enabled, viewer, ...result } = draft;
+  const before = result.items.length;
+
+  /*
+   * Tester sandbox rows, unless the viewer may see them.
+   *
+   * 🛑 A post-filter, NOT a query clause. A Firestore inequality on the
+   * test-data flag excludes every document that LACKS the field — which is all
+   * real content, since the flag is new and optional — so such a query returns
+   * ONLY test data, exactly inverting the intent. That trap is written up in
+   * CLAUDE.md's tester section and is why `filterTestDataForViewer` exists as
+   * an in-memory filter in the first place.
+   *
+   * Cheap: the flag is sparse (~25 documents), so this drops a handful of rows
+   * from a page that was already fetched.
+   */
+  let items = filterTestDataForViewer(
+    result.items as unknown as { isTestData?: boolean }[],
+    viewer,
+  ) as unknown as typeof result.items;
 
   // Feature-flagged-off types never reach a public surface.
-  const before = result.items.length;
-  const items = result.items.filter((it) => {
-    const lt = typeof it.listingType === "string" ? it.listingType : "standard";
-    return enabled.has(lt);
-  });
+  if (enabled && enabled.size > 0) {
+    items = items.filter((it) => {
+      const lt = typeof it.listingType === "string" ? it.listingType : "standard";
+      return enabled.has(lt);
+    });
+  }
+
   const removed = before - items.length;
   return {
     ...result,
