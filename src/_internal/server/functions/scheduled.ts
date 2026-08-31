@@ -25,6 +25,8 @@ import {
   prizeDrawExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
+  pageViewRollupHandler,
+  pageViewPruneHandler,
   dailyStatusDigestHandler,
   weeklyPayoutEligibilityHandler,
   testerSandboxCleanupHandler,
@@ -104,6 +106,32 @@ export const revenueRollup = defineFunction({
   description: "Pre-compute total delivered-order revenue into analytics/dashboardRollup, replacing an unbounded per-request scan (daily 01:30 UTC).",
   trigger: { kind: "schedule", cron: "30 1 * * *", timeZone: "UTC" },
   handler: revenueRollupHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
+/*
+ * The rollup runs BEFORE the prune, and both before the retention boundary
+ * moves. `pageViews` had neither until 2026-08-31: it wrote one document per
+ * entity per day, forever, and was the only unbounded writer among 27 scheduled
+ * functions.
+ *
+ * Order matters — the prune deletes the day-buckets the rollup reads, so a
+ * prune that ran first would delete views nobody had counted yet. 01:45 then
+ * 02:15, either side of nothing else.
+ */
+export const pageViewRollup = defineFunction({
+  name: "pageViewRollup",
+  description: "Fold new page-view day-buckets into analytics/pageViewRollup so the prune below cannot delete uncounted views (daily 01:45 UTC).",
+  trigger: { kind: "schedule", cron: "45 1 * * *", timeZone: "UTC" },
+  handler: pageViewRollupHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
+export const pageViewPrune = defineFunction({
+  name: "pageViewPrune",
+  description: "Delete page-view day-buckets past the 90-day retention window; lifetime totals survive in the rollup (daily 02:15 UTC).",
+  trigger: { kind: "schedule", cron: "15 2 * * *", timeZone: "UTC" },
+  handler: pageViewPruneHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -261,6 +289,8 @@ export const SCHEDULED_FUNCTIONS = [
   offerExpiry,
   productStatsSync,
   revenueRollup,
+  pageViewRollup,
+  pageViewPrune,
   dailyStatusDigest,
   dailyDataCleanup,
   countersReconcile,

@@ -32,10 +32,21 @@ import { REVIEWS_DETAIL_PAGE_SIZE } from "../../../shared/features/reviews/confi
 /** Fetch a single product by slug or id, deduped per request. */
 export const getProductForDetail = cache(
   async (slugOrId: string): Promise<ProductDocument | null> => {
-    const product = (await productRepository.findByIdOrSlug(slugOrId)) ?? null;
-    // Fire-and-forget viewCount increment — must not affect response time
-    if (product) void productRepository.incrementViewCount(product.id);
-    return product;
+    /*
+     * 🛑 No view-count write here — deleted 2026-08-31.
+     *
+     * This fired `incrementViewCount` on every render, which was two defects at
+     * once. It is a Firestore WRITE on the render path (Rule #6), and product
+     * and category detail were being counted TWICE by two systems that key
+     * differently: this one on the document by id, and the client
+     * `PageViewTracker` into `pageViews` by slug. They can never reconcile —
+     * they disagree on bots, on prefetch, and on JS-disabled clients — so the
+     * two numbers were guaranteed to drift and neither could be trusted.
+     *
+     * `pageViews` is the single counter now. `viewCount` on the document stays
+     * for historical rows; nothing increments it.
+     */
+    return (await productRepository.findByIdOrSlug(slugOrId)) ?? null;
   },
 );
 

@@ -2277,10 +2277,6 @@ export type { SeedSessionDocument } from "./seed/index";
 // TestSeedHandles - Type contract for test seed handles.
 export type { TestSeedHandles } from "./seed/index";
 
-// ./monitoring/index
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// ANALYTICS_EVENTS - Constant used across modules.
-export { ANALYTICS_EVENTS } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // ErrorCategory - Shared export for error category.
 export { ErrorCategory } from "./monitoring/index";
@@ -2305,9 +2301,6 @@ export { getCacheMetrics } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // getCacheStatistics - Helper for get cache statistics.
 export { getCacheStatistics } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// initializeAnalytics - Shared export for initialize analytics.
-export { initializeAnalytics } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // initializeClientLogger - Shared export for initialize client logger.
 export { initializeClientLogger } from "./monitoring/index";
@@ -2399,12 +2392,6 @@ export { resetCacheMetrics } from "./monitoring/index";
 // serverLogger - Shared export for server logger.
 export { serverLogger } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// setAnalyticsUserId - Helper for set analytics user id.
-export { setAnalyticsUserId } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// setAnalyticsUserProperties - Helper for set analytics user properties.
-export { setAnalyticsUserProperties } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // setErrorTracker - Helper for set error tracker.
 export { setErrorTracker } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
@@ -2423,47 +2410,23 @@ export { startTrace } from "./monitoring/index";
 // stopTrace - Helper for stop trace.
 export { stopTrace } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackAdmin - Helper for track admin.
-export { trackAdmin } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // trackApiError - Helper for track api error.
 export { trackApiError } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackAuth - Helper for track auth.
-export { trackAuth } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // trackAuthError - Helper for track auth error.
 export { trackAuthError } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackContent - Helper for track content.
-export { trackContent } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // trackDatabaseError - Helper for track database error.
 export { trackDatabaseError } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackEcommerce - Helper for track ecommerce.
-export { trackEcommerce } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // trackError - Helper for track error.
 export { trackError } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackEvent - Helper for track event.
-export { trackEvent } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackForm - Helper for track form.
-export { trackForm } from "./monitoring/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// trackPageView - Helper for track page view.
-export { trackPageView } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // trackPermissionError - Helper for track permission error.
 export { trackPermissionError } from "./monitoring/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // trackValidationError - Helper for track validation error.
 export { trackValidationError } from "./monitoring/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AnalyticsEvent - Type contract for analytics event.
-export type { AnalyticsEvent } from "./monitoring/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ClientErrorContext - Type contract for client error context.
 export type { ClientErrorContext } from "./monitoring/index";

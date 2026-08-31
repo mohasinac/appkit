@@ -73,6 +73,31 @@ export class PageViewsRepository extends BaseRepository<PageViewDocument> {
     const snap = await query.get();
     return snap.docs.map((d) => this.mapDoc<PageViewDocument>(d));
   }
+
+  /**
+   * Day-buckets older than `days`, as refs for `batchDelete`.
+   *
+   * 🛑 This collection had NO prune and NO rollup until 2026-08-31. It writes
+   * one document per entity per day, forever, and 27 scheduled functions
+   * existed without one of them touching it — so its growth was bounded only by
+   * how many distinct pages the catalogue had times how long the site had been
+   * up. See `pageViewPrune`.
+   *
+   * Returns refs rather than documents, matching `getOldReadRefs` on
+   * notifications: a prune needs the id, and hydrating the body of every doc it
+   * is about to delete is read budget spent on nothing (Rule #6).
+   */
+  async getOlderThanRefs(days: number): Promise<FirebaseFirestore.DocumentReference[]> {
+    const cutoff = new Date();
+    cutoff.setUTCDate(cutoff.getUTCDate() - days);
+    const cutoffKey = cutoff.toISOString().slice(0, 10);
+    // `<` and not `<=`: the cutoff day itself is still inside the window.
+    const snap = await this.getCollection()
+      .where(PAGE_VIEW_FIELDS.DATE, "<", cutoffKey)
+      .select()
+      .get();
+    return snap.docs.map((d) => d.ref);
+  }
 }
 
 export const pageViewsRepository = new PageViewsRepository();

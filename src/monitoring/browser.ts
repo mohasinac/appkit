@@ -52,17 +52,15 @@ export {
 } from "./performance";
 export type { PerformanceTrace, PerformanceProvider } from "./performance";
 
-export {
-  ANALYTICS_EVENTS,
-  initializeAnalytics,
-  trackEvent,
-  setAnalyticsUserId,
-  setAnalyticsUserProperties,
-  trackPageView,
-  trackAuth,
-  trackEcommerce,
-  trackContent,
-  trackForm,
-  trackAdmin,
-} from "./analytics";
-export type { AnalyticsEvent } from "./analytics";
+/*
+ * The Firebase-Analytics module that lived at ./analytics was deleted
+ * 2026-08-31. It defined 11 events, `initializeAnalytics` and `trackEvent`, and
+ * had ZERO call sites anywhere — it was re-exported through three barrels and
+ * never invoked once.
+ *
+ * Site analytics now runs through `siteSettings.integrations`
+ * (GA / GTM / Meta Pixel), emitted by `src/components/analytics/AnalyticsScripts`.
+ * Wiring a second, unrelated system in parallel would have given the project
+ * two answers to "how is this page counted", which is how it ended up with two
+ * view counters that could never reconcile.
+ */

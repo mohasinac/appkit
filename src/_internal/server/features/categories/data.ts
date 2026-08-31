@@ -9,9 +9,21 @@ import { CATEGORIES_FEATURED_LIMIT, CATEGORIES_MENU_LIMIT, CATEGORIES_SITEMAP_LI
 /** Full category document by slug — deduped per request via React.cache(). */
 export const getCategoryForDetail = cache(
   async (slug: string): Promise<CategoryDocument | null> => {
-    const category = (await categoriesRepository.getCategoryBySlug(slug)) ?? null;
-    if (category) void categoriesRepository.incrementViewCount(category.id);
-    return category;
+    /*
+     * 🛑 No view-count write here — deleted 2026-08-31.
+     *
+     * This fired `incrementViewCount` on every render, which was two defects at
+     * once. It is a Firestore WRITE on the render path (Rule #6), and product
+     * and category detail were being counted TWICE by two systems that key
+     * differently: this one on the document by id, and the client
+     * `PageViewTracker` into `pageViews` by slug. They can never reconcile —
+     * they disagree on bots, on prefetch, and on JS-disabled clients — so the
+     * two numbers were guaranteed to drift and neither could be trusted.
+     *
+     * `pageViews` is the single counter now. `viewCount` on the document stays
+     * for historical rows; nothing increments it.
+     */
+    return (await categoriesRepository.getCategoryBySlug(slug)) ?? null;
   },
 );
 

@@ -14,6 +14,8 @@ export { runCouponExpiry } from "./couponExpiry";
 export { runOfferExpiry } from "./offerExpiry";
 export { runCartPrune } from "./cartPrune";
 export { runNotificationPrune } from "./notificationPrune";
+export { runPageViewRollup } from "./pageViewRollup";
+export { runPageViewPrune, PAGE_VIEW_TTL_DAYS } from "./pageViewPrune";
 export { runDailyDataCleanup } from "./dailyDataCleanup";
 export { runCleanupRtdbEvents } from "./cleanupRtdbEvents";
 export { runMediaTmpCleanup } from "./mediaTmpCleanup";

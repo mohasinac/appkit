@@ -29,6 +29,8 @@ export { hardBanReinstatementHandler } from "./hardBanReinstatement";
 export { paymentReviewAutoApproveHandler } from "./paymentReviewAutoApprove";
 export { productStatsSyncHandler } from "./productStatsSync";
 export { revenueRollupHandler } from "./revenueRollup";
+export { pageViewRollupHandler } from "./pageViewRollup";
+export { pageViewPruneHandler } from "./pageViewPrune";
 export { dailyStatusDigestHandler } from "./dailyStatusDigest";
 export { positionsReconcileHandler } from "./positionsReconcile";
 export { payoutBatchHandler } from "./payoutBatch";

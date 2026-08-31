@@ -65,17 +65,3 @@ export {
   addTraceMetric,
 } from "./performance";
 export type { PerformanceTrace, PerformanceProvider } from "./performance";
-export {
-  ANALYTICS_EVENTS,
-  initializeAnalytics,
-  trackEvent,
-  setAnalyticsUserId,
-  setAnalyticsUserProperties,
-  trackPageView,
-  trackAuth,
-  trackEcommerce,
-  trackContent,
-  trackForm,
-  trackAdmin,
-} from "./analytics";
-export type { AnalyticsEvent } from "./analytics";

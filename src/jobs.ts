@@ -27,6 +27,8 @@ export {
   offerExpiryHandler,
   cartPruneHandler,
   notificationPruneHandler,
+  pageViewRollupHandler,
+  pageViewPruneHandler,
   dailyDataCleanupHandler,
   cleanupRtdbEventsHandler,
   auctionSettlementHandler,
