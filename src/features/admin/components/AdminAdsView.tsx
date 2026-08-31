@@ -7,6 +7,15 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Checkbox, Div, Input, Label, PaginatedSelect, Row, Select, Stack, Text, TextLink } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { adsConfigSchema, type AdsConfigValues } from "../schemas/admin-ops-forms";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
@@ -68,29 +77,60 @@ export interface AdminAdsViewProps {
 }
 
 interface AdsSettingsPanelProps {
-  adsenseClientId: string;
-  setAdsenseClientId: (v: string) => void;
-  thirdPartyScriptUrl: string;
-  setThirdPartyScriptUrl: (v: string) => void;
-  consentRequired: boolean;
-  setConsentRequired: (v: boolean) => void;
+  draft: AdsConfigValues;
+  onChange: (next: AdsConfigValues) => void;
   serverCredentialIssues: string[];
-  localCredentialIssues: string[];
   credentialStatus: { hasAdsenseClientId: boolean; hasThirdPartyScriptUrl: boolean; issues: string[] } | undefined;
+  /**
+   * The stored credentials, masked - shown as each input's PLACEHOLDER, which
+   * is why those two fields carry a renderer rather than deriving: the hint is
+   * server data and cannot be a static annotation.
+   */
   providerCredentialsMasked: { adsenseClientId?: string; thirdPartyScriptUrl?: string } | undefined;
   settingsMutation: { isPending: boolean };
-  hasPendingCredentialInput: boolean;
-  currentConsentRequired: boolean;
   settingsMessage: string | null;
   onSave: () => void;
 }
 
 function AdsSettingsPanel({
-  adsenseClientId, setAdsenseClientId, thirdPartyScriptUrl, setThirdPartyScriptUrl,
-  consentRequired, setConsentRequired, serverCredentialIssues, localCredentialIssues,
-  credentialStatus, providerCredentialsMasked, settingsMutation, hasPendingCredentialInput,
-  currentConsentRequired, settingsMessage, onSave,
+  draft, onChange, serverCredentialIssues, credentialStatus,
+  providerCredentialsMasked, settingsMutation, settingsMessage, onSave,
 }: AdsSettingsPanelProps) {
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<AdsConfigValues>(adsConfigSchema, {
+        renderers: {
+          adsenseClientId: ({ values, onChange: set, errors }) => (
+            <Input
+              label="AdSense client id"
+              value={values.adsenseClientId ?? ""}
+              onChange={(event) => set({ adsenseClientId: event.target.value })}
+              placeholder={providerCredentialsMasked?.adsenseClientId || "ca-pub-XXXXXXXXXX"}
+              helperText="Leave blank to keep the stored value."
+              error={errors.adsenseClientId}
+            />
+          ),
+          thirdPartyScriptUrl: ({ values, onChange: set, errors }) => (
+            <Input
+              label="Third-party script URL"
+              type="url"
+              value={values.thirdPartyScriptUrl ?? ""}
+              onChange={(event) => set({ thirdPartyScriptUrl: event.target.value })}
+              placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
+              helperText="Must be https. Leave blank to keep the stored value."
+              error={errors.thirdPartyScriptUrl}
+            />
+          ),
+        },
+      }),
+    [providerCredentialsMasked],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "admin:ads-settings" });
+  const form = useFormShellState(adsConfigSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
   return (
     <Stack border="default" className={__P.p3} gap="3" rounded="lg">
       <Text size="sm" weight="semibold">Provider and publish settings</Text>
@@ -102,46 +142,24 @@ function AdsSettingsPanel({
           {serverCredentialIssues.join("; ")}
         </Alert>
       ) : null}
-      <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-2">
-        <Input
-          label="AdSense client id"
-          value={adsenseClientId}
-          onChange={(event) => setAdsenseClientId(event.target.value)}
-          placeholder={providerCredentialsMasked?.adsenseClientId || "ca-pub-XXXXXXXXXX"}
+      <FormShellContext.Provider value={form.shellCtx}>
+        <FormErrorSummary />
+        <SectionForm<AdsConfigValues>
+          sections={sections}
+          values={draft}
+          onChange={(partial) => onChange({ ...draft, ...partial })}
+          onSubmit={onSave}
+          onValidationChange={() => form.validate(draft)}
+          schema={adsConfigSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          submitLabel="Save settings"
+          isLoading={settingsMutation.isPending}
         />
-        <Input
-          label="Third-party script URL"
-          value={thirdPartyScriptUrl}
-          onChange={(event) => setThirdPartyScriptUrl(event.target.value)}
-          placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
-        />
-      </Div>
+      </FormShellContext.Provider>
       <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
-      <Row align="center" justify="between" gap="3">
-        <Label layout="flex" gap="md" size="sm">
-          <Checkbox
-            bare
-            checked={consentRequired}
-            onChange={(event) => setConsentRequired(event.target.checked)}
-          />
-          Require consent globally for ad rendering
-        </Label>
-        <Button
-          size="sm"
-          variant="outline"
-          disabled={settingsMutation.isPending || localCredentialIssues.length > 0 || (!hasPendingCredentialInput && consentRequired === Boolean(currentConsentRequired))}
-          onClick={onSave}
-        >
-          {settingsMutation.isPending ? "Saving..." : "Save settings"}
-        </Button>
-      </Row>
-      {localCredentialIssues.length > 0 ? (
-        <Alert variant="error" title="Fix settings before saving">
-          {localCredentialIssues.join("; ")}
-        </Alert>
-      ) : null}
       {settingsMessage ? (
         <Alert variant={settingsMessage.toLowerCase().includes("failed") ? "error" : "success"} title="Settings">
           {settingsMessage}
@@ -158,9 +176,11 @@ export function AdminAdsView({
   renderEditLink,
 }: AdminAdsViewProps) {
   const queryClient = useQueryClient();
-  const [consentRequired, setConsentRequired] = React.useState(false);
-  const [adsenseClientId, setAdsenseClientId] = React.useState("");
-  const [thirdPartyScriptUrl, setThirdPartyScriptUrl] = React.useState("");
+  const [draft, setDraft] = React.useState<AdsConfigValues>({
+    consentRequired: false,
+    adsenseClientId: "",
+    thirdPartyScriptUrl: "",
+  });
   const [settingsMessage, setSettingsMessage] = React.useState<string | null>(null);
 
   // Lightweight metadata-only fetch (placements, consent, credential status) —
@@ -183,7 +203,9 @@ export function AdminAdsView({
 
   React.useEffect(() => {
     if (!metaQuery.data) return;
-    setConsentRequired(Boolean(metaQuery.data.consentRequired));
+    // Only the consent switch is seeded from the server: both credentials come
+    // back masked, so an input pre-filled with bullets would submit bullets.
+    setDraft((d) => ({ ...d, consentRequired: Boolean(metaQuery.data?.consentRequired) }));
   }, [metaQuery.data]);
 
   const settingsMutation = useApiMutation({
@@ -192,8 +214,7 @@ export function AdminAdsView({
     },
     onSuccess: async () => {
       setSettingsMessage("Ad settings saved.");
-      setAdsenseClientId("");
-      setThirdPartyScriptUrl("");
+      setDraft((d) => ({ ...d, adsenseClientId: "", thirdPartyScriptUrl: "" }));
       await queryClient.invalidateQueries({ queryKey: ["admin-ads-meta"] });
     },
     onError: (error) => {
@@ -205,35 +226,17 @@ export function AdminAdsView({
   const credentialStatus = metaQuery.data?.providerCredentialStatus;
   const serverCredentialIssues = credentialStatus?.issues ?? [];
 
-  const localCredentialIssues = React.useMemo(() => {
-    const issues: string[] = [];
-    if (adsenseClientId.trim() && !/^ca-pub-[0-9]{10,20}$/.test(adsenseClientId.trim())) {
-      issues.push("AdSense client id must match format ca-pub-XXXXXXXXXX");
-    }
-    if (thirdPartyScriptUrl.trim()) {
-      try {
-        const parsed = new URL(thirdPartyScriptUrl.trim());
-        if (parsed.protocol !== "https:") {
-          issues.push("Third-party script URL must be https");
-        }
-      } catch (_err) {
-        void normalizeError(_err);
-        issues.push("Third-party script URL must be a valid URL");
-      }
-    }
-    return issues;
-  }, [adsenseClientId, thirdPartyScriptUrl]);
-
-  const hasPendingCredentialInput =
-    adsenseClientId.trim().length > 0 || thirdPartyScriptUrl.trim().length > 0;
-
   const saveSettings = () => {
     setSettingsMessage(null);
+    const v = visibleValues(adsConfigSchema, draft) as AdsConfigValues;
     const payload: AdsConfigPatchPayload = {
-      consentRequired,
+      consentRequired: v.consentRequired,
       providerCredentials: {
-        adsenseClientId: adsenseClientId.trim() || undefined,
-        thirdPartyScriptUrl: thirdPartyScriptUrl.trim() || undefined,
+        // `undefined` on a blank field is what leaves the STORED credential
+        // alone - the route never sends the real value back, so an empty input
+        // means "unchanged", not "clear it".
+        adsenseClientId: v.adsenseClientId?.trim() || undefined,
+        thirdPartyScriptUrl: v.thirdPartyScriptUrl?.trim() || undefined,
       },
     };
     settingsMutation.mutate(payload);
@@ -386,19 +389,12 @@ export function AdminAdsView({
           </Alert>
         ) : null}
         <AdsSettingsPanel
-          adsenseClientId={adsenseClientId}
-          setAdsenseClientId={setAdsenseClientId}
-          thirdPartyScriptUrl={thirdPartyScriptUrl}
-          setThirdPartyScriptUrl={setThirdPartyScriptUrl}
-          consentRequired={consentRequired}
-          setConsentRequired={setConsentRequired}
+          draft={draft}
+          onChange={setDraft}
           serverCredentialIssues={serverCredentialIssues}
-          localCredentialIssues={localCredentialIssues}
           credentialStatus={credentialStatus}
           providerCredentialsMasked={metaQuery.data?.providerCredentialsMasked}
           settingsMutation={settingsMutation}
-          hasPendingCredentialInput={hasPendingCredentialInput}
-          currentConsentRequired={Boolean(metaQuery.data?.consentRequired)}
           settingsMessage={settingsMessage}
           onSave={saveSettings}
         />

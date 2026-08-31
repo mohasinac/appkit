@@ -11,15 +11,45 @@ import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { SIEVE_OP, sieveFilter } from "../../../utils/sieve-builder";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { annotate } from "../../shell/field-ui-meta";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 
 const groupTitleSchema = z.object({
-  groupTitle: z.string().min(1, "Group title is required"),
+  groupTitle: annotate(z.string().min(1, "Group title is required"), {
+    section: "group", sectionLabel: "Group", sectionRequired: true, quick: true,
+    order: 1, row: "full", label: "Group title",
+    help: "Shown above the set on the parent listing.",
+  }),
 });
 
+type GroupTitleValues = z.infer<typeof groupTitleSchema>;
+
+/*
+ * `price` stays a STRING rather than `z.coerce.number()`, deliberately: the
+ * POST body sends `parseFloat(price)` and an empty numeric input coerces to
+ * `NaN`, which passes `.optional()` and lands in the payload as `null`. As a
+ * string the "enter a valid price" rule can be stated once and reported on the
+ * field.
+ */
 const createChildSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  price: z.string().refine((v) => v.trim() !== "" && !Number.isNaN(parseFloat(v)) && parseFloat(v) > 0, "Enter a valid price"),
-  condition: z.string(),
+  title: annotate(z.string().min(1, "Title is required"), {
+    section: "child", sectionLabel: "New child listing", sectionRequired: true,
+    quick: true, order: 1, row: "pair", label: "Title",
+  }),
+  price: annotate(
+    z.string().refine((v) => v.trim() !== "" && !Number.isNaN(parseFloat(v)) && parseFloat(v) > 0, "Enter a valid price"),
+    { section: "child", quick: true, order: 2, row: "pair", kind: "number", label: "Price (INR)" },
+  ),
+  condition: annotate(z.string(), {
+    section: "child", order: 3, row: "pair", kind: "select", label: "Condition",
+    help: "Category, brand, shipping and return policy are inherited from the parent listing.",
+  }),
 });
 
 const __P = {
@@ -82,7 +112,7 @@ export function GroupSettingsPanel({
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [editTitle, setEditTitle] = useState(groupTitle ?? "");
+  const [titleDraft, setTitleDraft] = useState<GroupTitleValues>({ groupTitle: groupTitle ?? "" });
   const [showAddModal, setShowAddModal] = useState(false);
   const [addTab, setAddTab] = useState<"create" | "link">("create");
   const [createForm, setCreateForm] = useState<CreateChildForm>({
@@ -93,12 +123,22 @@ export function GroupSettingsPanel({
   const [linkTargets, setLinkTargets] = useState<string[]>([]);
   const [children, setChildren] = useState<ChildInfo[] | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
-  const { shellCtx: titleShellCtx, validate: validateTitle } = useFormShellState(groupTitleSchema);
+  const titleSections = React.useMemo(
+    () => buildSectionsFromSchema<GroupTitleValues>(groupTitleSchema),
+    [],
+  );
+  const titleNav = useSectionFormNav(titleSections, titleDraft, { scope: "store:group-title" });
+  const titleForm = useFormShellState(groupTitleSchema, {
+    sections: titleNav.sectionMeta,
+    onGoToSection: titleNav.goToSection,
+    fieldToSectionIndex: titleNav.fieldToSectionIndex,
+  });
+  const titleShellCtx = titleForm.shellCtx;
 
   useEffect(() => {
-    validateTitle({ groupTitle: editTitle });
+    titleForm.validate(titleDraft);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editTitle, validateTitle]);
+  }, [titleDraft]);
 
   if (isAuction) return null;
 
@@ -137,7 +177,7 @@ export function GroupSettingsPanel({
     if (Object.keys(titleShellCtx.errors).length > 0) return;
     setLoading(true);
     try {
-      await apiClient.patch(groupEndpoint, { groupTitle: editTitle });
+      await apiClient.patch(groupEndpoint, visibleValues(groupTitleSchema, titleDraft));
       showToast("Group title saved.", "success");
       onGroupChanged();
     } catch (e: unknown) {
@@ -326,24 +366,19 @@ export function GroupSettingsPanel({
           {isGroupParent && groupId && (
             <Stack gap="md">
               <FormShellContext.Provider value={titleShellCtx}>
-                <Row align="start" gap="sm" wrap>
-                  <Div className="flex-1 min-w-[200px]">
-                    <FormField
-                      name="groupTitle"
-                      label="Group title"
-                      type="text"
-                      value={editTitle}
-                      onChange={setEditTitle}
-                      placeholder="e.g. Human Toy Complete Set"
-                    />
-                  </Div>
-                  <Div padding="t-lg">
-                    <Button type="button" variant="secondary" size="sm" onClick={saveTitle} isLoading={loading}>
-                      Save title
-                    </Button>
-                  </Div>
-                </Row>
                 <FormErrorSummary />
+                <SectionForm<GroupTitleValues>
+                  sections={titleSections}
+                  values={titleDraft}
+                  onChange={(partial) => setTitleDraft((d) => ({ ...d, ...partial }))}
+                  onSubmit={() => void saveTitle()}
+                  onValidationChange={() => titleForm.validate(titleDraft)}
+                  schema={groupTitleSchema}
+                  openIds={titleNav.openIds}
+                  onOpenChange={titleNav.setOpenIds}
+                  submitLabel="Save title"
+                  isLoading={loading}
+                />
               </FormShellContext.Provider>
 
               <Div>
@@ -513,12 +548,25 @@ function AddChildContent({
   onAddLink,
   loading,
 }: AddChildContentProps) {
-  const { shellCtx, validate } = useFormShellState(createChildSchema);
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<CreateChildForm>(createChildSchema, {
+        options: { condition: CONDITION_OPTIONS },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, createForm, { scope: "store:group-add-child" });
+  const form = useFormShellState(createChildSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+  const shellCtx = form.shellCtx;
 
   useEffect(() => {
-    validate(createForm);
+    form.validate(createForm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createForm, validate]);
+  }, [createForm]);
 
   return (
     <Stack gap="md">
@@ -530,36 +578,34 @@ function AddChildContent({
         <TabsContent value="create">
           <FormShellContext.Provider value={shellCtx}>
           <Stack gap="sm" className="mt-4">
-            <FormField
-              name="title"
-              label="Title *"
-              type="text"
-              value={createForm.title}
-              onChange={(v) => setCreateForm({ ...createForm, title: v })}
-              placeholder={`${productSlug}-part`}
-            />
-            <FormField
-              name="price"
-              label="Price (₹) *"
-              type="number"
-              value={createForm.price}
-              onChange={(v) => setCreateForm({ ...createForm, price: v })}
-              placeholder="0"
-            />
-            <Select
-              label="Condition"
-              value={createForm.condition}
-              onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
-              options={CONDITION_OPTIONS}
+            <FormErrorSummary />
+            <SectionForm<CreateChildForm>
+              sections={sections}
+              values={createForm}
+              onChange={(partial) => setCreateForm({ ...createForm, ...partial })}
+              onSubmit={() => {
+                // SectionForm scrolls to the first erroring section and then
+                // submits regardless, so the guard lives here.
+                form.clearErrors();
+                const parsed = createChildSchema.safeParse(
+                  visibleValues(createChildSchema, createForm),
+                );
+                if (!parsed.success) {
+                  applyZodIssues(parsed.error.issues, form.setFieldError);
+                  return;
+                }
+                onAddCreate();
+              }}
+              onValidationChange={() => form.validate(createForm)}
+              schema={createChildSchema}
+              openIds={nav.openIds}
+              onOpenChange={nav.setOpenIds}
+              submitLabel="Create and link child"
+              isLoading={loading}
             />
             <Text className="dark:text-[var(--appkit-color-text-faint)]/80" color="faint" size="xs">
-              Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.
             </Text>
-            <FormErrorSummary />
-            <Button type="button" onClick={onAddCreate} isLoading={loading} disabled={!createForm.title || !createForm.price}>
-              Create and link child
-            </Button>
           </Stack>
           </FormShellContext.Provider>
         </TabsContent>

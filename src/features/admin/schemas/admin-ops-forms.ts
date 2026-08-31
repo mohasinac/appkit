@@ -268,3 +268,72 @@ export const adminAdFormSchema = z
   });
 
 export type AdminAdFormValues = z.infer<typeof adminAdFormSchema>;
+
+/**
+ * Ad SETTINGS — the provider credentials and the global consent switch.
+ *
+ * Distinct from `adminAdFormSchema`, which is one ad record. This is the
+ * platform-level configuration every ad renders under, and it was validated by
+ * a hand-written `localCredentialIssues` array that computed the same two rules
+ * on every keystroke and rendered them as a banner headed "Fix settings before
+ * saving" — never on the field that was wrong.
+ *
+ * Both credentials are optional and BLANK MEANS UNCHANGED: the route stores
+ * them encrypted and returns only a masked form, so the input starts empty on
+ * every load and an empty submit must leave the stored value alone. That is why
+ * neither field has a `.min()` — an empty string here is not an omission.
+ */
+export const adsConfigSchema = z.object({
+  consentRequired: annotate(z.boolean(), {
+    section: "consent", sectionLabel: "Consent", sectionRequired: true,
+    quick: true, order: 1, row: "full",
+    label: "Require consent globally for ad rendering",
+  }),
+  adsenseClientId: annotate(
+    z
+      .string()
+      .trim()
+      .regex(/^ca-pub-[0-9]{10,20}$/, "An AdSense client id looks like ca-pub-XXXXXXXXXX.")
+      .optional()
+      .or(z.literal("")),
+    {
+      section: "credentials", sectionLabel: "Provider credentials",
+      order: 1, row: "pair", label: "AdSense client id",
+      help: "Leave blank to keep the stored value.",
+    },
+  ),
+  thirdPartyScriptUrl: annotate(
+    z.string().trim().max(2000).optional().or(z.literal("")),
+    {
+      section: "credentials", order: 2, row: "pair",
+      label: "Third-party script URL", inputType: "url",
+      help: "Must be https. Leave blank to keep the stored value.",
+    },
+  ),
+})
+  .superRefine((v, ctx) => {
+    const url = v.thirdPartyScriptUrl?.trim();
+    if (!url) return;
+    let parsed: URL | null = null;
+    try {
+      parsed = new URL(url);
+    } catch (err) {
+      void normalizeError(err);
+      parsed = null;
+    }
+    if (!parsed) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom, path: ["thirdPartyScriptUrl"],
+        message: "That is not a valid URL.",
+      });
+    } else if (parsed.protocol !== "https:") {
+      // A third-party ad script runs in the page's own origin; http would let
+      // any network hop rewrite it.
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom, path: ["thirdPartyScriptUrl"],
+        message: "A third-party script URL must use https.",
+      });
+    }
+  });
+
+export type AdsConfigValues = z.infer<typeof adsConfigSchema>;
