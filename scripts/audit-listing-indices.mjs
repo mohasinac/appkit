@@ -281,8 +281,86 @@ function extractDataListingConfig(content) {
   return cfg;
 }
 
+/**
+ * A `sieveFilter(FIELD_CONST.NAME, SIEVE_OP.EQ, value)` call.
+ *
+ * 🛑 This is the builder form, and reading it is not optional.
+ *
+ * The extractor below used to see string literals ONLY. `AdminPrizeDrawsView`
+ * returned the literal `"listingType==prize-draw"` until 2026-08-31, when it
+ * adopted the typed builder — and this audit stopped seeing that clause at all,
+ * so it could no longer tell whether the view's query needed a composite index.
+ * It kept reporting "0 missing indices" on a query it had stopped reading.
+ *
+ * That is Recurrent Root Cause #84 exactly: adopting the better-typed API
+ * removed the caller from the check. Every other view that migrates to
+ * `sieveFilter` would have gone quiet the same way, silently, one at a time.
+ */
+const RE_SIEVE_BUILDER =
+  /\bsieve(?:Filter|Sort)\s*\(\s*([A-Z_]+(?:_FIELDS)?\.[A-Z_0-9]+|["'`][\w.]+["'`])\s*,\s*(SIEVE_OP\.[A-Z_]+|["'`][^"'`]+["'`])/g;
+
+/**
+ * `SIEVE_OP.EQ` -> `==`. Mirrors `appkit/src/utils/sieve-builder.ts`; a member
+ * this map does not know is skipped rather than guessed, because guessing the
+ * operator is what decides whether a clause counts as a range — and a wrong
+ * range reading produces a fabricated missing-index report.
+ */
+const SIEVE_OP_VALUES = {
+  EQ: "==", NEQ: "!=", GT: ">", LT: "<", GTE: ">=", LTE: "<=",
+  CONTAINS: "@=", STARTS: "_=", ENDS: "_-=",
+  NOT_CONTAINS: "!@=", NOT_STARTS: "!_=", NOT_ENDS: "!_-=",
+};
+
+/**
+ * `PRODUCT_FIELDS.LISTING_TYPE` -> `listingType`.
+ *
+ * Resolved by reading the constant maps rather than by transforming the member
+ * name: `CATEGORY_SLUGS` is `categorySlugs`, but `SEO.SLUG` is `seo.slug` and
+ * `ID` is `id`, and a SCREAMING_SNAKE -> camelCase transform gets the nested
+ * ones wrong in a way that looks right.
+ */
+let FIELD_CONSTANT_MAP = null;
+
+function loadFieldConstantMap() {
+  if (FIELD_CONSTANT_MAP) return FIELD_CONSTANT_MAP;
+  FIELD_CONSTANT_MAP = new Map();
+  const sources = [
+    join(APPKIT_ROOT, "src", "constants", "field-names.ts"),
+  ];
+  for (const file of sources) {
+    let src;
+    try {
+      src = readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+    // `NAME: "value",` inside any exported const object. The map is flat and
+    // keyed by MEMBER name, so a member defined in two objects with the same
+    // spelling resolves the same either way — which is true of every one
+    // measured (ID, TITLE, STATUS, CREATED_AT).
+    for (const m of src.matchAll(/\b([A-Z_0-9]+)\s*:\s*["'`]([\w.]+)["'`]/g)) {
+      if (!FIELD_CONSTANT_MAP.has(m[1])) FIELD_CONSTANT_MAP.set(m[1], m[2]);
+    }
+  }
+  return FIELD_CONSTANT_MAP;
+}
+
+function resolveFieldToken(token) {
+  const quoted = token.match(/^["'`]([\w.]+)["'`]$/);
+  if (quoted) return quoted[1];
+  const member = token.split(".").pop();
+  return loadFieldConstantMap().get(member) ?? null;
+}
+
+function resolveOpToken(token) {
+  const quoted = token.match(/^["'`]([^"'`]+)["'`]$/);
+  if (quoted) return quoted[1];
+  const member = token.split(".").pop();
+  return SIEVE_OP_VALUES[member] ?? null;
+}
+
 function extractSieveFieldsFromBody(body) {
-  // Pull every string literal, then extract Sieve field references from each.
+  // Two forms, both real: a raw Sieve string, and the typed builder.
   const out = [];
   for (const m of body.matchAll(RE_STRING_LITERAL)) {
     const literal = m[1];
@@ -290,8 +368,23 @@ function extractSieveFieldsFromBody(body) {
       out.push({ field: cm[1], op: cm[2], isRange: RANGE_OPS.has(cm[2]) });
     }
   }
+  for (const m of body.matchAll(RE_SIEVE_BUILDER)) {
+    const field = resolveFieldToken(m[1]);
+    const op = resolveOpToken(m[2]);
+    // An unresolvable constant is REPORTED, not silently dropped — a clause
+    // this cannot read is a clause the index check is blind to, which is the
+    // failure this whole block exists to end.
+    if (!field || !op) {
+      unresolvedBuilderTokens.push(`${m[1]} ${m[2]}`);
+      continue;
+    }
+    out.push({ field, op, isRange: RANGE_OPS.has(op) });
+  }
   return out;
 }
+
+/** Builder clauses this run could not resolve. Printed at the end. */
+const unresolvedBuilderTokens = [];
 
 function parseSieveString(s) {
   const out = [];
