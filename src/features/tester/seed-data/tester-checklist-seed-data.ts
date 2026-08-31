@@ -2803,6 +2803,27 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/products",
         },
         {
+          key: "soft-ban-lift-notification-has-a-body",
+          label: "Lifting a user's soft ban sends them a notification WITH a readable message, not just a title",
+          description:
+            "Fixed 2026-08-31. BEFORE: the route wrote `body`, `entityId` and `entityType` behind an `as any` — none of which are fields on NotificationDocument (they are `message`, `relatedId`, `relatedType`) — so the bell showed a title and an EMPTY body, and the notification never reached email or WhatsApp. AFTER: as an admin, lift any soft ban on a test user from /admin/users, then open that user's bell. The row must show both the title AND the sentence naming which restriction was lifted, and it must be clickable.",
+          href: "/admin/users",
+        },
+        {
+          key: "review-feedback-notification-delivers",
+          label: "Sending feedback on a review notifies the buyer with the message body, and the row is clickable",
+          description:
+            "Fixed 2026-08-31. BEFORE: three defects on one line, all hidden by an `as any` — the body was written under the wrong field name so it rendered empty; `type: \"store_feedback\"` is not a real notification type so no channel could ever be allow-listed for it; and it skipped `actionUrl` resolution so the row went nowhere when clicked. AFTER: as a seller, send feedback on a review from /store/reviews, then check that buyer's bell — message present, row clickable.",
+          href: "/store/reviews",
+        },
+        {
+          key: "analytics-tags-absent-until-configured",
+          label: "With no analytics IDs set, the page source contains NO googletagmanager / connect.facebook.net script tag",
+          description:
+            "Added 2026-08-31. siteSettings.integrations has held GA / Pixel / GTM IDs for a long time with NOTHING reading them; they now drive real tags. This case checks the OFF state, which is the one that can silently regress into tracking every visitor. With Site Settings → Integrations empty, view-source on the homepage and search for \"googletagmanager\" — a `preconnect` link is expected and fine, a `<script>` is a bug. Then set a GA ID, reload, and confirm the script now appears: a tag that never appears is the opposite failure.",
+          href: "/admin/site",
+        },
+        {
           key: "notification-count-bubbles-readable",
           label: "The unread-count bubbles (the small number circles on the header bell icon and the cart/bottom action bar) show a readable number in BOTH light and dark mode — not a colored blob with an invisible digit",
           description: "You need at least one unread notification, or an item in the cart, for the bubble to appear. Check both themes. (This case used to also name the Messages nav item; buyer↔seller messaging was removed 2026-08-31.)",
