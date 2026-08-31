@@ -337,3 +337,66 @@ export const adsConfigSchema = z.object({
   });
 
 export type AdsConfigValues = z.infer<typeof adsConfigSchema>;
+
+/**
+ * The support-ticket triage form — what an admin CHANGES about a ticket, as
+ * distinct from what they SAY on it (the reply box, which is its own write to
+ * a different endpoint and carries the ticket's new status with it).
+ *
+ * The five linked-party ids are FLAT here and reassembled into
+ * `relatedParties` at the payload boundary, the same call the ad creative and
+ * the user's public profile make: the stored shape is one nested object, and
+ * the form has always offered five discrete inputs.
+ */
+export const supportTicketUpdateSchema = z.object({
+  status: annotate(
+    z.enum(["open", "in_progress", "waiting_on_user", "resolved", "closed"]),
+    {
+      section: "triage", sectionLabel: "Triage", sectionRequired: true,
+      quick: true, order: 1, row: "pair", kind: "select",
+    },
+  ),
+  priority: annotate(z.enum(["low", "normal", "high", "urgent"]), {
+    section: "triage", quick: true, order: 2, row: "pair", kind: "select",
+  }),
+  internalNotes: annotate(z.string().trim().max(4000).optional().or(z.literal("")), {
+    section: "triage", order: 3, row: "full", kind: "textarea",
+    label: "Internal notes (staff only)",
+    help: "Visible only to admins and employees.",
+  }),
+  userId: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "parties", sectionLabel: "Linked parties", order: 1, row: "pair",
+    label: "User slug",
+    help: "Tag the buyer, store, order, product or bid this ticket concerns.",
+  }),
+  storeId: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "parties", order: 2, row: "pair", label: "Store slug",
+  }),
+  orderId: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "parties", order: 3, row: "pair", label: "Order ID",
+  }),
+  productId: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "parties", order: 4, row: "pair", label: "Product slug",
+  }),
+  bidId: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
+    section: "parties", order: 5, row: "pair", label: "Bid ID",
+  }),
+});
+
+export type SupportTicketUpdateValues = z.infer<typeof supportTicketUpdateSchema>;
+
+/**
+ * The five flat id fields, back into the nested `relatedParties` the ticket
+ * stores. Blank fields are dropped, and an entirely empty set returns
+ * `undefined` so the key is omitted rather than written as `{}`.
+ */
+export function toRelatedPartiesPayload(
+  v: SupportTicketUpdateValues,
+): Record<string, string> | undefined {
+  const out: Record<string, string> = {};
+  for (const key of ["userId", "storeId", "orderId", "productId", "bidId"] as const) {
+    const value = v[key]?.trim();
+    if (value) out[key] = value;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}

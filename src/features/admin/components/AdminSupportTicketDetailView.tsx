@@ -6,6 +6,20 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
+import {
+  supportTicketUpdateSchema,
+  toRelatedPartiesPayload,
+  type SupportTicketUpdateValues,
+} from "../schemas/admin-ops-forms";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 
@@ -52,6 +66,29 @@ export interface AdminSupportTicketDetailViewProps {
   /** The ticket's `statusHistory`. Absent on tickets predating W18. */
   statusHistory?: StatusChangeEntry[];
   statusHistoryTruncated?: number;
+}
+
+/**
+ * The drawer reopens for a different ticket without unmounting, so the draft is
+ * seeded in two places — initial state and the `open` effect. One function, so
+ * the two cannot disagree about what an absent field defaults to.
+ */
+function seedTicketDraft(
+  status: string | undefined,
+  priority: string | undefined,
+  notes: string | undefined,
+  parties: RelatedPartiesClient | undefined,
+): SupportTicketUpdateValues {
+  return {
+    status: (status ?? "open") as SupportTicketUpdateValues["status"],
+    priority: (priority ?? "normal") as SupportTicketUpdateValues["priority"],
+    internalNotes: notes ?? "",
+    userId: parties?.userId ?? "",
+    storeId: parties?.storeId ?? "",
+    orderId: parties?.orderId ?? "",
+    productId: parties?.productId ?? "",
+    bidId: parties?.bidId ?? "",
+  };
 }
 
 const STATUS_OPTIONS = [
@@ -103,47 +140,44 @@ export function AdminSupportTicketDetailView({
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const [status, setStatus] = React.useState(currentStatus ?? "open");
-  const [priority, setPriority] = React.useState(currentPriority ?? "normal");
-  const [notes, setNotes] = React.useState(internalNotes ?? "");
   const [replyBody, setReplyBody] = React.useState("");
-  // ST-6 — local edits for the linked-parties panel
-  const [parties, setParties] = React.useState<RelatedPartiesClient>(
-    relatedParties ?? {},
+  const [draft, setDraft] = React.useState<SupportTicketUpdateValues>(
+    () => seedTicketDraft(currentStatus, currentPriority, internalNotes, relatedParties),
   );
 
   React.useEffect(() => {
     if (open) {
-      setStatus(currentStatus ?? "open");
-      setPriority(currentPriority ?? "normal");
-      setNotes(internalNotes ?? "");
       setReplyBody("");
-      setParties(relatedParties ?? {});
+      setDraft(seedTicketDraft(currentStatus, currentPriority, internalNotes, relatedParties));
     }
   }, [open, currentStatus, currentPriority, internalNotes, relatedParties]);
+
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SupportTicketUpdateValues>(supportTicketUpdateSchema, {
+        options: { status: STATUS_OPTIONS, priority: PRIORITY_OPTIONS },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "admin:support-ticket" });
+  const form = useFormShellState(supportTicketUpdateSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ["admin", "support-tickets"] });
 
-  const cleanedParties = React.useMemo(() => {
-    const out: RelatedPartiesClient = {};
-    if (parties.userId?.trim()) out.userId = parties.userId.trim();
-    if (parties.storeId?.trim()) out.storeId = parties.storeId.trim();
-    if (parties.orderId?.trim()) out.orderId = parties.orderId.trim();
-    if (parties.productId?.trim()) out.productId = parties.productId.trim();
-    if (parties.bidId?.trim()) out.bidId = parties.bidId.trim();
-    return out;
-  }, [parties]);
-
   const updateMutation = useApiMutation({
     errorMessage: "Failed to update ticket.",
     mutationFn: async () => {
+      const v = visibleValues(supportTicketUpdateSchema, draft) as SupportTicketUpdateValues;
       await apiClient.patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
-        status,
-        priority,
-        internalNotes: notes || undefined,
-        relatedParties:
-          Object.keys(cleanedParties).length > 0 ? cleanedParties : undefined,
+        status: v.status,
+        priority: v.priority,
+        internalNotes: v.internalNotes || undefined,
+        relatedParties: toRelatedPartiesPayload(v),
       });
     },
     onSuccess: () => {
@@ -158,7 +192,7 @@ export function AdminSupportTicketDetailView({
     mutationFn: async () => {
       await apiClient.post(
         SUPPORT_ENDPOINTS.TICKET_MESSAGES(ticketId!),
-        { body: replyBody, newStatus: status },
+        { body: replyBody, newStatus: draft.status },
       );
     },
     onSuccess: () => {
@@ -173,7 +207,7 @@ export function AdminSupportTicketDetailView({
   const [storeStatus, setStoreStatus] = React.useState("active");
   const [storeIsVerified, setStoreIsVerified] = React.useState(false);
   const [storeIsFeatured, setStoreIsFeatured] = React.useState(false);
-  const linkedStoreId = parties.storeId?.trim();
+  const linkedStoreId = draft.storeId?.trim();
   const isStoreChangeRequest = category === "store_change_request";
 
   // Seed the panel from the store's REAL current values, not hardcoded
@@ -211,7 +245,7 @@ export function AdminSupportTicketDetailView({
       apiClient
         .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
           internalNotes:
-            (notes ? notes + "\n" : "") +
+            (draft.internalNotes ? draft.internalNotes + "\n" : "") +
             `[${new Date().toISOString()}] Applied store change to ${linkedStoreId}: status=${storeStatus}, verified=${storeIsVerified}, featured=${storeIsFeatured}`,
         })
         .catch(console.error);
@@ -223,7 +257,7 @@ export function AdminSupportTicketDetailView({
   // admin edit quantity per line + remove lines, then PATCHes the order).
   const [orderItemsOpen, setOrderItemsOpen] = React.useState(false);
   const [orderItems, setOrderItems] = React.useState<OrderItemEdit[]>([]);
-  const linkedOrderId = parties.orderId?.trim() || orderId;
+  const linkedOrderId = draft.orderId?.trim() || orderId;
   const isOrderModificationRequest =
     category === "order_modification_request" || category === "order_issue";
 
@@ -249,7 +283,7 @@ export function AdminSupportTicketDetailView({
   });
 
   // ST-5 — Lift Ban actions for unban_request tickets
-  const linkedUserId = parties.userId?.trim();
+  const linkedUserId = draft.userId?.trim();
   const isUnbanRequest = category === "unban_request";
 
   const liftHardBan = useApiMutation({
@@ -263,7 +297,7 @@ export function AdminSupportTicketDetailView({
       apiClient
         .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
           internalNotes:
-            (notes ? notes + "\n" : "") +
+            (draft.internalNotes ? draft.internalNotes + "\n" : "") +
             `[${new Date().toISOString()}] Lifted hard ban for ${linkedUserId}`,
           status: "resolved",
         })
@@ -285,7 +319,7 @@ export function AdminSupportTicketDetailView({
       apiClient
         .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
           internalNotes:
-            (notes ? notes + "\n" : "") +
+            (draft.internalNotes ? draft.internalNotes + "\n" : "") +
             `[${new Date().toISOString()}] Lifted create_support_tickets soft ban for ${linkedUserId}`,
           status: "resolved",
         })
@@ -318,7 +352,7 @@ export function AdminSupportTicketDetailView({
       apiClient
         .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
           internalNotes:
-            (notes ? notes + "\n" : "") +
+            (draft.internalNotes ? draft.internalNotes + "\n" : "") +
             `[${new Date().toISOString()}] Modified order ${linkedOrderId} items: ${orderItems
  .filter((it) => it.quantity > 0)
  .map((it) => `${it.productId}x${it.quantity}`)
@@ -437,62 +471,35 @@ export function AdminSupportTicketDetailView({
 
         <HorizontalRule tone="subtle" spacing="comfortable" />
 
-        {/* Status + Priority */}
-        <Select
-          label="Status"
-          options={STATUS_OPTIONS}
-          value={status}
-          onValueChange={setStatus}
-        />
-        <Select
-          label="Priority"
-          options={PRIORITY_OPTIONS}
-          value={priority}
-          onValueChange={setPriority}
-        />
-
-        {/* Internal notes */}
-        <Stack gap="xs">
-          <Label className="uppercase tracking-wide" color="muted" size="xs" weight="semibold">
-            Internal notes (staff only)
-          </Label>
-          <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            placeholder="Notes visible only to admins and employees…"
-          />
-        </Stack>
-
-        {/* ST-6 — Linked parties (admin-assigned subjects of this ticket) */}
-        <Stack
-          padding="sm" gap="sm" rounded="lg" border="default"
-        >
-          <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
-            Linked parties
-          </Text>
-          <Text size="xs" color="muted">
-            Tag the buyer / store / order / product / bid this ticket concerns.
-          </Text>
-          {([
-            ["userId", "User slug"],
-            ["storeId", "Store slug"],
-            ["orderId", "Order ID"],
-            ["productId", "Product slug"],
-            ["bidId", "Bid ID"],
-          ] as const).map(([key, label]) => (
-            <Input
-              key={key}
-              label={label}
-              type="text"
-              value={parties[key] ?? ""}
-              onChange={(e) =>
-                setParties((p) => ({ ...p, [key]: e.target.value }))
+        <FormShellContext.Provider value={form.shellCtx}>
+          <FormErrorSummary />
+          <SectionForm<SupportTicketUpdateValues>
+            sections={sections}
+            values={draft}
+            onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => {
+              // SectionForm scrolls to the first erroring section and then
+              // submits regardless, so the guard lives here.
+              form.clearErrors();
+              const parsed = supportTicketUpdateSchema.safeParse(
+                visibleValues(supportTicketUpdateSchema, draft),
+              );
+              if (!parsed.success) {
+                applyZodIssues(parsed.error.issues, form.setFieldError);
+                return;
               }
-              placeholder={label}
-            />
-          ))}
-        </Stack>
+              updateMutation.mutate();
+            }}
+            onValidationChange={() => form.validate(draft)}
+            schema={supportTicketUpdateSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            submitLabel="Save changes"
+            cancelLabel="Cancel"
+            onCancel={onClose}
+            isLoading={updateMutation.isPending}
+          />
+        </FormShellContext.Provider>
 
         {isOrderModificationRequest && (
           <OrderItemsPanel
@@ -528,19 +535,6 @@ export function AdminSupportTicketDetailView({
           />
         )}
 
-        <FormActions align="right">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            isLoading={updateMutation.isPending}
-            disabled={!ticketId || updateMutation.isPending}
-            onClick={() => updateMutation.mutate()}
-          >
-            Save changes
-          </Button>
-        </FormActions>
       </Stack>
     </SideDrawer>
   );

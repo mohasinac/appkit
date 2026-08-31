@@ -11,6 +11,12 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import {
+  SectionForm,
+  useSectionFormNav,
+  type SectionDef,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import type { JsonValue, JsonObject } from "../../../schemas/types";
 
 const __P = {
@@ -43,6 +49,14 @@ export interface AdminCarouselEditorViewProps
 }
 
 // ── helpers ─────────────────────────────────────────────────────────────────
+
+/** What the section nav and the error summary key on - see `draftForNav`. */
+interface CarouselDraft {
+  title: string;
+  active: boolean;
+  order: string;
+  cards: CarouselCard[];
+}
 
 function makeCard(zone: 1 | 2 | 3 | 4 | 5 | 6 = 1): CarouselCard {
   return {
@@ -472,6 +486,128 @@ export function AdminCarouselEditorView({
 
   const occupiedZones = cards.map((c) => c.zone);
 
+  /*
+   * Hand-written sections around the JSX that was already here, which is the
+   * `AdminCategoryEditorView` pattern. Deriving is not available: `background`
+   * is a discriminated union with its own editor, `cards[].buttons[]` is two
+   * levels of array, and neither has a `FieldKind`.
+   *
+   * `fields` is what makes the error summary's jump links and the per-section
+   * error badge work — it maps a Zod path back to the panel holding that
+   * control.
+   */
+  const sections = React.useMemo<SectionDef<CarouselDraft>[]>(() => [
+    {
+      id: "info",
+      label: "Slide info",
+      required: true,
+      fields: ["title", "active", "order", "settings"],
+      render: () => (
+        <Stack gap="md">
+          <FieldInput name="title" label="Title" value={title} onChange={(v) => setTitle(v)} required placeholder="e.g. Hot Wheels RLC Exclusives" />
+          <Toggle label="Active (visible on homepage)" checked={active} onChange={setActive} />
+          <Input label="Display order" type="number" value={order} onChange={(e) => setOrder(e.target.value)} min={0} placeholder="1" />
+          <Select
+            label="Slide height"
+            value={height}
+            onChange={(e) => setHeight(e.target.value as CarouselSlideHeight)}
+            options={HEIGHT_OPTIONS}
+          />
+          <Input
+            label="Autoplay delay (ms)"
+            type="number"
+            value={autoplayDelayMs}
+            onChange={(e) => setAutoplayDelayMs(e.target.value)}
+            min={1000}
+            max={15000}
+            placeholder="4000"
+            helperText="How long this slide shows before auto-advancing. Default: 4000 ms."
+          />
+        </Stack>
+      ),
+    },
+    {
+      id: "background",
+      label: "Background",
+      fields: ["background"],
+      render: () => <BackgroundEditor value={background} onChange={setBackground} />,
+    },
+    {
+      id: "overlay",
+      label: "Overlay text",
+      fields: ["overlay"],
+      render: () => (
+        <Stack gap="md">
+          <Text size="sm" color="muted">Centred text layered over the background. Leave blank to use cards only.</Text>
+          <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
+          <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokemon TCG - Hot Wheels - Beyblade X" />
+          <Input label="Description" value={overlayDesc} onChange={(e) => setOverlayDesc(e.target.value)} placeholder="One sentence description..." />
+          <Stack className={`${__P.p3}`} gap="sm" rounded="lg" border="default">
+            <Text size="sm" weight="medium">CTA button</Text>
+            <Input label="Button text" value={overlayBtnText} onChange={(e) => setOverlayBtnText(e.target.value)} placeholder="Shop Now" />
+            <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} />
+            <Select
+              label="Variant"
+              value={overlayBtnVariant}
+              onChange={(e) => setOverlayBtnVariant(e.target.value as typeof overlayBtnVariant)}
+              options={VARIANT_OPTIONS.filter((v) => ["primary", "secondary", "outline"].includes(v.value))}
+            />
+            <Toggle label="Open in new tab" checked={overlayBtnNewTab} onChange={setOverlayBtnNewTab} />
+          </Stack>
+        </Stack>
+      ),
+    },
+    {
+      id: "cards",
+      label: "Cards (0-2)",
+      fields: ["cards"],
+      render: () => (
+        <Stack gap="md">
+          <Row className={CLS_ROW_BETWEEN}>
+            <Text size="sm" color="muted">A slide holds at most two cards.</Text>
+            {cards.length < 2 && (
+              <Button type="button" variant="outline" size="sm" onClick={handleAddCard}>
+                + Add card
+              </Button>
+            )}
+          </Row>
+          {cards.length === 0 && (
+            <Text size="sm" color="faint">No cards - the overlay text covers the whole slide.</Text>
+          )}
+          {cards.map((card, i) => (
+            <CardEditor
+              key={card.id}
+              card={card}
+              index={i}
+              otherZones={occupiedZones.filter((z) => z !== card.zone)}
+              onChange={(updated) => setCards(cards.map((c, ci) => (ci === i ? updated : c)))}
+              onRemove={() => setCards(cards.filter((_, ci) => ci !== i))}
+            />
+          ))}
+        </Stack>
+      ),
+    },
+  ], [
+    title, active, order, height, autoplayDelayMs, background, cards, occupiedZones,
+    overlayTitle, overlaySubtitle, overlayDesc, overlayBtnText, overlayBtnLink,
+    overlayBtnVariant, overlayBtnNewTab, handleAddCard,
+  ]);
+
+  /**
+   * The values the nav and the error summary key on. Not a draft the form
+   * writes through - see the `onChange` note at the SectionForm below.
+   */
+  const draftForNav = React.useMemo<CarouselDraft>(
+    () => ({ title, active, order, cards }),
+    [title, active, order, cards],
+  );
+  const nav = useSectionFormNav(sections, draftForNav, { scope: "admin:carousel-editor" });
+  const form = useFormShellState(carouselSlideSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
+
   return (
     <StackedViewShell
       portal="admin"
@@ -481,135 +617,56 @@ export function AdminCarouselEditorView({
         errorMsg ? <Alert key="err" variant="error">{errorMsg}</Alert> : null,
         successMsg ? <Alert key="ok" variant="success">{successMsg}</Alert> : null,
 
-        <Form
-          key="slide-form"
-          schema={carouselSlideSchema}
-          onSubmit={(e) => e.preventDefault()}
-          spacing="lg"
-        >{({ setFieldError, clearErrors }) => (
-          <>
-          {/* ── 1. Slide Info ───────────────────────────────────────────── */}
-          <Div className={CLS_PANEL}>
-            <Heading level={3} className={CLS_SECTION_HEADING}>Slide info</Heading>
-            <FieldInput name="title" label="Title" value={title} onChange={(v) => setTitle(v)} required placeholder="e.g. Hot Wheels RLC Exclusives" />
-            <Toggle label="Active (visible on homepage)" checked={active} onChange={setActive} />
-            <Input label="Display order" type="number" value={order} onChange={(e) => setOrder(e.target.value)} min={0} placeholder="1" />
-            <Select
-              label="Slide height"
-              value={height}
-              onChange={(e) => setHeight(e.target.value as CarouselSlideHeight)}
-              options={HEIGHT_OPTIONS}
-            />
-            <Input
-              label="Autoplay delay (ms)"
-              type="number"
-              value={autoplayDelayMs}
-              onChange={(e) => setAutoplayDelayMs(e.target.value)}
-              min={1000}
-              max={15000}
-              placeholder="4000"
-              helperText="How long this slide shows before auto-advancing. Default: 4000 ms."
-            />
-          </Div>
-
-          {/* ── 2. Background ────────────────────────────────────────────── */}
-          <Div className={CLS_PANEL}>
-            <Heading level={3} className={CLS_SECTION_HEADING}>Background</Heading>
-            <BackgroundEditor value={background} onChange={setBackground} />
-          </Div>
-
-          {/* ── 3. Overlay text (optional) ───────────────────────────────── */}
-          <Div className={CLS_PANEL}>
-            <Heading level={3} className={CLS_SECTION_HEADING}>Overlay text (optional)</Heading>
-            <Text size="sm" color="muted">Centred text layered over the background. Leave blank to use cards only.</Text>
-            <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
-            <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokémon TCG · Hot Wheels · Beyblade X" />
-            <Input label="Description" value={overlayDesc} onChange={(e) => setOverlayDesc(e.target.value)} placeholder="One sentence description..." />
-            <Stack className={`${__P.p3}`} gap="sm" rounded="lg" border="default">
-              <Text size="sm" weight="medium">CTA button</Text>
-              <Input label="Button text" value={overlayBtnText} onChange={(e) => setOverlayBtnText(e.target.value)} placeholder="Shop Now" />
-              <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} />
-              <Select
-                label="Variant"
-                value={overlayBtnVariant}
-                onChange={(e) => setOverlayBtnVariant(e.target.value as typeof overlayBtnVariant)}
-                options={VARIANT_OPTIONS.filter((v) => ["primary", "secondary", "outline"].includes(v.value))}
-              />
-              <Toggle label="Open in new tab" checked={overlayBtnNewTab} onChange={setOverlayBtnNewTab} />
-            </Stack>
-          </Div>
-
-          {/* ── 4. Cards ─────────────────────────────────────────────────── */}
-          <Div className={CLS_PANEL}>
-            <Row className={CLS_ROW_BETWEEN}>
-              <Heading level={3} className={CLS_SECTION_HEADING}>Cards (0–2)</Heading>
-              {cards.length < 2 && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleAddCard}
-                >
-                  + Add card
-                </Button>
-              )}
-            </Row>
-            {cards.length === 0 && (
-              <Text size="sm" color="faint">No cards — the overlay text covers the whole slide.</Text>
-            )}
-            {cards.map((card, i) => (
-              <CardEditor
-                key={card.id}
-                card={card}
-                index={i}
-                otherZones={occupiedZones.filter((z) => z !== card.zone)}
-                onChange={(updated) => setCards(cards.map((c, ci) => (ci === i ? updated : c)))}
-                onRemove={() => setCards(cards.filter((_, ci) => ci !== i))}
-              />
-            ))}
-          </Div>
-
-          {/* ── Actions ──────────────────────────────────────────────────── */}
+        <FormShellContext.Provider key="slide-form" value={form.shellCtx}>
           <FormErrorSummary />
-          <FormActions>
-            <Button
-              type="submit"
-              isLoading={saveMutation.isPending}
-              disabled={!title || saveMutation.isPending}
-              onClick={() => {
-                clearErrors();
-                if (!title.trim()) { setFieldError("title", "Title is required"); return; }
-                saveMutation.mutate();
-              }}
-            >
-              {isEdit ? "Save changes" : "Create slide"}
-            </Button>
-            {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-            )}
-            {isEdit && (
-              <>
-                <Button
-                  type="button"
-                  variant="danger"
-                  isLoading={deleteMutation.isPending}
-                  onClick={() => setDeleteConfirmOpen(true)}
-                >
-                  {ACTIONS.ADMIN["delete-carousel"].label}
-                </Button>
-                <ConfirmDeleteModal
-                  isOpen={deleteConfirmOpen}
-                  onClose={() => setDeleteConfirmOpen(false)}
-                  onConfirm={() => { setDeleteConfirmOpen(false); deleteMutation.mutate(); }}
-                  title={ACTIONS.ADMIN["delete-carousel"].confirmation!.title}
-                  message={ACTIONS.ADMIN["delete-carousel"].confirmation!.body}
-                  isDeleting={deleteMutation.isPending}
-                />
-              </>
-            )}
-          </FormActions>
-          </>
-        )}</Form>,
+          <SectionForm<CarouselDraft>
+            sections={sections}
+            values={draftForNav}
+            /*
+             * The sections render from this component's own state, so
+             * `onChange` has nothing to route: every control already writes
+             * through its own setter, and the values object exists to give the
+             * error summary and the per-section badge a field map. Rebuilding
+             * eighteen scalars into one draft object would be a second source
+             * of truth for the same values.
+             */
+            onChange={() => undefined}
+            onSubmit={() => {
+              form.clearErrors();
+              if (!title.trim()) {
+                form.setFieldError("title", "Title is required");
+                return;
+              }
+              saveMutation.mutate();
+            }}
+            schema={carouselSlideSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            submitLabel={isEdit ? "Save changes" : "Create slide"}
+            cancelLabel="Cancel"
+            onCancel={onCancel}
+            isLoading={saveMutation.isPending}
+            destructiveAction={
+              isEdit
+                ? {
+                    label: ACTIONS.ADMIN["delete-carousel"].label,
+                    onClick: () => setDeleteConfirmOpen(true),
+                    disabled: deleteMutation.isPending,
+                  }
+                : undefined
+            }
+          />
+          {isEdit && (
+            <ConfirmDeleteModal
+              isOpen={deleteConfirmOpen}
+              onClose={() => setDeleteConfirmOpen(false)}
+              onConfirm={() => { setDeleteConfirmOpen(false); deleteMutation.mutate(); }}
+              title={ACTIONS.ADMIN["delete-carousel"].confirmation!.title}
+              message={ACTIONS.ADMIN["delete-carousel"].confirmation!.body}
+              isDeleting={deleteMutation.isPending}
+            />
+          )}
+        </FormShellContext.Provider>,
       ]}
     />
   );
