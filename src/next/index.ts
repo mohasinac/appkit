@@ -82,3 +82,53 @@ export type { UnauthorizedViewProps } from "./components/UnauthorizedView";
 
 export { ErrorBoundary } from "./ErrorBoundary";
 export type { ErrorBoundaryProps } from "./ErrorBoundary";
+
+/*
+ * Pure, isomorphic nav helpers — deliberately re-exported HERE as well as from
+ * the main and client entries.
+ *
+ * 🛑 `src/constants/navigation.tsx` CALLS `navItemId()` at module scope and is
+ * imported by BOTH server code (the locale and store layouts, the action index)
+ * and client code (every sidebar). That leaves it nowhere to import from:
+ *
+ *   - `@mohasinac/appkit/client` is `"use client"`, so on the server the binding
+ *     is a client-reference proxy and calling it throws (Root Cause #76). It did
+ *     — "Attempted to call navItemId() from the server" failed the Vercel build.
+ *   - the bare `@mohasinac/appkit` entry then trips
+ *     `audit-client-server-only-leak` on all 57 client components that reach
+ *     navigation.tsx transitively (Root Cause #6).
+ *
+ * The two audits pull in opposite directions, and both are right. `./next` is
+ * the third door: not `"use client"`, and not a path to firebase-admin — so it
+ * satisfies both. This is the same reasoning that keeps `/ui` and `/tokens`
+ * separate entries.
+ */
+export { navItemId } from "../_internal/shared/features/layout/types";
+export { matchesNavQuery } from "../_internal/shared/features/layout/matchesNavQuery";
+
+/*
+ * The action-index derivation — same reasoning as the nav helpers above.
+ *
+ * `src/constants/action-index.ts` calls `buildActionIndexBase()` at module
+ * scope and is imported by `GET /api/action-index` (a server route) as well as
+ * by `LayoutShellClient` (a client component). Neither the `"use client"` entry
+ * nor the bare one works for both; `./next` does.
+ *
+ * Found by `audit-client-entry-in-server`'s R2 the first time it ran — the same
+ * defect as navItemId, one file over, and the next build failure in line.
+ */
+export {
+  buildActionIndexBase,
+  deriveNavEntries,
+  deriveQuickActionEntries,
+} from "../features/search/action-index/derive";
+export { deriveSettingsEntries } from "../features/search/action-index/settings-entries";
+export {
+  mergeActionIndex,
+  projectActionIndexForViewer,
+} from "../features/search/action-index/types";
+export type {
+  ActionIndexEntry,
+  ActionIndexControl,
+  ActionIndexOverride,
+} from "../features/search/action-index/types";
