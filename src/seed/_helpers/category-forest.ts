@@ -21,9 +21,10 @@
 
 import type { CategoryTreeNode } from "./category-tree";
 import { seedExtMedia } from "./media";
+import { seedPhoto } from "../_helpers/media";
 
 const cover = (slug: string) =>
-  seedExtMedia(`https://picsum.photos/seed/category-image-${slug}-20260101/1200/600`);
+  seedPhoto(`category-image-${slug}-20260101`, 1200, 600);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Root 1 — Spinning Tops. The Beyblade catalogue, four generations deep:

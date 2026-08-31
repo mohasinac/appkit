@@ -29,7 +29,7 @@
  */
 
 import type { OrderDocument } from "../../orders/schemas/firestore";
-import { seedExtMedia } from "../../../seed/_helpers/media";
+import { seedPhoto } from "../../../seed/_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -38,7 +38,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 // in appkit/src/seed/orders-seed-data.ts for why this doesn't need to match
 // the real product's own seeded image.
 function orderItemImage(productId: string): string {
-  return seedExtMedia(`https://picsum.photos/seed/order-item-${productId}/300/300`);
+  return seedPhoto(`order-item-${productId}`, 300, 300);
 }
 
 const BUYER_ID = "user-tester-qa";

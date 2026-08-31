@@ -21,7 +21,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 export const productsArtSeedData: Partial<ProductDocument>[] = [
   {
@@ -38,10 +38,10 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 20,
     availableQuantity: 20,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-dranzer-phoenix-1-20260817/900/900"),
+    mainImage: seedPhoto("art-image-dranzer-phoenix-1-20260817", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/art-image-dranzer-phoenix-1-20260817/900/900"),
-      seedExtMedia("https://picsum.photos/seed/art-image-dranzer-phoenix-2-20260817/900/900"),
+      seedPhoto("art-image-dranzer-phoenix-1-20260817", 900, 900),
+      seedPhoto("art-image-dranzer-phoenix-2-20260817", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -80,10 +80,10 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 100,
     availableQuantity: 37,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-valkyrie-holo-1-20260818/900/900"),
+    mainImage: seedPhoto("art-image-valkyrie-holo-1-20260818", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/art-image-valkyrie-holo-1-20260818/900/900"),
-      seedExtMedia("https://picsum.photos/seed/art-image-valkyrie-holo-2-20260818/900/900"),
+      seedPhoto("art-image-valkyrie-holo-1-20260818", 900, 900),
+      seedPhoto("art-image-valkyrie-holo-2-20260818", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -122,8 +122,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 15,
     availableQuantity: 15,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-x-lineup-canvas-1-20260819/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/art-image-x-lineup-canvas-1-20260819/900/900")],
+    mainImage: seedPhoto("art-image-x-lineup-canvas-1-20260819", 900, 900),
+    images: [seedPhoto("art-image-x-lineup-canvas-1-20260819", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -167,8 +167,8 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 999,
     availableQuantity: 999,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-metal-vintage-1-20260819/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/art-image-metal-vintage-1-20260819/900/900")],
+    mainImage: seedPhoto("art-image-metal-vintage-1-20260819", 900, 900),
+    images: [seedPhoto("art-image-metal-vintage-1-20260819", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -206,10 +206,10 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 250,
     availableQuantity: 180,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-original-anniversary-1-20260819/900/900"),
+    mainImage: seedPhoto("art-image-original-anniversary-1-20260819", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/art-image-original-anniversary-1-20260819/900/900"),
-      seedExtMedia("https://picsum.photos/seed/art-image-original-anniversary-2-20260819/900/900"),
+      seedPhoto("art-image-original-anniversary-1-20260819", 900, 900),
+      seedPhoto("art-image-original-anniversary-2-20260819", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -252,9 +252,9 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 0,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/art-image-dragoon-galaxy-sold-out-1-20260824/900/900"),
+    mainImage: seedPhoto("art-image-dragoon-galaxy-sold-out-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/art-image-dragoon-galaxy-sold-out-1-20260824/900/900"),
+      seedPhoto("art-image-dragoon-galaxy-sold-out-1-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,

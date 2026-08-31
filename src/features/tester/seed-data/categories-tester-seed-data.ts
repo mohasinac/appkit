@@ -20,7 +20,7 @@
 
 import type { CategoryDocument } from "../../categories/schemas";
 import { CATEGORY_FIELDS } from "../../../constants/field-names";
-import { seedExtMedia } from "../../../seed/_helpers/media";
+import { seedPhoto } from "../../../seed/_helpers/media";
 import { testDataExpiresAt } from "./tester-ttl";
 
 const emptyMetrics = {
@@ -54,7 +54,7 @@ export const categoriesTesterSeedData: Partial<CategoryDocument>[] = [
     isFeatured: false,
     isBrand: false,
     seo: { title: "Tester Sandbox", description: "Disposable test category.", keywords: ["test"] },
-    display: { icon: "🧪", coverImage: seedExtMedia("https://picsum.photos/seed/category-image-tester-sandbox-20260101/1200/600"), color: "#64748b", showInMenu: false, showInFooter: false },
+    display: { icon: "🧪", coverImage: seedPhoto("category-image-tester-sandbox-20260101", 1200, 600), color: "#64748b", showInMenu: false, showInFooter: false },
     isActive: true,
     isSearchable: true,
     showOnHomepage: false,

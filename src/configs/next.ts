@@ -84,6 +84,15 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     webpack: consumerWebpack,
     outputFileTracingIncludes: consumerOutputFileTracingIncludes = {},
     turbopack: consumerTurbopack = {},
+    /*
+     * Destructured out even though it is merged below, because `...rest` is
+     * spread AFTER `images: mergedImages`. Left in `rest`, a consumer setting
+     * `images: { domains: [...] }` would silently overwrite the merged
+     * `unoptimized: true` — and with optimisation back on and no
+     * `remotePatterns` declared anywhere in this repo, every external image
+     * would 400. Every other key in this list is here for the same reason.
+     */
+    images: consumerImages = {},
     ...rest
   } = override;
 
@@ -318,10 +327,9 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   // hosts (ygoprodeck, unsplash, picsum); prod images move to Firebase
   // Storage via /api/media. Consumer can still pass an explicit
   // `images.unoptimized: false` + remotePatterns to opt back in.
-  const consumerImages = (override.images as Record<string, JsonValue>) ?? {};
   const mergedImages = {
     unoptimized: true,
-    ...consumerImages,
+    ...(consumerImages as Record<string, JsonValue>),
   };
 
   // Turbopack (used by `next build`) has its own alias system separate from

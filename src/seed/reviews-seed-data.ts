@@ -17,7 +17,7 @@
 
 import type { ReviewDocument } from "../features/reviews/schemas/firestore";
 import { withReviewSearchTxt } from "./_helpers/search-txt-wrappers";
-import { seedExtMedia } from "./_helpers/media";
+import { seedExtMedia, seedPhoto } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -112,14 +112,14 @@ for (let i = 0; i < 65; i++) {
     comment: template.comment,
     images: hasImage
       ? Array.from({ length: imageCount }, (_, n) =>
-          seedExtMedia(`https://picsum.photos/seed/review-image-${product.id}-${i + 1}-${n + 1}/800/800`),
+          seedPhoto(`review-image-${product.id}-${i + 1}-${n + 1}`, 800, 800),
         )
       : [],
     hasImages: hasImage,
     video: hasVideo
       ? {
           url: SAMPLE_VIDEO_URL,
-          thumbnailUrl: seedExtMedia(`https://picsum.photos/seed/review-video-thumb-${product.id}-${i + 1}/800/450`),
+          thumbnailUrl: seedPhoto(`review-video-thumb-${product.id}-${i + 1}`, 800, 450),
           duration: 18 + (i % 5) * 6,
         }
       : undefined,
@@ -181,9 +181,7 @@ for (let i = 0; i < 14; i++) {
     comment: template.comment,
     images: hasImage
       ? [
-          seedExtMedia(
-            `https://picsum.photos/seed/review-image-dranzer-deep-${i + 1}/800/800`,
-          ),
+          seedPhoto(`review-image-dranzer-deep-${i + 1}`, 800, 800),
         ]
       : [],
     hasImages: hasImage,

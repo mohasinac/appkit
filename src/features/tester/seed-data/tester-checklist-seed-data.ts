@@ -423,6 +423,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "standard-detail", label: "Standard product detail page loads correctly", href: "/products/product-tester-standard-1" },
         {
+          key: "seed-images-are-labelled-tiles",
+          label: "Every seeded product image is a readable tile showing the item's own name — NOT a broken-image icon and NOT an empty grey box",
+          description:
+            "Fixed 2026-08-31. BEFORE: 409 of the ~437 seeded image URLs pointed at picsum.photos, which went down (503 from its origin AND its CDN), so nearly every image on the site returned 502 and rendered as the browser's broken-image icon. AFTER: images come from `seedPhoto()`, which names its host in ONE place and renders the item's name on the tile. Open a product grid and confirm the tiles show text like \"Dranzer Phoenix\" rather than broken icons. A grid of identical blank tiles is also a fail — each should differ.",
+          href: "/products",
+        },
+        {
+          key: "unreachable-image-degrades-to-placeholder",
+          label: "An image whose upstream host is unreachable shows a neutral \"Image unavailable\" tile, not a broken-image icon",
+          description:
+            "This is the safety net under the case above, and it is checked with a URL that CANNOT work — a real one proves nothing. Open /api/media/ext?url=https%3A%2F%2Fexample.invalid%2Fx.png directly in a browser tab. BEFORE it returned 502 with the text \"Failed to fetch external image.\", which an <img> renders as a broken icon. AFTER it must return an SVG tile reading \"Image unavailable\". In devtools the response must carry the header X-Media-Placeholder: 1 and a SHORT Cache-Control (max-age=60) — if that header is missing, the tile is being cached as though it were a real image and the outage would outlive its cause.",
+          href: "/products",
+        },
+        {
           key: "auction-detail",
           label: "Auction detail page shows current bid + a live, ticking countdown correctly",
           description: "The countdown (\"Ends in 2d 5h 30m\", ticking every second — not a static date) must appear directly above every \"Place a bid\" button: the info panel, the desktop and mobile compact bid-summary cards, inside the \"Place your bid\" modal above the submit button, and in the mobile sticky bottom bar (as a row above the current-bid/bid-count line). It should switch to \"Ended\" once the end time passes.",

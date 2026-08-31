@@ -35,7 +35,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
   {
@@ -52,10 +52,10 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/live-image-golden-retriever-1-20260816/900/900"),
+    mainImage: seedPhoto("live-image-golden-retriever-1-20260816", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/live-image-golden-retriever-1-20260816/900/900"),
-      seedExtMedia("https://picsum.photos/seed/live-image-golden-retriever-2-20260816/900/900"),
+      seedPhoto("live-image-golden-retriever-1-20260816", 900, 900),
+      seedPhoto("live-image-golden-retriever-2-20260816", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -102,8 +102,8 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/live-image-bearded-dragon-1-20260817/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/live-image-bearded-dragon-1-20260817/900/900")],
+    mainImage: seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900),
+    images: [seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
@@ -150,10 +150,10 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/live-image-bonsai-juniper-1-20260818/900/900"),
+    mainImage: seedPhoto("live-image-bonsai-juniper-1-20260818", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/live-image-bonsai-juniper-1-20260818/900/900"),
-      seedExtMedia("https://picsum.photos/seed/live-image-bonsai-juniper-2-20260818/900/900"),
+      seedPhoto("live-image-bonsai-juniper-1-20260818", 900, 900),
+      seedPhoto("live-image-bonsai-juniper-2-20260818", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -201,9 +201,9 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 0,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/live-image-juniper-bonsai-sold-1-20260824/900/900"),
+    mainImage: seedPhoto("live-image-juniper-bonsai-sold-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/live-image-juniper-bonsai-sold-1-20260824/900/900"),
+      seedPhoto("live-image-juniper-bonsai-sold-1-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,

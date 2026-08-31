@@ -40,7 +40,7 @@
 import { withOrderSearchTxt } from "./_helpers/search-txt-wrappers";
 import type { OrderDocument } from "../features/orders/schemas/firestore";
 import type { StatusChangeEntry } from "../_internal/shared/history/index";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -52,7 +52,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 // 2026-08-20 (see OrderDocumentItem.image), so seeded order fixtures show a
 // thumbnail on My Orders / order-detail like real orders do.
 function orderItemImage(productId: string): string {
-  return seedExtMedia(`https://picsum.photos/seed/order-item-${productId}/300/300`);
+  return seedPhoto(`order-item-${productId}`, 300, 300);
 }
 
 // Deterministic 6-char base36 suffix derived from a seed string — replaces the

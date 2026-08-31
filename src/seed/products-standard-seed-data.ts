@@ -26,7 +26,7 @@
 import { ProductDocument, ProductSpecification, CustomField, CustomSection } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 /*
  * Real Beyblade attributes per fixture — Root Cause #6 (standard was the
@@ -204,11 +204,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 4,
     availableQuantity: 4,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dranzer-s-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-original-dranzer-s-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dranzer-s-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dranzer-s-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dranzer-s-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-original-dranzer-s-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-original-dranzer-s-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-original-dranzer-s-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
@@ -236,11 +236,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 2,
     availableQuantity: 2,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-driger-v-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-original-driger-v-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-driger-v-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-driger-v-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-driger-v-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-original-driger-v-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-original-driger-v-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-original-driger-v-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -269,11 +269,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 6,
     availableQuantity: 6,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-storm-pegasus-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-metal-storm-pegasus-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-storm-pegasus-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-storm-pegasus-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-storm-pegasus-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-metal-storm-pegasus-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-metal-storm-pegasus-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-metal-storm-pegasus-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -301,11 +301,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 3,
     availableQuantity: 3,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-flame-sagittario-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-metal-flame-sagittario-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-flame-sagittario-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-flame-sagittario-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-flame-sagittario-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-metal-flame-sagittario-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-metal-flame-sagittario-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-metal-flame-sagittario-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -334,11 +334,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 10,
     availableQuantity: 10,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-valkyrie-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-burst-valkyrie-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-valkyrie-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-valkyrie-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-valkyrie-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-burst-valkyrie-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-burst-valkyrie-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-burst-valkyrie-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -366,11 +366,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 5,
     availableQuantity: 5,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-regalia-genesis-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-burst-regalia-genesis-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-regalia-genesis-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-regalia-genesis-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-regalia-genesis-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-burst-regalia-genesis-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-burst-regalia-genesis-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-burst-regalia-genesis-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -399,11 +399,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 12,
     availableQuantity: 12,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-wizard-arrow-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-x-wizard-arrow-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-wizard-arrow-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-wizard-arrow-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-wizard-arrow-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-x-wizard-arrow-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-x-wizard-arrow-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-x-wizard-arrow-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -431,11 +431,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 7,
     availableQuantity: 7,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-knife-shinobi-1-20260101/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-x-knife-shinobi-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-knife-shinobi-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-knife-shinobi-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-knife-shinobi-3-20260101/900/900"),
+      seedPhoto("product-image-beyblade-x-knife-shinobi-1-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-x-knife-shinobi-2-20260101", 900, 900),
+      seedPhoto("product-image-beyblade-x-knife-shinobi-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -462,14 +462,14 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 5,
     availableQuantity: 5,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-1-20260819/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-1-20260819", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-1-20260819/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-original-dragoon-f-video-demo-2-20260819/900/900"),
+      seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-1-20260819", 900, 900),
+      seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-2-20260819", 900, 900),
     ],
     video: {
       url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
-      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-original-dragoon-f-video-demo-20260819/800/450"),
+      thumbnailUrl: seedPhoto("product-video-thumb-beyblade-original-dragoon-f-video-demo-20260819", 800, 450),
       duration: 15,
     },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
@@ -495,14 +495,14 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 8,
     availableQuantity: 8,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-1-20260819/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-x-dran-sword-video-demo-1-20260819", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-1-20260819/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-x-dran-sword-video-demo-2-20260819/900/900"),
+      seedPhoto("product-image-beyblade-x-dran-sword-video-demo-1-20260819", 900, 900),
+      seedPhoto("product-image-beyblade-x-dran-sword-video-demo-2-20260819", 900, 900),
     ],
     video: {
       url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
-      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-x-dran-sword-video-demo-20260819/800/450"),
+      thumbnailUrl: seedPhoto("product-video-thumb-beyblade-x-dran-sword-video-demo-20260819", 800, 450),
       duration: 20,
     },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
@@ -536,10 +536,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 4,
     availableQuantity: 4,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-dark-bull-video-demo-1-20260821/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-metal-dark-bull-video-demo-1-20260821", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-dark-bull-video-demo-1-20260821/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-metal-dark-bull-video-demo-2-20260821/900/900"),
+      seedPhoto("product-image-beyblade-metal-dark-bull-video-demo-1-20260821", 900, 900),
+      seedPhoto("product-image-beyblade-metal-dark-bull-video-demo-2-20260821", 900, 900),
     ],
     video: {
       // audit-seed-external-url-ok: MediaUploadField's YouTube tab always stores a
@@ -547,7 +547,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
       // getYouTubeVideoId() detects it and MediaVideo/ImageLightbox render a
       // youtube-nocookie.com iframe embed instead of a native <video> element.
       url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-metal-dark-bull-video-demo-20260821/800/450"),
+      thumbnailUrl: seedPhoto("product-video-thumb-beyblade-metal-dark-bull-video-demo-20260821", 800, 450),
       duration: 212,
     },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
@@ -578,14 +578,14 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 7,
     availableQuantity: 7,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-spryzen-video-demo-1-20260821/900/900"),
+    mainImage: seedPhoto("product-image-beyblade-burst-spryzen-video-demo-1-20260821", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-spryzen-video-demo-1-20260821/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-beyblade-burst-spryzen-video-demo-2-20260821/900/900"),
+      seedPhoto("product-image-beyblade-burst-spryzen-video-demo-1-20260821", 900, 900),
+      seedPhoto("product-image-beyblade-burst-spryzen-video-demo-2-20260821", 900, 900),
     ],
     video: {
       url: "https://upload.wikimedia.org/wikipedia/commons/4/42/Slow_motion_of_running_greyhound.webm", // audit-seed-external-url-ok: raw <video> src, CC-BY-SA 4.0 (Wikimedia Commons)
-      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/product-video-thumb-beyblade-burst-spryzen-video-demo-20260821/800/450"),
+      thumbnailUrl: seedPhoto("product-video-thumb-beyblade-burst-spryzen-video-demo-20260821", 800, 450),
       duration: 14,
     },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
@@ -614,10 +614,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 0,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-dran-buster-sold-out-1-20260824/900/900"),
+    mainImage: seedPhoto("product-image-dran-buster-sold-out-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-dran-buster-sold-out-1-20260824/900/900"),
-      seedExtMedia("https://picsum.photos/seed/product-image-dran-buster-sold-out-2-20260824/900/900"),
+      seedPhoto("product-image-dran-buster-sold-out-1-20260824", 900, 900),
+      seedPhoto("product-image-dran-buster-sold-out-2-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -641,9 +641,9 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 0,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/product-image-valtryek-v3-sold-out-1-20260824/900/900"),
+    mainImage: seedPhoto("product-image-valtryek-v3-sold-out-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/product-image-valtryek-v3-sold-out-1-20260824/900/900"),
+      seedPhoto("product-image-valtryek-v3-sold-out-1-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,

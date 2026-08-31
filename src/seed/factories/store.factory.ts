@@ -1,4 +1,4 @@
-import { seedExtMedia } from "../_helpers/media";
+import { seedPhoto } from "../_helpers/media";
 // appkit/src/seed/factories/store.factory.ts
 let _seq = 1;
 
@@ -44,8 +44,8 @@ export function makeFullStore(
   overrides: Partial<SeedBaseStoreDocument> = {},
 ): SeedBaseStoreDocument {
   return makeStore({
-    logo: seedExtMedia("https://example.com/logo.jpg"),
-    coverImage: seedExtMedia("https://example.com/cover.jpg"),
+    logo: seedPhoto("store-logo-factory", 400, 400),
+    coverImage: seedPhoto("store-banner-factory", 1200, 400),
     ownerEmail: "seller@example.com",
     commissionRate: 10,
     ...overrides,

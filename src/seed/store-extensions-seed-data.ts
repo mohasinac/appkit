@@ -17,7 +17,7 @@
  * @tag sideEffects:none
  */
 
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 import type {
   AnalyticsAlertDocument,
   AnalyticsCardDocument,
@@ -152,10 +152,10 @@ export const analyticsAlertsSeedData: Partial<AnalyticsAlertDocument>[] = [
 
 // ───── storeCategories (4 records) ────────────────────────────────────────
 export const storeCategoriesSeedData: Partial<StoreCategoryDocument>[] = [
-  { id: "scat-arena-original-series", storeId: "store-beyblade-arena", label: "Original Series", slug: "original-series", displayOrder: 0, productIds: [], isActive: true, description: "Original 1999-2003 series beyblades.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-original-series-20260101/600/400") },
-  { id: "scat-arena-metal-fight", storeId: "store-beyblade-arena", label: "Metal Fight", slug: "metal-fight", displayOrder: 1, productIds: [], isActive: true, description: "Metal Fight / Metal Fusion era beyblades.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-metal-fight-20260101/600/400") },
-  { id: "scat-letitrip-sealed", storeId: "store-letitrip-official", label: "Sealed Products", slug: "sealed-products", displayOrder: 0, productIds: [], isActive: true, description: "Factory-sealed launcher sets, stadiums, and starter boxes.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-sealed-products-20260101/600/400") },
-  { id: "scat-letitrip-accessories", storeId: "store-letitrip-official", label: "Accessories", slug: "accessories", displayOrder: 1, productIds: [], isActive: true, description: "Launchers, grip tape, ripcords, and carry cases.", coverImageUrl: seedExtMedia("https://picsum.photos/seed/storecat-accessories-20260101/600/400") },
+  { id: "scat-arena-original-series", storeId: "store-beyblade-arena", label: "Original Series", slug: "original-series", displayOrder: 0, productIds: [], isActive: true, description: "Original 1999-2003 series beyblades.", coverImageUrl: seedPhoto("storecat-original-series-20260101", 600, 400) },
+  { id: "scat-arena-metal-fight", storeId: "store-beyblade-arena", label: "Metal Fight", slug: "metal-fight", displayOrder: 1, productIds: [], isActive: true, description: "Metal Fight / Metal Fusion era beyblades.", coverImageUrl: seedPhoto("storecat-metal-fight-20260101", 600, 400) },
+  { id: "scat-letitrip-sealed", storeId: "store-letitrip-official", label: "Sealed Products", slug: "sealed-products", displayOrder: 0, productIds: [], isActive: true, description: "Factory-sealed launcher sets, stadiums, and starter boxes.", coverImageUrl: seedPhoto("storecat-sealed-products-20260101", 600, 400) },
+  { id: "scat-letitrip-accessories", storeId: "store-letitrip-official", label: "Accessories", slug: "accessories", displayOrder: 1, productIds: [], isActive: true, description: "Launchers, grip tape, ripcords, and carry cases.", coverImageUrl: seedPhoto("storecat-accessories-20260101", 600, 400) },
 ];
 
 // ───── listingTemplates (4 records) ───────────────────────────────────────
@@ -212,9 +212,9 @@ export const moderationQueueSeedData: Partial<ModerationQueueDocument>[] = [
   { id: "mod-video-dragoon-auction", mediaType: "video", mediaUrl: "/media/product-video-dragoon-storm-20260518.mp4", entityType: "product", entityId: "auction-beyblade-original-dragoon-storm", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "pending", submittedAt: new Date(NOW.getTime() - 3600_000) },
   { id: "mod-video-dranzer-unbox", mediaType: "video", mediaUrl: "/media/product-video-original-dranzer-s-20260518.mp4", entityType: "product", entityId: "product-beyblade-original-dranzer-s", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "pending", submittedAt: new Date(NOW.getTime() - 7200_000) },
   { id: "mod-review-driger-v", mediaType: "rich-text", entityType: "review", entityId: "review-8", ownerId: "user-yugi-muto", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
-  { id: "mod-image-arena-banner", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/store-banner-beyblade-arena-20260518/1600/400"), entityType: "storefront", entityId: "store-beyblade-arena", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
+  { id: "mod-image-arena-banner", mediaType: "image", mediaUrl: seedPhoto("store-banner-beyblade-arena-20260518", 1600, 400), entityType: "storefront", entityId: "store-beyblade-arena", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
   { id: "mod-blog-authentication-guide", mediaType: "rich-text", entityType: "blog", entityId: "blog-spot-genuine-takara-tomy-beyblade", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 432000_000), submittedAt: new Date(NOW.getTime() - 438000_000) },
-  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/event-cover-beyblade-tournament-20260518/1200/600"), entityType: "event", entityId: "event-favourite-blader-poll", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
+  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: seedPhoto("event-cover-beyblade-tournament-20260518", 1200, 600), entityType: "event", entityId: "event-favourite-blader-poll", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
 ];
 
 // ───── reports (5 records) ────────────────────────────────────────────────
@@ -237,7 +237,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     category: "spinning-tops",
     brand: "takara-tomy",
     maxBudget: 8000,
-    imageUrls: [seedExtMedia("https://picsum.photos/seed/irq-l-drago-sealed-20260101/600/600")],
+    imageUrls: [seedPhoto("irq-l-drago-sealed-20260101", 600, 600)],
     status: "open",
     replyCount: 2,
     replies: [],
@@ -253,7 +253,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     category: "spinning-tops",
     brand: "takara-tomy",
     maxBudget: 15000,
-    imageUrls: [seedExtMedia("https://picsum.photos/seed/irq-original-set-20260101/600/600")],
+    imageUrls: [seedPhoto("irq-original-set-20260101", 600, 600)],
     status: "open",
     replyCount: 0,
     replies: [],
@@ -269,7 +269,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     category: "spinning-tops",
     brand: "takara-tomy",
     maxBudget: 1500,
-    imageUrls: [seedExtMedia("https://picsum.photos/seed/irq-x-bx08-20260101/600/600")],
+    imageUrls: [seedPhoto("irq-x-bx08-20260101", 600, 600)],
     status: "fulfilled",
     replyCount: 4,
     replies: [],

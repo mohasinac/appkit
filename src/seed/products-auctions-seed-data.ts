@@ -26,7 +26,7 @@
 import { ProductDocument, ProductSpecification } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -69,11 +69,11 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 3,
     bidsHaveStarted: true,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-dragoon-storm-1-20260101/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-original-dragoon-storm-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-dragoon-storm-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-dragoon-storm-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-dragoon-storm-3-20260101/900/900"),
+      seedPhoto("auction-image-beyblade-original-dragoon-storm-1-20260101", 900, 900),
+      seedPhoto("auction-image-beyblade-original-dragoon-storm-2-20260101", 900, 900),
+      seedPhoto("auction-image-beyblade-original-dragoon-storm-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -88,7 +88,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     // on a non-standard listing type.
     video: {
       url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      thumbnailUrl: seedExtMedia("https://picsum.photos/seed/auction-video-thumb-beyblade-original-dragoon-storm-20260821/800/450"),
+      thumbnailUrl: seedPhoto("auction-video-thumb-beyblade-original-dragoon-storm-20260821", 800, 450),
       duration: 212,
     },
     storeId: "store-beyblade-arena",
@@ -113,11 +113,11 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 13,
     bidsHaveStarted: true,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-lightning-l-drago-1-20260101/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-metal-lightning-l-drago-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-lightning-l-drago-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-lightning-l-drago-2-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-lightning-l-drago-3-20260101/900/900"),
+      seedPhoto("auction-image-beyblade-metal-lightning-l-drago-1-20260101", 900, 900),
+      seedPhoto("auction-image-beyblade-metal-lightning-l-drago-2-20260101", 900, 900),
+      seedPhoto("auction-image-beyblade-metal-lightning-l-drago-3-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -155,10 +155,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 0,
     bidsHaveStarted: false,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-x-shark-edge-1-20260814/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-x-shark-edge-1-20260814", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-x-shark-edge-1-20260814/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-x-shark-edge-2-20260814/900/900"),
+      seedPhoto("auction-image-beyblade-x-shark-edge-1-20260814", 900, 900),
+      seedPhoto("auction-image-beyblade-x-shark-edge-2-20260814", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -197,10 +197,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 7,
     bidsHaveStarted: true,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-xcalius-1-20260824/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-burst-xcalius-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-xcalius-1-20260824/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-xcalius-2-20260824/900/900"),
+      seedPhoto("auction-image-beyblade-burst-xcalius-1-20260824", 900, 900),
+      seedPhoto("auction-image-beyblade-burst-xcalius-2-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -234,10 +234,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 4,
     bidsHaveStarted: true,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-seaborg-1-20260814/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-original-seaborg-1-20260814", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-seaborg-1-20260814/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-original-seaborg-2-20260814/900/900"),
+      seedPhoto("auction-image-beyblade-original-seaborg-1-20260814", 900, 900),
+      seedPhoto("auction-image-beyblade-original-seaborg-2-20260814", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -272,11 +272,11 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     leadingBidderId: "user-rohit-collector",
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-diablo-nemesis-1-20260810/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-metal-diablo-nemesis-1-20260810", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-diablo-nemesis-1-20260810/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-diablo-nemesis-2-20260810/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-metal-diablo-nemesis-3-20260810/900/900"),
+      seedPhoto("auction-image-beyblade-metal-diablo-nemesis-1-20260810", 900, 900),
+      seedPhoto("auction-image-beyblade-metal-diablo-nemesis-2-20260810", 900, 900),
+      seedPhoto("auction-image-beyblade-metal-diablo-nemesis-3-20260810", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
@@ -317,10 +317,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     leadingBidderId: "user-seto-kaiba",
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-spriggan-requiem-1-20260810/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-burst-spriggan-requiem-1-20260810", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-spriggan-requiem-1-20260810/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-spriggan-requiem-2-20260810/900/900"),
+      seedPhoto("auction-image-beyblade-burst-spriggan-requiem-1-20260810", 900, 900),
+      seedPhoto("auction-image-beyblade-burst-spriggan-requiem-2-20260810", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
@@ -354,10 +354,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 2,
     bidsHaveStarted: true,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-cho-z-achilles-1-20260815/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-burst-cho-z-achilles-1-20260815", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-cho-z-achilles-1-20260815/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-burst-cho-z-achilles-2-20260815/900/900"),
+      seedPhoto("auction-image-beyblade-burst-cho-z-achilles-1-20260815", 900, 900),
+      seedPhoto("auction-image-beyblade-burst-cho-z-achilles-2-20260815", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -389,10 +389,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 3,
     bidsHaveStarted: true,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-x-wizard-fafnir-1-20260816/900/900"),
+    mainImage: seedPhoto("auction-image-beyblade-x-wizard-fafnir-1-20260816", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-x-wizard-fafnir-1-20260816/900/900"),
-      seedExtMedia("https://picsum.photos/seed/auction-image-beyblade-x-wizard-fafnir-2-20260816/900/900"),
+      seedPhoto("auction-image-beyblade-x-wizard-fafnir-1-20260816", 900, 900),
+      seedPhoto("auction-image-beyblade-x-wizard-fafnir-2-20260816", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -443,9 +443,9 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidCount: 0,
     bidsHaveStarted: false,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/auction-image-lord-spryzen-ended-1-20260824/900/900"),
+    mainImage: seedPhoto("auction-image-lord-spryzen-ended-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/auction-image-lord-spryzen-ended-1-20260824/900/900"),
+      seedPhoto("auction-image-lord-spryzen-ended-1-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,

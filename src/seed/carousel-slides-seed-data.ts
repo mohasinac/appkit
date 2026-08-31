@@ -19,7 +19,7 @@
  */
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
-import { seedExtMedia } from "./_helpers/media";
+import { seedExtMedia, seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
@@ -33,7 +33,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://picsum.photos/seed/carousel-hero-homepage-20260101/1600/700"),
+      url: seedPhoto("carousel-hero-homepage-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     settings: { autoplayDelayMs: 5000, height: "tall" },
@@ -53,7 +53,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       // (rejects non-image content-type with 400). MediaVideo watermarks
       // video client-side instead, so the raw external URL is correct here.
       url: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
-      thumbnail: seedExtMedia("https://picsum.photos/seed/carousel-auctions-live-20260101/1600/700"),
+      thumbnail: seedPhoto("carousel-auctions-live-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
     link: { url: String(ROUTES.PUBLIC.AUCTIONS), openInNewTab: false },
@@ -69,7 +69,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://picsum.photos/seed/carousel-complete-collection-20260101/1600/700"),
+      url: seedPhoto("carousel-complete-collection-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.45 },
     },
     link: { url: String(ROUTES.PUBLIC.PRODUCTS), openInNewTab: false },
@@ -85,7 +85,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://picsum.photos/seed/carousel-preorders-open-20260101/1600/700"),
+      url: seedPhoto("carousel-preorders-open-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
     link: { url: String(ROUTES.PUBLIC.PRE_ORDERS), openInNewTab: false },
@@ -101,7 +101,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://picsum.photos/seed/carousel-authenticated-originals-20260101/1600/700"),
+      url: seedPhoto("carousel-authenticated-originals-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     link: { url: String(ROUTES.PUBLIC.CATEGORY_DETAIL("category-spinning-tops")), openInNewTab: false },
@@ -117,7 +117,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: false,
     background: {
       type: "image",
-      url: seedExtMedia("https://picsum.photos/seed/carousel-tournament-promo-20260101/1600/700"),
+      url: seedPhoto("carousel-tournament-promo-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     settings: { autoplayDelayMs: 5000, height: "tall" },

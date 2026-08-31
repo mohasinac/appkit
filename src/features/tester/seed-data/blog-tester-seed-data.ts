@@ -15,7 +15,7 @@
  */
 
 import type { BlogPostDocument } from "../../blog/schemas";
-import { seedExtMedia } from "../../../seed/_helpers/media";
+import { seedPhoto } from "../../../seed/_helpers/media";
 import { testDataExpiresAt } from "./tester-ttl";
 
 export const blogTesterSeedData: Partial<BlogPostDocument>[] = [
@@ -25,7 +25,7 @@ export const blogTesterSeedData: Partial<BlogPostDocument>[] = [
     slug: "tester-sandbox-post",
     excerpt: "A disposable test blog post for the tester QA program — check that images, formatting, and reading flow work correctly.",
     content: `<h2>This is a test post</h2><p>It exists only for the tester QA program and will be deleted automatically after 7 days.</p><p>Check: does this render correctly? Are images loading? Is the layout readable?</p>`,
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/blog-cover-tester-sandbox-post-20260101/1200/600"), alt: "Test cover image" },
+    coverImage: { type: "image", url: seedPhoto("blog-cover-tester-sandbox-post-20260101", 1200, 600), alt: "Test cover image" },
     category: "guides",
     tags: ["test"],
     isFeatured: false,

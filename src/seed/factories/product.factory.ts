@@ -1,5 +1,5 @@
 // appkit/src/seed/factories/product.factory.ts
-import { seedExtMedia } from "../_helpers/media";
+import { seedPhoto } from "../_helpers/media";
 import {
   getSeedLocale,
   getDefaultCurrency,
@@ -80,10 +80,10 @@ export function makeFullProduct(
   overrides: Partial<SeedBaseProductDocument> = {},
 ): SeedBaseProductDocument {
   return makeProduct({
-    mainImage: seedExtMedia("https://example.com/product.jpg"),
+    mainImage: seedPhoto("product-image-factory-1", 900, 900),
     images: [
-      seedExtMedia("https://example.com/product-1.jpg"),
-      seedExtMedia("https://example.com/product-2.jpg"),
+      seedPhoto("product-image-factory-1", 900, 900),
+      seedPhoto("product-image-factory-2", 900, 900),
     ],
     seoTitle: "Buy Amazing Product Online",
     tags: ["featured", "new-arrival"],

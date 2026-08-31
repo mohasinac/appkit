@@ -14,7 +14,7 @@
  */
 
 import type { HomepageSectionDocument } from "../features/homepage/schemas";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
@@ -184,7 +184,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       height: "md",
-      backgroundImage: seedExtMedia("https://picsum.photos/seed/section-banner-beyblade-collection-20260101/1600/500"),
+      backgroundImage: seedPhoto("section-banner-beyblade-collection-20260101", 1600, 500),
       content: {
         title: "Complete Your Beyblade Collection",
         subtitle: "All 4 generations available — Original to Beyblade X",

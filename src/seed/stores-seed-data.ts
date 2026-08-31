@@ -20,7 +20,7 @@ import type { StoreDocument } from "../features/stores/schemas";
 import { withStoreSearchTxt } from "./_helpers/search-txt-wrappers";
 import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 const NOW = new Date();
@@ -54,8 +54,8 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "The official LetItRip curated store. Hand-picked, authenticated collectibles with every item personally inspected before listing.",
     storeCategory: "category-spinning-tops",
-    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-letitrip-official-20260101/400/400"),
-    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-letitrip-official-20260101/1600/400"),
+    storeLogoURL: seedPhoto("store-logo-letitrip-official-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-letitrip-official-20260101", 1600, 400),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Curated by the LetItRip team. All items authenticated before listing. Fast dispatch, collector-grade packaging.",
     location: "Mumbai, Maharashtra, India",
@@ -144,8 +144,8 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Everything Beyblade — X, Burst, Metal Fight, and vintage original series. Takara-Tomy authentic stock, tournament-grade stadiums, launchers, and rare limited editions.",
     storeCategory: "category-spinning-tops",
-    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-beyblade-arena-20260101/400/400"),
-    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-beyblade-arena-20260101/1600/400"),
+    storeLogoURL: seedPhoto("store-logo-beyblade-arena-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-beyblade-arena-20260101", 1600, 400),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Beyblade champion turned seller. Importing authentic Takara-Tomy Beyblades directly from Japan. Let It Rip!",
     location: "Chennai, Tamil Nadu, India",
@@ -184,8 +184,8 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Personal seller store for the dedicated QA tester account — used to exercise seller-side flows (listing, orders, payouts) from the Tester Hub checklist.",
     storeCategory: "category-spinning-tops",
-    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-tester-qa-seller-20260101/400/400"),
-    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-tester-qa-seller-20260101/1600/400"),
+    storeLogoURL: seedPhoto("store-logo-tester-qa-seller-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-tester-qa-seller-20260101", 1600, 400),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "QA tester's own seller store — auto-approved via the isTester flag.",
     location: "Bengaluru, Karnataka, India",
@@ -235,8 +235,8 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Applied to sell refurbished Burst-era tops and spare parts. Awaiting review — not yet visible to buyers.",
     storeCategory: "category-beyblade-burst",
-    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-blader-bazaar-20260101/400/400"),
-    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-blader-bazaar-20260101/1600/400"),
+    storeLogoURL: seedPhoto("store-logo-blader-bazaar-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-blader-bazaar-20260101", 1600, 400),
     status: STORE_FIELDS.STATUS_VALUES.PENDING,
     bio: "Refurbishing and reselling Burst-era tops and parts.",
     location: "Pune, Maharashtra, India",
@@ -265,8 +265,8 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Vintage original-series specialist. Currently suspended pending a listing-authenticity review.",
     storeCategory: "category-beyblade-original",
-    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-vintage-vault-20260101/400/400"),
-    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-vintage-vault-20260101/1600/400"),
+    storeLogoURL: seedPhoto("store-logo-vintage-vault-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-vintage-vault-20260101", 1600, 400),
     status: STORE_FIELDS.STATUS_VALUES.SUSPENDED,
     suspensionReason:
       "Three listings flagged as possible reproductions; suspended while authenticity documentation is reviewed.",

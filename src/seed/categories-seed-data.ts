@@ -36,7 +36,7 @@
 
 import type { CategoryDocument } from "../features/categories/schemas";
 import { CATEGORY_FIELDS } from "../constants/field-names";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 import { buildCategoryTree } from "./_helpers/category-tree";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
 
@@ -196,7 +196,7 @@ const brandRows: Partial<CategoryDocument>[] = [
     path: "brand-takara-tomy",
     isLeaf: true,
     order: 1,
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/brand-logo-takara-tomy-20260101/800/800"), showInMenu: false, showInFooter: true },
+    display: { coverImage: seedPhoto("brand-logo-takara-tomy-20260101", 800, 800), showInMenu: false, showInFooter: true },
     isFeatured: true,
     isBrand: true,
     isActive: true,
@@ -230,7 +230,7 @@ const brandRows: Partial<CategoryDocument>[] = [
     path: "brand-beyblade",
     isLeaf: true,
     order: 2,
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/brand-logo-beyblade-20260101/800/800"), showInMenu: false, showInFooter: true },
+    display: { coverImage: seedPhoto("brand-logo-beyblade-20260101", 800, 800), showInMenu: false, showInFooter: true },
     isFeatured: true,
     isBrand: true,
     isActive: true,
@@ -265,7 +265,7 @@ const brandRows: Partial<CategoryDocument>[] = [
     path: "brand-hasbro",
     isLeaf: true,
     order: 3,
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/brand-logo-hasbro-20260101/800/800"), showInMenu: false, showInFooter: true },
+    display: { coverImage: seedPhoto("brand-logo-hasbro-20260101", 800, 800), showInMenu: false, showInFooter: true },
     isFeatured: false,
     isBrand: true,
     isActive: true,
@@ -301,7 +301,7 @@ const brandRows: Partial<CategoryDocument>[] = [
     path: "brand-independent-keepers",
     isLeaf: true,
     order: 4,
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/brand-logo-independent-keepers-20260101/800/800"), showInMenu: false, showInFooter: false },
+    display: { coverImage: seedPhoto("brand-logo-independent-keepers-20260101", 800, 800), showInMenu: false, showInFooter: false },
     isFeatured: false,
     isBrand: true,
     isActive: true,
@@ -335,7 +335,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     bundleCategorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops","category-original-plastic-gen","category-metal-masters","category-metal-tops","category-beyblade-metal"],
     bundleOriginalTotal: 4597, // 1499 + 1799 + 1299
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-original-collectors-set-20260101/1200/900"), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-original-collectors-set-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: true,
@@ -370,7 +370,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     bundleCategorySlugs: ["category-metal-masters","category-metal-tops","category-beyblade-metal","category-spinning-tops","category-metal-fury","category-original-hms","category-original-tops","category-beyblade-original"],
     bundleOriginalTotal: 3997, // 1299 + 1199 + 1499
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-metal-fusion-duo-20260101/1200/900"), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-metal-fusion-duo-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: false,
@@ -407,7 +407,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     bundleCategorySlugs: ["category-burst-superking","category-burst-tops","category-beyblade-burst","category-spinning-tops","category-burst-classic","category-metal-fury","category-metal-tops","category-beyblade-metal"],
     bundleOriginalTotal: 3597, // 999 + 1399 + 1199
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-burst-battlers-pack-20260101/1200/900"), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-burst-battlers-pack-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: true,
@@ -442,7 +442,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     bundleCategorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops","category-x-boosters","category-burst-superking","category-burst-tops","category-beyblade-burst"],
     bundleOriginalTotal: 2847, // 899 + 949 + 999
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-x-series-starter-20260101/1200/900"), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-x-series-starter-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: false,
@@ -490,7 +490,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     bundleCategorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops","category-metal-masters","category-metal-tops","category-beyblade-metal","category-burst-superking","category-burst-tops","category-beyblade-burst","category-x-starters","category-x-tops","category-beyblade-x"],
     bundleOriginalTotal: 4996, // 1799 + 1299 + 999 + 899
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedExtMedia("https://picsum.photos/seed/bundle-every-generation-starter-pack-20260101/1200/900"), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-every-generation-starter-pack-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: true,

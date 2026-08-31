@@ -14,7 +14,7 @@
  */
 
 import type { SiteSettingsDocument } from "../features/admin/schemas";
-import { seedExtMedia } from "./_helpers/media";
+import { seedExtMedia, seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
 import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../_internal/shared/features/auctions/config";
 
@@ -136,7 +136,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
         name: "Mohasin Chinnapattan",
         role: "Founder & Developer",
         bio: "Started LetItRip after one too many afternoons hunting for a specific 1st-edition card across a dozen disconnected forums and marketplaces. Built the entire platform — Next.js front end, Firebase backend, the auction engine, the whole thing — the same way most great collections start: one late night at a time. Still personally answers the support inbox.",
-        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-mohasin-chinnapattan-20260820/400/400"),
+        photoUrl: seedPhoto("letitrip-team-mohasin-chinnapattan-20260820", 400, 400),
         isFounder: true,
         isDeveloper: true,
         githubUrl: "https://github.com/mohasinac",
@@ -228,7 +228,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       "verified sellers india",
       "buy sell collectibles online",
     ],
-    ogImage: seedExtMedia("https://picsum.photos/seed/site-og-image-collectibles-20260101/1200/630"),
+    ogImage: seedPhoto("site-og-image-collectibles-20260101", 1200, 630),
   },
   features: [
     {
@@ -355,7 +355,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
         creative: {
           title: "New Arrivals Mega Drop",
           body: "Limited new arrivals across every category — this weekend only.",
-          imageUrl: seedExtMedia("https://picsum.photos/seed/ad-homepage-hero-new-arrivals-20260101/1200/400"),
+          imageUrl: seedPhoto("ad-homepage-hero-new-arrivals-20260101", 1200, 400),
           ctaLabel: "Explore Deals",
           ctaHref: "/promotions/deals",
         },
@@ -374,7 +374,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
         creative: {
           title: "Live Auctions",
           body: "Rare and collectible items — auctions ending this week.",
-          imageUrl: seedExtMedia("https://picsum.photos/seed/ad-listing-sidebar-auction-boost-20260101/600/600"),
+          imageUrl: seedPhoto("ad-listing-sidebar-auction-boost-20260101", 600, 600),
           ctaLabel: "View Auctions",
           ctaHref: String(ROUTES.PUBLIC.AUCTIONS),
         },
@@ -395,7 +395,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
         creative: {
           title: "Complete Your Collection",
           body: "Find the pieces you're missing — new listings added daily.",
-          imageUrl: seedExtMedia("https://picsum.photos/seed/ad-search-inline-spotlight-20260101/600/600"),
+          imageUrl: seedPhoto("ad-search-inline-spotlight-20260101", 600, 600),
           ctaLabel: "Browse All",
           ctaHref: String(ROUTES.PUBLIC.PRODUCTS),
         },

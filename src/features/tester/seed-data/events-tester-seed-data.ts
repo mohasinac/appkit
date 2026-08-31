@@ -17,7 +17,7 @@
 
 import type { EventDocument } from "../../events/schemas";
 import { EVENT_FIELDS } from "../../../constants/field-names";
-import { seedExtMedia } from "../../../seed/_helpers/media";
+import { seedPhoto } from "../../../seed/_helpers/media";
 import { testDataExpiresAt } from "./tester-ttl";
 
 const TEST_EVENT_COVER_ALT = "Test event cover";
@@ -33,7 +33,7 @@ export const eventsTesterSeedData: Partial<EventDocument>[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: new Date(),
     endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-tester-sandbox-spin-20260101/1200/600"), alt: TEST_EVENT_COVER_ALT },
+    coverImage: { type: "image", url: seedPhoto("event-cover-tester-sandbox-spin-20260101", 1200, 600), alt: TEST_EVENT_COVER_ALT },
     tags: ["test"],
     hasRaffle: true,
     raffleType: "open_raffle",
@@ -62,7 +62,7 @@ export const eventsTesterSeedData: Partial<EventDocument>[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: new Date(),
     endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-tester-sandbox-top-scorers-20260101/1200/600"), alt: TEST_EVENT_COVER_ALT },
+    coverImage: { type: "image", url: seedPhoto("event-cover-tester-sandbox-top-scorers-20260101", 1200, 600), alt: TEST_EVENT_COVER_ALT },
     tags: ["test"],
     hasRaffle: true,
     raffleType: "top_n_scorers",
@@ -85,7 +85,7 @@ export const eventsTesterSeedData: Partial<EventDocument>[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: new Date(),
     endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-tester-sandbox-top-participants-20260101/1200/600"), alt: TEST_EVENT_COVER_ALT },
+    coverImage: { type: "image", url: seedPhoto("event-cover-tester-sandbox-top-participants-20260101", 1200, 600), alt: TEST_EVENT_COVER_ALT },
     tags: ["test"],
     hasRaffle: true,
     raffleType: "top_n_participants",
@@ -108,7 +108,7 @@ export const eventsTesterSeedData: Partial<EventDocument>[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: new Date(),
     endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-tester-sandbox-offer-20260101/1200/600"), alt: TEST_EVENT_COVER_ALT },
+    coverImage: { type: "image", url: seedPhoto("event-cover-tester-sandbox-offer-20260101", 1200, 600), alt: TEST_EVENT_COVER_ALT },
     tags: ["test"],
     offerConfig: {
       couponId: "coupon-rehan10",

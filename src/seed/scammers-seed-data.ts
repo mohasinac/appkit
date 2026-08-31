@@ -21,7 +21,7 @@
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
 import { withScammerSearchTxt } from "./_helpers/search-txt-wrappers";
 import { SCAMMER_FIELDS } from "../constants/field-names";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 const NOW = new Date("2026-05-10T00:00:00.000Z");
@@ -69,7 +69,7 @@ const scammerRows: Partial<ScammerDocument>[] = [
       "Seller listed an original-series Dranzer S sealed launcher set on a Facebook group for ₹2,500 — significantly below market. When I messaged, he asked for ₹500 advance to 'hold' the set before shipping. After I paid via UPI (9876543210@paytm), he went silent. The account name on UPI matched 'Bey King'. Later found 2 more people in the same group who had the same experience with the same UPI ID.",
     amountLost: 500,
     itemInvolved: "Beyblade Original Dranzer S — Sealed Launcher Set",
-    evidence: [seedExtMedia("https://picsum.photos/seed/scammer-evidence-beyking-chat-screenshot-20260402/800/600")],
+    evidence: [seedPhoto("scammer-evidence-beyking-chat-screenshot-20260402", 800, 600)],
     reportedBy: "user-yugi-muto",
     reportedByAnon: false,
     status: SCAMMER_FIELDS.STATUS_VALUES.VERIFIED,
@@ -203,7 +203,7 @@ const scammerRows: Partial<ScammerDocument>[] = [
       "Ran a WhatsApp broadcast offering a bulk import batch of Metal Fight Beyblade tops at below-market prices, collecting ₹650 'booking' advances via UPI before shipping. Went silent after payment. Same operator resurfaced days later under a backup Telegram account (see related profile) using an identical script.",
     amountLost: 650,
     itemInvolved: "Metal Fight Beyblade BB-43 Flame Sagittario — bulk import batch",
-    evidence: [seedExtMedia("https://picsum.photos/seed/scammer-evidence-mf-preorder-agent-chat-20260420/800/600")],
+    evidence: [seedPhoto("scammer-evidence-mf-preorder-agent-chat-20260420", 800, 600)],
     reportedBy: "user-seto-kaiba",
     reportedByAnon: false,
     status: SCAMMER_FIELDS.STATUS_VALUES.VERIFIED,

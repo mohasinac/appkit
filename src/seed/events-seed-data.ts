@@ -21,7 +21,7 @@ import type {
 import type { LotteryConfig } from "../features/lottery/types";
 import { withEventSearchTxt } from "./_helpers/search-txt-wrappers";
 import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
-import { seedExtMedia } from "./_helpers/media";
+import { seedExtMedia, seedPhoto } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -34,11 +34,11 @@ const _raweventsSeedData: EventDocument[] = [
     slug: "favourite-blader-poll",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Vote: Best Blader of the Original Beyblade Series",
-    description: `<p>Who is the greatest blader of the original 1999 series? Cast your vote and see real-time results!</p><img src="${seedExtMedia("https://picsum.photos/seed/event-content-favourite-blader-lineup-20260101/900/500")}" alt="Original series blader lineup" />`,
+    description: `<p>Who is the greatest blader of the original 1999 series? Cast your vote and see real-time results!</p><img src="${seedPhoto("event-content-favourite-blader-lineup-20260101", 900, 500)}" alt="Original series blader lineup" />`,
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(5),
     endsAt: daysAhead(10),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-favourite-blader-poll-20260101/1200/600"), alt: "Original series Beyblade lineup" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-favourite-blader-poll-20260101", 1200, 600), alt: "Original series Beyblade lineup" },
     tags: ["poll", "original-series", "season-1"],
     // Demo fixture for the guest-participation toggle (2026-08-20) — polls
     // are otherwise login-gated, so this event demonstrates the override.
@@ -71,7 +71,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(14),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-storage-survey-20260101/1200/600"), alt: "Beyblade storage case" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-storage-survey-20260101", 1200, 600), alt: "Beyblade storage case" },
     tags: ["survey", "beyblade-storage", "community"],
     surveyConfig: {
       requireLogin: true,
@@ -101,7 +101,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(2),
     endsAt: daysAhead(7),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-original-clearance-20260101/1200/600"), alt: "Original series Beyblade clearance sale" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-original-clearance-20260101", 1200, 600), alt: "Original series Beyblade clearance sale" },
     tags: ["sale", "clearance", "original-series", "singles"],
     saleConfig: {
       discountPercent: 20,
@@ -120,11 +120,11 @@ const _raweventsSeedData: EventDocument[] = [
     slug: "win-burst-regalia-genesis",
     type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
     title: "Win a Sealed Beyblade Burst Regalia Genesis",
-    description: `<p>Enter for a chance to win a sealed Beyblade Burst Regalia Genesis! One lucky blader takes home the ultimate spinner.</p><img src="${seedExtMedia("https://picsum.photos/seed/event-content-regalia-genesis-prize-20260101/900/500")}" alt="Sealed Beyblade Burst Regalia Genesis prize box" />`,
+    description: `<p>Enter for a chance to win a sealed Beyblade Burst Regalia Genesis! One lucky blader takes home the ultimate spinner.</p><img src="${seedPhoto("event-content-regalia-genesis-prize-20260101", 900, 500)}" alt="Sealed Beyblade Burst Regalia Genesis prize box" />`,
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(14),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-regalia-genesis-raffle-20260101/1200/600"), alt: "Beyblade Burst Regalia Genesis" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-regalia-genesis-raffle-20260101", 1200, 600), alt: "Beyblade Burst Regalia Genesis" },
     tags: ["raffle", "burst", "regalia-genesis", "giveaway", "prizes"],
     hasRaffle: true,
     raffleType: "open_raffle",
@@ -146,7 +146,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(7),
     endsAt: daysAhead(23),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-daily-pull-wheel-20260101/1200/600"), alt: "Spin wheel prize wheel" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-daily-pull-wheel-20260101", 1200, 600), alt: "Spin wheel prize wheel" },
     tags: ["spin-wheel", "daily", "prizes", "coupons"],
     spinPrizes: [
       { id: "spin-10pct", label: "10% Off Coupon", couponId: "coupon-rehan10", weight: 15, isActive: true },
@@ -177,7 +177,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(10),
     endsAt: daysAhead(20),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-metal-fight-feedback-20260101/1200/600"), alt: "Metal Fight era Beyblade lineup" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-metal-fight-feedback-20260101", 1200, 600), alt: "Metal Fight era Beyblade lineup" },
     tags: ["feedback", "metal-fight", "community"],
     feedbackConfig: {
       formFields: [
@@ -202,7 +202,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(1),
     endsAt: daysAhead(20),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-buy3get1-20260101/1200/600"), alt: "Buy 3 beyblades, get 10% off offer" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-buy3get1-20260101", 1200, 600), alt: "Buy 3 beyblades, get 10% off offer" },
     tags: ["offer", "buy-3-get-10-percent", "singles"],
     offerConfig: {
       couponId: "coupon-buynow10",
@@ -221,11 +221,11 @@ const _raweventsSeedData: EventDocument[] = [
     slug: "won-original-set-raffle",
     type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
     title: "Win Complete Original Series Collectors Set",
-    description: `<p>The grand raffle has concluded! One lucky blader won a complete original-series collectors set.</p><img src="${seedExtMedia("https://picsum.photos/seed/event-content-original-set-winner-20260101/900/500")}" alt="Winner unboxing the complete original-series collectors set" />`,
+    description: `<p>The grand raffle has concluded! One lucky blader won a complete original-series collectors set.</p><img src="${seedPhoto("event-content-original-set-winner-20260101", 900, 500)}" alt="Winner unboxing the complete original-series collectors set" />`,
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
     startsAt: daysAgo(30),
     endsAt: daysAgo(5),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-original-set-raffle-20260101/1200/600"), alt: "Complete original-series collectors set" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-original-set-raffle-20260101", 1200, 600), alt: "Complete original-series collectors set" },
     tags: ["raffle", "original-series", "ended", "winner"],
     hasRaffle: true,
     raffleType: "open_raffle",
@@ -264,14 +264,14 @@ const _raweventsSeedData: EventDocument[] = [
         // so the detail page exercises both sides of the "only photographed
         // slots get a collage tile" rule. `image` is a plain image URL and so
         // is seedExtMedia()-wrapped like every other image in this file.
-        { slotNumber: 1,  name: "Charizard Base Set Holo",          image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-1/600/600"), price: 5000, weight: 1,  isBooked: true,  bookedByUserId: "user-ravi-k",   bookedByDisplayName: "Ravi K",   bookedByUserLotteryNumber: 1 },
-        { slotNumber: 2,  name: "Blastoise Base Set Holo",          image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-2/600/600"), price: 3000, weight: 33, isBooked: true,  bookedByUserId: "user-priya-s",  bookedByDisplayName: "Priya S",  bookedByUserLotteryNumber: 2 },
-        { slotNumber: 3,  name: "Venusaur Base Set Holo",           image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-3/600/600"), price: 2500, weight: 40, isBooked: true,  bookedByUserId: "user-arjun-m",  bookedByDisplayName: "Arjun M",  bookedByUserLotteryNumber: 3 },
-        { slotNumber: 4,  name: "Pikachu Surfing Promo",            image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-4/600/600"), price: 1500, weight: 66, isBooked: true,  bookedByUserId: "user-sneha-p",  bookedByDisplayName: "Sneha P",  bookedByUserLotteryNumber: 4 },
-        { slotNumber: 5,  name: "Mewtwo Base Set Holo",             image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-5/600/600"), price: 2000, weight: 50, isBooked: true,  bookedByUserId: "user-vikram-r", bookedByDisplayName: "Vikram R", bookedByUserLotteryNumber: 5 },
-        { slotNumber: 6,  name: "Gengar First Ed. Fossil",          image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-6/600/600"), price: 3500, weight: 28, isBooked: false },
-        { slotNumber: 7,  name: "Alakazam Base Set Holo",           image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-7/600/600"), price: 800,  weight: 93, isBooked: false },
-        { slotNumber: 8,  name: "Machamp 1st Ed. Base Set",         image: seedExtMedia("https://picsum.photos/seed/lottery-pokemon-number-draw-slot-8/600/600"), price: 400,  weight: 99, isBooked: false },
+        { slotNumber: 1,  name: "Charizard Base Set Holo",          image: seedPhoto("lottery-pokemon-number-draw-slot-1", 600, 600), price: 5000, weight: 1,  isBooked: true,  bookedByUserId: "user-ravi-k",   bookedByDisplayName: "Ravi K",   bookedByUserLotteryNumber: 1 },
+        { slotNumber: 2,  name: "Blastoise Base Set Holo",          image: seedPhoto("lottery-pokemon-number-draw-slot-2", 600, 600), price: 3000, weight: 33, isBooked: true,  bookedByUserId: "user-priya-s",  bookedByDisplayName: "Priya S",  bookedByUserLotteryNumber: 2 },
+        { slotNumber: 3,  name: "Venusaur Base Set Holo",           image: seedPhoto("lottery-pokemon-number-draw-slot-3", 600, 600), price: 2500, weight: 40, isBooked: true,  bookedByUserId: "user-arjun-m",  bookedByDisplayName: "Arjun M",  bookedByUserLotteryNumber: 3 },
+        { slotNumber: 4,  name: "Pikachu Surfing Promo",            image: seedPhoto("lottery-pokemon-number-draw-slot-4", 600, 600), price: 1500, weight: 66, isBooked: true,  bookedByUserId: "user-sneha-p",  bookedByDisplayName: "Sneha P",  bookedByUserLotteryNumber: 4 },
+        { slotNumber: 5,  name: "Mewtwo Base Set Holo",             image: seedPhoto("lottery-pokemon-number-draw-slot-5", 600, 600), price: 2000, weight: 50, isBooked: true,  bookedByUserId: "user-vikram-r", bookedByDisplayName: "Vikram R", bookedByUserLotteryNumber: 5 },
+        { slotNumber: 6,  name: "Gengar First Ed. Fossil",          image: seedPhoto("lottery-pokemon-number-draw-slot-6", 600, 600), price: 3500, weight: 28, isBooked: false },
+        { slotNumber: 7,  name: "Alakazam Base Set Holo",           image: seedPhoto("lottery-pokemon-number-draw-slot-7", 600, 600), price: 800,  weight: 93, isBooked: false },
+        { slotNumber: 8,  name: "Machamp 1st Ed. Base Set",         image: seedPhoto("lottery-pokemon-number-draw-slot-8", 600, 600), price: 400,  weight: 99, isBooked: false },
         { slotNumber: 9,  name: "Clefairy Base Set Holo",           price: 600,  weight: 95, isBooked: false },
         { slotNumber: 10, name: "Chansey Base Set Holo",            price: 700,  weight: 94, isBooked: false },
         { slotNumber: 11, name: "Ninetales Base Set Holo",          price: 1000, weight: 80, isBooked: false },
@@ -307,7 +307,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
     startsAt: daysAhead(7),
     endsAt: daysAhead(14),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-beyblade-slot-raffle-20260101/1200/600"), alt: "Beyblade Slot Raffle" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-beyblade-slot-raffle-20260101", 1200, 600), alt: "Beyblade Slot Raffle" },
     tags: ["lottery", "beyblade", "prizes"],
     lotteryConfig: {
       totalSlots: 10,
@@ -322,7 +322,7 @@ const _raweventsSeedData: EventDocument[] = [
         // Seed index, not Math.random() — a seed file is re-executed on every
         // CLI invocation, so any non-deterministic value breaks upsert
         // idempotency (Root Cause #25).
-        image: seedExtMedia(`https://picsum.photos/seed/lottery-beyblade-slot-raffle-slot-${i + 1}/600/600`),
+        image: seedPhoto(`lottery-beyblade-slot-raffle-slot-${i + 1}`, 600, 600),
         price: 500,
         weight: 50,
         isBooked: false,
@@ -350,7 +350,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.PAUSED,
     startsAt: daysAgo(3),
     endsAt: daysAhead(10),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-monsoon-sale-paused-20260101/1200/600"), alt: "Monsoon Sale" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-monsoon-sale-paused-20260101", 1200, 600), alt: "Monsoon Sale" },
     tags: ["sale", "monsoon", "paused"],
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
     createdBy: "user-admin-letitrip",
@@ -369,7 +369,7 @@ const _raweventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.CANCELLED,
     startsAt: daysAgo(20),
     endsAt: daysAgo(6),
-    coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-x-launch-raffle-cancelled-20260101/1200/600"), alt: "Beyblade X Launch Raffle" },
+    coverImage: { type: "image", url: seedPhoto("event-cover-x-launch-raffle-cancelled-20260101", 1200, 600), alt: "Beyblade X Launch Raffle" },
     tags: ["raffle", "beyblade-x", "cancelled"],
     hasRaffle: true,
     raffleType: "open_raffle",

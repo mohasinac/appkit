@@ -29,7 +29,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
   {
@@ -52,10 +52,10 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-stadium-set-1-20260101/900/900"),
+    mainImage: seedPhoto("classified-image-beyblade-stadium-set-1-20260101", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-stadium-set-1-20260101/900/900"),
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-stadium-set-2-20260101/900/900"),
+      seedPhoto("classified-image-beyblade-stadium-set-1-20260101", 900, 900),
+      seedPhoto("classified-image-beyblade-stadium-set-2-20260101", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
@@ -98,10 +98,10 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-burst-bengaluru-1-20260813/900/900"),
+    mainImage: seedPhoto("classified-image-beyblade-burst-bengaluru-1-20260813", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-burst-bengaluru-1-20260813/900/900"),
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-burst-bengaluru-2-20260813/900/900"),
+      seedPhoto("classified-image-beyblade-burst-bengaluru-1-20260813", 900, 900),
+      seedPhoto("classified-image-beyblade-burst-bengaluru-2-20260813", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -150,8 +150,8 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-x-pune-1-20260814/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-x-pune-1-20260814/900/900")],
+    mainImage: seedPhoto("classified-image-beyblade-x-pune-1-20260814", 900, 900),
+    images: [seedPhoto("classified-image-beyblade-x-pune-1-20260814", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     listingType: "classified" as const,
@@ -193,11 +193,11 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-metal-delhi-1-20260815/900/900"),
+    mainImage: seedPhoto("classified-image-beyblade-metal-delhi-1-20260815", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-metal-delhi-1-20260815/900/900"),
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-metal-delhi-2-20260815/900/900"),
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-metal-delhi-3-20260815/900/900"),
+      seedPhoto("classified-image-beyblade-metal-delhi-1-20260815", 900, 900),
+      seedPhoto("classified-image-beyblade-metal-delhi-2-20260815", 900, 900),
+      seedPhoto("classified-image-beyblade-metal-delhi-3-20260815", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -246,10 +246,10 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-original-chennai-1-20260816/900/900"),
+    mainImage: seedPhoto("classified-image-beyblade-original-chennai-1-20260816", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-original-chennai-1-20260816/900/900"),
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-original-chennai-2-20260816/900/900"),
+      seedPhoto("classified-image-beyblade-original-chennai-1-20260816", 900, 900),
+      seedPhoto("classified-image-beyblade-original-chennai-2-20260816", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
@@ -298,10 +298,10 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-x-hyderabad-1-20260817/900/900"),
+    mainImage: seedPhoto("classified-image-beyblade-x-hyderabad-1-20260817", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-x-hyderabad-1-20260817/900/900"),
-      seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-x-hyderabad-2-20260817/900/900"),
+      seedPhoto("classified-image-beyblade-x-hyderabad-1-20260817", 900, 900),
+      seedPhoto("classified-image-beyblade-x-hyderabad-2-20260817", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
@@ -350,8 +350,8 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 1,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-burst-mumbai-1-20260818/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/classified-image-beyblade-burst-mumbai-1-20260818/900/900")],
+    mainImage: seedPhoto("classified-image-beyblade-burst-mumbai-1-20260818", 900, 900),
+    images: [seedPhoto("classified-image-beyblade-burst-mumbai-1-20260818", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "classified" as const,
@@ -395,9 +395,9 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 0,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/classified-image-galaxy-pegasus-sold-1-20260824/900/900"),
+    mainImage: seedPhoto("classified-image-galaxy-pegasus-sold-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/classified-image-galaxy-pegasus-sold-1-20260824/900/900"),
+      seedPhoto("classified-image-galaxy-pegasus-sold-1-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,

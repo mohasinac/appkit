@@ -20,7 +20,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 export const productsStickersSeedData: Partial<ProductDocument>[] = [
   {
@@ -37,8 +37,8 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 100,
     availableQuantity: 100,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/stickers-image-original-classic-1-20260817/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/stickers-image-original-classic-1-20260817/900/900")],
+    mainImage: seedPhoto("stickers-image-original-classic-1-20260817", 900, 900),
+    images: [seedPhoto("stickers-image-original-classic-1-20260817", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -76,10 +76,10 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 80,
     availableQuantity: 62,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/stickers-image-x-holo-1-20260818/900/900"),
+    mainImage: seedPhoto("stickers-image-x-holo-1-20260818", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/stickers-image-x-holo-1-20260818/900/900"),
-      seedExtMedia("https://picsum.photos/seed/stickers-image-x-holo-2-20260818/900/900"),
+      seedPhoto("stickers-image-x-holo-1-20260818", 900, 900),
+      seedPhoto("stickers-image-x-holo-2-20260818", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -118,8 +118,8 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 60,
     availableQuantity: 60,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/stickers-image-burst-diecut-1-20260819/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/stickers-image-burst-diecut-1-20260819/900/900")],
+    mainImage: seedPhoto("stickers-image-burst-diecut-1-20260819", 900, 900),
+    images: [seedPhoto("stickers-image-burst-diecut-1-20260819", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -157,8 +157,8 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 500,
     availableQuantity: 214,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/stickers-image-metal-retro-1-20260819/900/900"),
-    images: [seedExtMedia("https://picsum.photos/seed/stickers-image-metal-retro-1-20260819/900/900")],
+    mainImage: seedPhoto("stickers-image-metal-retro-1-20260819", 900, 900),
+    images: [seedPhoto("stickers-image-metal-retro-1-20260819", 900, 900)],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -196,10 +196,10 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 45,
     availableQuantity: 45,
     isSold: false,
-    mainImage: seedExtMedia("https://picsum.photos/seed/stickers-image-x-glow-1-20260819/900/900"),
+    mainImage: seedPhoto("stickers-image-x-glow-1-20260819", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/stickers-image-x-glow-1-20260819/900/900"),
-      seedExtMedia("https://picsum.photos/seed/stickers-image-x-glow-2-20260819/900/900"),
+      seedPhoto("stickers-image-x-glow-1-20260819", 900, 900),
+      seedPhoto("stickers-image-x-glow-2-20260819", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -239,9 +239,9 @@ export const productsStickersSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 0,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedExtMedia("https://picsum.photos/seed/sticker-image-metal-fight-sold-out-1-20260824/900/900"),
+    mainImage: seedPhoto("sticker-image-metal-fight-sold-out-1-20260824", 900, 900),
     images: [
-      seedExtMedia("https://picsum.photos/seed/sticker-image-metal-fight-sold-out-1-20260824/900/900"),
+      seedPhoto("sticker-image-metal-fight-sold-out-1-20260824", 900, 900),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,

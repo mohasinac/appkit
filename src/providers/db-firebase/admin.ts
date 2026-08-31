@@ -124,8 +124,22 @@ export function getAdminApp(): App {
   }
 
   const keyPath = nodePath().join(nodeCwd(), "firebase-admin-key.json");
+  /*
+   * 🛑 `||`, not `??`.
+   *
+   * A Vercel env var that EXISTS but is empty yields `""`, and `""` is not
+   * nullish — so `??` short-circuits, the NEXT_PUBLIC fallback never runs, and
+   * `...(storageBucket && …)` then drops the key entirely. The app initialises
+   * with NO bucket and every own-bucket media request 500s with
+   * "Bucket name not specified".
+   *
+   * Invisible locally: `.env.local` does not define FIREBASE_ADMIN_STORAGE_BUCKET
+   * at all, so the fallback always runs here. `scripts/test-storage-flow.mjs`
+   * and `scripts/test-storage.mjs` both already use `||` for this same
+   * expression — this was the odd one out.
+   */
   const storageBucket =
-    process.env.FIREBASE_ADMIN_STORAGE_BUCKET?.trim() ??
+    process.env.FIREBASE_ADMIN_STORAGE_BUCKET?.trim() ||
     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.trim();
   let app: App;
 

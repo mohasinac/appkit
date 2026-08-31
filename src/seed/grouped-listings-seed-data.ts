@@ -24,7 +24,7 @@
  */
 
 import type { GroupedListingDocument } from "../features/grouped/schemas/firestore";
-import { seedExtMedia } from "./_helpers/media";
+import { seedPhoto } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -39,7 +39,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "product-beyblade-original-dranzer-s",
       "product-beyblade-original-driger-v",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-original-lineage-20260101/1200/900"),
+    coverImage: seedPhoto("group-beyblade-original-lineage-20260101", 1200, 900),
     groupTheme: "lineage",
     minActiveMembers: 2,
     activeMemberCount: 2,
@@ -62,7 +62,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "product-beyblade-metal-storm-pegasus",
       "product-beyblade-metal-flame-sagittario",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-metal-fusion-set-20260101/1200/900"),
+    coverImage: seedPhoto("group-beyblade-metal-fusion-set-20260101", 1200, 900),
     groupTheme: "set",
     minActiveMembers: 2,
     activeMemberCount: 2,
@@ -87,7 +87,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "product-beyblade-x-wizard-arrow",
       "product-beyblade-x-knife-shinobi",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-burst-x-related-20260101/1200/900"),
+    coverImage: seedPhoto("group-beyblade-burst-x-related-20260101", 1200, 900),
     groupTheme: "related",
     minActiveMembers: 2,
     activeMemberCount: 4,
@@ -114,7 +114,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "auction-beyblade-original-dragoon-storm",
       "auction-beyblade-metal-diablo-nemesis",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-auction-highlights-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-auction-highlights-20260819", 1200, 900),
     groupTheme: "related",
     minActiveMembers: 2,
     activeMemberCount: 2,
@@ -137,7 +137,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "preorder-beyblade-x-bx-08-wave",
       "preorder-beyblade-x-bx-09-glide-ring",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-x-preorder-wave-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-x-preorder-wave-20260819", 1200, 900),
     groupTheme: "set",
     minActiveMembers: 2,
     activeMemberCount: 2,
@@ -161,7 +161,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "prizedraw-beyblade-x-legendary-vault",
       "prizedraw-beyblade-original-vintage-vault",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-mystery-draws-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-mystery-draws-20260819", 1200, 900),
     groupTheme: "related",
     minActiveMembers: 2,
     activeMemberCount: 3,
@@ -185,7 +185,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "classified-beyblade-burst-collection-bengaluru",
       "classified-beyblade-x-starter-pune",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-local-meetup-picks-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-local-meetup-picks-20260819", 1200, 900),
     groupTheme: "related",
     minActiveMembers: 2,
     activeMemberCount: 3,
@@ -209,7 +209,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "digitalcode-beyblade-metal-app-classic-pack",
       "digitalcode-beyblade-burst-app-avatar-skins",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-app-unlock-codes-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-app-unlock-codes-20260819", 1200, 900),
     groupTheme: "related",
     minActiveMembers: 2,
     activeMemberCount: 3,
@@ -234,7 +234,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "stickers-beyblade-original-classic-sheet",
       "stickers-beyblade-x-holographic-pack",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-fan-art-and-stickers-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-fan-art-and-stickers-20260819", 1200, 900),
     groupTheme: "related",
     minActiveMembers: 2,
     activeMemberCount: 4,
@@ -257,7 +257,7 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
       "live-golden-retriever-puppy",
       "live-bonsai-juniper-10yr",
     ],
-    coverImage: seedExtMedia("https://picsum.photos/seed/group-beyblade-arena-extras-20260819/1200/900"),
+    coverImage: seedPhoto("group-beyblade-arena-extras-20260819", 1200, 900),
     groupTheme: "generic",
     minActiveMembers: 2,
     activeMemberCount: 2,
