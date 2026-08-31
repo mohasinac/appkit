@@ -12,7 +12,18 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { toCurrency } from "../hooks/useAdminListingData";
-import { adminOrderUpdateSchema } from "../schemas/admin-ops-forms";
+import {
+  adminOrderUpdateSchema,
+  type AdminOrderUpdateValues,
+} from "../schemas/admin-ops-forms";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { ValidationError } from "../../../errors/validation-error";
 
@@ -101,11 +112,32 @@ export function AdminOrderEditorView({
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const [status, setStatus] = React.useState(currentStatus ?? "pending");
-  const [trackingNumber, setTrackingNumber] = React.useState("");
-  const [carrier, setCarrier] = React.useState("");
-  const [notes, setNotes] = React.useState("");
-  const [refundAmount, setRefundAmount] = React.useState("");
+  const [draft, setDraft] = React.useState<AdminOrderUpdateValues>({
+    status: (currentStatus ?? "pending") as AdminOrderUpdateValues["status"],
+    trackingNumber: "",
+    carrier: "",
+    notes: "",
+  });
+  /*
+   * `refundAmount` carries a `when` in the schema — it is only meaningful on a
+   * refunding status — so the control appears and disappears with the status
+   * select, and `visibleValues()` drops the value when it disappears. The page
+   * used to gate the input with the same condition written a second time in
+   * JSX; now the schema is the single place that rule lives.
+   */
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<AdminOrderUpdateValues>(adminOrderUpdateSchema, {
+        options: { status: STATUS_OPTIONS, carrier: CARRIER_OPTIONS },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "admin:order-editor" });
+  const form = useFormShellState(adminOrderUpdateSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
   /*
    * 🛑 `reviewNote` belongs to the PAYMENT REVIEW actions, not to "Save
@@ -136,11 +168,12 @@ export function AdminOrderEditorView({
 
   React.useEffect(() => {
     if (open) {
-      setStatus(currentStatus ?? "pending");
-      setTrackingNumber("");
-      setCarrier("");
-      setNotes("");
-      setRefundAmount("");
+      setDraft({
+        status: (currentStatus ?? "pending") as AdminOrderUpdateValues["status"],
+        trackingNumber: "",
+        carrier: "",
+        notes: "",
+      });
       setReviewNote("");
     }
   }, [open, currentStatus]);
@@ -148,13 +181,16 @@ export function AdminOrderEditorView({
   const saveMutation = useApiMutation({
     errorMessage: "Failed to update order.",
     mutationFn: async () => {
+      // Built from `visibleValues`, so a refund amount typed and then hidden by
+      // a status change cannot travel with the request.
+      const v = visibleValues(adminOrderUpdateSchema, draft) as AdminOrderUpdateValues;
       const payload: FirestoreDocument = {
-        status,
-        notes: notes || undefined,
+        status: v.status,
+        notes: v.notes || undefined,
       };
-      if (trackingNumber) payload.trackingNumber = trackingNumber;
-      if (carrier) payload.carrier = carrier;
-      if (refundAmount.trim()) {
+      if (v.trackingNumber) payload.trackingNumber = v.trackingNumber;
+      if (v.carrier) payload.carrier = v.carrier;
+      if (v.refundAmount !== undefined && String(v.refundAmount).trim() !== "") {
         /*
          * Parsed through the schema, which coerces, requires > 0 and caps the
          * magnitude. It used to be `parseFloat` guarded by `!isNaN && > 0` with
@@ -162,7 +198,7 @@ export function AdminOrderEditorView({
          * save reported success with nothing recorded. A refund that does not
          * parse must stop the save, not disappear from it.
          */
-        const parsed = adminOrderUpdateSchema.shape.refundAmount.safeParse(refundAmount);
+        const parsed = adminOrderUpdateSchema.shape.refundAmount.safeParse(v.refundAmount);
         if (!parsed.success) {
           throw new ValidationError(
             parsed.error.issues[0]?.message ?? "Enter the refund amount as a number.",
@@ -252,11 +288,8 @@ export function AdminOrderEditorView({
       onClose={onClose}
       title={orderLabel ? `Order: ${orderLabel}` : "Update Order"}
     >
-      <Form schema={adminOrderUpdateSchema}
-        onSubmit={(e) => {
-          e.preventDefault();
-          saveMutation.mutate();
-        }} spacing="md" padding="md">
+      <FormShellContext.Provider value={form.shellCtx}>
+      <Stack gap="md" padding="md">
       <FormErrorSummary />
         {addons && <OrderAddonBadges order={addons} variant="detail" />}
         {items && items.length > 0 && (
@@ -281,50 +314,38 @@ export function AdminOrderEditorView({
           </Stack>
         )}
 
-        <Select
-          label="Order status"
-          options={STATUS_OPTIONS}
-          value={status}
-          onValueChange={setStatus}
+        <SectionForm<AdminOrderUpdateValues>
+          sections={sections}
+          values={draft}
+          onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+          onSubmit={() => {
+            // SectionForm surfaces errors and then submits regardless, so the
+            // guard is here.
+            form.clearErrors();
+            const parsed = adminOrderUpdateSchema.safeParse(
+              visibleValues(adminOrderUpdateSchema, draft),
+            );
+            if (!parsed.success) {
+              applyZodIssues(parsed.error.issues, form.setFieldError);
+              return;
+            }
+            saveMutation.mutate();
+          }}
+          onValidationChange={() => form.validate(draft)}
+          schema={adminOrderUpdateSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          submitLabel="Save changes"
+          cancelLabel="Cancel"
+          onCancel={onClose}
+          isLoading={saveMutation.isPending}
+          /*
+           * The pinned mobile bar suppresses itself inside a SideDrawer anyway
+           * (an overlay owns its own footer, and a viewport-fixed bar would
+           * render behind the backdrop) — stated here so the omission reads as
+           * a decision rather than an oversight.
+           */
         />
-
-        <Input
-          label="Tracking number (optional)"
-          value={trackingNumber}
-          onChange={(e) => setTrackingNumber(e.target.value)}
-          placeholder="e.g. DEL1234567890IN"
-        />
-
-        <Select
-          label="Carrier (optional)"
-          options={CARRIER_OPTIONS}
-          value={carrier}
-          onValueChange={setCarrier}
-        />
-
-        <Stack gap="xs">
-          <Label size="sm" weight="medium" color="primary">
-            Internal note (optional)
-          </Label>
-          <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            placeholder="Reason for status change, escalation notes…"
-          />
-        </Stack>
-
-        {(status === "refunded" || status === "return_requested") && (
-          <Input
-            label="Refund amount ₹ (optional)"
-            type="number"
-            min="0"
-            step="0.01"
-            value={refundAmount}
-            onChange={(e) => setRefundAmount(e.target.value)}
-            placeholder="e.g. 499.00"
-          />
-        )}
 
         {isManualPayment && (
           <Stack gap="xs">
@@ -438,19 +459,8 @@ export function AdminOrderEditorView({
           </Stack>
         )}
 
-        <FormActions align="right">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            isLoading={saveMutation.isPending}
-            disabled={!orderId || saveMutation.isPending}
-          >
-            Save changes
-          </Button>
-        </FormActions>
-      </Form>
+      </Stack>
+      </FormShellContext.Provider>
     </SideDrawer>
   );
 }

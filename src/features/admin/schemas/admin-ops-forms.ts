@@ -45,7 +45,11 @@ export const adminOrderUpdateSchema = z.object({
     section: "shipping", sectionLabel: "Shipping", order: 1, row: "pair",
   }),
   carrier: annotate(z.string().trim().max(80).optional(), {
-    section: "shipping", order: 2, row: "pair",
+    // `kind: "select"` is explicit because the field is a free string in the
+    // schema — the route accepts any carrier name — while the ADMIN form offers
+    // a fixed list. Without it the inferred control is a text input and the
+    // `options` passed by the view would be ignored.
+    section: "shipping", order: 2, row: "pair", kind: "select",
   }),
   /*
    * 🛑 Bounded. This was `parseFloat` + `> 0` with no ceiling, so a slipped

@@ -104,6 +104,26 @@ export const whatsappSettingsSchema = z.object({
 export type WhatsappSettingsValues = z.infer<typeof whatsappSettingsSchema>;
 
 /**
+ * The CONNECTION form's fields — credentials only.
+ *
+ * `catalogSyncEnabled` is deliberately absent. Its toggle lives in a different
+ * card and owns its own write (`syncToggleMutation`), because the credentials
+ * form used to send it unconditionally from two cards away: a seller flipped
+ * the switch, saw it move, and nothing persisted it. A field in this schema is
+ * a field this form's Save button owns.
+ *
+ * 🛑 `.omit()` rather than a second literal, so the two cannot drift — it
+ * carries the SAME field instances into the new shape, which is what keeps the
+ * `annotate()` WeakMap entries alive. (A wrapper such as `.superRefine()` is
+ * transparent for the same reason; a field-level re-wrap is not.)
+ */
+export const whatsappConnectionSchema = whatsappSettingsSchema.omit({
+  catalogSyncEnabled: true,
+});
+
+export type WhatsappConnectionValues = z.infer<typeof whatsappConnectionSchema>;
+
+/**
  * A buyer's lottery entry.
  *
  * `purchasedItemNumber` was `parseInt(itemNumber, 10)` — `NaN` for anything

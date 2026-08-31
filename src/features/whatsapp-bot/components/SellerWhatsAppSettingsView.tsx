@@ -21,7 +21,18 @@ import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildPurchaseAnnouncementMessage } from "../helpers/whatsapp";
-import { whatsappSettingsSchema } from "../../admin/schemas/admin-user-form";
+import {
+  whatsappConnectionSchema,
+  type WhatsappConnectionValues as ConnectionValues,
+} from "../../admin/schemas/admin-user-form";
+import {
+  SectionForm,
+  useSectionFormNav,
+  buildSectionsFromSchema,
+  visibleValues,
+} from "../../shell";
+import { useFormShellState, FormShellContext } from "../../../ui/forms";
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 // ---------------------------------------------------------------------------
@@ -175,20 +186,53 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   const cfg = data ?? null;
 
   // Connection form state
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [wabaId, setWabaId] = React.useState("");
-  const [catalogId, setCatalogId] = React.useState("");
-  const [accessToken, setAccessToken] = React.useState("");
+  const [draft, setDraft] = React.useState<ConnectionValues>({
+    phoneNumber: "",
+    wabaId: "",
+    catalogId: "",
+    accessToken: "",
+  });
   const [syncEnabled, setSyncEnabled] = React.useState(false);
 
   React.useEffect(() => {
     if (!cfg) return;
-    setPhoneNumber(cfg.phoneNumber ?? "");
-    setWabaId(cfg.wabaId ?? "");
-    setCatalogId(cfg.catalogId ?? "");
-    setAccessToken(cfg.accessToken ?? "");
+    setDraft({
+      phoneNumber: cfg.phoneNumber ?? "",
+      wabaId: cfg.wabaId ?? "",
+      catalogId: cfg.catalogId ?? "",
+      accessToken: cfg.accessToken ?? "",
+    });
     setSyncEnabled(cfg.catalogSyncEnabled ?? false);
   }, [cfg]);
+
+  /*
+   * The access token needs a renderer: it is a `text` field to the schema, and
+   * the control is a masked input with a reveal that must stay suppressed while
+   * the field still holds the server's sentinel.
+   */
+  const sections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<ConnectionValues>(whatsappConnectionSchema, {
+        renderers: {
+          accessToken: ({ values, onChange }) => (
+            <MaskedTokenInput
+              label="System User Access Token"
+              value={values.accessToken ?? ""}
+              onChange={(v) => onChange({ accessToken: v })}
+              placeholder="EAAxxxxxxxx…"
+              helperText="Long-lived token with WhatsApp Business permissions"
+            />
+          ),
+        },
+      }),
+    [],
+  );
+  const nav = useSectionFormNav(sections, draft, { scope: "store:whatsapp" });
+  const form = useFormShellState(whatsappConnectionSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
   /*
    * The CONNECTION form. Credentials only.
@@ -206,12 +250,13 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   const saveMutation = useApiMutation({
     errorMessage: "Failed to save settings.",
     mutationFn: async () => {
+      const v = visibleValues(whatsappConnectionSchema, draft) as ConnectionValues;
       const payload: Record<string, JsonValue> = {};
-      if (phoneNumber) payload.phoneNumber = phoneNumber;
-      if (wabaId) payload.wabaId = wabaId;
-      if (catalogId) payload.catalogId = catalogId;
+      if (v.phoneNumber) payload.phoneNumber = v.phoneNumber;
+      if (v.wabaId) payload.wabaId = v.wabaId;
+      if (v.catalogId) payload.catalogId = v.catalogId;
       // Only send accessToken if user has typed a new value (not the masked placeholder)
-      if (accessToken && accessToken !== MASKED_TOKEN) payload.accessToken = accessToken;
+      if (v.accessToken && v.accessToken !== MASKED_TOKEN) payload.accessToken = v.accessToken;
       return apiClient.put(WHATSAPP_SELLER_ENDPOINTS.SETTINGS, payload);
     },
     onSuccess: () => {
@@ -358,46 +403,33 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           )}
         </Row>
 
-        <Form schema={whatsappSettingsSchema}
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveMutation.mutate();
-          }} spacing="md">
-      <FormErrorSummary />
-          <Input
-            label="WhatsApp Business Phone Number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="919876543210"
-            helperText="Digits only, include country code (e.g. 91 for India)"
+        <FormShellContext.Provider value={form.shellCtx}>
+          <FormErrorSummary />
+          <SectionForm<ConnectionValues>
+            sections={sections}
+            values={draft}
+            onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+            onSubmit={() => {
+              // SectionForm scrolls to the first bad section and then submits
+              // regardless, so the guard lives here.
+              form.clearErrors();
+              const parsed = whatsappConnectionSchema.safeParse(
+                visibleValues(whatsappConnectionSchema, draft),
+              );
+              if (!parsed.success) {
+                applyZodIssues(parsed.error.issues, form.setFieldError);
+                return;
+              }
+              saveMutation.mutate();
+            }}
+            onValidationChange={() => form.validate(draft)}
+            schema={whatsappConnectionSchema}
+            openIds={nav.openIds}
+            onOpenChange={nav.setOpenIds}
+            submitLabel={ACTIONS.STORE["whatsapp-connect"].label}
+            isLoading={saveMutation.isPending}
           />
-          <Input
-            label="WABA ID (WhatsApp Business Account ID)"
-            value={wabaId}
-            onChange={(e) => setWabaId(e.target.value)}
-            placeholder="123456789012345"
-            helperText="From Meta Business Manager → WhatsApp Accounts"
-          />
-          <Input
-            label="Catalog ID"
-            value={catalogId}
-            onChange={(e) => setCatalogId(e.target.value)}
-            placeholder="987654321098765"
-            helperText="From Meta Commerce Manager → Catalogs"
-          />
-          <MaskedTokenInput
-            label="System User Access Token"
-            value={accessToken}
-            onChange={setAccessToken}
-            placeholder="EAAxxxxxxxx…"
-            helperText="Long-lived token with WhatsApp Business permissions"
-          />
-          <FormActions align="right">
-            <Button type="submit" isLoading={saveMutation.isPending} disabled={saveMutation.isPending}>
-              {saveMutation.isPending ? "Saving…" : ACTIONS.STORE["whatsapp-connect"].label}
-            </Button>
-          </FormActions>
-        </Form>
+        </FormShellContext.Provider>
       </Section>
 
       {/* ── Section 3: Catalog sync ─────────────────────────────────────── */}
