@@ -82,7 +82,16 @@ export function AdminFaqsView({
     () => ({
       portal: "admin",
       title: "FAQs",
-      searchPlaceholder: "Search questions, categories, or tokens",
+      search: {
+        placeholder: "Search questions, answers, categories or tags",
+        /*
+         * `buildFaqSearchTxt` indexes the question, the category, every tag AND
+         * the answer body, all prefix-expanded. The old placeholder said
+         * "tokens" — the name of the implementation — and omitted the answer,
+         * which is the largest thing it searches.
+         */
+        fields: ["question", "answer", "category", "tags"],
+      },
       emptyLabel: "No FAQs found",
       filterKeys: ["isActive"],
       defaultSort: sortBy("priority", "ASC"),

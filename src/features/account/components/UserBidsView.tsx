@@ -42,7 +42,12 @@ export function UserBidsView() {
   const config: ListingViewConfig<UserBidsResponse, BidDocument> = {
     portal: "user",
     title: "My Bids",
-    searchPlaceholder: "Search by auction title…",
+    search: {
+      placeholder: "Search by auction title…",
+      // `/api/user/bids` filters in memory: `(b.productTitle ?? "").includes(q)`.
+      // The bid document carries no other text.
+      fields: ["productTitle"],
+    },
     emptyLabel: "You haven't placed any bids yet.",
     filterKeys: ["status"],
     defaultSort: sortBy("bidDate", "DESC"),

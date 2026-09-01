@@ -39,7 +39,12 @@ export function UserReturnsView({ onOrderClick }: UserReturnsViewProps) {
   const config: ListingViewConfig<OrdersListResponse, Order> = {
     portal: "user",
     title: "Returns & Refunds",
-    searchPlaceholder: "Search by order id…",
+    search: {
+      placeholder: "Search by order id…",
+      // Same route as /user/orders, scoped to returned statuses — so the same
+      // single in-memory match on `o.id`.
+      fields: ["id"],
+    },
     emptyLabel: "You have no return or refund requests.",
     filterKeys: [],
     defaultSort: sortBy("updatedAt", "DESC"),

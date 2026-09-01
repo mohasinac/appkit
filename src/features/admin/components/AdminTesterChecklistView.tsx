@@ -106,7 +106,12 @@ export function AdminTesterChecklistView({
     () => ({
       portal: "admin",
       title: "Tester Checklist",
-      searchPlaceholder: "Search test cases, groups, or pages",
+      search: {
+        placeholder: "Search test cases, descriptions, groups or pages",
+        // `TesterChecklistItemRepository` builds `searchTxt` from label,
+        // description, groupLabel and pageLabel.
+        fields: ["label", "description", "groupLabel", "pageLabel"],
+      },
       emptyLabel: "No checklist items found",
       filterKeys: ["isActive", "bugConfirmed"],
       // Bug-confirmed (and reopened-away) cases are always isActive:false —

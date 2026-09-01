@@ -82,7 +82,18 @@ export function AdminAuditLogView({ children, ...props }: AdminAuditLogViewProps
   const config: ListingViewConfig<AdminAuditLogResponse, AuditLogRow> = {
     portal: "admin",
     title: "Audit Log",
-    searchPlaceholder: "Search by actor uid",
+    search: {
+      placeholder: "Search by actor uid (exact)",
+      /*
+       * `/api/admin/audit-log` builds `actorUid==${q}` — an EQUALITY, stated in
+       * that route's own comment because `@=` is prefix-only against Firestore
+       * anyway. A partial uid matches nothing, so the box commits on Enter and
+       * says "exact" rather than letting someone type half a uid and watch an
+       * empty list.
+       */
+      mode: "exact",
+      fields: ["actorUid"],
+    },
     emptyLabel: "No audit log entries found",
     filterKeys: ["action", "actorUid"],
     defaultSort: sortBy("createdAt", "DESC"),

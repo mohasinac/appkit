@@ -313,7 +313,16 @@ export function SellerProductsView({
   const config: ListingViewConfig<SellerProductsResponse, ProductRow> = {
     portal: "seller",
     title: "Products",
-    searchPlaceholder: "Search products by name…",
+    search: {
+      placeholder: "Search by name, description, brand or tag…",
+      /*
+       * The box understated itself: `/api/store/products` routes `q` through
+       * `buildProductSearchTxt`, which indexes far more than the title. A
+       * seller searching a brand or a tag got results and had no reason to
+       * expect them.
+       */
+      fields: ["title", "description", "brand", "categoryNames", "tags", "features"],
+    },
     emptyLabel: listingKind !== "all" ? `No ${listingKind} listings found` : "No products listed yet",
     filterKeys: FILTER_KEYS,
     defaultSort: DEFAULT_SORT,

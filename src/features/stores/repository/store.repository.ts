@@ -337,8 +337,13 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
    */
   async listAllStores(
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<StoreDocument>> {
-    return this.listStores(model, false);
+    // 🛑 `opts` is forwarded. It was not, so the admin store list had no way to
+    // reach the `searchTxt` path `listStores` already implements — and both its
+    // caller and the public one fell back to `storeName_=`, a PREFIX match on
+    // the name alone. "Beyblade Arena" was unfindable by "arena".
+    return this.listStores(model, false, opts);
   }
 
   /**

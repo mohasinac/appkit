@@ -120,7 +120,13 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     // Title search is not expressible here — `title` is not in the repository's
     // SIEVE_FIELDS and Sieve→Firestore cannot OR across two fields. The route
     // treats `q` as an exact userId lookup, so the placeholder says exactly that.
-    searchPlaceholder: "Search by user ID",
+    search: {
+      placeholder: "Search by user ID (exact)",
+      // `/api/admin/notifications` builds `userId==${q}`. An equality, so a
+      // partial id matches nothing and the box commits on Enter.
+      mode: "exact",
+      fields: ["userId"],
+    },
     emptyLabel: "No notifications found",
     filterKeys: ["type", "readState"],
     defaultSort: sortBy("createdAt", "DESC"),

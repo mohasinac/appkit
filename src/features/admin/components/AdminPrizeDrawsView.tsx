@@ -124,7 +124,17 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
   const config: ListingViewConfig<AdminProductsResponse, PrizeDrawAdminRow> = {
     portal: "admin",
     title: "Prize Draws",
-    searchPlaceholder: "Search prize draws by name or store…",
+    search: {
+      placeholder: "Search prize draws by name, brand or tag…",
+      /*
+       * 🛑 "or store" was a promise the corpus cannot keep.
+       * `buildProductSearchTxt` indexes title, description, brand, brandSlug,
+       * category names, tags, features, condition and card/grading details —
+       * and NO store name or id. Typing a seller's name returned an empty list
+       * that reads as "this seller runs no prize draws".
+       */
+      fields: ["title", "description", "brand", "categoryNames", "tags", "features"],
+    },
     emptyLabel: "No prize draws found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

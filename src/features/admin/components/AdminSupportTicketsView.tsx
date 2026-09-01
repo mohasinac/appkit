@@ -115,7 +115,17 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
   const config: ListingViewConfig<AdminSupportTicketsResponse, TicketRow> = {
     portal: "admin",
     title: "Support Tickets",
-    searchPlaceholder: "Search by subject",
+    search: {
+      placeholder: "Search by subject (starts with)",
+      /*
+       * `/api/admin/support-tickets` builds `subject@=${q}`, and `@=` is
+       * PREFIX-only against Firestore. `searchTxt` on this collection is built
+       * from the subject alone on purpose — the description and every message
+       * body are PII-encrypted, and indexing them in plaintext would hand back
+       * exactly what the encryption withholds.
+       */
+      fields: ["subject"],
+    },
     emptyLabel: "No support tickets found",
     filterKeys: ["status", "priority", "showResolved"],
     defaultSort: sortBy("createdAt", "DESC"),

@@ -92,7 +92,11 @@ export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesVi
   const config: ListingViewConfig<BundlesResponse, BundleRow> = {
     portal: "seller",
     title: "Bundles",
-    searchPlaceholder: "Search bundles by name or slug…",
+    search: {
+      placeholder: "Search bundles by name or slug…",
+      // `/api/store/bundles` filters in memory on `b.name` and `b.slug`.
+      fields: ["name", "slug"],
+    },
     emptyLabel: "No bundles yet — create a bundle to group multiple of your products together",
     filterKeys: ["isActive", "bundleStockStatus"],
     defaultSort: sortBy("name", "ASC"),

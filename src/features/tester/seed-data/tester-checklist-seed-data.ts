@@ -2138,6 +2138,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/store/orders",
         },
         {
+          key: "search-box-promises-match-corpus",
+          label: "Every dashboard search box matches what its placeholder promises",
+          description:
+            "BEFORE: four boxes promised a match the data could not make. /admin/prize-draws, /admin/deals and /admin/featured each read \"or seller\" while the product search index carries no store name at all, and /admin/stores read \"slugs, or owner names\" while the route ran a STARTS-WITH match on the store name alone. Each returned an empty list that reads as \"there are none\", not as \"this box cannot search that\". AFTER: type a seller's name into /admin/prize-draws — the placeholder no longer offers it. On /admin/stores type a word from the MIDDLE of a store's name (\"arena\", for Beyblade Arena) and a word from its description: both must now return it.",
+          href: "/admin/stores",
+        },
+        {
+          key: "exact-search-boxes-commit-on-enter",
+          label: "The two exact-match boxes say so and do not search while you type",
+          description:
+            "/admin/audit-log matches `actorUid` and /admin/notifications matches `userId`, both by EQUALITY — a partial id matches nothing. Both placeholders now say \"(exact)\". Type half a uid: the list must not churn per keystroke, and must not show \"no results\" until you press Enter. Each intermediate query would be a billed read that cannot match.",
+          href: "/admin/audit-log",
+        },
+        {
           key: "consolidated-tabs-command-palette",
           label: "The absorbed surfaces are still findable by name in search",
           description:

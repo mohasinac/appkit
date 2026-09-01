@@ -114,7 +114,11 @@ export function AdminBundlesView({ editHrefTemplate, newHref }: AdminBundlesView
   const config: ListingViewConfig<BundlesResponse, BundleRow> = {
     portal: "admin",
     title: "Bundles",
-    searchPlaceholder: "Search bundles by name or slug…",
+    search: {
+      placeholder: "Search bundles by name or slug…",
+      // `/api/admin/bundles` filters in memory on `b.name` and `b.slug`.
+      fields: ["name", "slug"],
+    },
     emptyLabel: BUNDLE_COPY.adminList.empty,
     filterKeys: ["isActive", "bundleStockStatus"],
     defaultSort: sortBy("name", "ASC"),

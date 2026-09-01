@@ -65,7 +65,14 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
   const config: ListingViewConfig<OrdersListResponse, Order> = {
     portal: "user",
     title: "My Orders",
-    searchPlaceholder: "Search by order id…",
+    search: {
+      placeholder: "Search by order id…",
+      // `/api/user/orders` filters in memory on `o.id` and nothing else — not
+      // the product titles the rows display, which is what a buyer would try
+      // first. Saying "order id" is the honest promise until the route can
+      // match more.
+      fields: ["id"],
+    },
     emptyLabel: "You haven't placed any orders yet.",
     filterKeys: ["status", "orderType"],
     defaultSort: sortBy("createdAt", "DESC"),

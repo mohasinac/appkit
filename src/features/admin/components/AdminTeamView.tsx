@@ -95,7 +95,17 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
   const config: ListingViewConfig<AdminTeamResponse, EmployeeRow> = {
     portal: "admin",
     title: "Team",
-    searchPlaceholder: "Search by name or email",
+    search: {
+      placeholder: "Search by name or email",
+      /*
+       * Genuinely partial, and that is worth stating: `/api/admin/team`
+       * filters AFTER `mapDoc` has decrypted, with
+       * `(u.email ?? "").toLowerCase().includes(q)`. Most PII search in this
+       * codebase resolves an HMAC blind index and matches exactly; this one
+       * does not, which is why `mode` stays partial here.
+       */
+      fields: ["displayName", "email"],
+    },
     emptyLabel: "No employees found",
     filterKeys: ["group"],
     defaultSort: sortBy("createdAt", "DESC"),

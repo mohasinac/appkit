@@ -56,7 +56,12 @@ export function AdminPageViewsReportView() {
   const config: ListingViewConfig<PageViewsListResponse, PageViewRow> = {
     portal: "admin",
     title: "Page Views",
-    searchPlaceholder: "Search by entity or URL",
+    search: {
+      placeholder: "Search by entity or URL",
+      // `/api/admin/analytics/pageviews` filters in memory on `row.entityId`
+      // and `row.url`.
+      fields: ["entityId", "url"],
+    },
     emptyLabel: "No page views recorded for this range.",
     filterKeys: ["entityType"],
     defaultSort: sortBy("count", "DESC"),

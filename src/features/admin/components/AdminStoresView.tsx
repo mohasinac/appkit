@@ -78,7 +78,19 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const config: ListingViewConfig<AdminStoresResponse, StoreRow> = {
     portal: "admin",
     title: "Stores",
-    searchPlaceholder: "Search stores, slugs, or owner names",
+    search: {
+      placeholder: "Search stores by name, description or category",
+      /*
+       * 🛑 "slugs, or owner names" was a promise nothing could keep — neither
+       * is in `buildStoreSearchTxt`, and the owner's name lives on another
+       * collection entirely.
+       *
+       * The route now searches `searchTxt` rather than `storeName_=`, so this
+       * is genuinely partial across all three fields; it used to be a
+       * STARTS-WITH match on the name alone.
+       */
+      fields: ["storeName", "storeDescription", "storeCategory"],
+    },
     emptyLabel: "No stores found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),

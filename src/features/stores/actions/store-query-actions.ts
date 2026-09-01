@@ -56,12 +56,15 @@ export async function listStores(
 
   const model: SieveModel = { filters, sorts, page, pageSize };
 
+  // The same fix as the admin route: `q` travels as the searchTxt term, not as
+  // `storeName_=`, which was a prefix match on the name alone.
   const filtersArr: string[] = [];
-  if (q) filtersArr.push(`storeName_=${q}`);
   if (filters) filtersArr.push(filters);
   model.filters = filtersArr.join(",") || undefined;
 
-  const result = await storeRepository.listStores(model);
+  const result = await storeRepository.listStores(model, true, {
+    search: q || undefined,
+  });
   return { ...result, items: filterTestDataForViewer(result.items, viewer) };
 }
 
