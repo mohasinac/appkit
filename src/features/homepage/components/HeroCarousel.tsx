@@ -11,6 +11,7 @@ import type {
   CarouselBackground,
   CarouselSlide,
   CarouselSlideCard,
+  CarouselSlideHeight,
   CarouselHoverEffect,
 } from "../types/index";
 
@@ -23,6 +24,27 @@ export interface HeroCarouselProps {
    * Falls back to `window.location.href` assignment when omitted.
    */
   push?: (href: string) => void;
+  /**
+   * Everything below comes from `CarouselSectionConfig`, which the section
+   * renderer used to drop entirely — it rendered `<HeroCarousel initialSlides />`
+   * and nothing else, so every one of these admin controls was inert.
+   */
+  /** Fallback slide height when a slide carries no `settings.height`. */
+  height?: CarouselSlideHeight;
+  /** Fallback autoplay delay when a slide carries no `settings.autoplayDelayMs`. */
+  defaultAutoplayDelayMs?: number;
+  /** Pause autoplay while the pointer is over the carousel. Defaults to `true`. */
+  pauseOnHover?: boolean;
+  /** Render the slide-position dots. Defaults to `true`. */
+  showDots?: boolean;
+  /** Render the prev/next arrows. Defaults to `true`. */
+  showArrows?: boolean;
+  /**
+   * Accessible name for the carousel region. Deliberately NOT rendered as a
+   * visible heading — the config field is a label for the admin list, and
+   * printing it above the slides would add hero chrome nobody asked for.
+   */
+  title?: string;
 }
 
 function makeButtonClickHandler(
@@ -147,7 +169,20 @@ function SlideBackground({
 
   return (
     <>
-      <MediaImage src={src} alt="" size="hero" priority={priority} />
+      {/*
+        Slide 0 is the LCP candidate and fetches at high priority; slides 1..4
+        are eagerly discoverable but off-screen, so they explicitly drop to
+        "low". Without the hint all five full-bleed banners race each other at
+        the browser's default priority and delay the only one the visitor can
+        actually see.
+      */}
+      <MediaImage
+        src={src}
+        alt=""
+        size="hero"
+        priority={priority}
+        fetchPriority={priority ? "high" : "low"}
+      />
       {effectiveBg.dimOverlay?.enabled && (
         <Div
           className={POSITION_FILL}
@@ -231,8 +266,10 @@ function CarouselCardRenderer({
             </Text>
           )}
           {card.content?.title && (
+            // level={3}: a card sits INSIDE a slide, so it is subordinate to
+            // that slide's own h2 overlay title rather than a sibling of it.
             <Heading
-              level={2}
+              level={3}
               className={`text-[11px] mb-0.5 md:mb-3`} truncate={2} weight="bold" shadow="md" mdSize="2xl" lgSize="3xl"
               style={{ color: card.content.textColor ?? "white" }}
             >
@@ -282,7 +319,16 @@ function CarouselCardRenderer({
   );
 }
 
-export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
+export function HeroCarousel({
+  initialSlides,
+  push,
+  height,
+  defaultAutoplayDelayMs,
+  pauseOnHover = true,
+  showDots = true,
+  showArrows = true,
+  title,
+}: HeroCarouselProps = {}) {
   const { hand } = useHandMode();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -301,8 +347,10 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       ?.slice(0, 5) || [];
 
   const currentSlideData = slides[currentSlide];
-  const autoplayDelay = currentSlideData?.settings?.autoplayDelayMs ?? 4000;
-  const heightClass = getSlideHeightClass(currentSlideData?.settings?.height);
+  // Per-slide setting wins, then the section-level config, then the built-in.
+  const autoplayDelay =
+    currentSlideData?.settings?.autoplayDelayMs ?? defaultAutoplayDelayMs ?? 4000;
+  const heightClass = getSlideHeightClass(currentSlideData?.settings?.height ?? height);
 
   const goToSlide = useCallback((index: number) => {
     const el = slidesRef.current;
@@ -369,10 +417,12 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       ref={sectionRef}
       className={`relative w-full ${heightClass} overflow-hidden`}
       aria-roledescription="carousel"
-      aria-label="Hero carousel"
+      aria-label={title?.trim() || "Hero carousel"}
       onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      // Hover-pause is configurable; focus-pause is NOT. WCAG 2.2.2 requires a
+      // mechanism to pause moving content, and keyboard users have no hover.
+      onMouseEnter={pauseOnHover ? () => setIsPaused(true) : undefined}
+      onMouseLeave={pauseOnHover ? () => setIsPaused(false) : undefined}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
       tabIndex={0}
@@ -417,8 +467,13 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       </Text>
                     )}
                     {slide.overlay.title && (
+                      // level={2}, NOT 1. The welcome section above this
+                      // carousel owns the page's single <h1>; a carousel that
+                      // emits one <h1> per slide gives the document as many
+                      // h1s as it has slides. `size` is independent of `level`,
+                      // so this changes the outline and not one pixel.
                       <Heading color="inverse"
-                        level={1}
+                        level={2}
                         className="stagger-2 font-display ! mb-2 md:mb-4 break-words" size="4xl" shadow="2xl" mdSize="6xl" lgSize="8xl"
                       >
                         {slide.overlay.title}
@@ -475,7 +530,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       </Div>
 
       {/* Navigation Dots */}
-      {slides.length > 1 && (
+      {showDots && slides.length > 1 && (
         <Row gap="sm" className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
           {slides.map((_, index) => (
             <Button
@@ -501,7 +556,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       )}
 
       {/* Navigation Arrows */}
-      {slides.length > 1 && (
+      {showArrows && slides.length > 1 && (
         <Row gap="sm" className={`absolute bottom-4 ${hand === "left" ? "left-4" : "right-4"} z-20`}>
           <Button
             variant="ghost"

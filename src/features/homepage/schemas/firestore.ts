@@ -223,19 +223,27 @@ export function canActivateSlide(currentActiveCount: number): boolean {
 
 // --- Homepage Sections --------------------------------------------------------
 
-/** Config for the hero carousel section — references the carouselSlides collection. */
+/**
+ * Config for the hero carousel section — references the carouselSlides collection.
+ *
+ * Every field here reaches `HeroCarousel` as a prop. It did not used to: the
+ * section renderer emitted `<HeroCarousel initialSlides={slides} />` and dropped
+ * the whole config, so all six controls were inert in the admin UI.
+ *
+ * `carouselId` was REMOVED. Nothing ever read it — SSR calls
+ * `carouselRepository.getActiveSlides()` (all active, capped at 5) and the
+ * client refetch goes through `useHeroCarousel`, and neither accepts an id.
+ * Honouring it means changing the repository, `GET /api/homepage/carousel` and
+ * the hook; leaving it in the schema advertised a capability that did not exist.
+ */
 export interface CarouselSectionConfig {
+  /** Accessible name for the carousel region. Not rendered as visible copy. */
   title?: string;
   height?: CarouselSlideHeight;
   defaultAutoplayDelayMs?: number;
   pauseOnHover?: boolean;
   showDots?: boolean;
   showArrows?: boolean;
-  /**
-   * ID of a named CarouselDocument (EX2).
-   * When absent, the section loads all active slides (pre-EX2 default hero behavior).
-   */
-  carouselId?: string;
 }
 
 export interface WelcomeSectionConfig {
@@ -245,8 +253,14 @@ export interface WelcomeSectionConfig {
   showCTA: boolean;
   ctaText?: string;
   ctaLink?: string;
-  /** Optional section background — reuses the carousel's background schema for consistency. Video is ignored at this scope (color/gradient/image only); see Section's `background` prop. */
-  background?: CarouselBackground;
+  /** Small eyebrow pill above the headline. Defaults to a generic label. */
+  pillLabel?: string;
+  /** Secondary CTA beside the primary one. */
+  secondaryCtaText?: string;
+  secondaryCtaLink?: string;
+  // `background` was REMOVED here and on the categories/stores/events configs.
+  // A repo-wide grep found no renderer reading any of them — four controls in
+  // the admin builder that had never affected a pixel.
 }
 
 export type TrustIndicator = {
@@ -269,11 +283,14 @@ export interface SectionCTA {
 
 export interface CategoriesSectionConfig {
   title: string;
-  maxCategories: 4;
+  /** Cards to render. Was pinned to the literal `4`; widened so the cap is real. */
+  maxCategories?: number;
   autoScroll: boolean;
   scrollInterval: number;
   /** Circular auto-rotate at the carousel edges. Default: true. */
   loop?: boolean;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
   /** Optional CTA button rendered below the scroller. */
   cta?: SectionCTA;
   /** Optional client-side filter chips above the scroller. */
@@ -282,8 +299,7 @@ export interface CategoriesSectionConfig {
     rootOnly?: boolean;
     rootCategoryId?: string;
   };
-  /** Optional section background — reuses the carousel's background schema for consistency. */
-  background?: CarouselBackground;
+  // `background` was REMOVED — no renderer has ever read it.
 }
 
 export interface BrandsSectionConfig {
@@ -294,6 +310,8 @@ export interface BrandsSectionConfig {
   scrollInterval: number;
   /** Circular auto-rotate at the carousel edges. Default: true. */
   loop?: boolean;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
   /** Optional CTA button rendered below the scroller. */
   cta?: SectionCTA;
   /** Optional client-side filter chips above the scroller. */
@@ -305,24 +323,41 @@ export interface BrandsSectionConfig {
 
 export type SectionPagination = "load-more" | "arrows" | "auto-scroll";
 
+/*
+ * 🛑 The fields marked NO-RENDERER below reach no component prop. They are
+ * kept because the admin builder still writes them and because honouring them
+ * needs work outside this schema, but nothing renders them today — treat every
+ * one as a control that does nothing until that work lands.
+ *
+ * `sortBy` / `filterByCategory` / `maxCount` all need the SSR fetch to accept
+ * a scope, and `MarketplaceHomepageView` deliberately runs ONE shared
+ * `getFeaturedProducts(12)` for every products section: fanning out per
+ * section would breach the ~3-round-trip budget in Rule #6.
+ *
+ * `itemsPerRow` / `mobileItemsPerRow` / `pagination` need `SectionCarousel` to
+ * take a caller-supplied `perView` instead of the shared preset.
+ */
 export interface ProductsSectionConfig {
   title: string;
   subtitle?: string;
+  /** @deprecated Legacy name the admin builder writes; prefer `maxItems`. */
   maxProducts?: number;
   /** Number of display rows (1–4). Each row shows itemsPerRow cards. Default: 1. */
   rows?: number;
-  itemsPerRow?: number;
-  mobileItemsPerRow?: number;
+  itemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
+  mobileItemsPerRow?: number; // NO-RENDERER: as above
   /** Maximum total items to show (5–20). Default: rows * 5. */
   maxItems?: number;
   /** Pagination mode for multi-row display. */
-  pagination?: SectionPagination;
+  pagination?: SectionPagination; // NO-RENDERER: SectionCarousel has no pagination mode
   autoScroll: boolean;
   scrollInterval: number;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
   filterByBrand?: string;
-  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
-  filterByCategory?: string;
-  maxCount?: 5 | 10 | 20;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular"; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  filterByCategory?: string; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  maxCount?: 5 | 10 | 20; // NO-RENDERER: superseded by the per-section max* field
   loop?: boolean;
 }
 
@@ -388,33 +423,48 @@ export interface StatsSectionConfig {
   }>;
 }
 
+/**
+ * The count fields here were declared as LITERAL types (`maxAuctions: 18`,
+ * `rows: 2`, …), which made them unconfigurable by construction — an admin
+ * setting 12 was a type error, and the pre-order config already contradicted
+ * its own literals in the seed. They are plain optional numbers now that the
+ * renderer actually forwards them.
+ */
 export interface AuctionsSectionConfig {
   title: string;
   subtitle?: string;
-  maxAuctions: 18;
-  rows: 2;
-  itemsPerRow: 3;
-  mobileItemsPerRow: 1;
+  maxAuctions?: number;
+  rows?: number;
+  itemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
+  mobileItemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
   autoScroll: boolean;
   scrollInterval: number;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
   filterByBrand?: string;
-  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
-  filterByCategory?: string;
-  maxCount?: 5 | 10 | 20;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular"; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  filterByCategory?: string; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  maxCount?: 5 | 10 | 20; // NO-RENDERER: superseded by the per-section max* field
   loop?: boolean;
 }
 
+/**
+ * `source` and `placeId` were REMOVED. They implied this section could render
+ * Google reviews, which it never could — `HomepageCustomerReviewsSection` only
+ * ever calls `useHomepageReviews()`. The `google-reviews` section type is the
+ * real surface for that, and it has its own config with a required `placeId`.
+ */
 export interface ReviewsSectionConfig {
   title: string;
-  maxReviews: 18;
-  itemsPerView: 3;
-  mobileItemsPerView: 1;
+  maxReviews?: number;
+  itemsPerView?: number;
+  mobileItemsPerView?: number;
   autoScroll: boolean;
   scrollInterval: number;
   /** Circular auto-rotate at the carousel edges. Default: true. */
   loop?: boolean;
-  source?: "platform" | "google";
-  placeId?: string;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
 }
 
 export interface WhatsAppCommunitySectionConfig {
@@ -427,9 +477,31 @@ export interface WhatsAppCommunitySectionConfig {
   testimonial?: string;
 }
 
+export interface FeatureItem {
+  key: string;
+  title: string;
+  description: string;
+}
+
+/**
+ * `features: string[]` could never reach `SecurityHighlightsSection`, which
+ * needs `{key, title, description}` cards — so the renderer silently fell back
+ * to `DEFAULT_SECURITY_ITEMS` and the configured list was dead.
+ *
+ * `items` is the real shape. `features` is kept readable for back-compat with
+ * documents written before this change; when only `features` is present each
+ * string becomes a title-only card.
+ */
 export interface FeaturesSectionConfig {
   title: string;
-  features: string[];
+  items?: FeatureItem[];
+  /** @deprecated Use `items`. Title-only cards. */
+  features?: string[];
+  /** Small eyebrow pill above the heading. */
+  pillLabel?: string;
+  /** "Learn more" link below the cards. */
+  learnMoreLabel?: string;
+  learnMoreLink?: string;
 }
 
 export type FAQCategoryKey =
@@ -457,21 +529,30 @@ export interface FAQSectionConfig {
   linkToFullPage: boolean;
   /** Which FAQ categories to pull items from for this section. */
   categories: FAQCategoryKey[];
+  /** Label for the "view all FAQs" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
 }
 
 export interface BlogArticlesSectionConfig {
   title: string;
-  maxArticles: 4;
-  showReadTime: boolean;
-  showAuthor: boolean;
-  showThumbnails: boolean;
+  /** Was the literal `4`, so the cap could not be changed. */
+  maxArticles?: number;
+  showReadTime?: boolean;
+  showAuthor?: boolean;
+  showThumbnails?: boolean;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
 }
 
+/**
+ * `placeholder` and `buttonText` were REMOVED. The form itself is supplied by
+ * the consumer through `MarketplaceHomepageViewProps.newsletterFormSlot` — the
+ * section only renders the surrounding band — so appkit has no element to apply
+ * them to. They were controls that could never affect anything.
+ */
 export interface NewsletterSectionConfig {
   title: string;
   description: string;
-  placeholder: string;
-  buttonText: string;
   privacyText: string;
   privacyLink: string;
 }
@@ -482,12 +563,12 @@ export interface StoresSectionConfig {
   maxStores: number;
   autoScroll: boolean;
   scrollInterval: number;
-  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
-  filterByCategory?: string;
-  maxCount?: 5 | 10 | 20;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular"; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  filterByCategory?: string; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  maxCount?: 5 | 10 | 20; // NO-RENDERER: superseded by the per-section max* field
   loop?: boolean;
-  /** Optional section background — reuses the carousel's background schema for consistency. */
-  background?: CarouselBackground;
 }
 
 export interface EventsSectionConfig {
@@ -496,12 +577,12 @@ export interface EventsSectionConfig {
   maxEvents: number;
   autoScroll: boolean;
   scrollInterval: number;
-  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
-  filterByCategory?: string;
-  maxCount?: 5 | 10 | 20;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular"; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  filterByCategory?: string; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  maxCount?: 5 | 10 | 20; // NO-RENDERER: superseded by the per-section max* field
   loop?: boolean;
-  /** Optional section background — reuses the carousel's background schema for consistency. */
-  background?: CarouselBackground;
 }
 
 export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart" | "youtube";
@@ -567,32 +648,44 @@ export type SocialPost = {
 export interface PreOrdersSectionConfig {
   title: string;
   subtitle?: string;
-  maxItems: number;
-  rows: 2;
-  itemsPerRow: 3;
-  mobileItemsPerRow: 1;
+  maxItems?: number;
+  // Same literal-type problem as the auctions config — and the seed already
+  // contradicted these with itemsPerRow: 4 / mobileItemsPerRow: 2.
+  rows?: number;
+  itemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
+  mobileItemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
   autoScroll: boolean;
   scrollInterval: number;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
   filterByBrand?: string;
-  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
-  filterByCategory?: string;
-  maxCount?: 5 | 10 | 20;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular"; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  filterByCategory?: string; // NO-RENDERER: SSR uses one shared fetch (Rule #6)
+  maxCount?: 5 | 10 | 20; // NO-RENDERER: superseded by the per-section max* field
   loop?: boolean;
 }
 
+/**
+ * Four fields were REMOVED here:
+ *
+ * - `backgroundColor` / `gradient`. The band's copy is fixed inverse (white)
+ *   ink, so an arbitrary admin-chosen fill has no safe outcome — that is
+ *   Root Cause #67 exactly. `backgroundImage` survives because it renders
+ *   under a scrim, which guarantees the contrast. The themed `accent-banner`
+ *   tone already gives a brand gradient that follows the active theme.
+ * - `clickable` / `clickLink`. A link wrapping the whole banner would nest the
+ *   two CTA buttons inside an anchor, which is an a11y violation and
+ *   ambiguous besides. The buttons are the click target.
+ */
 export interface BannerSectionConfig {
   height: "sm" | "md" | "lg" | "xl";
   backgroundImage?: string;
-  backgroundColor?: string;
-  gradient?: string;
   content: { title: string; subtitle?: string; description?: string };
   buttons: Array<{
     text: string;
     link: string;
     variant: "primary" | "secondary" | "outline";
   }>;
-  clickable: boolean;
-  clickLink?: string;
 }
 
 export type CustomCardsCard = {
@@ -656,20 +749,26 @@ export interface CollectionCardsSectionConfig {
   maxItems?: number;
   showCollectionTabs?: boolean;
   cta?: SectionCTA;
-  /** Optional section background — reuses the carousel's background schema for consistency. */
-  background?: CarouselBackground;
+  // `background` was REMOVED — the last of the five section-background fields
+  // that no renderer has ever read.
 }
 
 export const COLLECTION_CARDS_MAX_ENTRIES = 3 as const;
 
+/**
+ * `storeId`, `categorySlug` and `sortBy` were REMOVED. Bundles arrive
+ * pre-fetched from `listFeaturedBundles(8)` in `MarketplaceHomepageView`, which
+ * takes no scope or sort argument — honouring them means changing that fetch,
+ * and a per-section fetch would breach the SSR round-trip budget (Rule #6).
+ * `maxItems` survives because slicing an already-fetched list is real.
+ */
 export interface FeaturedBundlesSectionConfig {
   title?: string;
   subtitle?: string;
   maxItems?: number;
-  storeId?: string;
-  categorySlug?: string;
-  sortBy?: "newest" | "savings-desc" | "price-asc";
   showSavingsBadge?: boolean;
+  /** Label for the "view all" link. Defaults to a generic one. */
+  viewMoreLabel?: string;
 }
 
 export interface PrizeDrawsSectionConfig {

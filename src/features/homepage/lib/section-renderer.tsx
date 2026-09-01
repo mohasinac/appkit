@@ -2,6 +2,13 @@ import React from "react";
 import { ROUTES } from "../../../next";
 import { cleanTitle, parseWelcomeDescription } from "./section-helpers";
 import { DEFAULT_TRUST_FEATURES, DEFAULT_SECURITY_ITEMS } from "./section-defaults";
+import {
+  SECTION_TITLE,
+  SECTION_COPY,
+  VIEW_MORE_LABEL,
+  WELCOME_TRUST_CHIPS,
+} from "../constants/section-copy";
+import { FAQ_CATEGORY_LABELS } from "../constants/faq-category-labels";
 import type { LiveStatsMap } from "./live-stats";
 import { AnnouncementBar, hashBannerMessage } from "../components/AnnouncementBar";
 import { HeroCarousel } from "../components/HeroCarousel";
@@ -37,7 +44,7 @@ import type {
   HomepageSectionDocument,
   WelcomeSectionConfig,
   StatsSectionConfig,
-
+  CarouselSectionConfig,
   ProductsSectionConfig,
   AuctionsSectionConfig,
   PreOrdersSectionConfig,
@@ -90,6 +97,22 @@ export interface MarketplaceHomepageViewAdSlots {
 
 export type FaqItem = { id: string; question: string; answer: string; category: string };
 
+/**
+ * Consumer's site identity.
+ *
+ * appkit is a library and must not compile a consumer's brand into itself —
+ * the renderer used to hardcode `brandLogoText="LIR"` and
+ * `"Why Buyers Trust LetItRip"`. The consumer passes this from whatever single
+ * source it already uses for site identity, so there is no second definition
+ * to drift.
+ */
+export interface HomepageBrand {
+  /** Full display name, e.g. used in "Why Buyers Trust {name}". */
+  name?: string;
+  /** Short mark shown in the hero panel, e.g. "LT". */
+  shortName?: string;
+}
+
 const AD_SLOT_MAP: Record<string, keyof MarketplaceHomepageViewAdSlots> = {
   carousel: "afterHero",
   products: "afterFeaturedProducts",
@@ -104,32 +127,42 @@ function renderSectionElement(
   slides: CarouselSlide[],
   liveStats: LiveStatsMap,
   sectionData: SectionData,
+  brand: HomepageBrand | undefined,
 ): React.ReactNode {
   const { type, config } = section;
 
   switch (type) {
-    case "carousel":
-      return <HeroCarousel initialSlides={slides} />;
+    case "carousel": {
+      const cfg = config as CarouselSectionConfig;
+      return (
+        <HeroCarousel
+          initialSlides={slides}
+          title={cfg?.title}
+          height={cfg?.height}
+          defaultAutoplayDelayMs={cfg?.defaultAutoplayDelayMs}
+          pauseOnHover={cfg?.pauseOnHover}
+          showDots={cfg?.showDots}
+          showArrows={cfg?.showArrows}
+        />
+      );
+    }
 
     case "welcome": {
       const cfg = config as WelcomeSectionConfig;
       return (
         <WelcomeSection
-          title={cleanTitle(cfg?.h1) || "Discover Amazing Products"}
-          subtitle={parseWelcomeDescription(cfg?.description)}
-          pillLabel="India's #1 Marketplace"
+          title={cleanTitle(cfg?.h1) || SECTION_TITLE.welcome}
+          // A real `subtitle` wins; `description` is the legacy source and is
+          // still parsed for documents that only carry it.
+          subtitle={cfg?.subtitle?.trim() || parseWelcomeDescription(cfg?.description)}
+          pillLabel={cfg?.pillLabel || SECTION_COPY.welcomePill}
           showCTA={cfg?.showCTA ?? true}
-          ctaLabel={cfg?.ctaText || "Shop Now"}
+          ctaLabel={cfg?.ctaText || SECTION_COPY.welcomePrimaryCta}
           ctaHref={cfg?.ctaLink || ROUTES.PUBLIC.PRODUCTS}
-          secondaryCtaLabel="Browse All"
-          secondaryCtaHref={ROUTES.PUBLIC.PRODUCTS}
-          trustChips={[
-            { key: "delivery", emoji: "🚀", label: "Fast Delivery" },
-            { key: "secure", emoji: "🔒", label: "Secure Payments" },
-            { key: "rating", emoji: "⭐", label: "4.8+ Rated" },
-            { key: "returns", emoji: "↩️", label: "Easy Returns" },
-          ]}
-          brandLogoText="LIR"
+          secondaryCtaLabel={cfg?.secondaryCtaText || SECTION_COPY.welcomeSecondaryCta}
+          secondaryCtaHref={cfg?.secondaryCtaLink || ROUTES.PUBLIC.PRODUCTS}
+          trustChips={[...WELCOME_TRUST_CHIPS]}
+          brandLogoText={brand?.shortName}
         />
       );
     }
@@ -138,10 +171,11 @@ function renderSectionElement(
       const cfg = config as CategoriesSectionConfig;
       return (
         <ShopByCategorySection
-          title={cleanTitle(cfg?.title) || "Shop by Category"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.categories}
           viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
-          viewMoreLabel="All categories →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.categories}
           initialItems={sectionData.categories}
+          limit={cfg?.maxCategories}
           cta={cfg?.cta}
           filters={cfg?.filters}
           autoScroll={cfg?.autoScroll}
@@ -181,20 +215,24 @@ function renderSectionElement(
             })
         : [];
       if (stats.length === 0) return null;
-      return <StatsCounterSection stats={stats} />;
+      return <StatsCounterSection stats={stats} title={cleanTitle(cfg?.title)} />;
     }
 
     case "products": {
       const cfg = config as ProductsSectionConfig;
       return (
         <FeaturedProductsSection
-          title={cleanTitle(cfg?.title) || "Featured Products"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.products}
+          description={cfg?.subtitle}
           viewMoreHref={ROUTES.PUBLIC.PRODUCTS}
-          viewMoreLabel="View all products →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.products}
           filterByBrand={cfg?.filterByBrand}
           initialItems={sectionData.products}
           rows={cfg?.rows}
-          maxItems={cfg?.maxItems}
+          // `maxProducts` is what the admin builder's "Max items" input writes;
+          // `maxItems` is the schema's own name. The two never met, so the
+          // control had no effect. Read both, newest name first.
+          maxItems={cfg?.maxItems ?? cfg?.maxProducts}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
@@ -206,12 +244,14 @@ function renderSectionElement(
       const cfg = config as AuctionsSectionConfig;
       return (
         <FeaturedAuctionsSection
-          title={cleanTitle(cfg?.title) || "Live Auctions"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.auctions}
+          description={cfg?.subtitle}
           viewMoreHref={ROUTES.PUBLIC.AUCTIONS}
-          viewMoreLabel="View all auctions →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.auctions}
           filterByBrand={cfg?.filterByBrand}
           initialItems={sectionData.auctions}
           rows={cfg?.rows}
+          maxItems={cfg?.maxAuctions}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
@@ -223,12 +263,14 @@ function renderSectionElement(
       const cfg = config as PreOrdersSectionConfig;
       return (
         <FeaturedPreOrdersSection
-          title={cleanTitle(cfg?.title) || "Reserve Before It Ships"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.preOrders}
+          description={cfg?.subtitle}
           viewMoreHref={ROUTES.PUBLIC.PRE_ORDERS}
-          viewMoreLabel="View all pre-orders →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.preOrders}
           filterByBrand={cfg?.filterByBrand}
           initialItems={sectionData.preOrders}
           rows={cfg?.rows}
+          maxItems={cfg?.maxItems}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
@@ -240,10 +282,12 @@ function renderSectionElement(
       const cfg = config as StoresSectionConfig;
       return (
         <FeaturedStoresSection
-          title={cleanTitle(cfg?.title) || "Featured Stores"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.stores}
+          description={cfg?.subtitle}
           viewMoreHref={ROUTES.PUBLIC.STORES}
-          viewMoreLabel="View all stores →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.stores}
           initialItems={sectionData.stores}
+          limit={cfg?.maxStores}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
@@ -255,10 +299,12 @@ function renderSectionElement(
       const cfg = config as EventsSectionConfig;
       return (
         <EventsSection
-          title={cleanTitle(cfg?.title) || "Events & Offers"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.events}
+          description={cfg?.subtitle}
           viewMoreHref={ROUTES.PUBLIC.EVENTS}
-          viewMoreLabel="View all events →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.events}
           initialItems={sectionData.events}
+          limit={cfg?.maxEvents}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
@@ -270,9 +316,12 @@ function renderSectionElement(
       const cfg = config as ReviewsSectionConfig;
       return (
         <HomepageCustomerReviewsSection
-          title={cleanTitle(cfg?.title) || "What Our Customers Say"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.reviews}
           viewMoreHref={ROUTES.PUBLIC.REVIEWS}
-          viewMoreLabel="See all reviews →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.reviews}
+          maxReviews={cfg?.maxReviews}
+          itemsPerView={cfg?.itemsPerView}
+          mobileItemsPerView={cfg?.mobileItemsPerView}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
@@ -282,36 +331,64 @@ function renderSectionElement(
 
     case "banner": {
       const cfg = config as BannerSectionConfig;
+      // CTAs come from the configured buttons; the component's own neutral
+      // defaults fill in when none are set. Previously both labels and both
+      // hrefs were hardcoded here and `buttons[]` was ignored entirely.
+      const [primaryBtn, secondaryBtn] = cfg?.buttons ?? [];
       return (
         <CTABannerSection
-          title={cfg?.content?.title || "Thousands of collectibles. One marketplace."}
-          primaryLabel="Shop All Products →"
-          primaryHref={ROUTES.PUBLIC.PRODUCTS}
-          secondaryLabel="Browse Auctions →"
-          secondaryHref={ROUTES.PUBLIC.AUCTIONS}
+          title={cfg?.content?.title || SECTION_TITLE.banner}
+          subtitle={cfg?.content?.subtitle}
+          description={cfg?.content?.description}
+          height={cfg?.height}
+          backgroundImage={cfg?.backgroundImage}
+          primaryLabel={primaryBtn?.text}
+          primaryHref={primaryBtn?.link}
+          secondaryLabel={secondaryBtn?.text}
+          secondaryHref={secondaryBtn?.link}
         />
       );
     }
 
     case "trust-indicators": {
       const cfg = config as TrustIndicatorsSectionConfig;
+      const configured = (cfg?.indicators ?? [])
+        .filter((ind) => ind?.title?.trim())
+        .map((ind) => ({
+          key: ind.id,
+          iconName: ind.icon,
+          title: ind.title,
+          description: ind.description,
+        }));
       return (
         <TrustFeaturesSection
-          title={cleanTitle(cfg?.title) || "Why Buyers Trust LetItRip"}
-          items={DEFAULT_TRUST_FEATURES}
+          title={
+            cleanTitle(cfg?.title) ||
+            (brand?.name ? `Why Buyers Trust ${brand.name}` : SECTION_TITLE.trustIndicators)
+          }
+          items={configured.length > 0 ? configured : DEFAULT_TRUST_FEATURES}
         />
       );
     }
 
     case "features": {
       const cfg = config as FeaturesSectionConfig;
+      // `items` is the real shape; `features: string[]` is the legacy one and
+      // becomes title-only cards. Neither reached the component before — it
+      // always rendered DEFAULT_SECURITY_ITEMS regardless of config.
+      const configured =
+        cfg?.items?.filter((item) => item?.title?.trim()) ??
+        cfg?.features
+          ?.filter((label) => label?.trim())
+          .map((label, index) => ({ key: `feature-${index}`, title: label, description: "" })) ??
+        [];
       return (
         <SecurityHighlightsSection
-          title={cleanTitle(cfg?.title) || "Security You Can Trust"}
-          pillLabel="Built for trust"
-          items={DEFAULT_SECURITY_ITEMS}
-          learnMoreHref={ROUTES.PUBLIC.SECURITY}
-          learnMoreLabel="Learn about our security →"
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.features}
+          pillLabel={cfg?.pillLabel || SECTION_COPY.featuresPill}
+          items={configured.length > 0 ? configured : DEFAULT_SECURITY_ITEMS}
+          learnMoreHref={cfg?.learnMoreLink || ROUTES.PUBLIC.SECURITY}
+          learnMoreLabel={cfg?.learnMoreLabel || SECTION_COPY.featuresLearnMore}
         />
       );
     }
@@ -320,9 +397,11 @@ function renderSectionElement(
       const cfg = config as WhatsAppCommunitySectionConfig;
       return (
         <WhatsAppCommunitySection
-          title={cleanTitle(cfg?.title) || "Join Our WhatsApp Community"}
-          descriptionHtml={cfg?.description || "5,000+ members. Get deal alerts, auction updates, and exclusive drops before anyone else."}
-          memberCount={cfg?.memberCount || 5000}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.whatsappCommunity}
+          descriptionHtml={cfg?.description || SECTION_COPY.whatsappDescription}
+          // No `|| 5000` fallback: inventing a member count the site cannot
+          // verify is a fabricated social-proof number.
+          memberCount={cfg?.memberCount}
           groupLink={cfg?.groupLink || "https://chat.whatsapp.com/"}
           benefits={cfg?.benefits ?? []}
           testimonial={cfg?.testimonial}
@@ -337,15 +416,6 @@ function renderSectionElement(
 
       // Build tabs from configured visibleTabs (or all categories in config)
       const tabCategories = (cfg?.visibleTabs?.length ? cfg.visibleTabs : cfg?.categories) ?? [];
-      const FAQ_CATEGORY_LABELS: Record<string, string> = {
-        general: "General",
-        orders_payment: "Orders & Payment",
-        shipping_delivery: "Shipping",
-        returns_refunds: "Returns & Refunds",
-        product_information: "Products",
-        account_security: "Account",
-        technical_support: "Support",
-      };
       const tabs = tabCategories.map((cat) => ({
         value: cat,
         label: FAQ_CATEGORY_LABELS[cat] ?? cat,
@@ -357,7 +427,7 @@ function renderSectionElement(
 
       return (
         <FAQSection
-          title={cleanTitle(cfg?.title) || "Frequently Asked Questions"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.faq}
           subtitle={cfg?.subtitle}
           tabs={tabs}
           showCategoryTabs={cfg?.showCategoryTabs ?? false}
@@ -365,7 +435,7 @@ function renderSectionElement(
           defaultOpenCount={cfg?.defaultOpenCount ?? 0}
           items={slicedItems}
           viewMoreHref={cfg?.linkToFullPage ? ROUTES.PUBLIC.FAQS : undefined}
-          viewMoreLabel="View all FAQs →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.faq}
           hasMore={hasMore}
           moreCount={totalFaqs - slicedItems.length}
         />
@@ -376,10 +446,14 @@ function renderSectionElement(
       const cfg = config as BlogArticlesSectionConfig;
       return (
         <BlogArticlesSection
-          title={cleanTitle(cfg?.title) || "From Our Blog"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.blogArticles}
           viewMoreHref={ROUTES.BLOG.LIST}
-          viewMoreLabel="View all posts →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.blogArticles}
           initialItems={sectionData.blog}
+          limit={cfg?.maxArticles}
+          showReadTime={cfg?.showReadTime}
+          showAuthor={cfg?.showAuthor}
+          showThumbnails={cfg?.showThumbnails}
         />
       );
     }
@@ -388,8 +462,10 @@ function renderSectionElement(
       const cfg = config as NewsletterSectionConfig;
       return (
         <NewsletterSection
-          title={cleanTitle(cfg?.title) || "Stay Updated"}
-          subtitle={cfg?.description || "Get the latest drops, auctions, and deals in your inbox."}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.newsletter}
+          subtitle={cfg?.description}
+          privacyLabel={cfg?.privacyText}
+          privacyHref={cfg?.privacyLink}
           renderForm={() => newsletterFormSlot ?? null}
         />
       );
@@ -399,11 +475,11 @@ function renderSectionElement(
       const cfg = config as BrandsSectionConfig;
       return (
         <BrandsSection
-          title={cleanTitle(cfg?.title) || "Top Brands"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.brands}
           subtitle={cfg?.subtitle}
           limit={cfg?.maxBrands || 12}
           viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
-          viewMoreLabel="All brands →"
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.brands}
           initialItems={sectionData.brands}
           cta={cfg?.cta}
           filters={cfg?.filters}
@@ -470,8 +546,12 @@ function renderSectionElement(
       const cfg = config as FeaturedBundlesSectionConfig;
       return (
         <FeaturedBundlesSection
-          title={cleanTitle(cfg?.title) || "Curated Bundles"}
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.featuredBundles}
+          description={cfg?.subtitle}
           initialItems={sectionData.bundles}
+          maxItems={cfg?.maxItems}
+          showSavingsBadge={cfg?.showSavingsBadge}
+          viewMoreLabel={cfg?.viewMoreLabel}
         />
       );
     }
@@ -508,6 +588,7 @@ export function renderSection(
   slides: CarouselSlide[],
   liveStats: LiveStatsMap,
   sectionData: SectionData = {},
+  brand?: HomepageBrand,
 ): React.ReactNode {
   const sectionElement = renderSectionElement(
     section,
@@ -516,6 +597,7 @@ export function renderSection(
     slides,
     liveStats,
     sectionData,
+    brand,
   );
   if (!sectionElement) return null;
 

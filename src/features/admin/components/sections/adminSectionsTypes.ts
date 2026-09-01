@@ -79,6 +79,8 @@ export type ResourceMaxCount = 5 | 10 | 20;
 
 export interface ProductsBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxItems: number;
   status: "all" | "published" | "draft";
@@ -97,6 +99,8 @@ export interface ProductsBuilderState {
 
 export interface AuctionsBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "scheduled" | "ended";
@@ -135,6 +139,8 @@ export interface StatsBuilderState {
 
 export interface PreOrdersBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "upcoming" | "closed";
@@ -151,6 +157,8 @@ export interface PreOrdersBuilderState {
 
 export interface StoresBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "pending" | "disabled";
@@ -168,6 +176,8 @@ export interface StoresBuilderState {
 
 export interface EventsBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "upcoming" | "ended";
@@ -211,6 +221,8 @@ export interface TrustIndicatorsBuilderState {
 
 export interface CategoriesBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   maxCategories: number;
   autoScroll: boolean;
   scrollInterval: number;
@@ -219,6 +231,8 @@ export interface CategoriesBuilderState {
 
 export interface BrandsBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxBrands: number;
   autoScroll: boolean;
@@ -245,15 +259,20 @@ export interface FeaturesBuilderState {
   features: string[];
 }
 
+/**
+ * `source` / `placeId` were removed: this section only ever renders platform
+ * reviews (`useHomepageReviews`), so choosing "google" here changed nothing.
+ * The `google-reviews` section type is the real surface for that.
+ */
 export interface ReviewsBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   maxReviews: number;
   itemsPerView: number;
   autoScroll: boolean;
   scrollInterval: number;
   loop: boolean;
-  source: "platform" | "google";
-  placeId: string;
 }
 
 export interface WhatsAppBuilderState {
@@ -270,6 +289,8 @@ export type FAQCategory = "general" | "shipping" | "returns" | "payment" | "acco
 
 export interface FAQBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   showOnHomepage: boolean;
   displayCount: number;
@@ -280,17 +301,22 @@ export interface FAQBuilderState {
 
 export interface BlogBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   maxArticles: number;
   showReadTime: boolean;
   showAuthor: boolean;
   showThumbnails: boolean;
 }
 
+/**
+ * `placeholder` / `buttonText` were removed: the subscribe form itself is
+ * supplied by the consumer through `newsletterFormSlot`, so appkit has no
+ * input or button to apply them to.
+ */
 export interface NewsletterBuilderState {
   title: string;
   description: string;
-  placeholder: string;
-  buttonText: string;
   privacyText: string;
   privacyLink: string;
 }
@@ -339,13 +365,17 @@ export interface GoogleReviewsBuilderState {
   googleMapsUrl: string;
 }
 
+/**
+ * `storeId` / `categorySlug` / `sortBy` were removed: bundles arrive
+ * pre-fetched from `listFeaturedBundles(8)`, which takes no scope or sort
+ * argument, so none of the three could ever affect the rendered list.
+ */
 export interface FeaturedBundlesBuilderState {
   title: string;
+  /** Overrides the generic "View all →" link label. */
+  viewMoreLabel: string;
   subtitle: string;
   maxItems: number;
-  storeId: string;
-  categorySlug: string;
-  sortBy: "newest" | "savings-desc" | "price-asc";
   showSavingsBadge: boolean;
 }
 
@@ -401,6 +431,7 @@ export interface CollectionCardsBuilderState {
 
 export const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
+  viewMoreLabel: "",
   subtitle: "",
   maxItems: 18,
   status: "published",
@@ -419,6 +450,7 @@ export const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
 
 export const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
   title: "Live Auctions",
+  viewMoreLabel: "",
   subtitle: "",
   maxItems: 18,
   status: "active",
@@ -454,6 +486,7 @@ export const DEFAULT_STATS_BUILDER: StatsBuilderState = {
 
 export const DEFAULT_PRE_ORDERS_BUILDER: PreOrdersBuilderState = {
   title: "Reserve Before It Ships",
+  viewMoreLabel: "",
   subtitle: "",
   maxItems: 18,
   status: "active",
@@ -470,6 +503,7 @@ export const DEFAULT_PRE_ORDERS_BUILDER: PreOrdersBuilderState = {
 
 export const DEFAULT_STORES_BUILDER: StoresBuilderState = {
   title: "Featured Stores",
+  viewMoreLabel: "",
   subtitle: "",
   maxItems: 8,
   status: "active",
@@ -487,6 +521,7 @@ export const DEFAULT_STORES_BUILDER: StoresBuilderState = {
 
 export const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
   title: "Events & Offers",
+  viewMoreLabel: "",
   subtitle: "",
   maxItems: 6,
   status: "active",
@@ -535,6 +570,7 @@ export const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
 
 export const DEFAULT_CATEGORIES_BUILDER: CategoriesBuilderState = {
   title: "Shop by Category",
+  viewMoreLabel: "",
   maxCategories: 8,
   autoScroll: false,
   scrollInterval: 5000,
@@ -543,6 +579,7 @@ export const DEFAULT_CATEGORIES_BUILDER: CategoriesBuilderState = {
 
 export const DEFAULT_BRANDS_BUILDER: BrandsBuilderState = {
   title: "Top Brands",
+  viewMoreLabel: "",
   subtitle: "",
   maxBrands: 13,
   autoScroll: true,
@@ -571,13 +608,12 @@ export const DEFAULT_FEATURES_BUILDER: FeaturesBuilderState = {
 
 export const DEFAULT_REVIEWS_BUILDER: ReviewsBuilderState = {
   title: "What Collectors Say",
+  viewMoreLabel: "",
   maxReviews: 10,
   itemsPerView: 3,
   autoScroll: true,
   scrollInterval: 5000,
   loop: true,
-  source: "platform",
-  placeId: "",
 };
 
 export const DEFAULT_WHATSAPP_BUILDER: WhatsAppBuilderState = {
@@ -592,6 +628,7 @@ export const DEFAULT_WHATSAPP_BUILDER: WhatsAppBuilderState = {
 
 export const DEFAULT_FAQ_BUILDER: FAQBuilderState = {
   title: "Frequently Asked Questions",
+  viewMoreLabel: "",
   subtitle: "",
   showOnHomepage: true,
   displayCount: 5,
@@ -602,6 +639,7 @@ export const DEFAULT_FAQ_BUILDER: FAQBuilderState = {
 
 export const DEFAULT_BLOG_BUILDER: BlogBuilderState = {
   title: "From the Blog",
+  viewMoreLabel: "",
   maxArticles: 3,
   showReadTime: true,
   showAuthor: true,
@@ -611,8 +649,6 @@ export const DEFAULT_BLOG_BUILDER: BlogBuilderState = {
 export const DEFAULT_NEWSLETTER_BUILDER: NewsletterBuilderState = {
   title: "Stay in the Loop",
   description: "Get the latest drops, auction alerts, and collector news.",
-  placeholder: "Enter your email",
-  buttonText: "Subscribe",
   privacyText: "We respect your privacy. Unsubscribe anytime.",
   privacyLink: String(ROUTES.PUBLIC.PRIVACY),
 };
@@ -649,11 +685,9 @@ export const DEFAULT_GOOGLE_REVIEWS_BUILDER: GoogleReviewsBuilderState = {
 
 export const DEFAULT_FEATURED_BUNDLES_BUILDER: FeaturedBundlesBuilderState = {
   title: "Curated Bundles",
+  viewMoreLabel: "",
   subtitle: "Everything you need in one deal",
   maxItems: 8,
-  storeId: "",
-  categorySlug: "",
-  sortBy: "savings-desc",
   showSavingsBadge: true,
 };
 

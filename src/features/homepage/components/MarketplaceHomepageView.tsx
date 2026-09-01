@@ -6,6 +6,7 @@ import { carouselRepository, faqsRepository, siteSettingsRepository } from "../.
 import { safeRead } from "../../../errors/safe-read";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
+import { SECTION_COPY } from "../constants/section-copy";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import { isListingTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
 import type { ListingType } from "../../products/types/index";
@@ -61,12 +62,21 @@ export interface MarketplaceHomepageViewProps {
   newsletterFormSlot?: React.ReactNode;
   /** Callback when user dismisses announcement banner — wire to a server action to persist. */
   onBannerDismiss?: (hash: string) => void;
+  /**
+   * Consumer's site identity. Pass this from whatever single source already
+   * owns it (this app uses the same `appkit.config.js` block that backs
+   * `SITE_IDENTITY` in the root layout). Without it the sections fall back to
+   * brand-neutral copy — which is correct for a library, and is why the
+   * renderer no longer hardcodes "LIR" or "LetItRip".
+   */
+  brand?: import("../lib/section-renderer").HomepageBrand;
 }
 
 export async function MarketplaceHomepageView({
   adSlots,
   newsletterFormSlot,
   onBannerDismiss,
+  brand,
 }: MarketplaceHomepageViewProps = {}) {
   // Every read on this page is a RAIL: the homepage must still render when one
   // fails, but a failure has to be distinguishable from an empty catalogue —
@@ -77,9 +87,11 @@ export async function MarketplaceHomepageView({
   const siteSettings = await safeRead(() => siteSettingsRepository.getSingleton(), {
     route: "/", key: "homepage.siteSettings", fallback: null,
   });
+  // The fallback used to be a hardcoded seasonal Pokémon TCG discount, which
+  // any install leaving the bar unconfigured would have published as live
+  // promotional copy for a promotion that does not exist.
   const announcementMessage =
-    siteSettings?.announcementBar?.message?.trim() ||
-    "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15";
+    siteSettings?.announcementBar?.message?.trim() || SECTION_COPY.announcementFallback;
   const showAnnouncement = siteSettings?.announcementBar?.enabled ?? true;
 
   const [allSections, rawFaqItems] = await Promise.all([
@@ -238,7 +250,7 @@ export async function MarketplaceHomepageView({
           <AnnouncementBar overlay message={announcementMessage} link={siteSettings?.announcementBar?.link} onDismiss={onBannerDismiss} />
         ) : null}
         {orderedSections.map((section) =>
-          renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData),
+          renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData, brand),
         )}
       </Div>
     </Main>

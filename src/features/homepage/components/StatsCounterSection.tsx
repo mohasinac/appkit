@@ -13,6 +13,11 @@ export interface StatItem {
 
 export interface StatsCounterSectionProps {
   stats: StatItem[];
+  /**
+   * Optional heading above the tiles. The section config has always carried a
+   * `title` and this component had nowhere to put it, so it never rendered.
+   */
+  title?: string;
   className?: string;
 }
 
@@ -49,8 +54,13 @@ function StatCard({
         </Row>
       )}
 
+      {/*
+        level={3}, not 2: the section's own title is the h2, and a stat value
+        is subordinate to it. `size` is independent of `level`, so nothing
+        moves visually.
+      */}
       <Heading
-        level={2}
+        level={3}
         variant="none"
         gradient="brand"
         className="mb-1 font-display font-black" mdSize="5xl" size="4xl"
@@ -72,6 +82,7 @@ function StatCard({
 
 export function StatsCounterSection({
   stats,
+  title,
   className = "",
 }: StatsCounterSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -101,6 +112,11 @@ export function StatsCounterSection({
       className={`border-y ${className}`} paddingX="x-md" surface="default"
     >
       <Div className="mx-auto max-w-5xl">
+        {title && (
+          <Heading level={2} size="2xl" weight="semibold" className="mb-6 text-left">
+            {title}
+          </Heading>
+        )}
         <Grid cols="statTiles" gap="none">
           {stats.map((stat, i) => (
             <StatCard

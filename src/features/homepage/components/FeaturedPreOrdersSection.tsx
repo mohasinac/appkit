@@ -6,6 +6,7 @@ import { useFeaturedPreOrders } from "../hooks/useFeaturedPreOrders";
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";
 import type { ProductItem } from "../../products/types";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
+import { SECTION_TITLE, VIEW_MORE_LABEL } from "../constants/section-copy";
 
 export interface FeaturedPreOrdersSectionProps {
   title?: string;
@@ -16,25 +17,29 @@ export interface FeaturedPreOrdersSectionProps {
   filterByBrand?: string;
   initialItems?: ProductItem[];
   rows?: number;
+  /** Cap the rendered cards, mirroring FeaturedProductsSection. */
+  maxItems?: number;
   autoScroll?: boolean;
   scrollInterval?: number;
   loop?: boolean;
 }
 
 export function FeaturedPreOrdersSection({
-  title = "Reserve Before It Ships",
+  title = SECTION_TITLE.preOrders,
   description,
   viewMoreHref,
-  viewMoreLabel = "View all pre-orders →",
+  viewMoreLabel = VIEW_MORE_LABEL.preOrders,
   className = "",
   filterByBrand,
   initialItems,
   rows = 1,
+  maxItems,
   autoScroll = false,
   scrollInterval = 5000,
   loop = true,
 }: FeaturedPreOrdersSectionProps) {
-  const { data: items = [], isLoading } = useFeaturedPreOrders({ filterByBrand, initialData: initialItems });
+  const { data: fetched = [], isLoading } = useFeaturedPreOrders({ filterByBrand, initialData: initialItems });
+  const items = maxItems && maxItems > 0 ? fetched.slice(0, maxItems) : fetched;
 
   return (
     <SectionCarousel

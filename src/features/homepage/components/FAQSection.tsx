@@ -3,22 +3,11 @@ import React, { useState, useMemo } from "react";
 import { THEMED_BG_PRIMARY, THEMED_BG_TERTIARY, THEMED_BORDER, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY, FLEX_BETWEEN } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Heading, RichText, Section, Span, Stack, Tabs, TabsList, TabsTrigger, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
+import { FAQ_CATEGORY_LABELS } from "../constants/faq-category-labels";
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
-
-// --- Constants ----------------------------------------------------------------
-
-const CATEGORY_LABELS: Record<string, string> = {
-  general: "General",
-  orders_payment: "Orders & Payment",
-  shipping_delivery: "Shipping",
-  returns_refunds: "Returns & Refunds",
-  product_information: "Products",
-  account_security: "Account",
-  technical_support: "Support",
-};
 
 // --- Types -------------------------------------------------------------------
 
@@ -88,7 +77,7 @@ const flex = { between: FLEX_BETWEEN };
       const cat = item.category ?? "general";
       if (!seen.has(cat)) {
         seen.add(cat);
-        result.push({ value: cat, label: CATEGORY_LABELS[cat] ?? cat });
+        result.push({ value: cat, label: FAQ_CATEGORY_LABELS[cat] ?? cat });
       }
     }
     return result;

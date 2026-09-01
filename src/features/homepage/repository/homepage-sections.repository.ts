@@ -66,6 +66,52 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     return { id, ...sectionData };
   }
 
+  /**
+   * Merge `config` instead of replacing it.
+   *
+   * `BaseRepository.update` writes `config` as a top-level key, and a Firestore
+   * `update()` REPLACES a map field wholesale rather than merging it. So every
+   * config key a caller omitted was silently deleted — HTTP 200, no error. The
+   * admin section builder emits only the fields it has inputs for, which meant
+   * opening any section and clicking Save destroyed `products.rows`/`maxItems`/
+   * `filterByBrand`, `banner.backgroundImage`, `categories.cta`/`filters` and
+   * every other unbuilt field. Root Cause #76.
+   *
+   * Both write paths — `PATCH /api/admin/sections/[id]` and the
+   * `updateHomepageSection` server action — funnel through here, so the merge
+   * belongs in the write primitive rather than at either call site.
+   *
+   * Costs one extra read, and only when `config` is actually being written:
+   * a reorder or an enable/disable still costs exactly one write.
+   *
+   * Semantics: an omitted key is PRESERVED. Clearing one requires sending it
+   * explicitly (`null` / `""` / `[]`), not omitting it. `resetSectionToDefault`
+   * below deliberately keeps replace semantics — that is its whole purpose.
+   */
+  override async update(
+    id: string,
+    data: Partial<HomepageSectionDocument>,
+  ): Promise<HomepageSectionDocument> {
+    if (!data.config) {
+      return super.update(id, data);
+    }
+
+    // A missing doc falls through to super.update, which fails the same way it
+    // did before this override existed — don't invent a new error path here.
+    const existing = await this.findById(id);
+    if (!existing) {
+      return super.update(id, data);
+    }
+
+    return super.update(id, {
+      ...data,
+      config: {
+        ...(existing.config ?? {}),
+        ...data.config,
+      } as HomepageSectionDocument["config"],
+    });
+  }
+
   async getEnabledSections(): Promise<HomepageSectionDocument[]> {
     try {
       const snapshot = await this.db

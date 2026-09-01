@@ -6,6 +6,7 @@ import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 import type { ProductItem } from "../../products/types";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
+import { SECTION_TITLE, VIEW_MORE_LABEL } from "../constants/section-copy";
 
 export interface FeaturedProductsSectionProps {
   title?: string;
@@ -16,6 +17,8 @@ export interface FeaturedProductsSectionProps {
   filterByBrand?: string;
   initialItems?: ProductItem[];
   rows?: number;
+  /** Cap the rendered cards. Was declared but never destructured — so every
+   *  `maxItems` an admin configured was silently ignored. */
   maxItems?: number;
   autoScroll?: boolean;
   scrollInterval?: number;
@@ -23,14 +26,15 @@ export interface FeaturedProductsSectionProps {
 }
 
 export function FeaturedProductsSection({
-  title = "Featured Products",
+  title = SECTION_TITLE.products,
   description,
   viewMoreHref,
-  viewMoreLabel = "View all products →",
+  viewMoreLabel = VIEW_MORE_LABEL.products,
   className = "",
   filterByBrand,
   initialItems,
   rows = 1,
+  maxItems,
   autoScroll = false,
   scrollInterval = 5000,
   loop = true,
@@ -41,13 +45,14 @@ export function FeaturedProductsSection({
       ? { items: initialItems, total: initialItems.length, page: 1, pageSize: initialItems.length, totalPages: 1, hasMore: false }
       : undefined,
   });
-  const items = data?.items ?? [];
+  const fetched = data?.items ?? [];
+  const items = maxItems && maxItems > 0 ? fetched.slice(0, maxItems) : fetched;
 
   return (
     <SectionCarousel
       title={title}
       description={description}
-      pillLabel="Featured Products"
+      pillLabel={SECTION_TITLE.products}
       headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}

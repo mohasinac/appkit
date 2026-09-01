@@ -39,6 +39,12 @@ export interface BlogFeaturedCardProps {
   selectable?: boolean;
   isSelected?: boolean;
   onSelect?: (id: string, selected: boolean) => void;
+  /** Show the "N min read" chip. Defaults to `true`. */
+  showReadTime?: boolean;
+  /** Show the author name. Defaults to `true`. */
+  showAuthor?: boolean;
+  /** Show the cover image. Defaults to `true`. */
+  showThumbnail?: boolean;
 }
 
 export function BlogFeaturedCard({
@@ -49,10 +55,13 @@ export function BlogFeaturedCard({
   selectable = false,
   isSelected = false,
   onSelect,
+  showReadTime = true,
+  showAuthor = true,
+  showThumbnail = true,
 }: BlogFeaturedCardProps) {
   const longPress = useLongPress(() => onSelect?.(post.id, !isSelected));
   const safeTitle = post.title?.trim() || "Untitled post";
-  const coverImageUrl = getMediaUrl(post.coverImage);
+  const coverImageUrl = showThumbnail ? getMediaUrl(post.coverImage) : undefined;
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
@@ -82,24 +91,29 @@ export function BlogFeaturedCard({
         />
       )}
       <TextLink href={href} layout="flex-col" className="h-full">
-        {/* Cover image — aspect-video like EventCard */}
-        <Div className={`relative aspect-video ${__O.hidden} flex-shrink-0`}>
-          {coverImageUrl ? (
-            <MediaImage
-              src={coverImageUrl}
-              alt={safeTitle}
-              size="card"
-              className="transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <Div
-              role="img"
-              aria-label={safeTitle}
-              surface="muted"
-              className="h-full w-full"
-            />
-          )}
-        </Div>
+        {/* Cover image — aspect-video like EventCard.
+            Skipped entirely when `showThumbnail` is off: leaving the box in
+            place would reserve the same aspect-video band and render as a
+            broken image rather than as a hidden one. */}
+        {showThumbnail && (
+          <Div className={`relative aspect-video ${__O.hidden} flex-shrink-0`}>
+            {coverImageUrl ? (
+              <MediaImage
+                src={coverImageUrl}
+                alt={safeTitle}
+                size="card"
+                className="transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <Div
+                role="img"
+                aria-label={safeTitle}
+                surface="muted"
+                className="h-full w-full"
+              />
+            )}
+          </Div>
+        )}
 
         {/* Content */}
         <Stack className={`flex-1 ${__P.p4}`}>
@@ -137,10 +151,10 @@ export function BlogFeaturedCard({
 
           {/* Footer — pushed to bottom */}
           <Row color="muted" textSize="xs" className="mt-auto" gap="3" wrap>
-            {post.authorName && (
+            {showAuthor && post.authorName && (
               <Span>{safeDisplayName(post.authorName, "Author")}</Span>
             )}
-            {post.readTimeMinutes != null && (
+            {showReadTime && post.readTimeMinutes != null && (
               <Span>
                 {post.readTimeMinutes} {labels.readTime ?? "min read"}
               </Span>

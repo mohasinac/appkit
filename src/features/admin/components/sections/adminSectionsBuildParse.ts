@@ -98,6 +98,7 @@ export function toStringArray(value: unknown): string[] {
 export function buildProductsConfig(builder: ProductsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxProducts: builder.maxItems,
     maxCount: builder.maxCount,
@@ -125,6 +126,7 @@ export function buildProductsConfig(builder: ProductsBuilderState): JsonObjectWi
 export function buildAuctionsConfig(builder: AuctionsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxAuctions: builder.maxItems,
     maxCount: builder.maxCount,
@@ -176,6 +178,7 @@ export function buildStatsConfig(builder: StatsBuilderState): JsonObjectWithUnde
 export function buildPreOrdersConfig(builder: PreOrdersBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxItems: builder.maxItems,
     maxCount: builder.maxCount,
@@ -201,6 +204,7 @@ export function buildPreOrdersConfig(builder: PreOrdersBuilderState): JsonObject
 export function buildStoresConfig(builder: StoresBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxStores: builder.maxItems,
     maxCount: builder.maxCount,
@@ -224,6 +228,7 @@ export function buildStoresConfig(builder: StoresBuilderState): JsonObjectWithUn
 export function buildEventsConfig(builder: EventsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxEvents: builder.maxItems,
     maxCount: builder.maxCount,
@@ -250,6 +255,7 @@ export function parseProductsBuilder(config: JsonObjectWithUndefined): ProductsB
   const maxCount = toNumberValue(config.maxCount, DEFAULT_PRODUCTS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_PRODUCTS_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxProducts, DEFAULT_PRODUCTS_BUILDER.maxItems),
     status: toStringValue(filters.status, DEFAULT_PRODUCTS_BUILDER.status) as ProductsBuilderState["status"],
@@ -273,6 +279,7 @@ export function parseAuctionsBuilder(config: JsonObjectWithUndefined): AuctionsB
   const maxCount = toNumberValue(config.maxCount, DEFAULT_AUCTIONS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_AUCTIONS_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxAuctions, DEFAULT_AUCTIONS_BUILDER.maxItems),
     status: toStringValue(filters.status, DEFAULT_AUCTIONS_BUILDER.status) as AuctionsBuilderState["status"],
@@ -339,6 +346,7 @@ export function parsePreOrdersBuilder(config: JsonObjectWithUndefined): PreOrder
   const maxCount = toNumberValue(config.maxCount, DEFAULT_PRE_ORDERS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_PRE_ORDERS_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxItems, DEFAULT_PRE_ORDERS_BUILDER.maxItems),
     status: toStringValue(filters.status, DEFAULT_PRE_ORDERS_BUILDER.status) as PreOrdersBuilderState["status"],
@@ -360,6 +368,7 @@ export function parseStoresBuilder(config: JsonObjectWithUndefined): StoresBuild
   const maxCount = toNumberValue(config.maxCount, DEFAULT_STORES_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_STORES_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxStores, DEFAULT_STORES_BUILDER.maxItems),
     status: toStringValue(filters.status, DEFAULT_STORES_BUILDER.status) as StoresBuilderState["status"],
@@ -382,6 +391,7 @@ export function parseEventsBuilder(config: JsonObjectWithUndefined): EventsBuild
   const maxCount = toNumberValue(config.maxCount, DEFAULT_EVENTS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_EVENTS_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxEvents, DEFAULT_EVENTS_BUILDER.maxItems),
     status: toStringValue(filters.status, DEFAULT_EVENTS_BUILDER.status) as EventsBuilderState["status"],
@@ -480,6 +490,7 @@ export function parseTrustIndicatorsBuilder(config: JsonObjectWithUndefined): Tr
 export function buildCategoriesConfig(builder: CategoriesBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     maxCategories: builder.maxCategories,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
@@ -490,6 +501,7 @@ export function buildCategoriesConfig(builder: CategoriesBuilderState): JsonObje
 export function parseCategoriesBuilder(config: JsonObjectWithUndefined): CategoriesBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_CATEGORIES_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     maxCategories: toNumberValue(config.maxCategories, DEFAULT_CATEGORIES_BUILDER.maxCategories),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CATEGORIES_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_CATEGORIES_BUILDER.scrollInterval),
@@ -500,6 +512,7 @@ export function parseCategoriesBuilder(config: JsonObjectWithUndefined): Categor
 export function buildBrandsConfig(builder: BrandsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxBrands: builder.maxBrands,
     autoScroll: builder.autoScroll,
@@ -511,6 +524,7 @@ export function buildBrandsConfig(builder: BrandsBuilderState): JsonObjectWithUn
 export function parseBrandsBuilder(config: JsonObjectWithUndefined): BrandsBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_BRANDS_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     maxBrands: toNumberValue(config.maxBrands, DEFAULT_BRANDS_BUILDER.maxBrands),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_BRANDS_BUILDER.autoScroll),
@@ -581,27 +595,25 @@ export function parseFeaturesBuilder(config: JsonObjectWithUndefined): FeaturesB
 export function buildReviewsConfig(builder: ReviewsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     maxReviews: builder.maxReviews,
     itemsPerView: builder.itemsPerView,
     mobileItemsPerView: 1,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
     loop: builder.loop,
-    source: builder.source,
-    placeId: builder.source === "google" ? builder.placeId || undefined : undefined,
   };
 }
 
 export function parseReviewsBuilder(config: JsonObjectWithUndefined): ReviewsBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_REVIEWS_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     maxReviews: toNumberValue(config.maxReviews, DEFAULT_REVIEWS_BUILDER.maxReviews),
     itemsPerView: toNumberValue(config.itemsPerView, DEFAULT_REVIEWS_BUILDER.itemsPerView),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_REVIEWS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_REVIEWS_BUILDER.scrollInterval),
     loop: toBooleanValue(config.loop, DEFAULT_REVIEWS_BUILDER.loop),
-    source: toStringValue(config.source, "platform") as ReviewsBuilderState["source"],
-    placeId: toStringValue(config.placeId),
   };
 }
 
@@ -630,9 +642,19 @@ export function parseWhatsAppBuilder(config: JsonObjectWithUndefined): WhatsAppB
   };
 }
 
+/*
+ * Known drift, NOT introduced here: this builder emits `expandedByDefault`,
+ * which is not on `FAQSectionConfig` and which no renderer reads, and it omits
+ * `showCategoryTabs` / `visibleTabs` / `allowMultipleOpen` / `defaultOpenCount`,
+ * which are. Under the old replace-on-save semantics an admin saving this
+ * section silently deleted all four. The repository's merge fixes the
+ * destructive half; reconciling the builder's own field set is its own piece
+ * of UI work and is logged in newchange.md.
+ */
 export function buildFAQConfig(builder: FAQBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     showOnHomepage: builder.showOnHomepage,
     displayCount: builder.displayCount,
@@ -647,6 +669,7 @@ export function parseFAQBuilder(config: JsonObjectWithUndefined): FAQBuilderStat
   const validCats = FAQ_CATEGORY_OPTIONS.map((o) => o.value);
   return {
     title: toStringValue(config.title, DEFAULT_FAQ_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
     showOnHomepage: toBooleanValue(config.showOnHomepage, DEFAULT_FAQ_BUILDER.showOnHomepage),
     displayCount: toNumberValue(config.displayCount, DEFAULT_FAQ_BUILDER.displayCount),
@@ -659,6 +682,7 @@ export function parseFAQBuilder(config: JsonObjectWithUndefined): FAQBuilderStat
 export function buildBlogConfig(builder: BlogBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     maxArticles: builder.maxArticles,
     showReadTime: builder.showReadTime,
     showAuthor: builder.showAuthor,
@@ -669,6 +693,7 @@ export function buildBlogConfig(builder: BlogBuilderState): JsonObjectWithUndefi
 export function parseBlogBuilder(config: JsonObjectWithUndefined): BlogBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_BLOG_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     maxArticles: toNumberValue(config.maxArticles, DEFAULT_BLOG_BUILDER.maxArticles),
     showReadTime: toBooleanValue(config.showReadTime, DEFAULT_BLOG_BUILDER.showReadTime),
     showAuthor: toBooleanValue(config.showAuthor, DEFAULT_BLOG_BUILDER.showAuthor),
@@ -680,8 +705,6 @@ export function buildNewsletterConfig(builder: NewsletterBuilderState): JsonObje
   return {
     title: builder.title,
     description: builder.description,
-    placeholder: builder.placeholder,
-    buttonText: builder.buttonText,
     privacyText: builder.privacyText || undefined,
     privacyLink: builder.privacyLink || undefined,
   };
@@ -691,8 +714,6 @@ export function parseNewsletterBuilder(config: JsonObjectWithUndefined): Newslet
   return {
     title: toStringValue(config.title, DEFAULT_NEWSLETTER_BUILDER.title),
     description: toStringValue(config.description, DEFAULT_NEWSLETTER_BUILDER.description),
-    placeholder: toStringValue(config.placeholder, DEFAULT_NEWSLETTER_BUILDER.placeholder),
-    buttonText: toStringValue(config.buttonText, DEFAULT_NEWSLETTER_BUILDER.buttonText),
     privacyText: toStringValue(config.privacyText, DEFAULT_NEWSLETTER_BUILDER.privacyText),
     privacyLink: toStringValue(config.privacyLink, DEFAULT_NEWSLETTER_BUILDER.privacyLink),
   };
@@ -806,11 +827,9 @@ export function parseGoogleReviewsBuilder(config: JsonObjectWithUndefined): Goog
 export function buildFeaturedBundlesConfig(builder: FeaturedBundlesBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
+    viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
     maxItems: builder.maxItems,
-    storeId: builder.storeId || undefined,
-    categorySlug: builder.categorySlug || undefined,
-    sortBy: builder.sortBy,
     showSavingsBadge: builder.showSavingsBadge,
   };
 }
@@ -818,11 +837,9 @@ export function buildFeaturedBundlesConfig(builder: FeaturedBundlesBuilderState)
 export function parseFeaturedBundlesBuilder(config: JsonObjectWithUndefined): FeaturedBundlesBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_FEATURED_BUNDLES_BUILDER.title),
+    viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle, DEFAULT_FEATURED_BUNDLES_BUILDER.subtitle),
     maxItems: toNumberValue(config.maxItems, DEFAULT_FEATURED_BUNDLES_BUILDER.maxItems),
-    storeId: toStringValue(config.storeId),
-    categorySlug: toStringValue(config.categorySlug),
-    sortBy: toStringValue(config.sortBy, DEFAULT_FEATURED_BUNDLES_BUILDER.sortBy) as FeaturedBundlesBuilderState["sortBy"],
     showSavingsBadge: toBooleanValue(config.showSavingsBadge, DEFAULT_FEATURED_BUNDLES_BUILDER.showSavingsBadge),
   };
 }

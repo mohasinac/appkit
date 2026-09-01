@@ -28,7 +28,10 @@ export const carouselsSeedData: CarouselDocument[] = [
       "slide-beyblade-auction",
       "slide-beyblade-collection-hunt",
       "slide-preorders-open",
-      "slide-psa-graded",
+      // Was "slide-psa-graded", which has never existed in
+      // carousel-slides-seed-data.ts. `getCarouselWithSlides` filters missing
+      // refs away, so it failed silently rather than erroring.
+      "slide-authenticated-originals",
     ],
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(90),

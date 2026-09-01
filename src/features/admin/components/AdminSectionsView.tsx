@@ -77,6 +77,10 @@ const LBL_MAX_ITEMS = "Max items";
 const LBL_AUTOMATIC = "Automatic";
 const LBL_MANUAL_IDS = "Manual IDs";
 const LBL_SCROLL_INTERVAL = "Scroll interval (ms)";
+// Shared by all 11 section builders that expose a "view all" link.
+const LBL_VIEW_MORE = "View all link label";
+const PH_VIEW_MORE = "View all →";
+const HELP_VIEW_MORE = "Leave blank to use the default label.";
 
 export interface AdminSectionsViewProps {
   children?: React.ReactNode;
@@ -538,6 +542,16 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
+          label={LBL_VIEW_MORE}
+          value={productsBuilder.viewMoreLabel}
+          onChange={(event) =>
+            setProductsBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
+          }
+          placeholder={PH_VIEW_MORE}
+          helperText={HELP_VIEW_MORE}
+        />
+
+        <Input
           label="Subtitle"
           value={productsBuilder.subtitle}
           onChange={(event) =>
@@ -727,6 +741,16 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           onChange={(event) =>
             setAuctionsBuilder((prev) => ({ ...prev, title: event.target.value }))
           }
+        />
+
+        <Input
+          label={LBL_VIEW_MORE}
+          value={auctionsBuilder.viewMoreLabel}
+          onChange={(event) =>
+            setAuctionsBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
+          }
+          placeholder={PH_VIEW_MORE}
+          helperText={HELP_VIEW_MORE}
         />
 
         <Input
@@ -955,6 +979,16 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
+          label={LBL_VIEW_MORE}
+          value={preOrdersBuilder.viewMoreLabel}
+          onChange={(event) =>
+            setPreOrdersBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
+          }
+          placeholder={PH_VIEW_MORE}
+          helperText={HELP_VIEW_MORE}
+        />
+
+        <Input
           label="Subtitle"
           value={preOrdersBuilder.subtitle}
           onChange={(event) =>
@@ -1093,6 +1127,16 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           onChange={(event) =>
             setStoresBuilder((prev) => ({ ...prev, title: event.target.value }))
           }
+        />
+
+        <Input
+          label={LBL_VIEW_MORE}
+          value={storesBuilder.viewMoreLabel}
+          onChange={(event) =>
+            setStoresBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
+          }
+          placeholder={PH_VIEW_MORE}
+          helperText={HELP_VIEW_MORE}
         />
 
         <Input
@@ -1250,6 +1294,16 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
+          label={LBL_VIEW_MORE}
+          value={eventsBuilder.viewMoreLabel}
+          onChange={(event) =>
+            setEventsBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
+          }
+          placeholder={PH_VIEW_MORE}
+          helperText={HELP_VIEW_MORE}
+        />
+
+        <Input
           label="Subtitle"
           value={eventsBuilder.subtitle}
           onChange={(event) =>
@@ -1393,6 +1447,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">FAQ Section Builder</Text>
         <Input label="Section title" value={faqBuilder.title} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label={LBL_VIEW_MORE} value={faqBuilder.viewMoreLabel} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, viewMoreLabel: e.target.value }))} placeholder={PH_VIEW_MORE} helperText={HELP_VIEW_MORE} />
         <Input label="Subtitle" value={faqBuilder.subtitle} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
         <Input label="Display count" type="number" min={1} max={20} value={String(faqBuilder.displayCount)} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, displayCount: Math.min(20, Math.max(1, Number(e.target.value) || 1)) }))} />
         <Checkbox checked={faqBuilder.showOnHomepage} label="Show on homepage" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, showOnHomepage: e.target.checked }))} />
@@ -1425,6 +1480,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">Blog Articles Builder</Text>
         <Input label="Section title" value={blogBuilder.title} onChange={(e) => setBlogBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label={LBL_VIEW_MORE} value={blogBuilder.viewMoreLabel} onChange={(e) => setBlogBuilder((prev) => ({ ...prev, viewMoreLabel: e.target.value }))} placeholder={PH_VIEW_MORE} helperText={HELP_VIEW_MORE} />
         <Select label="Max articles" value={String(blogBuilder.maxArticles)} onValueChange={(v) => setBlogBuilder((prev) => ({ ...prev, maxArticles: Number(v) }))} options={[{ label: "3", value: "3" }, { label: "4", value: "4" }, { label: "6", value: "6" }]} />
         <Checkbox checked={blogBuilder.showReadTime} label="Show read time" onChange={(e) => setBlogBuilder((prev) => ({ ...prev, showReadTime: e.target.checked }))} />
         <Checkbox checked={blogBuilder.showAuthor} label="Show author" onChange={(e) => setBlogBuilder((prev) => ({ ...prev, showAuthor: e.target.checked }))} />
@@ -1439,8 +1495,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Text size="sm" weight="semibold" color="primary">Newsletter Section Builder</Text>
         <Input label="Title" value={newsletterBuilder.title} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Textarea label="Description" value={newsletterBuilder.description} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
-        <Input label="Email placeholder" value={newsletterBuilder.placeholder} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, placeholder: e.target.value }))} />
-        <Input label="Button text" value={newsletterBuilder.buttonText} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, buttonText: e.target.value }))} />
+        {/* "Email placeholder" and "Button text" removed — the subscribe form
+            is supplied by the consumer app, so neither had an element here to
+            apply to. */}
         <Input label="Privacy text" value={newsletterBuilder.privacyText} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyText: e.target.value }))} />
         <Input label="Privacy link" value={newsletterBuilder.privacyLink} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyLink: e.target.value }))} placeholder={String(ROUTES.PUBLIC.PRIVACY)} />
       </Div>
@@ -1505,24 +1562,11 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">Reviews Section Builder</Text>
         <Input label="Section title" value={reviewsBuilder.title} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
-        <Select
-          label="Reviews source"
-          value={reviewsBuilder.source}
-          onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, source: v as ReviewsBuilderState["source"] }))}
-          options={[
-            { label: "Platform reviews (LetItRip)", value: "platform" },
-            { label: "Google Business Reviews", value: "google" },
-          ]}
-        />
-        {reviewsBuilder.source === "google" ? (
-          <Input
-            label="Google Place ID"
-            value={reviewsBuilder.placeId}
-            onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, placeId: e.target.value }))}
-            placeholder="ChIJ..."
-            helperText="Find your Place ID at maps.google.com/placesinventory"
-          />
-        ) : null}
+        <Input label={LBL_VIEW_MORE} value={reviewsBuilder.viewMoreLabel} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, viewMoreLabel: e.target.value }))} placeholder={PH_VIEW_MORE} helperText={HELP_VIEW_MORE} />
+        {/* The "Reviews source" picker and its Google Place ID input are gone.
+            This section only ever renders platform reviews, so choosing
+            "Google Business Reviews" here silently did nothing. Add a
+            `google-reviews` section instead — it has a real placeId field. */}
         <Select label="Max reviews" value={String(reviewsBuilder.maxReviews)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, maxReviews: Number(v) }))} options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]} />
         <Select label="Items per view" value={String(reviewsBuilder.itemsPerView)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, itemsPerView: Number(v) }))} options={[{ label: "1", value: "1" }, { label: "2", value: "2" }, { label: "3", value: "3" }]} />
         <Checkbox checked={reviewsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
@@ -1600,6 +1644,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">Categories Section Builder</Text>
         <Input label="Section title" value={categoriesBuilder.title} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label={LBL_VIEW_MORE} value={categoriesBuilder.viewMoreLabel} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, viewMoreLabel: e.target.value }))} placeholder={PH_VIEW_MORE} helperText={HELP_VIEW_MORE} />
         <Input label="Max categories (4–12)" type="number" min={4} max={12} value={String(categoriesBuilder.maxCategories)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, maxCategories: Math.min(12, Math.max(4, Number(e.target.value) || 4)) }))} />
         <Checkbox checked={categoriesBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
         <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(categoriesBuilder.scrollInterval)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
@@ -1613,6 +1658,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">Brands Section Builder</Text>
         <Input label="Section title" value={brandsBuilder.title} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label={LBL_VIEW_MORE} value={brandsBuilder.viewMoreLabel} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, viewMoreLabel: e.target.value }))} placeholder={PH_VIEW_MORE} helperText={HELP_VIEW_MORE} />
         <Input label="Subtitle" value={brandsBuilder.subtitle} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
         <Input label="Max brands" type="number" min={1} max={30} value={String(brandsBuilder.maxBrands)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, maxBrands: Math.max(1, Number(e.target.value) || 1) }))} />
         <Checkbox checked={brandsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
@@ -1948,6 +1994,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           placeholder="Curated Bundles"
         />
         <Input
+          label={LBL_VIEW_MORE}
+          value={featuredBundlesBuilder.viewMoreLabel}
+          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, viewMoreLabel: e.target.value }))}
+          placeholder={PH_VIEW_MORE}
+          helperText={HELP_VIEW_MORE}
+        />
+        <Input
           label="Subtitle"
           value={featuredBundlesBuilder.subtitle}
           onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
@@ -1966,42 +2019,16 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))
           }
         />
-        <Input
-          label="Filter by store (storeId)"
-          value={featuredBundlesBuilder.storeId}
-          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, storeId: e.target.value }))}
-          placeholder="store-pokemon-palace"
-          helperText="Leave blank to show bundles from all stores."
-        />
-        <Stack gap="xs">
-          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
-          <CategoryInlineSelect
-            value={featuredBundlesBuilder.categorySlug}
-            onChange={(id) => setFeaturedBundlesBuilder((prev) => ({ ...prev, categorySlug: id }))}
-            placeholder={PH_FILTER_BY_CATEGORY}
-          />
-          <Text size="xs" color="muted">Leave blank to show bundles from all categories.</Text>
-        </Stack>
-        <Select
-          label="Sort by"
-          value={featuredBundlesBuilder.sortBy}
-          onValueChange={(value) =>
-            setFeaturedBundlesBuilder((prev) => ({ ...prev, sortBy: value as FeaturedBundlesBuilderState["sortBy"] }))
-          }
-          options={[
-            { label: "Newest first", value: "newest" },
-            { label: "Biggest savings", value: "savings-desc" },
-            { label: "Price: low → high", value: "price-asc" },
-          ]}
-        />
+        {/* "Filter by store", "Filter by category" and "Sort by" removed.
+            Bundles arrive pre-fetched from listFeaturedBundles(8), which takes
+            neither a scope nor a sort, so all three controls wrote config
+            nothing read. Per-section fetching would breach the SSR
+            round-trip budget (Rule #6). */}
         <Checkbox
           checked={featuredBundlesBuilder.showSavingsBadge}
           label="Show savings % badge on each bundle"
           onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, showSavingsBadge: e.target.checked }))}
         />
-        <Text size="xs" color="muted">
-          The bundles collection lands later in the bundle / prize-draw work; until then this section renders an empty state.
-        </Text>
       </Div>
     );
   }

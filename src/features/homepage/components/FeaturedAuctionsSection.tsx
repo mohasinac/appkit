@@ -6,6 +6,7 @@ import { useFeaturedAuctions } from "../hooks/useFeaturedAuctions";
 import { MarketplaceAuctionCard } from "../../auctions/components/MarketplaceAuctionCard";
 import type { ProductItem } from "../../products/types";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
+import { SECTION_TITLE, VIEW_MORE_LABEL } from "../constants/section-copy";
 
 export interface FeaturedAuctionsSectionProps {
   title?: string;
@@ -16,31 +17,35 @@ export interface FeaturedAuctionsSectionProps {
   filterByBrand?: string;
   initialItems?: ProductItem[];
   rows?: number;
+  /** Cap the rendered cards, mirroring FeaturedProductsSection. */
+  maxItems?: number;
   autoScroll?: boolean;
   scrollInterval?: number;
   loop?: boolean;
 }
 
 export function FeaturedAuctionsSection({
-  title = "Live Auctions",
+  title = SECTION_TITLE.auctions,
   description,
   viewMoreHref,
-  viewMoreLabel = "View all auctions →",
+  viewMoreLabel = VIEW_MORE_LABEL.auctions,
   className = "",
   filterByBrand,
   initialItems,
   rows = 1,
+  maxItems,
   autoScroll = false,
   scrollInterval = 5000,
   loop = true,
 }: FeaturedAuctionsSectionProps) {
-  const { data: items = [], isLoading } = useFeaturedAuctions({ filterByBrand, initialData: initialItems });
+  const { data: fetched = [], isLoading } = useFeaturedAuctions({ filterByBrand, initialData: initialItems });
+  const items = maxItems && maxItems > 0 ? fetched.slice(0, maxItems) : fetched;
 
   return (
     <SectionCarousel
       title={title}
       description={description}
-      pillLabel="Live Auctions"
+      pillLabel={SECTION_TITLE.auctions}
       headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}

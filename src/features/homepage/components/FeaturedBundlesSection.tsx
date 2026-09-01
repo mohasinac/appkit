@@ -38,6 +38,12 @@ export interface FeaturedBundlesSectionProps {
   title?: string;
   description?: string;
   initialItems?: CategoryDocument[];
+  /** Cap the rendered bundles. Items are supplied pre-fetched, so this slices. */
+  maxItems?: number;
+  /** Show the "N% off" badge on each cover. Defaults to `true`. */
+  showSavingsBadge?: boolean;
+  /** "View all" link label. */
+  viewMoreLabel?: string;
   className?: string;
   onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
@@ -46,11 +52,15 @@ export function FeaturedBundlesSection({
   title = BUNDLE_COPY.featuredDefaultTitle,
   description,
   initialItems = [],
+  maxItems,
+  showSavingsBadge = true,
+  viewMoreLabel = BUNDLE_COPY.featured.viewAll,
   className = "",
   onBuyNow,
 }: FeaturedBundlesSectionProps) {
   const { hand } = useHandMode();
-  const items = initialItems.filter((c) => c.categoryType === "bundle");
+  const bundles = initialItems.filter((c) => c.categoryType === "bundle");
+  const items = maxItems && maxItems > 0 ? bundles.slice(0, maxItems) : bundles;
   if (items.length === 0) return null;
 
   return (
@@ -72,13 +82,18 @@ export function FeaturedBundlesSection({
             href={String(ROUTES.PUBLIC.BUNDLES)}
             className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline"
           >
-            {BUNDLE_COPY.featured.viewAll}
+            {viewMoreLabel}
           </Link>
         </Row>
 
         <Grid cols="cards" gap="3">
           {items.map((bundle) => (
-            <FeaturedBundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
+            <FeaturedBundleCard
+              key={bundle.id}
+              bundle={bundle}
+              showSavingsBadge={showSavingsBadge}
+              onBuyNow={onBuyNow}
+            />
           ))}
         </Grid>
       </Stack>
@@ -88,10 +103,15 @@ export function FeaturedBundlesSection({
 
 interface FeaturedBundleCardProps {
   bundle: CategoryDocument;
+  showSavingsBadge?: boolean;
   onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
 
-function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
+function FeaturedBundleCard({
+  bundle,
+  showSavingsBadge = true,
+  onBuyNow,
+}: FeaturedBundleCardProps) {
   const stock = bundle.bundleStockStatus ?? "in_stock";
   const memberCount = bundle.bundleProductIds?.length ?? 0;
   const cover = bundle.display?.coverImage;
@@ -116,7 +136,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
               {PLACEHOLDER_EMOJI}
             </Row>
           )}
-          {discount && (
+          {showSavingsBadge && discount && (
             <Badge variant="success" className="absolute left-2 top-2">
               {BUNDLE_COPY.detail.discountBadge(discount.percent)}
             </Badge>

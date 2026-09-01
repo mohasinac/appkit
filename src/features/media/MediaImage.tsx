@@ -61,6 +61,15 @@ export interface MediaImageProps {
   priority?: boolean;
   /** Override browser loading strategy when needed (`eager` for LCP images). */
   loading?: "lazy" | "eager";
+  /**
+   * Explicit `fetchpriority` hint. Defaults to what `priority` implies.
+   *
+   * Set `"low"` on eagerly-loaded images that are NOT the LCP candidate — a
+   * carousel's off-screen slides are the motivating case. All five hero banners
+   * otherwise race each other at the browser's default priority and delay the
+   * one slide the visitor can actually see.
+   */
+  fetchPriority?: "high" | "low" | "auto";
   /** CSS object-fit applied to the underlying img element. Defaults to `'cover'`. */
   objectFit?: "cover" | "contain";
   /**
@@ -135,6 +144,7 @@ export function MediaImage({
   size = "card",
   priority = false,
   loading,
+  fetchPriority,
   objectFit = "cover",
   fallback,
   className,
@@ -210,6 +220,10 @@ export function MediaImage({
       ? `${resolvedSrc}${resolvedSrc.includes("?") ? "&" : "?"}retry=${retryCount}`
       : resolvedSrc;
 
+  // An explicit hint always wins; otherwise mirror what `priority` already
+  // implies, so existing call sites keep their current behaviour exactly.
+  const resolvedFetchPriority = fetchPriority ?? (priority ? "high" : undefined);
+
   // Art-directed `<picture>` path — bypasses Next.js `<Image>` because the
   // browser must pick the matching `<source>` itself. Loading + decoding hints
   // come from the consumer's preset.
@@ -239,6 +253,7 @@ export function MediaImage({
             src={requestSrc}
             alt={alt}
             loading={loading ?? (priority ? "eager" : "lazy")}
+            fetchPriority={resolvedFetchPriority}
             decoding="async"
             // catalogued primitive for media (variant catalogue allows the inner
             // <img> here). Object-fit + className come from typed props.
@@ -267,6 +282,7 @@ export function MediaImage({
         alt={alt}
         fill
         priority={priority}
+        fetchPriority={resolvedFetchPriority}
         loading={loading ?? (priority ? "eager" : "lazy")}
         className={fitClass}
         sizes={SIZE_HINTS[size]}

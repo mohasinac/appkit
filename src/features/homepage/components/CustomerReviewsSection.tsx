@@ -34,6 +34,12 @@ export interface CustomerReviewsSectionProps<T = unknown> {
   autoScroll?: boolean;
   scrollInterval?: number;
   loop?: boolean;
+  /**
+   * Responsive cards-per-view. Defaults to the shared `reviews` preset; the
+   * homepage section passes an admin-configured override built from its
+   * `itemsPerView` / `mobileItemsPerView` config.
+   */
+  perView?: Record<string, number>;
 }
 
 // --- Section -----------------------------------------------------------------
@@ -51,6 +57,7 @@ export function CustomerReviewsSection<T = unknown>({
   autoScroll = true,
   scrollInterval = 4500,
   loop = true,
+  perView,
 }: CustomerReviewsSectionProps<T>) {
 const themed = { textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
 if (isLoading) {
@@ -95,7 +102,7 @@ if (isLoading) {
         <HorizontalScroller
           items={items}
           renderItem={(item) => renderItem(item)}
-          perView={CAROUSEL_PER_VIEW.reviews}
+          perView={perView ?? CAROUSEL_PER_VIEW.reviews}
           gap={24}
           autoScroll={autoScroll}
           autoScrollInterval={scrollInterval}
