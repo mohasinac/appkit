@@ -3,6 +3,7 @@ import { categoriesRepository } from "../../../repositories";
 import { Container, Heading, Main, Section, Text } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
+import { safeRead } from "../../../errors/safe-read";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -31,9 +32,14 @@ export async function BundlesListView({
 }: BundlesListViewProps) {
   const storeId = sp(searchParams, "storeId");
 
-  const all = await categoriesRepository
-    .listByType("bundle", { activeOnly: true, limit: DEFAULT_LIMIT })
-    .catch(() => []);
+  const all = await safeRead(
+    () =>
+      categoriesRepository.listByType("bundle", {
+        activeOnly: true,
+        limit: DEFAULT_LIMIT,
+      }),
+    { route: "/bundles", key: "categories.listByType(bundle)", fallback: [] },
+  );
 
   const bundles = storeId
     ? all.filter((c) => c.createdByStoreId === storeId)

@@ -191,9 +191,14 @@ export const listFeaturedBundles = cache(
     _opts?: BundleDataOptions,
   ): Promise<CategoryDocument[]> => {
     void _opts;
-    const all = await categoriesRepository
-      .listByType("bundle", { activeOnly: true, limit })
-      .catch(() => []);
+    const all = await safeRead(
+      () => categoriesRepository.listByType("bundle", { activeOnly: true, limit }),
+      {
+        route: "bundles/getFeaturedBundles",
+        key: "categories.listByType(bundle)",
+        fallback: [],
+      },
+    );
     return all;
   },
 );
@@ -208,9 +213,18 @@ export const listFeaturedBundles = cache(
  */
 export const getRelatedBundles = cache(
   async (bundle: Pick<CategoryDocument, "id">, limit = 8): Promise<CategoryDocument[]> => {
-    const all = await categoriesRepository
-      .listByType("bundle", { activeOnly: true, limit: limit + 1 })
-      .catch(() => []);
+    const all = await safeRead(
+      () =>
+        categoriesRepository.listByType("bundle", {
+          activeOnly: true,
+          limit: limit + 1,
+        }),
+      {
+        route: "bundles/getRelatedBundles",
+        key: "categories.listByType(bundle)",
+        fallback: [],
+      },
+    );
     return all.filter((b) => b.id !== bundle.id).slice(0, limit);
   },
 );

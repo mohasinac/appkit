@@ -8,6 +8,7 @@ import {
   STORES_SITEMAP_LIMIT,
 } from "../../../shared/features/stores/config";
 import { makeGetStoreListingsInitial } from "../shared/listing-data-factory";
+import { safeRead } from "../../../../errors/safe-read";
 
 /** Full store document by slug — deduped per request via React.cache(). */
 export const getStoreForDetail = cache(
@@ -24,12 +25,18 @@ export const listStorePreOrdersInitial = makeGetStoreListingsInitial("pre-order"
 /** Stores for sitemap generation. */
 export const listSitemapStores = cache(
   async (): Promise<{ storeSlug: string; updatedAt: Date }[]> => {
-    const result = await storeRepository
-      .listStores(
-        { filters: "status==active", sorts: "-updatedAt", page: 1, pageSize: STORES_SITEMAP_LIMIT },
-        true,
-      )
-      .catch(() => null);
+    /*
+     * The SITEMAP. A swallowed failure here publishes a sitemap missing every
+     * store — which is not an error to any crawler, just a smaller site.
+     */
+    const result = await safeRead(
+      () =>
+        storeRepository.listStores(
+          { filters: "status==active", sorts: "-updatedAt", page: 1, pageSize: STORES_SITEMAP_LIMIT },
+          true,
+        ),
+      { route: "sitemap/stores", key: "stores.listStores", fallback: null },
+    );
     return (result?.items ?? []).map(({ storeSlug, updatedAt }) => ({ storeSlug, updatedAt }));
   },
 );

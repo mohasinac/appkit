@@ -45,6 +45,7 @@ import {
 import { resolveDate } from "../../../utils";
 import type { BidDocument } from "../schemas";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase";
+import { safeRead } from "../../../errors/safe-read";
 
 export interface PlaceBidInput {
   productId: string;
@@ -159,9 +160,12 @@ export async function placeBid(
     );
   }
 
-  const previousWinner = await bidRepository
-    .getWinningBid(productId)
-    .catch(() => null);
+  // A failure here is not "no previous winner" — it silently uncaps the
+  // auto-bid ceiling below, which is a money path.
+  const previousWinner = await safeRead(
+    () => bidRepository.getWinningBid(productId),
+    { route: "bid-actions/placeBid", key: "bids.getWinningBid", fallback: null },
+  );
 
   const prevCap = previousWinner?.data
     ? ((previousWinner.data as any).autoMaxBid ?? previousWinner.data.bidAmount ?? baseBid)

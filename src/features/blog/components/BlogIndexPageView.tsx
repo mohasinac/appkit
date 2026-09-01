@@ -4,6 +4,7 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
 import type { BlogPostCategory, BlogListResponse } from "../types";
+import { safeRead } from "../../../errors/safe-read";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -22,12 +23,14 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
   const category = sp(searchParams, "category") as BlogPostCategory | undefined;
 
-  const sieveResult = await blogRepository
-    .listPublished(
-      { ...(category ? { category } : {}) },
-      { sorts: sort, page, pageSize },
-    )
-    .catch(() => null);
+  const sieveResult = await safeRead(
+    () =>
+      blogRepository.listPublished(
+        { ...(category ? { category } : {}) },
+        { sorts: sort, page, pageSize },
+      ),
+    { route: "/blog", key: "blogPosts.listPublished", fallback: null },
+  );
 
   const initialData: BlogListResponse | undefined = sieveResult
     ? {

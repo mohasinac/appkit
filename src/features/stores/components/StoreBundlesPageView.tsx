@@ -2,6 +2,7 @@ import React from "react";
 import { categoriesRepository } from "../../../repositories";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { CategoryBundlesListing } from "../../categories/components/CategoryBundlesListing";
+import { safeRead } from "../../../errors/safe-read";
 
 export interface StoreBundlesPageViewProps {
   storeSlug: string;
@@ -27,10 +28,17 @@ export async function StoreBundlesPageView({
     return null;
   }
 
-  const bundles = await categoriesRepository
-    .listByType("bundle", { activeOnly: true, limit: 50 })
-    .then((rows) => rows.filter((c) => c.createdByStoreId === storeId))
-    .catch(() => []);
+  const bundles = await safeRead(
+    () =>
+      categoriesRepository
+        .listByType("bundle", { activeOnly: true, limit: 50 })
+        .then((rows) => rows.filter((c) => c.createdByStoreId === storeId)),
+    {
+      route: "/stores/[storeSlug]/bundles",
+      key: "categories.listByType(bundle)",
+      fallback: [],
+    },
+  );
 
   return <CategoryBundlesListing initialBundles={bundles} onBuyNow={onBuyNow} />;
 }

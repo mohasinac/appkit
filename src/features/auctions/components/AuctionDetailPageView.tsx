@@ -326,9 +326,14 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
 
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
 
-  const relatedDocs: FirestoreDocument[] = await productRepository
-    .findByCategory(String(p.category ?? ""))
-    .catch(() => []) as FirestoreDocument[];
+  const relatedDocs = (await safeRead(
+    () => productRepository.findByCategory(String(p.category ?? "")),
+    {
+      route: "/auctions/[slug]",
+      key: "products.findByCategory",
+      fallback: [] as unknown[],
+    },
+  )) as FirestoreDocument[];
 
   const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
     computeRelatedItems(product),

@@ -5,6 +5,7 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import type { ReviewListResponse } from "../types";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ReviewsIndexListing } from "./ReviewsIndexListing";
+import { safeRead } from "../../../errors/safe-read";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -43,9 +44,10 @@ export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPa
   const page = Number(sp(searchParams, "page")) || 1;
   const filters = buildReviewFilters(searchParams);
 
-  const result = await reviewRepository
-    .listAll({ filters, sorts: sort, page, pageSize: 12 })
-    .catch(() => null);
+  const result = await safeRead(
+    () => reviewRepository.listAll({ filters, sorts: sort, page, pageSize: 12 }),
+    { route: "/reviews", key: "reviews.listAll", fallback: null },
+  );
 
   const initialData: ReviewListResponse | undefined = result
     ? {

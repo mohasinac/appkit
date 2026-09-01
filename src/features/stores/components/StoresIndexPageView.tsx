@@ -3,6 +3,7 @@ import { storeRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { StoresIndexListing } from "./StoresIndexListing";
+import { safeRead } from "../../../errors/safe-read";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -20,9 +21,10 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
   const page = Number(sp(searchParams, "page")) || 1;
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
 
-  const result = await storeRepository
-    .listStores({ page, pageSize, sorts: sort }, true)
-    .catch(() => null);
+  const result = await safeRead(
+    () => storeRepository.listStores({ page, pageSize, sorts: sort }, true),
+    { route: "/stores", key: "stores.listStores", fallback: null },
+  );
 
   return (
     <Main>
