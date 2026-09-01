@@ -37,7 +37,7 @@ export async function EventRafflesSection({
       sorts: sortBy("startsAt", "DESC"),
       pageSize: limit,
     });
-    events = (result.items ?? []) as unknown as EventItem[];
+    events = hidePublicTestData(result.items ?? []) as unknown as EventItem[];
   } catch (_err) {
     void normalizeError(_err);
     // Loud on purpose: a swallowed failure here is indistinguishable from "no
