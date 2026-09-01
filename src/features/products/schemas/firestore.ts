@@ -196,7 +196,24 @@ export interface ProductDocument extends BaseDocument {
   video?: ProductVideoField;
   status: ProductStatus;
   storeId: string;
+  /**
+   * Denormalized seller display name — what every listing card renders as
+   * "by …", and the only place a card can get it: the public browse query
+   * never touches `storeRepository`.
+   *
+   * Optional for back-compat with documents written before the create paths
+   * populated it, NOT because it is optional in practice. `resolveStoreFields`
+   * fills it on every create, and a store rename re-syncs it through the
+   * `storeNameBackfill` job — that job is the mirror-guard, and removing it
+   * turns this into a field that silently goes stale (Root Cause #42).
+   */
   storeName?: string;
+  /**
+   * Denormalized `storeSlug`, so a card or a detail page can build a
+   * `/stores/{slug}` link without a second read. Written alongside `storeName`
+   * and re-synced by the same job.
+   */
+  storeSlug?: string;
   /** W1-34 — denormalized seller rating (0–5) shown on product detail store card. */
   storeRating?: number;
   /** W1-34 — denormalized seller total review count shown alongside the rating. */

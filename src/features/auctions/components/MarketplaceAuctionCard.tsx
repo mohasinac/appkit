@@ -14,6 +14,7 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { isBuyNowAvailable } from "../../../_internal/shared/features/auctions/config";
 import type { ListingType } from "../../products/types/index";
+import { CardStoreLine } from "../../products/components/CardStoreLine";
 
 const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
 const CLS_LIVE_BADGE = "rounded-full bg-error-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-error-on-solid";
@@ -46,6 +47,15 @@ export interface MarketplaceAuctionCardData {
    * (Root Cause #48).
    */
   isSold?: boolean;
+  /**
+   * The seller. Absent from this hand-rolled type entirely until now, so the
+   * auction card could not show a seller even where every other card did —
+   * the same dropped-field shape the `isSold` note directly above warns about,
+   * one field over. Every doc→card mapper must copy BOTH: `storeId` says the
+   * listing has a seller at all, `storeName` says who.
+   */
+  storeId?: string;
+  storeName?: string;
   /** Display name of the auction winner — shown masked when the auction has ended */
   winnerDisplayName?: string;
 }
@@ -206,6 +216,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
           />
         ) : null}
       </Row>
+      <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
       <Row align="center" gap="sm" wrap>
         <Text className="text-primary" size="sm" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
         <Div layout="inline-flex" gap="1" textWeight="semibold" className={`items-[center] py-[0.125rem] text-[11px] ${countdownClass}`} padding="x-xs" rounded="full">
@@ -243,6 +254,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
           />
         ) : null}
       </Row>
+      <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
       <Div>
         <Caption>
           {isEnded && hasCurrentBid ? mergedLabels.winningBid : hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}

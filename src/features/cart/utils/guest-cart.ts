@@ -155,6 +155,11 @@ export function clearGuestCart(
 ): void {
   if (!storage) return;
   storage.removeItem(key);
+  // Every other write in this file broadcasts through `writeItems`; this one
+  // used to skip it, so after a login-merge cleared the guest cart every other
+  // mounted `useGuestCart()` kept its pre-clear snapshot — a cart that had just
+  // been merged away still showing items, and a header badge still counting them.
+  dispatchGuestCartChange();
 }
 
 export function getGuestCartCount(

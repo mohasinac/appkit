@@ -13,6 +13,11 @@ export {
 } from "../../../shared/features/stores/config";
 export { renderStoreOgImage, renderStoreOg, type StoreOgData } from "./og";
 export {
+  resolveStoreFields,
+  resolveStoreFieldsMany,
+  type ProductStoreFields,
+} from "./denormalize";
+export {
   toStoreDetail,
   toStoreListItem,
   PUBLIC_STORE_FIELDS,

@@ -128,6 +128,9 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     // Read by isBuyNowAvailable() on the card — without it a sold auction still
     // offers a Buyout chip.
     isSold: p.isSold,
+    // Renders the card's "by <seller>" line.
+    storeId: p.storeId,
+    storeName: p.storeName,
   }));
 
   const commitSearch = useCallback(() => {

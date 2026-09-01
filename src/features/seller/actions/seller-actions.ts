@@ -10,6 +10,8 @@
  */
 
 import { serverLogger } from "../../../monitoring";
+import { normalizeError } from "../../../errors/normalize";
+import { enqueueJob } from "../../jobs/actions/enqueue-job";
 import { isAdminUser, isSellerUser, isStrictSellerUser, isTesterUser } from "../../auth/role-predicates";
 import {
   ApiError,
@@ -332,6 +334,29 @@ export async function updateStore(
     ...(isPublic !== undefined && { isPublic }),
   });
 
+  // A rename has to reach the products, or every card this store owns keeps
+  // showing the old name forever — the denormalized `storeName`/`storeSlug` on
+  // ProductDocument have no other writer after creation (Root Cause #42).
+  //
+  // Enqueued, not inline: the write is unbounded in the number of listings and
+  // would blow the 10s route ceiling (Rule #6). Best-effort — a failed enqueue
+  // must not fail the rename the seller just made, and the job is idempotent so
+  // the standalone backfill script can always catch up.
+  if (storeName !== undefined && storeName !== store.storeName) {
+    try {
+      await enqueueJob({
+        jobType: "storeNameBackfill",
+        payload: { storeId: store.storeSlug },
+        requestedBy: userId,
+      });
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.warn("updateSellerStore: storeNameBackfill enqueue failed", {
+        storeId: store.storeSlug,
+      });
+    }
+  }
+
   return { store: updated };
 }
 
@@ -596,18 +621,47 @@ export async function bulkSellerOrder(
 
 // --- Create Seller Product ----------------------------------------------------
 
+/**
+ * The real "create a listing" path — every seller `new` page under `/store`
+ * routes here.
+ *
+ * The store fields are resolved from the OWNER, never taken from the draft.
+ * `SellerProductDraft` has no `storeId`, `storeName` or `storeSlug` field at
+ * all, so this used to write `sellerId`/`sellerName`/`sellerEmail` and nothing
+ * else about the store — leaving every seller-created listing with no `storeId`
+ * whatsoever. That is not just a blank "by …" line on the card: `storeId` is
+ * what the store page queries on, what `splitCartIntoOrderGroups` groups on,
+ * and what a payout hangs off. Seed data set all three by hand, so a seeded
+ * environment looked entirely correct.
+ *
+ * Resolving server-side rather than accepting them from the client is also the
+ * only safe shape — a caller-supplied `storeId` would let a seller file a
+ * listing under someone else's store.
+ */
 export async function createSellerProduct(
   userId: string,
   userName: string,
   userEmail: string,
   input: Record<string, JsonValue>,
 ): Promise<void> {
+  const store = await storeRepository.findByOwnerId(userId);
+  // Refuse rather than write an orphan. A listing with no store is invisible on
+  // its own storefront, forms no order group at checkout, and cannot be paid
+  // out — a failed create the seller can act on beats a saved one that silently
+  // never appears.
+  if (!store) {
+    throw new NotFoundError("No store found for this account. Create your store first.");
+  }
+
   const finalizedData = await finalizeProductMediaReferences(input);
   await productRepository.create({
     ...finalizedData,
     sellerId: userId,
     sellerName: userName,
     sellerEmail: userEmail,
+    storeId: store.storeSlug,
+    storeName: store.storeName,
+    storeSlug: store.storeSlug,
     // Pass through the caller's intended status (draft vs published) instead
     // of hardcoding "draft" — this previously made every "Publish" click
     // silently save as a draft regardless of what the wizard sent.
@@ -615,6 +669,7 @@ export async function createSellerProduct(
   } as any);
   serverLogger.info("createSellerProduct: product created", {
     userId,
+    storeId: store.storeSlug,
     status: (finalizedData as { status?: string }).status ?? "draft",
   });
 }

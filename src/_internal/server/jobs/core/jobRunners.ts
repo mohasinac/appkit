@@ -16,6 +16,7 @@ import { runResetOtpVerification } from "./resetOtpVerification";
 import { runWhatsAppNotify, type WhatsAppNotifyPayload } from "./whatsappNotify";
 import { runNewsletterExport } from "./newsletterExport";
 import { runWhatsAppCatalogImport } from "./whatsappCatalogImport";
+import { runStoreNameBackfill } from "./storeNameBackfill";
 import type { JsonValue } from "@mohasinac/appkit";
 
 export interface JobRunResult {
@@ -98,6 +99,13 @@ async function runWhatsAppCatalogImportJob(
   );
 }
 
+async function runStoreNameBackfillJob(
+  payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  return runStoreNameBackfill({ storeId: String(payload.storeId ?? "") }, ctx);
+}
+
 export const JOB_RUNNERS: Record<string, JobRunner> = {
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,
@@ -105,4 +113,5 @@ export const JOB_RUNNERS: Record<string, JobRunner> = {
   whatsappNotify: runWhatsAppNotifyJob,
   newsletterExport: runNewsletterExportJob,
   whatsappCatalogImport: runWhatsAppCatalogImportJob,
+  storeNameBackfill: runStoreNameBackfillJob,
 };

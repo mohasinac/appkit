@@ -221,6 +221,58 @@ function renderAuctionStoreReviews(storeSlug: string | undefined) {
   );
 }
 
+/**
+ * Related auction docs → card data, at module scope rather than inline in the
+ * view.
+ *
+ * This is a pure doc→card mapper with no component state, and it is the exact
+ * spot Root Cause #48 keeps recurring: a card carries nine correct fields and
+ * routes or renders wrong because of the tenth. Naming it makes the field list
+ * reviewable on its own instead of buried 400 lines into a render prop.
+ */
+function toRelatedAuctionCards(
+  relatedDocs: FirestoreDocument[],
+  currentId: unknown,
+  now: Date,
+): MarketplaceAuctionCardData[] {
+  return relatedDocs
+    .filter((r) => {
+      if (r.id === currentId || r.listingType !== "auction") return false;
+      const s = r.status as string | undefined;
+      if (s && ["archived", "in_review", "draft"].includes(s)) return false;
+      if (r.isSold === true) return false;
+      const end = r.auctionEndDate;
+      if (!end) return true;
+      const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
+        ? (end as unknown as { toDate: () => Date }).toDate()
+        : end instanceof Date ? end : new Date(String(end));
+      return endDate > now;
+    })
+    .slice(0, 4)
+    .map((r) => ({
+      id: String(r.id ?? ""),
+      title: String(r.title ?? r.name ?? "Auction Item"),
+      price: typeof r.price === "number" ? r.price : 0,
+      currency: typeof r.currency === "string" ? r.currency : undefined,
+      mainImage: Array.isArray(r.images)
+        ? (r.images as string[])[0]
+        : typeof r.mainImage === "string"
+          ? r.mainImage
+          : undefined,
+      listingType: "auction" as const,
+      auctionEndDate: r.auctionEndDate as Date | undefined,
+      startingBid: typeof r.startingBid === "number" ? r.startingBid : undefined,
+      currentBid: typeof r.currentBid === "number" ? r.currentBid : undefined,
+      bidCount: typeof r.bidCount === "number" ? r.bidCount : undefined,
+      slug: typeof r.slug === "string" ? r.slug : undefined,
+      // The card renders "by <seller>"; dropping these is how a related-auction
+      // card ends up the only one on the page with no seller on it, from data
+      // that was on the doc all along.
+      storeId: typeof r.storeId === "string" ? r.storeId : undefined,
+      storeName: typeof r.storeName === "string" ? r.storeName : undefined,
+    }));
+}
+
 export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, onBuyNow, productFeatures }: AuctionDetailPageViewProps) {
   // The auction IS this page's subject. A read failure must surface rather than
   // become the same `undefined` a genuinely missing slug produces — the
@@ -605,38 +657,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             );
           }}
           renderRelated={() => {
-            const now = new Date();
-            const related: MarketplaceAuctionCardData[] = relatedDocs
-              .filter((r) => {
-                if (r.id === product.id || r.listingType !== "auction") return false;
-                const s = r.status as string | undefined;
-                if (s && ["archived", "in_review", "draft"].includes(s)) return false;
-                if (r.isSold === true) return false;
-                const end = r.auctionEndDate;
-                if (!end) return true;
-                const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-                  ? (end as unknown as { toDate: () => Date }).toDate()
-                  : end instanceof Date ? end : new Date(String(end));
-                return endDate > now;
-              })
-              .slice(0, 4)
-              .map((r) => ({
-                id: String(r.id ?? ""),
-                title: String(r.title ?? r.name ?? "Auction Item"),
-                price: typeof r.price === "number" ? r.price : 0,
-                currency: typeof r.currency === "string" ? r.currency : undefined,
-                mainImage: Array.isArray(r.images)
-                  ? (r.images as string[])[0]
-                  : typeof r.mainImage === "string"
-                    ? r.mainImage
-                    : undefined,
-                listingType: "auction",
-                auctionEndDate: r.auctionEndDate as Date | undefined,
-                startingBid: typeof r.startingBid === "number" ? r.startingBid : undefined,
-                currentBid: typeof r.currentBid === "number" ? r.currentBid : undefined,
-                bidCount: typeof r.bidCount === "number" ? r.bidCount : undefined,
-                slug: typeof r.slug === "string" ? r.slug : undefined,
-              }));
+            const related = toRelatedAuctionCards(relatedDocs, product.id, new Date());
             return (
               <Stack gap="xl">
                 {related.length > 0 && (

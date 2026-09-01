@@ -38,6 +38,13 @@ export function toProductItem(doc: FirestoreDocument): ProductItem {
     status: (doc.status as ProductItem["status"]) ?? "published",
     slug: typeof doc.slug === "string" ? doc.slug : undefined,
     storeName: typeof doc.storeName === "string" ? doc.storeName : undefined,
+    // `storeName` alone was carried here, and `storeId` was dropped — the same
+    // shape as the `listingType` bug two fields down, one field over. A card
+    // needs the id to decide whether it has a seller at all (a name can be
+    // absent on a document written before the create paths denormalized it),
+    // and the slug to name one without a second read.
+    storeId: typeof doc.storeId === "string" ? doc.storeId : undefined,
+    storeSlug: typeof doc.storeSlug === "string" ? doc.storeSlug : undefined,
     rating: typeof doc.rating === "number" ? doc.rating : undefined,
     reviewCount: typeof doc.reviewCount === "number" ? doc.reviewCount : undefined,
     // Without this, every related-item card silently linked to the standard

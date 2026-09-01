@@ -1603,6 +1603,14 @@ export { renderProductOg, renderProductOgImage, type ProductOgData, type OgOptio
 export { renderAuctionOg, renderAuctionOgImage, type AuctionOgData } from "./_internal/server/features/auctions/og";
 export { renderPreOrderOg, renderPreOrderOgImage, type PreOrderOgData } from "./_internal/server/features/pre-orders/og";
 export { renderStoreOg, renderStoreOgImage, type StoreOgData } from "./_internal/server/features/stores/og";
+// The one derivation of a product's denormalized store fields. Exported because
+// the consumer's admin create route writes products directly rather than through
+// adminCreateProduct, and a second hand-rolled copy is how these drift.
+export {
+  resolveStoreFields,
+  resolveStoreFieldsMany,
+  type ProductStoreFields,
+} from "./_internal/server/features/stores/denormalize";
 export { renderBrandOg, renderBrandOgImage, type BrandOgData } from "./_internal/server/features/brands/og";
 export { renderCategoryOg, renderCategoryOgImage, type CategoryOgData } from "./_internal/server/features/categories/og";
 export { renderBlogOg, renderBlogOgImage, type BlogOgData } from "./_internal/server/features/blog/og";

@@ -404,6 +404,50 @@ export class CartRepository extends BaseRepository<CartDocument> {
     }
   }
 
+  /**
+   * Re-derive the three item-dependent fields against the items that survive a
+   * removal.
+   *
+   * `removeItem` and `clearCart` both used to write `{ ...cart, items }`, which
+   * carries `selectedItemIds`, `appliedCoupons` and `storeAddons` through
+   * verbatim — so after a clear the cart still named items that no longer
+   * existed. That is not cosmetic: `previewCheckoutPricing`, `createOrderForGroup`
+   * and `/api/payment/create-order` all build `new Set(cart.selectedItemIds)`
+   * and filter by it, so a stale id set silently narrows a later checkout.
+   *
+   * `selectedItemIds` is intersected rather than cleared — `undefined` means
+   * "all items", so blanking a partial selection would silently re-select
+   * everything the buyer had deliberately unticked. An intersection that empties
+   * becomes `undefined` for the same reason it started that way: no items left
+   * to have a selection about.
+   */
+  private pruneForItems(
+    cart: CartDocument,
+    items: CartItemDocument[],
+  ): Pick<CartDocument, "selectedItemIds" | "appliedCoupons" | "storeAddons"> {
+    const survivingItemIds = new Set(items.map((item) => item.itemId));
+    const survivingStoreIds = new Set(items.map((item) => item.storeId));
+
+    const selected = cart.selectedItemIds?.filter((id) => survivingItemIds.has(id));
+
+    return {
+      selectedItemIds: selected && selected.length > 0 ? selected : undefined,
+      // A coupon is scoped to a store bucket or to the cart as a whole; with no
+      // items left there is nothing for either kind to discount.
+      appliedCoupons: items.length === 0 ? undefined : cart.appliedCoupons,
+      storeAddons: this.pruneAddonsMap(cart.storeAddons, survivingStoreIds),
+    };
+  }
+
+  private pruneAddonsMap(
+    addons: CartDocument["storeAddons"],
+    keepStoreIds: ReadonlySet<string>,
+  ): CartDocument["storeAddons"] {
+    if (!addons) return undefined;
+    const kept = Object.entries(addons).filter(([storeId]) => keepStoreIds.has(storeId));
+    return kept.length > 0 ? Object.fromEntries(kept) : undefined;
+  }
+
   async removeItem(userId: string, itemId: string): Promise<CartDocument> {
     try {
       const cart = await this.findByUserId(userId);
@@ -418,6 +462,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       const updatedCart: CartDocument = {
         ...cart,
         items,
+        ...this.pruneForItems(cart, items),
         updatedAt: new Date(),
       };
 
@@ -439,6 +484,14 @@ export class CartRepository extends BaseRepository<CartDocument> {
     }
   }
 
+  /**
+   * Empty the cart, keeping any locked line.
+   *
+   * A locked line is a won auction or an accepted offer — settlement put it
+   * there and the buyer owes payment on it, so "clear" cannot mean "walk away"
+   * (see § Checkout Lanes). Callers must tell the buyer that is what happened;
+   * a silently-surviving row reads as a failed clear.
+   */
   async clearCart(userId: string): Promise<CartDocument> {
     try {
       const cart = await this.getOrCreate(userId);
@@ -447,6 +500,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       const clearedCart: CartDocument = {
         ...cart,
         items: lockedItems,
+        ...this.pruneForItems(cart, lockedItems),
         updatedAt: new Date(),
       };
 
@@ -653,31 +707,14 @@ export class CartRepository extends BaseRepository<CartDocument> {
       );
   }
 
-  /**
-   * Drop a store's add-on entry once its last item leaves the cart, so the map
-   * doesn't accumulate orphans. Cosmetic — an orphan is already unreachable,
-   * because a store with no items forms no order group.
+  /*
+   * `pruneStoreAddons(userId, keepStoreIds)` used to live here. It had zero
+   * callers from the day it was written, and `pruneForItems` now does the same
+   * job inside the two write paths that actually remove items — with no extra
+   * read and no second write, since both already `set()` the whole document.
+   * Removed rather than wired up: two ways to prune the same map is the drift
+   * this feature was fixing.
    */
-  async pruneStoreAddons(userId: string, keepStoreIds: string[]): Promise<void> {
-    const cart = await this.findByUserId(userId);
-    const existing = cart?.storeAddons;
-    if (!existing) return;
-
-    const keep = new Set(keepStoreIds);
-    const stale = Object.keys(existing).filter((storeId) => !keep.has(storeId));
-    if (stale.length === 0) return;
-
-    await this.db
-      .collection(this.collection)
-      .doc(userId)
-      .set(
-        {
-          storeAddons: Object.fromEntries(stale.map((storeId) => [storeId, FieldValue.delete()])),
-          updatedAt: new Date(),
-        },
-        { merge: true },
-      );
-  }
 
   /**
    * Cloud Functions: return refs of stale carts not updated within TTL.

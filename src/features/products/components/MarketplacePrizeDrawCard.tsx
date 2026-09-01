@@ -11,6 +11,7 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
 import { BaseListingCard, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { CardStoreLine } from "./CardStoreLine";
 
 export type MarketplacePrizeDrawCardData = ProductItem;
 
@@ -220,6 +221,7 @@ export function MarketplacePrizeDrawCard({
             {product.title}
           </Text>
         </TextLink>
+        <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
         <Row justify="between" className="mt-1" gap="sm">
           <Text size="sm" weight="semibold" color="primary">
             {formatCurrency(pricePerEntry, getDefaultCurrency())}{" "}

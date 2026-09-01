@@ -12,8 +12,8 @@ import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
+import { CardStoreLine } from "./CardStoreLine";
 import { FeatureBadgeList } from "./FeatureBadge";
 import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
@@ -314,14 +314,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           );
         })()}
 
-        {(() => {
-          const seller = safeDisplayName(product.storeName, "");
-          return seller ? (
-            <Text className="mt-0.5 text-[11px]" color="faint">
-              by {seller}
-            </Text>
-          ) : null;
-        })()}
+        <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
 
         {product.rating !== undefined && (
           <Row className="mt-1" gap="xs">
@@ -565,6 +558,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             {[product.categoryName, product.brand].filter(Boolean).join(" · ")}
           </Span>
         )}
+        <CardStoreLine storeName={product.storeName} storeId={product.storeId} className="text-[11px]" />
         <Row className="mt-0.5" align="center" gap="sm" wrap>
           <Span size="sm" weight="semibold" className="text-primary">
             {formatCurrency(product.price, getDefaultCurrency())}

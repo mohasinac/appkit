@@ -132,6 +132,8 @@ export interface ProductItem {
   brands?: string[];
   storeId?: string;
   storeName?: string;
+  /** Denormalized store slug — lets a card name its seller with no second read. */
+  storeSlug?: string;
   specifications?: { name: string; value: string; unit?: string }[];
   features?: string[];
   shippingInfo?: string;

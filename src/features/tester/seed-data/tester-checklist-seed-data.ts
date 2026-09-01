@@ -193,6 +193,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "search", label: "Search returns relevant results", href: "/search" },
         { key: "filters", label: "Search/listing filters (price, brand, condition) work correctly" },
         {
+          key: "card-shows-seller-name",
+          label: "Every listing card shows a \"by <seller>\" line",
+          description:
+            "BEFORE: only the standard product card rendered a seller, and it read the value off the product document — which no seller-facing create path ever populated, so it was blank on every real listing while seeded demo products looked correct. Auction, pre-order and prize-draw cards had no seller line at all. AFTER: check /products in BOTH grid and list view, then /auctions, /pre-orders and /prize-draws — every card must carry a \"by …\" line naming the store. The name must be a readable store name (e.g. \"Beyblade Arena\"), never a raw slug like \"store-beyblade-arena\".",
+          href: "/products",
+        },
+        {
           key: "grid-one-card-per-row-on-phone",
           label: "On a phone, a product listing shows exactly ONE card per row — not two narrow ones",
           description:
@@ -886,6 +893,34 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/cart",
       cases: [
         { key: "update-qty", label: "Updating item quantity in cart recalculates the total" },
+        // ── Clearing the cart ────────────────────────────────────────────
+        // These are written as explicit before → after because the bug returned
+        // HTTP 200 and a "Cart cleared (N items)" toast over a cart that was
+        // not cleared. A case reading "check Remove all works" passes against it.
+        {
+          key: "remove-all-stays-empty",
+          label: "\"Remove all\" empties the cart and it STAYS empty for at least a minute",
+          description:
+            "BEFORE: \"Remove all\" looped a DELETE per row and never drained the local pending-op queue, so cleared rows re-appeared on the next render AND the background sync re-POSTed them to the server within 30s — the items came back permanently. AFTER: add 3 items using the quick-add button on the /products GRID (that is the path that queues pending ops — adding from a product detail page does not), open /cart, click \"Remove all\" and confirm the dialog. The cart must be empty, then WAIT 60 SECONDS without navigating and confirm nothing reappears. Reload the page and confirm it is still empty.",
+        },
+        {
+          key: "remove-all-confirmation",
+          label: "\"Remove all\" asks \"Clear your cart?\" before doing anything",
+          description:
+            "BEFORE: the button fired immediately with no confirmation, even though the confirmation copy was already defined in the action registry. AFTER: clicking \"Remove all\" opens a dialog titled \"Clear your cart?\"; pressing Cancel must leave every item in place.",
+        },
+        {
+          key: "remove-all-badge-zero",
+          label: "The header cart badge reads 0 after clearing, not a leftover count",
+          description:
+            "BEFORE: the badge showed the server count PLUS the undrained pending-op queue, so it sat at a non-zero number over a visibly empty cart. AFTER: after \"Remove all\", the cart icon in the header must show no badge (or 0) immediately — without a page reload.",
+        },
+        {
+          key: "remove-all-keeps-won-auction",
+          label: "\"Remove all\" keeps a won-auction line and SAYS that it did",
+          description:
+            "Needs a won auction in the cart (see the Auctions section). BEFORE: the won line was included in the delete loop, the server refused it, the failure was swallowed, and the toast still claimed every item was cleared. AFTER: the won-auction line must remain in the cart and the toast must read \"… N items awaiting payment kept.\" — the count in the first half must NOT include the kept line.",
+        },
         // ── Grouped & bundle cart lines ──────────────────────────────────
         // Fixtures backing these: product-tester-standard-1/2/3 (three members
         // of one group, deliberately spanning two GST rates),
@@ -1975,6 +2010,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "list-auction", label: "Listing an auction works" },
         { key: "list-preorder", label: "Listing a pre-order works" },
         { key: "edit-listing", label: "Editing an existing listing works" },
+        {
+          key: "new-listing-belongs-to-store",
+          label: "A listing created through the wizard appears on your OWN storefront and shows your store name on its card",
+          description:
+            "BEFORE: the create path wrote sellerId/sellerName/sellerEmail and no storeId at all — the wizard's draft has no store field — so a brand-new listing belonged to no store: invisible on the seller's own storefront, showing no seller on its card, and forming no order group at checkout. Seed data set all three fields by hand, which is why demo data looked right. AFTER: publish a new product, then open your public store page (/stores/<your-slug>) and confirm it is listed there, and open /products and confirm its card reads \"by <your store name>\".",
+          href: "/store/products/new",
+        },
+        {
+          key: "store-rename-updates-cards",
+          label: "Renaming your store updates the seller name on all your existing listing cards",
+          description:
+            "BEFORE: the store name is copied onto each product when it is created, and nothing re-synced it — so a rename left every existing card showing the old name forever, with no error anywhere. AFTER: note your current store name, rename the store in Storefront settings, then open /products and find one of your OLDER listings. Its card must show the NEW name. The re-sync runs as a background job, so allow up to a minute and reload before judging.",
+          href: "/store/storefront",
+        },
         { key: "media-upload", label: "Uploading product images/video during listing works" },
         {
           key: "media-upload-preview-no-white-box",
@@ -3137,6 +3186,108 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "promo-banner-overlay",
           label: "The promotion/announcement banner overlays the top of the first homepage section (translucent strip) instead of pushing the page content down with extra vertical space",
+          href: "/",
+        },
+
+        // --- Homepage rework, 2026-09-01 -----------------------------------
+        // Every case below is written as an explicit BEFORE → AFTER. Almost
+        // every defect this rework fixed returned HTTP 200 with plausible
+        // content, so a case reading "check the hero works" would have passed
+        // against the bug.
+        {
+          key: "hero-slides-have-copy",
+          label:
+            "Every hero carousel slide shows a headline, a supporting line and a working CTA button on top of its background image",
+          description:
+            "BEFORE: all five active slides rendered as bare background images with NO text and NO button — HeroCarousel only draws copy when the slide has an `overlay` (or `cards`), and no seeded slide had either. AFTER: four slides carry an overlay and the first carries a three-card grid. A slide showing only a photo is a regression. Also confirm no slide shows BOTH a big centred headline AND a row of cards — those two layers stack on the same pixels and overlap.",
+          href: "/",
+        },
+        {
+          key: "homepage-single-h1",
+          label:
+            "The homepage has exactly ONE <h1> — the welcome hero headline. Carousel slide headlines are <h2>.",
+          description:
+            "Open DevTools → Console and run: document.querySelectorAll('h1').length — it must be 1. BEFORE: the welcome hero AND every carousel slide overlay each claimed <h1>, so the page had as many h1s as it had slides with titles. Run it again after clicking through all the slides; the count must stay 1.",
+          href: "/",
+        },
+        {
+          key: "homepage-section-order",
+          label:
+            "Homepage section order reads: welcome hero → promo carousel → trust bar → Shop by Category → Featured Products → Live Auctions → Pre-Orders → Bundles → Stores → Reviews, with stats / security / FAQ near the BOTTOM",
+          description:
+            "BEFORE: the platform stats band sat third (before a visitor had seen a single product) and the FAQ sat mid-page. AFTER the order follows marketplace-homepage research: orient, then shop, then reassure.",
+          href: "/",
+        },
+        {
+          key: "homepage-no-franchise-specific-strips",
+          label:
+            "The homepage has no brand-specific product strip, and no section copy names a single franchise",
+          description:
+            "BEFORE: two 'Takara-Tomy' / 'Beyblade' product rows plus a Beyblade banner. Both rows filtered the same shared 12-item featured set client-side, so they usually rendered EMPTY as well as being off-brand. AFTER: copy is catalogue-neutral throughout. NOTE: seeding does not delete documents — if either brand strip still appears, delete `section-brand-takara-tomy` and `section-brand-beyblade` at /admin/sections.",
+          href: "/",
+        },
+        {
+          key: "section-config-actually-renders",
+          label:
+            "A section's Subtitle and 'View all link label' set in /admin/sections actually appear on the homepage",
+          description:
+            "Edit Featured Products at /admin/sections: set Subtitle to 'TEST SUBTITLE' and View all link label to 'TEST LINK', save, then reload the homepage. BEFORE: the subtitle was configurable and never rendered, and every 'View all →' label was hardcoded in code, so neither change appeared. AFTER both must show.",
+          href: "/admin/sections",
+        },
+        {
+          key: "section-save-preserves-other-fields",
+          label:
+            "Saving one field on a homepage section does NOT blank that section's other settings",
+          description:
+            "At /admin/sections open Featured Products, note Max items and Sort by, change ONLY the Title, save, reload the page and re-open the same section. BEFORE: saving wrote the whole config map, so every field the builder has no input for was silently deleted — HTTP 200, no error. AFTER: every other value must be exactly as it was.",
+          href: "/admin/sections",
+        },
+        {
+          key: "carousel-toggles-take-effect",
+          label:
+            "Turning the hero carousel's dots / arrows / pause-on-hover off in /admin/sections actually turns them off on the homepage",
+          description:
+            "BEFORE: the entire carousel config was dropped by the renderer — dots, arrows, pause-on-hover, height and autoplay delay were all hardcoded on, so every one of these switches did nothing. AFTER each must take effect. Keyboard focus still pauses the carousel even with pause-on-hover OFF — that is deliberate (WCAG 2.2.2), not a bug.",
+          href: "/admin/sections",
+        },
+        {
+          key: "banner-buttons-from-config",
+          label:
+            "The seller CTA banner shows its two configured buttons ('Start selling →' and 'Browse the marketplace') and both navigate correctly",
+          description:
+            "BEFORE: the banner read ONLY `content.title` from config — its background image, subtitle, description, height and both buttons were ignored, and the CTA labels/links were hardcoded to Shop All Products / Browse Auctions regardless of what an admin configured. AFTER the configured buttons must render, and 'Start selling →' must land on /seller-guide.",
+          href: "/",
+        },
+        {
+          key: "trust-and-security-from-config",
+          label:
+            "The trust bar and the 'Security You Can Trust' section show the four seeded items each, not a generic built-in list",
+          description:
+            "Trust bar: Authenticity checked / Escrow-backed payments / Straightforward returns / Real human support. Security: Escrow on every order / Verified sellers only / Public scam registry / Encrypted personal data. BEFORE: both sections ignored their configured items entirely and always rendered a hardcoded fallback list.",
+          href: "/",
+        },
+        {
+          key: "homepage-newsletter-enter-key",
+          label:
+            "Typing an email into the homepage newsletter box and pressing ENTER subscribes — you do not have to click the button",
+          description:
+            "BEFORE: Enter did nothing at all. The Subscribe button carried both type=submit and an onClick, while the form preventDefault'd the native submit — so Enter fired `submit` (which was swallowed) and never the click handler. Mouse worked, keyboard did not.",
+          href: "/",
+        },
+        {
+          key: "footer-newsletter-inline-error",
+          label:
+            "Typing `not-an-email` into the FOOTER newsletter box and submitting shows an inline error under the field",
+          description:
+            "BEFORE: the footer form declared a validation schema but never ran it — the only check was 'not empty' — so `not-an-email` was sent to the server and came back as a toast. AFTER the error must appear inline, on the field, with no network request.",
+          href: "/",
+        },
+        {
+          key: "homepage-faq-structured-data",
+          label:
+            "The homepage HTML contains FAQPage structured data matching the FAQs actually shown in the FAQ section",
+          description:
+            "View source on / and search for `application/ld+json`. There must be a block with \"@type\":\"FAQPage\" whose questions match the ones rendered on the page. BEFORE: the homepage rendered an FAQ strip and emitted no page-level structured data at all. There must NOT be an ItemList/Carousel block — Google restricts those to category pages.",
           href: "/",
         },
       ],

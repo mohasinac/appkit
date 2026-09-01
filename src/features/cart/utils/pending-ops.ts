@@ -173,6 +173,29 @@ export function clearCartOps(): void {
   dispatchCartOpsChange();
 }
 
+/**
+ * Drop the queued ops for specific products, after their removal has already
+ * been applied server-side.
+ *
+ * Deliberately NOT `pushCartOp({ op: "remove", … })`. Every call site in the
+ * codebase pushes `op: "add"` only, so the queue's `remove` half is dead —
+ * and `useSyncManager`'s replay of a remove op calls `BY_ITEM_ID(op.productId)`,
+ * handing a productId to a route that looks up by `itemId`. Queueing a remove
+ * to express "this is already gone" would activate that latent 404.
+ *
+ * The op is what makes a cleared row re-appear (the cart page layers the queue
+ * over the server response on every render) and what makes `useSyncManager`
+ * re-POST it 30s later — so dropping it is the whole point, not bookkeeping.
+ */
+export function removeCartOpsFor(productIds: readonly string[]): void {
+  if (typeof window === "undefined" || productIds.length === 0) return;
+  const drop = new Set(productIds);
+  const ops = read<CartOp>(CART_OPS_KEY());
+  const kept = ops.filter((op) => !drop.has(op.productId));
+  if (kept.length === ops.length) return;
+  writeCartOps(kept);
+}
+
 /** Net quantity of unsynced "add" ops — layered on top of the server's
  *  authoritative itemCount so the header badge updates immediately instead
  *  of waiting for the next useSyncManager interval. Cart never queues

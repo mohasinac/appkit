@@ -19,6 +19,7 @@ import { BaseListingCard, Button, RichText, Row, Span, Stack, Text, TextLink } f
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
+import { CardStoreLine } from "../../products/components/CardStoreLine";
 
 export type MarketplacePreorderCardData = ProductItem;
 
@@ -211,6 +212,7 @@ export function MarketplacePreorderCard({
                 />
               )}
             </Row>
+            <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
             <Row align="center" gap="sm" wrap>
               <Text className="text-primary" size="sm" weight="bold">
                 {formatCurrency(product.price, getDefaultCurrency())}
@@ -236,6 +238,7 @@ export function MarketplacePreorderCard({
                 {product.title}
               </Text>
             </TextLink>
+            <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
             {product.description ? (
               <RichText
                 html={normalizeRichTextHtml(product.description)}

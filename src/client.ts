@@ -568,7 +568,10 @@ export { StoreAddonsPicker, hasAnyStoreAddon } from "./features/cart/index";
 export { clientLineTotal } from "./features/cart/utils/line-total";
 export type { PricedCartLine } from "./features/cart/utils/line-total";
 export type { CartPriceBreakdownData, CartPriceBreakdownStore, StoreAddonsValue, StoreAddonsRates } from "./features/cart/index";
-export { getCartOps, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
+// `clearCartOps` / `removeCartOpsFor` are exported because the cart page has to
+// drain the queue after a removal succeeds server-side — without them a cleared
+// row is re-layered onto the next render and re-POSTed by useSyncManager 30s later.
+export { getCartOps, clearCartOps, removeCartOpsFor, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
 export type { CartOp } from "./features/cart/utils/pending-ops";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
 // Multi-member cart lines — the client needs these to render a bundle's or a

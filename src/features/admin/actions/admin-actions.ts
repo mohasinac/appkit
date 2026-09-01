@@ -33,6 +33,7 @@ import {
   assertPrizeDrawNotLocked,
   assertPrizeDrawWonItemsImmutable,
 } from "../../../_internal/server/features/products/service";
+import { resolveStoreFields } from "../../../_internal/server/features/stores/denormalize";
 import { recordAdminAction } from "../../../_internal/server/features/audit-log/actions";
 import { AdminAuditActionValues } from "../../audit-log/schemas/firestore";
 
@@ -367,10 +368,19 @@ export async function adminCreateProduct(
   input: ProductCreateInput &
     Partial<Pick<ProductDocument, "storeId" | "storeName">>,
 ): Promise<ProductDocument> {
+  // Resolve the real store rather than falling back to the literal "Admin",
+  // which is not a seller and renders as one on every listing card. `storeSlug`
+  // is denormalized alongside so a card can link without a second read; both
+  // re-sync through the storeNameBackfill job when the store is renamed.
+  const storeFields = input.storeId
+    ? await resolveStoreFields(input.storeId, "/api/admin/products")
+    : null;
+
   const product = await productRepository.create({
     ...input,
     storeId: input.storeId,
-    storeName: input.storeName || "Admin",
+    storeName: input.storeName || storeFields?.storeName,
+    storeSlug: storeFields?.storeSlug,
   });
 
   serverLogger.info("adminCreateProduct", {
