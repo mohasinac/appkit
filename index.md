@@ -2,7 +2,7 @@
 
 Auto-generated inventory of code/config files with detected exported and internal symbols.
 
-Generated: 2026-09-01T00:02:07.131Z
+Generated: 2026-09-01T05:10:01.439Z
 Total indexed files: 2372
 
 | Name | Path | Usage / What Is Inside | Symbols (Exported + Internal) |
@@ -777,7 +777,7 @@ Total indexed files: 2372
 | AdminAnalyticsGuideView.tsx | src/features/admin/components/AdminAnalyticsGuideView.tsx | Feature-level UI/view composition | fn AdminAnalyticsGuideView |
 | AdminAnalyticsView.tsx | src/features/admin/components/AdminAnalyticsView.tsx | Feature-level UI/view composition | const busy, const ordersByMonth, const query, const resolvedData, const shouldFetch, const summary, const topProducts, fn AdminAnalyticsView, interface AdminAnalyticsViewLabels, interface AdminAnalyticsViewProps |
 | AdminArtView.tsx | src/features/admin/components/AdminArtView.tsx | Feature-level UI/view composition | const CONFIG_OPTS, const LISTING_TYPES, const scope, fn AdminArtView, type AdminArtViewProps, type config |
-| AdminAuditLogView.tsx | src/features/admin/components/AdminAuditLogView.tsx | Feature-level UI/view composition | const action, const ACTION_LABELS, const config, const openEntry, const parts, const raw, fn AdminAuditLogView, interface AdminAuditLogResponse, interface AuditLogRow, type AdminAuditLogViewProps, type AuditLogEntryDetail, type JsonArray, type JsonValue |
+| AdminAuditLogView.tsx | src/features/admin/components/AdminAuditLogView.tsx | Feature-level UI/view composition | const action, const ACTION_LABELS, const config, const openEntry, const parts, const raw, fn AdminAuditLogView, interface AdminAuditLogResponse, interface AuditLogRow, type AdminAuditLogViewProps, type AuditLogEntryDetail, type half, type JsonArray, type JsonValue |
 | AdminBidsView.tsx | src/features/admin/components/AdminBidsView.tsx | Feature-level UI/view composition | const cancelMutation, const config, const detailBadge, const isCancelled, const queryClient, fn AdminBidsView, interface AdminBidsResponse, interface BidRow, let an, type AdminBidsViewProps, type JsonArray, type JsonObject |
 | AdminBlogEditorView.tsx | src/features/admin/components/AdminBlogEditorView.tsx | Feature-level UI/view composition | const __O, const __P, const base, const CATEGORY_OPTIONS, const DEFAULT_DRAFT, const deleteModal, const deleteMutation, const formContent, const id, const isEdit, const isLoading, const issues, const p, const payload, const postQuery, const previewSection, const readTime, const readTimeMinutes, const res, const saveMutation, const sections, const STATUS_OPTIONS, const update, const v, fn AdminBlogEditorView, fn toDateInputValue, fn toSlug, interface AdminBlogEditorViewProps, interface BlogDraft, type FirestoreDocument, type JsonValue |
 | AdminBlogView.tsx | src/features/admin/components/AdminBlogView.tsx | Feature-level UI/view composition | const config, const FEATURED_TABS, const filterParts, fn AdminBlogView, interface AdminBlogResponse, interface BlogRow, type AdminBlogViewProps, type JsonArray |
