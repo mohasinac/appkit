@@ -2,7 +2,7 @@
 
 Auto-generated inventory of code/config files with detected exported and internal symbols.
 
-Generated: 2026-09-01T09:00:17.232Z
+Generated: 2026-09-01T09:28:09.909Z
 Total indexed files: 2372
 
 | Name | Path | Usage / What Is Inside | Symbols (Exported + Internal) |
@@ -1531,7 +1531,7 @@ Total indexed files: 2372
 | server.ts | src/features/pre-orders/server.ts | Feature module logic, hooks, types, or schemas | export GET, export POST, export preOrdersGET, export preOrdersPOST |
 | index.ts | src/features/pre-orders/types/index.ts | Feature module logic, hooks, types, or schemas | const diffDays, const now, const ship, fn getPreorderStatus, interface PreorderItem, type PreOrderItem, type PreorderStatus, type PreOrderStatus |
 | index.ts | src/features/products/actions/index.ts | Action orchestration and side effects | - |
-| product-actions.ts | src/features/products/actions/product-actions.ts | Action orchestration and side effects | const aTime, const AUCTIONS_PUBLISHED, const bTime, const compoundFilters, const docs, const items, const mergedFilters, const PREORDERS_PUBLISHED, const products, const PUBLISHED_CLAUSE, const sieve, fn getFeaturedAuctions, fn getFeaturedPreOrders, fn getFeaturedProducts, fn getLatestAuctions, fn getLatestPreOrders, fn getLatestProducts, fn getProductById, fn getRelatedProducts, fn getStoreStorefrontProducts, fn listAuctions, fn listPreOrders, fn listProducts, fn toListResult, interface ProductListActionParams, type ProductListResult |
+| product-actions.ts | src/features/products/actions/product-actions.ts | Action orchestration and side effects | const aTime, const AUCTIONS_PUBLISHED, const bTime, const compoundFilters, const docs, const items, const mergedFilters, const PREORDERS_PUBLISHED, const products, const PUBLISHED_CLAUSE, const result, const sieve, fn getFeaturedAuctions, fn getFeaturedPreOrders, fn getFeaturedProducts, fn getLatestAuctions, fn getLatestPreOrders, fn getLatestProducts, fn getProductById, fn getRelatedProducts, fn getStoreStorefrontProducts, fn listAuctions, fn listPreOrders, fn listProducts, fn toListResult, interface ProductListActionParams, type ProductListResult |
 | route.ts | src/features/products/api/[id]/route.ts | Feature module logic, hooks, types, or schemas | const afterStatus, const anyPrizeWon, const becameUnavailable, const beforeStatus, const DELETE, const ERR_DB_NOT_REGISTERED, const ERR_PRODUCT_NOT_FOUND, const isAdmin, const isModerator, const isOwner, const ownerStore, const PATCH, const prizeItems, const product, const productUpdateSchema, const repo, const sanitized, const slugResult, const UNAVAILABLE_PRODUCT_STATUSES, const updated, export productItemDELETE, export productItemGET, export productItemPATCH, fn GET, fn getRepo, let item, type ProductRecord, type RouteContext |
 | route.ts | src/features/products/api/route.ts | Feature module logic, hooks, types, or schemas | const body, const created, const data, const listingTypeParam, const payload, const POST, const productMutateSchema, const repo, const requestedTypes, const response, const result, const url, fn GET, fn param, type ProductRecord, type query |
 | index.ts | src/features/products/columns/index.ts | Feature module logic, hooks, types, or schemas | const cols, const columns, const PRODUCT_SORT_VALUES, const productAdminColumns, export getProductTableColumns, type ProductSortValue |
