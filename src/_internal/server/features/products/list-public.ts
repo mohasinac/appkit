@@ -708,6 +708,21 @@ export async function listPublicProducts(
       : undefined;
 
   if (pushdown) {
+    /*
+     * 🛑 This branch keeps a POST-pagination sandbox filter, knowingly.
+     *
+     * It exists to give the ended-listing archive real, unbounded-depth
+     * Firestore pagination, which is incompatible with the over-fetch the
+     * window path uses. So an anonymous page here can come back a row or two
+     * SHORT when a sandbox fixture lands in it — bounded by the ~25 fixtures
+     * that exist, and nothing like the empty page the default view produced,
+     * because real ended listings dominate this scope.
+     *
+     * Falling through to Path C instead would fix the short page and cost every
+     * anonymous visitor the deep pagination this branch was written for. The
+     * short page is the better trade; it is recorded here so the next reader
+     * knows it was weighed rather than missed.
+     */
     const filters = sieveAnd(safeFilters, clauseToSieve(pushdown, now));
     const result = await runQuery(executor, {
       filters,
@@ -829,8 +844,30 @@ export async function listPublicProducts(
   const hasTypeFacet = Object.keys(input.typeFacets ?? {}).length > 0;
   /** Multi-value `tags`/`features` — no `array-contains-any`, so per-row. */
   const hasArrayMultiSelect = (input.tags?.length ?? 0) > 1 || (input.features?.length ?? 0) > 1;
+  /*
+   * 🛑 The tester-sandbox filter must run BEFORE the page is sliced.
+   *
+   * It used to run only in `finish()`, which receives an already-paginated
+   * page — so a page whose rows were ALL sandbox fixtures came back empty with
+   * a non-zero `total`. That is not hypothetical: the fixtures carry
+   * `Date.now()`-relative dates by design (they have to re-arm on every
+   * reseed), so immediately after a seed load they are the newest rows in the
+   * collection and fill the whole first page of the default `-createdAt` sort.
+   * The public catalogue returned `items: []` alongside `total: 79`.
+   *
+   * So an anonymous viewer forces the bounded-window path, where the filter is
+   * one more per-row predicate applied before the slice. That is already the
+   * default for public browsing (`wantAvailable`), so this widens the window
+   * path only for the non-default scopes.
+   */
+  const hidesTestData =
+    filterTestDataForViewer([{ isTestData: true }], opts?.viewer).length === 0;
   const inMemory =
-    wantAvailable || hasTypeFacet || hasArrayMultiSelect || (hasDateRange && !canPushDate);
+    wantAvailable ||
+    hasTypeFacet ||
+    hasArrayMultiSelect ||
+    hidesTestData ||
+    (hasDateRange && !canPushDate);
 
   // When a date range stays in memory, fetch in whichever direction front-loads
   // the rows that will PASS it: `dateFrom` (">=", still live) wants the most
@@ -873,6 +910,10 @@ export async function listPublicProducts(
     };
 
     const filtered = items.filter((item) => {
+      // Before the slice — see the note on `hidesTestData` above.
+      if (hidesTestData && (item as { isTestData?: boolean }).isTestData === true) {
+        return false;
+      }
       if (wantAvailable && !isListingRowAvailable(item, now)) return false;
       if (hasArrayMultiSelect) {
         if ((input.tags?.length ?? 0) > 1 && !matchesAny(item[PRODUCT_FIELDS.TAGS], input.tags!)) {
