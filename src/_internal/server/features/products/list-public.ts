@@ -1051,6 +1051,14 @@ export async function listStoreProducts(
   listingTypes: readonly string[],
   searchParams: URLSearchParams | Record<string, string | string[] | undefined> = {},
   defaults?: { pageSize?: number; sorts?: string },
+  /*
+   * Forwarded, because dropping it made three capabilities unreachable from
+   * every store tab: the viewer (sandbox visibility), `enabledListingTypes` (a
+   * type an admin has switched OFF still rendered its tab's rows), and the
+   * pinned `now`. The wrapper accepted none of them, so no caller could pass
+   * them however much it wanted to.
+   */
+  opts?: PublicProductListOptions,
 ): Promise<PublicProductListResult | null> {
   return listPublicProducts({
     ...parsePublicProductParams(searchParams, {
@@ -1062,7 +1070,7 @@ export async function listStoreProducts(
     // The route owns the store identity — a `?storeId=` in the URL must not be
     // able to make one store's tab render another store's inventory.
     storeId,
-  });
+  }, opts);
 }
 
 /**
