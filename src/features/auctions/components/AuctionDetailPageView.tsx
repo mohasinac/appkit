@@ -232,7 +232,10 @@ function renderAuctionStoreReviews(storeSlug: string | undefined) {
  */
 function toRelatedAuctionCards(
   relatedDocs: FirestoreDocument[],
-  currentId: unknown,
+  // The current auction's own id, so it is excluded from its own related list.
+  // Typed as the document id it is compared against, not `unknown` — a bare
+  // `unknown` here silently permits comparing against anything.
+  currentId: FirestoreDocument["id"],
   now: Date,
 ): MarketplaceAuctionCardData[] {
   return relatedDocs

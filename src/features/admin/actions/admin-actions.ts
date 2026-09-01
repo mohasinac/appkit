@@ -36,6 +36,7 @@ import {
 import { resolveStoreFields } from "../../../_internal/server/features/stores/denormalize";
 import { recordAdminAction } from "../../../_internal/server/features/audit-log/actions";
 import { AdminAuditActionValues } from "../../audit-log/schemas/firestore";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const ERR_UID_REQUIRED = "uid is required";
 
@@ -373,7 +374,7 @@ export async function adminCreateProduct(
   // is denormalized alongside so a card can link without a second read; both
   // re-sync through the storeNameBackfill job when the store is renamed.
   const storeFields = input.storeId
-    ? await resolveStoreFields(input.storeId, "/api/admin/products")
+    ? await resolveStoreFields(input.storeId, ADMIN_ENDPOINTS.PRODUCTS)
     : null;
 
   const product = await productRepository.create({
