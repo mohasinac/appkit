@@ -45,7 +45,7 @@ export async function BundlesListView({
   const visible = hidePublicTestData(all);
   const bundles = storeId
     ? visible.filter((c) => c.createdByStoreId === storeId)
-    : all;
+    : visible;
 
   return (
     <Main>

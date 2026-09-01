@@ -4,6 +4,7 @@ import { mediaUrlSchema } from "../../../validation/schemas";
 import { serverLogger } from "../../../monitoring";
 import { blogRepository } from "../repository/blog.repository";
 import { coerceMediaField, getMediaUrl, type MediaField } from "../../../utils";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import {
   finalizeStagedMediaField,
   finalizeStagedMediaObject,
@@ -177,7 +178,7 @@ export async function getFeaturedBlogPosts(
     { featuredOnly: true },
     { sorts: sortBy("publishedAt", "DESC"), page: 1, pageSize: count },
   );
-  return result.items;
+  return hidePublicTestData(result.items);
 }
 
 export async function getLatestBlogPosts(

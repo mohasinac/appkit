@@ -35,6 +35,7 @@ import type {
   EventEntryDocument,
 } from "../schemas";
 import type { EventStatus } from "../types";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -270,12 +271,14 @@ export async function listPublicEvents(
   }
 
   const base = "status==active";
-  return eventRepository.list({
+  const result = await eventRepository.list({
     filters: filters ? `${base},${filters}` : base,
     sorts: sorts ?? "startsAt",
     page,
     pageSize,
   });
+  // PUBLIC by name — it backs the homepage strip and /events.
+  return { ...result, items: hidePublicTestData(result.items) };
 }
 
 export async function getPublicEventById(

@@ -1,5 +1,6 @@
 import { serverLogger } from "../../../monitoring";
 import { categoriesRepository } from "../repository/categories.repository";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import type {
   CategoryCreateInput,
   CategoryDocument,
@@ -77,7 +78,7 @@ export async function listTopLevelCategories(
   limit = 12,
 ): Promise<CategoryDocument[]> {
   const all = await categoriesRepository.getCategoriesByTier(0);
-  return all
+  return hidePublicTestData(all)
     .filter((c) => c.isActive !== false)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .slice(0, limit);
@@ -87,7 +88,9 @@ export async function listBrandCategories(
   limit = 12,
 ): Promise<CategoryDocument[]> {
   const brands = await categoriesRepository.getBrandCategories();
-  return brands.filter((c) => c.isActive !== false).slice(0, limit);
+  return hidePublicTestData(brands)
+    .filter((c) => c.isActive !== false)
+    .slice(0, limit);
 }
 
 export async function getCategoryById(

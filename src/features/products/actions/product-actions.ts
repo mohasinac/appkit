@@ -6,6 +6,7 @@ import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-na
 import { productRepository } from "../repository/products.repository";
 import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -64,7 +65,14 @@ export async function listProducts(
     pageSize,
   };
 
-  return productRepository.list(sieve, { categoriesIn });
+  /*
+   * Fail-closed. This is reachable as a SERVER ACTION — invocable straight from
+   * a browser — so it is a public surface whoever happens to call it today.
+   * `getFeaturedProducts` and friends already route through
+   * `listPublicProducts`, which filters; this generic path did not.
+   */
+  const result = await productRepository.list(sieve, { categoriesIn });
+  return { ...result, items: hidePublicTestData(result.items) };
 }
 
 export async function getProductById(
