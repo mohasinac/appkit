@@ -24,6 +24,7 @@ import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/sh
 import { siteSettingsRepository } from "../../../repositories";
 import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -76,7 +77,10 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     // all active bundle rows; the carousel filters by category affinity.
     categoriesIn
       ? safeRead(
-          () => categoriesRepository.listByType("bundle", { activeOnly: true, limit: 50 }),
+          () =>
+            categoriesRepository
+              .listByType("bundle", { activeOnly: true, limit: 50 })
+              .then(hidePublicTestData),
           { route: "/categories/[slug]", key: "category.bundles", fallback: [] },
         )
       : Promise.resolve([]),

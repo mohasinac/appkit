@@ -12,6 +12,7 @@ import { productRepository } from "../../../../repositories";
 import { safeRead } from "../../../../errors/safe-read";
 import type { CategoryDocument } from "../../../../features/categories/schemas";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import { hidePublicTestData } from "../tester/visibility";
 
 export interface BundleDataOptions {
   /** Reserved for future overrides. */
@@ -199,7 +200,7 @@ export const listFeaturedBundles = cache(
         fallback: [],
       },
     );
-    return all;
+    return hidePublicTestData(all);
   },
 );
 
@@ -225,6 +226,8 @@ export const getRelatedBundles = cache(
         fallback: [],
       },
     );
-    return all.filter((b) => b.id !== bundle.id).slice(0, limit);
+    return hidePublicTestData(all)
+      .filter((b) => b.id !== bundle.id)
+      .slice(0, limit);
   },
 );

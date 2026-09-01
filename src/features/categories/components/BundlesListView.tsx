@@ -4,6 +4,7 @@ import { Container, Heading, Main, Section, Text } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { safeRead } from "../../../errors/safe-read";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -41,8 +42,9 @@ export async function BundlesListView({
     { route: "/bundles", key: "categories.listByType(bundle)", fallback: [] },
   );
 
+  const visible = hidePublicTestData(all);
   const bundles = storeId
-    ? all.filter((c) => c.createdByStoreId === storeId)
+    ? visible.filter((c) => c.createdByStoreId === storeId)
     : all;
 
   return (

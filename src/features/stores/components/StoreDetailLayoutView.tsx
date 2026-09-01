@@ -107,6 +107,8 @@ export async function StoreDetailLayoutView({
   const [listingCounts, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
         listingTabCounts(STORE_PAGE_TABS, { storeId }),
+        // audit-public-test-data-ok: a COUNT of the store's own coupons, and
+        // `CouponDocument` carries no isTestData field — there is nothing to strip.
         couponsRepository
           .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("validity.isActive", SIEVE_OP.EQ, "true")), page: 1, pageSize: 1 })
           .then((r) => r.total)

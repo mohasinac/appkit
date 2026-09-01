@@ -4,6 +4,7 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { StoresIndexListing } from "./StoresIndexListing";
 import { safeRead } from "../../../errors/safe-read";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -25,6 +26,14 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
     () => storeRepository.listStores({ page, pageSize, sorts: sort }, true),
     { route: "/stores", key: "stores.listStores", fallback: null },
   );
+  /*
+   * The API already filters this; the SSR page called the repository directly
+   * and did not, so the first paint rendered a card for `store-tester-sandbox`
+   * while the client refetch dropped it.
+   */
+  const publicResult = result
+    ? { ...result, items: hidePublicTestData(result.items) }
+    : result;
 
   return (
     <Main>
@@ -34,7 +43,7 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
             Stores
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <StoresIndexListing initialData={result ?? undefined} />
+          <StoresIndexListing initialData={publicResult ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

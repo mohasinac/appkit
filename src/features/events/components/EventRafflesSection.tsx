@@ -12,6 +12,7 @@ import type { EventRafflesSectionConfig } from "../../homepage/schemas/firestore
 import { eventRepository } from "../repository/events.repository";
 import { EventCard } from "./EventCard";
 import type { EventItem } from "../types";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 export interface EventRafflesSectionProps {
   config: EventRafflesSectionConfig;

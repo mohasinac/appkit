@@ -44,6 +44,10 @@ export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPa
   const page = Number(sp(searchParams, "page")) || 1;
   const filters = buildReviewFilters(searchParams);
 
+  // audit-public-test-data-ok: `ReviewDocument` carries no `isTestData` field —
+  // tsc rejects the filter outright, which is the honest signal that reviews
+  // have no sandbox concept to strip. A review OF a sandbox product is not
+  // flagged today; that is a seed-schema gap, not something a cast should hide.
   const result = await safeRead(
     () => reviewRepository.listAll({ filters, sorts: sort, page, pageSize: 12 }),
     { route: "/reviews", key: "reviews.listAll", fallback: null },

@@ -5,6 +5,8 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
 import type { CategoryItem } from "../types";
+import { safeRead } from "../../../errors/safe-read";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -43,16 +45,25 @@ export async function CategoriesIndexPageView({ searchParams = {} }: CategoriesI
   const page = Number(sp(searchParams, "page")) || 1;
   const filters = buildCategoryFilters(searchParams);
 
-  const result = await categoriesRepository
-    .list({
-      page,
-      pageSize: 200,
-      sorts: sort,
-      ...(filters ? { filters } : {}),
-    })
-    .catch(() => null);
+  const result = await safeRead(
+    () =>
+      categoriesRepository.list({
+        page,
+        pageSize: 200,
+        sorts: sort,
+        ...(filters ? { filters } : {}),
+      }),
+    { route: "/categories", key: "categories.list", fallback: null },
+  );
 
-  const initialData = (result?.items ?? []) as unknown as CategoryItem[];
+  /*
+   * This one page carries THREE entity kinds — categories, brands and bundles
+   * are all `CategoryDocument` rows discriminated by `categoryType` — so a
+   * single unfiltered read published sandbox fixtures of all three.
+   */
+  const initialData = hidePublicTestData(
+    (result?.items ?? []) as unknown as (CategoryItem & { isTestData?: boolean })[],
+  ) as unknown as CategoryItem[];
 
   return (
     <Main>

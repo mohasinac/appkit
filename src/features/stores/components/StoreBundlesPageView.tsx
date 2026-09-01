@@ -3,6 +3,7 @@ import { categoriesRepository } from "../../../repositories";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { CategoryBundlesListing } from "../../categories/components/CategoryBundlesListing";
 import { safeRead } from "../../../errors/safe-read";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 export interface StoreBundlesPageViewProps {
   storeSlug: string;
@@ -40,5 +41,10 @@ export async function StoreBundlesPageView({
     },
   );
 
-  return <CategoryBundlesListing initialBundles={bundles} onBuyNow={onBuyNow} />;
+  return (
+    <CategoryBundlesListing
+      initialBundles={hidePublicTestData(bundles)}
+      onBuyNow={onBuyNow}
+    />
+  );
 }

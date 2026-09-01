@@ -25,6 +25,7 @@ import { siteSettingsRepository } from "../../../repositories";
 import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -70,7 +71,10 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     // no dedicated repository query needed at this catalog's bundle volume.
     brand?.slug
       ? safeRead(
-          () => categoriesRepository.listByType("bundle", { activeOnly: true, limit: 50 }),
+          () =>
+            categoriesRepository
+              .listByType("bundle", { activeOnly: true, limit: 50 })
+              .then(hidePublicTestData),
           { route: "/brands/[slug]", key: "brand.bundles", fallback: [] },
         )
       : Promise.resolve([]),
@@ -78,7 +82,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     // `as unknown` is load-bearing only because CategoryDocument.createdAt is a
     // Date while CategoryItem.createdAt is a string — a pre-existing mismatch
     // the old `.catch(() => [])` union happened to paper over.
-    safeRead(() => categoriesRepository.findActiveBrands(), {
+    safeRead(() => categoriesRepository.findActiveBrands().then(hidePublicTestData), {
       route: "/brands/[slug]",
       key: "brand.relatedBrands",
       fallback: [],

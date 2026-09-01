@@ -6,6 +6,8 @@ import { EventsIndexListing } from "./EventsIndexListing";
 import { EVENT_FIELDS } from "../../../constants/field-names";
 import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
 import { sortBy } from "../../../constants/sort";
+import { safeRead } from "../../../errors/safe-read";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -53,17 +55,30 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
   const filters = buildEventFilters(searchParams);
 
   const [result, facetCounts] = await Promise.all([
-    eventRepository
-      .list({ filters, sorts: sort, page, pageSize })
-      .catch(() => null),
+    safeRead(() => eventRepository.list({ filters, sorts: sort, page, pageSize }), {
+      route: "/events",
+      key: "events.list",
+      fallback: null,
+    }),
     // Facet counts are deliberately NOT narrowed by the shopper's own type or
     // status selection: a count that shrank to zero as you ticked boxes would
     // hide the very facet you'd need to untick. They answer "does this kind of
     // event exist at all", which is the question that decides visibility.
-    eventRepository
-      .facetCountsForTypesAndStatuses()
-      .catch(() => ({}) as Record<string, number | undefined>),
+    safeRead(() => eventRepository.facetCountsForTypesAndStatuses(), {
+      route: "/events",
+      key: "events.facetCounts",
+      fallback: {} as Record<string, number | undefined>,
+    }),
   ]);
+
+  /*
+   * Sandbox events are seeded as ordinary public rows so testers exercise the
+   * real browse path; they must not reach anyone else's first paint. The client
+   * refetch threads the real viewer, so a signed-in tester still sees them.
+   */
+  const publicResult = result
+    ? { ...result, items: hidePublicTestData(result.items) }
+    : result;
 
   return (
     <Main>
@@ -73,7 +88,7 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
             Events
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <EventsIndexListing initialData={result} facetCounts={facetCounts} />
+          <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

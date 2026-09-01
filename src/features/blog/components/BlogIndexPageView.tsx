@@ -5,6 +5,7 @@ import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
 import type { BlogPostCategory, BlogListResponse } from "../types";
 import { safeRead } from "../../../errors/safe-read";
+import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -31,16 +32,20 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
       ),
     { route: "/blog", key: "blogPosts.listPublished", fallback: null },
   );
+  // Sandbox posts are public rows by design — not on someone else's first paint.
+  const publicSieve = sieveResult
+    ? { ...sieveResult, items: hidePublicTestData(sieveResult.items) }
+    : sieveResult;
 
-  const initialData: BlogListResponse | undefined = sieveResult
+  const initialData: BlogListResponse | undefined = publicSieve
     ? {
-        posts: sieveResult.items as any,
+        posts: publicSieve.items as any,
         meta: {
-          total: sieveResult.total,
-          page: sieveResult.page,
-          pageSize: sieveResult.pageSize,
-          totalPages: sieveResult.totalPages,
-          hasMore: sieveResult.hasMore,
+          total: publicSieve.total,
+          page: publicSieve.page,
+          pageSize: publicSieve.pageSize,
+          totalPages: publicSieve.totalPages,
+          hasMore: publicSieve.hasMore,
         },
       }
     : undefined;

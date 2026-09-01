@@ -9,6 +9,7 @@ import {
 } from "../../../shared/features/stores/config";
 import { makeGetStoreListingsInitial } from "../shared/listing-data-factory";
 import { safeRead } from "../../../../errors/safe-read";
+import { hidePublicTestData } from "../tester/visibility";
 
 /** Full store document by slug — deduped per request via React.cache(). */
 export const getStoreForDetail = cache(
@@ -37,6 +38,11 @@ export const listSitemapStores = cache(
         ),
       { route: "sitemap/stores", key: "stores.listStores", fallback: null },
     );
-    return (result?.items ?? []).map(({ storeSlug, updatedAt }) => ({ storeSlug, updatedAt }));
+    // A sandbox store in the SITEMAP is the longest-lived form of this leak:
+    // a crawler keeps the URL long after the fixture is pruned.
+    return hidePublicTestData(result?.items ?? []).map(({ storeSlug, updatedAt }) => ({
+      storeSlug,
+      updatedAt,
+    }));
   },
 );
