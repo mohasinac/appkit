@@ -152,8 +152,15 @@ export async function PolicyPageView({
           />
         ) : (
           <>
-            {/* Intro */}
-            {t("intro") && (
+            {/*
+             * Intro — `t.has()`, never `t("intro") &&`.
+             *
+             * On a missing key next-intl logs MISSING_MESSAGE and RETURNS THE
+             * KEY PATH, which is always truthy — so the old guard could never
+             * be false and rendered the literal string "terms.intro" on the
+             * page. `terms` was the one namespace of six that lacked the key.
+             */}
+            {t.has("intro") && (
               <Text variant="secondary" className="mb-10 leading-relaxed" size="base">
                 {t("intro")}
               </Text>

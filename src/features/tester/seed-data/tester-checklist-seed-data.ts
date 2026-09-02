@@ -136,6 +136,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/user/settings",
       cases: [
         { key: "edit-profile", label: "Editing display name / bio saves correctly", href: "/user/profile" },
+        {
+          key: "user-pages-signed-out-redirect",
+          label: "Opening /user/profile in a signed-out private window shows the login redirect — never another user's data, and never a permanently-stuck spinner",
+          description:
+            "Changed 2026-09-02. BEFORE: every /user/* route was server-rendered per request because of a `force-dynamic` export. AFTER: those 25 routes are prerendered to a static shell and the session hydrates client-side. The shell was verified to contain no uid, email, displayName or storeId — this case is the human confirmation of that, plus the UX question it raises. In a private window: open /user/profile, /user/orders and /user/bids. Each must show chrome plus a brief loading state and then redirect to login. Two distinct failures to watch for: (a) ANY trace of a real account (a name, an email, an order) — that would be a serious leak, fail immediately; (b) a spinner that never resolves. A short flash before the redirect is expected and is the tradeoff being evaluated — note in your comment whether it feels acceptable.",
+          href: "/user/profile",
+        },
         { key: "avatar-upload", label: "Uploading a profile avatar works" },
         { key: "notification-prefs", label: "Notification preferences save correctly" },
         { key: "public-profile-toggle", label: "Public profile visibility toggle works" },
@@ -4122,6 +4129,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             href: "/blog/spot-genuine-takara-tomy-beyblade",
           },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
+          {
+            key: "maintenance-error-lists-have-rows",
+            label: "/admin/maintenance/server-errors lists actual error rows — it is NOT empty",
+            description:
+              "Found 2026-09-02. BEFORE: the three composite indexes behind these pages were declared `occurredAt ASCENDING` while the query orders `desc`, so every one of them returned `9 FAILED_PRECONDITION` and the page 500'd. The pages carried `force-dynamic`, so the build never exercised them and nobody noticed. AFTER: the index direction is corrected AND the read is wrapped in safeRead. 🛑 That combination means a still-undeployed index now looks like an EMPTY LIST rather than an error — so \"the page loads\" is NOT a pass here. Trigger a real error first (hit any admin API with a bad payload, or open a 404'd route), then reload /admin/maintenance/server-errors and confirm at least one row appears. Repeat on /client-errors and /payment-rollbacks. If all three are empty while errors are definitely being recorded, the indexes have not been deployed.",
+            href: "/admin/maintenance/server-errors",
+          },
+          {
+            key: "maintenance-cloud-logs-degrades",
+            label: "/admin/maintenance/cloud-logs renders the page shell even when Google Cloud Logging is unreachable",
+            description:
+              "Found 2026-09-02: this is the only page in the app calling a Google Cloud API rather than Firestore, and the call was unguarded — a permission or outage error took the whole page down (and failed the production build). It now degrades to an empty list and records a DEGRADED_READ. Confirm the page renders its heading and empty state rather than an error boundary.",
+            href: "/admin/maintenance/cloud-logs",
+          },
           { key: "copilot-admin", label: "Admin copilot page works correctly", href: "/admin/copilot" },
           { key: "team-admin", label: "Admin team page works correctly", href: "/admin/team" },
           {

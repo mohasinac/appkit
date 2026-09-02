@@ -9186,7 +9186,7 @@
         },
         {
           "fieldPath": "occurredAt",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     },
@@ -9214,7 +9214,7 @@
         },
         {
           "fieldPath": "occurredAt",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     },
