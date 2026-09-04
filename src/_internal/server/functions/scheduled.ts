@@ -30,7 +30,6 @@ import {
   dailyStatusDigestHandler,
   weeklyPayoutEligibilityHandler,
   testerSandboxCleanupHandler,
-  testerSandboxRefreshHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -239,13 +238,13 @@ export const testerSandboxCleanup = defineFunction({
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
-export const testerSandboxRefresh = defineFunction({
-  name: "testerSandboxRefresh",
-  description: "Revert live tester QA sandbox fixtures to their canonical seed shape and prune tester-created extras (every 4 hours).",
-  trigger: { kind: "schedule", cron: "0 */4 * * *", timeZone: "UTC" },
-  handler: testerSandboxRefreshHandler,
-  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
-});
+// testerSandboxRefresh (every 4h: revert fixtures to seed shape, prune extras) was
+// REMOVED. The tester runner now owns fixture state — it seeds a known catalog at the
+// start of a run and wipes at the end — so a background job independently rewriting
+// those same documents was redundant and, worse, raced a run in progress: it reset
+// currentBid and recomputed auctionEndDate underneath a test that was mid-assertion.
+// Do not reinstate it without also deciding who owns fixture state; two owners is the
+// bug it caused. See tester/scripts/lifecycle.mjs.
 
 export const prizeDrawExpiryReveal = defineFunction({
   name: "prizeDrawExpiryReveal",
@@ -304,7 +303,6 @@ export const SCHEDULED_FUNCTIONS = [
   mediaTmpCleanup,
   draftPrune,
   testerSandboxCleanup,
-  testerSandboxRefresh,
   prizeDrawExpiryReveal,
   bundleStockSync,
   emiInstallmentReminder,

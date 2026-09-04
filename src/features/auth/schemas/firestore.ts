@@ -98,6 +98,13 @@ export interface UserDocument extends BaseDocument {
   // `role`. Meaningless unless isTester is also true.
   canTestAdmin?: boolean;
 
+  // Automated (non-human) account. Set on `user-claude-tester`, the identity the
+  // Claude-driven checklist runner answers as. It grants nothing — its only job is to
+  // keep a bot off the PUBLIC Bug Hunters leaderboard, which exists to credit people.
+  // Bot findings are still confirmable and still credit-stamped on the item; they just
+  // do not compete with humans for public credit. See getBugHunterLeaderboard().
+  isBot?: boolean;
+
   // Public profile settings
   publicProfile?: {
     isPublic: boolean;

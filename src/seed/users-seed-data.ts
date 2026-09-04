@@ -1,11 +1,16 @@
 /*
- * WHY: Provides 18 seed user accounts covering all marketplace roles and demographics.
- * WHAT: Exports 18 UserDocument partials — 1 admin, 2 sellers (store owners, one of which
- *       is also the dedicated isTester QA account), 15 buyers.
+ * WHY: Provides 21 seed user accounts covering all marketplace roles and demographics.
+ * WHAT: Exports 21 UserDocument partials — 1 admin, 2 sellers (store owners, one of which
+ *       is also the dedicated isTester QA account), 15 buyers, 1 automated tester
+ *       (`user-claude-tester`, isBot), and 2 employees on contrasting permission presets.
  *       All passwords are TempPass123! in the Firebase Auth emulator. UIDs match slugs.
  *
+ *       🛑 seed-cli sets that password ONLY when it creates the Auth record. A re-seed
+ *       never resets an existing password, so an account whose password was changed
+ *       stays changed and must be reset explicitly.
+ *
  * EXPORTS:
- *   usersSeedData — array of 18 Partial<UserDocument> objects for the seed runner
+ *   usersSeedData — array of 21 Partial<UserDocument> objects for the seed runner
  *
  * @tag domain:users,auth
  * @tag layer:seed
@@ -17,6 +22,7 @@
 
 import { getDefaultPhonePrefix } from "./seed-market-config";
 import type { UserDocument } from "../features/auth/schemas";
+import { PERMISSION_GROUPS } from "../features/auth/permissions/constants";
 import { USER_FIELDS } from "../constants/field-names";
 import { seedPhoto } from "./_helpers/media";
 
@@ -543,5 +549,104 @@ export const usersSeedData: Partial<UserDocument>[] = [
     metadata: { lastSignInTime: daysAgo(1), creationTime: daysAgo(1).toISOString(), loginCount: 5 },
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),
+  },
+
+  // ── Automated tester (the Claude-driven checklist runner answers as this account) ──
+  // `canTestAdmin` is REQUIRED, not decorative: 116 checklist cases are adminOnly and
+  // GET/PUT /api/user/tester-checklist 404s them for a caller without it, so the runner
+  // would silently see a shorter catalog than a human tester does.
+  // `isBot` keeps it off the public Bug Hunters leaderboard — see getBugHunterLeaderboard().
+  {
+    uid: "user-claude-tester",
+    email: "claude-tester@letitrip.in",
+    phoneNumber: `${_ph}9999900019`,
+    phoneVerified: true,
+    displayName: "Claude (automated)",
+    photoURL: seedPhoto("user-avatar-claude-tester-20260101", 400, 400),
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    isTester: true,
+    canTestAdmin: true,
+    isBot: true,
+    emailVerified: true,
+    disabled: false,
+    storeId: "store-tester-qa-seller",
+    storeSlug: "store-tester-qa-seller",
+    storeStatus: "approved",
+    publicProfile: {
+      isPublic: false,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Automated tester. Works the tester checklist against a freshly seeded catalog and records a verdict per case.",
+      location: "Bengaluru, Karnataka",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: { lastSignInTime: daysAgo(1), creationTime: daysAgo(1).toISOString(), loginCount: 1 },
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── Employees: two contrasting permission presets ───────────────────────────
+  // These exist so the sidebar-scoping checklist cases can be tested AT ALL. Before
+  // this the seed had no `role: "employee"` account anywhere, so the case the
+  // checklist itself marks "🛑 THE BIG ONE" — an employee must see only what their
+  // permissions allow, not all 91 admin entries — had nothing to sign in as.
+  //
+  // `permissions` is the load-bearing field (it is what the RBAC checks read);
+  // `permissionGroup` is display-only. Both are set from the same preset so they
+  // cannot disagree. Two presets on purpose: one narrow, one broad — a scoping bug
+  // that happens to produce the right count for one group is caught by the other.
+  {
+    uid: "user-employee-blog",
+    email: "employee-blog@letitrip.in",
+    phoneNumber: `${_ph}9999900020`,
+    phoneVerified: true,
+    displayName: "Mock Employee 1",
+    photoURL: seedPhoto("user-avatar-employee-blog-20260101", 400, 400),
+    role: USER_FIELDS.ROLE_VALUES.EMPLOYEE,
+    permissionGroup: "blog_poster",
+    permissions: [...PERMISSION_GROUPS.blog_poster],
+    emailVerified: true,
+    disabled: false,
+    publicProfile: {
+      isPublic: false,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Content employee — blog and media only.",
+      location: "Pune, Maharashtra",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: { lastSignInTime: daysAgo(2), creationTime: daysAgo(30).toISOString(), loginCount: 12 },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(2),
+  },
+  {
+    uid: "user-employee-trust",
+    email: "employee-trust@letitrip.in",
+    phoneNumber: `${_ph}9999900021`,
+    phoneVerified: true,
+    displayName: "Mock Employee 2",
+    photoURL: seedPhoto("user-avatar-employee-trust-20260101", 400, 400),
+    role: USER_FIELDS.ROLE_VALUES.EMPLOYEE,
+    permissionGroup: "trust_and_safety",
+    permissions: [...PERMISSION_GROUPS.trust_and_safety],
+    emailVerified: true,
+    disabled: false,
+    publicProfile: {
+      isPublic: false,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Trust & Safety employee — users, bans, reviews and reports.",
+      location: "Chennai, Tamil Nadu",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: { lastSignInTime: daysAgo(2), creationTime: daysAgo(60).toISOString(), loginCount: 40 },
+    createdAt: daysAgo(60),
+    updatedAt: daysAgo(2),
   },
 ];

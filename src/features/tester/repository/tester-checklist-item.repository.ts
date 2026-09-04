@@ -2,6 +2,7 @@ import { BaseRepository, parseSieveDateValue } from "../../../providers/db-fireb
 import { buildSearchTxt } from "../../../utils/search-txt";
 import type { FirebaseSieveFields, FirebaseSieveResult, SieveModel } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
+import { USER_COLLECTION } from "../../auth/schemas/firestore";
 import {
   TESTER_CHECKLIST_ITEM_COLLECTION,
   TESTER_CHECKLIST_ITEM_FIELDS,
@@ -125,19 +126,45 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     return newItem;
   }
 
+  /**
+   * Ids of automated (non-human) accounts, excluded from the PUBLIC leaderboard.
+   *
+   * Read as a bare collection query rather than through `userRepository` on purpose:
+   * no repository in this codebase imports another, and this needs a key set, not
+   * user documents. `.select()` with no fields returns refs only, so the read is as
+   * cheap as Firestore allows, and `isBot == true` is a single-field equality served
+   * by the automatic index — no composite index to declare.
+   */
+  private async botHunterIds(): Promise<Set<string>> {
+    const snapshot = await this.db
+      .collection(USER_COLLECTION)
+      .where("isBot", "==", true)
+      .select()
+      .get();
+    return new Set(snapshot.docs.map((d) => d.id));
+  }
+
   /** Single-query, in-memory aggregation of bug credits per hunter — mirrors
    * EventEntryRepository.getLeaderboard()'s shape. Includes old/disabled/
-   * superseded items, since bug credit is permanent. */
+   * superseded items, since bug credit is permanent.
+   *
+   * Bot accounts are aggregated out (not merely ranked last): the board exists to
+   * credit people, and a runner working all 943 cases would otherwise dominate it.
+   * The credit still lives on the item, so admin triage and the item's own
+   * `bugHunterName` are unaffected. */
   async getBugHunterLeaderboard(limit = 50): Promise<BugHunterLeaderboardEntry[]> {
-    const snapshot = await this.db
-      .collection(this.collection)
-      .where(TESTER_CHECKLIST_ITEM_FIELDS.BUG_CONFIRMED, "==", true)
-      .get();
+    const [snapshot, botIds] = await Promise.all([
+      this.db
+        .collection(this.collection)
+        .where(TESTER_CHECKLIST_ITEM_FIELDS.BUG_CONFIRMED, "==", true)
+        .get(),
+      this.botHunterIds(),
+    ]);
 
     const byHunter = new Map<string, { name: string; count: number }>();
     for (const doc of snapshot.docs) {
       const item = this.mapDoc<TesterChecklistItemDocument>(doc);
-      if (!item.bugHunterId) continue;
+      if (!item.bugHunterId || botIds.has(item.bugHunterId)) continue;
       const entry = byHunter.get(item.bugHunterId) ?? {
         name: item.bugHunterName ?? "Unknown tester",
         count: 0,

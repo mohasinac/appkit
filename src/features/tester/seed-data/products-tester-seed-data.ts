@@ -5,12 +5,16 @@
  *      pre-ordering against real code paths — including navigating every entry of the store
  *      detail page's listing-type dropdown (see StoreNavTabs). Auto-expires after 7 days
  *      (testerSandboxCleanup cascades into any bids on the auction).
- * WHAT: Exports productsTesterSeedData — 2 standard + 4 auction (3 staggered 1h/2h/3h "still
- *       open" cycling fixtures + 1 already-ended "won" fixture) + 1 pre-order + 1 prize-draw +
+ * WHAT: Exports productsTesterSeedData — 2 standard + 4 auction (3 staggered "still open"
+ *       cycling fixtures + 1 already-ended "won" fixture) + 1 pre-order + 1 prize-draw +
  *       1 classified + 1 digital-code + 1 live + 1 art + 1 stickers product + 1 product-group
  *       ("Set") parent (product-tester-standard-1/2 are its children, linked via groupId).
- *       The 3 staggered auction ids/end-dates are recomputed on every seed run (including the
- *       testerSandboxRefresh job, every 4h) so testers can watch one actually end mid-session.
+ *
+ *       Every auction end date is recomputed on each seed run from tester-window.ts, as a
+ *       FRACTION of the testing window rather than a fixed duration. At the default
+ *       180-minute window the staggered three land on the historical 1h/2h/3h; a shorter
+ *       TESTER_WINDOW_MINUTES pulls all of them in together, which is what lets a run
+ *       actually watch an auction cross its end time.
  *
  * EXPORTS:
  *   productsTesterSeedData — Array of Partial<ProductDocument> for the seed runner
@@ -28,6 +32,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { buildSearchTxt } from "../../../utils/search-txt";
 import { seedPhoto } from "../../../seed/_helpers/media";
 import { testDataExpiresAt } from "./tester-ttl";
+import { windowOffset } from "./tester-window";
 
 const TESTER_STORE_ID = "store-tester-sandbox";
 const TESTER_STORE_NAME = "Tester Sandbox Store";
@@ -50,19 +55,30 @@ function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   };
 }
 
-// Staggered, incrementing-id auction fixtures so testers can watch a live
-// auction actually cross its end time within a single sandbox refresh cycle
-// (testerSandboxRefresh re-imports this module every 4 hours, recomputing
-// these Date.now()-relative offsets fresh each time) instead of the old
-// single fixture that always sat 5 days out. A loop (not hand-typed ids)
-// avoids id collisions if the stagger list is ever extended.
-const AUCTION_CYCLE_STAGGER_HOURS = [1, 2, 3];
-const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_HOURS.map((hours, i) =>
-  withTokens({
+// Staggered, incrementing-id auction fixtures so a tester can watch a live auction
+// actually cross its end time inside one session, instead of the old single fixture
+// that always sat 5 days out. A loop (not hand-typed ids) avoids id collisions if
+// the stagger list is ever extended.
+//
+// Expressed as FRACTIONS of the testing window rather than fixed hours: with the
+// default 180-minute window these resolve to the same 1h/2h/3h this fixture has
+// always used, and an automated run shortens all three together by setting
+// TESTER_WINDOW_MINUTES. Hard-coded hours cannot be shortened, which is what made
+// "watch an auction end" untestable in any run shorter than three hours.
+const AUCTION_CYCLE_STAGGER_FRACTIONS = [1 / 3, 2 / 3, 1];
+
+/** Deliberately past the end of the run — "plenty of clock left" fixtures must NOT expire mid-test. */
+const OUTLASTS_RUN = 2;
+/** ~1/9 of the window: 20 minutes at the default 180, 10 at a 90-minute run. Scales with the window instead of pinning 20 minutes that a short run can never reach. */
+const EXPIRES_MID_RUN = 1 / 9;
+const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_FRACTIONS.map((fraction, i) => {
+  const endsAt = windowOffset(fraction);
+  const endsInMinutes = Math.max(1, Math.round((endsAt.getTime() - Date.now()) / 60_000));
+  return withTokens({
     id: `auction-tester-sandbox-cycle-${i + 1}`,
     slug: `auction-tester-sandbox-cycle-${i + 1}`,
-    title: `Test Auction — Ends in ~${hours}h`,
-    description: `Disposable test auction for the tester QA program, staggered to end roughly ${hours} hour(s) after the last sandbox refresh so testers can watch the end-of-auction flow live. Place a bid — it auto-expires in 7 days, cascading to any bids.`,
+    title: `Test Auction — Ends in ~${endsInMinutes}m`,
+    description: `Disposable test auction for the tester QA program, staggered to end roughly ${endsInMinutes} minute(s) after seeding so testers can watch the end-of-auction flow live. Place a bid — it auto-expires in 7 days, cascading to any bids.`,
     categorySlugs: COLLECTIBLES_CATEGORY_SLUGS,
     categoryNames: COLLECTIBLES_CATEGORY_NAMES,
     brandSlug: "brand-tester-sandbox",
@@ -73,7 +89,7 @@ const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_HOURS.m
     price: 150,
     stockQuantity: 1,
     availableQuantity: 1,
-    auctionEndDate: new Date(Date.now() + hours * 60 * 60 * 1000),
+    auctionEndDate: endsAt,
     bidCount: 0,
     bidsHaveStarted: false,
     isSold: false,
@@ -88,8 +104,8 @@ const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_HOURS.m
     isOnSale: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-  }),
-);
+  });
+});
 
 /**
  * Buy-Now (buyout) fixtures. Four states, because the 2026-08-24 rework made
@@ -98,7 +114,7 @@ const stagedAuctions: Partial<ProductDocument>[] = AUCTION_CYCLE_STAGGER_HOURS.m
  * three of them were previously unreachable as test data.
  *
  * Every date is Date.now()-relative at module import, per CLAUDE.md's tester
- * fixture standard, so the 4-hour testerSandboxRefresh re-arms them.
+ * fixture standard, so each seed run re-arms them; durations come from tester-window.ts.
  */
 const buyoutAuctions: Partial<ProductDocument>[] = [
   {
@@ -109,7 +125,7 @@ const buyoutAuctions: Partial<ProductDocument>[] = [
     buyNowPrice: 12000,
     bidCount: 0,
     bidsHaveStarted: false,
-    endsInHours: 6,
+    endsAtFraction: OUTLASTS_RUN,
   },
   {
     key: "buyout-contested",
@@ -119,7 +135,7 @@ const buyoutAuctions: Partial<ProductDocument>[] = [
     buyNowPrice: 12000,
     bidCount: 2,
     bidsHaveStarted: true,
-    endsInHours: 6,
+    endsAtFraction: OUTLASTS_RUN,
   },
   {
     key: "buyout-passed",
@@ -129,7 +145,7 @@ const buyoutAuctions: Partial<ProductDocument>[] = [
     buyNowPrice: 9000,
     bidCount: 5,
     bidsHaveStarted: true,
-    endsInHours: 6,
+    endsAtFraction: OUTLASTS_RUN,
   },
   {
     key: "buyout-expiring",
@@ -139,7 +155,7 @@ const buyoutAuctions: Partial<ProductDocument>[] = [
     buyNowPrice: 5000,
     bidCount: 1,
     bidsHaveStarted: true,
-    endsInMinutes: 20,
+    endsAtFraction: EXPIRES_MID_RUN,
   },
 ].map((f) =>
   withTokens({
@@ -158,10 +174,7 @@ const buyoutAuctions: Partial<ProductDocument>[] = [
     price: f.currentBid,
     stockQuantity: 1,
     availableQuantity: 1,
-    auctionEndDate: new Date(
-      Date.now() +
-        (f.endsInMinutes ? f.endsInMinutes * 60 * 1000 : (f.endsInHours ?? 6) * 60 * 60 * 1000),
-    ),
+    auctionEndDate: windowOffset(f.endsAtFraction),
     bidCount: f.bidCount,
     bidsHaveStarted: f.bidsHaveStarted,
     isSold: false,

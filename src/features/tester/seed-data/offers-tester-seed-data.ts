@@ -11,7 +11,7 @@
  *       drive it straight through the Offers checkout lane.
  *
  * Every date is Date.now()-relative (per CLAUDE.md's tester-fixture standards)
- * so the 4-hour testerSandboxRefresh re-arms it instead of letting it go stale.
+ * so each seed run re-arms it instead of letting it go stale.
  *
  * EXPORTS:
  *   offersTesterSeedData — Array of 1 Partial<OfferDocument> for the seed runner
@@ -27,10 +27,25 @@
 import type { OfferDocument } from "../../seller/schemas/firestore";
 import { OfferStatusValues } from "../../seller/schemas/firestore";
 import { testDataExpiresAt } from "./tester-ttl";
+import { windowOffset } from "./tester-window";
 
 const NOW = new Date();
 const hoursAgo = (n: number) => new Date(NOW.getTime() - n * 3_600_000);
-const hoursFromNow = (n: number) => new Date(NOW.getTime() + n * 3_600_000);
+
+/*
+ * Deadlines expressed as fractions of the testing window rather than fixed hours.
+ *
+ * "An accepted offer past its checkoutDeadline cannot be checked out" is a real
+ * checklist case, and a fixed 36-hour deadline makes it untestable in any session
+ * shorter than a day and a half. Fractions scale with TESTER_WINDOW_MINUTES, so the
+ * lapse actually happens while someone is watching.
+ *
+ * OUTLASTS_RUN is deliberately greater than 1: the "still live" offers must NOT
+ * lapse mid-run, or every other offer case starts failing for the wrong reason.
+ */
+const OUTLASTS_RUN = 2;
+const LAPSES_MID_RUN = 1 / 3;
+const CHECKOUT_LAPSES_MID_RUN = 1 / 6;
 
 export const offersTesterSeedData: Partial<OfferDocument>[] = [
   {
@@ -56,11 +71,11 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     status: OfferStatusValues.ACCEPTED,
     buyerNote: "Sandbox offer — already accepted so testers can drive checkout.",
     sellerNote: "Accepted for QA sandbox testing.",
-    expiresAt: hoursFromNow(24),
+    expiresAt: windowOffset(OUTLASTS_RUN),
     acceptedAt: hoursAgo(1),
     respondedAt: hoursAgo(1),
     // Well inside the 48h window so the lane is live for a whole test session.
-    checkoutDeadline: hoursFromNow(36),
+    checkoutDeadline: windowOffset(OUTLASTS_RUN),
     createdAt: hoursAgo(2),
     updatedAt: hoursAgo(1),
     isTestData: true,
@@ -88,7 +103,7 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     status: OfferStatusValues.COUNTERED,
     buyerNote: "Sandbox offer — seller has countered, accept it to test the counter path.",
     sellerNote: "Counter: ₹1,150.",
-    expiresAt: hoursFromNow(24),
+    expiresAt: windowOffset(OUTLASTS_RUN),
     respondedAt: hoursAgo(1),
     createdAt: hoursAgo(2),
     updatedAt: hoursAgo(1),
@@ -118,10 +133,10 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     status: OfferStatusValues.ACCEPTED,
     buyerNote: "Sandbox offer — accepted with a short checkout window.",
     sellerNote: "Accepted. Pay soon!",
-    expiresAt: hoursFromNow(1),
+    expiresAt: windowOffset(LAPSES_MID_RUN),
     acceptedAt: hoursAgo(0),
     respondedAt: hoursAgo(0),
-    checkoutDeadline: new Date(NOW.getTime() + 30 * 60_000),
+    checkoutDeadline: windowOffset(CHECKOUT_LAPSES_MID_RUN),
     createdAt: hoursAgo(1),
     updatedAt: hoursAgo(0),
     isTestData: true,
@@ -148,7 +163,7 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     currency: "INR",
     status: OfferStatusValues.PENDING,
     buyerNote: "Sandbox offer — still pending, withdraw it to test that path.",
-    expiresAt: hoursFromNow(24),
+    expiresAt: windowOffset(OUTLASTS_RUN),
     createdAt: hoursAgo(1),
     updatedAt: hoursAgo(1),
     isTestData: true,
@@ -176,7 +191,7 @@ export const offersTesterSeedData: Partial<OfferDocument>[] = [
     currency: "INR",
     status: OfferStatusValues.PENDING,
     buyerNote: "Sandbox inbound offer — accept, counter, or decline it from your store dashboard.",
-    expiresAt: hoursFromNow(24),
+    expiresAt: windowOffset(OUTLASTS_RUN),
     createdAt: hoursAgo(2),
     updatedAt: hoursAgo(2),
     isTestData: true,

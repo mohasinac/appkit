@@ -2,12 +2,21 @@ import type { JobContext } from "../runtime/types";
 import { batchDelete, getTestDataRefs } from "../handlers/_helpers";
 import { BID_FIELDS } from "../../../../constants/field-names";
 
-// Exported so testerSandboxRefresh.ts (the every-4h revert+prune job) reuses
-// the exact same collection scope instead of redefining it — one source of
-// truth for "what counts as sandbox scope."
-// Keep in sync with testerSandboxRefresh.ts's SEED_BY_COLLECTION — the daily
-// TTL cleanup and the 4-hourly revert+prune must agree on what "sandbox" means
-// (CLAUDE.md § Tester QA standards #3).
+/**
+ * 🛑 THE definition of "sandbox scope" — six collections, and nothing else.
+ *
+ * Everything OUTSIDE this list is permanent: neither this job nor anything else
+ * reclaims it. That is why `users`, `addresses`, `sessions` and `siteSettings`
+ * survive a tester run untouched, and why the tester lifecycle's cascade delete
+ * (tester/scripts/lib/collections.mjs) mirrors this list rather than inventing
+ * its own — a second definition is how the two silently disagree.
+ *
+ * Adding a collection here makes it disposable. Do not add one without also
+ * adding a seed fixture for it, or a run will delete rows nothing recreates.
+ *
+ * (This used to be shared with testerSandboxRefresh.ts, which was removed when
+ * the tester runner took over fixture state — see scheduled.ts.)
+ */
 export const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events", "offers"] as const;
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 
