@@ -830,6 +830,13 @@ export {
   isStickersListing,
 } from "./features/products/utils/listing-type";
 
+// Final sale — ABSENT MEANS TRUE, so these are the only legal reads of the
+// `finalSale` field. See the module docstring for why `!p.finalSale` is wrong.
+export {
+  isFinalSale,
+  acceptsChangeOfMindReturns,
+} from "./features/products/constants/final-sale";
+
 // SB-UNI-X4 2026-05-13 — per-type feature-flag helpers (client-safe).
 export {
   isListingTypeEnabled,
@@ -945,6 +952,9 @@ export {
   isAllowedMime,
   maxBytesFor,
   getConversionHint,
+  PRODUCT_MAX_IMAGES,
+  PRODUCT_MAX_VIDEOS,
+  PRODUCT_IMAGE_INDEX_MAX,
 } from "./_internal/shared/media/limits";
 export type {
   MediaKind,
@@ -1381,3 +1391,41 @@ export type { AdminActionIndexViewProps } from "./features/admin/components/Admi
 
 export { SellerSupportView } from "./features/seller/components/SellerSupportView";
 export type { SellerSupportViewProps } from "./features/seller/components/SellerSupportView";
+
+export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
+// Return / refund reasons — the closed enum the final-sale gate branches on.
+// See the module docstring for why the exempt set is "seller or carrier fault"
+// rather than "serious reasons".
+export {
+  RETURN_REASON,
+  FINAL_SALE_EXEMPT_REASONS,
+  RETURN_REASON_LABEL,
+  RETURN_REASON_GROUP_LABEL,
+  isFinalSaleExempt,
+  isReturnReason,
+  selectableReturnReasons,
+} from "./_internal/shared/features/orders/return-reasons";
+export type { ReturnReason } from "./_internal/shared/features/orders/return-reasons";
+
+// Buyer-facing return/refund request form and the window it is gated on.
+// Exported from the CLIENT entry because the page that renders it is a
+// "use client" route — importing it from the main entry there would drag the
+// server graph into the browser bundle (Root Cause #6).
+export { RefundRequestView } from "./features/orders/components/RefundRequestView";
+export type {
+  RefundRequestViewProps,
+  RefundRequestSubmission,
+} from "./features/orders/components/RefundRequestView";
+export {
+  ORDER_RETURN_WINDOW_DAYS,
+  ORDER_RETURN_WINDOW_MS,
+  ORDER_CANCELLABLE_STATUSES,
+} from "./_internal/shared/features/orders/config";
+
+// Seller listing form draft <-> product write payload. The flat form keys and
+// the nested document blocks are different shapes, and nothing translated
+// between them — see the module docstring.
+export {
+  draftToProductInput,
+  productToDraft,
+} from "./features/seller/utils/product-draft-mapping";

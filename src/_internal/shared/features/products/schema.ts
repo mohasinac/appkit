@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../../validation/schemas";
+import { PRODUCT_MAX_IMAGES } from "../../media/limits";
 
 const priceSchema = z.number().min(0, "Price must be non-negative");
 
@@ -15,7 +16,7 @@ export const productInputSchema = z.object({
   stockQuantity: z.number().int().min(0).default(0),
   availableQuantity: z.number().int().min(0).default(0),
   mainImage: mediaUrlSchema,
-  images: z.array(mediaUrlSchema).max(20).default([]),
+  images: z.array(mediaUrlSchema).max(PRODUCT_MAX_IMAGES).default([]),
   condition: conditionSchema.optional(),
   tags: z.array(z.string()).max(20).default([]),
   seoTitle: z.string().max(70).optional(),
@@ -23,6 +24,8 @@ export const productInputSchema = z.object({
   seoKeywords: z.array(z.string()).max(10).optional(),
   shippingInfo: z.string().max(1000).optional(),
   returnPolicy: z.string().max(1000).optional(),
+  // Absent means final sale. No `.default()` — see request-schemas.ts.
+  finalSale: z.boolean().optional(),
   shippingPaidBy: z.enum(["seller", "buyer"]).optional(),
   insurance: z.boolean().optional(),
   insuranceCost: z.number().min(0).optional(),

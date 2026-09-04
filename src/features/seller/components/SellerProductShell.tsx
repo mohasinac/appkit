@@ -13,6 +13,12 @@ import { QuickProductForm } from "./QuickProductForm";
 import { BarcodeField } from "./BarcodeField";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
+import {
+  PRODUCT_MAX_IMAGES,
+  PRODUCT_MAX_VIDEOS,
+  PRODUCT_IMAGE_INDEX_MAX,
+} from "../../../_internal/shared/media/limits";
+import { isFinalSale } from "../../products/constants/final-sale";
 import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -75,6 +81,14 @@ export interface SellerProductDraft {
   // P-8 GST
   gstRate?: 0 | 5 | 12 | 18 | 28;
   hsnCode?: string;
+  // Returns
+  /**
+   * Absent means FINAL SALE — the form seeds it explicitly so the toggle has
+   * a value to render, but a draft that never touched the section still saves
+   * `undefined`, which the platform reads as final sale. Read via isFinalSale.
+   */
+  finalSale?: boolean;
+  returnPolicy?: string;
   // Publish
   status?: "draft" | "published";
   seoTitle?: string;
@@ -149,8 +163,13 @@ const sellerProductSchema = z.object({
   category: z.string().optional(),
   brand: z.string().optional(),
   isActive: z.boolean().optional(),
-  images: z.array(z.string()).max(5, "Up to 5 gallery images allowed").optional(),
+  images: z
+    .array(z.string())
+    .max(PRODUCT_MAX_IMAGES, `Up to ${PRODUCT_MAX_IMAGES} gallery images allowed`)
+    .optional(),
   video: productVideoSchema.optional(),
+  finalSale: z.boolean().optional(),
+  returnPolicy: z.string().max(1000).optional(),
 }).passthrough();
 
 /** Shape returned by `onSave`/`onPublish` — structurally compatible with appkit's `ActionResult<T>` failure/success arms, without importing the server-only type into this client component. */
@@ -332,10 +351,39 @@ function StepMedia({
   const { upload } = useMediaUpload();
   const idxRef = useRef(0);
 
-  const galleryFields: MediaField[] = (values.images ?? []).map((url) => ({
-    url,
-    type: "image" as const,
-  }));
+  /*
+   * One control for both media kinds.
+   *
+   * The document keeps `images: string[]` and a single `video` — unchanged —
+   * so this seeds from both and splits again on write. Collapsing the two
+   * into one stored `media[]` would be a Firestore migration touching cards,
+   * detail, cart, orders and search; the input surface is what needed fixing.
+   */
+  const galleryFields: MediaField[] = [
+    ...(values.images ?? []).map((url) => ({ url, type: "image" as const })),
+    ...(values.video?.url
+      ? [{
+          url: values.video.url,
+          type: "video" as const,
+          ...(values.video.thumbnailUrl ? { thumbnailUrl: values.video.thumbnailUrl } : {}),
+        }]
+      : []),
+  ];
+
+  /** Split a mixed gallery back into the document's two fields. */
+  const applyGallery = (fields: MediaField[]) => {
+    const video = fields.find((f) => f.type === "video");
+    onChange({
+      images: fields.filter((f) => f.type === "image").map((f) => f.url),
+      video: video
+        ? {
+            ...(values.video ?? { type: "video" as const, source: "upload" as const }),
+            ...video,
+            type: "video" as const,
+          }
+        : undefined,
+    });
+  };
 
   return (
     <Stack gap="md">
@@ -357,26 +405,38 @@ function StepMedia({
         cropAspectRatio={1}
       />
       <MediaUploadList
-        label="Gallery Images (up to 5)"
+        label={`Gallery (up to ${PRODUCT_MAX_IMAGES} images + ${PRODUCT_MAX_VIDEOS} video)`}
         value={galleryFields}
-        onChange={(fields) => onChange({ images: fields.map((f) => f.url) })}
+        onChange={applyGallery}
         onUpload={(file) => {
+          /*
+           * The gallery occupies indices 2..N — index 1 is the main image, and
+           * `generateMediaFilename` bakes the index into the filename that the
+           * server's `indexGuard` then checks.
+           *
+           * This was `idxRef.current + 1` off a ref starting at 0, so the FIRST
+           * gallery image was index 2 and the fifth was index 6 — one past the
+           * server's ceiling of 5. The last slot of every product form returned
+           * a 400.
+           */
           idxRef.current += 1;
           return upload(file, "products", true, {
-            type: "product-image",
-            index: idxRef.current + 1,
+            type: file.type.startsWith("video/") ? "product-video" : "product-image",
+            index: Math.min(idxRef.current + 1, PRODUCT_IMAGE_INDEX_MAX),
             name: values.title ?? "product",
             store: storeSlug,
             category: values.category ?? "uncategorized",
           });
         }}
         accept="image/*,video/*"
-        maxItems={5}
-        maxSizeMB={10}
-        helperText="Show multiple angles, grading details, or box contents."
+        maxItems={PRODUCT_MAX_IMAGES + PRODUCT_MAX_VIDEOS}
+        maxImages={PRODUCT_MAX_IMAGES}
+        maxVideos={PRODUCT_MAX_VIDEOS}
+        maxSizeMB={50}
+        helperText="Show multiple angles, grading details, or box contents. A video can go here too."
       />
       <MediaUploadField
-        label="Product Video (optional)"
+        label="Video options — YouTube, external URL, trim and poster"
         value={values.video?.url ?? ""}
         onChange={(url) =>
           onChange({
@@ -399,8 +459,8 @@ function StepMedia({
             store: storeSlug,
           })
         }
-        kind="video"
-        helperText="MP4, WebM or QuickTime — max 50 MB"
+        kind="auto"
+        helperText="The gallery above accepts a video file directly. Use this panel for a YouTube or external URL, or to trim and pick a poster frame."
       />
 
       {/* S-STORE-3-B — 3rd-party video URL (YouTube/Vimeo). Queues moderation
@@ -1142,6 +1202,53 @@ function StepShipping({
   );
 }
 
+// ── Step: Returns ─────────────────────────────────────────────────────────
+
+/**
+ * Final sale + return policy.
+ *
+ * `returnPolicy` had no seller-facing editor at all before this section — the
+ * only place it could be authored was the admin field group, so a seller could
+ * never state their own terms.
+ *
+ * The toggle is phrased positively ("Accept returns") rather than as
+ * "Final sale", because a switch whose ON state means "fewer rights for the
+ * buyer" reads backwards and invites the seller to flip it by accident. The
+ * stored field is still `finalSale`, and OFF is its default.
+ */
+function StepReturns({
+  values,
+  onChange,
+}: {
+  values: SellerProductDraft;
+  onChange: (p: Partial<SellerProductDraft>) => void;
+}) {
+  const acceptsReturns = !isFinalSale(values);
+  return (
+    <Stack gap="md">
+      <Toggle
+        checked={acceptsReturns}
+        onChange={(checked) => onChange({ finalSale: !checked })}
+        label="Accept change-of-mind returns"
+      />
+      <Alert variant={acceptsReturns ? "info" : "warning"}>
+        {acceptsReturns
+          ? "Buyers can return this item within the platform return window for any reason, including simply changing their mind."
+          : "This is a FINAL SALE — the default. Buyers cannot return it for changing their mind. They can still claim if the item never arrived, arrived damaged, was the wrong item, was not as described, or was counterfeit."}
+      </Alert>
+      <FormField
+        name="returnPolicy"
+        label="Return policy (optional)"
+        type="textarea"
+        value={values.returnPolicy ?? ""}
+        onChange={(v) => onChange({ returnPolicy: v })}
+        placeholder="Any extra detail buyers should know — condition on return, who pays return shipping, how long you take to refund."
+        hint="Shown on the listing under Delivery & Returns. This is your own wording; it does not change what the platform allows above."
+      />
+    </Stack>
+  );
+}
+
 // ── Step: Publish / SEO ───────────────────────────────────────────────────
 
 function StepPublish({
@@ -1199,6 +1306,7 @@ const EDIT_SECTIONS: FormShellSection[] = [
   { id: "media", label: "Media" },
   { id: "pricing", label: "Pricing" },
   { id: "shipping", label: "Shipping" },
+  { id: "returns", label: "Returns" },
   { id: "publish", label: "Publish" },
 ];
 
@@ -1409,6 +1517,14 @@ export function SellerProductShell({
       fields: ["shippingPaidBy", "pickupAddressId", "insurance", "insuranceCost"],
       render: ({ values, onChange }) => (
         <StepShipping values={values} onChange={onChange} renderAddressSelector={renderAddressSelector} />
+      ),
+    },
+    {
+      id: "returns",
+      label: "Returns",
+      fields: ["finalSale", "returnPolicy"],
+      render: ({ values, onChange }) => (
+        <StepReturns values={values} onChange={onChange} />
       ),
     },
     {
@@ -1624,6 +1740,10 @@ export function SellerProductShell({
         <Section id="shipping">
           <Heading level={3} className="mb-4">Shipping</Heading>
           <StepShipping values={draft} onChange={update} renderAddressSelector={renderAddressSelector} />
+        </Section>
+        <Section id="returns">
+          <Heading level={3} className="mb-4">Returns</Heading>
+          <StepReturns values={draft} onChange={update} />
         </Section>
         <Section id="publish">
           <Heading level={3} className="mb-4">Publish</Heading>

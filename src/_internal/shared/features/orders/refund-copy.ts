@@ -25,6 +25,19 @@ export const REFUND_COPY = {
     errorFallback: "Failed to submit refund request",
     nonRefundableMessage:
       "This order is non-refundable (prize draw or bundle). Refunds cannot be issued.",
+    /**
+     * Shown when a final-sale line is in scope and the chosen reason is a
+     * change-of-mind one. Deliberately names the reasons that ARE accepted —
+     * a bare "final sale, request refused" reads as a dead end and generates a
+     * support ticket, when in most cases the buyer simply picked the wrong
+     * reason from the list.
+     */
+    finalSaleBlockedMessage:
+      "This order includes a final-sale item, so it can't be returned for a change of mind. If it never arrived, arrived damaged, was the wrong item, wasn't as described, or is counterfeit, choose that reason instead and your request will go through.",
+    finalSaleNoticeHeading: "This order includes a final-sale item",
+    reasonSelectLabel: "What went wrong?",
+    reasonSelectPlaceholder: "Choose a reason",
+    reasonNoteLabel: "Anything else we should know? (optional)",
     alreadyRefundedMessage:
       "A refund has already been processed on this order. No further disputes or refund requests can be filed.",
     acknowledgments: [

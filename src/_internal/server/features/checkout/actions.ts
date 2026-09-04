@@ -1665,7 +1665,15 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
       orderId: primaryOrderId,
       type: "partial",
       amount: refundAmount,
-      reason: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
+      /*
+       * A SYSTEM refund, not a buyer claim: items the buyer paid for turned
+       * out to be unavailable, so the seller could not deliver what was
+       * described. `not_received` is the honest code and — not incidentally —
+       * one final sale may never block, which is correct here: the buyer is
+       * owed this money whatever the listing's return terms said.
+       */
+      reasonCode: "not_received",
+      reasonNote: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
       method: "razorpay",
       razorpayPaymentId,
       confirmIrrevocable: true,

@@ -138,8 +138,6 @@ export { AdminCarouselEditorView } from "./AdminCarouselEditorView";
 export type { AdminCarouselEditorViewProps } from "./AdminCarouselEditorView";
 export { AdminDashboardView } from "./AdminDashboardView";
 export type { AdminDashboardViewProps } from "./AdminDashboardView";
-export { AdminSiteView } from "./AdminSiteView";
-export type { AdminSiteViewProps } from "./AdminSiteView";
 export { AdminSiteSettingsView } from "./AdminSiteSettingsView";
 export type { AdminSiteSettingsViewProps } from "./AdminSiteSettingsView";
 export { AdminAnalyticsView } from "./AdminAnalyticsView";

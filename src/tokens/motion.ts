@@ -25,6 +25,19 @@ export const EASE_OUT: Transition = {
   duration: 0.3,
 };
 
+/**
+ * `EASE_OUT`'s duration in MILLISECONDS.
+ *
+ * For the callers that must wait for an `EASE_OUT` animation to finish before
+ * measuring or focusing — `<Collapse>` animates height with it, and Framer
+ * drives that via rAF rather than a CSS transition, so there is no
+ * `transitionend` event to listen for and a timer is the only handle.
+ *
+ * DERIVED, never a second literal: a hardcoded `300` here would silently stop
+ * matching the moment `EASE_OUT.duration` was tuned.
+ */
+export const EASE_OUT_MS = (EASE_OUT.duration as number) * 1000;
+
 export const MOTION_PRESETS = {
   fadeIn: {
     initial: { opacity: 0 },

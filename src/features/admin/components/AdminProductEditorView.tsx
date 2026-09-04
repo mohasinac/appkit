@@ -29,6 +29,7 @@ import {
 import { useFormShellState, applyZodIssues, FormErrorSummary, FormShellContext } from "../../../ui/forms";
 import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 import type { StackedViewShellProps } from "../../../ui";
+import { PRODUCT_MAX_IMAGES } from "../../../_internal/shared/media/limits";
 
 // Admin form-input validation — deliberately a small local schema, not the
 // broader `productItemSchema` (that one requires `id`/`price`/`status` as
@@ -38,8 +39,12 @@ import type { StackedViewShellProps } from "../../../ui";
 const adminProductFormSchema = z.object({
   title: z.string().min(1, "Product title is required"),
   price: z.number().min(0).optional(),
-  images: z.array(z.string()).max(5, "Up to 5 gallery images allowed").optional(),
+  images: z
+    .array(z.string())
+    .max(PRODUCT_MAX_IMAGES, `Up to ${PRODUCT_MAX_IMAGES} gallery images allowed`)
+    .optional(),
   video: z.object({ url: z.string(), thumbnailUrl: z.string().optional() }).optional(),
+  finalSale: z.boolean().optional(),
 }).passthrough();
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

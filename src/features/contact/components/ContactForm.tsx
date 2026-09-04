@@ -1,9 +1,16 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { z } from "zod";
-import { Button, Div, Form, Heading, Input, Span, Stack, Text, Textarea } from "../../../ui";
-import { useFormShellState, FormShellContext, FormErrorSummary } from "../../../ui/forms";
+import { Button, Div, Heading, Stack, Text } from "../../../ui";
+import {
+  useFormShellState,
+  FormShellContext,
+  FormErrorSummary,
+  FieldInput,
+  FieldTextarea,
+} from "../../../ui/forms";
+import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -12,7 +19,6 @@ const contactFormSchema = z.object({
   message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
-const CLS_FIELD_ERROR = "text-error";
 const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-error dark:text-error";
 
 interface ContactFormData {
@@ -62,36 +68,87 @@ export function ContactForm({
   const [form, setForm] = useState<ContactFormData>(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof ContactFormData, string>>
-  >({});
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const { shellCtx, validate: validateSchema } = useFormShellState(contactFormSchema);
 
-  useEffect(() => {
-    validateSchema(form);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form, validateSchema]);
+  const update = useCallback(
+    (partial: Partial<ContactFormData>) => setForm((f) => ({ ...f, ...partial })),
+    [],
+  );
 
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof ContactFormData, string>> = {};
-    if (!form.name.trim())
-      newErrors.name = labels.validationRequired ?? "Required";
-    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      newErrors.email = labels.validationEmail ?? "Valid email required";
-    if (!form.subject.trim())
-      newErrors.subject = labels.validationRequired ?? "Required";
-    if (!form.message.trim() || form.message.length < 10)
-      newErrors.message =
-        labels.validationMessageTooShort ?? "Message too short";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  /*
+   * One section, `required` — so after the 2026-09-04 collapse fix it renders
+   * as a plain heading with no chevron and cannot be hidden. A contact form
+   * has nothing optional to fold away; the section exists to give the fields
+   * an owner for error attribution, not to be collapsible.
+   */
+  const sections: SectionDef<ContactFormData>[] = useMemo(
+    () => [
+      {
+        id: "message",
+        label: labels.title ?? "Send us a message",
+        required: true,
+        fields: ["name", "email", "subject", "message"],
+        render: ({ values, onChange }) => (
+          <Stack gap="md">
+            <FieldInput
+              name="name"
+              label={labels.nameLabel ?? "Your Name"}
+              required
+              value={values.name}
+              onChange={(v) => onChange({ name: v })}
+              placeholder={labels.namePlaceholder ?? "Enter your name"}
+            />
+            <FieldInput
+              name="email"
+              type="email"
+              label={labels.emailLabel ?? "Email"}
+              required
+              value={values.email}
+              onChange={(v) => onChange({ email: v })}
+              placeholder={labels.emailPlaceholder ?? "your@email.com"}
+            />
+            <FieldInput
+              name="subject"
+              label={labels.subjectLabel ?? "Subject"}
+              required
+              value={values.subject}
+              onChange={(v) => onChange({ subject: v })}
+              placeholder={labels.subjectPlaceholder ?? "How can we help?"}
+            />
+            <FieldTextarea
+              name="message"
+              label={labels.messageLabel ?? "Message"}
+              required
+              rows={5}
+              value={values.message}
+              onChange={(v) => onChange({ message: v })}
+              placeholder={labels.messagePlaceholder ?? "Tell us more…"}
+            />
+          </Stack>
+        ),
+      },
+    ],
+    [labels],
+  );
+
+  const nav = useSectionFormNav(sections, form);
+  const { shellCtx, validate: validateSchema } = useFormShellState(contactFormSchema, {
+    sections: nav.sectionMeta,
+    onGoToSection: nav.goToSection,
+    fieldToSectionIndex: nav.fieldToSectionIndex,
+  });
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!validate()) return;
+    async () => {
+      /*
+       * The hand-rolled `validate()` this replaces re-stated every rule the
+       * schema already had — required-ness, the email regex, the 10-character
+       * minimum — in a second place that could drift from it, and wrote the
+       * results into a `useState` errors map instead of the form context
+       * (Rule #9.2 and #9.4). `validateSchema` parses and pipes the issues to
+       * the fields, which is the same check the submit gate now uses.
+       */
+      if (!validateSchema(form)) return;
       setIsSubmitting(true);
       setSubmitError(null);
       try {
@@ -108,7 +165,7 @@ export function ContactForm({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [form, onSubmit, labels],
+    [form, onSubmit, labels, validateSchema],
   );
 
   if (submitted) {
@@ -132,94 +189,34 @@ export function ContactForm({
     );
   }
 
-  const field = (
-    id: keyof ContactFormData,
-    label: string,
-    placeholder: string,
-    multiline?: boolean,
-  ) => (
-    <Stack gap="xs">
-      <label
-        htmlFor={id}
-        className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)]"
-      >
-        {label}
-      </label>
-      {multiline ? (
-        <Textarea
-          id={id}
-          value={form[id]}
-          onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
-          placeholder={placeholder}
-          rows={5}
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] outline-none focus:ring-2 ring-primary/20 transition"
-        />
-      ) : (
-        <Input
-          id={id}
-          type={id === "email" ? "email" : "text"}
-          value={form[id]}
-          onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
-          placeholder={placeholder}
-          className="h-10"
-        />
-      )}
-      {errors[id] && <Span size="xs" className={CLS_FIELD_ERROR}>{errors[id]}</Span>}
-    </Stack>
-  );
-
   return (
     <FormShellContext.Provider value={shellCtx}>
-    <Form
-      onSubmit={handleSubmit}
-      noValidate
-      className={className}
-      spacing="md"
-    >
-      <Heading level={2} className="mb-6">
-        {labels.title ?? "Send us a message"}
-      </Heading>
-
-      {submitError && (
-        <Div className={CLS_ERROR_BANNER}>
-          {submitError}
-        </Div>
-      )}
-
-      {field(
-        "name",
-        labels.nameLabel ?? "Your Name",
-        labels.namePlaceholder ?? "Enter your name",
-      )}
-      {field(
-        "email",
-        labels.emailLabel ?? "Email",
-        labels.emailPlaceholder ?? "your@email.com",
-      )}
-      {field(
-        "subject",
-        labels.subjectLabel ?? "Subject",
-        labels.subjectPlaceholder ?? "How can we help?",
-      )}
-      {field(
-        "message",
-        labels.messageLabel ?? "Message",
-        labels.messagePlaceholder ?? "Tell us more…",
-        true,
-      )}
-
-      <FormErrorSummary />
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={isSubmitting}
-        className="w-full sm:w-auto"
-      >
-        {isSubmitting
-          ? (labels.submittingButton ?? "Sending…")
-          : (labels.submitButton ?? "Send Message")}
-      </Button>
-    </Form>
+      <Stack gap="md" className={className}>
+        {submitError && <Div className={CLS_ERROR_BANNER}>{submitError}</Div>}
+        <FormErrorSummary />
+        <SectionForm<ContactFormData>
+          sections={sections}
+          values={form}
+          onChange={update}
+          onSubmit={handleSubmit}
+          schema={contactFormSchema}
+          openIds={nav.openIds}
+          onOpenChange={nav.setOpenIds}
+          isLoading={isSubmitting}
+          submitLabel={
+            isSubmitting
+              ? (labels.submittingButton ?? "Sending…")
+              : (labels.submitButton ?? "Send Message")
+          }
+          /*
+           * No pinned mobile bar. This form is embedded in a marketing page
+           * beside other content rather than owning the screen, so a Save bar
+           * fixed to the bottom of the viewport would follow the visitor
+           * around the rest of the page.
+           */
+          bottomBar={false}
+        />
+      </Stack>
     </FormShellContext.Provider>
   );
 }

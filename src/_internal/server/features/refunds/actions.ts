@@ -25,6 +25,12 @@ import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { NotFoundError, ValidationError } from "../../../../errors";
 import { serverLogger } from "../../../../monitoring";
 import type { OrderRefundEvent, RefundType } from "../../../../features/orders/schemas";
+import {
+  isFinalSaleExempt,
+  RETURN_REASON_LABEL,
+  type ReturnReason,
+} from "../../../shared/features/orders/return-reasons";
+import { REFUND_COPY } from "../../../shared/features/orders/refund-copy";
 import { applyRefundDeductionAction } from "../payouts/actions";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import {
@@ -97,7 +103,14 @@ export type ProcessRefundInput = {
   type: RefundType;
   /** Decimal rupees. Must be > 0 and ≤ remaining refundable amount on the order. */
   amount: number;
-  reason: string;
+  /**
+   * Coded reason. Replaced a free-text `reason: string` — final sale has to
+   * refuse a change-of-mind return while always allowing a "didn't get what I
+   * paid for" claim, and that decision cannot be made against prose.
+   */
+  reasonCode: ReturnReason;
+  /** Optional human elaboration, stored alongside the code. */
+  reasonNote?: string;
   /** Product/item ids affected (for partial refunds). */
   itemIds?: string[];
   /** Required: caller must explicitly confirm this action is irrevocable. */
@@ -134,9 +147,32 @@ export async function processRefundAction(
         throw new ValidationError("Refund amount exceeds order total");
       }
     
-      // Guard: non-refundable orders (prize draws, bundles).
+      // Guard: non-refundable orders (prize draws, bundles). A property of the
+      // listing TYPE, decided by the platform — checked first because it
+      // admits no exception, not even a seller-fault one.
       if (order.isNonRefundable) {
         throw new ValidationError("This order is marked non-refundable and cannot be refunded.");
+      }
+
+      /*
+       * Guard: final sale.
+       *
+       * Unlike `isNonRefundable` this is per-LINE and reason-dependent. A
+       * seller-fault claim is never blocked, however the listing was sold —
+       * "no returns" is a statement about changing your mind, not a waiver of
+       * the seller's obligation to ship what was described.
+       *
+       * Read from the ORDER's snapshot, never from the product: the buyer
+       * agreed to the terms shown at checkout, and re-reading the live product
+       * would let a seller flip the switch afterwards.
+       */
+      if (!isFinalSaleExempt(input.reasonCode)) {
+        const scopedItems = input.itemIds?.length
+          ? (order.items ?? []).filter((i) => input.itemIds!.includes(i.productId))
+          : (order.items ?? []);
+        if (scopedItems.some((i) => i.finalSale === true)) {
+          throw new ValidationError(REFUND_COPY.request.finalSaleBlockedMessage);
+        }
       }
     
       // SB-UNI-N — digital-code refund gate: block if code is already claimed (revealed).
@@ -163,7 +199,14 @@ export async function processRefundAction(
         type: input.type,
         amount: input.amount,
         ...(input.itemIds?.length ? { itemIds: input.itemIds } : {}),
-        reason: input.reason,
+        reasonCode: input.reasonCode,
+        // `reason` stays the human-readable string every existing refund row
+        // and every rendering of RefundHistoryTable already reads. It is now
+        // DERIVED from the code rather than typed freehand, so the two can
+        // never disagree about why a refund happened.
+        reason: input.reasonNote
+          ? `${RETURN_REASON_LABEL[input.reasonCode]} — ${input.reasonNote}`
+          : RETURN_REASON_LABEL[input.reasonCode],
         refundedAt: now,
         refundedBy: input.refundedBy,
         ...(razorpayRefundId ? { razorpayRefundId } : {}),
@@ -191,7 +234,9 @@ export async function processRefundAction(
           orderId: input.orderId,
           refundId,
           refundedAmount: input.amount,
-          reason: input.reason,
+          // Same derived string the refund event records, so the payout
+          // deduction and the refund history read identically.
+          reason: event.reason,
         }).catch(() => {/* payout deduction is best-effort */});
       }
     

@@ -142,6 +142,7 @@ import { payoutMethodFormSchema } from "../features/store-extensions/schemas/pay
 import { shippingConfigFormSchema } from "../features/store-extensions/schemas/shipping-config-form";
 import { groupedListingFormSchema } from "../features/grouped/schemas/grouped-listing-form";
 import { sellerCouponFormSchema } from "../features/seller/schemas/coupon-form";
+import { productDraftSchema } from "../features/seller/schemas/product-form";
 import { customRoleFormSchema } from "../features/store-extensions/schemas/custom-role-form";
 import { moderationReviewFormSchema } from "../features/store-extensions/schemas/moderation-review-form";
 import { reportReviewFormSchema } from "../features/store-extensions/schemas/report-review-form";
@@ -165,6 +166,14 @@ import { adminNotificationCreateSchema } from "../features/store-extensions/sche
 import { homepageSectionCreateSchema } from "../features/homepage/schemas/index";
 
 const forms = {
+  /*
+   * `product` was ABSENT from this map until 2026-09-04, and that absence is
+   * why the flat-vs-nested field loss in the seller listing form went
+   * unnoticed for as long as it did: `roundtrip-diff` reads this map, and an
+   * entity it cannot see is an entity it cannot protect — exactly as the
+   * comment above warns.
+   */
+  product: productDraftSchema,
   blog: blogDraftSchema,
   event: eventDraftSchema,
   productFeature: productFeatureFormSchema,

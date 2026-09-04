@@ -14,7 +14,14 @@ import {
   Stack,
   TagInput,
   Text,
+  Toggle,
 } from "../../../ui";
+import { isFinalSale } from "../constants/final-sale";
+import {
+  PRODUCT_MAX_IMAGES,
+  PRODUCT_MAX_VIDEOS,
+  PRODUCT_IMAGE_INDEX_MAX,
+} from "../../../_internal/shared/media/limits";
 import { CustomSectionsEditor } from "./CustomSectionsEditor";
 import { SublistingCategorySelect } from "./SublistingCategorySelect";
 import { ProductFeaturesSelector } from "./ProductFeaturesSelector";
@@ -184,16 +191,44 @@ export function ProductForm({
     onChange({ ...product, ...partial });
   };
 
-  const galleryImages: MediaField[] = (product.images ?? []).map((url) => ({
-    url,
-    type: "image",
-  }));
+  /*
+   * One control for both media kinds — see the matching comment in
+   * SellerProductShell's StepMedia. The document keeps `images: string[]` plus
+   * a single `video`; this seeds from both and splits again on write.
+   */
+  const galleryImages: MediaField[] = [
+    ...(product.images ?? []).map((url) => ({ url, type: "image" as const })),
+    ...(product.video?.url
+      ? [{
+          url: product.video.url,
+          type: "video" as const,
+          ...(product.video.thumbnailUrl ? { thumbnailUrl: product.video.thumbnailUrl } : {}),
+        }]
+      : []),
+  ];
+
+  /** Split a mixed gallery back into the document's two fields. */
+  const applyGallery = (fields: MediaField[]) => {
+    const video = fields.find((f) => f.type === "video");
+    update({
+      images: fields.filter((f) => f.type === "image").map((f) => f.url),
+      video: video
+        ? { url: video.url, thumbnailUrl: video.thumbnailUrl ?? product.video?.thumbnailUrl }
+        : undefined,
+    });
+  };
 
   const handleGalleryUpload = async (file: File): Promise<string> => {
+    /*
+     * The gallery occupies indices 2..N — index 1 belongs to the main image,
+     * and this ref started at 0 producing index 1, so the first gallery image
+     * generated the same filename as the main image and overwrote it in
+     * Storage (content-derived slugs, no timestamp).
+     */
     galleryIndexRef.current += 1;
     return upload(file, "products", true, {
-      type: "product-image",
-      index: galleryIndexRef.current,
+      type: file.type.startsWith("video/") ? "product-video" : "product-image",
+      index: Math.min(galleryIndexRef.current + 1, PRODUCT_IMAGE_INDEX_MAX),
       name: product.title || "product",
       category: (product.categorySlugs?.[0] ?? product.category) || "uncategorized",
       store: product.storeName || "store",
@@ -425,11 +460,13 @@ export function ProductForm({
         <MediaUploadList
           label={t("formGalleryImages")}
           value={galleryImages}
-          onChange={(fields) => update({ images: fields.map((f) => f.url) })}
+          onChange={applyGallery}
           onUpload={handleGalleryUpload}
           accept="image/*,video/*"
-          maxItems={5}
-          maxSizeMB={10}
+          maxItems={PRODUCT_MAX_IMAGES + PRODUCT_MAX_VIDEOS}
+          maxImages={PRODUCT_MAX_IMAGES}
+          maxVideos={PRODUCT_MAX_VIDEOS}
+          maxSizeMB={50}
           helperText={t("formGalleryImagesHelper")}
           onAbort={onMediaAbort}
         />
@@ -469,7 +506,11 @@ export function ProductForm({
             });
           }}
           onUpload={handleVideoUpload}
-          accept="video/*"
+          // `auto` (image+video+pdf), not `video/*`: this control is also the
+          // only place a YouTube/external URL can be attached, and refusing
+          // images here served no purpose. The live-listing REQUIREMENT below
+          // is unchanged — that is a requiredness rule, not a count rule.
+          kind="auto"
           maxSizeMB={50}
           helperText={
             product.listingType === "live"
@@ -1087,6 +1128,28 @@ export function ProductForm({
         disabled={isReadonly}
         placeholder="Shipping information..."
       />
+
+      {/*
+        Admin override of the seller's final-sale choice. Same field, same
+        document — this is not an admin-only parallel flag.
+
+        Phrased positively ("Accept returns") to match the seller form: a
+        switch whose ON state removes buyer rights reads backwards. OFF is
+        the platform default, and an absent value is also OFF.
+      */}
+      <Div>
+        <Toggle
+          checked={!isFinalSale(product)}
+          onChange={(checked) => update({ finalSale: !checked })}
+          disabled={isReadonly}
+          label="Accept change-of-mind returns"
+        />
+        <Text className="mt-1" size="xs" color="muted">
+          {isFinalSale(product)
+            ? "Final sale (default). Not-received, damaged, wrong-item, not-as-described and counterfeit claims are still accepted."
+            : "Buyers can return this listing within the platform return window for any reason."}
+        </Text>
+      </Div>
 
       <FormField
         name="returnPolicy"

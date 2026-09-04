@@ -74,6 +74,7 @@ import { computeRelatedItems } from "../../../_internal/server/features/products
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
+import { isFinalSale } from "../../products/constants/final-sale";
 
 export interface AuctionDetailPageViewProps {
   id: string;
@@ -108,6 +109,8 @@ interface AuctionInfoPanelProps {
   /** Resolved via isBuyNowAvailable() by the caller — never re-derived here. */
   buyNowAvailable: boolean;
   featured: boolean; freeShipping: boolean; condition: string | null;
+  /** Resolved by the caller via isFinalSale() — absent on the doc means true. */
+  finalSale: boolean;
   category: string | null; categoryName: string | null;
   brand: string | null; brandSlug: string | null;
   productFeatures?: import("../../products/schemas/product-features").ProductFeatureDocument[];
@@ -116,7 +119,7 @@ interface AuctionInfoPanelProps {
 }
 
 function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
-  const { productId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
+  const { productId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
   return (
     <Stack gap="md">
       <Div>
@@ -164,7 +167,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           <Span size="xs" color="faint">— in “Place a bid”</Span>
         </Row>
       )}
-      <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", emiAvailable: "EMI Available", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
+      <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} finalSale={finalSale} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", finalSale: "Final Sale", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", emiAvailable: "EMI Available", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
           {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{categoryName || category}</Link>}
@@ -447,7 +450,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           renderGallery={() => (
             <ProductGalleryClient images={images} video={productVideo} productName={title} />
           )}
-          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
+          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale: isFinalSale(p), category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">

@@ -24,6 +24,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
+import { withFinalSale } from "./_helpers/final-sale-fixtures";
 
 const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   {
@@ -301,7 +302,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
 ];
 
-export const productsPreordersSeedData = _rawPreordersSeedData.map((p) => ({
+export const productsPreordersSeedData = _rawPreordersSeedData.map((p) => withFinalSale({
   tags: [] as string[],
   stockQuantity: p.availableQuantity ?? 1,
   mainImage: p.images?.[0] ?? "",

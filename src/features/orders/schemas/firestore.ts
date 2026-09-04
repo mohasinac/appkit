@@ -8,6 +8,7 @@ import type { OrderType } from "../utils/order-splitter";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ListingType } from "../../products/types";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
+import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
 //
@@ -242,6 +243,20 @@ export interface OrderDocumentItem {
   /** P-8 GST — snapshotted from the product at order time so the invoice stays accurate even if the product's HSN/rate later changes. */
   hsnCode?: string;
   gstRate?: 0 | 5 | 12 | 18 | 28;
+  /**
+   * Whether THIS line was final sale at the moment of purchase.
+   *
+   * Snapshotted, exactly like `gstRate` and `hsnCode` above and for the same
+   * reason: it is a term the buyer agreed to at checkout. Re-reading
+   * `product.finalSale` at refund time would let a seller flip the switch
+   * after the sale and retroactively refuse a return the buyer was promised —
+   * or, in the other direction, lose a restriction the buyer accepted.
+   *
+   * ALWAYS an explicit boolean here, resolved through `isFinalSale()` by the
+   * order-row builder, so no downstream reader has to know that absence means
+   * true on the product. Absence HERE means the order predates the field.
+   */
+  finalSale?: boolean;
 }
 
 /**
@@ -257,7 +272,17 @@ export interface OrderRefundEvent {
   amount: number;
   /** ProductIds / itemIds that were refunded (for partial refunds). */
   itemIds?: string[];
+  /**
+   * Human-readable reason, rendered by `RefundHistoryTable`. Derived from
+   * `reasonCode` (plus any buyer note) rather than typed freehand, so the
+   * prose and the code can never disagree about why a refund happened.
+   */
   reason: string;
+  /**
+   * Coded reason. Optional only because refunds recorded before the enum
+   * existed have none — every new refund sets it.
+   */
+  reasonCode?: ReturnReason;
   refundedAt: Date;
   refundedBy: string; // userId of admin / seller who issued the refund
   /** Set when Razorpay processed the refund. */
@@ -322,6 +347,23 @@ export interface OrderDocument extends BaseDocument {
   deliveryDate?: Date;
   cancellationDate?: Date;
   cancellationReason?: string;
+  /**
+   * Why the buyer asked to return this order. Closed enum — see
+   * `_internal/shared/features/orders/return-reasons`.
+   *
+   * `requestReturnAction` accepted a free-text reason and then discarded it
+   * before writing, so until now an order could reach `return_requested` with
+   * no recorded reason at all and the seller had nothing to act on.
+   */
+  returnReasonCode?: ReturnReason;
+  /** Optional buyer elaboration alongside the coded reason. */
+  returnReasonNote?: string;
+  returnRequestedAt?: Date;
+  /**
+   * Which lines the buyer wants to return. Absent means the whole order —
+   * the same convention `processRefundAction`'s `itemIds` already uses.
+   */
+  returnRequestedItemIds?: string[];
   refundAmount?: number;
   refundStatus?: RefundStatus;
   refundFeeDeducted?: number;

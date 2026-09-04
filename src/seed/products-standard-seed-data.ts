@@ -27,6 +27,7 @@ import { ProductDocument, ProductSpecification, CustomField, CustomSection } fro
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
+import { withFinalSale } from "./_helpers/final-sale-fixtures";
 
 /*
  * Real Beyblade attributes per fixture — Root Cause #6 (standard was the
@@ -661,4 +662,4 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     ...(p.id ? SPEC_OVERRIDES[p.id] : undefined),
     listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.STANDARD,
   })),
-];
+].map(withFinalSale);

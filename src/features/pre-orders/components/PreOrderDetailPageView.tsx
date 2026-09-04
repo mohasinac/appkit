@@ -46,6 +46,7 @@ import { CustomSectionTabContent } from "../../products/components/CustomSection
 import { PreOrderActionsClient } from "./PreOrderActionsClient";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
+import { isFinalSale } from "../../products/constants/final-sale";
 import { FeatureBadgeList } from "../../products/components/FeatureBadge";
 import type { ProductFeatureDocument } from "../../products/schemas/product-features";
 import { ShareButton } from "../../products/components/ShareButton";
@@ -93,6 +94,8 @@ interface PreOrderInfoSectionProps {
   freeShipping: boolean;
   condition: string | null;
   isCancellable: boolean;
+  /** Resolved by the caller via isFinalSale() — absent on the doc means true. */
+  finalSale: boolean;
   category: string | null;
   categoryName: string | null;
   brand: string | null;
@@ -113,6 +116,7 @@ function PreOrderInfoSection({
   freeShipping,
   condition,
   isCancellable,
+  finalSale,
   category,
   categoryName,
   brand,
@@ -162,6 +166,7 @@ function PreOrderInfoSection({
         freeShipping={freeShipping}
         condition={condition ?? undefined}
         returnable={isCancellable}
+        finalSale={finalSale}
         labels={{
           featured: "Featured",
           fasterDelivery: "Faster Delivery",
@@ -172,6 +177,7 @@ function PreOrderInfoSection({
           conditionBroken: "For Parts",
           conditionRefurbished: "Refurbished",
           returnable: "Cancellable",
+          finalSale: "Final Sale",
           freeShipping: "Free Shipping",
           codAvailable: "Cash on Delivery",
           emiAvailable: "EMI Available",
@@ -548,6 +554,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               freeShipping={freeShipping}
               condition={condition}
               isCancellable={isCancellable}
+              finalSale={isFinalSale(p)}
               category={category}
               categoryName={categoryName}
               brand={brand}

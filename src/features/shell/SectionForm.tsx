@@ -10,6 +10,7 @@ import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
 import { useFormBottomActions } from "../layout/hooks/useFormBottomActions";
 import { useSectionState } from "../account/hooks/useCollapsedSections";
 import { FormSchemaContext } from "./FormShell";
+import { EASE_OUT_MS } from "../../tokens/motion";
 
 /**
  * A collapsible form segment. Replaces `StepDef` — the differences are the
@@ -230,8 +231,37 @@ export function scrollToSection(id: string): void {
   if (typeof document === "undefined") return;
   requestAnimationFrame(() => {
     const el = document.getElementById(sectionAnchorId(id));
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
-    el?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+    if (!el) return;
+
+    /*
+     * The header is already at its final position, so scrolling can happen on
+     * the next frame.
+     */
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    /*
+     * Focusing the offending field cannot.
+     *
+     * `<Collapse>` animates height 0 -> auto over EASE_OUT_MS, and Framer
+     * drives that with rAF rather than a CSS transition — so there is no
+     * `transitionend` to wait for, and one `requestAnimationFrame` lands while
+     * the panel is still ~0px tall inside `overflow: hidden`. Focusing there
+     * makes the browser scroll-anchor against a box that is about to grow,
+     * which is why "jump to error" could leave the field off-screen.
+     *
+     * A required section renders with no <Collapse> at all, so it is already
+     * at full height and this simply fires a tick later than it needs to.
+     */
+    const reduced =
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const focusInvalid = () =>
+      el.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+
+    if (reduced) focusInvalid();
+    else window.setTimeout(focusInvalid, EASE_OUT_MS);
   });
 }
 
@@ -289,7 +319,20 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     onOpenChange?.(ids);
   }, [controlledOpenIds, onOpenChange]);
 
-  const fieldToSectionIndex = useMemo(() => buildFieldToSectionIndex(ordered), [ordered]);
+  /*
+   * `ordered` depends on `values`, so it is a NEW array on every keystroke.
+   * Anything derived from it must key on the visible section SET instead, or
+   * the effect below re-fires per character — running a second full-tree
+   * `safeParse` on top of the one `handleFieldChange` already performs, and
+   * rebuilding every downstream callback with it.
+   *
+   * `ordered` itself must keep recomputing: a `when()` predicate can flip
+   * mid-typing and a section can appear or disappear. It is only the DERIVED
+   * values that are stable across that.
+   */
+  const visibleSectionKey = ordered.map((s) => s.id).join("|");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fieldToSectionIndex = useMemo(() => buildFieldToSectionIndex(ordered), [visibleSectionKey]);
 
   // Keep the latest callback without making runValidation depend on it — the
   // caller usually passes an inline arrow, which would otherwise rebuild the
@@ -416,8 +459,17 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     <Stack gap="md">
       {ordered.map((section) => {
         const isRequired = section.required === true;
-        // A required section is always open — it holds the fields without
-        // which the record cannot be saved, so hiding it is never useful.
+        /*
+         * A required section is always open — it holds the fields without
+         * which the record cannot be saved, so hiding it is never useful.
+         *
+         * `collapsible={!isRequired}` below is what makes that VISIBLE: the
+         * header renders as a plain heading with no control. Previously this
+         * flag only forced `isCollapsed` false while the header still drew a
+         * chevron button, so the section was permanently open AND appeared
+         * broken. `onToggle` no longer needs its `if (!isRequired)` guard,
+         * because a static header has nothing to click.
+         */
         const isCollapsed = isRequired
           ? false
           : !(openIds.includes(section.id) || forceOpenIds.includes(section.id));
@@ -428,13 +480,20 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
             key={section.id}
             id={sectionAnchorId(section.id)}
             title={
-              <Row align="center" gap="xs">
+              /*
+               * `as="span"` matters: a collapsible section's header renders
+               * this INSIDE a <button>, and <Row>'s default <div> made that
+               * <button><div><span><div> — invalid, since a button may only
+               * contain phrasing content. Same variant props, legal element.
+               */
+              <Row as="span" align="center" gap="xs" className="min-w-0">
                 <Span weight="semibold" size="sm">{section.heading ?? section.label}</Span>
                 {isRequired && <Span size="xs" color="muted">Required</Span>}
               </Row>
             }
             isCollapsed={isCollapsed}
-            onToggle={() => { if (!isRequired) toggle(section.id); }}
+            collapsible={!isRequired}
+            onToggle={() => toggle(section.id)}
             keepMounted={section.keepMounted}
             renderHeaderExtra={
               errorCount > 0

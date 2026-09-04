@@ -9,6 +9,7 @@ import {
   ORDER_NOTE_MAX_LENGTH,
   ORDER_TRACKING_NUMBER_MAX_LENGTH,
 } from "./config";
+import { RETURN_REASON } from "./return-reasons";
 
 /*
  * The order's own SNAPSHOT of where it shipped, denormalised onto the order
@@ -66,6 +67,27 @@ export const cancelOrderSchema = z.object({
   reason: z.string().max(ORDER_CANCEL_REASON_MAX_LENGTH).optional(),
 });
 
+/**
+ * A buyer asking to return a delivered order.
+ *
+ * `requestReturnAction` used to parse `cancelOrderSchema` — a cancellation is
+ * a different event with a different window and a different outcome, and its
+ * `reason` was optional free text that the action then dropped before writing.
+ * So an order could reach `return_requested` carrying no reason at all, and
+ * the seller had nothing to act on.
+ *
+ * The code is REQUIRED here: final sale has to decide whether this particular
+ * return is allowed, and it cannot do that against an absent value.
+ */
+export const returnRequestSchema = z.object({
+  orderId: z.string().min(1),
+  reasonCode: z.enum(RETURN_REASON),
+  reasonNote: z.string().max(ORDER_CANCEL_REASON_MAX_LENGTH).optional(),
+  /** Omit for a whole-order return — matches `processRefundAction`'s itemIds. */
+  itemIds: z.array(z.string().min(1)).optional(),
+});
+
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
 export type CancelOrderInput = z.infer<typeof cancelOrderSchema>;
+export type ReturnRequestInput = z.infer<typeof returnRequestSchema>;

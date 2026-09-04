@@ -56,6 +56,10 @@ export {
   adminRequestProofReuploadAction,
   adminRejectPaymentAsFraudAction,
   raiseOrderDisputeAction,
+  // Buyer return request. Was reachable only through `server-entry.ts`, which
+  // is the bare `@mohasinac/appkit` specifier — not `/server`, where every
+  // other order action lives and where a consumer would look for it.
+  requestReturnAction,
 } from "./_internal/server/features/orders/actions";
 
 // [SERVER-ONLY] Cloud Function handler wrappers — persist exceptions to
@@ -1674,6 +1678,9 @@ export {
   isAllowedMime,
   maxBytesFor,
   getConversionHint,
+  PRODUCT_MAX_IMAGES,
+  PRODUCT_MAX_VIDEOS,
+  PRODUCT_IMAGE_INDEX_MAX,
 } from "./_internal/shared/media/limits";
 export type {
   MediaKind,
@@ -1840,3 +1847,26 @@ export {
   actionIndexRepository,
 } from "./features/search/action-index/repository";
 export type { ActionIndexDocument } from "./features/search/action-index/repository";
+
+export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
+// Return / refund reasons — the closed enum the final-sale gate branches on.
+// See the module docstring for why the exempt set is "seller or carrier fault"
+// rather than "serious reasons".
+export {
+  RETURN_REASON,
+  FINAL_SALE_EXEMPT_REASONS,
+  RETURN_REASON_LABEL,
+  RETURN_REASON_GROUP_LABEL,
+  isFinalSaleExempt,
+  isReturnReason,
+  selectableReturnReasons,
+} from "./_internal/shared/features/orders/return-reasons";
+export type { ReturnReason } from "./_internal/shared/features/orders/return-reasons";
+
+// Seller listing form draft <-> product write payload. The flat form keys and
+// the nested document blocks are different shapes, and nothing translated
+// between them — see the module docstring.
+export {
+  draftToProductInput,
+  productToDraft,
+} from "./features/seller/utils/product-draft-mapping";

@@ -8,3 +8,4 @@ export * from "./components";
 export * from "./schemas";
 export * from "./columns";
 export { manifest } from "./manifest";
+export { draftToProductInput, productToDraft } from "./utils/product-draft-mapping";

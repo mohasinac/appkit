@@ -43,7 +43,7 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "payment", // CheckoutRouteClient — payment.otpCheckoutThreshold (narrowed)
   "listings", // useListingTypeFlags — narrowed to listings.listingTypes; categoryTypes has no client reader
   "notificationChannels", // NotificationPreferencesPanel + CheckoutRouteClient (whatsapp.otpEnabled)
-  "announcementBar", // AdminSiteView; also the homepage banner
+  "announcementBar", // the homepage banner (AdminSiteSettingsView edits it)
   "navConfig", // NavbarWithSettings, DashboardLayoutClient
   "actionConfig", // useAuthGate
   "background", // DashboardLayoutClient (background.light / .dark)

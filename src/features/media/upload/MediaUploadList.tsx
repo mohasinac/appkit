@@ -6,6 +6,7 @@ import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -20,6 +21,21 @@ export interface MediaUploadListProps {
   accept?: string;
   maxSizeMB?: number;
   maxItems?: number;
+  /**
+   * Per-TYPE ceilings, counted separately.
+   *
+   * `maxItems` alone cannot express "10 images and 1 video" — it is one
+   * number over a mixed list, so a buyer-facing rule of that shape had to be
+   * enforced by splitting the control in two, which is why product forms
+   * carried a gallery AND a separate single-video field that wrote a
+   * different part of the document.
+   *
+   * When either is set the matching type is counted on its own and `maxItems`
+   * becomes the overall backstop. Existing callers that pass neither are
+   * completely unaffected.
+   */
+  maxImages?: number;
+  maxVideos?: number;
   disabled?: boolean;
   helperText?: string;
   /**
@@ -55,6 +71,8 @@ export function MediaUploadList({
   accept = "image/*,video/*,application/pdf",
   maxSizeMB = 50,
   maxItems = 12,
+  maxImages,
+  maxVideos,
   disabled = false,
   helperText,
   onAbort,
@@ -118,18 +136,59 @@ export function MediaUploadList({
       return;
     }
 
+    /*
+     * Per-type ceilings. Counted from the INCOMING batch as well as what is
+     * already there, so selecting five videos at once is refused up front
+     * rather than after four of them have uploaded.
+     *
+     * `inferMediaTypeFromMime` is the same classifier used to tag the item
+     * below, so the count and the stored `type` can never disagree.
+     */
+    if (maxImages != null || maxVideos != null) {
+      const incoming = files.map((f) => inferMediaTypeFromMime(f.type, f.name));
+      const countOf = (t: string) =>
+        value.filter((v) => v.type === t).length + incoming.filter((v) => v === t).length;
+
+      if (maxImages != null && countOf("image") > maxImages) {
+        setError(`You can upload up to ${maxImages} image${maxImages === 1 ? "" : "s"}.`);
+        e.currentTarget.value = "";
+        return;
+      }
+      if (maxVideos != null && countOf("video") > maxVideos) {
+        setError(
+          maxVideos === 1
+            ? "Only one video is allowed. Remove the current one to replace it."
+            : `You can upload up to ${maxVideos} videos.`,
+        );
+        e.currentTarget.value = "";
+        return;
+      }
+    }
+
     setError(null);
+    /*
+     * Size is checked BEFORE the upload loop, and reported directly rather
+     * than thrown.
+     *
+     * It used to throw into the shared catch, which then rendered
+     * `err.message` — so one branch of that catch was authored copy worth
+     * showing while the other was whatever the network layer happened to
+     * throw. Splitting them lets the useful message survive and the arbitrary
+     * one resolve through `toUserMessage` (Rule #9.6 / Root Cause #86).
+     */
+    const tooBig = files.find((f) => f.size / 1024 / 1024 > maxSizeMB);
+    if (tooBig) {
+      setError(`${tooBig.name} exceeds ${maxSizeMB}MB`);
+      e.currentTarget.value = "";
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const uploaded: MediaField[] = [];
 
       for (const file of files) {
-        const sizeMb = file.size / 1024 / 1024;
-        if (sizeMb > maxSizeMB) {
-          throw new Error(`${file.name} exceeds ${maxSizeMB}MB`);
-        }
-
         const url = await onUpload(file);
         stageUrl(url);
 
@@ -141,8 +200,14 @@ export function MediaUploadList({
 
       onChange([...value, ...uploaded]);
     } catch (err) {
-      void normalizeError(err);
-      setError(err instanceof Error ? err.message : "Upload failed");
+      const normalized = normalizeError(err);
+      // Never the thrown value's own text: `onUpload` reaches the signed-URL
+      // endpoint, so this is where a server sentence would surface.
+      setError(
+        toUserMessage(normalized.code, undefined, {
+          fallback: "Upload failed. Please try again.",
+        }),
+      );
     } finally {
       setIsLoading(false);
       e.currentTarget.value = "";
@@ -244,6 +309,26 @@ export function MediaUploadList({
         aria-hidden="true"
         data-testid="media-upload-list-input"
       />
+
+      {/*
+        Live per-type counter. Without it a shared image+video control gives no
+        warning before the refusal — the user finds the ceiling by hitting it.
+        Only rendered when a per-type cap is actually in force.
+      */}
+      {(maxImages != null || maxVideos != null) && (
+        <Text variant="secondary" size="xs">
+          {[
+            maxImages != null
+              ? `${value.filter((v) => v.type === "image").length}/${maxImages} images`
+              : null,
+            maxVideos != null
+              ? `${value.filter((v) => v.type === "video").length}/${maxVideos} video${maxVideos === 1 ? "" : "s"}`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </Text>
+      )}
 
       {helperText && !error && (
         <Text variant="secondary" size="xs">

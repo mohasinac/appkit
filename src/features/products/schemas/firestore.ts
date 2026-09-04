@@ -224,6 +224,23 @@ export interface ProductDocument extends BaseDocument {
   features?: string[];
   shippingInfo?: string;
   returnPolicy?: string;
+  /**
+   * 🛑 ABSENT MEANS FINAL SALE. The platform default is `true`, so `undefined`
+   * and `true` are the same thing and only an explicit `false` opts a listing
+   * into change-of-mind returns.
+   *
+   * Never read this field directly — `!p.finalSale` and `p.finalSale === true`
+   * both get `undefined` wrong, in the direction that silently grants returns.
+   * Use `isFinalSale(p)` from `features/products/constants/final-sale`.
+   *
+   * Deliberately NOT in `DEFAULT_PRODUCT_DATA` (a default there would make
+   * `undefined` unreachable in new rows while every existing row still lacks
+   * it) and NOT in `PRODUCT_INDEXED_FIELDS` (nothing queries it).
+   *
+   * This blocks a return REASON, not a refund: seller/carrier-fault claims are
+   * always accepted. See `_internal/shared/features/orders/return-reasons`.
+   */
+  finalSale?: boolean;
   condition?: "new" | "like_new" | "good" | "fair" | "poor" | "used" | "refurbished" | "broken" | "graded";
   insurance?: boolean;
   insuranceCost?: number;
@@ -532,6 +549,9 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "features",
   "shippingInfo",
   "returnPolicy",
+  // Buyer-facing: drives the "Final Sale" card pill and the detail-page
+  // Delivery & Returns line. Absent means final sale — read via isFinalSale().
+  "finalSale",
   "listingType",
   "auctionEndDate",
   "startingBid",
@@ -599,6 +619,7 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "features",
   "shippingInfo",
   "returnPolicy",
+  "finalSale",
   "pickupAddressId",
   "condition",
   "insurance",

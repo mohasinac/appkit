@@ -11,6 +11,7 @@ interface ProductFeatureBadgeLabels {
   conditionBroken: string;
   conditionRefurbished: string;
   returnable: string;
+  finalSale: string;
   freeShipping: string;
   codAvailable: string;
   emiAvailable: string;
@@ -24,6 +25,13 @@ interface ProductFeatureBadgesProps {
   ratedSeller?: boolean;
   condition?: string;
   returnable?: boolean;
+  /**
+   * Absent means final sale, so callers must resolve this through
+   * `isFinalSale()` rather than passing `product.finalSale` straight in.
+   * Mutually exclusive with `returnable` in practice, but both are accepted
+   * independently so a caller cannot accidentally render neither.
+   */
+  finalSale?: boolean;
   freeShipping?: boolean;
   wishlistCount?: number;
   categoryProductCount?: number;
@@ -54,6 +62,7 @@ export function ProductFeatureBadges({
   ratedSeller,
   condition,
   returnable,
+  finalSale,
   freeShipping,
   wishlistCount,
   categoryProductCount,
@@ -119,6 +128,24 @@ export function ProductFeatureBadges({
       colorClass: "text-primary",
       bgClass:
         "bg-primary/5 dark:bg-primary/10 border-primary/20 dark:border-primary/30",
+    });
+  }
+
+  /*
+   * Final sale is the platform DEFAULT, so unlike every other badge here this
+   * one is the common case rather than the exception — it is rendered on
+   * warning tokens, not error, because it is a term of the sale and not a
+   * fault. `-surface` + matching ink per Root Cause #67: never `text-white`,
+   * which is invisible against the light-theme tint.
+   */
+  if (finalSale) {
+    badges.push({
+      key: "finalSale",
+      icon: <Span size="xs">⊘</Span>,
+      label: labels.finalSale,
+      colorClass: "text-warning dark:text-warning",
+      bgClass:
+        "bg-warning-surface dark:bg-warning-surface border-warning dark:border-warning",
     });
   }
 

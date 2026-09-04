@@ -22,7 +22,7 @@
  * @tag layer:schema
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:AdminAddressEditorView,AdminStoreEditorView,AdminSiteView
+ * @tag consumers:AdminAddressEditorView,AdminStoreEditorView
  * @tag sideEffects:none
  */
 

@@ -366,8 +366,6 @@ export function AdminSiteSettingsView({
 
   // ⑪ Platform Limits
   const [maxProductsPerStore, setMaxProductsPerStore] = React.useState(100);
-  const [maxImagesPerProduct, setMaxImagesPerProduct] = React.useState(10);
-  const [maxVideoSizeMb, setMaxVideoSizeMb] = React.useState(100);
   const [maxCustomFields, setMaxCustomFields] = React.useState(50);
   const [maxCustomSections, setMaxCustomSections] = React.useState(3);
   const [orderCancelWindow, setOrderCancelWindow] = React.useState(24);
@@ -588,8 +586,6 @@ export function AdminSiteSettingsView({
     setSettlementGrace(s.auctionConfig?.settlementGracePeriodHours ?? 24);
 
     setMaxProductsPerStore(s.platformLimits?.maxProductsPerStore ?? 100);
-    setMaxImagesPerProduct(s.platformLimits?.maxImagesPerProduct ?? 10);
-    setMaxVideoSizeMb(s.platformLimits?.maxVideoSizeMb ?? 100);
     setMaxCustomFields(s.platformLimits?.maxCustomFieldsPerProduct ?? 50);
     setMaxCustomSections(s.platformLimits?.maxCustomSectionsPerProduct ?? 3);
     setOrderCancelWindow(s.platformLimits?.orderCancellationWindowHours ?? 24);
@@ -792,7 +788,7 @@ export function AdminSiteSettingsView({
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
       payment: { razorpayEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
-      platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
+      platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
       // Both keys are always sent: Firestore's update() replaces a nested map
       // wholesale, so omitting one here would wipe it. The load-time spread this
@@ -1678,8 +1674,6 @@ export function AdminSiteSettingsView({
             <SettingsTabForm id="limits" label="Limits">
               <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
-                <Input label="Max images per product" value={String(maxImagesPerProduct)} onChange={(e) => setMaxImagesPerProduct(parseInt(e.target.value) || 0)} type="number" min={1} />
-                <Input label="Max video size (MB)" value={String(maxVideoSizeMb)} onChange={(e) => setMaxVideoSizeMb(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max custom fields per product" value={String(maxCustomFields)} onChange={(e) => setMaxCustomFields(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Max custom sections per product" value={String(maxCustomSections)} onChange={(e) => setMaxCustomSections(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />

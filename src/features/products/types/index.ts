@@ -138,6 +138,8 @@ export interface ProductItem {
   features?: string[];
   shippingInfo?: string;
   returnPolicy?: string;
+  /** Absent means final sale — read via `isFinalSale()`, never directly. */
+  finalSale?: boolean;
   ingredients?: string[];
   howToUse?: string[];
   allowOffers?: boolean;

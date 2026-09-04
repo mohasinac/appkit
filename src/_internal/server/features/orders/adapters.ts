@@ -24,6 +24,10 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
         ...(item.cancelledQuantity != null
           ? { cancelledQuantity: item.cancelledQuantity }
           : {}),
+        // Snapshotted return terms. Without this the buyer's return form
+        // cannot tell a final-sale line from a returnable one and offers
+        // every reason on every order (Root Cause #57).
+        ...(item.finalSale != null ? { finalSale: item.finalSale } : {}),
       }))
     : [
         {
@@ -63,6 +67,12 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     // missing value as "standard" rather than filtering it out.
     orderType: doc.orderType,
     offerId: doc.offerId,
+    // Refund-eligibility fields. All three were declared on the document and
+    // mapped nowhere, so every buyer-facing refund surface saw `undefined`.
+    ...(doc.isNonRefundable != null ? { isNonRefundable: doc.isNonRefundable } : {}),
+    ...(doc.contestable != null ? { contestable: doc.contestable } : {}),
+    ...(doc.returnReasonCode ? { returnReasonCode: doc.returnReasonCode } : {}),
+    ...(doc.returnReasonNote ? { returnReasonNote: doc.returnReasonNote } : {}),
     subtotal,
     shippingCost: shippingCost || undefined,
     discount: discount || undefined,

@@ -385,8 +385,19 @@ export interface SiteSettingsIntegrations {
 /** Admin-tunable platform caps. Enforced server-side; not buyer-facing. */
 export interface SiteSettingsPlatformLimits {
   maxProductsPerStore?: number;
-  maxImagesPerProduct?: number;
-  maxVideoSizeMb?: number;
+  /*
+   * `maxImagesPerProduct` and `maxVideoSizeMb` were REMOVED here.
+   *
+   * Both were admin-editable and read by absolutely nothing — no upload
+   * component, schema, action or route ever consulted them, so an admin who
+   * lowered the image cap saw the field save and the cap not change. Media
+   * counts are now a flat compile-time constant
+   * (`_internal/shared/media/limits.ts`), which a Zod `.max()` can reference
+   * and a per-request settings read cannot.
+   *
+   * Do not re-add them without a reader: a control that silently does nothing
+   * is worse than an absent one.
+   */
   maxCustomFieldsPerProduct?: number;
   maxCustomSectionsPerProduct?: number;
   orderCancellationWindowHours?: number;

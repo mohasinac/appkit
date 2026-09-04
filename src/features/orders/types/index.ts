@@ -68,6 +68,15 @@ export interface OrderItem {
   bundleCategorySlug?: string;
   /** Snapshot of bundle.bundleProductIds at order-creation time. */
   bundleProductIds?: string[];
+  /**
+   * Whether this line was final sale when it was bought. Snapshotted on the
+   * order document; surfaced here so the buyer's return form can narrow the
+   * reason list without a second fetch.
+   *
+   * Absent means the order predates the field — NOT "returnable". The server
+   * gate reads the document, so this is a rendering hint only.
+   */
+  finalSale?: boolean;
 }
 
 /**
@@ -131,6 +140,21 @@ export interface Order {
   couponDiscount?: number;
   /** Every discount applied to this order — the full stack, not just the first. */
   appliedDiscounts?: AppliedOrderDiscount[];
+  /**
+   * Listing-TYPE level block (prize-draw entries). Distinct from per-line
+   * `finalSale`: this refuses every reason, that one refuses only
+   * change-of-mind reasons.
+   */
+  isNonRefundable?: boolean;
+  /**
+   * False once a refund has been posted — no further dispute or RMA.
+   * Was never mapped, so the buyer-facing refund form could not render its
+   * "already refunded" state at all.
+   */
+  contestable?: boolean;
+  /** Coded reason recorded when the buyer requested a return. */
+  returnReasonCode?: string;
+  returnReasonNote?: string;
 
   /**
    * Paid add-ons the buyer opted into for THIS order (= this store).

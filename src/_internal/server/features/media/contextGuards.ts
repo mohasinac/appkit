@@ -14,6 +14,8 @@ import {
   classifyMime,
   MIME_TO_EXT,
   type AllowedMime,
+  PRODUCT_IMAGE_INDEX_MAX,
+  PRODUCT_MAX_VIDEOS,
 } from "../../../shared/media/limits";
 import {
   generateMediaFilename,
@@ -46,12 +48,26 @@ function okWithFilename(
 // Per-context limits — mirrored from the previous inline constants in
 // /api/media/upload. Adjust here, not at the call site.
 export const CONTEXT_LIMITS = {
-  PRODUCT_IMAGE_MAX: 5,
-  PRODUCT_VIDEO_MAX: 1,
+  /*
+   * These are INDEX ceilings, not counts — `indexGuard` compares them against
+   * the `index` baked into the media filename, and `generateMediaFilename`
+   * gives the main image index 1 with the gallery running 2..N. So the index
+   * space is one larger than the gallery allowance, which is exactly what
+   * `PRODUCT_IMAGE_INDEX_MAX` encodes.
+   *
+   * Getting that wrong was a live 400: the gallery was capped at 5 and sent
+   * its 5th image as index 6, so the last slot of every product form was
+   * rejected by the signed-URL endpoint.
+   *
+   * FLAT across listing types — auctions and pre-orders are products with
+   * different sale mechanics, not products that deserve fewer photos.
+   */
+  PRODUCT_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
+  PRODUCT_VIDEO_MAX: PRODUCT_MAX_VIDEOS,
   REVIEW_IMAGE_MAX: 5,
   REVIEW_VIDEO_MAX: 1,
-  AUCTION_IMAGE_MAX: 5,
-  PREORDER_IMAGE_MAX: 5,
+  AUCTION_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
+  PREORDER_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
   EVENT_COVER_MAX: 1,
   EVENT_IMAGE_MAX: 10,
   EVENT_WINNER_IMAGE_MAX: 5,

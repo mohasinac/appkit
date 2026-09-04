@@ -22,8 +22,9 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
+import { withFinalSale } from "./_helpers/final-sale-fixtures";
 
-export const productsArtSeedData: Partial<ProductDocument>[] = [
+const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
   {
     id: "art-dranzer-phoenix-poster",
     slug: "art-dranzer-phoenix-poster",
@@ -280,3 +281,12 @@ export const productsArtSeedData: Partial<ProductDocument>[] = [
     ]),
   } as unknown as Partial<ProductDocument>,
 ];
+
+/*
+ * This file had no export wrapper at all — every other product seed file maps
+ * its raw array through one, and these two were the exception. Adding it here
+ * so the final-sale opt-outs are applied the same way everywhere rather than
+ * being hand-written into two records that reviewers would have to find.
+ */
+export const productsArtSeedData: Partial<ProductDocument>[] =
+  _rawProductsArtSeedData.map(withFinalSale);

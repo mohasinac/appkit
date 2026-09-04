@@ -7,7 +7,10 @@ import {
   createOrderSchema,
   updateOrderStatusSchema,
   cancelOrderSchema,
+  returnRequestSchema,
 } from "../../../shared/features/orders/schema";
+import { isFinalSaleExempt } from "../../../shared/features/orders/return-reasons";
+import { REFUND_COPY } from "../../../shared/features/orders/refund-copy";
 import { assertOrderCancellable, assertReturnWindowOpen } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
@@ -43,13 +46,57 @@ export async function cancelOrderAction(input: unknown): Promise<ActionResult<un
   });
 }
 
+/**
+ * Buyer requests a return on a delivered order.
+ *
+ * Two things this did not do before, both of which made the feature unusable:
+ *
+ *  1. it parsed `cancelOrderSchema` and then **discarded the reason**, so an
+ *     order reached `return_requested` with nothing recorded about why;
+ *  2. it had no caller anywhere — the whole path was unreachable.
+ */
 export async function requestReturnAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
-      const parsed = cancelOrderSchema.safeParse(input);
+      const parsed = returnRequestSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
-      await assertReturnWindowOpen(parsed.data.orderId, user.uid);
-      return orderRepository.updateStatus(parsed.data.orderId, "return_requested" as any);
+      const { orderId, reasonCode, reasonNote, itemIds } = parsed.data;
+
+      // Ownership + the 7-day post-delivery window.
+      await assertReturnWindowOpen(orderId, user.uid);
+
+      /*
+       * The final-sale gate, in the same shape as `processRefundAction`'s.
+       * Both entry points need it: this one is where the buyer asks, that one
+       * is where the money moves, and a buyer must not be able to lodge a
+       * request that is guaranteed to be refused at the second gate.
+       *
+       * Read from the order's per-line snapshot, never the live product.
+       */
+      if (!isFinalSaleExempt(reasonCode)) {
+        const order = await orderRepository.findById(orderId);
+        if (!order) throw new OrderNotFoundError(orderId);
+        const scopedItems = itemIds?.length
+          ? (order.items ?? []).filter((i) => itemIds.includes(i.productId))
+          : (order.items ?? []);
+        if (scopedItems.some((i) => i.finalSale === true)) {
+          throw new ValidationError(REFUND_COPY.request.finalSaleBlockedMessage);
+        }
+      }
+
+      /*
+       * Record the reason BEFORE flipping the status. A status change is what
+       * every notification and dashboard query keys on, so a seller reading
+       * the row the moment it lands must already find the reason on it.
+       */
+      await orderRepository.update(orderId, {
+        returnReasonCode: reasonCode,
+        ...(reasonNote ? { returnReasonNote: reasonNote } : {}),
+        returnRequestedAt: new Date(),
+        ...(itemIds?.length ? { returnRequestedItemIds: itemIds } : {}),
+      } as any);
+
+      return orderRepository.updateStatus(orderId, "return_requested" as any);
   });
 }
 

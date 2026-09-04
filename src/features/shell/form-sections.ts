@@ -95,6 +95,10 @@ export const SECTION_GROUP_DEFAULTS: Record<string, FormSectionGroup> = {
   // logistics
   address: "logistics", shipping: "logistics", delivery: "logistics",
   routing: "logistics",
+  // Returns sit with logistics rather than with pricing: the seller is
+  // describing what happens to the goods after delivery, and the section
+  // reads directly after Shipping on the listing form.
+  returns: "logistics",
   // relationships
   owner: "relationships", members: "relationships", link: "relationships",
   google: "relationships", sync: "relationships", subscribe: "relationships",

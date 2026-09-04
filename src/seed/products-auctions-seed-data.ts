@@ -27,6 +27,7 @@ import { ProductDocument, ProductSpecification } from "../features/products/sche
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
+import { withFinalSale } from "./_helpers/final-sale-fixtures";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -455,4 +456,4 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     createdAt: new Date("2026-08-10"),
     updatedAt: new Date("2026-08-24"),
   },
-].map(withTokens);
+].map(withTokens).map(withFinalSale);

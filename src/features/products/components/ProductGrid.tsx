@@ -14,6 +14,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { CardStoreLine } from "./CardStoreLine";
+import { isFinalSale } from "../constants/final-sale";
 import { FeatureBadgeList } from "./FeatureBadge";
 import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
@@ -38,6 +39,14 @@ const CLS_BADGE_LIMITED = "rounded-full bg-info-solid px-[var(--appkit-space-2)]
 // inverts with the theme. `warning` because success/info/error are each already
 // taken by a sibling pill in this same stack.
 const CLS_BADGE_OFFERABLE = "rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-warning-on-solid shadow-sm";
+/*
+ * Final sale. A fixed dark scrim with white ink, following CLS_BADGE_TRENDING's
+ * precedent rather than a `-surface` token: this sits on top of the product
+ * PHOTO, where a theme-relative tint is a near-white fill that vanishes against
+ * a light image (Root Cause #67). Not `warning-solid`, which "Taking Offers"
+ * already owns — two amber pills stacked would read as one control.
+ */
+const CLS_BADGE_FINAL_SALE = "rounded-full bg-zinc-900/90 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
 const CLS_STAR = "text-[11px] text-warning";
 const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-error";
 const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-error";
@@ -204,6 +213,20 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   title="The seller accepts offers on this listing"
                 >
                   Taking Offers
+                </Span>
+              )}
+              {/*
+                "Final Sale" pill. Absent means final sale, so this is resolved
+                through isFinalSale() and NOT `product.finalSale` — the latter
+                would leave every listing created before the field existed
+                unlabelled while still being final sale at the refund gate.
+              */}
+              {isFinalSale(product) && (
+                <Span
+                  className={CLS_BADGE_FINAL_SALE}
+                  title="Final sale — no change-of-mind returns. Not-received, damaged, wrong-item, not-as-described and counterfeit claims are still accepted."
+                >
+                  Final Sale
                 </Span>
               )}
               {/* "Variants" pill — product has sub-listings/variants */}

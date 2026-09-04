@@ -140,7 +140,22 @@ export function Collapse({ isOpen, children, ...props }: CollapseProps) {
       {isOpen && (
         <motion.div
           initial={reduced ? false : { height: 0, opacity: 0, overflow: "hidden" }}
-          animate={{ height: "auto", opacity: 1, overflow: "hidden" }}
+          /*
+           * `overflow: hidden` is needed WHILE the height animates, and is
+           * wrong once it lands. Keeping it in the settled state made every
+           * open panel clip anything that escapes its box — a dropdown, a
+           * popover, a tooltip, a focus ring on the last row.
+           *
+           * `transitionEnd` applies after the animation completes, so the
+           * clipping still happens during the transition and is released the
+           * moment the panel reaches its natural height.
+           */
+          animate={{
+            height: "auto",
+            opacity: 1,
+            overflow: "hidden",
+            transitionEnd: { overflow: "visible" },
+          }}
           exit={{ height: 0, opacity: 0, overflow: "hidden" }}
           transition={EASE_OUT}
           {...props}

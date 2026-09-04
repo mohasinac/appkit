@@ -1988,6 +1988,55 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
       ],
     },
+    {
+      pageKey: "return-request",
+      pageLabel: "Requesting a return \u2014 and what final sale actually blocks",
+      href: "/user/orders",
+      cases: [
+        {
+          key: "return-cta-only-when-returnable",
+          label: "The \"Request Return\" button appears only on a DELIVERED order inside the 7-day window",
+          description:
+            "Added 2026-09-04. BEFORE there was no buyer-facing return flow at all: the action existed, the CTA was registered in ACTIONS.USER, and nothing anywhere rendered it. AFTER: open a delivered order's detail page and the button is there beside Track Shipment. Open a pending or shipped one and it is not. Open a delivered order older than 7 days and the page explains the window has closed rather than offering a form that would be refused.",
+        },
+        {
+          key: "return-not-received-accepted-on-final-sale",
+          label: "\"It never arrived\" is accepted on a FINAL SALE order",
+          description:
+            "This is the whole rule. Final sale refuses a change of mind; it can never refuse a claim that the buyer did not get what they paid for. On a final-sale order, choose \"It never arrived\", tick the three acknowledgements, submit \u2014 it must go through and the order must move to Return Requested.",
+        },
+        {
+          key: "return-change-of-mind-refused-by-name",
+          label: "On a final-sale order the change-of-mind reasons are NOT OFFERED, and the panel says why",
+          description:
+            "Open the return form for a final-sale order. A warning panel names the situation, and the reason picker lists only the five fault reasons \u2014 never-arrived, not-as-described, damaged, wrong item, counterfeit. \"I changed my mind\" must not be selectable. On a returnable order all ten reasons appear. A generic \"request refused\" with no explanation is the failure this replaced.",
+        },
+        {
+          key: "return-reason-is-persisted",
+          label: "The reason the buyer picked is actually STORED and visible to staff",
+          description:
+            "BEFORE: `requestReturnAction` parsed a free-text reason and then threw it away before writing \u2014 an order reached Return Requested with nothing recorded about why, and the seller had nothing to act on. AFTER: submit a return, then open the same order in /admin/return-requests and confirm the coded reason and any note are there.",
+        },
+        {
+          key: "return-partial-gates-selected-lines-only",
+          label: "On a mixed order, a final-sale line does not block a return of the returnable line",
+          description:
+            "Final sale is snapshotted PER LINE at purchase, not per order. On an order containing one final-sale item and one returnable item, a change-of-mind return scoped to the returnable line must be accepted; the same reason scoped to the final-sale line must not.",
+        },
+        {
+          key: "return-prize-draw-still-refused-entirely",
+          label: "A prize-draw order is still refused for EVERY reason \u2014 a different, earlier gate",
+          description:
+            "`isNonRefundable` is a property of the listing TYPE and admits no exception, including a seller-fault one. Open a prize-draw order's refund surface: it must refuse outright and say so, without offering a reason picker at all. Confusing this with final sale in either direction is the failure.",
+        },
+        {
+          key: "return-terms-snapshotted-at-purchase",
+          label: "Changing a listing's return terms does NOT change an order already placed",
+          description:
+            "Buy a returnable listing. Then, as the seller, switch that listing to final sale. Go back to the order and request a change-of-mind return \u2014 it must still be ACCEPTED, because the buyer agreed to the terms shown at checkout. The order carries its own copy; a seller must not be able to withdraw a right after the sale.",
+        },
+      ],
+    },
   ]),
 
   ...group("selling", "Selling", [
@@ -2234,6 +2283,34 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description:
             "BEFORE: an invalid field produced a banner listing the problem with no way to reach it, and on the site-settings page the summary was mounted outside every form context and so displayed NOTHING at all. AFTER: submit a form with a bad value (a negative refund on an order, a non-https third-party ad URL, an AdSense id that is not ca-pub-…) and the summary must list it, tag it with its section, collapse open that section when clicked, and show a count badge on the section header.",
           href: "/admin/ads",
+        },
+        {
+          key: "required-section-has-no-dead-chevron",
+          label: "A REQUIRED section renders as a plain heading \u2014 no chevron, nothing to click",
+          description:
+            "Fixed 2026-09-04. BEFORE: SectionDef documented a required section as rendering \"without a collapse control so it can't be hidden\", but CollapsibleSection had no way to say that, so SectionForm passed a no-op handler and the header still drew a full button with a rotating chevron. Clicking it did nothing, on ~73 required sections across the app \u2014 which reads as a broken form. AFTER: on any sectionised form (admin product, admin user, store product), the first section's header has no chevron and no hover state, while every optional section below it still expands and collapses normally.",
+          href: "/admin/products/new",
+        },
+        {
+          key: "open-section-does-not-clip-dropdowns",
+          label: "A dropdown opened inside an expanded section is not clipped at the panel edge",
+          description:
+            "BEFORE: the collapse animation kept `overflow: hidden` in its SETTLED open state, not just during the transition, so anything escaping the panel box was cut off. AFTER: expand a section containing a select or picker near its bottom edge, open it, and the list must render in full rather than being sliced by the section border.",
+          href: "/admin/products/new",
+        },
+        {
+          key: "error-jump-lands-on-the-field",
+          label: "Jumping to an error scrolls to the section AND lands focus on the offending field",
+          description:
+            "BEFORE: the scroll fired one animation frame after expanding, while the panel was still ~0px tall inside overflow:hidden \u2014 so focus landed against a box that was about to grow and the field could end up off-screen. AFTER: submit a form with an error inside a COLLAPSED section. It expands, scrolls, and the invalid input is both visible and focused once the animation finishes.",
+          href: "/admin/products/new",
+        },
+        {
+          key: "long-form-typing-is-smooth",
+          label: "Typing in a long form does not stutter",
+          description:
+            "BEFORE: the section list was rebuilt on every keystroke, which re-fired the validation effect on top of the validation the keystroke already triggered \u2014 two full-tree schema parses per character on a 40-field listing form. AFTER: type a long description into the seller product form. It should keep up. This is a feel test, not a pass/fail assertion; report it if it lags.",
+          href: "/store/products/new",
         },
         {
           key: "form-mobile-action-bar",
@@ -2483,6 +2560,137 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "store-sidebar-logout-button",
           label: "The store dashboard sidebar has a visible \"Log out\" action at the bottom (not just the header profile dropdown), and clicking it signs out and redirects to login",
           href: "/store",
+        },
+      ],
+    },
+    {
+      pageKey: "final-sale-authoring",
+      pageLabel: "Final sale \u2014 the seller switch",
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "final-sale-defaults-on",
+          label: "A brand-new listing is FINAL SALE by default \u2014 the Returns section shows \"Accept change-of-mind returns\" switched OFF",
+          description:
+            "Added 2026-09-04. Open the Returns section on a new listing of any type. The toggle is off and the panel explains that not-received / damaged / wrong-item / not-as-described / counterfeit claims are still accepted. Absent means final sale, so a listing saved without ever opening this section is also final sale \u2014 which is the point.",
+          href: "/store/products/new",
+        },
+        {
+          key: "final-sale-opt-out-survives-reload",
+          label: "Turning returns ON, saving, and RELOADING shows it still on",
+          description:
+            "This is the case that matters, and a reload is the only way to see it. `productBaseSchema` is a plain z.object() with no .passthrough(), so it strips every key it does not name \u2014 a field missing from it saves with a success toast and is gone. BEFORE such a field existed at all. AFTER: toggle Accept returns ON, Save, reload the edit page, and the toggle must still be ON. If it reverts to off, `finalSale` is being stripped on write.",
+          href: "/store/products",
+        },
+        {
+          key: "return-policy-authorable-by-seller",
+          label: "A seller can write their own Return policy text \u2014 for the first time",
+          description:
+            "BEFORE: `returnPolicy` existed on the document and the ONLY editor for it was the admin product form, so a seller could never state their own terms. AFTER: the Returns section on the seller form has a Return policy textarea. Type into it, save, reload, and confirm it persists and appears on the public listing under Delivery & Returns.",
+          href: "/store/products",
+        },
+        {
+          key: "final-sale-admin-override",
+          label: "An admin can flip the same switch on any listing, and it is the SAME field",
+          description:
+            "Open a listing in the admin product editor. The \"Accept change-of-mind returns\" toggle sits directly above the Return policy box and reflects whatever the seller chose. Change it, save, then reopen the SELLER edit form for that listing \u2014 it must show the admin's value. Two independent flags would be the failure.",
+          href: "/admin/products",
+        },
+        {
+          key: "final-sale-badges-render",
+          label: "A final-sale listing shows the pill on its card AND the line on its detail page",
+          description:
+            "Seed data opts one listing per type OUT of final sale, so both states are visible. On /products, a final-sale listing carries a dark \"Final Sale\" pill; the opted-out one does not. On the detail page, the Delivery & Returns block always renders a returns line \u2014 even when the seller wrote no shipping or policy text at all, which previously hid the block entirely and with it the most consequential term of the sale.",
+          href: "/products",
+        },
+      ],
+    },
+    {
+      pageKey: "media-limits",
+      pageLabel: "Media \u2014 ten images and one video, on every listing type",
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "media-gallery-accepts-images-and-video",
+          label: "The gallery takes BOTH images and a video, and shows a live per-type count",
+          description:
+            "Changed 2026-09-04. BEFORE the single-media control on the listing form was video-only (`kind=\"video\"`), so the one \"add media\" affordance a seller saw refused photos. AFTER: the gallery accepts image files and a video file in the same control, and a counter under it reads \"N/10 images \u00b7 N/1 video\" as you add them.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-tenth-image-uploads",
+          label: "The 10th gallery image uploads \u2014 the 5th used to fail with a 400",
+          description:
+            "BEFORE: the gallery was capped at 5 and sent its Nth image as index N+1, while the server's signed-URL guard rejected any index above 5 \u2014 so the LAST slot of every product form returned a 400 that read as a random upload failure. AFTER: add ten images one at a time. All ten must succeed, including the tenth.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-eleventh-image-refused-client-side",
+          label: "The 11th image is refused by the FORM with a clear message, not by the server",
+          description:
+            "Try to add an 11th image. The control must refuse it before uploading, naming the limit (\"You can upload up to 10 images.\"). A server-side 400 arriving after the bytes have gone up is the wrong behaviour \u2014 the user has already waited.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-second-video-refused-first-kept",
+          label: "A second video is refused and the FIRST one is kept",
+          description:
+            "With one video already in the gallery, try to add another. The message must say only one video is allowed and tell you to remove the current one \u2014 and crucially the existing video must still be there afterwards. Silently replacing it would lose work.",
+          href: "/store/products/new",
+        },
+        {
+          key: "media-caps-flat-across-types",
+          label: "The same 10 + 1 applies to an auction and a pre-order \u2014 there is no per-type table",
+          description:
+            "Repeat the ten-image check on /store/auctions/new and /store/pre-orders/new. Both must allow ten. BEFORE the server carried separate AUCTION_IMAGE_MAX and PREORDER_IMAGE_MAX constants, both 5, disagreeing with everything else.",
+          href: "/store/auctions/new",
+        },
+        {
+          key: "media-live-listing-still-requires-video",
+          label: "A live listing STILL refuses to publish without a video",
+          description:
+            "Unchanged behaviour, re-verified because the surrounding control changed. Create a live listing with photos but no video and press Publish. It must be refused, and the Video field must be marked required. That is a requiredness rule, not a count rule, and the media-limit work must not have removed it.",
+          href: "/store/live/new",
+        },
+      ],
+    },
+    {
+      pageKey: "listing-type-fields-roundtrip",
+      pageLabel: "Per-type fields survive a save \u2014 all nine listing types",
+      href: "/store/products",
+      cases: [
+        {
+          key: "roundtrip-classified-meetup",
+          label: "A classified's meetup city, locality and pincode come back after a save",
+          description:
+            "Fixed 2026-09-04, and this was live data loss. BEFORE: the form held `classifiedCity` while the write schema expected `classified.meetupArea.city`, nothing translated between them, and the schema strips unnamed keys \u2014 so the seller pressed Publish, got a success, and the listing saved with none of the fields that made it a classified. AFTER: fill in the meetup details, save, reopen the edit form, and every value must be there.",
+          href: "/store/classified/new",
+        },
+        {
+          key: "roundtrip-live-species-jurisdictions",
+          label: "A live listing's species, transport method and permitted jurisdictions survive",
+          description:
+            "Same bug, and the most serious instance of it: `jurisdictionAllowed` is the field that prevents shipping a live animal somewhere that forbids it, and it was being dropped. Create a live listing with species, age, sex, care info, transport method, handling fee and at least one jurisdiction. Save, reopen, confirm all of it returned.",
+          href: "/store/live/new",
+        },
+        {
+          key: "roundtrip-digital-code-delivery",
+          label: "A digital code's delivery method, pool size and redemption instructions survive",
+          href: "/store/digital-codes/new",
+        },
+        {
+          key: "roundtrip-print-meta",
+          label: "An art print's size, material, finish and edition size survive \u2014 and so do a sticker sheet's",
+          description:
+            "Art and stickers share one `printMeta` block, so check both: create one of each with all four fields filled, save, reopen.",
+          href: "/store/art/new",
+        },
+        {
+          key: "roundtrip-edit-form-opens-populated",
+          label: "Opening the edit form for an EXISTING listing shows its per-type fields already filled",
+          description:
+            "The inverse half of the same bug. BEFORE: the edit pages hand-built their initial values and listed none of the per-type keys, so the form opened blank for them even when the document held real data \u2014 which read as \"my data was deleted\". AFTER: open the edit page for any seeded classified, live, digital-code, art or sticker listing and its per-type fields are populated on arrival.",
+          href: "/store/classified",
         },
       ],
     },

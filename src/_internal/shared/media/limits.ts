@@ -17,6 +17,39 @@ export const MAX_VIDEO_BYTES = 50 * MEGABYTE;
 
 export type MediaKind = "image" | "video" | "pdf";
 
+// ---------------------------------------------------------------------------
+// Per-listing media COUNTS.
+//
+// Byte ceilings are above; these are how MANY files one listing may carry.
+// Deliberately FLAT — every listing type gets the same allowance. There is no
+// per-type table and one should not be added: the previous state had six
+// disagreeing numbers (5 in the request schema, 5 in the seller form, 5 in the
+// admin form, 5/5/5 in the server context guards, 12 in the MediaUploadList
+// default, 20 in the internal product schema) and no two of them were reached
+// by the same code path, so which cap a seller actually hit depended on which
+// form they had opened.
+//
+// The video cap is 1 because `ProductDocument.video` is a single field, not an
+// array — raising it is a schema change, not a constant change.
+// ---------------------------------------------------------------------------
+
+/** Gallery images per listing. */
+export const PRODUCT_MAX_IMAGES = 10;
+
+/** Videos per listing. Bounded by `ProductDocument.video` being singular. */
+export const PRODUCT_MAX_VIDEOS = 1;
+
+/**
+ * Highest legal `index` in a product media filename.
+ *
+ * NOT the same number as `PRODUCT_MAX_IMAGES`, and conflating them is a live
+ * bug: `generateMediaFilename` gives the main image index 1 and the gallery
+ * 2..N, so the index space is one larger than the gallery count. The server
+ * guard checks the INDEX, which is why a gallery capped at 5 was rejecting its
+ * own 5th image with a 400 (it arrived as index 6).
+ */
+export const PRODUCT_IMAGE_INDEX_MAX = PRODUCT_MAX_IMAGES + 1;
+
 export const MAX_LABEL: Record<MediaKind, string> = {
   image: "10MB",
   video: "50MB",

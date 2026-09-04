@@ -17,6 +17,8 @@ const CLS_STOCK_IN = "bg-success-surface text-success dark:bg-success-surface da
 const CLS_STOCK_OUT = "bg-error-surface text-error dark:bg-error-surface dark:text-error";
 const CLS_BUNDLE_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full border border-success bg-success-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-semibold text-success transition-colors hover:border-success hover:bg-success-surface dark:border-success/60 dark:bg-success-surface dark:text-success dark:hover:border-success dark:hover:bg-success-surface";
 const CLS_FREE_SHIPPING_ICON = "mt-0.5 flex-shrink-0 text-success";
+/** Leading icon in a Delivery & Returns row. */
+const CLS_POLICY_ROW_ICON = "mt-0.5 flex-shrink-0";
 const CLS_BUNDLE_BOX = "rounded-xl border border-success dark:border-success/60 bg-success-surface dark:bg-success-surface p-[var(--appkit-space-5)]";
 const CLS_BUNDLE_ICON = "text-success dark:text-success";
 const CLS_BUNDLE_TITLE = "text-[length:var(--appkit-text-sm)] font-semibold text-success dark:text-success";
@@ -54,6 +56,7 @@ import { ProductDetailView } from "./ProductDetailView";
 import { ProductGalleryClient } from "./ProductGalleryClient";
 import { ProductTabsShell } from "./ProductTabsShell";
 import { ProductFeatureBadges } from "./ProductFeatureBadges";
+import { isFinalSale } from "../constants/final-sale";
 import { FeatureBadgeList } from "./FeatureBadge";
 import type { ProductFeatureDocument } from "../schemas/product-features";
 import { ShareButton } from "./ShareButton";
@@ -335,6 +338,12 @@ export async function ProductDetailPageView({
     typeof p.shippingInfo === "string" ? (p.shippingInfo as string) : null;
   const returnPolicy =
     typeof p.returnPolicy === "string" ? (p.returnPolicy as string) : null;
+  /*
+   * Absent means final sale, so this must go through `isFinalSale` — reading
+   * `p.finalSale` directly would treat every listing created before the field
+   * existed as returnable.
+   */
+  const finalSale = isFinalSale(p as { finalSale?: boolean });
   const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
   const freeShipping = shippingPaidBy === "seller";
   const featured = p.featured === true;
@@ -519,7 +528,14 @@ export async function ProductDetailPageView({
                 </Row>
               )}
 
-              {/* Feature badges */}
+              {/*
+                Feature badges.
+
+                `returnable` was `returnPolicy != null && returnPolicy.length > 0`
+                — i.e. "the seller typed something into a free-text box", which
+                is not the same claim as "you can return this", and was true
+                even for sellers whose policy text said returns were refused.
+              */}
               <ProductFeatureBadges
                 featured={featured}
                 freeShipping={freeShipping}
@@ -528,7 +544,8 @@ export async function ProductDetailPageView({
                 emiAvailable={emiEnabled === true}
                 emiHref={String(ROUTES.PUBLIC.HOW_EMI_WORKS)}
                 condition={condition ?? undefined}
-                returnable={returnPolicy != null && returnPolicy.length > 0}
+                returnable={!finalSale}
+                finalSale={finalSale}
                 labels={{
                   featured: "Featured",
                   fasterDelivery: "Faster Delivery",
@@ -539,6 +556,7 @@ export async function ProductDetailPageView({
                   conditionBroken: "For Parts",
                   conditionRefurbished: "Refurbished",
                   returnable: "Returnable",
+                  finalSale: "Final Sale",
                   freeShipping: "Free Shipping",
                   codAvailable: "Cash on Delivery",
                   emiAvailable: "EMI Available",
@@ -697,8 +715,15 @@ export async function ProductDetailPageView({
                 })}
               </Stack>
 
-              {/* Delivery & Returns */}
-              {(shippingInfo || returnPolicy || freeShipping) && (
+              {/*
+                Delivery & Returns.
+
+                `finalSale` is in the render condition because it is true by
+                default: without it, a final-sale listing whose seller wrote no
+                shipping or policy text rendered this block not at all, so the
+                single most consequential term of the sale was invisible.
+              */}
+              {(shippingInfo || returnPolicy || freeShipping || finalSale) && (
                 <Stack gap="sm" border="default" className="border-t" padding="t-md">
                   {freeShipping && (
                     <Row align="start" gap="sm">
@@ -715,15 +740,28 @@ export async function ProductDetailPageView({
                   )}
                   {!freeShipping && shippingInfo && (
                     <Row align="start" gap="sm">
-                      <Span className="mt-0.5 flex-shrink-0" color="faint">📦</Span>
+                      <Span className={CLS_POLICY_ROW_ICON} color="faint">📦</Span>
                       <Text size="xs" color="muted">
                         {shippingInfo}
                       </Text>
                     </Row>
                   )}
+                  <Row align="start" gap="sm">
+                    <Span className={CLS_POLICY_ROW_ICON} color="faint">↺</Span>
+                    <Div>
+                      <Text size="xs" weight="medium" color={finalSale ? "warning" : "muted"}>
+                        {finalSale ? "Final sale — no change-of-mind returns" : "Returns accepted"}
+                      </Text>
+                      <Text size="xs" color="muted">
+                        {finalSale
+                          ? "You can still claim if it never arrives, arrives damaged, is the wrong item, is not as described, or is counterfeit."
+                          : "Return this item within the platform return window for any reason."}
+                      </Text>
+                    </Div>
+                  </Row>
                   {returnPolicy && (
                     <Row align="start" gap="sm">
-                      <Span className="mt-0.5 flex-shrink-0" color="faint">↺</Span>
+                      <Span className={CLS_POLICY_ROW_ICON} color="faint">📄</Span>
                       <Text size="xs" color="muted">
                         {returnPolicy}
                       </Text>

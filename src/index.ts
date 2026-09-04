@@ -3468,8 +3468,6 @@ export { AdminSessionsManager } from "./features/admin/index";
 // AdminSidebar - Shared export for admin sidebar.
 export { AdminSidebar } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminSiteView - Component for admin site view.
-export { AdminSiteView } from "./features/admin/index";
 // AdminSublistingCategoriesView - Admin list view for sublisting categories (SC1).
 export { AdminSublistingCategoriesView } from "./features/admin/index";
 // AdminSublistingCategoryEditorView - Admin create/edit form for sublisting categories (SC1).
@@ -3726,8 +3724,6 @@ export type { AdminSessionsManagerProps } from "./features/admin/index";
 // AdminSidebarProps - Type contract for admin sidebar props.
 export type { AdminSidebarProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AdminSiteViewProps - Type contract for admin site view props.
-export type { AdminSiteViewProps } from "./features/admin/index";
 // AdminSiteSettingsViewProps - Type contract for admin site settings view props.
 export type { AdminSiteSettingsViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -6665,6 +6661,7 @@ export { RefundHistoryTable } from "./features/orders/index";
 export type { RefundHistoryTableProps } from "./features/orders/index";
 export { RefundRequestView } from "./features/orders/index";
 export type { RefundRequestViewProps } from "./features/orders/index";
+export type { RefundRequestSubmission } from "./features/orders/components/RefundRequestView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PaymentGatewayValues - Model for payment gateway values.
 export { PaymentGatewayValues } from "./features/orders/index";
@@ -7283,6 +7280,12 @@ export {
  isArtListing,
  isStickersListing,
 } from "./features/products/index";
+// Final sale — ABSENT MEANS TRUE, so these are the only legal reads of the
+// `finalSale` field. See the module docstring for why `!p.finalSale` is wrong.
+export {
+  isFinalSale,
+  acceptsChangeOfMindReturns,
+} from "./features/products/constants/final-sale";
 // SB-UNI-X4 2026-05-13 â€" per-type feature-flag helpers.
 export {
   isListingTypeEnabled,
@@ -9378,6 +9381,20 @@ export {
 } from "./_internal/shared/features/categories/bundle-copy";
 // S-SBUNI-RULES 2026-05-13 â€" shared copy for refund / shipping / sibling-payment UI.
 export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
+// Return / refund reasons — the closed enum the final-sale gate branches on.
+// See the module docstring for why the exempt set is "seller or carrier fault"
+// rather than "serious reasons".
+export {
+  RETURN_REASON,
+  FINAL_SALE_EXEMPT_REASONS,
+  RETURN_REASON_LABEL,
+  RETURN_REASON_GROUP_LABEL,
+  isFinalSaleExempt,
+  isReturnReason,
+  selectableReturnReasons,
+} from "./_internal/shared/features/orders/return-reasons";
+export type { ReturnReason } from "./_internal/shared/features/orders/return-reasons";
+
 // S-SBUNI-4 follow-up â€" shared admin bundle zod schemas.
 export {
  bundleCreateSchema,
@@ -9631,6 +9648,9 @@ export {
   isAllowedMime,
   maxBytesFor,
   getConversionHint,
+  PRODUCT_MAX_IMAGES,
+  PRODUCT_MAX_VIDEOS,
+  PRODUCT_IMAGE_INDEX_MAX,
 } from "./_internal/shared/media/limits";
 export type {
   MediaKind,
@@ -9977,3 +9997,11 @@ export type {
   ActionIndexValidationContext,
   ActionIndexValidationIssue,
 } from "./features/search/action-index/validate-entry";
+
+// Seller listing form draft <-> product write payload. The flat form keys and
+// the nested document blocks are different shapes, and nothing translated
+// between them — see the module docstring.
+export {
+  draftToProductInput,
+  productToDraft,
+} from "./features/seller/utils/product-draft-mapping";

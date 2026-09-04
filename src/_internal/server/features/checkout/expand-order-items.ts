@@ -22,6 +22,7 @@ import type { CartItemDocument } from "../../../../features/cart/schemas/firesto
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 import { lineTotalFor, allocateAcrossMembers } from "../../../shared/checkout/order-math";
+import { isFinalSale } from "../../../../features/products/constants/final-sale";
 
 /** A row before rule decoration — the shape `decorateOrderItem` receives. */
 export type BaseOrderLine = Omit<OrderDocumentItem, "listingType">;
@@ -59,6 +60,10 @@ export function expandCartLineToOrderRows(
       quantity: item.quantity,
       unitPrice: lineTotal / (item.quantity || 1),
       totalPrice: lineTotal,
+      // Snapshot the return terms the buyer is agreeing to right now. Resolved
+      // through `isFinalSale` so this is always an explicit boolean, even
+      // though the product field is optional and absent means true.
+      finalSale: isFinalSale(representative),
       // Legacy collapsed bundle rows (no groupMembers) keep their old shape so
       // orders already in flight and their UI stay untouched.
       ...(item.bundleCategorySlug && item.bundleProductIds
@@ -94,6 +99,10 @@ export function expandCartLineToOrderRows(
       quantity,
       unitPrice: quantity > 0 ? totalPrice / quantity : totalPrice,
       totalPrice,
+      // Per MEMBER, not per line: a bundle may mix a final-sale item with a
+      // returnable one, and the refund gate reads each row separately so the
+      // returnable member stays returnable.
+      finalSale: isFinalSale(product),
       groupSlug,
       groupTitle: item.groupTitle ?? item.productTitle,
       groupSource,
