@@ -37,6 +37,12 @@ import { authored as a_admin__catalog_listings } from "./admin__catalog-listings
 import { authored as a_admin__orders_fulfillment } from "./admin__orders-fulfillment";
 import { authored as a_admin__users_trust } from "./admin__users-trust";
 import { authored as a_admin__site_system } from "./admin__site-system";
+import { authored as a_admin__category_brand_authoring } from "./admin__category-brand-authoring";
+import { authored as a_admin__uncovered_admin_pages } from "./admin__uncovered-admin-pages";
+import { authored as a_admin__bans_and_trust } from "./admin__bans-and-trust";
+import { authored as a_admin__bulk_actions } from "./admin__bulk-actions";
+import { authored as a_admin__content_deletes } from "./admin__content-deletes";
+import { authored as a_content_discovery__category_brand_relations } from "./content-discovery__category-brand-relations";
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
 import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
@@ -132,6 +138,12 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__orders_fulfillment,
   ...a_admin__users_trust,
   ...a_admin__site_system,
+  ...a_admin__category_brand_authoring,
+  ...a_admin__uncovered_admin_pages,
+  ...a_admin__bans_and_trust,
+  ...a_admin__bulk_actions,
+  ...a_admin__content_deletes,
+  ...a_content_discovery__category_brand_relations,
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
   ...a_account_auth__testing_program,

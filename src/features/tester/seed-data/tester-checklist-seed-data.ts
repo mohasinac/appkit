@@ -3027,6 +3027,69 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
       ],
     },
+    {
+      pageKey: "category-brand-relations",
+      pageLabel: "Category tree & brand matching",
+      href: "/categories",
+      cases: [
+        {
+          key: "tier-depth-reachable",
+          label: "The category tree is four tiers deep and every tier is reachable by clicking down from a root",
+          description:
+            "Two roots exist — Spinning Tops and Living Collectibles. Walk one of them all the way to a leaf without typing a URL.",
+          href: "/categories",
+        },
+        {
+          key: "second-root-reachable",
+          label: "Both category roots appear on the categories index, not just the Beyblade one",
+          description:
+            "BEFORE: the tree had ONE root and TWO tiers, so the live-item listings carried no category at all and were unreachable from every category and brand page.",
+          href: "/categories",
+        },
+        {
+          key: "root-page-shows-descendant-products",
+          label: "A ROOT category's page shows products filed under its deepest descendants, not only ones tagged with the root itself",
+          description:
+            "A product carries its full ancestor chain, which is what lets a category page match on its own id alone. If the root's page is empty while its leaves have stock, the chain is missing on the product side.",
+          href: "/categories/category-spinning-tops",
+        },
+        {
+          key: "root-page-not-blank-on-large-tree",
+          label: "A root category page over a large tree renders products rather than a blank grid",
+          description:
+            "BEFORE: expanding a root into itself plus every descendant exceeded the query's value cap, the query threw, and the failure was swallowed into an empty grid with no error anywhere — a blank page that looks exactly like an empty category.",
+          href: "/categories/category-spinning-tops",
+        },
+        {
+          key: "mid-tier-scopes-to-own-subtree",
+          label: "A mid-tier category shows its own subtree only, not its parent's whole catalogue",
+          description:
+            "Compare Beyblade Burst against Spinning Tops. The child must be a strict subset — equal counts mean the scoping is not applied.",
+          href: "/categories/category-beyblade-burst",
+        },
+        {
+          key: "store-under-deep-category-visible-at-root",
+          label: "A store filed under a deep category appears on that category's ROOT page too",
+          description:
+            "BEFORE: the store lookup expanded direct children only, so a store filed three tiers down was invisible on its root. Stores carry a single category with no ancestor chain, so this side genuinely needs the descendant list — the opposite of how products work.",
+          href: "/categories/category-spinning-tops",
+        },
+        {
+          key: "brand-page-lists-its-products",
+          label: "A brand page lists the products that belong to that brand",
+          description:
+            "Brand matching is by DISPLAY NAME rather than by id, so a brand whose name and its products' brand strings disagree silently orphans its whole catalogue — the page renders perfectly and lists nothing.",
+          href: "/brands/brand-takara-tomy",
+        },
+        {
+          key: "brand-and-category-are-one-collection",
+          label: "A brand page and a category page render as different things even though both are rows in the same collection",
+          description:
+            "A brand shows an About-this-brand panel with website, country and founding year; a category does not. Neither should show the other's chrome.",
+          href: "/brands/brand-takara-tomy",
+        },
+      ],
+    },
   ]),
 
   ...group("community-support", "Community & Support", [
@@ -4714,6 +4777,251 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             key: "catalog-default-active-filter",
             label: "The Tester Checklist catalog (/admin/tester-checklist) shows only Active cases by default — bug-confirmed and reopened-away cases are hidden unless the Status filter is switched to \"Inactive\"/\"All\" or the \"Bug status\" filter is set to \"Bug Confirmed\"",
             href: "/admin/tester-checklist",
+          },
+        ],
+      },
+      {
+        pageKey: "category-brand-authoring",
+        pageLabel: "Category & Brand Authoring",
+        href: "/admin/categories",
+        cases: [
+          {
+            key: "create-child-under-parent",
+            label: "Creating a category under a chosen parent files it at the right depth and it appears under that parent on the public tree",
+            href: "/admin/categories",
+          },
+          {
+            key: "structural-fields-derived-not-typed",
+            label: "The category editor has no field for tier, path, ancestors or children — those are derived from the parent",
+            description:
+              "BEFORE: hand-writing any structural field is how a tree ends up internally inconsistent. Picking a parent must be the only structural input.",
+            href: "/admin/categories",
+          },
+          {
+            key: "reparent-moves-whole-subtree",
+            label: "Re-parenting a category moves its whole subtree with it, and its descendants stay reachable",
+            href: "/admin/categories",
+          },
+          {
+            key: "product-created-with-deep-category-visible-at-root",
+            label: "A product created through the form against a deep category appears on that category's ROOT page too",
+            description:
+              "🛑 KNOWN GAP, not a regression: nothing on the write side appends ancestors today, so a listing filed at tier 3 gets a one-element chain and is invisible on every ancestor page. Record what actually happens rather than assuming either answer.",
+            href: "/admin/products",
+          },
+          {
+            key: "brand-rename-orphan-check",
+            label: "Renaming a brand does not silently orphan its products",
+            description:
+              "Products match a brand by DISPLAY NAME. Rename a brand, then reload its page: an empty grid where products used to be is the finding. Restore the original name afterwards.",
+            href: "/admin/brands",
+          },
+          {
+            key: "brand-cover-image-is-the-hero",
+            label: "The brand editor's image field controls the image that actually renders as the brand page's hero",
+            description:
+              "BEFORE: a form had a Logo input and a Banner input side by side; Logo wrote the field the hero renders and Banner wrote a field with no readers at all, so every uploaded banner was silently discarded.",
+            href: "/admin/brands",
+          },
+          {
+            key: "category-type-not-guessable",
+            label: "The category editor makes the row's kind explicit — a normal listing category, a brand, a sub-listing group or a bundle — rather than leaving it to be guessed",
+            href: "/admin/categories",
+          },
+          {
+            key: "delete-category-with-children-refused",
+            label: "Deleting a category that still has children or products is refused with a reason naming what depends on it",
+            description:
+              "A delete that succeeds and orphans its subtree is unrecoverable. Refusing it, with the count, is the correct outcome.",
+            href: "/admin/categories",
+          },
+        ],
+      },
+      {
+        pageKey: "uncovered-admin-pages",
+        pageLabel: "Admin pages with no other coverage",
+        href: "/admin",
+        cases: [
+          { key: "action-index-renders", label: "The Action Index page renders the CTA registry rather than a blank shell", href: "/admin/action-index" },
+          { key: "admin-notifications-renders", label: "The Admin Notifications page lists notifications with a working row detail", href: "/admin/admin-notifications" },
+          { key: "maintenance-analysis-renders", label: "The Maintenance → Analysis page renders without an error boundary", href: "/admin/maintenance/analysis" },
+          {
+            key: "maintenance-client-errors-renders",
+            label: "The Client Errors page lists browser-reported errors, newest first",
+            description:
+              "This is where a digest a user quotes from an error screen must be findable. An empty list is only correct if no client error has been reported.",
+            href: "/admin/maintenance/client-errors",
+          },
+          {
+            key: "maintenance-function-errors-renders",
+            label: "The Function Errors page renders and states clearly when it has nothing to show",
+            description:
+              "This source has no production producer today, so an empty list is the expected state — but it must read as 'none recorded', not as a blank page.",
+            href: "/admin/maintenance/function-errors",
+          },
+          { key: "maintenance-payment-rollbacks-renders", label: "The Payment Rollbacks page renders and its rows open", href: "/admin/maintenance/payment-rollbacks" },
+          { key: "payment-method-clusters-renders", label: "The Payment Method Clusters page renders and each cluster opens", href: "/admin/payment-methods/clusters" },
+          { key: "settings-actions-renders", label: "The Settings → Actions page renders and a change to an action saves", href: "/admin/settings/actions" },
+          { key: "shipments-projections-renders", label: "The Shipment Projections page renders real figures rather than an empty chart", href: "/admin/shipments/projections" },
+          { key: "admin-stickers-renders", label: "The admin Stickers page lists sticker listings and its filters return results", href: "/admin/stickers" },
+          { key: "admin-deals-renders", label: "The Deals page renders and its rows open", href: "/admin/deals" },
+          { key: "admin-featured-renders", label: "The Featured page renders and a feature toggle persists across a reload", href: "/admin/featured" },
+          { key: "admin-features-renders", label: "The Product Features page lists features and a new one can be created", href: "/admin/features" },
+          {
+            key: "admin-guides-all-render",
+            label: "Every admin guide page renders real content and none of them 404s",
+            description:
+              "Walk each guide in the Admin → Guide section. A guide describing a screen that no longer exists is a finding worth recording even though the page itself loads.",
+            href: "/admin/guide",
+          },
+        ],
+      },
+      {
+        pageKey: "bans-and-trust",
+        pageLabel: "Bans, Unbans & Trust",
+        href: "/admin/users",
+        cases: [
+          { key: "soft-ban-blocks-signin", label: "Soft-banning a user prevents them signing in and tells them why", href: "/admin/users" },
+          { key: "soft-ban-requires-reason", label: "A ban cannot be applied without a reason, and that reason reaches the banned user", href: "/admin/users" },
+          {
+            key: "unban-restores-access",
+            label: "Unbanning restores access without the user having to sign out and back in on a new device",
+            description:
+              "Cached session fields refresh only periodically, so a just-unbanned user can keep hitting the block. The guard must re-read on navigation rather than trusting the cached snapshot.",
+            href: "/admin/users",
+          },
+          {
+            key: "hard-ban-cascade-runs",
+            label: "A hard ban runs its full cascade rather than only flagging the account",
+            description:
+              "It is queued as a background job because it exceeds a request's time budget. The job's completion must be reported, not assumed.",
+            href: "/admin/users",
+          },
+          { key: "hard-ban-recorded-in-audit-log", label: "A hard ban, a soft ban and an unban each appear in the admin audit log with the acting admin and the reason", href: "/admin/audit-log" },
+          { key: "ban-status-visible-in-list", label: "A banned user is visibly marked in the users list without opening their record", href: "/admin/users" },
+          {
+            key: "ban-filter-returns-banned-only",
+            label: "Filtering the users list by ban status returns only banned users",
+            description:
+              "A status chip whose value does not exactly match a stored value returns nothing forever, with no error anywhere.",
+            href: "/admin/users",
+          },
+          {
+            key: "session-ip-masked",
+            label: "A session's IP address is masked wherever it is shown, and the unmasked value never reaches the browser",
+            description:
+              "Check the rendered value AND the page's own data payload — a masked display over an unmasked payload is still a leak.",
+            href: "/admin/sessions",
+          },
+          { key: "sessions-list-device-details", label: "The sessions list shows browser, operating system and last activity for each session", href: "/admin/sessions" },
+          { key: "revoke-session-signs-out", label: "Revoking a session signs that device out rather than only removing the row", href: "/admin/sessions" },
+          {
+            key: "unban-request-reaches-admin",
+            label: "An unban request submitted by a banned user reaches an admin surface where it can be actioned",
+            href: "/admin/users",
+          },
+          {
+            key: "banned-user-content-handling",
+            label: "A banned seller's listings stop being publicly visible, and unbanning restores them",
+            href: "/admin/users",
+          },
+        ],
+      },
+      {
+        pageKey: "bulk-actions",
+        pageLabel: "Bulk Actions",
+        href: "/admin/products",
+        cases: [
+          { key: "select-all-count-matches-page", label: "\"Select all\" selects the rows on the current page and its count matches what is visible", href: "/admin/products" },
+          {
+            key: "bulk-bar-appears-on-selection",
+            label: "The bulk action bar appears when the first row is selected and disappears when the last is deselected",
+            description:
+              "It must hide by collapsing rather than by sliding away — a bar that keeps its layout height while invisible pushes every floating control up the screen on pages that have no bar.",
+            href: "/admin/products",
+          },
+          {
+            key: "bulk-destructive-confirms",
+            label: "Every destructive bulk action asks for confirmation naming how many rows it will affect",
+            description:
+              "A destructive action with no confirmation executes immediately and irreversibly on a selection the admin may have built by accident.",
+            href: "/admin/products",
+          },
+          { key: "bulk-action-reports-result", label: "A bulk action reports how many rows succeeded and how many failed, rather than a bare success message", href: "/admin/products" },
+          { key: "bulk-partial-failure-named", label: "When some rows in a bulk action fail, the failures are named rather than folded into a count", href: "/admin/products" },
+          { key: "bulk-selection-clears-after-run", label: "The selection clears after a bulk action completes and the list reflects the change without a manual reload", href: "/admin/products" },
+          {
+            key: "bulk-selection-survives-filter-change",
+            label: "Changing a filter while rows are selected either keeps the selection meaningful or clears it visibly — never acts on rows that are no longer shown",
+            href: "/admin/products",
+          },
+          {
+            key: "bulk-actions-from-registry",
+            label: "The bulk actions offered are the registered ones for that resource, with consistent labels across admin and seller lists",
+            href: "/admin/products",
+          },
+          {
+            key: "bulk-no-dead-actions",
+            label: "No bulk action is offered that does nothing when clicked",
+            description:
+              "BEFORE: a destructively-labelled bulk action's handler only cleared the selection — it read as working and cancelled nothing.",
+            href: "/admin/offers",
+          },
+          { key: "bulk-users-actions", label: "Bulk actions on the users list apply to every selected user and are recorded in the audit log", href: "/admin/users" },
+        ],
+      },
+      {
+        pageKey: "content-deletes",
+        pageLabel: "Editing & Deleting Content",
+        href: "/admin/sections",
+        cases: [
+          { key: "homepage-section-edit-persists", label: "Editing a homepage section's configuration persists and the public homepage reflects it", href: "/admin/sections" },
+          { key: "homepage-section-delete", label: "Deleting a homepage section removes it from the public homepage and the remaining sections keep their order", href: "/admin/sections" },
+          { key: "homepage-section-reorder", label: "Reordering homepage sections persists across a reload and the public page follows the new order", href: "/admin/sections" },
+          { key: "homepage-section-disable-vs-delete", label: "Disabling a section and deleting it are different actions with different outcomes, and the interface makes which is which obvious", href: "/admin/sections" },
+          { key: "carousel-slide-edit-persists", label: "Editing a carousel slide's background, cards and settings persists and shows on the homepage", href: "/admin/carousel" },
+          {
+            key: "carousel-slide-delete",
+            label: "Deleting a carousel slide removes it from the homepage rotation and the remaining slides still autoplay",
+            href: "/admin/carousel",
+          },
+          {
+            key: "carousel-active-limit-enforced",
+            label: "Activating more slides than the allowed maximum is refused with a reason rather than silently ignoring the extra ones",
+            href: "/admin/carousel",
+          },
+          { key: "blog-edit-persists", label: "Editing a blog post's title, body and cover image persists and the public post reflects every change", href: "/admin/blog" },
+          {
+            key: "blog-delete-removes-public-page",
+            label: "Deleting a blog post removes its public page, which then returns a 404 rather than a blank article",
+            href: "/admin/blog",
+          },
+          {
+            key: "blog-unpublish-vs-delete",
+            label: "Unpublishing a blog post hides it from the public list while keeping it editable; deleting removes it entirely",
+            href: "/admin/blog",
+          },
+          {
+            key: "listing-delete-removes-public-page",
+            label: "Deleting a listing removes its public detail page and takes it out of every listing grid it appeared in",
+            href: "/admin/products",
+          },
+          {
+            key: "listing-delete-with-orders-refused-or-archived",
+            label: "Deleting a listing that already has orders against it is refused or archived rather than hard-deleted",
+            description:
+              "An order's rows denormalise what they display, so an existing order survives — but the buyer's link into the product breaks. Record which of the two behaviours actually happens.",
+            href: "/admin/products",
+          },
+          {
+            key: "delete-confirmations-name-the-record",
+            label: "Every delete confirmation names the specific record it will remove, not just 'this item'",
+            href: "/admin/products",
+          },
+          {
+            key: "delete-reflected-immediately",
+            label: "A deleted record disappears from its list without a manual reload, and stays gone after one",
+            href: "/admin/products",
           },
         ],
       },
