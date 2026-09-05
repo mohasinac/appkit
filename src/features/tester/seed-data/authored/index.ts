@@ -49,6 +49,10 @@ import { authored as a_cta_layout__checkout_bottom_bar } from "./cta-layout__che
 import { authored as a_cta_layout__dialog_footers } from "./cta-layout__dialog-footers";
 import { authored as a_cta_layout__editor_action_bar } from "./cta-layout__editor-action-bar";
 import { authored as a_cta_layout__product_bottom_bar } from "./cta-layout__product-bottom-bar";
+import { authored as a_design_ux__back_to_top_button } from "./design-ux__back-to-top-button";
+import { authored as a_design_ux__dashboard_layout } from "./design-ux__dashboard-layout";
+import { authored as a_design_ux__footer_theme } from "./design-ux__footer-theme";
+import { authored as a_design_ux__form_validation_errors } from "./design-ux__form-validation-errors";
 import { authored as a_page_wiring__data_loss } from "./page-wiring__data-loss";
 import { authored as a_public_pages__auth_error_pages } from "./public-pages__auth-error-pages";
 import { authored as a_public_pages__bug_hunters } from "./public-pages__bug-hunters";
@@ -90,6 +94,10 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_cta_layout__dialog_footers,
   ...a_cta_layout__editor_action_bar,
   ...a_cta_layout__product_bottom_bar,
+  ...a_design_ux__back_to_top_button,
+  ...a_design_ux__dashboard_layout,
+  ...a_design_ux__footer_theme,
+  ...a_design_ux__form_validation_errors,
   ...a_page_wiring__data_loss,
   ...a_public_pages__auth_error_pages,
   ...a_public_pages__bug_hunters,
