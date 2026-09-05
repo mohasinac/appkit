@@ -25,7 +25,12 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 // Public, direct-playable sample MP4 — review.video.url renders through a raw
 // <video src> element (ReviewDetailShell.tsx), NOT the /api/media/ext image
 // proxy, so it must stay an unwrapped external URL (never seedExtMedia()).
-const SAMPLE_VIDEO_URL = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"; // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
+// Local fixture, not a third-party URL. The Google sample-video bucket these all
+// pointed at now returns 403 (measured 2026-09-05), so every seeded video was a
+// dead link and any case testing playback failed for a reason that is not a bug
+// here. Generated/committed by tester/scripts/make-media-fixtures.mjs.
+// Stays raw and unwrapped: /api/media/ext is image-only (Root Cause #27).
+const SAMPLE_VIDEO_URL = "/test-media/sample-video.mp4";
 
 const reviewTemplates = [
   { title: "Excellent quality and fast shipping!", comment: "Received exactly as described. Item is in perfect condition. Will buy again!", rating: 5 },

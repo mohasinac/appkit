@@ -117,7 +117,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       // helper routes through /api/media/ext, which only serves images
       // (rejects non-image content-type with 400). MediaVideo watermarks
       // video client-side instead, so the raw external URL is correct here.
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
+      url: "/test-media/sample-video.mp4",
       thumbnail: seedPhoto("carousel-auctions-live-20260101", 1600, 700),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },

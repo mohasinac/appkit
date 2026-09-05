@@ -469,7 +469,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
       seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-2-20260819", 900, 900),
     ],
     video: {
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
+      url: "/test-media/sample-video.mp4",
       thumbnailUrl: seedPhoto("product-video-thumb-beyblade-original-dragoon-f-video-demo-20260819", 800, 450),
       duration: 15,
     },
@@ -502,7 +502,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
       seedPhoto("product-image-beyblade-x-dran-sword-video-demo-2-20260819", 900, 900),
     ],
     video: {
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // audit-seed-external-url-ok: raw <video> src, /api/media/ext is image-only (Root Cause #27)
+      url: "/test-media/sample-video.mp4",
       thumbnailUrl: seedPhoto("product-video-thumb-beyblade-x-dran-sword-video-demo-20260819", 800, 450),
       duration: 20,
     },
