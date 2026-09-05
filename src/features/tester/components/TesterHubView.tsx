@@ -9,7 +9,7 @@ import { useSession } from "../../../react";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { TesterChecklistStepRow } from "./TesterChecklistStepRow";
-import type { TesterAnswer } from "../schemas/firestore";
+import type { TesterAnswer, TesterCaseRole } from "../schemas/firestore";
 import type { JsonValue } from "../../../schemas/types";
 
 interface RawChecklistItem {
@@ -22,6 +22,15 @@ interface RawChecklistItem {
   label: string;
   description?: string;
   href?: string;
+  // The six-part contract. These must be listed here AND forwarded below: this
+  // mapping is hand-picked, so a field the document carries but nobody adds
+  // reaches the API and dies at the row — Root Cause #38, one component over.
+  role?: TesterCaseRole;
+  startPage?: string;
+  steps?: string[];
+  expectedBehaviour?: string;
+  expectedUiState?: string;
+  endResult?: string;
   order: number;
   answer: TesterAnswer | null;
   comment?: string;
@@ -66,6 +75,12 @@ function TesterChecklistPageSection({ page, testerDisplayName, onAnswer, onSaveN
                   label: item.label,
                   description: item.description,
                   href: item.href,
+                  role: item.role,
+                  startPage: item.startPage,
+                  steps: item.steps,
+                  expectedBehaviour: item.expectedBehaviour,
+                  expectedUiState: item.expectedUiState,
+                  endResult: item.endResult,
                   answer: item.answer,
                   comment: item.comment,
                   screenshotUrl: item.screenshotUrl,

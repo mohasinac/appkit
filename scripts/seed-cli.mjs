@@ -182,6 +182,7 @@ const {
   categoriesSeedData, storesSeedData, sessionsSeedData,
   productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
+  productsArtSeedData, productsStickersSeedData,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
   couponsSeedData, couponUsageSeedData,
   eventsSeedData, eventEntriesSeedData, payoutsSeedData,
@@ -262,6 +263,11 @@ const SEED_DATA_MAP = {
   products: [
     ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
+    // art + stickers were written, exported from the seed barrel, and then never
+    // spread here — so 13 fixtures had NEVER reached the database, /art and
+    // /stickers were permanently empty, and listingType=art|stickers returned 0.
+    // Root Cause #58's family one layer down: added everywhere except the runner.
+    ...(productsArtSeedData || []), ...(productsStickersSeedData || []),
     ...(productsTesterSeedData || []),
   ],
   orders: [...(ordersSeedData || []), ...(ordersTesterSeedData || [])],

@@ -18,18 +18,43 @@
  * @tag sideEffects:none
  */
 
-import type { TesterChecklistItemDocument } from "../schemas";
+import type { TesterCaseRole, TesterChecklistItemDocument } from "../schemas";
 import { assignDefaultPhases } from "../utils/phases";
+import { moneyFlowsPages } from "./_money-flows";
 
 const ADMIN_TESTING_GROUP_LABEL = "Admin (Testing)";
 const BUG_HUNTER_REWARDS_PAGE_LABEL = "Bug Hunter Rewards";
 
+/**
+ * The six-part case contract — see TesterChecklistItemDocument for why each part
+ * exists and which bug class it catches. Every field below is required for a case
+ * to count as authored; `audit-tester-plugin-wiring` R5 enforces it.
+ */
 interface CaseInput {
   key: string;
   label: string;
   description?: string;
+  /** WHO: guest / buyer / seller (the OWNER of the listing) / admin / employee. */
+  role?: TesterCaseRole;
+  /** WHERE the tester starts. Unprefixed path. Defaults to the page's href. */
+  startPage?: string;
+  /** WHAT they do. One action each, literal values, no assertions. */
+  steps?: string[];
+  /** What the system must DO, including side effects no screen shows. */
+  expectedBehaviour?: string;
+  /** What must be SEEN — quote the screen, so a screenshot can be checked against it. */
+  expectedUiState?: string;
+  /** What survives a RELOAD. The persistence oracle. */
+  endResult?: string;
   href?: string;
 }
+
+/**
+ * Step phrases reused across cases. Extracted so the wording stays identical —
+ * two steps that mean the same thing should not read differently, or a tester
+ * starts wondering whether the difference is significant.
+ */
+const STEP_PLACE_ORDER = "Place the order.";
 
 function group(
   groupKey: string,
@@ -48,6 +73,15 @@ function group(
         pageLabel: page.pageLabel,
         label: c.label,
         description: c.description,
+        role: c.role,
+        // A case starting somewhere other than its page default says so; otherwise
+        // the page's own href is the start, which is what makes `startPage` safe
+        // to require on every case without repeating it 990 times.
+        startPage: c.startPage ?? c.href ?? page.href,
+        steps: c.steps,
+        expectedBehaviour: c.expectedBehaviour,
+        expectedUiState: c.expectedUiState,
+        endResult: c.endResult,
         // Every case gets a link: its own href, or the page's default —
         // guarantees "Go test this ->" always has somewhere real to send
         // the tester, even for cases nobody bothered to link individually.
@@ -4898,6 +4932,23 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
   ]),
+
+  /* ══════════════════════════════════════════════════════════════════════════
+   * END-TO-END MONEY FLOWS
+   *
+   * These are the flows that move money or ownership, and they were the largest
+   * hole in the catalogue: offers had cases for making one but none for the
+   * seller ACCEPTING it and the buyer then PAYING, and a won auction had no
+   * payment path tested at all — which is exactly where Root Cause #60 lived
+   * (settlement wrote an order nobody could pay for, and no case would have
+   * caught it).
+   *
+   * Every case here is written as numbered steps against a NAMED fixture, with
+   * the expectation stated separately. A step is something a person does; the
+   * expectation is what they then see. Keeping them apart is what stops a
+   * tester reporting "I did the actions" as if it were "the outcome was right".
+   * ══════════════════════════════════════════════════════════════════════════ */
+  ...group("money-flows", "Money Flows (end to end)", moneyFlowsPages),
 ];
 
 const defaultPhases = assignDefaultPhases(

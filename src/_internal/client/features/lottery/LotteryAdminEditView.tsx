@@ -218,13 +218,40 @@ function SlotTable({
   showPrice: boolean;
   onSlotsChange: (next: LotterySlotRow[]) => void;
 }) {
+  /**
+   * Next number is max+1, not length+1.
+   *
+   * Now that removeSlot preserves numbering, `slots.length + 1` collides: delete
+   * slot 1 of 25 and you hold 24 slots numbered 2..25, so length+1 is 25 — a
+   * duplicate, which the write schema rejects outright (slot numbers must be
+   * unique). Deriving from the highest number in use is stable under any gaps.
+   */
   const addSlot = () =>
-    onSlotsChange([...slots, { slotNumber: slots.length + 1, name: "", price: 0 }]);
+    onSlotsChange([
+      ...slots,
+      { slotNumber: slots.reduce((max, s) => Math.max(max, s.slotNumber), 0) + 1, name: "", price: 0 },
+    ]);
 
-  const removeSlot = (idx: number) =>
-    onSlotsChange(
-      slots.filter((_, i) => i !== idx).map((s, i) => ({ ...s, slotNumber: i + 1 })),
-    );
+  /**
+   * 🛑 Remove the slot. Do NOT renumber the survivors.
+   *
+   * `slotNumber` is the stable identity a booking is attached to, and renumbering
+   * silently defeated the server's own protection. `mergeLotteryConfig` refuses a
+   * save that drops a BOOKED slot by checking `isBooked && !incoming.has(slotNumber)`
+   * — but this function used to renumber the remaining slots to `i + 1`, so deleting
+   * slot 1 of 25 sent back numbers 1..24. Every booked number (1–5) still *appeared*
+   * in that set, the check found nothing to refuse, and the save went through.
+   *
+   * The damage was worse than the deletion: the merge re-attaches bookings by
+   * slotNumber, so the buyer of the deleted slot 1 had their booking moved onto
+   * whatever prize now occupied number 1. That is precisely the hazard the schema
+   * header describes — "hands slot 7's buyer the prize that used to be slot 8".
+   *
+   * Numbers may therefore be non-contiguous after a delete (2..25), which the write
+   * schema allows: it requires slot numbers to be UNIQUE, not gapless, and totalSlots
+   * is derived from slots.length rather than from the highest number.
+   */
+  const removeSlot = (idx: number) => onSlotsChange(slots.filter((_, i) => i !== idx));
 
   const updateSlot = (
     idx: number,
