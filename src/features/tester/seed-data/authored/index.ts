@@ -50,6 +50,10 @@ import { authored as a_buying__browsing_search } from "./buying__browsing-search
 import { authored as a_buying__buying_checkout } from "./buying__buying-checkout";
 import { authored as a_buying__buying_coupons } from "./buying__buying-coupons";
 import { authored as a_buying__product_detail } from "./buying__product-detail";
+import { authored as a_buying__image_tile_layout } from "./buying__image-tile-layout";
+import { authored as a_buying__return_request } from "./buying__return-request";
+import { authored as a_buying__reviews } from "./buying__reviews";
+import { authored as a_buying__user_dashboard_navigation } from "./buying__user-dashboard-navigation";
 import { authored as a_community_support__public_profile } from "./community-support__public-profile";
 import { authored as a_community_support__support_tickets } from "./community-support__support-tickets";
 import { authored as a_content_discovery__blog } from "./content-discovery__blog";
@@ -131,6 +135,10 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_buying__buying_checkout,
   ...a_buying__buying_coupons,
   ...a_buying__product_detail,
+  ...a_buying__image_tile_layout,
+  ...a_buying__return_request,
+  ...a_buying__reviews,
+  ...a_buying__user_dashboard_navigation,
   ...a_community_support__public_profile,
   ...a_community_support__support_tickets,
   ...a_content_discovery__blog,
