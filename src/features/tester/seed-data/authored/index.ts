@@ -73,6 +73,10 @@ import { authored as a_selling__become_seller } from "./selling__become-seller";
 import { authored as a_selling__final_sale_authoring } from "./selling__final-sale-authoring";
 import { authored as a_selling__listing_type_fields_roundtrip } from "./selling__listing-type-fields-roundtrip";
 import { authored as a_selling__media_limits } from "./selling__media-limits";
+import { authored as a_selling__seller_bids_bundles_filters } from "./selling__seller-bids-bundles-filters";
+import { authored as a_selling__seller_catalog_org } from "./selling__seller-catalog-org";
+import { authored as a_selling__seller_custom_brands } from "./selling__seller-custom-brands";
+import { authored as a_selling__seller_guide } from "./selling__seller-guide";
 import { authored as a_search_and_nav__employee_permissions } from "./search-and-nav__employee-permissions";
 import { authored as a_search_and_nav__header_search } from "./search-and-nav__header-search";
 import { authored as a_search_and_nav__settings_deep_links } from "./search-and-nav__settings-deep-links";
@@ -128,6 +132,10 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_selling__final_sale_authoring,
   ...a_selling__listing_type_fields_roundtrip,
   ...a_selling__media_limits,
+  ...a_selling__seller_bids_bundles_filters,
+  ...a_selling__seller_catalog_org,
+  ...a_selling__seller_custom_brands,
+  ...a_selling__seller_guide,
   ...a_search_and_nav__employee_permissions,
   ...a_search_and_nav__header_search,
   ...a_search_and_nav__settings_deep_links,
