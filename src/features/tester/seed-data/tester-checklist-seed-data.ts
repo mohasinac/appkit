@@ -21,6 +21,7 @@
 import type { TesterCaseRole, TesterChecklistItemDocument } from "../schemas";
 import { assignDefaultPhases } from "../utils/phases";
 import { moneyFlowsPages } from "./_money-flows";
+import { AUTHORED_CASES } from "./authored";
 
 const ADMIN_TESTING_GROUP_LABEL = "Admin (Testing)";
 const BUG_HUNTER_REWARDS_PAGE_LABEL = "Bug Hunter Rewards";
@@ -65,23 +66,34 @@ function group(
   const items: Partial<TesterChecklistItemDocument>[] = [];
   pages.forEach((page, pageIdx) => {
     page.cases.forEach((c, caseIdx) => {
+      const id = `checklist-${groupKey}-${page.pageKey}-${c.key}`;
+      /**
+       * Authored steps live in ./authored/<group>__<page>.ts and merge in here.
+       *
+       * INLINE WINS. A case written by hand in this file — the 22 money-flows
+       * reference cases — is the more deliberate artefact, so the overlay may
+       * only fill a field that is absent. `merge-authored.mjs` refuses to write
+       * an overlay entry for a case that already has inline steps rather than
+       * writing one that would be silently ignored.
+       */
+      const authored = AUTHORED_CASES[id];
       items.push({
-        id: `checklist-${groupKey}-${page.pageKey}-${c.key}`,
+        id,
         groupKey,
         groupLabel,
         pageKey: page.pageKey,
         pageLabel: page.pageLabel,
         label: c.label,
         description: c.description,
-        role: c.role,
+        role: c.role ?? authored?.role,
         // A case starting somewhere other than its page default says so; otherwise
         // the page's own href is the start, which is what makes `startPage` safe
         // to require on every case without repeating it 990 times.
-        startPage: c.startPage ?? c.href ?? page.href,
-        steps: c.steps,
-        expectedBehaviour: c.expectedBehaviour,
-        expectedUiState: c.expectedUiState,
-        endResult: c.endResult,
+        startPage: c.startPage ?? authored?.startPage ?? c.href ?? page.href,
+        steps: c.steps ?? authored?.steps,
+        expectedBehaviour: c.expectedBehaviour ?? authored?.expectedBehaviour,
+        expectedUiState: c.expectedUiState ?? authored?.expectedUiState,
+        endResult: c.endResult ?? authored?.endResult,
         // Every case gets a link: its own href, or the page's default —
         // guarantees "Go test this ->" always has somewhere real to send
         // the tester, even for cases nobody bothered to link individually.
