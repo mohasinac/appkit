@@ -74,11 +74,11 @@ function group(
       /**
        * Authored steps live in ./authored/<group>__<page>.ts and merge in here.
        *
-       * INLINE WINS. A case written by hand in this file — the 22 money-flows
+       * INLINE WINS. A case written inline in this file — the 22 money-flows
        * reference cases — is the more deliberate artefact, so the overlay may
-       * only fill a field that is absent. `merge-authored.mjs` refuses to write
-       * an overlay entry for a case that already has inline steps rather than
-       * writing one that would be silently ignored.
+       * only fill a field that is absent. So never write an overlay entry for a
+       * case that already has inline steps: it would be silently ignored, and
+       * the page would read as authored twice over while one copy did nothing.
        */
       const authored = AUTHORED_CASES[id];
       items.push({

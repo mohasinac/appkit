@@ -2,10 +2,10 @@
  * WHY: One lookup of every authored case, keyed by full checklist id.
  * WHAT: `AUTHORED_CASES` — merged from the per-page modules in this directory.
  *
- * 🛑 GENERATED REGION. The import block and the spread list below are rewritten by
- * `node tester/scripts/merge-authored.mjs` every time a page is authored. Edit a
- * page's own module, never this file — a hand-added entry is overwritten on the
- * next merge, silently, and the case reverts to unauthored.
+ * HAND-MAINTAINED. One import and one spread per page module, alphabetical. This
+ * file used to carry GENERATED sentinels rewritten by `merge-authored.mjs`; that
+ * script is gone, and the banner outlived it by exactly one session, telling the
+ * reader a machine owned a file nothing writes. Adding a page means editing here.
  *
  * This is a registry, not a convenience barrel (Root Cause #18): it composes a
  * data structure that no single module holds, and nothing imports a page module
@@ -24,26 +24,84 @@
 
 import type { AuthoredCase } from "./_types";
 
-/* GENERATED:IMPORTS:START */
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
-import { authored as a_account_auth__testing_program__admin } from "./account-auth__testing-program--admin";
+import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
+import { authored as a_addresses__address_filters } from "./addresses__address-filters";
+import { authored as a_addresses__postal_lookup } from "./addresses__postal-lookup";
+import { authored as a_addresses__postal_validation } from "./addresses__postal-validation";
+import { authored as a_addresses__state_picker } from "./addresses__state-picker";
+import { authored as a_addresses__unban_request } from "./addresses__unban-request";
 import { authored as a_buying__bidding } from "./buying__bidding";
 import { authored as a_buying__browsing_search } from "./buying__browsing-search";
 import { authored as a_buying__buying_checkout } from "./buying__buying-checkout";
 import { authored as a_buying__buying_coupons } from "./buying__buying-coupons";
 import { authored as a_buying__product_detail } from "./buying__product-detail";
-/* GENERATED:IMPORTS:END */
+import { authored as a_community_support__public_profile } from "./community-support__public-profile";
+import { authored as a_community_support__support_tickets } from "./community-support__support-tickets";
+import { authored as a_content_discovery__blog } from "./content-discovery__blog";
+import { authored as a_content_discovery__coupons } from "./content-discovery__coupons";
+import { authored as a_content_discovery__events } from "./content-discovery__events";
+import { authored as a_content_discovery__faq_help } from "./content-discovery__faq-help";
+import { authored as a_content_discovery__notifications } from "./content-discovery__notifications";
+import { authored as a_content_discovery__search } from "./content-discovery__search";
+import { authored as a_cta_layout__checkout_bottom_bar } from "./cta-layout__checkout-bottom-bar";
+import { authored as a_cta_layout__dialog_footers } from "./cta-layout__dialog-footers";
+import { authored as a_cta_layout__editor_action_bar } from "./cta-layout__editor-action-bar";
+import { authored as a_cta_layout__product_bottom_bar } from "./cta-layout__product-bottom-bar";
+import { authored as a_page_wiring__data_loss } from "./page-wiring__data-loss";
+import { authored as a_public_pages__auth_error_pages } from "./public-pages__auth-error-pages";
+import { authored as a_public_pages__bug_hunters } from "./public-pages__bug-hunters";
+import { authored as a_public_pages__core_listing_pages } from "./public-pages__core-listing-pages";
+import { authored as a_public_pages__help_how_it_works } from "./public-pages__help-how-it-works";
+import { authored as a_public_pages__legal_policy_pages } from "./public-pages__legal-policy-pages";
+import { authored as a_public_pages__stores_sellers_directories } from "./public-pages__stores-sellers-directories";
+import { authored as a_page_wiring__detail_pages } from "./page-wiring__detail-pages";
+import { authored as a_page_wiring__drawer_pages } from "./page-wiring__drawer-pages";
+import { authored as a_page_wiring__reachability } from "./page-wiring__reachability";
+import { authored as a_search_and_nav__employee_permissions } from "./search-and-nav__employee-permissions";
+import { authored as a_search_and_nav__header_search } from "./search-and-nav__header-search";
+import { authored as a_search_and_nav__settings_deep_links } from "./search-and-nav__settings-deep-links";
+import { authored as a_search_and_nav__sidebar_search } from "./search-and-nav__sidebar-search";
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
-  /* GENERATED:SPREAD:START */
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
-  ...a_account_auth__testing_program__admin,
+  ...a_account_auth__testing_program,
+  ...a_addresses__address_filters,
+  ...a_addresses__postal_lookup,
+  ...a_addresses__postal_validation,
+  ...a_addresses__state_picker,
+  ...a_addresses__unban_request,
   ...a_buying__bidding,
   ...a_buying__browsing_search,
   ...a_buying__buying_checkout,
   ...a_buying__buying_coupons,
   ...a_buying__product_detail,
-  /* GENERATED:SPREAD:END */
+  ...a_community_support__public_profile,
+  ...a_community_support__support_tickets,
+  ...a_content_discovery__blog,
+  ...a_content_discovery__coupons,
+  ...a_content_discovery__events,
+  ...a_content_discovery__faq_help,
+  ...a_content_discovery__notifications,
+  ...a_content_discovery__search,
+  ...a_cta_layout__checkout_bottom_bar,
+  ...a_cta_layout__dialog_footers,
+  ...a_cta_layout__editor_action_bar,
+  ...a_cta_layout__product_bottom_bar,
+  ...a_page_wiring__data_loss,
+  ...a_public_pages__auth_error_pages,
+  ...a_public_pages__bug_hunters,
+  ...a_public_pages__core_listing_pages,
+  ...a_public_pages__help_how_it_works,
+  ...a_public_pages__legal_policy_pages,
+  ...a_public_pages__stores_sellers_directories,
+  ...a_page_wiring__detail_pages,
+  ...a_page_wiring__drawer_pages,
+  ...a_page_wiring__reachability,
+  ...a_search_and_nav__employee_permissions,
+  ...a_search_and_nav__header_search,
+  ...a_search_and_nav__settings_deep_links,
+  ...a_search_and_nav__sidebar_search,
 };
