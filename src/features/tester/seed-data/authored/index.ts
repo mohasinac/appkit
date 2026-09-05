@@ -24,6 +24,9 @@
 
 import type { AuthoredCase } from "./_types";
 
+import { authored as a_admin__blog_faqs } from "./admin__blog-faqs";
+import { authored as a_admin__bundles } from "./admin__bundles";
+import { authored as a_admin__classifieds_digitalcodes_live } from "./admin__classifieds-digitalcodes-live";
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
 import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
@@ -92,6 +95,9 @@ import { authored as a_search_and_nav__settings_deep_links } from "./search-and-
 import { authored as a_search_and_nav__sidebar_search } from "./search-and-nav__sidebar-search";
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
+  ...a_admin__blog_faqs,
+  ...a_admin__bundles,
+  ...a_admin__classifieds_digitalcodes_live,
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
   ...a_account_auth__testing_program,
