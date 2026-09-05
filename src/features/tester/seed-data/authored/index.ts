@@ -82,6 +82,7 @@ import { authored as a_selling__seller_ops_comms } from "./selling__seller-ops-c
 import { authored as a_selling__store_dashboard_navigation } from "./selling__store-dashboard-navigation";
 import { authored as a_selling__sectionised_forms } from "./selling__sectionised-forms";
 import { authored as a_selling__seller_shipping_payouts_setup } from "./selling__seller-shipping-payouts-setup";
+import { authored as a_selling__seller_orders } from "./selling__seller-orders";
 import { authored as a_search_and_nav__employee_permissions } from "./search-and-nav__employee-permissions";
 import { authored as a_search_and_nav__header_search } from "./search-and-nav__header-search";
 import { authored as a_search_and_nav__settings_deep_links } from "./search-and-nav__settings-deep-links";
@@ -146,6 +147,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_selling__store_dashboard_navigation,
   ...a_selling__sectionised_forms,
   ...a_selling__seller_shipping_payouts_setup,
+  ...a_selling__seller_orders,
   ...a_search_and_nav__employee_permissions,
   ...a_search_and_nav__header_search,
   ...a_search_and_nav__settings_deep_links,
