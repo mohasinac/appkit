@@ -19,7 +19,7 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-buying-checkout-add-to-cart": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -32,7 +32,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /cart, 'Test Gadget — Standard Listing #1' is still listed in the Cart tab.",
   },
   "checklist-buying-buying-checkout-add-to-cart-max-quantity": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -46,7 +46,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /cart, the quantity shown does not exceed the stock cap that was enforced.",
   },
   "checklist-buying-buying-checkout-add-to-cart-out-of-stock": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products/product-beyblade-burst-valtryek-v3-sold-out",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -57,7 +57,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /products/product-beyblade-burst-valtryek-v3-sold-out, the page still shows '✗ Out of Stock' with no 'Add to Cart' button.",
   },
   "checklist-buying-buying-checkout-checkout-back-navigation": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -75,7 +75,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Only one order is created at the end. No duplicate orders appear in the buyer's order history.",
   },
   "checklist-buying-buying-checkout-checkout-cash-payment-no-validation-error": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -90,7 +90,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "An order is created and visible in the buyer's order history. The order has an active 15-minute payment window for proof upload.",
   },
   "checklist-buying-buying-checkout-checkout-flow": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -108,7 +108,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order confirmation URL, the order details remain visible and the order status is not cancelled.",
   },
   "checklist-buying-buying-checkout-checkout-manual-payment-consent": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -124,7 +124,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists from this step until the button is actually clicked and the order is placed.",
   },
   "checklist-buying-buying-checkout-checkout-mobile-responsive": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Resize the browser to a mobile viewport of 390×844 pixels.",
@@ -141,7 +141,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing additional persists from this layout check.",
   },
   "checklist-buying-buying-checkout-checkout-multi-seller-split": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -157,7 +157,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order confirmation or order history, two separate orders exist — one from store-tester-sandbox and one from store-beyblade-arena.",
   },
   "checklist-buying-buying-checkout-checkout-order-review": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -174,7 +174,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing additional persists from this review step. The order is not placed until payment is completed.",
   },
   "checklist-buying-buying-checkout-checkout-order-summary-full-breakdown": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -189,7 +189,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The Total shown in the Order Summary matches the Total on the order confirmation page after payment is completed.",
   },
   "checklist-buying-buying-checkout-checkout-otp-highvalue": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -208,7 +208,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After entering the correct OTP and completing payment, the order is placed. Re-entering the OTP step URL without a valid code should not allow order placement.",
   },
   "checklist-buying-buying-checkout-checkout-otp-whatsapp-hidden-without-phone": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and confirm Site Settings → Notifications → WhatsApp → 'WhatsApp OTP' is enabled.",
@@ -224,7 +224,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The order can still be completed via email OTP. The WhatsApp option remains absent for this address.",
   },
   "checklist-buying-buying-checkout-checkout-otp-whatsapp-option": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and confirm Site Settings → Notifications → WhatsApp → 'WhatsApp OTP' is enabled with real Meta Cloud API credentials.",
@@ -244,7 +244,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The order is placed after successful WhatsApp OTP verification.",
   },
   "checklist-buying-buying-checkout-checkout-razorpay-charge-includes-shipping": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and confirm Site Settings → Payments → Razorpay is enabled and the seller store-beyblade-arena has a configured shipping fee.",
@@ -260,7 +260,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After payment, the order confirmation page shows a Total that matches the Razorpay modal amount exactly.",
   },
   "checklist-buying-buying-checkout-emi-checkout-flow": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and confirm EMI is enabled in Site Settings → Payments → EMI.",
@@ -276,7 +276,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order detail page, the installment schedule is visible with the correct number of instalments and amounts.",
   },
   "checklist-buying-buying-checkout-gst-breakdown-display": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and verify that Site Settings → Tax → GST is enabled.",
@@ -291,7 +291,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing additional persists from viewing the GST breakdown.",
   },
   "checklist-buying-buying-checkout-order-confirmation": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -305,7 +305,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order confirmation URL, all details remain visible and the order is not cancelled.",
   },
   "checklist-buying-buying-checkout-out-of-stock-policy-cancel": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and set Site Settings → Checkout → Out-of-stock policy to 'Cancel whole order'.",
@@ -319,7 +319,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /cart, both items are still present in the cart (or the buyer is able to restart the checkout). No order record exists for this attempt.",
   },
   "checklist-buying-buying-checkout-out-of-stock-policy-skip": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in) and set Site Settings → Checkout → Out-of-stock policy to 'Skip unavailable items'.",
@@ -333,7 +333,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order detail page, only product-tester-standard-1 is listed in the order. product-tester-standard-2 is not included.",
   },
   "checklist-buying-buying-checkout-payment-auto-approve-dispute": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -348,7 +348,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order detail page, the dispute is recorded and the order status reflects the dispute.",
   },
   "checklist-buying-buying-checkout-payment-method-selection": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -365,7 +365,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists until payment is actually submitted.",
   },
   "checklist-buying-buying-checkout-payment-proof-reupload": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-admin-letitrip (admin@letitrip.in).",
@@ -381,7 +381,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order detail page, the payment proof status shows the newly submitted proof and the re-upload request is resolved.",
   },
   "checklist-buying-buying-checkout-payment-proof-upload": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -397,7 +397,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the order detail page, the payment proof status shows 'submitted' or 'pending review', and the uploaded screenshot is accessible.",
   },
   "checklist-buying-buying-checkout-payment-window-countdown": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -413,7 +413,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading the payment proof page, the countdown continues from where it left off (not reset) and the timer is still counting down toward zero.",
   },
   "checklist-buying-buying-checkout-payment-window-expiry": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -428,7 +428,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /products/product-tester-standard-1, the stock count reflects the restored item (the stock is back to at least what it was before the order was placed).",
   },
   "checklist-buying-buying-checkout-shipping-address": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -442,7 +442,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The selected address is carried into Step 2 and shown in the Order Summary panel throughout the remaining checkout steps.",
   },
   "checklist-buying-buying-checkout-shipping-address-edit": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -458,7 +458,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /user/addresses or revisiting the checkout, the address retains the updated street value.",
   },
   "checklist-buying-buying-checkout-shipping-address-inline-add": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -475,7 +475,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After completing the checkout, the saved address 'QA Address buying-checkout-shipping-address-inline-add' remains in the buyer's address book.",
   },
   "checklist-buying-buying-checkout-shipping-method-selection": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",

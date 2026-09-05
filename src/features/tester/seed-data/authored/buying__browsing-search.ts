@@ -19,7 +19,7 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-browsing-search-art-stickers-default-not-empty": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/art",
     steps: [
       "Open /art.",
@@ -29,7 +29,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-art-stickers-show-sold-adds-not-reveals": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/art",
     steps: [
       "Open /art.",
@@ -46,7 +46,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-art-stickers-type-chips-narrow": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/art",
     steps: [
       "Open /art.",
@@ -61,7 +61,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-auctions-show-ended-off-shows-live": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -72,7 +72,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-auctions-show-ended-with-nondefault-sort": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -84,7 +84,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-browse-categories": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/categories",
     steps: [
       "Open /categories.",
@@ -95,7 +95,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. Reloading /categories/category-beyblade-burst shows the same category listing.",
   },
   "checklist-buying-browsing-search-card-shows-seller-name": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products in grid view.",
@@ -111,7 +111,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. The store-name line is purely display data.",
   },
   "checklist-buying-browsing-search-compare-custom-fields": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com.",
@@ -125,7 +125,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-compare-double-row-arrows": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/",
     steps: [
       "Open /.",
@@ -136,7 +136,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-default-listing-not-empty": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products with no filters applied.",
@@ -150,7 +150,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-filter-drawer-combines-correctly": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -170,7 +170,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-filter-drawer-facets-actually-filter": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -189,7 +189,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "The 'Tags' and 'Sublisting Type' sections described in the case label were not visible in the drawer during observation — only 'Features' was present. Steps use Features only. Revisit if Tags/Sublisting Type appear on the live site.",
   },
   "checklist-buying-browsing-search-filter-drawer-flips-hand-mode": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/products",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com.",
@@ -202,7 +202,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The Left-hand mode preference persists in the user's profile across sessions.",
   },
   "checklist-buying-browsing-search-filters": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -218,7 +218,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted on the server. Reloading the filtered URL shows the same filtered grid.",
   },
   "checklist-buying-browsing-search-free-shipping-toggle-actually-filters": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -234,7 +234,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-grid-follows-sidebar-not-viewport": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products at 1440px wide.",
@@ -249,7 +249,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. Layout is purely CSS.",
   },
   "checklist-buying-browsing-search-grid-one-card-per-row-on-phone": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -266,7 +266,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. Layout is purely CSS.",
   },
   "checklist-buying-browsing-search-grid-short-last-row-not-stretched": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products at 1440px wide (3 cards per row at desktop).",
@@ -279,7 +279,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. Layout is purely CSS.",
   },
   "checklist-buying-browsing-search-homepage-event-raffles-section": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/",
     steps: [
       "Open /.",
@@ -292,7 +292,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-homepage-prize-draws-section": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/",
     steps: [
       "Open /.",
@@ -303,7 +303,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-listing-no-missing-message": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open browser DevTools (F12) and go to the Console tab.",
@@ -316,7 +316,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-listing-toggles-persist-across-pagination": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -329,7 +329,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server. State is URL-encoded.",
   },
   "checklist-buying-browsing-search-listing-toolbar-collapsed-on-mobile": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Resize the browser to 375px wide.",
@@ -345,7 +345,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The toolbar expanded/collapsed preference is preserved across navigation within the session but is not persisted to the server.",
   },
   "checklist-buying-browsing-search-listing-toolbar-forced-open-on-selection": {
-    role: "seller",
+    roles: ["seller"],
     startPage: "/store/products",
     steps: [
       "Resize the browser to 375px wide.",
@@ -358,7 +358,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. The forced-open state is UI-only.",
   },
   "checklist-buying-browsing-search-pagination": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -373,7 +373,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server. The page parameter is URL state.",
   },
   "checklist-buying-browsing-search-pre-orders-reachable-from-products": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -387,7 +387,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-product-filter-status-labels": {
-    role: "admin",
+    roles: ["admin"],
     startPage: "/products",
     steps: [
       "Sign in as admin@letitrip.in.",
@@ -401,7 +401,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-product-type-chip-dedicated-page-link": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -421,7 +421,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-product-type-chip-drives-sort-options": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -437,7 +437,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-product-type-chip-sort-resets-no-empty-page": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -451,7 +451,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-product-type-chips-cover-all-types": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -464,7 +464,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-product-type-chips-multi-select": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -483,7 +483,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server. Filter state is URL state.",
   },
   "checklist-buying-browsing-search-product-type-chips-none-means-all": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -496,7 +496,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-product-type-filter-counts-in-badge": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -514,7 +514,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-product-type-filter-lives-in-drawer": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -527,7 +527,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted.",
   },
   "checklist-buying-browsing-search-product-type-pending-until-apply": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products with no filters applied.",
@@ -546,7 +546,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-product-type-selection-survives-reload": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -563,7 +563,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server. Filter state is URL state.",
   },
   "checklist-buying-browsing-search-product-type-toggles-follow-selection": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -579,7 +579,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server.",
   },
   "checklist-buying-browsing-search-search": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -591,7 +591,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. Reloading the URL preserves the search query and shows the same filtered grid.",
   },
   "checklist-buying-browsing-search-search-filter-sort-combo": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -607,7 +607,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted to the server. State is URL-encoded.",
   },
   "checklist-buying-browsing-search-show-sold-toggle-reveals-items": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -628,7 +628,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is persisted. Tab state is URL state only.",
   },
   "checklist-buying-browsing-search-sort-options-per-listing-type": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products with no type filter.",

@@ -26,11 +26,14 @@ import type { TesterCaseRole } from "../schemas";
 interface MoneyFlowCase {
   key: string;
   label: string;
-  role: TesterCaseRole;
+  /** Every role the case affects; per-role detail goes inline in the expectations. */
+  roles: TesterCaseRole[];
   startPage?: string;
   steps: string[];
+  inputs?: Record<string, string | number | boolean>;
   expectedBehaviour: string;
   expectedUiState: string;
+  expectedData?: Record<string, string | number | boolean>;
   endResult: string;
   href?: string;
 }
@@ -56,7 +59,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "buyer-makes-offer",
         label: "A buyer can make an offer on a seller's product and it appears in their own offers list",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/products/product-tester-offerable",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -77,7 +80,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "duplicate-offer-refused",
         label: "A second offer on the same listing while one is still pending is refused",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/products/product-tester-offerable",
         steps: [
           "Sign in as the buyer ash@pokemonpalace.in, holding the pending 780 offer from the previous case.",
@@ -96,7 +99,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "seller-sees-and-accepts",
         label: "The owning seller sees the inbound offer and can accept it",
-        role: "seller",
+        roles: ["seller"],
         startPage: "/store/offers",
         steps: [
           "Sign in as tester@letitrip.in, who owns store-tester-qa-seller.",
@@ -118,7 +121,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "accepted-offer-locks-price",
         label: "🛑 Checkout bills the AGREED price, never the listing price",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/user/offers",
         steps: [
           "Sign in as tester@letitrip.in, who holds offer-tester-sandbox-accepted on product-beyblade-burst-valkyrie (listed ₹999, agreed ₹780).",
@@ -139,7 +142,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "owning-seller-cannot-offer",
         label: "The owning seller sees no Make Offer control on their own listing",
-        role: "seller",
+        roles: ["seller"],
         startPage: "/products/product-tester-standard-1",
         steps: [
           "Sign in as tester@letitrip.in, who owns store-tester-qa-seller.",
@@ -157,7 +160,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "offer-lane-blocks-other-items",
         label: "An accepted offer in the cart blocks unrelated items from being checked out alongside it",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/cart",
         steps: [
           "Sign in as tester@letitrip.in with the accepted offer on product-beyblade-burst-valkyrie in the cart.",
@@ -177,7 +180,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "expired-offer-cannot-checkout",
         label: "An accepted offer past its checkout deadline can no longer be paid",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/user/offers",
         steps: [
           "Sign in as tester@letitrip.in.",
@@ -204,7 +207,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "winning-bid-recorded",
         label: "Placing the highest bid on a closing auction records you as the winner",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/auctions/auction-tester-sandbox-cycle-1",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -224,7 +227,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "win-notification-arrives",
         label: "🛑 Winning an auction produces a notification that links somewhere payable",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/user/notifications",
         steps: [
           "Sign in as the buyer who won auction-tester-sandbox-cycle-1.",
@@ -244,7 +247,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "won-auction-is-payable",
         label: "🛑 A won auction can actually be paid for",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/user/orders",
         steps: [
           "Sign in as the buyer who won auction-tester-sandbox-cycle-1.",
@@ -265,7 +268,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "won-auction-line-is-locked",
         label: "A won-auction line cannot be removed from the cart or have its quantity changed",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/cart",
         steps: [
           "Sign in as the buyer holding the won auction line.",
@@ -285,7 +288,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "unpaid-win-forfeits",
         label: "An unpaid win past its deadline is forfeited and the buyer is told",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/user/orders",
         steps: [
           "Sign in as the buyer holding an unpaid won auction.",
@@ -311,7 +314,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "cod-order-places",
         label: "A cash-on-delivery order can be placed and shows the COD fee before confirming",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/products/product-tester-standard-1",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -333,7 +336,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "manual-payment-proof-upload",
         label: "🛑 A manual (UPI) order reaches a page where proof can actually be uploaded",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/checkout",
         steps: [
           "Sign in as the buyer ash@pokemonpalace.in with product-tester-standard-2 in the cart.",
@@ -356,7 +359,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "payment-page-reachable-later",
         label: "The payment page for an unpaid order is reachable again after navigating away",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/user/orders",
         steps: [
           "Sign in as the buyer holding an unpaid manual-payment order.",
@@ -375,7 +378,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "fees-match-between-preview-and-order",
         label: "🛑 The total shown at checkout equals the total recorded on the order",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/checkout",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -396,7 +399,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "coupon-applies-and-persists",
         label: "A coupon applied at checkout is reflected in the placed order",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/checkout",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -424,7 +427,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "out-of-stock-blocked",
         label: "A sold-out item cannot be added to the cart or checked out",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/products/product-tester-standard-sold",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -442,7 +445,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "cross-store-group-refused",
         label: "A group spanning two stores cannot be added as one cart line",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/products/product-tester-crossstore-a",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -461,7 +464,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "classified-has-no-cart",
         label: "A classified listing offers contact, never Add to Cart",
-        role: "buyer",
+        roles: ["buyer"],
         startPage: "/classified/classified-tester-sandbox-1",
         steps: [
           STEP_SIGNIN_BUYER,
@@ -479,7 +482,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "guest-gated-action-prompts-signin",
         label: "A gated action while signed out prompts sign-in and then completes the original action",
-        role: "guest",
+        roles: ["guest"],
         startPage: "/products/product-tester-standard-1",
         steps: [
           "Sign out completely.",
@@ -498,7 +501,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       {
         key: "banned-account-blocked",
         label: "A disabled account cannot sign in and is told why",
-        role: "guest",
+        roles: ["guest"],
         startPage: "/auth/login",
         steps: [
           "Sign out completely.",

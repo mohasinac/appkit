@@ -28,7 +28,7 @@ export interface TesterChecklistItemDocument extends BaseDocument {
    */
 
   /**
-   * WHO is performing this. Not decoration — it changes what "correct" means.
+   * WHICH ROLES this case affects. Not decoration — it changes what "correct" means.
    *
    * The same page is a different page per role: /products/<slug> shows a buyer
    * Add to Cart and Make Offer, shows the OWNING seller Edit listing and no Make
@@ -37,9 +37,17 @@ export interface TesterChecklistItemDocument extends BaseDocument {
    * meaningless without this, and a case omitting it is really three untested
    * cases wearing one label.
    *
-   * Also drives which session the automated harness browses with, per case.
+   * 🛑 A LIST, because the interesting content is usually the DIFFERENCE between
+   * roles — "the owning seller must NOT see Make Offer where a buyer does" is one
+   * case, not two, and splitting it loses the comparison that is the whole point.
+   * Where roles differ, `expectedBehaviour` and `expectedUiState` say so in prose
+   * ("Buyer: … Owning seller: …"). Deliberately NOT a parallel per-role structure:
+   * that would be four more fields to keep in sync for something a sentence
+   * expresses perfectly well.
+   *
+   * Also drives which session the automated harness browses with.
    */
-  role?: TesterCaseRole;
+  roles?: TesterCaseRole[];
   /** WHERE the tester begins. One unambiguous URL, unprefixed (/products, not /en/products). */
   startPage?: string;
   /**
@@ -50,8 +58,29 @@ export interface TesterChecklistItemDocument extends BaseDocument {
    * 🛑 No assertions in here — they belong in the three expectation fields. A
    * step reading "click Save and confirm it worked" is two things wearing one
    * number, and the confirming half silently goes unchecked.
+   *
+   * Length varies with the case. "This page renders" is one honest step; a
+   * multi-role negotiation is fifteen. There is no target, and padding toward one
+   * produces the mechanical "Open X. Verify Y." shape that fills the field while
+   * encoding nothing the label did not already say.
    */
   steps?: string[];
+  /**
+   * The exact data the tester enters or selects, as flat key/value pairs.
+   *
+   * 🛑 WHY THIS IS NOT JUST PROSE
+   *
+   * "Enter 780, the listed price is 999" reads fine and still lets two testers type
+   * two different numbers, and gives an automated runner nothing to consume but a
+   * sentence. The steps say WHAT TO DO; this says WITH WHAT — so the procedure is
+   * repeatable by construction and a runner can fill a form from it directly.
+   *
+   * Flat and scalar on purpose: nested objects invite a shape nobody validates, and
+   * every real value here is a string, number or boolean.
+   *
+   * Omitted entirely by a case that enters nothing — a read-only page has no inputs.
+   */
+  inputs?: Record<string, string | number | boolean>;
   /**
    * What the system must DO — the functional outcome, including side effects no
    * screen shows (a notification sent, stock decremented, an order created).
@@ -69,6 +98,20 @@ export interface TesterChecklistItemDocument extends BaseDocument {
    * claim instead of to a guess about what "works" looked like.
    */
   expectedUiState?: string;
+  /**
+   * The values that must be CORRECT afterwards, as flat key/value pairs.
+   *
+   * `expectedUiState` settles what the screen looks like; this settles whether the
+   * data behind it is right. The two are different questions, and a screen can be
+   * entirely plausible over a wrong number — which is most of this codebase's bug
+   * history, where a defect returns HTTP 200 with believable rows.
+   *
+   * Machine-readable so a runner asserts against it rather than re-reading English,
+   * and so "it looked right" becomes a comparison.
+   *
+   * Omitted by a case with nothing checkable behind the screen.
+   */
+  expectedData?: Record<string, string | number | boolean>;
   /**
    * What is still true after a RELOAD — the persistence oracle.
    *

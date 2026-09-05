@@ -35,16 +35,20 @@ interface CaseInput {
   key: string;
   label: string;
   description?: string;
-  /** WHO: guest / buyer / seller (the OWNER of the listing) / admin / employee. */
-  role?: TesterCaseRole;
+  /** WHICH ROLES: guest / buyer / seller (the OWNER of the listing) / admin / employee. */
+  roles?: TesterCaseRole[];
   /** WHERE the tester starts. Unprefixed path. Defaults to the page's href. */
   startPage?: string;
-  /** WHAT they do. One action each, literal values, no assertions. */
+  /** WHAT they do. One action each, no assertions. As many as the case needs. */
   steps?: string[];
+  /** The exact values entered or selected. Omitted when the case enters nothing. */
+  inputs?: Record<string, string | number | boolean>;
   /** What the system must DO, including side effects no screen shows. */
   expectedBehaviour?: string;
   /** What must be SEEN — quote the screen, so a screenshot can be checked against it. */
   expectedUiState?: string;
+  /** The values that must be correct afterwards. Omitted when nothing is checkable. */
+  expectedData?: Record<string, string | number | boolean>;
   /** What survives a RELOAD. The persistence oracle. */
   endResult?: string;
   href?: string;
@@ -85,14 +89,16 @@ function group(
         pageLabel: page.pageLabel,
         label: c.label,
         description: c.description,
-        role: c.role ?? authored?.role,
+        roles: c.roles ?? authored?.roles,
         // A case starting somewhere other than its page default says so; otherwise
         // the page's own href is the start, which is what makes `startPage` safe
         // to require on every case without repeating it 990 times.
         startPage: c.startPage ?? authored?.startPage ?? c.href ?? page.href,
         steps: c.steps ?? authored?.steps,
+        inputs: c.inputs ?? authored?.inputs,
         expectedBehaviour: c.expectedBehaviour ?? authored?.expectedBehaviour,
         expectedUiState: c.expectedUiState ?? authored?.expectedUiState,
+        expectedData: c.expectedData ?? authored?.expectedData,
         endResult: c.endResult ?? authored?.endResult,
         // Every case gets a link: its own href, or the page's default —
         // guarantees "Go test this ->" always has somewhere real to send

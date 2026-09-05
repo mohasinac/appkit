@@ -19,7 +19,7 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-buying-coupons-coupon-all-codes-listed-on-order": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -33,7 +33,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The order and invoice records are persisted — a reload shows the same distinct coupon lines.",
   },
   "checklist-buying-buying-coupons-coupon-auction-offer-lane-no-coupon-field": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -52,7 +52,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "The tester account may not have seeded won auctions or accepted offers. The case needs user-seto-kaiba or another buyer to have a won auction (offer-tester-sandbox-accepted / auction-tester-sandbox-won) accessible in their cart lanes.",
   },
   "checklist-buying-buying-coupons-coupon-category-restriction-accepts-matching-cart": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -65,7 +65,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows SEALED20 applied with the Burst-item-only discount amount.",
   },
   "checklist-buying-buying-coupons-coupon-category-restriction-rejects-non-matching-cart": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -78,7 +78,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows SEALED20 absent from the applied-coupons list.",
   },
   "checklist-buying-buying-coupons-coupon-expired-in-cart-dropped-at-placement": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -96,7 +96,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "This case requires admin cooperation to deactivate a coupon mid-session. The TESTEREXPIRED coupon is already expired at seed time, which could serve as a pre-condition if the checkout doesn't validate on load — the test should apply TESTEREXPIRED if it initially accepts, then place the order. Needs clarification on whether TESTEREXPIRED is accepted at apply-time or only rejected at placement.",
   },
   "checklist-buying-buying-coupons-coupon-help-visible-cart": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -110,7 +110,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The panel state is UI-only and does not persist across a reload — the disclosure returns to its collapsed default on the next page load.",
   },
   "checklist-buying-buying-coupons-coupon-help-visible-checkout": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -124,7 +124,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The panel state is UI-only and does not persist across a reload.",
   },
   "checklist-buying-buying-coupons-coupon-help-visible-listing": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/promotions",
     steps: [
       "Open /promotions and click the 'Coupons' tab.",
@@ -139,7 +139,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Panel state is UI-only and does not persist across a reload.",
   },
   "checklist-buying-buying-coupons-coupon-min-purchase-uses-eligible-subtotal": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -153,7 +153,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows ARENA25 absent from the applied-coupons list.",
   },
   "checklist-buying-buying-coupons-coupon-persists-across-reload": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -168,7 +168,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Both coupons are persisted server-side — they survive a full page reload and a cart-to-checkout round-trip.",
   },
   "checklist-buying-buying-coupons-coupon-remove-one-of-many": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -183,7 +183,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows ARENA25 and FREESHIP499 applied and SEALED20 absent.",
   },
   "checklist-buying-buying-coupons-coupon-split-across-per-store-orders": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -199,7 +199,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The order records are persisted — a reload of each order detail page shows the same coupon lines.",
   },
   "checklist-buying-buying-coupons-coupon-stack-duplicate-code-rejected": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -213,7 +213,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows a single ARENA25 entry in the applied-coupons list.",
   },
   "checklist-buying-buying-coupons-coupon-stack-second-global-rejected": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -229,7 +229,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows BLADER50 applied and FREESHIP499 absent.",
   },
   "checklist-buying-buying-coupons-coupon-stack-second-store-coupon-rejected": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -243,7 +243,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout shows ARENA25 still applied and SEALED20 absent.",
   },
   "checklist-buying-buying-coupons-coupon-stack-two-stores-plus-global": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -259,7 +259,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Applied coupons persist across a reload of /checkout — all three codes are still listed with the same amounts.",
   },
   "checklist-buying-buying-coupons-coupon-store-scope-limited-to-its-own-items": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -276,7 +276,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "A reload of /checkout still shows ARENA25 with the same discount amount tied to Beyblade Arena items only.",
   },
   "checklist-buying-buying-coupons-coupon-summary-total-matches-sum": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/cart",
     steps: [
       "Sign in as user-seto-kaiba (vivaan.kapoor@gmail.com / TempPass123!).",
@@ -297,7 +297,7 @@ export const authored: Record<string, AuthoredCase> = {
     // admin-perspective throughout: its own first step signs in as the canTestAdmin
     // account precisely so the usage counter can be read. The substantive ambiguity
     // stays flagged below; only the incoherent role is corrected here.
-    role: "admin",
+    roles: ["admin"],
     startPage: "/admin/coupons",
     steps: [
       "Sign in as user-claude-tester (claude-tester@letitrip.in / TempPass123!) who has canTestAdmin.",
@@ -314,7 +314,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "TESTERLIMITED seed details (perUserLimit, totalLimit, currentUsage) need checking to confirm which specific limit scenario this case targets — per-user exhaustion vs global exhaustion.",
   },
   "checklist-buying-buying-coupons-coupon-wallet-apply-lands-on-checkout": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/user/coupons",
     steps: [
       "Sign in as a buyer who has at least one active claimed coupon in /user/coupons.",

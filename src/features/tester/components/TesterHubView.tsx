@@ -25,11 +25,13 @@ interface RawChecklistItem {
   // The six-part contract. These must be listed here AND forwarded below: this
   // mapping is hand-picked, so a field the document carries but nobody adds
   // reaches the API and dies at the row — Root Cause #38, one component over.
-  role?: TesterCaseRole;
+  roles?: TesterCaseRole[];
   startPage?: string;
   steps?: string[];
+  inputs?: Record<string, string | number | boolean>;
   expectedBehaviour?: string;
   expectedUiState?: string;
+  expectedData?: Record<string, string | number | boolean>;
   endResult?: string;
   order: number;
   answer: TesterAnswer | null;
@@ -75,11 +77,13 @@ function TesterChecklistPageSection({ page, testerDisplayName, onAnswer, onSaveN
                   label: item.label,
                   description: item.description,
                   href: item.href,
-                  role: item.role,
+                  roles: item.roles,
                   startPage: item.startPage,
                   steps: item.steps,
+                  inputs: item.inputs,
                   expectedBehaviour: item.expectedBehaviour,
                   expectedUiState: item.expectedUiState,
+                  expectedData: item.expectedData,
                   endResult: item.endResult,
                   answer: item.answer,
                   comment: item.comment,

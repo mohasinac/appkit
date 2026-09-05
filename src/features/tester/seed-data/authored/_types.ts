@@ -36,16 +36,24 @@
 import type { TesterCaseRole } from "../../schemas";
 
 export interface AuthoredCase {
-  /** WHO. `seller` always means the OWNER of the listing under test. */
-  role: TesterCaseRole;
+  /**
+   * WHICH ROLES this case affects. `seller` always means the OWNER of the listing
+   * under test. A list, because the difference between roles is usually the point —
+   * per-role detail goes in the expectation fields as prose.
+   */
+  roles: TesterCaseRole[];
   /** WHERE the tester starts. One unprefixed path. */
   startPage: string;
-  /** WHAT they do. One action each, literal values, no assertions. */
+  /** WHAT they do. One action each, no assertions. As many as the case needs. */
   steps: string[];
+  /** The exact values entered or selected. Omitted when the case enters nothing. */
+  inputs?: Record<string, string | number | boolean>;
   /** What the system must DO, including side effects no screen shows. */
   expectedBehaviour: string;
   /** What must be SEEN. Quotes the screen, so a screenshot can settle it. */
   expectedUiState: string;
+  /** The values that must be correct afterwards. Omitted when nothing is checkable. */
+  expectedData?: Record<string, string | number | boolean>;
   /** What survives a RELOAD. States explicitly when nothing persists. */
   endResult: string;
   /**

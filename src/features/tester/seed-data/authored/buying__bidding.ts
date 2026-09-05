@@ -19,7 +19,7 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-bidding-auction-below-reserve-no-winner": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-beyblade-burst-lord-spryzen-ended-unsold",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -30,7 +30,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload the page still shows the ended-below-reserve state with no winner.",
   },
   "checklist-buying-bidding-auction-win-unpaid-forfeit": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/user/bids",
     steps: [
       "Sign in as the buyer who won auction-tester-sandbox-won.",
@@ -45,7 +45,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "Requires manipulating checkoutDeadline on the fixture or waiting 48 h — seed a short-deadline won-auction fixture to make this runnable without waiting.",
   },
   "checklist-buying-bidding-bid-below-current-plus-increment-rejected": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -61,7 +61,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "No bid was placed, so the auction's current bid and count are unchanged on reload.",
   },
   "checklist-buying-bidding-bid-count-increments-by-one": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-3",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -77,7 +77,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload: 2 bids, current bid ₹18,000.00.",
   },
   "checklist-buying-bidding-bid-custom-need-not-be-exact-multiple": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -92,7 +92,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload of the auction page, 'Current bid' shows ₹15,137.00.",
   },
   "checklist-buying-bidding-bid-history": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/user/bids",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -105,7 +105,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload of /user/bids, the same rows appear in the same order.",
   },
   "checklist-buying-bidding-bid-history-auction-detail-pagination": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-beyblade-metal-lightning-l-drago",
     steps: [
       "Open /auctions/auction-beyblade-metal-lightning-l-drago (no sign-in required for viewing).",
@@ -118,7 +118,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Pagination state is not persisted across reloads — opening the page again starts at page 1 with the most recent bid first.",
   },
   "checklist-buying-bidding-bid-history-shows-date-time-and-masked-name": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-beyblade-metal-lightning-l-drago",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com) — a different account from the bidders in the L-Drago bid history.",
@@ -131,7 +131,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload the same masked names and timestamps appear.",
   },
   "checklist-buying-bidding-bid-increment-live-tier-change": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-beyblade-metal-lightning-l-drago",
     steps: [
       "Open /auctions/auction-beyblade-metal-lightning-l-drago in Tab A (signed in as user-yugi-muto) — current bid ₹3,199, min increment ₹200.",
@@ -146,7 +146,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "Requires Tab A to be viewing the L-Drago page at current ₹3,199 when the tier-crossing bid lands — run in a fresh browser session so no prior bids have moved the price already.",
   },
   "checklist-buying-bidding-bid-increment-override-floor-raising": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-tester-qa (tester@letitrip.in) who owns store-tester-qa-seller.",
@@ -168,7 +168,7 @@ export const authored: Record<string, AuthoredCase> = {
     reviewNote: "Requires seller edit of per-listing bid increment during the test; confirm the seller dashboard path for editing auction increment.",
   },
   "checklist-buying-bidding-bid-increment-tiered": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-beyblade-metal-lightning-l-drago",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -185,7 +185,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload, 'Current bid' shows ₹3,399.00.",
   },
   "checklist-buying-bidding-bid-preset-follows-live-price": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-2",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com) in Tab A.",
@@ -201,7 +201,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "No persistent state — Tab A's modal reflects live data. If the tester clicks 'Place Bid' with the updated amount, the bid succeeds.",
   },
   "checklist-buying-bidding-bid-presets-are-increment-multiples": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -214,7 +214,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "N/A — this is a read-only modal inspection. No persistent state changes.",
   },
   "checklist-buying-bidding-bid-succeeds-and-outbids-previous-winner": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -230,7 +230,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload of the auction page, current bid ₹16,000.00 and 2 bids persist.",
   },
   "checklist-buying-bidding-first-bid-can-equal-starting-bid": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -247,7 +247,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload, current bid is ₹15,000.00, 1 bid.",
   },
   "checklist-buying-bidding-first-bid-displays-at-starting-price": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-3",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -265,7 +265,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload after both bids: current bid ₹18,000, user-yugi-muto leading.",
   },
   "checklist-buying-bidding-outbid-notification": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -282,7 +282,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The notification persists on reload of /user/notifications.",
   },
   "checklist-buying-bidding-outbid-notification-goes-to-outbid-user": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -298,7 +298,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload of each user's notifications, the outbid entry persists for user-seto-kaiba and is absent for user-yugi-muto.",
   },
   "checklist-buying-bidding-place-bid": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -313,7 +313,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "After reloading /auctions/auction-tester-sandbox-cycle-1, 'Current bid' still reads ₹15,000.00 and '1 bid'. The bid also appears on /user/bids for user-yugi-muto.",
   },
   "checklist-buying-bidding-place-bid-live-other-viewer": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-2",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com) in Tab A.",
@@ -327,7 +327,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload of Tab B, the same current bid and count are shown.",
   },
   "checklist-buying-bidding-place-bid-live-self": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -342,7 +342,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "On reload, the updated current bid and count persist.",
   },
   "checklist-buying-bidding-server-error-copy-is-never-raw": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Sign in as user-yugi-muto (rehan.sheikh@gmail.com).",
@@ -356,7 +356,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Server error log entries persist in the admin list on reload.",
   },
   "checklist-buying-bidding-win-auction": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-won",
     steps: [
       "Sign in as user-tester-qa (tester@letitrip.in).",

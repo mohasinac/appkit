@@ -19,7 +19,7 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-product-detail-auction-detail": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Open /auctions/auction-tester-sandbox-cycle-1.",
@@ -30,7 +30,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — the countdown and bid state are read from the server on each load.",
   },
   "checklist-buying-product-detail-bundle-purchase": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/bundles/bundle-tester-sandbox",
     steps: [
       "Sign in as rehan.sheikh@gmail.com (user-yugi-muto).",
@@ -44,7 +44,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Reloading the order page still shows the single 'Test Bundle' line item at ₹199.00.",
   },
   "checklist-buying-product-detail-classified-buy-request-pinned-to-price": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/classified/classified-beyblade-burst-collection-bengaluru",
     steps: [
       "Sign in as rehan.sheikh@gmail.com (user-yugi-muto).",
@@ -59,7 +59,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "No offer record is created for the lower amount. Reloading the page still shows the 'Request to Buy' button with amount 4500.",
   },
   "checklist-buying-product-detail-classified-full-price-offer-accepted": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/classified/classified-beyblade-stadium-set",
     steps: [
       "Sign in as rehan.sheikh@gmail.com (user-yugi-muto).",
@@ -73,7 +73,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "An offer record is created at ₹1,200 for classified-beyblade-stadium-set. Reloading the page reflects the sent offer (e.g. 'Offer pending' state or the offer visible in the buyer's offers list).",
   },
   "checklist-buying-product-detail-classified-offer-is-the-purchase-path": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/classified/classified-beyblade-stadium-set",
     steps: [
       "Open /classified/classified-beyblade-stadium-set.",
@@ -86,7 +86,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-digitalcode-delivery": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/digital-codes/digitalcode-tester-sandbox-1",
     steps: [
       "Sign in as rehan.sheikh@gmail.com (user-yugi-muto).",
@@ -100,7 +100,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Reloading the order page still shows the delivered code.",
   },
   "checklist-buying-product-detail-grouped-listings-carousel-on-detail": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Open /products/product-tester-standard-1.",
@@ -112,7 +112,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — read-only navigation.",
   },
   "checklist-buying-product-detail-image-gallery": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/auctions/auction-tester-sandbox-cycle-1",
     steps: [
       "Open /auctions/auction-tester-sandbox-cycle-1.",
@@ -127,7 +127,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — no user state changes.",
   },
   "checklist-buying-product-detail-image-gallery-thumbnails-not-blank": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Open /products/product-beyblade-burst-valkyrie.",
@@ -140,7 +140,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — no state changes.",
   },
   "checklist-buying-product-detail-live-item-detail": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/live/live-tester-sandbox-1",
     steps: [
       "Open /live/live-tester-sandbox-1.",
@@ -150,7 +150,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-live-item-video-mandatory": {
-    role: "seller",
+    roles: ["seller"],
     startPage: "/store/live/new",
     steps: [
       "Sign in as tyson@beybladearena.in (user-tyson-blader).",
@@ -167,7 +167,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "The live listing is saved with the video attached. Reloading /live/live-tester-sandbox-1 shows the video thumbnail in the gallery.",
   },
   "checklist-buying-product-detail-preorder-detail": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/pre-orders/preorder-tester-sandbox-1",
     steps: [
       "Open /pre-orders/preorder-tester-sandbox-1.",
@@ -177,7 +177,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — the page is read-only for a guest.",
   },
   "checklist-buying-product-detail-prizedraw-buy-reveal": {
-    role: "buyer",
+    roles: ["buyer"],
     startPage: "/prize-draws/prizedraw-tester-sandbox-1",
     steps: [
       "Sign in as rehan.sheikh@gmail.com (user-yugi-muto).",
@@ -191,7 +191,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Reloading the order page still shows the purchased entry and the revealed prize.",
   },
   "checklist-buying-product-detail-product-group-set-widget": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Open /products/product-tester-standard-1.",
@@ -206,7 +206,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — read-only panel.",
   },
   "checklist-buying-product-detail-related-listings-sections": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Open /products/product-beyblade-burst-valkyrie.",
@@ -217,7 +217,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — read-only page.",
   },
   "checklist-buying-product-detail-seed-images-are-labelled-tiles": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products.",
@@ -228,7 +228,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — the images are served on each page load.",
   },
   "checklist-buying-product-detail-standard-detail": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-tester-standard-1",
     steps: [
       "Open /products/product-tester-standard-1.",
@@ -238,7 +238,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — the page is read-only for a guest.",
   },
   "checklist-buying-product-detail-tester-fixtures-hidden-from-the-public": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /products in a private/incognito window (not signed in).",
@@ -252,7 +252,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists. The visibility rule is enforced per-request by the server.",
   },
   "checklist-buying-product-detail-unreachable-image-degrades-to-placeholder": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products",
     steps: [
       "Open /api/media/ext?url=https%3A%2F%2Fexample.invalid%2Fx.png directly in a new browser tab.",
@@ -263,7 +263,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — this is a read-only endpoint response.",
   },
   "checklist-buying-product-detail-video-lightbox-fullscreen-sizing": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-beyblade-burst-spryzen-video-demo",
     steps: [
       "Resize the browser window to 375 × 667 (mobile width).",
@@ -281,7 +281,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — no state changes.",
   },
   "checklist-buying-product-detail-video-playback": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-beyblade-original-dragoon-f-video-demo",
     steps: [
       "Open /products/product-beyblade-original-dragoon-f-video-demo.",
@@ -296,7 +296,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — no state changes.",
   },
   "checklist-buying-product-detail-video-playback-youtube": {
-    role: "guest",
+    roles: ["guest"],
     startPage: "/products/product-beyblade-metal-dark-bull-video-demo",
     steps: [
       "Open /products/product-beyblade-metal-dark-bull-video-demo.",
@@ -308,7 +308,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing persists — no state changes.",
   },
   "checklist-buying-product-detail-video-real-file-upload": {
-    role: "seller",
+    roles: ["seller"],
     startPage: "/store/products",
     steps: [
       "Sign in as tyson@beybladearena.in (user-tyson-blader).",

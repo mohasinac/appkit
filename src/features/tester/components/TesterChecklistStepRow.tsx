@@ -15,11 +15,13 @@ export interface TesterChecklistStepItem {
   /* ── The six-part contract, rendered so a human reads exactly what the
    * automated tester reads. One catalogue, one source of truth — a separate
    * crib sheet for people would drift from the cases within a week. */
-  role?: TesterCaseRole;
+  roles?: TesterCaseRole[];
   startPage?: string;
   steps?: string[];
+  inputs?: Record<string, string | number | boolean>;
   expectedBehaviour?: string;
   expectedUiState?: string;
+  expectedData?: Record<string, string | number | boolean>;
   endResult?: string;
   answer: TesterAnswer | null;
   comment?: string;
@@ -34,6 +36,38 @@ const ROLE_LABEL: Record<TesterCaseRole, string> = {
   admin: "As an admin",
   employee: "As an employee",
 };
+
+/**
+ * `inputs` / `expectedData` as a two-column list.
+ *
+ * Rendered as key/value rather than pretty-printed JSON because the reader is a
+ * person about to type these into a form — braces and quotes are noise, and a
+ * value they have to mentally unescape is a value they will get wrong.
+ *
+ * Renders nothing at all when the case has no such data, which is the common case:
+ * a read-only page enters nothing and has nothing checkable behind the screen.
+ */
+function KeyValueBlock({
+  label,
+  data,
+}: {
+  label: string;
+  data?: Record<string, string | number | boolean>;
+}) {
+  const entries = Object.entries(data ?? {});
+  if (!entries.length) return null;
+  return (
+    <Stack gap="none">
+      <Text size="xs" weight="semibold" color="muted">{label}</Text>
+      {entries.map(([k, v]) => (
+        <Row key={k} gap="xs" align="baseline" wrap>
+          <Text size="sm" color="muted">{k}</Text>
+          <Text size="sm" weight="medium" numeric={typeof v === "number"}>{String(v)}</Text>
+        </Row>
+      ))}
+    </Stack>
+  );
+}
 
 export interface TesterChecklistStepRowProps {
   item: TesterChecklistStepItem;
@@ -75,13 +109,14 @@ export function TesterChecklistStepRow({
       <Row gap="sm" justify="between" align="center" wrap>
         <Stack gap="none" className="min-w-0">
           <Row gap="xs" align="center" wrap>
-            {/* Role sits on the COLLAPSED row: a tester must know who to be before
-                deciding whether they can run the case at all. */}
-            {item.role && (
-              <Text size="xs" weight="semibold" color="muted">
-                {ROLE_LABEL[item.role]}
+            {/* Roles sit on the COLLAPSED row: a tester must know who to be before
+                deciding whether they can run the case at all. Several roles means
+                the case is ABOUT the difference between them. */}
+            {item.roles?.map((r) => (
+              <Text key={r} size="xs" weight="semibold" color="muted">
+                {ROLE_LABEL[r]}
               </Text>
-            )}
+            ))}
             <Text weight="medium">{item.label}</Text>
           </Row>
           {item.description && (
@@ -129,7 +164,12 @@ export function TesterChecklistStepRow({
         importantly between "what the system does" and "what I should see", whose
         gap is a real bug class here (a write succeeds, the screen never updates).
       */}
-      {(item.steps?.length || item.expectedBehaviour || item.expectedUiState || item.endResult) && (
+      {(item.steps?.length ||
+        item.expectedBehaviour ||
+        item.expectedUiState ||
+        item.endResult ||
+        item.inputs ||
+        item.expectedData) && (
         <Details tone="card" padding="sm" defaultOpen={false}>
           <Summary>
             {item.steps?.length ? `Steps (${item.steps.length})` : "Expected result"}
@@ -151,6 +191,10 @@ export function TesterChecklistStepRow({
                 </Ol>
               </Stack>
             ) : null}
+            {/* The exact values, as a table rather than buried in a sentence.
+                A tester copies them; a runner asserts against them. Prose alone
+                lets two people type two different numbers. */}
+            <KeyValueBlock label="Enter exactly" data={item.inputs} />
             {item.expectedBehaviour && (
               <Stack gap="none">
                 <Text size="xs" weight="semibold" color="muted">Expected behaviour</Text>
@@ -163,6 +207,7 @@ export function TesterChecklistStepRow({
                 <Text size="sm">{item.expectedUiState}</Text>
               </Stack>
             )}
+            <KeyValueBlock label="Values that must be correct" data={item.expectedData} />
             {item.endResult && (
               <Stack gap="none">
                 <Text size="xs" weight="semibold" color="muted">After reload</Text>
