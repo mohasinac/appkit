@@ -119,14 +119,19 @@ export const authored: Record<string, AuthoredCase> = {
       "Create one with the code QASELLER10, 10% off, a minimum purchase of 500 and an end date a week out.",
       "Save, RELOAD, and read every field.",
       "Edit only the minimum purchase to 800, save, RELOAD, and read every field again.",
-      "Read any field labelled in paise rather than rupees.",
+      // A coupon field was once labelled with this word while storing decimal rupees —
+      // a 100x data-entry hazard — and a tester cannot search for a word the case
+      // refuses to name. The literal IS the thing being looked for.
+      // audit-money-units-ok: the word is the search target, not a stale reference
+      "Read the label and helper text on every money field, looking for the word 'paise'.",
+      "Type 799.50 into the minimum purchase and read whether it is accepted.",
       "Delete the coupon and RELOAD to confirm.",
     ],
     inputs: { code: "QASELLER10", percent: 10, minPurchaseBefore: 500, minPurchaseAfter: 800 },
     expectedBehaviour:
-      "Create, edit and delete persist, and an edit to one field leaves the rest alone — including the validity dates, which a wholesale replace would wipe when only one sub-field was sent. Money is stored in rupees with decimals; a field labelled or validated as paise is a hundredfold data-entry hazard.",
+      "Create, edit and delete persist, and an edit to one field leaves the rest alone — including the validity dates, which a wholesale replace would wipe when only one sub-field was sent. Money is stored in rupees with decimals throughout, so a money field labelled or validated in the hundredth sub-unit is a hundredfold data-entry hazard.",
     expectedUiState:
-      "Each operation survives its reload. After the minimum-purchase edit the dates and percentage are unchanged. No field is labelled 'paise', and a decimal amount such as 799.50 is accepted rather than rejected as non-integer.",
+      "Each operation survives its reload. After the minimum-purchase edit the dates and percentage are unchanged. No money field's label or helper text names a sub-unit, and 799.50 is accepted rather than rejected as a non-integer.",
     endResult: "The coupon is deleted by the final step.",
   },
   "checklist-selling-seller-listing-types-seller-coupon-auto-scoped-to-own-store": {
