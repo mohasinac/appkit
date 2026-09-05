@@ -69,6 +69,10 @@ import { authored as a_public_pages__stores_sellers_directories } from "./public
 import { authored as a_page_wiring__detail_pages } from "./page-wiring__detail-pages";
 import { authored as a_page_wiring__drawer_pages } from "./page-wiring__drawer-pages";
 import { authored as a_page_wiring__reachability } from "./page-wiring__reachability";
+import { authored as a_selling__become_seller } from "./selling__become-seller";
+import { authored as a_selling__final_sale_authoring } from "./selling__final-sale-authoring";
+import { authored as a_selling__listing_type_fields_roundtrip } from "./selling__listing-type-fields-roundtrip";
+import { authored as a_selling__media_limits } from "./selling__media-limits";
 import { authored as a_search_and_nav__employee_permissions } from "./search-and-nav__employee-permissions";
 import { authored as a_search_and_nav__header_search } from "./search-and-nav__header-search";
 import { authored as a_search_and_nav__settings_deep_links } from "./search-and-nav__settings-deep-links";
@@ -120,6 +124,10 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_page_wiring__detail_pages,
   ...a_page_wiring__drawer_pages,
   ...a_page_wiring__reachability,
+  ...a_selling__become_seller,
+  ...a_selling__final_sale_authoring,
+  ...a_selling__listing_type_fields_roundtrip,
+  ...a_selling__media_limits,
   ...a_search_and_nav__employee_permissions,
   ...a_search_and_nav__header_search,
   ...a_search_and_nav__settings_deep_links,
