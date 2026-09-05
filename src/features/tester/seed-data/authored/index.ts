@@ -31,6 +31,8 @@ import { authored as a_admin__media_watermark } from "./admin__media-watermark";
 import { authored as a_admin__prize_draws_lotteries } from "./admin__prize-draws-lotteries";
 import { authored as a_admin__events_raffles_spin } from "./admin__events-raffles-spin";
 import { authored as a_admin__coupons } from "./admin__coupons";
+import { authored as a_admin__buyer_data_admin } from "./admin__buyer-data-admin";
+import { authored as a_admin__content_marketing } from "./admin__content-marketing";
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
 import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
@@ -106,6 +108,8 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__prize_draws_lotteries,
   ...a_admin__events_raffles_spin,
   ...a_admin__coupons,
+  ...a_admin__buyer_data_admin,
+  ...a_admin__content_marketing,
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
   ...a_account_auth__testing_program,
