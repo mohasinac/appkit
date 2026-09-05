@@ -43,6 +43,12 @@ import { authored as a_admin__bans_and_trust } from "./admin__bans-and-trust";
 import { authored as a_admin__bulk_actions } from "./admin__bulk-actions";
 import { authored as a_admin__content_deletes } from "./admin__content-deletes";
 import { authored as a_content_discovery__category_brand_relations } from "./content-discovery__category-brand-relations";
+import { authored as a_buying__order_status_lifecycle } from "./buying__order-status-lifecycle";
+import { authored as a_buying__user_uncovered_pages } from "./buying__user-uncovered-pages";
+import { authored as a_selling__listing_lifecycle } from "./selling__listing-lifecycle";
+import { authored as a_selling__store_uncovered_pages } from "./selling__store-uncovered-pages";
+import { authored as a_content_discovery__event_participation } from "./content-discovery__event-participation";
+import { authored as a_cta_layout__navbar_ctas } from "./cta-layout__navbar-ctas";
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
 import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
@@ -144,6 +150,12 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__bulk_actions,
   ...a_admin__content_deletes,
   ...a_content_discovery__category_brand_relations,
+  ...a_buying__order_status_lifecycle,
+  ...a_buying__user_uncovered_pages,
+  ...a_selling__listing_lifecycle,
+  ...a_selling__store_uncovered_pages,
+  ...a_content_discovery__event_participation,
+  ...a_cta_layout__navbar_ctas,
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
   ...a_account_auth__testing_program,
