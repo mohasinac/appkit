@@ -3861,6 +3861,181 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
   ]),
 
+  ...group("seo", "SEO & Metadata", [
+    {
+      pageKey: "canonical-and-host",
+      pageLabel: "Canonical host & redirects",
+      href: "/",
+      cases: [
+        {
+          key: "apex-redirects-to-www",
+          label: "The apex host redirects to the www host, and does so permanently rather than temporarily",
+          description:
+            "BEFORE: the apex 307'd to www. A 307 is TEMPORARY and explicitly tells a search engine NOT to move the index entry, so every page kept two competing addresses. AFTER: the redirect is permanent and the destination is the host the sitemap advertises.",
+        },
+        {
+          key: "locale-prefix-redirects-to-bare",
+          label: "A locale-prefixed path redirects to the unprefixed one",
+          description:
+            "BEFORE: /en/products 307'd to /products, so both spellings existed and every internal link that carried the prefix paid a redirect. AFTER: the prefixed form resolves to the bare path.",
+        },
+        {
+          key: "canonical-matches-visited-host",
+          label: "Every page's canonical link points at the same host the visitor is on, and that host is the one the sitemap uses",
+          description:
+            "BEFORE: the site had TWO owners of the hostname — one hardcoded, one read from an environment variable — and a comment claimed they were kept in sync. They were not, so the sitemap advertised the apex while the pages declared www. AFTER: one definition, one host, everywhere.",
+        },
+        {
+          key: "no-inherited-homepage-canonical",
+          label: "A page that declares no canonical of its own does NOT inherit the homepage's canonical",
+          description:
+            "BEFORE: the root layout set a static absolute canonical, so /promotions and /reviews each declared themselves duplicates of the homepage. AFTER: a page either declares its own canonical or has none — never the homepage's.",
+        },
+        {
+          key: "tab-family-single-canonical",
+          label: "A store's tab pages all share ONE canonical — the store's own URL — rather than four competing ones",
+          description:
+            "Tabs are views of one page. Four per-tab canonicals split the section into four addresses, none of which is the one in the sitemap. Per-tab titles and descriptions SHOULD still differ; only the canonical is shared.",
+          href: "/stores/store-beyblade-arena",
+        },
+        {
+          key: "redirect-only-page-no-canonical",
+          label: "A page that only redirects carries no metadata of its own",
+          description:
+            "A redirect fires before the document is produced, so any metadata on it never reaches a browser — a crawler follows the redirect and reads the canonical of the page it LANDS on. Metadata there reads as though it were doing something.",
+          href: "/promotions",
+        },
+      ],
+    },
+    {
+      pageKey: "sitemap-and-robots",
+      pageLabel: "Sitemap & robots",
+      href: "/sitemap.xml",
+      cases: [
+        {
+          key: "sitemap-loads-and-parses",
+          label: "The sitemap loads as valid XML with a non-trivial number of URLs",
+          href: "/sitemap.xml",
+        },
+        {
+          key: "sitemap-urls-do-not-redirect",
+          label: "Every URL the sitemap advertises resolves directly — none of them redirects",
+          description:
+            "BEFORE: all 182 sitemap URLs redirected, because the sitemap named the apex host while the pages canonicalised to www. A sitemap full of redirects is how a site leaves the index without anything erroring.",
+          href: "/sitemap.xml",
+        },
+        {
+          key: "robots-loads-and-allows",
+          label: "robots.txt loads, does not disallow the whole site, and names the same host as the sitemap",
+          href: "/robots.txt",
+        },
+        {
+          key: "robots-sitemap-line-correct",
+          label: "The Sitemap: line in robots.txt points at a sitemap URL that actually loads",
+          href: "/robots.txt",
+        },
+        {
+          key: "sitemap-excludes-private-routes",
+          label: "The sitemap lists no dashboard, checkout or auth route",
+          description:
+            "A signed-out crawler reaching /admin or /checkout gets a redirect or a shell, so listing them wastes crawl budget on pages that can never rank.",
+          href: "/sitemap.xml",
+        },
+        {
+          key: "sitemap-excludes-test-data",
+          label: "The sitemap lists no tester-sandbox fixture",
+          description:
+            "Sandbox content is wiped and re-seeded by every tester run, so a sitemap entry for it is a URL that repeatedly 404s. Search for \"tester-sandbox\" in the sitemap.",
+          href: "/sitemap.xml",
+        },
+      ],
+    },
+    {
+      pageKey: "page-metadata",
+      pageLabel: "Per-page titles & descriptions",
+      href: "/products",
+      cases: [
+        {
+          key: "listing-pages-distinct-titles",
+          label: "Each public listing page has its own title and description, not a shared site-wide default",
+          href: "/products",
+        },
+        {
+          key: "detail-page-title-from-record",
+          label: "A product detail page's title and description come from that product, not from a template with the slug pasted in",
+          description:
+            "BEFORE: one listing type interpolated the raw slug into the title, so the tab read a hyphenated id rather than the product's name.",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
+          key: "detail-pages-have-canonical",
+          label: "Every listing type's detail page declares a canonical — including classifieds, digital codes and live items",
+          description:
+            "BEFORE: three listing types were called without the site URL, so their metadata builder returned nothing and those pages shipped with NO canonical at all. Check all three, not just the standard product page.",
+          href: "/classified/classified-tester-sandbox-1",
+        },
+        {
+          key: "detail-canonical-uses-slug-not-id",
+          label: "A detail page's canonical uses the slug the route actually takes",
+          description:
+            "BEFORE: a canonical was built from the record's id while the route was keyed on its slug, so the canonical named a URL that does not exist.",
+          href: "/classified/classified-tester-sandbox-1",
+        },
+        {
+          key: "single-h1-per-page",
+          label: "Every page has exactly one top-level heading",
+          href: "/products",
+        },
+        {
+          key: "404-page-not-indexable",
+          label: "A page that does not exist returns a 404 status and is marked not-indexable, rather than returning 200 with a 'not found' message",
+          description:
+            "A 'soft 404' — a 200 response whose body says the page is missing — keeps the URL in the index indefinitely. Use a product path whose trailing segment is a nonsense word.",
+          href: "/products",
+        },
+        {
+          key: "title-length-reasonable",
+          label: "Titles are not truncated mid-word by the brand suffix and stay within a length a result page will show",
+          href: "/products",
+        },
+      ],
+    },
+    {
+      pageKey: "og-images",
+      pageLabel: "Social preview cards",
+      href: "/",
+      cases: [
+        {
+          key: "og-image-renders-homepage",
+          label: "The homepage's social preview image renders as a real image, not a blank or errored one",
+          href: "/",
+        },
+        {
+          key: "og-image-product",
+          label: "A product's social preview image shows that product's own title and image",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
+          key: "og-image-brand-logo-present",
+          label: "A brand's social preview card shows the brand's cover image rather than an empty slot",
+          description:
+            "BEFORE: the brand card's image reader named a field that does not exist on the record at all, so the logo was always undefined and the card rendered without it — silently.",
+          href: "/brands/brand-takara-tomy",
+        },
+        {
+          key: "og-tags-present-and-absolute",
+          label: "Open Graph and Twitter tags are present on public pages and their URLs are absolute, on the canonical host",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
+          key: "og-image-missing-media-fallback",
+          label: "A record with no image of its own still produces a readable social card rather than a broken image",
+          href: "/classified/classified-tester-sandbox-1",
+        },
+      ],
+    },
+  ]),
+
   ...group(
     "admin",
     ADMIN_TESTING_GROUP_LABEL,
