@@ -25,11 +25,19 @@
 import type { AuthoredCase } from "./_types";
 
 /* GENERATED:IMPORTS:START */
+import { authored as a_buying__bidding } from "./buying__bidding";
+import { authored as a_buying__browsing_search } from "./buying__browsing-search";
+import { authored as a_buying__buying_checkout } from "./buying__buying-checkout";
+import { authored as a_buying__buying_coupons } from "./buying__buying-coupons";
 import { authored as a_buying__product_detail } from "./buying__product-detail";
 /* GENERATED:IMPORTS:END */
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   /* GENERATED:SPREAD:START */
+  ...a_buying__bidding,
+  ...a_buying__browsing_search,
+  ...a_buying__buying_checkout,
+  ...a_buying__buying_coupons,
   ...a_buying__product_detail,
   /* GENERATED:SPREAD:END */
 };

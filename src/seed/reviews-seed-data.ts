@@ -30,7 +30,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 // dead link and any case testing playback failed for a reason that is not a bug
 // here. Generated/committed by tester/scripts/make-media-fixtures.mjs.
 // Stays raw and unwrapped: /api/media/ext is image-only (Root Cause #27).
-const SAMPLE_VIDEO_URL = "/test-media/sample-video.mp4";
+const SAMPLE_VIDEO_URL = "/demo-media/sample-video.mp4";
 
 const reviewTemplates = [
   { title: "Excellent quality and fast shipping!", comment: "Received exactly as described. Item is in perfect condition. Will buy again!", rating: 5 },
