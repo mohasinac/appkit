@@ -25,11 +25,11 @@
 import type { AuthoredCase } from "./_types";
 
 /* GENERATED:IMPORTS:START */
-
+import { authored as a_buying__product_detail } from "./buying__product-detail";
 /* GENERATED:IMPORTS:END */
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   /* GENERATED:SPREAD:START */
-
+  ...a_buying__product_detail,
   /* GENERATED:SPREAD:END */
 };
