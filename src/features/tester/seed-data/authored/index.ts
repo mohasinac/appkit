@@ -53,6 +53,9 @@ import { authored as a_design_ux__back_to_top_button } from "./design-ux__back-t
 import { authored as a_design_ux__dashboard_layout } from "./design-ux__dashboard-layout";
 import { authored as a_design_ux__footer_theme } from "./design-ux__footer-theme";
 import { authored as a_design_ux__form_validation_errors } from "./design-ux__form-validation-errors";
+import { authored as a_design_ux__general_design } from "./design-ux__general-design";
+import { authored as a_design_ux__status_badge_legibility } from "./design-ux__status-badge-legibility";
+import { authored as a_design_ux__carousel_arrow_bounds } from "./design-ux__carousel-arrow-bounds";
 import { authored as a_page_wiring__data_loss } from "./page-wiring__data-loss";
 import { authored as a_public_pages__auth_error_pages } from "./public-pages__auth-error-pages";
 import { authored as a_public_pages__bug_hunters } from "./public-pages__bug-hunters";
@@ -98,6 +101,9 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_design_ux__dashboard_layout,
   ...a_design_ux__footer_theme,
   ...a_design_ux__form_validation_errors,
+  ...a_design_ux__general_design,
+  ...a_design_ux__status_badge_legibility,
+  ...a_design_ux__carousel_arrow_bounds,
   ...a_page_wiring__data_loss,
   ...a_public_pages__auth_error_pages,
   ...a_public_pages__bug_hunters,
