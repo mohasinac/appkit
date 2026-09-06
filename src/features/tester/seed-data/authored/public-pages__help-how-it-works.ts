@@ -97,4 +97,22 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "Read-only; nothing persists. Any seller-side figure found here is a projection leak, not a copy problem.",
   },
+  "checklist-public-pages-help-how-it-works-how-emi-works-page": {
+    roles: ["guest"],
+    startPage: "/how-emi-works",
+    steps: [
+      "Open /how-emi-works signed out and read the whole page.",
+      "Write down the eligibility threshold it states and the worked example it gives.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! and put live-golden-retriever-puppy in the cart.",
+      "Reach the payment step and read the instalment figures offered.",
+      "Compare them against the page's worked example.",
+      "Empty the cart, add product-beyblade-burst-valkyrie instead, and check EMI is NOT offered below the threshold.",
+    ],
+    inputs: { eligibleProduct: "live-golden-retriever-puppy", ineligibleProduct: "product-beyblade-burst-valkyrie" },
+    expectedBehaviour:
+      "The page's threshold and worked example match what checkout does. This is the eighth how-it-works page and the only one describing money, so a stale figure here is a misstated charge rather than stale prose — and the aggregate case covering the family enumerates seven, which is why it needed its own.",
+    expectedUiState:
+      "The stated threshold matches the price at which checkout starts offering EMI, and the worked example's instalment figures match the real ones. Either mismatch is a finding, with both numbers.",
+    endResult: "Empty the cart; place no order.",
+  },
 };

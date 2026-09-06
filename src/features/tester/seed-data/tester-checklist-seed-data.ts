@@ -3988,6 +3988,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "contact-page", label: "The contact page loads and the form submits correctly", href: "/contact" },
         { key: "help-page", label: "The help page loads correctly", href: "/help" },
         { key: "how-it-works-pages", label: "All 7 how-it-works pages (auctions, checkout, offers, orders, payouts, pre-orders, reviews) load correctly" },
+        {
+          key: "how-emi-works-page",
+          label: "The how-EMI-works page loads and its worked example matches what checkout actually charges",
+          description:
+            "There are EIGHT how-it-works pages; the case above enumerates seven. This is the eighth, and it is the one describing money, so a stale example on it misstates a charge.",
+          href: "/how-emi-works",
+        },
         { key: "fees-page", label: "The fees page loads correctly", href: "/fees" },
       ],
     },
@@ -4039,8 +4046,102 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "forgot-reset-password-pages", label: "Forgot-password and reset-password pages both work" },
         { key: "verify-email-page", label: "The verify-email page correctly confirms a pending verification" },
         { key: "oauth-loading-redirect", label: "The OAuth-loading redirect page transitions correctly after a Google sign-in" },
+        {
+          key: "auth-close-terminates-popup",
+          label: "The OAuth popup-close page closes its own window and hands the result back to the page that opened it",
+          description:
+            "A popup that renders this page and stays open leaves the opener waiting forever — the sign-in succeeded and the site never learns it.",
+          href: "/auth/close",
+        },
         { key: "checkout-success-page", label: "The checkout-success page shows correct order details after payment", href: "/checkout/success" },
         { key: "unauthorized-404-pages", label: "Unauthorized and 404 error pages render correctly instead of crashing" },
+      ],
+    },
+    {
+      pageKey: "help-scams-guides-subpages",
+      pageLabel: "Help, Scams & Seller-Guide sub-pages",
+      href: "/help",
+      cases: [
+        {
+          key: "help-subpages-load",
+          label: "All four help sub-pages \u2014 account, auctions, orders, shopping \u2014 load with real content and are reachable from /help",
+          description:
+            "The parent /help page is covered elsewhere; these four are not. A sub-page that exists but is linked from nowhere is unreachable to anyone who did not type the URL.",
+          href: "/help",
+        },
+        {
+          key: "help-subpages-linked-both-ways",
+          label: "Each help sub-page links back to /help, and /help links forward to each of them",
+          href: "/help",
+        },
+        {
+          key: "help-subpage-content-matches-title",
+          label: "Each help sub-page's content is about its own topic rather than repeating the parent page's text",
+          href: "/help",
+        },
+        {
+          key: "scams-types-page-loads",
+          label: "The scam types page lists the real scam categories the registry uses, not a shorter hand-written subset",
+          description:
+            "The registry recognises a fixed set of scam types. A page listing fewer of them teaches reporters a vocabulary the report form will not accept.",
+          href: "/scams/types",
+        },
+        {
+          key: "scams-faqs-page-loads",
+          label: "The scams FAQ page loads with real questions and answers rather than an empty accordion",
+          href: "/scams/faqs",
+        },
+        {
+          key: "scams-report-form-submits",
+          label: "The scam report form validates its fields and submits, and the reporter is told what happens next",
+          href: "/scams/report",
+        },
+        {
+          key: "scams-report-errors-inline",
+          label: "Submitting the scam report form with a required field empty shows the error on that field, not as a banner",
+          href: "/scams/report",
+        },
+        {
+          key: "scams-report-reaches-admin",
+          label: "A submitted scam report reaches an admin surface where it can be actioned",
+          description:
+            "A form with no admin surface behind it tells a reporter their report was received and nobody will ever read it.",
+          href: "/scams/report",
+        },
+        {
+          key: "scams-subpages-linked-from-registry",
+          label: "The /scams registry page links to the types, FAQ and report pages",
+          href: "/scams",
+        },
+        {
+          key: "public-seller-guide-loads",
+          label: "The PUBLIC seller guide at /seller-guide loads and is distinct from the seller dashboard's own guide",
+          description:
+            "These are two different route families \u2014 /seller-guide is public marketing, /store/guide is the signed-in seller's manual. Coverage of one is not coverage of the other.",
+          href: "/seller-guide",
+        },
+        {
+          key: "public-seller-guide-subpages-load",
+          label: "The seller-guide bundles and prize-draws pages load with real content and are linked from /seller-guide",
+          href: "/seller-guide",
+        },
+        {
+          key: "public-seller-guide-matches-product",
+          label: "What the public seller guide promises about bundles and prize draws matches what the product actually does",
+          description:
+            "A guide is documentation with no compiler behind it. A promise the product no longer keeps is worse than no guide \u2014 a prospective seller signs up for something that is not there.",
+          href: "/seller-guide",
+        },
+        {
+          key: "seller-guide-reachable-signed-out",
+          label: "A signed-out visitor can reach the public seller guide from the site, without being asked to sign in first",
+          href: "/seller-guide",
+        },
+        {
+          key: "item-requests-new-form-opens",
+          label: "Opening the new-item-request page directly shows the form already open, and a submitted request appears in the item-requests list",
+          href: "/item-requests/new",
+        },
       ],
     },
     {
@@ -5222,6 +5323,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A deep link to an editor survives a reload",
           description:
             "Open a team member's edit page, then reload. The panel is still open, on the same record. This is the whole reason these pages exist — a drawer alone cannot be bookmarked, shared with a colleague, or reopened after a crash.",
+        },
+        {
+          key: "every-new-editor-route-opens",
+          label: "EVERY editor-as-a-page route across admin and store opens with its form showing \u2014 not just the three named above",
+          description:
+            "Sweep them all: admin categories, brands, bundles, faqs, ads, shipments, addresses, grouped-listings, sublisting-categories, carousel and carousels; store addresses, sublisting-categories, stickers, pre-orders and listing-templates. Each is a real route; a blank one is a working URL with nothing on it.",
         },
       ],
     },

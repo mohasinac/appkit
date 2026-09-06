@@ -97,8 +97,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/guide",
     steps: [
       SIGN_IN_SELLER,
-      "Open the seller Guide area and list every guide page linked from it.",
-      "Open each one in turn.",
+      "Open each of these by URL in turn: /store/guide, /store/guide/capabilities, /store/guide/finance, /store/guide/listings, /store/guide/orders, /store/guide/settings and /store/guide/whatsapp.",
+      "Check every one of them is also linked from the Guide area rather than only reachable by URL.",
       "Record any that 404 or render empty.",
       "On two of them, check the screen they describe still exists and is named the same way.",
       "Record any guide describing a control that is no longer there.",

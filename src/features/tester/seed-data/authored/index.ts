@@ -49,6 +49,7 @@ import { authored as a_selling__listing_lifecycle } from "./selling__listing-lif
 import { authored as a_selling__store_uncovered_pages } from "./selling__store-uncovered-pages";
 import { authored as a_content_discovery__event_participation } from "./content-discovery__event-participation";
 import { authored as a_cta_layout__navbar_ctas } from "./cta-layout__navbar-ctas";
+import { authored as a_public_pages__help_scams_guides_subpages } from "./public-pages__help-scams-guides-subpages";
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
 import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
@@ -156,6 +157,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_selling__store_uncovered_pages,
   ...a_content_discovery__event_participation,
   ...a_cta_layout__navbar_ctas,
+  ...a_public_pages__help_scams_guides_subpages,
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
   ...a_account_auth__testing_program,

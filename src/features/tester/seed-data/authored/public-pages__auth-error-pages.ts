@@ -139,4 +139,21 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "Read-only; nothing persists. A blank white page for either is the failure — it reads as the site being down rather than as one route being unavailable.",
   },
+  "checklist-public-pages-auth-error-pages-auth-close-terminates-popup": {
+    roles: ["guest"],
+    startPage: "/auth/login",
+    steps: [
+      "Open /auth/login in a private window with no session.",
+      "Start a Google sign-in so the popup opens.",
+      "Complete it and watch the popup window rather than the page behind it.",
+      "Check the popup closes itself rather than sitting on a page.",
+      "Read the original page and check it is now signed in.",
+      "If the popup stays open, read what it shows and whether the opener ever updates.",
+    ],
+    expectedBehaviour:
+      "The popup terminator closes its own window and hands the result back to the opener. A popup that renders and stays open leaves the opener waiting forever — the sign-in genuinely succeeded, and the site never learns it, which is indistinguishable to the visitor from a failed login.",
+    expectedUiState:
+      "The popup closes on its own and the original page becomes signed in without a manual reload. A popup left open is the finding, with whatever it displays.",
+    endResult: "Signed out.",
+  },
 };

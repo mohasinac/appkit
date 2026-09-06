@@ -251,8 +251,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/guide",
     steps: [
       SIGN_IN_ADMIN,
-      "Open the Admin section's Guide area and list every guide page linked from it.",
-      "Open each one in turn.",
+      "Open each of these by URL in turn: /admin/guide, /admin/guide/analytics, /admin/guide/catalog, /admin/guide/content, /admin/guide/orders, /admin/guide/payments, /admin/guide/site, /admin/guide/stores, /admin/guide/team, /admin/guide/trust, /admin/guide/users and /admin/guide/whatsapp.",
+      "Check every one of them is also linked from the Guide area rather than only reachable by URL.",
       "Record any that 404 or render empty.",
       "On two of them, check the screen they describe still exists and is named the same way.",
       "Record any guide describing a screen or a control that is no longer there.",
