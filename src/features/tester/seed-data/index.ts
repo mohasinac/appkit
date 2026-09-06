@@ -6,5 +6,6 @@ export { blogTesterSeedData } from "./blog-tester-seed-data";
 export { eventsTesterSeedData } from "./events-tester-seed-data";
 export { couponsTesterSeedData } from "./coupons-tester-seed-data";
 export { bidsTesterSeedData } from "./bids-tester-seed-data";
+export { cartsTesterSeedData } from "./carts-tester-seed-data";
 export { ordersTesterSeedData } from "./orders-tester-seed-data";
 export { offersTesterSeedData } from "./offers-tester-seed-data";

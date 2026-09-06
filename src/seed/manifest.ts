@@ -74,6 +74,7 @@ import {
   eventsTesterSeedData,
   couponsTesterSeedData,
   bidsTesterSeedData,
+  cartsTesterSeedData,
   ordersTesterSeedData,
   offersTesterSeedData,
 } from "../features/tester/seed-data";
@@ -248,7 +249,7 @@ export const SEED_MANIFEST: SeedManifest = {
     ],
   ),
   carts: pick(
-    asArr(cartsSeedData).map((c) => ({
+    [...asArr(cartsSeedData), ...asArr(cartsTesterSeedData)].map((c) => ({
       ...c,
       name: c.userId ?? c.id,
     })),

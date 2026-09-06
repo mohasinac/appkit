@@ -417,7 +417,11 @@ const notificationRecords: Partial<NotificationDocument>[] = [
     title: "Your auction ended with no winner",
     message: "The highest bid did not meet your reserve price. The listing has been archived.",
     isRead: false,
-    relatedId: "auction-beyblade-lord-spryzen-ended-unsold",
+    // 🛑 The real id carries `burst` — see products-auctions-seed-data.ts. Without
+    // it this notification's "view details" link resolves to nothing, which is the
+    // dangling-FK shape Root Cause #26 describes: the row renders perfectly and its
+    // only affordance goes nowhere.
+    relatedId: "auction-beyblade-burst-lord-spryzen-ended-unsold",
     relatedType: "product",
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),

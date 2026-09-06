@@ -5,6 +5,8 @@
  * Auth, rate-limiting, and Next.js specifics are handled by the consumer.
  */
 
+import { cache } from "react";
+
 import { maskPublicReview } from "../../../security";
 import { safeRead } from "../../../errors/safe-read";
 import { finalizeStagedMediaField } from "../../media/finalize";
@@ -73,7 +75,20 @@ export async function resolveProfileUser(
   return userRepository.findByUid(identifier);
 }
 
-export async function getPublicUserProfile(
+/**
+ * 🛑 React.cache-wrapped because a page and its generateMetadata both read it.
+ *
+ * `resolveProfileUser` tries up to THREE lookups (slug, id, uid), and
+ * `profile/[userId]/page.tsx` called this once in generateMetadata and again in
+ * the page body — so an uncached profile view cost up to six Firestore reads to
+ * answer one question. `sellers/[id]` had the same pair.
+ *
+ * This is the rule the SSR guide already states: every data-fetch exposed to a
+ * page + generateMetadata pair is memoised per argument list, so the second call
+ * is free. Note it caches the NARROW public projection, which is what both
+ * callers want; anything needing the whole document still goes to the repository.
+ */
+export const getPublicUserProfile = cache(async function getPublicUserProfile(
   userId: string,
 ): Promise<Pick<
   UserDocument,
@@ -102,7 +117,7 @@ export async function getPublicUserProfile(
     publicProfile: user.publicProfile,
     stats: user.stats,
   };
-}
+});
 
 /** Fetch approved reviews for a store. storeId === storeSlug in this project. */
 export async function getSellerReviews(storeId: string) {

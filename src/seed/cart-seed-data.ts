@@ -80,6 +80,17 @@ export const cartsSeedData: CartDocument[] = [
         storeId: "store-beyblade-arena",
         storeName: "Beyblade Arena",
         listingType: "auction",
+        /*
+         * 🛑 `isAuctionWin` is what puts this line in the AUCTION lane.
+         *
+         * `laneOf()` keys on `isAuctionWin || bidId` — `listingType: "auction"`
+         * and `locked: true` mean nothing to it. Without this flag the line fell
+         * into the STANDARD lane, so the cart's "Won Auctions" tab was empty
+         * while a non-removable auction line sat in the ordinary cart inflating
+         * its total, and the lane gate never blocked anything. Found by the
+         * tester 2026-09-06.
+         */
+        isAuctionWin: true,
         locked: true,
         addedAt: daysAgo(1),
         updatedAt: daysAgo(1),

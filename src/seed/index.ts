@@ -197,6 +197,7 @@ export {
   eventsTesterSeedData,
   couponsTesterSeedData,
   bidsTesterSeedData,
+  cartsTesterSeedData,
   ordersTesterSeedData,
 } from "../features/tester/seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
