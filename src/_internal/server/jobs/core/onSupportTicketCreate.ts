@@ -26,7 +26,7 @@ export async function handleSupportTicketCreate(
   try {
     await sendNotification({
       userId,
-      type: "account_action",
+      type: "support_ticket_update",
       priority: "normal",
       title: "Support ticket received",
       message: `We received your support request: "${ticket.subject ?? "your ticket"}". We'll get back to you soon.`,

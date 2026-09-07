@@ -19,6 +19,7 @@ import { addressesRepository } from "../../addresses/repository/addresses.reposi
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { sendWhatsAppBusinessMessage } from "../../whatsapp-bot/helpers/whatsapp";
 import { isChannelHealthy, withChannelRetry } from "../../../_internal/server/notifications/channel-health";
+import { guardSend, logSuppressedSend } from "../../../_internal/server/notifications/send-guard";
 import {
   CHECKOUT_VALUE_OTP_EXPIRY_MS,
   CHECKOUT_VALUE_OTP_MAX_ATTEMPTS,
@@ -109,6 +110,24 @@ export async function sendCheckoutValueOtp(
     });
 
     const message = buildCheckoutValueOtpMessage(code, siteName);
+
+    // Same guard as the email branch below, same reasoning: transactional, so
+    // the kill switch does not apply (the buyer cannot check out without the
+    // code), but the daily ceiling does.
+    const waGuard = {
+      channel: "whatsapp" as const,
+      feature: "checkout_value_otp",
+      audience: "user" as const,
+      transactional: true,
+    };
+    const waDecision = await guardSend(waGuard);
+    if (!waDecision.allow) {
+      logSuppressedSend(waGuard, waDecision);
+      throw new ValidationError(
+        "We couldn't send the verification code via WhatsApp — please try again, or send it by email instead.",
+      );
+    }
+
     try {
       const sent = await withChannelRetry("whatsapp", async () => {
         const ok = await sendWhatsAppBusinessMessage({ toPhone: phone, message, phoneNumberId, accessToken });
@@ -146,10 +165,11 @@ export async function sendCheckoutValueOtp(
 
   try {
     await withChannelRetry("email", async () => {
-      const { error } = await sendEmail({
-        to: userEmail,
-        subject: `${siteName}: Verify your order`,
-        html: `
+      const { error } = await sendEmail(
+        {
+          to: userEmail,
+          subject: `${siteName}: Verify your order`,
+          html: `
           <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
             <h2 style="margin-bottom:8px">Verify Your Order</h2>
             <p style="color:#555">Your cart total requires verification before checkout. Enter this code to continue:</p>
@@ -157,7 +177,26 @@ export async function sendCheckoutValueOtp(
             <p style="color:#888;font-size:12px">This code expires in 10 minutes. If you did not request this, please ignore this email.</p>
           </div>
         `,
-      });
+        },
+        {
+          channel: "email",
+          feature: "checkout_value_otp",
+          audience: "user",
+          /*
+           * The strongest case for `transactional` in the codebase: the buyer
+           * is mid-checkout above the high-value threshold and CANNOT complete
+           * the order without this code. Suppressing it does not quieten the
+           * site, it breaks checkout — so it ignores the kill switch.
+           *
+           * It still counts against the daily ceiling, which is the honest
+           * behaviour: if the provider is going to start rejecting, pretending
+           * otherwise here just moves the failure somewhere less legible. The
+           * 15-minute per-user cooldown in `checkout-value-otp.ts` already
+           * bounds how much of the allowance one buyer can consume.
+           */
+          transactional: true,
+        },
+      );
       if (error) throw new Error(String(error));
     });
   } catch (err) {

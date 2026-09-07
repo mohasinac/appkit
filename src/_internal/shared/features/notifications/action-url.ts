@@ -186,4 +186,13 @@ export const TYPE_AUDIENCE: Record<NotificationType, NotificationAudience> = {
   account_action: "buyer",
   system: "buyer",
   promotion: "buyer",
+  /*
+   * Both are "buyer" because that is where the RECIPIENT reads them — the
+   * ticket's owner at `/user/support`, the reporter at the scam registry.
+   * Staff do not receive either of these as notifications any more: the
+   * per-employee fan-out was replaced by a single `adminNotifications` row
+   * plus a daily digest section, so there is no staff audience to express.
+   */
+  support_ticket_update: "buyer",
+  scam_report_update: "buyer",
 };

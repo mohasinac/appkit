@@ -83,9 +83,11 @@ export async function runPaymentReviewAutoApprove(ctx: JobContext): Promise<void
     }
   }
 
-  await Promise.allSettled(
-    unreviewed.map((entry) =>
-      sendNotification({
+  // Sequential: `payment_review` is email-eligible, so each send reserves a
+  // unit from the single-document daily budget counter. See pendingOrderTimeout.
+  for (const entry of unreviewed) {
+    try {
+      await sendNotification({
         userId: entry.data.userId,
         type: "payment_review",
         priority: "normal",
@@ -93,9 +95,14 @@ export async function runPaymentReviewAutoApprove(ctx: JobContext): Promise<void
         message: ORDER_MESSAGES.AUTO_APPROVED_MESSAGE(entry.data.productTitle),
         relatedId: entry.id,
         relatedType: "order",
-      }),
-    ),
-  );
+      });
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.error("Failed to notify buyer of auto-approved payment (non-fatal)", err, {
+        orderId: entry.id,
+      });
+    }
+  }
 
   ctx.logger.info("Payment review auto-approve sweep complete", {
     scanned: unreviewed.length,

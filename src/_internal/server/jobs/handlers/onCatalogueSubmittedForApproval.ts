@@ -19,6 +19,20 @@ export const onCatalogueSubmittedForApprovalHandler: FirestoreTriggerHandler<Doc
   const itemId = event.params.itemId ?? (event.after?.id as string | undefined);
   const title = (event.after?.title as string | undefined) ?? "Untitled item";
 
+  /*
+   * No `as never` here any more, and the cast is worth a note because it was
+   * load-bearing in the wrong direction.
+   *
+   * `BaseRepository.create` takes `Omit<T, "id" | "createdAt" | "updatedAt">`
+   * and stamps its own timestamps. This call passed `createdAt: ctx.now`,
+   * which is an excess property — so TS rejected it, someone reached for
+   * `as never`, and that silenced the type check on EVERY OTHER FIELD of the
+   * payload rather than just the offending one. The `createdAt` was being
+   * discarded at runtime regardless.
+   *
+   * Dropping the field is the whole fix. Five more call sites now follow this
+   * shape; none of them needs a cast either.
+   */
   await adminNotificationsRepository.create({
     category: "moderation",
     title: "Catalogue listing pending approval",
@@ -28,6 +42,5 @@ export const onCatalogueSubmittedForApprovalHandler: FirestoreTriggerHandler<Doc
     entityType: "catalogueItem",
     entityId: itemId,
     audienceUserIds: [],
-    createdAt: ctx.now,
-  } as never);
+  });
 };

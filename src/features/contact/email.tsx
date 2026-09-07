@@ -14,6 +14,8 @@ function renderToStaticMarkup(el: React.ReactElement): string {
   return m.renderToStaticMarkup(el);
 }
 import { normalizeError } from "../../errors/normalize";
+import { guardSend, logSuppressedSend } from "../../_internal/server/notifications/send-guard";
+import type { SendGuardContext } from "../../_internal/shared/features/messaging/config";
 import type { JsonValue } from "@mohasinac/appkit";
 import { getProviders } from "../../contracts";
 import type { IEmailProvider } from "../../contracts/email";
@@ -47,6 +49,24 @@ type SendEmailOptions = Record<string, JsonValue> & {
   cc?: string | string[];
   replyTo?: string;
 };
+
+/**
+ * Everything `sendEmail` needs beyond the message itself.
+ *
+ * 🛑 REQUIRED, and that is the entire enforcement mechanism.
+ *
+ * There is no `guard?:` and no default. A sender that cannot say who this mail
+ * is for and what it is does not compile, so "someone forgot to guard a new
+ * send path" is not a class of bug that can occur — which is what a
+ * suppression-marker-and-audit approach would only have made *detectable*
+ * (CLAUDE.md Rule #22: make the wrong thing unrepresentable).
+ *
+ * Kept as a separate second parameter rather than a field on
+ * `SendEmailOptions` because that type has a `Record<string, JsonValue>` index
+ * signature — a structured object would not satisfy it, and widening the index
+ * signature to accommodate one field would weaken every other field's typing.
+ */
+export type SendEmailGuard = SendGuardContext;
 
 function getSiteName(): string {
   return process.env.NEXT_PUBLIC_SITE_NAME?.trim() || "App";
@@ -117,9 +137,25 @@ async function resolveEmailProvider(): Promise<IEmailProvider> {
   }
 }
 
+/**
+ * Send one email, subject to the messaging guard.
+ *
+ * `suppressed` is a THIRD outcome, distinct from both success and failure, and
+ * callers must treat it as such: `{ data: null, error: null }` means the
+ * message was deliberately not sent, so a caller that only checks `error` will
+ * correctly not raise an alarm, and one that wants to know can read
+ * `suppressed`. Returning an `error` for a suppression would have turned every
+ * intentional quiet into a logged incident.
+ */
 export async function sendEmail(
   opts: SendEmailOptions,
-): Promise<{ data: JsonValue; error: JsonValue }> {
+  guard: SendEmailGuard,
+): Promise<{ data: JsonValue; error: JsonValue; suppressed?: string }> {
+  const decision = await guardSend(guard);
+  if (!decision.allow) {
+    logSuppressedSend(guard, decision);
+    return { data: null, error: null, suppressed: decision.reason };
+  }
   try {
     const provider = await resolveEmailProvider();
     const data = await provider.send({
@@ -147,94 +183,30 @@ export async function sendEmail(
 
 async function sendConfiguredEmail(
   opts: SendEmailOptions,
-): Promise<{ data: JsonValue; error: JsonValue }> {
-  return sendEmail(opts);
+  guard: SendEmailGuard,
+): Promise<{ data: JsonValue; error: JsonValue; suppressed?: string }> {
+  return sendEmail(opts, guard);
 }
 
 const PARA_STYLE = { margin: "0 0 12px", fontSize: "14px", lineHeight: "1.6" } as const;
 const LABEL_STYLE = { color: "#71717a", fontSize: "13px" } as const;
 const VALUE_STYLE = { color: "#18181b", fontSize: "14px", fontWeight: 600 } as const;
 
-export async function sendVerificationEmailWithLink(
-  email: string,
-  verificationLink: string,
-): Promise<{ success: boolean; data?: JsonValue }> {
-  const siteName = getSiteName();
-  const html = `<!DOCTYPE html>${renderToStaticMarkup(
-    <EmailDoc title={`Verify your ${siteName} email`}>
-      <EmailContainer>
-        <EmailHeader brandName={siteName} />
-        <EmailRow>
-          <p style={PARA_STYLE}>
-            Click the link below to verify your email address. This link
-            expires in 24 hours.
-          </p>
-          <EmailButton href={verificationLink}>Verify email</EmailButton>
-        </EmailRow>
-        <EmailFooter copyright={`© ${currentYear()} ${siteName}. All rights reserved.`} />
-      </EmailContainer>
-    </EmailDoc>,
-  )}`;
-
-  try {
-    const { data, error } = await sendConfiguredEmail({
-      to: email,
-      subject: `Verify your ${siteName} email address`,
-      html,
-      text: `Verify your email: ${verificationLink}\n\nThis link expires in 24 hours.`,
-    });
-    if (error) {
-      serverLogger.error("Failed to send verification email (link)", { error });
-      throw error;
-    }
-    return { success: true, data };
-  } catch (error) {
-    serverLogger.error("Error sending verification email (link)", { error });
-    throw error;
-  }
-}
-
-export async function sendPasswordResetEmailWithLink(
-  email: string,
-  resetLink: string,
-): Promise<{ success: boolean; data?: JsonValue }> {
-  const siteName = getSiteName();
-  const html = `<!DOCTYPE html>${renderToStaticMarkup(
-    <EmailDoc title={`Reset your ${siteName} password`}>
-      <EmailContainer>
-        <EmailHeader brandName={siteName} />
-        <EmailRow>
-          <p style={PARA_STYLE}>
-            Click the link below to reset your password. This link expires
-            in 1 hour.
-          </p>
-          <EmailButton href={resetLink}>Reset password</EmailButton>
-          <p style={{ ...PARA_STYLE, color: "#71717a" }}>
-            If you didn't request this, you can safely ignore this email.
-          </p>
-        </EmailRow>
-        <EmailFooter copyright={`© ${currentYear()} ${siteName}. All rights reserved.`} />
-      </EmailContainer>
-    </EmailDoc>,
-  )}`;
-
-  try {
-    const { data, error } = await sendConfiguredEmail({
-      to: email,
-      subject: `Reset your ${siteName} password`,
-      html,
-      text: `Reset your password: ${resetLink}\n\nThis link expires in 1 hour.\n\nIf you didn't request this, ignore this email.`,
-    });
-    if (error) {
-      serverLogger.error("Failed to send password reset email (link)", { error });
-      throw error;
-    }
-    return { success: true, data };
-  } catch (error) {
-    serverLogger.error("Error sending password reset email (link)", { error });
-    throw error;
-  }
-}
+/*
+ * `sendVerificationEmailWithLink` and `sendPasswordResetEmailWithLink` were
+ * deleted here 2026-09.
+ *
+ * Both had ZERO callers. Signup verification and password reset moved to the
+ * Firebase client SDK's own hosted templates (Root Cause #54/#55), which send
+ * browser→Firebase with no server hop — so these two had been rendering
+ * templates nobody would ever receive. Keeping them "in case" would have meant
+ * two plausible-looking Resend senders sitting next to the real ones, ready for
+ * someone to wire up a second, competing password-reset path.
+ *
+ * If a bespoke auth mail is ever genuinely needed, note that it must go
+ * through `sendEmail(opts, guard)` like everything else, and that Firebase's
+ * own quota — not Resend's 100/day — is what currently absorbs this traffic.
+ */
 
 export interface OrderConfirmationEmailParams {
   to: string;
@@ -362,12 +334,27 @@ export async function sendOrderConfirmationEmail(
       : `  Product: ${productTitle}\n  Quantity: ${quantity}`;
 
   try {
-    const { data, error } = await sendConfiguredEmail({
-      to,
-      subject: `Order Confirmed — ${orderId}`,
-      html,
-      text: `Hi ${userName},\n\nYour order ${orderId} has been confirmed!\n\n${itemsText}\nTotal: ${formattedTotal}\nPayment: ${paymentLabel}\nShip to: ${shippingAddress ?? "-"}\n\nView your order: ${orderUrl}\n\n© ${currentYear()} ${siteName}`,
-    });
+    const { data, error } = await sendConfiguredEmail(
+      {
+        to,
+        subject: `Order Confirmed — ${orderId}`,
+        html,
+        text: `Hi ${userName},\n\nYour order ${orderId} has been confirmed!\n\n${itemsText}\nTotal: ${formattedTotal}\nPayment: ${paymentLabel}\nShip to: ${shippingAddress ?? "-"}\n\nView your order: ${orderUrl}\n\n© ${currentYear()} ${siteName}`,
+      },
+      {
+        channel: "email",
+        feature: "order_confirmation",
+        audience: "user",
+        /*
+         * Transactional: this is the buyer's receipt for money already taken.
+         * It ignores the kill switch — a site that has quietened its marketing
+         * must still confirm the orders it accepted — but it is still counted
+         * against the daily ceiling, because the ceiling exists to stay inside
+         * the provider's limit and the provider does not exempt receipts.
+         */
+        transactional: true,
+      },
+    );
     if (error) {
       serverLogger.error("Failed to send order confirmation email", { error });
       return { success: false };
@@ -380,60 +367,29 @@ export async function sendOrderConfirmationEmail(
   }
 }
 
-export async function sendContactEmail(params: {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}): Promise<{ success: boolean; data?: JsonValue }> {
-  const siteName = getSiteName();
-  const supportEmail = getSupportEmail();
-  const { name, email, subject, message } = params;
-
-  const html = `<!DOCTYPE html>${renderToStaticMarkup(
-    <EmailDoc title="New contact message">
-      <EmailContainer>
-        <EmailHeader brandName={siteName}>New Contact Message</EmailHeader>
-        <EmailRow>
-          <p style={PARA_STYLE}>
-            <span style={LABEL_STYLE}>From:</span>{" "}
-            <span style={VALUE_STYLE}>
-              {name} &lt;
-              <EmailLink href={`mailto:${email}`}>{email}</EmailLink>
-              &gt;
-            </span>
-          </p>
-          <p style={PARA_STYLE}>
-            <span style={LABEL_STYLE}>Subject:</span>{" "}
-            <span style={VALUE_STYLE}>{subject}</span>
-          </p>
-          <EmailDivider spacing="md" />
-          <p style={{ ...PARA_STYLE, whiteSpace: "pre-wrap" }}>{message}</p>
-        </EmailRow>
-        <EmailFooter copyright={`© ${currentYear()} ${siteName}`} />
-      </EmailContainer>
-    </EmailDoc>,
-  )}`;
-
-  try {
-    const { data, error } = await sendConfiguredEmail({
-      to: supportEmail,
-      replyTo: email,
-      subject: `[Contact] ${subject}`,
-      html,
-      text: `From: ${name} <${email}>\nSubject: ${subject}\n\n${message}`,
-    });
-    if (error) {
-      serverLogger.error("Failed to send contact email", { error });
-      return { success: false };
-    }
-    return { success: true, data };
-  } catch (error) {
-    void normalizeError(error);
-    serverLogger.error("Error sending contact email", { error });
-    return { success: false };
-  }
-}
+/*
+ * `sendContactEmail` was deleted here 2026-09. A contact-form submission is now
+ * a RECORD, not an email.
+ *
+ * It already wrote to `contactSubmissions` and already had a full admin inbox
+ * at `/admin/contact` with read/resolve flags — the email was a duplicate
+ * signal on top of a queue that existed. Each submission now appears in the
+ * daily digest with a `mailto:` reply link, which costs nothing and puts the
+ * reply in the operator's own mailbox rather than routing it back out through
+ * a 100/day allowance.
+ *
+ * 🛑 Two things had to change together for this to be safe, and the second is
+ * the one that bites:
+ *
+ *   1. `/api/contact` must AWAIT the Firestore write and fail the request when
+ *      it fails. It was fire-and-forget `.catch()`-and-continue, with the email
+ *      as the de-facto backup — so with the email gone, a dropped write would
+ *      have silently lost a customer's message.
+ *   2. `getSupportEmail()` went with it. Its fallback was
+ *      `"support@example.com"` and `EMAIL_SUPPORT` was never set in any
+ *      runtime, so every contact email this function ever "sent" went to a
+ *      domain nobody owns. That is a bug this deletion happens to fix.
+ */
 
 export async function sendDigitalCodeClaimedEmail(params: {
   to: string;
@@ -477,12 +433,23 @@ export async function sendDigitalCodeClaimedEmail(params: {
   )}`;
 
   try {
-    const { error } = await sendConfiguredEmail({
-      to,
-      subject: `Your digital code for "${productTitle}" is ready`,
-      html,
-      text: `Hi ${userName},\n\nYour digital code for "${productTitle}" (Order: ${orderId}) is ready to reveal.\n\nVisit your order: ${orderUrl}\n\nFor security, the code is only shown inside your ${siteName} account.\n\n© ${currentYear()} ${siteName}`,
-    });
+    const { error } = await sendConfiguredEmail(
+      {
+        to,
+        subject: `Your digital code for "${productTitle}" is ready`,
+        html,
+        text: `Hi ${userName},\n\nYour digital code for "${productTitle}" (Order: ${orderId}) is ready to reveal.\n\nVisit your order: ${orderUrl}\n\nFor security, the code is only shown inside your ${siteName} account.\n\n© ${currentYear()} ${siteName}`,
+      },
+      {
+        channel: "email",
+        feature: "digital_code_claimed",
+        audience: "user",
+        // Transactional: the buyer has paid and this is how they learn the
+        // thing they bought is available to collect. Suppressing it would be
+        // taking money and saying nothing.
+        transactional: true,
+      },
+    );
     if (error) {
       serverLogger.error("Failed to send digital code claimed email", { error });
       return { success: false };
@@ -495,70 +462,20 @@ export async function sendDigitalCodeClaimedEmail(params: {
   }
 }
 
-export async function sendSiteSettingsChangedEmail(params: {
-  adminEmails: string[];
-  changedByEmail: string;
-  changedFields: string[];
-}): Promise<{ success: boolean; data?: JsonValue }> {
-  const siteName = getSiteName();
-  const siteUrl = getSiteUrl();
-  const { adminEmails, changedByEmail, changedFields } = params;
-
-  if (adminEmails.length === 0) return { success: false };
-
-  const settingsUrl = `${siteUrl}/admin/site-settings`;
-  const timestamp = formatDateTime(nowMs());
-
-  const html = `<!DOCTYPE html>${renderToStaticMarkup(
-    <EmailDoc title="Site settings changed">
-      <EmailContainer>
-        <EmailHeader brandName={siteName}>Site Settings Changed ⚙️</EmailHeader>
-        <EmailRow>
-          <p style={PARA_STYLE}>
-            <EmailBold>{changedByEmail}</EmailBold> has updated the following site
-            settings:
-          </p>
-          <p style={PARA_STYLE}>
-            <span style={LABEL_STYLE}>Changed fields:</span>{" "}
-            <span style={VALUE_STYLE}>{changedFields.join(", ")}</span>
-          </p>
-          <p style={PARA_STYLE}>
-            <span style={LABEL_STYLE}>Changed by:</span>{" "}
-            <span style={VALUE_STYLE}>{changedByEmail}</span>
-          </p>
-          <p style={PARA_STYLE}>
-            <span style={LABEL_STYLE}>Timestamp:</span>{" "}
-            <span style={VALUE_STYLE}>{timestamp}</span>
-          </p>
-          <EmailDivider spacing="md" />
-          <EmailButton href={settingsUrl}>View settings</EmailButton>
-        </EmailRow>
-        <EmailFooter
-          copyright={`© ${currentYear()} ${siteName}. Automated notification — do not reply.`}
-        />
-      </EmailContainer>
-    </EmailDoc>,
-  )}`;
-
-  try {
-    const { data, error } = await sendConfiguredEmail({
-      to: adminEmails,
-      subject: `Site settings updated by ${changedByEmail}`,
-      html,
-      text: `Site settings updated by ${changedByEmail}\n\nChanged fields: ${changedFields.join(", ")}\n\nView at: ${settingsUrl}`,
-    });
-    if (error) {
-      serverLogger.error("Failed to send settings change notification email", {
-        error,
-      });
-      return { success: false };
-    }
-    return { success: true, data };
-  } catch (error) {
-    void normalizeError(error);
-    serverLogger.error("Error sending settings change notification email", {
-      error,
-    });
-    return { success: false };
-  }
-}
+/*
+ * `sendSiteSettingsChangedEmail` was deleted here 2026-09.
+ *
+ * It fired on EVERY settings save — so an admin adjusting a fee spent one of
+ * the day's 100 emails per click, and a session of tuning could spend a dozen.
+ *
+ * What it was for is already covered better: `adminAuditLog` records the actor,
+ * the action and the fields on every privileged admin write and is queryable at
+ * `/admin/audit-log`, which an email cannot be. The daily digest now carries
+ * the count so a burst of settings activity is still visible without anyone
+ * having to go looking.
+ *
+ * Note also that its `adminEmails: string[]` parameter was aspirational: the
+ * one call site passed `[process.env.ADMIN_NOTIFICATION_EMAIL ?? "admin@letitrip.in"]`,
+ * a single address, and `ADMIN_NOTIFICATION_EMAIL` was set in no runtime — so
+ * "notify the admins" meant one hardcoded mailbox.
+ */

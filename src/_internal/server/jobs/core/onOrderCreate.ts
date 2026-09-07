@@ -1,11 +1,12 @@
 import { normalizeError } from "../../../../errors/normalize";
-import { storeRepository, userRepository } from "../../../../repositories";
+import { adminNotificationsRepository, storeRepository, userRepository } from "../../../../repositories";
 import { decryptPii } from "../../../../security/index";
 import {
   sendWhatsAppBusinessMessage,
   buildPurchaseAnnouncementMessage,
 } from "../../../../features/whatsapp-bot/server";
 import { resolveKeys, type ResolvedKeys } from "../../../../core/integration-keys";
+import { guardSend, logSuppressedSend } from "../../notifications/send-guard";
 import type { JobContext } from "../runtime/types";
 import type { OrderDocument, OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 
@@ -87,7 +88,7 @@ function usable(value: string | undefined): string {
 async function resolveWhatsAppCredentials(
   ctx: JobContext,
   orderId: string,
-): Promise<{ phoneNumberId: string; accessToken: string; adminNumbersRaw: string }> {
+): Promise<{ phoneNumberId: string; accessToken: string }> {
   let db: Partial<ResolvedKeys> = {};
   try {
     db = await resolveKeys();
@@ -103,8 +104,6 @@ async function resolveWhatsAppCredentials(
       usable(db.whatsappPhoneNumberId) || usable(ctx.env("WHATSAPP_PHONE_NUMBER_ID")),
     accessToken:
       usable(db.whatsappCloudApiToken) || usable(ctx.env("WHATSAPP_CLOUD_API_TOKEN")),
-    adminNumbersRaw:
-      usable(db.whatsappAdminNotifyNumbers) || usable(ctx.env("WHATSAPP_ADMIN_NOTIFY_NUMBERS")),
   };
 }
 
@@ -113,18 +112,6 @@ export async function handleOrderCreate(
   ctx: JobContext,
 ): Promise<void> {
   const { orderId, order } = input;
-
-  // Credentials resolve DB-first (Admin → Site Settings → WhatsApp) with an env
-  // fallback, matching resolveKeys() and every other WhatsApp send path. This
-  // read ctx.env() ONLY until 2026-08-22, so credentials saved in Site Settings
-  // never reached the order-placed announcement — it silently no-op'd unless the
-  // Functions runtime also carried the env vars.
-  const { phoneNumberId, accessToken, adminNumbersRaw } = await resolveWhatsAppCredentials(ctx, orderId);
-
-  if (!phoneNumberId || !accessToken) {
-    ctx.logger.info("WhatsApp Cloud API not configured — skipping announcement", { orderId });
-    return;
-  }
 
   const items = order.items ?? [];
   const firstItem = items[0];
@@ -140,23 +127,71 @@ export async function handleOrderCreate(
     orderId,
   });
 
-  const adminNumbers = adminNumbersRaw
-    .split(",")
-    .map((n) => n.trim().replace(/\D/g, ""))
-    .filter(Boolean);
-
-  for (const num of adminNumbers) {
-    await sendAnnouncement(ctx, num, message, phoneNumberId, accessToken, "admin", orderId);
+  /*
+   * Staff side: one durable row, not a WhatsApp message per admin number.
+   *
+   * 🛑 This used to loop `whatsappAdminNotifyNumbers` and send the purchase
+   * announcement to every one of them, ON EVERY ORDER — the highest-volume
+   * staff blast in the codebase. It is now an `adminNotifications` row that
+   * the admin inbox reads and the daily digest counts.
+   *
+   * Written BEFORE the credential check on purpose. The old code returned
+   * early when WhatsApp was unconfigured, which meant that with no Meta
+   * credentials — the state this project is actually in — an order produced
+   * no staff signal at all, and no record that it hadn't.
+   */
+  try {
+    await adminNotificationsRepository.create({
+      category: "growth",
+      title: "New order placed",
+      body: message,
+      severity: "info",
+      isRead: false,
+      entityType: "order",
+      entityId: orderId,
+      audienceUserIds: [],
+    });
+  } catch (err) {
+    void normalizeError(err);
+    ctx.logger.error("Failed to write admin order notification (non-fatal)", err, { orderId });
   }
 
+  /*
+   * Seller side keeps WhatsApp: it is ONE message to ONE person about their
+   * own sale, which is the case the channel is good at. Credentials resolve
+   * DB-first (Admin → Site Settings → WhatsApp) with an env fallback — this
+   * read `ctx.env()` only until 2026-08-22, so credentials saved in Site
+   * Settings never reached the announcement and it silently no-op'd.
+   */
   const storeId = order.storeId;
-  if (storeId) {
-    await notifyStoreOwner(ctx, storeId, message, phoneNumberId, accessToken, orderId);
+  if (!storeId) {
+    ctx.logger.info("Order has no storeId — nothing to announce to a seller", { orderId });
+    return;
   }
 
-  ctx.logger.info(`Order announcement complete`, {
-    orderId,
-    adminCount: adminNumbers.length,
-    storeId: storeId ?? "unknown",
-  });
+  const { phoneNumberId, accessToken } = await resolveWhatsAppCredentials(ctx, orderId);
+  if (!phoneNumberId || !accessToken) {
+    ctx.logger.info("WhatsApp Cloud API not configured — skipping seller announcement", { orderId });
+    return;
+  }
+
+  // Audience is "user": a seller receiving news of their own sale is a
+  // marketplace participant, not an operator of the site. Staff exemption is
+  // for the digest and the payout summary, and widening it to "anyone we think
+  // ought to see this" would make the kill switch mean nothing.
+  const guard = {
+    channel: "whatsapp" as const,
+    feature: "order_placed_seller",
+    audience: "user" as const,
+  };
+  const decision = await guardSend(guard);
+  if (!decision.allow) {
+    logSuppressedSend(guard, decision);
+    ctx.logger.info("Seller order announcement suppressed by messaging guard", { orderId, storeId });
+    return;
+  }
+
+  await notifyStoreOwner(ctx, storeId, message, phoneNumberId, accessToken, orderId);
+
+  ctx.logger.info(`Order announcement complete`, { orderId, storeId });
 }

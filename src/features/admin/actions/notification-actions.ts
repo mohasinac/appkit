@@ -16,6 +16,7 @@ import {
   TYPE_AUDIENCE,
   type NotificationAudience,
 } from "../../../_internal/shared/features/notifications/action-url";
+import { isEmailEligible } from "../../../_internal/shared/features/notifications/email-eligibility";
 import { renderNotificationEmail } from "../../email/notification-templates";
 
 /**
@@ -146,6 +147,26 @@ export interface SendNotificationInput extends NotificationCreateInput {
    * the seller, `offer_responded` back to the buyer.
    */
   audience?: NotificationAudience;
+  /**
+   * Bypass `EMAIL_ELIGIBLE_TYPES` for THIS send, because a human explicitly
+   * asked for it.
+   *
+   * The only caller is the support-ticket reply route, where a staff member
+   * ticked "also email the user" on a reply. `support_ticket_update` is
+   * ineligible by default precisely so routine back-and-forth costs nothing —
+   * this is the escape hatch for the reply that genuinely has to reach an
+   * inbox.
+   *
+   * 🛑 It bypasses ELIGIBILITY ONLY. The kill switch, the daily ceiling, the
+   * channel config and the user's own opt-out all still apply — a staff tick
+   * is a request, not an override of the site's posture or of the recipient's
+   * stated preference.
+   *
+   * Deliberately a named literal rather than `boolean`: a `force: true` reads
+   * as "send harder" at the call site and invites reuse, while
+   * `"staff_requested"` states who is accountable for the send.
+   */
+  eligibilityOverride?: "staff_requested";
 }
 
 
@@ -169,7 +190,7 @@ export interface SendNotificationResult {
 export async function sendNotification(
   input: SendNotificationInput,
 ): Promise<SendNotificationResult> {
-  const { userEmail, userPhone, emailHtml, audience, ...notifInput } = input;
+  const { userEmail, userPhone, emailHtml, audience, eligibilityOverride, ...notifInput } = input;
 
   /*
    * Fill `actionUrl` when the caller did not.
@@ -196,6 +217,38 @@ export async function sendNotification(
     ...notifInput,
     ...(resolvedActionUrl ? { actionUrl: resolvedActionUrl } : {}),
   });
+
+  /*
+   * 🛑 The eligibility gate, and it is FIRST for a reason.
+   *
+   * `EMAIL_ELIGIBLE_TYPES` (see that file for the full argument) decides
+   * whether a type may leave the building at all. Checking it here — before
+   * the siteSettings read and before the user-prefs read — is what makes the
+   * expensive fan-outs free:
+   *
+   *   `auctionSettlement` sends `bid_lost` to up to 50 losing bidders in
+   *   parallel per auction. Each of those calls would otherwise pay TWO
+   *   Firestore reads (settings + user doc) to arrive at "skipped". That is
+   *   100 reads per auction to send nothing, and every expired auction settles
+   *   concurrently.
+   *
+   * Returning here costs zero reads, and it is also what lets the daily send
+   * counter stay a single unsharded document: the only remaining concurrent
+   * fan-out never reaches the counter.
+   *
+   * The bell is already filled by the write above, so nothing is lost — this
+   * suppresses the emailed/messaged COPY, not the notification.
+   *
+   * One map gates both channels deliberately. If a type is ever genuinely
+   * WhatsApp-worthy but not email-worthy, split the map then rather than
+   * loosening this early return.
+   */
+  if (
+    !isEmailEligible(notifInput.type as NotificationType) &&
+    eligibilityOverride !== "staff_requested"
+  ) {
+    return { notification, email: "skipped", whatsapp: "skipped" };
+  }
 
   // Load channel config + credentials (one Firestore read).
   let settings: Awaited<ReturnType<typeof siteSettingsRepository.getSingleton>>;
@@ -274,6 +327,18 @@ export async function sendNotification(
     // "Your catalogue photos are going stale" — housekeeping about the user's
     // own account, which is what `system` covers.
     catalogue_images_stale: "system",
+    /*
+     * Both land under `system` rather than getting new preference keys.
+     *
+     * Same reasoning as the EMI note above: an eighth and ninth key would have
+     * no stored value on any existing user, so it reads as on or off purely by
+     * accident of the default — a silent migration nobody asked for. And
+     * neither is something a user would plausibly want to silence
+     * independently: a ticket update is a reply to a conversation THEY started,
+     * and a scam-report outcome is the answer to a report THEY filed.
+     */
+    support_ticket_update: "system",
+    scam_report_update: "system",
   };
   const typeKey = typeToPrefsKey[type as NotificationType];
   // If the user has explicitly disabled this notification type, skip all external channels.

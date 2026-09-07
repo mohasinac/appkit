@@ -30,7 +30,7 @@ export async function handleScamReportVerified(
     const reporter = await userRepository.findById(reportedBy);
     await sendNotification({
       userId: reportedBy,
-      type: "account_action",
+      type: "scam_report_update",
       priority: "normal",
       title: "Your scam report was verified",
       message: `The report for "${name}" has been verified and published to the Scam Registry. Thank you for helping protect the community.`,

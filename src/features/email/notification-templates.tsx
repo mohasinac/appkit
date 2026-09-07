@@ -116,6 +116,18 @@ export const NOTIFICATION_EMAIL_TEMPLATES: Record<NotificationType, Notification
   // No CTA for the same reason — a system announcement has no record behind
   // it, and `resolveNotificationActionUrl` correctly returns undefined.
   system: { lead: "A message from the team." },
+
+  /*
+   * Both types are email-INELIGIBLE (`EMAIL_ELIGIBLE_TYPES`), so neither
+   * renders in the ordinary course — but they still need real entries rather
+   * than placeholders, because `support_ticket_update` DOES reach this
+   * renderer whenever a staff replier ticks "also email the user".
+   * `scam_report_update` cannot reach it today; it gets an honest entry anyway
+   * so that a future override path finds a written template instead of
+   * inventing one under time pressure.
+   */
+  support_ticket_update: { lead: "There's an update on your support ticket.", cta: "View ticket" },
+  scam_report_update: { lead: "There's an update on a scam report you filed.", cta: "View report" },
 };
 
 /**

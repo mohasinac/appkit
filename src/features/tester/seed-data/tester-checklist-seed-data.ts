@@ -2967,18 +2967,68 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "receive-notification", label: "In-app notifications appear for order/bid/message events", href: "/user/notifications" },
         { key: "mark-read", label: "Marking a notification as read works" },
         { key: "notification-channel-prefs", label: "Per-channel notification preferences (in-app / email / WhatsApp) save and are respected" },
-        { key: "notification-type-sample", label: "A sample of notification types (order status change, bid outbid, message received, payout) each trigger correctly end-to-end" },
+        {
+          key: "notification-type-sample",
+          label: "A sample of notification types each trigger correctly end-to-end — and the bell-only ones produce NO email",
+          description:
+            "Rewritten 2026-09. This case used to list \"bid outbid\" as something that should trigger end-to-end including email; it is now bell-only. Trigger one of each and check both surfaces: an ORDER STATUS CHANGE must appear in the bell AND (with email enabled) arrive in the inbox; BEING OUTBID must appear in the bell and produce NO email at all. If being outbid still emails, the eligibility gate is not running.",
+        },
         { key: "notification-tab-filters", label: "Notification tab filters correctly narrow the list", href: "/user/notifications" },
         {
           key: "notification-email-actually-arrives",
           label: "With email enabled for a notification type, the email really lands in your inbox — and comes from the site's configured sender name and address",
-          description: "Added 2026-08-21. Existing cases only checked that the preference SAVES and that the in-app notification appears; nobody ever checked the email itself leaves the building. Turn email on for one notification type, trigger that event for real (e.g. have a seller mark your order shipped), then open the actual inbox for the address on your account. Confirm: (a) an email arrives within a few minutes; (b) the From name and address match what Site Settings → Notifications is configured with, not a stranger's domain or a bare no-reply; (c) it landed in the inbox, not spam; (d) the links inside it open the right page on the live site and don't 404.",
+          description:
+            "Updated 2026-09 — the type now matters. Most notification types are bell-only and can never email regardless of settings, so this case MUST use an email-eligible one: use ORDER SHIPPED (have a seller mark your order shipped). Do not use \"outbid\", \"auction ended\", \"review replied\" or a promotion — those are bell-only by design and would make a working system look broken. First confirm Site Settings → Notifications → \"Send user-facing email\" is ON, then trigger the event and open the real inbox for the address on your account. Confirm: (a) an email arrives within a few minutes; (b) the From name and address match what Site Settings is configured with, not a stranger's domain or a bare no-reply; (c) it landed in the inbox, not spam; (d) the links inside it open the right page on the live site and don't 404.",
           href: "/user/notifications",
         },
         {
           key: "notification-email-opt-out-respected",
           label: "Turning email OFF for a notification type stops the emails but still shows the in-app notification",
-          description: "Added 2026-08-21. The two channels are meant to be independent — opting out of email must never silently opt you out of the in-app bell too. Turn email off for a type you can trigger on demand, trigger it, then confirm: no new email arrives, but the notification still appears in /user/notifications. Then turn it back on, trigger again, and confirm the email resumes — an opt-out that can't be reversed is just as much a bug.",
+          description:
+            "Updated 2026-09. Use an email-ELIGIBLE type or this case proves nothing — order shipped is the reliable one. A bell-only type (outbid, auction ended, review replied, promotion) never emails anyway, so turning the preference off would 'pass' while the preference was doing no work at all. The two channels are meant to be independent: opting out of email must never silently opt you out of the bell. Turn email off for order updates, have a seller mark an order shipped, then confirm: no new email arrives, but the notification still appears in /user/notifications. Turn it back on, trigger again, confirm the email resumes — an opt-out that cannot be reversed is just as much a bug.",
+          href: "/user/notifications",
+        },
+        {
+          key: "notification-ineligible-types-bell-only",
+          label: "Being outbid fills the notification bell and sends NO email",
+          description:
+            "Added 2026-09. THE case for this change. BEFORE: every outbid sent an email — one per bid per bidder on a live auction — and losing an auction sent one to every losing bidder, up to 50 in parallel per auction. On a 100-emails-a-day allowance two auctions could consume the entire day. AFTER: the notification is written to the bell exactly as before, and no email leaves. Nothing is lost; only the emailed copy is gone.",
+          roles: ["buyer"],
+          startPage: "/user/notifications",
+          steps: [
+            "Log in as a buyer.",
+            "Open a tester-sandbox auction and place a bid.",
+            "From a second account, place a higher bid on the same auction.",
+            "Back on the first account, open /user/notifications.",
+            "Open the real inbox for the address on the first account.",
+          ],
+          expectedBehaviour:
+            "An in-app notification row is written for the outbid. No email is sent, and no suppression error is raised — this is the designed path, not a failure.",
+          expectedUiState:
+            "The bell shows an outbid notification naming the auction. The inbox has no new message about it.",
+          endResult:
+            "After a full page reload the bell notification is still listed. Still no email.",
+          href: "/user/notifications",
+        },
+        {
+          key: "notification-losing-bidder-no-email",
+          label: "When an auction settles, every losing bidder gets a bell entry and zero emails — but the WINNER still gets an email",
+          description:
+            "Added 2026-09. The second half is what makes this case worth running: a change that merely broke email would pass a losers-only check. Winning carries a payment deadline and forfeits the lot if missed, so 'bid won' is deliberately still an email-eligible type while 'bid lost' is not.",
+          roles: ["buyer", "admin"],
+          startPage: "/user/notifications",
+          steps: [
+            "Ensure a tester-sandbox auction has bids from at least two different accounts.",
+            "Let the auction end, or have an admin settle it.",
+            "Check the bell and inbox of a LOSING bidder.",
+            "Check the bell and inbox of the WINNING bidder.",
+          ],
+          expectedBehaviour:
+            "Losing bidders each get an in-app notification and no email. The winner gets both an in-app notification and an email carrying a link to complete checkout.",
+          expectedUiState:
+            "Loser: bell shows the auction closed without them, inbox empty. Winner: bell shows they won, and an email arrives whose call to action goes to checkout, not to the product page.",
+          endResult:
+            "Both bell entries survive a reload. Exactly one email was sent for the whole settlement, to the winner.",
           href: "/user/notifications",
         },
         {
@@ -3241,6 +3291,150 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "The support tickets list now has a working search box (by subject, id, or category) — it did not have one at all before",
           description: "Converted 2026-08-21 off a hand-wired toolbar (which had status filter + \"hide resolved/closed\" toggle + sort, but no search input) onto the standard DataListingView scaffold, which adds search for free. Confirm typing part of a ticket's subject narrows the list, and the existing status filter + \"Hide resolved/closed\" toggle still work.",
           href: "/user/support",
+        },
+        {
+          key: "ticket-reply-no-email-by-default",
+          label: "A staff reply on a ticket reaches the user in-app and sends NO email unless the box is ticked",
+          description:
+            "Added 2026-09. Ticket conversation lives in the UI now — routine back-and-forth costs nothing against the daily allowance, and the tick is the deliberate exception for a reply that genuinely has to reach an inbox.",
+          roles: ["admin", "buyer"],
+          startPage: "/admin/support-tickets",
+          steps: [
+            "Log in as admin and open an existing support ticket from the list.",
+            "Type a reply in the \"Reply to user\" box.",
+            "Leave \"Also email the user about this reply\" unticked.",
+            "Send the reply.",
+            "Log in as the ticket's owner and open /user/support.",
+            "Open the real inbox for that account's address.",
+            "Back as admin, reply again on the same ticket with the checkbox TICKED.",
+            "Check the owner's inbox again.",
+          ],
+          expectedBehaviour:
+            "Both replies are saved to the ticket and both produce an in-app notification. Only the second sends an email. The checkbox resets itself to unticked after each send.",
+          expectedUiState:
+            "The ticket thread shows both replies. After the first, the inbox has nothing new; after the second, exactly one email arrives. The checkbox is unticked again when the reply box clears.",
+          endResult:
+            "After reloading the ticket, both replies are still there. Exactly one email was sent across the two.",
+          href: "/user/support",
+        },
+        {
+          key: "ticket-reply-user-cannot-force-email",
+          label: "A USER reply cannot trigger an email even when the request asks for one",
+          description:
+            "Added 2026-09. ENGINEERING-ASSISTED — it cannot be driven from the UI, because the user-side reply box has no such checkbox. That is exactly the point: the restriction is enforced on the SERVER from the session, not by the absence of a control.",
+          roles: ["buyer"],
+          startPage: "/user/support",
+          steps: [
+            "Log in as a buyer who owns at least one open support ticket and open it.",
+            "Open the browser console.",
+            // audit-hardcoded-api-routes-ok: prose in a tester-facing step (a copy-pasteable console snippet), not a call site — nothing to route through the registry.
+            "Post a reply with the email flag forced on: fetch('/api/support/tickets/<ticketId>/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({body:'probe',sendEmail:true})})",
+            "Open the real inbox for that account's address.",
+          ],
+          inputs: { sendEmail: true, body: "probe" },
+          expectedBehaviour:
+            "The message posts successfully (201). The sendEmail flag is ignored because the author is not staff, so no email is dispatched to anyone.",
+          expectedUiState:
+            "The reply appears in the ticket thread. The inbox has nothing new.",
+          endResult:
+            "After a reload the reply is still in the thread, and still no email was sent.",
+          href: "/user/support",
+        },
+        {
+          key: "ticket-created-reaches-staff",
+          label: "Raising a support ticket now produces a staff signal — it previously produced none at all",
+          description:
+            "Added 2026-09. BEFORE: onSupportTicketCreate notified only the ticket's own author, so nobody on staff was told a ticket existed; you found out by going to look. AFTER: it writes one admin-inbox row and rides the daily digest.",
+          roles: ["buyer", "admin"],
+          startPage: "/user/support",
+          steps: [
+            "Log in as a buyer and raise a new support ticket.",
+            "Log in as admin and open the admin notifications inbox.",
+            "Trigger the daily digest and read its Inbox section.",
+          ],
+          expectedBehaviour:
+            "One admin notification row is created for the new ticket — not one per staff member — and the ticket is counted in the digest's new-ticket total and in the open/in-progress/waiting breakdown.",
+          expectedUiState:
+            "The admin notifications inbox lists the new ticket. The digest's Inbox section shows the counts moving by one.",
+          endResult:
+            "The admin notification row persists after a reload and stays until someone marks it read.",
+          href: "/user/support",
+        },
+      ],
+    },
+    {
+      pageKey: "contact-inbox",
+      pageLabel: "Contact messages (admin inbox)",
+      href: "/admin/contact",
+      cases: [
+        {
+          key: "contact-saves-without-email",
+          label: "Submitting the contact form stores the message and sends no email",
+          description:
+            "Added 2026-09. BEFORE: each submission emailed a support address — and EMAIL_SUPPORT was never configured in any runtime, so every contact email went to an example.com domain nobody owns. AFTER: the message is a record, read from the admin inbox and listed in the daily digest.",
+          roles: ["guest", "admin"],
+          startPage: "/contact",
+          steps: [
+            "Open the public contact page as a signed-out visitor.",
+            "Fill in name, email, subject and a message of at least 10 characters.",
+            "Submit the form.",
+            "Log in as admin and open /admin/contact.",
+            "Check the inbox of whatever address used to receive support mail.",
+          ],
+          inputs: {
+            name: "Tester Probe",
+            email: "probe@example.com",
+            subject: "Digest probe",
+            message: "Checking the contact form stores without emailing.",
+          },
+          expectedBehaviour:
+            "The submission is written to Firestore before the request returns. No email is sent to anyone.",
+          expectedUiState:
+            "The form shows its success message. /admin/contact lists the message with the name, subject and body exactly as typed. No new mail anywhere.",
+          endResult:
+            "After a reload the message is still in /admin/contact, and it appears in the next daily digest under Contact messages with a Reply link.",
+          href: "/admin/contact",
+        },
+        {
+          key: "contact-save-failure-is-loud",
+          label: "If the contact message cannot be saved, the submitter is TOLD — it is never silently dropped",
+          description:
+            "Added 2026-09. ENGINEERING-ASSISTED — needs the Firestore write forced to fail. This guards the sharpest edge in the whole change: the save used to be fire-and-forget with the email as an unspoken backup, and with the email gone this write is the ONLY record that a customer wrote in. Telling someone to try again is strictly better than losing what they typed.",
+          roles: ["guest"],
+          startPage: "/contact",
+          steps: [
+            "Have an engineer force the contactSubmissions write to fail (e.g. temporarily deny the collection in rules).",
+            "Submit the contact form as a signed-out visitor.",
+            "Restore the write path afterwards.",
+          ],
+          expectedBehaviour:
+            "The request returns an error rather than a success. The submitter is not told their message was received when it was not.",
+          expectedUiState:
+            "The form shows a failure message, not the success confirmation.",
+          endResult:
+            "Nothing appears in /admin/contact for that attempt, and the visitor knows to try again.",
+          href: "/admin/contact",
+        },
+        {
+          key: "contact-digest-mailto-reply",
+          label: "The digest's Reply link opens a mail client addressed to the person who wrote in",
+          description:
+            "Added 2026-09. This is the reply path. There is deliberately no in-app reply box for contact messages: replying from your own mailbox costs nothing against the send allowance, whereas an in-app reply would spend one.",
+          roles: ["admin"],
+          startPage: "/admin/contact",
+          steps: [
+            "Submit a contact message from the public form.",
+            "As admin, trigger the daily digest.",
+            "Open the digest and find the message under Contact messages.",
+            "Click its Reply link.",
+          ],
+          expectedBehaviour:
+            "The link is a mailto: addressed to the submitter, with the subject pre-filled.",
+          expectedUiState:
+            "The local mail client opens a new message to the submitter's address with the subject \"Re: <their subject>\".",
+          endResult:
+            "No mail is sent by the site itself — the reply leaves from the operator's own mailbox.",
+          href: "/admin/contact",
         },
       ],
     },
@@ -4779,8 +4973,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           },
           {
             key: "whatsapp-order-announcement-fires",
-            label: "Placing an order sends the WhatsApp announcement to the configured admin numbers using credentials saved in Site Settings — no env var required",
-            description: "Fixed 2026-08-22 — the order-placed announcement previously read environment variables ONLY, so credentials entered in Site Settings were ignored and it silently did nothing. Needs real Meta credentials configured to verify.",
+            label: "Placing an order writes ONE admin notification and WhatsApps only the seller — never the admin number list",
+            description:
+              "Rewritten 2026-09. BEFORE: every order WhatsApped every number in the admin notify list, the highest-volume staff blast in the codebase, and it was skipped entirely when Meta credentials were absent — so with no credentials an order produced no staff signal at all and no record that it hadn't. AFTER: place an order and confirm (a) an admin notification row appears for it (visible in the admin notifications inbox, and counted in the next daily digest) EVEN WITH NO META CREDENTIALS CONFIGURED; (b) no WhatsApp message reaches any admin number; (c) with credentials configured, the seller who owns the listing still receives their sale announcement — that one is a single message to one person about their own sale and is deliberately kept.",
             href: "/admin/site",
           },
           {
@@ -4791,8 +4986,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           },
           {
             key: "daily-digest-recipients-save",
-            label: "Site Settings → Notifications → \"Daily status digest\" saves its recipient and CC lists (one address per line) and they survive a page reload",
-            description: "Added 2026-08-21. Toggle the digest on, enter a couple of addresses in Recipients (one per line) and one in CC, save, then reload Site Settings and confirm both lists come back exactly as entered. Also confirm the whole recipients/CC block is hidden when the toggle is off.",
+            label: "Site Settings → Notifications → \"Daily status digest\" saves its recipient list, and there is NO CC field",
+            description:
+              "Rewritten 2026-09. BEFORE: the digest went to 3 addresses plus a CC, and this case told you to enter a CC address and check it round-tripped. Resend bills a CC as a separate delivery, so one daily report cost FOUR of the day's 100 emails. AFTER: the CC input is gone from the Notifications tab entirely, and saving clears any CC a previous document carried. Toggle the digest on, enter ONE address in Recipients, save, reload, and confirm: (a) the address comes back exactly as entered; (b) there is no \"CC recipients\" field anywhere in the digest block; (c) the recipients block is hidden when the toggle is off.",
             href: "/admin/site",
           },
           {
@@ -4803,9 +4999,129 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           },
           {
             key: "daily-digest-email-content",
-            label: "The daily status digest email arrives with subject exactly \"Daily Status\" and shows the last 24h order count, revenue, active listings, pending-over-24h count, and a per-status breakdown",
-            // audit-hardcoded-api-routes-ok: prose in a tester-facing description (a copy-pasteable console snippet), not a call site — nothing to route through the registry.
-            description: "Added 2026-08-21. The digest runs automatically at 10:00 IST, but you don't need to wait — an admin can trigger it on demand by POSTing to /api/admin/daily-digest/trigger (e.g. from the browser console while logged in as admin: fetch('/api/admin/daily-digest/trigger',{method:'POST'})). Confirm the email reaches every configured recipient AND any CC addresses, and that the numbers match what the admin orders list actually shows for the last 24 hours. Note: this requires the Firebase Functions deploy to have happened for the scheduled 10:00 run — the manual trigger works regardless.",
+            label: "The daily status digest arrives at ONE address with no CC, and carries the Inbox and Needs-attention sections in both the HTML and the plain-text part",
+            description:
+              // audit-hardcoded-api-routes-ok: prose in a tester-facing description (a copy-pasteable console snippet), not a call site — nothing to route through the registry.
+              "Rewritten 2026-09. The digest is no longer an orders report — it is now the ONLY staff signal, carrying the contact messages, ticket backlog and payment-proof queue that each used to be their own email or WhatsApp blast. Trigger it on demand rather than waiting for 10:00 IST: while logged in as admin, run fetch('/api/admin/daily-digest/trigger',{method:'POST'}) in the browser console. Then confirm: (a) it arrives at exactly ONE address with NO CC — BEFORE it went to 3 recipients plus a CC, four billed sends for one report; (b) it still shows the 24h order count, revenue, active listings, pending-over-24h and the per-status breakdown, and those match the admin orders list; (c) there is an \"Inbox\" section with new contact messages, new support tickets, the open/in-progress/waiting ticket counts and unread admin notifications; (d) there is a \"Needs attention\" section with manual payments pending, new scam reports, new subscribers and admin actions logged; (e) if any contact messages arrived in the window, each is listed with a working Reply link that opens your mail client addressed to the sender. THE EASY ONE TO MISS: view the message's PLAIN-TEXT alternative (in Gmail: ⋮ → Show original) and confirm the Inbox and Needs-attention sections appear there too — the text part is built by a separate function and is exactly where a new section gets forgotten.",
+            href: "/admin/site",
+          },
+          {
+            key: "messaging-kill-switch-persists",
+            label: "Site Settings → Notifications → \"Outbound messaging budget\" toggles and ceilings survive a save + reload",
+            description:
+              "Added 2026-09. THE RELOAD IS THE WHOLE TEST. A settings group missing from the route's write allow-list saves with a success toast and writes nothing — so a toggle that flips, saves and shows green proves nothing at all until you come back to it.",
+            roles: ["admin"],
+            startPage: "/admin/site",
+            steps: [
+              "Open Site Settings → Notifications.",
+              "In \"Outbound messaging budget\", flip \"Send user-facing email\".",
+              "Change the daily email ceiling to a distinctive number.",
+              "Save.",
+              "Hard-reload the page and reopen the same tab.",
+            ],
+            inputs: { dailyEmailCeiling: 73 },
+            expectedBehaviour: "Both values are written to siteSettings and read back on load.",
+            expectedUiState: "After the reload the toggle is in the position you left it and the ceiling reads 73.",
+            endResult: "The values persist across a full browser restart. Restore them afterwards.",
+            href: "/admin/site",
+          },
+          {
+            key: "messaging-kill-switch-suppresses-user-mail",
+            label: "With user-facing email OFF, an order-shipped notification still fills the bell but sends no email",
+            description:
+              "Added 2026-09. NEGATIVE CONTROL CASE: a send returning success proves nothing here, because a suppressed send is deliberately NOT an error. The inbox is the only oracle.",
+            roles: ["admin", "seller", "buyer"],
+            startPage: "/admin/site",
+            steps: [
+              "Turn \"Send user-facing email\" OFF in Site Settings → Notifications and save.",
+              "As a seller, mark a buyer's order shipped.",
+              "As that buyer, open /user/notifications and the real inbox for the account's address.",
+              "Turn the toggle back ON and save.",
+              "Ship a second order and check the inbox again.",
+            ],
+            expectedBehaviour:
+              "With the switch off the notification is written but no email is dispatched. With it on, the email resumes — a kill switch that cannot be un-flipped is its own bug.",
+            expectedUiState:
+              "Off: bell shows the shipment, inbox has nothing new. On: bell shows it and an email arrives.",
+            endResult: "Both bell entries survive a reload. Exactly one email was sent across the two shipments.",
+            href: "/admin/site",
+          },
+          {
+            key: "messaging-kill-switch-spares-staff",
+            label: "With user-facing email OFF, the daily status digest STILL arrives",
+            description:
+              "Added 2026-09. The most important property of the kill switch: it suppresses user-facing mail only. Staff mail is exempt because the digest is now the only way a contact message, a new support ticket or a stuck payment proof gets noticed — switching off customer email must never leave the site unwatched.",
+            roles: ["admin"],
+            startPage: "/admin/site",
+            steps: [
+              "Confirm \"Send user-facing email\" is OFF in Site Settings → Notifications.",
+              "Open the browser console as admin.",
+              // audit-hardcoded-api-routes-ok: prose in a tester-facing step (a copy-pasteable console snippet), not a call site — nothing to route through the registry.
+              "Run fetch('/api/admin/daily-digest/trigger',{method:'POST'})",
+              "Check the configured digest recipient's inbox.",
+            ],
+            expectedBehaviour: "The digest is sent despite the kill switch, because its audience is staff rather than user.",
+            expectedUiState: "The digest email arrives with subject \"Daily Status\".",
+            endResult: "Turning the switch back on changes nothing about the digest — it was never gated by it.",
+            href: "/admin/site",
+          },
+          {
+            key: "messaging-daily-ceiling-blocks",
+            label: "Setting the daily email ceiling to 1 lets the first message through and blocks the second",
+            description:
+              "Added 2026-09. RESTORE THE CEILING TO 80 AFTERWARDS — the counter is per calendar day in IST, so leaving it at 1 silences the site until midnight.",
+            roles: ["admin", "seller", "buyer"],
+            startPage: "/admin/site",
+            steps: [
+              "Set \"Daily email ceiling\" to 1 and save. Ensure user-facing email is ON.",
+              "Ship one order so an email-eligible notification fires.",
+              "Ship a second order.",
+              "Check the buyer inboxes for both.",
+              "Set the ceiling back to 80 and save.",
+            ],
+            inputs: { dailyEmailCeiling: 1 },
+            expectedBehaviour:
+              "The first send reserves the only unit and goes out. The second is refused by the budget and recorded as a suppression rather than vanishing silently.",
+            expectedUiState: "One email arrives, the second does not. Both orders still show their notification in the bell.",
+            endResult: "After restoring the ceiling, the next shipment emails normally again.",
+            href: "/admin/site",
+          },
+          {
+            key: "scam-report-no-employee-blast",
+            label: "Filing a scam report creates ONE admin notification, not one per employee",
+            description:
+              "Added 2026-09. BEFORE: a single report sent one notification per employee, up to 100, in parallel — each a potential email, so one report could exhaust the day's allowance on its own.",
+            roles: ["buyer", "admin"],
+            startPage: "/scams",
+            steps: [
+              "As a signed-in buyer, file a scam report.",
+              "As admin, open the admin notifications inbox.",
+              "Check an employee account's notification bell and inbox.",
+              "Trigger the daily digest and read Needs attention.",
+            ],
+            expectedBehaviour:
+              "Exactly one admin-notification row is written. The reporter still gets their own in-app confirmation. No employee receives a personal notification or an email.",
+            expectedUiState:
+              "One row in the admin inbox; the reporter's bell shows their confirmation; employee bells show nothing new.",
+            endResult: "The digest's new-scam-report count has moved by one.",
+            href: "/admin/site",
+          },
+          {
+            key: "site-settings-save-sends-no-email",
+            label: "Saving Site Settings sends NO email to anyone",
+            description:
+              "Added 2026-09. BEFORE: every single save emailed a hardcoded admin address, so a session of tuning fees spent one of the day's 100 emails per click. The record still exists and is better — /admin/audit-log is queryable in a way an email never was.",
+            roles: ["admin"],
+            startPage: "/admin/site",
+            steps: [
+              "Save Site Settings three or four times, changing something small each time.",
+              "Check the inbox of any admin address that used to receive these.",
+              "Open /admin/audit-log.",
+              "Trigger the daily digest.",
+            ],
+            expectedBehaviour: "No email is sent for any save. Each save is recorded in adminAuditLog instead.",
+            expectedUiState: "No new mail. /admin/audit-log lists the saves with actor and changed fields.",
+            endResult: "The digest's \"Admin actions logged\" count reflects the saves.",
             href: "/admin/site",
           },
           {

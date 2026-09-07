@@ -3,7 +3,7 @@
 import { Code, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
+import { Button, Checkbox, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -141,6 +141,12 @@ export function AdminSupportTicketDetailView({
   const { showToast } = useToast();
 
   const [replyBody, setReplyBody] = React.useState("");
+  /*
+   * Opt-in per reply, and it RESETS to false after every send (see
+   * `onSuccess`). A sticky "also email" would quietly turn the exception back
+   * into the default — which is the behaviour this whole change removed.
+   */
+  const [alsoEmail, setAlsoEmail] = React.useState(false);
   const [draft, setDraft] = React.useState<SupportTicketUpdateValues>(
     () => seedTicketDraft(currentStatus, currentPriority, internalNotes, relatedParties),
   );
@@ -192,12 +198,16 @@ export function AdminSupportTicketDetailView({
     mutationFn: async () => {
       await apiClient.post(
         SUPPORT_ENDPOINTS.TICKET_MESSAGES(ticketId!),
-        { body: replyBody, newStatus: draft.status },
+        { body: replyBody, newStatus: draft.status, sendEmail: alsoEmail },
       );
     },
     onSuccess: () => {
-      showToast("Reply sent.", "success");
+      showToast(
+        alsoEmail ? "Reply sent and emailed." : "Reply sent.",
+        "success",
+      );
       setReplyBody("");
+      setAlsoEmail(false);
       invalidate();
       onClose();
     },
@@ -444,6 +454,18 @@ export function AdminSupportTicketDetailView({
             onChange={(e) => setReplyBody(e.target.value)}
             rows={3}
             placeholder="Type a reply…"
+          />
+          {/*
+            * The reply lands in the user's ticket view and their notification
+            * bell either way — this only decides whether it ALSO leaves as an
+            * email. Off by default because routine back-and-forth does not
+            * need to spend the daily allowance; tick it when the reply is
+            * something the user has to see today.
+            */}
+          <Checkbox
+            checked={alsoEmail}
+            onChange={(e) => setAlsoEmail(e.target.checked)}
+            label="Also email the user about this reply"
           />
           <Button
             type="button"

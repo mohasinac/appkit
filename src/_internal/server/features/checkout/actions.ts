@@ -15,6 +15,7 @@ import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring";
 import {
   unitOfWork,
+  adminNotificationsRepository,
   siteSettingsRepository,
   userRepository,
   storeRepository,
@@ -1701,36 +1702,37 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
           { orderId: primaryOrderId, err: updErr instanceof Error ? updErr.message : String(updErr) },
         );
       });
-    // Best-effort admin fan-out — mirrors onScamReportCreate's employee
-    // notification pattern. Never allowed to throw past this point.
-    try {
-      const admins = await userRepository.list({ filters: "role==admin", page: 1, pageSize: 100 });
-      await Promise.all(
-        admins.items
-          .filter((a) => !!a.id)
-          .map((admin) =>
-            sendNotification({
-              userId: admin.id!,
-              type: "system",
-              priority: "high",
-              title: "Automatic refund failed",
-              message: `Automatic refund failed for order ${primaryOrderId} (${unavailablePaid.length} unavailable item(s)) — manual refund required.`,
-              relatedId: primaryOrderId,
-              relatedType: "order",
-              userEmail: admin.email ?? undefined,
-              userPhone: admin.phoneNumber ?? undefined,
-            }).catch((notifErr: unknown) =>
-              serverLogger.error("Failed to notify admin of failed auto-refund (non-fatal)", notifErr),
-            ),
-          ),
-      );
-    } catch (notifyErr) {
-      void normalizeError(notifyErr);
-      serverLogger.error(
-        "verifyAndPlaceRazorpayOrderAction: failed to query admins for failed auto-refund notification",
-        { orderId: primaryOrderId },
-      );
-    }
+    /*
+     * One admin-inbox row, not one notification per admin.
+     *
+     * 🛑 The comment that used to sit here said this "mirrors
+     * onScamReportCreate's employee notification pattern" — and it did, which
+     * is exactly the problem: that pattern was a 100-way concurrent fan-out of
+     * an email-eligible type, and it has been removed. A failed auto-refund is
+     * ONE event needing ONE person to act, not N personal messages.
+     *
+     * It also no longer queries the admin list at all, so the failure mode
+     * where "we couldn't look up the admins" silently swallowed the alert is
+     * gone with it.
+     */
+    await adminNotificationsRepository
+      .create({
+        category: "payouts",
+        title: "Automatic refund failed",
+        body: `Automatic refund failed for order ${primaryOrderId} (${unavailablePaid.length} unavailable item(s)) — manual refund required.`,
+        severity: "error",
+        isRead: false,
+        entityType: "order",
+        entityId: primaryOrderId,
+        audienceUserIds: [],
+      })
+      .catch((notifyErr: unknown) => {
+        void normalizeError(notifyErr);
+        serverLogger.error(
+          "verifyAndPlaceRazorpayOrderAction: failed to write admin notification for failed auto-refund",
+          { orderId: primaryOrderId },
+        );
+      });
   }
 }
 

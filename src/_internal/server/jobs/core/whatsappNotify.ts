@@ -25,6 +25,7 @@ import {
   sendWhatsAppBusinessMessage,
 } from "../../../../features/whatsapp-bot/helpers/whatsapp";
 import { isChannelHealthy, recordChannelOutcome } from "../../notifications/channel-health";
+import { guardSend, logSuppressedSend } from "../../notifications/send-guard";
 import type { JobContext } from "../runtime/types";
 import type { JobRunResult } from "./jobRunners";
 
@@ -53,7 +54,49 @@ export async function runWhatsAppNotify(
   payload: WhatsAppNotifyPayload,
   ctx: JobContext,
 ): Promise<JobRunResult> {
-  const { toPhone, title, message, templateName, templateLanguage, notificationId, phoneNumberId, accessToken } = payload;
+  const { toPhone, title, message, type, templateName, templateLanguage, notificationId, phoneNumberId, accessToken } = payload;
+
+  /*
+   * The messaging guard, applied HERE rather than inside
+   * `sendWhatsAppBusinessMessage` itself.
+   *
+   * 🛑 That placement is deliberate and must not be "improved" by pushing a
+   * required guard parameter down into the sender. `features/whatsapp-bot/helpers/whatsapp.ts`
+   * is re-exported from `appkit/src/index.ts` (via `isAdminNumber`), and
+   * `guardSend` reaches `firebase-admin` through the settings and budget
+   * repositories. A static import of it from that file would put
+   * `firebase-admin` in the main entry's import graph, which is precisely the
+   * Turbopack client-bundle trap in Root Cause #6/#24 — it builds fine locally
+   * on webpack and fails every page in production.
+   *
+   * So the senders stay pure and each of the three real call sites guards
+   * itself; `scripts/audit-unguarded-send.mjs` enforces that a file calling a
+   * WhatsApp sender also calls `guardSend`.
+   *
+   * Note this job is only ever reached for an email/WhatsApp-ELIGIBLE type —
+   * `sendNotification` returns before enqueuing otherwise — so this is the
+   * ceiling and kill-switch check, not the type check.
+   */
+  const guard = {
+    channel: "whatsapp" as const,
+    feature: type,
+    audience: "user" as const,
+  };
+  const decision = await guardSend(guard);
+  if (!decision.allow) {
+    logSuppressedSend(guard, decision);
+    await notificationRepository
+      .update(notificationId, { whatsappStatus: "skipped" } as never)
+      .catch((err: unknown) => {
+        void normalizeError(err);
+      });
+    return {
+      summary: { total: 1, succeeded: 0, skipped: 1, failed: 0 },
+      succeeded: [],
+      skipped: [notificationId],
+      failed: [],
+    };
+  }
 
   if (!(await isChannelHealthy("whatsapp"))) {
     ctx.logger.warn("whatsappNotify: WhatsApp channel circuit is open — skipping send", { notificationId });

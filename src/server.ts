@@ -840,25 +840,48 @@ export type {
   EmailRowProps,
   EmailTone,
 } from "./features/email";
+/*
+ * Four senders were removed from this barrel 2026-09 along with their
+ * implementations: `sendContactEmail` (the contact form is a record now, read
+ * from /admin/contact and the daily digest), `sendSiteSettingsChangedEmail`
+ * (adminAuditLog already records it, queryably), and
+ * `sendVerificationEmailWithLink` / `sendPasswordResetEmailWithLink` (dead
+ * since auth mail moved to the Firebase client SDK).
+ */
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendContactEmail - Shared export for send contact email.
-export { sendContactEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendEmail - Shared export for send email.
+// sendEmail - Shared export for send email. Takes a REQUIRED guard context.
 export { sendEmail } from "./features/contact/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendOrderConfirmationEmail - Shared export for send order confirmation email.
 export { sendOrderConfirmationEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendPasswordResetEmailWithLink - Shared export for send password reset email with link.
-export { sendPasswordResetEmailWithLink } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendSiteSettingsChangedEmail - Shared export for send site settings changed email.
-export { sendSiteSettingsChangedEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendVerificationEmailWithLink - Shared export for send verification email with link.
-export { sendVerificationEmailWithLink } from "./features/contact/server";
-export type { OrderConfirmationEmailParams } from "./features/contact/server";
+export type { OrderConfirmationEmailParams, SendEmailGuard } from "./features/contact/server";
+/*
+ * `guardSend` is deliberately NOT exported here.
+ *
+ * It lives in `_internal/`, and `audit-appkit-reexports` correctly refuses to
+ * let `_internal/` symbols leak through a public barrel. That is the right
+ * answer for this one on its merits too: every sender that needs the guard is
+ * inside appkit, and the two entry points that consumers DO call —
+ * `sendEmail(opts, guard)` and `sendNotification()` — apply it themselves. A
+ * consumer holding `guardSend` could only use it to build a fourth send path
+ * outside the two the audit knows how to check.
+ *
+ * `SendEmailGuard` (the context type) is exported alongside `sendEmail` from
+ * `./features/contact/server`, which is what a caller actually needs.
+ */
+// [SERVER-ONLY]-Firestore-backed cooldown for the Firebase-sent auth mails
+// (password reset / verification), which never reach this app's server and so
+// cannot be covered by guardSend.
+export {
+  authMailCooldownRepository,
+  messageBudgetRepository,
+} from "./features/messaging/repository/message-budget.repository";
+export type {
+  MessageAudience,
+  MessageChannel,
+  SendDecision,
+  SendGuardContext,
+} from "./_internal/shared/features/messaging/config";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminGetEventById - Shared export for admin get event by id.
 export { adminGetEventById } from "./features/events/server";

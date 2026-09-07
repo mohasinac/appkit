@@ -83,6 +83,14 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   "footerConfig", // rendered server-side
   "theme", // delivered as an SSR prop to ThemeProvider by app/[locale]/layout.tsx
   "featuredResults", // rendered server-side by search
+  // Kill switch + daily send ceiling. Read ONLY by guardSend, server-side. Two
+  // reasons it stays private beyond "no client reader": the ceiling and the
+  // headroom left in it are operational detail, and publishing "user email is
+  // currently off" tells an attacker that password-reset traffic is going
+  // unwatched. The one client that arguably wants it — the admin ticket-reply
+  // checkbox, which disables itself when email is off — is behind the admin
+  // API, which returns the full document.
+  "messaging",
 ] as const;
 
 export interface ToPublicSiteSettingsOptions {

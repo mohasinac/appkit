@@ -30,7 +30,7 @@ export async function handleScamReportRejected(
     const reporter = await userRepository.findById(reportedBy);
     await sendNotification({
       userId: reportedBy,
-      type: "account_action",
+      type: "scam_report_update",
       priority: "normal",
       title: "Scam report not verified",
       message: `Your report for "${name}" could not be verified with the evidence provided. You may submit a new report with additional evidence.`,

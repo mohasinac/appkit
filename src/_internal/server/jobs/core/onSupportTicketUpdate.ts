@@ -49,7 +49,7 @@ export async function handleSupportTicketUpdate(
   try {
     await sendNotification({
       userId,
-      type: "account_action",
+      type: "support_ticket_update",
       priority: "normal",
       title: msg.title,
       message: msg.body(subject),

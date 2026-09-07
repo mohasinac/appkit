@@ -47,9 +47,12 @@ export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
     }
   }
 
-  await Promise.allSettled(
-    expired.map((entry) =>
-      sendNotification({
+  // Sequential: `order_cancelled` is email-eligible, so each send reserves a
+  // unit from the single-document daily budget counter and a concurrent sweep
+  // would contend on it. See pendingOrderTimeout for the full reasoning.
+  for (const entry of expired) {
+    try {
+      await sendNotification({
         userId: entry.data.userId,
         type: "order_cancelled",
         priority: "normal",
@@ -58,9 +61,14 @@ export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
         relatedId: entry.id,
         relatedType: "order",
         orderWhatsappAddonPaid: entry.data.whatsappNotifyAddon === true,
-      }),
-    ),
-  );
+      });
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.error("Failed to notify buyer of expired payment window (non-fatal)", err, {
+        orderId: entry.id,
+      });
+    }
+  }
 
   ctx.logger.info("Payment window timeout sweep complete", {
     scanned: expired.length,

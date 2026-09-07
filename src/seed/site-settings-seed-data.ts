@@ -198,18 +198,37 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     fromName: "LetItRip",
     fromEmail: "noreply@letitrip.in",
     replyTo: "support@letitrip.in",
-    // Admin-editable in Site Settings → Notifications. The Gmail address is a
-    // standing CC so the digest still lands somewhere reachable even if the
-    // @letitrip.in mailboxes aren't receiving mail yet.
+    /*
+     * ONE recipient, no CC.
+     *
+     * This was 3 TO plus 1 CC. Resend bills a CC as a separate delivery, so
+     * one daily report cost FOUR of the day's 100 emails — and the digest is
+     * now the single most important message the site sends, since it carries
+     * the contact messages, ticket backlog and payment-proof queue that used
+     * to be their own alerts.
+     *
+     * `ccRecipients` stays as an empty array rather than being removed: the
+     * field is still on the schema so existing documents validate, and
+     * `dailyStatusDigest` no longer reads it at all.
+     */
     dailyDigest: {
       enabled: true,
-      recipients: [
-        "support@letitrip.in",
-        "reply@letitrip.in",
-        "mohasin@letitrip.in",
-      ],
-      ccRecipients: ["letitrip.in@gmail.com"],
+      recipients: ["mohasin@letitrip.in"],
+      ccRecipients: [],
     },
+  },
+  /*
+   * Both channels start OFF. A reseed should leave the site quiet rather than
+   * mailing real people, and turning email back on is one toggle in
+   * Site Settings → Notifications.
+   *
+   * The ceiling is 80 against Resend's free 100/day — see
+   * MESSAGE_BUDGET_DEFAULTS for why the headroom is not timidity.
+   */
+  messaging: {
+    emailEnabled: false,
+    whatsappEnabled: false,
+    dailyCeiling: { email: 80, whatsapp: 200, sms: 50 },
   },
   seo: {
     defaultTitle:
@@ -518,7 +537,17 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     inApp: { enabled: true, readOnly: true },
     email: { enabled: true, minPriority: "normal" },
     whatsapp: { enabled: true, minPriority: "high", otpEnabled: true },
-    sms: { enabled: true, minPriority: "high" },
+    /*
+     * FALSE. There is no SMS sender anywhere in this codebase — nothing reads
+     * `notificationChannels.sms`, no Twilio SDK is installed, and the only
+     * "Twilio" reference is a parser for INBOUND webhook payloads.
+     *
+     * It was seeded `true`, which is worse than it sounds: the admin
+     * Notifications tab renders a channel as enabled, so anyone reading that
+     * screen would conclude SMS was live and being delivered. A channel that
+     * cannot send should not claim to be on.
+     */
+    sms: { enabled: false, minPriority: "high" },
   },
   actionConfig: {},
   navConfig: {},

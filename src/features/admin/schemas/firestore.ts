@@ -53,7 +53,27 @@ export const NOTIFICATION_TYPE_VALUES = [
   "promotion",
   "system",
   "welcome",
+  /*
+   * 🛑 `account_action` means A BAN OR AN UNBAN, and nothing else.
+   *
+   * It used to also carry support-ticket activity AND scam-report outcomes —
+   * three unrelated concerns on one value, which made them impossible to tell
+   * apart anywhere downstream. That mattered the moment email became
+   * type-gated (see `EMAIL_ELIGIBLE_TYPES`): there was no way to stop emailing
+   * "your ticket got a reply" without also silencing "you have been banned",
+   * and those two have opposite answers. A banned user has to be told outside
+   * the app, because the app is what they just lost.
+   *
+   * Split 2026-09. If you are tempted to route a fourth concern through this
+   * value because it is vaguely account-shaped, add a type instead — the
+   * `Record<NotificationType, …>` maps will tell you everywhere that needs an
+   * answer.
+   */
   "account_action",
+  /** Support ticket created, replied to, or moved status. Bell-only by default — see `EMAIL_ELIGIBLE_TYPES`; staff can opt a single reply into email. */
+  "support_ticket_update",
+  /** Scam report received, verified, or rejected. Bell-only; the admin side rides the daily digest. */
+  "scam_report_update",
   "offer_received",
   "offer_responded",
   "offer_expired",
@@ -608,6 +628,36 @@ export interface SiteSettingsDocument extends BaseDocument {
     instagram?: string;
     linkedin?: string;
   };
+  /**
+   * The outbound-messaging kill switch and spend ceiling.
+   *
+   * Distinct from `notificationChannels`, which decides WHICH notification
+   * types a channel carries. This decides whether the channel runs at all and
+   * how much of the day's allowance it may spend — a site-wide posture rather
+   * than a per-type routing rule.
+   *
+   * 🛑 Every field here is PRIVATE. It is triaged into
+   * `PRIVATE_SITE_SETTINGS_FIELDS` in the public projection, and must stay
+   * there: the ceiling and the remaining headroom are operational detail, and
+   * publishing "email is currently off" tells an attacker that password-reset
+   * mail is not being watched.
+   */
+  messaging?: {
+    /** User-facing email. Staff mail (daily digest, payout summary) ignores this. */
+    emailEnabled: boolean;
+    /** User-facing WhatsApp. Same exemption for staff. */
+    whatsappEnabled: boolean;
+    /**
+     * Reserved sends allowed per channel per day. Applies to staff and
+     * transactional mail too — the ceiling exists to stay inside the
+     * provider's own limit, and the provider does not exempt anyone.
+     */
+    dailyCeiling: {
+      email: number;
+      whatsapp: number;
+      sms: number;
+    };
+  };
   emailSettings: {
     fromName: string;
     fromEmail: string;
@@ -844,6 +894,14 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     otpCheckoutThreshold: 5000,
     smsVerification: false,
     adminCheckoutBypass: false,
+  },
+  // Mirrors MESSAGE_BUDGET_DEFAULTS — both channels start OFF. A fresh install
+  // that has made no decision should be quiet, not mailing real people from a
+  // half-configured site.
+  messaging: {
+    emailEnabled: false,
+    whatsappEnabled: false,
+    dailyCeiling: { email: 80, whatsapp: 200, sms: 50 },
   },
   emi: {
     enabled: false,

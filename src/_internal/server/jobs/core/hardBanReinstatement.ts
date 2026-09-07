@@ -50,9 +50,13 @@ export async function runHardBanReinstatement(ctx: JobContext): Promise<void> {
     }
   }
 
-  await Promise.allSettled(
-    expired.map((user) =>
-      sendNotification({
+  // Sequential: `account_action` is email-eligible — deliberately so, since a
+  // ban or unban has to reach someone outside the app they just lost or
+  // regained. Each send reserves a unit from the single-document daily budget
+  // counter, so a concurrent sweep would contend. See pendingOrderTimeout.
+  for (const user of expired) {
+    try {
+      await sendNotification({
         userId: user.uid,
         type: "account_action",
         priority: "normal",
@@ -61,9 +65,12 @@ export async function runHardBanReinstatement(ctx: JobContext): Promise<void> {
           "Your account access has been restored. If your seller store was suspended, contact support to reactivate it.",
         relatedId: user.uid,
         relatedType: "user",
-      }),
-    ),
-  );
+      });
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.error("Failed to notify user of ban reinstatement (non-fatal)", err, { uid: user.uid });
+    }
+  }
 
   ctx.logger.info("Hard ban reinstatement sweep complete", {
     scanned: expired.length,

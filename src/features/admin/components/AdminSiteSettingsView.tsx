@@ -425,7 +425,18 @@ export function AdminSiteSettingsView({
   // Daily ops digest — recipients are edited as one-per-line text, split on save.
   const [digestEnabled, setDigestEnabled] = React.useState(false);
   const [digestRecipients, setDigestRecipients] = React.useState("");
-  const [digestCcRecipients, setDigestCcRecipients] = React.useState("");
+
+  /*
+   * Outbound messaging: the kill switch and the daily ceiling.
+   *
+   * `emailEnabled` suppresses USER-facing mail only. Staff mail — the daily
+   * digest, the payout summary — keeps flowing regardless, because switching
+   * off customer email must never also blind the operator.
+   */
+  const [msgEmailEnabled, setMsgEmailEnabled] = React.useState(false);
+  const [msgWhatsappEnabled, setMsgWhatsappEnabled] = React.useState(false);
+  const [msgCeilingEmail, setMsgCeilingEmail] = React.useState(80);
+  const [msgCeilingWhatsapp, setMsgCeilingWhatsapp] = React.useState(200);
 
   // Snapshot of the masked placeholder strings the server returned for every
   // credentials.* field, captured once per load. A combined single-save has
@@ -639,7 +650,13 @@ export function AdminSiteSettingsView({
     setNotifFromName(s.emailSettings?.fromName ?? "");
     setDigestEnabled(s.emailSettings?.dailyDigest?.enabled ?? false);
     setDigestRecipients((s.emailSettings?.dailyDigest?.recipients ?? []).join("\n"));
-    setDigestCcRecipients((s.emailSettings?.dailyDigest?.ccRecipients ?? []).join("\n"));
+    // Defaults mirror MESSAGE_BUDGET_DEFAULTS — both channels OFF, so a
+    // settings document written before this feature existed reads as quiet
+    // rather than as "on and unmetered".
+    setMsgEmailEnabled(s.messaging?.emailEnabled ?? false);
+    setMsgWhatsappEnabled(s.messaging?.whatsappEnabled ?? false);
+    setMsgCeilingEmail(s.messaging?.dailyCeiling?.email ?? 80);
+    setMsgCeilingWhatsapp(s.messaging?.dailyCeiling?.whatsapp ?? 200);
 
     originalMaskedRef.current = {
       razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
@@ -781,7 +798,21 @@ export function AdminSiteSettingsView({
         dailyDigest: {
           enabled: digestEnabled,
           recipients: splitEmailList(digestRecipients),
-          ccRecipients: splitEmailList(digestCcRecipients),
+          // Always empty — the CC field is gone (see the Notifications tab).
+          // Sent explicitly rather than omitted so a save clears any CC list a
+          // pre-existing document still carries.
+          ccRecipients: [],
+        },
+      },
+      messaging: {
+        emailEnabled: msgEmailEnabled,
+        whatsappEnabled: msgWhatsappEnabled,
+        dailyCeiling: {
+          email: msgCeilingEmail,
+          whatsapp: msgCeilingWhatsapp,
+          // No SMS sender exists; the ceiling is carried so one cannot ship
+          // uncapped if somebody adds a provider later.
+          sms: 50,
         },
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
@@ -1743,6 +1774,51 @@ export function AdminSiteSettingsView({
                 fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
               </Text>
 
+              {/* Outbound budget — the kill switch and the daily ceiling. */}
+              <Stack gap="md" rounded="lg" border="default" padding="md">
+                <Text size="sm" weight="semibold">Outbound messaging budget</Text>
+                <Text size="xs" color="muted">
+                  The master switches. These suppress <Span weight="semibold">user-facing</Span> messages
+                  only — the daily status digest always reaches staff, so turning customer email off
+                  never leaves the site unwatched. Transactional messages (checkout verification codes,
+                  order receipts) also keep sending, because suppressing those breaks checkout rather
+                  than quietening it.
+                </Text>
+                <Toggle
+                  label="Send user-facing email"
+                  checked={msgEmailEnabled}
+                  onChange={setMsgEmailEnabled}
+                />
+                <Toggle
+                  label="Send user-facing WhatsApp"
+                  checked={msgWhatsappEnabled}
+                  onChange={setMsgWhatsappEnabled}
+                />
+                <Grid cols={2} gap="md">
+                  <Input
+                    label="Daily email ceiling"
+                    type="number"
+                    value={String(msgCeilingEmail)}
+                    onChange={(e) => setMsgCeilingEmail(Number(e.target.value) || 0)}
+                    helperText="Resend's free tier is 100/day. 80 leaves headroom for password-reset mail and in-flight sends."
+                  />
+                  <Input
+                    label="Daily WhatsApp ceiling"
+                    type="number"
+                    value={String(msgCeilingWhatsapp)}
+                    onChange={(e) => setMsgCeilingWhatsapp(Number(e.target.value) || 0)}
+                    helperText="A sanity bound. Meta bills per conversation, not per message."
+                  />
+                </Grid>
+                <Text size="xs" color="muted">
+                  Some notification types never email regardless of these settings — losing an auction,
+                  being outbid, marketing, review activity and ticket updates are shown in the
+                  notification bell only. That is deliberate: those were the highest-volume sends and
+                  the ones most likely to exhaust the day&apos;s allowance. A support reply can still be
+                  emailed one-off from the ticket screen.
+                </Text>
+              </Stack>
+
               {/* In-app — read-only */}
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Row justify="between" gap="sm">
@@ -1793,18 +1869,21 @@ export function AdminSiteSettingsView({
                       label="Recipients (To)"
                       value={digestRecipients}
                       onChange={(e) => setDigestRecipients(e.target.value)}
-                      placeholder={"support@letitrip.in\nmohasin@letitrip.in"}
-                      rows={4}
-                      helperText="One address per line."
-                    />
-                    <Textarea
-                      label="CC recipients"
-                      value={digestCcRecipients}
-                      onChange={(e) => setDigestCcRecipients(e.target.value)}
-                      placeholder="One address per line"
+                      placeholder={"mohasin@letitrip.in"}
                       rows={3}
-                      helperText="Optional — anyone else who should receive a copy."
+                      helperText="One address per line. Each address is billed as a separate send against the daily allowance — keep this list short."
                     />
+                    {/*
+                      * The CC field was removed 2026-09. Resend bills a CC as a
+                      * separate delivery, so a 3-recipient TO plus one CC cost
+                      * FOUR of the day's 100 emails for one report — and the
+                      * digest is now the site's single most important message,
+                      * carrying the contact queue, ticket backlog and payment
+                      * proofs that used to be alerts of their own.
+                      * `dailyStatusDigest` no longer reads `ccRecipients`; the
+                      * field stays on the schema only so existing documents
+                      * still validate.
+                      */}
                   </Stack>
                 )}
               </Stack>

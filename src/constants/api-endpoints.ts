@@ -44,6 +44,16 @@ export const AUTH_ENDPOINTS = {
   SESSION_ACTIVITY: "/api/auth/session/activity",
   SESSION_VALIDATE: "/api/auth/session/validate",
   EVENT_INIT: "/api/auth/event/init",
+  /**
+   * Cooldown gate the client asks BEFORE calling Firebase's own
+   * `sendPasswordResetEmail` / `sendEmailVerification`.
+   *
+   * Those go browser → Firebase with no server hop, so this is the only
+   * throttle they have — nothing else on our side ever sees them. Advisory by
+   * design: a failure here resolves to "allowed", because a user locked out of
+   * their account must not also be locked out by our infrastructure.
+   */
+  MAIL_GATE: "/api/auth/mail-gate",
   /*
    * RESEND_VERIFICATION was here and is gone. The route was deleted in the
    * Firebase-native auth migration (Root Cause #54: the Admin SDK cannot send

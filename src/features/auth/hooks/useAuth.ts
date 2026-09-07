@@ -516,12 +516,63 @@ export function useResendVerification(options?: {
   });
 }
 
+/**
+ * Ask the server whether this address may be sent an auth mail right now.
+ *
+ * Firebase's own auth mail goes browser → Firebase with no server hop, so
+ * nothing on our side can see it — including `applyRateLimit`. This gate is the
+ * only throttle these flows have, and it is deliberately advisory: a `false`
+ * from the network, a thrown request, or a missing route all resolve to
+ * "allowed", because a user locked out of their account must never be blocked
+ * from requesting a reset by our own infrastructure failing.
+ *
+ * See `src/app/api/auth/mail-gate/route.ts` for why this is an abuse guard
+ * rather than a security boundary.
+ */
+async function requestAuthMailPermission(
+  email: string,
+  purpose: "password_reset" | "verify_email",
+): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
+  try {
+    const res = await apiClient.post(AUTH_ENDPOINTS.MAIL_GATE, { email, purpose });
+    const data = ((res as { data?: unknown })?.data ?? res) as {
+      allowed?: boolean;
+      retryAfterSeconds?: number;
+    };
+    return {
+      allowed: data?.allowed !== false,
+      retryAfterSeconds: data?.retryAfterSeconds ?? 0,
+    };
+  } catch (err) {
+    // Normalised then deliberately discarded: an unreachable gate is not an
+    // incident worth reporting, it is the documented fail-open path. The user
+    // still gets their reset mail; only the cooldown is skipped.
+    void normalizeError(err);
+    return { allowed: true, retryAfterSeconds: 0 };
+  }
+}
+
+/** Thrown when the cooldown refuses — carries the wait so the UI can say it. */
+export class AuthMailCooldownError extends Error {
+  readonly retryAfterSeconds: number;
+  constructor(retryAfterSeconds: number) {
+    const mins = Math.max(1, Math.ceil(retryAfterSeconds / 60));
+    super(
+      `We've already sent that recently — please check your inbox, including spam. You can request another in ${mins} minute${mins === 1 ? "" : "s"}.`,
+    );
+    this.name = "AuthMailCooldownError";
+    this.retryAfterSeconds = retryAfterSeconds;
+  }
+}
+
 export function useForgotPassword(options?: {
   onSuccess?: (data: JsonValue) => void;
   onError?: (error: Error) => void;
 }) {
   return useMutation<JsonValue, Error,ForgotPasswordData>({
     mutationFn: async (data) => {
+      const gate = await requestAuthMailPermission(data.email, "password_reset");
+      if (!gate.allowed) throw new AuthMailCooldownError(gate.retryAfterSeconds);
       await getClientAuthProvider().sendPasswordResetEmail(data.email);
       return { success: true };
     },

@@ -46,9 +46,25 @@ export async function runPendingOrderTimeout(ctx: JobContext): Promise<void> {
     }
   }
 
-  await Promise.allSettled(
-    timedOut.map((entry) =>
-      sendNotification({
+  /*
+   * Sequential, not `Promise.allSettled`.
+   *
+   * 🛑 `order_cancelled` is email-ELIGIBLE, so each of these reserves a unit
+   * from the daily budget — a single Firestore document. Firestore sustains
+   * roughly one write per second on one document, so a concurrent sweep would
+   * contend on it, retry, and slow the job down more than the serial version
+   * it replaced. Awaiting in a loop is the cheap fix; the alternative is
+   * sharding the counter to defend a fan-out nobody needs.
+   *
+   * Safe on latency: this runs in a Firebase Function with a 300s budget, and
+   * the set is bounded by however many orders timed out in one window.
+   *
+   * Failures stay non-fatal per order — a notification that will not send must
+   * not stop the remaining cancellations being announced.
+   */
+  for (const entry of timedOut) {
+    try {
+      await sendNotification({
         userId: entry.data.userId,
         type: "order_cancelled",
         priority: "normal",
@@ -57,9 +73,14 @@ export async function runPendingOrderTimeout(ctx: JobContext): Promise<void> {
         relatedId: entry.id,
         relatedType: "order",
         orderWhatsappAddonPaid: entry.data.whatsappNotifyAddon === true,
-      }),
-    ),
-  );
+      });
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.error("Failed to notify buyer of timed-out order (non-fatal)", err, {
+        orderId: entry.id,
+      });
+    }
+  }
 
   ctx.logger.info("Pending order timeout complete", { cancelled: timedOut.length, restored });
 }

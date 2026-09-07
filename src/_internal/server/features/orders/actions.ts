@@ -1,7 +1,7 @@
 "use server";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
-import { orderRepository, storeRepository, userRepository } from "../../../../repositories";
+import { adminNotificationsRepository, orderRepository, storeRepository, userRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import {
   createOrderSchema,
@@ -127,54 +127,43 @@ function normalizeUpi(vpa: string | undefined): string {
 const REASON_REQUIRED_MSG = "A reason is required";
 
 /**
- * Fast-review WhatsApp push — fans out to every configured admin number so
- * a payment proof can be acted on within the 2-hour auto-approve window
- * without hunting through the orders list. Fire-and-forget, non-fatal on
- * failure (mirrors the existing `onOrderCreate.ts` purchase-announcement
- * pattern) — skips silently if the WhatsApp Cloud API isn't configured.
+ * Fast-review signal — a payment proof needs acting on inside the 2-hour
+ * auto-approve window, and the admin should not have to hunt the orders list
+ * to find it.
+ *
+ * 🛑 This used to `Promise.allSettled` a WhatsApp message to EVERY number in
+ * `whatsappAdminNotifyNumbers`, on every proof upload. Three problems, in
+ * increasing order of importance:
+ *
+ *   1. it was an unbounded fan-out on a metered channel;
+ *   2. WhatsApp free-form messages are rejected by Meta outside the 24-hour
+ *      customer-service window, so the alert most likely to matter — the one
+ *      arriving after a quiet period — is precisely the one that would fail;
+ *   3. it left no record. A missed push was simply gone, whereas the queue at
+ *      `/admin/orders` is the thing an admin actually works from.
+ *
+ * One `adminNotifications` row instead: durable, deduplicated by nature, read
+ * by the admin inbox, and counted in the daily digest. Still fire-and-forget
+ * and still non-fatal — the buyer's upload already succeeded, and a failure to
+ * announce it must never surface as an upload error.
  */
 function notifyAdminsOfPaymentProof(order: { id: string; userName: string; productTitle: string; totalPrice: number }): void {
   void (async () => {
     try {
-      const [{ resolveKeys }, { sendWhatsAppBusinessMessage, buildPaymentProofReviewMessage }] = await Promise.all([
-        import("../../../../core/integration-keys"),
-        import("../../../../features/whatsapp-bot/server"),
-      ]);
-      const keys = await resolveKeys();
-      if (!keys.whatsappPhoneNumberId || !keys.whatsappCloudApiToken) return;
-      const adminNumbers = keys.whatsappAdminNotifyNumbers
-        .split(",")
-        .map((n) => n.trim().replace(/\D/g, ""))
-        .filter(Boolean);
-      if (adminNumbers.length === 0) return;
-
-      // No hardcoded domain fallback here (audit-ssr-in-appkit) — every
-      // consumer sets NEXT_PUBLIC_SITE_URL; skip the review link rather than
-      // guessing a brand-specific domain from inside appkit/_internal/.
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-      const message = buildPaymentProofReviewMessage({
-        orderId: order.id,
-        buyerName: order.userName,
-        productTitle: order.productTitle,
-        totalAmount: order.totalPrice,
-        reviewUrl: `${baseUrl}/admin/orders`,
+      const { adminNotificationsRepository } = await import("../../../../repositories");
+      await adminNotificationsRepository.create({
+        category: "payouts",
+        title: "Payment proof awaiting review",
+        body: `${order.userName} uploaded proof for "${order.productTitle}" (₹${order.totalPrice.toLocaleString("en-IN")}). Review before the 2-hour auto-approve window closes.`,
+        severity: "warning",
+        isRead: false,
+        entityType: "order",
+        entityId: order.id,
+        audienceUserIds: [],
       });
-
-      await Promise.allSettled(
-        adminNumbers.map((toPhone) =>
-          sendWhatsAppBusinessMessage({
-            toPhone,
-            message,
-            phoneNumberId: keys.whatsappPhoneNumberId,
-            accessToken: keys.whatsappCloudApiToken,
-          }),
-        ),
-      );
     } catch (err) {
       void normalizeError(err);
-      // Non-fatal — the order itself already saved successfully; a WhatsApp
-      // Cloud API hiccup here must never surface as a proof-upload failure.
-      serverLogger.warn("Payment-proof admin WhatsApp push failed (non-fatal)", {
+      serverLogger.warn("Payment-proof admin notification failed (non-fatal)", {
         orderId: order.id,
         error: err instanceof Error ? err.message : String(err),
       });
@@ -422,21 +411,33 @@ export async function raiseOrderDisputeAction(
       disputeStatus: "open",
     } as any);
 
-    // Notify every admin for manual investigation — a dispute on an
-    // auto-approved order means nobody has looked at it yet.
-    const admins = await userRepository.findByRole("admin");
-    await Promise.allSettled(
-      admins.map((admin) =>
-        sendNotification({
-          userId: admin.uid,
-          type: "payment_review",
-          priority: "high",
-          title: "Dispute raised on auto-approved order",
-          message: `A dispute was raised on order "${order.productTitle}" (auto-approved payment). Reason: ${reason}.`,
-          relatedId: orderId,
-          relatedType: "order",
-        }),
-      ),
-    );
+    /*
+     * One admin-inbox row, not one notification per admin.
+     *
+     * 🛑 This was `Promise.allSettled` over `userRepository.findByRole("admin")`
+     * sending `payment_review` — an email-ELIGIBLE type — so a single disputed
+     * order cost one email per admin, concurrently. Same defect as the
+     * scam-report employee blast (removed in the same change), and the comment
+     * on that one said it was copying this pattern.
+     *
+     * `adminNotifications` is durable, appears in the admin inbox, is counted
+     * in the daily digest, and costs exactly one write regardless of how many
+     * admins exist.
+     */
+    await adminNotificationsRepository
+      .create({
+        category: "fraud",
+        title: "Dispute raised on auto-approved order",
+        body: `A dispute was raised on order "${order.productTitle}" (auto-approved payment). Reason: ${reason}.`,
+        severity: "error",
+        isRead: false,
+        entityType: "order",
+        entityId: orderId,
+        audienceUserIds: [],
+      })
+      .catch((err: unknown) => {
+        void normalizeError(err);
+        serverLogger.error("Failed to write dispute admin notification (non-fatal)", { orderId });
+      });
   });
 }

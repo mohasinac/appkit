@@ -143,6 +143,10 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
       });
     }
 
+    // audit-unguarded-send-ok: `bid_lost` is email-INELIGIBLE — these return at
+    // the eligibility gate having written only the bell row, so they never
+    // reach the budget counter. Same reasoning as the settled-auction fan-out
+    // below.
     await Promise.allSettled(
       activeBids.slice(0, 50).map(({ data: bid }) =>
         sendNotification({
@@ -228,6 +232,15 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
     actionLabel: AUCTION_MESSAGES.WON_ACTION_LABEL,
   });
 
+  // audit-unguarded-send-ok: `bid_lost` is email-INELIGIBLE, so every one of
+  // these returns at the eligibility gate in sendNotification having written
+  // only the in-app bell row — it never reaches guardSend or the daily budget
+  // counter, so there is nothing here to contend on. This was THE fan-out that
+  // motivated the whole change (50 concurrent emails per settled auction, with
+  // every expired auction settling at once); it is now 50 concurrent Firestore
+  // writes to 50 DIFFERENT notification documents, which is what this loop
+  // always was underneath. If `bid_lost` is ever made eligible, this must
+  // become sequential and the counter must be sharded first.
   await Promise.allSettled(
     loserEntries.slice(0, 50).map(({ data: bid }) =>
       sendNotification({
