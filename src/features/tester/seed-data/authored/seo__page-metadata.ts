@@ -108,16 +108,16 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/products",
     steps: [
       "Open the network panel and navigate to a product path whose trailing segment is a nonsense word no listing uses.",
-      "Read the status code of the document response.",
       "Read what the page shows.",
-      "View the source and look for a robots meta tag.",
-      "Repeat with a nonsense store path and a nonsense category path.",
+      "View the source and read every robots meta tag.",
+      "Repeat with a nonsense store path and a nonsense auction path.",
+      "Open a REAL product page and read its robots meta tags too.",
     ],
     expectedBehaviour:
-      "A missing page returns 404 and marks itself not-indexable. A 200 carrying a 'not found' message is a soft 404 — the URL stays in the index indefinitely, and every mistyped link a crawler follows adds another.",
+      "A missing page renders the site's 404 view and marks itself NOINDEX. Judge the noindex, not the status code: Next streams the response, so the headers are already sent by the time the not-found is raised and the status can no longer be changed. It injects a noindex robots tag into the streamed HTML instead, and that is what actually keeps the URL out of the index. A 200 here is expected and is not the finding.",
     expectedUiState:
-      "The document response is 404 on all three paths, the page shows a readable not-found state with a route onward, and it is marked not-indexable. A 200 status is the finding regardless of what the body says.",
-    expectedData: { statusCode: 404 },
+      "All three missing paths render the 404 view and their source carries a robots tag whose content is noindex. The real product page carries no noindex — check it, because a blanket noindex would satisfy the first half while quietly de-indexing the whole catalogue.",
+    expectedData: { missingPageIsNoindex: true, realPageIsNoindex: false },
     endResult: "Read-only.",
   },
   "checklist-seo-page-metadata-title-length-reasonable": {
