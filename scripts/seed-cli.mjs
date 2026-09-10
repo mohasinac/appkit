@@ -193,6 +193,8 @@ const {
   groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData,
   testerChecklistSeedData, cartsTesterSeedData, offersTesterSeedData,
+  supportTicketsSeedData, catalogueSeedData,
+  shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
   storesTesterSeedData, categoriesTesterSeedData, productsTesterSeedData,
   blogTesterSeedData, eventsTesterSeedData,
   couponsTesterSeedData, bidsTesterSeedData, ordersTesterSeedData,
@@ -240,6 +242,19 @@ const COLLECTION_MAP = {
   notifications: NOTIFICATIONS_COLLECTION,
   payouts: PAYOUT_COLLECTION,
   offers: OFFER_COLLECTION,
+  /*
+   * String literals, not constants, because SUPPORT_TICKET_COLLECTION,
+   * CATALOGUE_COLLECTION and SHIPMENT_COLLECTION are NOT re-exported from
+   * appkit's barrel -- only their features' own schema files declare them.
+   * Adding three barrel exports to fix a seeding gap is a public-API change
+   * for a private need, so the names are duplicated here with the source
+   * named beside each. If one is ever renamed, this is the site that breaks.
+   */
+  supportTickets: "supportTickets",          // features/support/schemas/firestore.ts:279
+  catalogueItems: "catalogueItems",          // features/catalogue/schemas/firestore.ts:18
+  procurementShipments: "procurementShipments", // features/shipments/schemas/firestore.ts:26
+  shipmentLots: "shipmentLots",
+  shipmentItems: "shipmentItems",
   blogPosts: BLOG_POSTS_COLLECTION,
   events: EVENTS_COLLECTION,
   eventEntries: EVENT_ENTRIES_COLLECTION,
@@ -290,6 +305,15 @@ const SEED_DATA_MAP = {
   // mapped below -- the PII half was wired and the loading half never was,
   // which is why the gap looked like support rather than an omission.
   offers: [...(offersSeedData ?? []), ...(offersTesterSeedData ?? [])],
+  // All four were unregistered like offers, all measured at 0 documents live.
+  // They are UNLISTED in the tester's tier map, which means PRESERVE -- so
+  // seeding them once persists across every future run rather than being
+  // wiped by the next tester:setup.
+  supportTickets: supportTicketsSeedData,
+  catalogueItems: catalogueSeedData,
+  procurementShipments: shipmentsSeedData,
+  shipmentLots: shipmentLotsSeedData,
+  shipmentItems: shipmentItemsSeedData,
   blogPosts: [...(blogPostsSeedData || []), ...(blogTesterSeedData || [])],
   events: [...(eventsSeedData || []), ...(eventsTesterSeedData || [])],
   eventEntries: eventEntriesSeedData,
