@@ -190,24 +190,6 @@ export const authored: Record<string, AuthoredCase> = {
       "Every preview shows its picture at the same size as its neighbours, at both widths. An empty white or bordered box where a photo should be is the failure, and it hits every clickable image tile in the app at once.",
     endResult: "Leave the editor without saving.",
   },
-  "checklist-selling-listing-a-product-media-upload-images-capped-at-5": {
-    roles: ["seller"],
-    startPage: "/store/products/new",
-    steps: [
-      "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new and read the stated image limit before uploading anything.",
-      "Upload public/test-media/sample-image.png repeatedly, counting the previews after each.",
-      "Continue until an upload is refused.",
-      "Read the message and the preview count at that point.",
-      "Compare the count against the limit the form stated.",
-    ],
-    inputs: { image: "public/test-media/sample-image.png" },
-    expectedBehaviour:
-      "The number the form STATES is the number it enforces. This case exists to catch a disagreement between them: a label saying five against a limit of ten, or the reverse, is a promise the form does not keep — and the checklist label itself says five while the shared limits module is the authority.",
-    expectedUiState:
-      "Uploads are accepted up to the stated limit and the next is refused with a readable message. The refusal count equals the stated limit exactly. If the two disagree, record BOTH numbers — which one is wrong is a judgement for the reader, not for the tester.",
-    endResult: "Leave the editor without saving.",
-  },
   "checklist-selling-listing-a-product-media-upload-video-duration": {
     roles: ["seller"],
     startPage: "/store/products/new",

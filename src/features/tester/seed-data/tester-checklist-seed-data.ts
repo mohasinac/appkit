@@ -2203,12 +2203,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Fixed 2026-08-21 — a fresh upload can briefly 404 while the Firestore doc and Storage object finish propagating; the thumbnail now retries with backoff instead of latching a permanent broken-image placeholder. Try uploading 2-3 images back-to-back on a slower connection to see the retry in action.",
           href: "/store/products/new",
         },
-        {
-          key: "media-upload-images-capped-at-5",
-          label: "The product gallery upload UI caps at 5 images (not 10) and its label reads \"up to 5\"",
-          description: "Fixed 2026-08-21 — the UI previously advertised/allowed up to 10 images while the server schema only ever accepted 5, so a 6th+ image silently failed validation with no clear reason.",
-          href: "/store/products/new",
-        },
+        /*
+         * REMOVED 2026-09-11 — `media-upload-images-capped-at-5`.
+         *
+         * It asserted the gallery caps at "5 images (not 10)". The cap was
+         * raised to 10 (`PRODUCT_MAX_IMAGES`, shared/media/limits.ts:37) and the
+         * `selling/media-limits` page asserts the opposite in its own label:
+         * "The 10th gallery image uploads — the 5th used to fail with a 400".
+         *
+         * So this case documented the OLD behaviour as the expectation. It
+         * would fail against correct code, and anyone "fixing" the product to
+         * satisfy it would re-break ten-image support. Its id encoded the wrong
+         * number too, so correcting the label alone would still mislead.
+         *
+         * The invariant it really tested — the stated limit equals the enforced
+         * limit — survives in `media-eleventh-image-refused-client-side`, which
+         * requires the refusal to name the limit ("You can upload up to 10
+         * images."). Nothing was lost.
+         */
         {
           key: "media-upload-video-duration",
           label: "Attaching a directly-uploaded video file during listing captures its duration automatically and saves without a validation error; attaching a YouTube or external video URL also saves fine without needing a duration",
