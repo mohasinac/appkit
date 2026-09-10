@@ -27,6 +27,19 @@
  */
 
 import type { AuthoredCase } from "./_types";
+import { MEDIA_ENDPOINTS } from "../../../../constants/api-endpoints";
+
+/*
+ * The endpoint comes from the registry, not a literal.
+ *
+ * These cases genuinely need to name it — the tester is told to open the
+ * network panel and read that exact request, and "the signing request" would be
+ * too vague for R8, which requires literal values. But a pasted copy of the path
+ * is a second definition that silently rots the day the route moves, leaving a
+ * tester hunting a request that no longer exists and reporting a bug that is
+ * really a stale case. Interpolating keeps it precise AND single-sourced.
+ */
+const SIGN = MEDIA_ENDPOINTS.SIGN;
 
 const SIGN_IN_SELLER = "Sign in as tyson@beybladearena.in / TempPass123!.";
 
@@ -61,13 +74,13 @@ export const authored: Record<string, AuthoredCase> = {
       "Open the Media section and read the size limit stated next to 'Main Image'.",
       "Choose public/test-media/oversized.png for the Main Image and start a timer. (The batch generates this file — it is >10 MB of incompressible noise and deliberately not committed.)",
       "Read the message that appears and note how long it took.",
-      "Open the browser network panel and check whether any request to /api/media/sign was made.",
+      `Open the browser network panel and check whether any request to ${SIGN} was made.`,
     ],
     inputs: { image: "public/test-media/oversized.png", limitMb: 10 },
     expectedBehaviour:
       "A file over the limit is refused BEFORE any bytes leave the browser. The point is the seller's time: a 12 MB upload that travels, then finalises, then fails validation has taken a minute to tell them something the form already knew when they picked the file. The limit is also stated up front rather than only in the refusal.",
     expectedUiState:
-      "The refusal is immediate (well under a second) and reads 'File size must be less than 10MB', naming the actual size. No /api/media/sign request appears in the network panel. The field keeps whatever image it had before.",
+      `The refusal is immediate (well under a second) and reads 'File size must be less than 10MB', naming the actual size. No ${SIGN} request appears in the network panel. The field keeps whatever image it had before.`,
     expectedData: { signRequestsMade: 0 },
     endResult: "Leave without saving; nothing was uploaded.",
   },
@@ -146,7 +159,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /store/products/new and switch to the advanced form.",
       "Open the Media section and open the video panel's 'Upload' tab.",
       "Choose public/test-media/sample-video.mp4 and wait for it to finish.",
-      "Open the browser network panel and read the status of the /api/media/sign request.",
+      `Open the browser network panel and read the status of the ${SIGN} request.`,
       "Read whether a poster frame and a duration appear.",
       "Publish with Title 'Video Upload Probe', Description 'Checking the seller video upload path end to end.', Category 'Beyblade Burst', Price 499, then open the public page and play the video.",
     ],
@@ -154,7 +167,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The dedicated video panel uploads through the same signed-URL flow as the gallery. This path returned HTTP 500 until 2026-09 because the panel omitted the category from the upload context and the filename generator threw on it — so every seller video upload from this panel failed while the gallery path worked. This case is that defect's regression test.",
     expectedUiState:
-      "/api/media/sign returns 200, not 400 or 500. A poster frame and a duration appear. The published page plays the video.",
+      `${SIGN} returns 200, not 400 or 500. A poster frame and a duration appear. The published page plays the video.`,
     expectedData: { signStatus: 200 },
     endResult:
       "The video survives a reload of the public page. Delete the product afterwards.",
