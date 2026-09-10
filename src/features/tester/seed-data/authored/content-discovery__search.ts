@@ -44,19 +44,32 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
+      // The batch seeds TWO probe rows: product-{{w}}-draft-probe (status
+      // "draft") and product-{{w}}-archived-probe (status "archived"), both
+      // titled so the query below matches them. Without a KNOWN unpublished row
+      // the case cannot distinguish "drafts are correctly hidden" from "there
+      // were no drafts" — a tester reported exactly that: the suggestion payload
+      // carries no status field to inspect, and no draft existed to probe with.
       "Open / in a private window with no session.",
-      "Click into the header search and type beyblade.",
+      "Click into the header search and type draftprobe.",
       "Read every suggestion and note its title.",
+      "Check specifically whether product-{{w}}-draft-probe or product-{{w}}-archived-probe appear.",
+      "Now type beyblade and read every suggestion.",
       "Open each suggestion in turn and read the page it lands on.",
       "Note any that 404s or shows an unpublished listing.",
     ],
-    inputs: { query: "beyblade" },
+    inputs: {
+      query: "beyblade",
+      probeQuery: "draftprobe",
+      draftProduct: "product-{{w}}-draft-probe",
+      archivedProduct: "product-{{w}}-archived-probe",
+    },
     expectedBehaviour:
       "Suggestions are filtered to published, publicly-visible listings. A status filter applied only when the caller explicitly asks for one is absent here, because a typeahead rarely asks — which is exactly how draft rows reach a public suggestion list.",
     expectedUiState:
-      "Every suggestion opens a real published listing. None 404s, none opens a draft or archived listing, and none names a tester sandbox item for a signed-out visitor.",
-    expectedData: { draftSuggestions: 0 },
-    endResult: "Read-only; nothing persists.",
+      "Searching 'draftprobe' returns NEITHER probe row — that is the real test, because both exist and both match the term. Then every 'beyblade' suggestion opens a real published listing: none 404s, none opens a draft or archived listing, and none names a tester sandbox item for a signed-out visitor.",
+    expectedData: { draftSuggestions: 0, probeRowsSuggested: 0 },
+    endResult: "Read-only; both probe rows are removed when the batch ends.",
   },
   "checklist-content-discovery-search-search-prefix-match": {
     roles: ["guest"],
@@ -114,18 +127,26 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/products",
     steps: [
-      "Open /products in a private window.",
+      // PRECONDITION FIRST. Without it a broken sort reads as "inconclusive"
+      // instead of "fail" — which is exactly what happened: a tester reported
+      // sorts=price and sorts=-price returning an IDENTICAL order with no
+      // search term at all, and had no way to record that as a verdict.
+      "Open /products in a private window with NO search term.",
+      "Set the sort to 'Price: low to high' and read the first three prices in order.",
+      "Set the sort to 'Price: high to low' and read the first three prices again.",
+      "If those two orders are identical, STOP and answer NO — sort is broken before search is involved, and say so. Do not continue.",
       "Type beyblade in the search field and click 'Search'.",
       "Read the card order and note the sort dropdown's selection.",
-      "Change the sort to price, low to high.",
+      "Change the sort to 'Price: low to high'.",
       "Read the card order, the URL and the search field.",
       "Reload the page and read all three again.",
     ],
-    inputs: { query: "beyblade", sort: "Price: low to high" },
+    inputs: { query: "beyblade", sort: "Price: low to high", sortReverse: "Price: high to low" },
     expectedBehaviour:
       "Changing the sort re-orders the current results and keeps the term. Both live in the URL, so a reload reproduces the same page — and the sort field must be one the query can actually sort on, since an unsortable field is dropped and the dropdown silently reorders nothing.",
     expectedUiState:
-      "Prices ascend down the page and the search field still holds 'beyblade'. The URL carries both. After the reload the order and the term are unchanged. A dropdown selection that changes no order at all is the dropped-sort failure.",
+      "With no search term, ascending and descending produce DIFFERENT orders — that is the precondition. Then, with the term applied, prices ascend down the page and the search field still holds 'beyblade'. The URL carries both. After the reload the order and the term are unchanged. A dropdown selection that changes no order at all is the dropped-sort failure, and it is a NO rather than an unanswerable.",
+    expectedData: { ascendingDiffersFromDescending: true },
     endResult: "Read-only; nothing persists beyond the URL.",
   },
   "checklist-content-discovery-search-search-keeps-facets": {
@@ -143,8 +164,8 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "Price, tag and availability all narrow alongside the term. A facet that renders and counts toward the badge while changing nothing is inert — that happens when it emits a field the query allowlist does not carry, and nothing raises.",
     expectedUiState:
-      "Each facet visibly reduces the count and every card respects it. The availability tab changes which rows appear. A facet that leaves the count identical while the filter badge increments is the failure.",
-    expectedData: { inertFacetCount: 0 },
+      "Each facet visibly reduces the count and every card respects it. The availability tab changes which rows appear. A facet that leaves the count identical while the filter badge increments is the failure. RECORD ALL THREE COUNTS SEPARATELY — price, tag, availability. This case names those three specifically; exercising a different facet (category, say) and reporting a partial pass answers a question nobody asked. If one of the three cannot be reached, answer NO or null for that reason rather than passing on the strength of the other two.",
+    expectedData: { inertFacetCount: 0, facetsExercised: 3 },
     endResult: "Read-only; nothing persists beyond the URL.",
   },
   "checklist-content-discovery-search-search-case-and-accents": {
@@ -205,10 +226,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/faqs",
     steps: [
       "Open /faqs in a private window and read the category list.",
-      "Open the Shipping category page.",
+      "CLICK INTO the Shipping category — this case is about the category PAGE, so reading the counters on /faqs is not an answer to it.",
       "Read the questions listed and expand one to read its answer.",
       "Read the address bar.",
       "Open a second category page and read its questions.",
+      "Compare the two lists of questions against each other.",
     ],
     expectedBehaviour:
       "Each category has its own page, keyed on the category's slug, rendering only its questions. Two category pages showing the same questions means the slug is not reaching the query.",
@@ -361,18 +383,25 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/products",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/products and sort by oldest first.",
-      "Read the title of the oldest listing.",
-      "Search for a distinctive word from that title.",
-      "Read whether that listing is returned.",
-      "Repeat with the newest listing's title as a comparison.",
+      // The batch seeds product-{{w}}-untokenised with NO searchTokens field —
+      // a stand-in for a record written before the token field existed. On a
+      // freshly-seeded catalogue every row carries current tokens, so without
+      // this fixture the case is unanswerable by construction, which is exactly
+      // what a tester reported: "the catalogue was freshly seeded... there is no
+      // older record to probe with".
+      "Open /admin/products and search for the exact word 'untokenised'.",
+      "Read whether product-{{w}}-untokenised is returned.",
+      "Search for a distinctive word from any ordinary seeded listing's title.",
+      "Read whether that one is returned.",
+      "Compare the two results.",
     ],
+    inputs: { untokenisedProduct: "product-{{w}}-untokenised", query: "untokenised" },
     expectedBehaviour:
       "Search is backed by a normalised token field written on save. Records created before that field existed have no tokens, so they are unfindable — the fix is a backfill, and this case is what detects whether one is needed.",
     expectedUiState:
-      "Both the oldest and the newest listing are returned by a word from their own titles. The newest being findable while the oldest is not is the signature of missing tokens on older rows, not of a broken search.",
+      "BOTH listings are returned by a word from their own titles. The ordinary one being findable while product-{{w}}-untokenised is not is the signature of missing tokens on older rows, not of a broken search — and it means a backfill is owed.",
     expectedData: { oldRecordFound: true },
     endResult:
-      "Read-only; nothing persists. Testing only recent records would pass this case while the backfill gap remains.",
+      "Read-only; the fixture is removed when the batch ends. Testing only recent records would pass this case while the backfill gap remains.",
   },
 };
