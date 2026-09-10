@@ -185,14 +185,14 @@ const {
   productsArtSeedData, productsStickersSeedData,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
   couponsSeedData, couponUsageSeedData,
-  eventsSeedData, eventEntriesSeedData, payoutsSeedData,
+  eventsSeedData, eventEntriesSeedData, payoutsSeedData, offersSeedData,
   notificationsSeedData, blogPostsSeedData,
   carouselsSeedData, carouselSlidesSeedData, homepageSectionsSeedData,
   siteSettingsSeedData, faqSeedData,
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData,
-  testerChecklistSeedData, cartsTesterSeedData,
+  testerChecklistSeedData, cartsTesterSeedData, offersTesterSeedData,
   storesTesterSeedData, categoriesTesterSeedData, productsTesterSeedData,
   blogTesterSeedData, eventsTesterSeedData,
   couponsTesterSeedData, bidsTesterSeedData, ordersTesterSeedData,
@@ -202,7 +202,7 @@ const {
   PRODUCT_COLLECTION, ORDER_COLLECTION, REVIEW_COLLECTION, BID_COLLECTION,
   COUPONS_COLLECTION, CAROUSELS_COLLECTION, CAROUSEL_SLIDES_COLLECTION,
   HOMEPAGE_SECTIONS_COLLECTION, SITE_SETTINGS_COLLECTION, FAQS_COLLECTION,
-  NOTIFICATIONS_COLLECTION, PAYOUT_COLLECTION, BLOG_POSTS_COLLECTION,
+  NOTIFICATIONS_COLLECTION, PAYOUT_COLLECTION, OFFER_COLLECTION, BLOG_POSTS_COLLECTION,
   EVENTS_COLLECTION, EVENT_ENTRIES_COLLECTION, SESSION_COLLECTION,
   CART_COLLECTION,
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
@@ -239,6 +239,7 @@ const COLLECTION_MAP = {
   faqs: FAQS_COLLECTION,
   notifications: NOTIFICATIONS_COLLECTION,
   payouts: PAYOUT_COLLECTION,
+  offers: OFFER_COLLECTION,
   blogPosts: BLOG_POSTS_COLLECTION,
   events: EVENTS_COLLECTION,
   eventEntries: EVENT_ENTRIES_COLLECTION,
@@ -282,6 +283,13 @@ const SEED_DATA_MAP = {
   faqs: faqSeedData,
   notifications: notificationsSeedData,
   payouts: payoutsSeedData,
+  // Both halves: the 10 marketplace offers AND the tester-sandbox one. The
+  // manifest already combined them (manifest.ts:294); only the LOADER was
+  // missing, so `offers` never appeared in `appkit-seed status` and no run has
+  // ever had an offer in Firestore. OFFER_PII_FIELDS was already imported and
+  // mapped below -- the PII half was wired and the loading half never was,
+  // which is why the gap looked like support rather than an omission.
+  offers: [...(offersSeedData ?? []), ...(offersTesterSeedData ?? [])],
   blogPosts: [...(blogPostsSeedData || []), ...(blogTesterSeedData || [])],
   events: [...(eventsSeedData || []), ...(eventsTesterSeedData || [])],
   eventEntries: eventEntriesSeedData,
