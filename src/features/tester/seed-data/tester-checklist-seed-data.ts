@@ -2734,6 +2734,92 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "product-upload-details",
+      pageLabel: "Product media — crop, refusals, ordering and the video path",
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "main-image-crop-applies",
+          label: "The main-image crop is applied to what gets UPLOADED, not just previewed",
+          description:
+            "BEFORE: a cropper that shows a selection and stores the original is worse than none — the seller believes they framed the photo and the marketplace shows something else. AFTER: crop to the left half, confirm, and the stored thumbnail shows the left half.",
+        },
+        {
+          key: "oversize-image-refused-client-side",
+          label: "An image over 10 MB is refused BEFORE any bytes leave the browser",
+          description:
+            "BEFORE: a 12 MB upload that travels, finalises and then fails validation has taken a minute to say what the form knew when the file was picked. AFTER: immediate refusal reading the size limit, and no /api/media/sign request at all.",
+        },
+        {
+          key: "disallowed-type-refused",
+          label: "An SVG is refused, and the field still works immediately afterwards",
+          description:
+            "SVG is outside the allowed image types on purpose — a document format that can carry script, served from our own origin. Refusing one file must not wedge the control: the next PNG has to upload without a reload.",
+        },
+        {
+          key: "gallery-order-persists",
+          label: "Re-ordering gallery images survives Publish and re-opening the editor",
+          description:
+            "Gallery order is the seller decision about which angle a buyer sees second, so it is stored rather than merely displayed. Order that holds in the form and resets on reload means the array is rebuilt from upload time instead of from the arrangement.",
+        },
+        {
+          key: "main-image-does-not-collide-with-gallery",
+          label: "The main image and the first gallery image do not overwrite each other",
+          description:
+            "Filenames are content-derived with no timestamp, so two uploads computing the same index write the same storage path and the second silently replaces the first — the seller watches one of their two pictures vanish. Main image is index 1; the gallery starts at 2.",
+        },
+        {
+          key: "video-upload-succeeds",
+          label: "A video uploaded from the dedicated video panel saves and plays",
+          description:
+            "BEFORE: /api/media/sign returned 500 because the panel omitted the category from the upload context and the filename generator threw on it — every seller video upload from this panel failed while the gallery path worked. AFTER: sign returns 200, a poster frame and duration appear, and the published page plays it.",
+        },
+      ],
+    },
+    {
+      pageKey: "quick-add-minimum-details",
+      pageLabel: "Quick add — the short form, and what WhatsApp shows",
+      href: "/store/products/new",
+      cases: [
+        {
+          key: "quick-form-is-the-default",
+          label: "Creating an ordinary product opens the SHORT form, with the full form one click away",
+          description:
+            "Most listings need six fields and the sectioned form asks for thirty. /store/products/new opens Quick add; Show all fields (advanced) reaches the rest. Non-standard types open the sectioned form directly because they carry fields the short form has no room for.",
+        },
+        {
+          key: "publish-with-the-minimum",
+          label: "The short form alone can publish a real, buyable listing",
+          description:
+            "If it cannot, it is a decoy: the seller fills it, is refused, and has to learn the long form anyway — having done the work twice.",
+        },
+        {
+          key: "whatsapp-shows-the-same-fields",
+          label: "Everything WhatsApp shows was already asked for by the short form",
+          description:
+            "The catalog push sends title, price, image, condition and stock. That is the quick form field set, which is why the short form is the right shape — a seller who fills only it has supplied everything a WhatsApp buyer will see.",
+        },
+        {
+          key: "advanced-flip-keeps-values",
+          label: "Switching to the full form keeps everything already typed",
+          description:
+            "Losing values on the way to the full form punishes the seller for outgrowing the short one, and teaches them to start with the long form every time — which defeats the point of having a short one.",
+        },
+        {
+          key: "condition-options-are-all-saveable",
+          label: "Every Condition option the form offers can actually be saved",
+          description:
+            "BEFORE: the dropdown lists Like New, Good and Fair while the server accepts only new/used/refurbished/broken, so picking the option that honestly describes the item is refused with nothing on screen saying which options are real. AFTER: every listed option publishes.",
+        },
+        {
+          key: "description-requirement-is-honest",
+          label: "The Description field label agrees with what the save actually requires",
+          description:
+            "BEFORE: the field reads Brief description (optional) and is never validated client-side, while the server demands 20+ characters — so a field marked optional is refused after the seller commits, as a toast, with no error on the field. AFTER: label and behaviour agree and a short entry is caught inline.",
+        },
+      ],
+    },
+    {
       pageKey: "media-limits",
       pageLabel: "Media \u2014 ten images and one video, on every listing type",
       href: "/store/products/new",

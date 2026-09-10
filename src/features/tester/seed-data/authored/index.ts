@@ -123,6 +123,8 @@ import { authored as a_selling__seller_orders } from "./selling__seller-orders";
 import { authored as a_selling__seller_marketing_extras } from "./selling__seller-marketing-extras";
 import { authored as a_selling__listing_a_product } from "./selling__listing-a-product";
 import { authored as a_selling__seller_listing_types } from "./selling__seller-listing-types";
+import { authored as a_selling__product_upload_details } from "./selling__product-upload-details";
+import { authored as a_selling__quick_add_minimum_details } from "./selling__quick-add-minimum-details";
 import { authored as a_seo__canonical_and_host } from "./seo__canonical-and-host";
 import { authored as a_seo__sitemap_and_robots } from "./seo__sitemap-and-robots";
 import { authored as a_seo__page_metadata } from "./seo__page-metadata";
@@ -232,6 +234,8 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_selling__seller_marketing_extras,
   ...a_selling__listing_a_product,
   ...a_selling__seller_listing_types,
+  ...a_selling__product_upload_details,
+  ...a_selling__quick_add_minimum_details,
   ...a_seo__canonical_and_host,
   ...a_seo__sitemap_and_robots,
   ...a_seo__page_metadata,
