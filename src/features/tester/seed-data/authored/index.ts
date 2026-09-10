@@ -37,6 +37,7 @@ import { authored as a_admin__catalog_listings } from "./admin__catalog-listings
 import { authored as a_admin__orders_fulfillment } from "./admin__orders-fulfillment";
 import { authored as a_admin__users_trust } from "./admin__users-trust";
 import { authored as a_admin__site_system } from "./admin__site-system";
+import { authored as a_admin__bug_hunter_rewards } from "./admin__bug-hunter-rewards";
 import { authored as a_admin__category_brand_authoring } from "./admin__category-brand-authoring";
 import { authored as a_admin__uncovered_admin_pages } from "./admin__uncovered-admin-pages";
 import { authored as a_admin__bans_and_trust } from "./admin__bans-and-trust";
@@ -145,6 +146,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__orders_fulfillment,
   ...a_admin__users_trust,
   ...a_admin__site_system,
+  ...a_admin__bug_hunter_rewards,
   ...a_admin__category_brand_authoring,
   ...a_admin__uncovered_admin_pages,
   ...a_admin__bans_and_trust,
