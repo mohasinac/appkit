@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useToast } from "../../../ui";
+import { useOptionalSession } from "../../../react/contexts/SessionContext";
+import { isAdminUser, isTesterUser } from "../../auth/role-predicates";
 import type {
   ProductItem,
   ProductListResponse,
@@ -86,14 +88,51 @@ export function useProducts<T extends ProductItem = ProductItem>(
   }
   const qs = sp.toString();
 
+  /*
+   * 🛑 A TESTER MUST REFETCH; EVERYONE ELSE MUST KEEP THE CACHED SSR PAINT.
+   *
+   * Sandbox rows are correctly hidden from the public. But the SSR listing views
+   * pass no `viewer` to `listPublicProducts`, so the server-rendered grid is the
+   * anonymous one for EVERY visitor — and with `initialData` + `staleTime:
+   * Infinity` the client never refetches, so a signed-in tester saw a catalogue
+   * with no sandbox fixtures in it, on every listing page. The items were
+   * reachable by direct URL, which is what made it look like a data problem
+   * rather than a visibility one.
+   *
+   * The fix is NOT to read the session in those SSR views. `getServerSessionUser`
+   * is a dynamic API, and calling it there would make every public listing page
+   * per-request — no caching, a billed invocation per visitor, and every
+   * `revalidate` silently overridden. That is Root Cause #82, and paying it for a
+   * testing affordance would be a poor trade.
+   *
+   * `/api/products` ALREADY resolves the session and passes `viewer`. So the only
+   * thing missing was a reason for the client to ask again: the query key now
+   * carries the viewer class, giving testers their own cache entry, and their
+   * `staleTime` is not frozen. Anonymous visitors keep the cached SSR data
+   * untouched and issue no extra request.
+   *
+   * `useOptionalSession` rather than `useAuth()` on purpose — `useSession`
+   * THROWS outside a provider, and making a public appkit hook require one would
+   * be a breaking contract change (Root Cause #20). Absent provider degrades to
+   * "not a tester", which is the fail-closed answer.
+   */
+  const session = useOptionalSession();
+  const viewer = session?.user;
+  const canSeeTestData = isTesterUser(viewer) || isAdminUser(viewer);
+
   const query = useQuery<ProductListResponse>({
-    queryKey: ["products", qs],
+    queryKey: ["products", qs, canSeeTestData ? "with-test-data" : "public"],
     queryFn: () =>
       apiClient.get<ProductListResponse>(
         `${PRODUCT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
       ),
-    initialData: opts?.initialData,
-    staleTime: opts?.staleTime ?? (opts?.initialData != null ? Infinity : 0),
+    // The SSR paint is the anonymous view, so it is only a valid starting point
+    // for an anonymous viewer. Handing it to a tester would show them the very
+    // rows this refetch exists to reveal.
+    initialData: canSeeTestData ? undefined : opts?.initialData,
+    staleTime:
+      opts?.staleTime ??
+      (!canSeeTestData && opts?.initialData != null ? Infinity : 0),
     enabled: opts?.enabled,
   });
 

@@ -596,6 +596,22 @@ export function useSession(): SessionContextValue {
   return context;
 }
 
+/**
+ * The session if a provider is mounted, `null` if not — never throws.
+ *
+ * `useSession` throwing is right for a component that genuinely cannot work
+ * signed-out. It is wrong for library code that merely wants to ADJUST for the
+ * viewer, because requiring a provider there turns an optional refinement into a
+ * breaking contract change for every consumer (Root Cause #20).
+ *
+ * Use this only where "no provider" has a sensible, fail-closed answer — e.g.
+ * `useProducts`, which treats an absent session as "not a tester" and keeps the
+ * public cached view.
+ */
+export function useOptionalSession(): SessionContextValue | null {
+  return useContext(SessionContext) ?? null;
+}
+
 export function useAuth() {
   const { user, loading, refreshUser } = useSession();
   return { user, loading, refreshUser };

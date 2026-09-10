@@ -142,7 +142,29 @@ export function ImageLightbox({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") { onClose(); return; }
+      /*
+       * Escape unwinds ONE level: fullscreen first, the lightbox second.
+       *
+       * Unconditionally calling `onClose()` meant Escape in fullscreen tore the
+       * whole lightbox down while the browser was natively exiting fullscreen at
+       * the same moment — the user asked to leave fullscreen and lost the image
+       * they were looking at. The Exit-fullscreen BUTTON behaved correctly, which
+       * is what made this read as a keyboard quirk rather than a bug.
+       *
+       * Exiting explicitly rather than relying on the browser's own handling: the
+       * `fullscreenchange` listener above is what clears `isFullscreen`, so going
+       * through the same path keeps the button label and this state in agreement
+       * whichever way the user leaves.
+       */
+      if (e.key === "Escape") {
+        if (isFullscreen) {
+          const doc = document as WebkitFullscreenDocument;
+          (document.exitFullscreen?.() ?? doc.webkitExitFullscreen?.())?.catch?.(() => {});
+          return;
+        }
+        onClose();
+        return;
+      }
       if (e.key === "ArrowLeft") { navigate(-1); return; }
       if (e.key === "ArrowRight") { navigate(1); return; }
       if (e.key === "+") { adjustZoom(ZOOM_STEP); return; }
@@ -150,7 +172,10 @@ export function ImageLightbox({
       if (e.key === "r" || e.key === "R") { setRotation((r) => (r + 90) % 360); return; }
       if (e.key === "0") { setZoom(100); setRotation(0); return; }
     },
-    [onClose, navigate, adjustZoom],
+    // `isFullscreen` is a real dependency now — Escape branches on it, and a
+    // stale closure would send the user back to the pre-fix behaviour exactly
+    // when they are in fullscreen.
+    [onClose, navigate, adjustZoom, isFullscreen],
   );
 
   // Focus overlay on open for keyboard to work
