@@ -170,12 +170,27 @@ function filterGroups<T extends SidebarNavGroup>(
   navConfig: Record<string, { enabled: boolean }> | undefined,
   permissions: string[] | null | undefined,
 ): T[] {
-  // null permissions = admin (show everything); undefined = no filtering (backwards compat)
-  if (permissions === null && !navConfig) return groups;
+  /*
+   * `permissions === null` MEANS ADMIN, and that must hold whether or not a
+   * navConfig exists.
+   *
+   * The early return below encoded the convention correctly and then applied it
+   * only when `!navConfig`. The moment site settings carried ANY nav config,
+   * an admin fell through to `filterNavItems(..., undefined)` — and
+   * `undefined?.includes(x)` is falsy, so every item carrying a
+   * `requiredPermission` was dropped. The Admin Panel sidebar rendered empty
+   * while every admin page stayed reachable by URL.
+   *
+   * Passing `isAdmin` keeps the admin's navConfig toggles working (disabling an
+   * entry is a configuration decision, not a permission) while granting the
+   * permissions an admin implicitly holds.
+   */
+  const isAdmin = permissions === null;
+  if (isAdmin && !navConfig) return groups;
   return groups
     .map((group) => ({
       ...group,
-      items: filterNavItems(group.items, navConfig, permissions ?? undefined),
+      items: filterNavItems(group.items, navConfig, permissions ?? undefined, isAdmin),
     }))
     .filter((group) => group.items.length > 0) as T[];
 }

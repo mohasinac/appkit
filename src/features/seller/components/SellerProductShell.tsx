@@ -456,6 +456,13 @@ function StepMedia({
           upload(file, "products", true, {
             type: "product-video",
             name: values.title ?? "product",
+            // `category` is REQUIRED — generateProductVideoFilename slugifies it,
+            // and slugify(undefined) threw `Cannot read properties of undefined
+            // (reading 'toLowerCase')` inside the generator, surfacing as a 500
+            // from /api/media/sign. Every product video upload from this panel
+            // failed that way; ProductForm's gallery path passed it and worked,
+            // which is why only the dedicated video tab was broken.
+            category: values.category || "uncategorized",
             store: storeSlug,
           })
         }

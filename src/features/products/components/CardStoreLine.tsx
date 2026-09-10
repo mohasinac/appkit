@@ -36,14 +36,37 @@ export interface CardStoreLineProps {
   className?: string;
 }
 
+/**
+ * `store-beyblade-arena` → `Beyblade Arena`.
+ *
+ * The slug fallback was described as "readable", and next to a raw Firestore id
+ * it is — but a buyer reading "by store-beyblade-arena" under a product does not
+ * see a readable name, they see a leaked identifier. Pre-order and auction
+ * documents do not denormalize `storeName`, so this fallback is what a large
+ * share of cards actually render, on every listing page.
+ *
+ * Humanising here fixes all six card variants at once and needs no data change.
+ * Denormalising `storeName` onto those documents is the better long-term fix and
+ * would simply stop this path being reached.
+ */
+function humanizeStoreSlug(slug: string): string {
+  return slug
+    .replace(/^store-/, "")
+    .split("-")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 export function CardStoreLine({ storeName, storeId, className }: CardStoreLineProps) {
   if (!storeId && !storeName) return null;
 
   // `safeDisplayName` also guards the encrypted-value case: a PII-ciphertext
   // string reaching a card must render as a label, never as `enc:v1:…`.
-  // `storeId` IS the store slug in this codebase, so it is a readable last
-  // resort rather than an opaque key.
-  const seller = safeDisplayName(storeName, storeId ?? "Seller");
+  const seller = safeDisplayName(
+    storeName,
+    storeId ? humanizeStoreSlug(storeId) : "Seller",
+  );
 
   return (
     <Text className={className ?? "mt-0.5 text-[11px]"} color="faint">

@@ -22,6 +22,7 @@ import {
   validateMediaFilename,
   type MediaFilenameContext,
 } from "../../../../utils/id-generators";
+import { normalizeError } from "../../../../errors/normalize";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
 /**
@@ -139,7 +140,40 @@ function indexGuard(
  * derive the SEO filename. Mirrors the inline logic that used to live
  * in /api/media/upload.
  */
-export function applyMediaContextGuards({
+/*
+ * 🛑 A MISSING CONTEXT FIELD IS A 400, NEVER A 500.
+ *
+ * The filename generators slugify their inputs, and `slugify(undefined)` throws
+ * `Cannot read properties of undefined (reading 'toLowerCase')` from deep inside
+ * `id-generators`. That escaped `applyMediaContextGuards` as an unhandled throw,
+ * so `/api/media/sign` answered 500 INTERNAL — twice in production — for what is
+ * simply a caller that forgot a field. The guards below validate `index` but
+ * have never validated the string fields, and enumerating every generator's
+ * requirements here would drift from the generators themselves (Root Cause #61).
+ *
+ * So the boundary catches instead: whatever the generator needs, failing to
+ * supply it now returns an actionable 400 naming the context type, and the real
+ * message is logged rather than shown. The caller-side fix still matters — this
+ * only guarantees the failure mode is honest.
+ */
+export function applyMediaContextGuards(input: GuardInput): GuardResult {
+  try {
+    return applyMediaContextGuardsInner(input);
+  } catch (err) {
+    const normalized = normalizeError(err);
+    const message = normalized.message;
+    return {
+      ok: false,
+      status: 400,
+      error:
+        `The upload context for "${input.context?.type ?? "unknown"}" is missing a required field. ` +
+        `Check every field its filename pattern needs.`,
+      details: { context: input.context?.type, thrown: message },
+    };
+  }
+}
+
+function applyMediaContextGuardsInner({
   detectedMime,
   context: ctx,
 }: GuardInput): GuardResult {
