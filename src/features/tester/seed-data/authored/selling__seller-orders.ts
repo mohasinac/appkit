@@ -207,6 +207,8 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Read-only; nothing persists.",
   },
   "checklist-selling-seller-orders-seller-new-order-notification-reaches-seller": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["buyer", "seller"],
     startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [

@@ -273,6 +273,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Read-only. If no rejected order exists, answer null rather than creating one — rejecting as fraud bans a real account for seven days.",
   },
   "checklist-buying-my-orders-order-lifecycle-emails-arrive": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [

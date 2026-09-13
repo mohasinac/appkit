@@ -434,6 +434,8 @@ export const authored: Record<string, AuthoredCase> = {
       "All four listings keep their type-specific fields. Restore any title that was changed.",
   },
   "checklist-buying-offers-notification-email-is-a-real-email": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [
