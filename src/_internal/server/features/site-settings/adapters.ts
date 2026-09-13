@@ -48,6 +48,26 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "actionConfig", // useAuthGate
   "background", // DashboardLayoutClient (background.light / .dark)
   "watermark", // MediaVideo, as the fallback behind effectiveWatermark
+  /*
+   * src/proxy.ts — the admin "disable a nav item and that route 404s" gate.
+   *
+   * 🛑 It was PRIVATE until 2026-09-13, justified by "read by
+   * app/[locale]/layout.tsx (RSC)". That was true once and stopped being true in
+   * Root Cause #82, which moved the gate OUT of the root layout (a dynamic API
+   * there made every page on the site uncacheable) and into the proxy. The
+   * proxy cannot do a Firestore read on the Edge, so it fetches
+   * /api/site-settings over HTTP — where a private field simply does not exist.
+   *
+   * The gate has therefore been a silent no-op ever since: getDisabledRoutes()
+   * reads `body.data.disabledRoutes`, gets undefined, and returns []. It fails
+   * OPEN, so nothing 404s that should not; the admin capability just does
+   * nothing. The stale comment on the private entry was the only trace.
+   *
+   * Publishing it is the right call rather than reverting the move: it is a
+   * list of route paths an admin has switched off, not a secret, and the
+   * alternative is putting a per-request Firestore read back on the Edge.
+   */
+  "disabledRoutes",
 ] as const;
 
 /** Everything else, with the reason it stays server-side. */
@@ -66,7 +86,6 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   "integrations", // analytics/tag IDs are injected server-side into markup, not fetched by the client
   "platformLimits", // server-enforced caps; no client reader
   "auctionConfig", // read by AuctionDetailPageView, a Server Component doing its own settings read
-  "disabledRoutes", // read by app/[locale]/layout.tsx (RSC) to gate routing
   "siteName", // delivered as an SSR prop / rendered server-side
   "tagline", // admin chrome only
   "motto", // rendered server-side
@@ -130,6 +149,11 @@ export function toPublicSiteSettings(
     actionConfig: doc.actionConfig,
     background: doc.background,
     watermark: doc.watermark,
+    // Defaulted to [] rather than passed through: src/proxy.ts fails OPEN on a
+    // missing value, so an absent field and an empty list already behave the
+    // same — but emitting `undefined` would drop the key from the JSON entirely
+    // and leave the next person wondering whether the projection ran at all.
+    disabledRoutes: doc.disabledRoutes ?? [],
     effectiveWatermark: opts?.effectiveWatermark,
   };
 }

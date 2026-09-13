@@ -48,6 +48,18 @@ export interface PublicSiteSettings {
   actionConfig?: SiteSettingsDocument["actionConfig"];
   background?: SiteSettingsDocument["background"];
   watermark?: SiteSettingsDocument["watermark"];
+  /**
+   * Routes an admin has switched off. Read by `src/proxy.ts`, which rewrites a
+   * disabled path to the 404 page.
+   *
+   * 🛑 Not optional, and always emitted (defaulted to `[]`). The proxy fetches
+   * this over HTTP and fails OPEN on a missing value, so the difference between
+   * "no routes disabled" and "the field never arrived" is invisible at runtime —
+   * which is exactly how this capability sat dead after Root Cause #82 moved the
+   * gate out of the root layout. A key that is always present makes the two
+   * distinguishable from the wire alone.
+   */
+  disabledRoutes: string[];
   /** Derived, not a stored field — the resolved marker → wordmark → text chain. */
   effectiveWatermark?: MediaVideoWatermark;
 }
