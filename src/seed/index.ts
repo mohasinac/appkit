@@ -190,6 +190,11 @@ export { supportTicketsSeedData } from "./support-tickets-seed-data";
 // folder on purpose) — re-exported here so every other seed consumer keeps one import surface.
 export {
   testerChecklistSeedData,
+  // 🛑 Adding a tester seed export means FOUR hops, not one: the tester barrel,
+  // THIS re-export, appkit/src/index.ts, and seed-cli's own import. Missing the
+  // middle two is silent — seed-cli logs "no seed data, skipping" and the run
+  // continues, which is exactly what happened on the first attempt here.
+  testerResponsesSeedData,
   storesTesterSeedData,
   categoriesTesterSeedData,
   productsTesterSeedData,

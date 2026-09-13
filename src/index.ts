@@ -1997,6 +1997,8 @@ export { faqSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // testerChecklistSeedData - Model for tester checklist seed data.
 export { testerChecklistSeedData } from "./seed/index";
+// testerResponsesSeedData - Seeded tester submissions behind the bug-hunter demo fixtures.
+export { testerResponsesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storesTesterSeedData - Model for the shared tester sandbox store seed data.
 export { storesTesterSeedData } from "./seed/index";
