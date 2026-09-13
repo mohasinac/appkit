@@ -122,6 +122,35 @@ export interface TesterChecklistItemDocument extends BaseDocument {
    * field to mean two different things.
    */
   endResult?: string;
+  /**
+   * The case's own author was unsure of its intent — the report flags the verdict
+   * so nobody reads it with more confidence than it earned.
+   *
+   * 🛑 These were UNDECLARED here until 2026-09-13, which is why the flag had
+   * never once fired: `fetch-cases.mjs` read them off the document, SKILL.md
+   * documented them and `record-verdicts.mjs` had a line to render them, but
+   * `group()` did not forward them and this interface did not admit them. Four
+   * hops right, two hops missing, and not one error anywhere. Root Cause #38.
+   */
+  needsReview?: boolean;
+  reviewNote?: string;
+  /**
+   * The case needs a channel an automated browser does not have — a real email
+   * inbox, or an interactive Google account. Always `null` in an automated run,
+   * by nature rather than by fault.
+   *
+   * 🛑 A PERMANENT FLOOR, not a backlog. Unflagged, these sit in the same
+   * "blocked" bucket as a case blocked by a genuine defect, so a raw blocked
+   * count mixes a constant with a signal and every run re-triages the same
+   * thirteen to rediscover none is a bug. Flagged, the report subtracts them.
+   *
+   * Never use it for a case that is merely hard, flaky or currently failing —
+   * that converts a defect into a documented non-test. See the three-kinds-of-
+   * null table in docs/TESTING-RIG-NOTES.md.
+   */
+  requiresHumanChannel?: boolean;
+  /** Which channel is missing, e.g. "real email inbox". Rendered in the report. */
+  humanChannelReason?: string;
   href?: string; // deep link to the real feature being tested
   order: number;
   // Admin-assigned test batch (1-based) — lets a tester work through ~10-50

@@ -51,6 +51,17 @@ interface CaseInput {
   expectedData?: Record<string, string | number | boolean>;
   /** What survives a RELOAD. The persistence oracle. */
   endResult?: string;
+  /** The author wrote steps but was unsure of the case's intent. */
+  needsReview?: boolean;
+  reviewNote?: string;
+  /**
+   * Needs a channel an automated browser has not got — a real inbox, or an
+   * interactive Google account. Always `null` in an automated run, by nature
+   * rather than by fault, so the report can subtract it instead of counting it
+   * as blockage. Never for a case that is merely hard or currently failing.
+   */
+  requiresHumanChannel?: boolean;
+  humanChannelReason?: string;
   href?: string;
 }
 
@@ -100,6 +111,25 @@ function group(
         expectedUiState: c.expectedUiState ?? authored?.expectedUiState,
         expectedData: c.expectedData ?? authored?.expectedData,
         endResult: c.endResult ?? authored?.endResult,
+        /*
+         * 🛑 This mapping is HAND-PICKED, so a field the overlay carries but
+         * nobody lists here dies right at this line — Root Cause #38, which the
+         * header of this very file warns about.
+         *
+         * `needsReview`/`reviewNote` were exactly that, from the day they were
+         * added until 2026-09-13: `fetch-cases.mjs` reads them off the Firestore
+         * item, SKILL.md documents them, and `record-verdicts.mjs` renders
+         * "the case's own author flagged it for review" in the report — but
+         * nothing ever put them ON the document, so the flag was permanently
+         * false and that report line had never printed once. Four hops correct,
+         * one hop missing, no error anywhere.
+         *
+         * When adding a field to AuthoredCase, add it HERE in the same commit.
+         */
+        needsReview: c.needsReview ?? authored?.needsReview,
+        reviewNote: c.reviewNote ?? authored?.reviewNote,
+        requiresHumanChannel: c.requiresHumanChannel ?? authored?.requiresHumanChannel,
+        humanChannelReason: c.humanChannelReason ?? authored?.humanChannelReason,
         // Every case gets a link: its own href, or the page's default —
         // guarantees "Go test this ->" always has somewhere real to send
         // the tester, even for cases nobody bothered to link individually.

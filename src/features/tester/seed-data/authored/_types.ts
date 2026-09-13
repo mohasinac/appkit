@@ -66,4 +66,28 @@ export interface AuthoredCase {
    */
   needsReview?: boolean;
   reviewNote?: string;
+  /**
+   * The case needs a channel an automated browser does not have — a real email
+   * inbox, or an interactive Google account. It is correct, it is worth keeping,
+   * and an automated run can never do anything with it but abstain.
+   *
+   * 🛑 This is a PERMANENT FLOOR, not a backlog. Without the flag those ~13 cases
+   * report `null` in every run forever and land in the same "blocked" bucket as a
+   * case blocked by a real defect — so a raw blocked count mixes a constant with
+   * a signal, and each run re-triages the same thirteen to rediscover that none
+   * of them is a bug. Flagged, the report can subtract them and say so.
+   *
+   * Deliberately distinct from the other two reasons a case yields no verdict —
+   * see the three-kinds-of-null table in docs/TESTING-RIG-NOTES.md. A missing
+   * fixture is a RIG fault and must be fixed; a case blocked by another defect is
+   * a PRODUCT fault and disappears when its cause does. Only this one is a
+   * permanent property of running headlessly, and collapsing the three is how a
+   * fixable gap hides inside an unfixable one.
+   *
+   * It must NEVER be used to excuse a case that is merely hard, flaky, or
+   * currently failing: that converts a defect into a documented non-test.
+   */
+  requiresHumanChannel?: boolean;
+  /** Which channel is missing, e.g. "real email inbox" / "interactive Google account". */
+  humanChannelReason?: string;
 }

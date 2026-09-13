@@ -31,6 +31,8 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-account-auth-signup-login-auth-email-links-single-use": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/forgot-password",
     steps: [
@@ -57,6 +59,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Account state after the second click is identical to after the first. divya.funko@gmail.com is back on TempPass123! by the final step — skipping that restore leaves the account unusable by every later case, since the seeder never resets an existing password.",
   },
   "checklist-account-auth-signup-login-auth-emails-sender-identity-and-inbox": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [
@@ -104,6 +108,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Reloading /user shows 'QA Signup Tester' and the address used. The account persists — this case creates a real row that a later teardown does not remove, which is why the address is numbered rather than fixed.",
   },
   "checklist-account-auth-signup-login-email-verify": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [
@@ -142,6 +148,8 @@ export const authored: Record<string, AuthoredCase> = {
       "No email arrives for nobody-here-12345@example.com. The two on-screen responses were indistinguishable, which is the whole point — a difference of any kind is an account-enumeration leak.",
   },
   "checklist-account-auth-signup-login-google-link-confirmation-shown": {
+    requiresHumanChannel: true,
+    humanChannelReason: "interactive Google account",
     roles: ["buyer"],
     startPage: "/user",
     steps: [
@@ -158,6 +166,8 @@ export const authored: Record<string, AuthoredCase> = {
       "After reload the green confirmation is still there and the blue prompt has not returned. Needs a Google account to reach — answer null with that reason rather than guessing if none is available.",
   },
   "checklist-account-auth-signup-login-google-link-conflict-rejected": {
+    requiresHumanChannel: true,
+    humanChannelReason: "interactive Google account",
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [
@@ -180,6 +190,8 @@ export const authored: Record<string, AuthoredCase> = {
       "After reload vivaan.kapoor@gmail.com has no Google link and rehan.sheikh@gmail.com still has G. Unlink G from rehan.sheikh@gmail.com afterwards. Needs a real Google account — answer null if none is available.",
   },
   "checklist-account-auth-signup-login-google-link-different-email": {
+    requiresHumanChannel: true,
+    humanChannelReason: "interactive Google account",
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [
@@ -201,6 +213,8 @@ export const authored: Record<string, AuthoredCase> = {
       "After reload the link persists and the primary email is still vivaan.kapoor@gmail.com. Unlink afterwards. Needs a second Google account — answer null if none is available.",
   },
   "checklist-account-auth-signup-login-google-link-existing": {
+    requiresHumanChannel: true,
+    humanChannelReason: "interactive Google account",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [
@@ -224,6 +238,8 @@ export const authored: Record<string, AuthoredCase> = {
       "One account exists for that email, not two, and it kept its wishlist. Needs a Google account whose address you can also register with — answer null if none is available.",
   },
   "checklist-account-auth-signup-login-google-oauth": {
+    requiresHumanChannel: true,
+    humanChannelReason: "interactive Google account",
     roles: ["guest"],
     startPage: "/auth/login",
     steps: [
@@ -241,6 +257,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Reloading /user keeps the session. Needs a Google account — answer null with that reason if none is available.",
   },
   "checklist-account-auth-signup-login-google-popup-blocked-fallback": {
+    requiresHumanChannel: true,
+    humanChannelReason: "interactive Google account",
     roles: ["guest"],
     startPage: "/auth/login",
     steps: [
@@ -295,6 +313,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Navigating to /user lands on /auth/login and no data for Vivaan Kapoor is rendered at any point. A back-button press does not restore the dashboard.",
   },
   "checklist-account-auth-signup-login-password-reset": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/login",
     steps: [
@@ -321,6 +341,8 @@ export const authored: Record<string, AuthoredCase> = {
       "The password is back at TempPass123! by the final step. That restore is mandatory: the seeder never resets an existing password, so skipping it leaves this account permanently signed out of every later case.",
   },
   "checklist-account-auth-signup-login-signup-verification-email-arrives": {
+    requiresHumanChannel: true,
+    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [
