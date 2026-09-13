@@ -54,7 +54,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /bundles in a private window at 1280 pixels wide.",
       "Look at each bundle card's discount badge and where it sits on the card.",
-      "Check the badge does not cover the bundle's title or price.",
+      "Check the badge does not cover the bundle's title or price row.",
       "Read the badge's text against its background.",
       "Resize to 390 pixels and look at the badges again.",
       "Switch to dark mode and read them once more.",
@@ -63,7 +63,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The badge overlays the card image, so it takes the solid pairing — a fill with its own on-solid ink — rather than a pale tint. A tint over an arbitrary product photograph is unreadable regardless of theme, and a literal white ink against a theme-inverting background is invisible in exactly one of the two.",
     expectedUiState:
-      "Every badge is readable at both widths and in both themes, and none covers the title or price. A visible badge shape with unreadable text inside it is the failure.",
+      "Every badge is readable at both widths and in both themes, and none covers the title or price row. A visible badge shape with unreadable text inside it is the failure.",
     endResult: "Read-only; return the site to light mode and restore the width.",
   },
   "checklist-buying-image-tile-layout-bundle-tile-opens-lightbox": {

@@ -451,9 +451,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/products",
         },
         {
-          key: "pre-orders-reachable-from-products",
-          label: "Pre-orders are reachable from /products — Filters → Listing type → tick Pre-Orders → Apply, and confirm real pre-order items appear with a \"Pre-Order\" badge",
-          description: "This was the original report: pre-orders (and auctions, prize draws, art, stickers) had no entry in the type filter at all, so they could only be found via their own dedicated pages.",
+          key: "every-listing-type-reachable-from-nav-or-products",
+          label: "Every listing type is reachable — the five with a main-nav entry from the nav, and the four without one from the /products Listing type filter",
+          description: "Reachability is the invariant, not the route to it. Auctions, pre-orders, prize draws and art/stickers used to have no entry in the /products type filter and were unreachable from the main catalogue; they were added there, and have now been moved back out because each owns a nav-linked page of its own. Classifieds, digital codes and live items have NO nav entry, so /products is still their only discovery path — dropping them from it is the same bug in a new place.",
           href: "/products",
         },
         {
@@ -517,7 +517,21 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Product / Auction / Pre-order Detail",
       href: "/products",
       cases: [
-        { key: "standard-detail", label: "Standard product detail page loads correctly", href: "/products/product-tester-standard-1" },
+        { key: "standard-detail", label: "Standard product detail page loads correctly, and a SIGNED-OUT visitor sees \"Sign in to see price\" where the price was", href: "/products/product-tester-standard-1" },
+        {
+          key: "standard-detail-price-signed-in",
+          label: "SIGNED IN, the same product detail page shows the real price (₹199.00) and no sign-in prompt",
+          description:
+            "The twin of the guest case above, and the half that is easy to forget: gating a price must not cost the coverage of the price itself. A gate that hides the amount from everyone passes the guest case perfectly and is a total regression.",
+          href: "/products/product-tester-standard-1",
+        },
+        {
+          key: "price-does-not-flash-sign-in-prompt-on-hard-reload",
+          label: "SIGNED IN, hard-reloading a product page never flashes \"Sign in to see price\" before the real price appears",
+          description:
+            "The session provider is mounted with no user and resolves asynchronously, so `loading` starts true on every hard load — for signed-in visitors too. A gate written as \"no user means show the prompt\" therefore accuses an already-signed-in buyer of being signed out for several hundred milliseconds on every page load. The gate has THREE states for this reason: while the session is resolving it renders a neutral placeholder, never the prompt. This is the single most likely regression in the price-gating work and it is invisible to every static check.",
+          href: "/products/product-tester-standard-1",
+        },
         {
           key: "tester-fixtures-hidden-from-the-public",
           label: "SIGNED OUT, no product on /products has an id containing \"tester\" — the sandbox is invisible to the public",
@@ -541,8 +555,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "auction-detail",
-          label: "Auction detail page shows current bid + a live, ticking countdown correctly",
-          description: "The countdown (\"Ends in 2d 5h 30m\", ticking every second — not a static date) must appear directly above every \"Place a bid\" button: the info panel, the desktop and mobile compact bid-summary cards, inside the \"Place your bid\" modal above the submit button, and in the mobile sticky bottom bar (as a row above the current-bid/bid-count line). It should switch to \"Ended\" once the end time passes.",
+          label: "SIGNED OUT, the auction detail page hides every bid figure and still shows a live, ticking countdown",
+          description: "The countdown (\"Ends in 2d 5h 30m\", ticking every second — not a static date) must appear directly above every \"Place a bid\" button: the info panel, the desktop and mobile compact bid-summary cards, and the mobile sticky bottom bar. It should switch to \"Ended\" once the end time passes. A signed-out visitor additionally sees NO bid amounts: the current bid reads \"Sign in to see the current bid\" and the bid form is replaced by \"Bidding is for members\" — the form was never usable signed out, so showing it with live figures was both a disclosure and a dead end.",
+          href: "/auctions/auction-tester-sandbox-cycle-1",
+        },
+        {
+          key: "auction-detail-bid-signed-in",
+          label: "SIGNED IN, the same auction shows the real current bid (₹15,000.00), the minimum increment and a working bid form",
+          description: "The twin of the guest case above. A gate that hides the bid from signed-in buyers too would pass the guest case and break bidding entirely.",
           href: "/auctions/auction-tester-sandbox-cycle-1",
         },
         { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly", href: "/pre-orders/preorder-tester-sandbox-1" },
@@ -4496,6 +4516,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             "BEFORE: the apex 307'd to www. A 307 is TEMPORARY and explicitly tells a search engine NOT to move the index entry, so every page kept two competing addresses. AFTER: the redirect is permanent and the destination is the host the sitemap advertises.",
         },
         {
+          key: "gated-price-is-declared-in-structured-data",
+          label: "A product and an auction page still publish offers.price to search engines, AND declare the sign-in gate with isAccessibleForFree:false plus a cssSelector that matches a real element",
+          description:
+            "Prices are hidden from signed-out visitors, and Googlebot crawls signed out — so the crawler renders 'Sign in to see price' while the JSON-LD beside it declares a real amount. Google requires marked-up content to be visible to the user, so that gap has to be DECLARED (paywalled-content markup) rather than left implicit, which risks the rich result. Serving prices to crawler user-agents but not to people would be cloaking and is deliberately not done. The selector half matters as much as the flag: a cssSelector matching nothing is indistinguishable from having made no declaration at all.",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
           key: "locale-prefix-redirects-to-bare",
           label: "A locale-prefixed path redirects to the unprefixed one",
           description:
@@ -4635,6 +4662,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "og-image-product",
           label: "A product's social preview image shows that product's own title and image",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
+          key: "og-image-carries-no-price",
+          label: "No social preview image renders a ₹ amount — product, bundle, classified, digital code, live item, catalogue item, prize draw or item request",
+          description:
+            "An OG image is a public image URL with the amount burned into the pixels. No sign-in gate reaches it and no structured-data declaration describes it, so it is the one surface where hiding a price on the page buys nothing. Eight og.tsx renderers carried a ₹ figure before 2026-09-14; the auction and pre-order cards already used a non-money accent (end date / release date) and are the pattern the rest now follow.",
           href: "/products/product-beyblade-burst-valkyrie",
         },
         {

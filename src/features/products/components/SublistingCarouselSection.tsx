@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
-import { Div, Row, Span, Text } from "../../../ui";
+import { Div, PricesOnly, Row, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
@@ -88,7 +88,7 @@ function ListingThumb({
         {listing.title}
       </Text>
       <Text className="text-[10px]" color="primary" weight="semibold">
-        {price}
+        <PricesOnly>{price}</PricesOnly>
       </Text>
     </Link>
   );

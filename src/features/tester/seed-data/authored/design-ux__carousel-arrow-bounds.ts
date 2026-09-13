@@ -28,14 +28,14 @@ export const authored: Record<string, AuthoredCase> = {
       "Open / in a private window at 1280 pixels wide.",
       "Scroll to a horizontal card carousel.",
       "Look at the left and right arrows and what sits under each.",
-      "Read the title and price of the first and last visible cards.",
+      "Read the title and the price row (signed out that row reads 'Sign in to see price') of the first and last visible cards.",
       "Try to click the first card's title without hitting an arrow.",
     ],
     inputs: { viewportWidth: 1280 },
     expectedBehaviour:
       "Arrows sit in reserved gutters beside the rail rather than floating over the first and last cards. An arrow on top of a card takes the click meant for the card, which reads as a card that does not open.",
     expectedUiState:
-      "Neither arrow overlaps a card's image, title or price. The first card is clickable across its whole area. An arrow covering the corner of the end card is the failure even when the card still opens from elsewhere.",
+      "Neither arrow overlaps a card's image, title or price row. The first card is clickable across its whole area. An arrow covering the corner of the end card is the failure even when the card still opens from elsewhere.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-carousel-arrow-bounds-arrows-no-overlap-mid-scroll": {
@@ -77,14 +77,14 @@ export const authored: Record<string, AuthoredCase> = {
       "Resize the browser window to 390 pixels wide and open / in a private window.",
       "Scroll to a card carousel and look at the first card's left edge.",
       "Look at the last card's right edge after swiping to the end.",
-      "Read each visible card's title and price in full.",
+      "Read each visible card's title and price row in full.",
       "Try to scroll the page sideways rather than the rail.",
     ],
     inputs: { mobileWidth: 390 },
     expectedBehaviour:
       "Cards are fully readable at the rail's ends, with the container's own padding preserved. A rail that bleeds into the page's edge padding makes the whole page scroll sideways instead of the rail.",
     expectedUiState:
-      "No card is clipped at either end. Every visible title and price reads in full. The PAGE does not scroll sideways — only the rail does.",
+      "No card is clipped at either end. Every visible title and price row reads in full. The PAGE does not scroll sideways — only the rail does.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-carousel-arrow-bounds-mobile-swipe-and-snap": {

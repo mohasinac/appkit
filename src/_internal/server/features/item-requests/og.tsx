@@ -20,7 +20,6 @@ import { resolveOgImageUrl } from "../seo/og";
 export interface ItemRequestOgData {
   title: string;
   opDisplayName?: string | null;
-  budgetLabel?: string | null;
   imageUrl?: string | null;
   status?: "open" | "closed" | "removed" | "approved" | null;
   replyCount?: number | null;
@@ -37,10 +36,6 @@ interface ItemRequestDocLike {
   category?: string | null;
 }
 
-function formatPriceInr(amount: number): string {
-  return `≤ ₹${amount.toLocaleString("en-IN")}`;
-}
-
 function normalizeStatus(s: string | null | undefined): ItemRequestOgData["status"] {
   if (s === "open" || s === "closed" || s === "removed" || s === "approved") return s;
   return null;
@@ -50,16 +45,10 @@ export function renderItemRequestOg(
   doc: ItemRequestDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const budgetLabel =
-    typeof doc?.maxBudget === "number" && doc.maxBudget > 0
-      ? formatPriceInr(doc.maxBudget)
-      : null;
-
   return renderItemRequestOgImage(
     {
       title: doc?.title ?? "Item Request",
       opDisplayName: doc?.opDisplayName ?? null,
-      budgetLabel,
       imageUrl: resolveOgImageUrl(doc?.imageUrls?.[0] ?? null, opts.baseUrl),
       status: normalizeStatus(doc?.status),
       replyCount: doc?.replyCount ?? null,
@@ -103,7 +92,7 @@ export function renderItemRequestOgImage(
   data: ItemRequestOgData,
   siteName: string,
 ): ReactElement {
-  const { title, opDisplayName, budgetLabel, imageUrl, status, replyCount, category } = data;
+  const { title, opDisplayName, imageUrl, status, replyCount, category } = data;
   const statusBadge = status ? STATUS_BADGE[status] : null;
   const replyLabel =
     typeof replyCount === "number" && replyCount >= 0
@@ -212,22 +201,6 @@ export function renderItemRequestOgImage(
               }}
             >
               {statusBadge.text}
-            </div>
-          )}
-          {budgetLabel && (
-            <div
-              style={{
-                display: "inline-flex",
-                padding: "10px 22px",
-                borderRadius: 999,
-                background: "rgba(34, 211, 238, 0.18)",
-                color: "#cffafe",
-                fontSize: 22,
-                fontWeight: 700,
-                border: "1px solid rgba(34, 211, 238, 0.4)",
-              }}
-            >
-              {budgetLabel}
             </div>
           )}
           {replyLabel && (

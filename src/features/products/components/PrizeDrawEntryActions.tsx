@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Anchor, Button, Stack, Text, LoginRequiredModal } from "../../../ui";
+import { Anchor, Button, GatedPrice, Stack, Text, LoginRequiredModal } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
@@ -58,10 +58,12 @@ export function PrizeDrawEntryActions({
   return (
     <Stack gap="md">
       <Text size="2xl" weight="bold" color="primary">
-        {formatCurrency(pricePerEntry, currency)}
-        <Text as="span" className="ml-1 text-[var(--appkit-color-text-muted)]" size="xs" weight="normal">
-          per entry
-        </Text>
+        <GatedPrice label="Sign in to see the entry price">
+          {formatCurrency(pricePerEntry, currency)}
+          <Text as="span" className="ml-1 text-[var(--appkit-color-text-muted)]" size="xs" weight="normal">
+            per entry
+          </Text>
+        </GatedPrice>
       </Text>
 
       <Button

@@ -16,6 +16,8 @@ import { safeDisplayName } from "../../../security";
 import {
   Div,
   Container,
+  GatedPrice,
+  PricesOnly,
   Heading,
   Main,
   Nav,
@@ -171,7 +173,9 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
               </Div>
 
               {price !== null && (
-                <Text size="2xl" weight="bold" color="primary">{formatCurrency(price, currency)}</Text>
+                <Text size="2xl" weight="bold" color="primary">
+                  <GatedPrice>{formatCurrency(price, currency)}</GatedPrice>
+                </Text>
               )}
 
               {jurisdictions.length > 0 && (
@@ -186,7 +190,9 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
                   <Text weight="medium">Transport</Text>
                   <Text className="text-muted-foreground">
                     Method: {transport.method}
-                    {transport.handlingFee !== undefined && ` · Handling: ${formatCurrency(transport.handlingFee, "INR")}`}
+                    {transport.handlingFee !== undefined && (
+                      <PricesOnly>{` · Handling: ${formatCurrency(transport.handlingFee, "INR")}`}</PricesOnly>
+                    )}
                     {transport.insuranceIncluded && " · Insurance included"}
                   </Text>
                 </Div>

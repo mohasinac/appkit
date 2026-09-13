@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, LoginRequiredModal, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, GatedPrice, LoginRequiredModal, PricesOnly, Row, Span, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
@@ -55,12 +55,14 @@ export function PreOrderActionsClient({
       {price !== null && (
         <Div>
           <Text size="2xl" weight="bold" color="primary">
-            {formatCurrency(price, currency)}
+            <GatedPrice>{formatCurrency(price, currency)}</GatedPrice>
           </Text>
           {depositAmount !== null && (
-            <Text className="mt-0.5" color="muted" size="xs">
-              Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
-            </Text>
+            <PricesOnly>
+              <Text className="mt-0.5" color="muted" size="xs">
+                Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
+              </Text>
+            </PricesOnly>
           )}
         </Div>
       )}

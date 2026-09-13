@@ -51,6 +51,25 @@ export const authored: Record<string, AuthoredCase> = {
       "The card shows the product's own title and its own photo. A generic card is the finding.",
     endResult: "Read-only.",
   },
+  "checklist-seo-og-images-og-image-carries-no-price": {
+    roles: ["guest"],
+    startPage: "/products/product-beyblade-burst-valkyrie",
+    steps: [
+      "Open /products/product-beyblade-burst-valkyrie, view source, find the og:image tag and open its URL in a fresh tab.",
+      "Read every figure printed on the card.",
+      "Repeat for /bundles/bundle-every-generation-starter-pack.",
+      "Repeat for /classified/classified-beyblade-stadium-set.",
+      "Repeat for /digital-codes/digitalcode-beyblade-x-app-starter-pack.",
+      "Repeat for /live/live-golden-retriever-puppy.",
+      "Repeat for /prize-draws/prizedraw-tester-sandbox-1.",
+    ],
+    expectedBehaviour:
+      "None of these cards prints a money amount. The card is a public image URL with its contents burned into the pixels, so a price there survives every gate on the page and is fetchable by anyone who has the listing URL. A prize draw that is genuinely free may still say 'Free entry' — that is a fact about the draw, not a disclosed amount.",
+    expectedUiState:
+      "BEFORE: the product card showed '₹1,299', the bundle card its bundle price, the classified/digital-code/live/catalogue cards their own prices, and the prize-draw card '₹X / entry'. AFTER: no '₹' character appears on any of the six cards. The auction and pre-order cards are unchanged — they show an end date and a release date respectively and never carried a price.",
+    expectedData: { cardsShowingRupee: 0 },
+    endResult: "Read-only. A ₹ figure on any of these cards is the regression this case exists for.",
+  },
   "checklist-seo-og-images-og-image-brand-logo-present": {
     roles: ["guest"],
     startPage: "/brands/brand-takara-tomy",

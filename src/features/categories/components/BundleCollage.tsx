@@ -11,7 +11,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Button, Div, Grid, Row, Text } from "../../../ui";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
+import { Button, Div, GatedPrice, Grid, Row, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
@@ -27,13 +28,19 @@ export interface BundleCollageProps {
 
 const PLACEHOLDER_EMOJI = "📦" as const;
 
-function toGalleryImages(members: ProductDocument[]): LightboxImage[] {
+function toGalleryImages(
+  members: ProductDocument[],
+  canSeePrices: boolean,
+): LightboxImage[] {
   return members.map((p, i) => ({
     src: p.mainImage ?? p.images?.[0] ?? "",
     alt: p.title,
     badge: `#${i + 1}`,
     caption: p.title,
-    sub: formatCurrency(p.price ?? 0, p.currency ?? "INR"),
+    // `sub` is a plain string on the lightbox caption, so the gate has to
+    // happen here — the tile's own price is gated in the JSX below, and this
+    // would otherwise print it again one click away.
+    sub: canSeePrices ? formatCurrency(p.price ?? 0, p.currency ?? "INR") : undefined,
   }));
 }
 
@@ -54,10 +61,11 @@ function makeBundleItemClickHandler(
 
 export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const { canSeePrices } = useCanSeePrices();
 
   if (!members.length) return null;
 
-  const galleryImages = toGalleryImages(members);
+  const galleryImages = toGalleryImages(members, canSeePrices);
 
   return (
     <>
@@ -123,7 +131,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                   {p.title}
                 </Link>
                 <Text className="mt-0.5 text-[var(--appkit-color-text-muted)]" size="xs">
-                  {formatCurrency(p.price ?? 0, p.currency ?? "INR")}
+                  <GatedPrice>{formatCurrency(p.price ?? 0, p.currency ?? "INR")}</GatedPrice>
                 </Text>
               </Div>
             </Div>

@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
-import { Button, CountdownDisplay, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
+import { Button, CountdownDisplay, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
@@ -104,6 +106,10 @@ export function PlaceBidFormClient({
   onBuyNow,
 }: PlaceBidFormClientProps) {
   const router = useRouter();
+  // Declared with the other hooks, never inside the early return below — a
+  // conditional hook is a render-order violation, and this component early-
+  // returns for signed-out viewers.
+  const { canSeePrices } = useCanSeePrices();
   // Live-updates while the bid card is open — reflects other bidders'
   // activity on this auction, not just the bidder's own submission.
   const live = useLiveAuctionBid(productId, ssrCurrentBid, ssrBidCount, { enabled: !isEnded });
@@ -293,6 +299,26 @@ export function PlaceBidFormClient({
         );
       }
     });
+  }
+
+  // A signed-out visitor cannot place a bid — `useAuthGate` already stops the
+  // submit — and this panel is the single densest money surface on the site:
+  // current bid, starting bid, minimum, increment, the +N preset chips and the
+  // Buy Now price, twelve amounts in all. Replacing the whole panel is both the
+  // honest affordance (the form was never usable) and the only version that
+  // cannot leak one of the twelve through a string prop.
+  if (!canSeePrices) {
+    return (
+      <Stack className={`${__P.p5}`} border="subtle" gap="sm" rounded="xl" surface="muted">
+        <Text size="sm" weight="semibold">Bidding is for members</Text>
+        <Text size="xs" color="muted">
+          Sign in to see the current bid and place your own.
+        </Text>
+        <TextLink href={String(ROUTES.AUTH.LOGIN)} weight="semibold" size="sm">
+          Sign in to bid
+        </TextLink>
+      </Stack>
+    );
   }
 
   return (

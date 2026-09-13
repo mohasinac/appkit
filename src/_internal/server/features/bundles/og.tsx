@@ -20,7 +20,6 @@ export interface BundleOgData {
   name: string;
   description?: string | null;
   coverImageUrl?: string | null;
-  priceLabel?: string | null;
   itemCount?: number | null;
   stockStatus?: "in_stock" | "partial" | "out_of_stock" | null;
 }
@@ -34,27 +33,17 @@ interface BundleDocLike {
   bundleStockStatus?: "in_stock" | "partial" | "out_of_stock" | null;
 }
 
-function formatPriceInr(amount: number): string {
-  return `₹${amount.toLocaleString("en-IN")}`;
-}
-
 export function renderBundleOg(
   doc: BundleDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const name = doc?.name ?? "Bundle";
-  const priceLabel =
-    typeof doc?.bundlePrice === "number" && doc.bundlePrice > 0
-      ? formatPriceInr(doc.bundlePrice)
-      : null;
-  return renderBundleOgImage(
+  const name = doc?.name ?? "Bundle";  return renderBundleOgImage(
     {
       name,
       description:
         doc?.description?.slice(0, 140) ??
         `Curated multi-product bundle on ${opts.siteName}.`,
       coverImageUrl: resolveOgImageUrl(doc?.display?.coverImage ?? null, opts.baseUrl),
-      priceLabel,
       itemCount: doc?.bundleProductIds?.length ?? null,
       stockStatus: doc?.bundleStockStatus ?? null,
     },
@@ -85,7 +74,7 @@ export function renderBundleOgImage(
   data: BundleOgData,
   siteName: string,
 ): ReactElement {
-  const { name, description, coverImageUrl, priceLabel, itemCount, stockStatus } = data;
+  const { name, description, coverImageUrl, itemCount, stockStatus } = data;
   const itemLabel =
     typeof itemCount === "number" && itemCount > 0
       ? `${itemCount} item${itemCount === 1 ? "" : "s"}`
@@ -182,22 +171,6 @@ export function renderBundleOgImage(
             flexWrap: "wrap",
           }}
         >
-          {priceLabel && (
-            <div
-              style={{
-                display: "inline-flex",
-                padding: "10px 22px",
-                borderRadius: 999,
-                background: "rgba(56, 189, 248, 0.18)",
-                color: "#e0f2fe",
-                fontSize: 26,
-                fontWeight: 700,
-                border: "1px solid rgba(56, 189, 248, 0.4)",
-              }}
-            >
-              {priceLabel}
-            </div>
-          )}
           {itemLabel && (
             <div
               style={{

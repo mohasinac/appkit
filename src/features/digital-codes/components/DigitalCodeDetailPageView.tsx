@@ -13,6 +13,7 @@ import { safeDisplayName } from "../../../security";
 import {
   Div,
   Container,
+  GatedPrice,
   Heading,
   Main,
   Nav,
@@ -168,7 +169,9 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
               </Div>
 
               {price !== null && (
-                <Text size="2xl" weight="bold" color="primary">{formatCurrency(price, currency)}</Text>
+                <Text size="2xl" weight="bold" color="primary">
+                  <GatedPrice>{formatCurrency(price, currency)}</GatedPrice>
+                </Text>
               )}
 
               {meta?.redemptionInstructions && (

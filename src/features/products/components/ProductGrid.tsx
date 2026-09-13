@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "../../../next";
 import type { LayoutSlots } from "../../../contracts";
-import { BaseListingCard, Button, Div, Grid, PriceDisplay, Row, Span, Stack, Text } from "../../../ui";
+import { BaseListingCard, Button, Div, GatedPrice, Grid, PriceDisplay, PricesOnly, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 import type { ViewMode } from "../../../ui";
@@ -584,10 +584,14 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         <CardStoreLine storeName={product.storeName} storeId={product.storeId} className="text-[11px]" />
         <Row className="mt-0.5" align="center" gap="sm" wrap>
           <Span size="sm" weight="semibold" className="text-primary">
-            {formatCurrency(product.price, getDefaultCurrency())}
+            <GatedPrice>{formatCurrency(product.price, getDefaultCurrency())}</GatedPrice>
           </Span>
           {discount && (
-            <Span weight="bold" className={CLS_DISCOUNT_TEXT_BARE}>-{discount}%</Span>
+            // The discount % is derived from price vs originalPrice, so it is a
+            // money disclosure even though it carries no currency symbol.
+            <PricesOnly>
+              <Span weight="bold" className={CLS_DISCOUNT_TEXT_BARE}>-{discount}%</Span>
+            </PricesOnly>
           )}
           {product.rating !== undefined && (
             <Span layout="flex" gap="2xs" className="text-[11px]" color="faint">

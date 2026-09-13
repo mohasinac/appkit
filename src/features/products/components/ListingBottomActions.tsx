@@ -2,6 +2,7 @@
 
 import { useBottomActions } from "../../layout/hooks/useBottomActions";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { ACTION_META, MOBILE_PRIMARY_ACTIONS } from "../constants/action-defs";
 
 /**
@@ -40,11 +41,19 @@ export function ListingBottomActions({
   infoSuffix,
 }: ListingBottomActionsProps) {
   const actionIds = MOBILE_PRIMARY_ACTIONS[listingType] ?? [];
+  const { canSeePrices } = useCanSeePrices();
 
+  // `infoLabel` is a plain string on the bottom bar, not a slot, so it cannot
+  // be wrapped in <GatedPrice> — the gate has to happen while the string is
+  // built. Note this label is ALSO the re-publish key for `useBottomActions`
+  // (see CLAUDE.md's bottom-edge notes), so it has to change when the viewer's
+  // access changes, which it does: the two branches never produce equal text.
   const infoLabel =
-    price !== null
-      ? `${formatCurrency(price, currency)}${infoSuffix ? ` ${infoSuffix}` : ""}`
-      : undefined;
+    price === null
+      ? undefined
+      : canSeePrices
+        ? `${formatCurrency(price, currency)}${infoSuffix ? ` ${infoSuffix}` : ""}`
+        : "Sign in to see price";
 
   useBottomActions(
     unavailable

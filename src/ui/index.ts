@@ -297,6 +297,8 @@ export { RatingDisplay } from "./components/RatingDisplay";
 
 export type { PriceDisplayProps } from "./components/PriceDisplay";
 export { PriceDisplay } from "./components/PriceDisplay";
+export type { GatedPriceProps } from "./components/GatedPrice";
+export { GatedPrice, PricesOnly, GATED_PRICE_CLASS } from "./components/GatedPrice";
 
 export type { StatsGridProps, StatItem } from "./components/StatsGrid";
 export { StatsGrid } from "./components/StatsGrid";

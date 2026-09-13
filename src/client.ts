@@ -194,6 +194,13 @@ export { UnsavedChangesModal } from "./ui/components/UnsavedChangesModal";
 // LoginRequiredModal - Modal prompting unauthenticated users to log in.
 export { LoginRequiredModal } from "./ui/components/LoginRequiredModal";
 export type { LoginRequiredModalProps } from "./ui/components/LoginRequiredModal";
+
+// GatedPrice - a money amount only signed-in visitors may read. GATED_PRICE_CLASS
+// is a contract with the JSON-LD paywall markup; see the component.
+export { GatedPrice, PricesOnly, GATED_PRICE_CLASS } from "./ui/components/GatedPrice";
+export type { GatedPriceProps } from "./ui/components/GatedPrice";
+export { useCanSeePrices } from "./react/hooks/useCanSeePrices";
+export type { CanSeePricesState } from "./react/hooks/useCanSeePrices";
 // isAuthError - Detects auth/authorization errors from server actions or fetch responses.
 export { isAuthError } from "./utils/auth-error";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.

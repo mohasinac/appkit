@@ -25,6 +25,8 @@ export const config = {
   pluralLabel: "Products",
   chipLabel: "Standard",
   browseRoute: String(ROUTES.PUBLIC.PRODUCTS),
+  // The general catalogue IS this type's page.
+  inGeneralCatalogue: true,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

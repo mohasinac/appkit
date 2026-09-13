@@ -31,7 +31,7 @@ const REL_NOOPENER = "noopener noreferrer";
 const CLS_REMOVE_BTN = "shrink-0 text-zinc-400 hover:text-error hover:bg-surface-hover";
 import Link from "next/link";
 import { X } from "lucide-react";
-import { Button, Div, Heading, IconButton, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, GatedPrice, Heading, IconButton, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { useSwipe } from "../../../react/hooks/useSwipe";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -225,7 +225,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose, customFie
 
       <FieldRow label={labels.field.price}>
         <Text size="base" weight="semibold" color="primary">
-          {priceLabel(item)}
+          <GatedPrice>{priceLabel(item)}</GatedPrice>
         </Text>
       </FieldRow>
 

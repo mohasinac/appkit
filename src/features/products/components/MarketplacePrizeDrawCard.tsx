@@ -9,7 +9,7 @@ import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
-import { BaseListingCard, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Button, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CardStoreLine } from "./CardStoreLine";
 
@@ -224,10 +224,12 @@ export function MarketplacePrizeDrawCard({
         <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
         <Row justify="between" className="mt-1" gap="sm">
           <Text size="sm" weight="semibold" color="primary">
-            {formatCurrency(pricePerEntry, getDefaultCurrency())}{" "}
-            <Span size="xs" weight="normal" className="text-[var(--appkit-color-text-muted)]">
-              {mergedLabels.pricePerEntryLabel}
-            </Span>
+            <GatedPrice label="Sign in to see the entry price">
+              {formatCurrency(pricePerEntry, getDefaultCurrency())}{" "}
+              <Span size="xs" weight="normal" className="text-[var(--appkit-color-text-muted)]">
+                {mergedLabels.pricePerEntryLabel}
+              </Span>
+            </GatedPrice>
           </Text>
           {max > 0 ? (
             <Text className="text-[var(--appkit-color-text-muted)]" size="xs">

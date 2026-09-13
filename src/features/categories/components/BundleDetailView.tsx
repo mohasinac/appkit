@@ -14,6 +14,8 @@ import {
   Badge,
   Container,
   Div,
+  GatedPrice,
+  PricesOnly,
   Heading,
   Li,
   Main,
@@ -107,17 +109,20 @@ export function BundleDetailView({
 
                 <Row gap="sm" align="center" wrap>
                   <Text size="lg" weight="bold">
-                    {priceLabel}
+                    <GatedPrice label="Sign in to see the bundle price">{priceLabel}</GatedPrice>
                   </Text>
                   {discount && (
-                    <>
+                    // Both the struck-through total and the "N% off" badge are
+                    // derived from the bundle price, so they disclose it even
+                    // though the badge carries no currency symbol.
+                    <PricesOnly>
                       <Text size="sm" color="muted" className="line-through">
                         {formatCurrency(discount.originalTotal, "INR")}
                       </Text>
                       <Badge variant="success">
                         {BUNDLE_COPY.detail.discountBadge(discount.percent)}
                       </Badge>
-                    </>
+                    </PricesOnly>
                   )}
                   <Text size="sm" color="muted">
                     · {BUNDLE_COPY.detail.itemCount(memberCount)}
@@ -127,9 +132,11 @@ export function BundleDetailView({
                   </Badge>
                 </Row>
                 {discount && (
-                  <Text size="sm" color="success" weight="medium">
-                    {BUNDLE_COPY.detail.savingsLabel(formatCurrency(discount.savings, "INR"))}
-                  </Text>
+                  <PricesOnly>
+                    <Text size="sm" color="success" weight="medium">
+                      {BUNDLE_COPY.detail.savingsLabel(formatCurrency(discount.savings, "INR"))}
+                    </Text>
+                  </PricesOnly>
                 )}
 
                 {bundle.description && (
@@ -186,7 +193,7 @@ export function BundleDetailView({
                         {p.title}
                       </Link>
                       <Span size="xs" color="muted">
-                        {formatCurrency(p.price ?? 0, p.currency ?? "INR")}
+                        <GatedPrice>{formatCurrency(p.price ?? 0, p.currency ?? "INR")}</GatedPrice>
                       </Span>
                     </Li>
                   ))}

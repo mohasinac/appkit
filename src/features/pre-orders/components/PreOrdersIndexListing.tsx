@@ -1,4 +1,6 @@
 "use client";
+import { withoutPriceSorts } from "../../products/constants/sieve";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import React, { useState, useCallback } from "react";
 import { Columns, Heart, ShoppingCart } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -48,6 +50,7 @@ export interface PreOrdersIndexListingProps {
 
 export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: PreOrdersIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
+  const { canSeePrices } = useCanSeePrices();
   const { showToast } = useToast();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
@@ -232,7 +235,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={PREORDER_SORT_OPTIONS}
+        sortOptions={withoutPriceSorts(PREORDER_SORT_OPTIONS, canSeePrices)}
         onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}

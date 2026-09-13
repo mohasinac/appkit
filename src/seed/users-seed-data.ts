@@ -569,8 +569,16 @@ export const usersSeedData: Partial<UserDocument>[] = [
     isBot: true,
     emailVerified: true,
     disabled: false,
-    storeId: "store-tester-qa-seller",
-    storeSlug: "store-tester-qa-seller",
+    // 🛑 This MUST name a store whose own `ownerId` is this uid. It used to say
+    // "store-tester-qa-seller", which is owned by `user-tester-qa` — so the app, which
+    // resolves sellers by `ownerId`, answered every /api/store/* call with 403
+    // "No store found for this account" while the client, reading `role` and `storeId`
+    // off this document, rendered the entire Store Panel over it. 36 checklist cases were
+    // blocked by that one-way pointer (measured, run 1789300124915).
+    // See stores-tester-seed-data.ts for why the shared sandbox could not simply be
+    // repointed at this account instead.
+    storeId: "store-claude-tester",
+    storeSlug: "store-claude-tester",
     storeStatus: "approved",
     publicProfile: {
       isPublic: false,

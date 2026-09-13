@@ -26,6 +26,9 @@ export const config = {
   pluralLabel: "Classifieds",
   chipLabel: "Classifieds",
   browseRoute: String(ROUTES.PUBLIC.CLASSIFIED),
+  // Has a dedicated page but NO MAIN_NAV_ITEMS entry, so /products is its only
+  // discovery path. Dropping it here would orphan the type (Root Cause #61).
+  inGeneralCatalogue: true,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

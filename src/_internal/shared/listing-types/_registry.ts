@@ -97,12 +97,39 @@ export interface ListingTypePlugin {
   /** Short label for the dense type-chip row on /products and /admin/products. */
   chipLabel: string;
   /**
-   * Dedicated public browse page for this type, or `null` when it browses on
-   * `/products` (art and stickers — see CLAUDE.md's Listing Types Reference).
-   * A non-null value also drives the "full <type> filters →" link shown on
-   * /products when exactly this type is selected.
+   * Dedicated public browse page for this type.
+   *
+   * EVERY type has one today, including `standard` (→ `/products`) and
+   * `art`/`stickers` (→ the combined `/art`). This field is therefore NOT a
+   * "does it have its own page" discriminator — use `inGeneralCatalogue` for
+   * that. (This comment used to claim `null` meant "browses on /products",
+   * which no config has ever matched.)
+   *
+   * Also drives the "full <type> filters →" link shown on /products when
+   * exactly this type is selected — suppressed when it points at /products
+   * itself, which would be a self-link.
    */
   browseRoute: string | null;
+  /**
+   * Does this type belong in the GENERAL catalogue at `/products`?
+   *
+   * `/products` is the general catalogue, not an index of everything. A type
+   * whose dedicated page is reachable from `MAIN_NAV_ITEMS` lives only on that
+   * page, so an item is never reachable from two places with two different
+   * chromes. A type with a dedicated page but NO nav entry
+   * (classified / digital-code / live) stays here, because `/products` is its
+   * only discovery path — dropping those is how Root Cause #61 happened.
+   *
+   * Required, not optional, on purpose: `LISTING_TYPE_REGISTRY` is a
+   * `Record<ListingType, ListingTypePlugin>`, so a tenth listing type cannot
+   * compile without answering this. A hand-written list of "types allowed on
+   * /products" is exactly the drift Root Cause #61 documents.
+   *
+   * 🛑 If you set this `false` for a type, confirm its dedicated page is
+   * actually linked from the main nav first — otherwise the type becomes
+   * reachable only by typing the URL.
+   */
+  inGeneralCatalogue: boolean;
   /**
    * Which "Show X" default this type's browse surfaces apply. Since 2026-08-24
    * this drives the LABEL of the availability tab bar's middle tab

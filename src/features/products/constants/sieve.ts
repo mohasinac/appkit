@@ -27,6 +27,51 @@ const BASE_PRICE_SORTS = [
 /** Time + price sorts, the common subset across most listing-type pickers. */
 export const BASE_SORT_OPTIONS = [...BASE_TIME_SORTS, ...BASE_PRICE_SORTS] as const satisfies readonly SortOption[];
 
+/**
+ * Drop the price sorts when the viewer may not see prices.
+ *
+ * Ordering a list by price discloses the ranking of every hidden amount, and
+ * with paging that is most of the way to a price list — so the option is not
+ * offered to signed-out visitors, matching the hidden price-range facet.
+ *
+ * 🛑 This removes the CONTROL, not the capability. A hand-written
+ * `?sort=price:asc` still sorts, exactly as `?f=price>N` still filters — both
+ * are the documented, accepted residue of gating the render rather than
+ * withholding the field (see CLAUDE.md § "Public Data Projections"). What it
+ * buys is that no casual visitor is handed the lever.
+ */
+export function withoutPriceSorts(
+  options: readonly SortOption[],
+  canSeePrices: boolean,
+): readonly SortOption[] {
+  if (canSeePrices) return options;
+  // Exact match on the field, both directions. `sortBy()` encodes direction as
+  // a leading "-", so stripping it yields the bare field name — substring
+  // matching would catch an unrelated `pricePerEntry` sort by accident.
+  return options.filter(
+    (o) => !MONEY_SORT_FIELDS.includes(o.value.replace(/^-/, "") as never),
+  );
+}
+
+/**
+ * Every sort field that orders by an AMOUNT, matched as a substring of the
+ * sort value (`sortBy()` emits `field` / `-field`, so one entry covers both
+ * directions).
+ *
+ * `currentBid`, `startingBid` and `buyNowPrice` are here for the same reason
+ * `price` is: "Highest Current Bid" ranks every hidden bid on the page, which
+ * is the disclosure the gate exists to prevent. `bidCount` is deliberately
+ * ABSENT — the number of bids is not an amount, it is already displayed
+ * ungated beside every auction, and hiding it would remove a real signal for
+ * no gain.
+ */
+const MONEY_SORT_FIELDS = [
+  PRODUCT_FIELDS.PRICE,
+  PRODUCT_FIELDS.CURRENT_BID,
+  PRODUCT_FIELDS.STARTING_BID,
+  PRODUCT_FIELDS.BUY_NOW_PRICE,
+] as const;
+
 // ---------------------------------------------------------------------------
 // Standard Products
 // ---------------------------------------------------------------------------

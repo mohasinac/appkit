@@ -31,12 +31,26 @@ export const authored: Record<string, AuthoredCase> = {
       "Read the countdown again.",
     ],
     expectedBehaviour:
-      "The page renders a live auction whose countdown ticks client-side against the stored end date. Auction listings offer bidding, never Add to Cart — the capability is per listing type, not a styling choice.",
+      "The page renders a live auction whose countdown ticks client-side against the stored end date. Auction listings offer bidding, never Add to Cart — the capability is per listing type, not a styling choice. A signed-out visitor sees no bid figures at all: a current bid is a money amount like any other, and the bid panel is replaced rather than shown with the numbers blanked.",
     expectedUiState:
-      "The heading names the sandbox auction. A countdown in the shape '47m 06s' or 'Xd Xh Xm Xs' sits next to 'Place a bid', and its seconds figure is lower after the 3-second wait — a frozen countdown is a fail even though the number looks plausible. Current bid ₹15,000.00 and a minimum increment of ₹1,000.00 are shown. There is a 'Place a bid' button and no 'Add to Cart' button anywhere on the page.",
-    expectedData: { currentBid: 15000, minIncrement: 1000 },
+      "BEFORE: 'Current bid ₹15,000.00' and 'minimum increment ₹1,000.00' were shown to anyone. AFTER: the current-bid line reads 'Sign in to see the current bid', the minimum-increment line is absent, and the bid panel reads 'Bidding is for members' with a 'Sign in to bid' link. The digits 15,000 and 1,000 appear nowhere on the page. The heading names the sandbox auction. A countdown in the shape '47m 06s' or 'Xd Xh Xm Xs' sits next to 'Place a bid', and its seconds figure is lower after the 3-second wait — a frozen countdown is a fail even though the number looks plausible. There is no 'Add to Cart' button anywhere on the page.",
     endResult:
       "Nothing persists — bid state and end time are read from the server on each load. The seconds figure moving is the whole check.",
+  },
+  "checklist-buying-product-detail-auction-detail-bid-signed-in": {
+    roles: ["buyer"],
+    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    steps: [
+      "Sign in as a buyer.",
+      "Open /auctions/auction-tester-sandbox-cycle-1.",
+      "Read the current bid, the minimum increment and the bid panel.",
+    ],
+    expectedBehaviour:
+      "The twin of the guest case above — the bid figures and the working bid form are exactly what the gate must not cost a signed-in buyer.",
+    expectedUiState:
+      "'Current bid ₹15,000.00' is shown, a minimum increment of ₹1,000.00 is stated, and the bid panel carries a real amount input and a submit button. Neither 'Sign in to see the current bid' nor 'Bidding is for members' appears anywhere on the page.",
+    expectedData: { currentBid: 15000, minIncrement: 1000 },
+    endResult: "Nothing persists unless a bid is actually submitted, which this case does not do.",
   },
   "checklist-buying-product-detail-bundle-purchase": {
     roles: ["buyer"],
@@ -193,14 +207,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/live/live-tester-sandbox-1",
     steps: [
       "Open /live/live-tester-sandbox-1.",
-      "Read the heading, the species line, the price and the delivery restrictions.",
+      "Read the heading, the species line, the price area and the delivery restrictions.",
       "Look at the gallery thumbnail strip.",
     ],
     expectedBehaviour:
       "A live listing renders its species-specific fields — species, breed, sex, age and the jurisdiction restrictions — which no other listing type carries, and offers a cart path once those restrictions are satisfied.",
     expectedUiState:
-      "Heading 'Test Live Item — Golden Retriever Puppy'. A species line in the shape 'Dog (Golden Retriever) · male · 6mo'. Price ₹1,500.00. Delivery restrictions are stated rather than blank. The thumbnail strip carries a 'View video' entry alongside 'View image 1'. An 'Add to Cart' button is present.",
-    expectedData: { price: 1500 },
+      "Heading 'Test Live Item — Golden Retriever Puppy'. A species line in the shape 'Dog (Golden Retriever) · male · 6mo'. BEFORE: the price read '₹1,500.00'; AFTER it reads 'Sign in to see price' and the digits 1,500 appear nowhere, and the 'Handling:' fee on the transport line is absent too. Delivery restrictions are stated rather than blank. The thumbnail strip carries a 'View video' entry alongside 'View image 1'. An 'Add to Cart' button is present.",
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-live-item-video-mandatory": {
@@ -237,14 +250,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/pre-orders/preorder-tester-sandbox-1",
     steps: [
       "Open /pre-orders/preorder-tester-sandbox-1.",
-      "Read the heading, the price, the status badge and the delivery line.",
+      "Read the heading, the price area, the status badge and the delivery line.",
       "Read the note beside the 'Reserve Now' button.",
     ],
     expectedBehaviour:
       "A pre-order shows an estimated delivery date and takes a deposit rather than the full price, which is what distinguishes it from a standard listing that happens to be out of stock.",
     expectedUiState:
-      "Heading 'Test Pre-order — Reserve Me!'. Price ₹299.00. An 'Estimated delivery:' label with an actual date beside it, not an empty value or the word 'undefined'. A 'Reserve Now' button with a note naming the 25% deposit of ₹74.75. Status badge 'In Production'.",
-    expectedData: { price: 299, depositAmount: 74.75 },
+      "Heading 'Test Pre-order — Reserve Me!'. BEFORE: the price read '₹299.00' with a 'Reserve with ₹74.75' note; AFTER the price reads 'Sign in to see price', the deposit note is absent entirely, and neither 299 nor 74.75 appears anywhere on the page. An 'Estimated delivery:' label with an actual date beside it, not an empty value or the word 'undefined'. A 'Reserve Now' button is still present. Status badge 'In Production'.",
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-prizedraw-buy-reveal": {
@@ -299,7 +311,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "Four independent related-items signals are rendered — same category, same brand, shared tags, same store — each capped and each filtered for items that are still available, so an ended auction or a sold-out listing does not appear as a suggestion.",
     expectedUiState:
-      "Four carousel sections, in the shape 'More in this category', 'More by Beyblade', 'You might also like' and 'More from Beyblade Arena'. Each holds at least one card carrying a real title, a rendered image tile and a price. A heading with an empty rail beneath it is a fail — the section should not render at all rather than render empty.",
+      "Four carousel sections, in the shape 'More in this category', 'More by Beyblade', 'You might also like' and 'More from Beyblade Arena'. Each holds at least one card carrying a real title, a rendered image tile and a price row — signed out that row reads 'Sign in to see price'. A heading with an empty rail beneath it is a fail — the section should not render at all rather than render empty.",
     expectedData: { carouselCount: 4 },
     endResult: "Nothing persists — read-only page.",
   },
@@ -321,17 +333,49 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/products/product-tester-standard-1",
     steps: [
-      "Open /products/product-tester-standard-1.",
-      "Read the heading, price, stock badge and description.",
+      "Open /products/product-tester-standard-1 in a private window with no session.",
+      "Read the heading, the price area, the stock badge and the description.",
       "Read the category and brand links below the heading.",
       "Read the seller line at the bottom of the info panel.",
     ],
     expectedBehaviour:
-      "A standard listing renders every panel a buyer needs to decide, and the purchase actions are present but inert for a signed-out visitor rather than absent — a missing button reads as a broken page, a disabled one reads as a prompt to sign in.",
+      "A standard listing renders every panel a buyer needs to decide, and the purchase actions are present but inert for a signed-out visitor rather than absent — a missing button reads as a broken page, a disabled one reads as a prompt to sign in. The PRICE is not shown to a signed-out visitor at all: the catalogue must not be readable at scale without an account.",
     expectedUiState:
-      "Heading 'Test Gadget — Standard Listing #1'. Price ₹199.00. Stock badge in the shape '✓ In Stock — only 10 left'. 'Buy Now', 'Add to Cart' and 'Add to Wishlist' are visible and disabled. Category links 'Test Gadgets' and 'Tester Sandbox' and brand link 'TestBrand' appear below the heading. A description paragraph is present. 'Sold by Tester Sandbox Store' with a 'Visit Store →' link is shown.",
-    expectedData: { price: 199, stockQuantity: 10 },
+      "BEFORE: the price area read '₹199.00'. AFTER: it reads 'Sign in to see price' and is a link to /auth/login; the digits 199 appear nowhere on the page. Heading 'Test Gadget — Standard Listing #1'. Stock badge in the shape '✓ In Stock — only 10 left' (stock is not an amount and is still shown). 'Buy Now', 'Add to Cart' and 'Add to Wishlist' are visible and disabled. Category links 'Test Gadgets' and 'Tester Sandbox' and brand link 'TestBrand' appear below the heading. A description paragraph is present. 'Sold by Tester Sandbox Store' with a 'Visit Store →' link is shown.",
+    expectedData: { stockQuantity: 10 },
     endResult: "Nothing persists — read-only for a guest.",
+  },
+  "checklist-buying-product-detail-price-does-not-flash-sign-in-prompt-on-hard-reload": {
+    roles: ["buyer"],
+    startPage: "/products/product-tester-standard-1",
+    steps: [
+      "Sign in as a buyer.",
+      "Open /products/product-tester-standard-1 and confirm the price reads ₹199.00.",
+      "Press Ctrl+Shift+R (hard reload) and watch the price area continuously from the moment the page starts painting.",
+      "Repeat the hard reload twice more, watching the same area.",
+      "Throttle the network to 'Slow 3G' in the browser's network panel and hard-reload once more, watching the price area throughout.",
+    ],
+    expectedBehaviour:
+      "While the session is still resolving the price area shows a neutral placeholder, never the sign-in prompt. The prompt means 'you are signed out', and the session provider starts every hard load with no user and resolves asynchronously — so a two-state gate tells a signed-in buyer they are signed out on every single page load. The throttled reload is the real test: at full speed the window can be too short to see.",
+    expectedUiState:
+      "Across all four reloads the price area goes from blank-or-placeholder straight to '₹199.00'. The text 'Sign in to see price' NEVER appears, not even for one frame, and most visibly not on the throttled load. A flash of the prompt before the price settles is the failure — the end state being correct does not pass this case.",
+    expectedData: { promptFlashes: 0 },
+    endResult: "Read-only; restore the network throttle to 'No throttling' afterwards.",
+  },
+  "checklist-buying-product-detail-standard-detail-price-signed-in": {
+    roles: ["buyer"],
+    startPage: "/products/product-tester-standard-1",
+    steps: [
+      "Sign in as a buyer.",
+      "Open /products/product-tester-standard-1.",
+      "Read the price area.",
+    ],
+    expectedBehaviour:
+      "The twin of the guest case above. Gating the price must not lose coverage of the price itself — a signed-in buyer sees the real amount, formatted as currency, with no sign-in prompt anywhere on the page.",
+    expectedUiState:
+      "The price area reads '₹199.00'. The text 'Sign in to see price' appears nowhere on the page.",
+    expectedData: { price: 199 },
+    endResult: "Nothing persists — read-only.",
   },
   "checklist-buying-product-detail-tester-fixtures-hidden-from-the-public": {
     roles: ["guest", "buyer"],

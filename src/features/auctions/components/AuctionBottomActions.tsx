@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTION_ID, ACTION_META } from "../../products/constants/action-defs";
 import { useCountdown, type CountdownRemaining } from "../../../react";
@@ -49,6 +50,7 @@ export function AuctionBottomActions(props: AuctionBottomActionsProps) {
     props;
   const [open, setOpen] = useState(false);
   const remaining = useCountdown(auctionEndDate ?? undefined);
+  const { canSeePrices } = useCanSeePrices();
 
   const placeBidMeta = ACTION_META[ACTION_ID.PLACE_BID];
   const buyNowMeta = ACTION_META[ACTION_ID.BUY_NOW_AUCTION];
@@ -68,14 +70,20 @@ export function AuctionBottomActions(props: AuctionBottomActionsProps) {
               ? [
                   {
                     ...buyNowMeta,
-                    label: `Buy Now — ${formatCurrency(buyNowPrice, currency)}`,
+                    // Both of these are plain strings on the bottom bar rather
+                    // than slots, so the gate happens as they are built.
+                    label: canSeePrices
+                      ? `Buy Now — ${formatCurrency(buyNowPrice, currency)}`
+                      : "Buy Now",
                     onClick: () => setOpen(true),
                   },
                 ]
               : []),
           ],
           secondaryLabel: formatCountdownLabel(remaining),
-          infoLabel: `${formatCurrency(currentBid, currency)} · ${bidCount} bid${bidCount !== 1 ? "s" : ""}`,
+          infoLabel: canSeePrices
+            ? `${formatCurrency(currentBid, currency)} · ${bidCount} bid${bidCount !== 1 ? "s" : ""}`
+            : `Sign in to see the bid · ${bidCount} bid${bidCount !== 1 ? "s" : ""}`,
           desktop: "after-scroll" as const,
         },
   );

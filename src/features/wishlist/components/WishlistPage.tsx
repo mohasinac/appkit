@@ -1,4 +1,4 @@
-import { Button, Div, Stack, Text } from "../../../ui";
+import { Button, Div, GatedPrice, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -39,7 +39,7 @@ export function WishlistCard({
         </Text>
         {item.productPrice !== undefined && (
             <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">
-            {formatCurrency(item.productPrice, item.productCurrency)}
+            <GatedPrice>{formatCurrency(item.productPrice, item.productCurrency)}</GatedPrice>
           </Text>
         )}
       </Stack>

@@ -1,7 +1,6 @@
-import { Span } from "./Typography";
-import { Row } from "./Layout";
-import { getDefaultCurrency } from "../../core/baseline-resolver";
-import { formatCurrency, formatPercentage } from "../../utils/number.formatter";
+"use client";
+
+import { GatedPrice } from "./GatedPrice";
 
 export interface PriceDisplayProps {
   amount: number;
@@ -11,46 +10,32 @@ export interface PriceDisplayProps {
   className?: string;
 }
 
+/**
+ * A product price on a public surface — gated behind sign-in.
+ *
+ * This is now a thin wrapper over `<GatedPrice>`, with no opt-out, because both
+ * of its consumers (`ProductGrid`'s card + list rows, and the generic
+ * `ProductDetailPageView`) are public listing surfaces. There is deliberately no
+ * `ungated` prop: nothing in admin, seller, cart, checkout or orders uses this
+ * component, so an escape hatch here would exist only to be misused. Those
+ * surfaces call `formatCurrency` directly and are signed-in by definition.
+ *
+ * Rendering, discount badge and markup are unchanged for a signed-in viewer.
+ */
 export function PriceDisplay({
   amount,
-  currency = getDefaultCurrency(),
+  currency,
   originalAmount,
   variant = "compact",
   className,
 }: PriceDisplayProps) {
-  const hasDiscount = originalAmount !== undefined && originalAmount > amount;
-  const discountPct = hasDiscount
-    ? (originalAmount - amount) / originalAmount
-    : 0;
-
-  const priceClass =
-    variant === "detail"
-      ? "appkit-price-display__price appkit-price-display__price--detail"
-      : "appkit-price-display__price appkit-price-display__price--compact";
-
-  const originalClass =
-    variant === "detail"
-      ? "appkit-price-display__original appkit-price-display__original--detail"
-      : "appkit-price-display__original appkit-price-display__original--compact";
-
   return (
-    <Row
-      wrap
-      align="baseline"
-      gap="xs"
-      className={`appkit-price-display ${className ?? ""}`.trim()}
-    >
-      <Span className={priceClass}>{formatCurrency(amount, currency)}</Span>
-      {hasDiscount && (
-        <>
-          <Span className={originalClass}>
-            {formatCurrency(originalAmount, currency)}
-          </Span>
-          <Span className="appkit-price-display__discount">
-            -{formatPercentage(discountPct, 0)}
-          </Span>
-        </>
-      )}
-    </Row>
+    <GatedPrice
+      amount={amount}
+      currency={currency}
+      originalAmount={originalAmount}
+      variant={variant}
+      className={className}
+    />
   );
 }

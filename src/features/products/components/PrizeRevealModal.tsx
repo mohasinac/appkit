@@ -10,7 +10,7 @@
  * a pure display: "pending" (no result yet) or "won" (order.prizeWon is set).
  */
 
-import { Anchor, Div, Heading, Modal, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, Modal, PricesOnly, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -83,10 +83,12 @@ export function PrizeRevealModal({
               </Div>
             ) : null}
             {winner.estimatedValue != null ? (
-              <Text className="mt-2 text-[var(--appkit-color-text-muted)]" size="sm">
-                Estimated value: ₹
-                {winner.estimatedValue.toLocaleString("en-IN")}
-              </Text>
+              <PricesOnly>
+                <Text className="mt-2 text-[var(--appkit-color-text-muted)]" size="sm">
+                  Estimated value: ₹
+                  {winner.estimatedValue.toLocaleString("en-IN")}
+                </Text>
+              </PricesOnly>
             ) : null}
           </Div>
         )}

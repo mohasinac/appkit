@@ -104,7 +104,18 @@ export function useAuctionBids(
         `${AUCTION_ENDPOINTS.BIDS(auctionSlug)}?limit=${limit}`,
       ),
     enabled: (opts?.enabled ?? true) && !!auctionSlug,
-    refetchInterval: 15_000, // refresh every 15 s for real-time feel
+    // 🛑 Do NOT restore a ~15s interval here. Live auction state on the detail
+    // page comes from the SSE channel (`useRealtimeBids` -> `useLiveAuctionBid`,
+    // consumed by LiveBidPrice / LiveMinIncrement / PlaceBidFormClient), NOT
+    // from this hook — so a fast poll here buys no freshness the page does not
+    // already have, and duplicates a stream that already costs a held-open
+    // function per viewer.
+    //
+    // Verified 2026-09-14: this hook currently has no call sites at all outside
+    // the appkit barrel re-export, so the old 15s interval was billing nothing
+    // only by accident. Kept deliberately slow so that adopting it cannot
+    // silently reintroduce a per-viewer poll.
+    refetchInterval: 60_000,
   });
 
   return {

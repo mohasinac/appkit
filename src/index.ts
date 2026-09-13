@@ -1042,6 +1042,9 @@ export { createSeoConfig } from "./seo/index";
 // faqJsonLd - Shared export for faq json ld.
 export { faqJsonLd } from "./seo/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// gatedPriceWebPageJsonLd - Shared export for gated price web page json ld.
+export { gatedPriceWebPageJsonLd } from "./seo/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // generateAuctionMetadata - Helper for generate auction metadata.
 export { generateAuctionMetadata } from "./seo/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -9076,7 +9079,7 @@ export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Paginati
 export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
 export { ActionRow } from "./ui/index";
 export type { ActionRowProps, ActionRowAlign } from "./ui/index";
-export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
+export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, GatedPrice, PricesOnly, SummaryCard } from "./ui/index";
 export { CountdownDisplay, ItemRow, HorizontalScroller } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
 export { Tabs, TabsList, TabsTrigger, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";

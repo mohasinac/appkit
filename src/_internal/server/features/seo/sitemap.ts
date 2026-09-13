@@ -78,8 +78,16 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     ({ url: `${baseUrl}${path}`, lastModified: new Date(), changeFrequency: changeFreq, priority });
   return [
     page(String(ROUTES.HOME), "daily", 1.0),
-    page(String(ROUTES.PUBLIC.PRODUCTS), "hourly", 0.9),
-    page(String(ROUTES.PUBLIC.AUCTIONS), "hourly", 0.9),
+    // "daily", not "hourly". These two are the highest-priority URLs in the
+    // sitemap AND the entry points into the deepest faceted URL space
+    // (tab x sortKey x page), so an hourly hint invites recrawl of that whole
+    // surface at a rate a catalogue this size cannot justify — new listings
+    // arrive daily, not hourly. `changeFrequency` is only a hint and Google has
+    // said it largely disregards it, so treat this as removing a bad signal
+    // rather than as a lever: priority is unchanged and neither page loses
+    // indexability. 2026-09-14, Vercel usage reduction.
+    page(String(ROUTES.PUBLIC.PRODUCTS), "daily", 0.9),
+    page(String(ROUTES.PUBLIC.AUCTIONS), "daily", 0.9),
     page(String(ROUTES.PUBLIC.CATEGORIES), "weekly", 0.8),
     page(String(ROUTES.PUBLIC.BRANDS), "weekly", 0.7),
     page(String(ROUTES.PUBLIC.BLOG), "daily", 0.7),

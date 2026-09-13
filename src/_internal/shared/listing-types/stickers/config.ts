@@ -28,6 +28,8 @@ export const config = {
   // have no page of their own, which is why this points at ART rather than
   // a `/stickers` route that does not exist.
   browseRoute: String(ROUTES.PUBLIC.ART),
+  // /art ("Art & Stickers") is in MAIN_NAV_ITEMS and spans art + stickers.
+  inGeneralCatalogue: false,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

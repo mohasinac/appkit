@@ -1,6 +1,7 @@
 "use client";
 
 import { Span } from "../../../ui";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
 import {
@@ -37,6 +38,13 @@ export function LiveMinIncrement({
 }: LiveMinIncrementProps) {
   const live = useLiveAuctionBid(productId, currentBid, bidCount, { enabled: !isEnded });
   const increment = resolveMinBidIncrement(live.currentBid, tiers, minBidIncrementOverride);
+  const { canSeePrices } = useCanSeePrices();
+
+  // The increment is derived from the current bid, so it discloses the bid's
+  // magnitude. This is a SECONDARY hint next to the gated bid itself, so it
+  // hides outright — "min increment Sign in to see price" reads as broken copy,
+  // and the prompt is already on the bid one line up.
+  if (!canSeePrices) return null;
 
   return (
     <Span size={size} color="muted">

@@ -123,6 +123,53 @@ export interface BlogPostJsonLdInput {
 
 // --- Helpers -----------------------------------------------------------------
 
+/**
+ * The CSS selector the price gate renders in every state.
+ *
+ * 🛑 Must equal `GATED_PRICE_CLASS` in `ui/components/GatedPrice.tsx`. It is
+ * duplicated as a literal here rather than imported because `seo/` is reached
+ * from server-only metadata paths and must not pull in a `"use client"` module
+ * (Root Cause #76). `audit-guest-price-leak` cross-checks the two.
+ */
+const GATED_PRICE_SELECTOR = ".appkit-gated-price";
+
+/**
+ * Declares that this page's price is behind a sign-in gate.
+ *
+ * Prices are hidden from signed-out visitors, and Googlebot crawls signed out —
+ * so the crawler sees "Sign in to see price" while the Product JSON-LD beside it
+ * declares a real `offers.price`. Left undeclared, that is a structured-data
+ * mismatch: Google requires marked-up content to be visible to the user, and an
+ * unexplained gap can cost the rich result.
+ *
+ * `isAccessibleForFree: false` + `hasPart`/`cssSelector` is the supported way to
+ * say "the markup is richer than what an anonymous visitor sees". It lives on a
+ * `WebPage` node rather than on the Product, because `isAccessibleForFree` is a
+ * `CreativeWork` property and `Product` is not a `CreativeWork`.
+ *
+ * Serving the price to crawler user-agents but not to people would be cloaking,
+ * which is a harder violation; this declares the gate instead of hiding it.
+ *
+ * 🛑 Emit this on EVERY page that emits `offers.price`. The audit enforces the
+ * pairing precisely so nobody removes one half later.
+ */
+export function gatedPriceWebPageJsonLd(path: string): Record<string, JsonLdValue> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    // Absolutised against the ONE canonical host, never a second definition of
+    // it (Root Cause #81) — a WebPage node naming a host the sitemap does not
+    // advertise is the same split-identity bug in miniature.
+    url: absoluteUrl(path),
+    isAccessibleForFree: false,
+    hasPart: {
+      "@type": "WebPageElement",
+      isAccessibleForFree: false,
+      cssSelector: GATED_PRICE_SELECTOR,
+    },
+  };
+}
+
 export function productJsonLd(
   product: ProductJsonLdInput,
 ): Record<string, JsonLdValue> {

@@ -110,7 +110,8 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/products",
     steps: [
-      "Open /products in a private window.",
+      "Sign in as a buyer. The price-range facet is hidden from signed-out visitors, so this case cannot run as a guest.",
+      "Open /products.",
       "Type beyblade in the search field and click 'Search', then note the count.",
       "Open the filters, tick the Beyblade Burst category, and apply.",
       "Read the count, the URL and the card titles.",
@@ -124,14 +125,15 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Read-only; nothing persists beyond the URL.",
   },
   "checklist-content-discovery-search-search-keeps-sort": {
-    roles: ["guest"],
+    roles: ["buyer"],
     startPage: "/products",
     steps: [
       // PRECONDITION FIRST. Without it a broken sort reads as "inconclusive"
       // instead of "fail" — which is exactly what happened: a tester reported
       // sorts=price and sorts=-price returning an IDENTICAL order with no
       // search term at all, and had no way to record that as a verdict.
-      "Open /products in a private window with NO search term.",
+      "Sign in as a buyer. Price sorts are not offered to signed-out visitors, so this case cannot run as a guest.",
+      "Open /products with NO search term.",
       "Set the sort to 'Price: low to high' and read the first three prices in order.",
       "Set the sort to 'Price: high to low' and read the first three prices again.",
       "If those two orders are identical, STOP and answer NO — sort is broken before search is involved, and say so. Do not continue.",
@@ -150,7 +152,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Read-only; nothing persists beyond the URL.",
   },
   "checklist-content-discovery-search-search-keeps-facets": {
-    roles: ["guest"],
+    roles: ["buyer"],
     startPage: "/products",
     steps: [
       "Open /products in a private window.",

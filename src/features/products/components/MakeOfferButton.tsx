@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import {
   Button,
   Div,
@@ -73,6 +74,7 @@ export function MakeOfferButton({
 }: MakeOfferButtonProps) {
   const [state, setState] = useState<State>("idle");
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const { canSeePrices } = useCanSeePrices();
   const [isPending, startTransition] = useTransition();
 
   const fmt = (n: number) => (currency ? formatCurrency(n, currency) : `₹${n.toLocaleString()}`);
@@ -175,7 +177,10 @@ export function MakeOfferButton({
         size="md"
         border="strong"
         className={`w-full ${className}`}
-        onClick={() => setState("open")}
+        // The modal's first line is "Listed at ₹X · Minimum offer: ₹Y", so
+        // opening it for a signed-out visitor both discloses the price and
+        // walks them into a form that can only fail at submit.
+        onClick={() => (canSeePrices ? setState("open") : setShowLoginModal(true))}
       >
         {bounds.isBuyRequest ? "Request to Buy" : "Make Offer"}
       </Button>

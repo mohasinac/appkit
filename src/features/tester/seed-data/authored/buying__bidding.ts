@@ -151,9 +151,10 @@ export const authored: Record<string, AuthoredCase> = {
       "After reload the same rows appear in the same order. An empty list here immediately after placing a bid means the bid was written without a buyer reference.",
   },
   "checklist-buying-bidding-bid-history-auction-detail-pagination": {
-    roles: ["guest"],
+    roles: ["buyer"],
     startPage: "/auctions/auction-beyblade-metal-lightning-l-drago",
     steps: [
+      "Sign in as a buyer — bid amounts are hidden from signed-out visitors, so this case cannot read them as a guest.",
       "Open /auctions/auction-beyblade-metal-lightning-l-drago.",
       "Click the 'Bid History' control to expand it.",
       "Read the amounts on the first page, top to bottom.",
@@ -407,17 +408,17 @@ export const authored: Record<string, AuthoredCase> = {
       "Reloading the auction still shows ₹15,000.00 and 1 bid, and the row is still on /user/bids.",
   },
   "checklist-buying-bidding-place-bid-live-other-viewer": {
-    roles: ["buyer", "guest"],
+    roles: ["buyer"],
     startPage: "/auctions/auction-tester-sandbox-cycle-2",
     steps: [
       "In window A, sign in as rehan.sheikh@gmail.com / TempPass123! and open /auctions/auction-tester-sandbox-cycle-2.",
-      "In window B, open the same auction signed out, and read the current bid and bid count.",
+      "In window B, sign in as a DIFFERENT buyer (vivaan.kapoor@gmail.com / TempPass123!) and open the same auction; read the current bid and bid count.",
       "In window A, click 'Place a bid', select the 'Minimum' preset at ₹15,000.00, and click 'Place Bid'.",
       "Switch to window B and watch for up to 10 seconds without reloading.",
     ],
     inputs: { bidAmount: 15000 },
     expectedBehaviour:
-      "Bid updates are relayed over SSE from the server, which is why a signed-out viewer sees them at all — the underlying realtime node is not client-readable, so the browser never reads it directly.",
+      "Bid updates are relayed over SSE from the server — the underlying realtime node is not client-readable, so the browser never reads it directly. Window B is a SECOND SIGNED-IN BUYER, not a signed-out visitor: bid figures are now hidden from guests, so a signed-out window B would show 'Sign in to see the current bid' before and after and could never demonstrate the stream at all.",
     expectedUiState:
       "Window B moves to 'Current bid ₹15,000.00' and '1 bid' within about 10 seconds, with no reload and no interaction. Figures that only change on refresh mean the stream is not connected.",
     expectedData: { currentBid: 15000, bidCount: 1 },

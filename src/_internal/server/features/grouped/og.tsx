@@ -3,10 +3,13 @@
  *
  * Deliberately delegates to `renderBundleOgImage` rather than re-implementing
  * the layout: the card is the same shape (title, description, cover, item
- * count) minus the price, and `BundleOgData.priceLabel` / `.stockStatus` are
- * already nullable for exactly that case. Forking it would give two ~150-line
- * OG layouts to keep visually in step — the Duplication Framework's
- * "same prop surface, same output" consolidate rule.
+ * count), and `BundleOgData.stockStatus` is already nullable for the fields a
+ * group has no value for. Forking it would give two ~150-line OG layouts to
+ * keep visually in step — the Duplication Framework's "same prop surface, same
+ * output" consolidate rule.
+ *
+ * Neither card carries a price any more: an OG image is a public URL with the
+ * amount burned into the pixels, which no sign-in gate reaches.
  */
 
 import type { ReactElement } from "react";
@@ -25,8 +28,6 @@ export function renderGroupedListingOg(
         doc?.description?.slice(0, 140) ??
         `A curated group of related listings on ${opts.siteName}.`,
       coverImageUrl: resolveOgImageUrl(doc?.coverImage ?? null, opts.baseUrl),
-      // A group has no price of its own — the buyer's selection is the price.
-      priceLabel: null,
       itemCount: doc?.productIds?.length ?? null,
       stockStatus: null,
     },

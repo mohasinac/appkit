@@ -8,7 +8,7 @@ import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
-import { Div } from "../../../ui";
+import { Div, PricesOnly } from "../../../ui";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import {
@@ -250,21 +250,28 @@ export function ProductFilters({
         defaultCollapsed={false}
       />
 
-      <RangeFilter
-        title={t("priceRange")}
-        minValue={table.get(TABLE_KEYS.MIN_PRICE)}
-        maxValue={table.get(TABLE_KEYS.MAX_PRICE)}
-        onMinChange={(v) => table.set(TABLE_KEYS.MIN_PRICE, v)}
-        onMaxChange={(v) => table.set(TABLE_KEYS.MAX_PRICE, v)}
-        prefix={currencyPrefix}
-        showSlider
-        minBound={0}
-        maxBound={500000}
-        step={500}
-        minPlaceholder={t("minPrice")}
-        maxPlaceholder={t("maxPrice")}
-        defaultCollapsed={false}
-      />
+      {/* 🛑 Hidden from signed-out visitors, and this is a real gate rather than
+          tidiness: a price-range facet lets anyone bracket a hidden price to the
+          rupee in a handful of clicks (₹0–1000? no results. ₹0–2000? one result.
+          …), which would make the rest of the price gating decorative. The same
+          reasoning removes the price SORT options — see `publicSortOptionsFor`. */}
+      <PricesOnly>
+        <RangeFilter
+          title={t("priceRange")}
+          minValue={table.get(TABLE_KEYS.MIN_PRICE)}
+          maxValue={table.get(TABLE_KEYS.MAX_PRICE)}
+          onMinChange={(v) => table.set(TABLE_KEYS.MIN_PRICE, v)}
+          onMaxChange={(v) => table.set(TABLE_KEYS.MAX_PRICE, v)}
+          prefix={currencyPrefix}
+          showSlider
+          minBound={0}
+          maxBound={500000}
+          step={500}
+          minPlaceholder={t("minPrice")}
+          maxPlaceholder={t("maxPrice")}
+          defaultCollapsed={false}
+        />
+      </PricesOnly>
 
       {loadBrandOptions ? (
         <AsyncFacetSection

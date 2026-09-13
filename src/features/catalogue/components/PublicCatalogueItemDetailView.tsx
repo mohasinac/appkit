@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Container, Div, Grid, Heading, Main, Row, Section, Skeleton, Span, Stack, Text } from "../../../ui";
+import { Container, Div, GatedPrice, Grid, Heading, Main, Row, Section, Skeleton, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -108,7 +108,9 @@ export function PublicCatalogueItemDetailView({ ownerSlug, itemId }: PublicCatal
 
             {typeof item.price === "number" && item.price > 0 && (
               <Stack gap="xs">
-                <Text size="2xl" weight="bold" color="primary">{formatCurrency(item.price)}</Text>
+                <Text size="2xl" weight="bold" color="primary">
+                  <GatedPrice label="Sign in to see the estimated value">{formatCurrency(item.price)}</GatedPrice>
+                </Text>
                 <Text size="xs" color="muted">Estimated value — not for direct sale from this page.</Text>
               </Stack>
             )}

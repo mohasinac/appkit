@@ -31,8 +31,8 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/products",
     steps: [
-      "Open /products in a private window in LIGHT mode.",
-      "Find a card of each listing type and read its badge: Auction, Pre-Order, Prize Draw, Classified, Digital Code, Live Item, Art Print, Sticker Sheet.",
+      "Open /products in a private window in LIGHT mode and read the badges on the grid: Classified, Digital Code, Live Item.",
+      "Open /auctions and read the Auction badge; /pre-orders for Pre-Order; /prize-draws for Prize Draw; /art for Art Print and Sticker Sheet.",
       "Read each badge's text against its own background.",
       "Write down any badge whose text cannot be read.",
     ],
@@ -48,7 +48,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/products",
     steps: [
       "Open /products in a private window and switch to DARK mode.",
-      "Find a card of each listing type and read its badge.",
+      "Read the Classified, Digital Code and Live Item badges on the grid, then visit /auctions, /pre-orders, /prize-draws and /art for the remaining five badges.",
       "Compare each against how it read in light mode.",
       "Write down any badge readable in one theme and not the other.",
     ],
@@ -65,7 +65,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /products in a private window and find a Live Item card.",
       "Look at its badge and check whether it has a filled background at all.",
-      "Compare it against the Auction and Pre-Order badges beside it.",
+      "Compare it against the Classified and Digital Code badges beside it, then against the Auction badge on /auctions.",
       "Switch to dark mode and look again.",
       "Open /live/live-tester-sandbox-1 signed in as tester@letitrip.in / TempPass123! and look at the badge there.",
     ],

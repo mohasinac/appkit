@@ -5,7 +5,6 @@ import { resolveOgImageUrl } from "../seo/og";
 
 export interface ClassifiedOgData {
   title: string;
-  priceLabel?: string | null;
   location?: string | null;
   imageUrl?: string | null;
 }
@@ -28,19 +27,9 @@ export function renderClassifiedOg(
     ? [meta.meetupArea.locality, meta.meetupArea.city].filter(Boolean).join(", ")
     : null;
 
-  const priceLabel =
-    doc?.price != null
-      ? new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: doc.currency ?? "INR",
-          maximumFractionDigits: 0,
-        }).format(doc.price)
-      : null;
-
   return renderClassifiedOgImage(
     {
       title: doc?.title ?? "Classified Listing",
-      priceLabel,
       location,
       imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
@@ -54,7 +43,7 @@ export function renderClassifiedOgImage(data: ClassifiedOgData, siteName: string
     subtitle: data.location ?? undefined,
     imageUrl: data.imageUrl,
     siteName: `${siteName} · Classified`,
-    accentSlot: data.priceLabel,
+    accentSlot: null,
     theme: { accentColor: "#38bdf8" },
   });
 }

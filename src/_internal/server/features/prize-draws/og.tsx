@@ -28,23 +28,17 @@ interface PrizeDrawDocLike {
   prizeCurrentEntries?: number | null;
 }
 
-function formatPriceInr(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
 export function renderPrizeDrawOg(
   doc: PrizeDrawDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const entryPrice = doc?.pricePerEntry ?? doc?.price ?? null;
+  // "Free entry" is kept — it is a fact about the draw, not a disclosed amount,
+  // and it is the half of this chip that actually earns a click. The priced case
+  // renders nothing: an OG image is a public URL with the value burned into the
+  // pixels, which no sign-in gate or paywall markup can reach.
   const pricePerEntryLabel =
-    typeof entryPrice === "number" && entryPrice > 0
-      ? `${formatPriceInr(entryPrice, doc?.currency ?? "INR")} / entry`
-      : "Free entry";
+    typeof entryPrice === "number" && entryPrice > 0 ? null : "Free entry";
 
   const max = doc?.prizeMaxEntries ?? null;
   const current = doc?.prizeCurrentEntries ?? 0;

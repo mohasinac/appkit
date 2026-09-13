@@ -20,6 +20,24 @@
 import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
+  "checklist-seo-canonical-and-host-gated-price-is-declared-in-structured-data": {
+    roles: ["guest"],
+    startPage: "/products/product-beyblade-burst-valkyrie",
+    steps: [
+      "Open /products/product-beyblade-burst-valkyrie in a private window and view the page source.",
+      "Find every <script type=\"application/ld+json\"> block and read them.",
+      "In the Product block, read the offers object and confirm it still carries a price and a priceCurrency.",
+      "Find the WebPage block and read its isAccessibleForFree value and its hasPart.cssSelector value.",
+      "Search the rendered HTML for that exact selector's class name and confirm at least one element carries it.",
+      "Repeat all of the above for /auctions/auction-beyblade-metal-lightning-l-drago.",
+    ],
+    expectedBehaviour:
+      "The structured data keeps the price on purpose, so search engines still see it — and declares the on-page gate alongside it, so the richer markup is not an undeclared mismatch. Both halves are required: the price alone is a mismatch, and the declaration alone throws away the search value the decision was made to keep.",
+    expectedUiState:
+      "The Product block's offers object contains a numeric price and priceCurrency 'INR'. A separate WebPage block is present carrying isAccessibleForFree: false and hasPart.cssSelector '.appkit-gated-price'. Searching the HTML for 'appkit-gated-price' finds at least one element. On the auction page the same two blocks are present, the offer price being the current bid. A page with offers.price and NO WebPage block is the failure; so is a cssSelector that matches no element in the HTML.",
+    expectedData: { webPageBlocksWithGateDeclared: 2, selectorMatchesElement: true },
+    endResult: "Read-only; nothing persists.",
+  },
   "checklist-seo-canonical-and-host-apex-redirects-to-www": {
     roles: ["guest"],
     startPage: "/",

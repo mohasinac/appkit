@@ -17,7 +17,8 @@
 
 import { Row } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
-import { Button, Div, Grid, Scrim, Text } from "../../../ui";
+import { Button, Div, Grid, PricesOnly, Scrim, Text } from "../../../ui";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
@@ -78,14 +79,20 @@ function makePrizeItemClickHandler<T extends CollagePrizeItem>(
 }
 
 /** Build the lightbox images array from sorted prize items. */
-function toGalleryImages(items: CollagePrizeItem[]): LightboxImage[] {
+function toGalleryImages(
+  items: CollagePrizeItem[],
+  canSeePrices: boolean,
+): LightboxImage[] {
   return items.map((it) => ({
     src: it.images?.[0] ?? "",
     alt: it.title || `Prize #${it.itemNumber}`,
     badge: `#${it.itemNumber}`,
     caption: it.title || `Prize #${it.itemNumber}`,
+    // `sub` is a plain caption string, so the gate happens here — the tile's
+    // own estimate is gated in the JSX below and this would otherwise print it
+    // again one click away.
     sub:
-      it.estimatedValue != null
+      canSeePrices && it.estimatedValue != null
         ? `est. ₹${it.estimatedValue.toLocaleString("en-IN")}`
         : undefined,
   }));
@@ -99,6 +106,9 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
   hideWonState = false,
 }: PrizeDrawCollageProps<T>) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  // Above the empty-state early return — a hook after a conditional return is a
+  // render-order violation, not a style preference.
+  const { canSeePrices } = useCanSeePrices();
 
   if (!items.length) {
     return (
@@ -110,7 +120,7 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
     );
   }
 
-  const galleryImages = toGalleryImages(items);
+  const galleryImages = toGalleryImages(items, canSeePrices);
 
   return (
     <>
@@ -181,9 +191,14 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
                   {it.title || `Prize #${it.itemNumber}`}
                 </Text>
                 {it.estimatedValue != null ? (
-                  <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
-                    est. ₹{it.estimatedValue.toLocaleString("en-IN")}
-                  </Text>
+                  // The prize's estimated value is a money amount like any
+                  // other — hidden rather than prompted, because the entry
+                  // price beside it already carries the sign-in gate.
+                  <PricesOnly>
+                    <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
+                      est. ₹{it.estimatedValue.toLocaleString("en-IN")}
+                    </Text>
+                  </PricesOnly>
                 ) : null}
               </Div>
             </Button>

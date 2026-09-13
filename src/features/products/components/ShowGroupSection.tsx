@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Div, Row, Span, Text, Modal, SideDrawer, Button } from "../../../ui";
+import { Div, PricesOnly, Row, Span, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker } from "./GroupMemberPicker";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -83,7 +83,9 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
       <Text className="text-[10px] leading-tight line-clamp-2 w-full" color="muted" align="start">
         {member.title}
       </Text>
-      <Text className="text-[10px]" color="primary" weight="semibold">{price}</Text>
+      <Text className="text-[10px]" color="primary" weight="semibold">
+        <PricesOnly>{price}</PricesOnly>
+      </Text>
     </Link>
   );
 }

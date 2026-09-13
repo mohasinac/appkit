@@ -5,7 +5,6 @@ import { resolveOgImageUrl } from "../seo/og";
 
 export interface DigitalCodeOgData {
   title: string;
-  priceLabel?: string | null;
   deliveryMethod?: string | null;
   imageUrl?: string | null;
 }
@@ -23,15 +22,6 @@ export function renderDigitalCodeOg(
   doc: DigitalCodeDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const priceLabel =
-    doc?.price != null
-      ? new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: doc.currency ?? "INR",
-          maximumFractionDigits: 0,
-        }).format(doc.price)
-      : null;
-
   const deliveryMethod =
     doc?.digitalCode?.codeDeliveryMethod === "auto-claim"
       ? "Instant delivery"
@@ -42,7 +32,6 @@ export function renderDigitalCodeOg(
   return renderDigitalCodeOgImage(
     {
       title: doc?.title ?? "Digital Code",
-      priceLabel,
       deliveryMethod,
       imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
@@ -59,7 +48,7 @@ export function renderDigitalCodeOgImage(
     subtitle: data.deliveryMethod ?? undefined,
     imageUrl: data.imageUrl,
     siteName: `${siteName} · Digital Code`,
-    accentSlot: data.priceLabel,
+    accentSlot: null,
     theme: { background: "#0c0a1e", accentColor: "#a78bfa" },
   });
 }

@@ -15,7 +15,7 @@ const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-sol
 const CLS_SALE_BADGE = "rounded-full bg-success-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-success-on-solid";
 const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
 const CLS_LIMITED_BADGE = "rounded-full bg-info-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-info-on-solid";
-import { BaseListingCard, Button, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Button, GatedPrice, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
@@ -215,7 +215,7 @@ export function MarketplacePreorderCard({
             <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
             <Row align="center" gap="sm" wrap>
               <Text className="text-primary" size="sm" weight="bold">
-                {formatCurrency(product.price, getDefaultCurrency())}
+                <GatedPrice>{formatCurrency(product.price, getDefaultCurrency())}</GatedPrice>
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}
             </Row>
@@ -248,7 +248,7 @@ export function MarketplacePreorderCard({
             ) : null}
             <Row justify="between" className="mt-1" gap="sm">
               <Text size="sm" weight="semibold" color="primary">
-                {formatCurrency(product.price, getDefaultCurrency())}
+                <GatedPrice>{formatCurrency(product.price, getDefaultCurrency())}</GatedPrice>
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}
             </Row>

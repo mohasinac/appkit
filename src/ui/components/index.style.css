@@ -21,6 +21,7 @@
 @import "./Skeleton.style.css";
 @import "./RatingDisplay.style.css";
 @import "./PriceDisplay.style.css";
+@import "./GatedPrice.style.css";
 @import "./ItemRow.style.css";
 @import "./Tooltip.style.css";
 @import "./Layout.style.css";

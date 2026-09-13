@@ -48,14 +48,14 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /products/product-beyblade-original-dranzer-s in a private window at 1280 pixels wide.",
       "Scroll down slowly and note the point at which the sticky bar appears.",
-      "Read what the bar contains — the price, the title, the actions.",
+      "Read what the bar contains — the price area, the title, the actions.",
       "Compare its actions against the in-page purchase panel's actions.",
     ],
     inputs: { viewportWidth: 1280, revealScrollPx: 400 },
     expectedBehaviour:
       "The bar appears around 400 pixels of scroll and carries the same actions as the panel it stands in for. Offering fewer actions than the panel makes the bar a downgrade the user has to scroll back up to escape.",
     expectedUiState:
-      "The bar appears once past roughly 400 pixels, showing the price and the same purchase actions as the in-page panel. It does not appear and disappear repeatedly while scrolling steadily in one direction.",
+      "The bar appears once past roughly 400 pixels, showing the same purchase actions as the in-page panel and the same price treatment — which for a signed-out visitor means the gate, not an amount. It does not appear and disappear repeatedly while scrolling steadily in one direction.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-sticky-cta-bar-desktop-hides-scrolling-back-up": {
@@ -134,14 +134,14 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /auctions/auction-beyblade-x-shark-edge in a private window at 1280 pixels wide.",
       "Scroll until the sticky bar appears.",
-      "Read the bar's contents — the current bid, the countdown and the action.",
+      "Read the bar's contents — the current-bid area, the countdown and the action.",
       "Wait 3 seconds and read the countdown again.",
       "Check the bar offers bidding and not 'Add to Cart'.",
     ],
     expectedBehaviour:
       "An auction's bar carries the live countdown and a bidding action, because auctions are capability-blocked from the cart. A bar offering Add to Cart here means it is publishing the default rather than the type's own.",
     expectedUiState:
-      "The bar shows the current bid and a ticking countdown whose seconds figure is lower after 3 seconds. Its action is 'Place a bid' or Buy Now — never 'Add to Cart'. A frozen countdown is a fail even though the number looks right.",
+      "BEFORE: the bar read '₹15,000.00 · 1 bid' to anyone. AFTER, signed out: it reads 'Sign in to see the bid · 1 bid' — the bid COUNT is not an amount and stays. A ticking countdown whose seconds figure is lower after 3 seconds sits beside it. Its action is 'Place a bid' or Buy Now — never 'Add to Cart'. A frozen countdown is a fail even though the number looks right.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-sticky-cta-bar-ended-auction-no-bar": {
@@ -167,14 +167,14 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /pre-orders/preorder-beyblade-x-bx-08-wave in a private window at 1280 pixels wide.",
       "Scroll until the sticky bar appears.",
-      "Read its action label and any note about the deposit.",
+      "Read its action label and whether any deposit figure is stated.",
       "Compare the label against the in-page purchase panel's.",
       "Open /pre-orders/preorder-beyblade-x-bx-11-sold-out and scroll the same way.",
     ],
     expectedBehaviour:
       "A pre-order's bar uses its own vocabulary — reserving against a deposit rather than buying outright — and a sold-out pre-order offers no purchase action. Generic 'Add to Cart' copy here misdescribes what the buyer is agreeing to.",
     expectedUiState:
-      "The live pre-order's bar reads as a reservation and mentions the deposit rather than the full price alone, matching the in-page panel. The sold-out one shows no purchase bar, or one with no active purchase control.",
+      "The live pre-order's bar reads as a reservation, and matches the in-page panel's price treatment — signed out that is 'Sign in to see price' with NO deposit figure anywhere, since a deposit is an amount. The sold-out one shows no purchase bar, or one with no active purchase control.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-sticky-cta-bar-prize-draw-bar-label": {
@@ -184,13 +184,13 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /prize-draws/prizedraw-beyblade-mystery-box in a private window at 1280 pixels wide.",
       "Scroll until the sticky bar appears.",
       "Read its action label and its price.",
-      "Check whether the price is described as an entry rather than as the item's price.",
+      "Check whether the charge is described as an entry rather than as the item's price.",
       "Compare the label against the in-page purchase panel's.",
     ],
     expectedBehaviour:
       "A prize draw sells ENTRIES, not the prize, and the bar has to say so. A label reading 'Buy now' beside a price is a misrepresentation of what the money buys, which matters more here than anywhere else on this page.",
     expectedUiState:
-      "The bar names an entry and its per-entry price, matching the in-page panel. It does not read as buying the prize outright.",
+      "The bar names an entry, matching the in-page panel. Signed out its amount is gated: it reads 'Sign in to see the entry price' rather than a per-entry figure. It does not read as buying the prize outright.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-sticky-cta-bar-closed-prize-draw-no-bar": {

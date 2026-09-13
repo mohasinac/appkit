@@ -19,7 +19,17 @@ export interface ClientErrorPayload {
 }
 
 const SEEN = new Map<string, number>();
-const DEDUPE_WINDOW_MS = 5000;
+/**
+ * How long an identical error is suppressed before it is reported again.
+ *
+ * This is a rate limit on a beacon that costs a function invocation per send,
+ * so the window has to be sized against the worst case rather than the typical
+ * one: a component stuck in a render loop re-throws the SAME error forever, and
+ * at the original 5s that was 12 invocations/minute/tab, indefinitely, from a
+ * single broken page. The first occurrence is still reported immediately —
+ * widening this loses no distinct error, only repeats of one already recorded.
+ */
+const DEDUPE_WINDOW_MS = 60_000;
 const MAX_SEEN = 32;
 
 function topFrame(stack?: string): string {

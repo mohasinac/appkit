@@ -129,14 +129,14 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open / in a private window at 1280 pixels wide.",
       "Find each product-showcase section and read its heading.",
-      "Check each has cards beneath it with titles, images and prices.",
+      "Check each has cards beneath it with titles, images and a price row.",
       "Write down any showcase heading whose rail is empty.",
       "Click one card and confirm it opens that listing.",
     ],
     expectedBehaviour:
       "A showcase section renders its own query's results. Because each section fails silently to nothing, an empty rail under a heading is the visible half of a section whose fetch returned nothing — the heading rendering at all means the section itself did not throw.",
     expectedUiState:
-      "Every showcase heading has populated cards beneath it, each with a real title, a rendered image and a price. A heading with an empty rail is the finding, named specifically.",
+      "Every showcase heading has populated cards beneath it, each with a real title, a rendered image and a price row — which for a signed-out visitor reads 'Sign in to see price' rather than an amount. A heading with an empty rail is the finding, named specifically.",
     expectedData: { emptyShowcaseRails: 0 },
     endResult: "Read-only; nothing persists.",
   },

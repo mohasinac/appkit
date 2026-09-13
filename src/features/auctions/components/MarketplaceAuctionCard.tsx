@@ -11,7 +11,7 @@ import { useCountdown, type CountdownRemaining } from "../../../react";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Button, Caption, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { isBuyNowAvailable } from "../../../_internal/shared/features/auctions/config";
 import type { ListingType } from "../../products/types/index";
 import { CardStoreLine } from "../../products/components/CardStoreLine";
@@ -218,7 +218,9 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
       </Row>
       <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
       <Row align="center" gap="sm" wrap>
-        <Text className="text-primary" size="sm" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
+        <Text className="text-primary" size="sm" weight="bold">
+          <GatedPrice label="Sign in to see the bid">{formatCurrency(displayBid, getDefaultCurrency())}</GatedPrice>
+        </Text>
         <Div layout="inline-flex" gap="1" textWeight="semibold" className={`items-[center] py-[0.125rem] text-[11px] ${countdownClass}`} padding="x-xs" rounded="full">
           <Clock className="h-2.5 w-2.5" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
@@ -259,7 +261,9 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
         <Caption>
           {isEnded && hasCurrentBid ? mergedLabels.winningBid : hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}
         </Caption>
-        <Text className="leading-none text-primary" size="base" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
+        <Text className="leading-none text-primary" size="base" weight="bold">
+          <GatedPrice label="Sign in to see the bid">{formatCurrency(displayBid, getDefaultCurrency())}</GatedPrice>
+        </Text>
         {isEnded && product.winnerDisplayName && (
           <Caption className="mt-0.5" color="muted">{mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}</Caption>
         )}

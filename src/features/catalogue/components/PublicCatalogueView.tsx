@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Div, Grid, Heading, Skeleton, Text } from "../../../ui";
+import { Div, GatedPrice, Grid, Heading, Skeleton, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -45,7 +45,7 @@ export function PublicCatalogueView({ ownerSlug }: PublicCatalogueViewProps) {
               <Heading level={4} size="sm">{item.title}</Heading>
             </Div>
             {typeof item.price === "number" && item.price > 0 && (
-              <Text size="sm" color="muted">{formatCurrency(item.price)}</Text>
+              <Text size="sm" color="muted"><GatedPrice>{formatCurrency(item.price)}</GatedPrice></Text>
             )}
           </Div>
         </Link>

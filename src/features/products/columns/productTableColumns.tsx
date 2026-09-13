@@ -1,6 +1,6 @@
 import React from "react";
 import type { DataTableColumn } from "../../../ui/DataTable";
-import { Button, Div, Row, Span } from "../../../ui";
+import { Button, Div, GatedPrice, Row, Span } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency as defaultFormatCurrency } from "../../../utils/number.formatter";
 import type { ProductItem } from "../types";
@@ -98,11 +98,17 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       width: "10%",
       render: (product: T) => (
         <Span>
-          {formatCurrency(
-            product.price ?? 0,
-            product.currency ?? currencyCode,
-            locale,
-          )}
+          {/* These columns are shared by public listing tables and the
+              admin/seller dashboards. The gate is a no-op on the dashboards —
+              staff are signed in by definition — so one gated column is
+              correct for both rather than two column sets that could drift. */}
+          <GatedPrice>
+            {formatCurrency(
+              product.price ?? 0,
+              product.currency ?? currencyCode,
+              locale,
+            )}
+          </GatedPrice>
         </Span>
       ),
     },

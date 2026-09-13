@@ -132,18 +132,18 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /products in a private window with no session.",
       "Read the total result count and the availability tab bar.",
-      "Read every listing-type chip offered above the grid.",
+      "Click 'Filters' and read every checkbox under the 'Listing type' heading.",
       "Read every card title on the first page, looking for anything containing 'Tester' or 'Test'.",
-      "Tick the Auctions chip and read the result count and the sort dropdown.",
-      "Tick Pre-Orders as well and read the sort dropdown again.",
+      "Read every badge on the first page of cards.",
+      "Tick 'Classifieds' and 'Digital Codes', click Apply, and read the sort dropdown.",
     ],
     expectedBehaviour:
-      "/products spans every listing type, so its type chips are a multi-select covering all nine — auctions, pre-orders, prize draws, art and stickers were unreachable from the main catalogue while only four chips were offered. The sort dropdown narrows to the options valid for every selected type, because a sort valid for one type alone would either no-op or fail the query for the others.",
+      "/products is the GENERAL catalogue, not an index of everything. It spans the four listing types that have no entry of their own in the main nav — Standard, Classifieds, Digital Codes, Live Items — so each of those is still reachable from somewhere. Auctions, Pre-Orders, Prize Draws, Art and Stickers each own a dedicated page linked from the main nav and no longer appear here, so no item is reachable from two places with two different chromes. The sort dropdown narrows to the options valid for every selected type.",
     expectedUiState:
-      "Nine type chips are offered, ticking more than one is possible, and the Available / Sold & Ended / All tabs are present with Available selected. No card title contains 'Tester' or 'Test' for a signed-out visitor. With Auctions and Pre-Orders both ticked the sort dropdown offers only sorts that apply to both.",
-    expectedData: { listingTypeChipCount: 9 },
+      "BEFORE (the behaviour this replaced): nine type checkboxes, and the grid mixed cards badged 'Auction', 'Pre-Order' and 'Sticker Sheet' in among ordinary products. AFTER: exactly four checkboxes — Standard, Classifieds, Digital Codes, Live Items — and NO card on any page carries an 'Auction', 'Pre-Order', 'Prize Draw', 'Art Print' or 'Sticker Sheet' badge. The Available / Sold & Ended / All tabs are present with Available selected. No card title contains 'Tester' or 'Test' for a signed-out visitor.",
+    expectedData: { listingTypeChipCount: 4 },
     endResult:
-      "Read-only; nothing persists. Four chips instead of nine is the specific regression this case exists for.",
+      "Read-only; nothing persists. An 'Auction' or 'Pre-Order' badge appearing in this grid is the specific regression this case exists for — those types belong on /auctions and /pre-orders.",
   },
   "checklist-public-pages-core-listing-pages-auctions-listing-page": {
     roles: ["guest"],
@@ -193,7 +193,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A bundle is a category row with a locked price, deliberately below the sum of its members, and the discount badge is computed from the two. Its members are mirrored onto the bundle for index-friendly reads, and a reader that trusts only the mirror shows an empty bundle whenever a write path forgot to update it.",
     expectedUiState:
-      "Each card shows a price and a discount percentage. The sandbox bundle shows ₹199 against a members' total of ₹348. Its detail page lists both members with titles and images rather than reading '0 items'. No sandbox bundle is visible to a signed-out visitor.",
+      "Each card shows a price row and, when signed in, a discount percentage. Signed out the price row reads 'Sign in to see the bundle price' and NO discount percentage is shown — the percentage is derived from the bundle price and discloses it. Signed in, the sandbox bundle shows ₹199 against a members' total of ₹348. Its detail page lists both members with titles and images rather than reading '0 items'. No sandbox bundle is visible to a signed-out visitor.",
     expectedData: { sandboxBundleVisibleToGuest: false },
     endResult:
       "Read-only; nothing persists. A bundle rendering as empty is the mirror-drift failure, not a missing bundle.",

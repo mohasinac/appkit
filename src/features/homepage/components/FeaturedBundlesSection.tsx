@@ -11,7 +11,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Badge, Div, Grid, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Badge, Div, GatedPrice, Grid, Heading, PricesOnly, Row, Section, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -145,14 +145,18 @@ function FeaturedBundleCard({
         <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
         <Row gap="sm" align="center" className="mt-1" wrap>
           <Text size="sm" weight="bold">
-            {bundle.bundlePrice
-              ? formatCurrency(bundle.bundlePrice, "INR")
-              : BUNDLE_COPY.featured.priceFallback}
+            <GatedPrice label="Sign in to see the bundle price">
+              {bundle.bundlePrice
+                ? formatCurrency(bundle.bundlePrice, "INR")
+                : BUNDLE_COPY.featured.priceFallback}
+            </GatedPrice>
           </Text>
           {discount && (
-            <Text size="xs" color="muted" className="line-through">
-              {formatCurrency(discount.originalTotal, "INR")}
-            </Text>
+            <PricesOnly>
+              <Text size="xs" color="muted" className="line-through">
+                {formatCurrency(discount.originalTotal, "INR")}
+              </Text>
+            </PricesOnly>
           )}
           <Text size="xs" color="muted">
             · {BUNDLE_COPY.featured.itemCount(memberCount)}

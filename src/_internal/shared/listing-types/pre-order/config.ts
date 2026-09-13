@@ -28,6 +28,8 @@ export const config = {
   pluralLabel: "Pre-Orders",
   chipLabel: "Pre-Orders",
   browseRoute: String(ROUTES.PUBLIC.PRE_ORDERS),
+  // /pre-orders is in MAIN_NAV_ITEMS.
+  inGeneralCatalogue: false,
   hideDefault: "closed" as const,
   // A pre-order closes when its allocation fills, NOT when its delivery date
   // passes — a shipped-soon pre-order is still orderable. `preOrderClosed`

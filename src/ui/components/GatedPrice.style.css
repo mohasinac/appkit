@@ -1,0 +1,40 @@
+/**
+ * Sign-in gate for money amounts on public listing surfaces.
+ *
+ * The pending state must occupy the SAME vertical space as a rendered price, or
+ * every card in a grid reflows once the session resolves. It is deliberately a
+ * silent placeholder rather than a shimmer: the wait is short, and an animated
+ * skeleton on 24 cards reads as a page that failed to load.
+ */
+.appkit-gated-price__pending {
+  display: inline-block;
+  min-width: 5rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  background: var(--appkit-color-surface-muted);
+}
+
+.appkit-gated-price__prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  color: var(--appkit-color-primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.appkit-gated-price__prompt:hover {
+  text-decoration: underline;
+}
+
+/* A lock glyph via ::before rather than an icon component: this renders inside
+   card grids, where 24 extra SVG trees per page is real weight for decoration
+   that carries no meaning the label doesn't already state. */
+.appkit-gated-price__prompt::before {
+  content: "\1F512";
+  font-size: 0.75rem;
+  line-height: 1;
+}

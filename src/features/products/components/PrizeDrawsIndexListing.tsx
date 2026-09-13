@@ -1,4 +1,6 @@
 "use client";
+import { withoutPriceSorts } from "../constants/sieve";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
@@ -46,6 +48,7 @@ export function PrizeDrawsIndexListing({
   storeId: forcedStoreId,
 }: PrizeDrawsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
+  const { canSeePrices } = useCanSeePrices();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const availability =
@@ -134,7 +137,7 @@ export function PrizeDrawsIndexListing({
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={PRIZE_DRAW_SORT_OPTIONS}
+        sortOptions={withoutPriceSorts(PRIZE_DRAW_SORT_OPTIONS, canSeePrices)}
         onSortChange={(v) => {
           table.set(TABLE_KEYS.SORT, v);
         }}

@@ -4,6 +4,7 @@ import type { ListingType } from "../types";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
 import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-names";
 import { productRepository } from "../repository/products.repository";
+import { GENERIC_PRODUCT_LISTING_TYPES } from "../constants/listing-tabs";
 import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
@@ -104,6 +105,15 @@ function toListResult(
   };
 }
 
+/**
+ * Featured items for the homepage's generic "Featured Products" strip.
+ *
+ * Scoped to `GENERIC_PRODUCT_LISTING_TYPES` for the same reason `/products` is:
+ * the homepage already has dedicated Live Auctions, Pre-Orders and Prize Draws
+ * sections, so leaving this unscoped put the same item in two strips on one
+ * page — and an auction rendered as a generic product card shows Buy-Now chrome
+ * instead of bid affordances.
+ */
 export async function getFeaturedProducts(
   pageSize = 8,
 ): Promise<ProductListResult> {
@@ -111,6 +121,7 @@ export async function getFeaturedProducts(
     await listPublicProducts({
       featured: true,
       availability: AVAILABILITY_VALUES.AVAILABLE,
+      listingTypes: GENERIC_PRODUCT_LISTING_TYPES,
       sorts: sortBy("createdAt", "DESC"),
       page: 1,
       pageSize,

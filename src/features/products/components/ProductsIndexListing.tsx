@@ -7,6 +7,8 @@ import { useProducts } from "../hooks/useProducts";
 import { BulkActionBar, Div, FilterDrawer, Grid, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
+import { withoutPriceSorts } from "../constants/sieve";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { CompareOverlay } from "./CompareOverlay";
@@ -61,6 +63,9 @@ function dedicatedPageFor(types: readonly string[]) {
   if (types.length !== 1) return null;
   const plugin = pluginFor(types[0] as ListingType);
   if (!plugin.browseRoute) return null;
+  // `standard`'s browseRoute IS /products, so without this the page offers
+  // "Full Products filters →" pointing at itself.
+  if (plugin.browseRoute === String(ROUTES.PUBLIC.PRODUCTS)) return null;
   return {
     href: plugin.browseRoute as string,
     label: `Full ${plugin.pluralLabel} filters →`,
@@ -92,6 +97,7 @@ export function ProductsIndexListing({
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
+  const { canSeePrices } = useCanSeePrices();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -115,7 +121,14 @@ export function ProductsIndexListing({
   // "Ending Soon"; pick Auctions + Products and you get only what both
   // support, because a sort on `auctionEndDate` would order the products
   // arbitrarily (and needs an index nobody declares for that shape).
-  const sortOptions = commonSortOptionsFor(effectiveTypes, "public");
+  // Price sorts are dropped for signed-out visitors for the same reason the
+  // price-range facet is hidden: ordering by price discloses the relative
+  // ranking of every hidden amount, and combined with paging it recovers a
+  // usable price list. `withoutPriceSorts` is a no-op once signed in.
+  const sortOptions = withoutPriceSorts(
+    commonSortOptionsFor(effectiveTypes, "public"),
+    canSeePrices,
+  );
   const sortValue = table.get(TABLE_KEYS.SORT) || DEFAULT_SORT;
   // Guard against a sort carried over from a previous selection that the new
   // one can't satisfy — that combination throws FAILED_PRECONDITION in

@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, Span } from "../../../ui";
+import { GatedPrice, Row, Span } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
 
@@ -37,7 +37,9 @@ export function LiveBidPrice({
   return (
     <Row align="center" gap="sm" wrap>
       <Span weight="bold" className="text-primary-600 dark:text-primary-400" size={priceSize}>
-        {formatCurrency(live.currentBid, currency)}
+        <GatedPrice label="Sign in to see the current bid">
+          {formatCurrency(live.currentBid, currency)}
+        </GatedPrice>
       </Span>
       <Span size={badgeSize} weight="medium" rounded="full" padding="pill-md" surface="subtle" color="muted">
         {live.bidCount} {live.bidCount === 1 ? "bid" : "bids"}

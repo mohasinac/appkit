@@ -25,7 +25,17 @@ import {
   clearWishlistOps,
 } from "../../features/cart/utils/pending-ops";
 
-const SYNC_INTERVAL_MS = 30_000;
+/**
+ * Cadence for replaying queued cart/wishlist ops.
+ *
+ * A tick with no pending ops is nearly free, but a tick WITH ops also
+ * invalidates the cart and wishlist queries, so each one can cascade into
+ * refetches. At 30s that ran for every signed-in tab for as long as it stayed
+ * open. 2 minutes is ample for an offline-replay backstop — the queue is also
+ * flushed eagerly on `visibilitychange` and `pagehide` (see below), which is
+ * what actually catches the tab-closing case that matters.
+ */
+const SYNC_INTERVAL_MS = 120_000;
 
 async function replayCartOps(): Promise<void> {
   const ops = getCartOps();

@@ -29,6 +29,8 @@ import {
   Container,
   CountdownDisplay,
   Div,
+  GatedPrice,
+  PricesOnly,
   Heading,
   Input,
   Main,
@@ -158,7 +160,9 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       {buyNowAvailable && buyNowPrice !== null && (
         <Row align="center" gap="sm" className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)] bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
-          <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
+          <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">
+            <GatedPrice label="Sign in to see the Buy Now price">{formatCurrency(buyNowPrice, currency)}</GatedPrice>
+          </Span>
           {/* This chip stated a price with no control anywhere near it, under a
               CTA labelled "Place a bid" — which is most of why Buy Now read as
               decorative. The real button lives inside the bid modal (it needs
@@ -506,14 +510,20 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               <Stack className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
                 <Stack gap="xs">
                   <Text size="xs" color="muted">
-                    Starting bid: {formatCurrency(startingBid, currency)}
-                    {!isEnded && <> · min increment {formatCurrency(initialMinBidIncrement, currency)}</>}
+                    <GatedPrice label="Sign in to see the starting bid">
+                      Starting bid: {formatCurrency(startingBid, currency)}
+                      {!isEnded && <> · min increment {formatCurrency(initialMinBidIncrement, currency)}</>}
+                    </GatedPrice>
                   </Text>
                 </Stack>
                 <Stack gap="sm">
                   <Input
                     type="number"
-                    placeholder={`At least ${formatCurrency(initialMinBid, currency)}`}
+                    // The minimum is stated in the gated line above rather than
+                    // in the placeholder: a placeholder is a plain string prop,
+                    // so it cannot be gated in place and would print the bid
+                    // floor to signed-out visitors.
+                    placeholder="Enter your bid"
                     min={initialMinBid}
                     aria-label="Your bid amount"
                     disabled={isEnded}
@@ -533,9 +543,14 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                       dead-affordance shape Root Cause #56 is about. The price
                       is stated instead. */}
                   {buyNowAvailable && buyNowPrice !== null && (
-                    <Text align="center" size="xs" color="muted">
-                      Buy Now available at {formatCurrency(buyNowPrice, currency)}
-                    </Text>
+                    // Hidden rather than prompted: the Buy Now chip at the top
+                    // of the panel already carries the gate, so repeating the
+                    // prompt here would be the same affordance twice.
+                    <PricesOnly>
+                      <Text align="center" size="xs" color="muted">
+                        Buy Now available at {formatCurrency(buyNowPrice, currency)}
+                      </Text>
+                    </PricesOnly>
                   )}
                 </Stack>
                 {tags.length > 0 && (
@@ -590,7 +605,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               <Div className={`${__P.p4} lg:hidden`} border="subtle" rounded="xl" surface="muted">
                 <Row align="center" gap="sm" className="mb-3">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
-                    {formatCurrency(currentBid, currency)}
+                    <GatedPrice label="Sign in to see the current bid">{formatCurrency(currentBid, currency)}</GatedPrice>
                   </Span>
                   <Span size="xs" color="muted">{bidCount} bids</Span>
                 </Row>

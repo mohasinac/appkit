@@ -11,7 +11,7 @@ const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-
 const CLS_STOCK_OK = "bg-success-solid text-success-on-solid";
 // audit-content-alignment-ok: button label text, not page content — buttons are universally center-labeled
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-[var(--appkit-space-1-5)] text-center text-[length:var(--appkit-text-xs)] font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
-import { BaseListingCard, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
@@ -207,16 +207,20 @@ export function MarketplaceBundleCard({
         </TextLink>
         <Row justify="between" className="mt-1" gap="sm" wrap>
           <Row gap="xs" align="center">
-            <Text size="sm" weight="semibold" color="primary">
-              {price
-                ? formatCurrency(price, getDefaultCurrency())
-                : "—"}
-            </Text>
-            {discount && (
-              <Text size="xs" color="muted" className="line-through">
-                {formatCurrency(discount.originalTotal, getDefaultCurrency())}
-              </Text>
-            )}
+            <GatedPrice label="Sign in to see the bundle price">
+              <Row gap="xs" align="center">
+                <Text size="sm" weight="semibold" color="primary">
+                  {price
+                    ? formatCurrency(price, getDefaultCurrency())
+                    : "—"}
+                </Text>
+                {discount && (
+                  <Text size="xs" color="muted" className="line-through">
+                    {formatCurrency(discount.originalTotal, getDefaultCurrency())}
+                  </Text>
+                )}
+              </Row>
+            </GatedPrice>
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
             {mergedLabels.itemsLabel(memberCount)}

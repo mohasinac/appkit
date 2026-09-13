@@ -23,6 +23,8 @@ import {
   Alert,
   Button,
   Div,
+  GatedPrice,
+  PricesOnly,
   Row,
   Span,
   Stack,
@@ -204,7 +206,7 @@ export function GroupMemberPicker({
                   </Td>
                   <Td paddingSide="pr-sm" padding="xs-tall">
                     <Text size="sm" color="muted">
-                      {formatCurrency(m.price, m.currency ?? currency)}
+                      <GatedPrice>{formatCurrency(m.price, m.currency ?? currency)}</GatedPrice>
                     </Text>
                   </Td>
                   {!isCrossStore && (
@@ -247,8 +249,11 @@ export function GroupMemberPicker({
           <Row justify="between" align="center" gap="sm" className="min-w-0">
             <Text size="sm" color="muted">
               {selectedUnits > 0
-                ? `${selectedUnits} item${selectedUnits === 1 ? "" : "s"} · ${formatCurrency(selectedTotal, currency)}`
+                ? `${selectedUnits} item${selectedUnits === 1 ? "" : "s"}`
                 : "Nothing selected yet"}
+              {selectedUnits > 0 && (
+                <PricesOnly>{` · ${formatCurrency(selectedTotal, currency)}`}</PricesOnly>
+              )}
             </Text>
             <Button
               action={ACTIONS.CART["add-group-to-cart"]}

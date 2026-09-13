@@ -130,7 +130,22 @@ const DEFAULT_ENDPOINTS: SessionEndpoints = {
 
 const SESSION_COOKIE = "__session";
 const SESSION_ID_COOKIE = "__session_id";
-const ACTIVITY_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+/**
+ * How often a VISIBLE tab pings session activity and re-reads RBAC flags.
+ *
+ * Each tick costs two function invocations (`sessionActivity`, then the
+ * piggybacked profile re-fetch below), per open tab, wall-clock rather than
+ * activity-gated. At the original 5 minutes that was 24 invocations/hour for
+ * every tab any signed-in user had left open, and it contributed to the Vercel
+ * overage that paused the account (2026-09-14).
+ *
+ * 15 minutes is safe because it is a BACKSTOP, not the primary freshness
+ * mechanism: `RoleGuard` calls `refreshUser()` on every mount of a role-gated
+ * layout, so navigating into /admin, /store or /user re-reads the flags
+ * immediately, and the visibility handler below re-reads them the moment a
+ * backgrounded tab is looked at again.
+ */
+const ACTIVITY_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
 
 // ---------------------------------------------------------------------------
 // React-query cache invalidation callback type
@@ -336,6 +351,16 @@ export function SessionProvider({
   const updateSessionActivity = useCallback(async () => {
     const currentSessionId = getSessionIdFromCookie();
     if (!currentSessionId || !user) return;
+    // A hidden tab is not "activity", so reporting it as such is both wasteful
+    // and wrong — an abandoned background tab used to keep both requests below
+    // firing indefinitely. The visibility handler re-runs this immediately when
+    // the tab is looked at again, so nothing is merely deferred into staleness.
+    if (
+      typeof document !== "undefined" &&
+      document.visibilityState === "hidden"
+    ) {
+      return;
+    }
     try {
       await apiClient.post(ep.sessionActivity, {
         sessionId: currentSessionId,
@@ -372,6 +397,22 @@ export function SessionProvider({
   useEffect(() => {
     updateSessionActivityRef.current = updateSessionActivity;
   }, [updateSessionActivity]);
+
+  // Re-read session activity and RBAC flags the moment a backgrounded tab is
+  // looked at again. This is what lets the interval above be 15 minutes and the
+  // hidden-tab skip be safe: the user-visible freshness guarantee is now "fresh
+  // whenever you are actually looking at it", which is strictly better than the
+  // old fixed 5-minute tick that fired whether anyone was there or not.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        void updateSessionActivityRef.current?.();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
 
   // -----------------------------------------------------------------------
   // Refresh helpers

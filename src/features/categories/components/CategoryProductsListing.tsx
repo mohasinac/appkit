@@ -1,4 +1,6 @@
 "use client";
+import { withoutPriceSorts } from "../../products/constants/sieve";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
@@ -84,6 +86,7 @@ export function CategoryProductsListing({
   initialData,
 }: CategoryProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
+  const { canSeePrices } = useCanSeePrices();
   const { showToast } = useToast();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -214,7 +217,7 @@ export function CategoryProductsListing({
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "-createdAt"}
-        sortOptions={PRODUCT_PUBLIC_SORT_OPTIONS}
+        sortOptions={withoutPriceSorts(PRODUCT_PUBLIC_SORT_OPTIONS, canSeePrices)}
         onSortChange={(v) => {
           table.set("sort", v);
         }}

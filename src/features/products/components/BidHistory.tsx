@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import React from "react";
-import { Div, Heading, Span, Stack, Text } from "../../../ui";
+import { Div, GatedPrice, Heading, Span, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface BidHistoryEntry {
@@ -112,7 +112,9 @@ export function BidHistory({
              data-section="bidhistory-div-422">
               <Stack gap="xs">
                 <Span weight="bold" className="text-primary-600 dark:text-primary-400">
-                  {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
+                  <GatedPrice label="Sign in to see bids">
+                    {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
+                  </GatedPrice>
                 </Span>
                 <Span size="xs" color="muted">
                   {bid.bidderName || maskBidderId(bid.bidderId)}

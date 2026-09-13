@@ -13,6 +13,7 @@ import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
 import { useBottomActions } from "../../layout/hooks/useBottomActions";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 
 import { normalizeError } from "../../../errors/normalize";
 export interface ProductDetailActionsProps {
@@ -54,6 +55,7 @@ export function ProductDetailActions({
   const { showToast } = useToast();
   const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
     useAuthGate();
+  const { canSeePrices } = useCanSeePrices();
   const [busy, setBusy] = useState<"buy" | "cart" | "wish" | null>(null);
   const [wishlisted, setWishlisted] = useState(false);
 
@@ -156,10 +158,15 @@ export function ProductDetailActions({
               onClick: handleBuyNow,
             },
           ],
+          // A plain string on the bottom bar, so the gate happens as it is
+          // built rather than in a slot. It also doubles as the bar's
+          // re-publish key, and the two branches never produce equal text.
           infoLabel:
-            price != null && currency
-              ? formatCurrency(price, currency)
-              : undefined,
+            price == null || !currency
+              ? undefined
+              : canSeePrices
+                ? formatCurrency(price, currency)
+                : "Sign in to see price",
           // The bar itself owns responsive visibility now, so this one registrar serves
           // both breakpoints. The desktop branch below must NOT also register —
           // useBottomActions is last-mounted-wins and the two would clobber each other.

@@ -1,4 +1,6 @@
 "use client";
+import { withoutPriceSorts } from "../constants/sieve";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
@@ -45,6 +47,7 @@ export interface AuctionsIndexListingProps {
 
 export function AuctionsIndexListing({ initialData, categorySlug, brandName }: AuctionsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
+  const { canSeePrices } = useCanSeePrices();
   const { showToast } = useToast();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
@@ -182,7 +185,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={AUCTION_PUBLIC_SORT_OPTIONS}
+        sortOptions={withoutPriceSorts(AUCTION_PUBLIC_SORT_OPTIONS, canSeePrices)}
         onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}

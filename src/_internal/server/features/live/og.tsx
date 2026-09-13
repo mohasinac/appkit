@@ -6,7 +6,6 @@ import { resolveOgImageUrl } from "../seo/og";
 export interface LiveItemOgData {
   title: string;
   species?: string | null;
-  priceLabel?: string | null;
   imageUrl?: string | null;
 }
 
@@ -23,20 +22,10 @@ export function renderLiveItemOg(
   doc: LiveItemDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const priceLabel =
-    doc?.price != null
-      ? new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: doc.currency ?? "INR",
-          maximumFractionDigits: 0,
-        }).format(doc.price)
-      : null;
-
   return renderLiveItemOgImage(
     {
       title: doc?.title ?? "Live Listing",
       species: doc?.liveItem?.species ?? null,
-      priceLabel,
       imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
@@ -49,7 +38,7 @@ export function renderLiveItemOgImage(data: LiveItemOgData, siteName: string): R
     subtitle: data.species ?? undefined,
     imageUrl: data.imageUrl,
     siteName: `${siteName} · Live Listing`,
-    accentSlot: data.priceLabel,
+    accentSlot: null,
     theme: { background: "#052e16", accentColor: "#86efac" },
   });
 }

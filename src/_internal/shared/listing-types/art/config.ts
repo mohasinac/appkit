@@ -28,6 +28,8 @@ export const config = {
   // detail pages use the standard product route — so this is a real
   // dedicated browse surface even though detailRoute points at /products.
   browseRoute: String(ROUTES.PUBLIC.ART),
+  // /art ("Art & Stickers") is in MAIN_NAV_ITEMS and spans art + stickers.
+  inGeneralCatalogue: false,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.
