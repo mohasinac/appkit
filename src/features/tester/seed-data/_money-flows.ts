@@ -202,16 +202,24 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
   {
     pageKey: "auction-win-to-payment",
     pageLabel: "Win an auction → get notified → pay",
-    href: "/auctions/auction-tester-sandbox-cycle-1",
+    href: "/auctions/auction-money-flows-closing",
     cases: [
       {
         key: "winning-bid-recorded",
         label: "Placing the highest bid on a closing auction records you as the winner",
         roles: ["buyer"],
-        startPage: "/auctions/auction-tester-sandbox-cycle-1",
+        // Batch-scoped fixture, seeded by
+        // seed-data/fixtures/money-flows__auction-win-to-payment.mjs and closing
+        // ~3 minutes after this batch starts.
+        //
+        // It used to cite auction-tester-sandbox-cycle-1, which 46 OTHER
+        // citations need LIVE — one fixture with two contradictory
+        // requirements, so this case could never pass its final step and the
+        // rig notes recorded it as unpassable-by-design.
+        startPage: "/auctions/auction-money-flows-closing",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Open /auctions/auction-tester-sandbox-cycle-1, which starts at ₹15,000 with a ₹1,000 increment.",
+          "Open /auctions/auction-money-flows-closing, which starts at ₹15,000 with a ₹1,000 increment and closes about three minutes from now.",
           "Note the current bid and the end time.",
           "Enter 16000 as the bid amount.",
           "Click 'Place Bid'.",
@@ -230,7 +238,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/user/notifications",
         steps: [
-          "Sign in as the buyer who won auction-tester-sandbox-cycle-1.",
+          "Sign in as the buyer who won auction-money-flows-closing.",
           "Open the notifications bell in the header.",
           "Find the auction-won notification.",
           "Read its text.",
@@ -250,7 +258,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/user/orders",
         steps: [
-          "Sign in as the buyer who won auction-tester-sandbox-cycle-1.",
+          "Sign in as the buyer who won auction-money-flows-closing.",
           "Open /user/orders.",
           "Locate the won auction.",
           "Click its payment call to action.",

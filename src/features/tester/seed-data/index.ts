@@ -9,3 +9,4 @@ export { bidsTesterSeedData } from "./bids-tester-seed-data";
 export { cartsTesterSeedData } from "./carts-tester-seed-data";
 export { ordersTesterSeedData } from "./orders-tester-seed-data";
 export { offersTesterSeedData } from "./offers-tester-seed-data";
+export { testerResponsesSeedData } from "./tester-responses-seed-data";

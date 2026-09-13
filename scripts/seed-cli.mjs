@@ -192,7 +192,7 @@ const {
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData,
-  testerChecklistSeedData, cartsTesterSeedData, offersTesterSeedData,
+  testerChecklistSeedData, testerResponsesSeedData, cartsTesterSeedData, offersTesterSeedData,
   supportTicketsSeedData, catalogueSeedData,
   shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
   storesTesterSeedData, categoriesTesterSeedData, productsTesterSeedData,
@@ -210,6 +210,7 @@ const {
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
   TESTER_CHECKLIST_ITEM_COLLECTION,
+  TESTER_CHECKLIST_RESPONSE_COLLECTION,
   // PII field/index constants (plain data, still in the main barrel — the
   // crypto functions themselves come from appkitServer above)
   USER_PII_FIELDS, USER_PII_INDEX_MAP,
@@ -266,6 +267,17 @@ const COLLECTION_MAP = {
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
   testerChecklistItems: TESTER_CHECKLIST_ITEM_COLLECTION,
+  /*
+   * Tester submissions. DERIVED tier in the tester's own map (wiped at setup so
+   * a prior run's verdicts never leak into the next), AND listed in
+   * SEED_TRANSACTIONAL so these two demo fixtures are restored afterwards —
+   * that list is a RESTORE list, orthogonal to the delete tiers.
+   *
+   * Without the fixtures, three admin/bug-hunter-rewards cases have nothing to
+   * confirm or reopen and can only report blocked. Measured 2026-09-11:
+   * 0 pass / 0 fail / 5 blocked, both controls correct.
+   */
+  testerChecklistResponses: TESTER_CHECKLIST_RESPONSE_COLLECTION,
 };
 
 const SEED_DATA_MAP = {
@@ -325,6 +337,7 @@ const SEED_DATA_MAP = {
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
   testerChecklistItems: testerChecklistSeedData,
+  testerChecklistResponses: testerResponsesSeedData,
 };
 
 const ALL_COLLECTIONS = Object.keys(COLLECTION_MAP);
