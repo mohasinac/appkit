@@ -984,6 +984,13 @@ export type { NavPermissionsManagerProps, NavGroup as NavPermissionsGroup, NavIt
 // ── Digital-code code-reveal panel (still used directly on order pages) ───────
 export { CodeRevealPanel } from "./_internal/client/features/digital-code/CodeRevealPanel";
 export type { CodeRevealPanelProps, RevealedCode } from "./_internal/client/features/digital-code/CodeRevealPanel";
+/*
+ * The SELLER half. Without a surface the pool routes are unreachable, which is
+ * the same "finished feature nobody can get to" gap that left the pool empty in
+ * the first place (its only writer answered 501).
+ */
+export { DigitalContentPoolManager } from "./_internal/client/features/digital-code/DigitalContentPoolManager";
+export type { DigitalContentPoolManagerProps, PoolEntry } from "./_internal/client/features/digital-code/DigitalContentPoolManager";
 
 export { PhysicalLocationModal } from "./features/seller/components/PhysicalLocationModal";
 export type { PhysicalLocation } from "./features/seller/components/PhysicalLocationModal";

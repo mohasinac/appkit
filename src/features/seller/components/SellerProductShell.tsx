@@ -189,6 +189,12 @@ export interface SellerProductShellProps {
   listingType?: ProductListingMode;
   initialValues?: SellerProductDraft;
   productId?: string;
+  /**
+   * The digital-content pool manager, injected by the consumer so appkit never
+   * hard-codes an API path. Rendered in EDIT MODE only — a pool is keyed on a
+   * product id that does not exist until the listing has been created once.
+   */
+  renderDigitalContentPool?: (productId: string) => React.ReactNode;
   onSave: (draft: SellerProductDraft) => Promise<ProductActionResult>;
   onPublish: (draft: SellerProductDraft) => Promise<ProductActionResult>;
   onDiscard?: () => void;
@@ -1323,6 +1329,12 @@ export function SellerProductShell({
   mode,
   listingType = "standard",
   initialValues,
+  /*
+   * `productId` was declared on the props interface and NEVER DESTRUCTURED —
+   * dead from the day it was added, because nothing in the shell needed it.
+   * The digital-content pool is the first thing that does.
+   */
+  productId,
   onSave,
   onPublish,
   onDiscard,
@@ -1334,6 +1346,7 @@ export function SellerProductShell({
   renderTemplateSelector,
   onSaveAsTemplate,
   previewSlot,
+  renderDigitalContentPool,
 }: SellerProductShellProps) {
   const [draft, setDraft] = useState<SellerProductDraft>(initialValues ?? { status: "draft", condition: "new" });
   const [formMode, setFormMode] = useState<"quick" | "full">(mode === "create" && listingType === "standard" ? "quick" : "full");
@@ -1738,6 +1751,30 @@ export function SellerProductShell({
           <Section id={typeSpecificSection.id}>
             <Heading level={3} className="mb-4">{typeSpecificSection.sectionHeading ?? typeSpecificSection.label}</Heading>
             {typeSpecificSection.render({ values: draft, onChange: update, errors: {} })}
+            {/*
+              * The digital-content pool, in EDIT MODE ONLY — the pool is keyed on
+              * a product id, which does not exist until the listing has been
+              * created once.
+              *
+              * Rendered as a SLOT beside the section rather than threaded into
+              * `TypeSpecificSectionDef.render`: that signature is shared by all
+              * nine listing types and widening it for one of them would make
+              * every other entry carry an argument it has no use for.
+              *
+              * Without this, everything about the pool — the routes, the claim,
+              * the buyer's reveal — is unreachable, which is how it came to be
+              * permanently empty in the first place.
+              */}
+            {/*
+              * 🛑 Gated on listingType, not just on the section existing. The
+              * type-specific Section is shared by all nine types, so an
+              * ungated slot would render the digital-content pool inside the
+              * Meetup Details of a classified listing.
+              */}
+            {mode === "edit" &&
+              listingType === "digital-code" &&
+              productId &&
+              renderDigitalContentPool?.(productId)}
           </Section>
         )}
         <Section id="pricing">

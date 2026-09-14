@@ -129,6 +129,14 @@ export { Skeleton } from "./components/Skeleton";
 // --- Interactive --------------------------------------------------------------
 export type { ButtonProps } from "./components/Button";
 export { Button } from "./components/Button";
+/*
+ * The one primitive allowed to own a raw <input type="file">. Rule #9 sends
+ * every raw form element to a primitive and there was none for a file picker,
+ * so the only feature that needed one had to carry a suppression marker that
+ * audit-no-suppression-comments (strict-zero) correctly refuses.
+ */
+export { FilePickerButton } from "./components/FilePickerButton";
+export type { FilePickerButtonProps } from "./components/FilePickerButton";
 
 export type { IconButtonProps } from "./components/IconButton";
 export { IconButton } from "./components/IconButton";
