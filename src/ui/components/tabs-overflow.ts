@@ -147,15 +147,36 @@ export function useTabsOverflow(
 
   /*
    * Keep the selected tab reachable when it starts off-screen in the strip.
-   * Keyed on `activeKey` and NOT run every render — an
-   * unconditional scrollIntoView would yank the strip back while the user is
-   * mid-scroll, fighting their own input.
+   * Keyed on `activeKey` and NOT run every render — an unconditional scroll
+   * would yank the strip back while the user is mid-scroll, fighting their
+   * own input.
+   *
+   * 🛑 This writes the STRIP's own `scrollLeft`. It must never call
+   * `scrollIntoView`, which by definition walks every scrollable ancestor and
+   * therefore can move the PAGE. `block: "nearest"` is not a sufficient guard:
+   * "nearest" only declines to scroll when the element is ALREADY in the
+   * viewport, so on mount a tab bar below the fold still drags the whole
+   * document down to meet it. That is exactly what happened on the homepage —
+   * the FAQ tab strip sits ~11,000px down, and every cold load of `/` landed
+   * the visitor at the WhatsApp section instead of the hero.
    */
+  const didMountRef = useRef(false);
   useEffect(() => {
-    const active = listRef.current?.querySelector('[aria-selected="true"]');
-    // `block: "nearest"` is essential — the default "start" scrolls the whole
-    // PAGE vertically whenever a tab bar sits below the fold.
-    (active as HTMLElement | null)?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+    const el = listRef.current;
+    const active = el?.querySelector<HTMLElement>('[aria-selected="true"]');
+    // Mount is not a tab CHANGE. The initial active tab is wherever the strip
+    // already renders it, so there is nothing to bring into view — and doing
+    // it anyway is what made this a page-scroll bug rather than a strip one.
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    if (!el || !active) return;
+    // Nothing to do when the strip does not overflow; `scrollLeft` would be a
+    // no-op anyway, but skipping avoids a pointless layout read.
+    if (el.scrollWidth <= el.clientWidth + EPSILON) return;
+    const target = active.offsetLeft - (el.clientWidth - active.offsetWidth) / 2;
+    el.scrollLeft = Math.max(0, Math.min(target, el.scrollWidth - el.clientWidth));
   }, [listRef, activeKey]);
 
   const scrollByPage = useCallback(
