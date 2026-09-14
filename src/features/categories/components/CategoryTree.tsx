@@ -69,7 +69,13 @@ function CategoryTreeNode({
 
         {item.metrics && (
           <Span size="xs" className="ml-auto flex-shrink-0 tabular-nums" color="faint">
-            {item.metrics.productCount}
+            {/*
+             * Rollup, matching the header pill and the child chips on
+             * CategoryDetailPageView. On a COLLAPSED branch the own count is
+             * usually 0 — a parent holds structure, not stock — so showing it
+             * reads as "this branch is empty" for a branch with 20 items in it.
+             */}
+            {item.metrics.totalProductCount ?? item.metrics.productCount}
           </Span>
         )}
       </Row>

@@ -37,6 +37,8 @@ interface DispatchInput {
   productId: string;
   beforeCategory: string | null;
   afterCategory: string | null;
+  beforeBrand: string | null;
+  afterBrand: string | null;
   beforeStoreId: string | null;
   afterStoreId: string | null;
   isAuction: boolean;
@@ -47,55 +49,118 @@ interface DispatchInput {
   ctx: JobContext;
 }
 
+/**
+ * 🛑 THIS IS A CROSS-COLLECTION TRIGGER AND THAT IS THE SAFETY ARGUMENT.
+ *
+ * It watches `products` and writes to `categories`, so its own writes cannot
+ * re-trigger it — there is no termination condition to get right, because there
+ * is no cycle. Contrast `onCategoryWrite`, which DOES write its own collection
+ * and is safe only because of a structural guard on `parentIds`.
+ *
+ * **Do not move this counting into `onCategoryWrite`.** A `categories` trigger
+ * that increments a `categories` document is exactly the shape of Root Cause
+ * #92 — `onShipmentHeaderWrite` recursed 1,017,548 times in 24 hours against a
+ * 2M/month quota because a key-order-sensitive `JSON.stringify` guard could
+ * never return true, and the only symptom was a billing page.
+ *
+ * Brands ride along here rather than in a second trigger: a brand IS a
+ * `categoryType:"brand"` row in the same collection, so it is the same write to
+ * the same place, and splitting it would double the invocations for nothing.
+ * A brand has no ancestors, so it is staged with an empty parent chain and its
+ * own count equals its rollup by construction.
+ */
 async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
-  const { productId, beforeCategory, afterCategory, beforeStoreId, afterStoreId,
+  const { productId, beforeCategory, afterCategory, beforeBrand, afterBrand,
+    beforeStoreId, afterStoreId,
     isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx } = p;
 
-  if (isDelete && wasPublished && beforeCategory) {
-    const parentIds = await getParentIds(beforeCategory);
-    const batch = ctx.db.batch();
-    categoriesRepository.updateMetricsInBatch(batch, beforeCategory, parentIds,
-      beforeIsAuction ? 0 : -1, beforeIsAuction ? -1 : 0, productId);
+  /** Stage one category (and, if given, one brand) at `sign` × 1 item. */
+  const stage = (
+    batch: FirebaseFirestore.WriteBatch,
+    categoryId: string | null,
+    brandId: string | null,
+    parentIds: string[],
+    auction: boolean,
+    sign: 1 | -1,
+  ): void => {
+    const productDelta = auction ? 0 : sign;
+    const auctionDelta = auction ? sign : 0;
+    if (categoryId) {
+      categoriesRepository.updateMetricsInBatch(
+        batch, categoryId, parentIds, productDelta, auctionDelta, productId,
+      );
+    }
+    if (brandId) {
+      categoriesRepository.updateMetricsInBatch(
+        batch, brandId, [], productDelta, auctionDelta, productId,
+      );
+    }
+  };
+
+  /*
+   * `batch.update()` REJECTS a missing document, and a batch is atomic — so one
+   * dangling ancestor id loses every increment in the batch, not just its own.
+   * That throw is caught by the caller and logged non-fatally, which is correct:
+   * a counter is not worth failing a product write over. What makes it
+   * acceptable is that `countersReconcile` now RECOUNTS FROM SCRATCH nightly and
+   * rewrites every row that disagrees, so a lost increment self-heals within a
+   * day and shows up as a non-zero `drifted` in that job's log.
+   */
+  const commit = async (batch: FirebaseFirestore.WriteBatch, what: string, meta: object) => {
     await batch.commit();
+    ctx.logger.info(what, { productId, ...meta });
+  };
+
+  if (isDelete && wasPublished && (beforeCategory || beforeBrand)) {
+    const batch = ctx.db.batch();
+    stage(batch, beforeCategory, beforeBrand, await getParentIds(beforeCategory ?? ""), beforeIsAuction, -1);
+    await commit(batch, "Decremented counters on hard-delete", { category: beforeCategory, brand: beforeBrand, storeId: beforeStoreId });
     if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
-    ctx.logger.info("Decremented counters on hard-delete", { productId, category: beforeCategory, storeId: beforeStoreId });
     return;
   }
 
-  if (!wasPublished && isPublished && afterCategory) {
-    const parentIds = await getParentIds(afterCategory);
+  if (!wasPublished && isPublished && (afterCategory || afterBrand)) {
     const batch = ctx.db.batch();
-    categoriesRepository.updateMetricsInBatch(batch, afterCategory, parentIds,
-      isAuction ? 0 : 1, isAuction ? 1 : 0, productId);
-    await batch.commit();
+    stage(batch, afterCategory, afterBrand, await getParentIds(afterCategory ?? ""), isAuction, 1);
+    await commit(batch, "Incremented counters on publish", { category: afterCategory, brand: afterBrand, storeId: afterStoreId });
     if (afterStoreId) await storeRepository.incrementTotalProducts(afterStoreId, 1);
-    ctx.logger.info("Incremented counters on publish", { productId, category: afterCategory, storeId: afterStoreId });
     return;
   }
 
-  if (wasPublished && !isPublished && beforeCategory) {
-    const parentIds = await getParentIds(beforeCategory);
+  if (wasPublished && !isPublished && (beforeCategory || beforeBrand)) {
     const batch = ctx.db.batch();
-    categoriesRepository.updateMetricsInBatch(batch, beforeCategory, parentIds,
-      beforeIsAuction ? 0 : -1, beforeIsAuction ? -1 : 0, productId);
-    await batch.commit();
+    stage(batch, beforeCategory, beforeBrand, await getParentIds(beforeCategory ?? ""), beforeIsAuction, -1);
+    await commit(batch, "Decremented counters on unpublish", { category: beforeCategory, brand: beforeBrand, storeId: beforeStoreId });
     if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
-    ctx.logger.info("Decremented counters on unpublish", { productId, category: beforeCategory, storeId: beforeStoreId });
     return;
   }
 
-  if (wasPublished && isPublished && beforeCategory && afterCategory && beforeCategory !== afterCategory) {
+  /*
+   * Still published, but re-filed. This is the branch a naive trigger gets
+   * wrong — incrementing the new home without decrementing the old one is how
+   * a count drifts permanently upward with no event to blame it on. Category
+   * and brand are tested INDEPENDENTLY because either can move without the
+   * other: re-tagging the brand while the category stands still used to fall
+   * through every branch and silently leave both brand rows wrong.
+   */
+  if (wasPublished && isPublished) {
+    const categoryMoved = beforeCategory !== afterCategory;
+    const brandMoved = beforeBrand !== afterBrand;
+    if (!categoryMoved && !brandMoved) return;
+
     const [beforeParents, afterParents] = await Promise.all([
-      getParentIds(beforeCategory),
-      getParentIds(afterCategory),
+      getParentIds(categoryMoved ? beforeCategory ?? "" : ""),
+      getParentIds(categoryMoved ? afterCategory ?? "" : ""),
     ]);
     const batch = ctx.db.batch();
-    categoriesRepository.updateMetricsInBatch(batch, beforeCategory, beforeParents,
-      beforeIsAuction ? 0 : -1, beforeIsAuction ? -1 : 0, productId);
-    categoriesRepository.updateMetricsInBatch(batch, afterCategory, afterParents,
-      isAuction ? 0 : 1, isAuction ? 1 : 0, productId);
-    await batch.commit();
-    ctx.logger.info("Moved product between categories", { productId, from: beforeCategory, to: afterCategory });
+    stage(batch, categoryMoved ? beforeCategory : null, brandMoved ? beforeBrand : null, beforeParents, beforeIsAuction, -1);
+    stage(batch, categoryMoved ? afterCategory : null, brandMoved ? afterBrand : null, afterParents, isAuction, 1);
+    await commit(batch, "Re-filed product", {
+      fromCategory: categoryMoved ? beforeCategory : undefined,
+      toCategory: categoryMoved ? afterCategory : undefined,
+      fromBrand: brandMoved ? beforeBrand : undefined,
+      toBrand: brandMoved ? afterBrand : undefined,
+    });
   }
 }
 
@@ -119,6 +184,16 @@ export async function handleProductWrite(
   // no-op category metrics here. Prefer categorySlugs[0], fall back to legacy category.
   const beforeCategory = getEffectiveCategory(before);
   const afterCategory = getEffectiveCategory(after);
+  /*
+   * `brandSlug` is the brand ROW's document id in this same `categories`
+   * collection. `brand` is the display NAME and is not a key — CLAUDE.md's
+   * § "Brand matching is by DISPLAY NAME" — so it must never be used here.
+   * Nothing had ever written a brand row's metrics, while
+   * BrandDetailPageView.tsx:124 reads `brand?.metrics?.productCount` — so every
+   * brand page fell through to its tab count or to a hard 0.
+   */
+  const beforeBrand = (before?.brandSlug as string | undefined) ?? null;
+  const afterBrand = (after?.brandSlug as string | undefined) ?? null;
   const beforeStoreId =
     ((before?.storeId as string | undefined) || (before?.sellerId as string | undefined)) ?? null;
   const afterStoreId =
@@ -132,11 +207,19 @@ export async function handleProductWrite(
 
   try {
     await dispatchProductWriteEvent({
-      productId, beforeCategory, afterCategory, beforeStoreId, afterStoreId,
+      productId, beforeCategory, afterCategory, beforeBrand, afterBrand,
+      beforeStoreId, afterStoreId,
       isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx,
     });
   } catch (err) {
     void normalizeError(err);
-    ctx.logger.error("Counter update failed (non-fatal)", err, { productId });
+    // Non-fatal on purpose — a counter must never fail a product write. The
+    // healer is `countersReconcile`, which recounts from scratch nightly and
+    // reports how many rows it had to correct.
+    ctx.logger.error(
+      "Counter update failed (non-fatal — countersReconcile will heal it tonight)",
+      err,
+      { productId },
+    );
   }
 }

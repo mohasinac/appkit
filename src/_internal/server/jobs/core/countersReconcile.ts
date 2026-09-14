@@ -5,67 +5,175 @@ import {
   storeRepository,
 } from "../../../../repositories";
 import { ProductStatusValues, PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
+import { CATEGORIES_COLLECTION } from "../../../../features/categories/schemas/firestore";
 import { ORDER_FIELDS, PRODUCT_FIELDS } from "../../../../constants/field-names";
 import type { JobContext } from "../runtime/types";
 import { QUERY_LIMIT } from "../handlers/messages";
 
 const STORES_COLLECTION = "stores";
 const ORDERS_COLLECTION = "orders";
+/** Page size for the products scan. Bounded reads, unbounded total coverage. */
+const PAGE_SIZE = 500;
 
+interface Tally {
+  productIds: string[];
+  auctionIds: string[];
+  totalProducts: number;
+  totalAuctions: number;
+}
+
+const emptyTally = (): Tally => ({
+  productIds: [],
+  auctionIds: [],
+  totalProducts: 0,
+  totalAuctions: 0,
+});
+
+/**
+ * Recount every category and brand row from the products collection.
+ *
+ * 🛑 THREE THINGS THIS HAS TO GET RIGHT, each of which the previous version
+ * got wrong, and none of which produced an error:
+ *
+ * 1. **Own vs rollup are different numbers.** `metrics.productCount` is what is
+ *    filed directly under a row; `metrics.totalProductCount` is that plus every
+ *    descendant. The old code passed one number for both — see `setMetrics`'s
+ *    header for the full account and the 19-of-65 measurement.
+ *
+ * 2. **Every row is written, including the ones that are now empty.** The old
+ *    code built its map from products that EXIST, so a category whose last item
+ *    was deleted was never visited and kept its stale count forever. Seeding
+ *    `tallies` from the category list instead of from the products is the whole
+ *    fix, and it is why the loop below walks `parentsOf` rather than `tallies`
+ *    entries.
+ *
+ * 3. **Brands are counted too.** Brands are `categoryType:"brand"` rows in this
+ *    same collection and `BrandDetailPageView` reads `metrics.productCount` off
+ *    them — but nothing has ever written it. They hang off `brandSlug`, not off
+ *    the category chain, so they get their own pass.
+ *
+ * Reads are bounded by pagination rather than by `.limit(QUERY_LIMIT)`, which
+ * silently recounted a subset the moment the catalogue passed 1,000 published
+ * rows — a truncated recount is indistinguishable from a correct one.
+ */
 async function reconcileCategories(ctx: JobContext): Promise<void> {
-  const snap = await ctx.db
-    .collection(PRODUCT_COLLECTION)
-    .where(ORDER_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
-    .limit(QUERY_LIMIT)
-    .get();
-
-  ctx.logger.info(`[categories] ${snap.size} published products found`);
-
-  const leafCounts: Record<string, { productIds: string[]; auctionIds: string[] }> = {};
-  for (const doc of snap.docs) {
-    const data = doc.data() as { category?: string; categorySlugs?: string[]; listingType?: string };
-    // `category` is @deprecated in favor of `categorySlugs[]` — mirrors the
-    // same effective-category selection as onProductWrite.ts's live trigger
-    // so the nightly reconcile agrees with real-time updates instead of
-    // silently no-op'ing on products written via categorySlugs-only paths.
-    const catId = Array.isArray(data.categorySlugs) && data.categorySlugs.length > 0
-      ? data.categorySlugs[0]
-      : data.category;
-    if (!catId) continue;
-    if (!leafCounts[catId]) leafCounts[catId] = { productIds: [], auctionIds: [] };
-    if (data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION) leafCounts[catId].auctionIds.push(doc.id);
-    else leafCounts[catId].productIds.push(doc.id);
+  // Every category row, so rows that dropped to zero are still reset.
+  const catSnap = await ctx.db.collection(CATEGORIES_COLLECTION).get();
+  const parentsOf = new Map<string, string[]>();
+  for (const d of catSnap.docs) {
+    parentsOf.set(d.id, (d.data() as { parentIds?: string[] }).parentIds ?? []);
   }
 
-  const ancestorAggregates: Record<string, { productDelta: number; auctionDelta: number }> = {};
-  let leafUpdated = 0;
-  for (const [catId, { productIds, auctionIds }] of Object.entries(leafCounts)) {
-    await categoriesRepository.setMetrics(
-      catId,
-      productIds.length,
-      auctionIds.length,
-      productIds,
-      auctionIds,
-    );
-    leafUpdated++;
-    const parentIds = (await categoriesRepository.findById(catId))?.parentIds ?? [];
-    for (const ancestorId of parentIds) {
-      if (!ancestorAggregates[ancestorId]) {
-        ancestorAggregates[ancestorId] = { productDelta: 0, auctionDelta: 0 };
+  const tallies = new Map<string, Tally>();
+  for (const id of parentsOf.keys()) tallies.set(id, emptyTally());
+
+  let scanned = 0;
+  let unknownCategory = 0;
+  let cursor: FirebaseFirestore.QueryDocumentSnapshot | null = null;
+  for (;;) {
+    let q = ctx.db
+      .collection(PRODUCT_COLLECTION)
+      .where(ORDER_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
+      .orderBy("__name__")
+      .limit(PAGE_SIZE);
+    if (cursor) q = q.startAfter(cursor);
+    const page = await q.get();
+    if (page.empty) break;
+
+    for (const doc of page.docs) {
+      scanned++;
+      const data = doc.data() as {
+        category?: string;
+        categorySlugs?: string[];
+        brandSlug?: string;
+        listingType?: string;
+      };
+      const isAuction =
+        data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+
+      // `category` is @deprecated in favour of `categorySlugs[]`; mirror the
+      // live trigger's selection exactly so the two agree (onProductWrite.ts).
+      const leaf =
+        (Array.isArray(data.categorySlugs) && data.categorySlugs[0]) ||
+        data.category ||
+        null;
+
+      if (leaf) {
+        const own = tallies.get(leaf);
+        if (!own) {
+          unknownCategory++;
+        } else {
+          if (isAuction) own.auctionIds.push(doc.id);
+          else own.productIds.push(doc.id);
+          // Roll up through self + every ancestor. `parentIds` already holds the
+          // WHOLE chain, so this is one pass rather than a walk.
+          for (const id of [leaf, ...(parentsOf.get(leaf) ?? [])]) {
+            const t = tallies.get(id);
+            if (!t) continue;
+            if (isAuction) t.totalAuctions++;
+            else t.totalProducts++;
+          }
+        }
       }
-      ancestorAggregates[ancestorId].productDelta += productIds.length;
-      ancestorAggregates[ancestorId].auctionDelta += auctionIds.length;
+
+      // Brands are a flat dimension: a brand row has no product children of its
+      // own beyond what points at it, so own === total by construction.
+      if (data.brandSlug) {
+        const b = tallies.get(data.brandSlug);
+        if (b) {
+          if (isAuction) {
+            b.auctionIds.push(doc.id);
+            b.totalAuctions++;
+          } else {
+            b.productIds.push(doc.id);
+            b.totalProducts++;
+          }
+        }
+      }
+    }
+
+    cursor = page.docs[page.docs.length - 1];
+    if (page.size < PAGE_SIZE) break;
+  }
+
+  let written = 0;
+  let drifted = 0;
+  for (const doc of catSnap.docs) {
+    const t = tallies.get(doc.id) ?? emptyTally();
+    const m = (doc.data() as { metrics?: Record<string, number> }).metrics ?? {};
+    const same =
+      (m.productCount ?? 0) === t.productIds.length &&
+      (m.auctionCount ?? 0) === t.auctionIds.length &&
+      (m.totalProductCount ?? 0) === t.totalProducts &&
+      (m.totalAuctionCount ?? 0) === t.totalAuctions;
+    // Skipping no-op writes keeps a 65-row nightly pass near-free against the
+    // 20k/day write budget — and makes `drifted` a real signal rather than a
+    // count of how many rows exist. A non-zero `drifted` on a quiet day means
+    // the live trigger missed something.
+    if (same) continue;
+    drifted++;
+    try {
+      await categoriesRepository.setMetrics(doc.id, {
+        productCount: t.productIds.length,
+        auctionCount: t.auctionIds.length,
+        totalProductCount: t.totalProducts,
+        totalAuctionCount: t.totalAuctions,
+        productIds: t.productIds,
+        auctionIds: t.auctionIds,
+      });
+      written++;
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.error(`[categories] setMetrics failed for ${doc.id}`, err);
     }
   }
 
-  const ancestorEntries = Object.entries(ancestorAggregates);
-  for (const [ancestorId, { productDelta, auctionDelta }] of ancestorEntries) {
-    await categoriesRepository.setMetrics(ancestorId, productDelta, auctionDelta, [], []);
-  }
-
   ctx.logger.info("[categories] reconciliation complete", {
-    leafCategoriesUpdated: leafUpdated,
-    ancestorCategoriesUpdated: ancestorEntries.length,
+    categoryRows: catSnap.size,
+    publishedProductsScanned: scanned,
+    drifted,
+    written,
+    unknownCategory,
   });
 }
 

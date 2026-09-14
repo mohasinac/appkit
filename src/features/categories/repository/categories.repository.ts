@@ -555,26 +555,55 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   }
 
   /**
-   * Cloud Functions: full-overwrite category metrics (used by nightly reconciliation job).
+   * Cloud Functions: full-overwrite category metrics (nightly reconciliation).
+   *
+   * 🛑 THE OWN COUNT AND THE ROLLUP ARE SEPARATE ARGUMENTS, and they must be.
+   *
+   * This method used to take ONE pair of numbers and write it to both
+   * `productCount` and `totalProductCount` — so it could not express the
+   * distinction the live trigger (`updateMetricsInBatch`, just above) carefully
+   * maintains: `productCount` is the category's OWN items, `totalProductCount`
+   * is own + every descendant's. The nightly job therefore overwrote correct
+   * values with wrong ones every night:
+   *
+   *   - on a leaf it was accidentally right (a leaf has no descendants);
+   *   - on an ancestor it wrote the DESCENDANT sum into both, so a category
+   *     with 5 of its own and 15 below reported `productCount: 15` (should be
+   *     5) and `totalProductCount: 15` (should be 20 — its own 5 were never
+   *     added, because the caller's aggregate only walked other rows' leaves);
+   *   - on a row that is both a leaf and an ancestor, `setMetrics` was called
+   *     twice and last-write-won.
+   *
+   * Measured on production 2026-09-14 before the fix: **19 of 65 category rows
+   * disagreed with a recount**, every one of them low — the root read 56 against
+   * a true 65. Nothing errored, and no page looked broken; a wrong number is
+   * simply a number.
    */
   async setMetrics(
     categoryId: string,
-    productCount: number,
-    auctionCount: number,
-    productIds: string[],
-    auctionIds: string[],
+    m: {
+      /** Items filed DIRECTLY under this category. */
+      productCount: number;
+      auctionCount: number;
+      /** Own + every descendant's. Equals the own count on a leaf. */
+      totalProductCount: number;
+      totalAuctionCount: number;
+      /** Own only — the ids are used for spot-checking, never for the rollup. */
+      productIds: string[];
+      auctionIds: string[];
+    },
   ): Promise<void> {
     await this.db
       .collection(this.collection)
       .doc(categoryId)
       .update({
-        "metrics.productCount": productCount,
-        "metrics.auctionCount": auctionCount,
-        "metrics.totalProductCount": productCount,
-        "metrics.totalAuctionCount": auctionCount,
-        "metrics.totalItemCount": productCount + auctionCount,
-        "metrics.productIds": productIds,
-        "metrics.auctionIds": auctionIds,
+        "metrics.productCount": m.productCount,
+        "metrics.auctionCount": m.auctionCount,
+        "metrics.totalProductCount": m.totalProductCount,
+        "metrics.totalAuctionCount": m.totalAuctionCount,
+        "metrics.totalItemCount": m.totalProductCount + m.totalAuctionCount,
+        "metrics.productIds": m.productIds,
+        "metrics.auctionIds": m.auctionIds,
         "metrics.lastUpdated": new Date(),
         updatedAt: new Date(),
       });

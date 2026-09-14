@@ -23,6 +23,9 @@ import {
 // wrapper. Three copies existed and two were missing the same three fields.
 import { buildProductSearchTxt } from "../../../utils/search-txt-builders";
 import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
+// Collection NAME only — deliberately not `categoriesRepository`. See
+// deriveTaxonomy()'s header for why this is a raw read.
+import { CATEGORIES_COLLECTION } from "../../categories/schemas/firestore";
 import type { ProductStatus } from "../types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
@@ -145,15 +148,132 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return doc as unknown as D;
   }
 
+  /**
+   * Resolve a product's taxonomy into the shape every READ path expects:
+   * `categorySlugs` as the FULL ancestor chain (self first, root last), and a
+   * brand recorded as both its id and its display name.
+   *
+   * 🛑 WHY THIS LIVES IN THE REPOSITORY. The seller and admin create/update
+   * paths send a SINGLE category id (`category: "category-x-starters"`) — and
+   * `productCreateSchema` (src/validation/request-schemas.ts:129) declares only
+   * that scalar, with no `.passthrough()`, so an inbound `categorySlugs` array
+   * is stripped before it ever reaches Firestore. `mapDoc` then backfills
+   * `categorySlugs = [category]` **on read only**, which is invisible to a
+   * query: the category page runs `array-contains-any` against the STORED
+   * field, so a UI-created listing was unreachable from its own leaf category
+   * and from every ancestor of it. CLAUDE.md recorded the ancestor half of this
+   * as an outstanding follow-up; the leaf half was never noticed because every
+   * product in the database came from the seed, which hand-writes the chain
+   * (measured 2026-09-14: 95/95 products carried a correct chain, so the defect
+   * is LATENT — it fires the first time anyone creates a listing through the
+   * UI, which is precisely why no page looks broken today).
+   *
+   * There are ~14 independent write paths — two seller actions, two admin
+   * actions, four in `_internal/server/features/products/actions.ts`, the
+   * duplicate route, group-children, catalogue promotion, shipment linking and
+   * the WhatsApp import. Deriving at each one is Root Cause #75's shape: the
+   * copy made before a branch was added never learns about it. `create` and
+   * `update` are the only two methods every one of them funnels through.
+   *
+   * 🛑 It reads `categories` through `this.db` rather than importing
+   * `categoriesRepository`. No repository in this codebase imports another
+   * feature's repository, and the reason is the Turbopack import-chain trap
+   * (Root Cause #6/#18) — a raw collection read has neither problem.
+   */
+  private async deriveTaxonomy(
+    input: Partial<ProductDocument>,
+  ): Promise<Partial<ProductDocument>> {
+    const out: Partial<ProductDocument> = {};
+    const cats = this.db.collection(CATEGORIES_COLLECTION);
+
+    const leaf =
+      (Array.isArray(input.categorySlugs) && input.categorySlugs[0]) ||
+      input.category ||
+      null;
+    /*
+     * The brand selector's option value is the brand ROW's id (`brand-beyblade`),
+     * but `ProductDocument.brand` is matched by DISPLAY NAME —
+     * `BrandDetailPageView` filters `sieveFilter("brand", EQ, brand.name)`, and
+     * CLAUDE.md's § "Brand matching is by DISPLAY NAME" says so explicitly. So a
+     * seller-created listing stored `brand: "brand-beyblade"` while every seeded
+     * one stored `brand: "Beyblade"`, and the brand page matched neither the new
+     * row nor counted it. Resolving the id back to its name fixes that; a value
+     * that is ALREADY a display name does not resolve as a document id and is
+     * left exactly as it was.
+     */
+    const brandRef = input.brandSlug || input.brand || null;
+
+    const [catSnap, brandSnap] = await Promise.all([
+      leaf ? cats.doc(leaf).get() : Promise.resolve(null),
+      brandRef ? cats.doc(brandRef).get() : Promise.resolve(null),
+    ]);
+
+    if (catSnap?.exists) {
+      const cat = catSnap.data() as {
+        name?: string;
+        parentIds?: string[];
+        ancestors?: { name?: string }[];
+      };
+      // `parentIds` is ordered root-first / nearest-last (category-tree.ts:107),
+      // and the stored chain is self-first / root-last. Reversing is what makes
+      // the derived value byte-identical to what the seed hand-writes — verified
+      // against products-standard-seed-data.ts:197.
+      out.categorySlugs = [leaf!, ...(cat.parentIds ?? []).slice().reverse()];
+      out.category = leaf!;
+      const names = [
+        cat.name,
+        ...(cat.ancestors ?? []).map((a) => a?.name).reverse(),
+      ].filter((n): n is string => !!n);
+      if (names.length) out.categoryNames = names;
+    } else if (leaf) {
+      // Never destroy a chain we cannot improve on. A leaf that is not a real
+      // category row is a data problem to report, not a reason to blank the field.
+      serverLogger.warn("Product category id does not resolve to a category", {
+        leaf,
+      });
+    }
+
+    if (brandSnap?.exists) {
+      const brand = brandSnap.data() as { name?: string; categoryType?: string };
+      if (brand.categoryType === "brand") {
+        out.brandSlug = brandRef!;
+        if (brand.name) out.brand = brand.name;
+      }
+    }
+
+    return out;
+  }
+
+  /** The keys whose presence means a write could change the product's taxonomy. */
+  private static readonly TAXONOMY_KEYS = [
+    "categorySlugs",
+    "category",
+    "brand",
+    "brandSlug",
+  ] as const;
+
   override async update(
     id: string,
     data: Partial<ProductDocument>,
   ): Promise<ProductDocument> {
     this.cacheInvalidateForId(id);
     const current = await super.findById(id);
-    const merged = { ...current, ...data } as ProductDocument;
+    /*
+     * Only re-derive when the write actually names a taxonomy field. Every
+     * stock decrement, view increment and status flip would otherwise pay two
+     * extra Firestore reads, which Rule #6 budgets at ~3 round-trips for a
+     * whole request.
+     */
+    const touchesTaxonomy = ProductRepository.TAXONOMY_KEYS.some(
+      (k) => k in data,
+    );
+    const derived = touchesTaxonomy
+      ? await this.deriveTaxonomy({ ...current, ...data })
+      : {};
+    const merged = { ...current, ...data, ...derived } as ProductDocument;
     const updated = await super.update(id, {
       ...data,
+      ...derived,
       searchTxt: buildProductSearchTxt(merged),
     });
     this.cacheSet(updated);
@@ -178,12 +298,18 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     );
 
     const barcodeId = input.barcodeId ?? await generateBarcodeId(id);
+    // Always derive on create — one extra read per listing created, and it is
+    // what makes a UI-created product reachable from its own category page at
+    // all. A seed row already carrying the correct chain derives to the same
+    // value, so this is a no-op for every existing fixture.
+    const derived = await this.deriveTaxonomy(input as Partial<ProductDocument>);
+    const withTaxonomy = { ...input, ...derived };
     const productData: Omit<ProductDocument, "id"> = {
-      ...input,
+      ...withTaxonomy,
       barcodeId,
       slug: id,
       availableQuantity: input.stockQuantity,
-      searchTxt: buildProductSearchTxt(input),
+      searchTxt: buildProductSearchTxt(withTaxonomy),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -288,9 +288,26 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                     <Span className="leading-none">{child.display.icon}</Span>
                   )}
                   {child.name}
-                  {(child.metrics?.productCount ?? 0) > 0 && (
+                  {/*
+                   * 🛑 THE ROLLUP, not the own count — `totalProductCount`, the
+                   * same number the header pill above reads (line ~194) and the
+                   * same one `CategoryGrid` shows.
+                   *
+                   * These chips used to read `metrics.productCount`, which is
+                   * items filed DIRECTLY under that child and excludes its own
+                   * descendants. So on a parent whose header said 20, the chips
+                   * beneath it could sum to 5 — two different questions answered
+                   * with the same-looking number, side by side, with nothing
+                   * saying which was which. The rule the catalogue is built on:
+                   * a category's count is its own items plus every descendant's,
+                   * and clicking it lists exactly those items.
+                   *
+                   * Admin surfaces that genuinely need both still show both —
+                   * CategoryTableColumns renders "own (total)" explicitly.
+                   */}
+                  {(child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0) > 0 && (
                     <Span size="xs" color="muted">
-                      {(child.metrics?.productCount ?? 0).toLocaleString()}
+                      {(child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0).toLocaleString()}
                     </Span>
                   )}
                 </Link>
