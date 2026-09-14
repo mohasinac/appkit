@@ -141,6 +141,26 @@ async function claimDigitalCodeForOrder(
     });
     claimed = true;
   });
+  if (claimed) {
+    /*
+     * Re-derive both pool counters. Nothing used to do this: the claim flipped a
+     * code to `claimed` and left `digitalCode.codesAvailable` exactly as the
+     * seller had typed it, so the availability predicate — which reads that
+     * counter — could never notice a listing selling out. Counting beats
+     * decrementing here because the counter was never trustworthy to begin with
+     * (Root Cause #42).
+     *
+     * Deliberately awaited but non-fatal inside: a failed recount must not undo
+     * a claim the buyer has already paid for.
+     */
+    const { recountPool } = await import("../digital-code/pool");
+    await recountPool(productId).catch((e) =>
+      serverLogger.error("claimDigitalCode: recount failed", {
+        error: normalizeError(e).message,
+        productId,
+      }),
+    );
+  }
   if (claimed && opts?.userEmail) {
     const { sendDigitalCodeClaimedEmail } = await import("../../../../features/contact/server");
     sendDigitalCodeClaimedEmail({

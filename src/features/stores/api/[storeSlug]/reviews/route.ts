@@ -220,7 +220,17 @@ export async function GET(
      */
     const productMap = new Map<string, ProductEntity>();
     const fetched = await Promise.all(
-      pageProductIds.map((id) => productsRepo.findById(id).catch(() => null)),
+      pageProductIds.map((id) =>
+        productsRepo.findById(id).catch((err) => {
+          // Named and logged, not swallowed: enrichment is genuinely optional
+          // (every review carries a denormalised productTitle), but a silent
+          // null here is indistinguishable from "that product was deleted" —
+          // Root Cause #59's shape, which is what this whole route was fixed for.
+          void normalizeError(err);
+          console.warn(`[feat-stores] products.findById failed for ${id}`);
+          return null;
+        }),
+      ),
     );
     for (const p of fetched) if (p) productMap.set(p.id, p);
 

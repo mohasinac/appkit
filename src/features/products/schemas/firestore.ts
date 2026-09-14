@@ -692,9 +692,47 @@ export const PRODUCT_CODES_SUBCOLLECTION = "codes" as const;
 
 export type ProductCodeStatus = "available" | "claimed" | "revoked";
 
+/**
+ * What the buyer actually receives. A "digital code" listing delivers digital
+ * CONTENT — a redemption string is only the commonest shape of it.
+ *
+ * `"code"` is the default and is what every pre-existing document is, so no
+ * migration is needed and no existing listing changes behaviour.
+ */
+export type ProductCodeContentKind = "code" | "image" | "file";
+
 export interface ProductCodeDocument extends BaseDocument {
   productId: string;
+  /**
+   * The redemption string. Required for `contentKind: "code"`, empty for the
+   * asset kinds — a QR is not a string.
+   */
   code: string;
+  /** Defaults to `"code"` when absent. */
+  contentKind?: ProductCodeContentKind;
+  /**
+   * 🛑 A RAW FIREBASE STORAGE PATH, NEVER a `/media/{slug}` URL, and never a
+   * signed URL.
+   *
+   * Two facts make this load-bearing:
+   *   - `storage.rules` is `allow read: if true` for every object in the
+   *     bucket, and
+   *   - `GET /api/media/[...slug]` applies NO authentication at all — it is a
+   *     bare exported handler with no session read, by design, because it
+   *     exists to serve public product photos through a watermarker.
+   *
+   * So anything reachable at a `/media/` slug is world-readable, and image
+   * filenames in this codebase are content-derived and therefore guessable.
+   * Putting a paid QR there would publish it. Instead the bytes are streamed by
+   * `GET /api/orders/{orderId}/code/asset`, which re-checks that the caller
+   * owns the order — the same shape as the invoice route, the one existing
+   * precedent for a gated download here.
+   */
+  assetPath?: string;
+  /** Original upload name, used for the `Content-Disposition` filename. */
+  fileName?: string;
+  /** Verified by magic bytes at upload, replayed as the response Content-Type. */
+  contentType?: string;
   status: ProductCodeStatus;
   orderId?: string;
   claimedByUserId?: string;

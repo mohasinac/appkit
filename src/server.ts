@@ -1788,6 +1788,37 @@ export { getDigitalCodeForDetail } from "./_internal/server/features/digital-cod
 export { toClientDigitalCode, type DigitalCodeClientShape } from "./_internal/server/features/digital-code/adapters";
 export { buildDigitalCodeMetadata, type DigitalCodeMetadataOptions } from "./_internal/server/features/digital-code/metadata";
 export { renderDigitalCodeOg, renderDigitalCodeOgImage, renderDigitalCodeOgFromDoc, type DigitalCodeOgData } from "./_internal/server/features/digital-code/og";
+/*
+ * The digital-CONTENT pool: the half of this feature that had no writer at all
+ * until 2026-09-14, so every digital-code purchase delivered nothing.
+ *
+ * Server-only, and that is structural rather than tidy — `pool` and `download`
+ * both reach `getAdminDb`/`getAdminStorage`, and `upload` mints signed URLs.
+ * None of it may appear in `index.ts` or `client.ts` (the Turbopack
+ * client-bundle trap, Root Cause #6/#24).
+ */
+export {
+  addPoolEntries,
+  listPoolEntries,
+  deletePoolEntry,
+  recountPool,
+  assertCanUploadContentKind,
+  DIGITAL_CONTENT_PREFIX,
+  type AddPoolEntryInput,
+} from "./_internal/server/features/digital-code/pool";
+export {
+  signDigitalContentUpload,
+  finalizeDigitalContentUpload,
+  contentKindForMime,
+  type SignedDigitalContent,
+  type FinalizedDigitalContent,
+} from "./_internal/server/features/digital-code/upload";
+export {
+  resolveCodeAssetForOrder,
+  codeAssetHeaders,
+  CODE_DOWNLOAD_STATUSES,
+  type CodeAssetResolution,
+} from "./_internal/server/features/digital-code/download";
 
 // ── Live-item listing — data + adapters + metadata + OG ──────────────────────
 export { getLiveItemForDetail } from "./_internal/server/features/live/data";

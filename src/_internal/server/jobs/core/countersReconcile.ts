@@ -29,6 +29,72 @@ const emptyTally = (): Tally => ({
   totalAuctions: 0,
 });
 
+/** Filed DIRECTLY under this row — `metrics.productCount` / `auctionCount`. */
+function countOwn(t: Tally, productId: string, isAuction: boolean): void {
+  if (isAuction) t.auctionIds.push(productId);
+  else t.productIds.push(productId);
+}
+
+/** This row or any ancestor — `metrics.totalProductCount` / `totalAuctionCount`. */
+function countRollup(t: Tally | undefined, isAuction: boolean): void {
+  if (!t) return;
+  if (isAuction) t.totalAuctions++;
+  else t.totalProducts++;
+}
+
+interface ProductTallyRow {
+  category?: string;
+  categorySlugs?: string[];
+  brandSlug?: string;
+  listingType?: string;
+}
+
+/**
+ * Fold one published product into the tallies.
+ *
+ * A named function rather than an inner block: this is the only place the
+ * own-vs-rollup distinction is actually APPLIED, and burying it four levels deep
+ * inside a paginating loop is how it stopped being visible last time.
+ * Returns true when the product names a category nothing recognises.
+ */
+function tallyProduct(
+  productId: string,
+  data: ProductTallyRow,
+  tallies: Map<string, Tally>,
+  parentsOf: Map<string, string[]>,
+): boolean {
+  const isAuction =
+    data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+
+  // `category` is @deprecated in favour of `categorySlugs[]`; mirror the live
+  // trigger's selection exactly so the two agree (onProductWrite.ts).
+  const leaf =
+    (Array.isArray(data.categorySlugs) && data.categorySlugs[0]) ||
+    data.category ||
+    null;
+
+  let unknown = false;
+  if (leaf && !tallies.has(leaf)) {
+    unknown = true;
+  } else if (leaf) {
+    countOwn(tallies.get(leaf)!, productId, isAuction);
+    // Roll up through self + every ancestor. `parentIds` already holds the
+    // WHOLE chain, so this is one pass rather than a walk.
+    for (const id of [leaf, ...(parentsOf.get(leaf) ?? [])]) {
+      countRollup(tallies.get(id), isAuction);
+    }
+  }
+
+  // Brands are a flat dimension: a brand row has no product children of its own
+  // beyond what points at it, so own === total by construction — which is why
+  // it is counted on both axes at once.
+  if (data.brandSlug && tallies.has(data.brandSlug)) {
+    countOwn(tallies.get(data.brandSlug)!, productId, isAuction);
+    countRollup(tallies.get(data.brandSlug), isAuction);
+  }
+  return unknown;
+}
+
 /**
  * Recount every category and brand row from the products collection.
  *
@@ -82,53 +148,8 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
 
     for (const doc of page.docs) {
       scanned++;
-      const data = doc.data() as {
-        category?: string;
-        categorySlugs?: string[];
-        brandSlug?: string;
-        listingType?: string;
-      };
-      const isAuction =
-        data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
-
-      // `category` is @deprecated in favour of `categorySlugs[]`; mirror the
-      // live trigger's selection exactly so the two agree (onProductWrite.ts).
-      const leaf =
-        (Array.isArray(data.categorySlugs) && data.categorySlugs[0]) ||
-        data.category ||
-        null;
-
-      if (leaf) {
-        const own = tallies.get(leaf);
-        if (!own) {
-          unknownCategory++;
-        } else {
-          if (isAuction) own.auctionIds.push(doc.id);
-          else own.productIds.push(doc.id);
-          // Roll up through self + every ancestor. `parentIds` already holds the
-          // WHOLE chain, so this is one pass rather than a walk.
-          for (const id of [leaf, ...(parentsOf.get(leaf) ?? [])]) {
-            const t = tallies.get(id);
-            if (!t) continue;
-            if (isAuction) t.totalAuctions++;
-            else t.totalProducts++;
-          }
-        }
-      }
-
-      // Brands are a flat dimension: a brand row has no product children of its
-      // own beyond what points at it, so own === total by construction.
-      if (data.brandSlug) {
-        const b = tallies.get(data.brandSlug);
-        if (b) {
-          if (isAuction) {
-            b.auctionIds.push(doc.id);
-            b.totalAuctions++;
-          } else {
-            b.productIds.push(doc.id);
-            b.totalProducts++;
-          }
-        }
+      if (tallyProduct(doc.id, doc.data() as ProductTallyRow, tallies, parentsOf)) {
+        unknownCategory++;
       }
     }
 
