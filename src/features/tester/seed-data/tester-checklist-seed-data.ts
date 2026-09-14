@@ -3097,6 +3097,28 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   ...group("content-discovery", "Content & Discovery", [
     {
       /*
+       * Event DETAIL. All 29 existing event cases stop at the index, while
+       * /events/[id]/ has four subroutes — participate, leaderboard, winner,
+       * spin-results — with none at all. Several real bugs were found on these
+       * pages by hand during the 2026-09 run, which is the usual consequence of
+       * a surface nobody has a procedure for.
+       */
+      pageKey: "event-detail-subroutes",
+      pageLabel: "Event detail — participate, leaderboard, winner, spin results",
+      href: "/events",
+      cases: [
+        { key: "detail-tabs-match-event-type", label: "An event's tabs match its TYPE — a poll shows no spin results, a sale shows no leaderboard" },
+        { key: "participate-records-an-entry", label: "Participating records an entry that is still there after a reload" },
+        { key: "participate-twice-is-refused", label: "Participating a second time is refused with a reason, not silently duplicated" },
+        { key: "leaderboard-ranks-by-a-real-number", label: "The leaderboard ranks by a real score and shows the same entry count the event reports" },
+        { key: "winner-page-before-draw", label: "The winner page on an undrawn event says so — it must not show a blank or a fabricated winner" },
+        { key: "winner-page-after-draw", label: "An ended raffle's winner page names the real winner recorded on the event" },
+        { key: "cancelled-event-refuses-participation", label: "A cancelled event cannot be participated in, and says why" },
+        { key: "guest-sees-event-but-is-prompted", label: "A signed-out visitor can read an event but is prompted to sign in to take part" },
+      ],
+    },
+    {
+      /*
        * Category counts and the LISTING they promise. A category's number is its
        * own items plus every descendant's, and clicking it must list exactly
        * those items. Both halves were wrong: the nightly reconciler could not
@@ -4304,6 +4326,53 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   ]),
 
   ...group("public-pages", "Public & Marketing Pages", [
+    {
+      /*
+       * The six browse pages wired into the footer on 2026-09-14. Each shipped
+       * with a real page and a real ROUTES.PUBLIC constant and NO link from
+       * anywhere — reachable only by typing the URL — so none has ever had a
+       * case (Root Cause #37).
+       *
+       * Every one gets a guest case: a signed-out visitor is their commonest
+       * caller, and /products' own scoping rules mean an out-of-span type chip
+       * silently WIDENS results rather than narrowing them.
+       */
+      pageKey: "newly-wired-browse-indexes",
+      pageLabel: "Classifieds, Digital Codes, Live, Lotteries, Brands, Sellers",
+      href: "/classified",
+      cases: [
+        { key: "all-six-reachable-from-footer", label: "All six pages are reachable by clicking the footer, not only by typing the URL" },
+        { key: "classified-lists-only-classifieds", label: "/classified lists classified listings and nothing of another type" },
+        { key: "digital-codes-lists-only-digital", label: "/digital-codes lists digital-code listings and nothing of another type" },
+        { key: "live-lists-only-live", label: "/live lists live-item listings and nothing of another type" },
+        { key: "lottery-lists-active-lotteries", label: "/lottery lists active lottery events with their slot counts" },
+        { key: "brands-tiles-open-their-brand", label: "Each /brands tile opens that brand's page and lists that brand's products" },
+        { key: "sellers-is-not-a-copy-of-stores", label: "/sellers shows verified sellers and is visibly a different page from /stores" },
+        { key: "guest-can-browse-all-six", label: "A signed-out visitor can browse all six, with prices gated rather than the page broken" },
+      ],
+    },
+    {
+      /*
+       * The store's own tabs. Nine of them are untested, starting with
+       * `products` — which is the DEFAULT tab, i.e. the first thing anyone sees
+       * after clicking a store.
+       *
+       * The reviews tab is deliberately included: it answered 200 with zero
+       * reviews for every store until 2026-09-14 (Root Cause #100), and the
+       * only symptom was a sentence that reads as a fact about the store.
+       */
+      pageKey: "store-tabs",
+      pageLabel: "Store page tabs — products, reviews, and the per-type tabs",
+      href: "/stores/store-beyblade-arena",
+      cases: [
+        { key: "default-tab-lists-products", label: "Opening a store lands on Products and lists that store's listings" },
+        { key: "each-tab-lists-only-its-type", label: "Each per-type tab lists only that listing type" },
+        { key: "empty-tab-says-empty", label: "A tab with nothing in it shows an empty state, not a spinner or a blank panel" },
+        { key: "tab-survives-a-reload", label: "Reloading on a tab stays on that tab rather than bouncing to Products" },
+        { key: "store-tabs-hide-other-stores-items", label: "No tab shows a listing belonging to a different store" },
+        { key: "coupons-tab-shows-this-stores-coupons", label: "The Coupons tab shows this store's coupons and not the platform-wide ones" },
+      ],
+    },
     {
       pageKey: "core-listing-pages",
       pageLabel: "Homepage & Core Listing Pages",

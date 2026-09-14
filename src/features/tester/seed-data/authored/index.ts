@@ -140,6 +140,9 @@ import { authored as a_content_discovery__category_counts_and_rollup } from "./c
 import { authored as a_content_discovery__store_reviews_aggregate } from "./content-discovery__store-reviews-aggregate";
 import { authored as a_buying__order_detail_actions } from "./buying__order-detail-actions";
 import { authored as a_admin__admin_detail_round_trips } from "./admin__admin-detail-round-trips";
+import { authored as a_content_discovery__event_detail_subroutes } from "./content-discovery__event-detail-subroutes";
+import { authored as a_public_pages__newly_wired_browse_indexes } from "./public-pages__newly-wired-browse-indexes";
+import { authored as a_public_pages__store_tabs } from "./public-pages__store-tabs";
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__blog_faqs,
@@ -258,4 +261,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_content_discovery__store_reviews_aggregate,
   ...a_buying__order_detail_actions,
   ...a_admin__admin_detail_round_trips,
+  ...a_content_discovery__event_detail_subroutes,
+  ...a_public_pages__newly_wired_browse_indexes,
+  ...a_public_pages__store_tabs,
 };
