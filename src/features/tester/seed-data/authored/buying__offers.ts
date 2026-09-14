@@ -528,7 +528,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-offers-ticket-resolution-timestamp-stamped": {
     roles: ["admin"],
-    startPage: "/admin/support",
+    startPage: "/admin/support-tickets",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open the admin support tickets surface and open an open ticket.",

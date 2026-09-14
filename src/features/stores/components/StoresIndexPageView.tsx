@@ -21,9 +21,25 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
   const sort = sp(searchParams, "sort") || "-createdAt";
   const page = Number(sp(searchParams, "page")) || 1;
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  /*
+   * 🛑 `q` MUST be read here, and passed as the third argument exactly as
+   * /api/stores does — `listStores(model, true, { search })`.
+   *
+   * It was not, so /stores?q=anything rendered the FULL store list: measured
+   * live, `?q=zzzznope` returned two real store cards and no empty state. The
+   * search box looked like it worked because a real term also returns rows —
+   * only a nonsense term exposes a filter that is not filtering.
+   *
+   * And it could not self-correct on the client: this result is handed to
+   * <StoresIndexListing initialData=...>, and every public listing hook sets
+   * `staleTime: Infinity` when given SSR data, so the unfiltered first paint is
+   * frozen for that query key. Root Cause #30 — the SSR builder has to compute
+   * the same filters the client would, because it never gets a second chance.
+   */
+  const q = sp(searchParams, "q").trim();
 
   const result = await safeRead(
-    () => storeRepository.listStores({ page, pageSize, sorts: sort }, true),
+    () => storeRepository.listStores({ page, pageSize, sorts: sort }, true, q ? { search: q } : undefined),
     { route: "/stores", key: "stores.listStores", fallback: null },
   );
   /*

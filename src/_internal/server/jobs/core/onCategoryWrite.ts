@@ -5,6 +5,39 @@ import type { JsonValue } from "@mohasinac/appkit";
  * CREATE → insert into parent's subtree + shift later siblings;
  * DELETE → shift back; MOVE → mark `positionDirty` so the nightly reconcile
  * job rebuilds.
+ *
+ * trigger-self-write-ok: terminates at depth 1 — the only branch that writes is
+ * gated on `parentIds` CHANGING, and none of this handler's own writes touch
+ * `parentIds`.
+ *
+ * 🛑 WHY THAT IS SAFE, SPELLED OUT — this is a `documentWritten` trigger on
+ * `categories` that writes back to `categories`, including to the triggering
+ * document (L110). That is the shape of Root Cause #92, which logged 1,017,548
+ * invocations in 24 hours, so it deserves an explicit argument rather than trust:
+ *
+ *   CREATE writes → sibling `position`s, own `position`/`subtreeSize`, ancestor
+ *                   `subtreeSize`. Every one re-enters as an UPDATE.
+ *   DELETE writes → sibling `position`s, ancestor `subtreeSize`. Same.
+ *   UPDATE        → writes ONLY when `beforeParent !== afterParent`. None of the
+ *                   writes above change `parentIds`, so the re-entry compares
+ *                   equal and does nothing. The cascade stops.
+ *   MOVE          → writes `positionDirty`, which is also not `parentIds`, so its
+ *                   own re-entry likewise does nothing. One extra hop, then stop.
+ *
+ * The guard is STRUCTURAL, not a value comparison — that is what makes it stronger
+ * than #92's. `onShipmentHeaderWrite` recomputed and rewrote the same derived field
+ * every time and relied on `JSON.stringify` equality to notice it had not changed;
+ * key-order sensitivity made that comparison always false, so it re-triggered
+ * forever. Here there is nothing to compare: the handler cannot write the field it
+ * branches on.
+ *
+ * 🛑 If you ever make this handler write `parentIds`, it becomes a true loop. Do
+ * not — a move is deliberately deferred to the nightly reconcile for this reason.
+ *
+ * Not free, though: creating one category writes to its siblings, its ancestors and
+ * itself, and each of those writes spawns a no-op invocation. A full reseed of the
+ * 58-category forest therefore costs on the order of thousands of invocations, all
+ * of them terminating. That is a cost worth knowing before a reseed, not a runaway.
  */
 
 import { FieldValue } from "firebase-admin/firestore";

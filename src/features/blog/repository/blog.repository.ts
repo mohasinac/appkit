@@ -218,10 +218,28 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
 
+  /**
+   * `search` uses the same `searchTxt` push-down as `listAll` — head token as an
+   * `array-contains` clause, remaining tokens AND-refined in memory.
+   *
+   * 🛑 IT HAD NO SEARCH PARAMETER AT ALL, and that is why /blog?q= was inert.
+   * `blogGET` searches via `listAll(model, { search })`, but the SSR view calls
+   * THIS method, so the server-rendered list ignored `q` entirely — and because
+   * that result is handed to the client as `initialData` under
+   * `staleTime: Infinity`, the unfiltered first paint was frozen and never
+   * refetched. Root Cause #59: the fix went into the API route and was never
+   * back-ported to the SSR view that duplicates its job. The route's own header
+   * documents the API-side half of this exact bug.
+   */
   async listPublished(
-    opts: { category?: BlogPostCategory; featuredOnly?: boolean },
+    opts: { category?: BlogPostCategory; featuredOnly?: boolean; search?: string },
     model: SieveModel,
   ): Promise<FirebaseSieveResult<BlogPostDocument>> {
+    // A search that yields no usable token must return NOTHING, not the whole
+    // published list — the same contract listAll and listForSeller keep.
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<BlogPostDocument>();
+
     let baseQuery = this.getCollection().where(
       BLOG_POST_FIELDS.STATUS,
       "==",
@@ -244,7 +262,15 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
       ) as typeof baseQuery;
     }
 
-    return this.sieveQuery<BlogPostDocument>(
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        BLOG_POST_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+
+    const result = await this.sieveQuery<BlogPostDocument>(
       model,
       BlogRepository.SIEVE_FIELDS,
       {
@@ -253,6 +279,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
         maxPageSize: 50,
       },
     );
+    return refineSearchTxt(result, plan.rest);
   }
 
   /** Derived on every write path via `applyWriteHooks`. */

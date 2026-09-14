@@ -15,6 +15,7 @@ function renderToStaticMarkup(el: React.ReactElement): string {
 }
 import { normalizeError } from "../../errors/normalize";
 import { guardSend, logSuppressedSend } from "../../_internal/server/notifications/send-guard";
+import { recordSendAttempt } from "../../_internal/server/notifications/send-recorder";
 import type { SendGuardContext } from "../../_internal/shared/features/messaging/config";
 import type { JsonValue } from "@mohasinac/appkit";
 import { getProviders } from "../../contracts";
@@ -154,6 +155,21 @@ export async function sendEmail(
   const decision = await guardSend(guard);
   if (!decision.allow) {
     logSuppressedSend(guard, decision);
+    /*
+     * Record the SUPPRESSION, not just the sends. Six checklist cases assert that
+     * an email should NOT arrive, and over IMAP that is unprovable — you wait and
+     * hope. Here it is a row saying which rule stopped it. Gated to the harness
+     * mailbox; a no-op for everyone else. See send-recorder.ts.
+     */
+    void recordSendAttempt({
+      to: opts.to as string | string[],
+      subject: typeof opts.subject === "string" ? opts.subject : "",
+      feature: guard.feature,
+      audience: String(guard.audience),
+      channel: String(guard.channel),
+      outcome: "suppressed",
+      reason: decision.reason,
+    });
     return { data: null, error: null, suppressed: decision.reason };
   }
   try {
@@ -174,10 +190,29 @@ export async function sendEmail(
           ? (opts.headers as Record<string, string>)
           : undefined,
     });
+    void recordSendAttempt({
+      to: opts.to as string | string[],
+      subject: typeof opts.subject === "string" ? opts.subject : "",
+      feature: guard.feature,
+      audience: String(guard.audience),
+      channel: String(guard.channel),
+      outcome: "sent",
+      html: typeof opts.html === "string" ? opts.html : undefined,
+    });
     return { data: data as unknown as JsonValue, error: null };
   } catch (error) {
     void normalizeError(error);
-    return { data: null, error: error instanceof Error ? error.message : String(error) };
+    const message = error instanceof Error ? error.message : String(error);
+    void recordSendAttempt({
+      to: opts.to as string | string[],
+      subject: typeof opts.subject === "string" ? opts.subject : "",
+      feature: guard.feature,
+      audience: String(guard.audience),
+      channel: String(guard.channel),
+      outcome: "failed",
+      reason: message,
+    });
+    return { data: null, error: message };
   }
 }
 

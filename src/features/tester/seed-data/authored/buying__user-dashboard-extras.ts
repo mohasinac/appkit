@@ -57,7 +57,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-user-dashboard-extras-catalogue-crud": {
     roles: ["buyer"],
-    startPage: "/user",
+    startPage: "/user/catalogue",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the personal catalogue surface and read the existing items.",
@@ -99,7 +99,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-user-dashboard-extras-my-prize-draws": {
     roles: ["buyer"],
-    startPage: "/user",
+    startPage: "/user/prize-draws",
     steps: [
       "Sign in as tester@letitrip.in / TempPass123!.",
       "Open the buyer's prize-draws surface and read every row.",
@@ -117,7 +117,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-user-dashboard-extras-my-digital-codes": {
     roles: ["buyer"],
-    startPage: "/user",
+    startPage: "/user/digital-codes",
     steps: [
       "Sign in as tester@letitrip.in / TempPass123!.",
       "Open the buyer's digital-codes surface and read every row.",
@@ -261,7 +261,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-user-dashboard-extras-my-returns": {
     roles: ["buyer"],
-    startPage: "/user",
+    startPage: "/user/returns",
     steps: [
       "Sign in as tester@letitrip.in / TempPass123!.",
       "Open the buyer's returns surface and read every row.",
@@ -278,7 +278,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-user-dashboard-extras-my-reviews": {
     roles: ["buyer"],
-    startPage: "/user",
+    startPage: "/user/reviews",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the buyer's reviews surface and read every row.",
@@ -297,7 +297,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-user-dashboard-extras-user-personal-listings-search-sort": {
     roles: ["buyer"],
-    startPage: "/user",
+    startPage: "/user/digital-codes",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the personal catalogue surface and note the unfiltered item count.",

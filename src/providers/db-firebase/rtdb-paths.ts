@@ -19,4 +19,11 @@ export const RTDB_PATHS = {
   AUTH_EVENTS: "auth_events",
   PAYMENT_EVENTS: "payment_events",
   BULK_EVENTS: "bulk_events",
+  /**
+   * Tester-only. A one-line ping per email decision so the harness can poll
+   * instead of reading a real mailbox — see `send-recorder.ts` for why, and for
+   * the gate that keeps real users' mail out of it. Pruned by
+   * `cleanupRtdbEvents` alongside the other three.
+   */
+  EMAIL_EVENTS: "email_events",
 } as const;

@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../../providers/db-firebase";
+import { RTDB_PATHS } from "../../../../providers/db-firebase/rtdb-paths";
 import { jobsRepository } from "../../../../repositories";
 import { batchDelete } from "../handlers/_helpers";
 import type { JobContext } from "../runtime/types";
@@ -7,6 +8,13 @@ import type { JobContext } from "../runtime/types";
 const AUTH_STALE_MS = 3 * 60 * 1000;
 const PAYMENT_STALE_MS = 15 * 60 * 1000;
 const BULK_STALE_MS = 15 * 60 * 1000;
+/**
+ * Longer than the other three on purpose: a tester batch can take ten minutes
+ * between triggering a send and asserting on it, and a ping deleted mid-batch
+ * would read as "no email was sent" — the exact false negative these records
+ * exist to prevent.
+ */
+const EMAIL_STALE_MS = 60 * 60 * 1000;
 const JOBS_TTL_DAYS = 30;
 
 export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
@@ -76,6 +84,40 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
   } catch (bulkErr) {
     void normalizeError(bulkErr);
     ctx.logger.error("Bulk events cleanup failed (non-fatal)", bulkErr);
+  }
+
+  /*
+   * Tester email pings. Written only for the harness mailbox (see
+   * `send-recorder.ts`), so this is normally a no-op — but an unpruned RTDB
+   * channel is precisely the thing that quietly accumulates, and the Firebase
+   * budget notes `auction-bids/*` as the one family with no TTL. Do not make it
+   * the second.
+   *
+   * The Firestore row is the record and is NOT touched here; this only clears the
+   * ping.
+   */
+  try {
+    const emailSnap = await rtdb.ref(RTDB_PATHS.EMAIL_EVENTS).get();
+    if (emailSnap.exists()) {
+      const allEmailEvents = emailSnap.val() as Record<string, { at?: string }>;
+      const staleEmailIds = Object.entries(allEmailEvents)
+        .filter(([, node]) => {
+          const at = node.at ? Date.parse(node.at) : 0;
+          // An unparseable or missing timestamp is stale by definition: it can
+          // never age out on its own, so leaving it would pin the node forever.
+          return !Number.isFinite(at) || at === 0 || at < now - EMAIL_STALE_MS;
+        })
+        .map(([id]) => id);
+      if (staleEmailIds.length > 0) {
+        await Promise.all(
+          staleEmailIds.map((id) => rtdb.ref(`${RTDB_PATHS.EMAIL_EVENTS}/${id}`).remove()),
+        );
+        ctx.logger.info("Email event pings removed", { count: staleEmailIds.length });
+      }
+    }
+  } catch (emailErr) {
+    void normalizeError(emailErr);
+    ctx.logger.error("Email events cleanup failed (non-fatal)", emailErr);
   }
 
   try {

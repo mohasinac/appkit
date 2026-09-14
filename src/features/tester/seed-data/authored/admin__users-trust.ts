@@ -243,7 +243,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-admin-users-trust-support-tickets-triage-admin": {
     roles: ["admin"],
-    startPage: "/admin/support",
+    startPage: "/admin/support-tickets",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open the admin support tickets surface and read every column.",

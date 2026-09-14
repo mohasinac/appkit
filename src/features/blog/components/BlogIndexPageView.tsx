@@ -23,11 +23,20 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
   const page = Number(sp(searchParams, "page")) || 1;
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
   const category = sp(searchParams, "category") as BlogPostCategory | undefined;
+  /*
+   * 🛑 `q` MUST be read and forwarded. Without it /blog?q=anything rendered the
+   * FULL published list — the same failure the API route's own header records
+   * having already fixed on its side, never back-ported here (Root Cause #59).
+   * It cannot self-correct on the client either: this result becomes
+   * `initialData`, and the listing hook sets `staleTime: Infinity` when given
+   * SSR data, so the unfiltered first paint is frozen for that query key.
+   */
+  const q = sp(searchParams, "q").trim();
 
   const sieveResult = await safeRead(
     () =>
       blogRepository.listPublished(
-        { ...(category ? { category } : {}) },
+        { ...(category ? { category } : {}), ...(q ? { search: q } : {}) },
         { sorts: sort, page, pageSize },
       ),
     { route: "/blog", key: "blogPosts.listPublished", fallback: null },
