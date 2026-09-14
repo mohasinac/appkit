@@ -391,4 +391,39 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { maxEntries: 50, duplicateProducts: 0 },
     endResult: "The account's history holds the merged, de-duplicated set.",
   },
+
+  /* ── Added 2026-09-14 (F3d) — the SIGNED-OUT wishlist ────────────────────────
+   * 20 cases existed, 2 signed-out, and both were about the login MERGE rather
+   * than about what a guest sees BEFORE logging in.
+   */
+  "checklist-buying-wishlist-history-wishlist-guest-heart-prompts-signin": {
+    roles: ["guest"],
+    startPage: "/products/product-beyblade-burst-valkyrie",
+    steps: [
+      "Open /products/product-beyblade-burst-valkyrie while signed out.",
+      "Note the state of the wishlist heart before touching it.",
+      "Tap the heart.",
+      "Note what appears, and note the heart's state immediately afterwards.",
+      "Dismiss whatever appeared and look at the heart once more.",
+    ],
+    expectedBehaviour:
+      "BEFORE: the heart is empty. Tapping it asks the visitor to sign in. AFTER dismissing that prompt the heart is empty again. It must not fill optimistically before refusing — a filled heart that saved nothing is worse than a plain refusal, because the visitor believes the item is kept and does not come back for it.",
+    expectedUiState:
+      "A sign-in prompt or modal appears naming what signing in will do. The heart is unfilled both before the tap and after the prompt is dismissed.",
+    endResult: "Nothing is saved. Nothing persists.",
+  },
+  "checklist-buying-wishlist-history-wishlist-guest-page-signed-out": {
+    roles: ["guest"],
+    startPage: "/wishlist",
+    steps: [
+      "Open /wishlist directly by URL while signed out.",
+      "Read exactly what the page says.",
+      "Note whether it offers a way to sign in from there.",
+    ],
+    expectedBehaviour:
+      "A signed-out visitor is asked to sign in. They are not shown a generic empty wishlist: an empty state reading 'nothing saved yet' is indistinguishable, to someone who did save things, from a wishlist whose contents were lost.",
+    expectedUiState:
+      "The page states that signing in is required and offers a route to it. The words used are quoted in the answer, because the distinction between this and an ordinary empty state IS the case.",
+    endResult: "Read-only; nothing persists.",
+  },
 };

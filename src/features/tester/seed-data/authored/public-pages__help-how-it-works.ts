@@ -64,13 +64,24 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/help",
     steps: [
-      "Open /how-it-works/auctions in a private window and read its content.",
-      "Open /how-it-works/checkout and read its content.",
-      "Open /how-it-works/offers and read its content.",
-      "Open /how-it-works/orders and read its content.",
-      "Open /how-it-works/payouts and read its content.",
-      "Open /how-it-works/pre-orders and read its content.",
-      "Open /how-it-works/reviews and read its content.",
+      /*
+       * 🛑 CORRECTED 2026-09-14. These seven steps named /how-it-works/<topic>,
+       * a route family that does not exist — every one was a 404, so the case
+       * could only ever be answered "no" for a reason that was not a product
+       * defect. The real routes are flat: /how-<topic>-work(s). That is also why
+       * these seven pages read as zero-coverage in a gap sweep despite having a
+       * case: the case pointed at nothing.
+       *
+       * audit-tester-checklist-hrefs did not catch it because it validates the
+       * `href` and `startPage` FIELDS, and these paths live inside step strings.
+       */
+      "Open /how-auctions-work in a private window and read its content.",
+      "Open /how-checkout-works and read its content.",
+      "Open /how-offers-work and read its content.",
+      "Open /how-orders-work and read its content.",
+      "Open /how-payouts-work and read its content.",
+      "Open /how-pre-orders-work and read its content.",
+      "Open /how-reviews-work and read its content.",
       "Write down any of the seven that renders empty, 404s, or repeats another page's copy.",
     ],
     expectedBehaviour:
@@ -114,5 +125,141 @@ export const authored: Record<string, AuthoredCase> = {
     expectedUiState:
       "The stated threshold matches the price at which checkout starts offering EMI, and the worked example's instalment figures match the real ones. Either mismatch is a finding, with both numbers.",
     endResult: "Empty the cart; place no order.",
+  },
+
+  /* ── Added 2026-09-14 (F3d) ──────────────────────────────────────────────────
+   * The blanket "how-it-works-pages" case above asserts all seven LOAD. These
+   * assert each one is TRUE: read the guide, then open the feature and compare.
+   * A guide is documentation with no compiler behind it, so nothing catches
+   * drift except doing both halves in one sitting — "it loads" passes against
+   * every stale sentence on the page.
+   */
+  "checklist-public-pages-help-how-it-works-how-auctions-work-matches-product": {
+    roles: ["guest"],
+    startPage: "/how-auctions-work",
+    steps: [
+      "Open /how-auctions-work signed out and read it end to end.",
+      "Write down what it says about the minimum bid increment, about bidding in the final minutes, and about what happens when a reserve is not met.",
+      "Open /auctions/auction-beyblade-original-dragoon-storm in a second tab.",
+      "Compare each of those three claims against what the auction page shows and what its bid form states.",
+    ],
+    expectedBehaviour:
+      "Every claim the guide makes is true of the live auction: the increment it names is the increment the bid form enforces, the end-of-auction behaviour it describes is what the page shows, and an anti-snipe extension it promises actually exists.",
+    expectedUiState:
+      "The guide renders its own headings and body text, not a placeholder. Each of the three claims matches. Quote verbatim any sentence that does not, next to what the auction page actually showed.",
+    endResult:
+      "Read-only; nothing persists. Prices are gated signed out, so compare the RULES rather than the amounts. A mismatch is a real defect even though both pages load.",
+  },
+  "checklist-public-pages-help-how-it-works-how-checkout-works-matches-product": {
+    roles: ["buyer"],
+    startPage: "/how-checkout-works",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /how-checkout-works and write down the checkout steps it names, in order.",
+      "Add product-beyblade-burst-valkyrie to the cart and open /checkout.",
+      "Write down the steps checkout actually presents, in order.",
+      "Compare the two lists.",
+    ],
+    expectedBehaviour:
+      "The guide names the same steps in the same order as the product: Address, then Add-ons and fees, then Payment. A guide still describing a two-step checkout sends a buyer looking for a screen that is not there; one that omits the add-ons step hides where the fees are chosen.",
+    expectedUiState:
+      "The checkout step indicator shows three steps and the guide's list matches it. Any extra, missing or reordered step is quoted exactly from the guide.",
+    expectedData: { checkoutSteps: 3 },
+    endResult: "A cart line is left behind — remove it afterwards. Place no order. The guide itself is read-only.",
+  },
+  "checklist-public-pages-help-how-it-works-how-offers-work-matches-product": {
+    roles: ["buyer"],
+    startPage: "/how-offers-work",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /how-offers-work and write down what it says about how many counter-rounds are allowed and when an offer expires.",
+      "Open /products/product-beyblade-burst-valkyrie and open the Make-an-Offer form.",
+      "Read the limits and expiry the form itself states.",
+      "Compare them against the guide, then close the form without submitting.",
+    ],
+    expectedBehaviour:
+      "The guide does not promise more counter-rounds than the product allows, and names the same expiry the offer actually gets. Over-promising here costs a buyer a negotiation they believed was still open.",
+    expectedUiState:
+      "The offer form states its own limits. Every number in the guide matches a number the product enforces; any that does not is quoted from both places.",
+    endResult: "Do not submit the offer — cancel out of the form. Nothing persists.",
+  },
+  "checklist-public-pages-help-how-it-works-how-orders-work-matches-product": {
+    roles: ["buyer"],
+    startPage: "/how-orders-work",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /how-orders-work and list every order status it names.",
+      "Open /user/orders and list every status offered by the Active, Closed and All tabs and by the status filter.",
+      "Compare the two lists in both directions.",
+    ],
+    expectedBehaviour:
+      "Every status the guide names is one an order can actually hold, and the guide omits none a buyer will see. A status that exists only in the guide teaches a vocabulary the product never uses.",
+    expectedUiState:
+      "Both lists are written down and compared. Any status present in one and absent from the other is named explicitly, with which side it came from.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-public-pages-help-how-it-works-how-payouts-work-matches-product": {
+    roles: ["seller"],
+    startPage: "/how-payouts-work",
+    steps: [
+      "Sign in as tyson@beybladearena.in / TempPass123!.",
+      "Open /how-payouts-work and write down the payout schedule and every deduction it names.",
+      "Open /store/payouts and read the schedule and deductions shown there.",
+      "Open one payout's detail and compare its deduction lines against the guide's list.",
+    ],
+    expectedBehaviour:
+      "The schedule and the deductions match. This page describes money a seller is owed, so a stale figure is a seller expecting the wrong amount on the wrong day — not merely stale prose.",
+    expectedUiState:
+      "Each deduction named in the guide appears on a real payout, and each deduction on the payout is explained by the guide. Mismatches are quoted with both numbers.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-public-pages-help-how-it-works-how-pre-orders-work-matches-product": {
+    roles: ["guest"],
+    startPage: "/how-pre-orders-work",
+    steps: [
+      "Open /how-pre-orders-work signed out and write down what it says about the deposit and about whether a pre-order can be cancelled.",
+      "Open /pre-orders/preorder-beyblade-x-bx-08-wave.",
+      "Read what that listing states about its deposit terms and cancellability.",
+      "Compare the two.",
+    ],
+    expectedBehaviour:
+      "The deposit wording and the cancellation rule match the listing. These are the two claims that drift, and both commit the buyer's money.",
+    expectedUiState:
+      "The listing states deposit terms and a cancellation stance; the guide describes the same ones. Any difference is quoted from both pages.",
+    endResult:
+      "Read-only; nothing persists. Prices are gated signed out, so compare the TERMS rather than the amounts.",
+  },
+  "checklist-public-pages-help-how-it-works-how-reviews-work-matches-product": {
+    roles: ["buyer"],
+    startPage: "/how-reviews-work",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /how-reviews-work and write down who it says may leave a review and when.",
+      "Open /products/product-beyblade-burst-valkyrie and try to leave a review.",
+      "Read what the form allows or refuses, and the reason it gives.",
+    ],
+    expectedBehaviour:
+      "What the form enforces is what the guide describes. If the guide says only verified purchasers may review, the form refuses a non-purchaser and says so; if the form allows it anyway, the guide is wrong.",
+    expectedUiState:
+      "Either the review form opens, or a refusal states its reason. That outcome matches the guide's sentence, which is quoted in the answer.",
+    endResult: "Do not submit a review. Nothing persists.",
+  },
+  "checklist-public-pages-help-how-it-works-track-order-page-works": {
+    roles: ["guest"],
+    startPage: "/track",
+    steps: [
+      "Open the site footer signed out and find the Support group.",
+      "Click the track-order link and note where it lands.",
+      "Type 9ab3f1-not-a-real-order into the tracking field and submit.",
+      "Note exactly what is shown.",
+      "Now submit the field left empty and note exactly what is shown.",
+    ],
+    inputs: { nonsenseOrderId: "9ab3f1-not-a-real-order" },
+    expectedBehaviour:
+      "The footer link resolves to a real page, and a nonsense id produces a clear not-found outcome rather than a blank panel or a spinner that never resolves. The nonsense id is the control: a page answering the same way to everything is not looking anything up, and a tracking page that never fails is indistinguishable from one that never works.",
+    expectedUiState:
+      "The page renders a tracking form. The nonsense id yields an explicit not-found message; the empty submit yields a field-level validation error rather than a silent no-op. Screenshot both outcomes.",
+    endResult:
+      "Read-only; nothing persists. The id above is INVENTED and is expected not to resolve — that is the point of the control.",
   },
 };

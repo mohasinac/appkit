@@ -262,4 +262,106 @@ export const authored: Record<string, AuthoredCase> = {
       "The form is open on arrival, the request appears in /item-requests, and is still there after a reload. A blank page on arrival is the finding.",
     endResult: "The QA item request is removed.",
   },
+
+  /* ── Added 2026-09-14 (F3d) ──────────────────────────────────────────────────
+   * The blanket cases above cover the four help sub-pages AS A SET — they load,
+   * they are linked both ways, their content differs from the parent's. These six
+   * address each page on its own terms and against the feature it documents,
+   * which is the half no "does it load" case reaches.
+   */
+  "checklist-public-pages-help-scams-guides-subpages-help-account-matches-product": {
+    roles: ["buyer"],
+    startPage: "/help/account",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /help/account and write down what it says about changing a password, changing an email, and closing an account.",
+      "Open /user/settings and find the controls for each of those three.",
+      "Compare what the help page describes against what the settings page actually offers.",
+    ],
+    expectedBehaviour:
+      "Each of the three is described as the product actually implements it. Password change is a Firebase reset LINK sent to the account's inbox, not an in-page old/new password form — a help page describing an in-page form sends the user hunting for a control that does not exist.",
+    expectedUiState:
+      "For each of the three actions, either the settings page offers what the help page describes, or the difference is quoted from both. An action the help page names with no control anywhere is the strongest finding.",
+    endResult: "Read-only — do not actually change the password or email. Nothing persists.",
+  },
+  "checklist-public-pages-help-scams-guides-subpages-help-auctions-matches-product": {
+    roles: ["buyer"],
+    startPage: "/help/auctions",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /help/auctions and write down what it tells a buyer about placing a bid, about being outbid, and about what happens if they lose.",
+      "Open /auctions/auction-beyblade-original-dragoon-storm and read what the bid form states.",
+      "Open /user/bids and read what it shows for a bid that is no longer winning.",
+      "Compare all three claims.",
+    ],
+    expectedBehaviour:
+      "The help page's account of bidding, being outbid and losing matches what the auction page and the bids list actually do — including whether a losing bidder is notified at all.",
+    expectedUiState:
+      "Each claim is matched against a real screen. Any claim with no corresponding behaviour is quoted verbatim.",
+    endResult: "Place no bid. Nothing persists.",
+  },
+  "checklist-public-pages-help-scams-guides-subpages-help-orders-matches-product": {
+    roles: ["buyer"],
+    startPage: "/help/orders",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /help/orders and list every action it says a buyer can take on an order — cancelling, returning, tracking, downloading an invoice.",
+      "Open /user/orders and open one order's detail page.",
+      "List the actions actually offered there.",
+      "Compare the two lists in both directions.",
+    ],
+    expectedBehaviour:
+      "Every action the help page names is offered somewhere on a real order, and the order page offers nothing significant the help page omits. An action named in help but absent from the order page is the finding.",
+    expectedUiState:
+      "Both lists are written down. Each missing or extra action is named, with the order id it was checked against.",
+    endResult: "Read-only — do not cancel or return anything. Nothing persists.",
+  },
+  "checklist-public-pages-help-scams-guides-subpages-help-shopping-matches-product": {
+    roles: ["buyer"],
+    startPage: "/help/shopping",
+    steps: [
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /help/shopping and write down what it says about carts, wishlists and coupons.",
+      "Add product-beyblade-burst-valkyrie to the cart and open /cart.",
+      "Open /wishlist.",
+      "Check each claim the help page made against those two screens, including any coupon rule it states.",
+    ],
+    expectedBehaviour:
+      "The help page's description of the cart, the wishlist and how coupons combine matches the product. The coupon rule is the one most likely to be stale: at most one seller coupon per store plus at most one platform-wide coupon.",
+    expectedUiState:
+      "Each claim is matched against the cart or wishlist screen. Any stale sentence is quoted, with what the screen actually did.",
+    endResult: "Remove the cart line afterwards. Place no order.",
+  },
+  "checklist-public-pages-help-scams-guides-subpages-seller-guide-bundles-matches-product": {
+    roles: ["seller"],
+    startPage: "/seller-guide/bundles",
+    steps: [
+      "Sign in as tyson@beybladearena.in / TempPass123!.",
+      "Open /seller-guide/bundles and write down every rule it states about what a bundle may contain and how it is priced.",
+      "Open the seller bundle editor from /store and begin creating a bundle.",
+      "Check each rule from the guide against what the editor allows or refuses.",
+      "In particular, check whether the guide says anything about all members having to belong to one store.",
+    ],
+    expectedBehaviour:
+      "Every rule in the guide is enforced by the editor, and the editor enforces no significant rule the guide fails to mention. A bundle's members must all belong to a single store — that is refused at save time — so a guide silent on it invites a seller to build a bundle that cannot be saved.",
+    expectedUiState:
+      "Each rule is matched against the editor's behaviour. A rule the guide states that the editor does not enforce, or a refusal the guide never warned about, is quoted.",
+    endResult: "Do not save the bundle — abandon the editor. Nothing persists.",
+  },
+  "checklist-public-pages-help-scams-guides-subpages-seller-guide-prize-draws-matches-product": {
+    roles: ["seller"],
+    startPage: "/seller-guide/prize-draws",
+    steps: [
+      "Sign in as tyson@beybladearena.in / TempPass123!.",
+      "Open /seller-guide/prize-draws and write down what it promises about entries, about how a winner is revealed, and about refunds if the draw does not fill.",
+      "Open the prize-draw creation flow from /store and read the options actually offered.",
+      "Open /prize-draws and pick a live draw to see what a buyer is shown.",
+      "Compare all three promises against what you saw.",
+    ],
+    expectedBehaviour:
+      "The entry mechanism, the reveal and the refund behaviour described in the guide are the ones the product implements. Refunds are the one that matters most: a seller who believes unfilled draws auto-refund, when they do not, has made a promise to buyers on the product's behalf.",
+    expectedUiState:
+      "Each of the three promises is matched against a real screen, and any that is unsupported is quoted verbatim from the guide.",
+    endResult: "Do not create a draw — abandon the flow. Nothing persists.",
+  },
 };

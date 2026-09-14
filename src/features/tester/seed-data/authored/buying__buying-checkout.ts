@@ -545,4 +545,42 @@ export const authored: Record<string, AuthoredCase> = {
     needsReview: true,
     reviewNote: "The step 2 add-ons screen did not show a shipping method selector in the session observed — it may only appear when the seller has configured multiple shipping options. Mark as needs-review until confirmed.",
   },
+
+  /* ── Added 2026-09-14 (F3d) — the SIGNED-OUT checkout ────────────────────────
+   * 30 checkout cases existed and NONE was signed-out, so the refusal path — the
+   * single most important thing checkout does for a guest — had no coverage at
+   * all. Only roles exactly ["guest"] reaches the guest identity slice.
+   */
+  "checklist-buying-buying-checkout-checkout-guest-redirected-to-signin": {
+    roles: ["guest"],
+    startPage: "/checkout",
+    steps: [
+      "While signed out, open /checkout directly by URL.",
+      "Note exactly what renders, and where the URL ends up.",
+      "If any form is shown, note which fields it asks for before refusing.",
+    ],
+    expectedBehaviour:
+      "The visitor is sent to sign in. Checkout does not render its address form to a signed-out visitor and only refuse at the end — that wastes the buyer's typing and reads as a bug in the payment step rather than an auth requirement.",
+    expectedUiState:
+      "Either /auth/login or an explicit sign-in prompt. No address fields, no payment step, and no partially-rendered checkout shell with a spinner that never resolves.",
+    endResult: "No order and no draft address are created. Nothing persists.",
+  },
+  "checklist-buying-buying-checkout-checkout-guest-returns-after-signin": {
+    roles: ["guest"],
+    startPage: "/cart",
+    steps: [
+      "While signed out, add product-beyblade-burst-valkyrie to the cart.",
+      "Press the checkout CTA and follow the sign-in prompt.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Note which page you land on once signed in.",
+      "Note whether product-beyblade-burst-valkyrie is still in the cart.",
+    ],
+    expectedBehaviour:
+      "BEFORE: a signed-out visitor with one cart line is stopped at checkout. AFTER signing in they are returned to checkout with that same line still present — the guest cart has merged into the account cart. A redirect that forgets where it came from, or that loses the line, is the same as losing the sale.",
+    expectedUiState:
+      "The landing page is checkout or the cart, not the homepage. The line for product-beyblade-burst-valkyrie is present with its original quantity, and prices are now visible because the viewer is signed in.",
+    expectedData: { cartLinesAfterSignIn: 1 },
+    endResult:
+      "The line now lives in the ACCOUNT cart and will persist across sessions — remove it afterwards so later cases start clean. Place no order.",
+  },
 };

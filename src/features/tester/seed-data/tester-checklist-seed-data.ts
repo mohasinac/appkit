@@ -797,6 +797,26 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Fixed 2026-08-20 — the Razorpay pre-charge amount (computed before opening the payment modal) omitted the seller's shipping fee entirely, while the order created afterward recorded a higher total that included it, so the buyer was silently charged less via the gateway than what got recorded as owed. Only testable when Site Settings → Payments → Razorpay is enabled and the seller has a configured shipping fee. Compare the amount shown in the Razorpay modal against the order's Total on the confirmation page — they should match exactly.",
           href: "/checkout",
         },
+        /*
+         * SIGNED-OUT checkout. 30 cases existed and NONE was signed-out, so the
+         * refusal path — the single most important thing checkout does for a guest
+         * — had no coverage at all. Only roles exactly ["guest"] reaches the guest
+         * identity slice.
+         */
+        {
+          key: "checkout-guest-redirected-to-signin",
+          label: "A signed-out visitor opening /checkout directly is sent to sign in, and is not shown a checkout form",
+          description:
+            "The failure to look for is a checkout that renders its steps for a signed-out visitor and only refuses at the end, after they have typed an address.",
+          href: "/checkout",
+        },
+        {
+          key: "checkout-guest-returns-after-signin",
+          label: "After signing in from that prompt the visitor lands back on checkout with their cart intact, not on the homepage with an empty cart",
+          description:
+            "A redirect that forgets where it came from is the same as losing the sale. The guest cart must have merged into the account cart by this point.",
+          href: "/checkout",
+        },
       ],
     },
     {
@@ -1019,6 +1039,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "history-revisit-reorders", label: "Re-visiting a product already in history removes the old entry and moves it to the front, rather than duplicating it" },
         { key: "history-fifo-cap", label: "History silently evicts the oldest entry once more than 50 items have been viewed (no error shown to the user)" },
         { key: "history-guest-merge-on-login", label: "Guest browsing history (localStorage) merges correctly with the account's history after login, deduplicated by product" },
+        /*
+         * SIGNED-OUT wishlist. 20 cases existed, 2 signed-out, and both were about
+         * the login MERGE rather than about what a guest sees before logging in.
+         */
+        {
+          key: "wishlist-guest-heart-prompts-signin",
+          label: "A signed-out visitor tapping the heart on product-beyblade-burst-valkyrie is asked to sign in, and the heart does not appear to have saved",
+          description:
+            "The gate must not optimistically fill the heart before refusing — a filled heart that saved nothing is worse than a refusal, because the visitor believes the item is kept.",
+          href: "/products/product-beyblade-burst-valkyrie",
+        },
+        {
+          key: "wishlist-guest-page-signed-out",
+          label: "A signed-out visitor opening /wishlist is asked to sign in rather than shown a permanently empty wishlist",
+          description:
+            "An empty-state that reads \"nothing saved yet\" to a signed-out visitor is indistinguishable from a wishlist whose contents were lost.",
+          href: "/wishlist",
+        },
       ],
     },
     {
@@ -1411,6 +1449,38 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "addons-follow-cart-not-checkout-request",
           label: "Add-on fees are charged strictly according to the per-store checkboxes on the cart page — leaving the cart and returning, or re-entering checkout, never adds or drops an add-on on its own",
           description: "Hardened 2026-08-21. The add-on booleans used to be accepted in the checkout request body as well as being stored per-store on the cart, so two sources could disagree about what the buyer had actually selected — and the cart's selection is the only one the buyer ever saw. The request body no longer carries them at all. To test: tick gift wrap for seller A only, go to checkout and note the Total, press Back to the cart, then return to checkout — the same single gift-wrap fee must still be there, for seller A only, with an unchanged Total. Repeat having ticked nothing and confirm no add-on line ever appears.",
+          href: "/cart",
+        },
+        /*
+         * SIGNED-OUT cart. Only a case whose `roles` is exactly ["guest"] is routed
+         * into the guest identity slice, which copies an EMPTY storage state over
+         * session.json — a two-role case runs signed in and therefore cannot test
+         * any of this. 71 cart cases existed and 3 were signed-out.
+         */
+        {
+          key: "cart-guest-add-and-persist",
+          label: "A signed-out visitor can add product-beyblade-burst-valkyrie to the cart, and it survives a full page reload",
+          description:
+            "The guest cart is localStorage-backed. If it does not survive a reload the visitor loses the cart between any two navigations, which is invisible to a signed-in tester.",
+          href: "/cart",
+        },
+        {
+          key: "cart-guest-prices-gated",
+          label: "A signed-out visitor sees \"Sign in to see price\" rather than an amount on the cart line and in the summary",
+          description:
+            "Prices are gated for guests. The gate has three states and the middle one is a neutral placeholder, so the failure to look for is a FLASH of the sign-in prompt at a signed-in buyer, and a permanent amount for a signed-out one.",
+          href: "/cart",
+        },
+        {
+          key: "cart-guest-checkout-prompts-signin",
+          label: "A signed-out visitor pressing the cart's checkout CTA is asked to sign in rather than being dropped on an empty checkout",
+          href: "/cart",
+        },
+        {
+          key: "cart-guest-group-line-refused",
+          label: "A signed-out visitor is told to sign in when adding a grouped/bundle line, rather than the line half-appearing",
+          description:
+            "Group lines cannot exist in the guest cart — it is keyed {productId, quantity} only and a group line could not survive the login merge. The refusal must be explicit.",
           href: "/cart",
         },
       ],
@@ -4527,6 +4597,65 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/how-emi-works",
         },
         { key: "fees-page", label: "The fees page loads correctly", href: "/fees" },
+        /*
+         * The blanket case above asserts all seven how-it-works pages LOAD. These
+         * seven assert each one is TRUE — the guide is read, then the feature it
+         * describes is opened and compared. A guide is documentation with no
+         * compiler behind it, so the only thing that catches drift is someone
+         * doing both halves in one sitting; "it loads" passes against every stale
+         * sentence on it.
+         */
+        {
+          key: "how-auctions-work-matches-product",
+          label: "What /how-auctions-work says about bidding, increments and what happens at the end matches a real auction page",
+          description:
+            "Compare against auction-beyblade-original-dragoon-storm. Anti-snipe, minimum increment and reserve behaviour are the three the guide is most likely to have stale.",
+          href: "/how-auctions-work",
+        },
+        {
+          key: "how-checkout-works-matches-product",
+          label: "What /how-checkout-works describes as the checkout steps matches the steps checkout actually presents",
+          description:
+            "Checkout is Address -> Add-ons & fees -> Payment. A guide still describing a two-step checkout sends a buyer looking for a screen that is not there.",
+          href: "/how-checkout-works",
+        },
+        {
+          key: "how-offers-work-matches-product",
+          label: "What /how-offers-work says about making, countering and accepting an offer matches the offer flow on a real listing",
+          description:
+            "The guide must not promise the seller can counter more rounds than the product allows, and must name the same expiry behaviour the offer actually has.",
+          href: "/how-offers-work",
+        },
+        {
+          key: "how-orders-work-matches-product",
+          label: "The order statuses named on /how-orders-work are the statuses an order can actually hold",
+          description:
+            "A status named in the guide that the product never sets is the tell. Compare against the status filter chips on /user/orders.",
+          href: "/how-orders-work",
+        },
+        {
+          key: "how-payouts-work-matches-product",
+          label: "The payout schedule and deductions described on /how-payouts-work match what a seller's payouts page shows",
+          href: "/how-payouts-work",
+        },
+        {
+          key: "how-pre-orders-work-matches-product",
+          label: "What /how-pre-orders-work says about deposits and cancellation matches a real pre-order listing",
+          description: "Compare against preorder-beyblade-x-bx-08-wave. Deposit wording and cancellability are the two that drift.",
+          href: "/how-pre-orders-work",
+        },
+        {
+          key: "how-reviews-work-matches-product",
+          label: "What /how-reviews-work says about who may review and when matches what the review form actually enforces",
+          href: "/how-reviews-work",
+        },
+        {
+          key: "track-order-page-works",
+          label: "The order-tracking page at /track is reachable from the footer and does something useful for both a real order id and a nonsense one",
+          description:
+            "Linked from the footer's Support group and has no checklist coverage at all. The nonsense id is the control: a page that reports 'found' for every input is not looking anything up.",
+          href: "/track",
+        },
       ],
     },
     {
@@ -4672,6 +4801,48 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "item-requests-new-form-opens",
           label: "Opening the new-item-request page directly shows the form already open, and a submitted request appears in the item-requests list",
           href: "/item-requests/new",
+        },
+        /*
+         * The three blanket cases above cover the four help sub-pages as a set —
+         * they load, they are linked both ways, their content differs from the
+         * parent's. These four address each page on its own terms and against the
+         * feature it documents, which is the half no "does it load" case reaches.
+         */
+        {
+          key: "help-account-matches-product",
+          label: "What /help/account says about changing a password, an email and closing an account matches what /user/settings actually offers",
+          description:
+            "Password change is a Firebase reset LINK, not an in-page form. A help page describing an in-page form sends the user hunting for a control that does not exist.",
+          href: "/help/account",
+        },
+        {
+          key: "help-auctions-matches-product",
+          label: "What /help/auctions tells a buyer about bidding and losing matches what an auction page and /user/bids actually do",
+          href: "/help/auctions",
+        },
+        {
+          key: "help-orders-matches-product",
+          label: "What /help/orders says about cancelling, returning and tracking matches the actions on a real order's page",
+          description:
+            "Compare against the row actions on /user/orders. An action the help page names but the order page does not offer is the finding.",
+          href: "/help/orders",
+        },
+        {
+          key: "help-shopping-matches-product",
+          label: "What /help/shopping says about carts, wishlists and coupons matches what those surfaces do for a signed-in buyer",
+          href: "/help/shopping",
+        },
+        {
+          key: "seller-guide-bundles-matches-product",
+          label: "What /seller-guide/bundles promises matches what the seller bundle editor actually allows",
+          description:
+            "A bundle's members must all belong to one store — that is refused at save time. A guide that does not say so invites a seller to build a bundle that cannot be saved.",
+          href: "/seller-guide/bundles",
+        },
+        {
+          key: "seller-guide-prize-draws-matches-product",
+          label: "What /seller-guide/prize-draws promises about entries, reveal and refunds matches the prize-draw a seller can actually create",
+          href: "/seller-guide/prize-draws",
         },
       ],
     },
@@ -5950,6 +6121,122 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             key: "delete-reflected-immediately",
             label: "A deleted record disappears from its list without a manual reload, and stays gone after one",
             href: "/admin/products",
+          },
+        ],
+      },
+      {
+        /*
+         * Step H. 55 Firebase functions — 28 scheduled, 20 Firestore triggers,
+         * 7 HTTPS — and no checklist coverage at all.
+         *
+         * Every case here tests an EFFECT, never a function. A case that says
+         * "wait for the cron" is untestable in a session and will be answered
+         * null forever; a case that reads the document the cron is supposed to
+         * have written is answerable in seconds. The functions are deployed
+         * infrastructure, so the only honest question a tester can ask is
+         * "did the thing it is responsible for actually happen".
+         */
+        pageKey: "firebase-function-effects",
+        pageLabel: "Firebase Functions — observable effects",
+        href: "/admin/maintenance",
+        cases: [
+          {
+            key: "function-invocation-health-per-function",
+            label: "The Firebase console's per-function invocation counts show no single function running away from the rest",
+            description:
+              "This is the case that would have caught Root Cause #92: onShipmentHeaderWrite self-triggered 1,017,548 times in 24h against a 2M/month free quota, while every other function sat at 0-95. The AGGREGATE number never names the culprit — read the PER-FUNCTION breakdown, sort by invocations, and compare the top entry against the rest.",
+            href: "/admin/maintenance",
+          },
+          {
+            key: "function-errors-page-has-no-producer",
+            label: "The function-errors page is EMPTY, and that is a known gap rather than a clean bill of health",
+            description:
+              "BEFORE: /admin/maintenance/function-errors renders a list. AFTER: it is empty — and it will be empty no matter what breaks, because nothing in production writes a serverErrors row with source:\"function\". wrapJobHandler is the only producer and it is referenced solely by its own test. Answer NO with that reasoning: a case reading \"check errors appear here\" would pass vacuously against a surface that can never populate.",
+            href: "/admin/maintenance/function-errors",
+          },
+          {
+            key: "https-function-401-is-healthy-500-is-not",
+            label: "Each deployed HTTPS function answers 401 unauthenticated, never 500",
+            description:
+              "There are 7: adminAnalytics, storeAnalytics, promotionsApi, listingProcessor, triggerEventRaffle, assignSpinPrize, gateway. A 401 means the module loaded and the auth gate ran — that is HEALTHY. A 500 means the module failed to load at cold start, which is how Root Cause #69 took every route down while the build was green.",
+            href: "/admin/maintenance",
+          },
+          {
+            key: "counters-reconcile-effect-category-counts",
+            label: "Category product counts on /categories agree with a recount of the products actually filed under each",
+            description:
+              "countersReconcile runs nightly and is what keeps metrics.productCount (own) and metrics.totalProductCount (own + descendants) honest. Root Cause 102: it could not express the two separately and wrote one number to both, so 19 of 65 rows disagreed with a recount, every one low. Pick the root category and one leaf, count the listings each actually shows, and compare against the displayed count.",
+            href: "/categories",
+          },
+          {
+            key: "revenue-rollup-effect-dashboard-reads-one-doc",
+            label: "The admin dashboard's revenue figures are present and plausible without the page scanning every order",
+            description:
+              "revenueRollup pre-aggregates nightly into a singleton so the dashboard is a single-doc read rather than a full-collection scan — that is the pattern protecting the 50K/day Firestore read quota. A dashboard showing zero revenue while real delivered orders exist means the rollup did not run or wrote the wrong shape.",
+            href: "/admin",
+          },
+          {
+            key: "auction-settlement-effect-winner-gets-payable-line",
+            label: "A settled auction produces a winner who can actually pay — a locked cart line, not an unpayable order",
+            description:
+              "Root Cause #60: auctionSettlement used to write a document to the orders collection that was not an OrderDocument, so the win rendered nowhere and no checkout would accept it — there was no way in the product for a winner to pay. The effect to check is a LOCKED line in the winner's cart that reaches checkout via the auction lane.",
+            href: "/user/orders",
+          },
+          {
+            key: "offer-expiry-effect-lapsed-offer-frees-the-cart",
+            label: "An offer past its deadline is no longer actionable, and its lapse does not leave a locked line blocking the buyer's cart",
+            description:
+              "runOfferExpiry sweeps three things in one pass — pending offers past expiresAt, ACCEPTED offers past checkoutDeadline, and unpaid auction wins. The offer lane outranks the standard lane, so a leftover locked line blocks the buyer's ENTIRE cart, not just that offer.",
+            href: "/user/offers",
+          },
+          {
+            key: "payment-window-timeout-effect-expired-proof-window",
+            label: "A manual-payment order left past its 15-minute window is resolved by the sweep rather than sitting pending forever",
+            description:
+              "paymentWindowTimeout and paymentReviewAutoApprove are the two sweeps that stop a manual payment stalling indefinitely. The observable effect is the order's own status and its payment panel — check one that is past its deadline.",
+            href: "/admin/orders",
+          },
+          {
+            key: "rtdb-event-channels-are-pruned",
+            label: "The realtime event channels are not accumulating — auth, payment and bulk event nodes are pruned",
+            description:
+              "cleanupRtdbEvents prunes auth_events/payment_events/bulk_events at 3/15/15 minutes and email_events at 1 hour. The email one is deliberately longest because a batch can take ten minutes between triggering a send and asserting on it, and a ping deleted mid-batch reads as \"no email was sent\".",
+            href: "/admin/maintenance",
+          },
+          {
+            key: "media-tmp-cleanup-effect-aborted-uploads-removed",
+            label: "An aborted media upload does not leave a permanent orphan under the tmp/ prefix",
+            description:
+              "Uploads land in tmp/ and are moved to a permanent path by finalize; mediaTmpCleanup removes whatever never finalised. Start an upload, abandon it before finalize, and confirm nothing renders it as a real asset.",
+            href: "/admin/media",
+          },
+          {
+            key: "product-write-trigger-effect-stock-and-groups",
+            label: "Changing a product's stock updates its listing availability and any grouped listing it belongs to, without a manual refresh elsewhere",
+            description:
+              "onProductWrite / onProductStockChange recompute derived state — a grouped listing's activeMemberCount and visibilityStatus, and bundle sync. The effect is visible on the group or bundle, not on the product you edited.",
+            href: "/admin/products",
+          },
+          {
+            key: "order-create-trigger-effect-staff-signal",
+            label: "A newly created order produces a staff-visible signal rather than only a row in the orders table",
+            description:
+              "onOrderCreate is expected to leave something an operator can notice. Staff signal is a durable record read by the admin inbox and counted by the daily digest — one row, not a personal notification per employee.",
+            href: "/admin/orders",
+          },
+          {
+            key: "shipment-trigger-no-op-guard-holds",
+            label: "Saving a procurement shipment twice with no change does NOT produce a second recomputation",
+            description:
+              "This is Root Cause #92's exact mechanism. onShipmentHeaderWrite writes back to the collection it watches; its only brake is a no-op guard, and that guard compared with JSON.stringify — which is key-order sensitive, while Firestore returns map fields alphabetically. The strings could never match, so every write re-triggered. Save an unchanged shipment and confirm totalsComputedAt does not move.",
+            href: "/admin/shipments",
+          },
+          {
+            key: "scheduled-job-count-matches-registry",
+            label: "The number of Cloud Scheduler jobs matches the number of scheduled functions actually defined",
+            description:
+              "28 scheduled functions means 28 Scheduler jobs, billed per registered job. This count has drifted four separate times, so RECOUNT rather than quoting a number: a job in Scheduler with no matching function is paid-for and dead, and a function with no job never runs.",
+            href: "/admin/maintenance",
           },
         ],
       },

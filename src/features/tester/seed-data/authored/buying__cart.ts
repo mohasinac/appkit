@@ -1316,4 +1316,74 @@ export const authored: Record<string, AuthoredCase> = {
       "No add-on flags appear in the request bodies. The recorded fees match the cart's checkboxes. A body carrying add-on flags is the finding even if the totals happen to agree today.",
     endResult: "Two orders exist with fees matching the cart.",
   },
+
+  /* ── Added 2026-09-14 (F3d) — the SIGNED-OUT cart ───────────────────────────
+   * 71 cart cases existed and 3 were signed-out. Only a case whose `roles` is
+   * exactly ["guest"] is routed into the guest identity slice, which copies an
+   * EMPTY storage state over the fixed session.json path; a two-role case runs
+   * signed in and cannot test any of this.
+   */
+  "checklist-buying-cart-cart-guest-add-and-persist": {
+    roles: ["guest"],
+    startPage: "/products/product-beyblade-burst-valkyrie",
+    steps: [
+      "Open /products/product-beyblade-burst-valkyrie while signed out.",
+      "Press Add to cart.",
+      "Open /cart and note the line that is there.",
+      "Press the browser reload button and wait for the page to settle.",
+      "Note whether the same line is still there.",
+    ],
+    expectedBehaviour:
+      "BEFORE: a signed-out visitor adds an item and the guest cart holds it. AFTER a full reload the same line is still present. The guest cart is localStorage-backed, so a cart that does not survive a reload loses the visitor's selection between any two navigations — and that is invisible to a signed-in tester, which is why this case exists.",
+    expectedUiState:
+      "The cart shows exactly one line for product-beyblade-burst-valkyrie both before and after the reload, with the same quantity. An empty cart after reload is the failure.",
+    expectedData: { cartLinesAfterReload: 1 },
+    endResult:
+      "The line persists in localStorage until cleared. Remove it at the end so the next signed-out case starts clean.",
+  },
+  "checklist-buying-cart-cart-guest-prices-gated": {
+    roles: ["guest"],
+    startPage: "/cart",
+    steps: [
+      "While signed out, add product-beyblade-burst-valkyrie to the cart and open /cart.",
+      "Read the price area of the cart line.",
+      "Read the order summary's total area.",
+      "Reload the page once and watch the price area during the first second after load.",
+    ],
+    expectedBehaviour:
+      "A signed-out visitor is shown a sign-in prompt where a price would be, not an amount. The gate has three states and the middle one renders a neutral placeholder, so a signed-in buyer must never see the prompt flash on load — but a signed-out visitor must never see a real amount at all.",
+    expectedUiState:
+      "The cart line and the summary both show the sign-in prompt in place of the money, and the row keeps its height rather than collapsing. No rupee amount for the item price is visible anywhere on the page.",
+    endResult: "Read-only apart from the cart line; remove it afterwards.",
+  },
+  "checklist-buying-cart-cart-guest-checkout-prompts-signin": {
+    roles: ["guest"],
+    startPage: "/cart",
+    steps: [
+      "While signed out, add product-beyblade-burst-valkyrie to the cart and open /cart.",
+      "Press the checkout CTA.",
+      "Note exactly where you land and what is shown.",
+    ],
+    expectedBehaviour:
+      "The visitor is asked to sign in. They are not dropped onto a checkout form that will refuse them later, and not left on the cart with a button that appears to do nothing.",
+    expectedUiState:
+      "A sign-in prompt, modal or /auth/login page appears, and it is clear that signing in will continue the purchase. A silent no-op is the failure, and so is an empty checkout page.",
+    endResult: "No order is created. Remove the cart line afterwards.",
+  },
+  "checklist-buying-cart-cart-guest-group-line-refused": {
+    roles: ["guest"],
+    startPage: "/bundles",
+    steps: [
+      "While signed out, open /bundles and pick any bundle.",
+      "Try to add the bundle to the cart.",
+      "Note exactly what happens.",
+      "Open /cart and note whether anything was added.",
+    ],
+    expectedBehaviour:
+      "The visitor is told to sign in, explicitly. A grouped or bundle line cannot exist in the guest cart at all — it is keyed on productId and quantity only, so such a line could not survive the login merge — which means a half-added line would be silently lost rather than merged.",
+    expectedUiState:
+      "A sign-in prompt appears. The cart afterwards contains no partial bundle line and no single stray member product.",
+    expectedData: { guestCartBundleLines: 0 },
+    endResult: "Nothing is added to the guest cart. Nothing persists.",
+  },
 };
