@@ -714,19 +714,10 @@ export async function listSellerOrders(
       hasMore: false,
     };
   }
-  const sellerProducts = await productRepository.findByStore(store.id);
-  const productIds = sellerProducts.map((p) => p.id);
-  if (productIds.length === 0) {
-    return {
-      items: [],
-      total: 0,
-      page: 1,
-      pageSize: params?.pageSize ?? 20,
-      totalPages: 0,
-      hasMore: false,
-    };
-  }
-  return orderRepository.listForSeller(productIds, {
+  // No products query: orders are scoped by `storeId`, the field a cart is
+  // split on. Fetching every product to build a `productId in [...]` clause was
+  // both an extra round trip and a hard 30-value Firestore cap.
+  return orderRepository.listForSeller(store.id, {
     filters: params?.filters,
     sorts: params?.sorts ?? "-createdAt",
     page: params?.page ?? 1,

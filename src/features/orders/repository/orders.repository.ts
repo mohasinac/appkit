@@ -452,8 +452,28 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     couponCode: { canFilter: true, canSort: false },
   };
 
+  /**
+   * A store's orders.
+   *
+   * 🛑 SCOPED BY `storeId`, NOT BY A LIST OF PRODUCT IDS.
+   *
+   * It used to take the seller's whole product list and run
+   * `.where(productId, "in", productIds)`. **Firestore caps `in` at 30 values**
+   * and nothing bounded that array, so the query threw `INVALID_ARGUMENT` and
+   * the route 500'd for any store past its 30th listing. Measured on production
+   * 2026-09-14: `store-beyblade-arena` has **65** products, so
+   * `GET /api/store/orders` — the seller's own order list — was permanently
+   * broken for the only real seller on the site, while the two small stores
+   * worked fine. A seller with 29 listings would never have reported it.
+   *
+   * `storeId` is the right key regardless of the cap: it is the field a cart is
+   * SPLIT on (one order per store), `findFulfillmentQueue` a few lines up
+   * already queries it, it is a registered sieve field, and 64/64 production
+   * orders carry it. It also deletes an entire products query per request from
+   * all four call sites — the route already resolved the store.
+   */
   async listForSeller(
-    productIds: string[],
+    storeId: string,
     model: SieveModel,
     opts?: { search?: string },
   ): Promise<FirebaseSieveResult<OrderDocument>> {
@@ -462,7 +482,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     // seller's whole order list.
     if (plan.empty) return emptySearchResult<OrderDocument>();
 
-    if (productIds.length === 0) {
+    if (!storeId) {
       const page = Math.max(1, Number(model.page ?? 1));
       const pageSize = Math.max(1, Number(model.pageSize ?? 20));
       return {
@@ -476,17 +496,14 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     }
 
     let baseQuery = this.getCollection().where(
-      ORDER_FIELDS.PRODUCT_ID,
-      "in",
-      productIds,
+      ORDER_FIELDS.STORE_ID,
+      "==",
+      storeId,
     );
     if (plan.head) {
-      // `array-contains` alongside `in` is legal — Firestore's one-per-query
-      // limits are on `array-contains` and on the `in`/`not-in`/
-      // `array-contains-any` family separately, so one of each is fine.
-      // Verified against production data before this shipped, and the
-      // matching composite index is declared in firestore.indexes.json;
-      // the query happened to plan without one, which is not a guarantee.
+      // One `array-contains` alongside one equality is unconstrained —
+      // Firestore's per-query limits are on `array-contains` and on the
+      // `in`/`not-in`/`array-contains-any` family separately.
       baseQuery = baseQuery.where(
         ORDER_FIELDS.SEARCH_TXT,
         "array-contains",
