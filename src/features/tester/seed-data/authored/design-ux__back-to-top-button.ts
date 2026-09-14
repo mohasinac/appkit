@@ -90,10 +90,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-design-ux-back-to-top-button-not-covering-toast-or-modal-actions": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-tester-standard-1 and scroll past 400 pixels so the control appears.",
+      "Open /products/product-beyblade-burst-valkyrie and scroll past 400 pixels so the control appears.",
       "Click 'Add to Cart' and watch for a toast.",
       "Look at whether the control overlaps the toast or any control inside it.",
       "Open any modal on the page and look at its footer buttons.",

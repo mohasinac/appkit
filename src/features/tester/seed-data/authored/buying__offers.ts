@@ -161,7 +161,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/offers",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds the seeded accepted offer offer-kaiba-dranzer-s-accepted and the seeded expired one offer-kaiba-x-wizard-arrow-expired.",
       "Open /user/offers and find an accepted offer past its checkout deadline.",
       "Read its status and any deadline shown.",
       "Open /cart and check the Accepted Offers tab for that line.",
@@ -623,7 +623,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/bids",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!, the buyer who holds seeded bids.",
       "Open /user/bids and find a forfeited bid.",
       "Open its detail and read its history.",
       "Check an entry explains WHY it was forfeited rather than only that it was.",
@@ -877,7 +877,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "seller", "admin"],
     startPage: "/user/bids",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! and open /user/bids.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds the seeded winning bid on auction-beyblade-burst-spriggan-requiem-bought-out, and open /user/bids.",
       "Click a bid row and read what opens.",
       "Sign out and sign in as tyson@beybladearena.in / TempPass123!.",
       "Open the store's bids listing and click a row, reading what opens.",
@@ -895,7 +895,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "seller", "admin"],
     startPage: "/user/bids",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! and open a bid detail from /user/bids.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and open a bid detail from /user/bids.",
       "Read every name and identifier shown, and search the page source for a bidder name.",
       "Sign in as tyson@beybladearena.in / TempPass123! and open the same bid from the store's listing.",
       "Read what identities are shown there.",
@@ -932,7 +932,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "guest"],
     startPage: "/user/bids",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! and open /user/bids.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and open /user/bids.",
       "Press Tab repeatedly and check each bid row receives focus with a visible ring.",
       "Press Enter on a focused row and check it opens.",
       "Open a public auction's bid history in a private window.",
@@ -968,7 +968,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/listing-templates",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123! and create a template, copying its edit URL.",
-      "Sign out and sign in as tester@letitrip.in / TempPass123!, a different store's owner.",
+      "Sign out and sign in as meera.blader@gmail.com / TempPass123!, who owns store-blader-bazaar — a different store.",
       "Paste that edit URL and read what happens.",
       "Check whether the template's contents are shown at any point.",
       "Attempt to save from that page.",

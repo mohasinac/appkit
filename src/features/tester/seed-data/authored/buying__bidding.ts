@@ -6,16 +6,28 @@
  * generator: the authoring scripts were deleted once it was clear they were
  * scaffolding around work that is simply writing.
  *
- * 🛑 THE SANDBOX AUCTIONS BELONG TO store-tester-sandbox, WHOSE OWNER IS
- * user-admin-letitrip — not user-tester-qa, who owns store-tester-qa-seller. A
- * seller-side step against auction-tester-sandbox-cycle-* therefore signs in as
- * admin@letitrip.in. Signing in as the wrong seller produces a 403 the tester
- * would reasonably report as a permissions bug.
+ * 🛑 EVERY SEEDED AUCTION BELONGS TO store-beyblade-arena, WHOSE OWNER IS
+ * user-tyson-blader. A seller-side step therefore signs in as
+ * tyson@beybladearena.in. Signing in as admin@letitrip.in reaches the admin
+ * surfaces but NOT the seller editor for someone else's store, and the 403 that
+ * produces reads like a permissions bug and is not one.
  *
- * Bids live in the CASCADE tier, so a run wipes and re-seeds them. Cases that
- * depend on a starting price — the tiered-increment ones especially — are
- * therefore reliable at the START of a run and drift as later cases bid the price
- * up. Where order matters the case says so.
+ * 🛑 NO SEEDED AUCTION STARTS EMPTY EXCEPT auction-beyblade-x-shark-edge
+ * (bidCount 0, starting bid ₹799). Every case below whose premise is "the first
+ * bid" therefore uses that one auction, and each says so in its endResult —
+ * whichever of them runs first gets the true zero-bid state and the rest must
+ * read the modal's own 'Minimum' preset rather than the literal in this file.
+ *
+ * Bids live in the CASCADE tier, so a run wipes and re-seeds them and every
+ * auction returns to its seeded current bid. Cases that depend on a starting
+ * price — the tiered-increment ones especially — are therefore reliable at the
+ * START of a run and drift as later cases bid the price up. Where order matters
+ * the case says so, and every such case also names the fallback: take the amount
+ * from the modal's 'Minimum' preset instead of typing the literal.
+ *
+ * The increment is TIERED from the current bid, not per-auction: ≤₹100 → ₹10,
+ * ≤₹1,000 → ₹100, ≤₹5,000 → ₹200, ≤₹10,000 → ₹500, above → ₹1,000. Every figure
+ * below is derived from that table against the auction's seeded current bid.
  *
  * @tag domain:tester
  * @tag layer:seed
@@ -50,14 +62,14 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/bids",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /user/bids and read the row for 'Test Auction — Already Won', noting its 'Pay now' link and the deadline beside it.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!, the buyer who holds the seeded winning bid.",
+      "Open /user/bids and read the row for 'Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)', noting whether it offers a 'Pay now' link and what deadline sits beside it.",
       "Leave the win unpaid until the checkout deadline passes.",
       "Open /user/bids again.",
       "Open /cart and switch to the 'Won Auctions' tab.",
       "Open the notification bell.",
     ],
-    inputs: { auctionId: "auction-tester-sandbox-won" },
+    inputs: { auctionId: "auction-beyblade-burst-spriggan-requiem-bought-out", winningBid: 4999 },
     expectedBehaviour:
       "Once the checkout deadline passes, the expiry sweep marks the bid forfeited, clears the locked cart line and notifies the buyer. Clearing the line matters beyond tidiness: a leftover locked line keeps the buyer's auction lane non-empty, and that lane outranks the standard one, so their entire cart stays blocked.",
     expectedUiState:
@@ -67,88 +79,89 @@ export const authored: Record<string, AuthoredCase> = {
       "The forfeited state survives a reload and the cart is unblocked. The seller is NOT notified — nothing was sold.",
     needsReview: true,
     reviewNote:
-      "The 48-hour checkout deadline is set by the settlement job, not by seed data, so tester-window.ts cannot shorten it and the case cannot run inside a session. It needs a won-auction fixture carrying an already-past checkoutDeadline — logged in tester/.tester-runs/fixture-requests.jsonl. Until that exists, answer null rather than waiting two days.",
+      "The 48-hour checkout deadline is set by the settlement job, not by seed data, so tester-window.ts cannot shorten it and the case cannot run inside a session. The seeded win on auction-beyblade-burst-spriggan-requiem-bought-out is also already settled rather than pending, so the unpaid state this case needs does not exist in the seed either. It needs a won-auction fixture carrying an already-past checkoutDeadline — logged in tester/.tester-runs/fixture-requests.jsonl. Until that exists, answer null rather than waiting two days.",
   },
   "checklist-buying-bidding-bid-below-current-plus-increment-rejected": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1 and click 'Place a bid'.",
-      "Select 'Custom' in the preset row.",
-      "Type 15500 in the amount field.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles and read the current bid — seeded at ₹1,650.00 — and the min increment beside it.",
+      "Click 'Place a bid' and select 'Custom' in the preset row.",
+      "Type 1700 in the amount field.",
       "Click 'Place Bid'.",
-      "Clear the field and type 14000.",
+      "Clear the field and type 1600.",
       "Click 'Place Bid'.",
     ],
-    inputs: { currentBid: 15000, increment: 1000, tooSmall: 15500, tooLow: 14000 },
+    inputs: { currentBid: 1650, increment: 200, tooSmall: 1700, tooLow: 1600 },
     expectedBehaviour:
-      "₹15,500 clears the current bid but not the ₹1,000 increment, and ₹14,000 does not even clear the current bid. Both are refused, and with DIFFERENT messages — collapsing them into one generic error tells the bidder nothing about which rule they broke.",
+      "₹1,700 clears the current bid but not the ₹200 increment, and ₹1,600 does not even clear the current bid. Both are refused, and with DIFFERENT messages — collapsing them into one generic error tells the bidder nothing about which rule they broke.",
     expectedUiState:
-      "₹15,500 produces an inline error under the amount field naming the increment, in the shape 'Minimum increment is ₹1,000.00'. ₹14,000 produces a distinct inline error about exceeding the current winning bid. Both appear on the field itself, not as a toast, and neither submit silently does nothing.",
+      "₹1,700 produces an inline error under the amount field naming the increment, in the shape 'Minimum increment is ₹200.00'. ₹1,600 produces a distinct inline error about exceeding the current winning bid. Both appear on the field itself, not as a toast, and neither submit silently does nothing.",
     expectedData: { bidsPlaced: 0 },
     endResult:
-      "No bid was recorded: the current bid and bid count are unchanged after a reload.",
+      "No bid was recorded: the current bid and bid count are unchanged after a reload. If an earlier case has already bid this auction above ₹1,650, read the current bid off the page and type one rupee above it and one rupee below it instead — the two refusals are the assertion, not the literals.",
   },
   "checklist-buying-bidding-bid-count-increments-by-one": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-3",
+    startPage: "/auctions/auction-beyblade-x-shark-edge",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-3 and read the bid count.",
-      "Click 'Place a bid', select 'Custom', type 24000, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-x-shark-edge and read the bid count — seeded at 0, with a starting bid of ₹799.00.",
+      "Click 'Place a bid', select 'Custom', type 1250, and click 'Place Bid'.",
       "Read the bid count and current bid.",
       "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-3.",
-      "Click 'Place a bid', select 'Custom', type 17000, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-x-shark-edge.",
+      "Click 'Place a bid', select 'Custom', type 1000, and click 'Place Bid'.",
       "Read the bid count and current bid.",
       "Click 'Bid History'.",
     ],
-    inputs: { proxyMax: 24000, challengerBid: 17000 },
+    inputs: { startingBid: 799, proxyMax: 1250, challengerBid: 1000 },
     expectedBehaviour:
       "Each submitted bid adds exactly one row. A proxy auction is the case where a naive implementation double-counts: the challenger's bid plus the automatic counter-bid it triggers can both be recorded, so the count jumps by two for one user action.",
     expectedUiState:
-      "After the first bid: '1 bid' and a current bid of ₹15,000.00 — the starting price, not ₹24,000, because a proxy maximum is not the visible price. After the second: '2 bids', NOT 3, and a current bid of ₹18,000.00 — the challenger's ₹17,000 plus one increment. Bid History shows the ₹17,000 row marked outbid.",
-    expectedData: { bidCount: 2, currentBid: 18000 },
+      "After the first bid: '1 bid' and a current bid of ₹799.00 — the starting price, not ₹1,250, because a proxy maximum is not the visible price. After the second: '2 bids', NOT 3, and a current bid of ₹1,100.00 — the challenger's ₹1,000 plus one ₹100 increment. Bid History shows the ₹1,000 row marked outbid.",
+    expectedData: { bidCount: 2, currentBid: 1100 },
     endResult:
-      "On reload: 2 bids and ₹18,000.00. A count of 3 means the proxy counter-bid was recorded as a separate user bid.",
+      "On reload: 2 bids and ₹1,100.00. A count of 3 means the proxy counter-bid was recorded as a separate user bid. This is the only seeded auction that starts with no bids, so run it before any other zero-bid case; if it already has bids, the count rising by exactly one per submitted bid is still the assertion.",
   },
   "checklist-buying-bidding-bid-custom-need-not-be-exact-multiple": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1 and click 'Place a bid'.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles and click 'Place a bid'.",
       "Select 'Custom' in the preset row.",
-      "Type 15137 in the amount field.",
+      "Type 1937 in the amount field.",
       "Read the helper text under the field.",
       "Click 'Place Bid'.",
     ],
-    inputs: { bidAmount: 15137, increment: 1000 },
+    inputs: { currentBid: 1650, minimumNextBid: 1850, bidAmount: 1937, increment: 200 },
     expectedBehaviour:
-      "The increment is a FLOOR, not a grid. ₹15,137 clears the ₹15,000 minimum and is accepted even though it is not a multiple of ₹1,000. Rejecting it would quietly force every bidder onto round numbers the rules never required.",
+      "The increment is a FLOOR, not a grid. ₹1,937 clears the ₹1,850 minimum and is accepted even though it is not a multiple of ₹200. Rejecting it would quietly force every bidder onto round numbers the rules never required.",
     expectedUiState:
-      "The modal closes with a success state. No error mentioning multiples of the increment appears. The helper text says any amount at or above the minimum is allowed rather than implying a step. Current bid becomes ₹15,137.00 — not ₹15,000 and not ₹16,000.",
-    expectedData: { currentBid: 15137 },
-    endResult: "On reload the current bid still reads ₹15,137.00.",
+      "The modal closes with a success state. No error mentioning multiples of the increment appears. The helper text says any amount at or above the minimum is allowed rather than implying a step. Current bid becomes ₹1,937.00 — not ₹1,850 and not ₹2,050.",
+    expectedData: { currentBid: 1937 },
+    endResult:
+      "On reload the current bid still reads ₹1,937.00. If an earlier case moved this auction past ₹1,850, read the 'Minimum' preset and type a deliberately non-round amount just above it instead — that the amount is not a multiple of the increment is the assertion, not the literal ₹1,937.",
   },
   "checklist-buying-bidding-bid-history": {
     roles: ["buyer"],
     startPage: "/user/bids",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1, click 'Place a bid', select the 'Minimum' preset at ₹15,000.00, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles, click 'Place a bid', select the 'Minimum' preset — ₹1,850.00 against the seeded current bid of ₹1,650.00 — and click 'Place Bid'.",
       "Open /user/bids.",
       "Read the rows from the top.",
       "Reload the page and read them again.",
     ],
-    inputs: { bidAmount: 15000 },
+    inputs: { bidAmount: 1850 },
     expectedBehaviour:
       "My Bids lists every auction this buyer has bid on, newest first, and each row is reachable — a row offering only status with no way to open the auction is a dead end.",
     expectedUiState:
-      "The row for the sandbox auction is at the top, carrying its amount, the auction title and its current status. Clicking the row or its title opens the auction.",
+      "The row for 'Beyblade Burst B-100 Cho-Z Achilles' is at the top, carrying its amount, the auction title and its current status. Clicking the row or its title opens the auction.",
     endResult:
-      "After reload the same rows appear in the same order. An empty list here immediately after placing a bid means the bid was written without a buyer reference.",
+      "After reload the same rows appear in the same order. An empty list here immediately after placing a bid means the bid was written without a buyer reference. rehan.sheikh@gmail.com has NO seeded bids, so before this case /user/bids is legitimately empty — that is the starting state, not a failure.",
   },
   "checklist-buying-bidding-bid-history-auction-detail-pagination": {
     roles: ["buyer"],
@@ -182,9 +195,9 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "Bidder names are masked on the way out of the server, not hidden in the renderer. The masking helper for bids once returned its input unchanged while being named as though it masked — every bidder's real name was in the public payload and nothing displayed it, so the leak was invisible from the screen. Displaying the masked name is what makes that checkable by eye.",
     expectedUiState:
-      "Each row reads in the shape '₹3,199.00 · M*** U*** 1*** · 4 Sept, 17:06'. The name is genuinely masked — asterisks in the middle — and is not a full readable name, and not a placeholder like 'Bidder'. The timestamp carries both a date and a clock time, not a date alone.",
+      "Each row reads in the shape '₹3,199.00 · M*** B*** · 4 Sept, 17:06'. The name is genuinely masked — asterisks in the middle — and is not a full readable name, and not a placeholder like 'Bidder'. The timestamp carries both a date and a clock time, not a date alone.",
     endResult:
-      "The same masked names and timestamps appear after reload. A real full name anywhere in these rows is a PII leak and fails the case outright.",
+      "The same masked names and timestamps appear after reload. A real full name — 'Meera Bey', 'Rohit Collector' or 'Ananya Collector', the three seeded bidders on this auction — anywhere in these rows is a PII leak and fails the case outright.",
   },
   "checklist-buying-bidding-bid-increment-live-tier-change": {
     roles: ["buyer"],
@@ -206,27 +219,27 @@ export const authored: Record<string, AuthoredCase> = {
       "Reloading window A confirms ₹500. Run this early in a session: bids are wiped and re-seeded per run, so L-Drago starts at ₹3,199, but a later case that bids it up moves it out of the ₹200 band and this case can no longer cross the boundary.",
   },
   "checklist-buying-bidding-bid-increment-override-floor-raising": {
-    roles: ["buyer", "admin"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    roles: ["buyer", "seller"],
+    startPage: "/auctions/auction-beyblade-original-seaborg",
     steps: [
-      "Sign in as admin@letitrip.in / TempPass123!, the owner of store-tester-sandbox.",
-      "Open the seller editor for auction-tester-sandbox-cycle-1 and set 'Minimum Bid Increment' to 1, then save.",
+      "Sign in as tyson@beybladearena.in / TempPass123!, the owner of store-beyblade-arena, which owns every seeded auction.",
+      "Open the seller editor for auction-beyblade-original-seaborg and set 'Minimum Bid Increment' to 1, then save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1, click 'Place a bid', select 'Custom', type 15001, and click 'Place Bid'.",
-      "Clear the field, type 16000, and click 'Place Bid'.",
-      "Sign out, sign in as admin@letitrip.in / TempPass123!, and set the same auction's 'Minimum Bid Increment' to 2000, then save.",
+      "Open /auctions/auction-beyblade-original-seaborg — seeded current bid ₹2,200.00 — click 'Place a bid', select 'Custom', type 2300, and click 'Place Bid'.",
+      "Clear the field, type 2400, and click 'Place Bid'.",
+      "Sign out, sign in as tyson@beybladearena.in / TempPass123!, and set the same auction's 'Minimum Bid Increment' to 2000, then save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open the auction, click 'Place a bid', select 'Custom', type 17000, and click 'Place Bid'.",
-      "Clear the field, type 18000, and click 'Place Bid'.",
+      "Open the auction, click 'Place a bid', select 'Custom', type 3000, and click 'Place Bid'.",
+      "Clear the field, type 4400, and click 'Place Bid'.",
     ],
-    inputs: { overrideBelowTier: 1, overrideAboveTier: 2000, tierIncrement: 1000 },
+    inputs: { currentBid: 2200, overrideBelowTier: 1, overrideAboveTier: 2000, tierIncrement: 200 },
     expectedBehaviour:
-      "The per-listing override can only RAISE the floor, never lower it. With the override at ₹1 the ₹1,000 tier still governs, so ₹15,001 is refused and ₹16,000 accepted. With the override at ₹2,000 the override governs, so ₹17,000 is refused and ₹18,000 accepted. A seller must not be able to undercut the platform's own increment band.",
+      "The per-listing override can only RAISE the floor, never lower it. With the override at ₹1 the ₹200 tier still governs, so ₹2,300 is refused and ₹2,400 accepted. With the override at ₹2,000 the override governs, so ₹3,000 is refused and ₹4,400 accepted. A seller must not be able to undercut the platform's own increment band.",
     expectedUiState:
-      "Both refusals are inline errors on the amount field naming the effective minimum — ₹1,000 in the first half, ₹2,000 in the second. Both accepted bids close the modal and raise the current bid.",
-    expectedData: { effectiveIncrementFirstHalf: 1000, effectiveIncrementSecondHalf: 2000 },
+      "Both refusals are inline errors on the amount field naming the effective minimum — ₹200 in the first half, ₹2,000 in the second. Both accepted bids close the modal and raise the current bid.",
+    expectedData: { effectiveIncrementFirstHalf: 200, effectiveIncrementSecondHalf: 2000 },
     endResult:
-      "The current bid reflects only the two accepted bids. Set the increment back to its seeded value afterwards. The store is store-tester-sandbox and its owner is admin@letitrip.in — signing in as tester@letitrip.in gives a 403 that reads like a permissions bug and is not one.",
+      "The current bid reflects only the two accepted bids, ending at ₹4,400.00. Set the increment back to empty afterwards — this auction is seeded with no override. Every seeded auction lives in store-beyblade-arena and its owner is tyson@beybladearena.in; signing in as any other seller gives a 403 that reads like a permissions bug and is not one.",
   },
   "checklist-buying-bidding-bid-increment-tiered": {
     roles: ["buyer"],
@@ -249,237 +262,243 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-bidding-bid-preset-follows-live-price": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-2",
+    startPage: "/auctions/auction-beyblade-x-wizard-fafnir",
     steps: [
-      "In window A, sign in as rehan.sheikh@gmail.com / TempPass123! and open /auctions/auction-tester-sandbox-cycle-2.",
-      "Click 'Place a bid' and select the 'Minimum' preset at ₹15,000.00, without clicking 'Place Bid'.",
+      "In window A, sign in as rehan.sheikh@gmail.com / TempPass123! and open /auctions/auction-beyblade-x-wizard-fafnir — seeded current bid ₹1,450.00.",
+      "Click 'Place a bid' and select the 'Minimum' preset at ₹1,650.00, without clicking 'Place Bid'.",
       "In window B, sign in as vivaan.kapoor@gmail.com / TempPass123! and open the same auction.",
-      "In window B click 'Place a bid', select 'Custom', type 16000, and click 'Place Bid'.",
+      "In window B click 'Place a bid', select 'Custom', type 1850, and click 'Place Bid'.",
       "Switch to window A and wait up to 10 seconds without clicking anything.",
       "Read the preset labels, the helper text and the number in the amount field.",
     ],
-    inputs: { staleAmount: 15000, competingBid: 16000, newMinimum: 17000 },
+    inputs: { currentBid: 1450, staleAmount: 1650, competingBid: 1850, newMinimum: 2050 },
     expectedBehaviour:
       "An open bid modal re-prices itself from the live feed. Otherwise the tester submits a figure that was valid when the modal opened, gets a rejection they cannot explain, and the real cause — someone else bid — is invisible.",
     expectedUiState:
-      "Window A's amount field now reads 17000, the first preset reads 'Minimum / ₹17,000.00', and the helper text names the new minimum. The stale 15000 is gone from the field rather than sitting there next to updated labels.",
-    expectedData: { refreshedMinimum: 17000 },
+      "Window A's amount field now reads 2050, the first preset reads 'Minimum / ₹2,050.00', and the helper text names the new minimum. The stale 1650 is gone from the field rather than sitting there next to updated labels.",
+    expectedData: { refreshedMinimum: 2050 },
     endResult:
-      "Nothing persists until submitted. Clicking 'Place Bid' with the refreshed amount succeeds; a modal still showing ₹15,000 would fail.",
+      "Nothing persists in window A until submitted. Clicking 'Place Bid' with the refreshed amount succeeds; a modal still showing ₹1,650 would fail. If this auction has already been bid up, take both figures from the modal itself — that window A's preset MOVES without a reload is the assertion.",
   },
   "checklist-buying-bidding-bid-presets-are-increment-multiples": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-x-shark-edge",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1 and read the current bid and min increment.",
+      "Open /auctions/auction-beyblade-x-shark-edge and read the starting bid, ₹799.00, the bid count, seeded at 0, and the min increment.",
       "Click 'Place a bid'.",
       "Read the three preset buttons beside 'Custom'.",
     ],
-    inputs: { currentBid: 15000, increment: 1000 },
+    inputs: { startingBid: 799, increment: 100 },
     expectedBehaviour:
-      "Presets are 1×, 5× and 10× the EFFECTIVE increment, computed from the minimum next bid. Deriving them from the raw multipliers instead would offer '+₹1', '+₹5' and '+₹10' on a ₹15,000 auction — every one of them below the minimum and therefore guaranteed to be rejected.",
+      "Presets are 1×, 5× and 10× the EFFECTIVE increment, computed from the minimum next bid. Deriving them from the raw multipliers instead would offer '+₹1', '+₹5' and '+₹10' on a ₹799 auction — every one of them below the minimum and therefore guaranteed to be rejected.",
     expectedUiState:
-      "The row reads 'Minimum / ₹15,000.00', '+₹4,000.00 / ₹19,000.00', '+₹9,000.00 / ₹24,000.00', 'Custom'. On a zero-bid auction the first is labelled 'Minimum', not '+₹0'. No preset offers a one-, five- or ten-rupee step.",
+      "The row reads 'Minimum / ₹799.00', '+₹400.00 / ₹1,199.00', '+₹900.00 / ₹1,699.00', 'Custom'. On a zero-bid auction the first is labelled 'Minimum', not '+₹0'. No preset offers a one-, five- or ten-rupee step.",
     expectedData: { presetCount: 3 },
-    endResult: "Read-only inspection of the modal; nothing is submitted and nothing persists.",
+    endResult:
+      "Read-only inspection of the modal; nothing is submitted and nothing persists. If an earlier case has already bid this auction, the labels shift accordingly — that no preset is a bare ₹1 / ₹5 / ₹10 step, and that the first is a real minimum, is the assertion.",
   },
   "checklist-buying-bidding-bid-succeeds-and-outbids-previous-winner": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1, click 'Place a bid', select the 'Minimum' preset at ₹15,000.00, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles, read the bid count, click 'Place a bid', select the 'Minimum' preset at ₹1,850.00, and click 'Place Bid'.",
       "Read the current bid and bid count.",
       "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open the same auction, click 'Place a bid', select 'Custom', type 16000, and click 'Place Bid'.",
+      "Open the same auction, click 'Place a bid', select 'Custom', type 2050, and click 'Place Bid'.",
       "Read the whole modal for error text before it closes.",
       "Click 'Bid History'.",
     ],
-    inputs: { firstBid: 15000, secondBid: 16000 },
+    inputs: { currentBid: 1650, firstBid: 1850, secondBid: 2050 },
     expectedBehaviour:
       "The higher bid is written and the previous leader's row is flipped to outbid in the same batch. The batch write is the fragile part: it once resolved its Firestore module through a relative runtime require that broke only in production, so every bid failed with a module-not-found error while every local test passed.",
     expectedUiState:
-      "Current bid ₹16,000.00 and '2 bids'. The ₹15,000 row in Bid History is marked outbid. No text containing a file path, 'Cannot find module', 'Require stack' or 'Batch write failed' appears anywhere in the modal or as a toast.",
-    expectedData: { currentBid: 16000, bidCount: 2 },
-    endResult: "On reload the current bid and count persist at ₹16,000.00 and 2 bids.",
+      "Current bid ₹2,050.00, and the bid count has risen by exactly 2 from what it read at the start — 4 against the seeded 2. The ₹1,850 row in Bid History is marked outbid. No text containing a file path, 'Cannot find module', 'Require stack' or 'Batch write failed' appears anywhere in the modal or as a toast.",
+    expectedData: { currentBid: 2050, bidCountDelta: 2 },
+    endResult:
+      "On reload the current bid and count persist at ₹2,050.00 and the raised count.",
   },
   "checklist-buying-bidding-first-bid-can-equal-starting-bid": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-x-shark-edge",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1 while it still shows 0 bids.",
+      "Open /auctions/auction-beyblade-x-shark-edge while it still shows 0 bids.",
       "Click 'Place a bid' and read the minimum shown in the modal.",
       "Select the 'Minimum' preset and click 'Place Bid'.",
       "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open the same auction, click 'Place a bid', select 'Custom', type 15500, and click 'Place Bid'.",
+      "Open the same auction, click 'Place a bid', select 'Custom', type 850, and click 'Place Bid'.",
     ],
-    inputs: { startingBid: 15000, secondBid: 15500, increment: 1000 },
+    inputs: { startingBid: 799, secondBid: 850, increment: 100 },
     expectedBehaviour:
-      "The FIRST bid may equal the starting price exactly — there is nothing to outbid yet. Only from the second bid onwards does current-plus-increment apply, which is why ₹15,500 is then refused.",
+      "The FIRST bid may equal the starting price exactly — there is nothing to outbid yet. Only from the second bid onwards does current-plus-increment apply, which is why ₹850 is then refused.",
     expectedUiState:
-      "The modal's minimum equals the starting bid, ₹15,000.00, and its first preset is labelled 'Minimum' rather than '+₹0'. The first bid is accepted: 1 bid at ₹15,000.00. The second bidder's ₹15,500 draws an inline increment error.",
-    expectedData: { currentBid: 15000, bidCount: 1 },
+      "The modal's minimum equals the starting bid, ₹799.00, and its first preset is labelled 'Minimum' rather than '+₹0'. The first bid is accepted: 1 bid at ₹799.00. The second bidder's ₹850 draws an inline increment error naming ₹100.",
+    expectedData: { currentBid: 799, bidCount: 1 },
     endResult:
-      "On reload: ₹15,000.00 and 1 bid. A refusal of the first bid for being 'not above the current bid' is the failure this case catches.",
+      "On reload: ₹799.00 and 1 bid. A refusal of the first bid for being 'not above the current bid' is the failure this case catches. auction-beyblade-x-shark-edge is the ONLY seeded auction with no bids, so this case must run before any other case bids on it; if it already shows bids, answer null rather than testing something else.",
   },
   "checklist-buying-bidding-first-bid-displays-at-starting-price": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-3",
+    startPage: "/auctions/auction-beyblade-x-shark-edge",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-3 while it still shows 0 bids.",
-      "Click 'Place a bid', select 'Custom', type 24000, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-x-shark-edge while it still shows 0 bids.",
+      "Click 'Place a bid', select 'Custom', type 1250, and click 'Place Bid'.",
       "Close the modal and read the current bid on the page.",
       "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open the same auction, click 'Place a bid', select 'Custom', type 17000, and click 'Place Bid'.",
+      "Open the same auction, click 'Place a bid', select 'Custom', type 1000, and click 'Place Bid'.",
       "Read the current bid and who is leading.",
     ],
-    inputs: { startingBid: 15000, proxyMax: 24000, challengerBid: 17000 },
+    inputs: { startingBid: 799, proxyMax: 1250, challengerBid: 1000 },
     expectedBehaviour:
-      "A custom amount is a proxy MAXIMUM, not the price. Bidding ₹24,000 into an empty auction shows ₹15,000 — the starting price — because there is no one to outbid. When a challenger bids ₹17,000 the proxy answers with exactly one increment above it, ₹18,000, and stops there rather than jumping to the maximum.",
+      "A custom amount is a proxy MAXIMUM, not the price. Bidding ₹1,250 into an empty auction shows ₹799 — the starting price — because there is no one to outbid. When a challenger bids ₹1,000 the proxy answers with exactly one increment above it, ₹1,100, and stops there rather than jumping to the maximum.",
     expectedUiState:
-      "After the proxy bid the current bid reads ₹15,000.00, not ₹16,000 and not ₹24,000. After the challenger's bid it reads ₹18,000.00 and rehan.sheikh@gmail.com is still shown as leading. A visible ₹24,000 would publish the buyer's maximum to every competitor.",
-    expectedData: { currentBidAfterProxy: 15000, currentBidAfterChallenge: 18000 },
-    endResult: "On reload: ₹18,000.00 with the proxy bidder leading.",
+      "After the proxy bid the current bid reads ₹799.00, not ₹899 and not ₹1,250. After the challenger's bid it reads ₹1,100.00 and rehan.sheikh@gmail.com is still shown as leading. A visible ₹1,250 would publish the buyer's maximum to every competitor.",
+    expectedData: { currentBidAfterProxy: 799, currentBidAfterChallenge: 1100 },
+    endResult:
+      "On reload: ₹1,100.00 with the proxy bidder leading. This is the only seeded auction with no bids — run it before any other zero-bid case, or answer null if it already carries bids.",
   },
   "checklist-buying-bidding-outbid-notification": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1, click 'Place a bid', select the 'Minimum' preset at ₹15,000.00, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles, click 'Place a bid', select the 'Minimum' preset at ₹1,850.00, and click 'Place Bid'.",
       "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open the same auction, click 'Place a bid', select 'Custom', type 16000, and click 'Place Bid'.",
+      "Open the same auction, click 'Place a bid', select 'Custom', type 2050, and click 'Place Bid'.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the notification bell in the header.",
       "Open /user/notifications.",
       "Click the outbid notification.",
     ],
-    inputs: { firstBid: 15000, outbiddingBid: 16000 },
+    inputs: { firstBid: 1850, outbiddingBid: 2050 },
     expectedBehaviour:
       "Losing the lead notifies the bidder who lost it, and the notification links somewhere real — a bid has no per-record page in any role, so the correct destination is the bids list rather than a fabricated per-bid URL that would 404.",
     expectedUiState:
-      "The bell shows an unread count and the list holds an outbid entry naming the sandbox auction. Clicking it lands on a real page, not a 404.",
+      "The bell shows an unread count and the list holds an outbid entry naming 'Beyblade Burst B-100 Cho-Z Achilles'. Clicking it lands on a real page, not a 404.",
     endResult:
-      "The notification survives a reload of /user/notifications. No notification at all means the outbid hook never fired.",
+      "The notification survives a reload of /user/notifications. No notification at all means the outbid hook never fired. If the auction has been bid past ₹1,850 by an earlier case, take both amounts from the 'Minimum' preset instead.",
   },
   "checklist-buying-bidding-outbid-notification-goes-to-outbid-user": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-x-wizard-fafnir",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1, click 'Place a bid', select 'Custom', type 20000, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-x-wizard-fafnir — seeded current bid ₹1,450.00 — click 'Place a bid', select 'Custom', type 2400, and click 'Place Bid'.",
       "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open the same auction, click 'Place a bid', select 'Custom', type 17000, and click 'Place Bid'.",
+      "Open the same auction, click 'Place a bid', select 'Custom', type 1900, and click 'Place Bid'.",
       "Open /user/notifications as vivaan.kapoor@gmail.com.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/notifications as rehan.sheikh@gmail.com.",
     ],
-    inputs: { proxyMax: 20000, losingBid: 17000 },
+    inputs: { currentBid: 1450, proxyMax: 2400, losingBid: 1900 },
     expectedBehaviour:
       "The notification goes to whoever LOST the lead. Here the challenger is outbid the instant they bid, by the standing proxy, so the challenger is notified and the proxy holder — who never lost the lead — is not. Notifying the leader instead, or notifying both, is the inversion this case catches.",
     expectedUiState:
-      "vivaan.kapoor@gmail.com has a new outbid notification for the sandbox auction. rehan.sheikh@gmail.com has NO new outbid notification, only whatever was there before.",
+      "vivaan.kapoor@gmail.com has a new outbid notification naming 'Beyblade X BX-06 Wizard Fafnir (Long-Running Auction)'. rehan.sheikh@gmail.com has NO new outbid notification, only whatever was there before.",
     expectedData: { challengerNotified: true, leaderNotified: false },
     endResult:
       "Both inboxes still read that way after a reload. The leader receiving an outbid notice while still leading is a fail even though a notification did fire.",
   },
   "checklist-buying-bidding-place-bid": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1.",
-      "Read the current bid and bid count.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles.",
+      "Read the current bid, seeded at ₹1,650.00, and the bid count, seeded at 2.",
       "Click 'Place a bid'.",
-      "Select the 'Minimum' preset at ₹15,000.00.",
+      "Select the 'Minimum' preset at ₹1,850.00.",
       "Click 'Place Bid'.",
       "Open /user/bids.",
     ],
-    inputs: { bidAmount: 15000 },
+    inputs: { currentBid: 1650, bidAmount: 1850 },
     expectedBehaviour:
       "The bid is written, the auction's current bid and count move, and the bid appears in the buyer's own list. All three must happen: a bid recorded against the auction but missing from /user/bids means the buyer reference was not stored.",
     expectedUiState:
-      "The modal closes with a success state. The auction reads ₹15,000.00 and '1 bid'. No stack trace, file path or 'Cannot find module' text appears anywhere. /user/bids has a row for this auction.",
-    expectedData: { currentBid: 15000, bidCount: 1 },
+      "The modal closes with a success state. The auction reads ₹1,850.00 and its bid count has risen by exactly one. No stack trace, file path or 'Cannot find module' text appears anywhere. /user/bids has a row for this auction.",
+    expectedData: { currentBid: 1850, bidCountDelta: 1 },
     endResult:
-      "Reloading the auction still shows ₹15,000.00 and 1 bid, and the row is still on /user/bids.",
+      "Reloading the auction still shows the raised bid and count, and the row is still on /user/bids. If an earlier case already moved this auction, use the 'Minimum' preset figure the modal offers rather than the literal ₹1,850.",
   },
   "checklist-buying-bidding-place-bid-live-other-viewer": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-2",
+    startPage: "/auctions/auction-beyblade-x-wizard-fafnir",
     steps: [
-      "In window A, sign in as rehan.sheikh@gmail.com / TempPass123! and open /auctions/auction-tester-sandbox-cycle-2.",
+      "In window A, sign in as rehan.sheikh@gmail.com / TempPass123! and open /auctions/auction-beyblade-x-wizard-fafnir.",
       "In window B, sign in as a DIFFERENT buyer (vivaan.kapoor@gmail.com / TempPass123!) and open the same auction; read the current bid and bid count.",
-      "In window A, click 'Place a bid', select the 'Minimum' preset at ₹15,000.00, and click 'Place Bid'.",
+      "In window A, click 'Place a bid', select the 'Minimum' preset at ₹1,650.00, and click 'Place Bid'.",
       "Switch to window B and watch for up to 10 seconds without reloading.",
     ],
-    inputs: { bidAmount: 15000 },
+    inputs: { currentBid: 1450, bidAmount: 1650 },
     expectedBehaviour:
       "Bid updates are relayed over SSE from the server — the underlying realtime node is not client-readable, so the browser never reads it directly. Window B is a SECOND SIGNED-IN BUYER, not a signed-out visitor: bid figures are now hidden from guests, so a signed-out window B would show 'Sign in to see the current bid' before and after and could never demonstrate the stream at all.",
     expectedUiState:
-      "Window B moves to 'Current bid ₹15,000.00' and '1 bid' within about 10 seconds, with no reload and no interaction. Figures that only change on refresh mean the stream is not connected.",
-    expectedData: { currentBid: 15000, bidCount: 1 },
+      "Window B moves to 'Current bid ₹1,650.00' and a bid count one higher than it showed, within about 10 seconds, with no reload and no interaction. Figures that only change on refresh mean the stream is not connected.",
+    expectedData: { currentBid: 1650, bidCountDelta: 1 },
     endResult: "Reloading window B shows the same figures it had already updated to.",
   },
   "checklist-buying-bidding-place-bid-live-self": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1 and read the current bid and bid count.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles and read the current bid and bid count.",
       "Click 'Place a bid', select the 'Minimum' preset, and click 'Place Bid'.",
       "Watch the page for 10 seconds without reloading it.",
     ],
-    inputs: { bidAmount: 15000 },
+    inputs: { currentBid: 1650, bidAmount: 1850 },
     expectedBehaviour:
       "The bidder's own page updates in place from the same stream, so the figure they just moved is the figure they see. A page that requires a manual refresh after your own successful bid reads as though the bid failed.",
     expectedUiState:
       "The current bid and count both update without the tester refreshing. The page does not navigate, and no full-page loading state appears.",
-    expectedData: { currentBid: 15000, bidCount: 1 },
-    endResult: "On reload the same values persist.",
+    expectedData: { currentBid: 1850, bidCountDelta: 1 },
+    endResult:
+      "On reload the same values persist. The 'Minimum' preset is used rather than a typed literal precisely so this case still runs after an earlier one has moved the price.",
   },
   "checklist-buying-bidding-server-error-copy-is-never-raw": {
     roles: ["buyer", "admin"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-burst-cho-z-achilles",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-cycle-1, click 'Place a bid', select 'Custom', type 15000, and click 'Place Bid'.",
+      "Open /auctions/auction-beyblade-burst-cho-z-achilles, click 'Place a bid', select 'Custom', type 1850, and click 'Place Bid'.",
       "Read every word of any error shown in the modal or as a toast.",
-      "Repeat the bid a second time to force a rejection.",
+      "Type 1850 again and click 'Place Bid' a second time to force a rejection.",
       "Sign out and sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/maintenance/server-errors.",
     ],
-    inputs: { bidAmount: 15000 },
+    inputs: { bidAmount: 1850 },
     expectedBehaviour:
       "Any 5xx message is scrubbed before it reaches the browser and the real one is kept server-side for the error recorder. This modal is the exact place a Node module-not-found error, complete with a /var/task path and a full require stack, was once rendered to buyers inside 'Place your bid'.",
     expectedUiState:
       "Nothing containing '/var/task/', 'Require stack', 'Cannot find module' or any filesystem path appears in the modal, in a toast, or in the page body — only plain English. If an error did occur, /admin/maintenance/server-errors holds the full detail with a reference that matches what the user was shown.",
     endResult:
-      "The admin error list keeps its entries across a reload. Readable user copy with nothing recorded server-side is only half a pass — the detail has to land somewhere.",
+      "The admin error list keeps its entries across a reload. Readable user copy with nothing recorded server-side is only half a pass — the detail has to land somewhere. The repeated ₹1,850 is refused whether or not the first was accepted, which is all this case needs.",
   },
   "checklist-buying-bidding-win-auction": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-won",
+    startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /auctions/auction-tester-sandbox-won.",
-      "Open /user/bids and find the row for 'Test Auction — Already Won'.",
-      "Click 'Pay now' on that row.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!, whose seeded cart already holds the LOCKED won-auction line for auction-beyblade-original-dragoon-storm.",
+      "Open /user/bids and read whether a won row with a 'Pay now' link is offered.",
       "Open /cart and switch to the 'Won Auctions' tab.",
+      "Read the line and confirm it names 'Beyblade Original — Dragoon Storm (Rare Sealed)'.",
       "Try to change the quantity and try to remove the line.",
       "Click through checkout, selecting the first saved address and Cash on Delivery, and place the order.",
       "Open /user/orders and switch to the 'Auction wins' tab.",
     ],
-    inputs: { auctionId: "auction-tester-sandbox-won", winningBid: 15000, paymentMethod: "Cash on Delivery" },
+    inputs: {
+      auctionId: "auction-beyblade-original-dragoon-storm",
+      paymentMethod: "Cash on Delivery",
+    },
     expectedBehaviour:
       "A win becomes a LOCKED cart line and is paid for through the ordinary checkout, which is the only flow that knows how to collect an address, take payment, split by store and produce a real order. Settlement used to write an order document directly in a shape no orders list could render and no checkout could accept, so a winner had no way to pay at all.",
     expectedUiState:
-      "The /user/bids row shows a won badge and a working 'Pay now'. In the Won Auctions cart tab the line has no remove control and its quantity cannot be changed. After placing the order it appears under the 'Auction wins' tab of /user/orders with the item title and amount.",
+      "In the Won Auctions cart tab the line has no remove control and its quantity cannot be changed. After placing the order it appears under the 'Auction wins' tab of /user/orders with the item title and amount.",
     expectedData: { orderType: "auction" },
     endResult:
-      "The order survives a reload under 'Auction wins'. The bid is back-linked to it, so the same win cannot be paid for twice.",
+      "The order survives a reload under 'Auction wins'. The cart's Won Auctions tab is empty afterwards, which also unblocks the buyer's standard lane. The /user/bids row is the weaker half of this case — the seed gives rehan.sheikh@gmail.com the locked cart line but no matching won BID document, so an empty /user/bids there is a seed gap, not a product failure; judge the case on the cart, checkout and order.",
   },
 };

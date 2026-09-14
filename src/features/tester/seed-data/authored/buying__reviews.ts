@@ -27,7 +27,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a delivered order.",
       "Use the control that leaves a review on one of its items.",
       "Submit with no rating and no text, and read where the errors appear.",

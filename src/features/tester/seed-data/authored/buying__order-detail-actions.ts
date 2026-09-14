@@ -6,9 +6,10 @@
  * subroutes — cancel, return, track, invoice, payment — and before 2026-09-14
  * exactly ONE case in the entire 1,188-case catalogue touched any of them.
  *
- * 🛑 NO SEEDED ORDER BELONGS TO THE BOT. Measured on production: 0 of 64. So a
- * case that says "open one of your orders" while signed in as the bot has no
- * order to open, and answers `null` forever. The positive cases below BUY first;
+ * 🛑 NO SEEDED ORDER BELONGS TO karthik.new@gmail.com. Every seeded order belongs
+ * to user-yugi-muto, user-seto-kaiba or user-admin-letitrip. So a case that says
+ * "open one of your orders" while signed in as karthik has no order to open, and
+ * answers `null` forever. The positive cases below BUY first;
  * the seeded ids belonging to other personas are used only as the ownership
  * negatives — which is the dimension nothing tested at all, and the one where a
  * mistake is an IDOR rather than a cosmetic bug.
@@ -28,7 +29,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/products",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
       "Open /products, add any in-stock item to the cart, and complete checkout.",
       "Open /user/orders and find the order you just placed. Write down its id from the row.",
       "Open the order and use its Invoice action.",
@@ -47,7 +48,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
       "Navigate directly to /api/user/orders/order-1-20260721-11joon/invoice — a seeded order belonging to a different persona.",
       "Read the response.",
       "Now navigate to /user/orders/order-1-20260721-11joon.",
@@ -66,7 +67,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
       "Place an order, then open /user/orders and open that order.",
       "Use the Cancel action and read what the page offers.",
       "Complete the cancellation.",
@@ -127,7 +128,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!, which owns no seeded orders.",
+      "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
       "Navigate to /user/orders/order-1-20260721-11joon/track.",
       "Navigate to /user/orders/order-1-20260721-11joon/invoice.",
       "Navigate to /user/orders/order-1-20260721-11joon/return.",

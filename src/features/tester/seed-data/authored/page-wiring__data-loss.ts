@@ -26,7 +26,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "admin"],
     startPage: "/admin/lotteries",
     steps: [
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and open the lottery event event-tester-sandbox-lottery.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! and open the lottery event event-pokemon-number-draw-july-2026.",
       "Pull slot number 3 and complete the purchase.",
       "Read the slot grid and note that slot 3 now shows as booked, with the buyer name and lottery number against it.",
       "Sign out and sign in as admin@letitrip.in / TempPass123!.",
@@ -50,7 +50,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/lotteries",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/lotteries and open the editor for event-tester-sandbox-lottery.",
+      "Open /admin/lotteries and open the editor for event-pokemon-number-draw-july-2026.",
       "Find the slot that has already been pulled, slot number 3.",
       "Remove that slot from the list.",
       "Save.",

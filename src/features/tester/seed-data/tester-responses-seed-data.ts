@@ -36,9 +36,9 @@
 
 import type { TesterChecklistResponseDocument } from "../schemas/firestore";
 
-/** The seeded QA persona that the demo fixtures credit as "Mock User 18". */
-const TESTER_ID = "user-tester-qa";
-const TESTER_NAME = "Mock User 18";
+/** The seeded buyer the demo fixtures credit as "Mock User 3". */
+const TESTER_ID = "user-yugi-muto";
+const TESTER_NAME = "Mock User 3";
 
 /** Same shape the answer route computes — see the callout above. */
 const responseId = (testerId: string, checklistItemId: string) =>
@@ -52,8 +52,8 @@ const seededAt = new Date("2026-08-18T09:30:00.000Z");
 export const testerResponsesSeedData: Partial<TesterChecklistResponseDocument>[] = [
   /*
    * The ALREADY-CONFIRMED submission. The v1 catalogue item carries
-   * bugConfirmed:true / bugHunterId:"user-tester-qa" / bugHunterName:"Mock User
-   * 18", and until now there was no response row behind that credit — so
+   * bugConfirmed:true / bugHunterId:"user-yugi-muto" / bugHunterName:"Mock User
+   * 3", and until now there was no response row behind that credit — so
    * /admin/tester-feedback showed "No feedback submitted yet" while the
    * leaderboard showed a confirmed bug. This is the missing half.
    *

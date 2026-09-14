@@ -59,13 +59,13 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events in a private window and find event-tester-sandbox-lottery.",
+      "Open /events in a private window and find event-pokemon-number-draw-july-2026.",
       "Look at its card image.",
       "Open the lottery's detail page.",
       "Look at the image at the top of that page.",
       "Note whether either shows an emoji instead of a photograph.",
     ],
-    inputs: { eventId: "event-tester-sandbox-lottery" },
+    inputs: { eventId: "event-pokemon-number-draw-july-2026" },
     expectedBehaviour:
       "A lottery renders its stored cover image on both the card and the detail page. The 🎰 emoji is the fallback for an event with no image, and seeing it where one is set means the field is not reaching the renderer.",
     expectedUiState:
@@ -76,7 +76,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open event-tester-sandbox-lottery's detail page in a private window.",
+      "Open event-pokemon-number-draw-july-2026's detail page in a private window.",
       "Find the 'Prizes' collage above the numbered slot grid.",
       "Count the tiles in the collage.",
       "Count the slots in the numbered grid below it.",
@@ -186,13 +186,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-tester-sandbox-offer and read the coupon code displayed.",
+      "Open event-buy-3-get-1-beyblades and read the coupon code displayed.",
       "Click the copy control beside it.",
       "Read any confirmation shown.",
       "Open /checkout with an item in the cart and paste into the coupon field.",
       "Read what was pasted and click 'Apply'.",
     ],
-    inputs: { eventId: "event-tester-sandbox-offer" },
+    inputs: { eventId: "event-buy-3-get-1-beyblades" },
     expectedBehaviour:
       "The code is shown in full and the copy control puts exactly that string on the clipboard. A copy control that copies a truncated or differently-cased value produces a rejection the buyer cannot explain.",
     expectedUiState:
@@ -219,51 +219,72 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { entriesPerUser: 1 },
     endResult: "The entry survives the reload.",
   },
+  /*
+   * 🛑 THESE TWO CASES CHANGED SHAPE, 2026-09-15.
+   *
+   * They used to open one fixture per raffleType — a `top_n_scorers` event and a
+   * `top_n_participants` one — and compare their leaderboards side by side. Both
+   * fixtures are gone and the permanent seed carries only `open_raffle`, so the
+   * comparison has no second half to make.
+   *
+   * Rather than delete the coverage, each case now AUTHORS the raffle type it is
+   * about, on a real event, and then reads the leaderboard back. That is a
+   * stronger test than the old one — it exercises the admin write path as well as
+   * the render — and it is the only form the current seed can express.
+   */
   "checklist-content-discovery-events-raffle-entry-top-n-scorers": {
-    roles: ["buyer"],
-    startPage: "/events",
+    roles: ["admin", "buyer"],
+    startPage: "/admin/events",
     steps: [
-      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-tester-sandbox-top-scorers and read the Overview tab's description of how winners are chosen.",
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/events, open event-win-burst-regalia-genesis for editing, and write down its current raffle type.",
+      "Set the raffle type to 'Top N scorers', set the N to 3, and save.",
+      "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /events/event-win-burst-regalia-genesis and read the Overview tab's description of how winners are chosen.",
       "Click the Participate tab and enter.",
       "Click the Leaderboard tab and read how entries are ranked.",
-      "Read whether the ranking is by score and whether the eligible cut-off is stated.",
+      "Read whether the ranking is by score and whether the eligible cut-off of 3 is stated.",
+      "Sign back in as admin@letitrip.in and restore the raffle type written down in step 2.",
     ],
-    inputs: { eventId: "event-tester-sandbox-top-scorers" },
+    inputs: { eventId: "event-win-burst-regalia-genesis", raffleTopN: 3 },
     expectedBehaviour:
-      "A top-N-scorers raffle draws from the highest-scoring entries, so the leaderboard must rank by score and the page must say how many qualify. Ranking by entry time instead would silently change who can win.",
+      "A top-N-scorers raffle draws from the highest-scoring entries, so the leaderboard must rank by score and the page must say how many qualify. Ranking by entry time instead would silently change who can win. The saved raffle type must also reach the public page — an admin field that saves and never renders is the commonest shape of this bug.",
     expectedUiState:
-      "The leaderboard is ordered by score, highest first, and the qualifying cut-off is stated. Entering is confirmed. A leaderboard ordered by entry time is the failure.",
-    endResult: "The entry survives a reload.",
+      "The Overview tab names the top-3-by-score rule after the save. The leaderboard is ordered by score, highest first, and the cut-off is stated. Entering is confirmed. A leaderboard still ordered by entry time is the failure.",
+    endResult: "The entry survives a reload. The raffle type is restored by the final step.",
   },
   "checklist-content-discovery-events-raffle-entry-top-n-participants": {
-    roles: ["buyer"],
-    startPage: "/events",
+    roles: ["admin", "buyer"],
+    startPage: "/admin/events",
     steps: [
-      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-tester-sandbox-top-participants and read the Overview tab's description of how winners are chosen.",
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/events, open event-win-burst-regalia-genesis for editing, and write down its current raffle type.",
+      "Set the raffle type to 'Top N participants', set the N to 3, and save.",
+      "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /events/event-win-burst-regalia-genesis and read the Overview tab's description of how winners are chosen.",
       "Click the Participate tab and enter.",
       "Click the Leaderboard tab and read how entries are ranked.",
-      "Compare the ranking rule with the one on event-tester-sandbox-top-scorers.",
+      "Compare the stated rule with the top-N-scorers rule from the previous case.",
+      "Sign back in as admin@letitrip.in and restore the raffle type written down in step 2.",
     ],
-    inputs: { eventId: "event-tester-sandbox-top-participants" },
+    inputs: { eventId: "event-win-burst-regalia-genesis", raffleTopN: 3 },
     expectedBehaviour:
-      "A top-N-participants raffle draws from the earliest or most active participants rather than the highest scorers — a different rule from the scorers variant. The two fixtures exist side by side precisely so the difference is checkable.",
+      "A top-N-participants raffle draws from the earliest or most active participants rather than the highest scorers — a different rule from the scorers variant. Running both against the same event is what makes the difference checkable now that there is no fixture per type.",
     expectedUiState:
-      "This event's leaderboard is ordered by its own rule and that rule is stated on the Overview tab. The two raffle types rank differently. Identical ranking on both means the raffle type is not reaching the leaderboard.",
-    endResult: "The entry survives a reload.",
+      "The Overview tab names a participation rule, not a score rule, and the leaderboard is ordered accordingly. Wording identical to the previous case means the raffle type is not reaching the leaderboard.",
+    endResult: "The entry survives a reload. The raffle type is restored by the final step.",
   },
   "checklist-content-discovery-events-spin-wheel": {
     roles: ["buyer"],
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-tester-sandbox-spin and click the Participate tab.",
+      "Open event-daily-beyblade-pull-wheel and click the Participate tab.",
       "Click the spin control ONCE and watch the wheel.",
       "Read the prize shown and how long it took to appear.",
       "Reload the page and read the Participate tab.",
     ],
-    inputs: { eventId: "event-tester-sandbox-spin" },
+    inputs: { eventId: "event-daily-beyblade-pull-wheel" },
     expectedBehaviour:
       "The very first spin succeeds and the prize is shown immediately over the realtime channel. A first attempt that fails and a second that works is the signature of a subscription established after the result was already written.",
     expectedUiState:
@@ -276,7 +297,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-tester-sandbox-spin and read the stated maximum spins per user.",
+      "Open event-daily-beyblade-pull-wheel and read the stated maximum spins per user.",
       "Spin until that maximum is reached, reading the remaining count each time.",
       "Attempt one more spin.",
       "Read the refusal.",
@@ -289,28 +310,40 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { spinsAfterReload: 0 },
     endResult: "The exhausted state persists across reloads.",
   },
+  /*
+   * 🛑 THE CLOSED WINDOW IS NOW AUTHORED, NOT WAITED FOR, 2026-09-15.
+   *
+   * This used to sit on a fixture whose spin window was a fraction of the run's
+   * testing window, so a tester could watch it close. That fixture is gone, and
+   * the permanent seed's wheel is open for another three weeks — a duration no
+   * session can outlast. Narrowing the window from the admin editor reaches the
+   * same refusal in a few seconds, and restoring it is one field.
+   */
   "checklist-content-discovery-events-spin-wheel-window-blocked": {
-    roles: ["buyer"],
-    startPage: "/events",
+    roles: ["admin", "buyer"],
+    startPage: "/admin/events",
     steps: [
-      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-tester-sandbox-spin and read the stated spin window.",
-      "If the window is currently closed, attempt a spin and read the refusal.",
-      "If it is open, wait for it to close — the window derives from the run's testing window, so shortening that shortens this — then attempt a spin.",
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/events, open event-daily-beyblade-pull-wheel for editing, and write down its current spin window start and end.",
+      "Set the spin window end to yesterday's date so the window is closed, and save.",
+      "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /events/event-daily-beyblade-pull-wheel, read the stated spin window, and attempt a spin.",
       "Read the refusal and check it names the window rather than a generic failure.",
+      "Sign back in as admin@letitrip.in and restore the two dates written down in step 2.",
     ],
+    inputs: { eventId: "event-daily-beyblade-pull-wheel" },
     expectedBehaviour:
-      "Spins outside the configured window are refused with a reason naming the window. The window is expressed as a fraction of the run's testing window rather than a baked duration, which is what makes 'wait for it to close' possible inside a session at all.",
+      "Spins outside the configured window are refused with a reason naming the window, and the check runs server-side — a window enforced only by hiding the button is no window at all.",
     expectedUiState:
-      "Outside the window the spin control is refused and the message names the window or its times. It is not a generic 'Spin failed', which would be indistinguishable from the realtime failure above.",
+      "With the window closed the spin control is refused and the message names the window or its times. It is not a generic 'Spin failed', which would be indistinguishable from the realtime failure above.",
     endResult:
-      "No spin is recorded outside the window. If the window cannot be reached within the session, answer null rather than guessing.",
+      "No spin is recorded outside the window. The original window is restored by the final step; if the restore fails, say so rather than leaving the wheel closed for later cases.",
   },
   "checklist-content-discovery-events-spin-results-tab": {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open event-tester-sandbox-spin in a private window with no session.",
+      "Open event-daily-beyblade-pull-wheel in a private window with no session.",
       "Find the 'Last 10 Spin Results' tab and open it.",
       "Read every row — the name shown and the prize.",
       "Count the rows.",

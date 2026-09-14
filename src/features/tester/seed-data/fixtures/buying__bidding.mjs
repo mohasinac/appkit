@@ -2,7 +2,7 @@
  * Per-batch fixtures for buying/bidding.
  *
  * The bidding page is where the window mechanism failed hardest: 29 blocked
- * answers were expired fixtures, and `auction-tester-sandbox-cycle-1` closed 80
+ * answers were expired fixtures, and the then-shared cycle auction closed 80
  * minutes into a 45-hour run, so every later bidding case read "Auction Ended".
  *
  * These four rows are created when the batch starts, so each is in exactly the

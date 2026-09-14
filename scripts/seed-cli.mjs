@@ -192,12 +192,9 @@ const {
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData,
-  testerChecklistSeedData, testerResponsesSeedData, cartsTesterSeedData, offersTesterSeedData,
+  testerChecklistSeedData, testerResponsesSeedData,
   supportTicketsSeedData, catalogueSeedData,
   shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
-  storesTesterSeedData, categoriesTesterSeedData, productsTesterSeedData,
-  blogTesterSeedData, eventsTesterSeedData,
-  couponsTesterSeedData, bidsTesterSeedData, ordersTesterSeedData,
   // collection constants
   USER_COLLECTION,
   CATEGORIES_COLLECTION, STORE_COLLECTION,
@@ -286,8 +283,8 @@ const SEED_DATA_MAP = {
   storeAddresses: storeAddressesSeedData,
   // SB-UNI-C: brands were merged into categories (categoryType:"brand") — no
   // standalone brands collection/seed exists anymore.
-  categories: [...(categoriesSeedData || []), ...(categoriesTesterSeedData || [])],
-  stores: [...(storesSeedData || []), ...(storesTesterSeedData || [])],
+  categories: categoriesSeedData,
+  stores: storesSeedData,
   products: [
     ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
@@ -296,12 +293,11 @@ const SEED_DATA_MAP = {
     // /stickers were permanently empty, and listingType=art|stickers returned 0.
     // Root Cause #58's family one layer down: added everywhere except the runner.
     ...(productsArtSeedData || []), ...(productsStickersSeedData || []),
-    ...(productsTesterSeedData || []),
   ],
-  orders: [...(ordersSeedData || []), ...(ordersTesterSeedData || [])],
+  orders: ordersSeedData,
   reviews: reviewsSeedData,
-  bids: [...(bidsSeedData || []), ...(bidsTesterSeedData || [])],
-  coupons: [...(couponsSeedData || []), ...(couponsTesterSeedData || [])],
+  bids: bidsSeedData,
+  coupons: couponsSeedData,
   couponUsage: couponUsageSeedData,
   carousels: carouselsSeedData,
   carouselSlides: carouselSlidesSeedData,
@@ -310,13 +306,12 @@ const SEED_DATA_MAP = {
   faqs: faqSeedData,
   notifications: notificationsSeedData,
   payouts: payoutsSeedData,
-  // Both halves: the 10 marketplace offers AND the tester-sandbox one. The
-  // manifest already combined them (manifest.ts:294); only the LOADER was
-  // missing, so `offers` never appeared in `appkit-seed status` and no run has
-  // ever had an offer in Firestore. OFFER_PII_FIELDS was already imported and
-  // mapped below -- the PII half was wired and the loading half never was,
-  // which is why the gap looked like support rather than an omission.
-  offers: [...(offersSeedData ?? []), ...(offersTesterSeedData ?? [])],
+  // The LOADER was missing for a long time, so `offers` never appeared in
+  // `appkit-seed status` and no run had an offer in Firestore. OFFER_PII_FIELDS
+  // was already imported and mapped below -- the PII half was wired and the
+  // loading half never was, which is why the gap looked like support rather
+  // than an omission.
+  offers: offersSeedData,
   // All four were unregistered like offers, all measured at 0 documents live.
   // They are UNLISTED in the tester's tier map, which means PRESERVE -- so
   // seeding them once persists across every future run rather than being
@@ -326,11 +321,11 @@ const SEED_DATA_MAP = {
   procurementShipments: shipmentsSeedData,
   shipmentLots: shipmentLotsSeedData,
   shipmentItems: shipmentItemsSeedData,
-  blogPosts: [...(blogPostsSeedData || []), ...(blogTesterSeedData || [])],
-  events: [...(eventsSeedData || []), ...(eventsTesterSeedData || [])],
+  blogPosts: blogPostsSeedData,
+  events: eventsSeedData,
   eventEntries: eventEntriesSeedData,
   sessions: sessionsSeedData,
-  carts: [...(cartsSeedData || []), ...(cartsTesterSeedData || [])],
+  carts: cartsSeedData,
   wishlists: wishlistsSeedData,
   history: historySeedData,
   groupedListings: groupedListingsSeedData,

@@ -58,30 +58,44 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "Reloading /checkout shows the same coupon and amount. A discrepancy between the card and the applied amount is a copy bug at minimum and a pricing bug at worst.",
   },
+  /*
+   * 🛑 THE EXPIRY IS NOW AUTHORED, 2026-09-15.
+   *
+   * This used to use a coupon seeded past its end date while still flagged
+   * active — the one shape that exercises the DATE check rather than the flag.
+   * That fixture is gone and every permanent coupon has a future end date, so
+   * the admin sets one back by hand. Leaving Active ON is the whole point: a
+   * validator that reads only the flag accepts this coupon, and that is the bug.
+   */
   "checklist-content-discovery-coupons-coupon-expired-rejected": {
-    roles: ["buyer"],
-    startPage: "/checkout",
+    roles: ["admin", "buyer"],
+    startPage: "/admin/coupons",
     steps: [
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/coupons, open SEALED20 for editing, and write down its end date.",
+      "Set its end date to yesterday and LEAVE the Active toggle ON, then save.",
+      "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
       "Open /checkout and complete the address and add-ons steps.",
-      "Type TESTEREXPIRED in the coupon field and click 'Apply'.",
+      "Type SEALED20 in the coupon field and click 'Apply'.",
       "Read the exact wording of the rejection.",
+      "Sign back in as admin@letitrip.in and restore the end date written down in step 2.",
     ],
-    inputs: { coupon: "TESTEREXPIRED" },
+    inputs: { coupon: "SEALED20" },
     expectedBehaviour:
-      "An expired coupon is refused with a reason that names expiry specifically. TESTEREXPIRED is seeded with an end date a day in the past and isActive still true, so this exercises the date check rather than the active flag — the two are separate reasons and a single generic message cannot tell a buyer which applies.",
+      "An expired coupon is refused with a reason that names expiry specifically. With the end date in the past and isActive still true, this exercises the date check rather than the active flag — the two are separate reasons and a single generic message cannot tell a buyer which applies.",
     expectedUiState:
-      "The rejection names expiry, in the shape 'This coupon has expired'. It does not read 'Invalid coupon', which would leave the buyer retyping a code that will never work. TESTEREXPIRED does not enter the applied list.",
+      "The rejection names expiry, in the shape 'This coupon has expired'. It does not read 'Invalid coupon', which would leave the buyer retyping a code that will never work. SEALED20 does not enter the applied list.",
     expectedData: { couponApplied: false },
-    endResult: "Reloading /checkout shows TESTEREXPIRED absent.",
+    endResult:
+      "Reloading /checkout shows SEALED20 absent. The end date is restored by the final step — leaving it in the past silently breaks every later coupon case.",
   },
   "checklist-content-discovery-coupons-coupon-below-min-purchase": {
     roles: ["buyer"],
     startPage: "/checkout",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-tester-standard-3 (₹99) to the cart and nothing else.",
+      "Add product-beyblade-metal-storm-pegasus (₹99) to the cart and nothing else.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type ARENA25 in the coupon field and click 'Apply'.",
       "Read the exact wording of the rejection and whether it names the required amount.",
@@ -119,16 +133,16 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/checkout",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
-      "Open /checkout, complete the address and add-ons steps, apply TESTERLIMITED, and place the order with Cash on Delivery.",
-      "Add product-beyblade-metal-storm-pegasus (₹1,299) to the cart.",
-      "Open /checkout, complete the address and add-ons steps, and type TESTERLIMITED in the coupon field.",
+      "Add 2 × product-beyblade-original-dranzer-s (₹1,499 each, ₹2,998 total — above ARENAVIP's ₹2,000 minimum and in an eligible category) to the cart.",
+      "Open /checkout, complete the address and add-ons steps, apply ARENAVIP, and place the order with Cash on Delivery.",
+      "Add 2 × product-beyblade-original-dranzer-s to the cart again.",
+      "Open /checkout, complete the address and add-ons steps, and type ARENAVIP in the coupon field.",
       "Read the rejection.",
-      "Sign out, sign in as rehan.sheikh@gmail.com / TempPass123!, add the same item, and apply TESTERLIMITED at checkout.",
+      "Sign out, sign in as rehan.sheikh@gmail.com / TempPass123!, add the same two items, and apply ARENAVIP at checkout.",
     ],
-    inputs: { coupon: "TESTERLIMITED", perUserLimit: 1 },
+    inputs: { coupon: "ARENAVIP", perUserLimit: 1 },
     expectedBehaviour:
-      "TESTERLIMITED allows one use per user and has no global limit, so exhausting it for one buyer must leave it fully usable for the next. Enforcing a per-user limit as if it were global would withdraw the coupon from everybody after a single redemption.",
+      "ARENAVIP allows one use per user, and its total limit of 50 has 38 uses left — so exhausting it for one buyer must leave it usable by the next. Enforcing a per-user limit as if it were global would withdraw the coupon from everybody after a single redemption.",
     expectedUiState:
       "The second attempt by the same buyer is refused with a limit-reached message. The DIFFERENT buyer's attempt is accepted and the coupon appears in their applied list. A refusal for the second buyer means the limit is being read as global.",
     expectedData: { perUserLimit: 1 },

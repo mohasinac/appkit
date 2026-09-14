@@ -98,9 +98,13 @@ export interface UserDocument extends BaseDocument {
   // `role`. Meaningless unless isTester is also true.
   canTestAdmin?: boolean;
 
-  // Automated (non-human) account. Set on `user-claude-tester`, the identity the
-  // Claude-driven checklist runner answers as. It grants nothing — its only job is to
-  // keep a bot off the PUBLIC Bug Hunters leaderboard, which exists to credit people.
+  // Automated (non-human) account. It grants nothing — its only job is to keep a bot
+  // off the PUBLIC Bug Hunters leaderboard, which exists to credit people.
+  //
+  // 🛑 No seeded row carries it as of 2026-09-14. It was set on `user-claude-tester`,
+  // which was deleted along with the rest of the tester personas when the runner moved
+  // to answering as `admin@letitrip.in` (the admin branch of the checklist gate). Keep
+  // the field: the leaderboard still reads it, and the next automated identity needs it.
   // Bot findings are still confirmable and still credit-stamped on the item; they just
   // do not compete with humans for public credit. See getBugHunterLeaderboard().
   isBot?: boolean;

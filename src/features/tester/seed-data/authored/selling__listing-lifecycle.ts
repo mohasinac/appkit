@@ -189,8 +189,8 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/digital-codes",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox fixtures are visible.",
-      "Open /digital-codes and find the seeded listing whose code pool is depleted.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /digital-codes on the All scope and find digitalcode-beyblade-x-app-launch-codes-depleted, whose code pool is empty while its stock field still reads 5.",
       "Open it and read whether it can be bought.",
       "Read its stock number.",
       "Compare that stock number against the pool count.",

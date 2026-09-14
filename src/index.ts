@@ -2002,30 +2002,6 @@ export { faqSeedData } from "./seed/index";
 export { testerChecklistSeedData } from "./seed/index";
 // testerResponsesSeedData - Seeded tester submissions behind the bug-hunter demo fixtures.
 export { testerResponsesSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// storesTesterSeedData - Model for the shared tester sandbox store seed data.
-export { storesTesterSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// categoriesTesterSeedData - Model for the shared tester sandbox category/brand/bundle seed data.
-export { categoriesTesterSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsTesterSeedData - Model for the shared tester sandbox product seed data.
-export { productsTesterSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// blogTesterSeedData - Model for the shared tester sandbox blog post seed data.
-export { blogTesterSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// eventsTesterSeedData - Model for the shared tester sandbox event seed data.
-export { eventsTesterSeedData } from "./seed/index";
-
-// couponsTesterSeedData - Model for the shared tester sandbox coupon seed data.
-export { couponsTesterSeedData } from "./seed/index";
-
-// bidsTesterSeedData - Model for the shared tester sandbox bid seed data.
-export { bidsTesterSeedData } from "./seed/index";
-
-// ordersTesterSeedData - Model for the shared tester sandbox order seed data.
-export { ordersTesterSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // formatSeedPrice - Helper for format seed price.
 export { formatSeedPrice } from "./seed/index";

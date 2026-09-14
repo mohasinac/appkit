@@ -1,12 +1,13 @@
 /*
  * WHY: Provides a minimal set of seed stores for the Beyblade-focused demo catalog.
- * WHAT: Exports 3 StoreDocument partials — letitrip-official (platform's first-party store,
+ * WHAT: Exports 4 StoreDocument partials — letitrip-official (platform's first-party store,
  *       kept for admin/catalogue flows that assume one exists), beyblade-arena (the
- *       Beyblade specialist storefront that owns the seeded product catalog), and
- *       tester-qa-seller (the dedicated isTester account's own seller store).
+ *       Beyblade specialist storefront that owns the seeded product catalog), plus two
+ *       status fixtures: blader-bazaar (pending) and vintage-vault-co (suspended), so the
+ *       admin status chips and the seller-approval queue are not empty.
  *
  * EXPORTS:
- *   storesSeedData — array of 3 Partial<StoreDocument> for the seed runner
+ *   storesSeedData — array of 4 Partial<StoreDocument> for the seed runner
  *
  * @tag domain:stores
  * @tag layer:seed
@@ -175,55 +176,7 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Store 3: Tester QA Seller Store (owned by the dedicated isTester account) ──
-  {
-    id: "store-tester-qa-seller",
-    storeSlug: "store-tester-qa-seller",
-    ownerId: "user-tester-qa",
-    storeName: "Tester QA Seller Store",
-    storeDescription:
-      "Personal seller store for the dedicated QA tester account — used to exercise seller-side flows (listing, orders, payouts) from the Tester Hub checklist.",
-    storeCategory: "category-spinning-tops",
-    storeLogoURL: seedPhoto("store-logo-tester-qa-seller-20260101", 400, 400),
-    storeBannerURL: seedPhoto("store-banner-tester-qa-seller-20260101", 1600, 400),
-    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "QA tester's own seller store — auto-approved via the isTester flag.",
-    location: "Bengaluru, Karnataka, India",
-    returnPolicy: "N/A — QA test store.",
-    shippingPolicy: "N/A — QA test store.",
-    shippingConfig: {
-      defaultProviderId: "provider-tester-standard",
-      providers: [
-        { providerId: "provider-tester-standard", label: "Standard", type: "custom" as const, fee: { flat: 49, freeAbove: 999 }, etaDaysMin: 3, etaDaysMax: 5, requiresAwbUpload: true },
-      ],
-    },
-    isPublic: true,
-    isVacationMode: false,
-    /*
-     * Reachable, but never advertised to search engines.
-     *
-     * This is a QA store — real enough for a tester to exercise seller flows
-     * against, and not something that belongs in Google's index. `isTestData`
-     * is what the codebase already uses to express that: the sitemap's store
-     * fetcher filters it out (it has no viewer), public store listings hide
-     * it, and `canViewTestData()` keeps it visible to testers and admins — so
-     * the checklist case linking to `/stores/store-tester-qa-seller` still
-     * resolves.
-     *
-     * 🛑 NOTE the deliberate absence of `testDataExpiresAt`. Every sandbox
-     * FIXTURE carries one; this store is permanent. `getTestDataRefs` skips
-     * docs without an expiry on the force-purge path precisely so
-     * `tester:purge-sandbox --force` cannot delete it. Do not add an expiry
-     * here — that would put a permanent seed store in range of the sweep.
-     */
-    isTestData: true,
-    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 0, averageRating: 0 },
-    capabilities: ["host_preorders", "verified_seller", "create_coupons"] as StoreCapability[],
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(1),
-  },
-
-  // ── Store 4: pending seller application ───────────────────────────────────
+  // ── Store 3: pending seller application ───────────────────────────────────
   // `StoreStatus` is pending|active|suspended|rejected, but every seeded store
   // was `active` — so three of the four admin status chips could only ever
   // return an empty list, and the seller-approval queue had nothing in it.
@@ -254,7 +207,7 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Store 5: suspended store ──────────────────────────────────────────────
+  // ── Store 4: suspended store ──────────────────────────────────────────────
   // Exercises `suspensionReason`, which no seeded row populated, and gives the
   // admin "Suspended" chip a row.
   {

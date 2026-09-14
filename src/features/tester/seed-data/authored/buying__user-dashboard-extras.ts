@@ -101,7 +101,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/prize-draws",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the buyer's prize-draws surface and read every row.",
       "Check each names the draw, the number of entries bought and the outcome.",
       "Find an entry in a REVEALED draw and read the prize it names.",
@@ -119,7 +119,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/digital-codes",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the buyer's digital-codes surface and read every row.",
       "Check each names the listing it came from and shows its code or its delivery state.",
       "Find an auto-claim purchase and read whether its code is present.",
@@ -155,7 +155,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open an order that has moved through several statuses.",
       "Open its timeline and read every step in order.",
       "Read the date and time against each step.",
@@ -173,7 +173,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and find an order that received a partial refund.",
       "Open its timeline and look for an entry describing the refund.",
       "Read whether the entry states the amount refunded.",
@@ -191,7 +191,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and switch to the Auction wins tab.",
       "Open an order that came from a WON auction and read what it says about how it was won.",
       "Read whether it shows the winning bid and the number of competing bids.",
@@ -226,7 +226,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open an order that had coupons applied and add-ons selected.",
       "Open its timeline and read every entry.",
       "Look for entries describing coupons being applied or removed, or add-on fees changing.",
@@ -244,7 +244,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open an order and open its timeline.",
       "Read every entry for a name, an email address or a phone number.",
       "Read how the actor of each change is identified.",
@@ -263,7 +263,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/returns",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open the buyer's returns surface and read every row.",
       "Check each names the item, the order and the reason given.",
       "Read every status filter offered and select each.",

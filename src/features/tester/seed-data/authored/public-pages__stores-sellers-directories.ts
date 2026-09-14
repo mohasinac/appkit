@@ -109,12 +109,11 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-empty-tabs-hidden": {
     roles: ["guest"],
-    startPage: "/stores/store-tester-qa-seller",
+    startPage: "/stores/store-beyblade-arena",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox content is visible.",
-      "Open /stores/store-tester-qa-seller and write down every tab offered.",
+      "Open /stores/store-beyblade-arena in a private window and write down every tab offered.",
       "Open each tab and note which are empty.",
-      "Open /stores/store-beyblade-arena and write down its tabs.",
+      "Open /stores/store-letitrip-official — a store whose whole catalogue is prize draws — and write down its tabs.",
       "Compare the two stores' tab lists.",
     ],
     expectedBehaviour:
@@ -241,19 +240,18 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-seller-detail-page": {
     roles: ["guest"],
-    startPage: "/stores/store-tester-qa-seller",
+    startPage: "/stores/store-beyblade-arena",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox content is visible.",
-      "Open /stores/store-tester-qa-seller.",
+      "Open /stores/store-beyblade-arena in a private window.",
       "Read the header, the tabs and the listings.",
       "Open the store's own listing-type dropdown, if it offers one, and select each option in turn.",
       "Note any option that returns nothing.",
     ],
-    inputs: { storeId: "store-tester-qa-seller" },
+    inputs: { storeId: "store-beyblade-arena" },
     expectedBehaviour:
-      "This store backs the tester programme and carries at least one fixture of every listing type — the art and stickers pair were added specifically so the type dropdown has real data on every option rather than several that silently return nothing.",
+      "This store carries standard products, auctions, pre-orders, classifieds, digital codes, live items, art and stickers — every type except prize draws, which all belong to store-letitrip-official. So the dropdown must offer the eight it has and not the one it does not: an option for an absent type silently returns nothing, which reads as a broken query rather than an empty catalogue.",
     expectedUiState:
-      "The page renders with its header and tabs. Every option in the listing-type dropdown returns at least one item. An option that returns nothing means either the fixture is missing or that type is being dropped from the query.",
+      "The page renders with its header and tabs. Every option the listing-type dropdown offers returns at least one item, and Prize Draws is not offered. An offered option that returns nothing means either the type is absent from this store or it is being dropped from the query.",
     expectedData: { emptyTypeOptionCount: 0 },
     endResult: "Read-only; nothing persists.",
   },

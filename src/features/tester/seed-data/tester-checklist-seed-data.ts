@@ -252,24 +252,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
       ],
     },
-    {
-      pageKey: "testing-program",
-      pageLabel: "Tester Hub",
-      href: "/user/tester",
-      cases: [
-        { key: "tester-hub-loads", label: "Tester Hub loads the full checklist grouped by section", href: "/user/tester" },
-        { key: "tester-hub-search", label: "Tester Hub search finds test cases by typing part of the title or the route (e.g. \"/store/payouts\")", href: "/user/tester" },
-        { key: "tester-hub-answer-saves", label: "Answering Yes/No and adding a comment on a test case saves without reloading" },
-        { key: "admin-tester-access", label: "Signed-in admin accounts can open the Tester Hub and see the same checklist as testers", href: "/user/tester" },
-        { key: "admin-testing-section", label: "Admin dashboard's Testing section shows both the Tester Checklist and Tester Feedback (results) links", href: "/admin/tester-feedback" },
-        {
-          key: "tester-flag-live-refresh",
-          label: "A tester whose isTester/canTestAdmin flag is granted by an admin gets Tester Hub access without needing to log out and back in — within a few minutes of the change, on a tab that's stayed open",
-          description: "Fixed 2026-08-20 — the client session only refreshed role/isTester/canTestAdmin/disabled/storeId on login or a full page reload, never on ordinary client-side navigation, so a flag flip by an admin was invisible until the user manually re-authenticated. Now piggybacked onto the existing 5-minute session-activity ping. To test: as admin, grant isTester to a second test account that's already logged in elsewhere with the app open; within ~5 minutes (no reload) it should gain access to /user/tester.",
-          href: "/user/tester",
-        },
-      ],
-    },
   ]),
 
   ...group("buying", "Buying", [
@@ -542,26 +524,26 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Product / Auction / Pre-order Detail",
       href: "/products",
       cases: [
-        { key: "standard-detail", label: "Standard product detail page loads correctly, and a SIGNED-OUT visitor sees \"Sign in to see price\" where the price was", href: "/products/product-tester-standard-1" },
+        { key: "standard-detail", label: "Standard product detail page loads correctly, and a SIGNED-OUT visitor sees \"Sign in to see price\" where the price was", href: "/products/product-beyblade-burst-valkyrie" },
         {
           key: "standard-detail-price-signed-in",
           label: "SIGNED IN, the same product detail page shows the real price (₹199.00) and no sign-in prompt",
           description:
             "The twin of the guest case above, and the half that is easy to forget: gating a price must not cost the coverage of the price itself. A gate that hides the amount from everyone passes the guest case perfectly and is a total regression.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "price-does-not-flash-sign-in-prompt-on-hard-reload",
           label: "SIGNED IN, hard-reloading a product page never flashes \"Sign in to see price\" before the real price appears",
           description:
             "The session provider is mounted with no user and resolves asynchronously, so `loading` starts true on every hard load — for signed-in visitors too. A gate written as \"no user means show the prompt\" therefore accuses an already-signed-in buyer of being signed out for several hundred milliseconds on every page load. The gate has THREE states for this reason: while the session is resolving it renders a neutral placeholder, never the prompt. This is the single most likely regression in the price-gating work and it is invisible to every static check.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "tester-fixtures-hidden-from-the-public",
           label: "SIGNED OUT, no product on /products has an id containing \"tester\" — the sandbox is invisible to the public",
           description:
-            "Fixed 2026-09-01. BEFORE: the public products endpoint had no viewer concept, so an ANONYMOUS caller got 25 tester fixtures in its first 40 rows — stickers-tester-sandbox-1, prizedraw-tester-sandbox-closed, live-tester-sandbox-1 — and they filled the public marketplace. AFTER: open /products in a private window and scan the grid; nothing should be named \"Tester …\". Then sign in AS A TESTER and reload — the sandbox items must come back. Both halves matter: hiding them from everyone would break the tester programme, and a fixture that never reappears is the opposite bug.",
+            "Fixed 2026-09-01. BEFORE: the public products endpoint had no viewer concept, so an ANONYMOUS caller got 25 tester fixtures in its first 40 rows — stickers-beyblade-original-classic-sheet, prizedraw-beyblade-metal-closed-revealed, live-golden-retriever-puppy — and they filled the public marketplace. AFTER: open /products in a private window and scan the grid; nothing should be named \"Tester …\". Then sign in AS A TESTER and reload — the sandbox items must come back. Both halves matter: hiding them from everyone would break the tester programme, and a fixture that never reappears is the opposite bug.",
           href: "/products",
         },
         {
@@ -582,15 +564,15 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "auction-detail",
           label: "SIGNED OUT, the auction detail page hides every bid figure and still shows a live, ticking countdown",
           description: "The countdown (\"Ends in 2d 5h 30m\", ticking every second — not a static date) must appear directly above every \"Place a bid\" button: the info panel, the desktop and mobile compact bid-summary cards, and the mobile sticky bottom bar. It should switch to \"Ended\" once the end time passes. A signed-out visitor additionally sees NO bid amounts: the current bid reads \"Sign in to see the current bid\" and the bid form is replaced by \"Bidding is for members\" — the form was never usable signed out, so showing it with live figures was both a disclosure and a dead end.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
           key: "auction-detail-bid-signed-in",
           label: "SIGNED IN, the same auction shows the real current bid (₹15,000.00), the minimum increment and a working bid form",
           description: "The twin of the guest case above. A gate that hides the bid from signed-in buyers too would pass the guest case and break bidding entirely.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
-        { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly", href: "/pre-orders/preorder-tester-sandbox-1" },
+        { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly", href: "/pre-orders/preorder-beyblade-x-bx-08-wave" },
         {
           key: "image-gallery",
           label: "Product image gallery thumbnails load reliably (no broken-image icons) and click-to-zoom/rotate works in the lightbox",
@@ -630,24 +612,24 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description: "Verify against \"Beyblade Burst B-01 Valkyrie\" (product-beyblade-burst-valkyrie) — all 4 sections should show real items: other Beyblade Burst products, other \"Beyblade\"-brand products, other attack-type/starter-set tagged products, and other Beyblade Arena store listings.",
           href: "/products",
         },
-        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry correctly assigns a prize once payment is confirmed (instant mode) or shows a pending state until the draw closes (scheduled mode)", href: "/prize-draws/prizedraw-tester-sandbox-1" },
+        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry correctly assigns a prize once payment is confirmed (instant mode) or shows a pending state until the draw closes (scheduled mode)", href: "/prize-draws/prizedraw-beyblade-mystery-box" },
         {
           key: "bundle-purchase",
           label: "Purchasing a bundle works and shows all included items in the order",
-          description: "Verify against \"Test Bundle\" (bundle-tester-sandbox, findable from the bundles listing page) — after checkout, the order should show a single \"Test Bundle\" line item, not two separate product lines.",
-          href: "/bundles/bundle-tester-sandbox",
+          description: "Verify against \"Test Bundle\" (bundle-original-collectors-set, findable from the bundles listing page) — after checkout, the order should show a single \"Test Bundle\" line item, not two separate product lines.",
+          href: "/bundles/bundle-original-collectors-set",
         },
         {
           key: "product-group-set-widget",
           label: "A product's detail page shows a collapsible \"Part of / Parts in this group\" panel with a working thumbnail strip and a \"View whole group\" table when the product belongs to a product-group (\"Set\")",
-          description: "Verify against \"Test Product Set — Standard #1 + Standard #2\" (group-tester-sandbox-bundle) and either of its two children (product-tester-standard-1 / product-tester-standard-2), findable from the products listing page — all three should show the panel with each other listed, the arrow/triangle expand icons should render as real glyphs (not garbled text), and \"View whole group\" should open a working modal/drawer.",
-          href: "/products/group-tester-sandbox-bundle",
+          description: "🛑 NO SEEDED PRODUCT IS A GROUP PARENT, so the case has to create the group it is about. As admin@letitrip.in / TempPass123!, open product-beyblade-burst-valkyrie in the admin product editor, use its Group settings to make it a group parent titled \"QA Set valkyrie+dranzer\", and add product-beyblade-original-dranzer-s as a child. Then open BOTH public pages: each must show the collapsible \"Part of / Parts in this group\" panel listing the other, the arrow/triangle expand icons must render as real glyphs (not garbled text), and \"View whole group\" must open a working modal/drawer. Remove the group afterwards so nothing accumulates. This is DIFFERENT from the grouped-listings carousel below — that one is a themed scroller from its own collection.",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "grouped-listings-carousel-on-detail",
           label: "A \"Grouped listings\" themed carousel appears on a product detail page with real, clickable member items",
           description: "Added 2026-08-21 — this carousel previously had no test case of its own outside the category/brand check. It is DIFFERENT from the \"Part of / Parts in this group\" set panel: this one is a horizontal themed scroller (titled by the group's theme, e.g. \"Same character\" / \"From the same set\"), it sits lower down near the related-items carousels, and it only shows for products that belong to an active, visible group. Confirm the cards show real titles and images (not placeholders) and that clicking one lands on that item's own detail page.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "classified-offer-is-the-purchase-path",
@@ -670,12 +652,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             "BEFORE: the shared rule rejected any offer >= the listed price with \"use Add to Cart instead\" — advice that named a button a classified does not have, so a buyer willing to pay full price had no route at all. AFTER: the ceiling is inclusive on a listing with no cart. Enter exactly the listed price and submit; it must succeed. On an ORDINARY product (/products/...) the same amount must still be rejected — that is the half of the rule which did not change.",
           href: "/classified/classified-beyblade-stadium-set",
         },
-        { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase", href: "/digital-codes/digitalcode-tester-sandbox-1" },
-        { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly", href: "/live/live-tester-sandbox-1" },
+        { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase", href: "/digital-codes/digitalcode-beyblade-x-app-starter-pack" },
+        { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly", href: "/live/live-golden-retriever-puppy" },
         {
           key: "live-item-video-mandatory",
           label: "Creating a live-item listing (species: animals/plants) without a video is rejected with a clear error; a live listing WITH a video plays correctly in the gallery's video slide and its poster thumbnail is watermarked",
-          description: "Verify the block on both the admin product editor and the seller \"List a live item\" form. Then verify playback against the tester-sandbox fixture \"Test Live Item — Golden Retriever Puppy\" (live-tester-sandbox-1) — its video is a real dog clip (previously a broken YouTube link that never played); confirm it actually plays in theater mode and the thumbnail carries the site watermark.",
+          description: "Verify the block on both the admin product editor and the seller \"List a live item\" form. Then verify playback against the seeded live item \"Golden Retriever Puppy\" (live-golden-retriever-puppy) — its video is a real dog clip (previously a broken YouTube link that never played); confirm it actually plays in theater mode and the thumbnail carries the site watermark.",
           href: "/store/live/new",
         },
       ],
@@ -708,7 +690,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "prizedraw-collage-stacked",
           label: "Prize-draw collage tiles stack the image ABOVE the title/value caption at full card width — the image is never squashed beside the text at half width",
-          href: "/prize-draws/prizedraw-tester-sandbox-1",
+          href: "/prize-draws/prizedraw-beyblade-mystery-box",
         },
         {
           key: "concern-card-icon-above-label",
@@ -827,7 +809,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "orders-item-summary",
           label: "Each row on My Orders shows the order's items (thumbnail, title, quantity) instead of just an order ID — and orders with more than 3 items show a \"+N more\" summary for the rest",
-          description: "Verify against the seeded \"order-tester-sandbox-multi-item\" fixture (5 items: Test Gadget — Standard Listing #1, Test Collectible — Standard Listing #2, Test Accessory — Carry Case, Display Stand ×2, Sticker Set ×3) — its card should show the first 3 items and a \"+2 more\" badge, plus the correct ₹602 total and delivered status.",
+          description: "Sign in as rehan.sheikh@gmail.com / TempPass123! and open /user/orders — this buyer owns nine seeded orders, including a 3 × Beyblade X BX-08 Wave order totalling ₹2,697 in Processing. Every row must show its items (thumbnail, title, quantity) rather than only an order id. If no seeded order carries more than three items, place one that does before judging the \"+N more\" half, or answer null for it rather than guessing.",
           href: "/user/orders",
         },
         {
@@ -867,7 +849,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "order-tracking-timeline",
           label: "\"Track Shipment\" opens a real page with a status timeline (Order placed → Shipped, each with a real date) and, when a tracking URL is set, a \"Track with carrier\" link that opens in a new tab — not a blank page",
-          description: "Fixed 2026-08-21 — /user/orders/[id]/track previously rendered <UserOrderTrackView /> with zero render-props (a Root Cause #8 blank slot-shell), and the underlying adapter dropped orderDate/shippingDate/deliveryDate/cancellationDate/trackingUrl entirely, so even a fixed page would have had nothing to show. From My Orders, open the seeded \"order-tester-sandbox-standard-shipped\" order and click \"Track Shipment\" — confirm both timeline steps show real dates and the tracking link opens www.example.com/track/TEST-TRACK-001 in a new tab.",
+          description: "Fixed 2026-08-21 — /user/orders/[id]/track previously rendered <UserOrderTrackView /> with zero render-props (a Root Cause #8 blank slot-shell), and the underlying adapter dropped orderDate/shippingDate/deliveryDate/cancellationDate/trackingUrl entirely, so even a fixed page would have had nothing to show. Sign in as vivaan.kapoor@gmail.com / TempPass123!, open order-1-20260820-buyout from My Orders (Shipped, Blue Dart, tracking LIR-TRK-77410992) and click \"Track Shipment\" — confirm the Ordered and Shipped steps both show real dates and that the tracking link opens in a new tab.",
           href: "/user/orders",
         },
         {
@@ -912,15 +894,15 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Bidding",
       href: "/user/bids",
       cases: [
-        { key: "place-bid", label: "Placing a bid on an auction works", href: "/auctions/auction-tester-sandbox-cycle-1" },
+        { key: "place-bid", label: "Placing a bid on an auction works", href: "/auctions/auction-beyblade-original-dragoon-storm" },
         { key: "place-bid-live-self", label: "After placing a bid, the current bid amount and bid count update immediately on the auction page for the bidder — no manual page refresh needed" },
         { key: "place-bid-live-other-viewer", label: "Opening the same auction in two browser tabs (or two accounts) and placing a bid in one updates the current bid and bid count in the other within a few seconds, without a manual refresh (realtime SSE)" },
         { key: "outbid-notification", label: "Getting outbid triggers a notification" },
         {
           key: "win-auction",
           label: "Winning an auction creates a payable locked cart line, not a stuck order",
-          description: "Fixed 2026-08-21 — settlement used to write a document that was not a real order (no items[], no buyerId, no payment method), so a winner had no way to pay anywhere in the product. Wait for `auction-tester-sandbox-won` to settle (or trigger the sweep manually), then confirm: a \"Won auction\" badge appears on the /user/bids row with a working \"Pay now\" link; the item shows up in the Cart's \"Won Auctions\" tab as a non-removable, non-editable line; and completing checkout produces a real order visible under the \"Auction wins\" tab on /user/orders.",
-          href: "/auctions/auction-tester-sandbox-won",
+          description: "Fixed 2026-08-21 — settlement used to write a document that was not a real order (no items[], no buyerId, no payment method), so a winner had no way to pay anywhere in the product. Wait for `auction-beyblade-burst-spriggan-requiem-bought-out` to settle (or trigger the sweep manually), then confirm: a \"Won auction\" badge appears on the /user/bids row with a working \"Pay now\" link; the item shows up in the Cart's \"Won Auctions\" tab as a non-removable, non-editable line; and completing checkout produces a real order visible under the \"Auction wins\" tab on /user/orders.",
+          href: "/auctions/auction-beyblade-burst-spriggan-requiem-bought-out",
         },
         {
           key: "auction-below-reserve-no-winner",
@@ -954,14 +936,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Placing a valid bid actually records it — the current bid rises and the previous high bid flips to \"outbid\"",
           description:
             "Fixed 2026-08-28. BEFORE: every bid failed and the modal showed the raw text \"Batch write failed: Cannot find module '../providers/db-firebase' Require stack: - /var/task/.next/server/chunks/ssr/...\" in the amount field. AFTER: the bid is accepted, \"Current bid\" rises by at least the minimum increment, and the previous winner's row in Bid History reads \"outbid\". Note the failure returned a normally-rendered modal and an HTTP 200, so \"the page loaded\" and \"no error in the network tab\" both prove nothing — read the actual numbers. Root cause: a relative-path runtime require inside appkit that only breaks once bundled into a Lambda chunk.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
           key: "server-error-copy-is-never-raw",
           label: "A server failure shows plain-English copy — never a file path, stack trace or \"Cannot find module\"",
           description:
             "Fixed 2026-08-28. BEFORE: any 500 printed its own internal message to the user, including absolute server paths under /var/task/. AFTER: the user sees \"A database error occurred. Please try again\" (or \"Something went wrong. Please try again.\"), while the FULL original text plus its cause chain appears in Admin → Maintenance → Server errors. Check both halves: generic in the browser, specific in the admin list. Seeing the raw text in either the bid modal or any toast is a regression.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
           key: "bid-increment-live-tier-change",
@@ -971,25 +953,25 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "bid-presets-are-increment-multiples",
           label: "The quick-bid buttons above the amount field are multiples of the auction's OWN minimum increment — never a flat +₹1 / +₹5 / +₹10",
           description: "Fixed 2026-08-21 — the presets were always 1x/5x/10x of the effective increment, but `resolveTieredBidIncrement` treated an empty `auctionConfig.bidIncrementTiers` array as \"no rule\" and fell through to the ₹1 last-resort constant, so every auction on the site rendered +₹1 / +₹5 / +₹10. On an auction whose current bid is in the ₹100-₹1,000 band (₹100 increment) the three buttons must read +₹100 / +₹500 / +₹1,000; on one above ₹10,000 (₹1,000 increment) they must read +₹1,000 / +₹5,000 / +₹10,000. Each button also shows the resulting bid amount underneath the step.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
           key: "bid-preset-follows-live-price",
           label: "With a quick-bid preset selected, another bidder raising the price updates the amount in the field too — it does not leave a now-too-low number behind",
           description: "Fixed 2026-08-21 — the amount was only ever written on mount or on button click, while the current bid keeps updating over SSE. Open the auction in two tabs, select the +1x preset in tab A, place a higher bid from tab B, then watch tab A: the preset button labels, the \"minimum next bid\" helper text AND the number in the field must all move up together. Before the fix the buttons relabelled but the field kept its stale value, so pressing Place Bid was a guaranteed \"bid must exceed the current winning bid\" rejection.",
-          href: "/auctions/auction-tester-sandbox-cycle-2",
+          href: "/auctions/auction-beyblade-x-shark-edge",
         },
         {
           key: "bid-below-current-plus-increment-rejected",
           label: "A bid below current bid + minimum increment is rejected with a clear inline error on the amount field — and the rejection is identical whether it is typed in Custom mode or forced through the API",
           description: "Switch the preset row to \"Custom\", type an amount between the current bid and current+increment, and submit. Expect an inline error on the field (not a toast, not a silent no-op). Also confirm an amount BELOW the current bid gives the distinct \"must exceed the current winning bid\" message rather than the increment one.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
           key: "bid-custom-need-not-be-exact-multiple",
           label: "In Custom mode any amount at or above the minimum is accepted — it does NOT have to be an exact multiple of the increment",
           description: "With a ₹100 increment and a ₹1,000 current bid, ₹1,137 must be accepted (it is above the ₹1,100 minimum). The helper text under the field states this explicitly. A client-side rule claiming to enforce exact multiples existed but was a no-op; it was removed rather than made real, because the server never enforced multiples and a real client rule would have rejected bids the server accepts.",
-          href: "/auctions/auction-tester-sandbox-cycle-1",
+          href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
           key: "first-bid-can-equal-starting-bid",
@@ -1005,7 +987,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "bid-count-increments-by-one",
           label: "Placing one bid increases the auction's bid count by exactly ONE, and the current bid never moves backwards",
           description: "Fixed 2026-08-21 — the `onBidPlaced` Firestore trigger duplicated work `placeBid` already did atomically: it incremented the bid count a second time (so one bid read as two), force-marked every new bid as winning, and overwrote the current bid with the new bid's amount. On the proxy path where a new bid LOSES to a standing higher maximum, that last part actually lowered the current bid to the loser's amount and named the loser as the leading bidder. Place a single bid and confirm the count goes up by 1, not 2. Then, from a second account, bid BELOW the standing proxy maximum: your bid must be recorded as outbid, and the auction's current bid must go UP (or hold), never down.",
-          href: "/auctions/auction-tester-sandbox-cycle-3",
+          href: "/auctions/auction-beyblade-burst-cho-z-achilles",
         },
         {
           key: "outbid-notification-goes-to-outbid-user",
@@ -1094,60 +1076,64 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             "Needs a won auction in the cart (see the Auctions section). BEFORE: the won line was included in the delete loop, the server refused it, the failure was swallowed, and the toast still claimed every item was cleared. AFTER: the won-auction line must remain in the cart and the toast must read \"… N items awaiting payment kept.\" — the count in the first half must NOT include the kept line.",
         },
         // ── Grouped & bundle cart lines ──────────────────────────────────
-        // Fixtures backing these: product-tester-standard-1/2/3 (three members
-        // of one group, deliberately spanning two GST rates),
-        // product-tester-group-soldout (blocked member),
-        // product-tester-crossstore-a/b (a group spanning two sellers),
-        // bundle-tester-sandbox (a priced, all-or-nothing bundle).
+        // 🛑 NO SEEDED PRODUCT IS A GROUP PARENT (2026-09-15). The fixtures that
+        // backed these cases were disposable and are gone, and the permanent seed
+        // has never carried one. So the picker cases below need a group CREATED
+        // first — admin product editor → Group settings, parent
+        // product-beyblade-burst-valkyrie with product-beyblade-original-dranzer-s
+        // and product-beyblade-x-dran-buster-sold-out (the blocked member) as
+        // children — and removed afterwards.
+        // bundle-original-collectors-set is a real, priced, all-or-nothing bundle
+        // and needs no setup.
         {
           key: "group-picker-opens",
           label: "On a product that belongs to a group, the \"Part of: …\" strip has a \"Pick items →\" control that opens a picker with a Qty column and a +/- stepper on each member",
           description:
             "Before this existed the panel was navigation only — the buyer had to open each member separately and add it as its own cart line.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-picker-running-total",
           label: "Changing any member's quantity updates the picker's running total (\"N items · ₹X\") immediately, and \"Add selected to cart\" stays disabled while nothing is selected",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-picker-stock-cap",
           label: "A member's + button stops at that member's available stock — it cannot be pushed past it",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-picker-blocked-member",
           label: "A sold-out member shows a reason chip (e.g. \"Sold\" / \"Out of stock\") in place of its stepper and cannot be selected",
           description:
             "Test Part — Sold Out is seeded into the tester group specifically for this. The rest of the group must stay selectable around it.",
-          href: "/products/product-tester-group-soldout",
+          href: "/products/product-beyblade-x-dran-buster-sold-out",
         },
         {
           key: "group-picker-one-line",
           label: "\"Add selected to cart\" with two or more members creates ONE cart line, not one line per product",
           description:
             "Pick 2 of one member and 1 of another, then open the cart: a single line reading \"N items\", not three separate rows.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-picker-single-member-plain-line",
           label: "Selecting exactly ONE member produces an ordinary product line (with a normal quantity stepper), not a grouped line",
           description:
             "1 item × qty N is already what a normal cart line means, so it deliberately does not become a group line.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-picker-cross-store",
           label: "A group whose members belong to DIFFERENT sellers renders read-only — no Qty column, no \"Add selected\" button — with an explanation, rather than a button that always fails",
           description:
-            "Use the Test Cross-Store Set. Its two members sit in different stores on purpose.",
-          href: "/products/product-tester-crossstore-a",
+            "🛑 A cross-store group cannot be seeded — the guard refuses one at SAVE time, so the banned shape never reaches the database. Attempt it instead: as admin@letitrip.in / TempPass123!, try to group product-beyblade-burst-valkyrie (store-beyblade-arena) with prizedraw-beyblade-mystery-box (store-letitrip-official). If the save is refused, that IS the pass and the picker half cannot be reached — record the refusal's wording. If the save SUCCEEDS, the guard is gone: then open the picker and it must render read-only, with no Qty column and no \"Add selected\" button, rather than a button that always fails.",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-picker-guest",
           label: "A signed-out visitor using the picker is shown the login prompt rather than silently losing the selection",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-line-expands-in-cart",
@@ -1183,7 +1169,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A bundle page has a \"Copies\" +/- stepper and BOTH \"Buy now\" and \"Add to cart\" — Add to cart stays on the page, Buy now goes to checkout",
           description:
             "A bundle is all-or-nothing: there must be no per-member quantity controls anywhere on the bundle page, only the copies stepper.",
-          href: "/bundles/bundle-tester-sandbox",
+          href: "/bundles/bundle-original-collectors-set",
         },
         {
           key: "bundle-line-in-cart",
@@ -1209,7 +1195,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "While an unpaid won auction or accepted offer is sitting in the cart, adding a group selection is refused with the same lane message as any other add",
           description:
             "This path used to bypass the gate entirely, so a buyer could keep shopping around an obligation they had already committed to.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "group-checkout-order-rows",
@@ -1273,7 +1259,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "auction-win-countdown-visible",
           label: "A won-auction cart line shows a live countdown next to \"payment required\" — days/hours/minutes remaining out of the 48-hour window — that ticks down while you watch",
-          description: "Payment for a won auction is MANDATORY (unlike an accepted offer, which the buyer may walk away from). The deadline was being written by settlement and enforced by the expiry sweep, but nothing ever rendered it, so a win could silently lapse and be forfeited with no warning anywhere in the UI. Use auction-tester-sandbox-won.",
+          description: "Payment for a won auction is MANDATORY (unlike an accepted offer, which the buyer may walk away from). The deadline was being written by settlement and enforced by the expiry sweep, but nothing ever rendered it, so a win could silently lapse and be forfeited with no warning anywhere in the UI. Use auction-beyblade-burst-spriggan-requiem-bought-out.",
           href: "/cart",
         },
         {
@@ -1297,7 +1283,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "cart-mobile-bar-lane-scoped",
           label: "The mobile bottom bar's total matches the desktop Summary total on every cart tab, and both name which lane the total covers (\"This total covers your cart only\" / \"…your won auctions only\")",
-          description: "The desktop Summary was converted to per-lane totals but the mobile bar was left reading the old blended figure, so the two disagreed on the same cart. Needs items in more than one lane — e.g. a normal product plus auction-tester-sandbox-won. Switch tabs and compare both viewports.",
+          description: "The desktop Summary was converted to per-lane totals but the mobile bar was left reading the old blended figure, so the two disagreed on the same cart. Needs items in more than one lane — e.g. a normal product plus auction-beyblade-burst-spriggan-requiem-bought-out. Switch tabs and compare both viewports.",
           href: "/cart",
         },
         {
@@ -3356,9 +3342,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           roles: ["buyer"],
           startPage: "/user/notifications",
           steps: [
-            "Log in as a buyer.",
-            "Open a tester-sandbox auction and place a bid.",
-            "From a second account, place a higher bid on the same auction.",
+            "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+            "Open /auctions/auction-beyblade-original-dragoon-storm and place a bid of 5500.",
+            "Sign in as vivaan.kapoor@gmail.com / TempPass123! in a second browser and bid 6000 on the same auction.",
             "Back on the first account, open /user/notifications.",
             "Open the real inbox for the address on the first account.",
           ],
@@ -3378,7 +3364,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           roles: ["buyer", "admin"],
           startPage: "/user/notifications",
           steps: [
-            "Ensure a tester-sandbox auction has bids from at least two different accounts.",
+            "Ensure /auctions/auction-beyblade-original-dragoon-storm carries bids from rehan.sheikh@gmail.com and vivaan.kapoor@gmail.com — place them if it does not.",
             "Let the auction end, or have an admin settle it.",
             "Check the bell and inbox of a LOSING bidder.",
             "Check the bell and inbox of the WINNING bidder.",
@@ -3884,39 +3870,39 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "ended-auction-no-bar",
           label: "An auction that has already ended shows NO sticky bar at all — there is nothing left to bid on",
-          href: "/auctions/auction-tester-sandbox-won",
+          href: "/auctions/auction-beyblade-burst-spriggan-requiem-bought-out",
         },
         {
           key: "preorder-bar",
           label: "A pre-order page's sticky bar says Reserve Now and shows the price, and the button jumps to the reserve panel",
-          href: "/pre-orders/preorder-tester-sandbox-1",
+          href: "/pre-orders/preorder-beyblade-x-bx-08-wave",
         },
         {
           key: "prize-draw-bar-label",
           label: "A prize-draw page's sticky bar CTA reads \"Enter Draw\" (not \"Buy Now\") and the info line shows the price per entry",
           description: "Label changed on purpose — you are entering a draw, not buying a specific item. Flag it if \"Buy Now\" still appears.",
-          href: "/prize-draws/prizedraw-tester-sandbox-1",
+          href: "/prize-draws/prizedraw-beyblade-mystery-box",
         },
         {
           key: "closed-prize-draw-no-bar",
           label: "A closed prize draw shows NO sticky bar",
-          href: "/prize-draws/prizedraw-tester-sandbox-closed",
+          href: "/prize-draws/prizedraw-beyblade-metal-closed-revealed",
         },
         {
           key: "classified-bar-no-cart",
           label: "A classified listing's sticky bar offers \"Make an Offer\" and does NOT offer Add to Cart or Buy Now — classifieds are arranged directly with the seller",
           description: "Tapping it should jump to the offer panel, and that panel must contain a real form (see classified-offer-is-the-purchase-path). An Add to Cart button appearing here is a real bug; so is the bar scrolling to an empty box.",
-          href: "/classified/classified-tester-sandbox-1",
+          href: "/classified/classified-beyblade-stadium-set",
         },
         {
           key: "digital-code-bar",
           label: "A digital-code listing has a sticky Buy Now bar, and a sold-out one has no bar at all",
-          href: "/digital-codes/digitalcode-tester-sandbox-1",
+          href: "/digital-codes/digitalcode-beyblade-x-app-starter-pack",
         },
         {
           key: "live-item-bar",
           label: "A live-item listing has a sticky Buy Now bar that jumps to its buy panel",
-          href: "/live/live-tester-sandbox-1",
+          href: "/live/live-golden-retriever-puppy",
         },
         {
           key: "bar-not-overlapping-content",
@@ -4384,7 +4370,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "The \"You might also like\" / related-items carousels lower down a PRODUCT page behave exactly the same as the homepage ones — arrows beside the cards, nothing covered, no arrows on mobile",
           description:
             "These are a different surface using the same underlying scroller, so they are the best check that the fix applied everywhere rather than only on the homepage.",
-          href: "/products/product-tester-standard-1",
+          href: "/products/product-beyblade-burst-valkyrie",
         },
         {
           key: "category-page-carousels-same-behaviour",
@@ -4568,7 +4554,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "store-tab-empty-state-not-error",
           label: "A store tab with genuinely no items shows a friendly empty state — never a blank white area, a spinner that never stops, or an error toast about a missing index",
-          href: "/stores/store-tester-qa-seller",
+          href: "/stores/store-beyblade-arena",
         },
         { key: "sellers-directory", label: "The sellers directory page loads correctly", href: "/sellers" },
         { key: "seller-detail-page", label: "An individual seller's public detail page loads correctly" },
@@ -4854,7 +4840,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "leaderboard-loads",
           label: "The public Bug Hunters leaderboard (/bug-hunters) loads and lists testers ranked by confirmed-bug count, most bugs first",
-          description: "Verify against the seeded demo fixture — \"Mock User 18\" should appear on the leaderboard with 1 confirmed bug (from the \"Demo fixture\" case under Admin (Testing) → Bug Hunter Rewards).",
+          description: "Verify against the seeded demo fixture — \"Mock User 3\" should appear on the leaderboard with 1 confirmed bug (from the \"Demo fixture\" case under Admin (Testing) → Bug Hunter Rewards).",
           href: "/bug-hunters",
         },
         { key: "leaderboard-empty-state", label: "If no bugs have been confirmed yet, the leaderboard shows a clear \"No confirmed bugs yet\" empty state instead of a blank page or error" },
@@ -4952,9 +4938,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "sitemap-excludes-test-data",
-          label: "The sitemap lists no tester-sandbox fixture",
+          label: "The sitemap lists no test-flagged fixture",
           description:
-            "Sandbox content is wiped and re-seeded by every tester run, so a sitemap entry for it is a URL that repeatedly 404s. Search for \"tester-sandbox\" in the sitemap.",
+            "A row flagged isTestData is wiped and re-seeded whenever fixtures are refreshed, so a sitemap entry for it is a URL that repeatedly 404s. Search the sitemap for \"sandbox\", \"qa-\" and \"test-\"; record every match with its full URL.",
           href: "/sitemap.xml",
         },
       ],
@@ -4981,14 +4967,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Every listing type's detail page declares a canonical — including classifieds, digital codes and live items",
           description:
             "BEFORE: three listing types were called without the site URL, so their metadata builder returned nothing and those pages shipped with NO canonical at all. Check all three, not just the standard product page.",
-          href: "/classified/classified-tester-sandbox-1",
+          href: "/classified/classified-beyblade-stadium-set",
         },
         {
           key: "detail-canonical-uses-slug-not-id",
           label: "A detail page's canonical uses the slug the route actually takes",
           description:
             "BEFORE: a canonical was built from the record's id while the route was keyed on its slug, so the canonical named a URL that does not exist.",
-          href: "/classified/classified-tester-sandbox-1",
+          href: "/classified/classified-beyblade-stadium-set",
         },
         {
           key: "single-h1-per-page",
@@ -5046,7 +5032,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "og-image-missing-media-fallback",
           label: "A record with no image of its own still produces a readable social card rather than a broken image",
-          href: "/classified/classified-tester-sandbox-1",
+          href: "/classified/classified-beyblade-stadium-set",
         },
       ],
     },
@@ -5722,7 +5708,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "pageviews-tracks-all-listing-types",
             label: "Visiting a blog post, event, pre-order, prize draw, classified, digital-code, live item, or bundle detail page records a page view that shows up in Admin Analytics → Page Views, filtered to that entity type",
-            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), /events/event-original-series-clearance (event), /pre-orders/preorder-tester-sandbox-1 (pre-order), /prize-draws/prizedraw-tester-sandbox-1 (prize-draw), /classified/classified-tester-sandbox-1 (classified), /digital-codes/digitalcode-tester-sandbox-1 (digital-code), /live/live-tester-sandbox-1 (live), /bundles/bundle-tester-sandbox (bundle).",
+            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), /events/event-original-series-clearance (event), /pre-orders/preorder-beyblade-x-bx-08-wave (pre-order), /prize-draws/prizedraw-beyblade-mystery-box (prize-draw), /classified/classified-beyblade-stadium-set (classified), /digital-codes/digitalcode-beyblade-x-app-starter-pack (digital-code), /live/live-golden-retriever-puppy (live), /bundles/bundle-original-collectors-set (bundle).",
             href: "/blog/spot-genuine-takara-tomy-beyblade",
           },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
@@ -5834,7 +5820,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "admin-store-detail-page",
             label: "Every admin store row's row menu has a \"View full page\" action landing on a real dedicated /admin/stores/[id]/view page — logo, status/verified/featured badges, an owner link to that owner's (now-enriched) user page, stats (products/items sold/reviews/rating), capabilities, and a \"Manage\" button opening the existing edit drawer",
-            description: "Added 2026-08-21 — admin previously had no dedicated store detail page at all, only the edit drawer (no logo, no owner link, no stats). From /admin/stores, open the seeded \"Tester Sandbox Store\" (store-tester-sandbox) and confirm every section renders real data, and the owner link lands on that seller's admin user page.",
+            description: "Added 2026-08-21 — admin previously had no dedicated store detail page at all, only the edit drawer (no logo, no owner link, no stats). From /admin/stores, open the seeded \"Tester Sandbox Store\" (store-beyblade-arena) and confirm every section renders real data, and the owner link lands on that seller's admin user page.",
             href: "/admin/stores",
           },
         ],
@@ -6257,14 +6243,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     pageKey: "bug-hunter-rewards",
     pageLabel: BUG_HUNTER_REWARDS_PAGE_LABEL,
     label: "Demo fixture — reported bug, already confirmed and reopened (v1, disabled)",
-    description: "Seed-only fixture demonstrating a confirmed bug: this v1 case is disabled (isActive:false) and credited to \"Mock User 18\". Its retest is \"Demo fixture — reported bug, already confirmed and reopened (v2, active)\" in this same page.",
+    description: "Seed-only fixture demonstrating a confirmed bug: this v1 case is disabled (isActive:false) and credited to \"Mock User 3\". Its retest is \"Demo fixture — reported bug, already confirmed and reopened (v2, active)\" in this same page.",
     href: "/admin/tester-checklist",
     order: 100,
     isActive: false,
     adminOnly: true,
     bugConfirmed: true,
-    bugHunterId: "user-tester-qa",
-    bugHunterName: "Mock User 18",
+    bugHunterId: "user-yugi-muto",
+    bugHunterName: "Mock User 3",
     bugConfirmedAt: new Date("2026-08-18T10:00:00.000Z"),
     version: 1,
     supersededByItemId: "checklist-admin-bug-hunter-rewards-demo-fixture-v2",

@@ -67,7 +67,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Look at its badge and check whether it has a filled background at all.",
       "Compare it against the Classified and Digital Code badges beside it, then against the Auction badge on /auctions.",
       "Switch to dark mode and look again.",
-      "Open /live/live-tester-sandbox-1 signed in as tester@letitrip.in / TempPass123! and look at the badge there.",
+      "Open /live/live-golden-retriever-puppy and look at the badge on the detail page too.",
     ],
     expectedBehaviour:
       "The Live Item badge names a colour the build can actually generate. Its background once used a flat alias that has no tint variant and is absent from the app's own palette entirely, so the class compiled to nothing and the badge rendered with no fill — which reads as a deliberate outline style rather than a dropped class.",

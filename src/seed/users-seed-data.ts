@@ -1,8 +1,7 @@
 /*
- * WHY: Provides 21 seed user accounts covering all marketplace roles and demographics.
- * WHAT: Exports 21 UserDocument partials — 1 admin, 2 sellers (store owners, one of which
- *       is also the dedicated isTester QA account), 15 buyers, 1 automated tester
- *       (`user-claude-tester`, isBot), and 2 employees on contrasting permission presets.
+ * WHY: Provides 19 seed user accounts covering all marketplace roles and demographics.
+ * WHAT: Exports 19 UserDocument partials — 1 admin, 1 seller (store owner), 15 buyers, and
+ *       2 employees on contrasting permission presets.
  *       All passwords are TempPass123! in the Firebase Auth emulator. UIDs match slugs.
  *
  *       🛑 seed-cli sets that password ONLY when it creates the Auth record. A re-seed
@@ -512,87 +511,6 @@ export const usersSeedData: Partial<UserDocument>[] = [
     metadata: { lastSignInTime: daysAgo(3), creationTime: daysAgo(110).toISOString(), loginCount: 50 },
     createdAt: daysAgo(110),
     updatedAt: daysAgo(3),
-  },
-
-  // ── Tester QA account (role stays "seller" — isTester unlocks Tester Hub + auto-approved store) ──
-  {
-    uid: "user-tester-qa",
-    email: "tester@letitrip.in",
-    phoneNumber: `${_ph}9999900018`,
-    phoneVerified: true,
-    displayName: "Mock User 18",
-    photoURL: seedPhoto("user-avatar-qa-tester-20260101", 400, 400),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
-    isTester: true,
-    emailVerified: true,
-    disabled: false,
-    storeId: "store-tester-qa-seller",
-    storeSlug: "store-tester-qa-seller",
-    storeStatus: "approved",
-    payoutDetails: {
-      method: "upi",
-      upiId: "tester-qa@upi",
-      isConfigured: true,
-    },
-    publicProfile: {
-      isPublic: true,
-      showEmail: false,
-      showPhone: false,
-      showOrders: false,
-      showWishlist: false,
-      bio: "Dedicated QA tester account for the Tester QA Program — runs through the checklist against the shared test sandbox.",
-      location: "Bengaluru, Karnataka",
-      storeName: "Tester QA Seller Store",
-      storeCategory: "category-spinning-tops",
-    },
-    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
-    metadata: { lastSignInTime: daysAgo(1), creationTime: daysAgo(1).toISOString(), loginCount: 5 },
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(1),
-  },
-
-  // ── Automated tester (the Claude-driven checklist runner answers as this account) ──
-  // `canTestAdmin` is REQUIRED, not decorative: 116 checklist cases are adminOnly and
-  // GET/PUT /api/user/tester-checklist 404s them for a caller without it, so the runner
-  // would silently see a shorter catalog than a human tester does.
-  // `isBot` keeps it off the public Bug Hunters leaderboard — see getBugHunterLeaderboard().
-  {
-    uid: "user-claude-tester",
-    email: "claude-tester@letitrip.in",
-    phoneNumber: `${_ph}9999900019`,
-    phoneVerified: true,
-    displayName: "Claude (automated)",
-    photoURL: seedPhoto("user-avatar-claude-tester-20260101", 400, 400),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
-    isTester: true,
-    canTestAdmin: true,
-    isBot: true,
-    emailVerified: true,
-    disabled: false,
-    // 🛑 This MUST name a store whose own `ownerId` is this uid. It used to say
-    // "store-tester-qa-seller", which is owned by `user-tester-qa` — so the app, which
-    // resolves sellers by `ownerId`, answered every /api/store/* call with 403
-    // "No store found for this account" while the client, reading `role` and `storeId`
-    // off this document, rendered the entire Store Panel over it. 36 checklist cases were
-    // blocked by that one-way pointer (measured, run 1789300124915).
-    // See stores-tester-seed-data.ts for why the shared sandbox could not simply be
-    // repointed at this account instead.
-    storeId: "store-claude-tester",
-    storeSlug: "store-claude-tester",
-    storeStatus: "approved",
-    publicProfile: {
-      isPublic: false,
-      showEmail: false,
-      showPhone: false,
-      showOrders: false,
-      showWishlist: false,
-      bio: "Automated tester. Works the tester checklist against a freshly seeded catalog and records a verdict per case.",
-      location: "Bengaluru, Karnataka",
-    },
-    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
-    metadata: { lastSignInTime: daysAgo(1), creationTime: daysAgo(1).toISOString(), loginCount: 1 },
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(1),
   },
 
   // ── Employees: two contrasting permission presets ───────────────────────────

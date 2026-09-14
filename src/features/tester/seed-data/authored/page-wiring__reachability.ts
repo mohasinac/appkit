@@ -111,23 +111,25 @@ export const authored: Record<string, AuthoredCase> = {
       "Read-only; nothing persists. Record every broken href in the comment, not just the first — one report naming all of them is worth more than a verdict.",
   },
   "checklist-page-wiring-reachability-user-tester-hub-reachable-from-user-sidebar": {
-    roles: ["buyer"],
+    roles: ["admin", "buyer"],
     startPage: "/user",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!, which carries the tester flag.",
+      "Sign in as admin@letitrip.in / TempPass123!, open /admin/users, and turn the tester flag ON for vivaan.kapoor@gmail.com — no seeded account carries it, so the case sets up the flag it is about.",
+      "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123!, which now carries the tester flag.",
       "Open /user and read the sidebar.",
       "Find the Testing group and click Tester Hub.",
       "Read where it lands.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!, which does not carry the flag.",
       "Open /user and read the sidebar for a Testing group.",
+      "Sign back in as admin@letitrip.in and turn the tester flag on vivaan.kapoor@gmail.com back off.",
     ],
-    inputs: { testerAccount: "tester@letitrip.in", nonTesterAccount: "rehan.sheikh@gmail.com" },
+    inputs: { testerAccount: "vivaan.kapoor@gmail.com", nonTesterAccount: "rehan.sheikh@gmail.com" },
     expectedBehaviour:
       "The Testing group is injected at runtime for accounts carrying the tester flag and is empty for everyone else. An empty group must not render as a heading with nothing under it.",
     expectedUiState:
       "The tester sees a Testing group containing Tester Hub, and clicking it opens /user/tester with the checklist. The non-tester sees no Testing group at all — not a heading with no children, and not a link that leads to a 'Testers only' warning.",
     expectedData: { testingGroupVisibleForNonTester: false },
     endResult:
-      "Read-only; nothing persists. Checking both accounts is the case — a group that renders for everybody would pass the first half alone.",
+      "The flag is revoked by the final step, leaving vivaan.kapoor@gmail.com on its seeded settings. Checking both accounts is the case — a group that renders for everybody would pass the first half alone.",
   },
 };

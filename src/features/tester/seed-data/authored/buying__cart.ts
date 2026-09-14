@@ -131,7 +131,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!, whose cart holds a won auction.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!, whose cart holds a won auction.",
       "Add two ordinary products to the cart.",
       "Open /cart and note the Won Auctions tab holds a line.",
       "Use 'Remove all' from the Cart tab and confirm it.",
@@ -369,28 +369,27 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-opens": {
     roles: ["guest"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-original-lineage",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox content is visible.",
-      "Open /products/product-tester-standard-1 and find the 'Part of' strip.",
-      "Read what the strip names and what controls it offers.",
-      "Click the 'Pick items' control.",
+      "Open /groups/group-beyblade-original-lineage in a private window with no session — the seeded grouped listing 'Original Series Lineage', whose members are product-beyblade-original-dranzer-s and product-beyblade-original-driger-v.",
+      "Read what the page names and what controls it offers.",
+      "Find the member picker.",
       "Read what opens and whether every member is listed.",
       "Check each member shows a thumbnail, a title, a unit price and a quantity control.",
     ],
     expectedBehaviour:
-      "A product belonging to a group offers a picker from its own page. A group is pick-as-you-wish — unlike a bundle, which is all-or-nothing — so the picker exists to let the buyer choose members and quantities before adding anything.",
+      "A grouped listing offers a picker on its own page. A group is pick-as-you-wish — unlike a bundle, which is all-or-nothing — so the picker exists to let the buyer choose members and quantities before adding anything.",
     expectedUiState:
-      "The strip names the group and its control opens a picker listing every member with thumbnail, title, unit price and a stepper. A strip with no way into the picker is the failure.",
+      "The page names the group and its picker lists both members with thumbnail, title, unit price and a stepper. A member list with no way to pick quantities is the failure.",
     endResult: "Close the picker without adding.",
   },
   "checklist-buying-cart-group-picker-running-total": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-original-lineage",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /products/product-tester-standard-1 and open the group picker.",
-      "Read the running total shown.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /groups/group-beyblade-original-lineage and open the member picker.",
+      "Read the running total shown — Dranzer S is ₹1,499.00 and Driger V is ₹1,799.00.",
       "Raise one member's quantity by one and read the total again.",
       "Check it rose by exactly that member's unit price.",
       "Lower another member to zero and read the total and the item count.",
@@ -404,11 +403,11 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-stock-cap": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-original-lineage",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open the group picker and find a member with limited stock.",
-      "Read its available stock.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /groups/group-beyblade-original-lineage and open the member picker.",
+      "Read the available stock on product-beyblade-original-driger-v, seeded at 2.",
       "Raise its quantity repeatedly until the control stops.",
       "Compare the quantity reached against the stated stock.",
       "Check the control is disabled at the cap rather than silently ignoring presses.",
@@ -416,33 +415,34 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "Each member's stepper stops at that member's own stock. The cap is per member rather than per line, because a group line's members are independent products with independent inventory.",
     expectedUiState:
-      "The quantity stops at the stated stock and the increase control becomes visibly disabled at that point. A control that accepts presses and does nothing is the failure — the buyer cannot tell it from an unresponsive page.",
+      "The quantity stops at 2 for Driger V and at 4 for Dranzer S, and the increase control becomes visibly disabled at that point. A control that accepts presses and does nothing is the failure — the buyer cannot tell it from an unresponsive page.",
     endResult: "Close the picker without adding.",
   },
   "checklist-buying-cart-group-picker-blocked-member": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-local-meetup-picks",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open the group picker and find product-tester-group-soldout among the members.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /groups/group-beyblade-local-meetup-picks \u2014 'Local Meetup Picks', whose three members are all classified listings and therefore cannot be added to a cart at all.",
+      "Find classified-beyblade-stadium-set among the members.",
       "Read what is shown in place of its quantity stepper.",
       "Check a reason is stated rather than the row being blank or absent.",
       "Try to include it in the selection.",
       "Read whether the running total counts it.",
     ],
-    inputs: { blockedMember: "product-tester-group-soldout" },
+    inputs: { blockedMember: "classified-beyblade-stadium-set" },
     expectedBehaviour:
-      "A member that cannot be bought shows WHY in place of its stepper. Hiding it entirely would misrepresent the group's contents, and showing an inert stepper would let the buyer build a selection that the server then refuses.",
+      "A member that cannot be bought shows WHY in place of its stepper. A classified listing's cart capability is blocked outright \u2014 it is a contact-the-seller listing, not a purchasable one \u2014 so every member of this group is in that state. Hiding them entirely would misrepresent the group's contents, and showing an inert stepper would let the buyer build a selection that the server then refuses.",
     expectedUiState:
-      "The sold-out member is listed with a reason chip instead of a stepper, cannot be selected, and does not contribute to the running total. A blank cell where the stepper would be is the failure.",
+      "Each blocked member is listed with a reason chip instead of a stepper, cannot be selected, and does not contribute to the running total. A blank cell where the stepper would be is the failure, and so is a working stepper on a classified listing.",
     endResult: "Close the picker without adding.",
   },
   "checklist-buying-cart-group-picker-one-line": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-original-lineage",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open the group picker and select TWO members with quantities.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /groups/group-beyblade-original-lineage and select BOTH members — Dranzer S at quantity 1 and Driger V at quantity 2.",
       "Note the running total.",
       "Add the selection to the cart.",
       "Open /cart and count the lines that appeared.",
@@ -457,10 +457,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-single-member-plain-line": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-original-lineage",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with an empty cart.",
-      "Open the group picker and select exactly ONE member with quantity 2.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! and empty the cart first.",
+      "Open /groups/group-beyblade-original-lineage and select exactly ONE member — product-beyblade-original-driger-v — at quantity 2.",
       "Add the selection to the cart.",
       "Open /cart and read the line.",
       "Check it has an ordinary line-level quantity stepper.",
@@ -472,34 +472,61 @@ export const authored: Record<string, AuthoredCase> = {
       "The line looks like any other product line, with a working line-level stepper reading 2, and no member expansion.",
     endResult: "Empty the cart afterwards.",
   },
+  /*
+   * 🛑 THE CROSS-STORE GROUP HAS TO BE BUILT — there is no fixture to read.
+   *
+   * This case used to drive `product-tester-crossstore-a` / `-b`, two listings
+   * seeded in the banned shape on purpose so a buyer could open a group spanning
+   * two sellers and confirm the picker rendered read-only. They were
+   * tester-sandbox rows and went with the rest of them on 2026-09-14.
+   *
+   * The guard is NOT at save time for a grouped listing — that is the bundle
+   * rule. `POST /api/admin/grouped-listings` takes the group's own `storeId` and
+   * never checks that each member belongs to it, and the single-store refusal
+   * lives in the picker and in `addGroupLineToCart`. So the banned state is still
+   * reachable through a supported admin path, which is what keeps the BUYER-facing
+   * half of this guard testable at all: the case creates it, reads the refusal,
+   * and deletes it again.
+   *
+   * The one pairing the real catalogue allows is an Arena product plus a
+   * letitrip-official prize draw. Both could be refused for their own reasons, so
+   * the case turns on the refusal MESSAGE naming the seller conflict — a case
+   * that cannot tell its two failure modes apart would pass against the bug.
+   */
   "checklist-buying-cart-group-picker-cross-store": {
-    roles: ["buyer"],
-    startPage: "/products/product-tester-crossstore-a",
+    roles: ["admin", "buyer"],
+    startPage: "/admin/grouped-listings",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /products/product-tester-crossstore-a, whose group spans two sellers.",
-      "Open its group picker.",
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/grouped-listings and create a group titled 'QA Group cross-store' with exactly two members: product-beyblade-original-dranzer-s (store-beyblade-arena) and prizedraw-beyblade-mystery-box (store-letitrip-official).",
+      "Save it and note its slug.",
+      "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open that group's public page at /groups/<the slug you noted>.",
       "Read whether quantity controls are offered.",
       "Read whether an add control is offered.",
       "Read what the picker says about why.",
-      "Using DevTools, attempt to submit a cross-store selection anyway.",
+      "Using DevTools, POST the two member ids to /api/cart/group anyway and read the response.",
     ],
-    inputs: { productId: "product-tester-crossstore-a" },
+    inputs: {
+      groupTitle: "QA Group cross-store",
+      memberStoreA: "product-beyblade-original-dranzer-s",
+      memberStoreB: "prizedraw-beyblade-mystery-box",
+    },
     expectedBehaviour:
-      "A cross-store group renders READ-ONLY, and the server refuses such a selection again. The store id is the order-splitting key and the key per-store shipping, coupons, add-ons and payouts hang off — a line spanning sellers would produce an order belonging to one seller containing another's products, with no notification, no shipping resolution and no payout for the second.",
+      "A cross-store group renders READ-ONLY, and the server refuses such a selection again. The store id is the order-splitting key and the key per-store shipping, coupons, add-ons and payouts hang off \u2014 a line spanning sellers would produce an order belonging to one seller containing another's products, with no notification, no shipping resolution and no payout for the second. The group has to be BUILT here: the guard means a valid cross-store group cannot exist in the seed, so there is no fixture to read.",
     expectedUiState:
-      "No quantity column and no add control, with a stated reason. The forced submission is refused server-side rather than accepted.",
+      "No quantity column and no add control, with a stated reason. The forced POST is refused server-side with an error naming the second store rather than accepted.",
     expectedData: { addControlPresent: false },
     endResult:
-      "Nothing is added. The fixtures exist in this banned shape precisely so both refusals are testable.",
+      "Nothing is added. Delete 'QA Group cross-store' afterwards \u2014 it exists in a shape the product forbids and must not be left in the catalogue.",
   },
   "checklist-buying-cart-group-picker-guest": {
     roles: ["guest"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/groups/group-beyblade-original-lineage",
     steps: [
-      "Open /products/product-tester-standard-1 in a private window with no session.",
-      "Open the group picker.",
-      "Select two members and use the add control.",
+      "Open /groups/group-beyblade-original-lineage in a private window with no session.",
+      "Open the member picker.",
+      "Select both members and use the add control.",
       "Read what happens.",
       "Check a sign-in prompt appears rather than the selection being silently lost.",
       "Sign in from that prompt and read whether the selection survived.",
@@ -514,7 +541,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a grouped line in the cart.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a grouped line in the cart.",
       "Open /cart and find the grouped line.",
       "Expand it.",
       "Read every member listed — thumbnail, title, unit price and quantity.",
@@ -531,7 +558,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a grouped line in the cart.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a grouped line in the cart.",
       "Open /cart and look at the grouped line's header row.",
       "Check there is no line-level quantity stepper on it.",
       "Expand the line and check each MEMBER has its own stepper.",
@@ -549,7 +576,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a grouped line in the cart.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a grouped line in the cart.",
       "Open /cart, expand the grouped line, and note the line total, the seller subtotal and the summary total.",
       "Raise one member's quantity by one.",
       "Read all three figures again.",
@@ -566,7 +593,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a grouped line holding two members.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a grouped line holding two members.",
       "Open /cart and expand the line.",
       "Remove ONE member.",
       "Read the remaining member and the line total.",
@@ -584,7 +611,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Add a grouped selection and a bundle to the cart.",
       "Open /cart and click the grouped line's title.",
       "Read where it lands.",
@@ -601,29 +628,29 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-bundle-copies-stepper": {
     roles: ["buyer"],
-    startPage: "/bundles/bundle-tester-sandbox",
+    startPage: "/bundles/bundle-original-collectors-set",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /bundles/bundle-tester-sandbox and find the copies stepper.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /bundles/bundle-original-collectors-set and find the copies stepper.",
       "Read the price shown at one copy.",
       "Raise the copies to 2 and read the price.",
       "Check both 'Buy now' and 'Add to cart' are present.",
       "Use 'Add to cart' and read whether the browser stayed on the bundle page.",
       "Open /cart and read the line.",
     ],
-    inputs: { bundleId: "bundle-tester-sandbox", copies: 2, bundlePrice: 199 },
+    inputs: { bundleId: "bundle-original-collectors-set", copies: 2, bundlePrice: 2999, memberTotal: 4597 },
     expectedBehaviour:
       "A bundle is all-or-nothing, so its stepper counts COPIES of the whole selection rather than members. Add to cart stays on the page — a buyer adding two copies may want a third — while Buy now proceeds to checkout.",
     expectedUiState:
-      "The price doubles to ₹398.00 at two copies. Both controls are present. Add to cart keeps the buyer on the bundle page and the cart gains one line at two copies.",
-    expectedData: { copies: 2, lineTotal: 398 },
+      "The price doubles to ₹5,998.00 at two copies. Both controls are present. Add to cart keeps the buyer on the bundle page and the cart gains one line at two copies.",
+    expectedData: { copies: 2, lineTotal: 5998 },
     endResult: "The cart holds a bundle line at two copies.",
   },
   "checklist-buying-cart-bundle-line-in-cart": {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a bundle line in the cart.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a bundle line in the cart.",
       "Open /cart and expand the bundle line.",
       "Read its members and check they are READ-ONLY — no per-member steppers.",
       "Read the line-level copies stepper.",
@@ -631,12 +658,12 @@ export const authored: Record<string, AuthoredCase> = {
       "Check it rose by the bundle price rather than by the members' summed price.",
       "RELOAD and confirm.",
     ],
-    inputs: { bundlePrice: 199, memberTotal: 348 },
+    inputs: { bundleId: "bundle-original-collectors-set", bundlePrice: 2999, memberTotal: 4597 },
     expectedBehaviour:
       "A bundle's members are fixed and its copies vary — the exact inverse of a group line. The price rule's bundle branch must be evaluated BEFORE its members branch: a bundle line carries members too, and summing them would charge the undiscounted total and throw away the discount that is the entire point of a bundle.",
     expectedUiState:
-      "Members are listed without steppers, the copies stepper is on the line, and raising it adds ₹199.00 per copy rather than ₹348.00. A total rising by the members' sum is the branch-order failure.",
-    expectedData: { pricePerCopy: 199 },
+      "The three members — Dranzer S, Driger V and Storm Pegasus — are listed without steppers, the copies stepper is on the line, and raising it adds ₹2,999.00 per copy rather than ₹4,597.00. A total rising by the members' sum is the branch-order failure.",
+    expectedData: { pricePerCopy: 2999 },
     endResult: "Empty the cart afterwards.",
   },
   "checklist-buying-cart-bundle-cross-store-rejected": {
@@ -659,27 +686,26 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-grouped-listing-page-picker": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /products/product-tester-standard-1 and find the 'Part of' strip.",
-      "Follow the link to the group's own public page.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /products/product-beyblade-original-dranzer-s and scroll to the themed grouped-listings carousel.",
+      "Follow the link for 'Original Series Lineage' to /groups/group-beyblade-original-lineage.",
       "Read the page — its title, description and member list.",
       "Find the picker on that page and open it.",
-      "Compare it against the picker on the product page.",
-      "Select members and add them, then check the cart line matches.",
+      "Select both members and add them, then check the cart line matches the running total.",
     ],
     expectedBehaviour:
-      "A grouped listing has its own public page carrying the same picker, so the group is reachable and shareable in its own right rather than only as a strip on a member's page.",
+      "A grouped listing has its own public page carrying the picker, so the group is reachable and shareable in its own right rather than only as a carousel on a member's page.",
     expectedUiState:
-      "The group page renders with its members and the same picker. Adding from it produces the same single grouped cart line as adding from the product page.",
+      "The group page renders with both members and a working picker. Adding from it produces ONE grouped cart line priced at the running total, not one line per member.",
     endResult: "Empty the cart afterwards.",
   },
   "checklist-buying-cart-group-lane-gate": {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!, whose cart holds an unpaid won auction.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!, whose cart holds an unpaid won auction.",
       "Open /cart and confirm the Won Auctions tab holds a line.",
       "Open a group's picker, select two members, and try to add them.",
       "Read what happens and any message shown.",
@@ -734,7 +760,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!, whose cart holds an unpaid won auction, an accepted offer and ordinary items.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!, whose cart holds an unpaid won auction, an accepted offer and ordinary items.",
       "Open /cart and read the three tabs.",
       "Open the Cart tab and read its checkout button's state.",
       "Open the Accepted Offers tab and read its checkout button's state.",
@@ -768,7 +794,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a won auction in the cart.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a won auction in the cart.",
       "Open /cart and switch to the Won Auctions tab.",
       "Find the countdown beside the payment-required note.",
       "Read the time remaining.",
@@ -785,7 +811,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a won auction whose deadline has passed.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a won auction whose deadline has passed.",
       "Open /cart and read the Won Auctions tab.",
       "Check the line is gone.",
       "Open /user/bids and read that bid's status.",
@@ -803,7 +829,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with items in all three lanes.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with items in all three lanes.",
       "Open /cart on the Cart tab and read the summary total.",
       "Add up the ordinary items yourself and compare.",
       "Switch to the Accepted Offers tab and read its total.",
@@ -821,7 +847,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with items in more than one lane.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with items in more than one lane.",
       "Open /cart on the Won Auctions tab and note its items and total.",
       "Click its checkout control.",
       "Read the checkout page's items and total.",
@@ -839,7 +865,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with items in more than one lane.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with items in more than one lane.",
       "Open /cart at 1280 pixels and note each tab's desktop summary total.",
       "Resize to 390 pixels and open /cart.",
       "On each tab, read the bottom bar's total and the lane it names.",
@@ -857,7 +883,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with an unpaid won auction and ordinary items.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with an unpaid won auction and ordinary items.",
       "Resize to 390 pixels and open /cart.",
       "Switch to the Cart tab, which is not currently payable.",
       "Read the bottom bar's checkout button state.",
@@ -875,7 +901,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with a payable non-standard lane.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with a payable non-standard lane.",
       "Resize to 390 pixels and open /cart.",
       "Switch to the Won Auctions or Accepted Offers tab.",
       "Tap the bottom bar's Checkout button.",
@@ -893,7 +919,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with items in more than one lane.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with items in more than one lane.",
       "Open /cart on the Cart tab and read the 'Select all' control's count.",
       "Compare it against the number of items on that tab only.",
       "Switch to another tab and read the count there.",
@@ -981,7 +1007,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! with items in the auction and offer lanes.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! with items in the auction and offer lanes.",
       "Open /cart on the Cart tab and expand the breakdown, noting whether a coupon line can appear.",
       "Switch to the Won Auctions tab and expand the breakdown.",
       "Read whether any coupon-discount line is present.",
@@ -1195,7 +1221,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a STANDARD order that had a coupon applied.",
       "Read the discount lines shown.",
       "Open an order that came from a won auction and read its discount area.",

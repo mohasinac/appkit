@@ -29,7 +29,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/notifications and read the unread count on the header bell.",
       "In a second window, sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "As that second buyer, open /auctions/auction-tester-sandbox-cycle-1 and place a bid high enough to outbid the first buyer.",
+      "As that second buyer, open /auctions/auction-beyblade-original-dragoon-storm and place a bid high enough to outbid the first buyer.",
       "Return to the first window and open /user/notifications.",
       "Read the newest entry and the bell's unread count.",
     ],

@@ -80,41 +80,6 @@ const _rawAddressesSeedData: Partial<AddressDocument>[] = [
     createdAt: daysAgo(365),
     updatedAt: daysAgo(5),
   },
-
-  /*
-   * Automated checklist runner — delivery address.
-   *
-   * 🛑 THIS ROW IS WHY CHECKOUT CAN BE TESTED AT ALL.
-   *
-   * `user-claude-tester` had no address, so /checkout stopped dead at "Step 1 of 3:
-   * Shipping Address — No saved addresses yet." Every order, payment, coupon-at-placement,
-   * offer-checkout and forfeited-bid case died there: 117 blocked cases, 27% of everything
-   * the run could not test, and the single largest blocker by a wide margin (measured,
-   * run 1789300124915).
-   *
-   * It has to be SEEDED rather than created by the runner mid-run. `addresses` is PRESERVE
-   * tier in tester/scripts/lib/collections.mjs — teardown deliberately never touches it,
-   * because real people's saved addresses live there — so a row the runner created at
-   * runtime would survive every future run with nothing owning its cleanup. Seeded, it is
-   * idempotent: `appkit-seed load` upserts this exact id, and re-running changes nothing.
-   */
-  {
-    id: "addr-claude-tester-home",
-    ownerType: "user",
-    ownerId: "user-claude-tester",
-    label: "Home",
-    fullName: "Claude (automated)",
-    phone: "+91-99999-00019",
-    addressLine1: "1 Automation Street",
-    addressLine2: "Koramangala",
-    city: "Bengaluru",
-    state: "Karnataka",
-    postalCode: "560034",
-    country: "India",
-    isDefault: true,
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(1),
-  },
 ];
 
 export const addressesSeedData = _rawAddressesSeedData as AddressDocument[];

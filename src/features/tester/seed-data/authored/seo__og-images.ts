@@ -61,7 +61,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Repeat for /classified/classified-beyblade-stadium-set.",
       "Repeat for /digital-codes/digitalcode-beyblade-x-app-starter-pack.",
       "Repeat for /live/live-golden-retriever-puppy.",
-      "Repeat for /prize-draws/prizedraw-tester-sandbox-1.",
+      "Repeat for /prize-draws/prizedraw-beyblade-mystery-box.",
     ],
     expectedBehaviour:
       "None of these cards prints a money amount. The card is a public image URL with its contents burned into the pixels, so a price there survives every gate on the page and is fetchable by anyone who has the listing URL. A prize draw that is genuinely free may still say 'Free entry' — that is a fact about the draw, not a disclosed amount.",
@@ -106,10 +106,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-seo-og-images-og-image-missing-media-fallback": {
     roles: ["guest"],
-    startPage: "/classified/classified-tester-sandbox-1",
+    startPage: "/classified/classified-beyblade-stadium-set",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Find a listing with no photo of its own, or note that the sandbox classified has none.",
+      "Open /classified in a private window and find a listing whose card shows no photo of its own; if every card has one, say so and answer null rather than guessing.",
       "Open its detail page and view the source.",
       "Copy the og:image URL and open it in a fresh tab.",
       "Read what renders.",

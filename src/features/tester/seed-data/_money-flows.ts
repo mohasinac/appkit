@@ -54,16 +54,16 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
   {
     pageKey: "offer-to-purchase",
     pageLabel: "Offer → accept → pay",
-    href: "/products/product-tester-offerable",
+    href: "/products/product-beyblade-burst-valkyrie",
     cases: [
       {
         key: "buyer-makes-offer",
         label: "A buyer can make an offer on a seller's product and it appears in their own offers list",
         roles: ["buyer"],
-        startPage: "/products/product-tester-offerable",
+        startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Open /products/product-tester-offerable.",
+          "Open /products/product-beyblade-burst-valkyrie.",
           "Click 'Make Offer'.",
           "Enter 780 as the offer amount.",
           "Enter the note 'QA offer offer-to-purchase-buyer-makes-offer'.",
@@ -71,7 +71,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Open /user/offers.",
         ],
         expectedBehaviour:
-          "An offer is created for 780 against product-tester-offerable, owned by the signed-in buyer, and the owning seller receives an offer-received notification.",
+          "An offer is created for 780 against product-beyblade-burst-valkyrie, owned by the signed-in buyer, and the owning seller receives an offer-received notification.",
         expectedUiState:
           "The offer modal closes and a success confirmation appears. /user/offers lists a row for the product with amount ₹780 and status Pending. The page does NOT read 'No offers yet'.",
         endResult:
@@ -81,10 +81,10 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         key: "duplicate-offer-refused",
         label: "A second offer on the same listing while one is still pending is refused",
         roles: ["buyer"],
-        startPage: "/products/product-tester-offerable",
+        startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
           "Sign in as the buyer ash@pokemonpalace.in, holding the pending 780 offer from the previous case.",
-          "Open /products/product-tester-offerable.",
+          "Open /products/product-beyblade-burst-valkyrie.",
           "Click 'Make Offer'.",
           "Enter 800 as the offer amount.",
           "Click 'Submit offer'.",
@@ -102,16 +102,16 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["seller"],
         startPage: "/store/offers",
         steps: [
-          "Sign in as tester@letitrip.in, who owns store-tester-qa-seller.",
+          "Sign in as tyson@beybladearena.in / TempPass123!, who owns store-beyblade-arena.",
           "Open /store/offers.",
-          "Find the row for offer-tester-sandbox-inbound (product-tester-standard-1, offered ₹120 against a listed ₹150).",
+          "Find the row for offer-yugi-burst-valkyrie-pending (product-beyblade-burst-valkyrie, offered ₹780 against a listed ₹999).",
           "Open the row actions menu.",
           "Click 'Accept'.",
           "Confirm in the dialog.",
           "Reload /store/offers.",
         ],
         expectedBehaviour:
-          "The offer moves to Accepted, a locked price of 120 is recorded, and the buyer receives an offer-responded notification.",
+          "The offer moves to Accepted, a locked price of 780 is recorded, and the buyer receives an offer-responded notification.",
         expectedUiState:
           "Before acting, the row menu offers Accept, Decline and Counter as enabled controls. After confirming, the row's status badge reads Accepted.",
         endResult:
@@ -124,7 +124,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/user/offers",
         steps: [
-          "Sign in as tester@letitrip.in, who holds offer-tester-sandbox-accepted on product-beyblade-burst-valkyrie (listed ₹999, agreed ₹780).",
+          "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds offer-kaiba-dranzer-s-accepted on product-beyblade-original-dranzer-s (listed ₹1499, agreed ₹1250).",
           "Open /user/offers.",
           "Click through to checkout from the accepted offer.",
           "Read the line item price in the checkout summary.",
@@ -132,9 +132,9 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Read the order total.",
         ],
         expectedBehaviour:
-          "Every price computed for this line uses the locked 780, not the product's current 999.",
+          "Every price computed for this line uses the locked 1250, not the product's current 1499.",
         expectedUiState:
-          "The line item reads ₹780.00 and the order total reflects 780 plus fees. ₹999 appears nowhere on the checkout screen for this line.",
+          "The line item reads ₹1,250.00 and the order total reflects 1250 plus fees. ₹1,499 appears nowhere on the checkout screen for this line.",
         endResult:
           "Nothing is placed in this case — stop at the payment step. The check is that the two numbers never appear together for the same line.",
         href: "/user/offers",
@@ -143,10 +143,10 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         key: "owning-seller-cannot-offer",
         label: "The owning seller sees no Make Offer control on their own listing",
         roles: ["seller"],
-        startPage: "/products/product-tester-standard-1",
+        startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
-          "Sign in as tester@letitrip.in, who owns store-tester-qa-seller.",
-          "Open /products/product-tester-standard-1, a listing owned by that store.",
+          "Sign in as tyson@beybladearena.in / TempPass123!, who owns store-beyblade-arena.",
+          "Open /products/product-beyblade-burst-valkyrie, a listing owned by that store.",
           "Read the action controls on the listing.",
         ],
         expectedBehaviour:
@@ -155,7 +155,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "'Make Offer' is ABSENT, not merely disabled. A seller-facing control such as 'Edit listing' is shown instead.",
         endResult:
           "Nothing is persisted; this is a read-only check of which controls render for the owner.",
-        href: "/products/product-tester-standard-1",
+        href: "/products/product-beyblade-burst-valkyrie",
       },
       {
         key: "offer-lane-blocks-other-items",
@@ -163,8 +163,9 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/cart",
         steps: [
-          "Sign in as tester@letitrip.in with the accepted offer on product-beyblade-burst-valkyrie in the cart.",
-          "Open /products/product-tester-standard-2 and click 'Add to cart'.",
+          "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds offer-kaiba-dranzer-s-accepted.",
+          "Open /user/offers and start checkout from that accepted offer so its locked line enters the cart, then return to /products.",
+          "Open /products/product-beyblade-burst-valkyrie and click 'Add to cart'.",
           "Open /cart.",
           "Read which lane or tab each line sits in.",
           "Attempt to check out the standard item.",
@@ -179,18 +180,18 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
       },
       {
         key: "expired-offer-cannot-checkout",
-        label: "An accepted offer past its checkout deadline can no longer be paid",
+        label: "An offer past its window can no longer be paid",
         roles: ["buyer"],
         startPage: "/user/offers",
         steps: [
-          "Sign in as tester@letitrip.in.",
-          "Open /user/offers and find offer-tester-sandbox-expiring, whose checkout window is a fraction of the run window.",
-          "Note the countdown shown on the row.",
-          "Reload the page until the countdown reaches zero.",
+          "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+          "Open /user/offers and find offer-kaiba-x-wizard-arrow-expired (product-beyblade-x-wizard-arrow, ₹700), whose window closed two days ago.",
+          "Read the row's status badge and the date it names.",
+          "Read every control the row offers.",
           "Attempt to start checkout from that offer.",
         ],
         expectedBehaviour:
-          "Checkout is refused once the deadline has passed; the offer is treated as expired rather than payable.",
+          "Checkout is refused once the window has passed; the offer is treated as expired rather than payable.",
         expectedUiState:
           "The row reads Expired and offers no checkout control. It must not silently proceed at ₹700.",
         endResult:
@@ -212,7 +213,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         // seed-data/fixtures/money-flows__auction-win-to-payment.mjs and closing
         // ~3 minutes after this batch starts.
         //
-        // It used to cite auction-tester-sandbox-cycle-1, which 46 OTHER
+        // It used to cite auction-beyblade-original-dragoon-storm, which 46 OTHER
         // citations need LIVE — one fixture with two contradictory
         // requirements, so this case could never pass its final step and the
         // rig notes recorded it as unpassable-by-design.
@@ -323,10 +324,10 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         key: "cod-order-places",
         label: "A cash-on-delivery order can be placed and shows the COD fee before confirming",
         roles: ["buyer"],
-        startPage: "/products/product-tester-standard-1",
+        startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Open /products/product-tester-standard-1 and click 'Add to cart'.",
+          "Open /products/product-beyblade-burst-valkyrie and click 'Add to cart'.",
           "Open /checkout and complete the address step.",
           "Continue to the add-ons and fees step.",
           "Select 'Cash on Delivery'.",
@@ -347,7 +348,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/checkout",
         steps: [
-          "Sign in as the buyer ash@pokemonpalace.in with product-tester-standard-2 in the cart.",
+          "Sign in as the buyer ash@pokemonpalace.in with product-beyblade-original-dranzer-s in the cart.",
           "Open /checkout and complete the address step.",
           "Select UPI / manual payment.",
           STEP_PLACE_ORDER,
@@ -390,8 +391,8 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         startPage: "/checkout",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Add product-tester-standard-1 (store-tester-sandbox) to the cart.",
           "Add product-beyblade-burst-valkyrie (store-beyblade-arena) to the cart.",
+          "Add prizedraw-beyblade-mystery-box (store-letitrip-official) to the cart, so the cart spans two sellers.",
           "Open /checkout and reach the payment step.",
           "Write down the exact total and every fee line.",
           STEP_PLACE_ORDER,
@@ -436,10 +437,10 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         key: "out-of-stock-blocked",
         label: "A sold-out item cannot be added to the cart or checked out",
         roles: ["buyer"],
-        startPage: "/products/product-tester-standard-sold",
+        startPage: "/products/product-beyblade-burst-valtryek-v3-sold-out",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Open /products/product-tester-standard-sold, a deliberately sold-out fixture.",
+          "Open /products/product-beyblade-burst-valtryek-v3-sold-out, a deliberately sold-out fixture.",
           "Attempt to add it to the cart.",
         ],
         expectedBehaviour:
@@ -448,35 +449,50 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "The add control is disabled or replaced by a Sold Out state, with the reason stated on the page.",
         endResult:
           "After reloading /cart the item is absent.",
-        href: "/products/product-tester-standard-sold",
+        href: "/products/product-beyblade-burst-valtryek-v3-sold-out",
       },
       {
+        /*
+         * 🛑 THIS CASE MOVED FROM THE CART TO THE BUNDLE EDITOR, 2026-09-15.
+         *
+         * It used to open a deliberately-banned pair of fixtures — two products
+         * in different stores wired into one group — and assert that the cart's
+         * picker refused them. Those fixtures are gone, and no replacement can
+         * be seeded: the guard the case tests is applied at SAVE time, so a
+         * cross-store group cannot exist to be opened.
+         *
+         * The refusal is therefore tested where it actually fires — an admin
+         * ATTEMPTS the banned shape and is refused before it is stored.
+         */
         key: "cross-store-group-refused",
-        label: "A group spanning two stores cannot be added as one cart line",
-        roles: ["buyer"],
-        startPage: "/products/product-tester-crossstore-a",
+        label: "A bundle whose members span two stores is refused when saved",
+        roles: ["admin"],
+        startPage: "/admin/bundles",
         steps: [
-          STEP_SIGNIN_BUYER,
-          "Open /products/product-tester-crossstore-a.",
-          "Open the group picker ('Pick items').",
-          "Attempt to select members and add them to the cart.",
+          "Sign in as admin@letitrip.in / TempPass123!.",
+          "Open /admin/bundles and start a new bundle.",
+          "Name it 'QA cross-store bundle'.",
+          "Add product-beyblade-burst-valkyrie (store-beyblade-arena) as a member.",
+          "Add prizedraw-beyblade-mystery-box (store-letitrip-official) as a second member — a different store.",
+          "Set the bundle price to 1000 and click Save.",
         ],
+        inputs: { bundleName: "QA cross-store bundle", bundlePrice: 1000 },
         expectedBehaviour:
-          "The picker refuses a cross-store selection; an order cannot span two sellers.",
+          "The save is refused because an order belongs to exactly one seller, and a bundle spanning two stores would produce an order containing another seller's product — with no notification, no shipping resolution and no payout for that second seller. The refusal is at save time, not at add-to-cart time, so bundles already stored keep working.",
         expectedUiState:
-          "The picker renders read-only — no quantity column and no 'Add selected to cart' control — and explains that the group spans two stores.",
+          "An error names the two stores, or at least states that a bundle cannot span sellers. The editor stays open with the entered members intact rather than clearing.",
         endResult:
-          "After reloading /cart no line was created.",
-        href: "/products/product-tester-crossstore-a",
+          "After reloading /admin/bundles there is no bundle named 'QA cross-store bundle'.",
+        href: "/admin/bundles",
       },
       {
         key: "classified-has-no-cart",
         label: "A classified listing offers contact, never Add to Cart",
         roles: ["buyer"],
-        startPage: "/classified/classified-tester-sandbox-1",
+        startPage: "/classified/classified-beyblade-stadium-set",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Open /classified/classified-tester-sandbox-1.",
+          "Open /classified/classified-beyblade-stadium-set.",
           "Read every action control on the listing.",
         ],
         expectedBehaviour:
@@ -485,16 +501,16 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Exactly one of 'Make Offer', 'Request to Buy' or a contact-seller control is present. 'Add to Cart' and 'Buy Now' are ABSENT, not disabled.",
         endResult:
           "Nothing is persisted; this is a read-only check of which controls render.",
-        href: "/classified/classified-tester-sandbox-1",
+        href: "/classified/classified-beyblade-stadium-set",
       },
       {
         key: "guest-gated-action-prompts-signin",
         label: "A gated action while signed out prompts sign-in and then completes the original action",
         roles: ["guest"],
-        startPage: "/products/product-tester-standard-1",
+        startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
           "Sign out completely.",
-          "Open /products/product-tester-standard-1.",
+          "Open /products/product-beyblade-burst-valkyrie.",
           "Click the wishlist heart.",
           "Sign in as ash@pokemonpalace.in through the prompt that appears.",
         ],
@@ -504,7 +520,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "A sign-in prompt appears rather than the click doing nothing. After signing in, the heart shows the saved state.",
         endResult:
           "After reloading /wishlist the item is listed.",
-        href: "/products/product-tester-standard-1",
+        href: "/products/product-beyblade-burst-valkyrie",
       },
       {
         key: "banned-account-blocked",

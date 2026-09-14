@@ -28,7 +28,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Resize the browser window to 320 pixels wide.",
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-tester-standard-1 and click 'Add to Cart'.",
+      "Open /products/product-beyblade-burst-valkyrie and click 'Add to Cart'.",
       "Open /checkout, select the first saved address, and continue to the Extras step.",
       "Read the two buttons in the bottom action bar and compare their widths.",
     ],
@@ -46,7 +46,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Resize the browser window to 320 pixels wide.",
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-tester-standard-1 and click 'Add to Cart'.",
+      "Open /products/product-beyblade-burst-valkyrie and click 'Add to Cart'.",
       "Open /checkout and continue through to the payment step.",
       "Read the primary button's label in full.",
       "Select each payment method in turn and read the primary label after each.",

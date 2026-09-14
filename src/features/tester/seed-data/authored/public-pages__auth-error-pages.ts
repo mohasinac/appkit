@@ -111,13 +111,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/checkout",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-tester-standard-1 and click 'Add to Cart'.",
+      "Open /products/product-beyblade-burst-valkyrie and click 'Add to Cart'.",
       "Open /checkout, select the first saved address, continue through the add-ons step, choose Cash on Delivery and place the order.",
       "Read the success page for an order number, the item, the address and the total.",
       "Copy the URL and reload it.",
       "Open the same URL in a private window with no session.",
     ],
-    inputs: { productId: "product-tester-standard-1", price: 199, paymentMethod: "Cash on Delivery" },
+    inputs: { productId: "product-beyblade-burst-valkyrie", price: 199, paymentMethod: "Cash on Delivery" },
     expectedBehaviour:
       "The success page reads the real order rather than whatever the checkout had in memory, so it survives a reload. It is also order-scoped data, so a signed-out visitor with the URL must not be shown someone's delivery address.",
     expectedUiState:

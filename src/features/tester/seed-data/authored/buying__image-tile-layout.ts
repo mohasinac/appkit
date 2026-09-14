@@ -31,20 +31,19 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-image-tile-layout-bundle-member-thumbnails": {
     roles: ["guest"],
-    startPage: "/bundles/bundle-tester-sandbox",
+    startPage: "/bundles/bundle-original-collectors-set",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox content is visible.",
-      "Open /bundles/bundle-tester-sandbox.",
+      "Open /bundles/bundle-original-collectors-set in a private window with no session.",
       "Look at the member collage and count the tiles.",
       "Check each tile shows its member's photograph rather than an empty bordered box.",
       "Compare the tiles' widths against one another.",
       "Hard-reload with Ctrl+Shift+R and look again.",
     ],
-    inputs: { bundleId: "bundle-tester-sandbox", memberCount: 2 },
+    inputs: { bundleId: "bundle-original-collectors-set", memberCount: 3 },
     expectedBehaviour:
       "Each member tile renders its image at its intended size. This collage is one of the twelve surfaces that collapsed at once when a wrapper element appeared between a button and its fill-style image — and it is the surface that stayed broken longest, because a bare display utility on the button voided the primitive's own fix from the call site.",
     expectedUiState:
-      "Two tiles, each showing its member's photo, both the same width. An empty bordered box where a photo should be is the collapse; a tile at a fraction of its neighbour's width is the row-direction failure.",
+      "Three tiles — Dranzer S, Driger V and Storm Pegasus — each showing its member's photo, all the same width. An empty bordered box where a photo should be is the collapse; a tile at a fraction of its neighbour's width is the row-direction failure.",
     expectedData: { blankTiles: 0 },
     endResult: "Read-only; nothing persists.",
   },
@@ -68,10 +67,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-image-tile-layout-bundle-tile-opens-lightbox": {
     roles: ["guest"],
-    startPage: "/bundles/bundle-tester-sandbox",
+    startPage: "/bundles/bundle-original-collectors-set",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /bundles/bundle-tester-sandbox and click a member tile in the collage.",
+      "Open /bundles/bundle-original-collectors-set in a private window with no session and click a member tile in the collage.",
       "Read what opens.",
       "If a lightbox opens, use its next and previous controls and read what changes.",
       "Close it and check the page is unchanged behind it.",

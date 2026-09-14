@@ -33,7 +33,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and read every row's primary label.",
       "Check each names the ITEM rather than only an order identifier.",
       "Find a multi-item order and read how its row summarises the contents.",
@@ -50,7 +50,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and click a row's body away from any control.",
       "Read what opens.",
       "Go back and use the explicit view-details control on the same row.",
@@ -67,7 +67,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and read every tab offered.",
       "Note the unfiltered order count on the All tab.",
       "Open the Auction wins tab and read the count and the rows.",
@@ -86,7 +86,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders on the All tab and note the total count.",
       "Note the count on the Auction wins and Offer wins tabs.",
       "Subtract those two from the total to get the expected Normal count.",
@@ -106,7 +106,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user and find the recent-orders area on the dashboard.",
       "Read each entry and check it names the item rather than only an identifier.",
       "Click one entry and read where it lands.",
@@ -123,7 +123,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and look at every row's thumbnail.",
       "Check each shows a photograph rather than an empty box or a placeholder icon.",
       "Hard-reload with Ctrl+Shift+R and look again.",
@@ -141,7 +141,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and note the unfiltered count.",
       "Read the scope tabs offered and select each, reading the counts.",
       "Read every status filter and select each, noting any that returns nothing.",
@@ -161,7 +161,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a SHIPPED order.",
       "Open its tracking view.",
       "Read every step in the timeline and the date against each.",
@@ -179,7 +179,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open an order paid by cash or UPI awaiting payment.",
       "Read the order detail for a manual-payment panel.",
       "Check it names the payment method, the amount and the deadline.",
@@ -196,7 +196,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open a manual-payment order and follow the control to its payment page.",
       "Read whether the page renders the upload form or tells you no manual payment is required.",
       "Read the UPI identifier displayed and the amount.",
@@ -216,7 +216,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open a manual-payment order's payment page and upload public/test-media/sample-image.png as proof.",
       "Type QATXN552310 as the payment reference and submit.",
       "Read what the page shows immediately afterwards.",
@@ -237,7 +237,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and request a proof re-upload on that order, with the note 'QA Note reupload — the reference is unreadable.'.",
-      "Sign out and sign in as tester@letitrip.in / TempPass123!.",
+      "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and read that order's row and its detail.",
       "Read whether the admin's note is shown to the buyer.",
       "Open the payment page and read whether the upload form is active again and what the deadline shows.",
@@ -257,7 +257,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and find an order whose payment was rejected.",
       "Read its row and its detail.",
       "Check the rejection is stated plainly rather than the order simply reading as cancelled.",

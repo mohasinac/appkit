@@ -69,15 +69,15 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/coupons",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/coupons, find TESTERLIMITED, and read its per-user limit, total limit and current usage.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and place an order applying TESTERLIMITED.",
+      "Open /admin/coupons, find ARENAVIP, and read its per-user limit (1), total limit (50) and current usage (12).",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and place an order of 2 × product-beyblade-original-dranzer-s (₹2,998, above ARENAVIP's ₹2,000 minimum) applying ARENAVIP.",
       "Attempt a second order applying it again and read the refusal.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and apply TESTERLIMITED at checkout.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! and apply ARENAVIP at checkout on the same two items.",
       "Sign back in as admin and read the usage count.",
     ],
-    inputs: { code: "TESTERLIMITED", perUserLimit: 1 },
+    inputs: { code: "ARENAVIP", perUserLimit: 1 },
     expectedBehaviour:
-      "TESTERLIMITED is one use per user with NO total limit, so exhausting it for one buyer must leave it fully usable by the next. Enforcing a per-user limit as if it were global withdraws the coupon from everybody after a single redemption.",
+      "ARENAVIP is one use per user, and its total limit of 50 has 38 uses left — so exhausting it for one buyer must leave it usable by the next. Enforcing a per-user limit as if it were global withdraws the coupon from everybody after a single redemption.",
     expectedUiState:
       "The same buyer's second attempt is refused with a limit message. A DIFFERENT buyer's attempt is accepted. The admin usage count has risen by the number of redemptions, and the coupon still reads as active.",
     expectedData: { perUserLimit: 1 },
@@ -90,7 +90,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and confirm QAADMIN15 has a minimum purchase of 500 and a maximum discount of 200.",
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-tester-standard-3 (₹99) to the cart alone and apply QAADMIN15 at checkout.",
+      "Add product-beyblade-metal-storm-pegasus (₹99) to the cart alone and apply QAADMIN15 at checkout.",
       "Read the refusal and whether it names the required amount.",
       "Add product-beyblade-original-driger-v (₹1,799) so the subtotal clears the minimum, and apply again.",
       "Read the discount amount.",
@@ -125,20 +125,21 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/coupons",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/coupons and find TESTEREXPIRED, reading its end date and its active flag.",
-      "Note that it is still marked active while its end date is in the past.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and apply TESTEREXPIRED at checkout.",
+      "Open /admin/coupons, open SEALED20, and write down its end date.",
+      "Set its end date to yesterday and LEAVE the Active toggle ON, then save — it is now past its end date while still flagged active.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and apply SEALED20 at checkout.",
       "Read the exact wording of the refusal.",
-      "Sign back in as admin, deactivate an ACTIVE coupon, and apply that one as the buyer.",
+      "Sign back in as admin, deactivate BLADER50 without touching its dates, and apply that one as the buyer.",
       "Compare the two refusal messages.",
+      "Sign back in as admin, restore SEALED20's end date and reactivate BLADER50.",
     ],
-    inputs: { expiredCode: "TESTEREXPIRED" },
+    inputs: { expiredCode: "SEALED20", deactivatedCode: "BLADER50" },
     expectedBehaviour:
-      "Expiry and deactivation are two separate reasons and both refuse. TESTEREXPIRED is seeded past its end date while still flagged active precisely so the DATE check is exercised rather than the flag — a validator reading only the flag would accept it.",
+      "Expiry and deactivation are two separate reasons and both refuse. SEALED20 is pushed past its end date while still flagged active precisely so the DATE check is exercised rather than the flag — a validator reading only the flag would accept it.",
     expectedUiState:
       "The expired coupon is refused with a message naming expiry. The deactivated one is refused with a different message. Two identical generic refusals mean only one of the two checks is running.",
     endResult:
-      "Reactivate the coupon that was deactivated. Leaving it off silently breaks every later case that applies it.",
+      "SEALED20's end date is restored and BLADER50 is reactivated by the final step. Leaving either changed silently breaks every later case that applies them.",
   },
   "checklist-admin-coupons-coupon-admin-is-platform-wide": {
     roles: ["admin", "buyer"],

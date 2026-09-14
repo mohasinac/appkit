@@ -54,13 +54,12 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-seo-page-metadata-detail-pages-have-canonical": {
     roles: ["guest"],
-    startPage: "/classified/classified-tester-sandbox-1",
+    startPage: "/classified/classified-beyblade-stadium-set",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox fixtures are visible.",
-      "Open /classified/classified-tester-sandbox-1 and view the page source.",
+      "Open /classified/classified-beyblade-stadium-set in a private window and view the page source.",
       "Search the source for a canonical link element and read its href, or record that there is none.",
-      "Do the same on /digital-codes/digitalcode-tester-sandbox-1.",
-      "Do the same on /live/live-tester-sandbox-1.",
+      "Do the same on /digital-codes/digitalcode-beyblade-x-app-starter-pack.",
+      "Do the same on /live/live-golden-retriever-puppy.",
       "Do the same on an ordinary product page as a control.",
     ],
     expectedBehaviour:
@@ -72,10 +71,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-seo-page-metadata-detail-canonical-uses-slug-not-id": {
     roles: ["guest"],
-    startPage: "/classified/classified-tester-sandbox-1",
+    startPage: "/classified/classified-beyblade-stadium-set",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
-      "Open /classified/classified-tester-sandbox-1 and note the exact path in the address bar.",
+      "Open /classified/classified-beyblade-stadium-set in a private window and note the exact path in the address bar.",
       "View the source and read the canonical's path.",
       "Compare the two paths character for character.",
       "Copy the canonical's URL into a fresh tab and read what loads.",

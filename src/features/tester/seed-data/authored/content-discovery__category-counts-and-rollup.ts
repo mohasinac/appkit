@@ -142,7 +142,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /categories in a private window with no session.",
       "Write down the counts on the first four category tiles.",
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /categories again and read the same four tiles.",
     ],
     expectedBehaviour:

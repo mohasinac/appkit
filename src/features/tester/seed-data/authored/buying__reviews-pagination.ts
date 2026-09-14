@@ -256,14 +256,14 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-empty-state": {
     roles: ["guest"],
-    startPage: "/products/product-tester-standard-3",
+    startPage: "/products/product-beyblade-burst-spryzen-video-demo",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123! so sandbox content is visible.",
-      "Open a product that has no reviews and open its reviews tab.",
+      "Open /products/product-beyblade-burst-spryzen-video-demo in a private window with no session — this listing carries no seeded reviews.",
+      "Open its reviews tab.",
       "Read what is shown.",
       "Check whether a pager, filters or a sort control are rendered over the empty list.",
       "Read the rating summary and check it reads as no reviews rather than zero out of five.",
-      "Apply a filter that matches nothing on a product that DOES have reviews and compare the two empty states.",
+      "Open /products/product-beyblade-original-dranzer-s, which carries 14 seeded reviews, apply a rating filter that matches nothing, and compare the two empty states.",
     ],
     expectedBehaviour:
       "A product with no reviews shows a named empty state, and controls that cannot act on anything are not rendered over it. The two empty states are different facts — 'no reviews yet' invites the buyer to write one, 'no reviews match this filter' invites them to clear it — and one message cannot say both.",

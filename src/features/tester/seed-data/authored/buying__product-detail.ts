@@ -23,9 +23,9 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-product-detail-auction-detail": {
     roles: ["guest"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-original-dragoon-storm",
     steps: [
-      "Open /auctions/auction-tester-sandbox-cycle-1.",
+      "Open /auctions/auction-beyblade-original-dragoon-storm.",
       "Read the countdown beside the 'Place a bid' button.",
       "Wait 3 seconds without touching anything.",
       "Read the countdown again.",
@@ -33,16 +33,16 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The page renders a live auction whose countdown ticks client-side against the stored end date. Auction listings offer bidding, never Add to Cart — the capability is per listing type, not a styling choice. A signed-out visitor sees no bid figures at all: a current bid is a money amount like any other, and the bid panel is replaced rather than shown with the numbers blanked.",
     expectedUiState:
-      "BEFORE: 'Current bid ₹15,000.00' and 'minimum increment ₹1,000.00' were shown to anyone. AFTER: the current-bid line reads 'Sign in to see the current bid', the minimum-increment line is absent, and the bid panel reads 'Bidding is for members' with a 'Sign in to bid' link. The digits 15,000 and 1,000 appear nowhere on the page. The heading names the sandbox auction. A countdown in the shape '47m 06s' or 'Xd Xh Xm Xs' sits next to 'Place a bid', and its seconds figure is lower after the 3-second wait — a frozen countdown is a fail even though the number looks plausible. There is no 'Add to Cart' button anywhere on the page.",
+      "BEFORE: 'Current bid ₹3,499.00' and 'minimum increment ₹200.00' were shown to anyone. AFTER: the current-bid line reads 'Sign in to see the current bid', the minimum-increment line is absent, and the bid panel reads 'Bidding is for members' with a 'Sign in to bid' link. The digits 3,499 and 200 appear nowhere on the page. The heading reads 'Beyblade Original — Dragoon Storm (Rare Sealed)'. A countdown in the shape '47m 06s' or 'Xd Xh Xm Xs' sits next to 'Place a bid', and its seconds figure is lower after the 3-second wait — a frozen countdown is a fail even though the number looks plausible. There is no 'Add to Cart' button anywhere on the page.",
     endResult:
       "Nothing persists — bid state and end time are read from the server on each load. The seconds figure moving is the whole check.",
   },
   "checklist-buying-product-detail-auction-detail-bid-signed-in": {
     roles: ["buyer"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-original-dragoon-storm",
     steps: [
       "Sign in as a buyer.",
-      "Open /auctions/auction-tester-sandbox-cycle-1.",
+      "Open /auctions/auction-beyblade-original-dragoon-storm.",
       "Read the current bid, the minimum increment and the bid panel.",
     ],
     expectedBehaviour:
@@ -54,24 +54,24 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-bundle-purchase": {
     roles: ["buyer"],
-    startPage: "/bundles/bundle-tester-sandbox",
+    startPage: "/bundles/bundle-original-collectors-set",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /bundles/bundle-tester-sandbox.",
+      "Open /bundles/bundle-original-collectors-set.",
       "Click 'Buy now'.",
       "On the checkout address step, select the first saved address, or add one named 'QA Address bundle-purchase' if none exists.",
       "Continue to the payment step and choose Cash on Delivery.",
       "Place the order.",
       "Open /user/orders and open the order just created.",
     ],
-    inputs: { bundleId: "bundle-tester-sandbox", bundlePrice: 199, paymentMethod: "Cash on Delivery" },
+    inputs: { bundleId: "bundle-original-collectors-set", bundlePrice: 2999, memberTotal: 4597, paymentMethod: "Cash on Delivery" },
     expectedBehaviour:
-      "The bundle is charged at its own locked price of ₹199, not the ₹348 sum of its two members, and the receipt collapses the members back into one line. A bundle is all-or-nothing: the buyer never chose which parts to include, so presenting them as separate purchasable lines would misrepresent what was bought.",
+      "The bundle is charged at its own locked price of ₹2,999, not the ₹4,597 sum of its three members, and the receipt collapses the members back into one line. A bundle is all-or-nothing: the buyer never chose which parts to include, so presenting them as separate purchasable lines would misrepresent what was bought.",
     expectedUiState:
-      "The order detail page shows ONE line reading 'Test Bundle' at ₹199.00. It does not show 'Test Gadget — Standard Listing #1' and 'Test Collectible — Standard Listing #2' as two rows, and the total is not ₹348. A 'What's included' expander beneath the line is fine — that is detail, not a second line.",
-    expectedData: { orderLineCount: 1, lineTotal: 199 },
+      "The order detail page shows ONE line reading 'Original Collector's Set' at ₹2,999.00. It does not show 'Beyblade Original — Dranzer S', 'Beyblade Original — Driger V' and 'Beyblade Metal Storm Pegasus' as three rows, and the total is not ₹4,597. A 'What's included' expander beneath the line is fine — that is detail, not a second line.",
+    expectedData: { orderLineCount: 1, lineTotal: 2999 },
     endResult:
-      "Reloading the order still shows the single 'Test Bundle' line at ₹199.00. A total of ₹348 means the bundle discount was thrown away at checkout.",
+      "Reloading the order still shows the single 'Original Collector's Set' line at ₹2,999.00. A total of ₹4,597 means the bundle discount was thrown away at checkout.",
   },
   "checklist-buying-product-detail-classified-buy-request-pinned-to-price": {
     roles: ["buyer"],
@@ -132,10 +132,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-digitalcode-delivery": {
     roles: ["buyer"],
-    startPage: "/digital-codes/digitalcode-tester-sandbox-1",
+    startPage: "/digital-codes/digitalcode-beyblade-x-app-starter-pack",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /digital-codes/digitalcode-tester-sandbox-1.",
+      "Open /digital-codes/digitalcode-beyblade-x-app-starter-pack.",
       "Click 'Buy Now'.",
       "On the checkout address step, select the first saved address.",
       "Continue to the payment step and choose Cash on Delivery.",
@@ -143,9 +143,9 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /user/orders and open the order just created.",
       "Reload the order page.",
     ],
-    inputs: { productId: "digitalcode-tester-sandbox-1", price: 99, paymentMethod: "Cash on Delivery" },
+    inputs: { productId: "digitalcode-beyblade-x-app-starter-pack", price: 199, codesAvailable: 25, paymentMethod: "Cash on Delivery" },
     expectedBehaviour:
-      "This fixture is auto-claim, so the code is allocated and delivered as soon as the order is confirmed, with no seller action in between. The pool's remaining count drops by one.",
+      "This fixture is auto-claim, so the code is allocated and delivered as soon as the order is confirmed, with no seller action in between. The pool's remaining count drops by one. The listing advertises 25 codes on the product document, but the codes themselves live in a subcollection the seed does not write — so the pool must be stocked first from the seller's Digital Content pool manager on /store/products, or the purchase completes and delivers nothing, which is the exact defect this case exists to catch.",
     expectedUiState:
       "The order page shows a digital-code panel containing an actual code string that can be selected and copied. It does not read 'Pending delivery' or 'Waiting for seller' — for an auto-claim listing those states mean the delivery never fired.",
     expectedData: { codeDelivered: true },
@@ -154,9 +154,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-grouped-listings-carousel-on-detail": {
     roles: ["guest"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
-      "Open /products/product-tester-standard-1.",
+      "Open /products/product-beyblade-burst-valkyrie.",
       "Scroll past the description tab and past the 'More in this category' and 'More by' carousels.",
       "Read the heading of the themed carousel below them.",
       "Click the first card in that carousel.",
@@ -164,14 +164,14 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The grouped-listings carousel is a distinct section from the four related-items carousels — it is fed by the groupedListings collection, not by category/brand/tag/store similarity — and each card links to its own detail page.",
     expectedUiState:
-      "A carousel with a theme heading (the group's own name, e.g. 'From the same set') sits below the related-items sections. Every card shows a real title and a rendered image tile, not a placeholder or a spinner. Clicking the first card lands on that product's detail page — /products/product-tester-standard-2 or similar — not back on the current page.",
+      "A carousel with a theme heading — the group's own name, such as 'Burst & X Attackers You Might Like' — sits below the related-items sections. Every card shows a real title and a rendered image tile, not a placeholder or a spinner. Clicking the first card lands on another member's detail page — /products/product-beyblade-burst-regalia-genesis, /products/product-beyblade-x-wizard-arrow or /products/product-beyblade-x-knife-shinobi — not back on the current page.",
     endResult: "Nothing persists — read-only navigation.",
   },
   "checklist-buying-product-detail-image-gallery": {
     roles: ["guest"],
-    startPage: "/auctions/auction-tester-sandbox-cycle-1",
+    startPage: "/auctions/auction-beyblade-original-dragoon-storm",
     steps: [
-      "Open /auctions/auction-tester-sandbox-cycle-1.",
+      "Open /auctions/auction-beyblade-original-dragoon-storm.",
       "Look at every thumbnail in the strip below the main image.",
       "Hard-reload with Ctrl+Shift+R and look at the strip again.",
       "Hard-reload twice more, looking at the strip each time.",
@@ -204,9 +204,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-live-item-detail": {
     roles: ["guest"],
-    startPage: "/live/live-tester-sandbox-1",
+    startPage: "/live/live-golden-retriever-puppy",
     steps: [
-      "Open /live/live-tester-sandbox-1.",
+      "Open /live/live-golden-retriever-puppy.",
       "Read the heading, the species line, the price area and the delivery restrictions.",
       "Look at the gallery thumbnail strip.",
     ],
@@ -247,9 +247,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-preorder-detail": {
     roles: ["guest"],
-    startPage: "/pre-orders/preorder-tester-sandbox-1",
+    startPage: "/pre-orders/preorder-beyblade-x-bx-08-wave",
     steps: [
-      "Open /pre-orders/preorder-tester-sandbox-1.",
+      "Open /pre-orders/preorder-beyblade-x-bx-08-wave.",
       "Read the heading, the price area, the status badge and the delivery line.",
       "Read the note beside the 'Reserve Now' button.",
     ],
@@ -261,10 +261,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-prizedraw-buy-reveal": {
     roles: ["buyer"],
-    startPage: "/prize-draws/prizedraw-tester-sandbox-1",
+    startPage: "/prize-draws/prizedraw-beyblade-mystery-box",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /prize-draws/prizedraw-tester-sandbox-1.",
+      "Open /prize-draws/prizedraw-beyblade-mystery-box.",
       "Click 'Buy now'.",
       "On the checkout address step, select the first saved address.",
       "Continue to the payment step and choose Cash on Delivery.",
@@ -272,7 +272,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /user/orders and open the order just created.",
       "Reload the page.",
     ],
-    inputs: { productId: "prizedraw-tester-sandbox-1", entries: 1, pricePerEntry: 50 },
+    inputs: { productId: "prizedraw-beyblade-mystery-box", entries: 1, pricePerEntry: 99, slotsRemaining: 4 },
     expectedBehaviour:
       "This fixture is instant-reveal, so the prize is drawn and assigned at confirmation rather than held until a scheduled close. The draw's remaining entry count drops by one.",
     expectedUiState:
@@ -282,23 +282,29 @@ export const authored: Record<string, AuthoredCase> = {
       "Reloading the order shows the same prize. A prize that changes on reload was never persisted and was being drawn per render.",
   },
   "checklist-buying-product-detail-product-group-set-widget": {
-    roles: ["guest"],
-    startPage: "/products/product-tester-standard-1",
+    roles: ["seller", "guest"],
+    startPage: "/store/products",
     steps: [
-      "Open /products/product-tester-standard-1.",
-      "Scroll to the 'Part of / Parts in this group' panel.",
-      "Click its expand control.",
-      "Read the member list.",
+      "Sign in as tyson@beybladearena.in / TempPass123!, the owner of store-beyblade-arena.",
+      "Open /store/products and edit product-beyblade-burst-valkyrie.",
+      "In the group settings panel, make it a group parent titled 'QA Set valkyrie-lineage' and add product-beyblade-burst-regalia-genesis as a member, then save.",
+      "Open /products/product-beyblade-burst-valkyrie and scroll to the 'Part of / Parts in this group' panel.",
+      "Click its expand control and read the member list.",
       "Click 'View whole group'.",
-      "Close what opens, then open /products/product-tester-standard-2 and expand the same panel.",
-      "Open /products/group-tester-sandbox-bundle and expand the same panel.",
+      "Close what opens, then open /products/product-beyblade-burst-regalia-genesis and expand the same panel.",
     ],
+    inputs: {
+      parent: "product-beyblade-burst-valkyrie",
+      child: "product-beyblade-burst-regalia-genesis",
+      groupTitle: "QA Set valkyrie-lineage",
+    },
     expectedBehaviour:
-      "The group panel appears on the parent and on both children, because membership is symmetric — a child knows its groupId and the parent knows its child slugs. A panel that renders only on the parent means the children's side of the link was never written.",
+      "The group panel appears on the parent and on the child, because membership is symmetric — a child knows its groupId and the parent knows its child slugs. A panel that renders only on the parent means the children's side of the link was never written. The group is BUILT by this case rather than read from the seed: no seeded product carries groupId, isGroupParent or groupChildSlugs, so there is no fixture to read.",
     expectedUiState:
-      "The panel is present on all three pages. Its expand control renders as a real triangle or chevron glyph, not a literal character like '▸' rendered at font-fallback size and not a missing box. Expanded, it lists 'Test Gadget — Standard Listing #1' and 'Test Collectible — Standard Listing #2' with image tiles. 'View whole group' opens a modal or drawer showing both members.",
+      "The panel is present on both pages. Its expand control renders as a real triangle or chevron glyph, not a literal character like '▸' rendered at font-fallback size and not a missing box. Expanded, it lists 'Beyblade Burst B-01 Valkyrie' and 'Beyblade Burst B-135 Regalia Genesis' with image tiles. 'View whole group' opens a modal or drawer showing both members.",
     expectedData: { groupMemberCount: 2 },
-    endResult: "Nothing persists — read-only panel.",
+    endResult:
+      "Clear the group settings on both listings afterwards so the seeded catalogue is left as it was. A panel that survives on the parent but never appeared on the child is the failure.",
   },
   "checklist-buying-product-detail-related-listings-sections": {
     roles: ["guest"],
@@ -331,9 +337,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-standard-detail": {
     roles: ["guest"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
-      "Open /products/product-tester-standard-1 in a private window with no session.",
+      "Open /products/product-beyblade-burst-valkyrie in a private window with no session.",
       "Read the heading, the price area, the stock badge and the description.",
       "Read the category and brand links below the heading.",
       "Read the seller line at the bottom of the info panel.",
@@ -341,16 +347,16 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A standard listing renders every panel a buyer needs to decide, and the purchase actions are present but inert for a signed-out visitor rather than absent — a missing button reads as a broken page, a disabled one reads as a prompt to sign in. The PRICE is not shown to a signed-out visitor at all: the catalogue must not be readable at scale without an account.",
     expectedUiState:
-      "BEFORE: the price area read '₹199.00'. AFTER: it reads 'Sign in to see price' and is a link to /auth/login; the digits 199 appear nowhere on the page. Heading 'Test Gadget — Standard Listing #1'. Stock badge in the shape '✓ In Stock — only 10 left' (stock is not an amount and is still shown). 'Buy Now', 'Add to Cart' and 'Add to Wishlist' are visible and disabled. Category links 'Test Gadgets' and 'Tester Sandbox' and brand link 'TestBrand' appear below the heading. A description paragraph is present. 'Sold by Tester Sandbox Store' with a 'Visit Store →' link is shown.",
+      "BEFORE: the price area read '₹999.00'. AFTER: it reads 'Sign in to see price' and is a link to /auth/login; the digits 999 appear nowhere on the page. Heading 'Beyblade Burst B-01 Valkyrie'. Stock badge in the shape '✓ In Stock — only 10 left' (stock is not an amount and is still shown). 'Buy Now', 'Add to Cart' and 'Add to Wishlist' are visible and disabled. Category link 'Superking' and brand link 'Beyblade' appear below the heading. A description paragraph is present. 'Sold by Beyblade Arena' with a 'Visit Store →' link is shown.",
     expectedData: { stockQuantity: 10 },
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-price-does-not-flash-sign-in-prompt-on-hard-reload": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Sign in as a buyer.",
-      "Open /products/product-tester-standard-1 and confirm the price reads ₹199.00.",
+      "Open /products/product-beyblade-burst-valkyrie and confirm the price reads ₹999.00.",
       "Press Ctrl+Shift+R (hard reload) and watch the price area continuously from the moment the page starts painting.",
       "Repeat the hard reload twice more, watching the same area.",
       "Throttle the network to 'Slow 3G' in the browser's network panel and hard-reload once more, watching the price area throughout.",
@@ -358,41 +364,42 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "While the session is still resolving the price area shows a neutral placeholder, never the sign-in prompt. The prompt means 'you are signed out', and the session provider starts every hard load with no user and resolves asynchronously — so a two-state gate tells a signed-in buyer they are signed out on every single page load. The throttled reload is the real test: at full speed the window can be too short to see.",
     expectedUiState:
-      "Across all four reloads the price area goes from blank-or-placeholder straight to '₹199.00'. The text 'Sign in to see price' NEVER appears, not even for one frame, and most visibly not on the throttled load. A flash of the prompt before the price settles is the failure — the end state being correct does not pass this case.",
+      "Across all four reloads the price area goes from blank-or-placeholder straight to '₹999.00'. The text 'Sign in to see price' NEVER appears, not even for one frame, and most visibly not on the throttled load. A flash of the prompt before the price settles is the failure — the end state being correct does not pass this case.",
     expectedData: { promptFlashes: 0 },
     endResult: "Read-only; restore the network throttle to 'No throttling' afterwards.",
   },
   "checklist-buying-product-detail-standard-detail-price-signed-in": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Sign in as a buyer.",
-      "Open /products/product-tester-standard-1.",
+      "Open /products/product-beyblade-burst-valkyrie.",
       "Read the price area.",
     ],
     expectedBehaviour:
       "The twin of the guest case above. Gating the price must not lose coverage of the price itself — a signed-in buyer sees the real amount, formatted as currency, with no sign-in prompt anywhere on the page.",
     expectedUiState:
-      "The price area reads '₹199.00'. The text 'Sign in to see price' appears nowhere on the page.",
-    expectedData: { price: 199 },
+      "The price area reads '₹999.00'. The text 'Sign in to see price' appears nowhere on the page.",
+    expectedData: { price: 999 },
     endResult: "Nothing persists — read-only.",
   },
   "checklist-buying-product-detail-tester-fixtures-hidden-from-the-public": {
-    roles: ["guest", "buyer"],
+    roles: ["guest", "admin"],
     startPage: "/products",
     steps: [
       "Open a private/incognito window with no session and open /products.",
-      "Read every card title on the grid and every card's URL slug, looking for the word 'Tester' or 'tester'.",
+      "Read every card title on the grid and every card's URL slug, looking for the word 'Probe', 'probe', 'Tester' or 'tester'.",
       "Page through the grid to the end, reading titles the same way.",
-      "In a normal window, sign in as tester@letitrip.in / TempPass123!.",
-      "Open /products and read the card titles again.",
+      "Do the same on /auctions, paging to the end.",
+      "In a normal window, sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/products, filter by title for 'Probe', and read how many rows come back.",
     ],
     expectedBehaviour:
-      "Sandbox rows are filtered out of every public read in the application layer, not by a Firestore query — an inequality on isTestData would exclude every document that lacks the field, which is all the real content, and the page would show ONLY test data. Signed in as a tester, the same page includes them.",
+      "Rows carrying isTestData are filtered out of every public read in the application layer, not by a Firestore query — an inequality on isTestData would exclude every document that lacks the field, which is all the real content, and the page would show ONLY test data. The admin half is the control: it proves such rows EXIST while the run is in progress, so their absence from the public grid is a filter doing work rather than an empty collection.",
     expectedUiState:
-      "Private window: not one card title contains 'Tester' and not one slug contains 'tester', on any page of the grid. Signed in as the tester: sandbox items such as 'Test Gadget — Standard Listing #1' are present.",
+      "Private window: not one card title or slug on any page of /products or /auctions carries 'Probe' or 'Tester'. Signed in as admin on /admin/products: the per-batch probe rows seeded for this run ARE listed. A zero count on both sides proves nothing and must be answered null.",
     endResult:
-      "Nothing persists — the rule is applied per request. Reading only the first page is not enough; a leak on page three is still a leak.",
+      "Nothing persists — the rule is applied per request. Reading only the first page is not enough; a leak on page three is still a leak. The permanent sandbox catalogue was removed, so the only isTestData rows are the per-batch fixtures a run creates while it is running.",
   },
   "checklist-buying-product-detail-unreachable-image-degrades-to-placeholder": {
     roles: ["guest"],

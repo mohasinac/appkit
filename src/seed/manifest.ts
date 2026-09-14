@@ -64,20 +64,8 @@ import { productFeaturesSeedData } from "./product-features-seed-data";
 import { offersSeedData } from "./offers-seed-data";
 import { couponUsageSeedData } from "./coupon-usage-seed-data";
 import { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
-// Tester sandbox seed fixtures live in ../features/tester/seed-data (isolated on purpose).
-import {
-  testerChecklistSeedData,
-  storesTesterSeedData,
-  categoriesTesterSeedData,
-  productsTesterSeedData,
-  blogTesterSeedData,
-  eventsTesterSeedData,
-  couponsTesterSeedData,
-  bidsTesterSeedData,
-  cartsTesterSeedData,
-  ordersTesterSeedData,
-  offersTesterSeedData,
-} from "../features/tester/seed-data";
+// Tester checklist seed data lives in ../features/tester/seed-data (isolated on purpose).
+import { testerChecklistSeedData } from "../features/tester/seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -130,7 +118,7 @@ const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
 };
 
 export const SEED_MANIFEST: SeedManifest = {
-  categories: pick([...asArr(categoriesSeedData), ...asArr(categoriesTesterSeedData)]),
+  categories: pick(asArr(categoriesSeedData)),
   users: pick(
     asArr(usersSeedData).map((u) => ({
       ...u,
@@ -138,7 +126,7 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   stores: pick(
-    [...asArr(storesSeedData), ...asArr(storesTesterSeedData)].map((s) => ({
+    asArr(storesSeedData).map((s) => ({
       ...s,
       name: s.storeName ?? s.id,
     })),
@@ -154,7 +142,6 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsLiveItemsSeedData),
       ...asArr(productsArtSeedData),
       ...asArr(productsStickersSeedData),
-      ...asArr(productsTesterSeedData),
     ].map((p) => ({
       ...p,
       type:
@@ -164,11 +151,11 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
     "title",
   ),
-  orders: pick([...asArr(ordersSeedData), ...asArr(ordersTesterSeedData)]),
+  orders: pick(asArr(ordersSeedData)),
   reviews: pick(asArr(reviewsSeedData), "title"),
-  bids: pick([...asArr(bidsSeedData), ...asArr(bidsTesterSeedData)]),
+  bids: pick(asArr(bidsSeedData)),
   coupons: pick(
-    [...asArr(couponsSeedData), ...asArr(couponsTesterSeedData)].map((c) => ({
+    asArr(couponsSeedData).map((c) => ({
       ...c,
       name: c.code ?? c.id,
     })),
@@ -211,13 +198,13 @@ export const SEED_MANIFEST: SeedManifest = {
   shipmentItems: pick(asArr(shipmentItemsSeedData), "title"),
   catalogueItems: pick(asArr(catalogueSeedData), "title"),
   blogPosts: pick(
-    [...asArr(blogPostsSeedData), ...asArr(blogTesterSeedData)].map((p) => ({
+    asArr(blogPostsSeedData).map((p) => ({
       ...p,
       name: p.title ?? p.id,
     })),
   ),
   events: pick(
-    [...asArr(eventsSeedData), ...asArr(eventsTesterSeedData)].map((e) => ({
+    asArr(eventsSeedData).map((e) => ({
       ...e,
       name: e.title ?? e.id,
     })),
@@ -249,7 +236,7 @@ export const SEED_MANIFEST: SeedManifest = {
     ],
   ),
   carts: pick(
-    [...asArr(cartsSeedData), ...asArr(cartsTesterSeedData)].map((c) => ({
+    asArr(cartsSeedData).map((c) => ({
       ...c,
       name: c.userId ?? c.id,
     })),
@@ -291,7 +278,7 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   offers: pick(
-    [...asArr(offersSeedData), ...asArr(offersTesterSeedData)].map((o) => ({
+    asArr(offersSeedData).map((o) => ({
       ...o,
       name: o.productTitle ?? o.id,
     })),

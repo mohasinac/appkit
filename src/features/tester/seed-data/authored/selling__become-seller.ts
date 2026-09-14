@@ -63,7 +63,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller"],
     startPage: "/store",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!, whose tester flag auto-approves their store.",
+      "Sign in as tyson@beybladearena.in / TempPass123!, whose store-beyblade-arena is approved and public.",
       "Open /store and read the dashboard.",
       "Open the store's own settings and read its name, description, logo and banner.",
       "Change the description to 'QA Store store-setup description' and save.",
@@ -73,7 +73,7 @@ export const authored: Record<string, AuthoredCase> = {
     ],
     inputs: { description: "QA Store store-setup description" },
     expectedBehaviour:
-      "A tester's store is approved on both documents at once — the user record's status AND the store's own status and public flag. Flipping only the user's leaves the seller with a working dashboard and a store invisible to the public, because every visibility check reads the store's own status.",
+      "An approved store is approved on both documents at once — the user record's status AND the store's own status and public flag. Flipping only the user's leaves the seller with a working dashboard and a store invisible to the public, because every visibility check reads the store's own status. That is why this case reads the PUBLIC page and not only the dashboard.",
     expectedUiState:
       "The dashboard loads rather than showing a pending-approval gate. The edited description survives the reload AND appears on the public store page. A description that saves in the dashboard but never reaches the public page means the store is not actually public.",
     endResult:

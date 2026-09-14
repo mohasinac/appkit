@@ -52,7 +52,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/cart",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!, whose seeded cart holds a locked won-auction line and a locked accepted-offer line alongside ordinary items.",
       "Open /cart and click the 'Won Auctions' tab.",
       "Click 'Proceed to checkout' from that tab.",
       "Read the whole checkout page, looking for a coupon input and the 'How coupons work' panel.",
@@ -65,7 +65,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedUiState:
       "Neither lane shows a coupon input or a 'How coupons work' panel. Each shows an explanatory banner in the shape of 'You're paying for your Auction wins. The price is already agreed, so coupons don't apply and the rest of your cart stays where it is.'",
     endResult:
-      "Display-only; nothing persists. Requires the tester account to hold a won auction and an accepted offer, both of which the sandbox seeds.",
+      "Display-only; nothing persists. Requires the account to hold a won auction and an accepted offer; the seeded cart for rehan.sheikh@gmail.com holds both.",
   },
   "checklist-buying-buying-coupons-coupon-category-restriction-accepts-matching-cart": {
     roles: ["buyer"],
@@ -109,7 +109,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123! in window A.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
       "Open /checkout, complete the address and add-ons steps, type ARENA25 in the coupon field and click 'Apply'.",
       "Read the ARENA25 discount amount and the order total, and leave the page open without reloading it.",
       "In window B, sign in as admin@letitrip.in / TempPass123! and open /admin/coupons.",
@@ -131,7 +131,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
       "Open /cart and find the Order Summary panel.",
       "Read the collapsed disclosure labelled 'How coupons work' with its 'Stacking rules' sub-label.",
       "Click that disclosure header.",
@@ -149,7 +149,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
       "Open /checkout and complete the address and add-ons steps.",
       "Find the coupon input and the 'How coupons work' panel beneath it.",
       "Click the disclosure header.",
@@ -202,7 +202,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type ARENA25 in the coupon field and click 'Apply'.",
       "Type FREESHIP499 in the coupon field and click 'Apply'.",
@@ -268,7 +268,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type ARENA25 in the coupon field and click 'Apply'.",
       "Type ARENA25 in the coupon field again and click 'Apply'.",
@@ -396,19 +396,19 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["admin", "buyer"],
     startPage: "/admin/coupons",
     steps: [
-      "Sign in as claude-tester@letitrip.in / TempPass123!, which carries canTestAdmin.",
-      "Open /admin/coupons, find TESTERLIMITED, and write down its current usage count.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
-      "Open /checkout, complete the address and add-ons steps, type TESTERLIMITED in the coupon field, click 'Apply', and place the order with Cash on Delivery.",
-      "Open /admin/coupons and read TESTERLIMITED's usage count again.",
-      "Add product-beyblade-metal-storm-pegasus (₹1,299) to the cart.",
-      "Open /checkout, complete the address and add-ons steps, type TESTERLIMITED in the coupon field, and click 'Apply'.",
+      "Sign in as admin@letitrip.in / TempPass123!, which can read /admin/coupons and buy.",
+      "Open /admin/coupons, find ARENAVIP, and write down its current usage count.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
+      "Open /checkout, complete the address and add-ons steps, type ARENAVIP in the coupon field, click 'Apply', and place the order with Cash on Delivery.",
+      "Open /admin/coupons and read ARENAVIP's usage count again.",
+      "Add 2 × product-beyblade-metal-storm-pegasus (₹1,299 each, ₹2,598 total) to the cart.",
+      "Open /checkout, complete the address and add-ons steps, type ARENAVIP in the coupon field, and click 'Apply'.",
     ],
-    inputs: { coupon: "TESTERLIMITED", perUserLimit: 1, discountPercent: 10, maxDiscount: 100 },
+    inputs: { coupon: "ARENAVIP", perUserLimit: 1, discountPercent: 15, maxDiscount: 750, minPurchase: 2000 },
     expectedBehaviour:
-      "Redemption is counted per user as well as globally, and the per-user count is written at checkout as a side effect of applying the coupon. TESTERLIMITED is perUserLimit 1 with no total limit, so this case is about per-user exhaustion: the SAME buyer's second attempt is refused while the coupon itself stays live for everyone else.",
+      "Redemption is counted per user as well as globally, and the per-user count is written at checkout as a side effect of applying the coupon. ARENAVIP is perUserLimit 1 against a totalLimit of 50 with only 12 used, so this case is about per-user exhaustion rather than the coupon running out: the SAME buyer's second attempt is refused while the coupon itself stays live for everyone else.",
     expectedUiState:
-      "The usage count in /admin/coupons is exactly one higher after the order. The second apply, by the same account, is refused with a limit-reached message and TESTERLIMITED does not enter the applied list. The coupon still shows as active in the admin list — it is exhausted for this user, not withdrawn.",
+      "The usage count in /admin/coupons is exactly one higher after the order. The second apply, by the same account, is refused with a limit-reached message and ARENAVIP does not enter the applied list. The coupon still shows as active in the admin list — it is exhausted for this user, not withdrawn.",
     expectedData: { perUserLimit: 1, usageIncrement: 1 },
     endResult:
       "The incremented count persists in /admin/coupons after a reload. A count that does not move means the per-user usage write is fire-and-forget and failed silently.",
@@ -419,7 +419,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "Open /promotions, click the 'Coupons' tab, and claim ARENA25.",
-      "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
+      "Add 2 × product-beyblade-original-driger-v (₹1,799 each, ₹3,598 total) to the cart — ARENAVIP needs a ₹2,000 minimum and a Beyblade Original or Metal category.",
       "Open /user/coupons.",
       "Click 'Use' on the ARENA25 row.",
       "Read where the browser lands and what the coupon section shows.",

@@ -104,17 +104,17 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/sitemap.xml",
     steps: [
-      "Open /sitemap.xml and search for 'tester-sandbox'.",
-      "Search for 'tester-qa'.",
+      "Open /sitemap.xml and search for 'sandbox'.",
+      "Search for 'qa-'.",
       "Search for 'test-' as a looser check.",
       "Record any match with its full URL.",
       "Open one matched URL, if any, and read what it serves.",
     ],
     expectedBehaviour:
-      "Sandbox fixtures are wiped and re-seeded on every tester run, so a sitemap entry for one is a URL that repeatedly disappears. Test data is filtered out of every public read for the same reason it must be filtered here.",
+      "A row flagged isTestData is wiped and re-seeded whenever fixtures are refreshed, so a sitemap entry for one is a URL that repeatedly disappears. Test data is filtered out of every public read for the same reason it must be filtered here.",
     expectedUiState:
-      "No sandbox id appears in the sitemap. A match is a finding, and if the URL currently loads that makes it worse rather than better — it means sandbox content is publicly indexable.",
-    expectedData: { sandboxUrlsInSitemap: 0 },
+      "No test-flagged id appears in the sitemap. A match is a finding, and if the URL currently loads that makes it worse rather than better — it means test content is publicly indexable.",
+    expectedData: { testUrlsInSitemap: 0 },
     endResult: "Read-only.",
   },
 };

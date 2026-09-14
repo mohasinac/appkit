@@ -4,8 +4,8 @@
  * THE PROBLEM THIS SOLVES
  *
  * `winning-bid-recorded` ends with "Wait past the auction end time, reloading
- * the page" — it must watch an auction CLOSE. It cited
- * `auction-tester-sandbox-cycle-1`, which 46 other citations need LIVE. One
+ * the page" — it must watch an auction CLOSE. It cited the then-shared cycle
+ * auction, which 46 other citations need LIVE. One
  * fixture, two contradictory requirements: extending it served 21 of the 22
  * cases and made this one permanently unpassable, which the rig notes recorded
  * as a fixture-design problem rather than a product defect.

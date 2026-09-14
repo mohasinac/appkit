@@ -107,8 +107,8 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller"],
     startPage: "/store/products",
     steps: [
-      "Sign in as the bot seller claude-tester@letitrip.in / TempPass123! (its store is empty).",
-      "In a second tab open /products and copy the slug of any listing belonging to Beyblade Arena.",
+      "Sign in as admin@letitrip.in / TempPass123!, who owns store-letitrip-official — a different store from Beyblade Arena.",
+      "In a second tab open /products and copy the slug of any listing belonging to Beyblade Arena, e.g. product-beyblade-burst-valkyrie.",
       "Back in the first tab, navigate to /store/products/<that slug>/edit.",
       "Read what the page shows.",
     ],

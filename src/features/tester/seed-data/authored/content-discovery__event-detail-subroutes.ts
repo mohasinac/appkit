@@ -51,7 +51,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/events",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-favourite-blader-poll.",
       "Open its Participate tab.",
       "Submit the first available option.",
@@ -71,7 +71,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/events",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123! and open /events/event-favourite-blader-poll.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123! and open /events/event-favourite-blader-poll.",
       "Participate once if you have not already.",
       "Reload, and try to participate a second time with a different option.",
       "Read what happens.",
@@ -90,17 +90,17 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events/event-tester-sandbox-top-scorers and open its Leaderboard tab.",
-      "Read the score beside each of the first five rows.",
-      "Check that the scores are in descending order.",
+      "Open /events/event-favourite-blader-poll and open its Leaderboard tab.",
+      "Read the number beside each of the first five rows — the vote or score the row is ranked on.",
+      "Check that those numbers are in descending order.",
       "Read the total entry count the event reports.",
       "Count the rows the leaderboard lists, paging if needed.",
     ],
-    inputs: { eventId: "event-tester-sandbox-top-scorers" },
+    inputs: { eventId: "event-favourite-blader-poll" },
     expectedBehaviour:
-      "The leaderboard orders by a stored score and covers the same entries the event counts. A ranking that is merely insertion order looks correct whenever the data happens to arrive sorted, so the descending check has to be explicit.",
+      "The leaderboard orders by a stored number and covers the same entries the event counts. A ranking that is merely insertion order looks correct whenever the data happens to arrive sorted, so the descending check has to be explicit.",
     expectedUiState:
-      "Scores descend down the list, and the number of entries listed matches the count the event reports.",
+      "The numbers descend down the list, and the number of entries listed matches the count the event reports. A leaderboard showing no number at all beside each row is the failure — there is then nothing it can be ranking by.",
     expectedData: { scoresDescending: true },
     endResult: "Nothing is changed; this case only reads.",
   },
@@ -144,7 +144,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/events",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-x-launch-raffle-cancelled — a CANCELLED raffle.",
       "Read the event header for its status.",
       "Open the Participate tab.",

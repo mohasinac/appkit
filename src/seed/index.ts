@@ -186,8 +186,9 @@ export { historySeedData } from "./history-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
-// Tester sandbox seed fixtures live in ../features/tester/seed-data (isolated from this
-// folder on purpose) — re-exported here so every other seed consumer keeps one import surface.
+// Tester checklist/response seed data lives in ../features/tester/seed-data (isolated from
+// this folder on purpose) — re-exported here so every other seed consumer keeps one import
+// surface.
 export {
   testerChecklistSeedData,
   // 🛑 Adding a tester seed export means FOUR hops, not one: the tester barrel,
@@ -195,15 +196,6 @@ export {
   // middle two is silent — seed-cli logs "no seed data, skipping" and the run
   // continues, which is exactly what happened on the first attempt here.
   testerResponsesSeedData,
-  storesTesterSeedData,
-  categoriesTesterSeedData,
-  productsTesterSeedData,
-  blogTesterSeedData,
-  eventsTesterSeedData,
-  couponsTesterSeedData,
-  bidsTesterSeedData,
-  cartsTesterSeedData,
-  ordersTesterSeedData,
 } from "../features/tester/seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
 export { offersSeedData } from "./offers-seed-data";

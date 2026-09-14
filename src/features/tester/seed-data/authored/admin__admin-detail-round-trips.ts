@@ -92,21 +92,23 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/users",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/users and find the account claude-tester@letitrip.in.",
-      "Open its Edit action and write down whether the tester flags are on.",
+      "Open /admin/users and find the account rehan.sheikh@gmail.com.",
+      "Open its Edit action, turn BOTH tester flags on, and save — no seeded account carries them, so the case has to set up the field it is about.",
+      "Reopen the same account and confirm both flags read as on.",
       "Change ONLY its bio — append the word roundtrip.",
       "Press Save.",
       "Reload the list and reopen the same account.",
       "Read the tester flags again.",
+      "Turn both tester flags back off and save.",
     ],
-    inputs: { account: "claude-tester@letitrip.in", bioSuffix: "roundtrip" },
+    inputs: { account: "rehan.sheikh@gmail.com", bioSuffix: "roundtrip" },
     expectedBehaviour:
       "An editor seeded from a LIST row can only send back what that row carried. If the list serializer omits a field the update schema accepts, the editor state defaults to false and the save rewrites it — so editing any other field silently strips it. That is why the check is on a field the form did not touch.",
     expectedUiState:
       "Both tester flags are still on after the reload, and the bio carries the appended word.",
     expectedData: { testerFlagsPreserved: true },
     endResult:
-      "The flags survive a second reload. If this fails, restore them before moving on — the bot needs them to run at all.",
+      "The flags survive a second reload, and the final step leaves the account back on its seeded settings with both flags off.",
   },
 
   "checklist-admin-admin-detail-round-trips-store-edit-keeps-verified": {

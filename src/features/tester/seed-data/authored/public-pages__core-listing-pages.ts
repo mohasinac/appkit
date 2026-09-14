@@ -185,7 +185,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /bundles in a private window with no session.",
       "Read each bundle card's price and its discount badge.",
-      "Open bundle-tester-sandbox and read its price and its members.",
+      "Open bundle-original-collectors-set and read its price and its members.",
       "Add up the members' individual prices and compare with the bundle price.",
       "Read the page for anything containing 'Tester' or 'Test' while signed out.",
     ],

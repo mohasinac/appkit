@@ -77,16 +77,16 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-design-ux-sticky-cta-bar-desktop-buttons-work": {
     roles: ["buyer"],
-    startPage: "/products/product-tester-standard-1",
+    startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-tester-standard-1 at 1280 pixels wide and scroll until the sticky bar appears.",
+      "Open /products/product-beyblade-burst-valkyrie at 1280 pixels wide and scroll until the sticky bar appears.",
       "Click 'Add to Cart' in the STICKY BAR, not in the page panel.",
       "Watch the label while the request runs.",
       "Open /cart and read what is in it.",
       "Go back, scroll to the bar again, and click the wishlist control in the bar.",
     ],
-    inputs: { productId: "product-tester-standard-1", quantity: 1 },
+    inputs: { productId: "product-beyblade-burst-valkyrie", quantity: 1 },
     expectedBehaviour:
       "The bar's controls are the real controls, not decorative copies — each performs the same action as its counterpart in the page panel and reflects its own loading state.",
     expectedUiState:

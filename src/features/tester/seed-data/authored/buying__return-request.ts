@@ -32,7 +32,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a DELIVERED order and read whether a return control is offered.",
       "Open a PENDING order and read whether one is offered.",
       "Open a SHIPPED order and read the same.",
@@ -52,7 +52,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and find a delivered order whose item was marked final sale.",
       "Confirm the order or its item shows the final-sale term.",
       "Open the return control and read every reason it offers.",
@@ -73,7 +73,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and find a different delivered final-sale order.",
       "Open the return control and read every reason offered.",
       "Select the change-of-mind reason.",
@@ -93,7 +93,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "admin"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open a delivered order and open the return control.",
       "Select a reason and type 'QA Return reason-persisted — item arrived damaged in transit.' as the note.",
       "Submit and RELOAD the order.",
@@ -114,7 +114,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a delivered order containing several items.",
       "Open the return control and read whether individual lines can be selected.",
       "Select ONE line and leave the others unselected.",
@@ -134,7 +134,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as tester@letitrip.in / TempPass123!.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a delivered prize-draw order.",
       "Read whether a return control is offered at all.",
       "If one is offered, open it and read every reason available.",

@@ -69,7 +69,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/digital-codes",
     steps: [
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123!.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /digital-codes and open a listing that shows codes available.",
       "Add it to the cart and complete checkout.",
       "Open /user/digital-codes.",
@@ -90,7 +90,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/digital-codes",
     steps: [
       "Open a digital-code listing's public page and write down the codes-available number it shows.",
-      "Sign in as the bot buyer claude-tester@letitrip.in / TempPass123! and buy that listing.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123! and buy that listing.",
       "Reload the listing's public page and read the number again.",
     ],
     expectedBehaviour:

@@ -53,7 +53,6 @@ import { authored as a_cta_layout__navbar_ctas } from "./cta-layout__navbar-ctas
 import { authored as a_public_pages__help_scams_guides_subpages } from "./public-pages__help-scams-guides-subpages";
 import { authored as a_account_auth__profile_settings } from "./account-auth__profile-settings";
 import { authored as a_account_auth__signup_login } from "./account-auth__signup-login";
-import { authored as a_account_auth__testing_program } from "./account-auth__testing-program";
 import { authored as a_addresses__address_filters } from "./addresses__address-filters";
 import { authored as a_addresses__postal_lookup } from "./addresses__postal-lookup";
 import { authored as a_addresses__postal_validation } from "./addresses__postal-validation";
@@ -175,7 +174,6 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_public_pages__help_scams_guides_subpages,
   ...a_account_auth__profile_settings,
   ...a_account_auth__signup_login,
-  ...a_account_auth__testing_program,
   ...a_addresses__address_filters,
   ...a_addresses__postal_lookup,
   ...a_addresses__postal_validation,
