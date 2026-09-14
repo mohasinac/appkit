@@ -84,10 +84,18 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           { route: "/categories/[slug]", key: "category.bundles", fallback: [] },
         )
       : Promise.resolve([]),
+    /*
+     * Every DESCENDANT, not just the direct children this used to fetch. A
+     * four-tier tree showed only tier+1 here, so the whole lower half of the
+     * catalogue was unreachable from the page that is supposed to be its index —
+     * you had to already know a sub-sub-category existed to navigate to it.
+     * `getDescendants` is one array-contains query over `parentIds`, which holds
+     * the full ancestor chain, so depth costs nothing extra.
+     */
     category?.id
-      ? safeRead(() => categoriesRepository.getChildren(category.id), {
+      ? safeRead(() => categoriesRepository.getDescendants(category.id), {
           route: "/categories/[slug]",
-          key: "category.children",
+          key: "category.descendants",
           fallback: [],
         }) as unknown as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
@@ -274,10 +282,28 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {childCategories.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
           <Div className="max-w-7xl mx-auto" padding="inline">
+            {/*
+              * Grouped by DEPTH BELOW THIS CATEGORY, not by absolute tier — the
+              * same subtree shape has to read the same whether you opened it from
+              * a root or from halfway down. One scroller per depth: a flat list of
+              * every descendant is accurate and unreadable, because nothing in it
+              * says which rows are children of which.
+              */}
+            {Array.from(
+              new Set(childCategories.map((c) => c.tier)),
+            )
+              .sort((a, b) => a - b)
+              .map((tier) => (
+            <Div key={tier} padding="b-2xs">
+              <Text size="xs" color="muted" weight="medium" className="mb-[var(--appkit-space-1-5)]">
+                {tier - (category?.tier ?? 0) === 1
+                  ? "Subcategories"
+                  : `${tier - (category?.tier ?? 0)} levels down`}
+              </Text>
             <Div layout="flex" gap="2"
               className={`.5 ${__O.xAuto} [scrollbar-width:none]`} padding="b-2xs"
             >
-              {childCategories.map((child) => (
+              {childCategories.filter((c) => c.tier === tier).map((child) => (
                 <Link
                   key={child.id}
                   href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
@@ -313,6 +339,8 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 </Link>
               ))}
             </Div>
+            </Div>
+              ))}
           </Div>
         </Section>
       )}

@@ -146,7 +146,46 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
   if (wasPublished && isPublished) {
     const categoryMoved = beforeCategory !== afterCategory;
     const brandMoved = beforeBrand !== afterBrand;
-    if (!categoryMoved && !brandMoved) return;
+    /*
+     * A listing can also change WHICH counter it belongs in without moving at
+     * all: flipping listingType between auction and anything else has to move
+     * the item from `auctionCount` to `productCount` on the same rows. That is
+     * tested independently for the same reason category and brand are — it
+     * happens on its own, and when it did, this branch returned early and left
+     * the item counted as an auction forever.
+     */
+    const typeChanged = beforeIsAuction !== isAuction;
+    if (!categoryMoved && !brandMoved && !typeChanged) return;
+
+    /*
+     * A pure type flip: nothing moved, so the item leaves one counter and joins
+     * the other on the SAME rows. Staged as ONE call carrying both deltas rather
+     * than a -1 followed by a +1, because those would be two writes to the same
+     * document in one batch. Note the two deltas cancel, so `totalItemCount`
+     * correctly does not move — the item did not come or go, it changed shape.
+     */
+    if (!categoryMoved && !brandMoved) {
+      const parents = await getParentIds(afterCategory ?? "");
+      const productDelta = isAuction ? -1 : 1;
+      const auctionDelta = isAuction ? 1 : -1;
+      const batch = ctx.db.batch();
+      if (afterCategory) {
+        categoriesRepository.updateMetricsInBatch(
+          batch, afterCategory, parents, productDelta, auctionDelta, productId,
+        );
+      }
+      if (afterBrand) {
+        categoriesRepository.updateMetricsInBatch(
+          batch, afterBrand, [], productDelta, auctionDelta, productId,
+        );
+      }
+      await commit(batch, "Listing type changed", {
+        productId,
+        from: beforeIsAuction ? "auction" : "product",
+        to: isAuction ? "auction" : "product",
+      });
+      return;
+    }
 
     const [beforeParents, afterParents] = await Promise.all([
       getParentIds(categoryMoved ? beforeCategory ?? "" : ""),

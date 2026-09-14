@@ -30,6 +30,9 @@ import {
 } from "../schemas";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
+/** One pending document write, for `commitChunked`. */
+type CategoryWrite = { id: string; data: FirestoreDocument };
+
 export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     name: { canFilter: true, canSort: true },
@@ -275,13 +278,43 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
    * listing/count to include products filed under any of its children.
    */
   async getDescendantIds(categoryId: string): Promise<string[]> {
+    const docs = await this.getDescendants(categoryId);
+    return docs.map((d) => d.id);
+  }
+
+  /**
+   * Every descendant DOCUMENT at any depth.
+   *
+   * 🛑 PAGINATED, DELIBERATELY. This query used to carry a bare `.limit(100)`,
+   * which silently truncated the subtree — acceptable-ish for a display list,
+   * and corrupting for `reparentSubtree`, which rewrites exactly what this
+   * returns. A move that saw 100 of 130 descendants would leave the other 30
+   * pointing at the old ancestors with no error anywhere. A partial answer to
+   * "what is beneath this node" is worse than a slow one.
+   */
+  async getDescendants(categoryId: string): Promise<CategoryDocument[]> {
     try {
-      const snapshot = await this.db
-        .collection(this.collection)
-        .where("parentIds", "array-contains", categoryId)
-        .limit(100)
-        .get();
-      return snapshot.docs.map((doc) => doc.id);
+      const out: CategoryDocument[] = [];
+      const pageSize = 300;
+      let cursor: FirebaseFirestore.QueryDocumentSnapshot | null = null;
+
+      for (;;) {
+        let q = this.db
+          .collection(this.collection)
+          .where("parentIds", "array-contains", categoryId)
+          .orderBy("__name__")
+          .limit(pageSize);
+        if (cursor) q = q.startAfter(cursor);
+
+        const page = await q.get();
+        if (page.empty) break;
+
+        for (const doc of page.docs) out.push(this.mapDoc<CategoryDocument>(doc));
+        if (page.size < pageSize) break;
+        cursor = page.docs[page.docs.length - 1];
+      }
+
+      return out;
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError(
@@ -331,119 +364,258 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     }
   }
 
-  async updateMetrics(
+  /**
+   * Move `categoryId` under `newParentId`, rewriting the WHOLE subtree.
+   *
+   * 🛑 THE DESCENDANTS ARE THE POINT. The previous `moveCategory` rewrote only
+   * the moved node's own hierarchy fields, so after a move every descendant
+   * still claimed its OLD ancestors — which breaks the `array-contains` subtree
+   * query, the category page's own listing, and `ProductRepository.deriveTaxonomy`
+   * (it reads the leaf's `parentIds` to build each product's `categorySlugs`
+   * chain). That is a data-corruption bug wearing the costume of a stale count.
+   *
+   * 🛑 AND THE METRIC DELTAS LIVE HERE, NOT IN A TRIGGER. `onCategoryWrite` is a
+   * `categories` trigger that writes `categories`, and it is safe only because
+   * every write it makes is gated on `parentIds` CHANGING — a structural guard.
+   * A `metrics.*` write is not covered by that gate, so putting rollup
+   * maintenance there is the Root Cause 92 shape that recursed 1,017,548 times
+   * in 24 hours. Doing it in the same batch as the structural change has no
+   * cycle to guard against in the first place.
+   *
+   * Returns the ids it rewrote, so a caller can log or verify the blast radius.
+   */
+  async reparentSubtree(
     categoryId: string,
-    productDelta: number,
-    auctionDelta: number,
-    productId?: string,
-  ): Promise<void> {
-    try {
-      const category = await this.findByIdOrFail(categoryId);
-      const batch = this.db.batch();
-      const now = new Date();
+    newParentId: string | null,
+  ): Promise<string[]> {
+    const node = await this.findByIdOrFail(categoryId);
 
-      const categoryRef = this.db.collection(this.collection).doc(categoryId);
-      const updates: FirestoreDocument = {
-        "metrics.productCount": increment(productDelta),
-        "metrics.auctionCount": increment(auctionDelta),
-        "metrics.totalProductCount": increment(productDelta),
-        "metrics.totalAuctionCount": increment(auctionDelta),
-        "metrics.totalItemCount": increment(productDelta + auctionDelta),
-        "metrics.lastUpdated": now,
-        updatedAt: now,
-      };
+    const newParent = newParentId
+      ? await this.findByIdOrFail(newParentId)
+      : null;
 
-      if (productId && productDelta !== 0) {
-        updates["metrics.productIds"] =
-          productDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
-      }
+    const oldParentId = node.parentIds[node.parentIds.length - 1] ?? null;
+    if (oldParentId === newParentId) return [];
 
-      batch.update(categoryRef, updates);
+    const descendants = await this.getDescendants(categoryId);
 
-      for (const ancestorId of category.parentIds) {
-        const ancestorRef = this.db.collection(this.collection).doc(ancestorId);
-        batch.update(ancestorRef, {
-          "metrics.totalProductCount": increment(productDelta),
-          "metrics.totalAuctionCount": increment(auctionDelta),
-          "metrics.totalItemCount": increment(productDelta + auctionDelta),
-          "metrics.lastUpdated": now,
-          updatedAt: now,
-        });
-      }
-
-      await batch.commit();
-    } catch (error) {
-      void normalizeError(error);
+    /*
+     * Cycle check. `isValidCategoryMove` only catches self-parenting and
+     * direct-child-as-parent, so a move onto a DEEPER descendant slips past it
+     * and detaches that whole branch from the forest with no error.
+     */
+    if (newParentId && descendants.some((d) => d.id === newParentId)) {
       throw new DatabaseError(
-        `Failed to update category metrics: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Invalid category move: ${newParentId} is a descendant of ${categoryId}`,
       );
     }
-  }
-
-  async moveCategory(input: CategoryMoveInput): Promise<CategoryDocument> {
-    try {
-      const { categoryId, newParentId } = input;
-      const category = await this.findByIdOrFail(categoryId);
-
-      if (!isValidCategoryMove(categoryId, newParentId, category)) {
-        throw new DatabaseError(
-          "Invalid category move: circular reference detected",
-        );
-      }
-
-      let newParent: CategoryDocument | null = null;
-      if (newParentId) {
-        newParent = await this.findByIdOrFail(newParentId);
-      }
-
-      const hierarchyFields = calculateCategoryFields(
-        newParent,
-        category.name,
-        categoryId,
+    if (!isValidCategoryMove(categoryId, newParentId, node)) {
+      throw new DatabaseError(
+        "Invalid category move: circular reference detected",
       );
+    }
 
-      const oldParentId =
-        category.parentIds.length > 0
-          ? category.parentIds[category.parentIds.length - 1]
-          : null;
+    const now = new Date();
+    const writes: CategoryWrite[] = [];
 
-      const batch = this.db.batch();
-      const now = new Date();
+    /*
+     * Recompute top-down. A descendant's IMMEDIATE parent never changes when an
+     * ancestor moves, so each node's new fields derive from its parent's new
+     * fields — one pass in tier order, no recursion and no re-reads.
+     */
+    const rebuilt = new Map<string, CategoryDocument>();
+    const movedFields = calculateCategoryFields(newParent, node.name, categoryId);
+    rebuilt.set(categoryId, { ...node, ...movedFields });
+    writes.push({ id: categoryId, data: { ...movedFields, updatedAt: now } });
 
-      const categoryRef = this.db.collection(this.collection).doc(categoryId);
-      batch.update(categoryRef, {
-        ...hierarchyFields,
-        updatedAt: now,
-      });
+    for (const child of [...descendants].sort((a, b) => a.tier - b.tier)) {
+      const parentId = child.parentIds[child.parentIds.length - 1] ?? "";
+      const parent = rebuilt.get(parentId);
+      // A descendant whose parent is missing from the subtree means the chain is
+      // already broken; leave it alone rather than writing a guess over it.
+      if (!parent) continue;
+      const fields = calculateCategoryFields(parent, child.name, child.id);
+      rebuilt.set(child.id, { ...child, ...fields });
+      writes.push({ id: child.id, data: { ...fields, updatedAt: now } });
+    }
 
-      if (oldParentId) {
-        const oldParentRef = this.db
-          .collection(this.collection)
-          .doc(oldParentId);
-        batch.update(oldParentRef, {
-          childrenIds: arrayRemove(categoryId),
-          updatedAt: now,
+    /*
+     * Rollup deltas, NETTED PER ANCESTOR.
+     *
+     * The old and new chains usually share ancestors (a move within one root),
+     * and Firestore rejects two updates to the same document in one batch — so a
+     * naive `-total` on the old chain followed by `+total` on the new one either
+     * throws or double-counts. Net them first and drop the zeros; for a move
+     * between siblings that leaves only two documents to touch.
+     *
+     * The delta is the moved node's own ROLLUP, not a subtree rescan: O(depth).
+     * The moved node's own counts do not change — only its ancestors' rollups.
+     */
+    const m = node.metrics ?? ({} as CategoryDocument["metrics"]);
+    const dProducts = m?.totalProductCount ?? 0;
+    const dAuctions = m?.totalAuctionCount ?? 0;
+
+    if (dProducts !== 0 || dAuctions !== 0) {
+      const oldChain = node.parentIds;
+      const newChain = newParent ? [...newParent.parentIds, newParent.id] : [];
+      const net = new Map<string, number>();
+      for (const id of oldChain) net.set(id, (net.get(id) ?? 0) - 1);
+      for (const id of newChain) net.set(id, (net.get(id) ?? 0) + 1);
+
+      for (const [id, sign] of net) {
+        if (sign === 0) continue;
+        writes.push({
+          id,
+          data: {
+            "metrics.totalProductCount": increment(dProducts * sign),
+            "metrics.totalAuctionCount": increment(dAuctions * sign),
+            "metrics.totalItemCount": increment((dProducts + dAuctions) * sign),
+            "metrics.lastUpdated": now,
+            updatedAt: now,
+          },
         });
-
-        const oldParent = await this.findById(oldParentId);
-        if (oldParent && oldParent.childrenIds.length === 1) {
-          batch.update(oldParentRef, { isLeaf: true });
-        }
       }
+    }
 
-      if (newParentId) {
-        const newParentRef = this.db
-          .collection(this.collection)
-          .doc(newParentId);
-        batch.update(newParentRef, {
+    if (oldParentId) {
+      writes.push({
+        id: oldParentId,
+        data: { childrenIds: arrayRemove(categoryId), updatedAt: now },
+      });
+    }
+    if (newParentId) {
+      writes.push({
+        id: newParentId,
+        data: {
           childrenIds: arrayUnion(categoryId),
           isLeaf: false,
           updatedAt: now,
+        },
+      });
+    }
+
+    try {
+      await this.commitChunked(writes);
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to move category ${categoryId}: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+
+    /*
+     * A parent that just lost its last child becomes a leaf again. Done after the
+     * commit because `childrenIds` is an arrayRemove above — reading it before
+     * would see the stale array.
+     */
+    if (oldParentId) {
+      const oldParent = await this.findById(oldParentId);
+      if (oldParent && (oldParent.childrenIds?.length ?? 0) === 0) {
+        await this.db
+          .collection(this.collection)
+          .doc(oldParentId)
+          .update({ isLeaf: true, updatedAt: new Date() });
+      }
+    }
+
+    await this.rewriteProductChains(rebuilt);
+
+    return writes.map((w) => w.id);
+  }
+
+  /**
+   * Re-derive `categorySlugs` for every product inside a moved subtree.
+   *
+   * 🛑 WITHOUT THIS THE MOVE IS ONLY HALF DONE. `categorySlugs` is a
+   * DENORMALISED COPY of the ancestor chain, written by
+   * `ProductRepository.deriveTaxonomy` at product-write time. Moving a category
+   * changes its descendants' chains but writes no product, so every product in
+   * the subtree keeps pointing at the OLD ancestors — it stays listed under the
+   * category it left and never appears under the one it joined. That is the same
+   * unreachable-listing bug the move is supposed to fix, one level down.
+   *
+   * Metric-neutral, and that is load-bearing: `onProductWrite` keys its re-file
+   * branch on the LEAF (`categorySlugs[0]`), which does not change when an
+   * ancestor moves. So these writes early-return in the trigger and apply no
+   * delta — the rollup was already moved by `reparentSubtree`. If this ever
+   * started changing the leaf, it would double-count.
+   *
+   * Reads `products` through `this.db` rather than importing ProductRepository:
+   * no repository in this codebase imports another feature's, because that is
+   * the import chain that drags firebase-admin into a client bundle.
+   */
+  private async rewriteProductChains(
+    rebuilt: Map<string, CategoryDocument>,
+  ): Promise<void> {
+    const writes: CategoryWrite[] = [];
+
+    for (const [categoryId, cat] of rebuilt) {
+      // Self first, root last — byte-identical to what deriveTaxonomy produces.
+      const chain = [categoryId, ...(cat.parentIds ?? []).slice().reverse()];
+      /*
+       * Byte-identical to what deriveTaxonomy produces, INCLUDING the falsy
+       * filter — these two must agree, or a product's names chain would differ
+       * depending on whether it was last touched by a product write or a
+       * category move, and nothing would report the difference.
+       */
+      const names = [
+        cat.name,
+        ...(cat.ancestors ?? []).map((a) => a?.name).reverse(),
+      ].filter((n): n is string => !!n);
+
+      const snap = await this.db
+        .collection("products")
+        .where(PRODUCT_FIELDS.CATEGORY, "==", categoryId)
+        .get();
+
+      for (const doc of snap.docs) {
+        writes.push({
+          id: doc.id,
+          data: { categorySlugs: chain, categoryNames: names, updatedAt: new Date() },
         });
       }
+    }
 
+    if (!writes.length) return;
+
+    const products = this.db.collection("products");
+    for (let i = 0; i < writes.length; i += 400) {
+      const batch = this.db.batch();
+      for (const w of writes.slice(i, i + 400)) {
+        batch.update(products.doc(w.id), w.data);
+      }
       await batch.commit();
+    }
+  }
 
+  /**
+   * Commit `writes` in chunks. Firestore caps a batch at 500 operations, and a
+   * subtree rewrite plus its ancestor deltas can exceed that on a deep forest.
+   */
+  private async commitChunked(
+    writes: CategoryWrite[],
+    chunkSize = 400,
+  ): Promise<void> {
+    const colRef = this.db.collection(this.collection);
+    for (let i = 0; i < writes.length; i += chunkSize) {
+      const batch = this.db.batch();
+      for (const w of writes.slice(i, i + chunkSize)) {
+        batch.update(colRef.doc(w.id), w.data);
+      }
+      await batch.commit();
+    }
+  }
+
+  /**
+   * The public move. Everything real lives in `reparentSubtree` so the
+   * delete-cascade path and this share one implementation — two copies of a
+   * subtree rewrite would drift, and only one of them would be the one anybody
+   * tested.
+   */
+  async moveCategory(input: CategoryMoveInput): Promise<CategoryDocument> {
+    try {
+      const { categoryId, newParentId } = input;
+      await this.reparentSubtree(categoryId, newParentId ?? null);
       return this.findByIdOrFail(categoryId);
     } catch (error) {
       void normalizeError(error);

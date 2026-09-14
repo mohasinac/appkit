@@ -121,6 +121,27 @@ function tallyProduct(
  * Reads are bounded by pagination rather than by `.limit(QUERY_LIMIT)`, which
  * silently recounted a subset the moment the catalogue passed 1,000 published
  * rows — a truncated recount is indistinguishable from a correct one.
+ *
+ * 🛑 THIS IS THE ONLY RECOUNT. `appkit/scripts/backfill-category-metrics.mjs`
+ * was a second implementation of exactly this, reachable as
+ * `npm run categories:backfill-metrics`, and it was wrong four ways: it wrote the
+ * descendant rollup into `productCount` (the own count — Root Cause 102, the bug
+ * this file's own/rollup split exists to fix), blanked `productIds` on every
+ * ancestor, enumerated only categories that HAVE products so a row that dropped
+ * to zero kept its stale count, and — worst — wrote any row that was both a leaf
+ * with products AND an ancestor twice, the ancestor pass silently overwriting its
+ * own count. It was deleted 2026-09-14 rather than repaired: a second recount
+ * that disagrees with this one is a way to *introduce* drift while believing you
+ * are fixing it. If a manual run is ever needed, invoke this job — do not write
+ * another script.
+ *
+ * As of 2026-09-14 this is a BACKSTOP, not the maintainer. `onProductWrite`
+ * (products → categories) and `CategoriesRepository.reparentSubtree`
+ * (structural moves + deletes) keep the counters correct in real time; this pass
+ * exists because a `batch.update()` against a dangling ancestor id throws and
+ * loses every increment in that batch. A non-zero `drifted` in its log is
+ * therefore a real signal that one of those paths missed something — it is not
+ * routine.
  */
 async function reconcileCategories(ctx: JobContext): Promise<void> {
   // Every category row, so rows that dropped to zero are still reset.

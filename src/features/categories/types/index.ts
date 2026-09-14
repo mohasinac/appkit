@@ -27,11 +27,20 @@ export interface CategoryMetrics {
   lastUpdated?: string;
 }
 
-export interface CategoryAncestor {
+/*
+ * A `type` rather than an `interface`, deliberately. This shape is PERSISTED to
+ * Firestore inside `CategoryDocument.ancestors[]`, and `FirestoreValue`'s object
+ * branch requires an index signature — which TypeScript grants implicitly to a
+ * type alias and never to an interface. As an interface, `CategoryAncestor[]`
+ * was not assignable to `FirestoreValue`, so any code writing an ancestors array
+ * through a typed document had to widen to `Record<string, unknown>` and lose
+ * every other field's checking with it.
+ */
+export type CategoryAncestor = {
   id: string;
   name: string;
   tier: number;
-}
+};
 
 export interface CategoryItem {
   id: string;
