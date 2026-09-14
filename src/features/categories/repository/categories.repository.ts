@@ -518,7 +518,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       }
     }
 
-    await this.rewriteProductChains(rebuilt);
+    await this.rewriteProductChains(rebuilt, categoryId);
 
     return writes.map((w) => w.id);
   }
@@ -546,12 +546,36 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
    */
   private async rewriteProductChains(
     rebuilt: Map<string, CategoryDocument>,
+    movedId: string,
   ): Promise<void> {
+    /*
+     * ONE query for the whole subtree, matched on `categorySlugs` — NOT N queries
+     * on the scalar `category`.
+     *
+     * 🛑 MEASURED 2026-09-14: `category` is unset on all 95 production products.
+     * It is written by deriveTaxonomy, but every product here came from the seed,
+     * which hand-writes `categorySlugs` only — so a `where("category","==",id)`
+     * query matched nothing and this rewrite silently did nothing at all. The
+     * array field is the one that actually exists, and matching the MOVED node
+     * gets the entire subtree in a single read because `categorySlugs` holds the
+     * full ancestor chain.
+     */
+    const snap = await this.db
+      .collection("products")
+      .where(PRODUCT_FIELDS.CATEGORY_SLUGS, "array-contains", movedId)
+      .get();
+
     const writes: CategoryWrite[] = [];
 
-    for (const [categoryId, cat] of rebuilt) {
+    for (const doc of snap.docs) {
+      const current = (doc.data() as { categorySlugs?: string[] }).categorySlugs ?? [];
+      const leaf = current[0];
+      const cat = leaf ? rebuilt.get(leaf) : undefined;
+      // A product whose leaf is outside the moved subtree has nothing to re-derive.
+      if (!leaf || !cat) continue;
+
       // Self first, root last — byte-identical to what deriveTaxonomy produces.
-      const chain = [categoryId, ...(cat.parentIds ?? []).slice().reverse()];
+      const chain = [leaf, ...(cat.parentIds ?? []).slice().reverse()];
       /*
        * Byte-identical to what deriveTaxonomy produces, INCLUDING the falsy
        * filter — these two must agree, or a product's names chain would differ
@@ -563,17 +587,12 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         ...(cat.ancestors ?? []).map((a) => a?.name).reverse(),
       ].filter((n): n is string => !!n);
 
-      const snap = await this.db
-        .collection("products")
-        .where(PRODUCT_FIELDS.CATEGORY, "==", categoryId)
-        .get();
+      if (chain.join(">") === current.join(">")) continue; // nothing moved for this row
 
-      for (const doc of snap.docs) {
-        writes.push({
-          id: doc.id,
-          data: { categorySlugs: chain, categoryNames: names, updatedAt: new Date() },
-        });
-      }
+      writes.push({
+        id: doc.id,
+        data: { categorySlugs: chain, categoryNames: names, updatedAt: new Date() },
+      });
     }
 
     if (!writes.length) return;
