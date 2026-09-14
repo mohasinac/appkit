@@ -21,6 +21,11 @@
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../../contracts";
+import { reviewRepository } from "../../../../reviews/repository/reviews.repository";
+import { maskPublicReview } from "../../../../../security/pii-mask";
+// Real types, not `unknown` — audit-unknown-leakage is right that an `unknown`
+// field is an unreviewed shape reaching a public payload.
+import type { ReviewVideoField } from "../../../../reviews/schemas/firestore";
 
 import { normalizeError } from "../../../../../errors/normalize";
 type RouteContext = { params: Promise<{ storeSlug: string }> };
@@ -45,11 +50,36 @@ interface ProductEntity {
   mainImage?: string | null;
 }
 
+/**
+ * The fields this route reads off a review.
+ *
+ * 🛑 DECLARED, not `Record<string, unknown>`. An index signature would let the
+ * projection below pick up any key by name with no compiler check — which is
+ * how the raw document (ciphertext `userName`, the `userNameIndex` blind index,
+ * `searchTxt`) reached the wire in the first place. Naming the readable fields
+ * is the same discipline as the allow-list projection, one layer up.
+ *
+ * `comment` vs `body` and `verified` vs `isVerifiedPurchase` are both here
+ * because the two spellings have genuinely drifted; the data settles which is
+ * real (`comment`/`verified`, across all 79 production documents).
+ */
 interface ReviewEntity {
+  id?: string;
   productId: string;
   createdAt?: string;
   rating: number;
   productTitle?: string;
+  userName?: string;
+  title?: string;
+  comment?: string;
+  body?: string;
+  images?: string[];
+  video?: ReviewVideoField;
+  verified?: boolean;
+  isVerifiedPurchase?: boolean;
+  helpfulCount?: number;
+  sellerReply?: string;
+  sellerRepliedAt?: Date;
 }
 
 // --- GET /api/stores/[storeSlug]/reviews --------------------------------------
@@ -117,14 +147,25 @@ export async function GET(
      * the store's reviews are one equality away. This also turns 21 Firestore
      * queries into 1, well inside Rule #6's ~3-round-trip budget.
      */
-    const reviewsRepo = db.getRepository<ReviewEntity>("reviews");
-    const reviewsResult = await reviewsRepo.findAll({
-      filters: `storeId==${store.id},status==approved`,
-      sort: "createdAt",
-      order: "desc",
-      perPage: STORE_REVIEW_SCAN_CAP,
-    });
-    const allFlat: ReviewEntity[] = reviewsResult.data;
+    /*
+     * 🛑 `reviewRepository`, NOT `db.getRepository("reviews")`.
+     *
+     * The generic provider repository returns the RAW document. `userName` is
+     * PII-encrypted at rest, so it came back as the literal string
+     * `enc:v1:…` — measured in production the moment this endpoint started
+     * returning rows at all — and so did `userNameIndex`, the HMAC blind index,
+     * `searchTxt`, `reportCount` and the moderation `status`. Only
+     * `reviewRepository.mapDoc` runs `decryptPiiFields`.
+     *
+     * This was INVISIBLE until the itemsSold fix (Root Cause #100): the
+     * endpoint returned zero reviews, so there was nothing to leak. A fix that
+     * makes a surface work for the first time is a fix that exposes whatever
+     * the surface does next.
+     */
+    const allFlat: ReviewEntity[] = (await reviewRepository.findApprovedByStore(
+      store.id,
+      STORE_REVIEW_SCAN_CAP,
+    )) as unknown as ReviewEntity[];
 
     // Compute aggregate metrics from ALL reviews (unfiltered)
     const ratingDistribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -167,7 +208,7 @@ export async function GET(
     // Apply search
     if (q) {
       filtered = filtered.filter((r) => {
-        const rv = r as ReviewEntity & { title?: string; body?: string; comment?: string };
+        const rv = r;
         const title = (rv.title ?? "").toLowerCase();
         /*
          * `comment` FIRST. The stored field is `comment` — verified against all
@@ -234,11 +275,38 @@ export async function GET(
     );
     for (const p of fetched) if (p) productMap.set(p.id, p);
 
-    const reviewsWithProduct = pageSlice.map((review) => ({
-      ...review,
-      productTitle: productMap.get(review.productId)?.title ?? review.productTitle,
-      productMainImage: productMap.get(review.productId)?.mainImage ?? null,
-    }));
+    /*
+     * 🛑 AN ALLOW-LIST, not a spread. `...review` published every field the
+     * document happens to carry — including `userNameIndex` (an HMAC blind
+     * index, which lets a caller confirm a guessed name), `searchTxt`,
+     * `reportCount` and the moderation `status`. Root Cause #70: a payload
+     * built by spreading publishes everything nobody thought to remove, and is
+     * blind to fields added later.
+     *
+     * `userName` is MASKED, matching every other public review surface —
+     * `maskPublicReview` is what `listReviewsForProduct` already applies.
+     */
+    const reviewsWithProduct = pageSlice.map((review) => {
+      const r = review;
+      const masked = maskPublicReview({ ...r, userName: String(r.userName ?? "") });
+      return {
+        id: r.id,
+        rating: r.rating,
+        title: r.title,
+        comment: r.comment ?? r.body,
+        images: r.images ?? [],
+        video: r.video,
+        verified: r.verified ?? r.isVerifiedPurchase,
+        helpfulCount: r.helpfulCount ?? 0,
+        sellerReply: r.sellerReply,
+        sellerRepliedAt: r.sellerRepliedAt,
+        createdAt: r.createdAt,
+        userName: masked.userName,
+        productId: r.productId,
+        productTitle: productMap.get(review.productId)?.title ?? review.productTitle,
+        productMainImage: productMap.get(review.productId)?.mainImage ?? null,
+      };
+    });
 
     return NextResponse.json({
       success: true,

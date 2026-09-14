@@ -162,13 +162,16 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
   }
 
-  async findApprovedByStore(storeId: string): Promise<ReviewDocument[]> {
+  async findApprovedByStore(
+    storeId: string,
+    limit = 50,
+  ): Promise<ReviewDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
       .where(REVIEW_FIELDS.STORE_ID, "==", storeId)
       .where(REVIEW_FIELDS.STATUS, "==", "approved")
       .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
-      .limit(50)
+      .limit(limit)
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
