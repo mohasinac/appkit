@@ -133,6 +133,11 @@ import { authored as a_search_and_nav__employee_permissions } from "./search-and
 import { authored as a_search_and_nav__header_search } from "./search-and-nav__header-search";
 import { authored as a_search_and_nav__settings_deep_links } from "./search-and-nav__settings-deep-links";
 import { authored as a_search_and_nav__sidebar_search } from "./search-and-nav__sidebar-search";
+import { authored as a_selling__listing_edit_roundtrip } from "./selling__listing-edit-roundtrip";
+import { authored as a_selling__digital_content_delivery } from "./selling__digital-content-delivery";
+import { authored as a_selling__seller_orders_at_scale } from "./selling__seller-orders-at-scale";
+import { authored as a_content_discovery__category_counts_and_rollup } from "./content-discovery__category-counts-and-rollup";
+import { authored as a_content_discovery__store_reviews_aggregate } from "./content-discovery__store-reviews-aggregate";
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__blog_faqs,
@@ -244,4 +249,9 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_search_and_nav__header_search,
   ...a_search_and_nav__settings_deep_links,
   ...a_search_and_nav__sidebar_search,
+  ...a_selling__listing_edit_roundtrip,
+  ...a_selling__digital_content_delivery,
+  ...a_selling__seller_orders_at_scale,
+  ...a_content_discovery__category_counts_and_rollup,
+  ...a_content_discovery__store_reviews_aggregate,
 };

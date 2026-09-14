@@ -2207,6 +2207,62 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
 
   ...group("selling", "Selling", [
     {
+      /*
+       * The UPDATE path. The create path has 57 cases on /store/products/new
+       * alone and this had ZERO — which is precisely where the 2026-09-14
+       * data-loss bug lived (Root Cause #98): nine editors spread an
+       * ActionResult envelope as a product, so the form opened blank and Save
+       * wrote "draft" over a live listing.
+       */
+      pageKey: "listing-edit-roundtrip",
+      pageLabel: "Editing an Existing Listing (round-trip)",
+      href: "/store/products",
+      cases: [
+        { key: "edit-opens-populated", label: "Opening a published listing for edit shows its REAL saved values, not an empty form" },
+        { key: "edit-category-preselected", label: "The Category field is pre-selected with the listing's actual category, not blank" },
+        { key: "edit-save-keeps-published", label: "Saving an edit to a PUBLISHED listing leaves it published — it must not drop to draft" },
+        { key: "edit-missing-id-404s", label: "Opening an edit URL for a listing id that does not exist shows 404, not a blank form" },
+        { key: "edit-other-sellers-listing-404s", label: "Opening another seller's listing id for edit shows 404" },
+        { key: "edit-ancestor-pages-after-recategorise", label: "Re-categorising a listing makes it appear on the new category's page AND on every ancestor of it" },
+      ],
+    },
+    {
+      /*
+       * The digital-content pool. Zero cases before 2026-09-14, and the pool's
+       * only writer answered 501 — so every digital-code purchase delivered
+       * nothing, silently, with the order completing normally (Root Cause #103).
+       */
+      pageKey: "digital-content-delivery",
+      pageLabel: "Digital Content — codes, QR images and files",
+      href: "/store/digital-codes",
+      cases: [
+        { key: "pool-empty-by-default", label: "A new digital-code listing shows an EMPTY pool, and warns that an empty pool delivers nothing" },
+        { key: "add-codes-bulk", label: "Pasting several codes adds them all, de-duplicates the paste, and updates the available count" },
+        { key: "buy-then-reveal-code", label: "Buying a digital-code listing and clicking Reveal shows a real code from the pool" },
+        { key: "available-count-drops-after-purchase", label: "The listing's available count DROPS by one after a purchase" },
+        { key: "claimed-entry-cannot-be-removed", label: "An entry already delivered to a buyer has no Remove button, and the API refuses to delete it" },
+        { key: "asset-download-requires-ownership", label: "The delivered asset URL refuses a guest and a non-buyer, and serves the buyer" },
+        { key: "seller-cannot-upload-non-image", label: "A seller may attach a QR image but not an arbitrary file; an admin may attach either" },
+        { key: "pool-list-never-shows-the-code", label: "The seller's pool list shows status and kind but never the code itself" },
+      ],
+    },
+    {
+      /*
+       * The seller's own order list, at a store large enough to break it. It
+       * queried `productId in [...]` against Firestore's 30-value cap, so it
+       * was a permanent 500 for the only real seller (65 products) and fine for
+       * every small store — which is why it survived.
+       */
+      pageKey: "seller-orders-at-scale",
+      pageLabel: "Seller orders — at a store with many listings",
+      href: "/store/orders",
+      cases: [
+        { key: "orders-list-loads-for-large-store", label: "The order list loads for a store with more than 30 listings" },
+        { key: "dashboard-revenue-not-zero", label: "The store dashboard shows real order counts and revenue, not zeros" },
+        { key: "orders-only-this-store", label: "The list contains only this store's orders" },
+      ],
+    },
+    {
       pageKey: "become-seller",
       pageLabel: "Become a Seller & Store Setup",
       href: "/user/become-seller",
@@ -3014,6 +3070,45 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   ]),
 
   ...group("content-discovery", "Content & Discovery", [
+    {
+      /*
+       * Category counts and the LISTING they promise. A category's number is its
+       * own items plus every descendant's, and clicking it must list exactly
+       * those items. Both halves were wrong: the nightly reconciler could not
+       * express own-vs-rollup (Root Cause #102), and the chips showed own while
+       * the header showed rollup.
+       */
+      pageKey: "category-counts-and-rollup",
+      pageLabel: "Category counts and the listing they promise",
+      href: "/categories",
+      cases: [
+        { key: "leaf-count-matches-its-listing", label: "A leaf category's count equals the number of products its own page lists" },
+        { key: "parent-count-includes-descendants", label: "A parent's count is its own items PLUS every descendant's, not just its own" },
+        { key: "parent-listing-includes-descendant-items", label: "Opening a parent category LISTS the descendants' items too, not only its own" },
+        { key: "header-and-child-chips-agree", label: "The header count and the child chips beneath it are the same kind of number and compose" },
+        { key: "root-count-is-the-whole-subtree", label: "A root category's count equals the sum over its whole subtree" },
+        { key: "sibling-isolation", label: "A sibling branch's items are NOT counted in the other sibling" },
+        { key: "guest-sees-the-same-counts", label: "A signed-out visitor sees the same category counts as a signed-in one" },
+        { key: "brand-count-matches-its-listing", label: "A brand page's count equals what that brand page lists" },
+      ],
+    },
+    {
+      /*
+       * Store reviews. The endpoint answered 200 with zero reviews for EVERY
+       * store while 79 approved ones existed, because it ordered products by a
+       * field no product has (Root Cause #100) — and once it returned rows it
+       * returned the raw document, ciphertext name and all.
+       */
+      pageKey: "store-reviews-aggregate",
+      pageLabel: "Store reviews tab — aggregate and privacy",
+      href: "/stores",
+      cases: [
+        { key: "reviews-tab-not-empty", label: "A store with reviews shows them on its Reviews tab — the tab must not read as empty" },
+        { key: "average-matches-the-rows", label: "The average rating and the star distribution agree with the reviews listed" },
+        { key: "reviewer-name-is-masked", label: "A reviewer's name is masked, and no encrypted value or internal field is visible" },
+        { key: "review-search-matches-body-text", label: "Searching the reviews matches a word from a review's BODY, and a nonsense term returns none" },
+      ],
+    },
     {
       pageKey: "blog",
       pageLabel: "Blog",
