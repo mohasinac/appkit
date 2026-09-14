@@ -138,6 +138,8 @@ import { authored as a_selling__digital_content_delivery } from "./selling__digi
 import { authored as a_selling__seller_orders_at_scale } from "./selling__seller-orders-at-scale";
 import { authored as a_content_discovery__category_counts_and_rollup } from "./content-discovery__category-counts-and-rollup";
 import { authored as a_content_discovery__store_reviews_aggregate } from "./content-discovery__store-reviews-aggregate";
+import { authored as a_buying__order_detail_actions } from "./buying__order-detail-actions";
+import { authored as a_admin__admin_detail_round_trips } from "./admin__admin-detail-round-trips";
 
 export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_admin__blog_faqs,
@@ -254,4 +256,6 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_selling__seller_orders_at_scale,
   ...a_content_discovery__category_counts_and_rollup,
   ...a_content_discovery__store_reviews_aggregate,
+  ...a_buying__order_detail_actions,
+  ...a_admin__admin_detail_round_trips,
 };

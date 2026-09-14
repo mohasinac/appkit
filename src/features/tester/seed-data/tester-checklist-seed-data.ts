@@ -274,6 +274,31 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
 
   ...group("buying", "Buying", [
     {
+      /*
+       * The post-purchase money surface. `/user/orders/[id]/` has five
+       * subroutes — cancel, return, track, invoice, payment — and before
+       * 2026-09-14 only `track` had a single case anywhere in the catalogue.
+       *
+       * 🛑 NO SEEDED ORDER BELONGS TO THE BOT (measured: 0 of 64). That is why
+       * the positive cases buy something first and the borrowed fixture ids are
+       * used only as the ownership NEGATIVES — which is the dimension nothing
+       * tested at all, and the one where a mistake is an IDOR rather than a
+       * cosmetic bug.
+       */
+      pageKey: "order-detail-actions",
+      pageLabel: "Order detail — cancel, return, track, invoice, payment",
+      href: "/user/orders",
+      cases: [
+        { key: "invoice-downloads-for-owner", label: "The buyer can download the invoice for their own order, and it is a real PDF" },
+        { key: "invoice-refuses-other-buyer", label: "The invoice URL for somebody else's order is refused, not served" },
+        { key: "cancel-page-refuses-delivered-order", label: "The cancel page refuses an order that is already delivered, and says why" },
+        { key: "return-request-round-trip", label: "Requesting a return moves the order to Return Requested and survives a reload" },
+        { key: "track-shows-real-dates", label: "The tracking timeline shows the order's REAL dates, not invented or blank ones" },
+        { key: "order-subroutes-404-for-other-users-order", label: "Every /user/orders/[id]/* subroute 404s for an order the signed-in user does not own" },
+        { key: "order-subroutes-redirect-guest", label: "A signed-out visitor hitting an order subroute is sent to sign in, never shown the order" },
+      ],
+    },
+    {
       pageKey: "browsing-search",
       pageLabel: "Browsing & Search",
       href: "/products",
@@ -4791,6 +4816,30 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     "admin",
     ADMIN_TESTING_GROUP_LABEL,
     [
+    {
+      /*
+       * Admin detail routes. 33 `[id]` directories under admin/ and almost all
+       * of them sit at zero.
+       *
+       * Written as ROUND TRIPS — open, change one field, save, RELOAD, then
+       * check the fields you did NOT touch. That shape is what catches an
+       * editor seeded from the wrong object: a form that opens blank and saves
+       * its own emptiness passes any case that only asks whether the page
+       * loads (Root Cause #98).
+       */
+      pageKey: "admin-detail-round-trips",
+      pageLabel: "Admin detail pages — view and edit round-trips",
+      href: "/admin/products",
+      cases: [
+        { key: "coupon-edit-round-trip", label: "Editing one field of a coupon saves it and leaves every other field intact after a reload" },
+        { key: "faq-edit-preserves-answer-shape", label: "Editing an FAQ's answer keeps it rendering as rich text, not as raw markup or a blank" },
+        { key: "category-edit-keeps-hierarchy", label: "Renaming a category leaves its parent, its children and its product count unchanged" },
+        { key: "user-edit-keeps-tester-flags", label: "Saving an unrelated field on a tester account does NOT clear its tester flags" },
+        { key: "store-edit-keeps-verified", label: "Saving an unrelated field on a verified store does NOT un-verify it" },
+        { key: "order-view-matches-drawer", label: "An order's full page shows the same items, address, payment and status as its row drawer" },
+        { key: "admin-detail-missing-id-404s", label: "An admin detail URL for an id that does not exist shows 404, not an empty editor" },
+      ],
+    },
       {
         pageKey: "catalog-listings",
         pageLabel: "Catalog & Listings",
