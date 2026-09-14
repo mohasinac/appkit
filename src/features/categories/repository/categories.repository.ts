@@ -554,8 +554,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
      *
      * 🛑 MEASURED 2026-09-14: `category` is unset on all 95 production products.
      * It is written by deriveTaxonomy, but every product here came from the seed,
-     * which hand-writes `categorySlugs` only — so a `where("category","==",id)`
-     * query matched nothing and this rewrite silently did nothing at all. The
+     * which hand-writes `categorySlugs` only — so an equality query on that
+     * scalar matched nothing and this rewrite silently did nothing at all. The
      * array field is the one that actually exists, and matching the MOVED node
      * gets the entire subtree in a single read because `categorySlugs` holds the
      * full ancestor chain.
