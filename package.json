@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "4.40.1",
+  "version": "4.41.0",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -151,7 +151,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/dedupe-peer-deps.mjs",
-    "build": "node scripts/dedupe-peer-deps.mjs && node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/bundle-css.mjs && node scripts/verify-css-build.mjs",
+    "build": "node scripts/dedupe-peer-deps.mjs && node -e \"const fs=require('fs');for(const t of ['tsconfig.build.tsbuildinfo','dist']){try{fs.rmSync(t,{recursive:true})}catch(e){}}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/bundle-css.mjs && node scripts/verify-css-build.mjs",
     "prepublishOnly": "npm run build",
     "watch": "concurrently --kill-others --restart-tries 0 --names \"ts,css\" \"tsc -p tsconfig.build.json --watch\" \"npm run watch:css\"",
     "watch:css": "tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --watch",
