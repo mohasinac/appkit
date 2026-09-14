@@ -35,27 +35,93 @@ export function assignDefaultPhases<T extends TesterPhaseAssignable>(
   itemsInCatalogOrder: T[],
   targetPhaseSize: number = DEFAULT_TESTER_PHASE_SIZE,
 ): number[] {
-  const phaseNumbers: number[] = new Array(itemsInCatalogOrder.length);
+  /*
+   * 🛑 PAGES ARE INTERLEAVED ACROSS GROUPS, NOT PACKED IN CATALOGUE ORDER.
+   *
+   * This used to walk the catalogue straight through, so a group's phase number
+   * was an accident of where its `...group(...)` spread sat in a 6,200-line
+   * literal. `admin` is the 9th spread, so its 231 cases landed at phases
+   * **25–32** — and any run that stops early is therefore GUARANTEED to lose
+   * the largest, most privileged group in its entirety. The same held for every
+   * infrastructure group in the tail: page-wiring (32–33), cta-layout (33),
+   * addresses and search-and-nav (34).
+   *
+   * That is not hypothetical. Run run-1789300124915 stopped at phase 17 of 34
+   * and ten of fourteen groups had ZERO coverage — 527 cases, including all 233
+   * admin ones — while the run looked about half done.
+   *
+   * Round-robin over groups fixes the shape rather than the symptom: an early
+   * stop now costs a proportional slice of every group instead of the whole
+   * tail. Groups are visited largest-first within each round so the big ones do
+   * not bunch up at the end as the small ones run out.
+   *
+   * A phase may now span several groups. That is fine for a tester session —
+   * it is ~25 cases either way — and every read path already groups by the
+   * STORED `item.phase`, never by position.
+   *
+   * 🛑 The RETURN IS STILL POSITIONAL. Items keep their catalogue order and
+   * their `order` field; only the phase LABEL changes. Nothing downstream
+   * reorders, and `fetch-cases` still sorts by (phase, order) to build batches.
+   */
+  const pageOrder: string[] = [];
+  const pageSize = new Map<string, number>();
+  const pageGroup = new Map<string, string>();
+  for (const item of itemsInCatalogOrder) {
+    const pageId = `${item.groupKey}␟${item.pageKey}`;
+    if (!pageSize.has(pageId)) {
+      pageOrder.push(pageId);
+      pageSize.set(pageId, 0);
+      pageGroup.set(pageId, item.groupKey);
+    }
+    pageSize.set(pageId, pageSize.get(pageId)! + 1);
+  }
 
+  // Queues of pages per group, each still in catalogue order within its group.
+  const byGroup = new Map<string, string[]>();
+  for (const pageId of pageOrder) {
+    const g = pageGroup.get(pageId)!;
+    if (!byGroup.has(g)) byGroup.set(g, []);
+    byGroup.get(g)!.push(pageId);
+  }
+
+  const groupsLargestFirst = [...byGroup.entries()]
+    .map(([g, pages]) => ({
+      g,
+      pages,
+      cases: pages.reduce((n, p) => n + pageSize.get(p)!, 0),
+    }))
+    .sort((a, b) => b.cases - a.cases || a.g.localeCompare(b.g))
+    .map((e) => e.g);
+
+  const cursor = new Map<string, number>(groupsLargestFirst.map((g) => [g, 0]));
+  const interleaved: string[] = [];
+  let remaining = pageOrder.length;
+  while (remaining > 0) {
+    for (const g of groupsLargestFirst) {
+      const i = cursor.get(g)!;
+      const pages = byGroup.get(g)!;
+      if (i >= pages.length) continue;
+      interleaved.push(pages[i]!);
+      cursor.set(g, i + 1);
+      remaining--;
+    }
+  }
+
+  // Pack the interleaved page sequence into phases, never splitting a page.
+  const phaseOfPage = new Map<string, number>();
   let currentPhase = 1;
   let currentPhaseCount = 0;
-  let lastPageKey: string | null = null;
-
-  for (let i = 0; i < itemsInCatalogOrder.length; i++) {
-    const item = itemsInCatalogOrder[i]!;
-    const pageId = `${item.groupKey}␟${item.pageKey}`;
-    const isNewPage = pageId !== lastPageKey;
-
-    // Only allow a phase boundary between pages, never mid-page.
-    if (isNewPage && currentPhaseCount >= targetPhaseSize) {
+  for (const pageId of interleaved) {
+    const size = pageSize.get(pageId)!;
+    if (currentPhaseCount > 0 && currentPhaseCount >= targetPhaseSize) {
       currentPhase += 1;
       currentPhaseCount = 0;
     }
-
-    phaseNumbers[i] = currentPhase;
-    currentPhaseCount += 1;
-    lastPageKey = pageId;
+    phaseOfPage.set(pageId, currentPhase);
+    currentPhaseCount += size;
   }
 
-  return phaseNumbers;
+  return itemsInCatalogOrder.map(
+    (item) => phaseOfPage.get(`${item.groupKey}␟${item.pageKey}`)!,
+  );
 }
