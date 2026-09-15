@@ -281,7 +281,17 @@ function stringMaxLength(schema: ZodTypeAny): number | undefined {
  */
 function enumOptions(schema: ZodTypeAny): string[] | undefined {
   const direct = (schema as unknown as { options?: unknown[] }).options;
-  if (Array.isArray(direct)) return direct.filter((o): o is string => typeof o === "string");
+  if (Array.isArray(direct)) {
+    const strings = direct.filter((o): o is string => typeof o === "string");
+    // On a ZodUnion `.options` is the member SCHEMAS, not strings, so the
+    // filter above yields []. Empty is truthy downstream, which is how a union
+    // rendered as a <select> with nothing in it. Read the literals instead.
+    if (strings.length === 0) {
+      const literals = unionStringLiterals(direct);
+      return literals.length > 0 ? literals : undefined;
+    }
+    return strings;
+  }
   const values = (schema as unknown as { _def?: { values?: unknown } })._def?.values;
   if (Array.isArray(values)) return values.filter((o): o is string => typeof o === "string");
   if (values && typeof values === "object") {
@@ -290,6 +300,26 @@ function enumOptions(schema: ZodTypeAny): string[] | undefined {
     );
   }
   return undefined;
+}
+
+/**
+ * String literal values carried by a union's members.
+ *
+ * `z.literal("a").or(z.literal("b"))` is a genuine choice and yields
+ * `["a", "b"]`. `z.string().optional().or(z.literal(""))` — the idiomatic
+ * "optional text that also accepts empty" — yields nothing usable, because its
+ * only literal is the empty string. That distinction is what decides whether a
+ * union field is a select or a text input.
+ */
+function unionStringLiterals(members: unknown[]): string[] {
+  const out: string[] = [];
+  for (const member of members) {
+    const direct = (member as { value?: unknown })?.value;
+    const nested = (member as { _def?: { value?: unknown } })?._def?.value;
+    const value = typeof direct === "string" ? direct : nested;
+    if (typeof value === "string" && value !== "") out.push(value);
+  }
+  return out;
 }
 
 /** Public: the option list for a select-shaped field, or null. */
@@ -301,7 +331,26 @@ export function schemaEnumOptions(schema: ZodTypeAny): string[] | null {
 /** Public: whether a field's type is optional-wrapped (i.e. not required). */
 export function schemaIsOptional(schema: ZodTypeAny): boolean {
   const type = typeOf(schema);
-  return type === "optional" || type === "default" || type === "nullish";
+  if (type === "optional" || type === "default" || type === "nullish") return true;
+  // A union HIDES optionality from the check above: the outer type is "union",
+  // so `z.string().optional().or(z.literal(""))` read as required and rendered
+  // a `*` on a field the schema is happy to leave empty. If any member is
+  // optional, or accepts "", the field is optional.
+  if (type === "union") {
+    const members = (schema as unknown as { options?: unknown[] }).options;
+    if (Array.isArray(members)) {
+      return members.some((member) => {
+        const memberType = typeOf(member as ZodTypeAny);
+        if (memberType === "optional" || memberType === "default" || memberType === "nullish") {
+          return true;
+        }
+        const direct = (member as { value?: unknown })?.value;
+        const nested = (member as { _def?: { value?: unknown } })?._def?.value;
+        return direct === "" || nested === "";
+      });
+    }
+  }
+  return false;
 }
 
 /**
@@ -382,8 +431,19 @@ function fromZodType(type: string, inner: ZodTypeAny): Partial<FieldUiMeta> {
     case "enum":
     case "nativeEnum":
     case "literal":
-    case "union":
       return { kind: "select", row: "pair" };
+    case "union": {
+      // Only a union that actually yields choices is a select. The other
+      // common shape, `z.string().optional().or(z.literal(""))`, is an optional
+      // TEXT field — rendering it as a select produced a dropdown with zero
+      // options, which is unusable and (being marked required) made the whole
+      // form unsubmittable. Seen live on /user/addresses/new, where
+      // "Address line 2" and "Landmark" were both required empty dropdowns.
+      const choices = enumOptions(inner);
+      return choices && choices.length > 0
+        ? { kind: "select", row: "pair" }
+        : { kind: "text", row: "pair" };
+    }
     case "date":
       return { kind: "date", row: "pair" };
     case "number":
