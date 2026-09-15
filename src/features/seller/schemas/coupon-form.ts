@@ -77,7 +77,10 @@ export const couponFormBase = z
      * `when` carries what the editor held as JSX conditionals, so a field the
      * form hides is one the payload cannot carry — see `couponDraftToPayload`.
      */
-    value: annotate(numericString("The discount value"), {
+    // Optional for the same reason as buyQuantity/getQuantity below: this field
+    // is `when`-gated, so visibleValues() strips it on a free-shipping coupon.
+    // refineCouponCommon still requires it for every other type.
+    value: annotate(numericString("The discount value").optional(), {
       section: "basics", quick: true, order: 3, row: "pair",
       when: (v) => v.type !== "free_shipping",
     }),
@@ -91,7 +94,9 @@ export const couponFormBase = z
      * cap typed while the type was "percentage" persisted after switching to
      * free shipping, invisibly.
      */
-    maxDiscount: annotate(numericString("Maximum discount"), {
+    // `when`-gated to percentage only, so it is stripped for fixed and
+    // free-shipping coupons — optional, or those two types cannot be saved.
+    maxDiscount: annotate(numericString("Maximum discount").optional(), {
       section: "limits", order: 2, row: "pair",
       when: (v) => v.type === "percentage",
     }),
@@ -128,7 +133,7 @@ export const couponFormBase = z
 export function refineCouponCommon(
   v: {
     type: string;
-    value: string;
+    value?: string;
     startDate: string;
     endDate: string;
     totalLimit: string;
@@ -144,8 +149,9 @@ export function refineCouponCommon(
     // a percentage above 100 is not a discount — it is the store paying the
     // customer. Nothing bounded this before.
     if (v.type !== "free_shipping") {
-      const amount = Number(v.value);
-      if (v.value.trim() === "") issue("value", "A discount value is required.");
+      const rawValue = v.value ?? "";
+      const amount = Number(rawValue);
+      if (rawValue.trim() === "") issue("value", "A discount value is required.");
       else if (amount <= 0) issue("value", "The discount must be greater than zero.");
       else if (v.type === "percentage" && amount > 100) {
         issue("value", "A percentage discount cannot exceed 100%.");
@@ -256,11 +262,28 @@ export const adminCouponFormSchema = couponFormBase
       section: "basics", order: 5, row: "full", kind: "textarea",
     }),
 
-    buyQuantity: annotate(numericString("Buy quantity"), {
+    /*
+     * 🛑 A `when`-gated field MUST be optional, or the form cannot be submitted
+     * at all while the condition is false.
+     *
+     * `visibleValues()` strips every field whose `when` is false before the
+     * submit path parses the draft — that is its whole job, so a hidden input
+     * cannot smuggle a stale value into the payload. But a stripped key is
+     * `undefined` to Zod, and these were required strings, so editing any
+     * ordinary percentage coupon produced exactly two "This field is required"
+     * issues for the two buy-x-get-y inputs that are not on screen. The summary
+     * rendered them as "Coupon: This field is required" twice, naming the
+     * section rather than any field, and no PATCH was ever issued.
+     *
+     * Optional here is not a loosening: the superRefine below still demands a
+     * whole number of one or more whenever the type IS buy_x_get_y, which is
+     * the only time either field is real.
+     */
+    buyQuantity: annotate(numericString("Buy quantity").optional(), {
       section: "basics", order: 6, row: "pair", kind: "number",
       when: (v) => v.type === "buy_x_get_y",
     }),
-    getQuantity: annotate(numericString("Get quantity"), {
+    getQuantity: annotate(numericString("Get quantity").optional(), {
       section: "basics", order: 7, row: "pair", kind: "number",
       when: (v) => v.type === "buy_x_get_y",
     }),
@@ -289,8 +312,13 @@ export const adminCouponFormSchema = couponFormBase
     // A buy-x-get-y with a zero on either side is not an offer.
     if (v.type === "buy_x_get_y") {
       for (const key of ["buyQuantity", "getQuantity"] as const) {
-        const n = Number(v[key]);
-        if (v[key].trim() === "" || !Number.isFinite(n) || n < 1) {
+        // `?? ""` because the field is optional now — see the note on its
+        // declaration. When the type IS buy_x_get_y the input is on screen, so
+        // an absent value here means the admin left it blank, which this
+        // rejects exactly as it did before.
+        const raw = v[key] ?? "";
+        const n = Number(raw);
+        if (raw.trim() === "" || !Number.isFinite(n) || n < 1) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: [key],
