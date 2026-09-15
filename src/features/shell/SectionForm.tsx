@@ -340,6 +340,20 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   const onValidationChangeRef = useRef(onValidationChange);
   onValidationChangeRef.current = onValidationChange;
 
+  /**
+   * Are two field-error maps the same set of messages?
+   *
+   * Flat string maps, so a key sweep is exact — no deep compare needed. This is
+   * what lets the validation effect depend on `values` (a new object every
+   * render) without looping: an unchanged result returns the previous object
+   * and React bails out of the update.
+   */
+  const sameErrors = (a: Record<string, string>, b: Record<string, string>): boolean => {
+    const ak = Object.keys(a);
+    if (ak.length !== Object.keys(b).length) return false;
+    return ak.every((k) => a[k] === b[k]);
+  };
+
   /** Section ids holding at least one error, in render order. */
   const erroringSectionIds = useCallback((errs: Record<string, string>): string[] => {
     const keys = Object.keys(errs);
@@ -357,8 +371,8 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     // applyZodIssues' incremental setFieldError-per-issue cannot do.
     const parsed = activeSchema.safeParse(nextValues);
     if (parsed.success) {
-      setFieldErrors({});
-      setForceOpenIds([]);
+      setFieldErrors((prev) => (Object.keys(prev).length === 0 ? prev : {}));
+      setForceOpenIds((prev) => (prev.length === 0 ? prev : []));
       onValidationChangeRef.current?.({}, fieldToSectionIndex);
       return;
     }
@@ -367,7 +381,12 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
       if (!issue.path || issue.path.length === 0) continue;
       next[issue.path.map(String).join(".")] = issue.message;
     }
-    setFieldErrors(next);
+    /*
+     * Return the PREVIOUS object when nothing actually changed. `values` is a
+     * fresh object on every render, so the effect below re-validates on every
+     * render; handing back an equal-but-new errors map would setState in a loop.
+     */
+    setFieldErrors((prev) => (sameErrors(prev, next) ? prev : next));
     // Release a force-opened section as soon as ITS OWN errors clear, rather
     // than waiting for the whole form to become valid — otherwise fixing
     // section 1 leaves it pinned open while the user works through section 5.
@@ -379,10 +398,30 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     onValidationChangeRef.current?.(next, fieldToSectionIndex);
   }, [schema, inheritedSchema, fieldToSectionIndex, erroringSectionIds]);
 
+  /*
+   * 🛑 `values` MUST be a dependency, and leaving it out cost the entire admin
+   * coupon editor.
+   *
+   * This effect used to run once on mount with an eslint-disable, so it
+   * validated the INITIAL draft. On an edit form that draft is the empty
+   * defaults: the record arrives asynchronously (useQuery → useEffect →
+   * patch()), and `patch` is not `handleFieldChange`, so the only other caller
+   * of runValidation never fired. The mount-time errors therefore outlived the
+   * data that fixed them.
+   *
+   * Measured on production 2026-09-15: opening ARENA25 showed "3 issues" with
+   * "A discount value is required." under a field containing 25 and "Give the
+   * campaign a name." under a populated name — the three fields that are empty
+   * BEFORE the load. Save then refused with "Coupon: This field is required"
+   * and issued no PATCH at all, so no coupon could be edited through the UI.
+   *
+   * Re-validating per render is safe because runValidation returns the previous
+   * errors object when nothing changed (see `sameErrors`); without that this
+   * would setState in a loop, which is presumably why the dep was dropped.
+   */
   useEffect(() => {
     runValidation(values);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schema, inheritedSchema, fieldToSectionIndex]);
+  }, [runValidation, values]);
 
   const handleFieldChange = useCallback((partial: Partial<T>) => {
     onChange(partial);
