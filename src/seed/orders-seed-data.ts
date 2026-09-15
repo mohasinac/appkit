@@ -45,6 +45,34 @@ import { seedPhoto } from "./_helpers/media";
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
+/**
+ * The anchor the order IDs are built from — fixed, never `NOW`.
+ *
+ * 🛑 An ID may not contain a value that moves. `generateOrderId` embeds a
+ * `yyyymmdd` derived from its anchor, so with `NOW` every order's id changed on
+ * every calendar day: `appkit-seed load` CREATED 50 fresh documents instead of
+ * upserting the same 50, and `status`/`delete` computed ids that had never been
+ * written.
+ *
+ * Measured immediately after a successful `load --collections orders` that
+ * reported "created 50, errors 0": `appkit-seed status` answered
+ * **`orders 50 seed / 0 in db`**. Both numbers were right; they were about
+ * different sets of ids.
+ *
+ * This is exactly the case Recurrent Root Cause #25 names — "`Date.now()` used
+ * as an ID component (as opposed to just a display timestamp)". The
+ * distinction is the whole fix:
+ *
+ *   - **IDs** anchor to `SEED_EPOCH`, so they are reproducible forever.
+ *   - **Display timestamps** (`orderDate`, `createdAt`, shipping dates) keep
+ *     using `daysAgo()` off `NOW`, so a reseeded catalogue still looks recent
+ *     and time-bound fixtures re-arm, which is what the tester window needs.
+ *
+ * It also broke every checklist case that names an order by id: they were
+ * authored against one day's ids and could never resolve afterwards.
+ */
+const SEED_EPOCH = new Date("2026-01-01T00:00:00.000Z");
+
 // Deterministic per-product thumbnail — picsum.photos returns a stable image
 // for any seed string, so this doesn't need to match the real product seed's
 // own image, just be present and consistent across reseeds. Backfills the
@@ -71,7 +99,9 @@ function seededSuffix(seed: string): string {
 }
 
 const generateOrderId = (itemCount: number, daysBack: number, seed: string): string => {
-  const date = new Date(NOW.getTime() - daysBack * 86_400_000);
+  // SEED_EPOCH, not NOW — see the block comment on SEED_EPOCH. An id that
+  // moves with the calendar is an id that never upserts.
+  const date = new Date(SEED_EPOCH.getTime() - daysBack * 86_400_000);
   const yyyymmdd = date.toISOString().split("T")[0].replace(/-/g, "");
   const rand = seededSuffix(`${itemCount}-${daysBack}-${seed}`);
   return `order-${itemCount}-${yyyymmdd}-${rand}`;
