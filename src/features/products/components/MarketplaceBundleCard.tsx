@@ -11,7 +11,7 @@ const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-
 const CLS_STOCK_OK = "bg-success-solid text-success-on-solid";
 // audit-content-alignment-ok: button label text, not page content — buttons are universally center-labeled
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-[var(--appkit-space-1-5)] text-center text-[length:var(--appkit-text-xs)] font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
-import { BaseListingCard, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Div, GatedPrice, PricesOnly, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
@@ -152,16 +152,26 @@ export function MarketplaceBundleCard({
           )}
         </TextLink>
 
+        {/*
+          A discount percentage is a SECONDARY money detail sitting beside an
+          already-gated price, so it belongs behind PricesOnly rather than
+          rendering for everyone: "35% OFF" next to "Sign in to see the bundle
+          price" tells a signed-out visitor how much the bundle saves without
+          showing what it costs, which is most of what the gate exists to
+          withhold. The price row below is already wrapped in GatedPrice.
+        */}
         {discount && (
-          <Span
-            size="xs"
-            weight="bold"
-            className="absolute left-2 top-2 bg-success-solid text-success-on-solid"
-            rounded="full"
-            padding="pill-xs"
-          >
-            {BUNDLE_COPY.detail.discountBadge(discount.percent)}
-          </Span>
+          <PricesOnly>
+            <Span
+              size="xs"
+              weight="bold"
+              className="absolute left-2 top-2 bg-success-solid text-success-on-solid"
+              rounded="full"
+              padding="pill-xs"
+            >
+              {BUNDLE_COPY.detail.discountBadge(discount.percent)}
+            </Span>
+          </PricesOnly>
         )}
 
         <Stack className="absolute right-2 top-2" align="end" gap="xs">

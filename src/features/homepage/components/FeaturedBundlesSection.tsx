@@ -136,10 +136,18 @@ function FeaturedBundleCard({
               {PLACEHOLDER_EMOJI}
             </Row>
           )}
+          {/*
+            PricesOnly, for the same reason the struck-through original total
+            below carries it: a discount percentage is a secondary money detail
+            beside an already-gated price. `showSavingsBadge` is a layout prop
+            that defaults to true and says nothing about who may see prices.
+          */}
           {showSavingsBadge && discount && (
-            <Badge variant="success" className="absolute left-2 top-2">
-              {BUNDLE_COPY.detail.discountBadge(discount.percent)}
-            </Badge>
+            <PricesOnly>
+              <Badge variant="success" className="absolute left-2 top-2">
+                {BUNDLE_COPY.detail.discountBadge(discount.percent)}
+              </Badge>
+            </PricesOnly>
           )}
         </Div>
         <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
