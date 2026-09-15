@@ -31,10 +31,19 @@ export interface AdminCarouselViewProps extends ListingLayoutProps {
   onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
-interface AdminCarouselResponse {
-  data?: JsonValue;
-  items?: JsonArray;
-  total?: number;
+/**
+ * Same shape caveat as AdminCategoriesView: `apiClient.get()` unwraps the
+ * `{success, data}` envelope, and `/api/carousel` returns its rows directly in
+ * `data` — so `mapRows` receives the ARRAY, on which `.data` is undefined.
+ */
+type AdminCarouselResponse = JsonValue;
+
+function extractCarouselRows(response: AdminCarouselResponse): JsonValue | undefined {
+  if (Array.isArray(response)) return response;
+  if (!response || typeof response !== "object") return undefined;
+  const obj = response as { data?: JsonValue; items?: JsonValue };
+  if (Array.isArray(obj.data)) return obj.data;
+  return Array.isArray(obj.items) ? obj.items : undefined;
 }
 
 interface CarouselRow {
@@ -67,7 +76,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     queryKey: ["admin", "carousel", "listing"],
     endpoint: `${HOMEPAGE_ENDPOINTS.CAROUSEL}?includeInactive=true`,
     mapRows: (response) => {
-      const sourceItems = Array.isArray(response.data) ? response.data : response.items;
+      const sourceItems = extractCarouselRows(response);
       return toRecordArray(sourceItems)
         .sort((a, b) => ((a.order as number) ?? 0) - ((b.order as number) ?? 0))
         .map((item, index) => {
@@ -87,8 +96,13 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
           };
         });
     },
-    getTotal: (response, mappedRows) =>
-      typeof response.total === "number" ? response.total : mappedRows.length,
+    getTotal: (response, mappedRows) => {
+      if (Array.isArray(response) || !response || typeof response !== "object") {
+        return mappedRows.length;
+      }
+      const total = (response as { total?: JsonValue }).total;
+      return typeof total === "number" ? total : mappedRows.length;
+    },
     buildFilters: (filterState) => {
       const activeRaw = filterState.active;
       if (activeRaw === "true") return "active==true";

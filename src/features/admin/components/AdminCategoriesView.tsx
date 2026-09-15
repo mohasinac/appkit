@@ -17,10 +17,34 @@ import { AdminCategoryEditorView } from "./AdminCategoryEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import type { AdminTableColumn } from "../types";
 
-interface AdminCategoriesResponse {
-  data?: JsonValue;
-  items?: JsonArray;
-  total?: number;
+/**
+ * `apiClient.get()` UNWRAPS the `{success, data}` envelope and returns `data`
+ * itself (ApiClient.ts — `return data.data as T`). `/api/categories` puts the
+ * rows directly in `data`, so what reaches `mapRows` is the ARRAY, not an
+ * object with a `.data` key. Reading `response.data` on an array yields
+ * undefined, which is how this listing rendered "No categories found" while the
+ * request behind it answered 200 with 58 rows.
+ *
+ * The union keeps the object shapes too — other admin endpoints nest their rows
+ * under `data` or `items` — so this stays correct whichever endpoint it is
+ * pointed at.
+ */
+type AdminCategoriesResponse = JsonValue;
+
+/** Rows, whichever of the three shapes the endpoint returns. */
+function extractCategoryRows(response: AdminCategoriesResponse): JsonValue | undefined {
+  if (Array.isArray(response)) return response;
+  if (!response || typeof response !== "object") return undefined;
+  const obj = response as { data?: JsonValue; items?: JsonValue };
+  if (Array.isArray(obj.data)) return obj.data;
+  return Array.isArray(obj.items) ? obj.items : undefined;
+}
+
+/** `total` only exists on the object shapes; a bare array has none. */
+function extractCategoryTotal(response: AdminCategoriesResponse): number | undefined {
+  if (Array.isArray(response) || !response || typeof response !== "object") return undefined;
+  const total = (response as { total?: JsonValue }).total;
+  return typeof total === "number" ? total : undefined;
 }
 
 interface CategoryRow {
@@ -84,7 +108,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
   ],
   columns: COLUMNS,
   mapRows: (response) => {
-    const sourceItems = Array.isArray(response.data) ? response.data : response.items;
+    const sourceItems = extractCategoryRows(response);
     return toRecordArray(sourceItems).map((item, index) => ({
       id: toStringValue(item.id, `category-${index}`),
       primary: toStringValue(item.name, "Untitled category"),
@@ -98,8 +122,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
       updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
     }));
   },
-  getTotal: (response, mappedRows) =>
-    typeof response.total === "number" ? response.total : mappedRows.length,
+  getTotal: (response, mappedRows) => extractCategoryTotal(response) ?? mappedRows.length,
   buildFilters: (state) => {
     const parts: string[] = [];
     if (state.isActive) parts.push(sieveFilter("isActive", SIEVE_OP.EQ, state.isActive));
