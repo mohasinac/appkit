@@ -1830,6 +1830,8 @@ export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type 
 export { getLotteryEventCached, listLotteryEvents, getLotteryEntriesForAdmin, getLotteryEntriesForUser } from "./_internal/server/features/lottery/data";
 export type { LotteryEventClient } from "./_internal/server/features/lottery/data";
 export { toClientLotterySlot, toClientLotteryConfig } from "./_internal/server/features/lottery/adapters";
+export { toPublicEvent, toClientSpinPrize } from "./_internal/server/features/events/adapters";
+export type { ClientSpinPrize } from "./_internal/server/features/events/adapters";
 export { buildLotteryMetadata } from "./_internal/server/features/lottery/metadata";
 export {
   submitLotteryPullAction,

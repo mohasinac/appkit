@@ -21,7 +21,7 @@ import type { EventItem, EventEntryItem } from "../../types/index";
 import { EVENT_FIELDS } from "../../schemas";
 
 import { normalizeError } from "../../../../errors/normalize";
-import { toClientLotteryConfig } from "../../../../_internal/server/features/lottery/adapters";
+import { toPublicEvent } from "../../../../_internal/server/features/events/adapters";
 type RouteContext = { params: Promise<{ id: string }> };
 
 // --- GET /api/events/[id] -----------------------------------------------------
@@ -54,26 +54,12 @@ export async function GET(
       );
     }
 
-    // Strip internal field.
-    //
-    // 🛑 This is a deny-list spread, so anything NOT named here is published by
-    // default — which is how a lottery event's stored `lotteryConfig` reached
-    // anonymous callers whole. `toClientLotteryConfig` is the allow-list that
-    // belongs on this boundary: it drops the per-slot `price` and `weight` (the
-    // weighting is how the odds are set) and the internal `bookedByUserId`,
-    // while deliberately keeping `bookedByDisplayName` and
-    // `bookedByUserLotteryNumber`, which the public slot grid renders.
-    const { createdBy: _createdBy, ...rawPublicEvent } = event as EventItem & {
-      createdBy?: string;
-    };
-    const publicEvent = rawPublicEvent.lotteryConfig
-      ? {
-          ...rawPublicEvent,
-          lotteryConfig: toClientLotteryConfig(
-            rawPublicEvent.lotteryConfig as Parameters<typeof toClientLotteryConfig>[0],
-          ),
-        }
-      : rawPublicEvent;
+    // 🛑 Do not hand-roll this projection here. `toPublicEvent` drops
+    // `createdBy` AND allow-lists the two nested structures that decide
+    // outcomes — `lotteryConfig.slots[]` (price / weight / bookedByUserId) and
+    // `spinPrizes[]` (weight / couponId). Both were published to anonymous
+    // callers by the deny-list spread that used to live here.
+    const publicEvent = toPublicEvent(event);
 
     const entriesRepo = db.getRepository<EventEntryItem>("eventEntries");
 
