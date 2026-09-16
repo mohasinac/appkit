@@ -49,12 +49,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
-      "Navigate directly to /api/user/orders/order-1-20260721-11joon/invoice — a seeded order belonging to a different persona.",
+      "Navigate directly to /api/user/orders/order-1-20251107-11joon/invoice — a seeded order belonging to a different persona.",
       "Read the response.",
-      "Now navigate to /user/orders/order-1-20260721-11joon.",
+      "Now navigate to /user/orders/order-1-20251107-11joon.",
       "Read that page.",
     ],
-    inputs: { foreignOrderId: "order-1-20260721-11joon" },
+    inputs: { foreignOrderId: "order-1-20251107-11joon" },
     expectedBehaviour:
       "An order id is short and guessable, so ownership is checked on every hit rather than relied upon to be secret. Answering 403 instead of 404 would confirm that an order with that id exists, which is a membership oracle over the id space.",
     expectedUiState:
@@ -88,14 +88,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123! — this persona owns the seeded DELIVERED orders, and a return can only be requested on one.",
-      "Open /user/orders and open order-1-20260721-11joon, which is delivered.",
+      "Open /user/orders and open order-1-20251107-11joon, which is delivered.",
       "Use the Return action.",
       "Give the reason: item not as described.",
       "Submit the request.",
       "Reload the order.",
       "Open /user/returns and look for it.",
     ],
-    inputs: { orderId: "order-1-20260721-11joon", reason: "item not as described" },
+    inputs: { orderId: "order-1-20251107-11joon", reason: "item not as described" },
     expectedBehaviour:
       "A return request moves the order into Return Requested and appears on the returns surface. That status is deliberately an ACTIVE one — it is the seller's next action item, not a closed state — so the order must not disappear from the active list.",
     expectedUiState:
@@ -110,12 +110,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123! — this persona owns the seeded SHIPPED order.",
-      "Open /user/orders and open order-1-20260718-aevnlw.",
+      "Open /user/orders and open order-1-20251104-aevnlw.",
       "Use the Track action.",
       "Read every step on the timeline and note which carry a date and which do not.",
       "Compare the dates shown against the order's own placed and shipped dates.",
     ],
-    inputs: { orderId: "order-1-20260718-aevnlw" },
+    inputs: { orderId: "order-1-20251104-aevnlw" },
     expectedBehaviour:
       "Each timeline step shows the date actually recorded for it. A step with no recorded date renders an em-dash rather than a guess — an invented or estimated date is worse than a blank, because it cannot be told apart from a real one.",
     expectedUiState:
@@ -129,14 +129,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
-      "Navigate to /user/orders/order-1-20260721-11joon/track.",
-      "Navigate to /user/orders/order-1-20260721-11joon/invoice.",
-      "Navigate to /user/orders/order-1-20260721-11joon/return.",
-      "Navigate to /user/orders/order-1-20260721-11joon/cancel.",
-      "Navigate to /user/orders/order-1-20260721-11joon/payment.",
+      "Navigate to /user/orders/order-1-20251107-11joon/track.",
+      "Navigate to /user/orders/order-1-20251107-11joon/invoice.",
+      "Navigate to /user/orders/order-1-20251107-11joon/return.",
+      "Navigate to /user/orders/order-1-20251107-11joon/cancel.",
+      "Navigate to /user/orders/order-1-20251107-11joon/payment.",
       "Read each page in turn.",
     ],
-    inputs: { foreignOrderId: "order-1-20260721-11joon" },
+    inputs: { foreignOrderId: "order-1-20251107-11joon" },
     expectedBehaviour:
       "Ownership is enforced on EVERY subroute, not only on the order page that links to them. A subroute that checks nothing is reachable by typing a URL, and these five carry the address, the amounts and the payment details.",
     expectedUiState:
@@ -150,11 +150,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Open a private window with no session.",
-      "Navigate to /user/orders/order-1-20260721-11joon/track.",
+      "Navigate to /user/orders/order-1-20251107-11joon/track.",
       "Read the page.",
       "Navigate to /user/orders and read that page too.",
     ],
-    inputs: { foreignOrderId: "order-1-20260721-11joon" },
+    inputs: { foreignOrderId: "order-1-20251107-11joon" },
     expectedBehaviour:
       "A signed-out visitor is sent to sign in. Being blocked IS the expected result here — the failure to look for is the page rendering its content for a moment before redirecting, which is enough to read and enough for a crawler to capture.",
     expectedUiState:

@@ -137,12 +137,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/orders",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/orders and open the row drawer for order-1-20260721-11joon.",
+      "Open /admin/orders and open the row drawer for order-1-20251107-11joon.",
       "Write down the item titles, the shipping address, the payment method and the status.",
       "Close the drawer and use that row's Open full page action.",
       "Read the same four things on the full page.",
     ],
-    inputs: { orderId: "order-1-20260721-11joon" },
+    inputs: { orderId: "order-1-20251107-11joon" },
     expectedBehaviour:
       "The drawer and the full page are two renderings of one record, so they must agree. Where they differ, one of them is reading a field the other is not — and the full page is the bookmarkable one an admin will send to somebody else.",
     expectedUiState:
