@@ -471,11 +471,54 @@ const cashOrderVerified: Partial<OrderDocument> = {
   updatedAt: daysAgo(2),
 };
 
+/*
+ * 🛑 DERIVES `items[]` FROM THE FLAT FIELDS WHEN A FIXTURE OMITS IT.
+ *
+ * `items[]` is the canonical shape and every orders surface reads
+ * `items[0].productTitle` for its row label (Root Cause #52). The generator
+ * below was taught to emit it — and that fix was NARROWER THAN THE DEFECT:
+ * measured after it shipped, 14 of the 50 seeded orders still had none,
+ * because the hand-written fixtures never go through the generator.
+ *
+ * That is Root Cause #84's shape — a fix scoped to the population you happened
+ * to be looking at. Patching those 14 by hand would leave the 15th to whoever
+ * writes it next, so the derivation lives here instead, on the path EVERY
+ * fixture already takes.
+ *
+ * It only ever fills a gap: a fixture that declares its own `items[]` (the
+ * multi-line ones, where the flat fields cannot express two products) is
+ * passed through untouched.
+ */
+function withOrderItems(order: Partial<OrderDocument>): Partial<OrderDocument> {
+  if (Array.isArray(order.items) && order.items.length > 0) return order;
+  if (!order.productId) return order;
+
+  const quantity = order.quantity ?? 1;
+  const unitPrice = order.unitPrice ?? 0;
+  return {
+    ...order,
+    items: [
+      {
+        productId: order.productId,
+        productTitle: order.productTitle ?? order.productId,
+        listingType: "standard",
+        quantity,
+        unitPrice,
+        // Prefer the order's own total: on a single-line order it is the
+        // authoritative figure, and re-deriving it would silently drop any
+        // fixture that deliberately encodes a locked or negotiated price.
+        totalPrice: order.totalPrice ?? unitPrice * quantity,
+      },
+    ],
+  } as Partial<OrderDocument>;
+}
+
 // Backfills image/imageUrls (see orderItemImage() above) on every fixture
 // regardless of which shape it uses (multi-item `items[]` vs the legacy
 // single-item top-level fields), so no seeded order silently renders without
 // a thumbnail the way real pre-2026-08-20 orders do.
-function withOrderImages(order: Partial<OrderDocument>): Partial<OrderDocument> {
+function withOrderImages(input: Partial<OrderDocument>): Partial<OrderDocument> {
+  const order = withOrderItems(input);
   return {
     ...order,
     imageUrls: order.imageUrls ?? (order.productId ? [orderItemImage(order.productId)] : undefined),
