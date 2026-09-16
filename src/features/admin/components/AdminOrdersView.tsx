@@ -194,9 +194,35 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
             ? `${title}${extraCount > 0 ? ` +${extraCount} more` : ""}`
             : `Order ${orderId}`,
           secondary: [
-            toStringValue(item.buyerName ?? item.customerName, "Unknown buyer"),
-            toCurrency(item.totalAmount ?? item.total ?? item.amount),
-            orderId.slice(0, 14),
+            /*
+             * 🛑 `userName` and `totalPrice` FIRST — they are the document's
+             * real field names (OrderDocument, and the live response of
+             * GET /api/admin/orders).
+             *
+             * This read `buyerName ?? customerName` and
+             * `totalAmount ?? total ?? amount`: five names, not one of which
+             * the order document has ever carried. So every row rendered
+             * "Unknown buyer · -", on all 25 rows, for as long as the view has
+             * existed — and the `??` chains made it look like considered
+             * defensive coding rather than a guess. A fallback spelled three
+             * ways is the tell that nobody checked which one was real.
+             *
+             * The aliases are GONE rather than demoted to fallbacks: nothing
+             * declares them (the client `Order` type has no such fields) and
+             * nothing emits them (no adapter renames to them). Keeping a
+             * fallback with no producer only preserves the ambiguity that
+             * hid the bug.
+             */
+            toStringValue(item.userName, "Unknown buyer"),
+            toCurrency(item.totalPrice),
+            /*
+             * Not `.slice(0, 14)` — that cut mid-date, so
+             * `order-1-20260822-aucwon` and `order-1-20260821-prizedr` both
+             * rendered as "order-1-202608". A truncation that destroys
+             * uniqueness is worse than a long string, because the id is the
+             * one thing on the row an admin searches by.
+             */
+            orderId,
             paymentReviewLabel(item),
           ]
             .filter(Boolean)

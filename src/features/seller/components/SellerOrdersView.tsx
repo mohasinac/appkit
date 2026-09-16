@@ -693,13 +693,37 @@ export function SellerOrdersView({
         const loc = item.physicalLocation as { zone?: string; shelf?: string; bin?: string } | undefined;
         return {
           id: toStringValue(item.id, `order-${index}`),
-          primary: `Order ${toStringValue(item.id, "-").slice(0, 14)}`,
-          secondary: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+          /*
+           * 🛑 The row says WHAT WAS SOLD, not the id repeated.
+           *
+           * This was `Order ${id.slice(0, 14)}` — a raw id, truncated
+           * mid-date, so two different orders rendered identically. The title
+           * was available the whole time: `items[0].productTitle` is
+           * denormalised onto every order precisely so a list never needs a
+           * second fetch (Root Cause #52), and it is already read three lines
+           * below as `itemTitle`.
+           */
+          primary: (() => {
+            const title =
+              typeof firstItem.productTitle === "string" ? firstItem.productTitle : "";
+            if (!title) return `Order ${toStringValue(item.id, "-")}`;
+            const extra = itemsArr.length - 1;
+            return extra > 0 ? `${title} +${extra} more` : title;
+          })(),
+          /*
+           * `userName` / `totalPrice` are the document's real field names.
+           * `buyerName`/`buyerDisplayName`/`totalAmount`/`total` are four
+           * spellings the order document has never carried, so every seller's
+           * order list showed "Unknown buyer" and ₹0 — see AdminOrdersView for
+           * the full writeup. They are removed rather than demoted: nothing
+           * declares them and nothing emits them.
+           */
+          secondary: toStringValue(item.userName, "Unknown buyer"),
           status: toStringValue(item.status, "PENDING"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.orderDate ?? item.createdAt),
           itemCount: itemsArr.length,
-          totalAmount: Number(item.totalAmount ?? item.total ?? 0),
-          buyerName: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+          totalAmount: Number(item.totalPrice ?? 0),
+          buyerName: toStringValue(item.userName, "Unknown buyer"),
           itemImage: typeof firstItem.image === "string" ? firstItem.image : undefined,
           itemTitle: typeof firstItem.productTitle === "string" ? firstItem.productTitle : undefined,
           physicalLocation:
