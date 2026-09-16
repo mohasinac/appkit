@@ -1325,6 +1325,33 @@ const EDIT_SECTIONS: FormShellSection[] = [
 
 // ── Main SellerProductShell ───────────────────────────────────────────────
 
+
+/**
+ * The message for a failed save.
+ *
+ * 🛑 "Fix the highlighted errors" may ONLY be said when something is actually
+ * highlighted. `toUserMessage` short-circuits to its `fallback` whenever no
+ * translator is passed (`if (!t) return generic`), so passing that sentence as
+ * the fallback rendered it for EVERY failure code — an authorization or
+ * not-found refusal was reported to the seller as a validation problem, with
+ * nothing marked and nothing to act on.
+ *
+ * With no issues we say so plainly and quote the CODE. A code is a stable
+ * identifier, not server text, so this does not reintroduce the raw-message
+ * leak Rule #9 §6 forbids — it is the same reasoning that puts the error digest
+ * in front of users (Root Cause #78): an opaque handle they can quote beats an
+ * explanation that is wrong.
+ */
+function saveFailureMessage(
+  code: string | undefined,
+  issueCount: number,
+): string {
+  if (issueCount > 0) return "Fix the highlighted errors and try again.";
+  return code
+    ? `Could not save — the server refused this change (${code}). Nothing was changed.`
+    : "Could not save — the server refused this change. Nothing was changed.";
+}
+
 export function SellerProductShell({
   mode,
   listingType = "standard",
@@ -1419,9 +1446,10 @@ export function SellerProductShell({
       );
       if (!silent) {
         showToast(
-          toUserMessage(result.code, undefined, {
-            fallback: "Fix the highlighted errors and try again.",
-          }),
+          saveFailureMessage(
+            result.code,
+            ((result.issues as unknown[] | undefined) ?? []).length,
+          ),
           "error",
         );
       }
@@ -1466,9 +1494,10 @@ export function SellerProductShell({
         setFieldError,
       );
       showToast(
-        toUserMessage(result.code, undefined, {
-          fallback: "Fix the highlighted errors and try again.",
-        }),
+        saveFailureMessage(
+          result.code,
+          ((result.issues as unknown[] | undefined) ?? []).length,
+        ),
         "error",
       );
     } catch (err) {

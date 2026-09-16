@@ -9203,6 +9203,7 @@ export {
   FIREBASE_STORAGE_HOST,
   GCS_HOST,
   isStoredMediaRef,
+  getYouTubeVideoId,
   MEDIA_PROXY_PREFIX,
   MEDIA_URL_MAX_LENGTH,
   MEDIA_URL_MESSAGE,
