@@ -41,10 +41,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "The account exists and persists. This case creates a real row that teardown does not remove, which is why the address is numbered rather than fixed.",
   },
-  "checklist-public-pages-auth-error-pages-forgot-reset-password-pages": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
-    roles: ["guest"],
+  "checklist-public-pages-auth-error-pages-forgot-reset-password-pages": {    roles: ["guest"],
     startPage: "/auth/forgot-password",
     steps: [
       "Open /auth/forgot-password in a private window with no session.",
@@ -68,10 +65,7 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "The password is back at TempPass123! by the final step. This case shares divya.funko@gmail.com with the single-use-link case in signup-login and with nothing else, deliberately — the seeder never resets an existing password, so a changed one outlives every future re-seed.",
   },
-  "checklist-public-pages-auth-error-pages-verify-email-page": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
-    roles: ["guest"],
+  "checklist-public-pages-auth-error-pages-verify-email-page": {    roles: ["guest"],
     startPage: "/auth/register",
     steps: [
       "Open /auth/register in a private window and create an account with an inbox you can open, using TestPass123! as the password.",

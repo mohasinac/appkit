@@ -240,8 +240,6 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Read-only; send nothing.",
   },
   "checklist-admin-site-system-daily-digest-email-content": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["admin"],
     startPage: "/admin/site",
     steps: [

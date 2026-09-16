@@ -7,6 +7,7 @@ import {
 import { ProductStatusValues, PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { CATEGORIES_COLLECTION } from "../../../../features/categories/schemas/firestore";
 import { ORDER_FIELDS, PRODUCT_FIELDS } from "../../../../constants/field-names";
+import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
 import type { JobContext } from "../runtime/types";
 import { QUERY_LIMIT } from "../handlers/messages";
 
@@ -42,11 +43,41 @@ function countRollup(t: Tally | undefined, isAuction: boolean): void {
   else t.totalProducts++;
 }
 
+/*
+ * 🛑 This carries the AVAILABILITY fields, not just the taxonomy ones.
+ *
+ * The tally used to be `status == "published"` and nothing else, while every
+ * listing surface renders the **Available** scope — so the two counted different
+ * populations and could never agree. The seed deliberately keeps a sold/ended
+ * fixture for every listing type, which guarantees at least one unavailable
+ * published row exists at all times, so the disagreement was permanent rather
+ * than occasional: 36 of the run's failures are a badge that over-counts the tab
+ * it opens.
+ *
+ * `isListingRowAvailable` is the SAME predicate the listing query uses
+ * (`_internal/shared/listing-types/_registry.ts`) — the point is to share it, not
+ * to re-derive "available" here. Re-deriving it is how the four partial copies in
+ * Root Cause #73 happened.
+ */
 interface ProductTallyRow {
   category?: string;
   categorySlugs?: string[];
   brandSlug?: string;
   listingType?: string;
+  // Availability inputs, consumed only via `isListingRowAvailable()`. Declared
+  // so it is visible that this row is read for more than taxonomy.
+  //
+  // `auctionEndDate` is deliberately NOT listed: on a raw snapshot it is a
+  // Firestore `Timestamp`, and typing it here as `Date | string` would be a
+  // lie while `unknown` is just a dodge. `AvailabilityRow` is
+  // `Record<string, FirestoreValue>`, so the predicate reads it — and every
+  // other per-type field — straight off the same document.
+  isSold?: boolean;
+  stockQuantity?: number;
+  availableQuantity?: number;
+  prizeRevealStatus?: string;
+  preOrderProductionStatus?: string;
+  digitalCode?: { codesAvailable?: number };
 }
 
 /**
@@ -65,6 +96,13 @@ function tallyProduct(
 ): boolean {
   const isAuction =
     data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+
+  /*
+   * Count only what a visitor can actually see. A published-but-sold, ended,
+   * closed or code-depleted row is excluded here for the same reason the listing
+   * excludes it — otherwise the badge promises rows the tab will not show.
+   */
+  if (!isListingRowAvailable(data as never, new Date())) return false;
 
   // `category` is @deprecated in favour of `categorySlugs[]`; mirror the live
   // trigger's selection exactly so the two agree (onProductWrite.ts).

@@ -92,6 +92,8 @@ export interface StoreListParams {
   pageSize?: number;
   sort?: string;
   filters?: string;
+  /** Minimum average rating, pipe-joined when several chips are ticked. Refined in memory server-side. */
+  rating?: string;
 }
 
 // --- Store auctions response --------------------------------------------------

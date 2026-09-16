@@ -52,8 +52,24 @@ export function AdminCarouselGroupEditorView({
     enabled: isEdit,
   });
 
+  /*
+   * 🛑 `existing.data` IS the document. Do not reach for `.data.data`.
+   *
+   * `apiClient` already unwraps the envelope — it returns `data.data` — so the
+   * extra hop resolved `undefined`, the effect bailed, and the form kept its
+   * initial values: an EMPTY name and `status: "draft"`.
+   *
+   * That is not a cosmetic bug. The editor then PATCHed those defaults over a
+   * live carousel, so opening "Homepage Hero" and pressing save renamed it to
+   * "" and took it off the homepage. An editor seeded from nothing is more
+   * dangerous than one that fails to open.
+   *
+   * Mirror image of Root Cause #98, which was a raw envelope treated as the
+   * payload; this is a payload unwrapped a second time. Both typecheck, because
+   * the cast asserts the shape rather than checking it.
+   */
   React.useEffect(() => {
-    const doc = (existing.data as { data?: { name?: string; status?: string } } | undefined)?.data;
+    const doc = existing.data as { name?: string; status?: string } | undefined;
     if (!doc) return;
     setName(doc.name ?? "");
     setStatus(doc.status === "active" ? "active" : "draft");

@@ -5,6 +5,7 @@ import { AdSlot } from "../../homepage/components/AdSlot";
 import { StoresIndexListing } from "./StoresIndexListing";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { STORE_FIELDS } from "../../../constants/field-names";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -15,9 +16,28 @@ function sp(params: SearchParams, key: string): string {
 
 export interface StoresIndexPageViewProps {
   searchParams?: SearchParams;
+  /**
+   * Restrict to verified stores and retitle the page. This is what /sellers is.
+   *
+   * /sellers rendered `<SellersListView />` with ZERO render props — and every
+   * slot on `SlottedListingView` is optional, so it produced a correct header,
+   * a correct breadcrumb and then a blank region: Root Cause #8 exactly. That
+   * shell had one consumer, this page, and it was empty in it.
+   *
+   * Reusing this view rather than filling in the shell means /sellers inherits
+   * what /stores already got right — the SSR `q` push-down, sandbox hiding,
+   * the ad slots and the shared listing — instead of growing a second copy that
+   * has to be fixed twice.
+   */
+  verifiedOnly?: boolean;
+  heading?: string;
 }
 
-export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPageViewProps) {
+export async function StoresIndexPageView({
+  searchParams = {},
+  verifiedOnly = false,
+  heading = "Stores",
+}: StoresIndexPageViewProps) {
   const sort = sp(searchParams, "sort") || "-createdAt";
   const page = Number(sp(searchParams, "page")) || 1;
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
@@ -37,10 +57,36 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
    * the same filters the client would, because it never gets a second chance.
    */
   const q = sp(searchParams, "q").trim();
+  /*
+   * The rating facet must be applied HERE too, not only by the client. This
+   * result is handed to <StoresIndexListing initialData=…>, and public listing
+   * hooks set staleTime: Infinity when given SSR data — so an unfiltered first
+   * paint is frozen for that query key and never self-corrects (Root Cause #30).
+   */
+  const ratingRaw = sp(searchParams, "rating");
+  const minRating = ratingRaw
+    ? Math.max(...ratingRaw.split("|").map(Number).filter((n) => Number.isFinite(n)))
+    : undefined;
 
   const result = await safeRead(
-    () => storeRepository.listStores({ page, pageSize, sorts: sort }, true, q ? { search: q } : undefined),
-    { route: "/stores", key: "stores.listStores", fallback: null },
+    () =>
+      storeRepository.listStores(
+        {
+          page,
+          pageSize,
+          sorts: sort,
+          ...(verifiedOnly ? { filters: `${STORE_FIELDS.IS_VERIFIED}==true` } : {}),
+        },
+        true,
+        q || minRating !== undefined
+          ? { ...(q ? { search: q } : {}), ...(minRating !== undefined ? { minRating } : {}) }
+          : undefined,
+      ),
+    {
+      route: verifiedOnly ? "/sellers" : "/stores",
+      key: "stores.listStores",
+      fallback: null,
+    },
   );
   /*
    * The API already filters this; the SSR page called the repository directly
@@ -56,7 +102,7 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
       <Section padding="y-2xl">
         <Container size="xl">
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
-            Stores
+            {heading}
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <StoresIndexListing initialData={publicResult ?? undefined} />

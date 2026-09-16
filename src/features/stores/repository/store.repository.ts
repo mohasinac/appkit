@@ -281,7 +281,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   async listStores(
     model: SieveModel,
     activeOnly = true,
-    opts?: { search?: string },
+    opts?: { search?: string; minRating?: number },
   ): Promise<FirebaseSieveResult<StoreDocument>> {
     const sieveFields = {
       [STORE_FIELDS.STORE_NAME]: { canFilter: true, canSort: true },
@@ -295,6 +295,11 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       // the clause and the toggle did nothing at all. Root Cause #62's
       // EMITTED_BUT_UNFILTERABLE, live in production.
       [STORE_FIELDS.IS_FEATURED]: { canFilter: true, canSort: false },
+      // Same omission as IS_FEATURED above, found the same way: /sellers is a
+      // "Verified Sellers" page, and a filter on a field missing from this map
+      // is dropped silently by sievejs (`throwExceptions: false`) — the page
+      // would have listed every store while claiming to list verified ones.
+      [STORE_FIELDS.IS_VERIFIED]: { canFilter: true, canSort: false },
       [STORE_FIELDS.CREATED_AT]: { canFilter: false, canSort: true },
       "stats.itemsSold": { canFilter: false, canSort: true },
       "stats.averageRating": { canFilter: false, canSort: true },
@@ -329,7 +334,33 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       // WhatsApp bearer token and a list has no use for it.
       mapDoc: (snap) => this.mapDocForList<StoreDocument>(snap),
     });
-    return refineSearchTxt(result, plan.rest);
+    const searched = refineSearchTxt(result, plan.rest);
+
+    /*
+     * 🛑 The rating threshold is applied IN MEMORY, deliberately.
+     *
+     * The facet emitted `averageRating>=N` — a field name that does not exist
+     * (the document nests it as `stats.averageRating`), so sievejs dropped the
+     * clause with `throwExceptions: false` and the facet returned every store.
+     * Measured: `?rating=5` listed both stores, neither rated 5.
+     *
+     * Renaming it and setting `canFilter: true` would fix the drop and create a
+     * worse bug: a GTE inequality forces Firestore to order by that field
+     * first, so pairing it with any other sort demands a composite index nobody
+     * declares — the FAILED_PRECONDITION trap of Root Cause #59, and exactly
+     * what the FAQ list was doing. Trading a silent wrong answer for a silent
+     * empty one is not progress.
+     *
+     * A threshold over a small, already-paged collection is cheap to refine
+     * here, needs no index, and composes with every sort. Same shape as the
+     * availability predicate, which is a per-row test for the same reason.
+     */
+    if (opts?.minRating === undefined) return searched;
+    const min = opts.minRating;
+    const kept = searched.items.filter(
+      (store) => Number(store.stats?.averageRating ?? 0) >= min,
+    );
+    return { ...searched, items: kept, total: kept.length };
   }
 
   /**

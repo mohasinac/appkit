@@ -343,6 +343,30 @@ for (let i = _rawOrdersSeedData.length; i < 50; i++) {
 
   expandedOrders.push({
     id: generateOrderId(qty, daysBack, `${combo.userId}-${product.productId}-${i}`),
+    /*
+     * 🛑 `items[]` IS THE CANONICAL SHAPE. The flat `productId`/`productTitle`
+     * pair below is legacy and is kept only for back-compat readers.
+     *
+     * This generator emitted the flat fields alone, so 44 of the 50 seeded
+     * orders had NO `items[]` — and every order surface reads
+     * `items[0].productTitle` for its row label. The admin list therefore
+     * rendered "🧾 Order order-1-20260822-aucwon" on 22 of 25 rows: a raw id
+     * beside a placeholder emoji, for orders whose product was known all along.
+     *
+     * Same family as Root Cause #60 — a writer producing a shape no reader can
+     * render — except the writer here is the seed, which is why it survived a
+     * fix to the readers.
+     */
+    items: [
+      {
+        productId: product.productId,
+        productTitle: product.productTitle,
+        listingType: "standard",
+        quantity: qty,
+        unitPrice: product.unitPrice,
+        totalPrice: product.unitPrice * qty,
+      },
+    ],
     productId: product.productId,
     productTitle: product.productTitle,
     userId: combo.userId,

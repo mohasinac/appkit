@@ -128,10 +128,20 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   const featured = table.get(TABLE_KEYS.FEATURED);
 
   const filterParts: string[] = [];
-  if (ratingRaw) {
-    const ratings = ratingRaw.split("|").filter(Boolean);
-    if (ratings.length === 1) filterParts.push(sieveFilter("averageRating", SIEVE_OP.GTE, ratings[0]));
-  }
+  /*
+   * 🛑 The rating threshold is NOT a sieve clause.
+   *
+   * It used to emit `averageRating>=N`, a field the document does not have —
+   * it nests as `stats.averageRating` — so sievejs dropped it with
+   * `throwExceptions: false` and the facet returned every store. Measured:
+   * `?rating=5` listed stores rated well below 5.
+   *
+   * Correcting the NAME would not be enough and would be worse: a GTE
+   * inequality forces Firestore to order by that field first, so pairing it
+   * with any other sort demands a composite index nobody declares (Root Cause
+   * #59). The `rating` URL param reaches the route directly and the repository
+   * refines it in memory, which composes with every sort.
+   */
   if (minProductCount) filterParts.push(sieveFilter("stats.totalProducts", SIEVE_OP.GTE, minProductCount));
   if (maxProductCount) filterParts.push(sieveFilter("stats.totalProducts", SIEVE_OP.LTE, maxProductCount));
   if (featured === "true") filterParts.push("isFeatured==true");
@@ -144,6 +154,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
       sort: table.get(TABLE_KEYS.SORT) || undefined,
       category: table.get(TABLE_KEYS.CATEGORY) || undefined,
       filters: filterParts.length > 0 ? filterParts.join(",") : undefined,
+      rating: ratingRaw || undefined,
     },
     { initialData },
   );

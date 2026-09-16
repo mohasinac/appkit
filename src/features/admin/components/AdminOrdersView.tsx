@@ -39,7 +39,35 @@ interface AdminOrdersResponse {
  * GUID) instead was Root Cause Pattern #(order-guid) — see CLAUDE.md.
  */
 function toOrderItemRows(item: ListingItemRecord): AdminOrderItemRow[] {
-  const items = Array.isArray(item.items) ? item.items : [];
+  const raw = Array.isArray(item.items) ? item.items : [];
+  /*
+   * Fall back to the LEGACY flat shape when `items[]` is absent.
+   *
+   * `items[]` is canonical and every real checkout writes it, but older
+   * documents carry `productId`/`productTitle`/`quantity` at the top level
+   * instead. Reading only `items[]` rendered those rows as "Order <raw id>"
+   * beside a placeholder emoji — the product was known, just not where this
+   * looked.
+   *
+   * Root Cause #42's rule: prefer making the READER resilient over fixing only
+   * today's seed data, because the next hand-written fixture or legacy
+   * document will land in the same shape.
+   */
+  const items =
+    raw.length > 0
+      ? raw
+      : typeof item.productTitle === "string" && item.productTitle
+        ? [
+            {
+              productId: item.productId,
+              productTitle: item.productTitle,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              totalPrice: item.totalPrice,
+              image: item.image,
+            } as Record<string, unknown>,
+          ]
+        : [];
   return items
     .filter((entry): entry is Record<string, unknown> => Boolean(entry) && typeof entry === "object")
     .map((entry) => ({

@@ -31,8 +31,6 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-account-auth-signup-login-auth-email-links-single-use": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/forgot-password",
     steps: [
@@ -59,8 +57,6 @@ export const authored: Record<string, AuthoredCase> = {
       "Account state after the second click is identical to after the first. divya.funko@gmail.com is back on TempPass123! by the final step — skipping that restore leaves the account unusable by every later case, since the seeder never resets an existing password.",
   },
   "checklist-account-auth-signup-login-auth-emails-sender-identity-and-inbox": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [
@@ -108,8 +104,6 @@ export const authored: Record<string, AuthoredCase> = {
       "Reloading /user shows 'QA Signup Tester' and the address used. The account persists — this case creates a real row that a later teardown does not remove, which is why the address is numbered rather than fixed.",
   },
   "checklist-account-auth-signup-login-email-verify": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [
@@ -313,8 +307,6 @@ export const authored: Record<string, AuthoredCase> = {
       "Navigating to /user lands on /auth/login and no data for Vivaan Kapoor is rendered at any point. A back-button press does not restore the dashboard.",
   },
   "checklist-account-auth-signup-login-password-reset": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/login",
     steps: [
@@ -341,8 +333,6 @@ export const authored: Record<string, AuthoredCase> = {
       "The password is back at TempPass123! by the final step. That restore is mandatory: the seeder never resets an existing password, so skipping it leaves this account permanently signed out of every later case.",
   },
   "checklist-account-auth-signup-login-signup-verification-email-arrives": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["guest"],
     startPage: "/auth/register",
     steps: [

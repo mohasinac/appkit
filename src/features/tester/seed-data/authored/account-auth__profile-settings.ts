@@ -169,8 +169,6 @@ export const authored: Record<string, AuthoredCase> = {
       "All three links reach the same page. Set profile visibility back to Public afterwards, since other cases read this profile as another user.",
   },
   "checklist-account-auth-profile-settings-password-change-reset-link": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [

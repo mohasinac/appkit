@@ -52,7 +52,33 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
 
   const shippingCost = doc.shippingFee ?? 0;
   const discount = doc.couponDiscount ?? 0;
-  const subtotal = doc.totalPrice - shippingCost + discount;
+
+  /*
+   * 🛑 SUM THE ITEMS. Do not back it out of the total.
+   *
+   * This was `doc.totalPrice - shippingCost + discount`, which subtracts
+   * shipping and adds back the discount — and ignores every other charge the
+   * order carries: the platform fee, GST, the COD handling fee and deposit, and
+   * the three per-store add-ons. With shipping and discount both zero, that
+   * derivation returns the GRAND TOTAL, and the order page printed it on the
+   * row labelled "Subtotal".
+   *
+   * Measured: an order whose items are ₹1,399.00 + ₹899.00 = ₹2,298.00
+   * displayed "Subtotal ₹2,549.60 / Total ₹2,549.60" — a page that visibly does
+   * not add up, on the document a buyer checks when they think they were
+   * overcharged.
+   *
+   * The items are the authority: they are on the document, they carry their own
+   * `totalPrice`, and they cannot drift out of step with the fee list the way a
+   * subtraction must every time a fee is added. The old derivation survives only
+   * as a fallback for documents with no items.
+   */
+  const itemsSubtotal = items.reduce(
+    (sum, it) => sum + (Number(it.price) || 0) * (Number(it.quantity) || 0),
+    0,
+  );
+  const subtotal =
+    items.length > 0 ? itemsSubtotal : doc.totalPrice - shippingCost + discount;
 
   return {
     id: doc.id,

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Div, Heading, Input, SlottedListingView, Text } from "../../../ui";
+import { Alert, Div, Heading, Input, SlottedListingView, Text } from "../../../ui";
 import { sortBy } from "../../../constants/sort";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
@@ -88,7 +88,7 @@ export function FAQPageContent({
         ? "question"
         : "-createdAt";
 
-  const { faqs, total, isLoading } = useFaqList({
+  const { faqs, total, isLoading, isError } = useFaqList({
     category: selectedCategory === "all" ? undefined : selectedCategory,
     search: searchValue.trim() || undefined,
     sorts,
@@ -197,6 +197,23 @@ export function FAQPageContent({
                 <Text color="muted">
                   {labels.loading}
                 </Text>
+              ) : isError ? (
+                /*
+                 * 🛑 A failed query is NOT an empty result, and rendering it as
+                 * one is what hid this for so long: the list query threw
+                 * FAILED_PRECONDITION (its default -createdAt sort had no
+                 * composite index) while the sidebar's count query, sorted
+                 * differently, succeeded. The page therefore showed "0
+                 * questions" beside a sidebar counting 14 matches — two numbers
+                 * from two queries, one of which had died silently.
+                 *
+                 * Saying so costs nothing and makes the next index gap
+                 * self-reporting rather than a phantom empty state.
+                 */
+                <Alert variant="error" title="Couldn't load questions">
+                  Something went wrong fetching these FAQs. Try a different sort
+                  or reload the page.
+                </Alert>
               ) : renderAccordion ? (
                 renderAccordion(faqs)
               ) : (

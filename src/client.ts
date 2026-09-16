@@ -1272,6 +1272,17 @@ export {
   type CartLane,
   type LaneAssignable,
 } from "./_internal/shared/checkout/lanes";
+/*
+ * The cart page needs these to tell a multi-member line from an ordinary one: a
+ * group/bundle line's `productId` is a group or category id, not a product id,
+ * so anything that resolves it as a product must skip those lines. Reading
+ * `groupMembers` directly instead would miss carts written before that field
+ * existed — the fallback lives inside these accessors.
+ */
+export {
+  getCartLineMembers,
+  isMultiMemberLine,
+} from "./_internal/shared/checkout/line-members";
 export {
   newsletterSubscribeSchema,
   quickCreateTaxonomySchema,

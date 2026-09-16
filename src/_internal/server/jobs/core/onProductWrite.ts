@@ -11,6 +11,7 @@ import {
 } from "../../../../repositories";
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
+import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
 import type { JobContext } from "../runtime/types";
 
 export type ProductDoc = Record<string, JsonValue>;
@@ -240,8 +241,32 @@ export async function handleProductWrite(
   const isAuction = (after?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
   const beforeIsAuction = (before?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
 
-  const wasPublished = beforeStatus === ProductStatusValues.PUBLISHED;
-  const isPublished = afterStatus === ProductStatusValues.PUBLISHED;
+  /*
+   * 🛑 COUNTED means published AND available, because that is what the listing
+   * shows — and therefore what the badge must promise.
+   *
+   * Counting publish/unpublish alone left the badge over-promising for as long
+   * as a row stayed published-but-sold: 36 of one run's failures were a tab
+   * badge larger than the tab it opened. `countersReconcile` now tallies the
+   * same way, and this keeps the live counter agreeing with it between nightly
+   * passes instead of drifting high all day.
+   *
+   * It closes more of the drift than it looks like it should, because the
+   * transitions that matter are all WRITES: a sale decrements stock, a refund
+   * restores it, and `auctionSettlement` writes to the product when an auction
+   * ends. A purely time-based expiry with no accompanying write is the only
+   * residue, and the nightly recount is its healer.
+   */
+  const wasCounted =
+    beforeStatus === ProductStatusValues.PUBLISHED &&
+    !!before &&
+    isListingRowAvailable(before as never, new Date());
+  const isCounted =
+    afterStatus === ProductStatusValues.PUBLISHED &&
+    !!after &&
+    isListingRowAvailable(after as never, new Date());
+  const wasPublished = wasCounted;
+  const isPublished = isCounted;
   const isDelete = !after;
 
   try {

@@ -111,8 +111,6 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Read-only; nothing persists beyond the URL.",
   },
   "checklist-content-discovery-notifications-notification-email-actually-arrives": {
-    requiresHumanChannel: true,
-    humanChannelReason: "real email inbox",
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [

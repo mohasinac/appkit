@@ -678,8 +678,18 @@ export function SellerOrdersView({
     mapRows: (response) =>
       toRecordArray(response.orders).map((item, index) => {
         const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
+        /*
+         * Same legacy fallback as AdminOrdersView: `items[]` is canonical and
+         * every real checkout writes it, but older documents carry
+         * `productTitle` at the top level instead, and reading only `items[]`
+         * leaves the row with no title or thumbnail at all.
+         */
         const firstItem =
-          itemsArr[0] && typeof itemsArr[0] === "object" ? (itemsArr[0] as Record<string, unknown>) : {};
+          itemsArr[0] && typeof itemsArr[0] === "object"
+            ? (itemsArr[0] as Record<string, unknown>)
+            : typeof item.productTitle === "string" && item.productTitle
+              ? { productTitle: item.productTitle, image: item.image }
+              : {};
         const loc = item.physicalLocation as { zone?: string; shelf?: string; bin?: string } | undefined;
         return {
           id: toStringValue(item.id, `order-${index}`),

@@ -47,12 +47,27 @@ export async function listVerifiedScammers(
   if (params.scamType)     filters.push(sieveFilter("scamType", SIEVE_OP.EQ, String(params.scamType)));
   if (params.scamPlatform) filters.push(sieveFilter("scamPlatform", SIEVE_OP.EQ, String(params.scamPlatform)));
 
-  const result = await scammerRepository.listVerified({
-    filters: filters.join(",") || undefined,
-    sorts: sort,
-    page,
-    pageSize,
-  });
+  /*
+   * 🛑 `q` MUST reach the repository. It was read by ScamRegistryView and then
+   * dropped here, so the registry's own search box — whose subtitle reads
+   * "Search by name, phone, or UPI" — filtered nothing: `?q=zzzznope` returned
+   * every verified profile and the counter still showed the full total.
+   *
+   * Only a nonsense term exposes this, because a real term also returns rows.
+   * Same shape as the /stores SSR search that was fixed earlier: the parameter
+   * was parsed, and then simply not used.
+   */
+  const search = String(params.q ?? "").trim();
+
+  const result = await scammerRepository.listVerified(
+    {
+      filters: filters.join(",") || undefined,
+      sorts: sort,
+      page,
+      pageSize,
+    },
+    search ? { search } : undefined,
+  );
 
   return {
     items:    result.items,

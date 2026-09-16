@@ -60,17 +60,46 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
     updatedAt:     { canFilter: false, canSort: true  },
   };
 
-  async listVerified(model: SieveModel): Promise<FirebaseSieveResult<ScammerDocument>> {
-    const baseQuery = this.getCollection().where(
+  /**
+   * The PUBLIC registry at /scams.
+   *
+   * 🛑 `opts.search` is not optional decoration — the page has a prominent
+   * search box whose own subtitle says "Search by name, phone, or UPI", and it
+   * filtered nothing: `listVerifiedScammers` read `q` and never passed it on,
+   * so `?q=zzzznope` returned every verified profile and the counter still read
+   * the full total. Only a nonsense term exposes that, because a real term also
+   * returns rows.
+   *
+   * Mirrors `listAll` below deliberately, including the empty-plan guard: a
+   * search that narrows to no usable token must return NOTHING rather than the
+   * whole registry — failing open here would publish every profile to someone
+   * who searched for a single stop-word.
+   */
+  async listVerified(
+    model: SieveModel,
+    opts?: { search?: string },
+  ): Promise<FirebaseSieveResult<ScammerDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<ScammerDocument>();
+
+    let baseQuery = this.getCollection().where(
       SCAMMER_FIELDS.STATUS,
       "==",
       "verified" as ScammerStatus,
     );
-    return this.sieveQuery<ScammerDocument>(model, ScammerRepository.SIEVE_FIELDS, {
+    if (plan.head) {
+      baseQuery = baseQuery.where(
+        SCAMMER_FIELDS.SEARCH_TXT,
+        "array-contains",
+        plan.head,
+      ) as typeof baseQuery;
+    }
+    const result = await this.sieveQuery<ScammerDocument>(model, ScammerRepository.SIEVE_FIELDS, {
       baseQuery,
       defaultPageSize: 20,
       maxPageSize: 50,
     });
+    return refineSearchTxt(result, plan.rest);
   }
 
   /** Derived on every write path via `applyWriteHooks`. */

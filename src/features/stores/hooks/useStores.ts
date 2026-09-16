@@ -29,6 +29,10 @@ export function useStores(
   if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   if (params.sort) sp.set("sorts", params.sort);
   if (params.filters) sp.set("filters", params.filters);
+  // Rides as its own param, never inside `filters` — the route refines it in
+  // memory because a GTE inequality would force Firestore to order by rating
+  // first and break every other sort (Root Cause #59).
+  if (params.rating) sp.set("rating", params.rating);
   const qs = sp.toString();
   const endpoint = opts?.endpoint ?? `${STORE_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`;
 
