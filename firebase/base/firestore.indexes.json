@@ -10967,6 +10967,66 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "faqs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchTxt",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "priority",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "faqs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchTxt",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "faqs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchTxt",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "question",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "faqs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "searchTxt",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "question",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
