@@ -91,6 +91,55 @@ export function assertPrizeDrawWonItemsImmutable(
   }
 }
 
+/**
+ * Anti-scam guard — an auction's economic terms (starting bid, reserve, close
+ * time) stop being editable the moment a real bid exists. Moving the goalposts
+ * under a live bidder is the one auction edit that must never pass.
+ *
+ * 🛑 It compares VALUES, not key presence. The seller editor round-trips the
+ * whole draft, so every save resubmits `startingBid` and `auctionEndDate`
+ * unchanged — rejecting on presence alone would make a live auction entirely
+ * unsaveable, and the seller could no longer fix so much as a typo.
+ */
+export function assertAuctionTermsMutable(
+  existing: Pick<
+    ProductDocument,
+    "listingType" | "bidsHaveStarted" | "bidCount" | "startingBid" | "reservePrice" | "auctionEndDate"
+  >,
+  input: unknown,
+): void {
+  if ((existing.listingType ?? "standard") !== "auction") return;
+  const bidding = existing.bidsHaveStarted === true || (existing.bidCount ?? 0) > 0;
+  if (!bidding) return;
+  if (typeof input !== "object" || input === null) return;
+  const patch = input as Partial<
+    Record<"startingBid" | "reservePrice" | "auctionEndDate", string | number | Date | null>
+  >;
+
+  const time = (v: unknown): number | null => {
+    if (v == null) return null;
+    const d = v instanceof Date ? v : new Date(v as string | number);
+    return Number.isNaN(d.getTime()) ? null : d.getTime();
+  };
+
+  const changed: string[] = [];
+  if ("startingBid" in patch && patch.startingBid !== existing.startingBid)
+    changed.push("starting bid");
+  if ("reservePrice" in patch && patch.reservePrice !== existing.reservePrice)
+    changed.push("reserve price");
+  if (
+    "auctionEndDate" in patch &&
+    time(patch.auctionEndDate) !== time(existing.auctionEndDate)
+  )
+    changed.push("end date");
+
+  if (changed.length > 0) {
+    throw new ValidationError(
+      `Bidding has already started on this auction, so its ${changed.join(" and ")} can no longer be changed. Everything else on the listing is still editable.`,
+    );
+  }
+}
+
 /** Assert the product has available stock for a purchase. */
 export function assertInStock(product: ProductDocument, quantity = 1): void {
   if ((product.availableQuantity ?? 0) < quantity) {

@@ -1,4 +1,5 @@
 "use client"
+import { IMAGE_ACCEPT_ATTR } from "../../../_internal/shared/media/limits";
 import { normalizeError } from "../../../errors/normalize";
 /**
  * ImageUpload — canonical image upload component for @mohasinac/feat-media.
@@ -357,7 +358,7 @@ export function ImageUpload({
         <input
           ref={mobileCaptureRef}
           type="file"
-          accept="image/*"
+          accept={IMAGE_ACCEPT_ATTR}
           capture="environment"
           onChange={handleFileChange}
           className="hidden"

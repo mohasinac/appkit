@@ -1,4 +1,5 @@
 "use client"
+import { IMAGE_ACCEPT_ATTR } from "../../../_internal/shared/media/limits";
 import { normalizeError } from "../../../errors/normalize";
 import React, { useEffect, useState, useRef } from "react";
 import { z } from "zod";
@@ -301,7 +302,7 @@ export function CharacterHotspotForm({
             </Span>
             <Input
               type="file"
-              accept="image/*"
+              accept={IMAGE_ACCEPT_ATTR}
               className="hidden"
               onChange={handleImageUpload}
               disabled={uploading}
@@ -953,7 +954,7 @@ export function CharacterHotspotForm({
                 {uploading ? "Uploading…" : "Replace Image"}
                 <Input
                   type="file"
-                  accept="image/*"
+                  accept={IMAGE_ACCEPT_ATTR}
                   className="hidden"
                   onChange={handleImageUpload}
                   disabled={uploading}

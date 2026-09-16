@@ -1,4 +1,5 @@
 "use client"
+import { IMAGE_ACCEPT_ATTR } from "../../_internal/shared/media/limits";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Div, Input, Progress, Row, Stack, Text, useToast } from "../../ui";
 import { useMediaUpload } from "./hooks/useMedia";
@@ -262,7 +263,7 @@ export function AvatarUpload({
               ref={fileInputRef}
               bare
               type="file"
-              accept="image/*"
+              accept={IMAGE_ACCEPT_ATTR}
               onChange={handleFileSelect}
               className="hidden"
               aria-label={t.changePhoto}

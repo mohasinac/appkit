@@ -1639,6 +1639,17 @@ export const ACTIONS: ActionTree = {
       description: "Approve a return request and initiate the refund flow.",
       kind: "primary",
       permissions: ["admin", "moderator"],
+      // Required by Rule #7 — approving starts a real refund, which is money
+      // leaving the platform and is not undoable from this screen. Its absence
+      // also CRASHED /admin/return-requests outright: the view reads
+      // `confirmation!.title`, so a missing block threw "Cannot read properties
+      // of undefined (reading 'title')" during render and the page never painted.
+      confirmation: {
+        title: "Approve return request?",
+        body: "The order will be marked Refunded, the buyer will be notified, and the refund process will begin. This cannot be undone from here.",
+        confirmLabel: "Approve return",
+        confirmKind: "primary",
+      },
     },
     "reject-return": {
       iconKey: "reject",

@@ -27,6 +27,7 @@ import { ProductStatusValues } from "../../products/schemas";
 import {
   assertPrizeDrawNotLocked,
   assertPrizeDrawWonItemsImmutable,
+  assertAuctionTermsMutable,
 } from "../../../_internal/server/features/products/service";
 import { orderRepository } from "../../orders/repository/orders.repository";
 import { OrderStatusValues } from "../../orders/schemas";
@@ -852,6 +853,7 @@ export async function sellerUpdateProduct(
     assertPrizeDrawNotLocked(existing, "unpublished or archived");
   }
   assertPrizeDrawWonItemsImmutable(existing, input.prizeDrawItems);
+  assertAuctionTermsMutable(existing, input);
   const finalizedData = await finalizeProductMediaReferences(input);
   const updated = await productRepository.updateProduct(
     productId,

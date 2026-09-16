@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../../validation/schemas";
 import { PRODUCT_MAX_IMAGES } from "../../media/limits";
+import { PRODUCT_UPDATABLE_FIELDS } from "../../../../features/products/schemas/firestore";
 
 const priceSchema = z.number().min(0, "Price must be non-negative");
 
 const conditionSchema = z.enum(["new", "like_new", "good", "fair", "poor", "used", "refurbished", "broken"]);
 
-export const productInputSchema = z.object({
+const productBaseShape = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(200),
   description: z.string().max(10000).optional(),
   category: z.string().min(1, "Category is required"),
@@ -33,6 +34,52 @@ export const productInputSchema = z.object({
   minOfferPercent: z.number().min(0).max(100).optional(),
   features: z.array(z.string()).max(50).optional(),
 });
+
+/**
+ * Every other field a seller legitimately owns on their own listing.
+ *
+ * 🛑 Declared, never `.passthrough()`. `sellerUpdateProduct` hands its parsed
+ * input straight to `productRepository.updateProduct` with no field filter, so
+ * passthrough would let a seller forge `currentBid` / `bidCount` / `viewCount`
+ * or reassign `storeId` to another store. The three sibling product-update
+ * routes DO use `.passthrough()`; they get away with it because they are
+ * admin-gated. This one is not.
+ *
+ * Derived from `PRODUCT_UPDATABLE_FIELDS` — the codebase's existing declaration
+ * of what a seller may change — so the two cannot drift (Root Cause #61).
+ *
+ * Why this exists: `productInputSchema` declared 24 fields while that constant
+ * lists 55, and `z.object()` SILENTLY STRIPS whatever it does not declare. The
+ * parse SUCCEEDED, so nothing surfaced anywhere — the seller saw a success
+ * toast and 38 fields were discarded on the way to Firestore, including
+ * `status` (so Publish wrote nothing at all), `listingType`, and all four
+ * per-type blocks that `draftToProductInput` had just carefully assembled.
+ * Update-side sibling of Root Cause #101.
+ */
+const EXTRA_WRITABLE_FIELDS = [
+  ...PRODUCT_UPDATABLE_FIELDS,
+  // Absent from that constant, but plainly the seller's own listing data —
+  // their media, their tax codes. Omitting them is an oversight in the list,
+  // not a policy: there is no integrity risk in a seller setting either.
+  "video",
+  "gstRate",
+  "hsnCode",
+  // Auction terms. Writable while the listing is still a draft; once a real
+  // bid exists, `sellerUpdateProduct` refuses them — changing the starting bid
+  // or the end date under a live bidder is the one case that must not pass.
+  "startingBid",
+  "auctionEndDate",
+] as const;
+
+const declaredKeys = new Set(Object.keys(productBaseShape.shape));
+
+const extraWritableShape = Object.fromEntries(
+  EXTRA_WRITABLE_FIELDS.filter((field) => !declaredKeys.has(field)).map(
+    (field) => [field, z.unknown().optional()],
+  ),
+) as Record<string, z.ZodOptional<z.ZodUnknown>>;
+
+export const productInputSchema = productBaseShape.extend(extraWritableShape);
 
 export const productUpdateSchema = productInputSchema.partial();
 

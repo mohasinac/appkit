@@ -1,4 +1,5 @@
 "use client";
+import { IMAGE_ACCEPT_ATTR } from "../../../shared/media/limits";
 import React, { useCallback, useEffect, useState } from "react";
 import { normalizeError } from "../../../../errors/normalize";
 import { Alert, Button, Div, Row, Span, Stack, Text } from "../../../../ui";
@@ -159,7 +160,7 @@ export function DigitalContentPoolManager({
           variant="secondary"
           size="sm"
           disabled={busy}
-          accept={canUploadFiles ? undefined : "image/*"}
+          accept={canUploadFiles ? undefined : IMAGE_ACCEPT_ATTR}
           onFile={(file) => void run(() => api.addAsset(productId, file))}
         >
           {canUploadFiles ? "Upload QR or file" : "Upload QR image"}

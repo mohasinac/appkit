@@ -1,4 +1,5 @@
 "use client";
+import { IMAGE_ACCEPT_ATTR } from "../../../_internal/shared/media/limits";
 
 /**
  * Add or edit an item in a user's personal catalogue.
@@ -121,7 +122,7 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
                 onChange({ images: urls, mainImage: urls[0] ?? "" });
               }}
               onUpload={handleUpload}
-              accept="image/*"
+              accept={IMAGE_ACCEPT_ATTR}
               maxItems={8}
               helperText="Photos older than 30 days must be refreshed before this item can be listed."
             />

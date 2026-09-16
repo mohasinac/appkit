@@ -96,6 +96,19 @@ export type AllowedVideoMime = (typeof ALLOWED_VIDEO_MIMES)[number];
 export type AllowedDocMime = (typeof ALLOWED_DOC_MIMES)[number];
 export type AllowedMime = (typeof ALLOWED_MIMES)[number];
 
+/**
+ * The `accept` attribute for an image picker.
+ *
+ * 🛑 Never `image/*` — that wildcard matches `image/svg+xml`, which
+ * `ALLOWED_IMAGE_MIMES` deliberately excludes as an XSS surface. The server
+ * does reject it (`classifyMime` returns null and `/api/media/finalize` 422s),
+ * but only AFTER the picker has accepted it and the crop editor has opened on
+ * it — so the user frames and crops an image that was never going to upload,
+ * and the refusal arrives at the end looking like a failure rather than a rule.
+ * Deriving the attribute from the allowlist makes the picker refuse it first.
+ */
+export const IMAGE_ACCEPT_ATTR = ALLOWED_IMAGE_MIMES.join(",");
+
 export const ALLOWED_TYPES_LABEL =
   "JPEG, PNG, GIF, WebP, MP4, WebM, QuickTime, 3GP, MKV, PDF";
 
