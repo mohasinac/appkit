@@ -125,8 +125,29 @@ function AdminCardItem({
         onClick={handleClick}
         role={onRowClick ? "button" : undefined}
       >
+        {/*
+          🛑 `e.target === e.currentTarget` below is load-bearing, not defensive.
+
+          The wrapper exists to enlarge the hit area, so it toggles too — but a
+          click on the CHECKBOX bubbles to it, and the input has already fired
+          its own `onChange`. Toggling again here selected the row and then
+          immediately deselected it, so selection read as completely INERT on
+          every card-view listing: no checkmark, no bulk bar, nothing to report
+          but "clicking does nothing".
+
+          Guarding on the target keeps the enlarged hit area (a click on the
+          padding IS the wrapper) while letting the input own its own clicks.
+          Same double-fire shape as Root Cause #13, on the selection axis.
+        */}
         {onToggleSelect && (
-          <Div data-no-row-click className="shrink-0" onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}>
+          <Div
+            data-no-row-click
+            className="shrink-0"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (e.target === e.currentTarget) onToggleSelect(row.id);
+            }}
+          >
             <Checkbox
               bare
               checked={selected}
@@ -179,7 +200,11 @@ function AdminCardItem({
           gap="xs"
           data-no-row-click
           paddingY="t-sm" padding="x-sm"
-          onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}
+          // Same double-toggle guard as the compact row above — see that comment.
+          onClick={(e) => {
+            e.stopPropagation();
+            if (e.target === e.currentTarget) onToggleSelect(row.id);
+          }}
         >
           <Checkbox
             bare

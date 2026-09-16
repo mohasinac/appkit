@@ -117,7 +117,22 @@ export async function handleOrderCreate(
   const firstItem = items[0];
   const firstItemName = firstItem?.productTitle ?? "an item";
   const additionalItemCount = Math.max(0, items.length - 1);
-  const buyerName = order.userName ?? "A customer";
+  /*
+   * 🛑 DECRYPT. This handler receives the RAW Firestore snapshot — the type
+   * above says so — so it never passes through the repository's `mapDoc`, and
+   * `userName` is PII, stored as `enc:v1:…`.
+   *
+   * Undecrypted, the ciphertext was interpolated straight into the announcement
+   * body and PERSISTED there, so every admin alert read
+   * "🛍️ New order! enc:v1:67Mn0rITjTWGsZZE:… purchased …". Measured on
+   * production: 383 such rows. The message is baked at write time, so the
+   * damage is permanent per row — decrypting on read would not repair them.
+   *
+   * `decryptPii` was already imported in this file and used for the store
+   * owner's phone eleven lines up; the buyer's name was simply missed.
+   */
+  const buyerName =
+    (decryptPii(order.userName) as string | null) ?? order.userName ?? "A customer";
 
   const message = buildPurchaseAnnouncementMessage({
     buyerName,
