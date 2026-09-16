@@ -25,7 +25,7 @@ import { serverLogger } from "../../../../monitoring";
 
 export async function createOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = createOrderSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid order input");
       return orderRepository.create({
@@ -38,7 +38,7 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<un
 
 export async function cancelOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = cancelOrderSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
       await assertOrderCancellable(parsed.data.orderId, user.uid);
@@ -57,7 +57,7 @@ export async function cancelOrderAction(input: unknown): Promise<ActionResult<un
  */
 export async function requestReturnAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = returnRequestSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
       const { orderId, reasonCode, reasonNote, itemIds } = parsed.data;
@@ -183,7 +183,7 @@ export async function attachPaymentProofAction(
   },
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
     const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
     if (!isAdminUser(user) && order.userId !== user.uid) throw new OrderOwnershipError(orderId);
@@ -382,7 +382,7 @@ export async function raiseOrderDisputeAction(
   reason: string,
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
     if (!reason.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);

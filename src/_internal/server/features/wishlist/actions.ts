@@ -20,7 +20,7 @@ export async function addToWishlistAction(
   },
 ): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       try {
         return await wishlistRepository.addItem(user.uid, productId, extras);
       } catch (err) {
@@ -34,7 +34,7 @@ export async function addToWishlistAction(
 
 export async function removeFromWishlistAction(productId: string): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       await wishlistRepository.removeItem(user.uid, productId);
   });
 }
@@ -48,7 +48,7 @@ export async function mergeGuestWishlistAction(
   }>,
 ): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const merged: string[] = [];
     
       for (const item of guestItems) {

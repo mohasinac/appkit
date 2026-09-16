@@ -45,7 +45,7 @@ export async function submitLotteryPullAction(
 ): Promise<ActionResult<{ userLotteryNumber: number; assignedPrizeSlotNumber: number; slotName: string }>> {
   return wrapAction(async () => {
     // Auth — must be logged in
-    const user = await requireRoleUser(["buyer", "seller", "admin", "moderator", "employee"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin", "moderator", "employee"]);
 
     const parsed = submitLotteryPullSchema.safeParse(input);
     if (!parsed.success) {

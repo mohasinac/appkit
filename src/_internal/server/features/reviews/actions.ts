@@ -22,7 +22,7 @@ import {
 
 export async function createReviewAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
     
       const parsed = createReviewSchema.safeParse(input);
       if (!parsed.success) {
@@ -78,7 +78,7 @@ export async function replyToReviewAction(input: unknown): Promise<ActionResult<
 
 export async function deleteReviewAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
     
       const parsed = deleteReviewSchema.safeParse(input);
       if (!parsed.success) {
@@ -99,7 +99,7 @@ export async function deleteReviewAction(input: unknown): Promise<ActionResult<u
 
 export async function markReviewHelpfulAction(reviewId: string): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
     await getReviewOrThrow(reviewId);
     // Keyed on the voter so a repeated call is a no-op rather than another +1.
     return reviewRepository.voteHelpful(reviewId, user.uid);

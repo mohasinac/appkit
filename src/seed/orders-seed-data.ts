@@ -577,7 +577,25 @@ const acquisitionOrders: Partial<OrderDocument>[] = [
     shippingCarrier: "Delhivery",
     orderDate: daysAgo(12),
     shippingDate: daysAgo(9),
-    deliveryDate: daysAgo(6),
+    /*
+     * 🛑 TWO DAYS, NOT SIX — THIS IS THE RETURN-WINDOW FIXTURE.
+     *
+     * A return can only be requested on a DELIVERED order inside the 7-day
+     * window, and you cannot reach "delivered" by buying in a test: it needs
+     * seller action. So the return flow is testable only if a seeded delivered
+     * order sits inside the window — and until now none did for the harness's
+     * own identity. Every candidate was 6, 7, 8, 20, 29 days old, so
+     * /user/orders/{id}/return answered 'The 7-day return window for this
+     * order has closed.' and the case could never be worked.
+     *
+     * Six days would have been inside the window today and OUTSIDE it
+     * tomorrow — a fixture that passes on Monday and fails on Tuesday is worse
+     * than one that always fails, because the failure looks like a regression.
+     * Two days leaves five days of margin.
+     *
+     * Do not raise this without checking RETURN_WINDOW_DAYS.
+     */
+    deliveryDate: daysAgo(2),
     createdAt: daysAgo(12),
     updatedAt: daysAgo(6),
     sourceContext: { path: "standard", listPrice: 999 },

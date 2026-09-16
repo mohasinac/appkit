@@ -17,7 +17,7 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export async function placeBidAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = placeBidActionSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid bid input");
     

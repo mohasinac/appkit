@@ -14,7 +14,7 @@ export async function trackProductViewAction(
   productSnapshot?: UserHistoryItem["productSnapshot"],
 ): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       await historyRepository.track(user.uid, {
         productId,
         productType,
@@ -32,7 +32,7 @@ export async function mergeGuestHistoryAction(
   }>,
 ): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       return historyRepository.merge(user.uid, guestItems);
   });
 }

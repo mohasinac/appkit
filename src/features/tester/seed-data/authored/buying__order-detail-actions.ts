@@ -87,15 +87,29 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! — this persona owns the seeded DELIVERED orders, and a return can only be requested on one.",
-      "Open /user/orders and open order-1-20251107-11joon, which is delivered.",
+      /*
+       * 🛑 rehan, NOT vivaan — and the order changed with it.
+       *
+       * This said vivaan.kapoor@gmail.com (user-seto-kaiba), who does own
+       * order-1-20251107-11joon. But TWO other cases in this same batch use
+       * that order as a FOREIGN one, and a batch browses as exactly one
+       * identity — so the page could not be worked as authored: the same
+       * order had to be both owned and not-owned by the signed-in user.
+       *
+       * rehan.sheikh@gmail.com (user-yugi-muto) is the harness's `main`
+       * identity, and order-1-20260818-stdctx is one of its delivered orders.
+       * That makes the whole batch coherent under one session and leaves the
+       * access-control cases genuinely foreign.
+       */
+      "Sign in as rehan.sheikh@gmail.com / TempPass123! — this persona owns the order below, and a return can only be requested on a delivered one.",
+      "Open /user/orders and open order-1-20260818-stdctx, which is delivered.",
       "Use the Return action.",
       "Give the reason: item not as described.",
       "Submit the request.",
       "Reload the order.",
       "Open /user/returns and look for it.",
     ],
-    inputs: { orderId: "order-1-20251107-11joon", reason: "item not as described" },
+    inputs: { orderId: "order-1-20260818-stdctx", reason: "item not as described" },
     expectedBehaviour:
       "A return request moves the order into Return Requested and appears on the returns surface. That status is deliberately an ACTIVE one — it is the seller's next action item, not a closed state — so the order must not disappear from the active list.",
     expectedUiState:

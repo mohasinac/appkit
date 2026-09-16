@@ -37,7 +37,7 @@ export async function updateEventAction(eventId: string, input: unknown): Promis
 
 export async function registerForEventAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = registerForEventSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid registration input");
     
@@ -77,7 +77,7 @@ export async function registerForEventAction(input: unknown): Promise<ActionResu
 
 export async function cancelEventRegistrationAction(entryId: string): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const entry = await eventEntryRepository.findById(entryId);
       if (!entry || (entry as any).userId !== user.uid) {
         throw new ValidationError("Registration not found or does not belong to you");

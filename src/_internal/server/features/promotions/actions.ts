@@ -16,7 +16,7 @@ const ERR_INVALID_COUPON_INPUT = "Invalid coupon input";
 
 export async function applyCouponAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = applyCouponSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? ERR_INVALID_COUPON_INPUT);
     
