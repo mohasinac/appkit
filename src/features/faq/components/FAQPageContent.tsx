@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Alert, Div, Heading, Input, SlottedListingView, Text } from "../../../ui";
+import { Alert, Div, EmptyState, Heading, Input, SlottedListingView, Text } from "../../../ui";
 import { sortBy } from "../../../constants/sort";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
@@ -35,6 +35,15 @@ interface FAQPageContentProps {
     resultCount: (count: number) => string;
     inCategory: (categoryLabel: string) => string;
     loading: string;
+    /*
+     * Optional, unlike every label above, because this branch is NEW and all
+     * existing consumers predate it — making them required would be a breaking
+     * change to a public appkit surface for a string that has a sensible
+     * default (Root Cause #20: a prop signature change must update every call
+     * site in the same commit, so prefer not needing one).
+     */
+    emptyTitle?: string;
+    emptyDescription?: string;
     contactTitle: string;
     contactDescription: string;
     contactEmailUs: string;
@@ -214,6 +223,29 @@ export function FAQPageContent({
                   Something went wrong fetching these FAQs. Try a different sort
                   or reload the page.
                 </Alert>
+              ) : faqs.length === 0 ? (
+                /*
+                 * 🛑 AN EXPLICIT EMPTY BRANCH — without it the page rendered a
+                 * BARE WHITE AREA.
+                 *
+                 * The chain fell through to <FAQAccordion faqs={[]} />, which
+                 * renders nothing at all. Measured on /faqs?q=zzzznope: the
+                 * page showed "0 questions", the search box, a divider, and
+                 * then blank space — no message anywhere in the DOM.
+                 *
+                 * A blank region is the worst possible answer here because it
+                 * is indistinguishable from a page that failed to load, which
+                 * is exactly the confusion the isError branch above exists to
+                 * prevent. Three states, three distinct renderings: loading,
+                 * failed, and genuinely nothing found.
+                 */
+                <EmptyState
+                  title={labels.emptyTitle ?? "No questions found"}
+                  description={
+                    labels.emptyDescription ??
+                    "Try a different search term, or pick another category from the list."
+                  }
+                />
               ) : renderAccordion ? (
                 renderAccordion(faqs)
               ) : (
