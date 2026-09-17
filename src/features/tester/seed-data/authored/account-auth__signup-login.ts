@@ -83,7 +83,26 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /auth/register.",
       "Type QA Signup Tester in the 'Full name' field.",
-      "Type qa-signup-1@mailnull.com in the 'Email address' field — if that address already has an account from a previous run, increment the number and use qa-signup-2@mailnull.com, and so on.",
+      /*
+       * 🛑 SUBSTITUTE THE RUN ID — this is the one input in the catalogue that
+       * is deliberately not literal.
+       *
+       * `users` is PRESERVE tier: it survives every catalogue wipe, so an
+       * account created here is permanent and the harness cannot clean it up.
+       * The previous instruction ("increment the number if it already exists")
+       * made that explicit and unbounded — one more dead account per run,
+       * forever.
+       *
+       * A run-stamped address under `letitrip-qa.test` fixes both halves:
+       * the address is unique per run so signup never collides, and
+       * `.test` is an RFC 2606 reserved TLD that can never be registered and
+       * can never receive mail — so no real person can ever hold one, which is
+       * what makes `tester/scripts/purge-qa-signups.mjs` safe to point at the
+       * PRESERVE tier at all.
+       *
+       * Run that purge after the run to remove exactly these accounts.
+       */
+      "Type qa-signup+<runId>@letitrip-qa.test in the 'Email address' field, substituting the current run id — e.g. qa-signup+run-1789483929743@letitrip-qa.test.",
       "Type TestPass123! in the 'Password' field.",
       "Type TestPass123! in the 'Confirm password' field.",
       "Tick the 'I accept the terms' checkbox.",
@@ -92,7 +111,7 @@ export const authored: Record<string, AuthoredCase> = {
     ],
     inputs: {
       fullName: "QA Signup Tester",
-      email: "qa-signup-1@mailnull.com",
+      email: "qa-signup+<runId>@letitrip-qa.test",
       password: "TestPass123!",
     },
     expectedBehaviour:
