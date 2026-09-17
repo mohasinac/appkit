@@ -356,11 +356,27 @@ export function SellerProductsView({
                 .filter(Boolean)
                 .join(" · ")
             : "";
+        /*
+         * 🛑 THE STATUS GOES IN THE VISIBLE LINE, NOT ONLY IN `status`.
+         *
+         * `status` is mapped correctly and the API does emit it (measured:
+         * "published" on every row) — but this view's right-hand slot holds
+         * Edit / Duplicate / Delete, so unlike the admin table there is no
+         * status chip and the value was never rendered anywhere. A seller
+         * could not tell which of their listings were live without opening
+         * each one, and a checklist case that begins "find a listing whose
+         * status reads Published" had nothing to read.
+         *
+         * Same family as Root Cause #52: the data was already on the row and
+         * the UI simply never presented it.
+         */
+        const statusLabel = toStringValue(item.status, "draft");
+        const secondaryBase = auctionSecondary || toStringValue(item.condition, "");
         return {
           id: toStringValue(item.id, `product-${index}`),
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
-          secondary: auctionSecondary || toStringValue(item.condition, ""),
-          status: toStringValue(item.status, "draft"),
+          secondary: [secondaryBase, statusLabel].filter(Boolean).join(" · "),
+          status: statusLabel,
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
           image: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
