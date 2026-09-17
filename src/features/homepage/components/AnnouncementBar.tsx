@@ -75,8 +75,32 @@ export function AnnouncementBar({ message, link, className = "", onDismiss, over
   }, [message, userAlreadyDismissed]);
 
   if (dismissed) return null;
+  /*
+   * 🛑 THE OVERLAY IS md AND UP ONLY — IT PAINTED OVER THE HERO HEADING ON
+   * EVERY PHONE WIDTH.
+   *
+   * `absolute` reserves no space, which is the whole point of the overlay: the
+   * hero's own top padding is sized to sit a ONE-LINE banner over it. A real
+   * announcement wraps on a narrow screen, grows downward, and there is
+   * nothing to stop it.
+   *
+   * Measured on production against the live announcement, against the <h1>:
+   *
+   *   320px → 30px overlap      768px → 10px clear
+   *   390px → 10px overlap     1280px → 10px clear
+   *   430px → 10px overlap
+   *
+   * So it was every phone width and no tablet or desktop width — which is why
+   * it survived: the breakpoints people check it at are the ones where the
+   * message still fits on one line.
+   *
+   * Below `md` it is an ordinary in-flow bar that pushes the hero down, with a
+   * SOLID background (the translucent + blur treatment only reads as
+   * deliberate when there is artwork behind it). From `md` up, the designed
+   * overlay is unchanged.
+   */
   const positionCls = overlay
-    ? "absolute inset-x-0 top-0 z-20 bg-primary-700/85 backdrop-blur-sm"
+    ? "relative md:absolute inset-x-0 top-0 z-20 bg-primary-700 md:bg-primary-700/85 md:backdrop-blur-sm"
     : "relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700";
   return (
     <Div className={`${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
