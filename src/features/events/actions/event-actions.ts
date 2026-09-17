@@ -281,11 +281,37 @@ export async function listPublicEvents(
   return { ...result, items: hidePublicTestData(result.items) };
 }
 
+/**
+ * 🛑 ONLY `draft` IS HIDDEN. Every other status is public history.
+ *
+ * This read `status !== "active"`, which collapsed four distinct states into
+ * "this event does not exist":
+ *
+ *   ended     a finished raffle — the thing people come back to read, and the
+ *             only place `raffleWinnerDisplayName` is ever shown. The seeded
+ *             `event-won-original-set-raffle` has a real recorded winner and
+ *             its page answered 404.
+ *   cancelled should say it was cancelled. Vanishing tells a visitor holding
+ *             the link that they misremembered it, not that it was called off.
+ *   paused    temporarily not accepting entries, which is not the same as gone.
+ *   draft     genuinely not published yet — the one case 404 is right for.
+ *
+ * The rendering layer was ALREADY built for this: `events/[id]/layout.tsx`
+ * computes `eventStatus`, derives `isActive`, and gates `showParticipateTab`
+ * on it. Participation is refused by that gate, not by hiding the page — so
+ * this filter was the only thing standing between a visitor and content the
+ * UI knew how to show.
+ *
+ * The API (`GET /api/events/[id]`) already returned cancelled and ended events
+ * with 200 while the page 404'd them, so the two layers disagreed about what
+ * exists. Measured live before the fix:
+ *   active 200/renders · cancelled 200/404 · ended 200/404 · paused 404/404
+ */
 export async function getPublicEventById(
   id: string,
 ): Promise<EventDocument | null> {
   const event = await eventRepository.findByIdOrSlug(id);
-  if (!event || event.status !== "active") return null;
+  if (!event || event.status === "draft") return null;
   return event;
 }
 
