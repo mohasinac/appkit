@@ -6,11 +6,11 @@
  *      `orderType: "auction"`. Everything else was recoverable only by reading
  *      the auction or offer document, which is mutable and eventually archived.
  * WHAT: `buildOrderSourceContext()` — the ONE builder for `OrderSourceContext`,
- *       called by both order-creation paths (manual/COD and Razorpay).
+ *       called by both order-creation paths (manual/COD and PhonePe).
  *
  * ## Why one shared function and not two inline blocks
  *
- * `createOrderForGroup` and `createRazorpayGroupOrder` are near-identical
+ * `createOrderForGroup` and `createPhonePeGroupOrder` are near-identical
  * ~200-line twins that already drifted once on add-on fees (Root Cause #65).
  * Two hand-written copies of this would be the create-vs-create axis of Root
  * Cause #39: one lane records provenance, the other silently doesn't, and the

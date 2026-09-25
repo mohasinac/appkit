@@ -3,7 +3,7 @@
 /**
  * OrderPaymentSummary — the single place both admin and seller order-detail
  * views render payment info from, regardless of how the buyer paid (manual
- * cash/UPI proof, Razorpay, or COD). Reads `order.paymentRecord` when present;
+ * cash/UPI proof, PhonePe, or COD). Reads `order.paymentRecord` when present;
  * falls back to an adapter over the pre-existing legacy fields
  * (`paymentMethod`/`paymentId`/`paymentProofUrl`/`paymentTransactionId`) for
  * orders placed before Feature C shipped, so old orders keep rendering
@@ -17,15 +17,15 @@ import type { OrderDocument, OrderPaymentRecord } from "../schemas";
 
 const METHOD_LABEL: Record<OrderPaymentRecord["method"], string> = {
   manual: "Manual (Cash / UPI)",
-  razorpay: "Razorpay",
+  phonepe: "PhonePe",
   cod: "Cash on Delivery",
 };
 
 function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
   if (!order.paymentMethod) return null;
   const method: OrderPaymentRecord["method"] =
-    order.paymentMethod === "razorpay" || order.paymentMethod === "online"
-      ? "razorpay"
+    order.paymentMethod === "online"
+      ? "phonepe"
       : order.paymentMethod === "cod"
         ? "cod"
         : "manual";
@@ -35,7 +35,7 @@ function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
     proofUrl: order.paymentProofUrl,
     amount: order.totalPrice,
     verificationMethod:
-      method === "razorpay" ? "webhook" : method === "cod" ? "cod_collection" : "manual_review",
+      method === "phonepe" ? "order_status" : method === "cod" ? "cod_collection" : "manual_review",
   };
 }
 
@@ -93,10 +93,10 @@ export function OrderPaymentSummary({ order, className = "" }: OrderPaymentSumma
             <Text size="sm">{record.verifiedBy}</Text>
           </Row>
         )}
-        {record.gatewayRef?.paymentId && (
+        {record.gatewayRef?.phonepeOrderId && (
           <Row justify="between">
-            <Text size="sm" color="muted">Gateway payment ID</Text>
-            <Text size="sm">{record.gatewayRef.paymentId}</Text>
+            <Text size="sm" color="muted">Gateway order ID</Text>
+            <Text size="sm">{record.gatewayRef.phonepeOrderId}</Text>
           </Row>
         )}
       </Stack>

@@ -11,16 +11,20 @@
  *
  * Usage:
  *   const keys = await resolveKeys();
- *   const razorpay = new Razorpay({ key_id: keys.razorpayKeyId, key_secret: keys.razorpayKeySecret });
+ *   const client = StandardCheckoutClient.getInstance(keys.phonepeClientId, keys.phonepeClientSecret, Number(keys.phonepeClientVersion), env);
  */
 import { siteSettingsRepository } from "../repositories";
 import { normalizeError } from "../errors/normalize";
 
 export interface ResolvedKeys {
-  // Razorpay
-  razorpayKeyId: string;
-  razorpayKeySecret: string;
-  razorpayWebhookSecret: string;
+  // PhonePe
+  phonepeClientId: string;
+  phonepeClientSecret: string;
+  phonepeClientVersion: string;
+  /** "sandbox" | "production" */
+  phonepeEnvironment: string;
+  phonepeWebhookUsername: string;
+  phonepeWebhookPassword: string;
   // Resend email
   resendApiKey: string;
   // WhatsApp Business Cloud (Twilio legacy key)
@@ -33,9 +37,12 @@ export interface ResolvedKeys {
 }
 
 const EMPTY_KEYS: ResolvedKeys = {
-  razorpayKeyId: "",
-  razorpayKeySecret: "",
-  razorpayWebhookSecret: "",
+  phonepeClientId: "",
+  phonepeClientSecret: "",
+  phonepeClientVersion: "",
+  phonepeEnvironment: "",
+  phonepeWebhookUsername: "",
+  phonepeWebhookPassword: "",
   resendApiKey: "",
   whatsappApiKey: "",
   whatsappPhoneNumberId: "",
@@ -66,11 +73,17 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
   }
 
   const value: ResolvedKeys = {
-    razorpayKeyId: db.razorpayKeyId || process.env.RAZORPAY_KEY_ID || "",
-    razorpayKeySecret:
-      db.razorpayKeySecret || process.env.RAZORPAY_KEY_SECRET || "",
-    razorpayWebhookSecret:
-      db.razorpayWebhookSecret || process.env.RAZORPAY_WEBHOOK_SECRET || "",
+    phonepeClientId: db.phonepeClientId || process.env.PHONEPE_CLIENT_ID || "",
+    phonepeClientSecret:
+      db.phonepeClientSecret || process.env.PHONEPE_CLIENT_SECRET || "",
+    phonepeClientVersion:
+      db.phonepeClientVersion || process.env.PHONEPE_CLIENT_VERSION || "1",
+    phonepeEnvironment:
+      db.phonepeEnvironment || process.env.PHONEPE_ENVIRONMENT || "sandbox",
+    phonepeWebhookUsername:
+      db.phonepeWebhookUsername || process.env.PHONEPE_WEBHOOK_USERNAME || "",
+    phonepeWebhookPassword:
+      db.phonepeWebhookPassword || process.env.PHONEPE_WEBHOOK_PASSWORD || "",
     resendApiKey: db.resendApiKey || process.env.RESEND_API_KEY || "",
     whatsappApiKey: db.whatsappApiKey || process.env.WHATSAPP_API_KEY || "",
     whatsappPhoneNumberId:

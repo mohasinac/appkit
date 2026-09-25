@@ -22,7 +22,6 @@ export { runMediaTmpCleanup } from "./mediaTmpCleanup";
 export { runPendingOrderTimeout } from "./pendingOrderTimeout";
 export { runCountersReconcile } from "./countersReconcile";
 export { runBundleStockSync } from "./bundleStockSync";
-export { runPayoutBatch } from "./payoutBatch";
 export { runAutoPayoutEligibility } from "./autoPayoutEligibility";
 export { runProductStatsSync } from "./productStatsSync";
 export { runPositionsReconcile } from "./positionsReconcile";

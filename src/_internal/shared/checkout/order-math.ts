@@ -57,7 +57,7 @@ export interface PricedCartLine {
  * 🛑 Do not hand-roll this rule at a call site. It has been re-derived by hand
  * six times, and the two copies that lived in the consumer repo
  * (`src/app/api/payment/create-order/route.ts`) each reproduced the bundle
- * branch while silently omitting case 1 — so Razorpay captured the LIST price
+ * branch while silently omitting case 1 — so the gateway captured the LIST price
  * for an accepted offer while the cart displayed the negotiated one. Call
  * `lineTotalFor` and let this function stay the only definition.
  */

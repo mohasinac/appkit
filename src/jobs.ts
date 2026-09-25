@@ -42,7 +42,6 @@ export {
   pendingOrderTimeoutHandler,
   productStatsSyncHandler,
   positionsReconcileHandler,
-  payoutBatchHandler,
   weeklyPayoutEligibilityHandler,
   onCategoryWriteHandler,
   onProductWriteHandler,

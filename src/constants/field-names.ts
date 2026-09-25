@@ -1119,7 +1119,7 @@ export const SITE_SETTINGS_FIELDS = {
   },
   PAYMENT: "payment",
   PAYMENT_FIELDS: {
-    RAZORPAY_ENABLED: "payment.razorpayEnabled",
+    PHONEPE_ENABLED: "payment.phonepeEnabled",
     UPI_MANUAL_ENABLED: "payment.upiManualEnabled",
     COD_ENABLED: "payment.codEnabled",
   },

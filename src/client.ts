@@ -11,7 +11,7 @@ export { ERROR_DISPLAY_MAP, getErrorDisplay } from "./errors/error-display-map";
 // It terminates in a constant, so a thrown value's own .message never surfaces.
 export { toUserMessage, GENERIC_USER_MESSAGE } from "./errors/error-display-map";
 export type { ErrorDisplayEntry } from "./errors/error-display-map";
-export { RazorpayUnreachableError } from "./errors/razorpay-unreachable";
+export { PaymentProviderUnreachableError } from "./errors/payment-provider-unreachable";
 
 // [CLIENT-SAFE] ActionResult envelope type — for typing server-action call sites.
 // Re-exported from the public utils barrel to keep the _internal/ boundary

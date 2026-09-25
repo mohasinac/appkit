@@ -174,7 +174,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     whatsappNumber: "918919665811",
   },
   payment: {
-    razorpayEnabled: false,
+    phonepeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,
@@ -488,9 +488,12 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     },
   },
   credentials: {
-    razorpayKeyId: "rzp_test_PLACEHOLDER",
-    razorpayKeySecret: "secret_PLACEHOLDER",
-    razorpayWebhookSecret: "webhook_PLACEHOLDER",
+    phonepeClientId: "PGTESTPAYUAT_PLACEHOLDER",
+    phonepeClientSecret: "secret_PLACEHOLDER",
+    phonepeClientVersion: "1",
+    phonepeEnvironment: "sandbox",
+    phonepeWebhookUsername: "webhook_PLACEHOLDER",
+    phonepeWebhookPassword: "webhook_PLACEHOLDER",
     resendApiKey: "",
     whatsappApiKey: "wa_PLACEHOLDER",
     // Real Meta secrets — deliberately left empty. With these unset the order

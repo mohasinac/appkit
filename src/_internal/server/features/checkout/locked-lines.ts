@@ -8,7 +8,7 @@
  *      and a won bid had no link to the order it became.
  * WHAT: `assertLockedLinesStillValid` (pre-order-creation guard) and
  *       `finalizeLockedLines` (post-order-creation close-out). Both are called
- *       from every order-creation path so the manual/COD and Razorpay flows
+ *       from every order-creation path so the manual/COD and PhonePe flows
  *       cannot diverge.
  *
  * EXPORTS:

@@ -55,7 +55,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A label too long for one line makes its button taller rather than truncating. Height is cheap in a bottom bar; a clipped verb is not, because the buyer cannot tell what the button will do.",
     expectedUiState:
-      "'Pay Online (Razorpay)' is shown complete, wrapping onto two lines if it needs to. An ellipsis anywhere in the bar is a failure, on any payment method.",
+      "'Pay Online (PhonePe)' is shown complete, wrapping onto two lines if it needs to. An ellipsis anywhere in the bar is a failure, on any payment method.",
     endResult:
       "Layout-only; nothing persists. Restore the window width afterwards.",
   },

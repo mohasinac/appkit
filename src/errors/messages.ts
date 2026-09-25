@@ -337,6 +337,7 @@ export const ERROR_MESSAGES = {
     INSUFFICIENT_STOCK: "Insufficient stock for one or more items",
     PAYMENT_FAILED: "Payment processing failed",
     PAYMENT_DECLINED: "Payment was declined.",
+    ORDER_PLACEMENT_IN_PROGRESS: "Your payment is still being confirmed — please wait a moment and refresh.",
     PAYMENT_TRACKING_INIT_FAILED:
       "Failed to initialise payment tracking. Please check your order status.",
     PAYMENT_TRACKING_CONNECTION_LOST:

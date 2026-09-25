@@ -219,7 +219,7 @@ export async function analyzeLogs(opts: AnalyzeOptions): Promise<AnalyzeReport> 
   }
   if (topCodes.find((c) => c.code.startsWith("PAYMENT_ROLLBACK"))) {
     recommendations.push(
-      "PAYMENT_ROLLBACK_* observed — verify Razorpay webhook health and check the refund-rollback path.",
+      "PAYMENT_ROLLBACK_* observed — verify PhonePe webhook health and check the refund-rollback path.",
     );
   }
   if (

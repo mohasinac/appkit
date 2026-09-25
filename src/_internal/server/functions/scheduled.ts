@@ -16,7 +16,6 @@ import {
   mediaTmpCleanupHandler,
   notificationPruneHandler,
   offerExpiryHandler,
-  payoutBatchHandler,
   paymentWindowTimeoutHandler,
   hardBanReinstatementHandler,
   paymentReviewAutoApproveHandler,
@@ -166,14 +165,6 @@ export const positionsReconcile = defineFunction({
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
-export const payoutBatch = defineFunction({
-  name: "payoutBatch",
-  description: "Dispatch the day's payout batch (daily 06:00 UTC).",
-  trigger: { kind: "schedule", cron: "0 6 * * *", timeZone: "UTC" },
-  handler: payoutBatchHandler,
-  options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
-});
-
 export const cartPrune = defineFunction({
   name: "cartPrune",
   description: "Prune abandoned carts (weekly Sunday 04:00 UTC).",
@@ -294,7 +285,6 @@ export const SCHEDULED_FUNCTIONS = [
   dailyDataCleanup,
   countersReconcile,
   positionsReconcile,
-  payoutBatch,
   cartPrune,
   notificationPrune,
   weeklyPayoutEligibility,

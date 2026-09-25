@@ -82,29 +82,6 @@ export interface PayoutDocument extends BaseDocument {
   /** Seller-set personal follow-up flag — surfaced only to the owning seller, never mutated by admin. */
   sellerReminderFlag?: boolean;
 
-  /*
-   * ── Dispatch outcome ──────────────────────────────────────────────────
-   *
-   * All four are written by `recordSuccess` / `recordFailure` in the payouts
-   * batch and were **undeclared here** until 2026-08-26 — the same
-   * written-but-not-declared shape as Root Cause #70's `adSettings`. Nothing
-   * type-checked against them, so no reader could safely surface a dispatch
-   * failure to the seller or to an admin, and only the repository's own tests
-   * knew they existed.
-   */
-  /** Razorpay's payout id, once the API accepted the dispatch. */
-  razorpayPayoutId?: string;
-  /** Razorpay's own status string — NOT this document's `status`. */
-  razorpayStatus?: string;
-  /** Consecutive dispatch failures. At MAX_FAILURES the payout goes `failed`. */
-  failureCount?: number;
-  /**
-   * Why the LAST attempt failed. Overwritten by every retry, which is why the
-   * timeline tracks it: `statusHistory` is the only place the earlier reasons
-   * survive.
-   */
-  lastFailureReason?: string;
-
   /**
    * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
    *
@@ -122,16 +99,18 @@ export interface PayoutDocument extends BaseDocument {
  * `netAmount`/`refundDeductions` are excluded — a refund deduction is money
  * churn before dispatch, and § "Status History" keeps money off the timeline;
  * `refundDeductions[]` on the document is already its own record.
- * `failureCount` is excluded because `lastFailureReason` changing is the
- * event, and tracking both would double every retry entry.
+ *
+ * The automated RazorpayX payout-dispatch job (and the `razorpayPayoutId` /
+ * `razorpayStatus` / `failureCount` / `lastFailureReason` fields it alone
+ * wrote) was deleted when Razorpay was replaced by PhonePe — PhonePe has no
+ * comparable payout API, so seller payouts are fully manual again via
+ * `adminUpdatePayout`. Those four fields no longer exist on `PayoutDocument`;
+ * do not re-add them here without a real writer.
  */
 export const PAYOUT_TRACKED_FIELDS = [
   "status",
   "processedAt",
   "transactionId",
-  "razorpayPayoutId",
-  "razorpayStatus",
-  "lastFailureReason",
 ] as const;
 
 export const PAYOUT_COLLECTION = "payouts" as const;

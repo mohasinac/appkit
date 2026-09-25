@@ -320,9 +320,12 @@ export function AdminSiteSettingsView({
   const [platformShippingFixedMin, setPlatformShippingFixedMin] = React.useState(0);
 
   // ⑧ Integrations
-  const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
-  const [razorpayKeySecret, setRazorpayKeySecret] = React.useState("");
-  const [razorpayWebhookSecret, setRazorpayWebhookSecret] = React.useState("");
+  const [phonepeClientId, setPhonepeClientId] = React.useState("");
+  const [phonepeClientSecret, setPhonepeClientSecret] = React.useState("");
+  const [phonepeClientVersion, setPhonepeClientVersion] = React.useState("1");
+  const [phonepeEnvironment, setPhonepeEnvironment] = React.useState("sandbox");
+  const [phonepeWebhookUsername, setPhonepeWebhookUsername] = React.useState("");
+  const [phonepeWebhookPassword, setPhonepeWebhookPassword] = React.useState("");
   const [smtpHost, setSmtpHost] = React.useState("");
   const [smtpPort, setSmtpPort] = React.useState("587");
   const [smtpUser, setSmtpUser] = React.useState("");
@@ -347,7 +350,7 @@ export function AdminSiteSettingsView({
   const [maxDeliveryRadius, setMaxDeliveryRadius] = React.useState(0);
 
   // ⑨ Payment methods (siteSettings.payment — read by checkout for method eligibility)
-  const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
+  const [phonepeEnabled, setPhonepeEnabled] = React.useState(false);
   const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
   const [codEnabled, setCodEnabled] = React.useState(true);
   const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
@@ -558,9 +561,12 @@ export function AdminSiteSettingsView({
     setGstLegalName(s.gst?.legalName ?? "");
     setGstAddress(s.gst?.address ?? "");
 
-    setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
-    setRazorpayKeySecret(s.credentialsMasked?.razorpayKeySecret ?? "");
-    setRazorpayWebhookSecret(s.credentialsMasked?.razorpayWebhookSecret ?? "");
+    setPhonepeClientId(s.credentialsMasked?.phonepeClientId ?? "");
+    setPhonepeClientSecret(s.credentialsMasked?.phonepeClientSecret ?? "");
+    setPhonepeClientVersion(s.credentialsMasked?.phonepeClientVersion ?? "1");
+    setPhonepeEnvironment(s.credentialsMasked?.phonepeEnvironment ?? "sandbox");
+    setPhonepeWebhookUsername(s.credentialsMasked?.phonepeWebhookUsername ?? "");
+    setPhonepeWebhookPassword(s.credentialsMasked?.phonepeWebhookPassword ?? "");
     setGoogleMapsApiKey(s.credentialsMasked?.googleMapsApiKey ?? "");
     setGooglePlaceId(s.credentialsMasked?.googlePlaceId ?? "");
     setSmtpHost(s.emailSettings?.host ?? "");
@@ -582,7 +588,7 @@ export function AdminSiteSettingsView({
     setDefaultCarrier(s.shipping?.defaultCarrier ?? "custom");
     setMaxDeliveryRadius(s.shipping?.maxDeliveryRadius ?? 0);
 
-    setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
+    setPhonepeEnabled(s.payment?.phonepeEnabled ?? false);
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
     setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
@@ -659,9 +665,12 @@ export function AdminSiteSettingsView({
     setMsgCeilingWhatsapp(s.messaging?.dailyCeiling?.whatsapp ?? 200);
 
     originalMaskedRef.current = {
-      razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
-      razorpayKeySecret: s.credentialsMasked?.razorpayKeySecret ?? "",
-      razorpayWebhookSecret: s.credentialsMasked?.razorpayWebhookSecret ?? "",
+      phonepeClientId: s.credentialsMasked?.phonepeClientId ?? "",
+      phonepeClientSecret: s.credentialsMasked?.phonepeClientSecret ?? "",
+      phonepeClientVersion: s.credentialsMasked?.phonepeClientVersion ?? "",
+      phonepeEnvironment: s.credentialsMasked?.phonepeEnvironment ?? "",
+      phonepeWebhookUsername: s.credentialsMasked?.phonepeWebhookUsername ?? "",
+      phonepeWebhookPassword: s.credentialsMasked?.phonepeWebhookPassword ?? "",
       googleMapsApiKey: s.credentialsMasked?.googleMapsApiKey ?? "",
       googlePlaceId: s.credentialsMasked?.googlePlaceId ?? "",
       metaPageAccessToken: s.credentialsMasked?.metaPageAccessToken ?? "",
@@ -768,9 +777,12 @@ export function AdminSiteSettingsView({
       // "" field, so an unedited tab never overwrites a real secret with its
       // own masked display string.
       credentials: {
-        razorpayKeyId: maskedOrReal("razorpayKeyId", razorpayKeyId),
-        razorpayKeySecret: maskedOrReal("razorpayKeySecret", razorpayKeySecret),
-        razorpayWebhookSecret: maskedOrReal("razorpayWebhookSecret", razorpayWebhookSecret),
+        phonepeClientId: maskedOrReal("phonepeClientId", phonepeClientId),
+        phonepeClientSecret: maskedOrReal("phonepeClientSecret", phonepeClientSecret),
+        phonepeClientVersion: maskedOrReal("phonepeClientVersion", phonepeClientVersion),
+        phonepeEnvironment: maskedOrReal("phonepeEnvironment", phonepeEnvironment),
+        phonepeWebhookUsername: maskedOrReal("phonepeWebhookUsername", phonepeWebhookUsername),
+        phonepeWebhookPassword: maskedOrReal("phonepeWebhookPassword", phonepeWebhookPassword),
         googleMapsApiKey: maskedOrReal("googleMapsApiKey", googleMapsApiKey),
         googlePlaceId: maskedOrReal("googlePlaceId", googlePlaceId),
         metaPageAccessToken: maskedOrReal("metaPageAccessToken", metaPageAccessToken),
@@ -817,7 +829,7 @@ export function AdminSiteSettingsView({
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
-      payment: { razorpayEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
+      payment: { phonepeEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
@@ -874,6 +886,10 @@ export function AdminSiteSettingsView({
     { label: "Delhivery", value: "delhivery" },
     { label: "Bluedart", value: "bluedart" },
     { label: "FedEx", value: "fedex" },
+  ];
+  const PHONEPE_ENVIRONMENT_OPTIONS = [
+    { label: "Sandbox (test)", value: "sandbox" },
+    { label: "Production (live)", value: "production" },
   ];
   const LISTING_TYPE_KEYS = ["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live"] as const;
   const CATEGORY_TYPE_KEYS = ["category", "sublisting", "brand", "bundle"] as const;
@@ -1278,7 +1294,7 @@ export function AdminSiteSettingsView({
               <Grid cols={2} gap="md">
                 <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-                <Input label="Razorpay gateway cost (%)" helperText="Gateway's own fee — absorbed by platform, not passed through." value={String(gatewayFeePercent)} onChange={(e) => setGatewayFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
+                <Input label="PhonePe gateway cost (%)" helperText="Gateway's own fee — absorbed by platform, not passed through." value={String(gatewayFeePercent)} onChange={(e) => setGatewayFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
                 <Input label="Minimum transaction fee (₹)" helperText="Per-transaction floor. Total charge will never be below base + this." value={String(minimumTransactionFee)} onChange={(e) => setMinimumTransactionFee(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
                 <Input label="Maximum platform fee (₹)" helperText="Ceiling on the buyer's platform commission, charged once per checkout on every payment method. GST is calculated on the capped amount." value={String(platformFeeMax)} onChange={(e) => setPlatformFeeMax(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
                 <Input label="Seller payout hold (days)" value={String(payoutHoldDays)} onChange={(e) => setPayoutHoldDays(parseInt(e.target.value) || 0)} type="number" min={0} />
@@ -1541,11 +1557,14 @@ export function AdminSiteSettingsView({
             <SettingsTabForm id="integrations" label="Integrations">
               <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Razorpay</Text>
+                <Text size="sm" weight="medium" color="muted">PhonePe</Text>
                 <Grid cols={2} gap="md">
-                  <MaskedInput label="Razorpay Key ID" value={razorpayKeyId} onChange={setRazorpayKeyId} placeholder="rzp_live_…" />
-                  <MaskedInput label="Razorpay Key Secret" value={razorpayKeySecret} onChange={setRazorpayKeySecret} placeholder="••••••••" />
-                  <MaskedInput label="Razorpay Webhook Secret" value={razorpayWebhookSecret} onChange={setRazorpayWebhookSecret} placeholder="••••••••" />
+                  <MaskedInput label="PhonePe Client ID" value={phonepeClientId} onChange={setPhonepeClientId} placeholder="MERCHANTID_…" />
+                  <MaskedInput label="PhonePe Client Secret" value={phonepeClientSecret} onChange={setPhonepeClientSecret} placeholder="••••••••" />
+                  <Input label="PhonePe Client Version" value={phonepeClientVersion} onChange={(e) => setPhonepeClientVersion(e.target.value)} placeholder="1" />
+                  <Select label="PhonePe Environment" options={PHONEPE_ENVIRONMENT_OPTIONS} value={phonepeEnvironment} onValueChange={setPhonepeEnvironment} />
+                  <MaskedInput label="PhonePe Webhook Username" value={phonepeWebhookUsername} onChange={setPhonepeWebhookUsername} placeholder="••••••••" />
+                  <MaskedInput label="PhonePe Webhook Password" value={phonepeWebhookPassword} onChange={setPhonepeWebhookPassword} placeholder="••••••••" />
                 </Grid>
               </Stack>
               <Stack gap="sm">
@@ -1608,7 +1627,7 @@ export function AdminSiteSettingsView({
           <TabsContent value="shipping">
             <SettingsTabForm id="shipping" label="Shipping">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
-              <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
+              <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — disabled by default, manual payment is the default" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
               <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
               <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />

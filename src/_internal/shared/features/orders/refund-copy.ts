@@ -11,7 +11,7 @@ export const REFUND_COPY = {
     badgeFull: "Full refund",
     badgePartial: "Partial refund",
     labelTxn: "Txn:",
-    labelRazorpay: "Razorpay:",
+    labelPhonePe: "PhonePe:",
     nonContestableBanner:
       'Disputes, RMA requests, and "Item Not Received" claims are no longer available for this order.',
   },

@@ -48,9 +48,9 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
             {REFUND_COPY.history.labelTxn} {event.manualTransactionId}
           </Text>
         )}
-        {event.razorpayRefundId && (
+        {event.phonepeRefundId && (
           <Text size="xs" color="muted">
-            {REFUND_COPY.history.labelRazorpay} {event.razorpayRefundId}
+            {REFUND_COPY.history.labelPhonePe} {event.phonepeRefundId}
           </Text>
         )}
       </Stack>

@@ -5,8 +5,9 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
  * processRefundAction — append a refund event to an order.
  *
  * Supports two paths:
- *  - Razorpay: calls the payment provider's `refund()` method, then records
- *    the razorpayRefundId on the event.
+ *  - PhonePe: calls the payment provider's `refund()` method — order-keyed
+ *    via `order.paymentId` (PhonePe's `merchantOrderId`), never a payment
+ *    id — then records the phonepeRefundId on the event.
  *  - Manual: no payment-provider call; records manualTransactionId + optional
  *    proof document URL.
  *
@@ -19,7 +20,7 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { randomUUID } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
 import { normalizeError } from "../../../../errors/normalize";
-import { rupeesToPaise } from "../../../../providers/payment-razorpay/index";
+import { rupeesToPaise } from "../../../../core/money";
 import { orderRepository } from "../../../..";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { NotFoundError, ValidationError } from "../../../../errors";
@@ -119,16 +120,16 @@ export type ProcessRefundInput = {
   refundedBy: string;
 } & (
   | {
-      method: "razorpay";
-      /** Razorpay paymentId from the order (order.paymentId). */
-      razorpayPaymentId: string;
+      method: "phonepe";
+      /** The order's PhonePe merchantOrderId (order.paymentId) — PhonePe refunds are order-keyed, never payment-keyed. */
+      phonepeOrderId: string;
       manualTransactionId?: never;
       proofDocumentUrl?: never;
       proofDocumentMimeType?: never;
     }
   | {
       method: "manual";
-      razorpayPaymentId?: never;
+      phonepeOrderId?: never;
       manualTransactionId?: string;
       proofDocumentUrl?: string;
       proofDocumentMimeType?: string;
@@ -183,13 +184,13 @@ export async function processRefundAction(
     
       const refundId = randomUUID();
       const now = new Date();
-      let razorpayRefundId: string | undefined;
-    
-      if (input.method === "razorpay") {
+      let phonepeRefundId: string | undefined;
+
+      if (input.method === "phonepe") {
         const payment = getProviders().payment;
         if (!payment) throw new ValidationError("Payment provider not configured");
-        const result = await payment.refund(input.razorpayPaymentId, rupeesToPaise(input.amount));
-        razorpayRefundId = result.id;
+        const result = await payment.refund(input.phonepeOrderId, rupeesToPaise(input.amount));
+        phonepeRefundId = result.id;
       }
 
       const isFull = input.amount >= order.totalPrice;
@@ -209,7 +210,7 @@ export async function processRefundAction(
           : RETURN_REASON_LABEL[input.reasonCode],
         refundedAt: now,
         refundedBy: input.refundedBy,
-        ...(razorpayRefundId ? { razorpayRefundId } : {}),
+        ...(phonepeRefundId ? { phonepeRefundId } : {}),
         ...(input.method === "manual" && input.manualTransactionId
           ? { manualTransactionId: input.manualTransactionId }
           : {}),

@@ -68,7 +68,7 @@ export const orderRefundEventSchema = z.object({
   reason: z.string(),
   refundedAt: firestoreDateSchema,
   refundedBy: z.string(),
-  razorpayRefundId: z.string().optional(),
+  phonepeRefundId: z.string().optional(),
   manualTransactionId: z.string().optional(),
   proofDocumentUrl: z.string().optional(),
   proofDocumentMimeType: z.string().optional(),

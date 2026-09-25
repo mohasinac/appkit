@@ -1,8 +1,3 @@
-import {
-  type PaymentGateway,
-  PaymentGatewayValues,
-} from "../../payments/schemas";
-export { type PaymentGateway, PaymentGatewayValues };
 import type { ListingType } from "../../products/types/index";
 import type { OrderType } from "../utils/order-splitter";
 import type { AppliedOrderDiscount, OrderSourceContext } from "../schemas/firestore";
@@ -123,7 +118,7 @@ export interface Order {
   orderType?: OrderType;
   /** Set when this order settled an accepted Make-an-Offer. */
   offerId?: string;
-  paymentGateway?: PaymentGateway;
+  paymentGateway?: string;
   subtotal: number;
   shippingCost?: number;
   discount?: number;

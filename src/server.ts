@@ -474,34 +474,16 @@ export { prepareForFirestore } from "./providers/db-firebase/index";
 // createResendProvider - Helper for create resend provider.
 export { createResendProvider } from "./providers/email-resend/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// RazorpayProvider - Component for razorpay provider.
-export { RazorpayProvider } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createRazorpayOrder - Helper for create razorpay order.
-export { createRazorpayOrder } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createRazorpayRefund - Helper for create razorpay refund.
-export { createRazorpayRefund } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// fetchRazorpayOrder - Shared export for fetch razorpay order.
-export { fetchRazorpayOrder } from "./providers/payment-razorpay/index";
+// PhonePeProvider - Component for phonepe provider.
+export { PhonePeProvider } from "./providers/payment-phonepe/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // paiseToRupees - Shared export for paise to rupees. // audit-money-units-ok: names the boundary conversion function itself
-export { paiseToRupees } from "./providers/payment-razorpay/index";
+export { paiseToRupees } from "./core/money";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // rupeesToPaise - Shared export for rupees to paise. // audit-money-units-ok: names the boundary conversion function itself
-export { rupeesToPaise } from "./providers/payment-razorpay/index";
+export { rupeesToPaise } from "./core/money";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyPaymentSignature - Shared export for verify payment signature.
-export { verifyPaymentSignature } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyPaymentSignatureWithKeys - Shared export for verify payment signature with keys.
-export { verifyPaymentSignatureWithKeys } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyWebhookSignature - Shared export for verify webhook signature.
-export { verifyWebhookSignature } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// resolveKeys - resolves integration credentials (Razorpay etc.) from Firestore site settings, falling back to env vars. Used by providers.config.ts to construct RazorpayProvider when siteSettings.payment.razorpayEnabled is true.
+// resolveKeys - resolves integration credentials (PhonePe etc.) from Firestore site settings, falling back to env vars. Used by providers.config.ts to construct PhonePeProvider when siteSettings.payment.phonepeEnabled is true.
 export { resolveKeys } from "./core/integration-keys";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ManualPaymentProvider - the default IPaymentProvider implementation (no gateway).

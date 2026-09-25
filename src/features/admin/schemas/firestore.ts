@@ -240,9 +240,15 @@ export interface FeaturedResult {
 }
 
 export interface SiteSettingsCredentials {
-  razorpayKeyId?: string;
-  razorpayKeySecret?: string;
-  razorpayWebhookSecret?: string;
+  phonepeClientId?: string;
+  phonepeClientSecret?: string;
+  /** Version number PhonePe assigned this client credential (sent as-is to their API — a number in their SDK, stored as a string here to match every other credentials field). */
+  phonepeClientVersion?: string;
+  /** "sandbox" | "production" — selects PhonePe's base URL + Env enum. */
+  phonepeEnvironment?: string;
+  /** Username/password pair configured in the PhonePe dashboard's Webhook tab (SHA/Basic auth mode) — verified via the SDK's `validateCallback()`. */
+  phonepeWebhookUsername?: string;
+  phonepeWebhookPassword?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
   metaAppId?: string;
@@ -284,9 +290,12 @@ export interface SiteSettingsCredentials {
 }
 
 export interface SiteSettingsCredentialsMasked {
-  razorpayKeyId?: string;
-  razorpayKeySecret?: string;
-  razorpayWebhookSecret?: string;
+  phonepeClientId?: string;
+  phonepeClientSecret?: string;
+  phonepeClientVersion?: string;
+  phonepeEnvironment?: string;
+  phonepeWebhookUsername?: string;
+  phonepeWebhookPassword?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
   metaAppId?: string;
@@ -509,7 +518,7 @@ export interface SiteSettingsDocument extends BaseDocument {
     whatsappNumber?: string;
   };
   payment: {
-    razorpayEnabled: boolean;
+    phonepeEnabled: boolean;
     upiManualEnabled: boolean;
     codEnabled: boolean;
     /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. Optional — falls back to no OTP gate when unset. */
@@ -888,7 +897,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   motto: "Your Marketplace, Your Rules",
   theme: DEFAULT_SITE_SETTINGS_THEME,
   payment: {
-    razorpayEnabled: false,
+    phonepeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,

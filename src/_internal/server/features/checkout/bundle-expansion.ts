@@ -109,7 +109,7 @@ export function validateCartItemStock(
 /**
  * Result of bucketing a cart into stock-satisfiable vs. stock-short lines.
  * Shared shape consumed by both checkout entry points (COD/UPI transaction
- * path and Razorpay post-payment path) so "what happens when an item is
+ * path and PhonePe post-payment path) so "what happens when an item is
  * unavailable" (skip it vs. cancel the whole checkout) is decided ONCE, by
  * the caller, from the same bucketing logic.
  */

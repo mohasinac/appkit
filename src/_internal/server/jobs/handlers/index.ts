@@ -33,7 +33,6 @@ export { pageViewRollupHandler } from "./pageViewRollup";
 export { pageViewPruneHandler } from "./pageViewPrune";
 export { dailyStatusDigestHandler } from "./dailyStatusDigest";
 export { positionsReconcileHandler } from "./positionsReconcile";
-export { payoutBatchHandler } from "./payoutBatch";
 export { weeklyPayoutEligibilityHandler } from "./weeklyPayoutEligibility";
 export { onCategoryWriteHandler } from "./onCategoryWrite";
 export { onProductWriteHandler } from "./onProductWrite";

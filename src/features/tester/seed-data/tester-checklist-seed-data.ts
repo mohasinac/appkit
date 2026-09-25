@@ -744,7 +744,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "The \"Send via WhatsApp instead\" option is NOT offered when the selected delivery address has no phone number on it, even with WhatsApp OTP enabled",
           description: "Added 2026-08-21. The phone is resolved server-side from the selected address (never from anything the browser sends), so an address with no phone has nowhere to send the code. Select/create a delivery address with the phone field empty and confirm the WhatsApp option is absent rather than appearing and then failing.",
         },
-        { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and Razorpay (when enabled) at checkout works" },
+        { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and PhonePe (when enabled) at checkout works" },
         { key: "payment-window-countdown", label: "Manual-payment orders show a 15-minute countdown timer on the payment page" },
         { key: "payment-proof-upload", label: "Uploading manual payment proof (screenshot, UTR, mark-as-paid + agreement checkboxes) works" },
         { key: "payment-proof-reupload", label: "Requesting a proof re-upload extends the buyer's payment window and the buyer can successfully re-submit" },
@@ -774,9 +774,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/checkout",
         },
         {
-          key: "checkout-razorpay-charge-includes-shipping",
-          label: "When Razorpay online payment is enabled, the amount charged in the Razorpay checkout modal matches the order's recorded Total exactly, including shipping fee",
-          description: "Fixed 2026-08-20 — the Razorpay pre-charge amount (computed before opening the payment modal) omitted the seller's shipping fee entirely, while the order created afterward recorded a higher total that included it, so the buyer was silently charged less via the gateway than what got recorded as owed. Only testable when Site Settings → Payments → Razorpay is enabled and the seller has a configured shipping fee. Compare the amount shown in the Razorpay modal against the order's Total on the confirmation page — they should match exactly.",
+          key: "checkout-phonepe-charge-includes-shipping",
+          label: "When PhonePe online payment is enabled, the amount charged in the PhonePe checkout iframe matches the order's recorded Total exactly, including shipping fee",
+          description: "Originally fixed 2026-08-20 against Razorpay; PhonePe replaced Razorpay entirely in this same migration and the pre-charge amount is built by the identical fee-calculation code, so the same regression is reachable through the new gateway. Only testable when the \"PhonePe (online card/UPI) enabled\" toggle under Site Settings → Shipping → Payment methods is ON and the seller has a configured shipping fee. Note the amount shown inside the PhonePe iframe before paying, then compare it against the order's Total on the confirmation page — they should match exactly.",
           href: "/checkout",
         },
         /*
@@ -1409,8 +1409,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "platform-fee-all-methods",
-          label: "The platform fee is charged on every payment method — COD, UPI-manual/cash and Razorpay all include it; COD additionally shows the COD handling fee and the 10% token",
-          description: "It used to be added only on the Razorpay path, so COD and UPI buyers were never charged it. Compare the same cart across each available method.",
+          label: "The platform fee is charged on every payment method — COD, UPI-manual/cash and PhonePe all include it; COD additionally shows the COD handling fee and the 10% token",
+          description: "It used to be added only on the online-gateway path (Razorpay, since replaced by PhonePe), so COD and UPI buyers were never charged it. Compare the same cart across each available method.",
           href: "/checkout",
         },
         {
@@ -1428,7 +1428,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "cart-checkout-order-totals-agree",
           label: "For the same cart, the expanded cart breakdown, the sum of the per-seller card fee lines, the checkout Order Summary and the created orders all show the SAME total",
-          description: "Repeat on COD, UPI-manual and Razorpay. Acceptance test for the whole pricing change — if any two of those four disagree, something is reading a different source than it charges from.",
+          description: "Repeat on COD, UPI-manual and PhonePe. Acceptance test for the whole pricing change — if any two of those four disagree, something is reading a different source than it charges from.",
           href: "/checkout",
         },
         {
@@ -1728,9 +1728,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/admin/stores",
         },
         {
-          key: "payout-failure-reasons-survive-retries",
-          label: "A payout that failed twice shows BOTH reasons, not just the last",
-          description: "`lastFailureReason` is overwritten by every retry, so the timeline is the only place earlier attempts survive. Also confirm the four dispatch fields (razorpayPayoutId, razorpayStatus, failureCount, lastFailureReason) render — they were written by the batch and UNDECLARED on the document until 2026-08-26, so nothing could safely surface them.",
+          key: "payout-marked-failed-shows-in-timeline",
+          label: "Manually marking a payout Failed records the change on its own status timeline, and doing it a second time does not erase the first entry",
+          description: "Seller payouts are fully manual (there is no automated dispatch/retry job — PhonePe has no payout API, so the earlier RazorpayX auto-dispatch job and its `razorpayPayoutId`/`razorpayStatus`/`failureCount`/`lastFailureReason` fields were deleted outright rather than migrated). Mark a pending payout Failed from /admin/payouts, reopen it, and confirm the History block shows a Failed entry with the admin as actor. Mark it Failed again and confirm the FIRST entry is still listed rather than being overwritten by the second.",
           href: "/admin/payouts",
         },
         {
@@ -5172,7 +5172,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "coupon-admin-usage-visible",
             label: "The admin coupon list shows usage counts that go up after a buyer redeems the coupon",
-            description: "Note the current usage, have a buyer complete an order with the coupon, then refresh the admin list. Check this for BOTH a cash/UPI order and (if Razorpay is enabled) an online-payment order — online payments previously did not record usage at all.",
+            description: "Note the current usage, have a buyer complete an order with the coupon, then refresh the admin list. Check this for BOTH a cash/UPI order and (if PhonePe is enabled) an online-payment order — online payments previously did not record usage at all.",
           },
         ],
       },
@@ -5492,6 +5492,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         href: "/admin/site",
         cases: [
           { key: "site-settings-admin", label: "Admin site settings page saves correctly", href: "/admin/site" },
+          {
+            key: "phonepe-credentials-persist",
+            label: "Site Settings → Integrations saves the PhonePe Client ID, Client Secret, Client Version, Environment and both webhook credentials — and they survive a reload",
+            description: "Open /admin/site and switch to the Integrations tab (?tab=integrations). Fill in the PhonePe Client ID, Client Secret, Client Version, Environment (sandbox/production) and Webhook Username/Password, then save and hard-reload. The Client Secret and both webhook credential fields are masked on reload (dots, not the raw value) — that is correct. Confirm by changing an unrelated field on the same tab, saving again, and verifying the masked fields still work (checkout still reaches PhonePe) rather than being silently overwritten with the mask value.",
+            href: "/admin/site",
+          },
+          {
+            key: "phonepe-enabled-toggle-persists",
+            label: "Site Settings → Shipping: the \"PhonePe (online card/UPI) enabled\" toggle persists after save + reload, and gates the checkout payment option",
+            description: "The toggle lives under the Shipping tab's \"Payment methods\" section (?tab=shipping), not a dedicated Payments tab. With it OFF, /checkout must not offer 'Pay Online (PhonePe)' — only manual UPI/cash and COD (whichever are separately enabled). Turn it ON, save, reload the settings page to confirm it's still ON, then open /checkout and confirm 'Pay Online (PhonePe)' now appears as a payment option.",
+            href: "/admin/site",
+          },
           {
             key: "whatsapp-credentials-persist",
             label: "Site Settings → WhatsApp saves the Phone Number ID, Cloud API token, admin notify numbers, template language and all 6 template names — and they survive a reload",
@@ -6407,7 +6419,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "no-truncation-anywhere",
           label: "No CTA label is ever cut off — long ones wrap to two lines",
           description:
-            "Check the payment step, whose primary reads 'Pay Online (Razorpay)'. BEFORE: a label too long for its share was clipped with an ellipsis. AFTER: the button grows taller and shows the whole label on two lines. An ellipsis anywhere in the bar is a failure.",
+            "Check the payment step, whose primary reads 'Pay Online (PhonePe)'. BEFORE: a label too long for its share was clipped with an ellipsis. AFTER: the button grows taller and shows the whole label on two lines. An ellipsis anywhere in the bar is a failure.",
         },
       ],
     },

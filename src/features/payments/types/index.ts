@@ -1,6 +1,4 @@
-import { type PaymentGateway, PaymentGatewayValues } from "../schemas";
 import type { JsonValue } from "@mohasinac/appkit";
-export { type PaymentGateway, PaymentGatewayValues };
 export type PaymentStatus =
   | "pending"
   | "processing"
@@ -11,7 +9,7 @@ export type PaymentStatus =
 
 export interface PaymentGatewayConfig {
   id: string;
-  gateway: PaymentGateway;
+  gateway: string;
   isEnabled: boolean;
   displayName?: string;
   credentials?: Record<string, string>;
@@ -35,7 +33,7 @@ export interface PaymentSettings {
 export interface PaymentRecord {
   id: string;
   orderId: string;
-  gateway: PaymentGateway;
+  gateway: string;
   gatewayPaymentId?: string;
   amount: number;
   currency: string;

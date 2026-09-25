@@ -80,11 +80,9 @@ import {
 } from "../../../../features/orders/schemas/index";
 import type { OutOfStockPolicy } from "../../../../features/orders/schemas/index";
 import { getDefaultCurrency } from "../../../../core/index";
-import {
-  verifyPaymentSignatureWithKeys,
-  fetchRazorpayOrder,
-  paiseToRupees,
-} from "../../../../providers/payment-razorpay/index";
+import { getProviders } from "../../../../contracts";
+import type { PhonePeCheckoutIntent } from "../../../../providers/payment-phonepe/index";
+import { rupeesToPaise, paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { checkEmiEligibility, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
@@ -346,7 +344,7 @@ interface GroupCouponDiscountResult {
  * Prorates every buyer-applied coupon against one seller-group's total. Pure
  * — no side effects (usage-accumulator bookkeeping is layered on by callers
  * that actually place an order). Shared by createOrderForGroup,
- * createRazorpayGroupOrder, and the read-only previewCheckoutPricing so the
+ * createPhonePeGroupOrder, and the read-only previewCheckoutPricing so the
  * three can never drift on how a coupon splits across sellers (was three
  * near-identical copies before this extraction — Duplication Decision
  * Framework's Rule of Three).
@@ -776,8 +774,8 @@ async function createOrderForGroup(
   }
 
   // The platform commission is now charged on EVERY payment method. It used to
-  // be added only on the Razorpay path, so COD / UPI-manual / cash / EMI buyers
-  // silently never paid it.
+  // be added only on the online-payment path, so COD / UPI-manual / cash / EMI
+  // buyers silently never paid it.
   const orderTotal =
     Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
 
@@ -798,7 +796,7 @@ async function createOrderForGroup(
 
   // ── 15-minute payment window + seller UPI resolution (Tier PP) ──────────
   // Deadline + displayed UPI apply only to methods with a buyer-uploaded
-  // proof step — never cod (paid on delivery), razorpay (paid before order
+  // proof step — never cod (paid on delivery), online (paid before order
   // creation), or admin_bypass (already marked paid above).
   const hasPaymentWindow =
     !adminBypass &&
@@ -1389,7 +1387,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
 /**
  * Read-only "what will I actually be charged" preview for the checkout
  * Order Summary. Reuses the exact same building blocks
- * createCheckoutOrderAction / verifyAndPlaceRazorpayOrderAction use when an
+ * createCheckoutOrderAction / verifyAndPlacePhonePeOrderAction use when an
  * order is actually placed — resolveShippingCost, the compute*Fee helpers,
  * computeGroupCouponDiscount, and the GST calc — so the number shown to the
  * buyer can never diverge from what gets charged/recorded. Never decrements
@@ -1603,51 +1601,64 @@ export async function attachPaymentAction(input: {
 }
 
 // ---------------------------------------------------------------------------
-// Razorpay-confirmed checkout: signature verify + amount re-check + atomic
-// stock decrement + cart clear + multi-order create + notifications.
+// PhonePe-confirmed checkout: Order Status confirm + amount re-check +
+// atomic stock decrement + cart clear + multi-order create + notifications.
+//
+// Unlike Razorpay, there is no client-side signature — the buyer's browser
+// never receives a verifiable proof of payment. Both the buyer-present
+// `/api/payment/verify` call AND the async webhook (buyer may have closed
+// the tab) call this SAME action, keyed only by `merchantOrderId`. A small
+// Firestore claim doc (`phonepeOrderClaims/{merchantOrderId}`, created via
+// `.create()`, which throws on conflict) makes whichever caller arrives
+// first the sole placer of orders for that payment.
 // ---------------------------------------------------------------------------
 
-export interface VerifyAndPlaceRazorpayOrderInput {
-  userId: string;
-  userName: string;
-  userEmail: string;
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-  /** Required for physical carts; omitted for digital-code-only carts. */
+export interface VerifyAndPlacePhonePeOrderInput {
+  /** PhonePe's merchantOrderId — our own id, generated in PhonePeProvider.createOrder(). */
+  merchantOrderId: string;
+  /**
+   * Buyer identity. Omit on the webhook path — no session exists there, so
+   * it's resolved from `uid` packed into PhonePe's `metaInfo` at
+   * create-order time and re-fetched from `userRepository`.
+   */
+  userId?: string;
+  userName?: string;
+  userEmail?: string;
+  /** Present on the buyer-present path; falls back to metaInfo (webhook path) when omitted. Required for physical carts. */
   addressId?: string;
   notes?: string;
   /**
    * Buyer's choice for what to do when a cart item is unavailable at
-   * checkout time. Defaults to "cancel_order" — matches this path's
-   * historical (only) behavior for any caller/old-client that omits the
-   * field, since "skip_items" partial fulfillment has no prior precedent
-   * on the Razorpay path.
+   * checkout time. Defaults to "cancel_order" when neither the caller nor
+   * metaInfo supplies one — matches this path's historical (only) behavior.
    */
   outOfStockPolicy?: OutOfStockPolicy;
   // Same as CreateCheckoutOrderInput: add-ons come from `CartDocument.storeAddons`,
-  // not the request. The old "must match the value sent to /api/payment/create-order"
-  // contract no longer exists because neither side takes a client-supplied value.
+  // not the request. Neither side takes a client-supplied add-on value.
 }
 
 /**
- * Place order(s) from the user's cart after a Razorpay payment is verified.
- * Mirrors the existing /api/payment/verify route handler.
+ * Place order(s) from the user's cart after a PhonePe payment is confirmed.
+ * Called from both /api/payment/verify (buyer present) and the webhook
+ * (buyer may be gone) — see the module-level comment above.
  *
- * Consumers must authenticate the user before calling. The action performs:
- *   1. HMAC signature verification (rejects forged callbacks)
- *   2. Cart re-validation against current product prices/stock
- *   3. Amount cross-check against the Razorpay order record
- *   4. Atomic stock decrement + cart clear via unitOfWork batch
- *   5. Multi-coupon pro-rating per order group
- *   6. order_placed notifications (buyer + seller)
- *   7. Confirmation email + RTDB success signal (both fire-and-forget)
+ * Performs:
+ *   1. Order Status confirmation via `getProviders().payment.getOrder()` —
+ *      the sole source of truth; PhonePe never hands the browser a
+ *      verifiable proof of payment.
+ *   2. An idempotency claim so only one of the two callers proceeds.
+ *   3. Cart re-validation against current product prices/stock.
+ *   4. Amount cross-check against the confirmed PhonePe order.
+ *   5. Atomic stock decrement + cart clear via unitOfWork batch.
+ *   6. Multi-coupon pro-rating per order group.
+ *   7. order_placed notifications (buyer + seller).
+ *   8. Confirmation email + RTDB success signal (both fire-and-forget).
  */
 /**
- * Auto-refund the value of items dropped from a Razorpay checkout under the
- * "skip_items" out-of-stock policy. Razorpay captures payment for the FULL
+ * Auto-refund the value of items dropped from a PhonePe checkout under the
+ * "skip_items" out-of-stock policy. PhonePe captures payment for the FULL
  * cart before the stock check runs, so anything not placed as an order must
- * be given back. Extracted from `verifyAndPlaceRazorpayOrderAction` — same
+ * be given back. Extracted from `verifyAndPlacePhonePeOrderAction` — same
  * behavior, kept as a named step so the parent function stays readable.
  *
  * Awaited by the caller (this moves money, never fire-and-forget). On
@@ -1655,13 +1666,14 @@ export interface VerifyAndPlaceRazorpayOrderInput {
  * created and paid); the failure is surfaced via `order.refundPending` + an
  * admin notification fan-out, never silently dropped (Rule #8).
  */
-async function refundDroppedItemsForRazorpayCheckout(input: {
+async function refundDroppedItemsForPhonePeCheckout(input: {
   unavailablePaid: StockBucketResult["unavailable"];
   orderIds: string[];
   productByIdPaid: Map<string, ProductDocument>;
-  razorpayPaymentId: string;
+  /** PhonePe refunds are order-keyed — the original merchantOrderId, not a payment id. */
+  phonepeOrderId: string;
 }): Promise<void> {
-  const { unavailablePaid, orderIds, productByIdPaid, razorpayPaymentId } = input;
+  const { unavailablePaid, orderIds, productByIdPaid, phonepeOrderId } = input;
   if (unavailablePaid.length === 0 || orderIds.length === 0) return;
 
   const droppedValue = unavailablePaid.reduce(
@@ -1676,9 +1688,9 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
     // Cap defensively at the primary order's total — processRefundAction
     // rejects any amount exceeding order.totalPrice, and a multi-order
     // batch's dropped-items value isn't cleanly attributable to a single
-    // order (Razorpay refunds are keyed by paymentId, not orderId; the
-    // FIRST order created in this batch is used as the refund's book-
-    // keeping anchor).
+    // order (PhonePe refunds are keyed by the original order id, not a
+    // payment id; the FIRST order created in this batch is used as the
+    // refund's book-keeping anchor).
     const refundAmount = primaryOrder
       ? Math.min(droppedValue, primaryOrder.totalPrice)
       : droppedValue;
@@ -1695,8 +1707,8 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
        */
       reasonCode: "not_received",
       reasonNote: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
-      method: "razorpay",
-      razorpayPaymentId,
+      method: "phonepe",
+      phonepeOrderId,
       confirmIrrevocable: true,
       refundedBy: "system:checkout-auto-refund",
     });
@@ -1706,7 +1718,7 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
   } catch (refundErr) {
     void normalizeError(refundErr);
     serverLogger.warn(
-      "verifyAndPlaceRazorpayOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
+      "verifyAndPlacePhonePeOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
       {
         orderId: primaryOrderId,
         droppedValue,
@@ -1718,7 +1730,7 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
       .catch((updErr: unknown) => {
         void normalizeError(updErr);
         serverLogger.error(
-          "verifyAndPlaceRazorpayOrderAction: failed to flag refundPending after auto-refund failure",
+          "verifyAndPlacePhonePeOrderAction: failed to flag refundPending after auto-refund failure",
           { orderId: primaryOrderId, err: updErr instanceof Error ? updErr.message : String(updErr) },
         );
       });
@@ -1749,7 +1761,7 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
       .catch((notifyErr: unknown) => {
         void normalizeError(notifyErr);
         serverLogger.error(
-          "verifyAndPlaceRazorpayOrderAction: failed to write admin notification for failed auto-refund",
+          "verifyAndPlacePhonePeOrderAction: failed to write admin notification for failed auto-refund",
           { orderId: primaryOrderId },
         );
       });
@@ -1757,14 +1769,14 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
 }
 
 /**
- * Places one order for one seller-group within `verifyAndPlaceRazorpayOrderAction`
+ * Places one order for one seller-group within `verifyAndPlacePhonePeOrderAction`
  * — mirrors `createOrderForGroup`'s role on the COD/cash/EMI path (same
  * per-group fee/coupon/order-doc/notification shape), extracted into its own
  * function purely to keep the parent function under the LARGE_COMPONENT
  * audit threshold (`scripts/audit-code-quality.mjs`). No behavior change
  * from the inline version this replaced.
  */
-async function createRazorpayGroupOrder(
+async function createPhonePeGroupOrder(
   group: Array<{ item: CartItemDocument; product: ProductDocument | null }>,
   orderType: OrderType,
   ctx: {
@@ -1778,9 +1790,12 @@ async function createRazorpayGroupOrder(
     uid: string;
     userName: string;
     userEmail: string;
-    razorpay_order_id: string;
-    razorpay_payment_id: string;
-    razorpay_signature: string;
+    /** Our own generated order id — stored as `order.paymentId`, the durable reference for refunds/lookups. */
+    merchantOrderId: string;
+    /** PhonePe's own order id (distinct from merchantOrderId). */
+    phonepeOrderId?: string;
+    /** PhonePe's transaction id for the completed payment attempt, if available. */
+    transactionId?: string;
     shippingAddress?: string;
     notes?: string;
     outOfStockPolicy: OutOfStockPolicy;
@@ -1801,9 +1816,9 @@ async function createRazorpayGroupOrder(
     uid,
     userName,
     userEmail,
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
+    merchantOrderId,
+    phonepeOrderId,
+    transactionId,
     shippingAddress,
     notes,
     outOfStockPolicy,
@@ -1811,7 +1826,7 @@ async function createRazorpayGroupOrder(
     orderIds,
     emailsToSend,
     couponUsageAccumulator,
-    productById: razorpayProductById,
+    productById: phonepeProductById,
   } = ctx;
 
 
@@ -1837,7 +1852,7 @@ async function createRazorpayGroupOrder(
 
   // Mirrors createOrderForGroup — without this the online-payment path wrote
   // the discount onto the order but never incremented usage.currentUsage or
-  // the per-user counter, so limits were unenforceable for Razorpay orders.
+  // the per-user counter, so limits were unenforceable for PhonePe orders.
   const groupCouponCodes = new Set<string>();
   for (const discount of appliedDiscounts) {
     if (discount.couponId) {
@@ -1871,26 +1886,26 @@ async function createRazorpayGroupOrder(
     commissionRates,
   );
   const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst;
-  // P-8 GST — deliberately NOT wired into this Razorpay-verify path. The
+  // P-8 GST — deliberately NOT wired into this PhonePe-verify path. The
   // amount-mismatch check above (expectedPaymentAmountRs) compares against
-  // what the buyer already paid via the Razorpay order created earlier in
+  // what the buyer already paid via the PhonePe order created earlier in
   // the flow; adding product GST here without also adding it to that
   // upstream pre-payment amount calculation would either fail the mismatch
   // check or silently under/over-charge. Wiring GST through the full
-  // Razorpay create→verify round-trip is separate follow-up work, tracked
-  // alongside P-13 (Razorpay is disabled by default today, so this order
+  // PhonePe create→confirm round-trip is separate follow-up work, tracked
+  // alongside P-13 (PhonePe is disabled by default today, so this order
   // type doesn't currently carry a GST breakdown).
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
   // the price rule (`isBundle ? item.price : product.price`) that — like the
-  // two in the consumer's Razorpay route — silently omitted `lockedPrice`, so
-  // an accepted offer paid through Razorpay was RECORDED at the seller's list
+  // two in the consumer's checkout route — silently omitted `lockedPrice`, so
+  // an accepted offer paid through PhonePe was RECORDED at the seller's list
   // price. `lineTotalFor` inside the expansion is the single definition.
   const orderItems = group.flatMap(({ item, product }) => {
     const lt = (product?.listingType ?? "standard") as ListingType;
     const itemRule = getListingRule(lt);
-    return expandCartLineToOrderRows(item, product!, razorpayProductById).map((baseLine) =>
+    return expandCartLineToOrderRows(item, product!, phonepeProductById).map((baseLine) =>
       itemRule.decorateOrderItem(baseLine, product!),
     );
   });
@@ -1905,10 +1920,10 @@ async function createRazorpayGroupOrder(
   ];
 
   // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
-  const lt0Rzp = (group[0].product?.listingType ?? "standard") as ListingType;
-  const groupRuleRzp = getListingRule(lt0Rzp);
+  const lt0Pp = (group[0].product?.listingType ?? "standard") as ListingType;
+  const groupRulePp = getListingRule(lt0Pp);
   const extraOrderFields = {
-    ...groupRuleRzp.decorateOrderDoc(group[0].item, group[0].product!),
+    ...groupRulePp.decorateOrderDoc(group[0].item, group[0].product!),
   };
 
   // Both creation paths call the SAME builder — two hand-written copies is the
@@ -1942,18 +1957,20 @@ async function createRazorpayGroupOrder(
     status: OrderStatusValues.CONFIRMED,
     paymentStatus: PaymentStatusValues.PAID,
     paymentMethod: PaymentMethodValues.ONLINE,
-    paymentId: razorpay_payment_id,
+    // Our own generated id, not PhonePe's — this is what refunds/lookups key
+    // on (PhonePe's refund API is `originalMerchantOrderId`-keyed anyway).
+    paymentId: merchantOrderId,
     paymentRecord: {
-      method: "razorpay",
-      transactionId: razorpay_payment_id,
+      method: "phonepe",
+      transactionId: transactionId ?? merchantOrderId,
       amount: orderTotal,
       paidAt: new Date(),
-      verifiedBy: "razorpay-webhook",
-      verificationMethod: "webhook",
+      verifiedBy: "phonepe-order-status",
+      verificationMethod: "order-status",
       gatewayRef: {
-        orderId: razorpay_order_id,
-        paymentId: razorpay_payment_id,
-        signature: razorpay_signature,
+        merchantOrderId,
+        phonepeOrderId,
+        transactionId,
       },
     },
     shippingAddress,
@@ -2032,42 +2049,74 @@ async function createRazorpayGroupOrder(
   return orderTotal;
 }
 
-export async function verifyAndPlaceRazorpayOrderAction(
-  input: VerifyAndPlaceRazorpayOrderInput,
+export async function verifyAndPlacePhonePeOrderAction(
+  input: VerifyAndPlacePhonePeOrderInput,
 ): Promise<CheckoutOrderResult> {
-  const {
-    userId: uid,
-    userName,
-    userEmail,
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-    addressId,
-    notes,
-    outOfStockPolicy = OutOfStockPolicyValues.CANCEL_ORDER,
-  } = input;
+  const { merchantOrderId } = input;
 
-  // Add-on fees are no longer resolved here. They are per store, and this
-  // function has no single store — each group reads its own selection off
-  // `cart.storeAddons` inside createRazorpayGroupOrder.
-  const siteSettings = await siteSettingsRepository.getSingleton();
+  // Idempotency: the buyer's /verify call and the async webhook can both
+  // race to confirm+place for the same PhonePe payment (see the module
+  // comment above). `.create()` throws on conflict, so whichever caller
+  // creates this claim doc first is the sole placer; the loser returns
+  // whatever the winner already placed, or a retryable "in progress" error
+  // if the winner genuinely hasn't finished yet.
+  const claimRef = getAdminDb().collection("phonepeOrderClaims").doc(merchantOrderId);
+  try {
+    await claimRef.create({ claimedAt: new Date() });
+  } catch (claimErr) {
+    void normalizeError(claimErr);
+    const existingOrders = await unitOfWork.orders.findByPaymentId(merchantOrderId);
+    if (existingOrders.length > 0) {
+      return {
+        orderIds: existingOrders.map((o) => o.id),
+        total: existingOrders.reduce((sum, o) => sum + o.totalPrice, 0),
+        itemCount: existingOrders.length,
+      };
+    }
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.ORDER_PLACEMENT_IN_PROGRESS);
+  }
 
-  const isValid = await verifyPaymentSignatureWithKeys({
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-  });
-  if (!isValid) {
-    serverLogger.warn(`Payment signature verification failed for user ${uid}`);
+  // Order Status confirmation — PhonePe never hands the browser a
+  // verifiable proof of payment, so this call IS the "signature check".
+  const phonepeOrder = await getProviders().payment!.getOrder(merchantOrderId);
+  if (phonepeOrder.status !== "paid") {
+    serverLogger.warn(`PhonePe order not completed: merchantOrderId=${merchantOrderId} state=${phonepeOrder.status}`);
     failedCheckoutRepository
-      .logPayment(uid, "signature_mismatch", "HMAC signature invalid", {
-        gatewayOrderId: razorpay_order_id,
-        gatewayPaymentId: razorpay_payment_id,
-        addressId,
+      .logPayment(input.userId ?? "unknown", "signature_mismatch", "PhonePe order not COMPLETED", {
+        gatewayOrderId: phonepeOrder.gatewayOrderId,
+        gatewayPaymentId: merchantOrderId,
+        addressId: input.addressId,
       })
       .catch((logErr: unknown) => { void normalizeError(logErr); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: logErr instanceof Error ? logErr.message : String(logErr) }); });
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
   }
+
+  // The buyer-present /verify call always supplies these; the webhook path
+  // (no session) reconstructs them from PhonePe's metaInfo, packed at
+  // create-order time — see `PhonePeCheckoutIntent`.
+  const intent = phonepeOrder.metadata as unknown as PhonePeCheckoutIntent | undefined;
+  const uid = input.userId ?? intent?.uid;
+  if (!uid) {
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
+  }
+  let userName = input.userName;
+  let userEmail = input.userEmail;
+  if (userName === undefined || userEmail === undefined) {
+    const userDoc = await userRepository.findById(uid);
+    userName = userName ?? userDoc?.displayName ?? "Customer";
+    userEmail = userEmail ?? userDoc?.email ?? "";
+  }
+  const addressId = input.addressId ?? intent?.addressId;
+  const notes = input.notes ?? intent?.notes;
+  const outOfStockPolicy =
+    input.outOfStockPolicy ??
+    (intent?.outOfStockPolicy as OutOfStockPolicy | undefined) ??
+    OutOfStockPolicyValues.CANCEL_ORDER;
+
+  // Add-on fees are no longer resolved here. They are per store, and this
+  // function has no single store — each group reads its own selection off
+  // `cart.storeAddons` inside createPhonePeGroupOrder.
+  const siteSettings = await siteSettingsRepository.getSingleton();
 
   const cart = await unitOfWork.carts.getOrCreate(uid);
   if (!cart.items || cart.items.length === 0) {
@@ -2075,28 +2124,28 @@ export async function verifyAndPlaceRazorpayOrderAction(
   }
 
   // Same lane priority + locked-line revalidation the manual/COD path runs.
-  // The Razorpay path settles the whole cart (no selectedItemIds), so the
+  // The PhonePe path settles the whole cart (no selectedItemIds), so the
   // "selected" set is the cart itself.
   assertCheckoutLane(cart.items, cart.items);
   await assertLockedLinesStillValid(cart.items, uid);
 
-  const isDigitalCartRazorpay = cartIsDigitalOnly(cart.items);
+  const isDigitalCartPp = cartIsDigitalOnly(cart.items);
 
   let shippingAddress: string | undefined;
-  let resolvedAddressRzp: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
-  if (!isDigitalCartRazorpay) {
+  let resolvedAddressPp: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
+  if (!isDigitalCartPp) {
     if (!addressId) {
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     const addressDoc = await unitOfWork.addresses.findById(addressId);
-    resolvedAddressRzp =
+    resolvedAddressPp =
       addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
         ? addressDoc
         : null;
-    if (!resolvedAddressRzp) {
+    if (!resolvedAddressPp) {
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
-    shippingAddress = formatShippingAddress(resolvedAddressRzp);
+    shippingAddress = formatShippingAddress(resolvedAddressPp);
   }
 
   // SB-UNI-5 2026-05-13 — bundle-aware product fetch + validation. Each
@@ -2138,19 +2187,19 @@ export async function verifyAndPlaceRazorpayOrderAction(
     (p): p is { item: CartItemDocument; product: ProductDocument } =>
       p.product !== null && p.product !== undefined && !isMultiMemberLine(p.item),
   );
-  // This whole action is the Razorpay path — paymentMethod is always "online".
+  // This whole action is the online-payment path — paymentMethod is always "online".
   runSyncPreflight(preflightPairs, "online");
 
   // SB-UNI-O 2026-05-15 — Live-item jurisdiction guard.
-  if (!isDigitalCartRazorpay && resolvedAddressRzp) {
-    assertLiveJurisdiction(cart.items, productByIdPaid, resolvedAddressRzp.state);
+  if (!isDigitalCartPp && resolvedAddressPp) {
+    assertLiveJurisdiction(cart.items, productByIdPaid, resolvedAddressPp.state);
   }
 
   // SB-UNI-5 — validate every required member product across the cart with
   // cumulative decrement awareness (two bundles sharing a member must NOT
   // both succeed unless the product has enough stock for the sum).
   //
-  // Out-of-stock policy: unlike the COD/UPI path, Razorpay payment has
+  // Out-of-stock policy: unlike the COD/UPI path, PhonePe payment has
   // ALREADY been captured for the full cart by the time this runs — so
   // "skip_items" here means placing orders for the available items only and
   // auto-refunding the dropped items' value (below), not skipping payment.
@@ -2174,8 +2223,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
             ? `Product ${u.productId} has ${u.availableQty} left, requested ${u.requestedQty}`
             : `Product ${u.productId} not published`,
           {
-            gatewayOrderId: razorpay_order_id,
-            gatewayPaymentId: razorpay_payment_id,
+            gatewayOrderId: phonepeOrder.gatewayOrderId,
+            gatewayPaymentId: merchantOrderId,
             addressId,
           },
         )
@@ -2185,7 +2234,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
 
   // outOfStockPolicy: "cancel_order" (also the default for old clients that
   // omit the field) — reject the whole checkout batch, exactly like every
-  // Razorpay checkout behaved before this policy existed.
+  // online-payment checkout behaved before this policy existed.
   if (outOfStockPolicy === OutOfStockPolicyValues.CANCEL_ORDER && unavailablePaid.length > 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
   }
@@ -2213,7 +2262,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
     const { platformFee: expectedPlatformFee, gstOnFee: expectedGstOnFee } =
       computeCheckoutFees(cartSubtotalRs, commissionRates);
     // Same per-seller-group shipping sum /api/payment/create-order charged
-    // upfront (and the same resolveShippingCost createRazorpayGroupOrder
+    // upfront (and the same resolveShippingCost createPhonePeGroupOrder
     // below will use to build each order's recorded totalPrice) — keeps this
     // floor check from passing an amount that's short by the shipping fee.
     const expectedShippingGroups = splitCartIntoOrderGroups(bucketedPaid.available);
@@ -2240,8 +2289,9 @@ export async function verifyAndPlaceRazorpayOrderAction(
     }, 0);
     const expectedPaymentAmountRs =
       cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee;
-    const rzpOrderRecord = await fetchRazorpayOrder(razorpay_order_id);
-    const paidAmountRs = paiseToRupees(rzpOrderRecord.amount);
+    // Reuses the order already fetched above to confirm COMPLETED — PhonePe's
+    // own amount is in its wire-format smallest unit. // audit-money-units-ok: describes the PhonePe boundary conversion this line performs, not our storage convention
+    const paidAmountRs = paiseToRupees(phonepeOrder.amount);
     if (paidAmountRs < expectedPaymentAmountRs - 1) {
       serverLogger.warn(
         `Payment amount mismatch for user ${uid}: paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
@@ -2252,8 +2302,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
           "amount_mismatch",
           `Paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
           {
-            gatewayOrderId: razorpay_order_id,
-            gatewayPaymentId: razorpay_payment_id,
+            gatewayOrderId: phonepeOrder.gatewayOrderId,
+            gatewayPaymentId: merchantOrderId,
             amountRs: paidAmountRs,
             addressId,
           },
@@ -2271,7 +2321,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
     );
   // "skip_items" (or an all-available cart under any policy) — build order
   // groups from the available bucket only. Dropped items are never ordered;
-  // their value is refunded below since Razorpay already captured payment
+  // their value is refunded below since PhonePe already captured payment
   // for the full cart before this stock check ran.
   const orderGroups = splitCartIntoOrderGroups(bucketedPaid.available);
 
@@ -2301,7 +2351,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
   );
 
   for (const { items: group, orderType } of orderGroups) {
-    total += await createRazorpayGroupOrder(group, orderType, {
+    total += await createPhonePeGroupOrder(group, orderType, {
       appliedCoupons,
       cartSubtotal,
       storeAddons: cart.storeAddons,
@@ -2310,9 +2360,9 @@ export async function verifyAndPlaceRazorpayOrderAction(
       uid,
       userName,
       userEmail,
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
+      merchantOrderId,
+      phonepeOrderId: phonepeOrder.gatewayOrderId,
+      transactionId: phonepeOrder.transactionId,
       shippingAddress,
       notes,
       outOfStockPolicy,
@@ -2349,17 +2399,17 @@ export async function verifyAndPlaceRazorpayOrderAction(
   });
 
   // outOfStockPolicy: "skip_items" — auto-refund the dropped items' value.
-  // Razorpay already captured payment for the FULL cart before this stock
+  // PhonePe already captured payment for the FULL cart before this stock
   // check ran, so anything not placed as an order must be given back.
   // AWAITED (not fire-and-forget) — this moves money. On failure the orders
   // themselves are NOT rolled back (they're already validly created and
   // paid); instead the failure is surfaced via order.refundPending + an
   // admin notification, never silently dropped (Rule #8).
-  await refundDroppedItemsForRazorpayCheckout({
+  await refundDroppedItemsForPhonePeCheckout({
     unavailablePaid,
     orderIds,
     productByIdPaid,
-    razorpayPaymentId: razorpay_payment_id,
+    phonepeOrderId: merchantOrderId,
   });
 
   if (emailsToSend.length > 0) {
@@ -2369,11 +2419,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
   }
 
   serverLogger.info(
-    `verifyAndPlaceRazorpayOrderAction: ${orderIds.length} order(s) placed for uid=${uid} — payment ${razorpay_payment_id}`,
+    `verifyAndPlacePhonePeOrderAction: ${orderIds.length} order(s) placed for uid=${uid} — payment ${merchantOrderId}`,
   );
 
   getAdminRealtimeDb()
-    .ref(`${RTDB_PATHS.PAYMENT_EVENTS}/${razorpay_order_id}`)
+    .ref(`${RTDB_PATHS.PAYMENT_EVENTS}/${merchantOrderId}`)
     .update({ status: "success", orderIds, updatedAt: Date.now() })
     .catch((err: unknown) =>
       serverLogger.warn("Payment event RTDB signal failed (non-critical)", { err }),

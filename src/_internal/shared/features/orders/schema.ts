@@ -50,7 +50,7 @@ export const createOrderSchema = z.object({
     }),
   ).min(1, "Order must have at least one item"),
   shippingAddress: addressSchema,
-  paymentMethod: z.enum(["razorpay", "cod", "upi"]),
+  paymentMethod: z.enum(["phonepe", "cod", "upi"]),
   couponCode: z.string().optional(),
 });
 

@@ -1,11 +1,11 @@
 export {
   createCheckoutOrderAction,
   attachPaymentAction,
-  verifyAndPlaceRazorpayOrderAction,
+  verifyAndPlacePhonePeOrderAction,
   previewCheckoutPricing,
   resolveShippingCost,
   type CreateCheckoutOrderInput,
-  type VerifyAndPlaceRazorpayOrderInput,
+  type VerifyAndPlacePhonePeOrderInput,
   type CheckoutPricingPreviewInput,
   type CheckoutPricingPreview,
 } from "./actions";

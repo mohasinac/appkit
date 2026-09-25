@@ -60,25 +60,10 @@ export { firebaseStorageProvider } from "./providers/storage-firebase/index";
 export { createResendProvider } from "./providers/email-resend/index";
 export type { ResendProviderOptions } from "./providers/email-resend/index";
 
-// Payment (Razorpay) — disabled by default; siteSettings.payment.razorpayEnabled turns it on
-export {
-  RazorpayProvider,
-  rupeesToPaise,
-  paiseToRupees,
-  verifyPaymentSignature,
-  createRazorpayOrder,
-  fetchRazorpayOrder,
-  verifyPaymentSignatureWithKeys,
-  verifyWebhookSignature,
-  createRazorpayRefund,
-} from "./providers/payment-razorpay/index";
-export type {
-  RazorpayConfig,
-  RazorpayPaymentResult,
-  RazorpayOrderOptions,
-  RazorpayOrder,
-  RazorpayRefundResult,
-} from "./providers/payment-razorpay/index";
+// Payment (PhonePe) — disabled by default; siteSettings.payment.phonepeEnabled turns it on
+export { PhonePeProvider } from "./providers/payment-phonepe/index";
+export type { PhonePeConfig } from "./providers/payment-phonepe/index";
+export { rupeesToPaise, paiseToRupees } from "./core/money";
 
 // Payment (manual) — the default provider
 export { ManualPaymentProvider } from "./providers/payment-manual/index";

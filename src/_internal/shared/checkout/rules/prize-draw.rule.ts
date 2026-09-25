@@ -16,7 +16,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  * checkout — instant-mode winner assignment triggers on the order's payment
  * actually being confirmed, which cod/cash/emi don't guarantee happens (or
  * happens promptly). Only "upi_manual" (bank/UPI transfer, confirmed later by
- * seller/admin) and "online" (Razorpay, confirms near-instantly) are allowed;
+ * seller/admin) and "online" (PhonePe, confirms near-instantly) are allowed;
  * "admin_bypass" stays usable for QA regardless.
  */
 const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "cash", "emi"];
@@ -62,7 +62,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
       if (hasPrizeDraw) {
         throw Object.assign(
           new ValidationError(
-            "Prize-draw entries can only be paid by manual bank/UPI transfer or Razorpay — cash on delivery and EMI are not available for this listing type.",
+            "Prize-draw entries can only be paid by manual bank/UPI transfer or PhonePe — cash on delivery and EMI are not available for this listing type.",
           ),
           { code: "PRIZE_DRAW_PAYMENT_METHOD_BLOCKED" },
         );

@@ -426,6 +426,172 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         endResult:
           "After reloading the order, ARENA25 and the same discount amount are still recorded on it.",
       },
+      /*
+       * PhonePe replaced Razorpay entirely in this migration. Unlike Razorpay,
+       * PhonePe never hands the browser a verifiable signature — the checkout
+       * iframe's own callback is not authoritative, and either the buyer's own
+       * /api/payment/verify call OR the async webhook (buyer may be gone) can
+       * be the one that actually places the order. A Firestore claim doc
+       * (phonepeOrderClaims/{merchantOrderId}) makes whichever caller arrives
+       * first the sole placer, which is the one behavior with no Razorpay
+       * precedent and the reason these five cases exist as their own group.
+       */
+      {
+        key: "phonepe-iframe-payment-completes",
+        label: "🛑 A PhonePe online payment completes inside the checkout iframe and places the order",
+        roles: ["buyer"],
+        startPage: "/checkout",
+        steps: [
+          "Sign in as admin@letitrip.in / TempPass123!, open /admin/site, switch to the Shipping tab, and confirm 'PhonePe (online card/UPI) enabled' is ON.",
+          STEP_SIGNIN_BUYER,
+          "Open /products/product-beyblade-burst-valkyrie (₹999) and click 'Add to cart'.",
+          "Open /checkout and complete the address step.",
+          "On the payment step, click 'Pay Online (PhonePe)'.",
+          "Complete the payment inside the PhonePe checkout iframe using a sandbox test instrument.",
+          "Wait for the iframe to close and the page to react.",
+        ],
+        expectedBehaviour:
+          "The iframe's own callback is NOT trusted — the app calls /api/payment/verify immediately afterward, which asks PhonePe's Order Status API what actually happened and only then places the order.",
+        expectedUiState:
+          "A brief 'processing' state appears after the iframe closes (this is the verify call in flight), then the page redirects to order confirmation with a success toast. It must not hang indefinitely or show a generic failure while the payment genuinely succeeded.",
+        endResult:
+          "After reloading /user/orders, exactly one order exists for this purchase with status reflecting a confirmed payment.",
+        href: "/checkout",
+      },
+      {
+        key: "phonepe-webhook-places-order-alone",
+        label: "🛑 If the buyer leaves before /api/payment/verify runs, the PhonePe webhook alone places the order",
+        roles: ["buyer"],
+        startPage: "/checkout",
+        steps: [
+          "Confirm PhonePe is enabled (Site Settings → Shipping → 'PhonePe (online card/UPI) enabled').",
+          STEP_SIGNIN_BUYER,
+          "Open /products/product-beyblade-original-dranzer-s and click 'Add to cart'.",
+          "Open /checkout, complete the address step, and click 'Pay Online (PhonePe)'.",
+          "Complete the payment inside the PhonePe iframe using a sandbox test instrument.",
+          "The instant the iframe reports success, close the browser tab entirely — before the app's own confirmation screen or processing state can appear.",
+          "Wait about 30 seconds for PhonePe's server-to-server webhook to arrive.",
+          "Sign back in and open /user/orders.",
+        ],
+        expectedBehaviour:
+          "PhonePe never hands the browser a verifiable proof of payment, so with the tab closed before the buyer-present verify call ran, only the async webhook (POST /api/payment/webhook, event checkout.order.completed) is left to place the order — and it does, using the buyer identity packed into PhonePe's metaInfo at order-creation time rather than a session.",
+        expectedUiState:
+          "There is no UI to observe during this case — the tab is gone. The check is entirely in what /user/orders shows afterward.",
+        endResult:
+          "The order for product-beyblade-original-dranzer-s exists in /user/orders with a confirmed payment, even though the buyer's browser never received a success screen.",
+        href: "/user/orders",
+      },
+      {
+        key: "phonepe-verify-and-webhook-race-no-duplicate-order",
+        label: "A PhonePe payment confirmed by BOTH the buyer's browser and the webhook produces exactly ONE order, never two",
+        roles: ["buyer"],
+        startPage: "/checkout",
+        steps: [
+          "Confirm PhonePe is enabled.",
+          STEP_SIGNIN_BUYER,
+          "Open /products/product-beyblade-x-dran-sword-video-demo and click 'Add to cart'.",
+          "Open /checkout, complete the address step, and click 'Pay Online (PhonePe)'.",
+          "Complete the payment inside the PhonePe iframe and let the tab stay open normally (do NOT close it) — the ordinary happy path, where the buyer's own verify call and PhonePe's webhook can both arrive for the same payment.",
+          "After the confirmation page loads, open /user/orders and count how many orders exist for this one purchase.",
+        ],
+        expectedBehaviour:
+          "A Firestore claim doc keyed on the payment's merchantOrderId, created with .create() (which throws on conflict), makes whichever of the two callers — the buyer's browser or the webhook — arrives first the sole placer of the order. The second caller's attempt is a no-op.",
+        expectedUiState:
+          "The confirmation page shows exactly one order.",
+        expectedData: { ordersCreatedForThisPurchase: 1 },
+        endResult:
+          "After reloading /user/orders, still exactly one order exists for product-beyblade-x-dran-sword-video-demo from this checkout — not two, and not zero.",
+        href: "/user/orders",
+      },
+      {
+        key: "phonepe-failed-payment-creates-no-order",
+        label: "A PhonePe payment the buyer abandons or fails produces NO order and the item stays in the cart",
+        roles: ["buyer"],
+        startPage: "/checkout",
+        steps: [
+          "Confirm PhonePe is enabled.",
+          STEP_SIGNIN_BUYER,
+          "Open /products/product-beyblade-metal-dark-bull-video-demo and click 'Add to cart'.",
+          "Open /checkout, complete the address step, and click 'Pay Online (PhonePe)'.",
+          "Inside the PhonePe iframe, either close it without paying or use a sandbox instrument that simulates a decline.",
+          "Observe the checkout page's reaction.",
+          "Open /user/orders.",
+        ],
+        expectedBehaviour:
+          "A failed or abandoned PhonePe payment must never place an order — the webhook's checkout.order.failed handler only signals the failure, it never calls order placement, and a subsequent /api/payment/verify call reports the payment as not completed rather than creating one anyway.",
+        expectedUiState:
+          "The checkout page shows a payment-failed error and returns to the payment step rather than redirecting to a confirmation page.",
+        expectedData: { ordersCreated: 0 },
+        endResult:
+          "After reloading /user/orders, no order exists for this attempt, and the item is still in /cart to retry.",
+        href: "/cart",
+      },
+      {
+        key: "phonepe-auto-refund-on-skipped-item",
+        label: "🛑 An item dropped by the \"skip unavailable items\" policy on a paid PhonePe order is automatically refunded through PhonePe's real refund API",
+        roles: ["buyer"],
+        startPage: "/checkout",
+        steps: [
+          "Sign in as admin@letitrip.in / TempPass123!, confirm PhonePe is enabled, and set Site Settings → Checkout → Out-of-stock policy to 'Skip unavailable items'.",
+          STEP_SIGNIN_BUYER,
+          "Add product-beyblade-burst-valkyrie (₹999, stock available) and product-beyblade-original-dranzer-s (₹1,499) to the cart.",
+          "Open /checkout, complete the address step, and click 'Pay Online (PhonePe)'.",
+          "While on the PhonePe iframe (before completing payment), have the admin or another session reduce product-beyblade-original-dranzer-s's stock to 0.",
+          "Complete the PhonePe payment for the FULL cart total shown (both items) inside the iframe.",
+          "Open the resulting order's detail page.",
+        ],
+        inputs: { policy: "Skip unavailable items", goesOutOfStock: "product-beyblade-original-dranzer-s" },
+        expectedBehaviour:
+          "PhonePe already captured payment for the whole cart before the stock check ran, so the value of the dropped item (₹1,499) is refunded back to the buyer automatically via a real PhonePe refund call (processRefundAction, reason 'not_received'), keyed off the order's own merchantOrderId — not just recorded as a database adjustment.",
+        expectedUiState:
+          "The order confirmation shows only product-beyblade-burst-valkyrie with a notice that product-beyblade-original-dranzer-s was unavailable and refunded. The order detail's refund history / status timeline shows a partial refund of ₹1,499 with reason 'not_received'.",
+        endResult:
+          "After reloading the order detail page, the ₹1,499 partial refund is still listed in the timeline. If the automatic refund call itself fails (rare), the order is flagged refundPending and an admin-inbox notification 'Automatic refund failed' appears instead — that is the documented fallback, not a silent loss of the buyer's money.",
+        href: "/user/orders",
+      },
+      {
+        key: "phonepe-manual-refund-has-no-admin-control",
+        label: "🛑 There is currently no admin control that triggers a real PhonePe refund on a completed order — surfacing this, not asserting it works",
+        roles: ["admin"],
+        startPage: "/admin/orders",
+        steps: [
+          "Sign in as admin@letitrip.in / TempPass123!.",
+          "Open any order paid via PhonePe from /admin/orders and open its detail/editor.",
+          "Look for a control to issue a refund (a button, a 'Refund' action, or a status change to 'Refunded' with an amount field).",
+          "If a 'Refunded' status option with a refund-amount field exists, set it, save, and reload the order.",
+        ],
+        expectedBehaviour:
+          "A dedicated route (POST /api/admin/orders/[id]/refund) exists and does call PhonePe's real refund API when hit directly, but as of this migration nothing in the admin UI calls it. The generic order editor's status field can be set to 'Refunded' with a refund amount, but that PATCH goes through a schema (updateOrderSchema) that does not declare a refundAmount field at all — Zod's default object schema silently strips it, so the amount typed in is never persisted and PhonePe is never contacted.",
+        expectedUiState:
+          "Setting status to 'Refunded' with an amount appears to save successfully (a 200 / success toast), which is the failure mode to watch for — a save that LOOKS like it worked.",
+        endResult:
+          "After reloading the order, confirm whether the refund amount you entered is actually present on the order. If it is missing, this case should be answered 'no' — an admin currently has no working way to manually refund a PhonePe payment, and the money-moving path that exists (POST /api/admin/orders/[id]/refund) is only reachable automatically, from the checkout out-of-stock flow, never from a click in the dashboard.",
+        href: "/admin/orders",
+      },
+      {
+        key: "phonepe-preorder-deposit-charge-matches-shown-amount",
+        label: "A pre-order paid via PhonePe charges exactly the shown DEPOSIT amount, never the full listing price",
+        roles: ["buyer"],
+        startPage: "/pre-orders/preorder-beyblade-x-bx-08-wave",
+        steps: [
+          "Confirm PhonePe is enabled.",
+          STEP_SIGNIN_BUYER,
+          "Open /pre-orders/preorder-beyblade-x-bx-08-wave (listed at ₹799, 25% deposit) and click its buy/reserve control.",
+          "Open /checkout and complete the address step.",
+          "On the payment step, note the exact deposit amount shown in the Order Summary.",
+          "Click 'Pay Online (PhonePe)' and read the amount shown inside the PhonePe iframe before paying.",
+          "Complete the payment.",
+          "Open the resulting order's detail page.",
+        ],
+        inputs: { productId: "preorder-beyblade-x-bx-08-wave", listedPrice: 799, depositPercent: 25 },
+        expectedBehaviour:
+          "The PhonePe order is created for the deposit amount only (roughly 25% of ₹799), never the full ₹799 — a pre-order's checkout flow computes the deposit before ever calling PhonePe's create-order API.",
+        expectedUiState:
+          "The amount inside the PhonePe iframe is identical, to the rupee, to the deposit figure shown in the Order Summary a moment earlier — not the full listing price.",
+        endResult:
+          "The order detail page shows the deposit amount as paid and the remaining balance as due later, matching what was charged through PhonePe.",
+        href: "/user/orders",
+      },
     ],
   },
   {

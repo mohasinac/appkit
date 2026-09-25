@@ -270,7 +270,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       // sideEffects:false should tree-shake unused server-only exports, but
       // webpack must first PARSE the full module graph to enumerate all exports.
       // That parse phase hits Node.js-only requires deep in firebase-admin,
-      // resend, razorpay, etc. and throws "Module not found" errors.
+      // resend, phonepe-pg-sdk-node, etc. and throws "Module not found" errors.
       //
       // Fix: alias every server-only package to `false` so webpack replaces them
       // with empty stubs during the parse phase. Tree-shaking then eliminates the
@@ -291,7 +291,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
         ...FIREBASE_EXTERNAL_PACKAGES,
         "resend",
         "@react-email/render",
-        "razorpay",
+        "phonepe-pg-sdk-node",
         "firebase-functions",
       ];
       const clientStubAliases = Object.fromEntries(

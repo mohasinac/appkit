@@ -241,7 +241,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
 
   /**
    * Payment Detail Parity (Feature C) — the COD counterpart to the manual
-   * proof-upload / Razorpay-webhook write paths. Seller or admin confirms
+   * proof-upload / PhonePe-webhook write paths. Seller or admin confirms
    * the cash was physically collected; there is no external gateway to
    * verify against, so `verifiedBy` is the acting user's uid and
    * `verificationMethod` is always "cod_collection".
@@ -671,6 +671,23 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     const snap = await this.db
       .collection(this.collection)
       .where("paymentBatchId", "==", batchId)
+      .limit(20)
+      .get();
+    return snap.docs.map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument));
+  }
+
+  /**
+   * Fetch every order recorded against a single gateway payment id (e.g. a
+   * PhonePe `merchantOrderId`, which one checkout can split into several
+   * per-seller orders). Used by the checkout idempotency guard — the buyer's
+   * `/verify` call and the async webhook can both race to place orders for
+   * the same payment, and whichever loses the claim needs to know what the
+   * winner already created.
+   */
+  async findByPaymentId(paymentId: string): Promise<OrderDocument[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.PAYMENT_ID, "==", paymentId)
       .limit(20)
       .get();
     return snap.docs.map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument));

@@ -269,14 +269,14 @@ export {
 export {
   createCheckoutOrderAction,
   attachPaymentAction,
-  verifyAndPlaceRazorpayOrderAction,
+  verifyAndPlacePhonePeOrderAction,
   previewCheckoutPricing,
   resolveShippingCost,
   formatShippingAddress,
   CHECKOUT_DEFAULT_COMMISSIONS,
   CHECKOUT_PAYMENT_METHODS,
   type CreateCheckoutOrderInput,
-  type VerifyAndPlaceRazorpayOrderInput,
+  type VerifyAndPlacePhonePeOrderInput,
   type CheckoutOrderResult,
   type CheckoutPaymentMethod,
   type CheckoutPricingPreviewInput,
@@ -298,20 +298,6 @@ export {
   processRefundAction,
   type ProcessRefundInput,
 } from "./_internal/server/features/refunds/actions";
-
-// S4: payments actions
-export {
-  createPaymentIntentAction,
-  verifyPaymentSignatureAction,
-  resolvePaymentFee,
-  PAYMENTS_DEFAULT_PLATFORM_FEE_PERCENT,
-  PAYMENTS_DEFAULT_GST_PERCENT,
-  PAYMENTS_RECEIPT_PREFIX,
-  type CreatePaymentIntentInput,
-  type CreatePaymentIntentResult,
-  type VerifyPaymentSignatureInput,
-  type ResolvedPaymentFee,
-} from "./_internal/server/features/payments/index";
 
 // S3: sublisting categories data layer
 export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/index";

@@ -3,7 +3,7 @@ import type { FeatureManifest } from "../../contracts";
 export const manifest: FeatureManifest = {
   name: "payments",
   i18nNamespace: "payments",
-  envKeys: ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"],
+  envKeys: ["PHONEPE_CLIENT_ID", "PHONEPE_CLIENT_SECRET"],
   routes: [],
   apiRoutes: [
     { segment: "api/payments/create", methods: ["POST"] },

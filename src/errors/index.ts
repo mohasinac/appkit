@@ -14,7 +14,7 @@ export { AuthorizationError } from "./authorization-error";
 export { NotFoundError } from "./not-found-error";
 export { ConflictError } from "./conflict-error";
 export { DatabaseError } from "./database-error";
-export { RazorpayUnreachableError } from "./razorpay-unreachable";
+export { PaymentProviderUnreachableError } from "./payment-provider-unreachable";
 // error-handler uses `next/server` — only import in server/API-route contexts
 export { handleApiError, logError, isAppError } from "./error-handler";
 // Code→HTTP mapper (server) — and the i18n / inline-field map (client-safe)

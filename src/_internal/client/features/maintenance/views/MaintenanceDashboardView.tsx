@@ -97,7 +97,7 @@ export function MaintenanceDashboardView({
         </Anchor>
         <Anchor href={`${basePath}/payment-rollbacks`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Payment rollbacks</Span>
-          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Razorpay refund + upstream-unavailable rows</Div>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>PhonePe refund + upstream-unavailable rows</Div>
         </Anchor>
         <Anchor href={`${basePath}/analysis`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Analysis</Span>

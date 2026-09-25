@@ -519,9 +519,6 @@ export { deleteField } from "./contracts/index";
 // getClientAuthProvider - Helper for get client auth provider.
 export { getClientAuthProvider } from "./contracts/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// getClientPaymentGateway - Helper for get client payment gateway.
-export { getClientPaymentGateway } from "./contracts/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // getClientRealtimeProvider - Helper for get client realtime provider.
 export { getClientRealtimeProvider } from "./contracts/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -534,9 +531,6 @@ export { getCollectionHooks } from "./contracts/index";
 // getProviders - Helper for get providers.
 export { getProviders } from "./contracts/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// getRegisteredPaymentGateways - Helper for get registered payment gateways.
-export { getRegisteredPaymentGateways } from "./contracts/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // increment - Shared export for increment.
 export { increment } from "./contracts/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -548,9 +542,6 @@ export { mergeSortDefinitions } from "./contracts/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // registerClientAuthProvider - Helper for register client auth provider.
 export { registerClientAuthProvider } from "./contracts/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// registerClientPaymentGateway - Helper for register client payment gateway.
-export { registerClientPaymentGateway } from "./contracts/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // registerClientRealtimeProvider - Helper for register client realtime provider.
 export { registerClientRealtimeProvider } from "./contracts/index";
@@ -645,9 +636,6 @@ export type { FilterOption } from "./contracts/index";
 // FilterType - Type contract for filter type.
 export type { FilterType } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// GatewayPaymentResponse - Type contract for gateway payment response.
-export type { GatewayPaymentResponse } from "./contracts/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // IAuthProvider - Type contract for iauth provider.
 export type { IAuthProvider } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -656,9 +644,6 @@ export type { ICacheProvider } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // IClientAuthProvider - Type contract for iclient auth provider.
 export type { IClientAuthProvider } from "./contracts/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// IClientPaymentGateway - Type contract for iclient payment gateway.
-export type { IClientPaymentGateway } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // IClientRealtimeProvider - Type contract for iclient realtime provider.
 export type { IClientRealtimeProvider } from "./contracts/index";
@@ -716,9 +701,6 @@ export type { LayoutSlots } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NavItem - Type contract for nav item.
 export type { NavItem } from "./contracts/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// OpenGatewayOptions - Type contract for open gateway options.
-export type { OpenGatewayOptions } from "./contracts/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PagedResult - Type contract for paged result.
 export type { PagedResult } from "./contracts/index";
@@ -996,8 +978,8 @@ export { logError } from "./errors/index";
 // ErrorCode - Type contract for error code.
 export type { ErrorCode } from "./errors/index";
 // [UTIL]-Pure utility — no framework or runtime dependency; safe to import from any environment.
-// RazorpayUnreachableError - Thrown when Razorpay API exhausts retries.
-export { RazorpayUnreachableError } from "./errors/index";
+// PaymentProviderUnreachableError - Thrown when the payment gateway API exhausts retries.
+export { PaymentProviderUnreachableError } from "./errors/index";
 // [UTIL]-Pure utility — server boundary code/HTTP mapper for any thrown value.
 // mapToHttpError - Map any thrown value to { status, code, message, issues? }.
 export { mapToHttpError, HTTP_ERROR_CODES } from "./errors/index";
@@ -2771,49 +2753,19 @@ export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/inde
 // FirebaseClientRealtimeConfig - Type contract for firebase client realtime config.
 export type { FirebaseClientRealtimeConfig } from "./providers/firebase-client/index";
 
-// ./providers/payment-razorpay/index
+// ./providers/payment-phonepe/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// RazorpayProvider - Component for razorpay provider.
-export { RazorpayProvider } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createRazorpayOrder - Helper for create razorpay order.
-export { createRazorpayOrder } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createRazorpayRefund - Helper for create razorpay refund.
-export { createRazorpayRefund } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// fetchRazorpayOrder - Shared export for fetch razorpay order.
-export { fetchRazorpayOrder } from "./providers/payment-razorpay/index";
+// PhonePeProvider - Component for phonepe provider.
+export { PhonePeProvider } from "./providers/payment-phonepe/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // paiseToRupees - Shared export for paise to rupees. // audit-money-units-ok: names the boundary conversion function itself
-export { paiseToRupees } from "./providers/payment-razorpay/index";
+export { paiseToRupees } from "./core/money";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // rupeesToPaise - Shared export for rupees to paise. // audit-money-units-ok: names the boundary conversion function itself
-export { rupeesToPaise } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyPaymentSignature - Shared export for verify payment signature.
-export { verifyPaymentSignature } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyPaymentSignatureWithKeys - Shared export for verify payment signature with keys.
-export { verifyPaymentSignatureWithKeys } from "./providers/payment-razorpay/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// verifyWebhookSignature - Shared export for verify webhook signature.
-export { verifyWebhookSignature } from "./providers/payment-razorpay/index";
+export { rupeesToPaise } from "./core/money";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RazorpayConfig - Type contract for razorpay config.
-export type { RazorpayConfig } from "./providers/payment-razorpay/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RazorpayOrder - Type contract for razorpay order.
-export type { RazorpayOrder } from "./providers/payment-razorpay/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RazorpayOrderOptions - Type contract for razorpay order options.
-export type { RazorpayOrderOptions } from "./providers/payment-razorpay/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RazorpayPaymentResult - Type contract for razorpay payment result.
-export type { RazorpayPaymentResult } from "./providers/payment-razorpay/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RazorpayRefundResult - Type contract for razorpay refund result.
-export type { RazorpayRefundResult } from "./providers/payment-razorpay/index";
+// PhonePeConfig - Type contract for phonepe config.
+export type { PhonePeConfig } from "./providers/payment-phonepe/index";
 
 // ./providers/payment-manual/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -6644,9 +6596,6 @@ export { RefundRequestView } from "./features/orders/index";
 export type { RefundRequestViewProps } from "./features/orders/index";
 export type { RefundRequestSubmission } from "./features/orders/components/RefundRequestView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// PaymentGatewayValues - Model for payment gateway values.
-export { PaymentGatewayValues } from "./features/orders/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PaymentMethodValues - Model for payment method values.
 export { PaymentMethodValues } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -6777,9 +6726,6 @@ export type { OrderTimeline } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // OrderUpdateInput - Type contract for order update input.
 export type { OrderUpdateInput } from "./features/orders/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PaymentGateway - Type contract for payment gateway.
-export type { PaymentGateway } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // RefundStatus - Type contract for refund status.
 export type { RefundStatus } from "./features/orders/index";
@@ -6942,18 +6888,6 @@ export { createPayoutId } from "./features/payments/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // paymentAdminColumns - Shared export for payment admin columns.
 export { paymentAdminColumns } from "./features/payments/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// paymentGatewayConfigSchema - Model for payment gateway config schema.
-export { paymentGatewayConfigSchema } from "./features/payments/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// paymentGatewaySchema - Model for payment gateway schema.
-export { paymentGatewaySchema } from "./features/payments/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// paymentRecordSchema - Model for payment record schema.
-export { paymentRecordSchema } from "./features/payments/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// paymentStatusSchema - Model for payment status schema.
-export { paymentStatusSchema } from "./features/payments/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // payoutQueryHelpers - Shared export for payout query helpers.
 export { payoutQueryHelpers } from "./features/payments/index";
@@ -9143,8 +9077,7 @@ export type {
 export { CartItemRow, CartDrawer, CartView, CartSummary, ShippingPicker } from "./features/cart/index";
 export type { ShippingPickerProps } from "./features/cart/index";
 export { CheckoutView, CheckoutAddressStep, CheckoutSuccessView } from "./features/cart/index";
-export { CheckoutStepper, useCheckout } from "./features/checkout/index";
-// PaymentGateway already exported from checkout types above
+export { CheckoutStepper } from "./features/checkout/index";
 
 // Missing account hooks
 export { useProfile as useCurrentProfile, useUpdateProfile as useUpdateCurrentProfile } from "./features/account/index";

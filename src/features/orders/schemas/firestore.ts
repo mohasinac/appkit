@@ -163,7 +163,6 @@ export const PaymentMethodValues = {
   CASH: "cash",
   ONLINE: "online",
   UPI_MANUAL: "upi_manual",
-  RAZORPAY: "razorpay",
   ADMIN_BYPASS: "admin_bypass",
   EMI: "emi",
 } as const;
@@ -285,8 +284,8 @@ export interface OrderRefundEvent {
   reasonCode?: ReturnReason;
   refundedAt: Date;
   refundedBy: string; // userId of admin / seller who issued the refund
-  /** Set when Razorpay processed the refund. */
-  razorpayRefundId?: string;
+  /** Set when PhonePe processed the refund. */
+  phonepeRefundId?: string;
   /** Set when refund was processed manually (offline). */
   manualTransactionId?: string;
   /** Proof document URL (via /api/media signed-URL flow). */
@@ -617,25 +616,25 @@ export interface OrderDocument extends BaseDocument {
   refundPending?: boolean;
 }
 
-export type OrderPaymentRecordMethod = "manual" | "razorpay" | "cod";
-export type OrderPaymentVerificationMethod = "manual_review" | "webhook" | "cod_collection";
+export type OrderPaymentRecordMethod = "manual" | "phonepe" | "cod";
+export type OrderPaymentVerificationMethod = "manual_review" | "webhook" | "cod_collection" | "order_status";
 
 export interface OrderPaymentRecord {
   method: OrderPaymentRecordMethod;
-  /** UTR (manual) | razorpay_payment_id (razorpay) | collector note/ref (COD). */
+  /** UTR (manual) | PhonePe transactionId (phonepe) | collector note/ref (COD). */
   transactionId?: string;
-  /** Manual proof upload | COD collection receipt photo (optional) | n/a for razorpay. */
+  /** Manual proof upload | COD collection receipt photo (optional) | n/a for phonepe. */
   proofUrl?: string;
   amount: number;
   paidAt?: Date;
-  /** Admin/seller uid (manual/COD) | "razorpay-webhook" (razorpay, automatic). */
+  /** Admin/seller uid (manual/COD) | "phonepe-order-status" or "phonepe-webhook" (phonepe, automatic). */
   verifiedBy?: string;
   verificationMethod: OrderPaymentVerificationMethod;
-  /** Razorpay audit trail only. */
+  /** PhonePe audit trail only. */
   gatewayRef?: {
-    orderId?: string;
-    paymentId?: string;
-    signature?: string;
+    merchantOrderId?: string;
+    phonepeOrderId?: string;
+    transactionId?: string;
   };
 }
 

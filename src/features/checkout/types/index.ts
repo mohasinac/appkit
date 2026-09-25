@@ -1,9 +1,3 @@
-import {
-  type PaymentGateway,
-  PaymentGatewayValues,
-} from "../../payments/schemas";
-export { type PaymentGateway, PaymentGatewayValues };
-
 export interface UserAddress {
   id: string;
   label?: string;
@@ -33,28 +27,3 @@ export interface ShippingOption {
   estimatedDays?: number;
 }
 
-export interface CheckoutState {
-  step: CheckoutStep;
-  address?: UserAddress;
-  shippingOption?: ShippingOption;
-  paymentGateway?: PaymentGateway;
-  couponCode?: string;
-  notes?: string;
-}
-
-export interface CheckoutSummary {
-  subtotal: number;
-  shippingCost: number;
-  discount?: number;
-  tax?: number;
-  total: number;
-  currency: string;
-}
-
-export interface PlaceOrderInput {
-  address: UserAddress;
-  shippingOptionId: string;
-  paymentGateway: PaymentGateway;
-  couponCode?: string;
-  notes?: string;
-}

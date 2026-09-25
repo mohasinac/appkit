@@ -181,15 +181,3 @@ export type {
   SortDefinition,
 } from "./extend";
 export { mergeFilterDefinitions, mergeSortDefinitions } from "./extend";
-
-// Client-side payment gateway
-export type {
-  GatewayPaymentResponse,
-  OpenGatewayOptions,
-  IClientPaymentGateway,
-} from "./client-payment-gateway";
-export {
-  registerClientPaymentGateway,
-  getClientPaymentGateway,
-  getRegisteredPaymentGateways,
-} from "./client-payment-gateway";

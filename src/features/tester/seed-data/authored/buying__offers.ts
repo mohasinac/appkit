@@ -599,23 +599,24 @@ export const authored: Record<string, AuthoredCase> = {
       "The suspension entry names an actor, a timestamp and a reason. After restoring, both transitions are listed in order.",
     endResult: "The second store is back to its original status, with both entries recorded.",
   },
-  "checklist-buying-offers-payout-failure-reasons-survive-retries": {
+  "checklist-buying-offers-payout-marked-failed-shows-in-timeline": {
     roles: ["admin"],
     startPage: "/admin/payouts",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/payouts and find a payout that has failed more than once.",
-      "Open its history and read every entry.",
-      "Check BOTH failure reasons are present rather than only the most recent.",
-      "Check the pending-to-processing transitions are also recorded.",
-      "Count the entries against the number of attempts.",
+      "Open /admin/payouts and find a pending payout.",
+      "Open it and set its status to Failed with an admin note, then save.",
+      "Reopen the payout and read its History block.",
+      "Set the same payout to Failed again with a DIFFERENT admin note, then save.",
+      "Reopen the payout and read its History block again.",
     ],
+    inputs: { firstFailureNote: "Bank rejected the transfer", secondFailureNote: "Retried with corrected IFSC, still rejected" },
     expectedBehaviour:
-      "Batch payout writes thread a RUNNING copy of the record rather than the original snapshot. Diffing the last write against the first snapshot loses everything in between — a pending, processing, failed sequence would record only the final state and the dispatch attempt would vanish.",
+      "Seller payouts are fully manual — there is no automated dispatch/retry job (PhonePe has no payout API, so the earlier RazorpayX auto-dispatch job that used to write razorpayPayoutId/razorpayStatus/failureCount/lastFailureReason was deleted outright when Razorpay was replaced). Each manual status change goes through the payout's status-history primitive, which appends rather than overwrites, so both Failed entries must be visible with the admin as actor.",
     expectedUiState:
-      "Every attempt appears with its own reason, oldest first, including the intermediate processing transitions. Only the latest reason showing is the snapshot-diff failure.",
+      "After the second save, the History block lists BOTH Failed entries in order, each with its own note ('Bank rejected the transfer' then 'Retried with corrected IFSC, still rejected') — not just the most recent one.",
     endResult:
-      "Read-only. If no twice-failed payout exists, answer null rather than forcing a failure.",
+      "After reloading the payout detail page, both History entries are still present.",
   },
   "checklist-buying-offers-bid-timeline-explains-forfeited": {
     roles: ["buyer"],

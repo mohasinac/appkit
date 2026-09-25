@@ -130,6 +130,48 @@ export const authored: Record<string, AuthoredCase> = {
       "The tab lists every type, including offer-received and payment-review. After the reload only the toggled channel differs and every other type's settings are unchanged.",
     endResult: "The channel is restored.",
   },
+  "checklist-admin-site-system-phonepe-credentials-persist": {
+    roles: ["admin"],
+    startPage: "/admin/site",
+    steps: [
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/site and switch to the Integrations tab.",
+      "Read the current PhonePe Client ID, Client Secret, Client Version, Environment and both webhook credential fields.",
+      "Type QA-PHONEPE-CLIENT-991 into the Client ID field, QA-PHONEPE-SECRET-991 into the Client Secret field, and QA-WEBHOOK-USER-991 / QA-WEBHOOK-PASS-991 into the two webhook fields.",
+      "Save, then hard-reload the page.",
+      "Read how the Client Secret and both webhook fields display.",
+      "Change only the PhonePe Environment dropdown, save again, and reload.",
+    ],
+    inputs: {
+      clientId: "QA-PHONEPE-CLIENT-991",
+      clientSecret: "QA-PHONEPE-SECRET-991",
+      webhookUsername: "QA-WEBHOOK-USER-991",
+      webhookPassword: "QA-WEBHOOK-PASS-991",
+    },
+    expectedBehaviour:
+      "PhonePe replaced Razorpay entirely in this codebase. The Client ID and Environment are stored and displayed in the clear; the Client Secret and both webhook credentials are encrypted at rest and masked on read, the same pattern as the WhatsApp access token. Saving an unrelated field (Environment) must not silently blank or overwrite the already-masked secret fields with their own mask value.",
+    expectedUiState:
+      "After the first reload, Client ID reads QA-PHONEPE-CLIENT-991 in the clear; the Client Secret and both webhook fields show a masked placeholder, not the raw value and not blank. After changing only Environment and reloading again, the masked fields are still masked and checkout still reaches PhonePe (the credentials were not wiped).",
+    endResult: "The credential fields hold the values entered through this case's own saves, and PhonePe checkout keeps working afterward.",
+  },
+  "checklist-admin-site-system-phonepe-enabled-toggle-persists": {
+    roles: ["admin", "buyer"],
+    startPage: "/admin/site",
+    steps: [
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/site and switch to the Shipping tab.",
+      "Read the current state of the 'PhonePe (online card/UPI) enabled' toggle.",
+      "Turn it OFF, save, and open /checkout in another tab (with an item in the cart) to confirm 'Pay Online (PhonePe)' is absent from the payment step.",
+      "Return to Site Settings, turn the toggle back ON, and save.",
+      "Reload the settings page to confirm it reads ON.",
+      "Reopen /checkout and confirm 'Pay Online (PhonePe)' is now offered.",
+    ],
+    expectedBehaviour:
+      "The toggle lives under the Shipping tab's 'Payment methods' section, not a dedicated Payments tab — the same admin field checkout's payment-method list reads from. It gates whether the PhonePe option is offered at all, independent of the manual-UPI and COD toggles beside it.",
+    expectedUiState:
+      "With the toggle OFF, /checkout offers only whichever of manual UPI/cash and COD are separately enabled — no 'Pay Online (PhonePe)' button. With it back ON, the button reappears.",
+    endResult: "The toggle is restored to ON, matching the state before this case started.",
+  },
   "checklist-admin-site-system-whatsapp-credentials-persist": {
     roles: ["admin"],
     startPage: "/admin/site",

@@ -220,19 +220,14 @@ const sieve = {
 
 // ---------------------------------------------------------------------------
 // Webhook envelope schemas — W7 cohort. Each provider registers a bucket
-// of `eventName` → schema. The Razorpay envelope is a discriminated union
-// keyed on the `event` discriminator.
+// of `eventName` → schema.
 // ---------------------------------------------------------------------------
-import { razorpayWebhookEnvelopeSchema } from "./webhooks/razorpay";
 import {
   googleSignInWithIdpResponseSchema,
   googleTokenInfoSchema,
 } from "./webhooks/google-oauth";
 
 const webhook = {
-  razorpay: {
-    envelope: razorpayWebhookEnvelopeSchema,
-  },
   googleOauth: {
     signInWithIdp: googleSignInWithIdpResponseSchema,
     tokenInfo: googleTokenInfoSchema,

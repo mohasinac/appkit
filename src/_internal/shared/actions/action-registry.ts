@@ -2677,8 +2677,8 @@ export const ACTIONS: ActionTree = {
     "pay-online": {
       iconKey: "cart",
       id: "checkout.pay-online",
-      label: "Pay Online (Razorpay)",
-      description: "Initiate an online payment via Razorpay UPI/Card/NetBanking.",
+      label: "Pay Online (PhonePe)",
+      description: "Initiate an online payment via PhonePe UPI/Card/NetBanking.",
       kind: "primary",
     },
     "pay-cod": {
