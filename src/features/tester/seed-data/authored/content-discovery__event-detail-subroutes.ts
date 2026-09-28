@@ -25,7 +25,7 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-content-discovery-event-detail-subroutes-detail-tabs-match-event-type": {
     roles: ["guest"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       "Open /events/event-favourite-blader-poll — a poll.",
       "Write down every tab shown.",
@@ -49,7 +49,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-participate-records-an-entry": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-favourite-blader-poll.",
@@ -69,13 +69,13 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-participate-twice-is-refused": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123! and open /events/event-favourite-blader-poll.",
       "Participate once if you have not already.",
       "Reload, and try to participate a second time with a different option.",
       "Read what happens.",
-      "Open the Leaderboard tab and read the total entry count.",
+      "Open /events/event-favourite-blader-poll, then its Leaderboard tab, and read the total entry count. This case reads the state the previous one left behind, so run them in order — but it still has to start somewhere, and the index is not it.",
     ],
     inputs: { eventId: "event-favourite-blader-poll" },
     expectedBehaviour:
@@ -88,7 +88,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-leaderboard-ranks-by-a-real-number": {
     roles: ["guest"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll/leaderboard",
     steps: [
       "Open /events/event-favourite-blader-poll and open its Leaderboard tab.",
       "Read the number beside each of the first five rows — the vote or score the row is ranked on.",
@@ -107,7 +107,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-winner-page-before-draw": {
     roles: ["guest"],
-    startPage: "/events",
+    startPage: "/events/event-win-burst-regalia-genesis/winner",
     steps: [
       "Open /events/event-win-burst-regalia-genesis — an ACTIVE raffle that has not been drawn.",
       "Open its Winner tab.",
@@ -124,7 +124,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-winner-page-after-draw": {
     roles: ["guest"],
-    startPage: "/events",
+    startPage: "/events/event-won-original-set-raffle/winner",
     steps: [
       "Open /events/event-won-original-set-raffle — an ENDED raffle with a recorded winner.",
       "Open its Winner tab.",
@@ -142,7 +142,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-cancelled-event-refuses-participation": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-x-launch-raffle-cancelled",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-x-launch-raffle-cancelled — a CANCELLED raffle.",
@@ -176,5 +176,31 @@ export const authored: Record<string, AuthoredCase> = {
       "The event's own content is readable. Participate shows a sign-in prompt rather than a form, and nothing 404s or bounces to /unauthorized.",
     expectedData: { eventContentReadableByGuest: true },
     endResult: "No entry is recorded and no session is created.",
+  },
+  "checklist-content-discovery-event-detail-subroutes-spin-results-subroute": {
+    roles: ["buyer"],
+    startPage: "/events/event-daily-beyblade-pull-wheel/spin-results",
+    steps: [
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Open /events/event-daily-beyblade-pull-wheel — a SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2.",
+      "Read which tabs the detail page offers and check a results tab is among them.",
+      "Open /events/event-daily-beyblade-pull-wheel/spin-results directly by URL.",
+      "Read what it shows before this account has spun — a named empty state, not a blank panel and not an error.",
+      "Go back, spin once, and read the prize awarded.",
+      "Return to the spin-results route and check that spin is listed with its prize.",
+      "Spin a second time, then attempt a third — the cap is 2 per user.",
+      "Read how the third attempt is refused, and check spin-results still lists exactly two.",
+    ],
+    inputs: {
+      eventId: "event-daily-beyblade-pull-wheel",
+      spinMaxPerUser: 2,
+    },
+    expectedBehaviour:
+      "The spin-results subroute is reachable by URL and lists this account's own spins with the prize each won. A per-user cap of 2 is enforced on the third attempt rather than silently accepted, and the results list is what proves the first two were actually recorded — a spin that animates, names a prize and stores nothing looks identical to one that worked.",
+    expectedUiState:
+      "Before spinning, a named empty state. After one spin, exactly one row naming the prize just awarded. After two, exactly two. The third attempt is refused with a readable message and the list still holds two, not three.",
+    expectedData: { spinsRecorded: 2 },
+    endResult:
+      "Two spins are recorded against this account and they persist across a reload. They are NOT cleaned up: eventEntries is a CASCADE-tier collection, wiped when the seeded event it references is, so the next run starts clean without anything being deleted here.",
   },
 };

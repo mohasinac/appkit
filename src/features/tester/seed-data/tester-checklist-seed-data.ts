@@ -3206,6 +3206,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Event detail — participate, leaderboard, winner, spin results",
       href: "/events",
       cases: [
+        {
+          key: "spin-results-subroute",
+          label: "The /events/{id}/spin-results subroute is reachable by URL and lists this account's own spins with the prize each won",
+          description: "One of five event detail subroutes and the only one with no coverage. Uses event-daily-beyblade-pull-wheel, a SPIN_WHEEL event with real spinPrizes and spinMaxPerUser of 2, so the per-user cap is testable: the third attempt must be refused and the list must still hold two. A spin that animates, names a prize and stores nothing looks identical to one that worked.",
+          href: "/events/event-daily-beyblade-pull-wheel/spin-results",
+        },
         { key: "detail-tabs-match-event-type", label: "An event's tabs match its TYPE — a poll shows no spin results, a sale shows no leaderboard" },
         { key: "participate-records-an-entry", label: "Participating records an entry that is still there after a reload" },
         { key: "participate-twice-is-refused", label: "Participating a second time is refused with a reason, not silently duplicated" },
