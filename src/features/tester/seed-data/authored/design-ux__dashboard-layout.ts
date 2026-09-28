@@ -27,7 +27,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin and read the sidebar's group headings.",
+      "Open /admin — it redirects to the admin dashboard, which is expected — and read the sidebar's group headings. There are TWELVE, and exactly one, 'Guides', ships defaultOpen:false, so a group already closed on arrival is the fixture rather than a collapse you caused.",
       "Collapse one expanded group and read what remains.",
       "Expand a collapsed group and read its contents.",
       "Navigate to another admin page using the sidebar.",
@@ -46,7 +46,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store and read the sidebar's group headings.",
+      "Open /store and read the sidebar's group headings. There are SIX — Overview, Listings, Orders & Reviews, Finance, Store, Guides — and the last, 'Guides', ships defaultOpen:false.",
       "Collapse one expanded group and read what remains.",
       "Expand a collapsed group and read its contents.",
       "Navigate to another store page using the sidebar and read the state.",
@@ -63,7 +63,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user and read the sidebar's group headings.",
+      "Open /user and read the sidebar's group headings. There are FIVE, and none ships collapsed — so on this portal every group should be open on arrival, which makes an already-closed one a real finding here rather than the fixture.",
       "Collapse one expanded group and read what remains.",
       "Expand a collapsed group and read its contents.",
       "Navigate to another user page using the sidebar and read the state.",
