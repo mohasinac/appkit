@@ -13,8 +13,12 @@
  * chips against the real union rather than trusting the labels.
  *
  * Categories are the other theme: a product carries its FULL ancestor chain so a
- * parent page can match on its own id alone, and nothing on the write side
- * derives that chain yet.
+ * parent page can match on its own id alone. That chain IS derived on write, by
+ * `ProductRepository.deriveTaxonomy()`, from create and update alike — this header
+ * said the opposite until 2026-09-29 and told the tester a one-element chain was
+ * expected. A form cannot supply the chain itself (the create schema strips it), so
+ * if the derivation stops running there is no fallback and the product silently
+ * reaches only its leaf page.
  *
  * @tag domain:tester
  * @tag layer:seed
@@ -29,10 +33,10 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-admin-catalog-listings-brands-crud": {
     roles: ["admin", "guest"],
-    startPage: "/admin/categories",
+    startPage: "/admin/brands",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin brands surface and create one named 'QA Brand admin-crud' with a website, a country and a founding year.",
+      "Open /admin/brands and create one named 'QA Brand admin-crud' with a website, a country and a founding year.",
       "Upload public/test-media/sample-image.png to the field labelled for the hero or cover image.",
       "Save, RELOAD, and read every field.",
       "Open /brands/{slug} in a private window and read the hero banner and the 'About this brand' panel.",
@@ -72,19 +76,26 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/products",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/products and create a product titled 'QA Product admin-crud' at 600 with a category, a brand, stock 3 and an image.",
+      "Open /admin/products and create a product titled 'QA Product admin-crud' at 600 with stock 3, an image, the brand Beyblade, and the category Burst Parts — which sits two levels below the root.",
       "Save, RELOAD, and read every field.",
       "Open its public page and read the title, price, stock badge, category links and brand link.",
-      "Count the category links shown.",
+      "Count the category links shown and read their names.",
       "Edit ONLY the price to 700, save, RELOAD, and compare every other field.",
       "Delete the product and confirm the public page no longer resolves.",
     ],
-    inputs: { title: "QA Product admin-crud", priceBefore: 600, priceAfter: 700, stock: 3 },
+    inputs: {
+      title: "QA Product admin-crud",
+      priceBefore: 600,
+      priceAfter: 700,
+      stock: 3,
+      categoryId: "category-burst-parts",
+      brand: "Beyblade",
+    },
     expectedBehaviour:
-      "An admin create and edit round-trip, and an edit writes back only what changed. The category link count is worth recording: a product is supposed to carry its full ancestor chain so every ancestor page can find it, and nothing on the write side derives that chain — so a product created through a form against a deep category gets ONE slug and is invisible on every ancestor page.",
+      "An admin create and edit round-trip, and an edit writes back only what changed. The category links are the second assertion: the repository derives the full ancestor chain on write, so a product filed under Burst Parts carries Beyblade Burst and Spinning Tops with it. The brand link is the same shape — products are matched to a brand by DISPLAY NAME while the picker's value is the brand row's id, so that too is resolved on write rather than stored as picked.",
     expectedUiState:
-      "After each reload the values hold and only the price differs after the edit. Record how many category links the public page shows — one, where the chosen category has ancestors, is the known gap rather than a surprise. After the delete the public URL no longer resolves.",
-    expectedData: { unintendedFieldChanges: 0 },
+      "After each reload the values hold and only the price differs after the edit. THREE category links: Burst Parts, Beyblade Burst, Spinning Tops. The brand link resolves to a page that lists this product rather than an empty one. One category link, or a brand page that does not list it, are both write-path failures and both look entirely normal on the product's own page. After the delete the public URL no longer resolves.",
+    expectedData: { unintendedFieldChanges: 0, categoryLinksShown: 3 },
     endResult:
       "The product is deleted. Report the category link count either way.",
   },
@@ -182,16 +193,17 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/products",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open each per-type admin listing in turn — auctions, pre-orders, prize draws, classifieds, digital codes, live items, art and stickers.",
+      "Open each per-type admin listing in turn, BY URL — there are exactly six and only /admin/classified is linked from the sidebar: /admin/prize-draws, /admin/classified, /admin/digital-codes, /admin/live, /admin/art, /admin/stickers.",
       "On each, read the filters offered and note whether any are specific to that type.",
       "Use each type-specific filter and confirm it changes the rows.",
       "Write down any page offering no filters at all.",
       "Write down any filter that changes nothing.",
+      "Now confirm auctions and pre-orders have NO page of their own: /admin/auctions and /admin/pre-orders should not resolve, and both types must instead be reachable as chips on /admin/products.",
     ],
     expectedBehaviour:
-      "Each type's page offers the facets that type actually has — a classified's city, a live item's species, an auction's bid range — on top of the shared ones. A facet that renders and matches nothing is inert, which happens when it emits a field the query allowlist does not carry, and nothing raises.",
+      "Each type's page offers the facets that type actually has — a classified's city, a live item's species — on top of the shared ones. A facet that renders and matches nothing is inert, which happens when it emits a field the query allowlist does not carry, and nothing raises. Auctions and pre-orders deliberately have no dedicated admin page; the chips on /admin/products are their only admin surface, and that is why those chips must cover all nine types.",
     expectedUiState:
-      "Every per-type page offers filters including its own, and each visibly changes the rows. A page with no filters, or a filter that leaves the count identical while incrementing the badge, are both findings named by page.",
+      "All six per-type pages resolve and offer filters including their own, each visibly changing the rows. /admin/auctions and /admin/pre-orders do not resolve, and both types filter correctly from the chips instead — a 404 there is the expected result, not a finding. A page with no filters, or a filter leaving the count identical while incrementing the badge, are findings named by page.",
     endResult: "Read-only; nothing persists beyond the URL.",
   },
   "checklist-admin-catalog-listings-admin-listing-reset-restores-defaults": {
@@ -221,7 +233,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Read the URL and check it encodes the selection.",
       "Copy the URL, open it in a new tab, and read which chip is active on arrival.",
       "Press the browser back button and read which chip is active.",
-      "Repeat all of this on the admin payment-methods listing.",
+      "Repeat all of this on /admin/payment-methods, which has the same chip row.",
     ],
     expectedBehaviour:
       "Chip state lives in the URL on both listings, so a filtered view is shareable and the back button walks the selections. A chip held in component state alone makes the URL describe a different page from the one on screen.",
@@ -237,7 +249,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /admin/products with no query parameters and read the sort dropdown's selection.",
       "Check something is selected rather than the control being blank.",
       "Confirm the selected option is one of the options the dropdown offers.",
-      "Repeat on /admin/orders, /admin/addresses and the admin payment-methods listing.",
+      "Repeat on /admin/orders, /admin/addresses and /admin/payment-methods.",
       "Write down any listing whose dropdown opens with nothing selected.",
     ],
     expectedBehaviour:
@@ -248,10 +260,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-admin-catalog-listings-sublisting-categories-crud": {
     roles: ["admin", "guest"],
-    startPage: "/admin/categories",
+    startPage: "/admin/sublisting-categories",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin sublisting-categories surface and read the existing rows.",
+      "Open /admin/sublisting-categories and read the existing rows.",
       "Create one named 'QA Sublisting admin-crud' with a description and save.",
       "RELOAD and read every field.",
       "Rename it, save, RELOAD, and read the derived page title and description.",
@@ -275,22 +287,22 @@ export const authored: Record<string, AuthoredCase> = {
       "Create a carousel named 'QA Carousel admin-crud' and add a slide with a title, an image and a link.",
       "Save, RELOAD, and read the carousel's name, status and its slide.",
       "Set it active and open / in a private window to find it.",
-      "Count the active carousels and check the cap is respected.",
+      "Add slides to it until a sixth ACTIVE slide is refused. The cap of five is on active SLIDES, not on carousels, and the seed already ships five active ones — so the refusal may arrive on the very first slide you activate.",
       "Delete the carousel.",
     ],
     inputs: { name: "QA Carousel admin-crud", maxActive: 5 },
     expectedBehaviour:
-      "The list page lists named carousels — it once rendered the flat slide editor instead, so there was no list at all. At most five may be active at once, and a slide's background may be an image, a video, a colour or a gradient; a video background renders through a real video element, so its URL must be directly playable rather than routed through the image proxy, which rejects video outright.",
+      "The list page lists named carousels — it once rendered the flat slide editor instead, so there was no list at all. At most five SLIDES may be active at once — refused at write with a 409 naming the limit, not silently truncated, and there is deliberately no cap on the number of named carousels. A slide's background may be an image, a video, a colour or a gradient; a video background renders through a real video element, so its URL must be directly playable rather than routed through the image proxy, which rejects video outright.",
     expectedUiState:
-      "The page lists named carousels. After the reload the carousel holds its name, status and slide. Activating it shows it publicly. Attempting a sixth active carousel is refused rather than silently accepted.",
+      "The page lists named carousels. After the reload the carousel holds its name, status and slide. Activating it shows it publicly. A sixth active SLIDE is refused with a readable message rather than silently accepted or silently dropped from the public carousel. Refusing to create a sixth CAROUSEL would be the opposite failure — there is no such cap.",
     endResult: "The carousel is deleted by the final step.",
   },
   "checklist-admin-catalog-listings-sections-crud": {
     roles: ["admin", "guest"],
-    startPage: "/admin",
+    startPage: "/admin/sections",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the homepage sections editor and read every section, its type and its order.",
+      "Open /admin/sections and read every section, its type and its order. It is the homepage sections editor; /admin is only a redirect to the dashboard.",
       "Create a section, choosing a type, and configure every field it offers.",
       "Save, RELOAD, and read every field back.",
       "Open / in a private window and find the new section in the right position.",
@@ -311,9 +323,9 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Create an art listing titled 'QA Art Print admin-crud' at 700 with a size, material, finish and edition size.",
       "Save, RELOAD, and read all four print fields.",
-      "Open the admin listing filtered to art and check the listing appears there.",
+      "Open /admin/art and check the listing appears there.",
       "Read every other row in that filtered view and check none is an ordinary product.",
-      "Open the public art tab and check the listing appears there too.",
+      "Open /art publicly and check the listing appears there too. Art and stickers share that one browse route — there is no /stickers page.",
       "Delete the listing.",
     ],
     inputs: { title: "QA Art Print admin-crud", price: 700 },
@@ -333,8 +345,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Set its featured flag on and save.",
       "RELOAD and confirm the flag is still on.",
       "Open / in a private window and find the product in a featured section.",
-      "Set the promoted or on-sale flag on, save, reload, and check the public surface that flag drives.",
-      "Turn both flags back off, save, and confirm the product leaves those surfaces.",
+      "Set the promoted flag on, save, reload, and open /admin/featured and /admin/deals — both are real listings of flagged products and the product must appear in the matching one.",
+      "Turn both flags back off, save, and confirm the product leaves the homepage section AND leaves /admin/featured and /admin/deals.",
     ],
     expectedBehaviour:
       "Featured, promoted and on-sale flags reach the public surfaces they drive, in both directions. Turning a flag off must remove the product from its section — a flag that only ever adds is half a flag, and the homepage sections that read them filter by availability too, so a sold-out featured product should not appear.",
