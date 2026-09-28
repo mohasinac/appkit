@@ -146,9 +146,11 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "admin"],
     startPage: "/scams/report",
     steps: [
+      "START AS THE BUYER. This case lists roles [buyer, admin] and the harness resolves that to the ADMIN session — admin wins whenever it is present — so the batch opens as the wrong person for this first half. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER before continuing; the MCP reads that file only when the context is created.",
       "Sign in as rehan.sheikh@gmail.com / TempPass123! and submit a report with the description 'QA scam report routing probe — checklist case.'",
+      "Switch identity before continuing: copy tester/.tester-runs/session-admin.json over tester/.tester-runs/session.json and CLOSE THE BROWSER first — the MCP server reads that file when the context is created, so copying it over an open browser changes nothing and the next steps run as the previous person.",
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Find that report in an admin surface.",
+      "Find that report at /admin/scammers — the scam-report queue — and if it is not there, check /admin/reports before concluding it did not route.",
       "Open it and read the description and the reporter.",
       "Check it can be actioned — accepted, rejected or turned into a registry entry.",
       "Remove the QA report if the interface allows.",
@@ -183,7 +185,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /seller-guide signed out and read its content.",
       "Note whether it reads as marketing for prospective sellers or as a dashboard manual.",
-      "Sign in as tyson@beybladearena.in / TempPass123! and open /store/guide.",
+      "Do NOT sign in — this case is signed out by design and the harness gives a guest batch no session at all. The comparison against the seller-dashboard hub at /store/guide belongs to selling/seller-guide, which runs as the seller; note here only that /seller-guide is a DIFFERENT, public page and not that hub.",
       "Read that content.",
       "Compare the two.",
       "Check neither is a copy of the other.",
