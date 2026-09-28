@@ -29,7 +29,22 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/orders and open a delivered order.",
-      "Use the control that leaves a review on one of its items.",
+      /*
+       * 🛑 THIS CONTROL MAY NOT EXIST, AND THAT IS THE FINDING — not a reason
+       * to soften the case.
+       *
+       * Measured 2026-09-28: the write path exists server-side
+       * (createReviewAction, useCreateReview) and the labels exist
+       * (UI_TEXT.WRITE_REVIEW, twice), but NO .tsx consumes any of them. The
+       * only review modal is ViewReviewModal, which is read-only.
+       *
+       * So the expected outcome is a real 'no' with evidence, not a 'could not
+       * test'. The step says where to look and what its absence means, so the
+       * two verdicts cannot be confused — a tester who simply cannot find a
+       * button otherwise records "could not test", and a missing feature then
+       * reads as a coverage gap.
+       */
+      "On the delivered order's item row, use the control that leaves a review — 'Write a review' or equivalent. If no such control exists anywhere on the order or on the product page, that is the answer: record it as a FAILURE with a screenshot of the order row, not as 'could not test'.",
       "Submit with no rating and no text, and read where the errors appear.",
       "Select 4 stars, type 'QA Review leave-review' as the title and 'Written by the tester checklist.' as the body, and attach public/test-media/sample-image.png.",
       "Submit and RELOAD.",
