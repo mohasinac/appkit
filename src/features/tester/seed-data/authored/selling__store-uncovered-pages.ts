@@ -79,7 +79,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/pre-orders",
     steps: [
       SIGN_IN_SELLER,
-      "Open /store/pre-orders.",
+      "Open /store/pre-orders. It REDIRECTS to /store/products?listingType=pre-order — the per-type seller pages were folded into the one products list with a type filter — so landing on a differently-named URL carrying a query is the design, not a broken link. Everything below is read on that filtered list.",
       "Read the listings shown and check each is a pre-order.",
       "Read each one's production status and delivery date in the list.",
       "Create a pre-order from this page titled 'QA Store Preorder Probe' with a full price of 999 and a deposit of 200.",
@@ -98,7 +98,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_SELLER,
       "Open each of these by URL in turn: /store/guide, /store/guide/capabilities, /store/guide/finance, /store/guide/listings, /store/guide/orders, /store/guide/settings and /store/guide/whatsapp.",
-      "Check every one of them is also linked from the Guide area rather than only reachable by URL.",
+      "Check every one of them is also linked from the sidebar's 'Guides' group — it is the LAST group and sets defaultOpen:false, so EXPAND IT before concluding anything is unlinked. All seven are there: All Guides, Listings Guide, Orders Guide, Finance Guide, Settings, Capabilities, WhatsApp Catalog Sync.",
       "Record any that 404 or render empty.",
       "On two of them, check the screen they describe still exists and is named the same way.",
       "Record any guide describing a control that is no longer there.",
