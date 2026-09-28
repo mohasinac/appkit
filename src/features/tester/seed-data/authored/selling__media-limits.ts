@@ -28,6 +28,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and type 'QA Product media-gallery' as the title.",
+      "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
       "Upload public/test-media/sample-image.png to the gallery.",
       "Upload public/test-media/sample-image.jpg to the gallery.",
       "Upload public/test-media/sample-image.webp to the gallery.",
@@ -52,6 +53,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and type 'QA Product media-tenth' as the title.",
+      "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
       "Upload public/test-media/sample-image.png to the gallery nine times, counting the previews after each.",
       "Upload it a tenth time.",
       "Read the preview count and any message about the limit.",
@@ -70,6 +72,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and upload public/test-media/sample-image.png ten times.",
+      "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
       "Open the browser's Network panel.",
       "Attempt an eleventh upload of the same file.",
       "Read the message shown and count the previews.",
@@ -89,6 +92,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and type 'QA Product media-second-video' as the title.",
+      "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
       "Upload public/test-media/sample-video.mp4 to the video field and wait for its poster frame.",
       "Attempt to upload public/test-media/sample-video.mp4 a second time.",
       "Read the message shown.",
@@ -107,10 +111,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new and read the stated image and video limits.",
-      "Open the auction creation form and read its stated limits.",
-      "Open the pre-order creation form and read its limits.",
-      "Open the classified, digital-code and live-item creation forms and read each.",
+      "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
+      "Read the stated image and video limits on the advanced form.",
+      "Open /store/auctions/new and read its stated limits. These per-type creation routes render the full form directly, so no advanced switch is needed on any of them.",
+      "Open /store/pre-orders/new and read its limits.",
+      "Open /store/classified/new, /store/digital-codes/new and /store/live/new and read each.",
       "Compare all six.",
     ],
     expectedBehaviour:
