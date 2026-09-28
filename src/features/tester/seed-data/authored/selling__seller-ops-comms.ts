@@ -48,10 +48,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-ops-comms-seller-fulfillment-queue": {
     roles: ["seller"],
-    startPage: "/store/orders",
+    startPage: "/store/fulfillment",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's fulfillment queue and read the rows.",
+      "Open /store/fulfillment and stay on its Queue tab — the page is a two-tab shell, Queue and 'Print centre', and the other tab is a different case.",
       "Read each row's primary label and check it names the ITEM rather than only an order id.",
       "Read every filter offered and select each in turn, reading the rows.",
       "Open one row and read the order it opens.",
@@ -68,7 +68,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/print-center",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/print-center and read what it offers.",
+      "Open /store/print-center and note that it REDIRECTS to /store/fulfillment, carrying the query string with it. Landing on a differently-named page is expected, not a fault.",
+      "Switch to the 'Print centre' tab — note the British spelling — and read what it offers.",
       "Select one or more items or orders to print.",
       "Read the preview and check the store's own name, logo and address appear on it.",
       "Generate the printable output and read it.",
@@ -83,20 +84,20 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-ops-comms-seller-inventory-print": {
     roles: ["seller"],
-    startPage: "/store/print-center",
+    startPage: "/store/fulfillment",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/print-center and write down what it offers and whether the store context is present.",
-      "Open the store's inventory print page.",
-      "Write down what IT offers and whether the store context is present.",
-      "Compare the two side by side.",
-      "Check the sidebar for which of the two is linked.",
+      "Open /store/fulfillment, switch to the 'Print centre' tab, and write down what it offers and whether the store context is present — name, logo, pickup address.",
+      "Open /store/inventory/print directly by URL. It should NOT resolve: the degraded duplicate was removed when Print Centre became a tab.",
+      "Open /store/print-center and confirm it redirects here rather than rendering a second copy.",
+      "Read the sidebar and check exactly ONE entry leads to this surface, under whichever name it uses.",
+      "Confirm there is no second, store-less print surface reachable from anywhere in the sidebar.",
     ],
     expectedBehaviour:
-      "Only one of these is the real surface. The other renders the same component with no store attached, so it produces a preview with no name, no logo and no address — a page that looks built and yields an unusable label. Two features that look alike is how one ships broken and unnoticed.",
+      "The duplicate is RESOLVED and this case now guards the resolution rather than measuring the gap. /store/inventory/print used to render the same component with no store attached — a preview with no name, no logo and no address, a page that looked built and produced an unusable label. It was removed when Print Centre became a tab of /store/fulfillment, and /store/print-center became a redirect. What must stay true is that exactly one print surface exists and it has the store context.",
     expectedUiState:
-      "One surface carries the full store context and the other does not, or the second no longer exists. Record which is which, and which one the sidebar links to — a sidebar pointing at the degraded copy is the finding.",
+      "The Print centre tab carries the store name, logo and pickup address. /store/inventory/print does not resolve. /store/print-center redirects here rather than rendering a second copy. The sidebar offers exactly one route to it. A second print surface reappearing — or this one rendering without store context — is the finding.",
     endResult:
-      "Read-only; nothing persists. If both render identically and correctly, say so — that is a valid outcome and means the duplicate was resolved.",
+      "Read-only; nothing persists. /store/inventory/print resolving at all is a REGRESSION, not a discovery: it was deliberately deleted, so its return means something reinstated it.",
   },
 };
