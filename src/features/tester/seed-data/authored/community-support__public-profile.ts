@@ -46,10 +46,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/profile/user-tyson-blader",
     steps: [
       "Open /profile/user-tyson-blader in a private window with no session.",
-      "Read the display name, avatar and bio.",
+      "Read the display name, avatar and bio. The name is 'Mock User 6' — every seeded persona is literally Mock User N, so that is the fixture rather than a placeholder bug, and the bio is real prose.",
       "Open each tab on the profile.",
       "Search the page source for an email address and for a phone number.",
-      "Open /profile/user-yugi-muto and read the same things.",
+      "Open /profile/user-yugi-muto and read the same things — display name 'Mock User 3', its own bio.",
+      "On BOTH profiles, check what is NOT shown. Each seeded publicProfile sets showEmail, showPhone, showOrders and showWishlist to FALSE, so none of those may appear anywhere on the page. Open View Source and search for the personas' email addresses (tyson@beybladearena.in, rehan.sheikh@gmail.com) and for the strings phoneNumber, orders and wishlist — a value hidden in the rendered page but present in the HTML is still published, which is the shape the store case on this page checks for.",
     ],
     inputs: { sellerProfile: "user-tyson-blader", buyerProfile: "user-yugi-muto" },
     expectedBehaviour:
