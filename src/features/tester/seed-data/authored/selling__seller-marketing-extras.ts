@@ -48,7 +48,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /store/features and read the existing features.",
       "Create one named 'QA Feature marketing-extras' with an icon and a description, and save.",
       "RELOAD and read every field.",
-      "Open a product editor and attach that feature to 'Beyblade Burst B-01 Valkyrie', then save.",
+      "Open /store/products, find 'Beyblade Burst B-01 Valkyrie', open its editor, attach that feature and save.",
       "Open the product's public page at /products/{its slug} and read whether the feature is shown.",
       "Detach it, then delete the feature.",
     ],
