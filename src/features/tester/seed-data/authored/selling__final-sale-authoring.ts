@@ -27,15 +27,15 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new and find the final-sale control without touching it.",
-      "Read its state.",
-      "Open the auction creation form and read the same control's state.",
-      "Open the pre-order and classified creation forms and read it in each.",
+      "Open /store/products/new and go to the Returns step WITHOUT touching anything. The control is a toggle labelled 'Accept change-of-mind returns' — there is none named 'final sale' — and it stores the INVERSE: toggle OFF means finalSale, which is the default.",
+      "Read its state. Expect it OFF, meaning final sale is on.",
+      "Open /store/auctions/new and read the same toggle's state.",
+      "Open /store/pre-orders/new and /store/classified/new and read it in each.",
     ],
     expectedBehaviour:
       "Final sale is on by default on every listing type, so a seller who never opens the setting is protected rather than silently exposed to returns they did not agree to.",
     expectedUiState:
-      "The control reads as on in every creation form checked, before any interaction. A type whose default differs is the finding, named by type.",
+      "The 'Accept change-of-mind returns' toggle reads OFF in all four creation forms before any interaction — OFF is what makes the listing final sale. A type whose default differs is the finding, named by type. Remember the polarity when recording: a toggle that reads ON here means returns ARE accepted, which is the opposite of the expected default.",
     expectedData: { defaultFinalSale: true },
     endResult:
       "Leave every editor without saving. This case cannot distinguish a real default from a field that fails to load — that is what the next case is for.",
@@ -46,11 +46,11 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products and open the editor for 'Beyblade Burst B-01 Valkyrie'.",
-      "Turn the final-sale control OFF.",
+      "Turn final sale OFF. 🛑 THE CONTROL IS INVERTED AND RENAMED: there is no switch labelled 'Final sale'. It is a toggle reading 'Accept change-of-mind returns', in the Returns step, and turning final sale OFF means turning that toggle ON. Its OFF state is the default and stores finalSale as final-sale.",
       "Save and read the confirmation.",
       "RELOAD the editor and read the control's state.",
-      "Open the product's public page and read whether a final-sale badge is shown.",
-      "Turn the control back on, save, and reload to confirm.",
+      "Open /products/product-beyblade-burst-valkyrie and read whether a 'Final Sale' badge is shown — that is the badge's exact label.",
+      "Turn the 'Accept change-of-mind returns' toggle back OFF — restoring final sale, which is the seeded default — then save and reload to confirm.",
     ],
     inputs: { productId: "product-beyblade-burst-valkyrie", finalSale: false },
     expectedBehaviour:
@@ -67,11 +67,11 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open the editor for 'Beyblade Burst B-01 Valkyrie' and find the return-policy field.",
-      "Turn final sale off so returns are permitted.",
+      "Turn ON the toggle labelled 'Accept change-of-mind returns' in the Returns step — that is what turns final sale off. There is no control named 'final sale'; the switch is deliberately phrased positively so its ON state never means fewer buyer rights.",
       "Type 'QA Return Policy authorable — 7 days, unopened only.' into the policy field and save.",
       "RELOAD the editor and read the field.",
-      "Open the product's public page in a private window and find the return policy.",
-      "Restore the original policy and turn final sale back on.",
+      "Open /products/product-beyblade-burst-valkyrie in a private window and find the return policy.",
+      "Restore the original policy and turn the 'Accept change-of-mind returns' toggle back OFF, which restores final sale.",
     ],
     inputs: {
       productId: "product-beyblade-burst-valkyrie",
@@ -93,8 +93,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /admin/products, open the same product, and turn final sale OFF.",
       "Save and reload the admin editor to confirm.",
       "Sign out and sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the seller editor for the same product and read the control.",
-      "Open the public page and read whether the badge is shown.",
+      "Open that product's SELLER editor at /store/products/{id}/edit and read the 'Accept change-of-mind returns' toggle — the admin form names the field directly while the seller form inverts and renames it, which is the disagreement this case is for.",
+      "Open that product's public page at /products/{its slug} and read whether the 'Final Sale' badge is shown.",
     ],
     inputs: { productId: "product-beyblade-burst-valkyrie" },
     expectedBehaviour:
