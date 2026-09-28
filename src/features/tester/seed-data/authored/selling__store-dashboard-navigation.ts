@@ -28,10 +28,10 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store and expand every group in the sidebar.",
+      "Open /store and expand ALL SIX sidebar groups: Overview, Listings, Orders & Reviews, Finance, Store, Guides. The last one — Guides — sets defaultOpen:false, so it is the one a tester skips and then reports as missing.",
       "Click each link in turn, reading where it lands and going back each time.",
       "Write down any link that 404s, renders an empty shell, or lands somewhere unrelated.",
-      "Count the links against the number of pages that exist under /store.",
+      "Count the links against the pages that exist under /store. There are 39 sidebar items and 86 page.tsx files beneath /store, so a surplus of pages is EXPECTED — new/, [id]/edit/ and other sub-routes legitimately have no entry of their own. What matters is a top-level page with no route in at all.",
     ],
     expectedBehaviour:
       "Every sidebar link opens a real page with content. The inverse — a built page with no sidebar entry — is the same defect from the other side and is why the count matters: around seventeen store pages were once reachable only by typing their exact URL.",
