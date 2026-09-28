@@ -83,7 +83,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as rehan.sheikh@gmail.com / TempPass123! and turn on 'Left-hand mode'.",
       "Open /products and scroll past 400 pixels so the back-to-top control appears.",
       "Note which side of the viewport it is on.",
-      "Open a product detail page, scroll until the purchase bar appears, and check the control still clears the bar.",
+      "Open /products/product-beyblade-burst-valkyrie, scroll until the purchase bar appears, and check the control still clears the bar.",
       "Turn 'Left-hand mode' off and check both again.",
     ],
     inputs: { leftHandMode: true },
