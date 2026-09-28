@@ -26,6 +26,24 @@ export interface TesterPhaseAssignable {
 export const DEFAULT_TESTER_PHASE_SIZE = 25;
 
 /**
+ * Groups that take the earliest phases, ahead of the round-robin.
+ *
+ * 🛑 THE ROUND-ROBIN BELOW IS RIGHT FOR EVERYTHING ELSE AND WRONG FOR THIS.
+ * Interleaving exists so an early stop costs a proportional slice of every
+ * group rather than the whole tail — a fair outcome when no group matters more
+ * than another. But `happy-path` is not one group among fourteen: it is the
+ * question "can anyone buy anything on this site", and a run that covered 7% of
+ * it alongside 7% of SEO metadata has answered nothing.
+ *
+ * So these groups are packed FIRST, in their own catalogue order, and the
+ * round-robin then runs over the remainder exactly as before.
+ *
+ * Adding a group here is a real cost: every group after it loses its early
+ * proportional slice. Two entries is the intended size of this list.
+ */
+export const PRIORITY_GROUPS: readonly string[] = ["happy-path"];
+
+/**
  * Returns a same-length array of 1-based phase numbers, one per input item,
  * computed by greedily packing whole pages (consecutive runs of the same
  * groupKey+pageKey) into phases of ~`targetPhaseSize` items. `items` MUST
@@ -84,7 +102,18 @@ export function assignDefaultPhases<T extends TesterPhaseAssignable>(
     byGroup.get(g)!.push(pageId);
   }
 
+  /*
+   * Priority groups first, whole, in catalogue order — then the round-robin over
+   * everything else. See PRIORITY_GROUPS for why this one group is exempt from
+   * the interleaving the rest depends on.
+   */
+  const interleaved: string[] = [];
+  for (const g of PRIORITY_GROUPS) {
+    for (const pageId of byGroup.get(g) ?? []) interleaved.push(pageId);
+  }
+
   const groupsLargestFirst = [...byGroup.entries()]
+    .filter(([g]) => !PRIORITY_GROUPS.includes(g))
     .map(([g, pages]) => ({
       g,
       pages,
@@ -94,8 +123,7 @@ export function assignDefaultPhases<T extends TesterPhaseAssignable>(
     .map((e) => e.g);
 
   const cursor = new Map<string, number>(groupsLargestFirst.map((g) => [g, 0]));
-  const interleaved: string[] = [];
-  let remaining = pageOrder.length;
+  let remaining = pageOrder.length - interleaved.length;
   while (remaining > 0) {
     for (const g of groupsLargestFirst) {
       const i = cursor.get(g)!;

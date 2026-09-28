@@ -20,6 +20,7 @@
 
 import type { TesterCaseRole, TesterChecklistItemDocument } from "../schemas";
 import { assignDefaultPhases } from "../utils/phases";
+import { happyPathPages } from "./_happy-path";
 import { moneyFlowsPages } from "./_money-flows";
 import { AUTHORED_CASES } from "./authored";
 
@@ -150,6 +151,18 @@ function group(
  * group and is not globally unique across groups.
  */
 const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
+  /*
+   * 🛑 FIRST ON PURPOSE. The happy path is the core commerce flow — browse a
+   * category, reach a brand and a store, open a standard product, buy it, pay
+   * for it, watch the seller fulfil and the admin verify.
+   *
+   * It leads the catalogue because a run that is interrupted, rate-limited or
+   * abandoned half way should have covered "can anyone buy anything" before it
+   * covered SEO metadata. Ordering is enforced by HAPPY_PATH_FIRST in
+   * ../utils/phases, not by this position — array position alone would be
+   * silently undone by the round-robin phase assignment below.
+   */
+  ...group("happy-path", "Happy Path (core flows)", happyPathPages),
   ...group("account-auth", "Account & Auth", [
     {
       pageKey: "signup-login",

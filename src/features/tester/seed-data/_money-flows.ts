@@ -66,7 +66,15 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Open /products/product-beyblade-burst-valkyrie.",
           "Click 'Make Offer'.",
           "Enter 780 as the offer amount.",
-          "Enter the note 'QA offer offer-to-purchase-buyer-makes-offer'.",
+          /*
+           * Named `QA note buyer-makes-offer`, not `QA offer offer-to-purchase-…`.
+           * R7 reads `offer-…` as a FIXTURE CITATION wherever it appears in a
+           * step — including inside a name the tester is being told to type — so
+           * the page-qualified key read as an offer id that does not exist. The
+           * fixture reference documents this exact trap; renaming the record is
+           * cheaper than weakening the rule.
+           */
+          "Enter the note 'QA note buyer-makes-offer'.",
           "Click 'Submit offer'.",
           "Open /user/offers.",
         ],
