@@ -208,10 +208,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-tab-empty-state-not-error": {
     roles: ["guest"],
-    startPage: "/stores/store-vintage-vault-co",
+    startPage: "/stores/store-letitrip-official",
     steps: [
-      "Open /stores/store-vintage-vault-co in a private window with no session.",
-      "Open every tab offered and find one that is genuinely empty.",
+      "Open /stores/store-letitrip-official in a private window with no session. 🛑 NOT store-vintage-vault-co, which this case used to name: that store is SUSPENDED with isPublic false, and getStoreBySlug returns null unless status is ACTIVE and isPublic is true — so its public page calls notFound(). A tester would meet a 404 and have to judge an empty state on a page that does not exist.",
+      "Open every tab offered and find one that is genuinely empty. This store carries SIX listings, all prize draws, so eleven of its twelve tabs are empty and one is not — which gives both halves of the comparison.",
       "Read exactly what is shown in that empty tab.",
       "Wait 10 seconds and read it again.",
       "Check for any error toast anywhere on the page.",
