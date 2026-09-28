@@ -11,6 +11,29 @@
  * classic half-fix: the seller sees an approved dashboard while every public
  * visibility check reads the store's, so the store never appears anywhere.
  *
+ * 🛑 THIS CHAIN IS ONE-SHOT AND LEAVES karthik.new@gmail.com A SELLER FOREVER.
+ * Read this before running it a second time, because the second run does not
+ * fail — it tests something else while looking the same.
+ *
+ * `users` is PRESERVE tier, so the tester lifecycle never wipes it. `stores` is
+ * SEED_OWNED, so it IS wiped. After one run karthik therefore holds
+ * `role: seller` and a `storeStatus` with NO STORE — a half-state neither
+ * `sell-redirect` (which needs "a buyer with no store") nor `apply-seller`
+ * (which needs someone who has not applied) is written for.
+ *
+ * A users reseed only half-fixes it: the seed declares `role`, so that is
+ * restored — but it does NOT declare `storeStatus`, and `appkit-seed load` is a
+ * merge write that cannot REMOVE a key it does not carry. The leftover status
+ * survives every reseed. Clearing it needs a deliberate field delete.
+ *
+ * So before re-running this page:
+ *   1. delete `storeStatus` (and `storeId`, if set) from user-karthik-new
+ *   2. npx appkit-seed load --collections users   (restores role)
+ *
+ * The honest alternative is a fresh QA signup per run, as
+ * account-auth/signup-login does with its run-stamped address — but that leaks
+ * a permanent account each time, which is its own cost.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
