@@ -49,6 +49,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and read the page before typing — note whether any errors are listed.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create — six flat fields, NO sections at all — so every section, chevron and error-summary step below needs the advanced form, which is the sectionised one this page is about.",
       "Leave required fields empty in two DIFFERENT sections.",
       "Collapse both of those sections.",
       "Attempt to publish.",
@@ -66,6 +67,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and look at every section header.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create — six flat fields, NO sections at all — so every section, chevron and error-summary step below needs the advanced form, which is the sectionised one this page is about.",
       "Find any section that is always open because it is required.",
       "Look at whether it still shows an expand chevron.",
       "Click that chevron and read what happens.",
@@ -83,6 +85,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and expand a section containing a picker.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create — six flat fields, NO sections at all — so every section, chevron and error-summary step below needs the advanced form, which is the sectionised one this page is about.",
       "Open that picker and read whether its full option list is visible.",
       "Scroll while it is open and check it stays anchored to its field.",
       "Open a picker in the LAST section of the form, near the bottom of the page.",
@@ -102,6 +105,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and leave a required field empty in a section far down the form.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create — six flat fields, NO sections at all — so every section, chevron and error-summary step below needs the advanced form, which is the sectionised one this page is about.",
       "Collapse that section and attempt to publish.",
       "Click the error for that field in the summary.",
       "Read where the page has scrolled to and whether the field is visible.",
@@ -137,6 +141,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and expand every section.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create — six flat fields, NO sections at all — so every section, chevron and error-summary step below needs the advanced form, which is the sectionised one this page is about.",
       "Type a long paragraph into the description field at normal speed.",
       "Watch for characters lagging behind the keystrokes.",
       "Attempt a publish so validation is running live, then keep typing into another field.",
@@ -153,7 +158,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Resize the browser window to 390 pixels wide and open /store/products/new.",
+      "Resize the browser window to 390 pixels wide, open /store/products/new, and click 'Show all fields (advanced)' — the quick form has no sections and therefore no section-scoped error sheet, which is what this case reads.",
       "Read the action bar at the bottom and every control in it.",
       "Type into a field so the form becomes dirty and read the bar again.",
       "Attempt a publish with fields missing and read what the bar shows.",
@@ -173,6 +178,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and find a control that reveals conditional fields — a listing type or a shipping choice.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create — six flat fields, NO sections at all — so every section, chevron and error-summary step below needs the advanced form, which is the sectionised one this page is about.",
       "Set it so the conditional fields appear and fill them in, noting each value.",
       "Change the controlling field so those conditionals are hidden.",
       "Change it back so they reappear.",
