@@ -28,6 +28,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and go to the Returns step WITHOUT touching anything. The control is a toggle labelled 'Accept change-of-mind returns' — there is none named 'final sale' — and it stores the INVERSE: toggle OFF means finalSale, which is the default.",
+      "Click 'Show all fields (advanced)' first — the quick form has no Returns step, so the toggle below is not on screen until you switch.",
       "Read its state. Expect it OFF, meaning final sale is on.",
       "Open /store/auctions/new and read the same toggle's state.",
       "Open /store/pre-orders/new and /store/classified/new and read it in each.",

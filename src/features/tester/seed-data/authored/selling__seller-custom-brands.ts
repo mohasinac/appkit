@@ -28,6 +28,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and find the brand picker.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create, and its six fields are Product Name, Category, Price (₹), Stock Quantity, Description and Product Image — there is NO brand field on it at all. The brand picker exists only on the advanced form.",
       "Type QA Brand inline-create into its search box.",
       "Read what the picker offers when nothing matches.",
       "Use the create control the picker offers and fill the form it opens.",
@@ -47,6 +48,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and open the brand picker.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create, and its six fields are Product Name, Category, Price (₹), Stock Quantity, Description and Product Image — there is NO brand field on it at all. The brand picker exists only on the advanced form.",
       "Search for QA Brand inline-create.",
       "Read whether it is offered as an existing option.",
       "Reload the page and search for it again.",
@@ -65,6 +67,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and open the brand picker.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create, and its six fields are Product Name, Category, Price (₹), Stock Quantity, Description and Product Image — there is NO brand field on it at all. The brand picker exists only on the advanced form.",
       "Use the create control and type QA Brand inline-create — the name that already exists.",
       "Save and read the message.",
       "Open the picker again and search that name.",
@@ -85,6 +88,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and type 'QA Product custom-brand' as the title.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create, and its six fields are Product Name, Category, Price (₹), Stock Quantity, Description and Product Image — there is NO brand field on it at all. The brand picker exists only on the advanced form.",
       "Select QA Brand inline-create in the brand picker.",
       "Type 500 as the price, fill every other required field, and publish.",
       "RELOAD the product's editor and read the brand.",
