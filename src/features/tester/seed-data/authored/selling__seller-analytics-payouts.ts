@@ -100,16 +100,37 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/payouts",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/payouts and find the payout reminder toggle.",
-      "Read its current state.",
-      "Turn it OFF and save if a save is required.",
-      "RELOAD the page and read the toggle's state.",
-      "Turn it back on, save, and reload to confirm.",
+      /*
+       * 🛑 THE TOGGLE IS PER-PAYOUT, LABELLED 'Remind me', AND SAVES ITSELF.
+       *
+       * This said "open /store/payouts and find the payout reminder toggle",
+       * then "turn it OFF and save if a save is required", then back on. Three
+       * things were wrong and each one alone would strand a tester:
+       *
+       *  - it is not on the page. It lives inside a SELECTED payout's detail
+       *    panel, so a payout has to be opened first.
+       *  - it is labelled 'Remind me', with the helper text "Flag this payout
+       *    for a personal follow-up". Nothing reads "reminder".
+       *  - there is no save. handleToggleReminder PATCHes immediately and
+       *    toasts 'Reminder set.' or 'Reminder cleared.', so waiting for a save
+       *    button means never completing the step.
+       *
+       * And the direction was backwards: no seeded payout sets
+       * `sellerReminderFlag`, and the control reads
+       * `checked={Boolean(payout.sellerReminderFlag)}` — so it starts OFF.
+       * "Turn it OFF" first was a no-op that would have made the reload check
+       * pass trivially.
+       */
+      "Open /store/payouts and open any payout to show its detail panel.",
+      "Find the 'Remind me' toggle in that panel and read its current state — it starts OFF, because no seeded payout carries the flag.",
+      "Turn it ON. It saves immediately; look for the toast reading 'Reminder set.' rather than a save button.",
+      "RELOAD the page, reopen the SAME payout, and read the toggle's state.",
+      "Turn it back off, confirming the toast reads 'Reminder cleared.', and reload once more to confirm.",
     ],
     expectedBehaviour:
       "The preference persists server-side. Off is the direction worth testing when the default is on: a toggle that never saves reads back as its default and passes a test that only ever turns it on.",
     expectedUiState:
-      "After the reload the toggle is still off. A toggle that has reverted to on is the failure, and the save will have reported success.",
+      "After the reload the reopened payout's 'Remind me' toggle is still ON. A toggle that has reverted to off is the failure — and the PATCH will have reported success and toasted 'Reminder set.', which is exactly what makes it invisible without the reload.",
     expectedData: { reminderEnabled: false },
     endResult:
       "The toggle is back on by the final step, so payout reminders are not left suppressed.",
