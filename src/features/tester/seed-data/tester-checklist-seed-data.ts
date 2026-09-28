@@ -5265,6 +5265,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Prize Draws / Lotteries",
         href: "/admin/prize-draws",
         cases: [
+        {
+          key: "lottery-edit-preserves-bookings",
+          label: "Editing a lottery's prizes leaves its bookings intact -- booked slots stay booked, against the same buyers",
+          description: "BEFORE: the editor sent isBooked:false and weight:0 for every slot and dropped the buyer fields, and the event PATCH was passthrough -- so the first save of a live lottery freed every purchased slot and erased who bought them, with a 200 and no error. AFTER: the write shape cannot express booking state at all, and the merge reattaches by slotNumber rather than array index. Uses the seeded 25-slot lottery, five of them booked.",
+          href: "/admin/lotteries",
+        },
           { key: "prizedraw-create", label: "Admin can create a prize-draw listing, choosing instant or scheduled reveal mode and a 1–15 day duration", href: "/admin/prize-draws" },
           { key: "prizedraw-reveal-winner", label: "Winners are assigned automatically via crypto.randomInt (on payment confirmation for instant mode, or at expiry/sellout for scheduled mode) — never by a manual admin click" },
           { key: "prizedraw-scam-guard", label: "A prize draw with active entries cannot be unpublished, archived, or deleted, and an already-won item's details cannot be edited" },

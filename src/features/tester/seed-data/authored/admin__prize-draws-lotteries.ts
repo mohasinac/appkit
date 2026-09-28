@@ -32,7 +32,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Create a prize draw titled 'QA Prize Draw admin-create' at 80 per entry, 25 entries, instant-reveal mode.",
       "Define at least two prizes with names and save.",
       "RELOAD the editor and read the mode, the per-entry price, the entry count and the prizes.",
-      "Open the public page in a private window and read the purchase panel's wording.",
+      "Open the prize draw's public page at /prize-draws/{its id} in a private window and read the purchase panel's wording.",
       "Read whether the panel describes buying an ENTRY rather than buying the prize.",
     ],
     inputs: { title: "QA Prize Draw admin-create", pricePerEntry: 80, entryCount: 25 },
@@ -49,7 +49,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as rehan.sheikh@gmail.com / TempPass123! and buy one entry in 'QA Prize Draw admin-create' with Cash on Delivery.",
       "Read what the order page shows immediately after payment.",
       "Sign out and sign in as admin@letitrip.in / TempPass123!.",
-      "Open the draw's admin view and read the entries and any reveal control.",
+      "Open /admin/prize-draws/{its id}/edit and read the entries and any reveal control.",
       "Trigger the reveal if the mode requires it, and read the assigned prize.",
       "Sign back in as the buyer and read the prize on their order.",
       "Compare the prize the admin sees against the one the buyer sees.",
@@ -85,11 +85,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/products",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open a prize draw's admin view and read what the reveal mechanism is described as.",
+      "Open /admin/prize-draws/prizedraw-beyblade-burst-collectors-draw/edit — a seeded draw that is still open — and read what the reveal mechanism is described as.",
       "Read whether the admin can choose WHO wins a specific prize.",
       "Read whether the admin can see, before revealing, which prize an entry will draw.",
       "Trigger a reveal and read whether the outcome was predictable from anything on screen beforehand.",
-      "Open the public page and read whether the odds or prize pool are disclosed to buyers.",
+      "Open the prize draw's public page at /prize-draws/{its id} and read whether the odds or prize pool are disclosed to buyers.",
     ],
     expectedBehaviour:
       "The draw is not steerable. Prizes are assigned by cryptographic randomness at reveal, so an admin cannot pick a winner and cannot see the outcome in advance — a prize draw an operator can steer is a rigged one, whatever else the page does correctly.",
@@ -103,7 +103,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/products",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open a prize draw's entries view and read every column.",
+      "Open /admin/prize-draws/prizedraw-beyblade-metal-closed-revealed/entries — a CLOSED and revealed draw, so it has entries and a recorded winner to read rather than an empty table.",
       "Check each row shows enough to identify the entry without opening it.",
       "Read whether buyer identities are shown in full or masked.",
       "Read the row actions offered and check at least one lets you VIEW the entry.",
@@ -118,5 +118,32 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { nonsenseResultCount: 0 },
     endResult:
       "Read-only. Delete 'QA Prize Draw admin-create' as the last action of this page.",
+  },
+  "checklist-admin-prize-draws-lotteries-lottery-edit-preserves-bookings": {
+    roles: ["admin"],
+    startPage: "/admin/lotteries",
+    steps: [
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/lotteries and find event-pokemon-number-draw-july-2026 — 25 total slots, of which FIVE are already booked in the seed.",
+      "Open its slot editor at /admin/lotteries/event-pokemon-number-draw-july-2026/edit.",
+      "WRITE DOWN which slot numbers show as booked and the buyer named against each.",
+      "Change something harmless and unrelated — rename ONE unbooked slot's prize — and save.",
+      "RELOAD the editor and read the booked slots again.",
+      "Compare every booked slot number and buyer against what you wrote down.",
+      "Read the prices shown on the slots too: they must be the real stored amounts, not zeros.",
+      "Restore the renamed slot and save again.",
+    ],
+    inputs: {
+      eventId: "event-pokemon-number-draw-july-2026",
+      totalSlots: 25,
+      bookedSlots: 5,
+    },
+    expectedBehaviour:
+      "Editing a lottery's prizes leaves its bookings alone. This is the one save in the application that has destroyed buyer data: the editor once sent isBooked:false and weight:0 for every slot and dropped the buyer fields entirely, and because the event PATCH was passthrough, the first save of a live lottery marked every purchased slot available again and erased who had bought them — with a 200 and no error anywhere. The write shape now cannot even express booking state, and the merge reattaches bookings by slotNumber rather than by array position, so deleting a slot cannot hand slot 7's buyer slot 8's prize.",
+    expectedUiState:
+      "All five booked slots are still booked after the reload, against the same buyers, and only the renamed prize differs. Prices read as their stored amounts. 🛑 EVERY SLOT SHOWING AS AVAILABLE is the catastrophic outcome and it looks like a successful save — the page re-renders, the toast is green, and only the buyers know. Every price reading zero is the same defect's twin, from seeding the form off the public projection, which strips price and weight.",
+    expectedData: { bookedSlotsAfterSave: 5, slotsPricedZero: 0 },
+    endResult:
+      "The renamed slot is restored and all five bookings survive. If any booking is gone, STOP and report it immediately rather than continuing the batch — there is no undo, and the remaining cases on this page would be run against corrupted data.",
   },
 };
