@@ -328,10 +328,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-design-ux-homepage-carousels-section-config-actually-renders": {
     roles: ["admin", "guest"],
-    startPage: "/admin",
+    startPage: "/admin/sections",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open the homepage sections editor.",
-      "Open one section's configuration and write down every field it offers.",
+      "Open /admin/sections — the homepage sections editor; /admin is only a redirect to the dashboard — then open one section's configuration and write down every field it offers.",
       "Change a visible field — a heading or an item limit — and save.",
       "Open / in a private window and read that section.",
       "Check whether the change is reflected.",
@@ -346,10 +346,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-design-ux-homepage-carousels-section-save-preserves-other-fields": {
     roles: ["admin"],
-    startPage: "/admin",
+    startPage: "/admin/sections",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open the homepage sections editor.",
-      "Open one section and write down the value of EVERY field it holds.",
+      "Open /admin/sections, then one section, and write down the value of EVERY field it holds.",
       "Change exactly one field and save.",
       "RELOAD the editor and read every field again.",
       "Compare against what was written down.",
@@ -364,10 +364,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-design-ux-homepage-carousels-carousel-toggles-take-effect": {
     roles: ["admin", "guest"],
-    startPage: "/admin",
+    startPage: "/admin/carousel",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open the carousel or homepage section settings.",
-      "Note which carousel-related toggles are offered and their current states.",
+      "Open /admin/carousel — the flat hero-SLIDE editor, singular; /admin/carousels plural is the named-carousel list and is a different feature — and note which carousel-related toggles are offered and their current states.",
       "Turn one off and save.",
       "Open / in a private window and check whether that behaviour has stopped.",
       "Turn it back on, save, and check the behaviour returns.",
@@ -381,10 +381,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-design-ux-homepage-carousels-banner-buttons-from-config": {
     roles: ["admin", "guest"],
-    startPage: "/admin",
+    startPage: "/admin/carousel",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open the homepage section holding a banner with buttons.",
-      "Change a button's label to 'QA Banner buttons-from-config' and its destination to /about, then save.",
+      "Open /admin/carousel, the flat hero-slide editor, then change a button's label to 'QA Banner buttons-from-config' and its destination to /about, and save.",
       "Open / in a private window and find that banner.",
       "Read the button's label and click it.",
       "Read where it lands.",
