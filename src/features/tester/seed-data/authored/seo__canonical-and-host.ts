@@ -62,7 +62,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Type the products path with an /en prefix in front of it into the address bar.",
       "Watch the network panel and read the first response's status.",
       "Read where the address bar lands.",
-      "Open the products page from the site's own navigation and read the address bar.",
+      "Open /products from the site's own navigation — the Products entry in the main nav, not a typed URL — and read the address bar. It must land on /products with no locale prefix; the site's own links are what matter here, since a typed /en/products would only prove the redirect works, not that the navigation stopped emitting prefixed hrefs.",
       "Compare the two.",
     ],
     expectedBehaviour:
@@ -75,7 +75,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open the homepage on the www host and view the page source.",
+      "Open the homepage on the www host and view the page source. The canonical host has ONE definition — appkit.config.js seo.siteUrl, which defaults to https://www.letitrip.in and can be overridden by NEXT_PUBLIC_SITE_URL. That override is how these drifted apart before: one path read the env var and another held a hardcoded apex, so the sitemap advertised URLs on a host that redirected. Compare what you read here against the host in the address bar, not against a remembered value.",
       "Find the canonical link element and read its href.",
       "Compare its host against the host in the address bar.",
       "Open /products and read its canonical.",
@@ -92,13 +92,13 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-seo-canonical-and-host-no-inherited-homepage-canonical": {
     roles: ["guest"],
-    startPage: "/promotions",
+    startPage: "/reviews",
     steps: [
       "Open /reviews and view the page source.",
       "Find the canonical link element, if there is one, and read its href.",
       "Check it is not the homepage's URL.",
-      "Open /promotions and read its canonical the same way.",
-      "Open two more pages that are unlikely to declare their own metadata and read theirs.",
+      "Open /promotions and read its canonical the same way. EXPECT NONE: it is a bare redirect, and a redirect page deliberately carries no metadata at all, because redirect() fires before a document is produced — a crawler follows it and reads the canonical of the page it LANDS on. An absent canonical here is correct; the homepage's URL appearing here is the defect.",
+      "Open /sellers and /brands — two more pages unlikely to declare their own metadata — and read theirs.",
     ],
     expectedBehaviour:
       "Metadata declared at the root is INHERITED by every page beneath it, so a static absolute canonical there makes every page that does not override it declare itself a duplicate of the homepage. A page either declares its own or has none.",
