@@ -355,14 +355,30 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/checkout",
     steps: [
-      "Sign in as admin@letitrip.in / TempPass123! and set Site Settings → Checkout → Out-of-stock policy to 'Cancel whole order'.",
+      /*
+       * 🛑 THE BUYER CHOOSES THIS AT CHECKOUT — it is not an admin setting.
+       *
+       * This step said "Sign in as admin and set Site Settings → Checkout →
+       * Out-of-stock policy". There is no such setting: `outOfStockPolicy` is a
+       * POLICY_SECTIONS field rendered by CheckoutRouteClient and passed
+       * straight into createCheckoutOrder. It appears nowhere in the admin
+       * feature. A tester would have hunted through Site Settings, not found
+       * it, and answered "could not test".
+       *
+       * The option labels were wrong too — 'Cancel whole order' is the app's
+       * "Cancel my whole order", and the sibling case's 'Skip unavailable
+       * items' is actually "Ship what's available and refund the rest", which
+       * shares no words with what the case asked for.
+       */
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-valkyrie (₹999, stock 10) and product-beyblade-original-dranzer-s (₹149) to the cart.",
-      "While on the checkout payment step (before submitting), have the admin or another session reduce product-beyblade-burst-valkyrie's stock to 0.",
+      "Add product-beyblade-burst-valkyrie (₹999, stock 10) and product-beyblade-original-dranzer-s (₹1,499) to the cart.",
+      "Open /checkout and advance to the payment step.",
+      "Under 'If an item goes out of stock', select 'Cancel my whole order'.",
+      "Before submitting, have another session reduce product-beyblade-burst-valkyrie's stock to 0.",
       "Submit the checkout.",
     ],
-    inputs: { policy: "Cancel whole order", goesOutOfStock: "product-beyblade-burst-valkyrie" },
-    expectedBehaviour: "With the 'cancel whole order' policy, if any item in the batch goes out of stock mid-checkout, the entire checkout is rejected. No order is created and the buyer receives an error.",
+    inputs: { policy: "Cancel my whole order", goesOutOfStock: "product-beyblade-burst-valkyrie" },
+    expectedBehaviour: "With the cancel-whole-order policy, if any item in the batch goes out of stock mid-checkout, the entire checkout is rejected. No order is created and the buyer receives an error.",
     expectedUiState: "After submitting, an error message is shown indicating that an item went out of stock and the entire order was cancelled. No order confirmation page is shown.",
     expectedData: { ordersCreated: 0 },
     endResult: "After reloading /cart, both items are still present in the cart (or the buyer is able to restart the checkout). No order record exists for this attempt.",
@@ -371,14 +387,16 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/checkout",
     steps: [
-      "Sign in as admin@letitrip.in / TempPass123! and set Site Settings → Checkout → Out-of-stock policy to 'Skip unavailable items'.",
+      /* Buyer-chosen at checkout, not an admin setting — see the sibling case. */
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Add product-beyblade-burst-valkyrie (₹999, stock 10) and product-beyblade-original-dranzer-s (₹149) to the cart.",
-      "While on the checkout payment step (before submitting), have the admin or another session reduce product-beyblade-original-dranzer-s's stock to 0.",
+      "Add product-beyblade-burst-valkyrie (₹999, stock 10) and product-beyblade-original-dranzer-s (₹1,499) to the cart.",
+      "Open /checkout and advance to the payment step.",
+      "Under 'If an item goes out of stock', select 'Ship what's available and refund the rest'.",
+      "Before submitting, have another session reduce product-beyblade-original-dranzer-s's stock to 0.",
       "Submit the checkout.",
     ],
-    inputs: { policy: "Skip unavailable items", goesOutOfStock: "product-beyblade-original-dranzer-s" },
-    expectedBehaviour: "With the 'skip unavailable items' policy, the out-of-stock item is silently dropped and an order is placed for only the still-available item(s). The buyer is informed which item was skipped.",
+    inputs: { policy: "Ship what's available and refund the rest", goesOutOfStock: "product-beyblade-original-dranzer-s" },
+    expectedBehaviour: "With the ship-what's-available policy, the out-of-stock item is dropped and an order is placed for only the still-available item(s). The buyer is informed which item was skipped.",
     expectedUiState: "After submitting, the order confirmation page shows only product-beyblade-burst-valkyrie (₹999). A notice is shown indicating that product-beyblade-original-dranzer-s was unavailable and was removed from the order.",
     expectedData: { orderLineCount: 1 },
     endResult: "After reloading the order detail page, only product-beyblade-burst-valkyrie is listed in the order. product-beyblade-original-dranzer-s is not included.",
