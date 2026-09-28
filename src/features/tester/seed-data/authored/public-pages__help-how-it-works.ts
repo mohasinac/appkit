@@ -114,7 +114,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /how-emi-works signed out and read the whole page.",
       "Write down the eligibility threshold it states and the worked example it gives.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and put live-golden-retriever-puppy in the cart.",
+      "Switch identity before continuing: this case is roles [guest] and the harness gives a guest batch NO session at all, so copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER first — the MCP reads that file only at context creation. Then sign in as rehan.sheikh@gmail.com / TempPass123! and put live-golden-retriever-puppy in the cart. That fixture is priced at 25,000, comfortably over the seeded EMI minOrderValue of 10,000, so EMI should be offered; a cheaper item would show no EMI for the right reason and read as a failure.",
       "Reach the payment step and read the instalment figures offered.",
       "Compare them against the page's worked example.",
       "Empty the cart, add product-beyblade-burst-valkyrie instead, and check EMI is NOT offered below the threshold.",
