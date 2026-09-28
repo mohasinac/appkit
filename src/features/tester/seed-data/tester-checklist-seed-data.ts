@@ -719,13 +719,23 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Prize-draw collage tiles stack the image ABOVE the title/value caption at full card width — the image is never squashed beside the text at half width",
           href: "/prize-draws/prizedraw-beyblade-mystery-box",
         },
-        {
-          key: "concern-card-icon-above-label",
-          label: "Category concern cards show their icon ABOVE the label, not beside it",
-          description:
-            "This is a deliberate visual change: the card always asked for a vertical layout but had been rendering side-by-side. Confirm the stacked layout looks right rather than assuming the old side-by-side was intended.",
-          href: "/categories",
-        },
+        /*
+         * REMOVED 2026-09-28 — concern-card-icon-above-label.
+         *
+         * `ConcernCard` is rendered only by `ConcernGrid`, and `ConcernGrid` has
+         * NO consumer anywhere in src/ or appkit/src/. Both are exported from
+         * appkit's public index, which is why they look alive from a grep of the
+         * barrel. Nothing puts them on a page.
+         *
+         * The case's href said /categories and its overlay startPage said /, and
+         * the component renders on neither — so it could only ever be answered
+         * "could not test", forever, on every run. A permanently un-passable case
+         * is worse than no case: it occupies a batch slot, and a `null` verdict
+         * reads as a coverage gap rather than as a catalogue defect.
+         *
+         * The dead component itself is recorded in docs/TEST-RUN-3-OUTOFSCOPE.md.
+         * Restore this case if ConcernGrid is ever mounted.
+         */
         {
           key: "media-picker-existing-grid",
           label: "In any media field, \"Choose existing\" shows each file as a square thumbnail with the filename underneath — not thumbnail-beside-filename with a shrunken image",

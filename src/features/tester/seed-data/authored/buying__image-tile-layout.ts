@@ -98,24 +98,6 @@ export const authored: Record<string, AuthoredCase> = {
       "Every tile shows its image above its caption, all at the same width, at both viewport sizes. An image sitting beside its caption and squeezed narrow is the row-direction failure.",
     endResult: "Read-only; restore the window width afterwards.",
   },
-  "checklist-buying-image-tile-layout-concern-card-icon-above-label": {
-    roles: ["guest"],
-    startPage: "/",
-    steps: [
-      "Open / in a private window at 1280 pixels wide.",
-      "Find the concern or trust cards and look at each one.",
-      "Check each card's icon sits above its label rather than beside it.",
-      "Compare the icon's size against the card's own height.",
-      "Resize to 390 pixels and check the arrangement holds.",
-      "Switch to dark mode and check the icons are still visible.",
-    ],
-    inputs: { desktopWidth: 1280, mobileWidth: 390 },
-    expectedBehaviour:
-      "These cards carry an explicitly-sized icon box, which is what kept them from collapsing entirely when the wrapper defect hit — but an explicit size does not fix the direction, so they still laid the icon out beside the label. Sizing and direction are two separate failures and this card had only one of them.",
-    expectedUiState:
-      "Each card shows its icon above its label at both widths, with the icon proportionate to the card. An icon beside its label, or one at the platform font's fallback size, are different failures and should be reported as such.",
-    endResult: "Read-only; return to light mode and restore the width.",
-  },
   "checklist-buying-image-tile-layout-media-picker-existing-grid": {
     roles: ["seller"],
     startPage: "/store/products/new",
