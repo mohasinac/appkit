@@ -5,12 +5,20 @@
  * The WRITE side of the tree. Its read side is content-discovery/category-brand-relations;
  * these are the operations that can corrupt what that page then renders.
  *
- * 🛑 ONE OF THESE IS A KNOWN OPEN GAP RATHER THAN A REGRESSION. Nothing on the
- * write path derives a product's ancestor chain from the category it was filed
- * under — the convention is maintained by hand in the seed. So a seller picking a
- * tier-3 category through the form today produces a one-element chain and a
- * product invisible on every ancestor page. The case says so and asks for what
- * actually happens, because a case that assumes the answer teaches nothing.
+ * 🛑 THE ANCESTOR-CHAIN CASE WAS INVERTED AND IS NOW CORRECTED. This header used to
+ * say "nothing on the write path derives a product's ancestor chain", and the case
+ * encoded that as `categoryPagesListingIt: 1` — so once the gap was actually closed,
+ * the case DEMANDED the bug: correct behaviour scored a fail and a tester following
+ * it would have filed the fix as a regression.
+ *
+ * `ProductRepository.deriveTaxonomy()` has derived the chain from both `create` and
+ * `update` since 2026-09-14. It reads the leaf's `parentIds`, reverses them onto the
+ * front, and writes `categorySlugs = [leaf, ...ancestors]` — byte-identical to what
+ * the seed hand-writes. The expected answer is now ALL THREE pages.
+ *
+ * It stays a valuable case for a reason worth keeping: every SEEDED product already
+ * carries a correct chain, so a regression here is invisible to any check that reads
+ * existing data. Only a product created through a form can catch it.
  *
  * @tag domain:tester
  * @tag layer:seed
@@ -88,19 +96,16 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /categories/category-burst-parts publicly and check the product is listed.",
       "Open /categories/category-beyblade-burst and search for it.",
       "Open /categories/category-spinning-tops and search for it.",
-      "Record on which of the three pages it appears.",
+      "Record on which of the three pages it appears — Burst Parts sits two levels below the root, so all three are expected.",
       "Delete the product afterwards.",
     ],
     inputs: { title: "QA Ancestor Chain Probe", price: 499, categoryId: "category-burst-parts" },
     expectedBehaviour:
-      "A category page matches on its own id alone, which only works if the product carries its full ancestor chain — and nothing on the write path derives that chain today. So a product created here is expected to be visible on Burst Parts and NOT on its ancestors. That is a known open gap, not a fresh regression, and the value of the case is the exact answer rather than the verdict.",
+      "A category page matches on its own id alone, which works only if the product carries its full ancestor chain — and the repository derives that chain on write, from create and update alike. A form cannot supply it: the create schema strips any categorySlugs it is sent, so if the derivation stops running there is no fallback and the product silently reaches its leaf page only.",
     expectedUiState:
-      "Record exactly which of the three category pages list the product. Visible on all three means the chain is now derived on write and the gap is closed; visible only on Burst Parts is today's expected state.",
-    expectedData: { categoryPagesListingIt: 1 },
+      "All THREE pages list it: Burst Parts, Beyblade Burst and Spinning Tops. Visible only on Burst Parts is the failure — and it is a silent one, because the product's own page looks entirely normal and every seeded product around it still shows a correct chain.",
+    expectedData: { categoryPagesListingIt: 3 },
     endResult: "The QA product is deleted.",
-    needsReview: true,
-    reviewNote:
-      "Open gap by design — the write side does not append ancestors. The case exists to measure it, and its answer should change once that lands.",
   },
   "checklist-admin-category-brand-authoring-brand-rename-orphan-check": {
     roles: ["admin"],
@@ -146,34 +151,48 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/categories and start creating a category.",
-      "Find where the row's kind is chosen and read the options offered.",
-      "Check the options match the kinds the site actually renders — a listing category, a brand, a sub-listing group and a bundle.",
-      "Check no option is offered that no page renders.",
-      "Save nothing and open an existing brand row for edit, checking its kind is shown.",
+      "Read every field the create form offers and confirm there is NO dropdown for the row's kind or type — the fields are name, slug, description, parent, order, active and show-in-menu.",
+      "Create one named 'QA Kind Probe' with no parent and save it.",
+      "Open /admin/brands and confirm 'QA Kind Probe' is NOT listed there.",
+      "Create a brand named 'QA Brand Probe' on /admin/brands and save it.",
+      "Return to /admin/categories and confirm 'QA Brand Probe' is NOT listed among the categories.",
+      "Open /brands publicly and confirm QA Brand Probe appears; open /categories and confirm QA Kind Probe appears and QA Brand Probe does not.",
+      "Delete both QA rows.",
     ],
+    inputs: { categoryName: "QA Kind Probe", brandName: "QA Brand Probe" },
     expectedBehaviour:
-      "Brands, bundles, sub-listing groups and ordinary categories are all rows in one collection distinguished by a kind field, so the author has to be able to see and set it. An option offered that no page renders creates rows nothing will ever display.",
+      "Brands, bundles, sub-listing groups and ordinary categories are all rows in ONE collection distinguished by a kind field — but the author never picks it. The surface determines it: /admin/brands lists and writes kind=brand, /admin/categories writes an ordinary category. That is deliberate, so a missing kind dropdown is correct rather than a gap. What must hold is that the two surfaces stay disjoint.",
     expectedUiState:
-      "The kind is an explicit, readable choice on create and visible on edit, and every option corresponds to a kind the site renders.",
-    endResult: "Nothing is saved.",
+      "No kind dropdown on either form. Each row appears on exactly ONE admin surface and exactly one public surface. A brand leaking into the category tree — or a category into the brand list — means the kind was not set from the surface, and that row will render in a place built for a different shape.",
+    endResult:
+      "Both QA rows are deleted. If a row appeared on both surfaces, record which, and delete it — a mistyped row is worse left in place than removed.",
   },
   "checklist-admin-category-brand-authoring-delete-category-with-children-refused": {
     roles: ["admin"],
     startPage: "/admin/categories",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/categories and attempt to delete Beyblade Burst, which has children and products beneath it.",
-      "Read the confirmation or refusal.",
-      "Check the message names how many children or products depend on it.",
-      "If it refuses, cancel and confirm the category is untouched.",
-      "If it succeeds, open the public categories tree and record what happened to its children.",
+      "Create a category 'QA Doomed Parent' under Beyblade Burst, then a category 'QA Orphan Child' under QA Doomed Parent.",
+      "Create a product 'QA Cascade Probe' priced at 499 filed directly under QA Doomed Parent, and publish it.",
+      "Open /admin/categories and delete QA Doomed Parent.",
+      "Open /categories/category-beyblade-burst publicly and look for QA Orphan Child — it should now sit directly under Beyblade Burst.",
+      "Open the QA Cascade Probe product's public page and read its category links.",
+      "Open /categories/category-beyblade-burst and confirm the product is listed there.",
+      "Delete QA Orphan Child and the product afterwards.",
     ],
-    inputs: { categoryId: "category-beyblade-burst" },
+    inputs: {
+      doomedParent: "QA Doomed Parent",
+      orphanChild: "QA Orphan Child",
+      productTitle: "QA Cascade Probe",
+      price: 499,
+      grandparentId: "category-beyblade-burst",
+    },
     expectedBehaviour:
-      "A delete that orphans a subtree is unrecoverable, so it is refused with a count of what depends on it. Deletes are the one operation whose bug cannot be undone, which is why the refusal has to be structural rather than a warning the admin can click past.",
+      "Deleting a category CASCADES TO ITS PARENT rather than refusing: the children re-parent to the grandparent and the products are re-filed there, through the repository so each product's ancestor chain is rebuilt from its new leaf. This replaced an older flat refusal. The order is load-bearing — products must move while the document still exists — so the failure mode to watch for is a product left pointing at a category that is gone.",
     expectedUiState:
-      "The delete is refused with a message naming the dependent children and products. If it succeeds instead, that is the finding and the state of the orphaned subtree is the evidence.",
+      "QA Orphan Child now sits directly under Beyblade Burst. QA Cascade Probe is filed under Beyblade Burst and its category links show the rebuilt chain, with no link naming the deleted QA Doomed Parent. A product with a dead category link, a one-element chain, or one missing from Beyblade Burst entirely is the failure.",
+    expectedData: { childReparentedToGrandparent: true, deadCategoryLinks: 0 },
     endResult:
-      "The category still exists. If the delete succeeded, re-seed rather than attempting a manual repair.",
+      "Only the two QA rows and the QA product were touched; the seeded tree is unchanged. Do NOT test this by deleting a seeded category — the whole Burst subtree would re-parent and every other case reading it in this run would then be testing a different tree.",
   },
 };

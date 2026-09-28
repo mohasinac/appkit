@@ -2794,6 +2794,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/store/products/new",
         },
         {
+          key: "deep-category-chain-derived",
+          label: "A product filed against a DEEP category is written with its full ancestor chain, so it appears on every ancestor's page and not just the leaf's",
+          description: "BEFORE: the chain was maintained by hand in the seed, so a form-created listing got a one-element array and was invisible on every ancestor page. AFTER (2026-09-14): ProductRepository.deriveTaxonomy() derives it on create and update. Latent by construction — every seeded product already has the chain, so only a listing created through the UI can catch a regression.",
+          href: "/store/products/new",
+        },
+        {
           key: "seller-category-inline-create-duplicate-rejected",
           label: "Creating a category with a name that already exists shows a readable \"already exists\" error, not a generic failure or a silent no-op",
           description: "Slug is derived from the name, so a duplicate name collides. Expect a clear message in the drawer.",
@@ -5940,7 +5946,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             key: "product-created-with-deep-category-visible-at-root",
             label: "A product created through the form against a deep category appears on that category's ROOT page too",
             description:
-              "🛑 KNOWN GAP, not a regression: nothing on the write side appends ancestors today, so a listing filed at tier 3 gets a one-element chain and is invisible on every ancestor page. Record what actually happens rather than assuming either answer.",
+              "BEFORE: nothing on the write side appended ancestors, so a listing filed deep got a one-element chain and was invisible on every ancestor page. AFTER (2026-09-14): ProductRepository.deriveTaxonomy() derives the chain on create and update, so all three pages list it. Latent by construction — every seeded product already carries a correct chain, so only a product created through a form can catch a regression.",
             href: "/admin/products",
           },
           {
@@ -5959,14 +5965,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           },
           {
             key: "category-type-not-guessable",
-            label: "The category editor makes the row's kind explicit — a normal listing category, a brand, a sub-listing group or a bundle — rather than leaving it to be guessed",
+            label: "A row's kind is set by WHICH admin surface authored it, and the surfaces stay disjoint — a brand never appears in the category tree, and vice versa",
+            description:
+              "Brands, bundles, sub-listing groups and ordinary categories share one collection, discriminated by categoryType. The admin category form has no kind dropdown and correctly should not: /admin/brands filters and writes categoryType==brand while /admin/categories writes an ordinary category. This tests that separation rather than the absent control. (Key kept — renaming orphans responses.)",
             href: "/admin/categories",
           },
           {
             key: "delete-category-with-children-refused",
-            label: "Deleting a category that still has children or products is refused with a reason naming what depends on it",
+            label: "Deleting a category CASCADES to its parent — its children re-parent to the grandparent and its products are re-filed there with rebuilt ancestor chains",
             description:
-              "A delete that succeeds and orphans its subtree is unrecoverable. Refusing it, with the count, is the correct outcome.",
+              "BEFORE: a flat 409 refusal whenever the category had subcategories. AFTER: the delete cascades. Products are re-filed through the repository, so each one's chain is rebuilt from its new leaf; the order is load-bearing because a product must move while the document still exists. The failure to watch for is a product left pointing at the deleted row. (Key kept despite the stale 'refused' wording — renaming it would orphan every response recorded against it.)",
             href: "/admin/categories",
           },
         ],
