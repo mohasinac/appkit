@@ -124,12 +124,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123! — this persona owns the seeded SHIPPED order.",
-      "Open /user/orders and open order-1-20251104-aevnlw.",
+      "Open /user/orders and open order-1-20251122-481j4x.",
       "Use the Track action.",
       "Read every step on the timeline and note which carry a date and which do not.",
       "Compare the dates shown against the order's own placed and shipped dates.",
     ],
-    inputs: { orderId: "order-1-20251104-aevnlw" },
+    inputs: { orderId: "order-1-20251122-481j4x" },
     expectedBehaviour:
       "Each timeline step shows the date actually recorded for it. A step with no recorded date renders an em-dash rather than a guess — an invented or estimated date is worse than a blank, because it cannot be told apart from a real one.",
     expectedUiState:

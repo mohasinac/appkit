@@ -127,8 +127,19 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /user/settings.",
       "Click the 'Notifications' tab.",
-      "Set the 'Email' switch to off.",
-      "Set the 'Promotions' switch to off.",
+      /*
+       * Both switches named with their SECTION, because the panel renders two
+       * independent lists — 'Notification channels' (Email / WhatsApp / SMS) and
+       * the per-type list (Offers, Promotions, Reviews, …) — and 'the Email
+       * switch' alone does not say which list to look in.
+       *
+       * The channels section is CONDITIONAL: it renders only when an admin has
+       * enabled at least one external channel in Site Settings. Its absence is
+       * therefore a precondition that was not met, not a defect — which is why
+       * the step says to record it rather than to hunt for the control.
+       */
+      "Set the 'Email' switch under 'Notification channels' to off. If that whole section is absent, record it and skip to the next step — an admin has disabled every external channel, which is a precondition, not a bug.",
+      "Set the 'Promotions' switch in the per-type list to off.",
       "Click 'Save preferences'.",
       "Reload the page.",
       "Click the 'Notifications' tab.",
