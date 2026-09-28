@@ -105,6 +105,24 @@ export const authored: Record<string, AuthoredCase> = {
       "Collapse that section and attempt to publish.",
       "Click the error for that field in the summary.",
       "Read where the page has scrolled to and whether the field is visible.",
+      /*
+       * 🛑 EXPECT THIS TO FAIL TODAY, AND RECORD IT AS A FAILURE.
+       *
+       * Measured 2026-09-29: FormErrorList's entire click handler is
+       * `onClick={() => ctx.goToStep(stepIndex!)}`. There is no focus() call,
+       * no scrollIntoView, and no element lookup — so it opens the owning
+       * section and stops, which is exactly what this case calls the failure.
+       *
+       * Kept as written rather than softened to match. The rationale holds: a
+       * section can carry a dozen fields, and an error summary that drops the
+       * user at the heading has told them something is wrong without showing
+       * them what. Softening it to "lands on the section" would convert a real
+       * UX gap into a passing case.
+       *
+       * So a tester who lands on the heading records a FAILURE with a
+       * screenshot — not "could not test", and not a lenient pass because the
+       * section did open.
+       */
       "Check whether the field is focused and marked, not merely on screen.",
     ],
     expectedBehaviour:
