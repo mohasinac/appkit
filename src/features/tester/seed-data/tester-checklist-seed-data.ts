@@ -3782,11 +3782,11 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           roles: ["guest", "admin"],
           startPage: "/contact",
           steps: [
-            "Open the public contact page as a signed-out visitor.",
+            "Open the public contact page as a signed-out visitor. 🛑 THIS CASE LISTS roles [guest, admin] AND THE HARNESS RESOLVES THAT TO ADMIN — admin wins whenever present — so the batch opens SIGNED IN. Copy tester/.tester-runs/session-guest.json (an empty storage state, by design) over session.json and CLOSE THE BROWSER first; the MCP reads it only at context creation.",
             "Fill in name, email, subject and a message of at least 10 characters.",
             "Submit the form.",
-            "Log in as admin and open /admin/contact.",
-            "Check the inbox of whatever address used to receive support mail.",
+            "Swap to tester/.tester-runs/session-admin.json, closing the browser again, then open /admin/contact.",
+            "Prove NO email was sent: node tester/scripts/check-inbox.mjs --since <a timestamp captured before the submission> --subject \"contact\" --expect-none. There is no support address to open — EMAIL_SUPPORT was never configured in any runtime, which is half of why this path was removed — so 'check the inbox' had nowhere to go. --expect-none waits the full window and succeeds only on silence; without it, nothing-arrived is unprovable.",
           ],
           inputs: {
             name: "Tester Probe",
@@ -3821,6 +3821,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           endResult:
             "Nothing appears in /admin/contact for that attempt, and the visitor knows to try again.",
           href: "/admin/contact",
+          requiresHumanChannel: true,
+          humanChannelReason:
+            "Needs the contactSubmissions write forced to fail — a Firestore rules change or a deploy-time fault injection. A browser cannot cause it, so a tester answers null and says so rather than spending turns trying. Kept in the catalogue because it guards the sharpest edge in the change: with the email gone, that write is the ONLY record a customer wrote in, and a save that fails while the form still says thank you loses the message silently.",
         },
         {
           key: "contact-digest-mailto-reply",
@@ -3831,7 +3834,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           startPage: "/admin/contact",
           steps: [
             "Submit a contact message from the public form.",
-            "As admin, trigger the daily digest.",
+            "As admin, trigger the daily digest: run fetch('/api/admin/daily-digest/trigger',{method:'POST'}) from the browser console. There is no button for it — Site Settings only carries a toggle to enable the schedule — and this is the same instruction the other digest case uses.",
             "Open the digest and find the message under Contact messages.",
             "Click its Reply link.",
           ],
