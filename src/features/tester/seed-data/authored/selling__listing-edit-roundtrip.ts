@@ -107,10 +107,26 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller"],
     startPage: "/store/products",
     steps: [
-      "Sign in as admin@letitrip.in / TempPass123!, who owns store-letitrip-official — a different store from Beyblade Arena.",
+      /*
+       * 🛑 NOT THE ADMIN. `getSellerProductAction` reads
+       * `if (!isAdminUser(profile))` before comparing stores, so an admin is
+       * EXEMPT by design and will open Beyblade Arena's listing successfully.
+       * Signing in as admin@letitrip.in and expecting a 404 tested the
+       * exemption while claiming to test the gate — it would have reported a
+       * working ownership check as broken.
+       *
+       * 🛑 AND THE CONFOUND IS REAL: store-blader-bazaar is PENDING, because
+       * there is no second ACTIVE non-admin seller in the seed (Beyblade Arena
+       * is the only one; Vintage Vault Co. is suspended). So a refusal here may
+       * come from the store's status rather than from ownership, and the step
+       * below says how to tell them apart rather than pretending the fixture is
+       * cleaner than it is.
+       */
+      "Sign in as meera.blader@gmail.com / TempPass123!, who owns store-blader-bazaar — a different store from Beyblade Arena.",
+      "Open /store/products first — if meera's own dashboard is itself blocked, her store's PENDING status is the cause and this case is a null with that reason, not a verdict about ownership.",
       "In a second tab open /products and copy the slug of any listing belonging to Beyblade Arena, e.g. product-beyblade-burst-valkyrie.",
       "Back in the first tab, navigate to /store/products/<that slug>/edit.",
-      "Read what the page shows.",
+      "Read what the page shows, and whether the refusal is about OWNERSHIP or about the store being pending.",
     ],
     expectedBehaviour:
       "Ownership is checked against the caller's STORE, and a product's `storeId` is the store SLUG rather than the owner's Auth uid. A check comparing `storeId` to a uid compares two different namespaces and can never pass — which returns null for every legitimate seller too, so a page that 404s here must be verified to still open the seller's OWN listing.",
