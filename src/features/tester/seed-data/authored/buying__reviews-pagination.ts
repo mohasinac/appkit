@@ -16,6 +16,24 @@
  * A filter or sort whose field is not marked sortable or filterable is dropped
  * silently, so the control changes and nothing moves.
  *
+ * 🛑 THE PRODUCT IS `product-beyblade-original-dranzer-s`, AND IT HAS TO BE.
+ *
+ * Every case here used to open `product-beyblade-burst-valkyrie`, which carries
+ * FOUR reviews. The tab pages at 12, so there was never a second page: nine
+ * cases about paginating, comparing page 2, and filtering by rating could not
+ * do the thing they describe, and would have been answered "could not test" on
+ * a feature that works.
+ *
+ * `reviews-seed-data.ts` builds this fixture for exactly this purpose — a
+ * DEEP_REVIEW_PRODUCT loop adding 14 reviews on top of its 5 from the main
+ * loop, 19 in all. Its comments say why: ratings cycle 1..5 so every star
+ * bucket is populated for the rating filter, and its dates are drawn from a
+ * different range than the main loop so the two sets interleave and
+ * "newest first" is verifiable by eye.
+ *
+ * Do not repoint these at a different product without counting its reviews
+ * first. Four is invisible; the pager simply never renders.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
@@ -29,9 +47,9 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-buying-reviews-pagination-detail-tab-paginates": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window.",
       "Open the reviews tab and count the reviews shown.",
       "Read the total review count stated on the page.",
       "Look for a pagination control and read what it offers.",
@@ -46,9 +64,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-newest-first": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window.",
       "Open the reviews tab without changing any control.",
       "Read the date on every review down the page.",
       "Check the dates descend from top to bottom.",
@@ -63,9 +81,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-page-2-differs": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window.",
       "Open the reviews tab and write down every review title on page 1.",
       "Click to page 2.",
       "Write down every review title on page 2.",
@@ -81,9 +99,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-url-unchanged": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window and read the URL.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window and read the URL.",
       "Open the reviews tab and read the URL again.",
       "Click to page 2 and read the URL.",
       "Apply a rating filter and read the URL.",
@@ -98,9 +116,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-sort": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window and open the reviews tab.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window and open the reviews tab.",
       "Read the sort control's options and write them down.",
       "Write down the review titles in the default order.",
       "Select each other sort option in turn, writing down the resulting order each time.",
@@ -116,9 +134,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-rating-filter": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window and open the reviews tab.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window and open the reviews tab.",
       "Note the unfiltered review count.",
       "Filter to 5-star reviews and read the count and every review's rating.",
       "Filter to 1-star and read the count and ratings.",
@@ -134,9 +152,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-summary-stable": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window and open the reviews tab.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window and open the reviews tab.",
       "Read the rating summary — the average, the total count and any per-star breakdown.",
       "Filter to 5-star reviews and read the summary again.",
       "Go to page 2 and read the summary again.",
@@ -152,9 +170,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-detail-tab-filters-all-work": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window and open the reviews tab.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window and open the reviews tab.",
       "Read every filter control offered and write the list down.",
       "Note the unfiltered count.",
       "Apply each filter in turn and read the resulting count and rows.",
@@ -170,9 +188,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-date-range-sort-options": {
     roles: ["guest"],
-    startPage: "/products/product-beyblade-burst-valkyrie",
+    startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
-      "Open /products/product-beyblade-burst-valkyrie in a private window and open the reviews tab.",
+      "Open /products/product-beyblade-original-dranzer-s in a private window and open the reviews tab.",
       "Read whether a date-range filter is offered.",
       "Set a range covering only the oldest reviews and read the count and dates.",
       "Set a range covering only the newest and read the count and dates.",
