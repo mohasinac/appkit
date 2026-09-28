@@ -100,7 +100,19 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/shipping",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open each of the pre-consolidation URLs directly in the address bar, one at a time.",
+      /*
+       * 🛑 THE URLS ARE NAMED NOW. This said "each of the pre-consolidation
+       * URLs" and listed none, so the tester had to guess which ones existed —
+       * and a guess that misses the one that regressed reports a clean pass.
+       *
+       * These are the real shims under /store, each a page.tsx whose whole body
+       * is a redirect. Two of them carry a TAB, which is the part worth
+       * checking: /store/payout-settings redirects to ?tab=settings, and
+       * /store/print-center forwards its own query onto /store/fulfillment.
+       * Landing on the right page but the FIRST tab is the regression this case
+       * exists for, and it is invisible unless the URLs are enumerated.
+       */
+      "Open each of these pre-consolidation URLs directly in the address bar, one at a time: /store/payout-methods, /store/payout-settings, /store/shipping-configs, /store/print-center, /store/auctions, /store/pre-orders, /store/prize-draws, /store/slug.",
       "For each, read where the browser lands and which tab is open.",
       "Note any that 404 or land on the first tab rather than the one they name.",
       "Read the final URL each one settles on.",
@@ -108,7 +120,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "An old URL lands on the consolidated page WITH its own tab open. These URLs are live in bookmarks, emails and guides, so a 404 breaks links that were correct when they were written — and landing on tab one is only marginally better, since the user still has to hunt.",
     expectedUiState:
-      "Every old URL resolves and opens the tab it corresponds to. None 404s and none lands on the default tab. Record any that do, by URL.",
+      "Every old URL resolves and opens the tab it corresponds to. None 404s and none lands on the default tab. Specifically: /store/payout-settings settles on /store/payouts with the settings tab open (its shim appends ?tab=settings), /store/payout-methods settles on /store/payouts, /store/shipping-configs on /store/shipping, /store/print-center on /store/fulfillment carrying any query it was given, /store/slug on /store/storefront, and /store/auctions, /store/pre-orders and /store/prize-draws all on /store/products. Record any that 404 or land on the default tab, by URL.",
     endResult: "Read-only; nothing persists.",
   },
   "checklist-selling-seller-shipping-payouts-setup-consolidated-tabs-url-writeback": {
