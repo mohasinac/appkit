@@ -6,7 +6,7 @@
  * what makes this one page rather than two.
  *
  * `/store/products/new` does NOT open the sectioned form. SellerProductShell.tsx
- * :1339 picks `formMode = "quick"` whenever mode is create and listingType is
+ * :1379 picks `formMode = "quick"` whenever mode is create and listingType is
  * standard, so the default is QuickProductForm — six fields: title*, category*,
  * price*, mainImage*, description, stockQuantity. The sectioned form is behind
  * "Show all fields (advanced)".
@@ -74,7 +74,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Upload public/test-media/sample-image.png as the Product Image.",
       "Enter Description 'A short-form listing created with only the required fields present.'",
       "Click Publish and read what happens.",
-      "Open the product's public page and read the title, price and image.",
+      "Open the product's public page at /products/{its slug} and read the title, price and image.",
     ],
     inputs: {
       title: "Minimum Details Probe",
@@ -140,7 +140,7 @@ export const authored: Record<string, AuthoredCase> = {
       SIGN_IN_SELLER,
       "Open /store/products/new and click 'Show all fields (advanced)'.",
       "Open the Basic section and read every option in the Condition dropdown, writing them all down.",
-      "Fill Title 'Condition Probe', Description 'Checking that every condition the form offers can actually be saved.', Category 'Beyblade Burst', Price 499 and a Main Image.",
+      "Fill Product Name 'Condition Probe', Description 'Checking that every condition the form offers can actually be saved.', Category 'Beyblade Burst', Price 499 and a Product Image. The six labels are exactly: Product Name, Category, Price (₹), Stock Quantity, Description, Product Image — there is no field labelled Title or Main Image.",
       "Select Condition 'Like New' and click Publish.",
       "Read the result — inline error, toast, or success.",
       "Repeat with 'Good', then with 'Fair', then with 'New', reading the result each time.",
