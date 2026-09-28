@@ -61,7 +61,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /events in a private window and find event-pokemon-number-draw-july-2026.",
       "Look at its card image.",
-      "Open the lottery's detail page.",
+      "Open /lottery/event-pokemon-number-draw-july-2026 — the lottery detail route is /lottery/{id}, not /events/{id}.",
       "Look at the image at the top of that page.",
       "Note whether either shows an emoji instead of a photograph.",
     ],
@@ -259,7 +259,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/events, open event-win-burst-regalia-genesis for editing, and write down its current raffle type.",
-      "Set the raffle type to 'Top N participants', set the N to 3, and save.",
+      "Set the raffle type to 'Top N earliest participants' — the dropdown carries the word 'earliest' and the stored value is top_n_participants — set the N to 3, and save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-win-burst-regalia-genesis and read the Overview tab's description of how winners are chosen.",
       "Click the Participate tab and enter.",
