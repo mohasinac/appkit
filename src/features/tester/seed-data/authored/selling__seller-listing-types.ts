@@ -99,7 +99,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/auctions",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's auctions listing and read each row.",
+      "Open /store/auctions — it redirects to /store/products?listingType=auction, which is the auctions listing; landing there is correct, not a wrong turn.",
+      "Read each row.",
       "Check each shows the current bid, the bid count and time remaining.",
       "Compare one row's figures against that auction's public page.",
       "Find an ended auction and read what its row shows in place of time remaining.",
@@ -348,7 +349,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/prize-draws",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's prize-draws page and create one titled 'QA Prize Draw seller-crud' at 75 per entry, 20 entries, instant-reveal mode.",
+      "Open /store/prize-draws — it redirects to /store/products?listingType=prize-draw, which is the prize-draws listing. Create one titled 'QA Prize Draw seller-crud' at 75 per entry, 20 entries, instant-reveal mode.",
       "Save, RELOAD, and read the mode, the per-entry price and the entry count.",
       "Open the public page and read the purchase panel's wording.",
       "Check the panel describes buying an ENTRY rather than buying the prize.",
