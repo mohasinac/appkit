@@ -12,6 +12,22 @@
  * speculative cases against a screen nobody has opened is how a checklist grows
  * cases that measure nothing.
  *
+ * Checked 2026-09-29, and three descriptions were wrong about the affordance:
+ *
+ *   · /admin/featured is "Featured Products" — `buildFilters: () => "featured==true"`
+ *     — so the row action REMOVES a product from the list rather than toggling a
+ *     two-state control. Re-featuring is done from /admin/products' Quick edit,
+ *     which is the only surface with a Featured toggle.
+ *   · /admin/deals is "Deals (Promoted Products)" and its rows DO open — via
+ *     `rowHrefTemplate` to /admin/products/{id}/edit, not to a detail of its own.
+ *   · /admin/stickers has exactly ONE facet, `filterKeys: ["status"]`, so "apply a
+ *     different filter" means a different status VALUE. Only `published` stickers
+ *     are seeded, so the other three statuses returning nothing is correct.
+ *
+ * All twelve guide routes named in the guides case exist, and all twelve are in
+ * ADMIN_NAV_GROUPS — verified rather than assumed, because the hrefs audit
+ * checks `href`/`startPage` only and cannot see a route named in step prose.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
@@ -148,14 +164,15 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/settings/actions",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/settings/actions.",
-      "Read what the page lets an admin change.",
-      "Change one setting and save.",
+      "Open /admin/settings/actions and read its two panels — the action-permissions manager and the nav-permissions panel.",
+      "Write down the current value of the one control you are about to change.",
+      "Change ONE action's permission — not a nav permission — and save.",
       "Reload and read whether the change held.",
-      "Restore the original value.",
+      "Restore the value written down in step 3 and reload once more to confirm it went back.",
     ],
+    inputs: { panel: "action permissions" },
     expectedBehaviour:
-      "A change made here persists. A settings save that returns success without writing is the most dangerous failure a settings screen has — there is no stale display to notice and no error to read, and it has happened on this codebase before.",
+      "A change made here persists. A settings save that returns success without writing is the most dangerous failure a settings screen has — there is no stale display to notice and no error to read, and it has happened on this codebase before.\n\n🛑 Change an ACTION permission, not a nav permission. The nav panel drives the disabled-routes gate that runs in the proxy, so disabling the wrong entry 404s a real route for every later case in the run.",
     expectedUiState:
       "The changed value is still changed after the reload. A value that reverts is the finding, even though the save reported success.",
     endResult: "The original value is restored.",
@@ -182,16 +199,18 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/stickers",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/stickers.",
-      "Read the rows listed and count them.",
-      "Apply a status filter and read the rows again.",
-      "Clear it and apply a different filter.",
-      "Check each filter returns a plausible, non-empty result where such rows exist.",
+      "Open /admin/stickers and read the rows listed, counting them — five sticker listings are seeded.",
+      "Open the filter drawer: this page has ONE facet, Status.",
+      "Select Published and read the rows.",
+      "Select Draft, then In Review, then Archived, reading the rows each time.",
+      "Type zzzznope into the search box and read the count.",
     ],
+    inputs: { seededStickerCount: 5, nonsenseQuery: "zzzznope" },
     expectedBehaviour:
       "The list and its filters return real sticker listings. A filter whose value does not exactly match a stored one returns zero rows forever with no error — the single most common silent defect in this product's listing surfaces, and it looks identical to an empty catalogue.",
     expectedUiState:
-      "Rows on the default view, and each filter returning a subset rather than nothing. An always-empty filter is the finding, named.",
+      "Rows on the default view, and Published returning them. Draft, In Review and Archived are EXPECTED to return nothing — only published stickers are seeded, so an empty result there is correct and is not a finding. What would be a finding is Published returning nothing while the unfiltered list holds rows, which is the always-empty-filter shape. 'zzzznope' returns none.",
+    expectedData: { nonsenseResultCount: 0 },
     endResult: "Read-only.",
   },
   "checklist-admin-uncovered-admin-pages-admin-deals-renders": {
@@ -199,16 +218,18 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/deals",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/deals.",
-      "Read what the page lists.",
-      "Open one row.",
-      "Read what the detail shows.",
+      "Open /admin/deals and read its title — it lists promoted products.",
+      "Read the rows listed.",
+      "Click one row and read the URL it lands on.",
+      "Read whether the page it opened shows that product, and whether it is a product editor rather than a deal detail.",
       "Read the console for errors.",
     ],
+    inputs: { expectedRowDestination: "/admin/products/{id}/edit" },
     expectedBehaviour:
       "Rows can be opened. A row offering only mutations, or no way in at all, is a dead end — an admin can act on a record they were never able to read.",
     expectedUiState:
-      "Rows render and one opens to a readable detail. A list with no detail affordance is the finding.",
+      "Rows render and one opens — to the product editor at /admin/products/{id}/edit, which is this page's detail affordance rather than a deal-specific view. That is a pass: the record being listed IS a product. A row that does nothing on click is the finding.",
+    expectedData: { consoleErrors: 0 },
     endResult: "Read-only.",
   },
   "checklist-admin-uncovered-admin-pages-admin-featured-renders": {
@@ -216,17 +237,21 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/featured",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/featured and read what it lists.",
-      "Toggle one record's featured state.",
-      "Reload the page and read the same record's state.",
-      "Open the public surface that shows featured content and check it followed.",
-      "Restore the original state.",
+      "Open /admin/featured, read its title and note which products it lists — every row is a product whose featured flag is set.",
+      "Write down the name of one of them.",
+      "Sign out and open /, find the 'Featured Products' section, and confirm that product is in it.",
+      "Sign back in, use the row action that removes that product from featured, and reload /admin/featured to confirm it is gone from the list.",
+      "Sign out and reload /, checking the 'Featured Products' section no longer carries it.",
+      "Sign back in, open /admin/products, find that product, and use the row menu's 'Quick edit' to turn its Featured toggle back on — this page can only remove, so restoring is done there.",
+      "Reload /admin/featured and confirm the product is listed again.",
     ],
+    inputs: { publicSection: "Featured Products", restoreVia: "/admin/products Quick edit" },
     expectedBehaviour:
-      "A featured toggle persists and the public surface follows it. A list endpoint that omits a field the edit form sends back is how a toggle silently resets — saving any other field on the record re-sends a wrong default for the one the list never returned.",
+      "The featured flag persists and the homepage follows it, in both directions. This page is a FILTERED VIEW of products where `featured == true`, not a toggle board, so removal happens here and restoring happens on /admin/products — a case that expects one control to do both would report a missing affordance that was never there. A list endpoint that omits a field the edit form sends back is how such a flag silently resets: saving any other field on the record re-sends a wrong default for the one the list never returned.",
     expectedUiState:
-      "The toggled state survives the reload and appears publicly. A state that reverts is the finding.",
-    endResult: "The original featured state is restored.",
+      "The removal survives a reload and the homepage's 'Featured Products' section loses the product; re-featuring from /admin/products brings it back to both. A state that reverts on its own is the finding. Note the section shows at most twelve products, so a product that does not appear may simply be beyond the cap — pick one that was visible in step 3 before concluding anything.",
+    expectedData: { removedFromPublicSection: true, restoredAfterQuickEdit: true },
+    endResult: "The product is featured again and back in the homepage section.",
   },
   "checklist-admin-uncovered-admin-pages-admin-features-renders": {
     roles: ["admin"],
@@ -252,15 +277,15 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_ADMIN,
       "Open each of these by URL in turn: /admin/guide, /admin/guide/analytics, /admin/guide/catalog, /admin/guide/content, /admin/guide/orders, /admin/guide/payments, /admin/guide/site, /admin/guide/stores, /admin/guide/team, /admin/guide/trust, /admin/guide/users and /admin/guide/whatsapp.",
-      "Check every one of them is also linked from the Guide area rather than only reachable by URL.",
+      "Check every one of them is also reachable from the admin sidebar's Guides group rather than only by URL — all twelve have a nav entry, so a missing one is a finding.",
       "Record any that 404 or render empty.",
-      "On two of them, check the screen they describe still exists and is named the same way.",
-      "Record any guide describing a screen or a control that is no longer there.",
+      "Pick the Site Configuration and Content & Marketing guides and, for each screen or control they name, open it and check it still exists under that name.",
+      "Record any guide describing a screen or a control that is no longer there, naming both the guide and the screen.",
     ],
     expectedBehaviour:
       "Every guide page renders and describes something that still exists. A guide is documentation with no compiler behind it, so it rots silently — and a guide naming a deleted screen is worse than none, because it sends an employee looking for something that is gone.",
     expectedUiState:
-      "Every guide loads with real content. A 404 is a finding; so is a guide describing a screen that no longer exists, recorded with which guide and which screen.",
+      "Every guide loads with real content and every one is in the sidebar's Guides group. A 404 is a finding; so is a guide describing a screen that no longer exists, recorded with which guide and which screen. The second is the likelier of the two and the reason this case exists — the routes are checked by an audit on every build, the PROSE inside them is checked by nobody.",
     expectedData: { guidePagesNotFound: 0 },
     endResult: "Read-only.",
   },
