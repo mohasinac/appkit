@@ -56,8 +56,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/robots.txt",
     steps: [
       "Open /robots.txt directly and read the whole file.",
-      "Read every Disallow line.",
-      "Check no rule disallows the site root for all user agents.",
+      "Read every Disallow line. There are ELEVEN under the '*' group — /admin/, /api/, /store/, /user/, /auth/, /checkout/, /cart/, /wishlist, /preview/, /track/, /unauthorized/ — and each names a surface a crawler has no business indexing. A public browse route appearing among them is the finding.",
+      "Check no rule disallows the site root for the '*' group. 🛑 THERE IS A SECOND GROUP AND IT DOES DISALLOW EVERYTHING: GPTBot, ChatGPT-User, Google-Extended and CCBot are blocked wholesale with Disallow: /. That is deliberate — AI crawlers, not search engines — so finding a bare 'Disallow: /' in this file is expected and is NOT the failure. Check which user-agent block it sits under before recording anything.",
       "Read the Host line, if present, and note the hostname.",
       "Compare that hostname against the address bar and against the sitemap's entries.",
     ],
@@ -104,7 +104,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/sitemap.xml",
     steps: [
-      "Open /sitemap.xml and search for 'sandbox'.",
+      "Open /sitemap.xml and search for 'tester-sandbox' — that is the exact marker the fixtures carry (product-tester-sandbox-…, store-tester-sandbox, group-tester-sandbox-…), so it is a precise check rather than a guess at the naming.",
       "Search for 'qa-'.",
       "Search for 'test-' as a looser check.",
       "Record any match with its full URL.",
