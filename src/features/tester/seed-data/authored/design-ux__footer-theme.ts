@@ -43,8 +43,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/",
     steps: [
       "Open / in a private window and scroll to the footer.",
-      "Find the GitHub icon and look at its size relative to the other social icons.",
-      "Hover it and read any tooltip or label.",
+      "Find the GitHub icon and look at its size relative to the other social icon. There are exactly TWO — WhatsApp and GitHub, both inline SVGs at w-4 h-4 in src/constants/footer.tsx — so 'the other social icons' means one neighbour, and any size difference between two identically-classed SVGs is a real finding rather than a judgement call.",
+      "Hover it and read any tooltip or label. Its aria-label reads 'View the developer’s GitHub profile' — with a straight apostrophe in source — so a screen-reader label that differs, or is missing, is the finding.",
       "Click it and read where it lands.",
       "Switch to dark mode and look at the icon again.",
     ],
