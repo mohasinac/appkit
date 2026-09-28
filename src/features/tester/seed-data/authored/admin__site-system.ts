@@ -1,6 +1,27 @@
 /*
  * WHY: Authored six-part procedures for the admin/site-system checklist page.
- * WHAT: 35 case(s), keyed by full checklist id.
+ * WHAT: 37 case(s), keyed by full checklist id.
+ *
+ * 🛑 SITE SETTINGS IS PRESERVE-TIER, AND THE TESTER RULES SAY NEVER MODIFY IT.
+ * That rule and this page are not in conflict, but the reconciliation has to be
+ * stated or a tester following the rules literally answers `null` to all of them.
+ *
+ * The rule exists because `siteSettings` is NEVER wiped and NEVER reseeded — the
+ * lifecycle preserves it by design, so unlike the catalogue there is nothing to
+ * put it back. What it forbids is leaving it CHANGED, not touching it.
+ *
+ * So every mutating case here does three things, and a case that skips any of
+ * them is the defect rather than the coverage:
+ *
+ *   1. read and write down the existing value BEFORE editing,
+ *   2. make the smallest change that proves the point,
+ *   3. RESTORE the recorded value — not "clear the field", which is a different
+ *      destructive edit wearing the same clothes.
+ *
+ * Three cases had no restore at all until 2026-09-29, and one of them overwrote
+ * the PhonePe Client ID, Client Secret and both webhook credentials with QA
+ * values and walked away. Running it would have disabled online payment for real
+ * buyers, silently, until somebody with the real keys noticed.
  *
  * Written by hand, case by case, against the label each one states. There is no
  * generator: the authoring scripts were deleted once it was clear they were
@@ -56,12 +77,12 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/site and go to the credentials tab.",
-      "Read how existing credentials are displayed.",
-      "Type QA-CREDENTIAL-118427 into one credential field and save.",
+      "Read how existing credentials are displayed, and WRITE DOWN the masked value of every field on the tab before touching anything.",
+      "Pick a field whose masked value shows a *_PLACEHOLDER or is empty — never one holding a real key. Type QA-CREDENTIAL-118427 into that field and save.",
       "Read the confirmation and RELOAD the tab.",
       "Read how that credential now displays.",
       "Open /api/site-settings in a private window and search the response for QA-CREDENTIAL-118427.",
-      "Clear the field, save, and reload to confirm.",
+      "RESTORE the field to exactly what step 3 recorded — clearing it is NOT restoring it, and siteSettings survives every run, so a cleared real key is gone for good. Save and reload to confirm the original masked value is back.",
     ],
     inputs: { credential: "QA-CREDENTIAL-118427" },
     expectedBehaviour:
@@ -136,11 +157,12 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/site and switch to the Integrations tab.",
-      "Read the current PhonePe Client ID, Client Secret, Client Version, Environment and both webhook credential fields.",
+      "WRITE DOWN the current PhonePe Client ID, Client Secret, Client Version, Environment and both webhook credential fields — the masked form of each. You must be able to put them back; nothing else will.",
       "Type QA-PHONEPE-CLIENT-991 into the Client ID field, QA-PHONEPE-SECRET-991 into the Client Secret field, and QA-WEBHOOK-USER-991 / QA-WEBHOOK-PASS-991 into the two webhook fields.",
       "Save, then hard-reload the page.",
       "Read how the Client Secret and both webhook fields display.",
       "Change only the PhonePe Environment dropdown, save again, and reload.",
+      "RESTORE every one of the six fields to exactly what step 3 recorded, save, and reload to confirm. This is not optional housekeeping: siteSettings is never reseeded, so QA values left in the PhonePe Client ID and Secret disable online payment for real buyers until someone notices and has the real keys to hand.",
     ],
     inputs: {
       clientId: "QA-PHONEPE-CLIENT-991",
@@ -160,11 +182,11 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/site and switch to the Shipping tab.",
-      "Read the current state of the 'PhonePe (online card/UPI) enabled' toggle.",
-      "Turn it OFF, save, and open /checkout in another tab (with an item in the cart) to confirm 'Pay Online (PhonePe)' is absent from the payment step.",
-      "Return to Site Settings, turn the toggle back ON, and save.",
-      "Reload the settings page to confirm it reads ON.",
-      "Reopen /checkout and confirm 'Pay Online (PhonePe)' is now offered.",
+      "Read the current state of the 'PhonePe (online card/UPI) enabled' toggle. It is seeded OFF (phonepeEnabled: false), so ON is the direction that proves anything here — turning OFF something already off would leave PhonePe absent from checkout for the reason it was always absent, and pass trivially.",
+      "Turn it ON, save, and open /checkout in another tab (with an item in the cart) to confirm 'Pay Online (PhonePe)' is now offered in the payment step.",
+      "Return to Site Settings, RELOAD, and confirm the toggle still reads ON — the save is not proven until the reload.",
+      "Turn it back OFF and save, restoring the seeded state.",
+      "Reopen /checkout and confirm 'Pay Online (PhonePe)' is absent again.",
     ],
     expectedBehaviour:
       "The toggle lives under the Shipping tab's 'Payment methods' section, not a dedicated Payments tab — the same admin field checkout's payment-method list reads from. It gates whether the PhonePe option is offered at all, independent of the manual-UPI and COD toggles beside it.",
@@ -177,12 +199,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/site",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the WhatsApp settings and read every field and its current state.",
+      "Open /admin/site, switch to the Integrations tab, and WRITE DOWN every WhatsApp field and its current masked state before touching anything.",
       "Type QA-WA-TOKEN-552310 into the access-token field and fill any account identifier fields.",
       "Save and RELOAD, then read how each field displays.",
       "Open /api/site-settings in a private window and search for QA-WA-TOKEN-552310.",
       "Open a public store page's source and search for it too.",
-      "Clear the fields, save, and reload.",
+      "RESTORE every field to exactly what step 3 recorded — clearing is not restoring, and a real Meta token cleared here cannot be recovered from the seed. Save and reload to confirm.",
     ],
     inputs: { token: "QA-WA-TOKEN-552310" },
     expectedBehaviour:
@@ -197,8 +219,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/site",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the WhatsApp settings and read every channel toggle and its state.",
-      "Turn one OFF and save.",
+      "Open /admin/site, switch to the Notifications tab, and read every channel toggle and its state. Four are listed: in-app, email, WhatsApp and SMS.",
+      "Turn the WHATSAPP channel off and save. Pick that one specifically — SMS is seeded OFF (and has no sender at all), so toggling it off would be a no-op that proves nothing.",
       "RELOAD and read every toggle.",
       "Check only the one changed.",
       "Turn it back on, save, and reload to confirm.",

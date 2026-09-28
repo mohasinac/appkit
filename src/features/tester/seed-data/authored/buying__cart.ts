@@ -671,7 +671,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/bundles",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's bundles surface and start creating one.",
+      "Open /store/bundles and start creating one.",
       "Add a member from this store and one from a different store.",
       "Save and read the message.",
       "Check the message names the offending member or store.",
@@ -815,7 +815,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /cart and read the Won Auctions tab.",
       "Check the line is gone.",
       "Open /user/bids and read that bid's status.",
-      "Open the notification list and read the forfeiture entry.",
+      "Open /user/notifications and read the forfeiture entry.",
       "Check the Cart tab's checkout is now enabled again.",
     ],
     expectedBehaviour:
