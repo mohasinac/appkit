@@ -27,11 +27,12 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and publish with every field empty, reading where the errors land.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create: its image control is a single-value field labelled 'Product Image' — no gallery, no multi-select, no crop editor, no video field and no brand. Anything beyond one plain image needs the advanced form.",
       "Type 'QA Product list-standard' as the title and 750 as the price.",
       "Select a category and a brand, set the stock to 5, and write a description.",
       "Upload public/test-media/sample-image.png as the main image.",
       "Publish.",
-      "Open the product's public page and read its title, price, stock badge and images.",
+      "Open the product's public page at /products/{its slug} and read its title, price, stock badge and images.",
     ],
     inputs: { title: "QA Product list-standard", price: 750, stock: 5, image: "public/test-media/sample-image.png" },
     expectedBehaviour:
@@ -46,11 +47,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/auctions/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the auction creation form and type 'QA Auction list-auction' as the title.",
+      "Open /store/auctions/new and type 'QA Auction list-auction' as the title.",
       "Set the starting bid to 1000, the minimum increment to 100, and an end date two days out.",
       "Upload public/test-media/sample-image.png and fill every other required field.",
       "Publish.",
-      "Open the auction's public page and read the starting bid, increment, countdown and purchase controls.",
+      "Open the auction's public page at /auctions/{its slug} and read the starting bid, increment, countdown and purchase controls.",
       "Delete the auction.",
     ],
     inputs: {
@@ -70,11 +71,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/pre-orders/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the pre-order creation form and type 'QA Pre-order list-preorder' as the title.",
+      "Open /store/pre-orders/new and type 'QA Pre-order list-preorder' as the title.",
       "Set the price to 1200, the deposit percentage to 25, an estimated delivery date a month out, and the production status.",
       "Upload public/test-media/sample-image.png and fill every other required field.",
       "Publish.",
-      "Open the pre-order's public page and read the price, deposit note, delivery date and status badge.",
+      "Open the pre-order's public page at /pre-orders/{its slug} and read the price, deposit note, delivery date and status badge.",
       "Delete the pre-order.",
     ],
     inputs: {
@@ -99,7 +100,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Write down every field's current value.",
       "Change the price to 850 and nothing else.",
       "Save, then RELOAD the editor and compare every field against what was written down.",
-      "Open the public page and read the price and everything else.",
+      "Open the public page at /products/{its slug} and read the price and everything else.",
       "Delete the listing.",
     ],
     inputs: { priceBefore: 750, priceAfter: 850 },
@@ -116,8 +117,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new and publish a listing titled 'QA Product belongs-to-store' at 300.",
-      "Open its public page and read the seller line at the bottom of the info panel.",
+      "Open /store/products/new and publish a listing titled 'QA Product belongs-to-store' at 300, with Category 'Beyblade Burst' and a Product Image — the quick form requires title, category, price AND image, so a publish naming only two of them cannot succeed.",
+      "Open its public page at /products/{its slug} and read the seller line at the bottom of the info panel.",
       "Click the 'Visit Store' link and read where it lands.",
       "Open /stores/store-beyblade-arena and find the listing in the Products tab.",
       "Sign out and sign in as admin@letitrip.in / TempPass123!, a different seller who owns store-letitrip-official.",
@@ -136,7 +137,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's settings and change the store name to 'QA Store rename-updates-cards'.",
+      "Open /store/storefront and change the store name to 'QA Store rename-updates-cards'.",
       "Save and reload to confirm.",
       "Open /products in a private window and find a card from that store.",
       "Read the seller name on the card and on the product's detail page.",
@@ -196,6 +197,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and read any stated video duration or size limit.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create: its image control is a single-value field labelled 'Product Image' — no gallery, no multi-select, no crop editor, no video field and no brand. Anything beyond one plain image needs the advanced form.",
       "Upload public/test-media/sample-video.mp4 to the video field.",
       "Wait for it to finish and read the preview and any duration shown.",
       "Read whether a poster frame was captured.",
@@ -214,6 +216,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and select public/test-media/sample-image.png, sample-image.jpg and sample-image.webp together in one file dialog.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create: its image control is a single-value field labelled 'Product Image' — no gallery, no multi-select, no crop editor, no video field and no brand. Anything beyond one plain image needs the advanced form.",
       "Watch the upload progress and read whether each file reports its own.",
       "Read the previews once they finish and count them.",
       "Check each preview shows its own file rather than three copies of one.",
@@ -232,6 +235,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and upload sample-image.png, sample-image.jpg and sample-image.webp.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create: its image control is a single-value field labelled 'Product Image' — no gallery, no multi-select, no crop editor, no video field and no brand. Anything beyond one plain image needs the advanced form.",
       "Note which image is in which position.",
       "Remove the MIDDLE one and read the remaining previews.",
       "Check the remaining two are the ones expected and are in their original relative order.",
@@ -250,6 +254,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/products/new and upload public/test-media/sample-image.png as the main image.",
+      "Click 'Show all fields (advanced)' first. 🛑 /store/products/new opens the QUICK form for a standard create: its image control is a single-value field labelled 'Product Image' — no gallery, no multi-select, no crop editor, no video field and no brand. Anything beyond one plain image needs the advanced form.",
       "Open the crop editor and read the aspect-ratio presets offered.",
       "Choose a preset, rotate the image, zoom in, and apply.",
       "Read the resulting preview.",
