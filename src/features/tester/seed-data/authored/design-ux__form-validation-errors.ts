@@ -68,8 +68,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new, a multi-step wizard.",
-      "Advance past the first step leaving a required field on it empty, and continue to a later step.",
+      "Open /store/products/new and click 'Show all fields (advanced)'. 🛑 IT IS NOT A WIZARD BY DEFAULT: a standard create opens the QUICK form — six flat fields, no steps at all — so there is no step for an error to be tagged with until you switch. The advanced form is the sectionised one this case is about.",
+      "Advance past the first section leaving a required field on it empty, and continue to a later section.",
       "Leave a required field on that later step empty too.",
       "Attempt to publish.",
       "Read the summary and note whether each error names the step it belongs to.",
