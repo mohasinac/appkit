@@ -78,7 +78,22 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/addresses/add",
     steps: [
       SIGN_IN_BUYER,
+      /*
+       * 🛑 THIS URL REDIRECTS, AND THAT IS THE POINT OF TESTING IT.
+       *
+       * /user/addresses/add is a three-line legacy shim that redirects to
+       * /user/addresses/new — kept deliberately, because the old path has been
+       * live and may be bookmarked. The form this case then fills is the /new
+       * one.
+       *
+       * The step used to say only "check the form is already open", which
+       * passes whether the redirect works or the browser merely happens to land
+       * somewhere with a form. Reading the URL is what actually tests the shim,
+       * and it is the only thing this case covers that its sibling on /new
+       * does not.
+       */
       "Open /user/addresses/add directly by URL.",
+      "Read the address bar: it must now be /user/addresses/new — the old path is a legacy redirect, not a page of its own.",
       "Check the form is already open.",
       "Fill it with the name 'QA Address Probe', phone 9876543210, line 1 '221B Test Street', landmark 'Opposite the QA park', postal code 560001.",
       "Save it.",
@@ -96,7 +111,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "Every field the form collects is written and read back — the landmark specifically, because a form missing a field the server accepts sends nothing for it on every edit and quietly drops whatever was there. Reopening the saved address for edit is the only way to see it.",
     expectedUiState:
-      "The address appears in the list, and reopening it for edit shows all five values including the landmark. A landmark that is blank on reopen is the finding.",
+      "The address bar reads /user/addresses/new after the redirect, not /add. The address appears in the list, and reopening it for edit shows all five values including the landmark. A landmark that is blank on reopen is the finding.",
     endResult: "The QA address is deleted.",
   },
 };
