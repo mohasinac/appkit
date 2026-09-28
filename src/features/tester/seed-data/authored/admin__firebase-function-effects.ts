@@ -4,11 +4,22 @@
  *
  * 🛑 EVERY CASE HERE TESTS AN EFFECT, NEVER A FUNCTION.
  *
- * 55 Firebase functions are deployed — 28 scheduled, 20 Firestore triggers, 7
+ * 53 Firebase functions are defined — 27 scheduled, 20 Firestore triggers, 6
  * HTTPS — and none had a checklist case. The reason is that the obvious way to
  * write one is untestable: "trigger the cron and confirm it ran" cannot be done
  * from a browser in a session, so every such case would be answered null
  * forever, which reads as coverage while providing none.
+ *
+ * 🛑 THOSE FOUR NUMBERS WERE 55 / 28 / 20 / 7 UNTIL 2026-09-29, and three of them
+ * were wrong. Recounted from the registry itself:
+ *
+ *     grep -c "defineFunction(" appkit/src/_internal/server/functions/scheduled.ts
+ *                                                                    firestore.ts
+ *                                                                    https.ts
+ *
+ * CLAUDE.md warns that the scheduled figure has drifted four separate times and
+ * says to recount rather than quote it; this file quoted it and drifted a fifth.
+ * Recount before trusting any of them — including these.
  *
  * So each case instead reads the thing the function is RESPONSIBLE FOR. A nightly
  * reconciler is tested by recounting what it reconciles; a settlement job by
@@ -51,6 +62,9 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { runawayFunctions: 0 },
     endResult:
       "Read-only; nothing persists. 🛑 Read the PER-FUNCTION breakdown, never the aggregate — the aggregate never names the culprit, which is exactly why #92 was found from a billing page rather than from monitoring.",
+    requiresHumanChannel: true,
+    humanChannelReason:
+      "The per-function invocation breakdown lives in the Firebase console, which needs an interactive Google sign-in the automated browser does not have. There is no in-product surface for it — /admin/maintenance/cloud-logs shows raw log lines, not per-function counts. A human runs this one; the automated answer is null, naming the console as the missing channel.",
   },
 
   "checklist-admin-firebase-function-effects-function-errors-page-has-no-producer": {
@@ -63,7 +77,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Compare the two: note whether server-errors has rows while function-errors does not.",
     ],
     expectedBehaviour:
-      "BEFORE: the page is expected to list Cloud Function failures. AFTER: it is empty, and it will remain empty no matter what breaks, because NOTHING IN PRODUCTION WRITES a serverErrors row with source \"function\". The only producer is wrapJobHandler, which is referenced solely by its own test. The sibling server-errors page has a real producer and should show rows, which is what makes the contrast legible.",
+      "BEFORE: the page is expected to list Cloud Function failures. AFTER: it is empty, and it will remain empty no matter what breaks, because NOTHING IN PRODUCTION WRITES a serverErrors row with source \"function\". `wrapJobHandler` is the only thing that would, and as of 2026-09-29 it has NO CALL SITES AT ALL — it is defined, re-exported from the server barrel, and invoked nowhere. (This case used to say \"referenced solely by its own test\", which stopped being true when both test suites were deleted; the claim is now stronger, not weaker.) The sibling server-errors page has a real producer and should show rows, which is what makes the contrast legible.",
     expectedUiState:
       "function-errors renders an empty list or empty state. server-errors renders actual rows. Screenshot both, side by side if possible.",
     expectedData: { functionErrorRows: 0 },
@@ -240,7 +254,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       ADMIN,
       "Open /admin/orders and note the most recent order's id and the time it was created.",
-      "Open the admin notifications or inbox surface and look for a signal corresponding to that order.",
+      "Open /admin/admin-notifications — the staff inbox, which is a different page from /admin/notifications, the per-user notification list — and look for a signal corresponding to that order.",
       "Note whether the signal exists, and whether there is exactly one rather than one per employee.",
     ],
     expectedBehaviour:
@@ -285,6 +299,9 @@ export const authored: Record<string, AuthoredCase> = {
     expectedUiState:
       "Two counts are written down and are equal. If they differ, name the jobs or functions that appear on only one side.",
     endResult:
-      "Read-only; nothing persists. 🛑 RECOUNT rather than quoting a remembered number — this figure has drifted four separate times, which is exactly why the case asks for a count instead of stating one.",
+      "Read-only; nothing persists. 🛑 RECOUNT rather than quoting a remembered number — this figure has drifted five separate times now, including once inside this very file, which is exactly why the case asks for a count instead of stating one. As of 2026-09-29 the registry defines 27 scheduled functions; if Scheduler shows a different number, the difference is the finding.",
+    requiresHumanChannel: true,
+    humanChannelReason:
+      "Both counts are read from Google consoles — Cloud Scheduler and the Firebase Functions list — which need an interactive Google sign-in the automated browser does not have. The registry side can be counted from source, but the billed side cannot, and the whole case is the comparison. A human runs this one.",
   },
 };
