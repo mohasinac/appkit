@@ -14,6 +14,33 @@
  * was unbanned a moment ago — the fix is to re-read on navigation, not to widen
  * the refresh interval.
  *
+ * 🛑 A SOFT BAN DOES NOT BLOCK SIGN-IN (corrected 2026-09-29). Three cases and
+ * one catalogue label said it did. It does not, and the code is unambiguous:
+ *
+ *   soft ban   POST /api/admin/users/{uid}/soft-ban appends to `user.softBans[]`
+ *              as `{ action, reason, bannedBy, bannedAt, expiresAt }`, where
+ *              `action` is one of EIGHT: write_reviews, write_blog_comments,
+ *              join_events, place_bids, create_listings, send_messages,
+ *              create_support_tickets, report_scammers. It is a PER-ACTION
+ *              restriction. Sign-in is untouched.
+ *   lift       DELETE /api/admin/users/{uid}/soft-ban/{action} — one action at a
+ *              time. `/unban` does NOT clear softBans.
+ *   hard ban   POST …/hard-ban sets `disabled: true` on the Auth record and
+ *              enqueues the 8-stage `hardBanCascade` job. `/api/auth/login`
+ *              refuses on `userRecord.disabled` alone — so THIS is the ban that
+ *              blocks sign-in.
+ *   unban      POST …/unban sets `disabled: false` on Auth and the user doc and
+ *              clears the hard-ban fields only.
+ *
+ * So the sign-in case now exercises a HARD ban for the sign-in half and a soft
+ * ban for the restriction half, and says plainly that a soft-banned account
+ * signing in normally is CORRECT — otherwise the first tester to run it reports
+ * a defect that is really the case being wrong.
+ *
+ * `reason` is `z.string().min(1)`, so a ONE-CHARACTER reason is accepted. The
+ * requires-reason case hedged on "if a minimum length applies"; it now states
+ * the contract so a one-character reason being accepted is not written up.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
@@ -33,55 +60,66 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_ADMIN,
       "Open /admin/users and find the account rohit.collect@gmail.com.",
-      "Soft-ban the account with the reason 'QA ban probe — checklist case, will be lifted.'",
-      "Sign out.",
-      "Try to sign in as rohit.collect@gmail.com / TempPass123!.",
-      "Read what is shown.",
-      "Sign back in as the admin and lift the ban.",
+      "Soft-ban it from place_bids with the reason 'QA ban probe — checklist case, will be lifted.'",
+      "Sign out and sign in as rohit.collect@gmail.com / TempPass123!. This must SUCCEED — a soft ban restricts one action, it does not block sign-in.",
+      "Open any live auction and try to place a bid. Read the refusal and whether it quotes the reason the admin typed.",
+      "Sign back in as the admin and lift that soft ban.",
+      "Now HARD-ban the same account with the reason 'QA sign-in block probe — checklist case, will be lifted.'",
+      "Sign out and try to sign in as rohit.collect@gmail.com / TempPass123!. Read exactly what is shown.",
+      "Sign back in as the admin and unban the account, then confirm it signs in again.",
     ],
-    inputs: { reason: "QA ban probe — checklist case, will be lifted." },
+    inputs: {
+      reason: "QA ban probe — checklist case, will be lifted.",
+      softBanAction: "place_bids",
+      hardBanReason: "QA sign-in block probe — checklist case, will be lifted.",
+    },
     expectedBehaviour:
-      "A soft-banned account cannot sign in and is told why. A refusal with a generic credentials error is worse than a block — the user believes their password is wrong and resets it, repeatedly, against an account that would refuse them either way.",
+      "The two bans do different things and both must say why. A soft ban blocks ONE action and leaves sign-in alone; a hard ban disables the account outright and sign-in is refused. A refusal with a generic credentials error is worse than a block — the user believes their password is wrong and resets it, repeatedly, against an account that would refuse them either way.",
     expectedUiState:
-      "The sign-in is refused with a message naming the ban, not an invalid-credentials error. The reason the admin typed is visible to the user.",
-    endResult: "The ban is lifted and the account signs in again.",
+      "The soft-banned account SIGNS IN NORMALLY — that is correct and is not a finding — and is refused only at the bid, with the admin's reason quoted. The hard-banned account is refused at sign-in with a message naming the disabled account, not an invalid-credentials error. Record the exact wording of both refusals.",
+    expectedData: { softBannedCanSignIn: true, hardBannedCanSignIn: false },
+    endResult:
+      "The soft ban is lifted, the hard ban is lifted, and the account signs in and can bid again. 🛑 Both must be lifted separately — /unban clears the hard-ban fields only and leaves softBans untouched.",
   },
   "checklist-admin-bans-and-trust-soft-ban-requires-reason": {
     roles: ["admin"],
     startPage: "/admin/users",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/users and start banning the account rohit.collect@gmail.com.",
+      "Open /admin/users and start a soft ban on the account rohit.collect@gmail.com.",
       "Leave the reason field empty and submit.",
-      "Read what happens.",
-      "Type a one-character reason and submit.",
-      "Read whether that is accepted.",
-      "Cancel without banning.",
+      "Read what happens and WHERE the error appears — on the field, or as a banner.",
+      "Type a single character as the reason and submit.",
+      "Read whether that is accepted — the schema is a minimum of one character, so it should be.",
+      "If it was accepted, lift that soft ban immediately.",
     ],
+    inputs: { minimumReasonLength: 1 },
     expectedBehaviour:
       "A ban carries a reason, enforced rather than requested. The reason is what the banned user reads and what the audit log records — a ban with none leaves both the user and the next admin with an action and no explanation.",
     expectedUiState:
-      "The empty submission is refused with an inline error on the reason field, not a banner. A one-character reason is refused too if a minimum length applies.",
-    endResult: "Nobody is banned.",
+      "The empty submission is refused with an inline error ON THE REASON FIELD, not a banner. A one-character reason IS accepted — the contract is `z.string().min(1)` — so do not record that as a finding; record instead whether a reason that short is useful to the person who reads it. What would be a finding is an empty reason being accepted, or the refusal appearing only as a banner with nothing marked on the field.",
+    expectedData: { emptyReasonRejected: true, oneCharReasonAccepted: true },
+    endResult: "Nobody is left banned — if the one-character ban applied, it is lifted.",
   },
   "checklist-admin-bans-and-trust-unban-restores-access": {
     roles: ["admin", "buyer"],
     startPage: "/admin/users",
     steps: [
       SIGN_IN_ADMIN,
-      "Soft-ban the account rohit.collect@gmail.com with the reason 'QA unban probe — checklist case.'",
-      "In a second browser, sign in as rohit.collect@gmail.com / TempPass123! and confirm the block.",
-      "As the admin, lift the ban.",
-      "In the second browser, WITHOUT signing out or reloading, navigate to another page.",
-      "Read whether access is restored.",
-      "Note how long it took, if it was not immediate.",
+      "In a second browser, sign in as rohit.collect@gmail.com / TempPass123! and leave that session open on a signed-in page.",
+      "As the admin, soft-ban that account from place_bids with the reason 'QA unban probe — checklist case.'",
+      "In the second browser, WITHOUT signing out or reloading, open a live auction and confirm bidding is refused.",
+      "As the admin, lift that soft ban.",
+      "In the second browser, WITHOUT signing out or reloading, navigate to another page and try to bid again.",
+      "Read whether access is restored, and note how long it took if it was not immediate.",
     ],
-    inputs: { reason: "QA unban probe — checklist case." },
+    inputs: { reason: "QA unban probe — checklist case.", softBanAction: "place_bids" },
     expectedBehaviour:
       "A lifted ban takes effect on the next navigation. Role and status fields on a session refresh only periodically, so a guard reading that cached snapshot keeps blocking for minutes after the ban is gone — which reads to the user as the unban not having worked. The guard re-reads on navigation into a gated area for exactly this reason.",
     expectedUiState:
-      "Access is restored on the next navigation, without a sign-out or a hard reload. A block persisting for minutes is the finding, recorded with how long.",
-    endResult: "The account is unbanned and working.",
+      "Bidding is restored on the next navigation, without a sign-out or a hard reload. A block persisting for minutes is the finding, recorded with how long — that is the cached-session-snapshot failure this case exists for, and it reads to a user as the unban not having worked.",
+    endResult:
+      "The soft ban is lifted and the account can bid again. Note this case uses a SOFT ban deliberately: a hard ban ends the session outright, so there would be no live session left to observe the restoration on.",
   },
   "checklist-admin-bans-and-trust-hard-ban-cascade-runs": {
     roles: ["admin"],
@@ -89,18 +127,22 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_ADMIN,
       "Open /admin/users and hard-ban the account arjun.builder@gmail.com with the reason 'QA hard-ban cascade probe — checklist case.'",
-      "Read what the interface says immediately after submitting.",
-      "Check it reports that work was queued rather than claiming completion.",
+      "Read what the interface says IMMEDIATELY after submitting — the route returns a job id and a token, so it should report started work rather than a finished cascade.",
       "Wait for the completion signal and read what it reports.",
-      "Open the account and read its state.",
-      "Lift the ban afterwards.",
+      "Open the account and read its state — it should now be disabled.",
+      "Unban the account and confirm it is enabled again.",
     ],
-    inputs: { reason: "QA hard-ban cascade probe — checklist case." },
+    inputs: {
+      reason: "QA hard-ban cascade probe — checklist case.",
+      jobType: "hardBanCascade",
+      cascadeStages: 8,
+    },
     expectedBehaviour:
       "A hard ban runs a multi-stage cascade that exceeds a single request's time budget, so it is queued as a background job and its completion is reported back. A screen that claims success at submit time is claiming an outcome it cannot know — the job may still fail.",
     expectedUiState:
-      "The submit reports queued work, a completion signal follows, and the account's state reflects the finished cascade. An immediate unqualified success message is the finding.",
-    endResult: "The ban is lifted.",
+      "The submit reports started or queued work, a completion signal follows separately, and only then does the account's state reflect the finished cascade. An immediate unqualified 'user banned' with no later signal is the finding — the eight-stage cascade runs in a background job and the request cannot know its outcome.",
+    endResult:
+      "The ban is lifted and the account is enabled again. A hard ban left in place outlives every reseed — users is PRESERVE tier — and silently breaks whichever other page signs in as this persona.",
   },
   "checklist-admin-bans-and-trust-hard-ban-recorded-in-audit-log": {
     roles: ["admin"],

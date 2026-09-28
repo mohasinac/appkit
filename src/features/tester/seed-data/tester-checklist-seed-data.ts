@@ -6065,7 +6065,15 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Bans, Unbans & Trust",
         href: "/admin/users",
         cases: [
-          { key: "soft-ban-blocks-signin", label: "Soft-banning a user prevents them signing in and tells them why", href: "/admin/users" },
+          {
+            key: "soft-ban-blocks-signin",
+            /* Key kept — renaming it orphans every verdict recorded against it. */
+            label:
+              "A soft ban blocks the ONE action it names and leaves sign-in working; a hard ban refuses sign-in. Both tell the person why",
+            description:
+              "The label used to read \"Soft-banning a user prevents them signing in\", which is false: a soft ban appends to user.softBans[] as a per-action restriction (place_bids, write_reviews, …) and /api/auth/login refuses only on the Auth record being disabled, which is what a HARD ban sets. A tester following the old label would have reported working behaviour as a defect.",
+            href: "/admin/users",
+          },
           { key: "soft-ban-requires-reason", label: "A ban cannot be applied without a reason, and that reason reaches the banned user", href: "/admin/users" },
           {
             key: "unban-restores-access",
