@@ -76,7 +76,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A reviewer's name is PII, stored encrypted, and shown masked in public. The generic repository returns the document verbatim, so a route that does not go through the reviews repository serves ciphertext — and a payload built by spreading the document also carries the HMAC blind index, which lets a caller confirm a guessed name.",
     expectedUiState:
-      "Names render masked, for example 'M*** U***'. No card shows a value beginning enc:v1.",
+      "Names render masked. maskName masks EVERY whitespace-separated word, and every seeded persona is literally 'Mock User N' — so the exact rendering is 'M*** U*** 3***', including the number. A two-word 'M*** U***' would mean the trailing word was dropped. No card shows a value beginning enc:v1.",
     expectedData: { ciphertextInResponse: false, blindIndexInResponse: false },
     endResult: "Nothing is changed; this case only reads.",
   },
