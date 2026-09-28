@@ -108,7 +108,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/classified/classified-beyblade-stadium-set",
     steps: [
-      "Open /classified in a private window and find a listing whose card shows no photo of its own; if every card has one, say so and answer null rather than guessing.",
+      "🛑 THIS BRANCH CANNOT BE REACHED THROUGH THE UI — answer null and record why, rather than hunting. The OG renderer falls back when a listing has neither mainImage nor images[0] (resolveOgImageUrl is passed null), but EVERY seeded listing carries images, and both product forms require one: the schema is mainImage: z.string().min(1, 'A main image is required'), on the quick form and the advanced form alike. So no listing a tester can find or create reaches the fallback. Confirm the branch exists by reading the source if you wish, then abstain — a fabricated yes here would be coverage of a path no visitor can produce.",
       "Open its detail page and view the source.",
       "Copy the og:image URL and open it in a fresh tab.",
       "Read what renders.",
