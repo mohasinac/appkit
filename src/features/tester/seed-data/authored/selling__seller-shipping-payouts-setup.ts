@@ -28,7 +28,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/shipping",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's shipping settings and read every field and section.",
+      "Open /store/shipping and read every field and section.",
       "Note which shipping options the store currently offers and their rates.",
       "Read whether a free-shipping threshold is configurable and what it is set to.",
       "Reload the page and confirm the same values are shown.",
@@ -44,10 +44,10 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/shipping",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's shipping settings and create a config named 'QA Shipping configs-crud' with a rate of 99.",
+      "Open /store/shipping and create a config named 'QA Shipping configs-crud' with a rate of 99.",
       "Save, RELOAD, and read every field of it.",
       "Edit only its rate to 149, save, RELOAD, and read every field again including the name.",
-      "Open a product's editor and check the new config is offered as a shipping choice.",
+      "Open /store/products, then that product's editor, and check the new config is offered as a shipping choice.",
       "Delete the config and RELOAD to confirm.",
     ],
     inputs: { name: "QA Shipping configs-crud", rateBefore: 99, rateAfter: 149 },
@@ -83,7 +83,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/payouts",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's payout settings and read every field and toggle.",
+      "Open /store/payouts and read every field and toggle.",
       "Read whether the payout schedule, hold period and minimum amount are shown.",
       "Change one editable setting and save.",
       "RELOAD and read every setting again.",
@@ -128,7 +128,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/shipping",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the consolidated settings page and read the URL.",
+      "Open /store/shipping and read the URL. It is the consolidated page: /store/shipping-configs now redirects here, as /store/payout-methods and /store/payout-settings both redirect to /store/payouts.",
       "Click a different tab and read the URL again.",
       "Copy that URL, open it in a new tab, and read which tab is open.",
       "Press the browser back button and read which tab is shown.",
@@ -145,7 +145,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/print-center",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/print-center and select two items to print.",
+      "Open /store/print-center — it REDIRECTS to /store/fulfillment and carries the query string with it, which is the whole mechanism this case depends on — then switch to the 'Print centre' tab and select two items to print.",
       "Read the URL and check the selection is represented in it.",
       "Copy the URL and open it in a new tab.",
       "Read whether the same two items are selected on arrival.",
