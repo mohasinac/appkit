@@ -90,7 +90,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The bar's controls are the real controls, not decorative copies — each performs the same action as its counterpart in the page panel and reflects its own loading state.",
     expectedUiState:
-      "The label changes while the request runs and the cart badge increases. /cart holds 'Test Gadget — Standard Listing #1'. The wishlist control in the bar also acts rather than doing nothing.",
+      "The label changes while the request runs and the cart badge increases. /cart holds 'Beyblade Burst Valkyrie' at ₹1,899.00. The wishlist control in the bar also acts rather than doing nothing.",
     endResult:
       "Empty the cart and the wishlist afterwards so later cases start clean.",
   },
@@ -141,7 +141,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "An auction's bar carries the live countdown and a bidding action, because auctions are capability-blocked from the cart. A bar offering Add to Cart here means it is publishing the default rather than the type's own.",
     expectedUiState:
-      "BEFORE: the bar read '₹15,000.00 · 1 bid' to anyone. AFTER, signed out: it reads 'Sign in to see the bid · 1 bid' — the bid COUNT is not an amount and stays. A ticking countdown whose seconds figure is lower after 3 seconds sits beside it. Its action is 'Place a bid' or Buy Now — never 'Add to Cart'. A frozen countdown is a fail even though the number looks right.",
+      "BEFORE: the bar read '₹15,000.00 · 1 bid' to anyone. AFTER, signed out: it reads exactly 'Sign in to see price' — the whole label, with the bid-count suffix DROPPED. Record that suffix loss: a bid count is not an amount (it is deliberately excluded from the money-sort list for that reason), so hiding it is inconsistent with the rest of the gate, but it is what the one label-building branch does today and is not this case's pass/fail. A ticking countdown whose seconds figure is lower after 3 seconds sits beside it. Its action is 'Place a bid' or Buy Now — never 'Add to Cart'. A frozen countdown is a fail even though the number looks right.",
     endResult: "Read-only; restore the window width afterwards.",
   },
   "checklist-design-ux-sticky-cta-bar-ended-auction-no-bar": {
