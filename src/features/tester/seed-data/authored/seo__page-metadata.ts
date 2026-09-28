@@ -88,10 +88,10 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/products",
     steps: [
-      "Open /products and use the browser's element inspector to count top-level headings.",
-      "Do the same on the homepage.",
-      "Do the same on a product detail page.",
-      "Do the same on a store page and on a blog post.",
+      "Open /products and WAIT for the page to settle before counting anything — this app hydrates client-side and the homepage has been measured with NO h1 at 2.5 seconds and exactly one at 3. A count taken early reports zero and reads as a missing heading. Then use the element inspector to count top-level headings.",
+      "Do the same on / — the page where the early-count trap was actually measured, so wait there especially.",
+      "Do the same on /products/product-beyblade-burst-valkyrie.",
+      "Do the same on /stores/store-beyblade-arena and on /blog/selling-tips-letitrip.",
       "Record the count for each.",
     ],
     expectedBehaviour:
@@ -105,11 +105,11 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/products",
     steps: [
-      "Open the network panel and navigate to a product path whose trailing segment is a nonsense word no listing uses.",
+      "Open the network panel and navigate to /products/zzzznope — a nonsense slug no listing uses, deliberately NOT shaped like a real id so nobody mistakes it for a fixture.",
       "Read what the page shows.",
       "View the source and read every robots meta tag.",
-      "Repeat with a nonsense store path and a nonsense auction path.",
-      "Open a REAL product page and read its robots meta tags too.",
+      "Repeat with /stores/zzzznope and /auctions/zzzznope.",
+      "Open a REAL product page — /products/product-beyblade-burst-valkyrie — and read its robots meta tags too. That contrast is the point: a noindex on the 404 is correct, the SAME noindex on a live listing is the defect, and without both readings you cannot tell which you are looking at.",
     ],
     expectedBehaviour:
       "A missing page renders the site's 404 view and marks itself NOINDEX. Judge the noindex, not the status code: Next streams the response, so the headers are already sent by the time the not-found is raised and the status can no longer be changed. It injects a noindex robots tag into the streamed HTML instead, and that is what actually keeps the URL out of the index. A 200 here is expected and is not the finding.",

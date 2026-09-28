@@ -104,7 +104,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/sitemap.xml",
     steps: [
-      "Open /sitemap.xml and search for 'tester-sandbox' — that is the exact marker the fixtures carry (product-tester-sandbox-…, store-tester-sandbox, group-tester-sandbox-…), so it is a precise check rather than a guess at the naming.",
+      "Open /sitemap.xml and search for 'tester-sandbox' — that substring is the exact marker every tester fixture carries in its id, so it is a precise check rather than a guess at the naming.",
       "Search for 'qa-'.",
       "Search for 'test-' as a looser check.",
       "Record any match with its full URL.",
