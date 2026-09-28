@@ -27,7 +27,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open the homepage and scroll to the footer.",
+      "Open the homepage and scroll to the footer. Of the six indexes, THREE are redirect shims into the catalogue (/classified, /digital-codes, /live -> /products?listingType=…) and three are real pages (/lottery, /sellers, /brands). A footer link that lands on /products carrying a query has worked; judge each by where it ends up, not by whether the URL changed.",
       "Read the Shop column and list every link in it.",
       "Click Classifieds and confirm where it lands.",
       "Go back and repeat for Digital Codes, Live Items, Lotteries, Brands and Verified Sellers.",
@@ -44,7 +44,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/classified",
     steps: [
-      "Open /classified.",
+      "Open /classified. 🛑 IT REDIRECTS to /products?listingType=classified, and that IS the wiring this page exists to confirm — the per-type browse indexes were folded into the one catalogue with a type filter, so landing on /products with a query is the design, not a broken link. Everything below is read on that filtered catalogue.",
       "Read the badge on each of the first six cards.",
       "Open the first card and read the badge on its detail page.",
       "Note the URL the card led to.",
@@ -61,7 +61,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/digital-codes",
     steps: [
-      "Open /digital-codes.",
+      "Open /digital-codes. It redirects to /products?listingType=digital-code — same folding as /classified.",
       "Read the badge on each of the first six cards.",
       "Open the first card and confirm the URL it leads to.",
       "Read whether the detail page states how many codes remain.",
@@ -78,7 +78,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/live",
     steps: [
-      "Open /live.",
+      "Open /live. It redirects to /products?listingType=live — same folding as /classified.",
       "Read the badge on every card shown.",
       "Open the first card and confirm the URL.",
       "Read whether the detail page shows the species and jurisdiction fields a live item carries.",
@@ -152,7 +152,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/classified",
     steps: [
       "Open a private window with no session.",
-      "Open each of /classified, /digital-codes, /live, /lottery, /brands and /sellers in turn.",
+      "Open each of /classified, /digital-codes, /live, /lottery, /brands and /sellers in turn. The first three redirect into /products?listingType=… — expected, and not a sign the gate broke navigation — while the last three are real pages.",
       "On each, confirm cards render and note what appears where a price would be.",
       "Open one listing detail page from a price-bearing index.",
       "Read the price area on that detail page.",
