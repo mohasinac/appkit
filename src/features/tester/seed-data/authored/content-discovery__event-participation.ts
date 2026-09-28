@@ -27,10 +27,10 @@ const SIGN_IN_BUYER = "Sign in as rehan.sheikh@gmail.com / TempPass123!.";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-content-discovery-event-participation-join-event-as-participant": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events and pick an event whose status is active.",
+      "Open /events/event-favourite-blader-poll — an ACTIVE poll with 3 seeded entries. 🛑 THE NEXT FOUR CASES READ THE ENTRY THIS ONE CREATES, so they must all use this same event; picking a different active event each time breaks the chain and each case then tests a state nobody set up.",
       "Open it and find the control for joining.",
       "Use it.",
       "Read the outcome shown.",
@@ -44,7 +44,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-own-entry-visible-after-join": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
@@ -61,13 +61,13 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-entry-survives-reload-and-relogin": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event and note the entry's status.",
       "Reload the event page and read the entry again.",
       "Sign out and sign back in as the same account.",
-      "Open the event page and read the entry.",
+      "Open /events/event-favourite-blader-poll and read the entry this account created.",
       "Open the event in a different browser signed in as the same account.",
     ],
     expectedBehaviour:
@@ -78,13 +78,13 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-cannot-join-twice": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
       "Attempt to join the same event again from the page.",
       "Read what happens.",
-      "Open the event in a second tab and attempt to join from there as well.",
+      "Open /events/event-favourite-blader-poll in a second tab and attempt to join from there as well.",
       "Check the account has exactly one entry.",
     ],
     expectedBehaviour:
@@ -96,11 +96,11 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leave-or-cancel-entry": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
-      "Find the control for withdrawing and use it.",
+      "On /events/event-favourite-blader-poll, find the control for withdrawing and use it.",
       "Read the confirmation, if one is shown.",
       "Read the entry's state afterwards.",
       "Reload and read it again.",
@@ -114,10 +114,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-closed-event-cannot-be-joined": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-won-original-set-raffle",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events and find an event whose status is ended.",
+      "Open /events/event-won-original-set-raffle — an ENDED raffle, which is the seed's only ended event.",
       "Open it and read whether a join control is offered.",
       "If one is offered, use it and read what happens.",
       "Repeat with an event whose status is cancelled.",
@@ -131,10 +131,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-shows-real-participants": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll/leaderboard",
     steps: [
       SIGN_IN_BUYER,
-      "Open an event that has a leaderboard and open that tab.",
+      "Open /events/event-favourite-blader-poll and open its Leaderboard tab — it carries 3 seeded entries, so the board is not empty.",
       "Read the rows — the names and the scores.",
       "Check the names are masked rather than showing full identities.",
       "Check the scores are real numbers rather than zeros or placeholders.",
@@ -148,11 +148,11 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-own-row-findable": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll/leaderboard",
     steps: [
       SIGN_IN_BUYER,
       "Join an event that has a leaderboard and take part enough to appear on it.",
-      "Open the leaderboard.",
+      "Open /events/event-favourite-blader-poll and its Leaderboard tab.",
       "Look for the participant's own row without scrolling the whole list.",
       "Check it is highlighted, pinned, or otherwise findable.",
       "Read the position shown for it.",
@@ -165,10 +165,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-ordering-correct": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-favourite-blader-poll/leaderboard",
     steps: [
       SIGN_IN_BUYER,
-      "Open an event leaderboard and write down the first ten rows in order with their scores.",
+      "Open /events/event-favourite-blader-poll and its Leaderboard tab, and write down every row in order with its score — the seed has 3 entries, so read all of them rather than expecting ten.",
       "Check each score is not greater than the one above it.",
       "Find two rows with equal scores and note their order.",
       "Reload the page and read the first ten again.",
@@ -182,10 +182,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-empty-state": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-beyblade-slot-raffle-draft",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events and find an event with no entries yet, such as a draft or a newly-started one.",
+      "Open /events/event-beyblade-slot-raffle-draft — a DRAFT raffle with no seeded entries, which is what makes the empty state reachable.",
       "Open its leaderboard.",
       "Read what is shown.",
       "Check it states there are no entries rather than showing a blank panel.",
@@ -199,12 +199,12 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-raffle-winner-announced-to-participants": {
     roles: ["admin", "buyer"],
-    startPage: "/events",
+    startPage: "/events/event-won-original-set-raffle",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open an event with a raffle configured.",
       "Draw the raffle and note who won.",
       "Sign in as the winning participant.",
-      "Open the event page and read whether the result is announced.",
+      "Open /events/event-won-original-set-raffle — ENDED and carrying a recorded raffleWinnerUserId — and read whether the result is announced.",
       "Open the account's notifications and look for one about the win.",
       "Sign in as a non-winning participant and check the result is visible to them too.",
     ],
@@ -216,20 +216,20 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-spin-wheel-one-use-enforced": {
     roles: ["buyer"],
-    startPage: "/events",
+    startPage: "/events/event-daily-beyblade-pull-wheel",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events and find a spin-wheel event that is currently open.",
+      "Open /events/event-daily-beyblade-pull-wheel — the seed's only SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2. Note the cap is TWO, not one: a case asserting a single use would fail on a correct system.",
       "Take a spin and read the result.",
-      "Attempt to spin again immediately.",
-      "Read what happens.",
-      "Reload the page and attempt once more.",
+      "Spin a SECOND time — this one is allowed, because spinMaxPerUser is 2.",
+      "Attempt a THIRD spin and read what happens.",
+      "Reload the page and attempt a third spin once more.",
       "If a prize was won, follow whatever the interface offers for claiming it.",
     ],
     expectedBehaviour:
-      "The per-user spin limit is enforced server-side and survives a reload, and a won prize is claimable. A limit held only in the browser is defeated by refreshing — which is the first thing anyone does after a disappointing spin.",
+      "The per-user spin limit is TWO, enforced server-side, and it survives a reload; a won prize is claimable. A limit held only in the browser is defeated by refreshing — which is the first thing anyone does after a disappointing spin.",
     expectedUiState:
-      "The second spin is refused before and after the reload, with a message naming the limit, and a won prize can actually be claimed. A spin that works again after a reload is the finding.",
-    endResult: "One spin is used; claim the prize if one was won.",
+      "The first two spins succeed and the THIRD is refused, before and after the reload, with a message naming the limit; a won prize can actually be claimed. A refusal on the second spin is a failure in the other direction — the cap is 2 — and a third spin that works after a reload is the finding.",
+    endResult: "Both spins are used; claim any prize won. The key still reads one-use-enforced and is deliberately unchanged — a case id is the response document id, so renaming it orphans every verdict recorded against it.",
   },
 };
