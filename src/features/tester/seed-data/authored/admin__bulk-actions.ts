@@ -12,6 +12,29 @@
  * keeps its layout height while invisible over-reports the tier on every page that
  * has no bar, pushing floating controls up the screen site-wide.
  *
+ * 🛑 BOTH RECURRING SHAPES ARE PRESENT TODAY, and three cases were pointed at a
+ * surface where neither can be observed (checked 2026-09-29).
+ *
+ * `BulkActionItem` is `{ id, label, variant, onClick }`. There is NO `action`
+ * ActionDef on it, so Rule #7's auto-confirmation — which works by resolving
+ * `ActionDef.confirmation` inside `<Button action={…}>` — never runs here.
+ * `BulkActionBar.handleApply` calls `selectedAction?.onClick()` directly, and
+ * `variant: "danger"` only adds `--danger` styling to the trigger and the
+ * option. So **bulk Cancel on /admin/orders cancels every selected order with
+ * no dialog**, which is exactly the failure this file's own header describes.
+ *
+ * And every bulk handler is a fire-and-forget loop —
+ * `for (const rowId of selection.selectedIds) void handleQuickStatus(rowId, …)`
+ * then `clearSelection()` — so there is no aggregated outcome anywhere: no
+ * succeeded count, no failed count, and no way to name which rows failed. Two
+ * cases asked for those counts; they now expect their absence and say so.
+ *
+ * 🛑 /admin/products HAS NO DESTRUCTIVE BULK ACTION. Its preset is
+ * [FEATURE, PROMOTE, SALE] — three boolean flags — so the confirmation case
+ * cannot start there. It now starts on /admin/orders, whose preset carries
+ * CANCEL. Note those three are TOGGLES (`!row[field]`), so running "Feature"
+ * over a mixed selection UN-features the rows that were already featured.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
@@ -61,52 +84,61 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-admin-bulk-actions-bulk-destructive-confirms": {
     roles: ["admin"],
-    startPage: "/admin/products",
+    startPage: "/admin/orders",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/products and select three rows.",
-      "Trigger the destructive bulk action offered.",
-      "Read the dialog WITHOUT confirming.",
-      "Check it names the action and how many rows it will affect.",
-      "Cancel it and check all three rows are untouched.",
-      "Repeat on /admin/users and /admin/orders.",
+      "Open /admin/products and read its bulk actions with three rows selected — they are Feature, Promote and Sale, and NONE of them is destructive, so there is nothing to confirm here.",
+      "Open /admin/orders and select ONE order that is already cancelled, so that running the action cannot destroy anything.",
+      "Open the bulk action picker and read the options — Mark Shipped, Mark Delivered and Cancel.",
+      "Choose Cancel and apply it. Watch carefully for a confirmation dialog BEFORE anything commits.",
+      "Record whether a dialog appeared at all, and what the bar did immediately afterwards.",
+      "Open /admin/users, select one row, and check whether its Delete bulk action confirms.",
     ],
+    inputs: { productBulkActions: "Feature, Promote, Sale", orderBulkActions: "Mark Shipped, Mark Delivered, Cancel" },
     expectedBehaviour:
-      "Every destructive bulk action confirms first, naming the count. An action defined inline at its call site rather than in the shared registry has no confirmation configured at all, and so runs immediately and irreversibly — on the largest selection the admin has ever made, since bulk is where selections are largest.",
+      "Every destructive bulk action should confirm first, naming the count. Bulk is where selections are largest, so an unconfirmed destructive action is irreversible across the most rows an admin ever touches at once.",
     expectedUiState:
-      "A confirmation naming the action and the row count appears on all three surfaces, and cancelling changes nothing. A destructive action that runs on click is the finding.",
-    endResult: "Nothing is deleted.",
+      "🛑 EXPECT NO CONFIRMATION, AND RECORD IT AS A FAILURE. `BulkActionItem` carries no ActionDef, so the registry's confirmation never resolves; the bar calls the handler directly and `variant: \"danger\"` only colours the control. Select an ALREADY-CANCELLED order so that proving this costs nothing. Say for each surface whether a dialog appeared.",
+    expectedData: { confirmationShownOnOrdersCancel: false },
+    endResult:
+      "Nothing that mattered was destroyed — the only order actioned was already cancelled. Do not test this with a live order.",
   },
   "checklist-admin-bulk-actions-bulk-action-reports-result": {
     roles: ["admin"],
     startPage: "/admin/products",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/products and select three rows.",
-      "Run a non-destructive bulk action on them, such as a status or flag change.",
-      "Read the message shown when it completes.",
-      "Check it states how many rows succeeded and how many failed.",
-      "Check the affected rows show the change without a manual reload.",
+      "Open /admin/products and note which of three rows are already Featured — the bulk action is a TOGGLE, so this matters.",
+      "Select three rows that are all NOT featured, so the toggle moves them the same way.",
+      "Run the Feature bulk action.",
+      "Read whatever message appears when it completes, and record the exact wording.",
+      "Check whether the three rows show the change without a manual reload.",
+      "Re-select the same three and run Feature again to put them back.",
     ],
+    inputs: { action: "Feature", rowCount: 3 },
     expectedBehaviour:
-      "The result names the counts. A bare 'Done' after an action over N rows tells the admin nothing about whether it was N — and a partial success reported as an unqualified success is how rows silently stay unchanged.",
+      "The result should name the counts. A bare 'Done' after an action over N rows tells the admin nothing about whether it was N — and a partial success reported as an unqualified success is how rows silently stay unchanged.",
     expectedUiState:
-      "A message naming the succeeded and failed counts, and the rows updated in place. A bare success message is the finding.",
-    endResult: "Restore whatever the action changed.",
+      "🛑 EXPECT NO COUNTS, AND RECORD IT AS A FAILURE. The handler is a fire-and-forget loop over the selected ids followed by clearSelection(), so nothing collects an outcome: there is no succeeded count, no failed count, and no aggregated message to read. Record what IS shown — per-row toast, nothing at all, or a bare success — and whether the rows updated in place. 🛑 Select rows that are all in the same starting state: Feature inverts each row independently, so a mixed selection un-features the ones that were already featured.",
+    expectedData: { succeededCountShown: false, failedCountShown: false },
+    endResult:
+      "The three rows are back to not-featured. Running the same toggle twice restores them, which is only true because they all started the same way.",
   },
   "checklist-admin-bulk-actions-bulk-partial-failure-named": {
     roles: ["admin"],
     startPage: "/admin/products",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/products and build a selection mixing rows the action can apply to with rows it cannot — an archived row alongside published ones, for example.",
-      "Run the action.",
-      "Read the result message.",
-      "Check the rows that failed are named rather than only counted.",
-      "Check the rows that succeeded did in fact change.",
+      "Open /admin/orders and build a selection mixing rows the action can apply to with rows it cannot — one PENDING order alongside one already CANCELLED and one already DELIVERED.",
+      "Run Mark Shipped over that selection.",
+      "Read the result message and record the exact wording.",
+      "Check whether the rows that could not be shipped are NAMED, merely counted, or not mentioned at all.",
+      "Reload and read each of the three rows' status to find out what actually happened to each.",
+      "Restore any order whose status this changed.",
     ],
+    inputs: { action: "Mark Shipped", mixedStatuses: "pending + cancelled + delivered" },
     expectedBehaviour:
-      "Failures are named. 'Two rows failed' out of a selection of twenty leaves the admin re-checking twenty rows by hand to find which two — and the usual next step is to run the action again on everything, which is worse.",
+      "Failures should be named. 'Two rows failed' out of a selection of twenty leaves the admin re-checking twenty rows by hand to find which two — and the usual next step is to run the action again on everything, which is worse. Naming nothing at all is worse still: the admin cannot even tell that anything failed.",
     expectedUiState:
       "The failed rows are identified by title or id, with a reason. A bare failure count is the finding.",
     endResult: "Restore whatever succeeded.",
@@ -169,16 +201,16 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_ADMIN,
       "Open /admin/offers and select two rows.",
-      "Read every bulk action offered.",
-      "Run each one in turn, noting what changed.",
-      "Reload after each and check whether the records actually changed.",
-      "Record any action that only cleared the selection.",
+      "Read what the bulk bar offers — the correct answer here is NOTHING.",
+      "If any bulk action IS offered, run it, reload, and check whether the records actually changed.",
+      "Open a single offer's row menu and confirm Cancel is there instead, and that it demands a reason.",
     ],
+    inputs: { expectedBulkActionCount: 0 },
     expectedBehaviour:
-      "Every offered action does what its label says. A destructively-labelled bulk action once existed here whose handler only cleared the selection — it read as working, cancelled nothing, and an admin using it believed a batch of offers had been cancelled.",
+      "Every offered action does what its label says — and where it cannot, it is not offered. A destructively-labelled bulk action once existed here whose handler only cleared the selection: it read as working, cancelled nothing, and an admin using it believed a batch of offers had been cancelled. It was DELETED rather than wired, because cancelling an offer requires a reason and one shared reason across a mixed selection is worse audit data than no bulk action at all.",
     expectedUiState:
-      "Each action produces a visible, persisted change matching its label. An action whose only effect is clearing the selection is the finding, named.",
-    endResult: "Restore whatever the actions changed.",
+      "No bulk actions are offered on this page. That absence is the pass. A re-appeared bulk Cancel is the finding — whether it works or not — and per-offer Cancel is still available from the row menu, where it can ask for a reason.",
+    endResult: "Nothing is changed; no offer is cancelled.",
   },
   "checklist-admin-bulk-actions-bulk-users-actions": {
     roles: ["admin"],
