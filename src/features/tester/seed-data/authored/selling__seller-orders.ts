@@ -158,15 +158,33 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/orders and open an order.",
-      "Find the WhatsApp share control and read what it offers.",
-      "Trigger it and read the message it composes before sending anything.",
-      "Check the message for the buyer's full phone number, full address and any payment identifier.",
+      /*
+       * 🛑 NO SUCH CONTROL EXISTS TODAY, AND ABSENCE IS THE EXPECTED ANSWER.
+       *
+       * Measured 2026-09-29: SELLER_ROW_ACTIONS.orders is
+       * [VIEW, EDIT, TRACK, RESEND] — no share. SellerOrdersView mentions
+       * WhatsApp only as the buyer's purchased add-on flag
+       * (whatsappNotifyAddon / whatsappNotifyFee), and every `wa.me` link in
+       * the codebase is on the contact page, the chat button or the buyer's own
+       * payment page. The registry's WhatsApp actions are store SETUP
+       * (whatsapp-connect, catalog-sync, catalog-import).
+       *
+       * The case is kept rather than deleted because it guards a real risk the
+       * day someone adds one: an order share is exactly the control that would
+       * paste a buyer's address and phone into a third-party app. Written so
+       * that absence PASSES and a leaky implementation FAILS — which is the
+       * only shape that stays useful while the feature does not exist.
+       */
+      "Look for a WhatsApp or generic share control on the order — in the row actions, the detail drawer and the full detail page.",
+      "If none exists anywhere, record that and stop: no share control is the expected state and the case passes.",
+      "If one does exist, trigger it and read the message it composes before sending anything.",
+      "Check that message for the buyer's full phone number, full address and any payment identifier.",
       "Close without sending.",
     ],
     expectedBehaviour:
       "The share composes a message about the order. What it must not do is put more of the buyer's data into a third-party app than the seller needs to fulfil — a share that pastes a full address and phone into an outbound message has moved PII somewhere no policy here covers.",
     expectedUiState:
-      "The composed message identifies the order and what it contains. Read exactly what buyer data it includes and record it. A full payment identifier in the message is a finding regardless of anything else.",
+      "No share control is present on the row actions, the drawer or the detail page — that is the current expected state and it passes. If one IS present, the composed message identifies the order and what it contains; read exactly what buyer data it includes and record it, and a full payment identifier in that message is a finding regardless of anything else.",
     endResult:
       "Nothing is sent. Report precisely which buyer fields the message carries — that is the substance of this case.",
   },
