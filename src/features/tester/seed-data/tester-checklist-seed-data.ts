@@ -5297,11 +5297,26 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       {
         pageKey: "classifieds-digitalcodes-live",
         pageLabel: "Classifieds, Digital Codes & Live Listings",
-        href: "/admin/classified",
+        /*
+         * 🛑 /admin/products, not /admin/classified. The three per-type admin
+         * pages exist and are real, but they are browse-only wrappers over the
+         * shared listing-type config — no row actions, no Approve/Reject, no
+         * Quick edit. Moderation lives on /admin/products alone, so an href
+         * pointing at the per-type page sends the tester to a surface where
+         * the thing being tested cannot be done.
+         */
+        href: "/admin/products",
         cases: [
-          { key: "classified-create-moderate", label: "Admin can create and moderate classified listings", href: "/admin/classified" },
-          { key: "digitalcode-create-moderate", label: "Admin can create and moderate digital-code listings", href: "/admin/digital-codes" },
-          { key: "live-create-moderate", label: "Admin can create and moderate live-item listings", href: "/admin/live" },
+          { key: "classified-create-moderate", label: "Admin can create and moderate classified listings", href: "/admin/products" },
+          { key: "digitalcode-create-moderate", label: "Admin can create and moderate digital-code listings", href: "/admin/products" },
+          { key: "live-create-moderate", label: "Admin can create and moderate live-item listings", href: "/admin/products" },
+          {
+            key: "reject-status-has-no-chip",
+            label: "After the Reject row action, the listing is still findable by an admin — some status chip returns it",
+            description:
+              "BEFORE: Reject writes { status: \"rejected\" }, and ProductStatus is draft|published|in_review|archived — no such value. The PATCH schema types status as a bare z.string(), so it persists unvalidated, and the row then matches none of the four status chips: an admin can reach it only under All. AFTER: a rejected listing is isolatable by a status filter. The public half already works — every public query filters on published, so the listing does disappear, which is why this went unnoticed.",
+            href: "/admin/products",
+          },
         ],
       },
       {
