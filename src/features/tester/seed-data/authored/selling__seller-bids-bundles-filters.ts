@@ -83,18 +83,37 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/bundles",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
+      /*
+       * 🛑 THE SELLER OWNS NO SEEDED BUNDLE, SO THE CASE HAS TO MAKE ONE.
+       *
+       * /store/bundles filters on `b.createdByStoreId === store.id`, and
+       * `createdByStoreId` appears ZERO times across every seed file — all 11
+       * seeded bundles are `createdByType: "admin"`, authored by
+       * user-admin-letitrip. They are platform bundles and correctly invisible
+       * here.
+       *
+       * So the page is empty for every seller, and a case that opens it and
+       * "notes the total row count" could only ever be answered "could not
+       * test". Creating one first makes the case self-sufficient, and the
+       * created row is disposable: `categories` is SEED_OWNED, so the next
+       * lifecycle wipe removes it.
+       */
+      "Open /store/bundles/new and create a bundle named 'QA Bundle active-filter' with at least two of this store's products as members, leaving it Active.",
+      "Create a second one named 'QA Bundle inactive-probe' and set it Inactive.",
       "Open the store's bundles page and note the total row count.",
       "Read the active filter's options.",
       "Select active and read the rows and their states.",
       "Select inactive and read the rows and their states.",
       "Confirm the two counts add up to the unfiltered total.",
       "Open one bundle and check its member list is populated rather than reading zero items.",
+      "Delete both QA bundles afterwards.",
     ],
     expectedBehaviour:
       "The two filter states partition the list, so their counts sum to the total. The member check matters separately: a bundle's members are mirrored onto the bundle for index-friendly reads, and a reader trusting only that mirror shows an empty bundle whenever a write path forgot to update it.",
     expectedUiState:
       "Active and inactive each return their own rows and the counts sum to the unfiltered total. The opened bundle lists its members with titles and images rather than reading '0 items'.",
     expectedData: { partitionSumsToTotal: true },
-    endResult: "Read-only; nothing persists beyond the URL.",
+    endResult:
+      "Both QA bundles are deleted, leaving the store's bundle list as it was — empty, since no seeded bundle belongs to a store. If the delete fails, say so: `categories` is SEED_OWNED and the next lifecycle wipe clears them anyway, so a leftover is untidy rather than harmful.",
   },
 };
