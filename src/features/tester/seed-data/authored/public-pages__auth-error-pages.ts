@@ -41,17 +41,19 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "The account exists and persists. This case creates a real row that teardown does not remove, which is why the address is numbered rather than fixed.",
   },
-  "checklist-public-pages-auth-error-pages-forgot-reset-password-pages": {    roles: ["guest"],
+  "checklist-public-pages-auth-error-pages-forgot-reset-password-pages": {
+    roles: ["guest"],
     startPage: "/auth/forgot-password",
     steps: [
       "Open /auth/forgot-password in a private window with no session.",
       "Click 'Send reset link' with the field empty and read where the error appears.",
       "Type not-an-email and click 'Send reset link'.",
-      "Type divya.funko@gmail.com and click 'Send reset link'.",
-      "Open that inbox, open the reset link, and read the page it lands on.",
+      "Type divya.funko@gmail.com and click 'Send reset link'. Read only the CONFIRMATION here — the generic 'if an account exists' message is the whole point of this step and needs no inbox.",
+      "🛑 DO NOT COMPLETE A RESET FOR A SEEDED PERSONA. The harness cannot open divya's inbox — both check-inbox.mjs and the emailEvents recorder key on TESTER_EMAIL_ID — and a reset that half-completes leaves a PRESERVE-tier login changed with nothing to restore it from, breaking every other case that signs in as her. For the link half, register a throwaway account on the harness mailbox using a plus-address and request the reset for THAT.",
+      "Capture a timestamp, request the link for the throwaway address, then run: node tester/scripts/check-inbox.mjs --since <that number> --subject \"reset\". Open the link it reports and read the page it lands on.",
       "Submit the reset form with two different passwords typed into its two fields.",
       "Set both fields to QaAuthPages654! and submit.",
-      "Request another link for the same address and use it to set the password back to TempPass123!.",
+      "No restore is needed: the password changed belongs to a throwaway account, not to a seeded persona. Note in your comment that the account remains — the purge script matches only qa-signup+…@letitrip-qa.test, so a Gmail plus-address is not swept automatically.",
     ],
     inputs: {
       email: "divya.funko@gmail.com",
@@ -65,11 +67,12 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "The password is back at TempPass123! by the final step. This case shares divya.funko@gmail.com with the single-use-link case in signup-login and with nothing else, deliberately — the seeder never resets an existing password, so a changed one outlives every future re-seed.",
   },
-  "checklist-public-pages-auth-error-pages-verify-email-page": {    roles: ["guest"],
+  "checklist-public-pages-auth-error-pages-verify-email-page": {
+    roles: ["guest"],
     startPage: "/auth/register",
     steps: [
-      "Open /auth/register in a private window and create an account with an inbox you can open, using TestPass123! as the password.",
-      "Open the inbox and find the verification email.",
+      "Open /auth/register in a private window and create an account on the HARNESS mailbox using a plus-address — no seeded persona can receive testable email, since both instruments key on TESTER_EMAIL_ID — with TestPass123! as the password.",
+      "Capture a timestamp before registering, then find the verification email: node tester/scripts/check-inbox.mjs --since <that number> --subject \"verify\". Read the exit code — 0 arrived, 1 did not (a defect), 2 could not open the mailbox (a harness problem, answer null).",
       "Open the verification link and read the page it lands on.",
       "Open /user and look for an unverified-email warning.",
       "Open the same verification link a second time and read the page.",
@@ -115,7 +118,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The success page reads the real order rather than whatever the checkout had in memory, so it survives a reload. It is also order-scoped data, so a signed-out visitor with the URL must not be shown someone's delivery address.",
     expectedUiState:
-      "The page names an order number, 'Test Gadget — Standard Listing #1' at ₹199.00, the delivery address and a total. After the reload it shows the same. In the private window it does not render the order details — it asks for sign-in or reports not-found.",
+      "The page names an order number, 'Beyblade Burst Valkyrie' at ₹1,899.00 — the product the steps actually add, the delivery address and a total. After the reload it shows the same. In the private window it does not render the order details — it asks for sign-in or reports not-found.",
     expectedData: { orderTotal: 199 },
     endResult:
       "The order exists in /user/orders. A success page that goes blank on reload was rendering from checkout state and not from the order.",
