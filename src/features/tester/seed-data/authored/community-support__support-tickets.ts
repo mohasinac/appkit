@@ -68,13 +68,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/support",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user/support and read the total number of rows.",
-      "Type 'QA Ticket' in the search box.",
+      "Open /user/support and read the total number of rows. This account owns FIVE seeded tickets spanning all five statuses — open, in progress, waiting on user, resolved and closed — so the status filter and the hide-toggle below both have real rows to act on, and the starting count is five plus whatever this run has created.",
+      "Type 'QA Ticket' in the search box. 🛑 That row exists only if create-ticket has already run in this batch — work these three in order. If it has not, search a word from a seeded subject instead and say which you used.",
       "Read the rows.",
       "Clear the box and type 'zzzznope'.",
       "Read the rows.",
-      "Clear the box, then use the status filter to select a status and read the rows.",
-      "Toggle 'Hide resolved/closed' and read the rows.",
+      "Clear the box, then use the status filter to select each status in turn and read the rows. All five have at least one seeded ticket, so a status returning nothing is a finding rather than an empty corner of the fixture.",
+      "Toggle 'Hide resolved/closed' and read the rows. The seed carries one resolved AND one closed ticket for this account, so the count must FALL by at least two — a toggle that changes nothing is the inert-control failure this step exists for.",
     ],
     inputs: { matchingQuery: "QA Ticket", nonsenseQuery: "zzzznope" },
     expectedBehaviour:
