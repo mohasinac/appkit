@@ -25,6 +25,18 @@ import type { AuthoredCase } from "./_types";
 
 const SIGN_IN_SELLER = "Sign in as tyson@beybladearena.in / TempPass123!.";
 
+/*
+ * The two MIXED-ROLE cases below list roles [seller, buyer], and identityFor
+ * resolves that to the BUYER session — admin wins if present, then all-seller,
+ * and everything else falls to the buyer. So those batches open as someone who
+ * owns no store, and their first step is a seller action. They say so; the
+ * twelve seller-only cases on this page need no such warning and do not carry
+ * one.
+ */
+const SIGN_IN_SELLER_MIXED =
+  SIGN_IN_SELLER +
+  " 🛑 THIS CASE OPENS AS THE BUYER because its roles are [seller, buyer]. Copy tester/.tester-runs/session-seller.json over session.json and CLOSE THE BROWSER before this step; the MCP reads that file only when the context is created.";
+
 export const authored: Record<string, AuthoredCase> = {
   "checklist-selling-listing-lifecycle-standard-create-publish-sell": {
     roles: ["seller", "buyer"],
@@ -50,13 +62,13 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller", "buyer"],
     startPage: "/store/products",
     steps: [
-      SIGN_IN_SELLER,
+      SIGN_IN_SELLER_MIXED,
       "Create an auction titled 'QA Lifecycle Auction' with a starting bid of 500, an increment of 50 and no reserve, ending within the current test window, and publish it.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and place a bid of 550.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and place a bid of 600.",
+      "Swap session: copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER before continuing — the MCP reads that file only when the context is created, so swapping over an open browser changes nothing and the next steps run as the previous person. Then sign in as rehan.sheikh@gmail.com / TempPass123! and place a bid of 550.",
+      "Sign out and sign in as vivaan.kapoor@gmail.com / TempPass123! — same browser session file, a different account — and place a bid of 600.",
       "Wait for the auction to end.",
       "Read the auction page for the outcome.",
-      "Sign in as the winning bidder and check the won line is in their cart.",
+      "Sign in as the winning bidder (vivaan, at ₹600) and check the won line is in their cart under the Won Auctions tab.",
     ],
     inputs: { title: "QA Lifecycle Auction", startingBid: 500, increment: 50, bidA: 550, bidB: 600 },
     expectedBehaviour:
@@ -129,7 +141,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller", "buyer"],
     startPage: "/store/products",
     steps: [
-      SIGN_IN_SELLER,
+      SIGN_IN_SELLER_MIXED,
       "Create a prize draw titled 'QA Lifecycle Draw' with 3 entries at 100 each and a reveal window inside the current test window, and publish it.",
       "Sign in as rehan.sheikh@gmail.com / TempPass123! and buy two entries.",
       "Sign in as vivaan.kapoor@gmail.com / TempPass123! and buy the last one.",
@@ -190,11 +202,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/digital-codes",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /digital-codes on the All scope and find digitalcode-beyblade-x-app-launch-codes-depleted, whose code pool is empty while its stock field still reads 5.",
+      "Open /digital-codes — it REDIRECTS to /products?listingType=digital-code, which is expected: the per-type browse pages were folded into one catalogue with an in-page type filter — then set the All scope and find digitalcode-beyblade-x-app-launch-codes-depleted, whose code pool is empty while its stock field still reads 5.",
       "Open it and read whether it can be bought.",
       "Read its stock number.",
       "Compare that stock number against the pool count.",
-      "Open /digital-codes on the Available scope and check the listing is not there.",
+      "Open /digital-codes — it REDIRECTS to /products?listingType=digital-code, which is expected: the per-type browse pages were folded into one catalogue with an in-page type filter — then set the Available scope and check the listing is not there.",
     ],
     expectedBehaviour:
       "Availability for this type is the NESTED codes-available count, not the stock field — and the two disagree on purpose in the seed, so a check reading stock alone passes while the listing is unbuyable. The branch that reads the pool once looked at a top-level field the record does not have, so it had never fired even once.",
