@@ -276,11 +276,33 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/orders",
     steps: [
-      "Sign in as an account whose inbox you can open and confirm order emails are enabled in its notification settings.",
-      "Place an order and note the time.",
-      "Open the inbox and wait up to five minutes for a confirmation email.",
-      "Read its From name, its subject and its body.",
-      "Have the seller mark the order shipped, then check the inbox again.",
+      /*
+       * 🛑 THE ACCOUNT MUST BE THE HARNESS MAILBOX, AND NO SEEDED PERSONA IS.
+       *
+       * This step used to read "an account whose inbox you can open", which is
+       * not a literal value and quietly hid a real constraint. Two mechanisms
+       * can settle an email case, and BOTH key on TESTER_EMAIL_ID:
+       *
+       *   - check-inbox.mjs reads that mailbox over IMAP
+       *   - the emailEvents recorder writes a row ONLY when the recipient
+       *     equals TESTER_EMAIL_ID (or EMAIL_RECORDER_ALL is set)
+       *
+       * Every seeded persona uses a real-looking address the harness does not
+       * own, so an order placed as rehan produces nothing either instrument can
+       * see. Gmail plus-addressing is the way in: a fresh signup at
+       * <harness-mailbox>+run3@gmail.com is delivered to the same inbox.
+       *
+       * Capture the timestamp BEFORE placing the order. The mailbox is shared
+       * across every case in every run, so "newest matching message" will
+       * happily return one an earlier case left behind — which reads as a pass
+       * for an email this action never sent.
+       */
+      "Register a new account at /auth/register using the harness mailbox with a run-stamped plus-address (the value of TESTER_EMAIL_ID in tester/.env, e.g. name+run3@gmail.com), and confirm order emails are enabled in its notification settings.",
+      "Run `node -e \"console.log(Date.now())\"` and keep that number.",
+      "Place an order as that account.",
+      "Run `node tester/scripts/check-inbox.mjs --since <that number> --subject \"order\"` and read the exit code: 0 the mail arrived, 1 it did not, 2 the mailbox could not be opened.",
+      "Read the message's From name, its subject and its body.",
+      "Have the seller mark the order shipped, capture a fresh timestamp, and run check-inbox.mjs again with --subject \"shipped\".",
       "Click a link inside each email and read where it lands.",
       "Compare each email's figures against the order itself.",
     ],
