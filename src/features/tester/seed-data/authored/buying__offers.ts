@@ -57,11 +57,11 @@ export const authored: Record<string, AuthoredCase> = {
       "Read the row — product, offered amount, listed price, status and round.",
       "Open the row action menu and read every action offered.",
       "Use Counter, then cancel out of the form without submitting.",
-      "Use Decline on a DIFFERENT pending offer and read what happens.",
+      "Use Reject on a DIFFERENT pending offer and read what happens.",
       "Reload and read that offer's status.",
     ],
     expectedBehaviour:
-      "The seller's list shows incoming offers with the context needed to decide, and Accept, Decline and Counter all act. The store keeps sole authority over its own pricing — this is the surface where that authority lives.",
+      "The seller's list shows incoming offers with the context needed to decide, and Accept, Reject and Counter all act. The store keeps sole authority over its own pricing — this is the surface where that authority lives.",
     expectedUiState:
       "Rows show product, amounts, status and round. All three actions are present and act. The declined offer reads as declined after the reload.",
     endResult: "One offer is declined; QA Offer make-offer is untouched.",
@@ -91,7 +91,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/offers and find a pending offer.",
-      "WITHOUT using Accept, Decline or Counter, find a way to open its details.",
+      "WITHOUT using Accept, Reject or Counter, find a way to open its details.",
       "Read the buyer's note, the listed price, the offered amount and the round.",
       "Read any earlier rounds in the same negotiation.",
       "Return to the list and check the same is reachable from the row.",
@@ -274,14 +274,14 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open the admin offers surface and open a pending offer's row menu.",
       "Read every action offered and write the list down.",
-      "Check for Accept, Counter or Decline.",
+      "Check for Accept, Counter or Reject.",
       "Select several rows and read any bulk action bar that appears.",
       "Read whether a bulk cancel is offered.",
     ],
     expectedBehaviour:
       "Admin is a coordinator, not a participant: only View and Cancel. The store keeps sole authority over its own pricing. There is deliberately no bulk cancel — one shared reason across a heterogeneous selection is worse audit data than none, and a registry-backed control that reads as working while doing nothing is worse than an absent one.",
     expectedUiState:
-      "The menu offers View and Cancel only. No Accept, Counter or Decline. No bulk cancel appears — and if one does, it must actually act rather than only clearing the selection.",
+      "The menu offers View and Cancel only. No Accept, Counter or Reject. No bulk cancel appears — and if one does, it must actually act rather than only clearing the selection.",
     expectedData: { adminActions: 2 },
     endResult: "Read-only; act on nothing.",
   },
@@ -292,12 +292,26 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/offers and open a pending offer's row menu.",
       "Read every action offered.",
-      "Check Accept, Counter and Decline are all present.",
+      "Check Accept, Counter and Reject are all present.",
       "Use Accept on one and reload.",
       "Read the offer's status and check the buyer's cart gains a line for it.",
     ],
     expectedBehaviour:
-      "Adding an admin surface must not have removed the store's own actions. The seller retains Accept, Counter and Decline — an admin coordinating a dispute is a different capability from the seller deciding their own price.",
+      /*
+       * 'Reject', not 'Decline'. SellerOffersView renders its row menu from
+       * ACTIONS.STORE["accept-offer" | "counter-offer" | "reject-offer"], whose
+       * labels are Accept / Counter / Reject. Nothing in the menu says Decline.
+       *
+       * The confusion is real and worth naming: the offer STATUS is `declined`,
+       * and this project's own docs describe the seller as able to
+       * "accept / counter / decline". Both are true of the outcome — but a case
+       * tells a tester which BUTTON to click, and that button says Reject.
+       *
+       * Note SELLER_ROW_ACTIONS.offers ([VIEW, APPROVE, REJECT]) is NOT what
+       * this view uses, so reading the action-defs preset would give a third
+       * answer again.
+       */
+      "Adding an admin surface must not have removed the store's own actions. The seller retains Accept, Counter and Reject — an admin coordinating a dispute is a different capability from the seller deciding their own price.",
     expectedUiState:
       "All three actions are present and Accept works. The accepted offer reads accepted and produces a cart line in the buyer's offer lane.",
     endResult: "One offer is accepted.",
