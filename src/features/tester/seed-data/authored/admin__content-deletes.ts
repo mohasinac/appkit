@@ -23,6 +23,29 @@
  * @tag sideEffects:none
  */
 
+/*
+ * 🛑 TWO CAROUSEL WRITE PATHS, AND THE LIMIT IS ON THE ONE THE ADMIN DOES NOT USE
+ * (found 2026-09-29).
+ *
+ *   /api/carousel          — `carouselPOST` / the `[id]` handler from appkit.
+ *                            BOTH enforce `Maximum 5 active slides allowed`.
+ *   /api/admin/carousel    — the consumer's own routes. `active` is a bare
+ *                            `z.boolean().optional()` with NO count check, in
+ *                            either the collection POST or the `[id]` PUT.
+ *
+ * `ADMIN_ENDPOINTS.CAROUSEL` is `/api/admin/carousel`, so the admin editor uses
+ * the UNGUARDED pair. The public read then does `slides.slice(0, 5)` — so a
+ * sixth active slide saves, shows as active in the admin list, and never
+ * renders. That is the exact failure the limit case calls "worse than
+ * refusing", and it is live.
+ *
+ * 🛑 DELETING A PRODUCT IS A HARD DELETE with one guard. `adminDeleteProduct`
+ * checks `assertPrizeDrawNotLocked` and then calls `productRepository.delete`.
+ * There is no order check anywhere, so a product an order references is removed
+ * outright. Orders denormalise title, price and image onto `items[]`, so the
+ * receipt still renders — only the link into the product dies.
+ */
+
 import type { AuthoredCase } from "./_types";
 
 const SIGN_IN_ADMIN = "Sign in as admin@letitrip.in / TempPass123!.";
@@ -36,7 +59,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /admin/sections and open a section for edit.",
       "Change its heading to 'QA Section Heading Probe' and save.",
       "Reload the admin page and read the heading.",
-      "Open the public homepage and find that section.",
+      "Sign out, open /, and find that section on the homepage.",
       "Read its heading there.",
       "Restore the original heading.",
     ],
@@ -89,7 +112,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_ADMIN,
       "Open /admin/sections and disable a section rather than deleting it.",
-      "Open the public homepage and check the section is gone from it.",
+      "Sign out, open /, and check the section is gone from the homepage.",
       "Return to the admin page and check the section is still listed, marked as disabled.",
       "Re-enable it and check it returns publicly.",
       "Read the two controls side by side and check which is which is obvious without trying them.",
@@ -144,29 +167,33 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/carousel",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/carousel and count how many slides are currently active.",
-      "Read whether the page states a maximum.",
-      "Activate slides until you exceed that maximum.",
-      "Read what happens on the attempt that would exceed it.",
-      "Open the homepage and count the slides in the rotation.",
-      "Restore the original active set.",
+      "Open /admin/carousel and write down which slides are active — five of the six seeded slides are, and one is inactive.",
+      "Read whether the page states a maximum anywhere.",
+      "Activate the sixth slide and save.",
+      "Read what happens: a refusal naming the maximum, or a successful save.",
+      "Reload /admin/carousel and count the active slides again.",
+      "Sign out, open /, and count the slides actually in the homepage rotation.",
+      "Sign back in and restore the original active set from step 2.",
     ],
+    inputs: { maxActiveSlides: 5, seededSlides: 6 },
     expectedBehaviour:
-      "Exceeding the active-slide maximum is refused with a reason. Silently accepting the extra slide and then rendering only the first few is worse than refusing — the admin sees their slide saved and never learns it is not being shown.",
+      "Exceeding the active-slide maximum should be refused with a reason. Silently accepting the extra slide and then rendering only the first few is worse than refusing — the admin sees their slide saved and never learns it is not being shown.",
     expectedUiState:
-      "The attempt is refused with a message naming the maximum, and the homepage's rotation count matches the active count. A saved-but-not-rendered slide is the finding.",
-    endResult: "The original active set is restored.",
+      "🛑 EXPECT THE SAVE TO SUCCEED, AND RECORD IT AS A FAILURE. The limit is enforced in the appkit handlers mounted at /api/carousel, and the admin editor posts to /api/admin/carousel, whose `active` field is a bare optional boolean with no count check. So expect six active slides in the admin list and FIVE in the homepage rotation — the public read slices to five. Report both numbers; the gap between them is the finding, and it is exactly the saved-but-not-rendered slide this case names.",
+    expectedData: { activeSlidesInAdmin: 6, slidesOnHomepage: 5 },
+    endResult:
+      "The original active set is restored, so the homepage rotates the same five slides as before.",
   },
   "checklist-admin-content-deletes-blog-edit-persists": {
     roles: ["admin"],
     startPage: "/admin/blog",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/blog and open a published post for edit.",
+      "Open /admin/blog and open blog-spot-genuine-takara-tomy-beyblade for edit, writing down its Slug.",
       "Change its title to 'QA Blog Title Probe', edit a sentence of its body, and replace its cover image with /test-media/sample-image.png.",
       "Save.",
       "Reload the admin editor and check all three changes are there.",
-      "Open the post's public page and check all three again.",
+      "Sign out, open /blog/blog-spot-genuine-takara-tomy-beyblade, and check all three again.",
       "Restore the original title, sentence and cover image.",
     ],
     inputs: { title: "QA Blog Title Probe", coverImage: "/test-media/sample-image.png" },
@@ -182,7 +209,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_ADMIN,
       "Open /admin/blog and create a post titled 'QA Disposable Post', publish it.",
-      "Open its public page and note the URL.",
+      "Open /blog/qa-disposable-post — the slug is the title slugified — and note that it renders.",
       "Return to /admin/blog and delete it, confirming.",
       "Reload the public URL with the network panel open.",
       "Read the response status.",
@@ -224,7 +251,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Return to /admin/products and delete it, confirming.",
       "Reload the public URL with the network panel open and read the status.",
       "Open /products and search for it.",
-      "Open the search page and search for it there too.",
+      "Open /search and search for it there too.",
     ],
     inputs: { title: "QA Disposable Listing", price: 299 },
     expectedBehaviour:
@@ -239,22 +266,25 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/products",
     steps: [
       SIGN_IN_ADMIN,
-      "Open /admin/orders and find an order, noting one product it contains.",
-      "Open /admin/products and attempt to delete that product.",
-      "Read whether the interface refuses, warns, or deletes.",
-      "If it deletes, open that order and read whether its rows still render.",
-      "Click the product link on the order's row and read where it lands.",
-      "Record which of the three behaviours occurred.",
+      "Open /admin/orders, open any order, and write down its id and the exact title of one product it contains.",
+      "Open /admin/products, find that product, and delete it.",
+      "Read whether the interface refuses, warns about the order, or simply deletes.",
+      "Reload /admin/products and confirm whether the product is gone.",
+      "Reopen the order from step 2 and read whether its rows still render with that title and price.",
+      "Click the product link on the order's row and read exactly where it lands — a product page, a 404, or nothing.",
+      "Repeat the link check as the BUYER on /user/orders for the same order, since that is where a real person would meet it.",
     ],
+    inputs: { deleteIsHard: true },
     expectedBehaviour:
       "An order's rows denormalise the title, price and image they display, so an existing order survives the product's deletion — but the buyer's link into that product breaks. Either outcome can be defensible; what matters is that it is deliberate and stated rather than discovered by a buyer opening an old order.",
     expectedUiState:
-      "Record exactly what happened: a refusal naming the orders, an archive instead of a delete, or a hard delete. If it deleted, record whether the order still renders and where its product link goes.",
+      "🛑 EXPECT A HARD DELETE. `adminDeleteProduct` checks only that a prize draw is not locked and then deletes the document; there is no order check anywhere, and no archive path. So expect no refusal and no warning. The order should still render its rows from the denormalised title and price — if it does NOT, that is a far more serious finding than the broken link. Record where the product link lands, on both the admin and the buyer surfaces.",
+    expectedData: { deleteRefused: false, orderRowsStillRender: true },
     endResult:
-      "If a product was hard-deleted, re-seed rather than attempting a manual repair.",
+      "A seeded product has been destroyed. `products` is seed-owned and is re-seeded around every run, so this is recoverable — but re-seed rather than attempting a manual repair, and do not run this case against a product another case in the same batch depends on.",
     needsReview: true,
     reviewNote:
-      "The intended behaviour is not settled. The case exists to record which of refuse / archive / hard-delete actually happens, and what it does to an existing order.",
+      "What the code does is now settled — a hard delete with no order guard. What is NOT settled is whether that is the intended behaviour, so the case records the consequence for a real buyer rather than asserting a verdict on the design.",
   },
   "checklist-admin-content-deletes-delete-confirmations-name-the-record": {
     roles: ["admin"],
