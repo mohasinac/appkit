@@ -50,7 +50,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Search for QA Brand inline-create.",
       "Read whether it is offered as an existing option.",
       "Reload the page and search for it again.",
-      "Open a different creation form — the auction one — and search for it there.",
+      "Open /store/auctions/new — a different creation form — and search for it there. Note that route exists even though /store/auctions itself is a redirect-only shim to the products list.",
     ],
     inputs: { brandName: "QA Brand inline-create" },
     expectedBehaviour:
@@ -88,7 +88,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Select QA Brand inline-create in the brand picker.",
       "Type 500 as the price, fill every other required field, and publish.",
       "RELOAD the product's editor and read the brand.",
-      "Open the product's public page and read the brand link below the title.",
+      "Open the product's public page at /products/{its slug} and read the brand link below the title.",
       "Click that link.",
     ],
     inputs: { title: "QA Product custom-brand", brandName: "QA Brand inline-create", price: 500 },
@@ -107,15 +107,15 @@ export const authored: Record<string, AuthoredCase> = {
       "Look for QA Brand inline-create in the list.",
       "Open its brand page.",
       "Read the product grid and look for 'QA Product custom-brand'.",
-      "Sign in as tyson@beybladearena.in / TempPass123! and delete the QA product, then the QA brand.",
+      "Open the sort control and choose 'Most Products', then look for QA Brand inline-create AND the four seeded brands — Takara-Tomy, Beyblade, Hasbro and Independent Keepers.",
     ],
     inputs: { brandName: "QA Brand inline-create", productTitle: "QA Product custom-brand" },
     expectedBehaviour:
       "A seller-created brand becomes a real public brand page listing its products. The match is on display name, so this page is where a name-versus-slug mismatch finally shows — the brand page renders and its grid is empty, which reads as a brand with no stock rather than as a broken link.",
     expectedUiState:
-      "The brand is listed on /brands and its page shows 'QA Product custom-brand' in the grid. An empty grid on a brand that demonstrably has a product is the failure this whole page builds toward.",
+      "The brand is listed on /brands and its page shows 'QA Product custom-brand' in the grid. An empty grid on a brand that demonstrably has a product is the failure this whole page builds toward. Under 'Most Products', EXPECT THE FOUR SEEDED BRANDS TO VANISH and record it: they carry no metrics field at all, and an orderBy silently excludes every document lacking the ordering field, so that sort shows only brands created through the UI. The newly created one has metrics.productCount because the create action sets it.",
     expectedData: { productsOnBrandPage: 1 },
     endResult:
-      "Both the product and the brand are deleted by the final step, so nothing accumulates across runs.",
+      "NOTHING is cleaned up here and that is deliberate: this case is signed out, and the harness gives a guest batch no session at all, so a 'sign in and delete' step could never be performed. The QA product and brand are removed by the seller-side case that created them; if this case runs alone, say so and leave them.",
   },
 };
