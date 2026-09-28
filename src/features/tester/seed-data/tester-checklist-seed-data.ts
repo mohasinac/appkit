@@ -3266,6 +3266,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Blog",
       href: "/blog",
       cases: [
+        {
+          key: "blog-search-filters-the-list",
+          label: "The blog listing's search box actually filters, and the filtered result survives a reload",
+          description: "BEFORE: BlogIndexPageView never read q while /api/blog did, and listPublished had no search parameter at all -- so the SSR first paint was the unfiltered list, and a public listing hook sets staleTime Infinity once given SSR data, freezing it. AFTER: listPublished takes the same push-down. Needs a nonsense control: a real term returns plausible cards either way.",
+          href: "/blog",
+        },
         { key: "read-post", label: "Reading a blog post renders correctly (images, formatting)" },
         { key: "blog-listing", label: "Blog listing page shows all published posts" },
         { key: "blog-cover-image-display", label: "A blog post's cover image displays on both its listing card and its detail page" },

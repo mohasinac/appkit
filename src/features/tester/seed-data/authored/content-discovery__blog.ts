@@ -74,8 +74,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/blog",
     steps: [
-      "Open /blog in a private window and find a post whose card or body indicates a video.",
-      "Open that post.",
+      "Open /blog/selling-tips-letitrip in a private window — '10 Tips to Sell Faster on LetItRip' is the ONLY seeded post carrying a youtubeId, so searching the listing for a video indicator finds nothing and a tester would answer null on a path that works.",
       "Scroll to the embedded video.",
       "Click play and watch for a few seconds.",
       "Read any error text shown in or near the player.",
@@ -102,5 +101,26 @@ export const authored: Record<string, AuthoredCase> = {
       "Three headed sections appear: Related Posts, 'You might also like', and a same-author section. Each holds at least one card with a real title and image. The current post appears in none of them, and every card opens the post it names.",
     expectedData: { selfLinkCount: 0 },
     endResult: "Read-only; nothing persists.",
+  },
+  "checklist-content-discovery-blog-blog-search-filters-the-list": {
+    roles: ["guest"],
+    startPage: "/blog",
+    steps: [
+      "Open /blog in a private window with no session and count the posts listed.",
+      "Type beyblade into the search box ('Search posts...') and commit the search.",
+      "Read the count and confirm it is SMALLER than the unfiltered count, and that every remaining card is relevant.",
+      "Clear the box, type zzzznope, and commit.",
+      "Read the result — an empty state, not the full list.",
+      "RELOAD the page while zzzznope is still in the URL and read the FIRST PAINT, before anything settles.",
+      "Clear the search and confirm the original count returns.",
+    ],
+    inputs: { realQuery: "beyblade", nonsenseQuery: "zzzznope" },
+    expectedBehaviour:
+      "The blog listing filters server-side and the filtered result survives a reload. The nonsense control is the whole case: a real term returns plausible cards whether or not the query reached the server, so only zzzznope distinguishes filtering from returning everything. The reload matters separately — the SSR view and the API are two implementations of one query, and when the view ignored `q` the client hook's initialData froze the UNFILTERED list permanently, because a public listing hook sets staleTime Infinity once it is given SSR data. A page that shows the right rows only after a moment is that bug, not a slow render.",
+    expectedUiState:
+      "'beyblade' returns fewer cards than the unfiltered list. 'zzzznope' returns a named empty state and zero cards, on first paint as well as after hydration. Clearing restores the original count.",
+    expectedData: { nonsenseResultCount: 0 },
+    endResult:
+      "Read-only; nothing persists beyond the URL. A full list under zzzznope is the failure, and it is the same shape whether the query never left the browser or the SSR view dropped it.",
   },
 };
