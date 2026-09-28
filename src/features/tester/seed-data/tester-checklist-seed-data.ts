@@ -387,9 +387,23 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           href: "/products",
         },
         {
+          /*
+           * 🛑 The KEY still says "toggle" and must stay that way: it is the
+           * document id (`${testerId}__${checklistItemId}`), so renaming it
+           * orphans every recorded response. The LABEL and DESCRIPTION are not
+           * part of the id and were still describing the removed control.
+           *
+           * The showSold/showEnded/showClosed pills were replaced by the
+           * three-tab availability bar, and the three fixtures named here
+           * ("Test Collectible — Sold Out" et al) went with the tester-sandbox
+           * catalogue. A tester reads the label FIRST, so a stale one sends them
+           * hunting before the steps ever get a chance to correct them.
+           */
           key: "show-sold-toggle-reveals-items",
-          label: "The \"Show sold\" / \"Show ended\" / \"Show closed\" toggle on Products/Auctions/Prize Draws listing pages is off by default (hiding sold-out/ended/closed items) and reveals them when switched on",
-          description: "Verify against the seeded fixtures: \"Test Collectible — Sold Out\" (standard, hidden until \"Show sold\" is on), \"Test Auction — Already Won\" (hidden until \"Show ended\" is on), \"Test Prize Draw — Already Closed\" (hidden until \"Show closed\" is on). All three should be genuinely absent by default, not just from an unrelated broken query.",
+          label:
+            "The availability tab bar hides sold-out, ended and closed items by default, and the middle tab reveals them",
+          description:
+            "Verify against the seeded fixtures: \"Beyblade X BX-34 Dran Buster (Sold Out)\" on /products, \"Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)\" on /auctions, and \"Metal Fight Mystery Draw — Ended (Revealed)\" on /prize-draws. Each must be genuinely absent on 'Available' and present on the middle tab — not merely missing because an unrelated query broke. Only the middle label varies by type: 'Sold & Ended' on /products, 'Ended' on both /auctions and /prize-draws.",
           href: "/products",
         },
         {

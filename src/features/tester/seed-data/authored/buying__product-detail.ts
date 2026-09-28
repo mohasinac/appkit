@@ -213,7 +213,15 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A live listing renders its species-specific fields — species, breed, sex, age and the jurisdiction restrictions — which no other listing type carries, and offers a cart path once those restrictions are satisfied.",
     expectedUiState:
-      "Heading 'Test Live Item — Golden Retriever Puppy'. A species line in the shape 'Dog (Golden Retriever) · male · 6mo'. BEFORE: the price read '₹1,500.00'; AFTER it reads 'Sign in to see price' and the digits 1,500 appear nowhere, and the 'Handling:' fee on the transport line is absent too. Delivery restrictions are stated rather than blank. The thumbnail strip carries a 'View video' entry alongside 'View image 1'. An 'Add to Cart' button is present.",
+      /*
+       * Title and price taken from the seed, not from the deleted sandbox.
+       * This read 'Test Live Item — Golden Retriever Puppy' at '₹1,500.00' —
+       * a fixture from the tester-sandbox catalogue that was removed with
+       * testerSandboxRefresh. The real row is live-golden-retriever-puppy at
+       * ₹25,000. The guest-gate half of this expectation was migrated
+       * correctly; only the literals were left pointing at the old catalogue.
+       */
+      "Heading 'Golden Retriever Puppy — 6 Months, Vaccinated'. A species line in the shape 'Dog (Golden Retriever) · male · 6mo'. BEFORE: the price read '₹25,000.00'; AFTER it reads 'Sign in to see price' and the digits 25,000 appear nowhere, and the 'Handling:' fee on the transport line is absent too. Delivery restrictions are stated rather than blank. The thumbnail strip carries a 'View video' entry alongside 'View image 1'. An 'Add to Cart' button is present.",
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-live-item-video-mandatory": {
@@ -256,7 +264,13 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A pre-order shows an estimated delivery date and takes a deposit rather than the full price, which is what distinguishes it from a standard listing that happens to be out of stock.",
     expectedUiState:
-      "Heading 'Test Pre-order — Reserve Me!'. BEFORE: the price read '₹299.00' with a 'Reserve with ₹74.75' note; AFTER the price reads 'Sign in to see price', the deposit note is absent entirely, and neither 299 nor 74.75 appears anywhere on the page. An 'Estimated delivery:' label with an actual date beside it, not an empty value or the word 'undefined'. A 'Reserve Now' button is still present. Status badge 'In Production'.",
+      /*
+       * Same sandbox leftover as the live-item case above. The real row is
+       * preorder-beyblade-x-bx-08-wave: ₹799 at preOrderDepositPercent 25, so
+       * the deposit is ₹199.75 — figures a tester can check against the seed
+       * rather than against a fixture that no longer exists.
+       */
+      "Heading 'Beyblade X BX-08 Booster — Next Wave'. BEFORE: the price read '₹799.00' with a 'Reserve with ₹199.75' note; AFTER the price reads 'Sign in to see price', the deposit note is absent entirely, and neither 799 nor 199.75 appears anywhere on the page. An 'Estimated delivery:' label with an actual date beside it, not an empty value or the word 'undefined'. A 'Reserve Now' button is still present. Status badge 'In Production'.",
     endResult: "Nothing persists — read-only for a guest.",
   },
   "checklist-buying-product-detail-prizedraw-buy-reveal": {
@@ -301,7 +315,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The group panel appears on the parent and on the child, because membership is symmetric — a child knows its groupId and the parent knows its child slugs. A panel that renders only on the parent means the children's side of the link was never written. The group is BUILT by this case rather than read from the seed: no seeded product carries groupId, isGroupParent or groupChildSlugs, so there is no fixture to read.",
     expectedUiState:
-      "The panel is present on both pages. Its expand control renders as a real triangle or chevron glyph, not a literal character like '▸' rendered at font-fallback size and not a missing box. Expanded, it lists 'Beyblade Burst B-01 Valkyrie' and 'Beyblade Burst B-135 Regalia Genesis' with image tiles. 'View whole group' opens a modal or drawer showing both members.",
+      "The panel is present on both pages. Its expand control renders as a real triangle or chevron glyph, not a literal character like '▸' rendered at font-fallback size and not a missing box. Expanded, it lists 'Beyblade Burst B-01 Valkyrie' and 'Beyblade Burst B-59 Regalia Genesis' with image tiles. 'View whole group' opens a modal or drawer showing both members.",
     expectedData: { groupMemberCount: 2 },
     endResult:
       "Clear the group settings on both listings afterwards so the seeded catalogue is left as it was. A panel that survives on the parent but never appeared on the child is the failure.",
