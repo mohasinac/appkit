@@ -65,17 +65,18 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Resize the browser window to 390 pixels wide and open /user.",
-      "Read how the sidebar is presented.",
-      "Open it, read its entries, and navigate somewhere.",
+      "Open the sidebar using the header's hamburger icon.",
+      "Read its entries, and navigate somewhere.",
       "Check whether it closed on navigation.",
-      "Count the fixed bars at the bottom of the screen.",
+      "Count the fixed bars at the bottom of the screen and read every one of its slots, including the last ('More').",
+      "Tap the bottom bar's 'More' slot and read what it opens.",
       "Try to scroll the page sideways.",
     ],
     inputs: { mobileWidth: 390 },
     expectedBehaviour:
-      "On a phone the sidebar collapses behind a control and closes after navigating. The dashboard renders its own bottom tab bar and the public one is suppressed on these routes, so exactly one is mounted — two would be two bars on the same pixels with a height nobody owns, and everything above them would be positioned against the wrong one.",
+      "BEFORE (fixed 2026-09-28): /user rendered a dashboard-specific bottom bar — up to 5 flattened sidebar links, text-only, no icons — while the public bottom bar was suppressed on this route. AFTER: the dashboard sidebar opens from the header hamburger, exactly as on every dashboard route, and closes after navigating. The bottom tab bar itself is now the SAME shared bar every public page uses (same items, same order, same icons) — not a dashboard-specific one — and its own 'More' slot opens the public site menu, not this sidebar. Exactly one bottom bar is mounted either way, since it is the sole publisher of its own height.",
     expectedUiState:
-      "The sidebar is collapsed by default, opens on demand and closes after navigation. Exactly one bottom bar is present, carrying dashboard destinations rather than the public ones. The page does not scroll sideways.",
+      "The header hamburger opens the dashboard sidebar, collapsed by default, closing after navigation. The bottom bar matches the public site's bar item-for-item, and tapping its 'More' slot opens the public menu rather than the dashboard sidebar. The page does not scroll sideways.",
     expectedData: { bottomNavCount: 1 },
     endResult: "Read-only; restore the window width afterwards.",
   },

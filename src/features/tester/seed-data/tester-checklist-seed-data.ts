@@ -2157,7 +2157,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "sidebar-all-links-work", label: "Every item in the user dashboard sidebar navigates to its page without a 404 or broken layout", href: "/user" },
         { key: "sidebar-active-highlight", label: "The sidebar correctly highlights the currently active section as you navigate between pages" },
-        { key: "sidebar-mobile-collapse", label: "The user dashboard sidebar collapses into a mobile-friendly menu/bottom bar on small screens" },
+        { key: "sidebar-mobile-collapse", label: "On small screens, the user dashboard sidebar opens from the header hamburger as a collapsible menu; the bottom tab bar is the exact same one shown on every other page, not a dashboard-specific bar" },
         { key: "deep-link-direct-load", label: "Directly loading a deep user dashboard URL (e.g. /user/orders/view/[id]) works without first visiting the dashboard home" },
         { key: "become-seller-crossnav", label: "\"Become a Seller\" (buyer) vs \"Go to my Store\" (seller) shows the correct one based on account state and navigates correctly" },
         { key: "browser-back-forward", label: "Browser back/forward buttons move correctly between dashboard sub-pages without breaking the layout" },
@@ -2865,7 +2865,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "store-sidebar-all-links-work", label: "Every item in the store/seller dashboard sidebar navigates to its page without a 404 or broken layout", href: "/store" },
         { key: "store-sidebar-active-highlight", label: "The store sidebar correctly highlights the currently active section as you navigate between pages" },
-        { key: "store-sidebar-mobile-collapse", label: "The store dashboard sidebar collapses into a mobile-friendly menu/bottom bar on small screens" },
+        { key: "store-sidebar-mobile-collapse", label: "On small screens, the store dashboard sidebar opens from the header hamburger as a collapsible menu; the bottom tab bar is the exact same one shown on every other page, not a dashboard-specific bar" },
         { key: "store-deep-link-direct-load", label: "Directly loading a deep store dashboard URL (e.g. /store/products/[id]/edit) works without first visiting the dashboard home" },
         { key: "store-user-crossnav", label: "The store dashboard's cross-nav link back to the buyer dashboard works and lands on the correct page" },
         { key: "store-browser-back-forward", label: "Browser back/forward buttons move correctly between store dashboard sub-pages without breaking the layout" },
@@ -4119,7 +4119,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "titlebar-row2-mirror", label: "On a phone-width viewport with Left-hand mode ON, the top bar's SECOND row (notifications / wishlist / cart / profile icons) packs against the LEFT edge in mirrored order with profile leftmost; with it OFF it packs against the right edge with notifications leftmost", href: "/" },
         { key: "titlebar-actions-no-overflow-narrow", label: "With Left-hand mode ON at the narrowest phone width (~320px), no top-bar icon is clipped or pushed off-screen — the mirrored row fits exactly as well as the default row does", href: "/" },
         { key: "bottom-nav-mirror", label: "With Left-hand mode ON, the mobile bottom tab bar's slots appear in reverse order (Profile leftmost, Home rightmost); with it OFF, Home is leftmost. Slot widths stay equal in both modes.", href: "/" },
-        { key: "dashboard-bottom-nav-mirror", label: "With Left-hand mode ON, the dashboard's own mobile bottom tab bar (on admin/store/user routes) mirrors the same way the public one does — both bars behave identically", href: "/user" },
+        { key: "dashboard-bottom-nav-mirror", label: "On admin/store/user routes, the mobile bottom tab bar is the exact same shared bar the public site uses — with Left-hand mode ON it mirrors identically, because it is literally the same component", href: "/user" },
         { key: "count-badges-mirror", label: "With Left-hand mode ON, the red count bubbles on the cart / wishlist / notification icons sit on the TOP-LEFT corner of their icon instead of top-right — in BOTH the top bar and the mobile bottom tab bar — and neither is clipped by the icon's edge", href: "/" },
         { key: "nav-scroll-arrows-unaffected", label: "Left-hand mode does NOT flip the main navigation bar's overflow scroll chevrons — the left chevron still scrolls the nav left and the right chevron still scrolls it right, in both modes", href: "/" },
         { key: "header-tab-order-sane", label: "With Left-hand mode ON, pressing Tab repeatedly from the top of the page still reaches every top-bar control with none skipped or trapped", description: "The visual left-to-right order will NOT match the tab order in left-hand mode — that is expected and accepted (the mirror is visual only, DOM order is deliberately unchanged so screen-reader reading order stays stable). What must not happen is a control becoming unreachable.", href: "/" },

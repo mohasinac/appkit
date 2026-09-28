@@ -704,7 +704,7 @@ export function AppLayoutShell({
   const pathname = usePathname();
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
   const { theme, toggleTheme, activeTheme } = useTheme();
-  const { closeNav: closeDashboardNav, hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } = useDashboardNav();
+  const { closeNav: closeDashboardNav } = useDashboardNav();
   const { user: authUser } = useAuth();
 
   const headerRef = useRef<HTMLDivElement>(null);
@@ -887,7 +887,7 @@ export function AppLayoutShell({
             loginHref={loginHref}
             onSearchToggle={() => setSearchOpen((prev) => !prev)}
             navItems={navItems}
-            onMoreToggle={hasDashboardNav ? toggleDashboardNav : handleTogglePublicSidebar}
+            onMoreToggle={handleTogglePublicSidebar}
           />
         )}
         <UnsavedChangesModal />

@@ -23,9 +23,15 @@ export interface BottomNavLayoutProps {
  *
  * Hand mode: the item strip carries `appkit-hand-mirror`, so slot order
  * reverses in left-hand mode (CSS-only via `[data-hand]` — applies on the
- * first paint, no flash). This deliberately covers BOTH bottom bars: the
- * public `BottomNavbar` and `DashboardLayoutClient`'s `dashboard-bottom-navbar`
- * both render through here, and they must behave identically.
+ * first paint, no flash).
+ *
+ * `BottomNavbar` (`./BottomNavbar.tsx`) is the sole consumer, and it renders
+ * unconditionally on every route including admin/store/user dashboards —
+ * there is deliberately no second, dashboard-specific bottom bar (removed
+ * 2026-09-28; dashboard section navigation lives on the header hamburger
+ * instead, via `DashboardNavContext`). Never add a second component that
+ * mounts through this shell — exactly one bottom nav may exist per route,
+ * since this is the sole publisher of `--bottom-nav-height`.
  */
 export function BottomNavLayout({
   ariaLabel,

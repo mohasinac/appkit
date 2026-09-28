@@ -257,14 +257,14 @@ export const authored: Record<string, AuthoredCase> = {
       "Resize the browser window to 390 pixels wide and open /user.",
       "Look at the bottom tab bar and write down its items in order.",
       "Count the bottom bars present.",
+      "Compare the item order against the public bar from the sibling case (checklist-design-ux-hand-mode-layout-bottom-nav-mirror, on /).",
       "Turn 'Left-hand mode' off and check both again.",
-      "Compare the dashboard's bar against the public one from the previous case.",
     ],
     inputs: { leftHandMode: true, mobileWidth: 390 },
     expectedBehaviour:
-      "The dashboard renders its own bottom bar and the public one is suppressed on those routes, so exactly one is mounted. Two would be two bars on the same pixels with a height nobody owns, and everything above would be positioned against the wrong one.",
+      "BEFORE (fixed 2026-09-28): /user rendered its own dashboard-specific bottom bar, so this case was testing whether a second, separate implementation happened to mirror the same way as the public one. AFTER: /user renders the exact same shared bottom bar component as every public page — there is only one implementation, so hand-mode mirroring is inherited for free rather than needing its own logic. Exactly one bottom bar is mounted.",
     expectedUiState:
-      "Exactly one bottom bar on /user in both modes, carrying dashboard destinations rather than the public ones. Item order is unchanged between modes, matching the public bar's behaviour.",
+      "The /user bottom bar's items and order match the public bar's from the sibling case, in both hand-mode states, because it is literally the same bar. Exactly one bottom bar is present throughout.",
     expectedData: { bottomNavCount: 1 },
     endResult: "The mode is off again by the last step; restore the window width.",
   },
