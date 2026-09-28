@@ -98,7 +98,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/users, find karthik.new@gmail.com, and apply a soft ban with a reason.",
       "Lift the ban again.",
-      "Sign out and sign in as karthik.new@gmail.com / TempPass123!.",
+      "Swap identity: this case lists roles [admin, buyer] and the harness resolves that to ADMIN, so it opens signed in as the admin. Copy tester/.tester-runs/session-buyer.json over session.json, CLOSE THE BROWSER, then sign in as karthik.new@gmail.com / TempPass123!.",
       "Open /user/notifications and read the ban-lift notification's title AND its body.",
     ],
     inputs: { targetUser: "karthik.new@gmail.com" },
@@ -114,7 +114,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/products/product-beyblade-burst-valkyrie",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open a product this account has bought and leave a review.",
+      "Open a product this account has bought and leave a review. 🛑 EXPECT NO CONTROL FOR THIS and record that as the finding rather than as a failure to look properly: createReviewAction, useCreateReview and the UI_TEXT.WRITE_REVIEW string all exist, but no .tsx consumes any of them — the only review modal is read-only. If there is genuinely no way to write a review, answer null for this case and report the missing control; do not improvise through an API, which would test a path no buyer can reach.",
       "Sign out and sign in as tyson@beybladearena.in / TempPass123!, the store owner.",
       "Open /store and check for a notification about the new review.",
       "Read its title, its body and where its link goes.",
