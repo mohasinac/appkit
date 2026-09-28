@@ -40,8 +40,9 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Resize the browser window to 390 pixels wide.",
       "Open /faqs in a private window with no session.",
+      "WAIT for the page to settle before reading any number. This page has been measured showing zero questions at 2.5 seconds and 62 at 6 — a count taken early is confidently wrong, and this case is entirely about comparing counts.",
       "Read the count shown against each category.",
-      "Open one category and count the questions it actually holds.",
+      "Open one category and count the questions it actually holds, waiting again before counting.",
       "Compare the two numbers.",
       "Try to scroll the page sideways.",
     ],
@@ -70,5 +71,29 @@ export const authored: Record<string, AuthoredCase> = {
     expectedUiState:
       "At 1280 the categories are a tab strip. At 390 they are a dropdown listing every category, and selecting one switches the questions AND updates the control's own label. The page does not scroll sideways at either width.",
     endResult: "Read-only; nothing persists. Restore the window width afterwards.",
+  },
+  "checklist-content-discovery-faq-help-faq-search-filters-and-survives-reload": {
+    roles: ["guest"],
+    startPage: "/faqs",
+    steps: [
+      "Open /faqs in a private window with no session.",
+      "WAIT for the questions to appear before counting anything. 🛑 This page hydrates client-side and the difference is not subtle — it has been measured showing zero questions at 2.5 seconds and 62 at 6. A count taken early produces a confident, wrong answer, and that has already happened twice on this exact page.",
+      "Count the questions visible across all categories once the page has settled.",
+      "Type shipping into the search box and commit it.",
+      "Read the count and confirm it is SMALLER than the unfiltered count, and that the remaining questions are about shipping.",
+      "Read the address bar and check the term is in the URL as ?q=shipping.",
+      "RELOAD with that URL and confirm the same filtered set comes back, waiting again before judging.",
+      "Clear the box, type zzzznope, and commit.",
+      "Read the result — a named empty state and zero questions, not the full list.",
+      "Clear the search and confirm the original count returns.",
+    ],
+    inputs: { realQuery: "shipping", nonsenseQuery: "zzzznope" },
+    expectedBehaviour:
+      "The search box filters the questions and the term round-trips through the URL, so a filtered view is shareable and survives a reload. The nonsense control is the whole case: a real term returns plausible questions whether or not the filter ran at all, so only zzzznope separates filtering from returning everything. The seed ships 63 FAQs across seven categories, which is enough for a real term to narrow visibly rather than by one row.",
+    expectedUiState:
+      "'shipping' shows fewer questions than the unfiltered list and they are about shipping. The URL carries ?q=shipping and reloading reproduces that view. 'zzzznope' shows a named empty state with zero questions — a blank panel with no message is a different failure and should be recorded as such. Clearing restores the original count.",
+    expectedData: { nonsenseResultCount: 0 },
+    endResult:
+      "Read-only; nothing persists beyond the URL. A full list under zzzznope is the failure. So is an empty page under a real term, which on this page is far more likely to be a count taken before hydration than a broken filter — wait, then look again, before recording either.",
   },
 };

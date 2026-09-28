@@ -3445,6 +3445,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "FAQ & Help",
       href: "/faqs",
       cases: [
+        {
+          key: "faq-search-filters-and-survives-reload",
+          label: "The FAQ search box filters the questions, the term round-trips through ?q=, and a nonsense term shows an empty state rather than the full list",
+          description: "No case covered /faqs search, on the one page whose documented near-miss WAS search appearing empty -- it renders zero questions at 2.5s and 62 at 6s, so a count taken early is confidently wrong. Needs both a nonsense control and an explicit wait.",
+          href: "/faqs",
+        },
         { key: "faq-bottom-borders", label: "FAQ question rows show a clear bottom-border divider on the homepage and the FAQs page", href: "/faqs" },
         { key: "faq-mobile-count", label: "Homepage FAQ section shows a good number of questions on mobile, not just 1-2", href: "/" },
         { key: "tabs-mobile-dropdown", label: "Tabs on category/brand/product/event detail pages collapse into a colored dropdown on mobile once there are more than 5 tabs" },
