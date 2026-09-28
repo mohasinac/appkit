@@ -28,14 +28,23 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /bug-hunters in a private window with no session.",
       "Read the rows from the top and note each name and confirmed-bug count.",
       "Check that the counts descend from the first row to the last.",
-      "Look for 'Mock User 18' and read the count beside it.",
+      /*
+       * 'Mock User 3' — the demo fixture's bugHunterName, matching
+       * bugHunterId "user-yugi-muto". This said 'Mock User 18', and there is no
+       * such persona: the seed runs Mock User 1–17 plus two Mock Employees.
+       *
+       * So the tester looked for a name that cannot be on the board, found
+       * nothing, and the case failed for a reason that is not a bug — while
+       * the leaderboard's real behaviour went unchecked.
+       */
+      "Look for 'Mock User 3' and read the count beside it.",
       "Look for the Claude tester account by name anywhere in the list.",
     ],
-    inputs: { seededHunter: "Mock User 18", seededBugCount: 1 },
+    inputs: { seededHunter: "Mock User 3", seededBugCount: 1 },
     expectedBehaviour:
       "The board ranks testers by confirmed-bug count, highest first, and is fed by the demo fixture under Admin (Testing) → Bug Hunter Rewards. The bot account is excluded because it carries isBot — credit belongs to people, and a runner working the whole checklist would otherwise sit at the top forever.",
     expectedUiState:
-      "'Mock User 18' appears with 1 confirmed bug. Counts never increase as you read down the list. The Claude tester account does not appear at all.",
+      "'Mock User 3' appears with 1 confirmed bug. Counts never increase as you read down the list. The Claude tester account does not appear at all.",
     expectedData: { botAccountOnLeaderboard: 0 },
     endResult:
       "Read-only; nothing persists. A bot row on the board is a fail even if the ordering is otherwise correct.",
@@ -45,7 +54,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/bug-hunters",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/tester-feedback and find the confirmed bug credited to 'Mock User 18'.",
+      "Open /admin/tester-feedback and find the confirmed bug credited to 'Mock User 3'.",
       "Un-confirm it, so no confirmed bugs remain.",
       "Open /bug-hunters in a private window with no session.",
       "Read the page.",
@@ -55,7 +64,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "With nothing to rank the page shows a named empty state rather than a blank container or an error. Zero rows is a normal condition for this page on a new install, not a failure.",
     expectedUiState:
-      "With no confirmed bugs the page reads 'No confirmed bugs yet' or equivalent, inside the normal site chrome. It is not a blank white page, not an error boundary, and not a heading with nothing under it. After re-confirming, 'Mock User 18' is back.",
+      "With no confirmed bugs the page reads 'No confirmed bugs yet' or equivalent, inside the normal site chrome. It is not a blank white page, not an error boundary, and not a heading with nothing under it. After re-confirming, 'Mock User 3' is back.",
     expectedData: { emptyStateShown: true },
     endResult:
       "The confirmation is restored by the final step, so the leaderboard-loads case above still has its fixture. Leaving it un-confirmed silently breaks that case.",

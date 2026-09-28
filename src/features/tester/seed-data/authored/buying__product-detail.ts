@@ -146,8 +146,23 @@ export const authored: Record<string, AuthoredCase> = {
     inputs: { productId: "digitalcode-beyblade-x-app-starter-pack", price: 199, codesAvailable: 25, paymentMethod: "Cash on Delivery" },
     expectedBehaviour:
       "This fixture is auto-claim, so the code is allocated and delivered as soon as the order is confirmed, with no seller action in between. The pool's remaining count drops by one. The listing advertises 25 codes on the product document, but the codes themselves live in a subcollection the seed does not write — so the pool must be stocked first from the seller's Digital Content pool manager on /store/products, or the purchase completes and delivers nothing, which is the exact defect this case exists to catch.",
+    /*
+     * 🛑 THE FORBIDDEN STATES DID NOT EXIST, SO THE ASSERTION COULD NOT FAIL.
+     *
+     * This forbade 'Pending delivery' and 'Waiting for seller'. Neither string
+     * is anywhere in the source: CodeRevealPanel renders 'Your Digital Code',
+     * 'Your Digital Content', 'Your download', 'Copied!' and one error —
+     * 'Could not retrieve your code. Please try again.'
+     *
+     * That matters more here than on most pages. Root Cause #103 is exactly
+     * this failure: the pool had no writer, so every purchase logged "code pool
+     * exhausted", returned silently, completed the order normally, and left the
+     * reveal answering 404. The real symptom is an ABSENT or ERRORING panel —
+     * and forbidding two states the app never renders meant this case would
+     * have passed straight through it.
+     */
     expectedUiState:
-      "The order page shows a digital-code panel containing an actual code string that can be selected and copied. It does not read 'Pending delivery' or 'Waiting for seller' — for an auto-claim listing those states mean the delivery never fired.",
+      "The order page shows a digital-code panel headed 'Your Digital Code' (or 'Your Digital Content') containing an actual code string that can be selected and copied. The panel is present at all — an absent panel, a 404 from the reveal request, or the text 'Could not retrieve your code. Please try again.' each mean the delivery never fired, which for an auto-claim listing is the defect this case exists to catch.",
     expectedData: { codeDelivered: true },
     endResult:
       "Reloading the order still shows the same delivered code. A code that appears once and is blank after reload was never persisted against the order.",
