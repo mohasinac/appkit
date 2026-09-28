@@ -26,7 +26,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/stores",
     steps: [
-      "Open /stores and click through to Beyblade Arena.",
+      "Open /stores and click through to Beyblade Arena. The store URL /stores/store-beyblade-arena redirects to /stores/store-beyblade-arena/products — that redirect IS the default-tab behaviour this case is checking, so landing on a /products URL is the pass condition rather than a surprise.",
       "Note which tab is selected on arrival.",
       "Count the listings shown and read the total the pager reports.",
       "Open two of the cards and read which store each says it belongs to.",
@@ -61,9 +61,9 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-public-pages-store-tabs-empty-tab-says-empty": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores/store-letitrip-official",
     steps: [
-      "Open Beyblade Arena and work through every tab in turn.",
+      "Open /stores/store-letitrip-official and work through all twelve tabs in turn: Products, Auctions, Pre-orders, Prize Draws, Classified, Digital Codes, Live, Art, Bundles, Coupons, Reviews, About. 🛑 USE THIS STORE, NOT Beyblade Arena: the official store carries SIX listings and every one is a prize draw, so eleven of its twelve tabs are genuinely empty. Beyblade Arena has stock in every single type, so it has no empty tab to find and the case cannot be performed there at all.",
       "Find one that lists nothing.",
       "Wait for it to finish loading before judging it.",
       "Read what it shows.",
@@ -100,8 +100,8 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/stores/store-letitrip-official",
     steps: [
-      "Open /stores/store-letitrip-official — a store with a small catalogue, so a leak is obvious.",
-      "Work through every tab and read the store name on each card.",
+      "Open /stores/store-letitrip-official — SIX listings, all of them prize draws, which is what makes a leak obvious: any card on any other tab belongs to someone else, and the Prize Draws tab should hold exactly six.",
+      "Work through all twelve tabs and read the store name on each card: Products, Auctions, Pre-orders, Prize Draws, Classified, Digital Codes, Live, Art, Bundles, Coupons, Reviews, About.",
       "Note any card naming a different store.",
       "Open one card and confirm on its detail page which store it belongs to.",
     ],
