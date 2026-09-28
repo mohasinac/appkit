@@ -114,12 +114,12 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [
-      "Sign in as an account whose inbox you can open.",
-      "Open /user/settings, click the 'Notifications' tab, and make sure Email is on for order updates.",
+      "Sign in as the harness mailbox account. 🛑 NO SEEDED PERSONA CAN RECEIVE TESTABLE EMAIL — both instruments key on TESTER_EMAIL_ID, and every seeded persona uses a real-looking address the harness does not own. Register a plus-addressed signup on that mailbox, or run this as whichever account already uses it.",
+      "Open /user/settings, click the 'Notifications' tab, and make sure Email is on for order updates. order_confirmed is one of the 18 email-eligible types, so it should send.",
       "Place an order that will produce an order-confirmed notification.",
       "Open /user/notifications and confirm the in-app entry is there.",
-      "Open the inbox, checking Spam as well, and wait up to five minutes.",
-      "Read the email's From name and address, its subject and its body.",
+      "Capture a timestamp BEFORE the order — node -e \"console.log(Date.now())\" — then ask the mailbox: node tester/scripts/check-inbox.mjs --since <that number> --subject \"order\". --since is the whole correctness argument: the mailbox is shared across every case in every run, so 'newest matching message' happily returns one an earlier case left behind.",
+      "Read the exit code. 0 means it arrived; 1 means it did not (a product defect); 2 means the mailbox could not be opened (a harness problem, answer null). Then read the email's From name and address, its subject and its body.",
       "Click the button or link inside it.",
     ],
     expectedBehaviour:
@@ -133,12 +133,12 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/settings",
     steps: [
-      "Sign in as an account whose inbox you can open.",
+      "Sign in as the harness mailbox account — see the arrival case above; no seeded persona can receive testable email.",
       "Open /user/settings, click the 'Notifications' tab, and turn Email OFF for order updates.",
       "Click 'Save preferences' and reload to confirm it stayed off.",
       "Place an order that would produce an order-confirmed notification.",
       "Open /user/notifications and read the entries.",
-      "Open the inbox and wait five minutes, checking Spam as well.",
+      "Prove the SILENCE rather than waiting for it: node tester/scripts/check-inbox.mjs --since <timestamp captured before the order> --subject \"order\" --expect-none. Without --expect-none, 'nothing arrived' is unprovable — you wait and hope, and a slow inbox looks exactly like a working suppression. Exit 0 means the silence held.",
       "Turn Email back on for order updates and save.",
     ],
     expectedBehaviour:
