@@ -350,7 +350,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/team",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open several admin listing pages in turn and look at each toolbar.",
+      "Open these four admin listings in turn and look at each toolbar: /admin/products, /admin/orders, /admin/team, /admin/reviews. Naming them matters — two testers picking different pages cannot compare results, and a gap that appears on only one listing is the finding.",
       "Note any toolbar with a visible empty gap where a control would sit.",
       "Resize to 390 pixels wide and look at the same toolbars.",
     ],
