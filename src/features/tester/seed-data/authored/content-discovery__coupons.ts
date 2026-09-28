@@ -27,7 +27,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "Open /user/coupons and read what is listed.",
-      "Open /promotions, click the 'Coupons' tab, and claim NEWBLADER.",
+      "Open /promotions — it redirects to /promotions/deals, which is expected — then click the 'Coupons' tab, landing on /promotions/coupons, and claim NEWBLADER.",
       "Open /user/coupons again.",
       "Read the NEWBLADER row — its code, discount, minimum spend and expiry.",
       "Reload the page.",
@@ -44,7 +44,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/promotions",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Open /promotions, click the 'Coupons' tab, and read the ARENA25 card's stated discount and minimum spend.",
+      "Open /promotions — it redirects to /promotions/deals — then click the 'Coupons' tab and read the ARENA25 card's stated discount and minimum spend.",
       "Add product-beyblade-burst-regalia-genesis (₹1,399, Beyblade Arena) to the cart.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type ARENA25 in the coupon field and click 'Apply'.",
@@ -78,6 +78,27 @@ export const authored: Record<string, AuthoredCase> = {
       "Add product-beyblade-burst-regalia-genesis (₹1,399) to the cart.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type SEALED20 in the coupon field and click 'Apply'.",
+      /*
+       * 🛑 EXPECT THIS TO FAIL TODAY, AND RECORD IT AS A FAILURE.
+       *
+       * Measured 2026-09-29: the only rejection this path can produce is
+       * "Coupon is not currently valid" (coupons.repository.ts:241). It is
+       * returned by one branch gated on isCouponValid(), which folds THREE
+       * separate reasons into one string — isActive false, the date window,
+       * and the total usage limit being exhausted.
+       *
+       * So the buyer is told the same thing whether the coupon expired
+       * yesterday, was switched off, or was claimed by someone else thirty
+       * seconds ago. Only the first is permanent; the third may well work on a
+       * retry. The message cannot tell them which, and there is no second
+       * message to fall back to.
+       *
+       * Kept as written rather than softened to match. This case previously
+       * demanded the string 'This coupon has expired', which exists NOWHERE in
+       * the codebase — so the assertion could never be satisfied and never
+       * fail informatively either. Naming the real string is what makes the
+       * failure actionable.
+       */
       "Read the exact wording of the rejection.",
       "Sign back in as admin@letitrip.in and restore the end date written down in step 2.",
     ],
@@ -85,7 +106,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "An expired coupon is refused with a reason that names expiry specifically. With the end date in the past and isActive still true, this exercises the date check rather than the active flag — the two are separate reasons and a single generic message cannot tell a buyer which applies.",
     expectedUiState:
-      "The rejection names expiry, in the shape 'This coupon has expired'. It does not read 'Invalid coupon', which would leave the buyer retyping a code that will never work. SEALED20 does not enter the applied list.",
+      "The rejection names EXPIRY. Today it reads 'Coupon is not currently valid', which names nothing — record that as the failure, quoting it. SEALED20 must still be kept out of the applied list; a coupon that is refused and applied anyway would be a far worse finding than the wording.",
     expectedData: { couponApplied: false },
     endResult:
       "Reloading /checkout shows SEALED20 absent. The end date is restored by the final step — leaving it in the past silently breaks every later coupon case.",
@@ -98,13 +119,27 @@ export const authored: Record<string, AuthoredCase> = {
       "Add product-beyblade-metal-storm-pegasus (₹99) to the cart and nothing else.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type ARENA25 in the coupon field and click 'Apply'.",
+      /*
+       * 🛑 THE SECOND HALF OF THIS EXPECTS TO FAIL TODAY.
+       *
+       * Measured 2026-09-29: the message is "Minimum purchase requirement not
+       * met" — the same literal from both producing branches, and no UI
+       * composes the threshold into it (zero .tsx read `minPurchase` outside
+       * the admin editor). So the buyer is told they are short without being
+       * told of what, on a cart they can see is ₹99 against a threshold they
+       * cannot see at all.
+       *
+       * The first half — that it names the minimum-purchase REASON rather than
+       * being a bare "Invalid coupon" — does hold, and is worth keeping
+       * separate: reason and amount are two assertions and only one fails.
+       */
       "Read the exact wording of the rejection and whether it names the required amount.",
     ],
     inputs: { coupon: "ARENA25", cartSubtotal: 99, minPurchase: 1000 },
     expectedBehaviour:
       "A coupon below its minimum spend is refused with a message that names the threshold, so the buyer knows how much more to add. The minimum is measured against the items the coupon could actually discount, not the whole cart.",
     expectedUiState:
-      "The rejection names a minimum purchase and states the amount. It is not a bare 'Invalid coupon'. ARENA25 does not enter the applied list.",
+      "The rejection names the minimum-purchase reason — today 'Minimum purchase requirement not met', which satisfies that half — and states the AMOUNT, which it does not. Record the missing amount as the failure, quoting the message. ARENA25 does not enter the applied list.",
     expectedData: { couponApplied: false },
     endResult: "Reloading /checkout shows ARENA25 absent.",
   },
