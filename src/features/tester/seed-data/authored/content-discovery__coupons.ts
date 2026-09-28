@@ -116,7 +116,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/checkout",
     steps: [
       "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-      "Add product-beyblade-metal-storm-pegasus (₹99) to the cart and nothing else.",
+      "Add product-beyblade-x-wizard-arrow (₹899 — the cheapest in-stock listing in the catalogue, and below ARENA25's ₹1,000 minimum) to the cart and nothing else.",
       "Open /checkout and complete the address and add-ons steps.",
       "Type ARENA25 in the coupon field and click 'Apply'.",
       /*
@@ -135,7 +135,7 @@ export const authored: Record<string, AuthoredCase> = {
        */
       "Read the exact wording of the rejection and whether it names the required amount.",
     ],
-    inputs: { coupon: "ARENA25", cartSubtotal: 99, minPurchase: 1000 },
+    inputs: { coupon: "ARENA25", cartSubtotal: 899, minPurchase: 1000 },
     expectedBehaviour:
       "A coupon below its minimum spend is refused with a message that names the threshold, so the buyer knows how much more to add. The minimum is measured against the items the coupon could actually discount, not the whole cart.",
     expectedUiState:
