@@ -51,14 +51,30 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store/orders and count how many orders are listed.",
+      /*
+       * 🛑 ZERO IS ONE FAILURE HERE; TOO HIGH IS THE OTHER, AND ONLY ZERO WAS
+       * BEING CHECKED.
+       *
+       * The route documents two real bugs it fixed, and this case only caught
+       * the first: an unbounded `in` query that threw for any store past its
+       * 30th listing and was swallowed into ₹0 (Root Cause #59's shape). The
+       * second was the opposite direction — `o.status !== "CANCELLED"` against
+       * a lowercase OrderStatusValues, so the exclusion never excluded anything
+       * and headline revenue counted cancelled and refunded orders.
+       *
+       * A "> ₹0" assertion passes cheerfully against that. The cancelled and
+       * refunded totals are what tell the two apart, so the steps below read
+       * them.
+       */
+      "Filter /store/orders to Cancelled and note the total of any one cancelled order.",
       "Open /store.",
       "Read the total-orders figure and the revenue figure on the dashboard.",
     ],
     expectedBehaviour:
-      "The dashboard's headline numbers come from the same query as the order list, so they must agree with it. A failed query here is swallowed into an empty array, which renders as a confident zero rather than as an error.",
+      "The dashboard's headline numbers come from the same query as the order list, so they must agree with it. A failed query here is swallowed into an empty array, which renders as a confident zero rather than as an error. Revenue additionally EXCLUDES cancelled and refunded orders — money that was never kept is not revenue — so a figure that silently includes them is wrong in the opposite direction and looks healthier than the truth.",
     expectedUiState:
-      "The order count matches what /store/orders listed, and revenue is greater than ₹0 for a store with delivered orders.",
-    expectedData: { revenueIsZero: false },
+      "The order count matches what /store/orders listed, and revenue is greater than ₹0 for a store with delivered orders. Revenue is also strictly LESS than the sum of every order's total, because this store has cancelled and refunded orders that must not be counted — a revenue figure equal to the all-orders sum is the exclusion silently not applying.",
+    expectedData: { revenueIsZero: false, cancelledOrdersCountedAsRevenue: false },
     endResult: "The same figures survive a reload.",
   },
 
