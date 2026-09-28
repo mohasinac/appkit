@@ -91,11 +91,11 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-admin-users-trust-roles-crud": {
     roles: ["admin"],
-    startPage: "/admin/team",
+    startPage: "/admin/roles",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the roles or permissions surface and read every role and its permissions.",
-      "Read whether a permissions catalogue page exists and is reachable from the sidebar.",
+      "Open /admin/roles and read every role and its permissions.",
+      "Open /admin/permissions and confirm it redirects to /admin/roles?tab=permissions — it is a redirect-only shim, so the catalogue is a TAB rather than a page of its own. Check that tab is reachable from the sidebar under one name or the other.",
       "Create a role named 'QA Role users-trust' with two permissions and save.",
       "RELOAD and read its permissions.",
       "Edit it to add a third, save, RELOAD, and check the first two are still there.",
@@ -153,7 +153,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/addresses",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the banned-addresses surface and read every column.",
+      "Open /admin/banned-addresses and read every column.",
       "Check each row shows the address, who banned it, when, and why.",
       "Read whether an unban request from the owner is visible on the row.",
       "Open one and read the requester's full note before deciding anything.",
@@ -171,7 +171,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/addresses",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the address clusters surface and read what a cluster row represents.",
+      "Open /admin/address-clusters and read what a cluster row represents.",
       "Check each row states how many accounts share the address and names them.",
       "Open a cluster and read the accounts it groups.",
       "Read whether the shared address itself is shown in full or masked.",
@@ -189,7 +189,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/moderation",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the moderation queue and read every row.",
+      "Open /admin/moderation and read every row.",
       "Check each row identifies what is being moderated and shows enough to judge it.",
       "Open one item and read its full content — text, images, whatever was submitted.",
       "Return to the list and check the same is reachable from the row itself.",
@@ -207,7 +207,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/moderation",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the moderation queue and open an item.",
+      "Open /admin/moderation and open an item.",
       "Read its content, then choose Reject.",
       "Submit with the reason box empty and read what happens.",
       "Type 'Too short' and submit, reading what happens.",
@@ -246,7 +246,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/support-tickets",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin support tickets surface and read every column.",
+      "Open /admin/support-tickets and read every column.",
       "Read every status filter and select each, noting any that returns nothing.",
       "Open a ticket and read the full message thread.",
       "Reply to it and change its status in the same action.",
@@ -264,7 +264,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/item-requests",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the item-requests surface and read every row.",
+      "Open /admin/item-requests and read every row.",
       "Check each row shows the requested item's title and description rather than only a requester.",
       "Open one and read the full request before acting.",
       "Read the actions offered and check a view exists alongside them.",
@@ -284,7 +284,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open the item-request form from the buyer side.",
+      "Open /item-requests/new as the buyer — the public item-request form, not the admin queue at /admin/item-requests.",
       "Submit it completely empty and read where the errors appear.",
       "Type a title only and submit, reading what happens.",
       "Type a one-word description and submit, reading what happens.",
@@ -304,7 +304,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/reports",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the reports surface and read every row.",
+      "Open /admin/reports and read every row.",
       "Check each row names what was reported and by whom, and shows the reporter's stated detail.",
       "Open one and read the full report before acting.",
       "Read every status filter and select each, noting any that returns nothing.",
@@ -341,7 +341,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/reports",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the reports surface and open the report created by the buyer case.",
+      "Open /admin/reports and open the report created by the buyer case.",
       "Read its full detail, then choose Dismiss.",
       "Submit with the reason empty and read what happens.",
       "Type 'QA Dismissal users-trust — reviewed, no policy breach.' and submit.",
@@ -359,7 +359,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/reports",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the reports surface and open an open report.",
+      "Open /admin/reports and open an open report.",
       "Note the current date and time.",
       "Close the report with a resolution note.",
       "RELOAD and read the closed date shown.",
@@ -378,10 +378,10 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/reports",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the reports surface and read every status the status control offers.",
+      "Open /admin/reports and read every status the status control offers.",
       "Write the list down.",
       "Select each in turn on a test report and confirm each is accepted.",
-      "Open the reports list and read every status filter chip.",
+      "Open /admin/reports and read every status filter chip.",
       "Compare the chip list against the status list from the editor.",
       "Note any chip naming a status the editor cannot set, or any status the editor sets that has no chip.",
     ],
@@ -396,7 +396,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/catalogue-approvals",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the catalogue approvals surface and read every row.",
+      "Open /admin/catalogue-approvals and read every row.",
       "Check each row shows the submitted item's photos, description and price.",
       "Read every status filter and select each.",
       "Open one submission and read everything the user submitted.",
@@ -413,7 +413,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/catalogue-approvals",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the catalogue approvals surface and find a pending submission.",
+      "Open /admin/catalogue-approvals and find a pending submission.",
       "WITHOUT using Approve or Reject, find a way to open the submission in full.",
       "Read every photo at full size and the complete description.",
       "Read the price the submitter set and any linked marketplace listing.",
@@ -430,7 +430,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/payment-methods",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the payment-methods clusters surface and read what a row represents.",
+      "Open /admin/payment-methods and read what a row represents.",
       "Check each row states how many accounts share the instrument and names them.",
       "Read how the payment identifier itself is displayed.",
       "Search the page source for a full card or UPI identifier.",
@@ -593,7 +593,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the homepage sections editor and open the section type picker.",
+      "Open /admin/sections and open the section type picker.",
       "Write down every type offered.",
       "Compare the list against the section types the homepage can render.",
       "Create one of each type not already present, saving after each.",
@@ -611,7 +611,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/site",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the analytics alert settings and find the threshold field.",
+      "Open /admin/analytics and find the threshold field.",
       "Type abc into it and attempt to save.",
       "Read where any error appears.",
       "Type -5 and attempt to save, reading what happens.",
