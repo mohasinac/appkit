@@ -175,7 +175,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user and find the log-out control in the sidebar.",
+      /* 'Logout' is the rendered label (AppLayoutShell's sidebarProfileLabels). */
+      "Open /user and find 'Logout' in the sidebar's Profile section.",
       "Click it and read where the browser lands.",
       "Open /user again and read what happens.",
       "Press the browser back button and read what is shown.",
