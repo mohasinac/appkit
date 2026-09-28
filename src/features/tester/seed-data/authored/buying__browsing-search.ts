@@ -627,14 +627,31 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /auctions.",
       "Click the 'Ended' tab.",
       "Scan the grid for 'Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)' (auction-beyblade-burst-spriggan-requiem-bought-out).",
-      "Click the 'Live' tab.",
+      /*
+       * 🛑 'Available', not 'Live' — and on the next page 'Ended', not 'Closed'.
+       *
+       * `availabilityTabsFor` builds exactly three tabs and only the MIDDLE one
+       * varies: its label comes from HIDE_DEFAULT_NOUN, which maps every
+       * hideDefault onto "Sold" or "Ended" and nothing else. Prize-draw's
+       * `hideDefault: "closed"` maps to "Ended", so /prize-draws reads
+       * Available / Ended / All.
+       *
+       * The first tab is ALWAYS 'Available'. This case named it 'Live' on
+       * /auctions and 'Open' on /prize-draws, and called the prize-draw middle
+       * tab 'Closed' — three controls that render under different names, so the
+       * tester would hunt, fail to find them, and answer "could not test" on a
+       * feature that works.
+       */
+      "Click the 'Available' tab.",
       "Open /prize-draws.",
-      "Click the 'Closed' tab.",
+      "Click the 'Ended' tab.",
       "Scan the grid for 'Metal Fight Mystery Draw — Ended (Revealed)' (prizedraw-beyblade-metal-closed-revealed).",
-      "Click the 'Open' tab.",
+      "Click the 'Available' tab.",
     ],
-    expectedBehaviour: "The 'Available' / 'Live' / 'Open' tab hides sold-out, ended, and closed items by default. The 'Sold & Ended' / 'Ended' / 'Closed' tab reveals them.",
-    expectedUiState: "'Beyblade X BX-34 Dran Buster (Sold Out)' appears on the 'Sold & Ended' tab and is absent on 'Available'. 'Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)' appears on 'Ended' and is absent on 'Live'. 'Metal Fight Mystery Draw — Ended (Revealed)' appears on 'Closed' and is absent on 'Open'.",
+    expectedBehaviour:
+      "The 'Available' tab hides sold-out, ended and closed items on every listing page; the middle tab reveals them. Only the middle label varies by listing type — 'Sold & Ended' on /products, 'Ended' on /auctions and on /prize-draws.",
+    expectedUiState:
+      "'Beyblade X BX-34 Dran Buster (Sold Out)' appears on the 'Sold & Ended' tab and is absent on 'Available'. 'Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)' appears on /auctions' 'Ended' tab and is absent on 'Available'. 'Metal Fight Mystery Draw — Ended (Revealed)' appears on /prize-draws' 'Ended' tab and is absent on 'Available'. No page offers a tab labelled 'Live', 'Open' or 'Closed'.",
     endResult: "Nothing is persisted. Tab state is URL state only.",
   },
   "checklist-buying-browsing-search-sort-options-per-listing-type": {
