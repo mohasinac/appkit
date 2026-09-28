@@ -87,11 +87,11 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/orders and find the manual-payment filter chips.",
-      "Read every chip offered and write the list down.",
+      "Read every chip offered and write the list down — there are three: All, 'Awaiting payment' and 'Awaiting verification'.",
       "Select each in turn and read the rows returned.",
       "Check the awaiting-payment chip returns orders with NO proof uploaded.",
       "Check the awaiting-verification chip returns orders WITH a proof and no decision.",
-      "Read the URL and confirm the selection is encoded there.",
+      "Read the URL and confirm the selection is encoded there as ?paymentReview=awaiting_proof or ?paymentReview=awaiting_verification — a query param of its own, NOT a Sieve f= filter, which is the whole point of the case.",
     ],
     expectedBehaviour:
       "The queue is not an ordinary Sieve filter. 'Has a proof' cannot be expressed as a query predicate — an inequality on the proof field excludes every document where it was never written, which IS the awaiting-payment set, so the query would return only the opposite of what was asked. The queue runs one bounded query and refines in memory instead, reached through its own query parameter.",
@@ -235,7 +235,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/orders",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin returns surface and read the rows.",
+      "Open /admin/return-requests and read the rows.",
       "Check each row shows the item, the buyer's stated reason and the order it belongs to.",
       "Read the scope tabs and check which scope a return-requested order sits under.",
       "Open one and read the full reason before acting.",
@@ -254,7 +254,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/orders",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin fulfillment queue and read every row's primary label.",
+      "Open /admin/fulfillment and read every row's primary label.",
       "Check each names the ITEM and shows its thumbnail rather than only an order id.",
       "Read a multi-item order's row and check it indicates there is more than one item.",
       "Read the queue's ordering and check the oldest unfulfilled order is first.",
@@ -271,7 +271,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/shipments",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin shipments surface and read the existing shipments.",
+      "Open /admin/shipments and read the existing shipments.",
       "Create one named 'QA Shipment admin-crud' with a supplier and a date, and save.",
       "RELOAD and read every field.",
       "Add a lot and an item to it, save, RELOAD, and read them back.",
