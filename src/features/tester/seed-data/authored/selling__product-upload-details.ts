@@ -72,7 +72,7 @@ export const authored: Record<string, AuthoredCase> = {
       SIGN_IN_SELLER,
       "Open /store/products/new and switch to the advanced form.",
       "Open the Media section and read the size limit stated next to 'Main Image'.",
-      "Choose public/test-media/oversized.png for the Main Image and start a timer. (The batch generates this file — it is >10 MB of incompressible noise and deliberately not committed.)",
+      "Choose public/test-media/oversized.png for the Main Image and start a timer. 🛑 THE BATCH DOES NOT GENERATE THIS FILE — there is no fixture manifest for this page. Run `node tester/scripts/make-media-fixtures.mjs --with-oversized` first; it sizes the fixture by reading the caps out of appkit/src/_internal/shared/media/limits.ts rather than from a remembered number. It is >10 MB of incompressible noise and deliberately not committed.",
       "Read the message that appears and note how long it took.",
       `Open the browser network panel and check whether any request to ${SIGN} was made.`,
     ],
@@ -80,7 +80,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "A file over the limit is refused BEFORE any bytes leave the browser. The point is the seller's time: a 12 MB upload that travels, then finalises, then fails validation has taken a minute to tell them something the form already knew when they picked the file. The limit is also stated up front rather than only in the refusal.",
     expectedUiState:
-      `The refusal is immediate (well under a second) and reads 'File size must be less than 10MB', naming the actual size. No ${SIGN} request appears in the network panel. The field keeps whatever image it had before.`,
+      `The refusal is immediate (well under a second) and reads 'File size must be less than 10MB (current: …)', naming the actual size — 10 is MAX_IMAGE_BYTES from limits.ts. 🛑 EXPECT 50MB INSTEAD, AND RECORD IT: the gallery field passes maxSizeMB={50} explicitly, which is the VIDEO cap applied to a field accepting image/* and video/* alike, so a 12 MB image is accepted client-side. MediaUploadField's own auto-derived defaults (image 25, video 200, pdf 10) disagree with limits.ts (10, 50, 20) on all three. Report the number the message actually states. No ${SIGN} request appears in the network panel. The field keeps whatever image it had before.`,
     expectedData: { signRequestsMade: 0 },
     endResult: "Leave without saving; nothing was uploaded.",
   },
@@ -140,7 +140,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Add public/test-media/sample-image-2.png as the first GALLERY image.",
       "Read both previews and confirm they show different pictures.",
       "Publish with Title 'Slot Collision Probe', Description 'Main image and first gallery image must not overwrite each other.', Category 'Beyblade Burst', Price 499.",
-      "Open the product's public page and read the main image and the first gallery thumbnail.",
+      "Open the product's public page at /products/{its slug} and read the main image and the first gallery thumbnail.",
     ],
     inputs: { mainImage: "public/test-media/sample-image.png", firstGalleryImage: "public/test-media/sample-image-2.png", price: 499 },
     expectedBehaviour:
