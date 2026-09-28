@@ -111,13 +111,13 @@ export const authored: Record<string, AuthoredCase> = {
       "Look for QA Brand inline-create in the list.",
       "Open its brand page.",
       "Read the product grid and look for 'QA Product custom-brand'.",
-      "Open the sort control and choose 'Most Products', then look for QA Brand inline-create AND the four seeded brands — Takara-Tomy, Beyblade, Hasbro and Independent Keepers.",
+      "Open the sort control and choose 'Most Products'. ALL brands should be listed, seeded ones included — Takara-Tomy, Beyblade, Hasbro and Independent Keepers. The seed file writes no `metrics` on brand rows, but `onProductWrite` is a documentWritten trigger on products/{productId}: it fires on seed writes too and increments `metrics.productCount` on the brand as well as the category, creating the field. A brand MISSING from this sort means the trigger did not run for its products.",
     ],
     inputs: { brandName: "QA Brand inline-create", productTitle: "QA Product custom-brand" },
     expectedBehaviour:
       "A seller-created brand becomes a real public brand page listing its products. The match is on display name, so this page is where a name-versus-slug mismatch finally shows — the brand page renders and its grid is empty, which reads as a brand with no stock rather than as a broken link.",
     expectedUiState:
-      "The brand is listed on /brands and its page shows 'QA Product custom-brand' in the grid. An empty grid on a brand that demonstrably has a product is the failure this whole page builds toward. Under 'Most Products', EXPECT THE FOUR SEEDED BRANDS TO VANISH and record it: they carry no metrics field at all, and an orderBy silently excludes every document lacking the ordering field, so that sort shows only brands created through the UI. The newly created one has metrics.productCount because the create action sets it.",
+      "The brand is listed on /brands and its page shows 'QA Product custom-brand' in the grid. An empty grid on a brand that demonstrably has a product is the failure this whole page builds toward. Under 'Most Products' every brand with products is listed, seeded ones included. An orderBy does silently exclude a document lacking the ordering field, so a brand absent HERE is real evidence that onProductWrite never ran for its products — which is why this sort is worth opening at all.",
     expectedData: { productsOnBrandPage: 1 },
     endResult:
       "NOTHING is cleaned up here and that is deliberate: this case is signed out, and the harness gives a guest batch no session at all, so a 'sign in and delete' step could never be performed. The QA product and brand are removed by the seller-side case that created them; if this case runs alone, say so and leave them.",

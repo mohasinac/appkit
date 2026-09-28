@@ -52,7 +52,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories/x-tops — a parent whose children include x-starters and x-boosters.",
+      "Open /categories/category-x-tops — a parent whose children are category-x-starters and category-x-boosters — every category id carries the `category-` prefix, and a URL without it does not resolve.",
       "Write down the count on the parent's tile.",
       "Open the parent and write down the count shown on each of its child chips.",
       "Add the children's counts together.",
@@ -70,7 +70,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories/x-tops.",
+      "Open /categories/category-x-tops.",
       "Open one of its CHILD categories and write down the title of a product listed there.",
       "Go back to the parent category's own page.",
       "Search the parent's listing for that same product, paging through if necessary.",
@@ -87,7 +87,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open a parent category page that shows a row of child chips.",
+      "Open /categories/category-x-tops, a parent that shows a row of child chips — category-x-starters and category-x-boosters.",
       "Write down the number in the page header.",
       "Write down the number on each child chip.",
       "Open one child and compare its own header number to the number its chip showed.",
@@ -104,7 +104,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories/spinning-tops — a root category.",
+      "Open /categories/category-spinning-tops — a root category.",
       "Write down its count.",
       "Open it and write down the count on each of its direct children.",
       "Open each child in turn and write down its children's counts, until you reach leaves.",
@@ -122,7 +122,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories/x-tops, which has several children.",
+      "Open /categories/category-x-tops, which has several children.",
       "Open the first child and write down a product title from its listing.",
       "Open the second child's listing.",
       "Search the second child for that product.",
