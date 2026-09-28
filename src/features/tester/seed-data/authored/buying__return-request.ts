@@ -53,14 +53,27 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user/orders and find a delivered order whose item was marked final sale.",
+      "Open /user/orders and open any delivered order — every seeded listing is final sale, because ProductDocument.finalSale is ABSENT on all of them and absent means true.",
       "Confirm the order or its item shows the final-sale term.",
       "Open the return control and read every reason it offers.",
-      "Select the not-received reason.",
+      /*
+       * 🛑 THE RENDERED LABEL, NOT THE ENUM VALUE OR A PARAPHRASE.
+       *
+       * These steps said "the not-received reason" and "the change-of-mind
+       * reason". The stored codes really are `not_received` and `changed_mind`
+       * — but RETURN_REASON_LABEL renders them as 'It never arrived' and
+       * 'I changed my mind', and neither paraphrase appears on screen.
+       *
+       * A tester scanning a select for "not received" does not find it. Same
+       * shape as the Decline/Reject button on buying/offers: the code value and
+       * the label are two different registers, and a step names the one the
+       * user clicks.
+       */
+      "Select 'It never arrived'.",
       "Type 'QA Return not-received — the parcel never arrived.' and submit.",
       "RELOAD the order and read its status.",
     ],
-    inputs: { reason: "not received", note: "QA Return not-received — the parcel never arrived." },
+    inputs: { reason: "It never arrived", note: "QA Return not-received — the parcel never arrived." },
     expectedBehaviour:
       "Final sale does not override non-delivery. It is a statement about changing your mind, not about whether the seller has to deliver — so a not-received claim must be accepted on a final-sale item, and refusing it converts a delivery failure into a term the buyer never agreed to.",
     expectedUiState:
@@ -74,13 +87,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user/orders and find a different delivered final-sale order.",
+      "Open /user/orders and open a DIFFERENT delivered order — it is final sale too, for the same reason.",
       "Open the return control and read every reason offered.",
-      "Select the change-of-mind reason.",
+      "Select 'I changed my mind'.",
       "Read what happens — whether it is refused, and what the message says.",
       "Read whether the message names FINAL SALE as the reason for the refusal.",
     ],
-    inputs: { reason: "change of mind" },
+    inputs: { reason: "I changed my mind" },
     expectedBehaviour:
       "Change of mind is refused on a final-sale item and the refusal NAMES final sale. A generic 'returns are not available' leaves the buyer believing the item is broken or the site is; naming the term tells them it was disclosed before purchase and points them at where they agreed to it.",
     expectedUiState:
