@@ -25,7 +25,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open / in a private window at 1280 pixels wide.",
+      "Open / in a private window at 1280 pixels wide. 🛑 EVERY STEP BELOW MEANS THE CARD CAROUSELS — 'Featured Products', 'Live Auctions', 'Shop by Category', 'Reserve Before It Ships' — and NOT the full-bleed hero slider at the top of the page, which is a different component with its own arrows and its own behaviour. Reading the hero instead is the easiest way to record a finding about the wrong thing.",
       "Scroll to a horizontal card carousel.",
       "Look at the left and right arrows and what sits under each.",
       "Read the title and the price row (signed out that row reads 'Sign in to see price') of the first and last visible cards.",
@@ -42,7 +42,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open / in a private window at 1280 pixels wide and scroll to a card carousel.",
+      "Open / in a private window at 1280 pixels wide and scroll to the 'Featured Products' carousel.",
       "Click the right arrow once and watch the cards move.",
       "While the cards are still moving, look at where the arrows are.",
       "Let it settle and look again.",
@@ -59,7 +59,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/",
     steps: [
       "Resize the browser window to 390 pixels wide and open / in a private window.",
-      "Scroll to a card carousel and look for arrows.",
+      "Scroll to the 'Featured Products' carousel and look for arrows.",
       "Swipe the rail and check it moves.",
       "Resize to 1280 pixels and look for the arrows again.",
     ],
@@ -75,7 +75,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/",
     steps: [
       "Resize the browser window to 390 pixels wide and open / in a private window.",
-      "Scroll to a card carousel and look at the first card's left edge.",
+      "Scroll to the 'Featured Products' carousel and look at the first card's left edge.",
       "Look at the last card's right edge after swiping to the end.",
       "Read each visible card's title and price row in full.",
       "Try to scroll the page sideways rather than the rail.",
@@ -92,7 +92,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/",
     steps: [
       "Resize the browser window to 390 pixels wide and open / in a private window.",
-      "Scroll to a card carousel and swipe it left with a short flick.",
+      "Scroll to the 'Featured Products' carousel and swipe it left with a short flick.",
       "Watch where it comes to rest.",
       "Swipe again with a long flick and watch where it rests.",
       "Swipe back to the start.",
@@ -108,7 +108,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open / in a private window in light mode at 1280 pixels and scroll to a card carousel.",
+      "Open / in a private window in light mode at 1280 pixels and scroll to the 'Featured Products' carousel.",
       "Look at the left and right edges of the rail for a fade or gradient overlay.",
       "Switch to dark mode and look at the same edges.",
       "Scroll the rail to the middle and look again in dark mode.",
@@ -123,7 +123,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open / in a private window at 1280 pixels and find a carousel whose cards wrap to two rows, or a taller card variant.",
+      "Open / in a private window at 1280 pixels and find a carousel whose cards are TALLER than the Featured Products row — 'Live Auctions' carries a countdown and bid line, so its cards run taller than a plain product card. If no section on the page wraps to two rows, say so and test the tallest single row instead rather than hunting for a layout that may not exist.",
       "Look at the arrows' vertical position relative to the rail.",
       "Check whether they are centred on the full height or on one row.",
       "Click each and check it scrolls the whole rail.",
@@ -139,7 +139,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/",
     steps: [
       "Open / in a private window and switch to dark mode.",
-      "Scroll to a card carousel and look at both arrows.",
+      "Scroll to the 'Featured Products' carousel and look at both arrows.",
       "Hover each and look at it while hovering.",
       "Compare their visibility against light mode.",
     ],
@@ -153,7 +153,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open / in a private window at 1280 pixels and scroll to a card carousel.",
+      "Open / in a private window at 1280 pixels and scroll to the 'Featured Products' carousel.",
       "Look at the left arrow while the rail is at its start.",
       "Click right repeatedly to the end of the rail.",
       "Look at the right arrow at the end and at the rail's position.",
@@ -169,7 +169,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/",
     steps: [
-      "Open / in a private window at 1280 pixels and scroll to a card carousel.",
+      "Open / in a private window at 1280 pixels and scroll to the 'Featured Products' carousel.",
       "Slowly resize the window down through 1024, 768 and 640 to 390 pixels, watching the rail throughout.",
       "Note the width at which the arrows disappear.",
       "Slowly resize back up to 1280, watching the rail.",
