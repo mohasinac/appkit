@@ -28,7 +28,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/offers",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's offers list and read every row — product, offered amount, listed price, status and round.",
+      "Open /store/offers and read every row — product, offered amount, listed price, status and round.",
       "Read every status filter offered and select each in turn, noting any that returns nothing.",
       "For each empty filter, check the unfiltered list for rows carrying that status.",
       "Open one offer and read its detail, including any earlier rounds.",
@@ -45,11 +45,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/features",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's product-features page and read the existing features.",
+      "Open /store/features and read the existing features.",
       "Create one named 'QA Feature marketing-extras' with an icon and a description, and save.",
       "RELOAD and read every field.",
       "Open a product editor and attach that feature to 'Beyblade Burst B-01 Valkyrie', then save.",
-      "Open the product's public page and read whether the feature is shown.",
+      "Open the product's public page at /products/{its slug} and read whether the feature is shown.",
       "Detach it, then delete the feature.",
     ],
     inputs: { name: "QA Feature marketing-extras", productId: "product-beyblade-burst-valkyrie" },
@@ -62,10 +62,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-marketing-extras-seller-google-reviews-sync": {
     roles: ["seller"],
-    startPage: "/store",
+    startPage: "/store/google-reviews",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's Google reviews sync surface and read what it asks for.",
+      "Open /store/google-reviews and read what it asks for.",
       "Read whether it states that credentials are required and which ones.",
       "Trigger a sync without credentials configured and read the message.",
       "Read whether any error mentions a provider, a key, or a raw response.",
@@ -80,10 +80,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-marketing-extras-seller-whatsapp-catalog": {
     roles: ["seller"],
-    startPage: "/store",
+    startPage: "/store/whatsapp",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's WhatsApp catalog surface and read every control.",
+      "Open /store/whatsapp and read every control.",
       "Read what it says about the connection state.",
       "Read whether it names the business account and catalog it would sync with.",
       "Trigger a catalog action without a token configured and read the message.",
@@ -96,15 +96,15 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-marketing-extras-seller-whatsapp-token-save": {
     roles: ["seller", "guest"],
-    startPage: "/store",
+    startPage: "/store/whatsapp",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's WhatsApp settings and type QA-WHATSAPP-TOKEN-118427 into the access-token field.",
-      "Save and RELOAD, then read how the token is displayed.",
+      "Open /store/whatsapp and type QA-WHATSAPP-TOKEN-118427 into the access-token field.",
+      "Save and RELOAD, then read how the token is displayed — a set token renders as a mask (••••••), never as the value typed.",
       "Open the browser's View Source on that settings page and search for QA-WHATSAPP-TOKEN-118427.",
       "Open /stores/store-beyblade-arena in a private window with no session.",
       "Open View Source there and search for QA-WHATSAPP-TOKEN-118427 and for accessToken.",
-      "Clear the token field, save, and reload to confirm it is gone.",
+      "Clear the token field, save, and reload to confirm it is gone. Clearing is the correct ending here, unusually: no seeded store carries a whatsappConfig, so there is no prior value to restore and the field started empty.",
     ],
     inputs: { token: "QA-WHATSAPP-TOKEN-118427" },
     expectedBehaviour:
@@ -117,10 +117,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-marketing-extras-seller-whatsapp-import-runs-in-background": {
     roles: ["seller"],
-    startPage: "/store",
+    startPage: "/store/whatsapp",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's WhatsApp catalog surface and start an import.",
+      "Open /store/whatsapp and start an import.",
       "Read what the page shows immediately — whether it blocks or returns.",
       "Navigate to another store page and back.",
       "Read whether the import's progress is still reported.",
@@ -135,10 +135,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-selling-seller-marketing-extras-seller-whatsapp-import-skips-already-synced": {
     roles: ["seller"],
-    startPage: "/store",
+    startPage: "/store/whatsapp",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's WhatsApp catalog surface and run an import, noting the summary and the store's product count.",
+      "Open /store/whatsapp and run an import, noting the summary and the store's product count.",
       "Run the SAME import a second time without changing anything.",
       "Read the second summary and compare it against the first.",
       "Open /store/products and read the product count again.",
@@ -150,7 +150,7 @@ export const authored: Record<string, AuthoredCase> = {
       "The second summary reports items skipped rather than a second full import. The product count is unchanged and no title appears twice.",
     expectedData: { duplicateTitles: 0 },
     endResult:
-      "No duplicates exist. A doubled product count after a repeated import is the failure, and the summary will still have read as successful.",
+      "No duplicates exist. A doubled product count after a repeated import is the failure, and the summary will still have read as successful. NOTE: no seeded store carries a whatsappConfig at all, so with no Meta credentials configured BOTH imports will decline and there is nothing to compare — record that and answer null rather than reading two declines as a pass. Two identical declines are not evidence that duplicates are skipped.",
   },
   "checklist-selling-seller-marketing-extras-seller-whatsapp-push-product-link-opens": {
     roles: ["seller"],
@@ -176,7 +176,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/reviews",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open the store's reviews list and open a review with no seller response.",
+      "Open /store/reviews and open a review with no seller response.",
       "Type 'QA Response seller-reviews-response — thanks for the feedback.' as the response and save.",
       "RELOAD and read the response.",
       "Open that review on the product's public page in a private window.",
