@@ -194,10 +194,27 @@ export const authored: Record<string, AuthoredCase> = {
     ],
     expectedBehaviour:
       "Bidder names are masked on the way out of the server, not hidden in the renderer. The masking helper for bids once returned its input unchanged while being named as though it masked — every bidder's real name was in the public payload and nothing displayed it, so the leak was invisible from the screen. Displaying the masked name is what makes that checkable by eye.",
+    /*
+     * 🛑 THE FORBIDDEN NAMES WERE FICTIONAL, SO THE PII CHECK PASSED VACUOUSLY.
+     *
+     * This asserted that 'Meera Bey', 'Rohit Collector' or 'Ananya Collector'
+     * must not appear. Those three strings occur ZERO times in the seed: the
+     * personas' displayName values are "Mock User 11", "Mock User 14" and
+     * "Mock User 9". So the assertion could never fail — it would report a
+     * clean PII check whether masking worked or not, which is the one outcome
+     * worse than no check at all.
+     *
+     * The masked shape was wrong for the same reason: 'M*** B***' is the mask
+     * of "Meera Bey". maskName splits on whitespace and keeps each word's first
+     * character, so "Mock User 11" becomes "M*** U*** 11***".
+     *
+     * Bidder uids are right (meera-bey, rohit-collector, ananya-collector all
+     * bid on this auction) — only the names they resolve to were invented.
+     */
     expectedUiState:
-      "Each row reads in the shape '₹3,199.00 · M*** B*** · 4 Sept, 17:06'. The name is genuinely masked — asterisks in the middle — and is not a full readable name, and not a placeholder like 'Bidder'. The timestamp carries both a date and a clock time, not a date alone.",
+      "Each row reads in the shape '₹3,199.00 · M*** U*** 11*** · 4 Sept, 17:06'. The name is genuinely masked — every word reduced to its first character plus asterisks — and is not a full readable name, and not a placeholder like 'Bidder'. The timestamp carries both a date and a clock time, not a date alone.",
     endResult:
-      "The same masked names and timestamps appear after reload. A real full name — 'Meera Bey', 'Rohit Collector' or 'Ananya Collector', the three seeded bidders on this auction — anywhere in these rows is a PII leak and fails the case outright.",
+      "The same masked names and timestamps appear after reload. An unmasked display name — 'Mock User 9', 'Mock User 11' or 'Mock User 14', the three seeded bidders on this auction — anywhere in these rows is a PII leak and fails the case outright.",
   },
   "checklist-buying-bidding-bid-increment-live-tier-change": {
     roles: ["buyer"],

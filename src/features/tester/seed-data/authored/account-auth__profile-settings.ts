@@ -68,7 +68,14 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The save succeeds and both fields are written to the user document. The header account menu picks up the new display name too, since it reads the same field.",
     expectedUiState:
-      "After reload, Profile Details shows the display name 'QA Profile account-auth-profile-settings-edit-profile' and the bio 'Tester bio update for QA.'. Neither field has reverted to 'Rehan Sheikh' or to an empty bio.",
+      /*
+       * 'Mock User 3', not 'Rehan Sheikh'. Every seeded persona's displayName
+       * is "Mock User N" — the human-looking names live only in the email
+       * addresses — so 'Rehan Sheikh' occurs nowhere in the seed and the
+       * revert half of this assertion could never fail. A save that silently
+       * reverted would still have passed.
+       */
+      "After reload, Profile Details shows the display name 'QA Profile account-auth-profile-settings-edit-profile' and the bio 'Tester bio update for QA.'. Neither field has reverted to 'Mock User 3' (user-yugi-muto's seeded display name) or to an empty bio.",
     expectedData: {
       displayName: "QA Profile account-auth-profile-settings-edit-profile",
       bio: "Tester bio update for QA.",
