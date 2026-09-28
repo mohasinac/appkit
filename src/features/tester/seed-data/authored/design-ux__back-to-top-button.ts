@@ -44,7 +44,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/products/product-beyblade-original-dranzer-s",
     steps: [
       "Open /products/product-beyblade-original-dranzer-s in a private window at 1280 pixels wide.",
-      "Scroll down past 400 pixels so both the sticky buy bar and the back-to-top control are showing.",
+      "Scroll down past 400 pixels so both the sticky buy bar and the back-to-top control are showing. Both reveal at exactly 400 — BottomActions.DESKTOP_REVEAL_SCROLL_PX and BackToTop's own default threshold are the same number — so on desktop they appear on the SAME scroll tick and any overlap is deterministic rather than a matter of timing. There is no need to hunt for the moment they collide.",
       "Look at where the back-to-top control sits relative to the buy bar.",
       "Try to click both the back-to-top control and each button in the buy bar.",
       "Resize to 390 pixels wide and repeat.",
