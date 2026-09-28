@@ -46,7 +46,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/",
     steps: [
       "Open / on a device or emulator with WhatsApp installed.",
-      "Find the 'Join the Community' button and read the URL it points at.",
+      "Find the WhatsApp community button — its default label is 'Join our WhatsApp community', not 'Join the Community' — and read the URL it points at.",
       "Tap it and read what WhatsApp shows.",
       "Open /contact and find its WhatsApp link.",
       "Read that URL and compare it with the first.",
@@ -96,7 +96,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /about in a private window with no session.",
       "Scroll to the 'Our Values' section.",
-      "Count the values listed.",
+      "Count the values listed, and read whether each has a second smaller paragraph under its heading.",
       "Read each one for a second, smaller paragraph beneath its heading.",
       "Find the 'How we hold ourselves to this →' link and click it.",
       "Read the address bar.",
@@ -105,7 +105,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The section carries six values, each with a subtitle paragraph, and links onward to the Ethics page — where the commitments are actually detailed. Values with no onward link are a statement with nothing behind it.",
     expectedUiState:
-      "Six values are shown, not three. Each has a second smaller paragraph under its heading rather than a heading alone. The link is present and lands on /ethics.",
+      "Six values are shown, not three, each with a second smaller paragraph under its heading, and the link lands on /ethics. 🛑 EXPECT THREE WITHOUT SUBTITLES ON A FRESHLY-SEEDED ENVIRONMENT, and record that as a CONTENT gap rather than a UI failure: appkit/src/seed/site-settings-seed-data.ts ships three valueItems and none of them carries a `detail` field, so it predates this expansion. aboutContent lives in siteSettings, which is PRESERVE-tier and never reseeded, so production holds whatever an admin last saved and may well show six. Report the count you actually see and which environment you saw it in — the link and the subtitle rendering are separately testable and the link should work either way.",
     expectedData: { valueCount: 6, ethicsHref: "/ethics" },
     endResult: "Read-only; nothing persists.",
   },
