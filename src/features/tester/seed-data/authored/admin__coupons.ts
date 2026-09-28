@@ -70,9 +70,9 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/coupons, find ARENAVIP, and read its per-user limit (1), total limit (50) and current usage (12).",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and place an order of 2 × product-beyblade-original-dranzer-s (₹2,998, above ARENAVIP's ₹2,000 minimum) applying ARENAVIP.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as vivaan.kapoor@gmail.com / TempPass123! and place an order of 2 × product-beyblade-original-dranzer-s (₹2,998, above ARENAVIP's ₹2,000 minimum) applying ARENAVIP.",
       "Attempt a second order applying it again and read the refusal.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and apply ARENAVIP at checkout on the same two items.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as rehan.sheikh@gmail.com / TempPass123! and apply ARENAVIP at checkout on the same two items.",
       "Sign back in as admin and read the usage count.",
     ],
     inputs: { code: "ARENAVIP", perUserLimit: 1 },
@@ -89,7 +89,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/coupons",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and confirm QAADMIN15 has a minimum purchase of 500 and a maximum discount of 200.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "Add product-beyblade-metal-storm-pegasus (₹99) to the cart alone and apply QAADMIN15 at checkout.",
       "Read the refusal and whether it names the required amount.",
       "Add product-beyblade-original-driger-v (₹1,799) so the subtotal clears the minimum, and apply again.",
@@ -100,7 +100,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The minimum gates whether the coupon applies at all and the maximum caps what it gives. The minimum is measured against the items the coupon could actually discount rather than the whole cart, and money is decimal rupees throughout — a validator rejecting 799.50 as a non-integer is a leftover from the old whole-number storage.",
     expectedUiState:
-      "Below the minimum the coupon is refused with a message naming the threshold, not a bare 'Invalid coupon'. Above it the discount is capped at ₹200.00. A decimal amount is accepted in the coupon form.",
+      "Below the minimum the coupon is refused with a message naming the REASON — today 'Minimum purchase requirement not met', which names the reason but NOT the amount, and the missing amount is a known gap recorded against content-discovery/coupons rather than a fresh finding here. What must not appear is a bare 'Invalid coupon', which would tell the buyer nothing about how much more to add. Above it the discount is capped at ₹200.00. A decimal amount is accepted in the coupon form.",
     endResult: "Nothing is ordered; leave checkout without placing.",
   },
   "checklist-admin-coupons-coupon-scope-admin-vs-seller": {
@@ -127,7 +127,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/coupons, open SEALED20, and write down its end date.",
       "Set its end date to yesterday and LEAVE the Active toggle ON, then save — it is now past its end date while still flagged active.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and apply SEALED20 at checkout.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as vivaan.kapoor@gmail.com / TempPass123! and apply SEALED20 at checkout.",
       "Read the exact wording of the refusal.",
       "Sign back in as admin, deactivate BLADER50 without touching its dates, and apply that one as the buyer.",
       "Compare the two refusal messages.",
@@ -146,7 +146,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/coupons",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and confirm QAADMIN15 is admin-scoped with no store.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "Add product-beyblade-burst-regalia-genesis (₹1,399, Beyblade Arena) to the cart.",
       "Add prizedraw-beyblade-original-vintage-vault (₹299, LetItRip Official) and set its quantity to 2.",
       "Apply QAADMIN15 at checkout and read the discount.",
@@ -185,7 +185,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Create a coupon coded QACATADMIN20 at 20%, restricted to the Beyblade Burst category, no minimum.",
       "Save, RELOAD, and confirm the restriction persisted.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "Add product-beyblade-metal-storm-pegasus (₹1,299, Metal Fight) alone and apply QACATADMIN20 — read the refusal.",
       "Add product-beyblade-burst-regalia-genesis (₹1,399, Burst) and apply again.",
       "Read the discount and compare it against 20% of ₹1,399.",
@@ -228,7 +228,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/coupons and read the usage figure on every row.",
       "Note the figure for ARENA25.",
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123! and place an order applying ARENA25.",
+      "Swap identity before this step: this case lists admin among its roles, so the harness resolves the whole batch to the ADMIN session. Copy tester/.tester-runs/session-buyer.json over session.json and CLOSE THE BROWSER — the MCP reads that file only at context creation. An admin can apply a coupon perfectly well, so without this the case passes while testing the wrong person. Then sign in as vivaan.kapoor@gmail.com / TempPass123! and place an order applying ARENA25.",
       "Sign back in as admin and read ARENA25's usage figure again.",
       "Open the coupon's detail and read whether it shows total usage, per-user usage, or both.",
       "Reload and confirm the figure persists.",
