@@ -91,7 +91,7 @@ export const authored: Record<string, AuthoredCase> = {
       "After the reload the credential shows masked rather than as the typed value or as raw ciphertext. The public settings response contains no trace of it. A save that errors should name the missing configuration rather than showing a stack trace.",
     expectedData: { credentialInPublicResponse: 0 },
     endResult:
-      "The field is cleared. A hit in the public response is a credential leak and fails the case outright.",
+      "The field holds exactly what it held before the case ran — restored, not cleared. A hit in the public response is a credential leak and fails the case outright.",
   },
   "checklist-admin-site-system-site-settings-credentials-partial-save-keeps-others": {
     roles: ["admin"],
@@ -344,7 +344,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/analytics",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the admin analytics page and read every card and chart.",
+      "Open /admin/analytics and read every card and chart.",
       "Write down any figure reading zero or a dash.",
       "Change the date range if one is offered and read the figures again.",
       "Reload and confirm the figures are stable.",
@@ -379,7 +379,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open the browser console and clear it.",
-      "Open the admin analytics page and wait for every card to settle.",
+      "Open /admin/analytics and wait for every card to settle.",
       "Read the console for any permission-denied message.",
       "Open the admin dashboard and read the console again.",
       "Note which card or widget was loading when any such message appeared.",
@@ -430,7 +430,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/maintenance",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the maintenance section and read every page it links to.",
+      "Open /admin/maintenance and read every page it links to.",
       "Open each in turn and confirm it renders content rather than an error.",
       "Note any that shows a failed-precondition or missing-index error.",
       "Note any that shows a permission or credentials error.",
@@ -447,10 +447,10 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/maintenance",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the server errors list and read the rows.",
+      "Open /admin/maintenance/server-errors and read the rows.",
       "Read whether rows carry a source, a code, a message and a time.",
-      "Open the client errors list and read its rows.",
-      "Open the function errors list and read its rows.",
+      "Open /admin/maintenance/client-errors and read its rows.",
+      "Open /admin/maintenance/function-errors and read its rows.",
       "Note which of the three lists is empty.",
       "Check the sort order puts the newest first.",
     ],
@@ -465,7 +465,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/maintenance",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the cloud logs page and read what renders.",
+      "Open /admin/maintenance/cloud-logs and read what renders.",
       "Read whether it shows log entries, an empty state, or an error.",
       "If it errors, read whether the message names the missing configuration.",
       "Reload and confirm the behaviour is consistent.",
@@ -482,7 +482,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open the copilot or assistant surface and read what it offers.",
+      "Open /admin/copilot and read what it offers.",
       "Read whether it states which model or provider it uses.",
       "Submit a simple request and read the response.",
       "Read whether any error surfaces a provider key or a raw response body.",
