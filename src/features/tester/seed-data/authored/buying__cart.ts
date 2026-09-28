@@ -1060,7 +1060,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123! with items from TWO sellers.",
-      "Open /cart and tick 'WhatsApp order updates' on ONE seller's card only.",
+      /*
+       * 'WhatsApp updates' — the label StoreAddonsPicker actually renders,
+       * under an 'Add-ons' heading on each seller's card. This said 'WhatsApp
+       * order updates', which appears nowhere; CartPriceBreakdown's matching
+       * FEE LINE reads 'WhatsApp updates' too, so neither surface uses the
+       * longer form.
+       */
+      "Open /cart and tick 'WhatsApp updates' under 'Add-ons' on ONE seller's card only.",
       "Read that seller's fee lines and the aggregate breakdown.",
       "Check the fee is charged once at ₹10.00, not ₹20.00.",
       "Check the other seller's card shows no such fee.",
