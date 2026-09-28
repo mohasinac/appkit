@@ -47,7 +47,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Open /store and note which sidebar entry is highlighted.",
       "Navigate to /store/products and read which entry is highlighted.",
-      "Navigate to a nested page beneath it — a product's editor — and read the highlight again.",
+      "Navigate to a nested page beneath it — open /store/products, then a product's editor at /store/products/{id}/edit — and read the highlight again. The parent Products entry must stay highlighted two levels down; a highlight that only matches the exact path goes dark on every editor.",
       "Navigate to /store/orders and read it again.",
       "Use the browser's back button and read the highlight.",
     ],
@@ -105,7 +105,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Click through to /user and read where it lands.",
       "From /user, find the way back to /store and click it.",
       "Check the sidebar changed with the portal each time.",
-      "Open the public store page from within the dashboard and confirm it opens the public view rather than the editor.",
+      "Open the public store page from within the dashboard — it is /stores/store-beyblade-arena, under the PLURAL /stores — and confirm it opens the public view rather than the editor. The two differ by one character, which is exactly how such a link ends up pointing back into the dashboard.",
     ],
     expectedBehaviour:
       "A seller is also a buyer, so both portals are reachable from each other and each renders its own navigation. The public-store link is a distinct destination from the store settings editor — conflating them is a live defect on the buyer side, where a 'My Profile' entry leads to the edit page rather than the public profile.",
