@@ -119,6 +119,23 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     shipmentProtectionAddon: doc.shipmentProtectionAddon,
     shipmentProtectionFee: doc.shipmentProtectionFee,
     platformFee: doc.platformFee,
+    /*
+     * 🛑 `gstAmount` -> `tax`, and codHandlingFee alongside it.
+     *
+     * The comment four lines up is about exactly this and the same block still
+     * dropped two fees. The invoice renders its GST line as
+     * `order.tax !== undefined && order.tax > 0`, and nothing ever set `tax`,
+     * so that line could never appear — Root Cause #57's silent "not
+     * applicable" fallback, on a financial document.
+     *
+     * Measured on a real order: the invoice listed Subtotal ₹899.00 and
+     * Shipping ₹77.00 against a stated Total of ₹997.80, leaving ₹21.80 with
+     * nothing to explain it (₹10 platform fee + ₹10 WhatsApp updates +
+     * ₹1.80 GST). An invoice whose lines do not sum to its own total is a
+     * GST-compliance problem, not a cosmetic one.
+     */
+    tax: doc.gstAmount,
+    codHandlingFee: doc.codHandlingFee,
     trackingNumber: doc.trackingNumber,
     shippingCarrier: doc.shippingCarrier,
     trackingUrl: doc.trackingUrl,

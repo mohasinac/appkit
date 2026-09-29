@@ -38,7 +38,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The invoice is generated on demand and streamed by a route that checks the order belongs to the caller. It is not a stored file and has no public URL.",
     expectedUiState:
-      "A file downloads rather than rendering in the tab, and its name contains the order id. Not a JSON blob and not an error page.",
+      "The invoice opens as a readable print view with a Print / Save as PDF control — it is not a JSON blob and not an error page. It does NOT download a file, and that is by design. Check the MONEY: every fee in the total must have its own row, so Subtotal + Shipping + each fee equals the stated Total exactly.",
     expectedData: { invoiceDownloaded: true },
     endResult:
       "The order is unchanged by downloading its invoice; the row still shows the same status after a reload.",

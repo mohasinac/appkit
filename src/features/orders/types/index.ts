@@ -171,6 +171,8 @@ export interface Order {
   shipmentProtectionFee?: number;
   /** Buyer-facing platform commission apportioned to this order. */
   platformFee?: number;
+  /** COD handling fee, charged only on cash-on-delivery orders. */
+  codHandlingFee?: number;
 
   trackingNumber?: string;
   shippingCarrier?: string;
