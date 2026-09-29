@@ -11,6 +11,7 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../hooks/useAdminListingData";
+import type { ListingItemRecord } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminCategoryEditorView } from "./AdminCategoryEditorView";
@@ -109,10 +110,45 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
   columns: COLUMNS,
   mapRows: (response) => {
     const sourceItems = extractCategoryRows(response);
-    return toRecordArray(sourceItems).map((item, index) => ({
+    const rows = toRecordArray(sourceItems);
+
+    /*
+     * 🛑 THE PARENT COLUMN READ A FIELD THAT DOES NOT EXIST.
+     *
+     * It was `toStringValue(item.parentId, "root")`, and `CategoryDocument` has
+     * no `parentId` — the field is **`parentIds: string[]`**, the full ancestor
+     * chain. So the fallback fired on every row: measured on the live list, all
+     * **100** categories displayed "Parent: root" while their tiers ranged 0-4
+     * and only 22 were actually roots. The tier beside it renders correctly from
+     * the same document, which is what makes the wrong value so easy to trust.
+     *
+     * CLAUDE.md flags this exact confusion in the Seed Data Reference ("NOT a
+     * single `parentId`"), and `parentId` does still exist — as an optional
+     * field on a create/update INPUT shape, which is why it typechecks here and
+     * is undefined at runtime.
+     *
+     * `parentIds` is ordered ancestors-nearest-LAST ("matching how parentIds is
+     * read elsewhere", category-tree.ts), so the immediate parent is the final
+     * element. The name is shown where the list already knows it: every
+     * category is in this same response, so the lookup costs nothing and an id
+     * is a poor answer to "what is this filed under".
+     */
+    const nameById = new Map<string, string>();
+    for (const r of rows) {
+      const id = toStringValue(r.id, "");
+      if (id) nameById.set(id, toStringValue(r.name, id));
+    }
+    const parentLabel = (item: ListingItemRecord): string => {
+      const chain = Array.isArray(item.parentIds) ? (item.parentIds as unknown[]) : [];
+      const immediate = chain.length ? String(chain[chain.length - 1]) : "";
+      if (!immediate) return "root";
+      return nameById.get(immediate) ?? immediate;
+    };
+
+    return rows.map((item, index) => ({
       id: toStringValue(item.id, `category-${index}`),
       primary: toStringValue(item.name, "Untitled category"),
-      secondary: `Slug: ${toStringValue(item.slug, "no-slug")} · Tier: ${typeof item.tier === "number" ? String(item.tier) : "-"} · Parent: ${toStringValue(item.parentId, "root")}`,
+      secondary: `Slug: ${toStringValue(item.slug, "no-slug")} · Tier: ${typeof item.tier === "number" ? String(item.tier) : "-"} · Parent: ${parentLabel(item)}`,
       status:
         typeof item.isActive === "boolean"
           ? item.isActive
