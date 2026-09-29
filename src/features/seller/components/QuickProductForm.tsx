@@ -33,7 +33,19 @@ interface ValidationErrors {
   price?: string;
   mainImage?: string;
   category?: string;
+  description?: string;
 }
+
+/**
+ * Mirrors `productBaseSchema.description` (`z.string().min(20).max(5000)`).
+ *
+ * 🛑 This validator already mirrored every other server constraint — title
+ * length, price, image, category — and simply omitted description, so the
+ * server was the first thing to notice and it answered in Zod's own words:
+ * "Invalid input: expected string, received undefined", printed under a field
+ * whose placeholder read "(optional)".
+ */
+const DESCRIPTION_MIN = 20;
 
 function validate(values: SellerProductDraft): ValidationErrors {
   const errors: ValidationErrors = {};
@@ -48,6 +60,10 @@ function validate(values: SellerProductDraft): ValidationErrors {
   }
   if (!values.category?.trim()) {
     errors.category = "Category is required";
+  }
+  const description = values.description?.trim() ?? "";
+  if (description.length < DESCRIPTION_MIN) {
+    errors.description = `Description must be at least ${DESCRIPTION_MIN} characters`;
   }
   return errors;
 }
@@ -153,14 +169,36 @@ export function QuickProductForm({
         error={touched ? errors.mainImage : undefined}
       />
 
+      {/*
+        * 🛑 DESCRIPTION IS REQUIRED, AND THE PLACEHOLDER USED TO SAY OTHERWISE.
+        *
+        * `productBaseSchema.description` is `z.string().min(20).max(5000)`, so a
+        * listing cannot be created without at least 20 characters — while this
+        * field was labelled plainly "Description" and placeheld "Brief
+        * description (optional)".
+        *
+        * Leaving it empty made Publish fail with the raw Zod text **"Invalid
+        * input: expected string, received undefined"** rendered under the field.
+        * Measured: three consecutive publishes did nothing and said only that,
+        * while the dialog stayed open; filling the description published
+        * immediately. A seller reading "optional" has no reason to suspect the
+        * empty box, and developer text is not an instruction anyone can follow
+        * (Rule #9.6).
+        *
+        * The minimum is stated up front rather than discovered on submit, since
+        * a 5-character description fails the same way with a different Zod
+        * message.
+        */}
       <FormField
         name="description"
         label="Description"
         type="textarea"
+        required
         value={values.description ?? ""}
         onChange={(v) => onChange({ description: v })}
-        placeholder="Brief description (optional)"
+        placeholder="What is it, what condition is it in, what is included? (at least 20 characters)"
         rows={3}
+        error={touched ? errors.description : undefined}
       />
 
       <FormField
