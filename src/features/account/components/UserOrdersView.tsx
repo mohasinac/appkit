@@ -11,6 +11,7 @@ import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { OrderCard } from "../../orders/components/OrdersList";
 import type { Order } from "../../orders/types";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
+import { useSearchParams } from "next/navigation";
 
 const CANCELLABLE_STATUSES = new Set(["pending", "confirmed", "processing"]);
 const TRACKABLE_STATUSES = new Set(["shipped"]);
@@ -62,6 +63,36 @@ export interface UserOrdersViewProps {
 export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
   const orderScope = useOrderScope();
 
+  /*
+   * 🛑 A FILTERED empty result is not an empty account, and saying so is a lie
+   * the buyer has no way to check.
+   *
+   * Both empty states here read "You haven't placed any orders yet." That is
+   * correct for a new account and flatly wrong the moment a search or a status
+   * chip is what emptied the list. Measured: /user/orders?q=zzzznope on an
+   * account with roughly thirty real orders rendered exactly that sentence — a
+   * buyer searching for an order they could not find would reasonably conclude
+   * their whole history had gone.
+   *
+   * Same shape as the poll leaderboard fixed earlier in this run, where a
+   * withheld tally rendered as "No votes yet." beside a participant count of
+   * 365: an empty result must not be reported as an absolute zero when a filter
+   * is the reason.
+   *
+   * Read from the URL rather than threaded through `renderCards`, whose
+   * signature is `(rows, view, selection, isLoading)` and carries no filter
+   * state. `useUrlTable`/`useSearchParams` hold no local state, so a second
+   * reader against the same URL stays in sync with the listing's own
+   * (CLAUDE.md, Root Cause #35).
+   */
+  const searchParams = useSearchParams();
+  const hasNarrowingFilter = ["q", "search", "status", "orderType", "filters"].some(
+    (k) => Boolean(searchParams.get(k)),
+  );
+  const emptyMessage = hasNarrowingFilter
+    ? "No orders match your search or filters."
+    : "You haven't placed any orders yet.";
+
   const config: ListingViewConfig<OrdersListResponse, Order> = {
     portal: "user",
     title: "My Orders",
@@ -73,7 +104,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
       // match more.
       fields: ["id"],
     },
-    emptyLabel: "You haven't placed any orders yet.",
+    emptyLabel: emptyMessage,
     filterKeys: ["status", "orderType"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["user", "orders", "listing"],
@@ -124,7 +155,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
         );
       }
       if (rows.length === 0) {
-        return <Text color="muted">You haven't placed any orders yet.</Text>;
+        return <Text color="muted">{emptyMessage}</Text>;
       }
       return (
         <Grid gap="md" className="grid-cols-1">
