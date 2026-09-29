@@ -8,6 +8,23 @@
  * and an active-section marker has to be derived from the current path rather
  * than set once on first render.
  *
+ * 🛑 CLEARING THE ANNOUNCEMENT DOES NOT REMOVE THE BAR (corrected 2026-09-29).
+ * MarketplaceHomepageView reads
+ *   announcementBar.message?.trim() || SECTION_COPY.announcementFallback
+ * and gates on `announcementBar.enabled ?? true`. So an empty message falls back
+ * to 'Free shipping on eligible orders — shop the latest arrivals.'
+ * and the bar stays. Removing it means turning OFF 'Show announcement bar'. The
+ * last case told the tester to clear the message and check the bar left the
+ * homepage, which would have reported correct fallback behaviour as a defect.
+ *
+ * The seed ships enabled:true with a real message, so no setup toggle is needed,
+ * and the ONLY surface that renders it is the homepage.
+ *
+ * Verified fixed before asserting: the editor writes announcementBar.message,
+ * which is the key the renderer reads — the historical bug wrote `text`, a key
+ * nothing has ever read, so every announcement saved and none appeared. A pass
+ * is the expected result here.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
@@ -41,7 +58,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/",
     steps: [
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! with an empty cart.",
+      "Sign in as rehan.sheikh@gmail.com / TempPass123!. No cart is seeded for this buyer, so the badge should start empty — if it does not, empty the cart before continuing.",
       "Read the header's cart control and its badge.",
       "Add a product from /products and read the badge without reloading.",
       "Add a second and read it again.",
@@ -129,7 +146,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open the homepage and read which navigation entry is marked as current.",
       "Navigate to /products and read which is marked.",
-      "Navigate to a product detail page and read which is marked.",
+      "Navigate to /products/product-beyblade-original-dranzer-s and read which is marked.",
       "Navigate to /events and read which is marked.",
       "Use the browser's back button twice and read the marker each time.",
     ],
@@ -144,17 +161,22 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/site",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open Site Settings.",
-      "Find the announcement bar section and set its message to 'QA announcement probe — checklist case.'",
-      "Save.",
-      "Open the public homepage as a signed-out visitor.",
-      "Read whether the announcement appears and whether the text matches.",
-      "Return to Site Settings, clear the announcement, and check it leaves the homepage.",
+      "Open the 'Announcement' tab, write down the current message, and confirm 'Show announcement bar' is already on.",
+      "Set the message to 'QA announcement probe — checklist case.' and save.",
+      "Sign out and open / . Read whether the announcement appears and whether the text matches exactly.",
+      "Sign back in, CLEAR the message and save, then reload / . The bar should still be there, now reading the fallback: 'Free shipping on eligible orders — shop the latest arrivals.'",
+      "Turn 'Show announcement bar' OFF, save, and reload / . NOW the bar should be gone.",
+      "Restore the original message and turn the toggle back on.",
     ],
-    inputs: { message: "QA announcement probe — checklist case." },
+    inputs: {
+      message: "QA announcement probe — checklist case.",
+      fallback: "Free shipping on eligible orders — shop the latest arrivals.",
+      toggle: "Show announcement bar",
+    },
     expectedBehaviour:
       "An announcement an admin saves appears. The editor once wrote the copy under a key no renderer has ever read, so every announcement saved successfully and none of them appeared — a save that reports success while writing to a field with no reader is invisible from both ends.",
     expectedUiState:
-      "The exact text appears in the announcement bar on the public homepage, and clearing it removes the bar. A successful save with nothing on the homepage is the finding.",
+      "The exact text appears in the announcement bar on the homepage. Clearing the message does NOT remove the bar — it falls back to 'Free shipping on eligible orders — shop the latest arrivals.', which is correct and must not be reported as a defect. Only turning the toggle off removes it. A successful save with the OLD text still on the homepage is the finding.",
     endResult: "The announcement is cleared.",
   },
 };
