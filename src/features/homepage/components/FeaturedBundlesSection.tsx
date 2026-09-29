@@ -78,9 +78,11 @@ export function FeaturedBundlesSection({
               </Text>
             )}
           </Stack>
+          {/* Solid fill, matching SectionCarousel — see BrandsSection's note.
+              Was a plain teal text link, one of five out of eleven. */}
           <Link
             href={String(ROUTES.PUBLIC.BUNDLES)}
-            className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline"
+            className="inline-flex items-center gap-[0.375rem] rounded-[var(--appkit-radius-md)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-semibold transition-colors bg-primary text-white hover:bg-primary-600"
           >
             {viewMoreLabel}
           </Link>

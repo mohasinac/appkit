@@ -142,8 +142,26 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
               </Text>
             )}
           </>
+          {/*
+            🛑 Solid fill, matching SectionCarousel — this was a plain teal
+            text link.
+
+            Measured on the live homepage: of the eleven section-level CTAs,
+            SIX carry the solid `bg-primary text-white` treatment that
+            SectionCarousel renders and five did not, so the row of "View all"
+            affordances read as two different kinds of control depending on
+            which section you had scrolled to.
+
+            Kept as a Link with the carousel's class string rather than
+            refactored onto SectionCarousel: this section's header layout is
+            genuinely different, and the point is that the CONTROL matches, not
+            that the container does.
+          */}
           {!cta && viewMoreHref && (
-            <Link href={viewMoreHref} className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline">
+            <Link
+              href={viewMoreHref}
+              className="inline-flex items-center gap-[0.375rem] rounded-[var(--appkit-radius-md)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-semibold transition-colors bg-primary text-white hover:bg-primary-600"
+            >
               {viewMoreLabel}
             </Link>
           )}

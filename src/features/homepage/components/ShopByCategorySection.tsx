@@ -245,7 +245,15 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
         {/* Fallback view-more link when no CTA configured */}
         {!cta && viewMoreHref && !isLoading && (
           <Div className="mt-6 text-left">
-            <Link href={viewMoreHref} className="inline-flex items-center gap-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:opacity-80">
+            {/*
+              Solid fill, matching SectionCarousel — see the note in
+              BrandsSection. This was a plain teal text link, one of the five
+              section CTAs (of eleven) that lacked the fill the other six had.
+            */}
+            <Link
+              href={viewMoreHref}
+              className="inline-flex items-center gap-[0.375rem] rounded-[var(--appkit-radius-md)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-semibold transition-colors bg-primary text-white hover:bg-primary-600"
+            >
               {viewMoreLabel}
             </Link>
           </Div>

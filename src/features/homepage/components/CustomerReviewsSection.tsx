@@ -116,9 +116,17 @@ if (isLoading) {
         {/* See all link */}
         {viewMoreHref && (
           <Div className="text-left mt-8">
+            {/*
+              Solid fill, matching SectionCarousel and BrandsSection — see the
+              note there. This was a plain teal text link, one of five section
+              CTAs out of eleven that did not carry the fill the other six did.
+            */}
             <TextLink
               href={viewMoreHref}
-              className="text-primary hover:text-primary/80" size="sm" weight="medium"
+              rounded="md"
+              align="center"
+              gap="xs"
+              className="inline-flex px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] transition-colors bg-primary text-white hover:bg-primary-600" size="sm" weight="semibold"
             >
               {viewMoreLabel}
             </TextLink>
