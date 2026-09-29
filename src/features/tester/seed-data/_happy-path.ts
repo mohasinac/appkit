@@ -519,9 +519,9 @@ export const happyPathPages: HappyPathPage[] = [
           "Enter the description A standard listing created by the QA happy-path run.",
           "Enter the price 1250.",
           "Enter the stock quantity 5.",
-          "Select the category Beyblade X.",
-          "Select the brand Beyblade.",
-          "Select the condition New.",
+          "Select the category Beyblade X Tops. Pick the LEAF, not the generation: the point of this case is that the repository derives the ancestor chain, and category-x-tops sits under category-beyblade-x, which is the page the next case checks. NOTE the picker's search box does not filter — scroll or use Load more to find it.",
+          "Upload a product image. It is a REQUIRED field and Publish is refused with 'Product image is required' without one; the crop dialog that opens must be confirmed with Save Crop.",
+          "Brand and condition are NOT on the quick-add form — they live behind 'Show all fields (advanced)'. Leave them at their defaults for this case.",
           "Click the publish control.",
           "Wait for the navigation to settle.",
         ],
@@ -536,7 +536,7 @@ export const happyPathPages: HappyPathPage[] = [
         expectedBehaviour:
           "A product is written against store-beyblade-arena with listingType standard and status published. The repository derives the full ancestor chain onto categorySlugs from the chosen leaf, which is what makes the listing reachable from its category later.",
         expectedUiState:
-          "The form leaves the create screen and the new listing is shown, reading 'QA Listing seller-listing' at ₹1,250. No validation error is displayed.",
+          "The form leaves the create screen and lands on /store/products, where a row reads 'QA Listing seller-listing' with 'standard' and 'new · published'. Once the image is attached no validation error is displayed.",
         endResult: "After reloading /store/products the listing is present with status Published.",
       },
       {

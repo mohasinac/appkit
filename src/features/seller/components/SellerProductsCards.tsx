@@ -6,6 +6,7 @@ import React from "react";
 import { Badge, Button, Checkbox, Div, Grid, Row, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { listingBadgeVariant } from "../../products/utils/listing-badge-variant";
 
 const __P = {
@@ -42,6 +43,27 @@ function buildHref(row: SellerProductsCardsRowShape): string {
   return `/products/${row.id}`;
 }
 
+/*
+ * 🛑 THE DELETE BUTTONS BELOW CARRY `action`, AND THAT IS WHAT CONFIRMS THEM.
+ *
+ * They took their LABEL from `ROW_ACTION_META[ROW_ACTION_ID.DELETE]` and
+ * passed no `action` prop, so `<Button>`'s confirmation gate — which fires
+ * only when `action.confirmation` is set — never engaged. One click on a
+ * row's Delete permanently removed a PUBLISHED listing with no dialog of any
+ * kind; measured on a real seller account, the row was gone immediately and
+ * still gone after a reload.
+ *
+ * Using the registry for the label while bypassing it for the confirmation is
+ * exactly the split Rule #7 describes, on the one action where that rule says
+ * the cost is data loss. `ACTIONS.STORE["delete-listing"]` already carried the
+ * copy ("Delete listing? / This listing will be permanently removed. This
+ * action cannot be undone.") and the bulk bar already resolved it correctly;
+ * only the row path did not.
+ *
+ * `variant="ghost"` stays explicit so the row keeps its quiet styling: Button
+ * resolves the variant as `variant ?? kindDefault`, so the caller wins and the
+ * danger kind drives the dialog without turning the row button red.
+ */
 export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
   view,
   rows,
@@ -98,7 +120,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(row); }} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
               <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDuplicate(row); }} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
               {onDelete && (
-                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(row); }} aria-label="Delete">{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
+                <Button variant="ghost" size="sm" action={ACTIONS.STORE["delete-listing"]} onClick={(e) => { e.stopPropagation(); onDelete(row); }} aria-label="Delete">{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
               )}
             </Row>
           </Div>
@@ -128,7 +150,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               <Button variant="ghost" size="sm" onClick={() => onEdit(row)} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
               <Button variant="ghost" size="sm" onClick={() => onDuplicate(row)} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
               {onDelete && (
-                <Button variant="ghost" size="sm" onClick={() => onDelete(row)} aria-label="Delete">{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
+                <Button variant="ghost" size="sm" action={ACTIONS.STORE["delete-listing"]} onClick={() => onDelete(row)} aria-label="Delete">{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
               )}
             </Row>
           </Row>

@@ -76,6 +76,7 @@ interface ProductRow {
   image?: string;
   listingKind: ListingKind;
   price: string;
+  stock: string;
   physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
@@ -371,17 +372,41 @@ export function SellerProductsView({
          * the UI simply never presented it.
          */
         const statusLabel = toStringValue(item.status, "draft");
+        /*
+         * 🛑 PRICE AND STOCK GO IN THE VISIBLE LINE TOO — same reason as the
+         * status note above, one field over.
+         *
+         * `price` was already mapped onto the row and correct, and this view
+         * renders only `primary`, `secondary`, the type chip and the action
+         * buttons — so it was never displayed. Measured on a real seller
+         * account with 127 listings: ZERO rupee amounts and zero stock figures
+         * anywhere in the list. To learn what one of their own listings costs
+         * or how many are left, a seller had to open it.
+         *
+         * Those are the two numbers a seller scans for, so price leads.
+         * `stockQuantity` was not mapped at all and is added here.
+         *
+         * An auction keeps its own summary (reserve / bids / ends) and is not
+         * given a list price: for an auction the meaningful money is the
+         * reserve and the current bid, both already in `auctionSecondary`, and
+         * a "price" beside them would read as a third, competing figure.
+         */
+        const stockRaw = typeof item.stockQuantity === "number" ? item.stockQuantity : null;
+        const priceLabel =
+          kind !== "auction" && priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "";
+        const stockLabel = stockRaw === null ? "" : `${stockRaw} in stock`;
         const secondaryBase = auctionSecondary || toStringValue(item.condition, "");
         return {
           id: toStringValue(item.id, `product-${index}`),
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
-          secondary: [secondaryBase, statusLabel].filter(Boolean).join(" · "),
+          secondary: [priceLabel, stockLabel, secondaryBase, statusLabel].filter(Boolean).join(" · "),
           status: statusLabel,
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
           image: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
           listingKind: kind,
           price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
+          stock: stockLabel || "—",
           physicalLocation:
             item.physicalLocation &&
             typeof (item.physicalLocation as Record<string, JsonValue>).zone === "string"
