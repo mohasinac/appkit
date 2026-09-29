@@ -69,6 +69,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /api/ads signed out and check the draft is absent from the response.",
       "Sign back in and delete the ad.",
     ],
+    // audit-hardcoded-api-routes-ok: a URL the tester opens by hand, not a call site.
     inputs: { name: "QA Ad crud-preview", status: "draft", publicEndpoint: "/api/ads" },
     expectedBehaviour:
       "A draft ad is invisible publicly and its provider credentials never leave the server. The ads group was written by the admin form while undeclared on the settings type, so it was published wholesale by an unauthenticated endpoint — including drafts and unmasked credentials — and nothing type-driven could see it.",

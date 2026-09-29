@@ -3834,6 +3834,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           startPage: "/admin/contact",
           steps: [
             "Submit a contact message from the public form.",
+            // audit-hardcoded-api-routes-ok: no button exists; the tester pastes this URL into a console by hand.
             "As admin, trigger the daily digest: run fetch('/api/admin/daily-digest/trigger',{method:'POST'}) from the browser console. There is no button for it — Site Settings only carries a toggle to enable the schedule — and this is the same instruction the other digest case uses.",
             "Open the digest and find the message under Contact messages.",
             "Click its Reply link.",
