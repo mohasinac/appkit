@@ -82,10 +82,28 @@ function renderCategoryFilterDrawer(props: {
 function getNumericParam(table: UrlTable, key: string): number | undefined {
   return table.get(key) ? Number(table.get(key)) : undefined;
 }
-const DEFAULT_SORT = sortBy(CATEGORY_FIELDS.NAME, "ASC");
+/*
+ * 🛑 TIER FIRST, NOT NAME. Found by
+ * checklist-happy-path-guest-browse-categories-index-lists-roots, 2026-09-29.
+ *
+ * This was `name ASC`, which sorts 47 categories alphabetically with no
+ * awareness of the tree — so BOTH roots fell off page 1. "Spinning Tops" sorts
+ * under S onto page 3 and "Living Collectibles" under L onto page 2, while
+ * their own descendants filled page 1: Bits, Blades, Discs, Drivers, Energy
+ * Rings. A visitor opening /categories met component-level leaves, eight of
+ * them reading "0 items", and never saw either root.
+ *
+ * `tier` is already `canSort: true` in the repository's SIEVE_FIELDS, and a
+ * single-field sort needs no composite index, so this costs nothing to deploy.
+ * Deliberately NOT `tier ASC, name ASC`: that pairing has no
+ * `(tier, name)` index and a missing composite fails as an empty page rather
+ * than an error (Root Cause #59).
+ */
+const DEFAULT_SORT = sortBy(CATEGORY_FIELDS.TIER, "ASC");
 const FILTER_KEYS = [TABLE_KEYS.IS_FEATURED, "isBrand", "rootOnly", "tier", "minItemCount", "maxItemCount"];
 
 const SORT_OPTIONS = [
+  { value: sortBy(CATEGORY_FIELDS.TIER, "ASC"), label: "Top level first" },
   { value: sortBy(CATEGORY_FIELDS.NAME, "ASC"), label: "Name A–Z" },
   { value: sortBy(CATEGORY_FIELDS.NAME), label: "Name Z–A" },
   { value: sortBy("metrics.productCount", "DESC"), label: "Most Products" },

@@ -1,4 +1,6 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { sortBy } from "../../../constants/sort";
+import { CATEGORY_FIELDS } from "../../../constants/field-names";
 import React from "react";
 import { categoriesRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
@@ -41,7 +43,18 @@ export interface CategoriesIndexPageViewProps {
 }
 
 export async function CategoriesIndexPageView({ searchParams = {} }: CategoriesIndexPageViewProps) {
-  const sort = sp(searchParams, "sort") || "name";
+  /*
+   * 🛑 MUST MATCH CategoriesIndexListing's DEFAULT_SORT.
+   *
+   * This defaulted to "name" while the client listing defaulted to the same,
+   * and both were wrong: the roots fell off page 1. Now both default to tier
+   * ascending — and they have to agree, because this view hands its result to
+   * the listing as initialData and every public listing hook sets
+   * `staleTime: Infinity` when given it. A disagreement here is not a
+   * transient wrong first paint; it is frozen for that query key
+   * (Root Cause #30).
+   */
+  const sort = sp(searchParams, "sort") || sortBy(CATEGORY_FIELDS.TIER, "ASC");
   const page = Number(sp(searchParams, "page")) || 1;
   const filters = buildCategoryFilters(searchParams);
 
