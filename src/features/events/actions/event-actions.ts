@@ -527,6 +527,40 @@ export async function enterEvent(
     }
   }
 
+  /*
+   * 🛑 A signed-in user could vote in a poll as many times as they liked, and
+   * every vote counted.
+   *
+   * Three paths reach this point and only two of them guarded. A GUEST is
+   * deduped by hashed IP just above; a SURVEY enforces `maxEntriesPerUser`
+   * immediately above that; a poll had neither, so the one case that is trivial
+   * to abuse — an authenticated voter clicking Cast Vote again — was the
+   * unguarded one. Measured on /events/event-favourite-blader-poll: voted for
+   * one option, reloaded, voted for a DIFFERENT option, and the second was
+   * accepted with the same "Vote recorded!" confirmation. The event's
+   * Participants counter went 362 -> 364 on those two votes from one account, so
+   * the tally itself was corrupted, not merely the UI.
+   *
+   * A poll is one vote per person by definition — there is no
+   * `maxEntriesPerUser` to consult and no change-your-vote affordance anywhere
+   * in the UI — so the rule is simply "not twice". Uses the same
+   * `countUserEntries` the survey path already relies on rather than a new
+   * query, so the read cost and the index it needs are both already proven.
+   *
+   * ValidationError, so the caller gets `ALREADY_ENTERED` and a real message:
+   * the previous behaviour silently produced a duplicate, which is the failure
+   * mode this refusal exists to replace.
+   */
+  if (user && event.type === "poll") {
+    const priorVotes = await eventEntryRepository.countUserEntries(
+      resolvedEventId,
+      user.uid,
+    );
+    if (priorVotes >= 1) {
+      throw new ValidationError(ERROR_MESSAGES.EVENT.ALREADY_ENTERED);
+    }
+  }
+
   if (event.type === "poll" && event.pollConfig) {
     const validOptionIds = (event.pollConfig as any).options.map(
       (o: any) => o.id,
