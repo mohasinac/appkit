@@ -11,6 +11,21 @@
  * nothing, or wrote the wrong thing. The screen after saving looked correct in
  * every one of them; only the reload told the truth.
  *
+ * 🛑 SLOTS 1-5 ARE ALREADY BOOKED IN THE SEED (corrected 2026-09-29), so the
+ * first case could not start: it told the tester to pull slot 3, and slot 3 is
+ * taken by 'Arjun M'. `maxPullsPerUser` is 1 on this lottery, so a pull is also
+ * a once-per-persona-per-run action and a poor fixture for a case about
+ * surviving an edit. The seeded bookings ARE the fixture; no pull is needed.
+ *
+ * 🛑 AND NONE OF THE FIVE BOOKERS IS A REAL ACCOUNT. user-ravi-k,
+ * user-priya-s, user-arjun-m, user-sneha-p and user-vikram-r appear in
+ * events-seed-data.ts (as lotteryConfig.slots[].bookedByUserId) and in
+ * lottery-entries-seed-data.ts, and NONE of them exists in users-seed-data.ts.
+ * So nobody can sign in as the person who booked slot 3, and any step asking
+ * for that is unperformable. The buyer-side check is done from the public page
+ * instead, which needs no account. Recorded in OUTOFSCOPE: dangling seed FKs
+ * are data, and repairing them is not a case edit.
+ *
  * @tag domain:tester
  * @tag layer:seed
  * @tag pattern:none
@@ -23,25 +38,30 @@ import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-page-wiring-data-loss-lottery-edit-preserves-bookings": {
-    roles: ["buyer", "admin"],
+    roles: ["admin", "guest"],
     startPage: "/admin/lotteries",
     steps: [
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and open the lottery event event-pokemon-number-draw-july-2026.",
-      "Pull slot number 3 and complete the purchase.",
-      "Read the slot grid and note that slot 3 now shows as booked, with the buyer name and lottery number against it.",
-      "Sign out and sign in as admin@letitrip.in / TempPass123!.",
+      "Sign in as admin@letitrip.in / TempPass123! and open /lottery/event-pokemon-number-draw-july-2026.",
+      "Read the slot grid and write down slots 1 to 5 — all five are booked in the seed — recording each slot number, the buyer name shown against it and its lottery number.",
       "Open /admin/lotteries and open the editor for that lottery.",
-      "Rename slot number 7 to 'QA Slot lottery-edit-preserves-bookings' — a slot nobody has pulled.",
+      "Rename slot number 7 to 'QA Slot lottery-edit-preserves-bookings'. Slot 7 is 'Alakazam Base Set Holo' and is NOT booked — renaming an unbooked slot is the whole point.",
       "Save.",
-      "Reload the editor and read slot 3.",
-      "Sign out, sign in as rehan.sheikh@gmail.com / TempPass123!, and open the public lottery page to read slot 3.",
+      "Reload the editor and read slots 1 to 5 against what was written down, then read slot 7.",
+      "Read the price on each of slots 1 to 5 as well — slot 1 is 5000, slot 3 is 2500 — and confirm none has become 0.",
+      "Sign out and open /lottery/event-pokemon-number-draw-july-2026 to read the same five slots as a visitor sees them.",
     ],
-    inputs: { bookedSlot: 3, renamedSlot: 7, newName: "QA Slot lottery-edit-preserves-bookings" },
+    inputs: {
+      bookedSlots: "1, 2, 3, 4, 5",
+      renamedSlot: 7,
+      newName: "QA Slot lottery-edit-preserves-bookings",
+      slot1Price: 5000,
+      slot3Price: 2500,
+    },
     expectedBehaviour:
       "The write shape cannot express booking state at all, so an admin editing prize names cannot touch attendance. Bookings are re-attached from the stored config and matched by slot NUMBER, never by array position — deleting a slot shifts every later index, and an index-wise merge hands slot 7's buyer the prize that was slot 8's.",
     expectedUiState:
-      "After the save and reload, slot 3 is still booked, still carrying the same buyer name and the same lottery number. Slot 7 carries its new name. The buyer's own view of the lottery still shows their pull.",
-    expectedData: { slot3StillBooked: true },
+      "After the save and reload, all five booked slots are still booked, carrying the same buyer names and the same lottery numbers. Slot 7 carries its new name. Every price is unchanged — a grid of zeros is the same defect's twin, caused by seeding the editor from the public projection, which strips price and weight. The public page shows the same five slots still taken.",
+    expectedData: { bookedSlotsAfterSave: 5, slotsPricedZero: 0 },
     endResult:
       "The pull survives the admin edit. The editor once sent isBooked:false for every slot into a passthrough route, so the first save of a live lottery marked every purchased slot available again and erased the buyers — with a success message and no error anywhere.",
   },
@@ -51,7 +71,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/lotteries and open the editor for event-pokemon-number-draw-july-2026.",
-      "Find the slot that has already been pulled, slot number 3.",
+      "Find slot number 3, which the seed ships already booked by 'Arjun M' — no earlier case has to run for this to be true.",
       "Remove that slot from the list.",
       "Save.",
       "Read the error message.",
@@ -71,17 +91,20 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/grouped-listings",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/grouped-listings and note the title of the first group.",
-      "Open its editor at /admin/grouped-listings/{id}/edit.",
+      "Open /admin/grouped-listings, find group-beyblade-original-lineage, and write down its exact title.",
+      "Open /admin/grouped-listings/group-beyblade-original-lineage/edit.",
       "Replace the title with 'QA Group admin-grouped-listing-title-actually-saves'.",
       "Save and read the confirmation.",
       "RELOAD the page.",
       "Read the title.",
       "Set the title back to what it was and save.",
     ],
-    inputs: { newTitle: "QA Group admin-grouped-listing-title-actually-saves" },
+    inputs: {
+      group: "group-beyblade-original-lineage",
+      newTitle: "QA Group admin-grouped-listing-title-actually-saves",
+    },
     expectedBehaviour:
-      "The admin PATCH accepts every field the editor can send, not just productIds. A Zod object schema STRIPS unknown keys rather than rejecting them, so a schema listing only productIds turned a title change into a perfectly normal 200 that wrote nothing at all.",
+      "The admin PATCH accepts every field the editor can send, not just productIds. A Zod object schema STRIPS unknown keys rather than rejecting them, so a schema listing only productIds turned a title change into a perfectly normal 200 that wrote nothing at all. Verified fixed on 2026-09-29 — the admin route now parses the same strict schema as the seller route, so a pass here is the expected result. It is kept because the failure was invisible without a reload and would return the moment the two schemas diverge again.",
     expectedUiState:
       "After the reload the title is the new one. A save confirmation followed by the OLD title after reload is the exact failure — and without the reload the screen looks identical either way, because the form is still showing what was typed.",
     expectedData: { titlePersisted: true },
