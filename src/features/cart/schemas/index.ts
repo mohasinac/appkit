@@ -8,6 +8,8 @@ export const cartItemMetaSchema = z.object({
   price: z.number(),
   currency: z.string().default(getDefaultCurrency()),
   slug: z.string().optional(),
+  /* Named field, not an `attributes` entry — see CartItemMeta.storeName. */
+  storeName: z.string().optional(),
   attributes: z.record(z.string(), z.string()).optional(),
 });
 

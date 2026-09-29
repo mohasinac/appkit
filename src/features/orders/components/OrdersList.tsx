@@ -1,5 +1,6 @@
 import type React from "react";
 import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { shortOrderRef } from "../utils/order-ref";
 import { MediaImage } from "../../media/MediaImage";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -62,7 +63,7 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
       <Row wrap align="start" justify="between" gap="3">
         <Div>
           <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
-            Order #{order.id.slice(-8).toUpperCase()}
+            Order #{shortOrderRef(order.id)}
           </Text>
           {date && (
             <Text className="mt-0.5" color="faint" size="xs">{date}</Text>

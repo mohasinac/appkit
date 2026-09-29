@@ -232,6 +232,24 @@ export const happyPathPages: HappyPathPage[] = [
         endResult: "After reloading /cart the line is still present at ₹899, quantity 1.",
       },
       {
+        key: "cart-line-shows-no-raw-field-names",
+        label: "🛑 The cart line shows no raw field name to the buyer",
+        roles: ["buyer"],
+        startPage: "/cart",
+        steps: [
+          SIGNIN_BUYER,
+          "Open /cart holding the single Wizard Arrow line.",
+          "Read every line of text inside the cart line, between the product title and the price.",
+        ],
+        expectedBehaviour:
+          "The line renders the seller once, as the group heading. CartItemRow prints each meta.attributes entry verbatim as `key: value`, so any plumbing field placed in that bag is published to the buyer with its own field name.",
+        expectedUiState:
+          "No text of the form `<fieldName>: <value>` appears anywhere in the line. In particular the string 'storeName:' does NOT appear. The seller is shown once, as 'SOLD BY BEYBLADE ARENA' above the line.",
+        expectedData: { rawFieldLabelsVisible: 0 },
+        endResult: "Nothing is written; the same line reads the same way after a reload.",
+        href: "/cart",
+      },
+      {
         key: "cart-quantity-updates-total",
         label: "Changing the quantity updates the line and the cart total",
         roles: ["buyer"],

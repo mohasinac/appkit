@@ -1153,6 +1153,7 @@ export { BecomeSellerView } from "./features/account/index";
 export type { BidDocument } from "./features/auctions/index";
 export type { ClaimedCouponDocument } from "./features/promotions/schemas";
 export { groupOrderItemsByLine } from "./features/orders/index";
+export { shortOrderRef } from "./features/orders/index";
 export type { LineOrderGroup, OutOfStockPolicy } from "./features/orders/index";
 export { MediaUploadField } from "./features/media/index";
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";

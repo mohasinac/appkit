@@ -357,9 +357,27 @@ export function MediaUploadField({
   const [extError, setExtError] = useState("");
 
   const hasAlternateSources = showYoutube || showExternal;
-  // PDF mode: derived from the `accept` prop. Hides camera capture + alternate
-  // URL tabs (YouTube/External never make sense for invoice/payout-doc fields)
-  // and trim/thumbnail flow.
+  /*
+   * PDF mode: derived from the `accept` prop. It forces file-only capture
+   * (`effectiveCaptureSource` below) and does nothing else.
+   *
+   * 🛑 This comment used to claim it also hid "alternate URL tabs (YouTube /
+   * External never make sense for invoice/payout-doc fields) and trim/thumbnail
+   * flow". Two of those three were never implemented — `pdfMode` has exactly one
+   * consumer — so a reader checking whether a document field could be given a
+   * YouTube link found a comment saying no and code saying yes. The buyer's
+   * payment-proof field was offering "YouTube" and "External URL" as ways to
+   * evidence a real payment because of it.
+   *
+   * The intent in that comment is still right, and closing it properly means
+   * deciding one rule for all 11 mounts: `showYoutube`/`showExternal` default to
+   * TRUE and NOT ONE mount in the codebase opts out, while `AUTO_KIND_DEFAULTS`
+   * accepts `application/pdf`, so gating the tabs on `pdfMode` alone would also
+   * strip YouTube from every `kind="auto"` field — including the product video
+   * field, where the YouTube source is deliberate (Root Cause #49). Until that
+   * rule is chosen, a field that must not accept a URL says so explicitly, as
+   * the payment-proof page now does.
+   */
   // SB-UNI-Z5 2026-05-13 — fold `kind` defaults under explicit props.
   const kindDefaults =
     kind === "auto"
