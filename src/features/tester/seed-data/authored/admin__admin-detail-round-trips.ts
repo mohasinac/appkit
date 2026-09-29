@@ -34,6 +34,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Press Save.",
       "Reload the page and open the same coupon again.",
       "Read the discount value, the usage limits and the validity dates.",
+      "Restore the description by deleting the word you appended, then save again. coupons is SEED_OWNED so a reseed would fix it either way, but a run does not reseed — three earlier runs left this text reading 'roundtrip roundtrip roundtrip', and a later case reading this description would be reading what this one wrote.",
+      "Note the editor keeps Limits and Validity in COLLAPSIBLE sections. After the reload they are closed, so their fields are absent from the page rather than empty — read those four numbers off the coupon card in the list, which renders them directly, or expand the sections again before judging.",
     ],
     inputs: { couponCode: "ARENA25", descriptionSuffix: "roundtrip" },
     expectedBehaviour:
@@ -55,7 +57,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Append the sentence: Edited during a round-trip check.",
       "Press Save.",
       "Reload and reopen the same FAQ.",
-      "Open the public /faqs page and find the same question.",
+      "Open the public /faqs page and find the same question. Answers are collapsed accordions — click the question to expand it before reading.",
+      "Remove the sentence you appended and save again. Append it with the KEYBOARD at the caret, never by filling the field: this is a contenteditable holding real HTML, and a fill replaces the whole answer with plain text, destroying five bold runs on a buyer-facing page.",
     ],
     inputs: { faqSlug: "coupons-and-discounts", appended: "Edited during a round-trip check." },
     expectedBehaviour:
