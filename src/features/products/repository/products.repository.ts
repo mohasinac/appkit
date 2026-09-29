@@ -186,9 +186,36 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const out: Partial<ProductDocument> = {};
     const cats = this.db.collection(CATEGORIES_COLLECTION);
 
+    /*
+     * 🛑 THE SCALAR `category` WINS. It used to be the other way round, and a
+     * seller could not re-categorise a listing at all.
+     *
+     * `categorySlugs` is a value this function DERIVES; `category` is the leaf a
+     * category picker actually writes. The seller edit form sends both — its
+     * draft carries the loaded product's `categorySlugs` untouched while the
+     * picker updates `category` — so a payload mid-edit reads, measured off the
+     * real request:
+     *
+     *     "categorySlugs": ["category-burst-superking"]     <- STALE, derived
+     *     "category":      "category-original-plastic-gen"  <- what the user picked
+     *
+     * Preferring `categorySlugs[0]` therefore resolved the OLD leaf, re-derived
+     * the OLD chain from it, and then line `out.category = leaf` wrote the old
+     * value back OVER the user's choice. The save returned success, the form
+     * re-opened on the original category, the product page kept its old chips and
+     * the new category page never listed the item — with nothing logged anywhere,
+     * because from this function's point of view it had resolved a leaf perfectly
+     * well. It was only ever the WRONG leaf.
+     *
+     * Reversing the precedence is safe for every other caller: anyone who passes
+     * `categorySlugs` without a `category` (the seed, an admin PATCH) still falls
+     * through to it, and anyone passing a consistent pair gets the same answer
+     * either way. The two can only disagree when one of them is stale, and the
+     * derived one is the one that goes stale.
+     */
     const leaf =
-      (Array.isArray(input.categorySlugs) && input.categorySlugs[0]) ||
       input.category ||
+      (Array.isArray(input.categorySlugs) && input.categorySlugs[0]) ||
       null;
     /*
      * The brand selector's option value is the brand ROW's id (`brand-beyblade`),

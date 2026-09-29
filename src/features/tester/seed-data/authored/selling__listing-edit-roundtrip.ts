@@ -141,12 +141,23 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/products",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /categories/original-plastic-gen — a tier-3 category whose parent is original-tops and whose root is spinning-tops.",
+      /*
+       * 🛑 The `category-` PREFIX is load-bearing in all three URLs below.
+       *
+       * These steps named /categories/original-plastic-gen, original-tops and
+       * spinning-tops, and every one of them 404s — a category's document id IS
+       * its prefixed slug (§ Slug Prefix System), so the real routes are
+       * /categories/category-original-plastic-gen and so on. Verified 200 on all
+       * three prefixed forms. `audit-tester-checklist-hrefs` did not catch it
+       * because it validates `href` and `startPage`, and these are URLs written
+       * inside step PROSE, which nothing checks.
+       */
+      "Open /categories/category-original-plastic-gen — its parent is category-original-tops and its root is category-spinning-tops.",
       "Open /store/products, pick a published listing, and open its Edit action.",
-      "Change its Category to Original Plastic Gen and press Save.",
-      "Open /categories/original-plastic-gen and look for the listing.",
-      "Open /categories/original-tops and look for the same listing.",
-      "Open /categories/spinning-tops and look for it again.",
+      "Change its Category to Plastic Generation (that is the display name; the id is category-original-plastic-gen) and press Save.",
+      "Open /categories/category-original-plastic-gen and look for the listing.",
+      "Open /categories/category-original-tops and look for the same listing.",
+      "Open /categories/category-spinning-tops and look for it again.",
     ],
     expectedBehaviour:
       "A product stores the FULL ancestor chain, so it is reachable from its own category and from every ancestor with one query. If only the leaf is stored, the ancestor pages match nothing — and the leaf page can fail too, because the stored field and the field the form sends are not the same one.",

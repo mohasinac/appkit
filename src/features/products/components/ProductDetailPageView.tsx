@@ -403,8 +403,20 @@ export async function ProductDetailPageView({
                 {(primaryCategorySlug || category) && (
                   <>
                     <Span aria-hidden>/</Span>
+                    {/*
+                      🛑 Label from `categoryNames`, the array — NOT the singular
+                      `categoryName`, which is not a field the repository writes.
+
+                      The link already targets `categorySlugs[0]`, so the label has
+                      to come from the matching entry of the matching array or the
+                      two describe different things. It read `categoryName || category`
+                      and `categoryName` was always null, so every product detail page
+                      rendered its RAW SLUG as the final crumb — "category-burst-superking"
+                      — while the category chips ten lines down, which correctly read
+                      `categoryNames[i] ?? slug`, rendered "Superking" on the same screen.
+                    */}
                     <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(primaryCategorySlug ?? category!))} className={CLS_BREADCRUMB_LINK}>
-                      {categoryName || category}
+                      {categoryNames[0] || categoryName || category}
                     </Link>
                   </>
                 )}
@@ -943,7 +955,7 @@ export async function ProductDetailPageView({
                 relatedByBrand={relatedByBrand}
                 relatedByTags={relatedByTags}
                 relatedByStore={relatedByStore}
-                categoryLabel={categoryName || category || undefined}
+                categoryLabel={categoryNames[0] || categoryName || category || undefined}
                 brandLabel={brand || undefined}
                 storeLabel={storeName || undefined}
               />
