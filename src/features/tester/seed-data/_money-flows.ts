@@ -452,7 +452,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/checkout",
         steps: [
-          "Sign in as admin@letitrip.in / TempPass123!, open /admin/site, switch to the Shipping tab, and confirm 'PhonePe (online card/UPI) enabled' is ON.",
+          "Sign in as admin@letitrip.in / TempPass123!, open /admin/site, switch to the Shipping tab, and confirm the toggle reading 'PhonePe (online card/UPI) enabled — disabled by default, manual payment is the default' is ON. It is OFF on a fresh install, which is what that label is telling you.",
           STEP_SIGNIN_BUYER,
           "Open /products/product-beyblade-burst-valkyrie (₹999) and click 'Add to cart'.",
           "Open /checkout and complete the address step.",
@@ -542,7 +542,8 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/checkout",
         steps: [
-          "Sign in as admin@letitrip.in / TempPass123!, confirm PhonePe is enabled, and set Site Settings → Checkout → Out-of-stock policy to 'Skip unavailable items'.",
+          "Sign in as admin@letitrip.in / TempPass123! and confirm PhonePe is enabled on Site Settings, Shipping tab.",
+          "🛑 The out-of-stock policy is NOT an admin setting — there is no Checkout tab in Site Settings, and no control by the name this step used to give. It is a BUYER choice made at checkout, under the heading 'If an item goes out of stock', offering \"Ship what's available and refund the rest\" and \"Cancel my whole order\". The first is already the default, so nothing needs changing; just confirm it is selected when you reach checkout.",
           STEP_SIGNIN_BUYER,
           "Add product-beyblade-burst-valkyrie (₹999, stock available) and product-beyblade-original-dranzer-s (₹1,499) to the cart.",
           "Open /checkout, complete the address step, and click 'Pay Online (PhonePe)'.",
