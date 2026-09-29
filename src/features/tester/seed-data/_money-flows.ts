@@ -249,6 +249,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         startPage: "/user/notifications",
         steps: [
           "Sign in as the buyer who won auction-money-flows-closing.",
+          "🛑 WAIT FOR SETTLEMENT FIRST. The auction closes three minutes after the batch starts, but `auctionSettlement` is a scheduled function running every 15 minutes — so the win is not processed the moment the clock runs out. Nothing in this case or the two after it can be judged until it has run; an empty list before then is the schedule, not a defect.",
           "Open the notifications bell in the header.",
           "Find the auction-won notification.",
           "Read its text.",
@@ -266,22 +267,22 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         key: "won-auction-is-payable",
         label: "🛑 A won auction can actually be paid for",
         roles: ["buyer"],
-        startPage: "/user/orders",
+        startPage: "/cart",
         steps: [
           "Sign in as the buyer who won auction-money-flows-closing.",
-          "Open /user/orders.",
-          "Locate the won auction.",
-          "Click its payment call to action.",
+          "Open /cart, NOT /user/orders. A win does not create an order — settlement adds a LOCKED CART LINE, and the buyer pays through the ordinary checkout in the auction lane. An order only exists after payment.",
+          "Locate the won auction line and read its price.",
+          "Click through to checkout from that line.",
           "Read the amount due.",
           "Proceed as far as the payment method selection.",
         ],
         expectedBehaviour:
           "A reachable payment path exists and the amount due equals the winning bid of ₹16,000.",
         expectedUiState:
-          "The order shows ₹16,000.00 due and a payment control. Root Cause #60 is exactly this failing — settlement once wrote an order with no payment route, so 'the record exists' is NOT a pass; a payment step must be reachable.",
+          "The cart line reads ₹16,000.00 and checkout is reachable from it, arriving at a payment method selection. Root Cause #60 is exactly this failing — settlement once wrote an ORDER with no payment route at all, so 'the record exists' is NOT a pass; a payment step must be reachable. A line that is present but leads nowhere is the same defect wearing a different shape.",
         endResult:
-          "Stop at the payment method step. After reloading /user/orders the order is still listed as awaiting payment.",
-        href: "/user/orders",
+          "Stop at the payment method step and place nothing. After reloading /cart the locked line is still there at ₹16,000.00.",
+        href: "/cart",
       },
       {
         key: "won-auction-line-is-locked",
