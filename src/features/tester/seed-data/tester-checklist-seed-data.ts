@@ -6421,6 +6421,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description:
             "Open the same bid at /admin/bids/{id}/view and at /user/bids/{id}/view. The buyer view must not show the other bidder's identity. One `viewer` argument decides this, in one place — if the buyer view leaks a name, that argument is being ignored somewhere.",
         },
+        {
+          key: "detail-page-seller-sees-bidder",
+          label:
+            "A seller opening a bid on their own auction sees who placed it, and the modal and the full page agree",
+          description:
+            "buildBidDetailFields(bid, viewer) has four callers and the seller leg had no case. Its only viewer-dependent row is Bidder, added when the viewer is not the buyer, so this is the other side of the identity case: the buyer must NOT see a competitor, and the seller MUST see who is bidding on their own auction.",
+          href: "/store/bids",
+        },
       ],
     },
     {

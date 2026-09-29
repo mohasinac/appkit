@@ -1,6 +1,25 @@
 /*
  * WHY: Authored six-part procedures for the page-wiring/detail-pages page.
- * WHAT: 2 case(s), keyed by full checklist id.
+ * WHAT: 3 case(s), keyed by full checklist id.
+ *
+ * 🛑 REHAN NEVER BID (corrected 2026-09-29). The identity case said to find a
+ * bid placed by rehan.sheikh@gmail.com. Only three personas bid anywhere in the
+ * seed: user-rohit-collector, user-ananya-collector and user-meera-bey. So the
+ * step found nothing, and its buyer half would then have been signing in as
+ * someone looking at another person's bid, which is a different test entirely.
+ *
+ * Bid ids are DERIVED and therefore knowable:
+ *   bid-{auctionSuffix}-{userSuffix}-20260601-{NNN}
+ * so the first bid on auction-beyblade-original-dragoon-storm is
+ *   bid-beyblade-original-dragoon-storm-rohit-collector-20260601-000
+ * That auction has three distinct bidders, which is what makes it the right
+ * fixture for a case about seeing other people's identities.
+ *
+ * ONE builder, FOUR viewers. `buildBidDetailFields(bid, viewer)` is called by
+ * AdminBidsView's modal ('admin'), UserBidsView ('buyer'), SellerBidsView
+ * ('seller') and the shared BidDetailPageClient behind all three /view pages.
+ * Its only viewer-dependent row is Bidder, added when viewer !== 'buyer'. The
+ * seller leg had no case at all and now has one.
  *
  * Written by hand, case by case, against the label each one states. There is no
  * generator: the authoring scripts were deleted once it was clear they were
@@ -24,8 +43,8 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/bids and open the first bid row so its modal appears.",
       "Write down every field label the modal shows, in order.",
-      "Copy the bid's id and close the modal.",
-      "Open /admin/bids/{id}/view directly, substituting the copied id.",
+      "Click the modal's 'Open full page' link and note the URL it lands on.",
+      "Confirm that URL is /admin/bids/{that bid id}/view.",
       "Write down every field label that page shows, in order.",
       "Compare the two lists.",
     ],
@@ -41,19 +60,38 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/bids",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/bids and find a bid placed by rehan.sheikh@gmail.com on an auction that other people have also bid on.",
-      "Copy that bid's id and open /admin/bids/{id}/view.",
+      "Open /admin/bids/bid-beyblade-original-dragoon-storm-rohit-collector-20260601-000/view directly. It is the first of three bids on auction-beyblade-original-dragoon-storm, placed by rohit.collect@gmail.com.",
       "Write down every bidder name and identifier shown anywhere on the page.",
-      "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user/bids/{id}/view with the same id.",
+      "Sign out and sign in as rohit.collect@gmail.com / TempPass123!, the buyer who placed it.",
+      "Open /user/bids/bid-beyblade-original-dragoon-storm-rohit-collector-20260601-000/view.",
       "Write down every bidder name and identifier shown anywhere on that page, including in the page source.",
     ],
     expectedBehaviour:
       "One viewer argument decides what each portal reveals, in one place. The admin view may name other bidders because moderating a dispute requires it; the buyer's own view must not, because a competitor's identity is not the buyer's to see.",
     expectedUiState:
-      "The admin page may show other bidders' identities. The buyer page shows only their own bid, with any other bidder masked or absent — and that holds in the page source too, not merely in what is rendered. A real name anywhere in the buyer view is a leak.",
+      "The admin page shows a Bidder row naming who placed it; the buyer page omits that row entirely — it is the one field buildBidDetailFields makes viewer-dependent, added only when the viewer is not the buyer. Check the page source too, not merely what is rendered. A competing bidder's real name anywhere in the buyer view is a leak.",
     expectedData: { otherBidderNamesInBuyerView: 0 },
     endResult:
       "Read-only; nothing persists. A buyer view that shows nothing at all also fails — the buyer must still see their own bid.",
+  },
+  "checklist-page-wiring-detail-pages-detail-page-seller-sees-bidder": {
+    roles: ["seller"],
+    startPage: "/store/bids",
+    steps: [
+      "Sign in as tyson@beybladearena.in / TempPass123!.",
+      "Open /store/bids and open the first bid row so its modal appears.",
+      "Write down every field label the modal shows, in order.",
+      "Open /store/bids/bid-beyblade-original-dragoon-storm-rohit-collector-20260601-000/view directly.",
+      "Write down every field label that page shows, in order, and compare the two lists.",
+      "Read whether a Bidder row is present and what it names.",
+    ],
+    inputs: { bidId: "bid-beyblade-original-dragoon-storm-rohit-collector-20260601-000", viewer: "seller" },
+    expectedBehaviour:
+      "The seller is the third viewer of the same field builder, and the only one with no case until now. A seller running an auction needs to know who bid, so the Bidder row is present for them as it is for an admin; the buyer is the single viewer it is withheld from.",
+    expectedUiState:
+      "The modal and the page show the same labels in the same order. A Bidder row is present and names the bidder. If it is absent, the seller cannot tell who is bidding on their own auction — and if the buyer view gained one, that is the leak the case above tests.",
+    expectedData: { bidderRowShown: true },
+    endResult:
+      "Read-only; nothing persists. Every bid on this auction belongs to store-beyblade-arena, which is tyson's store, so the seller is entitled to see it.",
   },
 };
