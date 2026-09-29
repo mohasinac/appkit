@@ -103,10 +103,48 @@ interface OrderDetail {
   id: string;
   status: string;
   totalAmount?: number;
+  /*
+   * 🛑 The flat legacy spelling of the order total, and the one that is ACTUALLY
+   * populated. Measured against the single-order store endpoint on both a seeded order
+   * and one placed through real checkout: `totalAmount` came back undefined on
+   * both while `totalPrice` carried the real figure. Declared so the fallback
+   * below is type-checked rather than reached through a cast.
+   */
+  totalPrice?: number;
   buyerName?: string;
-  shippingAddress?: Record<string, JsonValue>;
-  items?: Array<{ productId?: string; title?: string; image?: string; quantity?: number; price?: number }>;
+  /*
+   * Either shape. The endpoint returns a pre-formatted STRING for existing
+   * orders ("Mock User 3, 123 Stadium Lane, …, India"); the object form is what
+   * `OrderDocument` declares. Typed as the union so the string case cannot be
+   * destructured by accident again — that is precisely how the drawer came to
+   * show no shipping destination at all.
+   */
+  shippingAddress?: Record<string, JsonValue> | string;
+  /*
+   * 🛑 These names mirror `OrderDocumentItem` — `productTitle`, `unitPrice`,
+   * `totalPrice`. The interface used to say `title` and `price`, which are not
+   * fields of that document, so the drawer rendered a product slug at ₹0.00 and
+   * tsc could not object: the type it was checked against was the mistake.
+   * `title`/`price` are kept optional only so a caller passing the old shape
+   * still compiles; nothing produces them.
+   */
+  items?: Array<{
+    productId?: string;
+    productTitle?: string;
+    image?: string;
+    quantity?: number;
+    unitPrice?: number;
+    totalPrice?: number;
+    title?: string;
+    price?: number;
+  }>;
   trackingNumber?: string;
+  /*
+   * 🛑 `shippingCarrier` is the field `OrderDocument` declares and the one the
+   * write path sets. `carrier` is declared only so the fallback reads above
+   * type-check; nothing stores it.
+   */
+  shippingCarrier?: string;
   carrier?: string;
   trackingUrl?: string;
   paymentMethod?: string;
@@ -222,7 +260,22 @@ export function SellerOrderDetailPanel({
         setDraft({
           status: "",
           trackingNumber: o.trackingNumber ?? "",
-          carrier: o.carrier ?? "",
+          /*
+           * 🛑 `shippingCarrier` is the stored field. `OrderDocument` declares
+           * it at line ~422 and declares no `carrier` at all.
+           *
+           * The WRITE below already gets this right (`payload.shippingCarrier`),
+           * so the carrier has been persisting correctly all along — verified
+           * against the live endpoint after shipping an order: `shippingCarrier:
+           * "QA Carrier"`, `carrier: undefined`. Only the read-back was wrong, so
+           * reopening a shipped order showed an EMPTY Carrier box next to a
+           * populated tracking number. A seller would reasonably retype it, and
+           * the diff-against-loaded-state payload means retyping the same value
+           * would then look like no change at all.
+           *
+           * Not a lost write — a field the form could not see.
+           */
+          carrier: o.shippingCarrier ?? o.carrier ?? "",
           trackingUrl: o.trackingUrl ?? "",
         });
       })
@@ -287,7 +340,10 @@ export function SellerOrderDetailPanel({
       setDraft({
         status: "",
         trackingNumber: next.trackingNumber ?? "",
-        carrier: next.carrier ?? "",
+        // Same stored-field name as the initial load above — this re-seed is
+        // explicitly "against the saved state", so reading the wrong field here
+        // makes every subsequent diff think the carrier had been cleared.
+        carrier: next.shippingCarrier ?? next.carrier ?? "",
         trackingUrl: next.trackingUrl ?? "",
       });
     } catch (err) {
@@ -298,8 +354,32 @@ export function SellerOrderDetailPanel({
     }
   };
 
-  const addr = order?.shippingAddress ?? {};
-  const addrLine = [addr.addressLine1, addr.city, addr.state, addr.pincode].filter(Boolean).join(", ");
+  /*
+   * 🛑 `shippingAddress` is sometimes a STRING, and destructuring one yields
+   * nothing but silence.
+   *
+   * Measured on both a seeded order and one placed through real checkout,
+   * the single-order store endpoint returns it pre-formatted:
+   *
+   *     "Mock User 3, 123 Stadium Lane, Vijay Nagar, Indore, Madhya Pradesh, 452010, India"
+   *
+   * Reading `.addressLine1` / `.city` / `.state` / `.pincode` off a string gives
+   * four undefineds, `filter(Boolean)` drops them all, and `addrLine` became "".
+   * The block below renders only when `addrLine` is truthy — so the seller was
+   * shown NO shipping destination at all for an order they are expected to post,
+   * with no error and no empty state. (`Object.keys()` on it returns "0".."80",
+   * which is the tell: those are string indices, not fields.)
+   *
+   * Handle both shapes rather than picking one: the object form is what the
+   * schema declares and what newer writes produce, and a seller needs the
+   * address either way.
+   */
+  const rawAddr = order?.shippingAddress;
+  const addr = (typeof rawAddr === "object" && rawAddr !== null ? rawAddr : {}) as Record<string, JsonValue>;
+  const addrLine =
+    typeof rawAddr === "string" && rawAddr.trim()
+      ? rawAddr.trim()
+      : [addr.addressLine1, addr.city, addr.state, addr.pincode].filter(Boolean).join(", ");
 
   return (
     <>
@@ -338,11 +418,29 @@ export function SellerOrderDetailPanel({
                           <MediaImage src={item.image} alt={item.title ?? "Order item"} size="thumbnail" />
                         </Div>
                         <Div className="min-w-0">
-                          <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
+                          {/*
+                            🛑 `productTitle` and `totalPrice` — NOT `title` and
+                            `price`, which are not fields of `OrderDocumentItem`.
+
+                            It read `item.title ?? item.productId` and
+                            `item.price ?? 0`, so every line in this drawer showed
+                            the buyer a product SLUG priced at ₹0.00 —
+                            "product-beyblade-original-dranzer-s · Qty: 1 · ₹0.00".
+                            The data was there the whole time: the same response
+                            carries `productTitle: "Beyblade Original — Dranzer S"`
+                            and `totalPrice: 977.92`. Both wrong names came from a
+                            loosely-typed `order`, so tsc could not see them
+                            (Root Cause #45).
+
+                            `totalPrice` is the LINE total, which is what a
+                            single figure at the end of the row means; `unitPrice`
+                            here would understate any line with quantity > 1.
+                          */}
+                          <Text size="sm" className="truncate" weight="medium">{item.productTitle ?? item.title ?? item.productId ?? "Item"}</Text>
                           <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
                         </Div>
                       </Row>
-                      <Text size="sm" className="shrink-0" weight="medium">{toCurrency(item.price ?? 0)}</Text>
+                      <Text size="sm" className="shrink-0" weight="medium">{toCurrency(item.totalPrice ?? item.unitPrice ?? item.price ?? 0)}</Text>
                     </Row>
                   ))}
                 </Div>
@@ -367,7 +465,22 @@ export function SellerOrderDetailPanel({
 
             <Row surface="muted" padding="inline" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
-              <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toCurrency(order.totalAmount ?? 0)}</Text>
+              {/*
+                🛑 Fall back to `totalPrice`. Measured against the live endpoint,
+                `totalAmount` is UNDEFINED on every order the single-order store endpoint
+                serves — both a seeded one and one placed through real checkout —
+                while `totalPrice` carries the real figure (997.8 = 899 item + 77
+                shipping + 10 platform + 10 WhatsApp). So `order.totalAmount ?? 0`
+                rendered a confident **₹0.00** as the order total on every single
+                order in the seller's drawer.
+
+                Reading both names is the fix that is certain here. Why the stored
+                documents use `totalPrice` when `OrderDocument` declares
+                `totalAmount` is a schema-vs-data divergence spanning the order
+                write paths — recorded in docs/TEST-RUN-3-OUTOFSCOPE.md rather
+                than guessed at from one drawer.
+              */}
+              <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toCurrency(order.totalAmount ?? order.totalPrice ?? 0)}</Text>
             </Row>
 
             {addrLine && (
