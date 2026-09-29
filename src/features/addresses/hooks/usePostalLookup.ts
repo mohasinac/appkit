@@ -61,8 +61,71 @@ interface ZippopotamResponse {
   }[];
 }
 
+/**
+ * India Post's response, narrowed to what is used.
+ *
+ * `District` is the CITY. `Name` is the post office, which is what Zippopotam
+ * returns as its "place name" and is the reason this second source exists.
+ */
+interface IndiaPostResponse {
+  Status?: string;
+  PostOffice?: { Name?: string; District?: string; State?: string }[] | null;
+}
+
 const ENDPOINT = "https://api.zippopotam.us";
+const INDIA_ENDPOINT = "https://api.postalpincode.in/pincode";
 const DEBOUNCE_MS = 400;
+
+/**
+ * 🛑 India does not go through Zippopotam, because Zippopotam has no city
+ * for an Indian PIN.
+ *
+ * Its `places[].place name` is the POST OFFICE, and measured against the five
+ * largest Indian cities not one of them returned the city:
+ *
+ *     560001 Bengaluru — "Rajbhavan"
+ *     400001 Mumbai    — "Haji S Musafarkhana"
+ *     110001 Delhi     — "Janpath"
+ *     700001 Kolkata   — "Lalbazar"
+ *     452001 Indore    — "Indore Jail Road"
+ *
+ * So the City field was filled with a street or locality on every Indian
+ * address, which is worse than leaving it blank: the buyer sees a
+ * plausible-looking filled field and has no reason to correct it, and the
+ * courier gets an address with no city. This hook's own promise — "typing a
+ * zipcode should fill in the city" — was never once kept in the only market
+ * this site serves.
+ *
+ * India Post publishes `District`, which IS the city (Bangalore, Mumbai,
+ * Indore). Note it uses the older spellings; that is the authority's own data
+ * and not ours to rewrite.
+ */
+async function lookupIndia(code: string, signal: AbortSignal): Promise<PostalLookupResult | null> {
+  const res = await fetch(`${INDIA_ENDPOINT}/${encodeURIComponent(code)}`, { signal });
+  if (!res.ok) return null;
+  const json = (await res.json()) as IndiaPostResponse[] | null;
+  const row = json?.[0];
+  if (row?.Status !== "Success") return null;
+  const offices = (row.PostOffice ?? []).filter(Boolean);
+  if (offices.length === 0) return null;
+
+  /*
+   * The MOST COMMON district, not the first. A PIN on a boundary returns post
+   * offices from two districts — 400001 lists 'Mumbai' and 'Raigarh(MH)' —
+   * and the first row is not reliably the one the buyer means.
+   */
+  const tally = new Map<string, number>();
+  for (const o of offices) {
+    const d = (o.District ?? "").trim();
+    if (d) tally.set(d, (tally.get(d) ?? 0) + 1);
+  }
+  let city = "";
+  let best = 0;
+  for (const [d, n] of tally) {
+    if (n > best) { city = d; best = n; }
+  }
+  return { city, state: (offices[0].State ?? "").trim() };
+}
 
 /**
  * Per-session cache, keyed `{country}:{postal}`.
@@ -135,18 +198,35 @@ export function usePostalLookup({
         abortRef.current = controller;
         setIsLooking(true);
 
-        void fetch(`${ENDPOINT}/${def.code.toLowerCase()}/${encodeURIComponent(code)}`, {
-          signal: controller.signal,
-        })
-          .then((res) => (res.ok ? (res.json() as Promise<ZippopotamResponse>) : null))
-          .then((json) => {
-            const place = json?.places?.[0];
-            const result: PostalLookupResult | null = place
-              ? {
-                  city: place["place name"] ?? "",
-                  state: place.state ?? place["state abbreviation"] ?? "",
-                }
-              : null;
+        /*
+         * India has its own source — see `lookupIndia`. Everywhere else keeps
+         * Zippopotam, whose "place name" IS the city outside India.
+         */
+        const request: Promise<PostalLookupResult | null> =
+          def.code.toUpperCase() === "IN"
+            ? lookupIndia(code, controller.signal)
+            : fetch(`${ENDPOINT}/${def.code.toLowerCase()}/${encodeURIComponent(code)}`, {
+                signal: controller.signal,
+              })
+                .then((res) => (res.ok ? (res.json() as Promise<ZippopotamResponse>) : null))
+                .then((json) => {
+                  const place = json?.places?.[0];
+                  return place
+                    ? {
+                        city: place["place name"] ?? "",
+                        state: place.state ?? place["state abbreviation"] ?? "",
+                      }
+                    : null;
+                });
+
+        void request
+          .then((resolved) => {
+            /*
+             * A result with neither field is a miss, not a hit — handing the
+             * form two empty strings would clear nothing and resolve nothing,
+             * while caching it as success hides a real answer for the session.
+             */
+            const result = resolved && (resolved.city || resolved.state) ? resolved : null;
             CACHE.set(key, result);
             if (result) onResolvedRef.current(result);
           })

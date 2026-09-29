@@ -116,13 +116,28 @@ export function useCreateAddress(options?: {
 /**
  * Update options.
  *
- * `method` exists because the two portals disagree: `/api/user/addresses/[id]`
- * exports PATCH and `/api/store/addresses/[id]` exports PUT, and
- * `SellerAddressesView` hardcodes PUT against the latter. Changing the route's
- * verb would break that working call site, so the hook bends instead.
+ * 🛑 `method` DEFAULTS TO PUT, because both portals take PUT.
  *
- * Caught by `audit-client-verb-match` before the store pages were written —
- * this hook would have 405'd the moment they reused it.
+ * This defaulted to PATCH on the strength of a comment saying "the two portals
+ * disagree: `/api/user/addresses/[id]` exports PATCH and
+ * `/api/store/addresses/[id]` exports PUT". Measured against both route files,
+ * each exports **GET / PUT / DELETE** and NEITHER exports PATCH — so the
+ * premise was stale and the default was the only thing disagreeing with either
+ * of them. Every buyer edit sent `PATCH /api/user/addresses/{id}` and took a
+ * **405**, surfacing as `ApiClientError: Invalid JSON response`. The form stays
+ * on the edit page and the record is unchanged. (`EditAddressClient` does call
+ * `showToast("Failed to update address.", "error")` from `onError`; whether the
+ * buyer actually sees it was NOT established — every measurement landed after a
+ * toast's lifetime, so it is not claimed either way here.)
+ *
+ * The prop is kept rather than deleted so a portal that genuinely wants PATCH
+ * can ask for it, and `SellerAddressesView` keeps passing PUT explicitly.
+ *
+ * 🛑 That comment also cited `audit-client-verb-match` as proof this could
+ * not happen. The audit reports **clean** while the 405 is live: it resolves
+ * literal `apiClient.patch("/some/path")` calls, and cannot see a verb chosen
+ * at runtime by `method === "PUT" ? apiClient.put(...) : apiClient.patch(...)`.
+ * A gate you have not watched fail is not a gate (Root Cause #87).
  */
 export interface UpdateAddressOptions {
   byIdEndpoint?: (id: string) => string;
@@ -138,7 +153,7 @@ export function useUpdateAddress(
 ) {
   const queryClient = useQueryClient();
   const byIdEndpoint = options?.byIdEndpoint ?? DEFAULT_ENDPOINTS.byId;
-  const method = options?.method ?? "PATCH";
+  const method = options?.method ?? "PUT";
   return useMutation<Address, Error, AddressFormData>({
     mutationFn: (data) =>
       method === "PUT"

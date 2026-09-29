@@ -12,6 +12,10 @@ import { useSectionState } from "../account/hooks/useCollapsedSections";
 import { FormSchemaContext } from "./FormShell";
 import { EASE_OUT_MS } from "../../tokens/motion";
 
+/* Stable identity — a fresh `{}` per render would break any memo a section
+ * render does on its `errors` prop. */
+const EMPTY_ERRORS: Record<string, string> = {};
+
 /**
  * A collapsible form segment. Replaces `StepDef` — the differences are the
  * point, not incidental:
@@ -291,6 +295,27 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    * a caller renders it outside a provider, which is legitimate.
    */
   const shellCtx = useContext(FormShellContext);
+  /*
+   * 🛑 Has the user ASKED to save yet?
+   *
+   * Root Cause #74 gated `FormErrorSummary` on this and stopped there. The
+   * per-section "N issues" badges below were never gated, and the eleven views
+   * that mount SectionForm all call `validate(draft)` from a MOUNT EFFECT —
+   * which that entry is explicit must STAY, because it is what keeps the errors
+   * current as the user fixes fields after a failed save. So `fieldErrors` is
+   * fully populated on first paint, and "Add New Address" opened reading
+   * "3 issues" and "4 issues" in red against a form nobody had typed into.
+   *
+   * Gate the DISPLAY, never the computation — deleting the mount-effect
+   * validate is the obvious repair and it is the wrong one.
+   *
+   * Local state rather than `shellCtx.submitAttempted` alone: SectionForm owns
+   * the submit button, so it always knows, whereas `shellCtx` is legitimately
+   * null when a caller renders it outside a provider (see above). Both are
+   * consulted, so a provider-level attempt from the pinned mobile bar counts too.
+   */
+  const [attemptedHere, setAttemptedHere] = useState(false);
+  const submitAttempted = attemptedHere || shellCtx?.submitAttempted === true;
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [uncontrolledOpenIds, setUncontrolledOpenIds] = useState<string[]>(() =>
     orderSections(sections).filter((s) => s.required).map((s) => s.id),
@@ -434,6 +459,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    * identically whichever the user presses.
    */
   const handleSubmit = useCallback(() => {
+    setAttemptedHere(true);
     shellCtx?.markSubmitAttempted();
 
     /*
@@ -535,7 +561,8 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
             onToggle={() => toggle(section.id)}
             keepMounted={section.keepMounted}
             renderHeaderExtra={
-              errorCount > 0
+              /* Only after the user has tried to save — see `submitAttempted` above. */
+              submitAttempted && errorCount > 0
                 ? () => (
                     <Badge variant="danger">
                       {errorCount} {errorCount === 1 ? "issue" : "issues"}
@@ -544,7 +571,29 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
                 : undefined
             }
           >
-            {section.render({ values, onChange: handleFieldChange, errors: fieldErrors })}
+            {/*
+             * Errors reach the fields only once the user has tried to save.
+             *
+             * `fieldErrors` is a WHOLE-FORM parse result — `runValidation`
+             * bulk-replaces it from one `safeParse` — so it is the sectioned
+             * equivalent of `FormErrorSummary`, not per-field touch tracking,
+             * and Root Cause #74 is explicit that the summary waits for an
+             * attempt while per-field errors keep their own `touched` gate.
+             *
+             * Without this, a field wired `error={errors.x}` showed its message
+             * on first paint: "Add New Address" greeted the buyer with
+             * "Enter the state or region." under an untouched picker. Fields
+             * that instead read `FormShellContext` showed nothing, so the same
+             * form was inconsistent with itself about when an error is due.
+             *
+             * `touched`-gated context errors are unaffected — that path does not
+             * come through here.
+             */}
+            {section.render({
+              values,
+              onChange: handleFieldChange,
+              errors: submitAttempted ? fieldErrors : EMPTY_ERRORS,
+            })}
           </CollapsibleSection>
         );
       })}

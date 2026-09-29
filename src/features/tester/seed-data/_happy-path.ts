@@ -435,8 +435,8 @@ export const happyPathPages: HappyPathPage[] = [
         expectedBehaviour:
           "A postal-code lookup resolves the city and state and populates both fields without the buyer typing them.",
         expectedUiState:
-          "The city field reads Bengaluru and the state field reads Karnataka. Neither is left blank.",
-        expectedData: { city: "Bengaluru", state: "Karnataka" },
+          "The city field reads Bangalore and the state field reads Karnataka. Neither is left blank, and neither reads a street or post-office name such as 'Rajbhavan' — that is the defect this case exists to catch.",
+        expectedData: { city: "Bangalore", state: "Karnataka" },
         endResult: "Nothing is saved unless the form is submitted; leaving the page discards it.",
       },
       {
