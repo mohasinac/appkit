@@ -36,6 +36,7 @@ import type {
 } from "../schemas";
 import type { EventStatus } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { maskName } from "../../../security/pii-mask";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -345,8 +346,58 @@ export async function getEventSpinResults(
   const entries = await eventEntryRepository.getRecentSpinResults(event.id, limit);
   return entries.map((entry) => ({
     id: entry.id,
-    userDisplayName: entry.userId ? entry.userDisplayName : undefined,
+    /*
+     * 🛑 MASKED. This is a public feed on a public event page — the route is
+     * not viewer-scoped and never has been — so it was publishing real winners'
+     * full display names beside the prize each one won, to anybody with the
+     * event's URL.
+     *
+     * Root Cause #50 is the precedent and it is the same shape: a real bidder's
+     * display name was going out on public Bid History because `maskPublicBid`
+     * spread its input instead of calling `maskName`. Nothing rendered the field
+     * conspicuously there either, which is why it sat unnoticed.
+     *
+     * `maskName` returns "Anonymous" for a missing name, so the guest case still
+     * reads sensibly, and `isGuest` below is what the renderer actually branches
+     * on for its own label. A caller's OWN spins are served unmasked by
+     * `getUserSpinResultsForEvent` — masking is for other people's.
+     */
+    userDisplayName: entry.userId ? maskName(entry.userDisplayName) : undefined,
     isGuest: !entry.userId,
+    spinPrizeId: entry.spinPrizeId,
+    spinPrizeTitle: entry.spinPrizeId ? prizeTitleById.get(entry.spinPrizeId) : undefined,
+    spinWonAt: entry.spinWonAt ? new Date(entry.spinWonAt).toISOString() : undefined,
+  }));
+}
+
+/**
+ * The CALLER'S OWN winning spins for an event, newest first.
+ *
+ * The companion to `getEventSpinResults`, which is a public masked feed of
+ * everyone's recent spins. That feed cannot answer "what did I win", and a
+ * checklist case asserting it did was the thing that surfaced the gap: read as
+ * a buyer who had never spun, the page listed three other people's prizes and
+ * showed no empty state, because from its point of view nothing was empty.
+ *
+ * Unmasked on purpose — these are the caller's own results, and `userId` is
+ * supplied by the server from a verified session, never by the client.
+ */
+export async function getUserSpinResultsForEvent(
+  eventId: string,
+  userId: string,
+): Promise<import("../types").SpinResultEntry[]> {
+  const event = await eventRepository.findByIdOrSlug(eventId);
+  if (!event || event.type !== "spin_wheel") return [];
+
+  const prizeTitleById = new Map(
+    (event.spinPrizes ?? []).map((p) => [p.id, p.label]),
+  );
+
+  const entries = await eventEntryRepository.getUserSpinResults(event.id, userId);
+  return entries.map((entry) => ({
+    id: entry.id,
+    userDisplayName: entry.userDisplayName,
+    isGuest: false,
     spinPrizeId: entry.spinPrizeId,
     spinPrizeTitle: entry.spinPrizeId ? prizeTitleById.get(entry.spinPrizeId) : undefined,
     spinWonAt: entry.spinWonAt ? new Date(entry.spinWonAt).toISOString() : undefined,

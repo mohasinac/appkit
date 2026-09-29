@@ -179,6 +179,49 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     }
   }
 
+  /**
+   * One caller's own winning spins for an event, newest first.
+   *
+   * 🛑 Deliberately the SAME query shape as `countUserEntries` — two equalities
+   * on `(eventId, userId)` and no `orderBy` — so it needs no composite index
+   * that does not already exist. `getRecentSpinResults` orders by `spinWonAt`,
+   * which is fine with its single equality but would demand a new
+   * `(eventId, userId, spinWonAt)` index here, and an index that has not been
+   * deployed fails with FAILED_PRECONDITION at runtime while looking perfectly
+   * correct in source (Root Cause #2).
+   *
+   * Sorting in memory is safe precisely because this set is tiny and bounded by
+   * the event's own `spinMaxPerUser` — it is "my spins", not a feed. Rows with
+   * no `spinWonAt` are dropped rather than sorted to an arbitrary end: an entry
+   * that never resolved a prize is not a spin result.
+   */
+  async getUserSpinResults(
+    eventId: string,
+    userId: string,
+  ): Promise<EventEntryDocument[]> {
+    try {
+      const snapshot = await this.getCollection()
+        .where(EVENT_ENTRY_FIELDS.EVENT_ID, "==", eventId)
+        .where(EVENT_ENTRY_FIELDS.USER_ID, "==", userId)
+        .get();
+
+      return snapshot.docs
+        .map((doc) => this.mapDoc(doc))
+        .filter((entry) => Boolean(entry.spinWonAt))
+        .sort((a, b) => {
+          const at = new Date(a.spinWonAt as unknown as string).getTime();
+          const bt = new Date(b.spinWonAt as unknown as string).getTime();
+          return (Number.isFinite(bt) ? bt : 0) - (Number.isFinite(at) ? at : 0);
+        });
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to load spin results for user ${userId} on event ${eventId}`,
+        error,
+      );
+    }
+  }
+
   async countUserEntries(eventId: string, userId: string): Promise<number> {
     try {
       const snapshot = await this.getCollection()

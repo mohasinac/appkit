@@ -177,30 +177,66 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { eventContentReadableByGuest: true },
     endResult: "No entry is recorded and no session is created.",
   },
+  /*
+   * 🛑 SPLIT IN TWO, 2026-09-29, after this case failed for a reason that was
+   * not a bug in the code it was testing.
+   *
+   * It asserted that /events/{id}/spin-results lists "this account's own spins".
+   * The route was a PUBLIC feed — `getSpinResultsCached(id)` took only the event
+   * id and returned the ten most recent spins across all users — so read by a
+   * buyer who had never spun it listed three strangers' prizes and showed no
+   * empty state, because from the feed's point of view nothing was empty.
+   *
+   * Both readings turned out to be wanted, so the page now has two sections and
+   * there are two cases. Rewriting the single case to assert whatever the code
+   * already did would have made it a tautology; deleting the account-scoped
+   * claim would have thrown away the one a human actually cared about.
+   */
   "checklist-content-discovery-event-detail-subroutes-spin-results-subroute": {
     roles: ["buyer"],
     startPage: "/events/event-daily-beyblade-pull-wheel/spin-results",
     steps: [
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-daily-beyblade-pull-wheel — a SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2.",
       "Read which tabs the detail page offers and check a results tab is among them.",
       "Open /events/event-daily-beyblade-pull-wheel/spin-results directly by URL.",
-      "Read what it shows before this account has spun — a named empty state, not a blank panel and not an error.",
-      "Go back, spin once, and read the prize awarded.",
-      "Return to the spin-results route and check that spin is listed with its prize.",
-      "Spin a second time, then attempt a third — the cap is 2 per user.",
-      "Read how the third attempt is refused, and check spin-results still lists exactly two.",
+      "Find the 'Last 10 Spin Results' section — the PUBLIC feed of everyone's recent spins, which is a different section from 'Your Spins'.",
+      "Read the participant name on each row.",
+    ],
+    inputs: {
+      eventId: "event-daily-beyblade-pull-wheel",
+    },
+    expectedBehaviour:
+      "The public feed lists recent spins by ANY participant, and every display name is masked. This is a public page on a public event, so a real winner's full name must not be published beside the prize they won — the same rule that applies to bidder names on public bid history.",
+    expectedUiState:
+      "A 'Last 10 Spin Results' heading over rows of participant, prize and relative time. Every signed-in participant's name is masked to initials in the 'R*** K***' shape; a guest row reads 'Guest'. No row shows a full first and last name.",
+    expectedData: { fullNamesVisibleInPublicFeed: 0 },
+    endResult:
+      "Read-only. Nothing is spun and nothing is written.",
+  },
+
+  "checklist-content-discovery-event-detail-subroutes-my-spins-scoped-to-viewer": {
+    roles: ["buyer"],
+    startPage: "/events/event-daily-beyblade-pull-wheel/spin-results",
+    steps: [
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
+      "Open /events/event-daily-beyblade-pull-wheel/spin-results.",
+      "Find the 'Your Spins' section — it sits ABOVE the public 'Last 10 Spin Results' feed.",
+      "Before spinning, read what it shows. It must name YOUR state, not the event's: 'You have not spun on this event yet.' Reading 'No spins yet' here would be the bug this case exists for, because the public feed below is not empty.",
+      "Go back to the event, spin once, and read the prize awarded.",
+      "Return to spin-results and check 'Your Spins' lists exactly that one spin with that prize.",
+      "Confirm no other participant's row appears inside 'Your Spins' — the strangers visible in the feed below must not be in your own section.",
     ],
     inputs: {
       eventId: "event-daily-beyblade-pull-wheel",
       spinMaxPerUser: 2,
     },
     expectedBehaviour:
-      "The spin-results subroute is reachable by URL and lists this account's own spins with the prize each won. A per-user cap of 2 is enforced on the third attempt rather than silently accepted, and the results list is what proves the first two were actually recorded — a spin that animates, names a prize and stores nothing looks identical to one that worked.",
+      "'Your Spins' is scoped to the signed-in caller and answers what did I win. Its empty state is about the viewer, so someone who has never spun is told so plainly rather than being shown other people's prizes with nothing to distinguish them.",
     expectedUiState:
-      "Before spinning, a named empty state. After one spin, exactly one row naming the prize just awarded. After two, exactly two. The third attempt is refused with a readable message and the list still holds two, not three.",
-    expectedData: { spinsRecorded: 2 },
+      "Before spinning: a 'Your Spins' heading over the text 'You have not spun on this event yet.' After one spin: exactly one row naming the prize just awarded and its relative time, and no participant names at all — every row in this section is yours by construction.",
+    expectedData: { mySpinRowsBeforeSpinning: 0, mySpinRowsAfterOneSpin: 1 },
     endResult:
-      "Two spins are recorded against this account and they persist across a reload. They are NOT cleaned up: eventEntries is a CASCADE-tier collection, wiped when the seeded event it references is, so the next run starts clean without anything being deleted here.",
+      "One spin is recorded against this account and 'Your Spins' still shows it after a reload. Signed out, the section reads 'Sign in to see your own spins and the prizes you have won.' rather than showing anyone else's.",
   },
 };

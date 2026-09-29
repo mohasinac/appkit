@@ -3208,8 +3208,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         {
           key: "spin-results-subroute",
-          label: "The /events/{id}/spin-results subroute is reachable by URL and lists this account's own spins with the prize each won",
-          description: "One of five event detail subroutes and the only one with no coverage. Uses event-daily-beyblade-pull-wheel, a SPIN_WHEEL event with real spinPrizes and spinMaxPerUser of 2, so the per-user cap is testable: the third attempt must be refused and the list must still hold two. A spin that animates, names a prize and stores nothing looks identical to one that worked.",
+          label: "The public 'Last 10 Spin Results' feed masks every participant's display name",
+          description: "Re-scoped 2026-09-29. This case used to assert the route listed 'this account's own spins'; it does not and never did — getSpinResultsCached takes only the event id and returns the ten most recent spins across ALL users, so a buyer who had never spun was shown three strangers' prizes with no empty state. The page now has two sections and this case covers the PUBLIC one. What it checks is the masking: a public event page was publishing real winners' full display names beside the prize each won, which is the same shape as the bidder-name leak on public bid history (Root Cause #50). The account-scoped claim moved to my-spins-scoped-to-viewer.",
+          href: "/events/event-daily-beyblade-pull-wheel/spin-results",
+        },
+        {
+          key: "my-spins-scoped-to-viewer",
+          label: "'Your Spins' shows only the signed-in caller's own spins, with an empty state about YOU",
+          description: "The account-scoped half of the old spin-results case, now a section of its own above the public feed. The bug it guards against is specific: when the viewer-scoped block did not exist, someone who had never spun saw the public feed's rows and had no way to tell that none of them were theirs. So the empty state must name the viewer ('You have not spun on this event yet.') rather than the event ('No spins yet'), which would be false while the feed below is full. Signed out it must prompt to sign in, never show anyone else's results.",
           href: "/events/event-daily-beyblade-pull-wheel/spin-results",
         },
         { key: "detail-tabs-match-event-type", label: "An event's tabs match its TYPE — a poll shows no spin results, a sale shows no leaderboard" },
