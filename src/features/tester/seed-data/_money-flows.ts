@@ -64,8 +64,9 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         steps: [
           STEP_SIGNIN_BUYER,
           "Open /products/product-beyblade-burst-valkyrie.",
+          "Confirm the signed-in account is ash@pokemonpalace.in and NOT rehan.sheikh@gmail.com. The seeded pending 780 on this product belongs to rehan, who is also the harness default buyer, so running this case as rehan trips the guard that allows only one active offer per listing and Make Offer is refused — which reads as a broken control rather than as the wrong identity.",
           "Click 'Make Offer'.",
-          "Enter 780 as the offer amount.",
+          "Enter 815 as the offer amount. NOT 780: the seed already ships offer-yugi-burst-valkyrie-pending, a pending 780 from a different buyer on this same product, and two pending rows at the same amount on the same listing are tellable apart only by buyer name.",
           /*
            * Named `QA note buyer-makes-offer`, not `QA offer offer-to-purchase-…`.
            * R7 reads `offer-…` as a FIXTURE CITATION wherever it appears in a
@@ -79,11 +80,11 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Open /user/offers.",
         ],
         expectedBehaviour:
-          "An offer is created for 780 against product-beyblade-burst-valkyrie, owned by the signed-in buyer, and the owning seller receives an offer-received notification.",
+          "An offer is created for 815 against product-beyblade-burst-valkyrie, owned by the signed-in buyer, and the owning seller receives an offer-received notification.",
         expectedUiState:
-          "The offer modal closes and a success confirmation appears. /user/offers lists a row for the product with amount ₹780 and status Pending. The page does NOT read 'No offers yet'.",
+          "The offer modal closes and a success confirmation appears. /user/offers lists a row for the product with amount ₹815 and status Pending. The page does NOT read 'No offers yet'. Only THIS buyer's offers appear here, so the seeded 780 from another buyer must not be listed.",
         endResult:
-          "After reloading /user/offers the row is still listed at ₹780 with status Pending.",
+          "After reloading /user/offers the row is still listed at ₹815 with status Pending.",
       },
       {
         key: "duplicate-offer-refused",
@@ -91,18 +92,18 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
-          "Sign in as the buyer ash@pokemonpalace.in, holding the pending 780 offer from the previous case.",
+          "Sign in as the buyer ash@pokemonpalace.in, holding the pending 815 offer from the previous case.",
           "Open /products/product-beyblade-burst-valkyrie.",
           "Click 'Make Offer'.",
           "Enter 800 as the offer amount.",
           "Click 'Submit offer'.",
         ],
         expectedBehaviour:
-          "The second offer is rejected. No new offer document is created; the existing 780 offer is untouched.",
+          "The second offer is rejected. No new offer document is created; the existing 815 offer is untouched.",
         expectedUiState:
           "An error states that an active offer already exists on this listing. The amount field keeps the entered 800 rather than clearing silently.",
         endResult:
-          "After reloading /user/offers there is still exactly ONE pending row for this product, at ₹780 — not two, and not one at ₹800.",
+          "After reloading /user/offers there is still exactly ONE pending row for this product, at ₹815 — not two, and not one at ₹800. The rule is per buyer per listing, so the other buyer's seeded 780 is unaffected and is not visible here anyway.",
       },
       {
         key: "seller-sees-and-accepts",
@@ -112,7 +113,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         steps: [
           "Sign in as tyson@beybladearena.in / TempPass123!, who owns store-beyblade-arena.",
           "Open /store/offers.",
-          "Find the row for offer-yugi-burst-valkyrie-pending (product-beyblade-burst-valkyrie, offered ₹780 against a listed ₹999).",
+          "Find the row for offer-yugi-burst-valkyrie-pending — product-beyblade-burst-valkyrie, offered ₹780 against a listed ₹999, from buyer Mock User 3. If the previous cases ran there is also an ₹815 row from a different buyer on the same product; accept the ₹780 one.",
           "Open the row actions menu.",
           "Click 'Accept'.",
           "Confirm in the dialog.",
