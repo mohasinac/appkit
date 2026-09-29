@@ -76,7 +76,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
            * cheaper than weakening the rule.
            */
           "Enter the note 'QA note buyer-makes-offer'.",
-          "Click 'Submit offer'.",
+          "Click the primary button. It reads 'Send offer of ₹815.00' — the label carries the amount, so it doubles as a check that what you typed reached the button. The label is interpolated, so it is not a fixed string to search for.",
           "Open /user/offers.",
         ],
         expectedBehaviour:
@@ -96,7 +96,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Open /products/product-beyblade-burst-valkyrie.",
           "Click 'Make Offer'.",
           "Enter 800 as the offer amount.",
-          "Click 'Submit offer'.",
+          "Click the primary button, which now reads 'Send offer of ₹800.00'.",
         ],
         expectedBehaviour:
           "The second offer is rejected. No new offer document is created; the existing 815 offer is untouched.",
@@ -649,15 +649,15 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Sign in as admin@letitrip.in / TempPass123!.",
           "Open /admin/bundles and start a new bundle.",
           "Name it 'QA cross-store bundle'.",
-          "Add product-beyblade-burst-valkyrie (store-beyblade-arena) as a member.",
-          "Add prizedraw-beyblade-mystery-box (store-letitrip-official) as a second member — a different store.",
+          "Add THREE members, because the form refuses fewer: product-beyblade-burst-valkyrie and product-beyblade-x-wizard-arrow (both store-beyblade-arena), plus prizedraw-beyblade-mystery-box (store-letitrip-official) — a different store.",
+          "🛑 Two members is not enough to reach the cross-store check at all. BUNDLE_MIN_ITEMS is 3, and a two-member save is refused with 'Select at least 3 products (currently 2).' — a refusal for the wrong reason, which reads as a pass if the message is not read.",
           "Set the bundle price to 1000 and click Save.",
         ],
         inputs: { bundleName: "QA cross-store bundle", bundlePrice: 1000 },
         expectedBehaviour:
           "The save is refused because an order belongs to exactly one seller, and a bundle spanning two stores would produce an order containing another seller's product — with no notification, no shipping resolution and no payout for that second seller. The refusal is at save time, not at add-to-cart time, so bundles already stored keep working.",
         expectedUiState:
-          "An error names the two stores, or at least states that a bundle cannot span sellers. The editor stays open with the entered members intact rather than clearing.",
+          "An error names how many sellers the members span, or at least states that a bundle cannot span sellers. Read the message: a minimum-members error means the cross-store guard never ran. The editor stays open with the entered members intact rather than clearing.",
         endResult:
           "After reloading /admin/bundles there is no bundle named 'QA cross-store bundle'.",
         href: "/admin/bundles",
