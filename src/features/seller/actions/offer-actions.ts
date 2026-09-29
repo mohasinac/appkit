@@ -92,6 +92,41 @@ export async function makeOffer(
   const product = await productRepository.findById(productId);
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);
 
+  /*
+   * 🛑 A seller may not offer on their OWN listing. There was no such check.
+   *
+   * Measured on production as tyson@beybladearena.in, who owns
+   * store-beyblade-arena: product-beyblade-burst-valkyrie — sold by that very
+   * store — offered a live 'Make Offer' control, and clicking it opened the
+   * full form ("Listed at ₹999 · Minimum offer: ₹699.3") with a working
+   * 'Send offer of ₹899.1' button and the buyer-facing line "The seller will
+   * accept, decline, or suggest a counter price" shown TO that seller.
+   *
+   * The three gates above it are all real but none of them is about identity:
+   * the type's `canMakeOffer`, the seller's `allowOffers` opt-in, and the
+   * amount bounds. So a self-offer would have been accepted and written, and
+   * the same person would then appear on both sides of a negotiation — able to
+   * accept their own offer and, through the offer lane, mint a locked cart line
+   * at any price down to the minimum floor. That is a pricing bypass, not a
+   * cosmetic one.
+   *
+   * The check is HERE rather than only in the UI on purpose (Root Cause #46): a
+   * hidden button is not an authorization boundary, and the control was already
+   * reachable. `product.storeId` is the store SLUG while `userId` is an Auth
+   * uid — two different namespaces by design — so the owner is resolved through
+   * `findByOwnerId`, exactly as `sellerUpdateProduct` does.
+   *
+   * Admins are not exempted: there is no legitimate reason for anyone to
+   * negotiate with themselves, and an admin wanting to adjust a price has the
+   * listing editor.
+   */
+  const callerStore = await storeRepository.findByOwnerId(userId);
+  if (callerStore && callerStore.id === product.storeId) {
+    throw new ValidationError(
+      "You can't make an offer on your own listing — edit its price instead.",
+    );
+  }
+
   const listingType = normalizeListingType(product);
 
   // Some listing types cannot be negotiated at all — an auction already has

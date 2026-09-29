@@ -9,7 +9,7 @@ import { OfferPhaseTimeline } from "./OfferPhaseTimeline";
 import { counterOfferFormSchema } from "../schemas/offer-forms";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import { SELLER_OFFER_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { SELLER_OFFER_STATUS_TABS, offerStatusLabel } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
@@ -101,7 +101,7 @@ export function SellerOffersView({
           `Listed: ${toCurrency(item.listedPrice)}`,
           toStringValue(item.buyerName ?? "Unknown buyer", "Unknown buyer"),
         ].join(" · "),
-        status: toStringValue(item.status, "Pending"),
+        status: offerStatusLabel(toStringValue(item.status, "pending"), "seller"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
         detail: item as JsonObject,
       })),

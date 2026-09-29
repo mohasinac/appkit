@@ -13,7 +13,9 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
-import { toRecordArray, toRelativeDate, toCurrency, toStringValue } from "../hooks/useSellerListingData";
+import { toRecordArray, toCurrency, toStringValue } from "../hooks/useSellerListingData";
+// Defining module (Root Cause #18) — the seller-side duplicate was deleted for drift.
+import { toRelativeDate } from "../../admin/hooks/useAdminListingData";
 import { DataTable } from "../../admin/components/DataTable";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";

@@ -72,6 +72,29 @@ export interface ProductJsonLdInput {
   /** Canonical discriminator (SB1-G Phase 4). */
   listingType?: ListingType;
   /**
+   * The path this listing actually lives at, e.g. `/auctions/{slug}`.
+   *
+   * 🛑 Both builders hardcoded `/products/${slug}`, so an auction's own
+   * structured data advertised its offer — and its `url` — at a path that
+   * belongs to a different listing type. Measured live: the block on
+   * `/auctions/auction-beyblade-metal-lightning-l-drago` carried
+   * `offers.url: ".../products/auction-beyblade-metal-lightning-l-drago"`,
+   * and that URL served a full standard product page with Buy Now and Add to
+   * Cart and no bid controls at all. So the one consumer that reads this field
+   * — a crawler — was sent to the wrong page, and told it was canonical there.
+   *
+   * Six of the nine listing types have their own detail route (Root Cause
+   * #48), so `/products/{slug}` is a wrong default for two thirds of them.
+   *
+   * Defaults to `/products/${slug}` when omitted, which is correct for
+   * `standard`, `art` and `stickers` — the three that genuinely live there —
+   * and keeps every existing caller behaving exactly as before. The caller
+   * knows its own route; resolving it here would mean importing the listing-type
+   * registry into `seo/`, which must stay reachable from server-only metadata
+   * paths without widening its import graph (Root Cause #76).
+   */
+  detailPath?: string;
+  /**
    * Denormalised rating, straight off `ProductDocument.avgRating` /
    * `.reviewCount` — so emitting it costs **zero** extra Firestore reads.
    *
@@ -173,7 +196,7 @@ export function gatedPriceWebPageJsonLd(path: string): Record<string, JsonLdValu
 export function productJsonLd(
   product: ProductJsonLdInput,
 ): Record<string, JsonLdValue> {
-  const url = `${SITE_URL}/products/${product.slug}`;
+  const url = `${SITE_URL}${product.detailPath ?? `/products/${product.slug}`}`;
   // Absolutise, then de-duplicate: `mainImage` is very often also `images[0]`,
   // which produced the same URL twice in the emitted array.
   const images = [
@@ -381,7 +404,8 @@ export function searchBoxJsonLd(opts?: SiteIdentityOptions): Record<string, Json
 export function auctionJsonLd(
   auction: ProductJsonLdInput,
 ): Record<string, JsonLdValue> {
-  const url = `${SITE_URL}/products/${auction.slug}`;
+  // An auction lives at /auctions/{slug} — see `detailPath`'s note.
+  const url = `${SITE_URL}${auction.detailPath ?? `/auctions/${auction.slug}`}`;
   const base = productJsonLd(auction);
   return {
     ...base,

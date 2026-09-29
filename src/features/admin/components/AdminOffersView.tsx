@@ -44,7 +44,7 @@ import {
 } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ADMIN_OFFER_STATUS_TABS } from "../constants/filter-tabs";
+import { ADMIN_OFFER_STATUS_TABS, offerStatusLabel } from "../constants/filter-tabs";
 import { OfferPhaseTimeline } from "../../seller/components/OfferPhaseTimeline";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
 import { cancelOfferFormSchema } from "../../seller/schemas/offer-forms";
@@ -177,7 +177,7 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
           `Listed: ${toCurrency(item.listedPrice)}`,
           `${toStringValue(item.buyerName, "Unknown buyer")} → ${toStringValue(item.storeName, "Unknown store")}`,
         ].join(" · "),
-        status: toStringValue(item.status, "pending"),
+        status: offerStatusLabel(toStringValue(item.status, "pending"), "admin"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
         detail: item as JsonObject,
       })),

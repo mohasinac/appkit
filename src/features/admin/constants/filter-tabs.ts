@@ -402,6 +402,39 @@ export const SELLER_OFFER_STATUS_TABS = [
   { id: "paid", label: "Paid" },
 ] as const satisfies readonly AdminFilterTab[];
 
+/**
+ * The display label for an offer status — the SAME words as that audience's
+ * own filter chips.
+ *
+ * 🛑 Both offer views rendered the raw stored value as the badge, so a seller
+ * filtered by a chip reading **"Rejected"** and the matching rows came back
+ * badged **"declined"** — two words for one state, on one screen. Every other
+ * badge was lowercase too ("pending", "accepted") while the fallback beside it
+ * was capitalised `"Pending"`, which is the tell that display-cased values were
+ * always the intent.
+ *
+ * 🛑 **`audience` is not ceremony — the two chip sets DISAGREE on purpose.**
+ * `declined` is "Rejected" to a seller (see the header above: kept for
+ * continuity with existing seller-facing wording) and "Declined" to an admin.
+ * A single shared lookup would therefore have printed "Rejected" on the admin
+ * screen beside its own "Declined" chip — reintroducing the exact mismatch
+ * this function exists to remove, one audience over.
+ *
+ * Deriving from the arrays rather than writing a third map is the point: a
+ * hand-written copy is how ten enumerations of one union came to disagree
+ * (Root Cause #61). An unrecognised value falls through to itself, so an
+ * eighth status shows up as its raw name rather than vanishing (Root Cause
+ * #72 — unknown must never render as absent).
+ */
+export function offerStatusLabel(
+  status: string | null | undefined,
+  audience: "seller" | "admin",
+): string {
+  if (!status) return "Pending";
+  const tabs = audience === "admin" ? ADMIN_OFFER_STATUS_TABS : SELLER_OFFER_STATUS_TABS;
+  return (tabs as readonly AdminFilterTab[]).find((t) => t.id === status)?.label ?? status;
+}
+
 /** Seller > Bids — bid-state filter chip set. Uses the empty-sentinel
  *  variant (see `EMPTY_TAB`). */
 export const SELLER_BID_STATUS_TABS = [

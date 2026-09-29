@@ -34,7 +34,9 @@ import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
-import { toRecordArray, toRelativeDate, toCurrency, toStringValue } from "../hooks/useSellerListingData";
+import { toRecordArray, toCurrency, toStringValue } from "../hooks/useSellerListingData";
+// Defining module (Root Cause #18) — the seller-side duplicate was deleted for drift.
+import { toRelativeDate } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";

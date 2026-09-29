@@ -13,6 +13,9 @@
 
 import type { OfferDocument } from "../../../../features/seller/schemas";
 import type { FieldChange } from "../../../shared/history/index";
+// Display masking only — `pii-mask.ts` is the crypto-FREE half that Root Cause
+// #24 split out of `pii-encrypt.ts` precisely so it could be imported freely.
+import { maskEmail, maskName } from "../../../../security/pii-mask";
 
 function toIsoOrUndefined(value: Date | undefined): string | undefined {
   return value instanceof Date ? value.toISOString() : undefined;
@@ -100,15 +103,51 @@ export interface Offer {
 
 export interface OfferAdapterOptions {
   /**
-   * Include `buyerUid`/`buyerName`/`buyerEmail`.
+   * What to do with `buyerUid`/`buyerName`/`buyerEmail`.
    *
-   * Default **false**, deliberately. The seller-facing route masks buyer
-   * identity, and a route that forgot to call `maskOfferForSeller` would
-   * previously have shipped it verbatim — there was no adapter to stop it.
-   * Making the omission the default means forgetting the flag under-shares
-   * rather than leaks.
+   * | value | emits |
+   * |---|---|
+   * | `"omit"` (default) | nothing — the three keys are absent |
+   * | `"masked"` | `buyerName` `"M*** U***"`, `buyerEmail` `"m***@***.in"`, no uid |
+   * | `"full"` | verbatim |
+   *
+   * 🛑 **This replaced a boolean, because the boolean had no way to say
+   * "masked" and the seller route needed exactly that.** It worked around the
+   * gap by calling `maskOfferForSeller(o)` and then adapting with the flag
+   * OFF — so the mask ran, produced a masked name, and the adapter deleted it
+   * on the very next line. Every one of the 13 rows on `/store/offers` read
+   * **"Unknown buyer"**, measured live as tyson@beybladearena.in, and so did
+   * the detail modal.
+   *
+   * That is worse than cosmetic: a seller could not tell two offers on the same
+   * listing apart, which is the one thing they need when two people are bidding
+   * up the same item. It also silently disagreed with the sibling server action
+   * `listSellerOffers`, which masks and returns the name — two seller read
+   * paths, two answers (Root Cause #38), and a mask whose output was discarded
+   * (Root Cause #50).
+   *
+   * Masking now happens INSIDE the adapter, so a caller cannot apply one half.
+   * `"masked"` deliberately omits `buyerUid` as well: a uid is not a display
+   * value and there is nothing to partially reveal about it.
+   *
+   * The default stays the safe one — a caller that says nothing under-shares
+   * rather than leaks, which is why the old boolean defaulted false too.
    */
-  includeBuyerIdentity?: boolean;
+  buyerIdentity?: "omit" | "masked" | "full";
+}
+
+/** The three buyer keys, resolved per `buyerIdentity`. Absent keys stay absent. */
+function buyerIdentityFields(
+  doc: OfferDocument,
+  mode: OfferAdapterOptions["buyerIdentity"],
+): Partial<Pick<Offer, "buyerUid" | "buyerName" | "buyerEmail">> {
+  if (mode === "full") {
+    return { buyerUid: doc.buyerUid, buyerName: doc.buyerName, buyerEmail: doc.buyerEmail };
+  }
+  if (mode === "masked") {
+    return { buyerName: maskName(doc.buyerName), buyerEmail: maskEmail(doc.buyerEmail) };
+  }
+  return {};
 }
 
 export function offerDocumentToOffer(
@@ -161,9 +200,7 @@ export function offerDocumentToOffer(
     cancelledByAdminUid: doc.cancelledByAdminUid,
     cancelReason: doc.cancelReason,
 
-    ...(opts.includeBuyerIdentity
-      ? { buyerUid: doc.buyerUid, buyerName: doc.buyerName, buyerEmail: doc.buyerEmail }
-      : {}),
+    ...buyerIdentityFields(doc, opts.buyerIdentity),
   };
 }
 

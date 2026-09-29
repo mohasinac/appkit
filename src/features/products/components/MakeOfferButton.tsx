@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
+import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import {
   Button,
   Div,
@@ -38,6 +39,23 @@ export interface MakeOfferButtonProps {
    * form accepts, `makeOffer` accepts.
    */
   bounds: OfferBounds;
+  /**
+   * The listing's owning store SLUG (`product.storeId`), so the owning seller
+   * is not offered a control for negotiating with themselves.
+   *
+   * 🛑 Optional only because the two consumer pages must both keep compiling;
+   * pass it. Omitting it restores the old behaviour, which was to show the full
+   * offer form to the very seller who set the price — measured on production as
+   * tyson@beybladearena.in on a listing sold by his own store, complete with
+   * the buyer-facing line "The seller will accept, decline, or suggest a
+   * counter price".
+   *
+   * This is a UI courtesy, NOT the authorization boundary — `makeOffer` refuses
+   * a self-offer server-side, which is where the actual rule lives (Root Cause
+   * #46: a hidden button is not a gate). Hiding it here only stops a seller
+   * filling in a form that was always going to be rejected.
+   */
+  listingStoreId?: string;
   /** Called with (productId, offerAmount, note?). Must return void or throw on error. */
   onMakeOffer: (productId: string, amount: number, note?: string) => Promise<void>;
   className?: string;
@@ -69,13 +87,27 @@ export function MakeOfferButton({
   listedPrice,
   currency,
   bounds,
+  listingStoreId,
   onMakeOffer,
   className = "",
 }: MakeOfferButtonProps) {
   const [state, setState] = useState<State>("idle");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { canSeePrices } = useCanSeePrices();
+  const session = useOptionalSession();
   const [isPending, startTransition] = useTransition();
+
+  /*
+   * `UserDocument.storeId` and `ProductDocument.storeId` are both the store
+   * SLUG, so this is a same-namespace comparison (unlike the uid-vs-slug trap
+   * that made `getSellerProductAction`'s ownership check always fail — Root
+   * Cause #98). `useOptionalSession` rather than `useSession` because library
+   * code that adjusts for the viewer must not require a provider, and no
+   * provider must fail CLOSED — no session means no owner, i.e. show the
+   * button, which is correct for the signed-out visitor it describes.
+   */
+  const viewerOwnsListing =
+    Boolean(listingStoreId) && session?.user?.storeId === listingStoreId;
 
   const fmt = (n: number) => (currency ? formatCurrency(n, currency) : `₹${n.toLocaleString()}`);
 
@@ -134,6 +166,16 @@ export function MakeOfferButton({
       }
     });
   }
+
+  /*
+   * Checked AFTER the success/pending panels below would have been, but before
+   * the idle button — placed here so it cannot hide a panel reporting an offer
+   * this viewer already sent. In practice an owner never reaches those states
+   * (the server refuses), so ordering only matters if `listingStoreId` is ever
+   * wrong: then the worst outcome is a visible panel rather than a silently
+   * swallowed one.
+   */
+  if (viewerOwnsListing) return null;
 
   if (state === "success") {
     return (

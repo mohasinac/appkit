@@ -119,6 +119,41 @@ export function toCurrency(value: unknown): string {
   return formatCurrency(value);
 }
 
+/**
+ * A timestamp as human-relative text — **in either direction**.
+ *
+ * 🛑 **Every FUTURE date used to render as "1m ago".** `deltaMs` is
+ * `now - date`, which is negative ahead of now; `deltaMs < hour` then matched,
+ * and `Math.max(1, Math.floor(negative))` clamped the result to exactly `1`.
+ * So a deadline 48 hours away and one 5 minutes away both read "1m ago", and
+ * the clamp is what hid it — without it the string would have been
+ * "-2880m ago", which nobody could have mistaken for working.
+ *
+ * Measured live on `/store/offers` as tyson@beybladearena.in: an offer accepted
+ * seconds earlier showed **"Buyer must pay by 1m ago"** against a real
+ * `checkoutDeadline` of `now + 48h` (`OFFER_CHECKOUT_WINDOW_MS`). The data was
+ * correct and the sentence told the seller — and on the admin view, the admin —
+ * that a buyer had already missed a window that had barely opened. On the
+ * buyer's own side that reads as "too late to pay for the thing you just
+ * negotiated", i.e. an abandoned purchase caused entirely by a formatter.
+ *
+ * Five call sites render a future-capable field today (offer `expiresAt` and
+ * `checkoutDeadline` on both the seller and admin views, and session
+ * `expiresAt`), and any of the other 61 becomes one the moment its field can
+ * hold a future date — which is why this is fixed here rather than at the call
+ * sites.
+ *
+ * The `Math.max(1, …)` floors stay for the PAST direction: they keep a
+ * 40-second-old row reading "1m ago" instead of "0m ago". They are applied to
+ * an absolute magnitude now, so they can no longer mask a sign error.
+ *
+ * NOTE ON ITS HOME: a pure date formatter belongs in `ui/` or
+ * `_internal/client/`, not in an admin hook module that 44 files reach into.
+ * Moving it means rewriting all 44 imports, so it stays put for now and the
+ * seller-side duplicate was deleted instead (see `useSellerListingData.ts`) —
+ * that copy had already drifted, returning "just now" for the same future date
+ * this one called "1m ago". Two answers to one question is the whole argument.
+ */
 export function toRelativeDate(value: unknown): string {
   const date = parseDate(value);
   if (!date) {
@@ -130,19 +165,21 @@ export function toRelativeDate(value: unknown): string {
   const hour = 60 * minute;
   const day = 24 * hour;
 
-  if (deltaMs < hour) {
-    const minutes = Math.max(1, Math.floor(deltaMs / minute));
-    return `${minutes}m ago`;
+  const future = deltaMs < 0;
+  const magnitude = Math.abs(deltaMs);
+  // "in 3h" vs "3h ago" — the only difference between the two directions.
+  const phrase = (n: number, unit: string) => (future ? `in ${n}${unit}` : `${n}${unit} ago`);
+
+  if (magnitude < hour) {
+    return phrase(Math.max(1, Math.floor(magnitude / minute)), "m");
   }
 
-  if (deltaMs < day) {
-    const hours = Math.max(1, Math.floor(deltaMs / hour));
-    return `${hours}h ago`;
+  if (magnitude < day) {
+    return phrase(Math.max(1, Math.floor(magnitude / hour)), "h");
   }
 
-  if (deltaMs < 7 * day) {
-    const days = Math.max(1, Math.floor(deltaMs / day));
-    return `${days}d ago`;
+  if (magnitude < 7 * day) {
+    return phrase(Math.max(1, Math.floor(magnitude / day)), "d");
   }
 
   return date.toLocaleDateString("en-IN", {

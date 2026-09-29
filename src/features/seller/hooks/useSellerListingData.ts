@@ -38,24 +38,23 @@ export function toCurrency(value: unknown): string {
   return formatCurrency(value);
 }
 
-export function toRelativeDate(value: unknown): string {
-  const date = parseDate(value);
-  if (!date) {
-    return "-";
-  }
-
-  const deltaMs = Date.now() - date.getTime();
-  const minute = 60_000;
-  const hour = 60 * minute;
-  const day = 24 * hour;
-
-  if (deltaMs < minute) return "just now";
-  if (deltaMs < hour) return `${Math.floor(deltaMs / minute)}m ago`;
-  if (deltaMs < day) return `${Math.floor(deltaMs / hour)}h ago`;
-  if (deltaMs < 7 * day) return `${Math.floor(deltaMs / day)}d ago`;
-
-  return date.toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" });
-}
+/*
+ * 🛑 `toRelativeDate` WAS HERE AND IS GONE. Import it from
+ * `features/admin/hooks/useAdminListingData` — the defining module now, and
+ * the one 44 files already use (Root Cause #18: import from where a symbol is
+ * defined, never from a convenience copy).
+ *
+ * This copy had drifted from that one and the drift was live: for a FUTURE
+ * date, `deltaMs` is negative, so `deltaMs < minute` matched and this version
+ * answered **"just now"** while the admin version answered **"1m ago"** — two
+ * different wrong answers to "when is this deadline", depending on which file
+ * a view happened to import from. The admin one is fixed to say "in 48h"; a
+ * second implementation is how that fix would have been half-applied.
+ *
+ * The three sibling helpers below are also duplicated there. They are left
+ * alone deliberately: none of them is wrong, and collapsing them is an import
+ * rewrite across both feature trees rather than a bug fix.
+ */
 
 function parseDate(value: unknown): Date | null {
   if (value instanceof Date) return value;

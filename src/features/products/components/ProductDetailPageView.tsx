@@ -103,6 +103,11 @@ export interface ProductDetailPageViewProps {
     minOfferPercent: number;
     /** Resolved by `resolveOfferBounds()` — the same rule `makeOffer` enforces. */
     bounds: OfferBounds;
+    /**
+     * The owning store's SLUG, so the control can suppress itself for the
+     * seller who owns the listing. Same namespace as `UserDocument.storeId`.
+     */
+    listingStoreId?: string;
   }) => React.ReactNode;
   /**
    * Renders the primary action buttons (Buy Now / Add to Cart / Wishlist).
@@ -718,6 +723,8 @@ export async function ProductDetailPageView({
                   price,
                   currency,
                   minOfferPercent,
+                  listingStoreId:
+                    typeof p.storeId === "string" ? (p.storeId as string) : undefined,
                   bounds: resolveOfferBounds({
                     listingType: normalizeListingType(p as never),
                     listedPrice: price,

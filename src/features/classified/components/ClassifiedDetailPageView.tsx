@@ -66,6 +66,14 @@ export interface ClassifiedDetailPageViewProps {
     currency: string;
     minOfferPercent: number;
     bounds: OfferBounds;
+    /**
+     * The owning store's SLUG, so the control can suppress itself for the
+     * seller who owns the listing. Kept identical to `ProductDetailPageView`'s
+     * ctx — the comment at the `/classified/[slug]` call site asserts the two
+     * contracts match precisely so a consumer snippet can be shared, and an
+     * added field on one is drift unless it lands on both.
+     */
+    listingStoreId?: string;
   }) => React.ReactNode;
 }
 
@@ -295,6 +303,8 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                       typeof p.minOfferPercent === "number"
                         ? (p.minOfferPercent as number)
                         : DEFAULT_MIN_OFFER_PERCENT,
+                    listingStoreId:
+                      typeof p.storeId === "string" ? (p.storeId as string) : undefined,
                     bounds: offerBounds,
                   })}
                   <Text size="xs" color="muted">

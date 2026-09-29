@@ -21,7 +21,9 @@ import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import type { ListingType } from "../../products/types";
-import { toRecordArray, toRelativeDate, toStringValue } from "../hooks/useSellerListingData";
+import { toRecordArray, toStringValue } from "../hooks/useSellerListingData";
+// Defining module (Root Cause #18) — the seller-side duplicate was deleted for drift.
+import { toRelativeDate } from "../../admin/hooks/useAdminListingData";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
