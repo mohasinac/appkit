@@ -1,8 +1,43 @@
 import type { Order } from "../../../../features/orders/types";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 
-function toIsoOrUndefined(value: Date | undefined): string | undefined {
-  return value instanceof Date ? value.toISOString() : undefined;
+/**
+ * 🛑 A date that is not a `Date` INSTANCE used to be silently dropped, and that
+ * is not a hypothetical — it blanked the buyer's tracking page.
+ *
+ * The old body was `value instanceof Date ? value.toISOString() : undefined`,
+ * and its parameter was typed `Date | undefined`, so TypeScript had no reason to
+ * object: `OrderDocument` declares these fields as `Date`. What Firestore hands
+ * back does not always agree. Measured end to end after a seller marked an order
+ * shipped: the stored document carried
+ * `shippingDate: "2026-09-29T09:06:22.381Z"` — an ISO **string**, because that is
+ * what the ship write path stores — while `orderDate`, written at creation, was a
+ * real `Date`. So the adapter mapped `orderDate` and dropped `shippingDate`, and
+ * `/user/orders/[id]/track` rendered the Shipped step with an em-dash placeholder
+ * beside a perfectly correct carrier and tracking number. Root Cause #57's shape:
+ * one field lost in an adapter, presenting as a UI that looks merely incomplete.
+ *
+ * Three shapes are accepted because all three genuinely occur here: a `Date`, a
+ * Firestore `Timestamp` (duck-typed on `toDate` rather than imported, so this
+ * file stays free of a firebase-admin import — appkit Export Rules), and an ISO
+ * string. Anything else, including an unparseable string, still yields
+ * `undefined` — a wrong date is worse than a missing one, and the timeline is
+ * built to render the em-dash honestly.
+ */
+function toIsoOrUndefined(value: unknown): string | undefined {
+  if (!value) return undefined;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? undefined : value.toISOString();
+  }
+  if (typeof value === "object" && typeof (value as { toDate?: () => Date }).toDate === "function") {
+    const d = (value as { toDate: () => Date }).toDate();
+    return d instanceof Date && !Number.isNaN(d.getTime()) ? d.toISOString() : undefined;
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
+  }
+  return undefined;
 }
 
 export function orderDocumentToOrder(doc: OrderDocument): Order {
