@@ -39,7 +39,25 @@ const STATUS_BADGE: Record<string, string> = {
   closed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
+/**
+ * 🛑 `items` is what the route emits — and this type declaring only `tickets`
+ * is precisely why nothing caught the bug.
+ *
+ * `GET /api/admin/support-tickets` ends in `successResponse(result)` where
+ * `result` is `supportRepository.listAll(model)`, a PagedResult. So the shape
+ * arriving here is `{ items, total, page, pageSize, totalPages, hasMore }` and
+ * there is no `tickets` key at any level. This interface was the ONLY
+ * specification of that key, so `tsc` was satisfied, the route was satisfied,
+ * and the two disagreed in the middle — the identical shape as the buyer-side
+ * `TicketsResponse` in `src/app/[locale]/user/support/page.tsx`, which had the
+ * same wrong key for the same reason.
+ *
+ * `tickets` stays declared and optional so the `??` chain in `mapRows` still
+ * typechecks; it is never populated in practice.
+ */
 interface AdminSupportTicketsResponse {
+  items?: JsonArray;
+  /** @deprecated never emitted by the route — read via the `??` chain. */
   tickets?: JsonArray;
   meta?: { total?: number; filteredTotal?: number };
   total?: number;
@@ -137,8 +155,34 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
       { value: sortBy("updatedAt", "DESC"), label: "Recently updated" },
     ],
     columns: TICKET_COLUMNS,
+    /*
+     * 🛑 The item array is `items`. This read `response.tickets`, a key the
+     * route does not emit, so EVERY admin saw "No support tickets found".
+     *
+     * `GET /api/admin/support-tickets` ends in `successResponse(result)` where
+     * `result` is `supportRepository.listAll(model)` — a PagedResult, i.e.
+     * `{ items, total, page, pageSize, totalPages, hasMore }`. Measured against
+     * production: the API returns **total 10** while this list rendered its
+     * empty state, so nobody on staff could see a single support ticket.
+     *
+     * 🛑 I NEARLY MISSED THIS, and the reason is worth recording. The same
+     * defect was fixed on the BUYER side (`/user/support`) minutes earlier, and
+     * the sweep I ran afterwards searched for the `ok`-vs-`success` envelope
+     * flag — not for item-array key misreads — so it reported "no further
+     * copies" while this one sat one route away. A sweep narrower than the rule
+     * it is checking finds what it was shaped to find (Root Cause #84).
+     *
+     * A grep of the route then said it emitted `tickets`; the live API said
+     * `items`. The grep had matched the word elsewhere in the file. The
+     * MEASUREMENT is what settled it, which is the same lesson again.
+     *
+     * `tickets` is kept in the chain rather than deleted, for the same reason as
+     * the buyer-side fix: both spellings demonstrably exist in this codebase,
+     * and reading one key too many costs nothing while reading the wrong one
+     * cost the entire staff-facing queue.
+     */
     mapRows: (response) =>
-      toRecordArray(response.tickets).map((item, index) => ({
+      toRecordArray(response.items ?? response.tickets).map((item, index) => ({
         id: toStringValue(item.id, `ticket-${index}`),
         primary: toStringValue(item.subject, "No subject"),
         secondary: [
