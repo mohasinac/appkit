@@ -109,12 +109,12 @@ export const bundleFormSchema = z
      * because an empty picker on a DYNAMIC bundle is correct — the resolver
      * fills the mirror. A flat `.min(3)` would block every dynamic save.
      */
-    productIds: annotate(z.array(z.string()), {
+    productIds: annotate(z.array(z.string()).optional(), {
       section: "members", order: 2, row: "full", kind: "list",
       label: `${BUNDLE_COPY.adminEditor.ruleTypeStatic} (${BUNDLE_MIN_ITEMS}–${BUNDLE_MAX_ITEMS})`,
       when: (v) => v.ruleType !== "dynamic",
     }),
-    dynamicRule: annotate(dynamicRuleSchema, {
+    dynamicRule: annotate(dynamicRuleSchema.optional(), {
       section: "members", order: 3, row: "full",
       label: BUNDLE_COPY.adminEditor.dynamic.title,
       help: BUNDLE_COPY.adminEditor.dynamic.hint,
@@ -149,18 +149,42 @@ export const bundleFormSchema = z
      * them — a two-member bundle saved, and `listBundleMembers` rendered it as
      * a "bundle" of two.
      */
+    /*
+     * 🛑 Both member sources are `.optional()` because a hidden control is not
+     * SENT, and the two are mutually hidden by `ruleType`. Declaring either as
+     * required made the branch that hides it impossible to save: a static
+     * bundle submitted no `dynamicRule`, zod raised `invalid_type`, and
+     * `zodErrorMap` rendered it as "Bundle members: This field is required" on
+     * a form whose picker visibly held three products. Admin bundle CREATION
+     * was impossible in both directions. Found by
+     * `money-flows/blockers--admin` → `cross-store-group-refused`, which could
+     * not reach the cross-store guard it exists to test.
+     *
+     * Requiredness therefore lives HERE, per branch, where `ruleType` is known.
+     */
+    if (v.ruleType === "dynamic") {
+      if (!v.dynamicRule) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["dynamicRule"],
+          message: "Describe the query that resolves this bundle's members.",
+        });
+      }
+      return;
+    }
     if (v.ruleType !== "static") return;
-    if (v.productIds.length < BUNDLE_MIN_ITEMS) {
+    const productIds = v.productIds ?? [];
+    if (productIds.length < BUNDLE_MIN_ITEMS) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["productIds"],
-        message: `Select at least ${BUNDLE_MIN_ITEMS} products (currently ${v.productIds.length}).`,
+        message: `Select at least ${BUNDLE_MIN_ITEMS} products (currently ${productIds.length}).`,
       });
-    } else if (v.productIds.length > BUNDLE_MAX_ITEMS) {
+    } else if (productIds.length > BUNDLE_MAX_ITEMS) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["productIds"],
-        message: `Maximum ${BUNDLE_MAX_ITEMS} products allowed (currently ${v.productIds.length}).`,
+        message: `Maximum ${BUNDLE_MAX_ITEMS} products allowed (currently ${productIds.length}).`,
       });
     }
   });
