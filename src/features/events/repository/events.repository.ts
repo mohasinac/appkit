@@ -191,7 +191,31 @@ class EventRepository extends BaseRepository<EventDocument> {
         updatedAt: now,
       });
 
-      const ref = await this.getCollection().add(data);
+      /*
+       * 🛑 This used to be `.add(data)` — a raw write that ran NEITHER half of
+       * the repository's own contract, and broke two things at once:
+       *
+       *  1. `applyWriteHooks` never fired, so `buildSearchTxtFor` never wrote
+       *     SEARCH_TXT — and `list()` filters on
+       *     `where(SEARCH_TXT, "array-contains", head)`. Every event created
+       *     through the UI was therefore invisible to admin event search,
+       *     permanently, while seeded events (whose tokens the seeder writes)
+       *     searched fine. The hook's docstring above claims it is derived on
+       *     every write path; it was not derived on this one.
+       *  2. `.add()` mints a Firestore auto-id, so the document id was e.g.
+       *     `SJHlHFAs5BHMLQwH8MdM` while every seeded event uses its slug.
+       *     Events are "pure slugs (id === slug)" per the slug table, and the
+       *     public URL and any slug lookup depend on it.
+       *
+       * `.create()` rather than `.set()`: it REJECTS an existing id, so a
+       * duplicate title surfaces as a conflict instead of silently
+       * overwriting someone else's event.
+       *
+       * Found by tester run-3 batch 98, page-wiring/reachability--admin →
+       * lottery-can-be-created-without-seeding. Root Cause #9's shape.
+       */
+      const ref = this.getCollection().doc(slug);
+      await ref.create(this.applyWriteHooks(data));
       const created = await ref.get();
 
       serverLogger.info("Event created", { eventId: ref.id, type: input.type });

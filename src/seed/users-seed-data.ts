@@ -575,4 +575,46 @@ export const usersSeedData: Partial<UserDocument>[] = [
     createdAt: daysAgo(60),
     updatedAt: daysAgo(2),
   },
+
+  /*
+   * ── Disabled buyer: the ONLY account with `disabled: true` ──
+   *
+   * 🛑 This persona exists so that cases about a banned/disabled login are
+   * testable WITHOUT disabling a real one. Measured 2026-10-01: of the 19
+   * seeded users, `disabled: true` occurred ZERO times, so every such case was
+   * permanently unrunnable — `users` is PRESERVE-tier (never wiped, never
+   * restored, merge-write on reseed), making "disable someone to test it" the
+   * one piece of permanent damage a test run can do.
+   *
+   * Nothing but a sign-in attempt should ever touch it: no orders, no store,
+   * no public profile. Keep `disabled: true` — flipping it to false silently
+   * removes the only fixture these cases have.
+   *
+   * Needed by money-flows/blockers--guest → banned-account-blocked, and the
+   * soft-ban cases declined for the same reason. Same class as Root Cause #90:
+   * a case reports "nothing here" because its fixture was never seeded.
+   */
+  {
+    uid: "user-qa-disabled",
+    email: "qa.disabled@letitrip.in",
+    phoneNumber: `${_ph}9999900099`,
+    phoneVerified: false,
+    displayName: "QA Disabled Account",
+    role: USER_FIELDS.ROLE_VALUES.USER,
+    emailVerified: true,
+    disabled: true,
+    publicProfile: {
+      isPublic: false,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Fixture account — deliberately disabled so ban/disabled-login cases are testable.",
+      location: "Indore, Madhya Pradesh",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: { lastSignInTime: daysAgo(30), creationTime: daysAgo(90).toISOString(), loginCount: 1 },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(30),
+  },
 ];
