@@ -515,6 +515,15 @@ export { PERMISSION_GROUPS, PERMISSION_DOMAINS, getPermissionsForDomain, formatP
 export { Details, Summary } from "./ui/components/Details";
 export { ADMIN_ENDPOINTS } from "./constants/index";
 export { SELLER_ENDPOINTS } from "./constants/index";
+/**
+ * The buyer-portal endpoint map. Its admin and seller siblings were already
+ * here; this one was reachable only from `index.ts`, so a Client Component
+ * needing a /api/user/* URL had to either hardcode the path (blocked by
+ * audit-hardcoded-api-routes) or import the bare entry (the firebase-admin
+ * client-bundle leak audit-client-server-only-leak blocks). Added for
+ * BidDetailPageClient — checklist-page-wiring-detail-pages-detail-page-matches-list-modal.
+ */
+export { ACCOUNT_ENDPOINTS } from "./constants/index";
 // P-16 — Tour system (driver.js-backed onboarding walkthrough).
 export { TourProvider, useTour } from "./_internal/client/features/tour/TourProvider";
 export type { TourContextValue, TourRole } from "./_internal/client/features/tour/TourProvider";
