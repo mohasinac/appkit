@@ -150,6 +150,26 @@ export function resolveMediaUrl(
   opts?: ResolveMediaUrlOptions,
 ): string | undefined {
   if (!url) return undefined;
+  /*
+   * 🛑 Same type-guard as `isStoredMediaRef`, and for the same reason: this is a
+   * RENDER-path helper called from `MediaImage`, every avatar, every logo and
+   * every card, with whatever the document happens to hold. `!url` catches
+   * null/undefined/""; an object or array is truthy and falls straight through
+   * to `.startsWith`, throwing `TypeError: e.startsWith is not a function` and
+   * taking out the whole subtree it was rendering.
+   *
+   * Returning undefined is the documented behaviour for a falsy input and is the
+   * right answer here too — the caller renders its placeholder instead of
+   * crashing. The warn names the shape so the real caller stays findable.
+   */
+  if (typeof url !== "string") {
+    // eslint-disable-next-line no-console -- render path; a throw here kills the subtree
+    console.warn(
+      "[resolveMediaUrl] expected a string, received",
+      Object.prototype.toString.call(url),
+    );
+    return undefined;
+  }
   if (url.startsWith(PROXY_PREFIX)) return url;
   // A blob:/data: URI is only ever valid in the tab that created it (e.g. a
   // freshly-selected file preview via URL.createObjectURL, or a FileReader
