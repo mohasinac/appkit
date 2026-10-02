@@ -71,6 +71,36 @@ export const MEDIA_URL_MESSAGE =
  * validated before stops validating now.
  */
 export function isStoredMediaRef(value: string): boolean {
+  /*
+   * 🛑 Type-guard first: this predicate is reached through `.refine()` from two
+   * schemas and from several hand-written call sites, so it receives whatever
+   * the document actually holds — not whatever the signature says.
+   *
+   * Without this line a non-string reached `value.startsWith(...)` and threw
+   * `TypeError: e.startsWith is not a function`, which killed the whole render
+   * of the panel it was validating. Measured on production 2026-10-02: expanding
+   * the Branding section of /admin/site threw exactly that and the section body
+   * never appeared — so the Site Settings editor looked like it rendered no
+   * fields for ANY section, and five checklist cases were blocked behind what
+   * read as a missing feature.
+   *
+   * `!value` already caught null/undefined/"" and 0; an object or an array is
+   * truthy with `length === undefined`, so `undefined > MAX` is false and
+   * execution fell straight through to `.startsWith`.
+   *
+   * A VALIDATOR MUST REJECT, NEVER THROW. Returning false is the correct answer
+   * for a non-string, and the warn keeps the real defect findable — some caller
+   * is passing the wrong shape (a `{ url }` object where its `.url` was meant
+   * is the obvious candidate) and that is a separate fix at the call site.
+   */
+  if (typeof value !== "string") {
+    // eslint-disable-next-line no-console -- client-side; the server path has its own recorder
+    console.warn(
+      "[isStoredMediaRef] expected a string, received",
+      Object.prototype.toString.call(value),
+    );
+    return false;
+  }
   if (!value || value.length > MEDIA_URL_MAX_LENGTH) return false;
   if (value.startsWith(MEDIA_PROXY_PREFIX)) return true;
   if (value.startsWith("blob:") || value.startsWith("data:")) return false;
