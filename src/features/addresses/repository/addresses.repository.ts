@@ -99,6 +99,19 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     }
   }
 
+  /**
+   * 🛑 Requires the composite index `(ownerType ASC, createdAt DESC)`.
+   *
+   * The pre-existing `(ownerType, ownerId, createdAt DESC)` index does NOT serve
+   * this query: Firestore matches an index by its field sequence, and `ownerId`
+   * sits between the equality and the sort, so a query that filters on
+   * `ownerType` alone and orders by `createdAt` has no usable prefix. Without the
+   * two-field index this throws FAILED_PRECONDITION, which `mapToHttpError`
+   * renders as a **409** — and `/admin/address-clusters` then showed "Failed to
+   * load clusters." *and* "No shared addresses found." at the same time, so the
+   * page read as "there are no clusters" rather than as an error. Added
+   * 2026-10-02; see Recurrent Root Cause #2.
+   */
   async listByOwnerType(
     ownerType: AddressOwnerType,
     limit = 500,
