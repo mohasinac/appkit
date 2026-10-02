@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Div, Li, Nav, Row, Span, Ul } from "../../ui";
 import { NavbarChevron } from "../../ui/components/NavbarChevron";
+import { findActiveNavItem } from "../../_internal/client/features/layout/navActive";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -100,6 +101,27 @@ export function NavbarLayout({
   const scroll = (dir: "left" | "right") =>
     scrollRef.current?.scrollBy({ left: dir === "left" ? -240 : 240, behavior: "smooth" });
 
+  // 🛑 Resolve the active item with `findActiveNavItem`, NOT `activeHref === item.href`.
+  //
+  // Strict equality is what this used, and it meant the top navbar marked
+  // nothing at all on any detail page: /products marked "Products", but
+  // /products/product-beyblade-original-dranzer-s marked nothing — verified in
+  // production 2026-10-02, where the Products and Home links had byte-identical
+  // computed styles (colour rgb(91,91,99), weight 500, transparent background,
+  // 0px bottom border), so there was no visual marker either. A visitor who
+  // drills from a listing into an item loses their place in the navigation.
+  //
+  // The sidebars and the mobile drawer were always correct, because they
+  // already called this helper — which is why the mobile bottom nav highlighted
+  // "Auctions" on /auctions while the desktop navbar above it highlighted
+  // nothing. One algorithm, four surfaces.
+  //
+  // `findActiveNavItem` prefix-matches (`activeHref.startsWith(`${href}/`)`) and
+  // resolves ties by LONGEST href, so a root entry like "/" cannot light up on
+  // every page and a more specific entry always beats a shorter one.
+  const activeItem = findActiveNavItem(items, activeHref);
+  const isItemActive = (item: NavbarLayoutItem) => activeItem?.href === item.href;
+
   if (inline) {
     return (
       <Ul
@@ -109,9 +131,9 @@ export function NavbarLayout({
         {items.map((item) => (
           <Li key={item.href}>
             {renderItem ? (
-              renderItem(item, activeHref === item.href)
+              renderItem(item, isItemActive(item))
             ) : (
-              <DefaultNavItem item={item} isActive={activeHref === item.href} />
+              <DefaultNavItem item={item} isActive={isItemActive(item)} />
             )}
           </Li>
         ))}
@@ -149,11 +171,11 @@ export function NavbarLayout({
             {items.map((item) => (
               <Li key={item.href} className="shrink-0">
                 {renderItem ? (
-                  renderItem(item, activeHref === item.href)
+                  renderItem(item, isItemActive(item))
                 ) : (
                   <DefaultNavItem
                     item={item}
-                    isActive={activeHref === item.href}
+                    isActive={isItemActive(item)}
                   />
                 )}
               </Li>
