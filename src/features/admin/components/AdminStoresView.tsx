@@ -191,6 +191,18 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
             ? (editorRow!._raw!.capabilities as string[])
             : undefined
         }
+        /*
+         * The list serializer DOES emit `adminNotes`
+         * (src/app/api/admin/stores/route.ts), so the row already carries it —
+         * it was simply never passed down, which is why the textbox could not
+         * display a stored note. Root Cause #38's shape, one hop later: the
+         * field survives the API and dies at the prop.
+         */
+        currentAdminNotes={
+          typeof editorRow?._raw?.adminNotes === "string"
+            ? (editorRow._raw.adminNotes as string)
+            : undefined
+        }
       />
     </>
   );

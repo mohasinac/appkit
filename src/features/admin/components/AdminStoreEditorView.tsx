@@ -45,6 +45,16 @@ export interface AdminStoreEditorViewProps {
   currentIsVerified?: boolean;
   currentIsFeatured?: boolean;
   currentCapabilities?: string[];
+  /**
+   * 🛑 Required for the note to DISPLAY. Without it `adminNotes` was hardcoded
+   * `""` at both the initial-state and the reopen-reset sites, so a stored note
+   * could never appear — and because the payload sent `parsed.adminNotes ||
+   * undefined`, an always-empty box meant `"" || undefined === undefined`, the
+   * route skipped the key, and an existing note could never be CLEARED either.
+   * Verified on production 2026-10-02: the document held `adminNotes:
+   * "RT3-probe"` while `textarea[name="adminNotes"]` read `""`.
+   */
+  currentAdminNotes?: string;
 }
 
 const CAPABILITY_GROUPS: { label: string; caps: { key: StoreCapability; label: string }[] }[] = [
@@ -122,19 +132,21 @@ function CapabilityPicker({
               </Span>
             </Summary>
             <Div layout="grid" paddingY="y-xs-tall" className="grid-cols-2 gap-x-2 gap-y-1.5" surface="muted" padding="x-sm">
+              {/*
+                * `<Checkbox label>` rather than a raw `<label>` wrapper: the
+                * primitive renders its own label element and associates it with
+                * the input, so this also fixes the association the hand-rolled
+                * wrapper only implied. `bare` is dropped with the wrapper — a
+                * labelled Checkbox needs its normal chrome.
+                */}
               {group.caps.map((cap) => (
-                <label
+                <Checkbox
                   key={cap.key}
-                  className="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
-                >
-                  <Checkbox
-                    bare
-                    checked={selected.has(cap.key)}
-                    onChange={() => onToggle(cap.key)}
-                    className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"
-                  />
-                  {cap.label}
-                </label>
+                  label={cap.label}
+                  checked={selected.has(cap.key)}
+                  onChange={() => onToggle(cap.key)}
+                  wrapperClassName="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
+                />
               ))}
             </Div>
           </Details>
@@ -156,6 +168,7 @@ export function AdminStoreEditorView({
   currentIsVerified,
   currentIsFeatured,
   currentCapabilities,
+  currentAdminNotes,
 }: AdminStoreEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -166,7 +179,7 @@ export function AdminStoreEditorView({
     isFeatured: currentIsFeatured ?? false,
     suspensionReason: "",
     capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
-    adminNotes: "",
+    adminNotes: currentAdminNotes ?? "",
   }));
 
   const handleChange = React.useCallback(
@@ -184,9 +197,9 @@ export function AdminStoreEditorView({
       isFeatured: currentIsFeatured ?? false,
       suspensionReason: "",
       capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
-      adminNotes: "",
+      adminNotes: currentAdminNotes ?? "",
     });
-  }, [open, currentStatus, currentIsVerified, currentIsFeatured, currentCapabilities]);
+  }, [open, currentStatus, currentIsVerified, currentIsFeatured, currentCapabilities, currentAdminNotes]);
 
   const saveMutation = useApiMutation({
     errorMessage: "Failed to update store.",
@@ -204,7 +217,9 @@ export function AdminStoreEditorView({
       const parsed = adminStoreUpdateSchema.parse(values);
       await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId!), {
         storeStatus: parsed.storeStatus,
-        adminNotes: parsed.adminNotes || undefined,
+        // `?? ""`, NOT `|| undefined` — sending undefined makes the route skip
+        // the key, so clearing a note was impossible.
+        adminNotes: parsed.adminNotes ?? "",
         isFeatured: parsed.isFeatured,
         isVerified: parsed.isVerified,
         suspensionReason: parsed.suspensionReason || undefined,
