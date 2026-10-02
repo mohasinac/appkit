@@ -153,10 +153,29 @@ export function AdminBundleEditorView({
   const brandsQuery = useQuery({
     queryKey: ["admin", "brands", "picker"],
     queryFn: async () => {
+      /*
+       * 🛑 `res.items`, NOT `res.data.items` — `apiClient` ALREADY unwraps the
+       * envelope (`ApiClient.ts` ends `return data.data as T`), so what arrives
+       * here is `{ items, total, page, pageSize, totalPages, hasMore }` and
+       * there is no second `.data` to reach through.
+       *
+       * This read was `res?.data?.items ?? []` behind a hand-written
+       * `as { data?: { items?: CategoryDocument[] } }`. The cast cannot be wrong
+       * at runtime — it only silenced the one check that would have caught it —
+       * and `?? []` turned the miss into an empty list rather than an error. So
+       * the Brand select offered ONLY "No specific brand", for every admin,
+       * forever: verified in production 2026-10-02 by polling the live
+       * `<select name="brandSlug">` for 15s (optionCount stayed 1) while
+       * `GET /api/admin/brands` returned 200 with 5 brand rows in `data.items`.
+       *
+       * Nothing was wrong with the endpoint, the query, the memo or its
+       * dependency array — I checked each before concluding. Root Cause #98's
+       * family: a cast at a boundary asserting a shape that is not there.
+       */
       const res = (await apiClient.get(ADMIN_ENDPOINTS.BRANDS)) as {
-        data?: { items?: CategoryDocument[] };
+        items?: CategoryDocument[];
       };
-      return res?.data?.items ?? [];
+      return res?.items ?? [];
     },
   });
 
@@ -174,10 +193,30 @@ export function AdminBundleEditorView({
   const bundleQuery = useQuery({
     queryKey: ["bundle", scope, bundleId],
     queryFn: async () => {
+      /*
+       * 🛑 The response IS the bundle — do not reach through a second `.data`.
+       *
+       * Same defect as `brandsQuery` above and far more dangerous. This was
+       * `res?.data ?? null` behind `as { data?: CategoryDocument }`, so every
+       * edit of an existing bundle resolved to `null`, `bundleToForm(null)`
+       * returned `EMPTY_FORM`, and the editor rendered BLANK — then saving it
+       * would have written that blank over a live bundle.
+       *
+       * Verified in production 2026-10-02: /admin/bundles/
+       * bundle-every-generation-starter-pack/edit polled for 14s with
+       * `input[name="name"]` and `input[name="priceRupees"]` both `""` and no
+       * member count, while `GET /api/admin/bundles/{id}` returned 200 with the
+       * real bundle (`{ success, data: <bundle> }`, no nested `data`). I did not
+       * press Save.
+       *
+       * Root Cause #98: an `ActionResult`/envelope spread as if it were the
+       * payload, where the destructive half is the status field silently
+       * defaulting on the way back out.
+       */
       const res = (await apiClient.get(
         endpoints.byId(encodeURIComponent(bundleId!)),
-      )) as { data?: CategoryDocument };
-      return res?.data ?? null;
+      )) as CategoryDocument | null;
+      return res ?? null;
     },
     enabled: isEdit,
   });

@@ -83,11 +83,43 @@ export const bundleFormSchema = z
         quick: true, order: 1, row: "pair", label: "Name",
       },
     ),
+    /*
+     * 🛑 `z.coerce.number()`, NOT `z.string()`, because `kind: "number"` below
+     * decides the runtime type and the schema does not get a vote.
+     *
+     * `build-sections.tsx`'s number control is
+     * `onChange={(v) => set(v === "" ? undefined : Number(v))}` — it writes a
+     * NUMBER into the draft on every keystroke. This field used to be
+     * `z.string().regex(...)`, so a save with 1500 visibly in the box was
+     * refused with "This field is required" sitting directly under it, and the
+     * summary read "Bundle: This field is required" — naming the section and no
+     * field. A bundle therefore could not be created at all. Verified in
+     * production 2026-10-02 by walking up from the role=alert element to its
+     * owner, `input[name="priceRupees"]`.
+     *
+     * Do NOT "fix" this by removing the coercion in `build-sections.tsx`:
+     * ~10 of the 30 `kind: "number"` fields are plain `z.number()` and depend on
+     * it. Two other fields still declare `z.string()` under the same control and
+     * have the same latent defect — `purchasedItemNumber` (admin-user-form) and
+     * `maxBudget` (item-request-create-form); neither is driven by a test yet,
+     * so neither was changed blind.
+     *
+     * `coerce` keeps every existing caller working: `EMPTY_FORM.priceRupees` is
+     * `""` (→ the control sends `undefined` → "This field is required", which is
+     * the right message for an empty price), `bundleToForm` supplies a string,
+     * and the submit still does `Number(form.priceRupees)`.
+     *
+     * The two-decimal rule is kept as a refine over `String(n)` rather than
+     * `multipleOf(0.01)`, which is not float-safe.
+     */
     priceRupees: annotate(
-      z
-        .string()
-        .regex(/^\d+(\.\d{1,2})?$/, BUNDLE_COPY.adminEditor.errors.priceInvalid)
-        .refine((v) => Number(v) > 0, BUNDLE_COPY.adminEditor.errors.priceInvalid),
+      z.coerce
+        .number({ message: BUNDLE_COPY.adminEditor.errors.priceInvalid })
+        .positive(BUNDLE_COPY.adminEditor.errors.priceInvalid)
+        .refine(
+          (n) => Number.isFinite(n) && /^\d+(\.\d{1,2})?$/.test(String(n)),
+          BUNDLE_COPY.adminEditor.errors.priceInvalid,
+        ),
       {
         section: "basics", quick: true, order: 2, row: "pair",
         kind: "number", label: "Bundle price (₹)",
