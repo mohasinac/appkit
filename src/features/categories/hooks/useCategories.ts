@@ -68,9 +68,29 @@ export function useCategoriesFiltered(params: CategoriesFilteredParams = {}) {
     if (minProductCount !== undefined) items = items.filter((c) => ((c as any).productCount ?? 0) >= minProductCount);
     if (maxProductCount !== undefined) items = items.filter((c) => ((c as any).productCount ?? 0) <= maxProductCount);
 
+    /*
+     * 🛑 This comparator is the ONLY thing that orders the category index —
+     * `sort` is never sent to the API (the request is `?flat=true` and nothing
+     * else), so an unrecognised value does not fall back to a server ordering,
+     * it falls through to name ASC right here. That is how the tier sort
+     * shipped "fixed" and stayed broken: CategoriesIndexListing declared
+     * DEFAULT_SORT = tier ASC and offered a "Top level first" option, both
+     * correct, and this switch had never heard of tier — so the roots stayed
+     * off page 1 while four source reads said the code was right.
+     *
+     * Add a case here for every value in SORT_OPTIONS, or the option is
+     * decoration.
+     */
     items = [...items].sort((a, b) => {
       if (sort === "-productCount") return ((b as any).productCount ?? 0) - ((a as any).productCount ?? 0);
+      if (sort === "productCount") return ((a as any).productCount ?? 0) - ((b as any).productCount ?? 0);
       if (sort === "-name") return b.name.localeCompare(a.name);
+      /* Tier ascending puts the roots first; name breaks ties within a tier. */
+      if (sort === "tier" || sort === "-tier") {
+        const dir = sort === "tier" ? 1 : -1;
+        const d = ((a as any).tier ?? 0) - ((b as any).tier ?? 0);
+        return d !== 0 ? d * dir : a.name.localeCompare(b.name);
+      }
       return a.name.localeCompare(b.name);
     });
 
