@@ -46,7 +46,29 @@ export const getProductForDetail = cache(
      * `pageViews` is the single counter now. `viewCount` on the document stays
      * for historical rows; nothing increments it.
      */
-    return (await productRepository.findByIdOrSlug(slugOrId)) ?? null;
+    const product = await productRepository.findByIdOrSlug(slugOrId);
+    if (!product) return null;
+    /*
+     * 🛑 Status gate — added 2026-10-02 alongside the identical one in
+     * `makeGetListingForDetail`, which covers the other six listing types.
+     *
+     * Without it, an archived or rejected listing kept rendering in full at its
+     * own public URL, signed out, with a live CTA — measured on production. This
+     * is the standard, art and sticker half of that leak.
+     *
+     * `isPubliclyVisible` is the predicate every public LIST query already uses:
+     * it treats a MISSING status as visible, so pre-field documents survive, and
+     * it says nothing about availability — a sold-out product must still render
+     * with its "Out of Stock" chrome rather than 404.
+     *
+     * It is handed the one field it reads, not the whole document: its row type
+     * is an index-signature `Record` so that one predicate can serve Firestore
+     * docs, the Function's ISO-string rows and API JSON, and a declared
+     * interface does not satisfy that. Passing `{ status }` keeps it type-safe
+     * where a cast would only silence the check (Root Cause #98).
+     */
+    if (!isPubliclyVisible({ status: product.status })) return null;
+    return product;
   },
 );
 

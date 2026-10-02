@@ -11,6 +11,8 @@ import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } fro
 import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { FAQ_CATEGORY_LABELS } from "../../faq/schemas/firestore";
+import type { FAQCategory } from "../../faq/types";
 
 /**
  * Matches the draft this form actually holds, and the payload it actually
@@ -90,14 +92,35 @@ export interface AdminFaqEditorViewProps
 
 // --- Constants ---------------------------------------------------------------
 
-const CATEGORY_OPTIONS = [
-  { label: "Shipping", value: "shipping" },
-  { label: "Returns", value: "returns" },
-  { label: "Payments", value: "payments" },
-  { label: "Auctions", value: "auctions" },
-  { label: "Pre-orders", value: "pre-orders" },
-  { label: "General", value: "general" },
-];
+/*
+ * 🛑 DERIVED FROM THE REAL UNION. NEVER HAND-WRITE THIS LIST AGAIN.
+ *
+ * Until 2026-10-02 this was six hand-written options — shipping / returns /
+ * payments / auctions / pre-orders / general — and FIVE of them were values no
+ * reader in the product understands. `FAQCategory` is orders_payment |
+ * shipping_delivery | returns_refunds | product_information | account_security |
+ * technical_support | general | scam_awareness, so only `general` overlapped.
+ *
+ * Measured on production: an FAQ created with "Shipping" stored category
+ * "shipping" with isActive true, and then appeared on /faqs under NO sidebar
+ * category AND not under All FAQs — nowhere at all. The API types `category` as
+ * a bare z.string() and casts it, so the write was a clean 200 and the admin saw
+ * a saved FAQ that no visitor could ever reach. Moving it to "Payments" changed
+ * nothing.
+ *
+ * The old list almost certainly came from the OTHER `FAQCategory` declared in
+ * `admin/components/sections/adminSectionsTypes.ts` (general | shipping |
+ * returns | payment | account | products | sellers) — two same-named types in
+ * one package, Root Cause #36. Note it says "payment" where this list said
+ * "payments", so it did not even match its own source.
+ *
+ * `FAQ_CATEGORY_LABELS` is a `Record<FAQCategory, string>`, so adding a ninth
+ * category is a compile error here rather than a silently missing option, and a
+ * renamed value cannot drift out of this picker.
+ */
+const CATEGORY_OPTIONS = (
+  Object.entries(FAQ_CATEGORY_LABELS) as Array<[FAQCategory, string]>
+).map(([value, label]) => ({ value, label }));
 
 function toSlug(str: string): string {
   const base = str
