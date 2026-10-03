@@ -220,6 +220,70 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     createdAt: new Date("2026-04-10"),
     updatedAt: new Date("2026-05-01"),
   },
+  /*
+   * 🛑 CROSS-STORE PAIR — these two exist ONLY so the cross-store bundle
+   * refusal can be exercised. They are deliberately in DIFFERENT stores,
+   * which is the shape all four bundle write routes must reject via
+   * findBundleMemberStores().
+   *
+   * Added 2026-10-03: CLAUDE.md asserted these were seeded and they were not —
+   * a full reseed produced 70 products with zero tester fixtures, so the guard
+   * had nothing that could trigger it and the case was unrunnable. A guard with
+   * no data that triggers it is a guard nobody can verify.
+   *
+   * isTestData marks them for the sandbox cleanup sweep; keep the expiry far
+   * enough out that a run cannot outlive them.
+   */
+  {
+    id: "product-tester-crossstore-a",
+    slug: "product-tester-crossstore-a",
+    title: "QA Cross-store A — Beyblade Arena",
+    description: "Tester fixture. Paired with product-tester-crossstore-b, which belongs to a DIFFERENT store, so that a bundle spanning both must be refused at save time.",
+    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
+    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    price: 499,
+    currency: "INR",
+    stockQuantity: 5,
+    availableQuantity: 5,
+    isSold: false,
+    mainImage: seedPhoto("product-image-tester-crossstore-a-1-20261003", 900, 900),
+    images: [seedPhoto("product-image-tester-crossstore-a-1-20261003", 900, 900)],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["qa-fixture"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    isTestData: true,
+    createdAt: new Date("2026-10-03"),
+    updatedAt: new Date("2026-10-03"),
+  },
+  {
+    id: "product-tester-crossstore-b",
+    slug: "product-tester-crossstore-b",
+    title: "QA Cross-store B — LetItRip Official",
+    description: "Tester fixture. Paired with product-tester-crossstore-a, which belongs to a DIFFERENT store, so that a bundle spanning both must be refused at save time.",
+    categorySlugs: ["category-beyblade-burst", "category-spinning-tops"],
+    categoryNames: ["Beyblade Burst", "Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    price: 499,
+    currency: "INR",
+    stockQuantity: 5,
+    availableQuantity: 5,
+    isSold: false,
+    mainImage: seedPhoto("product-image-tester-crossstore-b-1-20261003", 900, 900),
+    images: [seedPhoto("product-image-tester-crossstore-b-1-20261003", 900, 900)],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["qa-fixture"],
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    isTestData: true,
+    createdAt: new Date("2026-10-03"),
+    updatedAt: new Date("2026-10-03"),
+  },
   {
     id: "product-beyblade-original-driger-v",
     slug: "product-beyblade-original-driger-v",
