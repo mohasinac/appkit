@@ -862,7 +862,25 @@ async function createOrderForGroup(
     shipmentProtectionAddon: !adminBypass && shipmentProtectionFee > 0 ? true : undefined,
     shipmentProtectionFee: !adminBypass && shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
     taxableAmount: gstBreakdown?.taxableAmount,
-    gstAmount: gstBreakdown?.gstAmount,
+    /*
+     * 🛑 This must include the GST on the PLATFORM FEE, not just product GST.
+     *
+     * `gstBreakdown` exists only when product GST is non-zero, and this
+     * catalogue's products carry no `gstRate` — so for every real order so far
+     * this resolved to `undefined`. Measured 2026-10-03: 0 of 40 live orders
+     * had a `gstAmount`, and the order page's Tax row (which maps from it via
+     * adapters.ts `tax: doc.gstAmount`) had therefore NEVER rendered.
+     *
+     * Meanwhile the buyer IS charged `platformFeeGst` — it is a term in the
+     * `orderTotal` expression above — and checkout displays it: a real order
+     * showed "GST ₹1.80" at checkout and an order page whose lines summed
+     * ₹1.80 short of its own total, with nothing naming the gap.
+     *
+     * Summing both is what makes the order reconcile. Keep `cgst`/`sgst`/`igst`
+     * as the product-only split; they describe the intra/inter-state breakdown
+     * of goods, which fee GST is not part of.
+     */
+    gstAmount: (gstBreakdown?.gstAmount ?? 0) + platformFeeGst || undefined,
     cgst: gstBreakdown?.cgst || undefined,
     sgst: gstBreakdown?.sgst || undefined,
     igst: gstBreakdown?.igst || undefined,
