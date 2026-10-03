@@ -179,6 +179,10 @@ const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBank
 const {
   // seed data
   usersSeedData, addressesSeedData, storeAddressesSeedData,
+  // store-extensions — see the SEED_DATA_MAP note below (Root Cause #90, 7-16).
+  payoutMethodsSeedData, shippingConfigsSeedData, analyticsCardsSeedData, analyticsAlertsSeedData,
+  storeCategoriesSeedData, listingTemplatesSeedData, moderationQueueSeedData, reportsSeedData,
+  itemRequestsSeedData, storeGoogleConfigSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
   productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
@@ -253,6 +257,24 @@ const COLLECTION_MAP = {
   procurementShipments: "procurementShipments", // features/shipments/schemas/firestore.ts:26
   shipmentLots: "shipmentLots",
   shipmentItems: "shipmentItems",
+  /*
+   * store-extensions. Ten collections with seed fixtures in manifest.ts that
+   * were NEVER in this map, so ALL_COLLECTIONS omitted them and they held ZERO
+   * documents in every run ever -- Root Cause #90, instances 7-16. Found via
+   * /store/analytics/cards rendering "No cards" under copy promising built-ins.
+   * String literals for the same reason as the block above: none of these is
+   * re-exported from appkit's barrel.
+   */
+  payoutMethods: "payoutMethods",           // features/store-extensions/schemas/firestore.ts:46
+  shippingConfigs: "shippingConfigs",       // :84
+  analyticsCards: "analyticsCards",         // :120
+  analyticsAlerts: "analyticsAlerts",       // :152
+  storeCategories: "storeCategories",       // :179
+  listingTemplates: "listingTemplates",     // :240
+  moderationQueue: "moderationQueue",       // :280
+  reports: "reports",                       // :372
+  itemRequests: "itemRequests",
+  storeGoogleConfig: "storeGoogleConfig",
   blogPosts: BLOG_POSTS_COLLECTION,
   events: EVENTS_COLLECTION,
   eventEntries: EVENT_ENTRIES_COLLECTION,
@@ -279,6 +301,23 @@ const COLLECTION_MAP = {
 
 const SEED_DATA_MAP = {
   users: usersSeedData,
+  /*
+   * store-extensions. COLLECTION_MAP was only HALF the wiring: load() reads
+   * SEED_DATA_MAP and short-circuits on an empty array, so adding the ten
+   * collection names alone produced "no seed data, skipping" for all ten.
+   * Same shape as the art/stickers note further down -- added everywhere
+   * except the map that actually runs.
+   */
+  payoutMethods: payoutMethodsSeedData,
+  shippingConfigs: shippingConfigsSeedData,
+  analyticsCards: analyticsCardsSeedData,
+  analyticsAlerts: analyticsAlertsSeedData,
+  storeCategories: storeCategoriesSeedData,
+  listingTemplates: listingTemplatesSeedData,
+  moderationQueue: moderationQueueSeedData,
+  reports: reportsSeedData,
+  itemRequests: itemRequestsSeedData,
+  storeGoogleConfig: storeGoogleConfigSeedData,
   addresses: addressesSeedData,
   storeAddresses: storeAddressesSeedData,
   // SB-UNI-C: brands were merged into categories (categoryType:"brand") — no
