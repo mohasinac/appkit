@@ -158,6 +158,37 @@ export function isLaneCheckoutable(
 }
 
 /**
+ * The items a checkout settles when the buyer has made no explicit selection.
+ *
+ * 🛑 This MUST be the active lane, never the whole cart. Both placement paths
+ * used to fall back to `cart.items`, and `assertCheckoutLane` then compared the
+ * whole cart against its own active lane — so every off-lane line was a
+ * violation and the throw was unconditional. The consequence was total: a cart
+ * holding more than ONE lane could not be checked out by any UI path, with
+ * `CHECKOUT_LANE_BLOCKED` and "Settle your 1 won auction first" returned for
+ * the very lane the buyer was already settling.
+ *
+ * Multi-lane carts are not an edge case — they are what the lane model
+ * produces. `auctionSettlement` pushes a won auction straight into the cart
+ * whatever is already sitting in it, and `assertCanAddNewItems` only blocks
+ * ADDING while a higher lane is pending; it never clears what was there first.
+ * So any buyer who had anything in their cart when they won an auction was
+ * locked out of checkout entirely. That is Root Cause #60's symptom returning
+ * by a different mechanism — the auction winner who cannot pay.
+ *
+ * Returning the active lane also makes the server agree with what the buyer is
+ * looking at: the cart page scopes its lines, its totals and its CTA to that
+ * same lane, and renders no selection control at all, so "no explicit
+ * selection" means "the lane on screen" and can mean nothing else.
+ */
+export function defaultCheckoutItems<T extends LaneAssignable>(
+  items: readonly T[],
+): T[] {
+  const active = activeLane(items);
+  return active ? laneItems(items, active) : [...items];
+}
+
+/**
  * Why `lane` can't be checked out right now — null when it can.
  * Phrased for the buyer, naming the lane that's blocking and what to do.
  */

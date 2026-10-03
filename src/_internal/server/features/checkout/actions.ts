@@ -41,7 +41,12 @@ import {
   assertLockedLinesStillValid,
   finalizeLockedLines,
 } from "./locked-lines";
-import { activeLane, laneOf, type CartLane } from "../../../shared/checkout/lanes";
+import {
+  activeLane,
+  defaultCheckoutItems,
+  laneOf,
+  type CartLane,
+} from "../../../shared/checkout/lanes";
 import {
   computeCodHandlingFee,
   type CodHandlingFeeRates,
@@ -1023,10 +1028,14 @@ export async function createCheckoutOrderAction(
   const selectedSet = cart.selectedItemIds?.length
     ? new Set(cart.selectedItemIds)
     : null;
-  const cartItems = cart.items.filter(
-    (item) =>
-      !excludedSet.has(item.productId) &&
-      (!selectedSet || selectedSet.has(item.itemId)),
+  // No explicit selection means THE ACTIVE LANE, not the whole cart — see
+  // defaultCheckoutItems. Falling back to every line made assertCheckoutLane
+  // below throw on any multi-lane cart, which is most of them.
+  const candidateItems = selectedSet
+    ? cart.items.filter((item) => selectedSet.has(item.itemId))
+    : defaultCheckoutItems(cart.items);
+  const cartItems = candidateItems.filter(
+    (item) => !excludedSet.has(item.productId),
   );
   if (cartItems.length === 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
@@ -2142,12 +2151,18 @@ export async function verifyAndPlacePhonePeOrderAction(
   }
 
   // Same lane priority + locked-line revalidation the manual/COD path runs.
-  // The PhonePe path settles the whole cart (no selectedItemIds), so the
-  // "selected" set is the cart itself.
-  assertCheckoutLane(cart.items, cart.items);
-  await assertLockedLinesStillValid(cart.items, uid);
+  //
+  // 🛑 This path carries no selectedItemIds, so it settles the ACTIVE LANE —
+  // not the cart. It used to pass `cart.items` as its own "selected" set,
+  // which made assertCheckoutLane compare the whole cart against its own
+  // active lane and throw on every multi-lane cart. Everything downstream
+  // reads `settleItems` for the same reason: stock decrements, jurisdiction
+  // and the order rows must cover exactly what was charged for.
+  const settleItems = defaultCheckoutItems(cart.items);
+  assertCheckoutLane(cart.items, settleItems);
+  await assertLockedLinesStillValid(settleItems, uid);
 
-  const isDigitalCartPp = cartIsDigitalOnly(cart.items);
+  const isDigitalCartPp = cartIsDigitalOnly(settleItems);
 
   let shippingAddress: string | undefined;
   let resolvedAddressPp: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
@@ -2170,7 +2185,7 @@ export async function verifyAndPlacePhonePeOrderAction(
   // cart line gets paired with a "representative" product (first member id
   // for bundles, productId for regular items). The full bundle-member
   // decrement runs against `expansionPaid.decrements` lower down.
-  const expansionPaid = getExpandedDecrements(cart.items);
+  const expansionPaid = getExpandedDecrements(settleItems);
   const productByIdPaid = new Map<string, ProductDocument>();
   // Independent reads across distinct product docs — batch them instead of
   // awaiting one findById per product (mirrors the COD/UPI path above, which
@@ -2182,7 +2197,7 @@ export async function verifyAndPlacePhonePeOrderAction(
     const product = fetchedProductsPaid[i];
     if (product) productByIdPaid.set(pid, product);
   });
-  const productChecks = cart.items.map((item) => {
+  const productChecks = settleItems.map((item) => {
     const [firstMember] = getCartItemMemberIds(item);
     const product = productByIdPaid.get(firstMember) ?? null;
     return { item, product };
@@ -2210,7 +2225,7 @@ export async function verifyAndPlacePhonePeOrderAction(
 
   // SB-UNI-O 2026-05-15 — Live-item jurisdiction guard.
   if (!isDigitalCartPp && resolvedAddressPp) {
-    assertLiveJurisdiction(cart.items, productByIdPaid, resolvedAddressPp.state);
+    assertLiveJurisdiction(settleItems, productByIdPaid, resolvedAddressPp.state);
   }
 
   // SB-UNI-5 — validate every required member product across the cart with
@@ -2222,7 +2237,7 @@ export async function verifyAndPlacePhonePeOrderAction(
   // "skip_items" here means placing orders for the available items only and
   // auto-refunding the dropped items' value (below), not skipping payment.
   const bucketedPaid = bucketCartItemsByStock(
-    cart.items,
+    settleItems,
     productByIdPaid,
     expansionPaid.decrements,
     (item) => productByIdPaid.get(getCartItemMemberIds(item)[0]) ?? null,
