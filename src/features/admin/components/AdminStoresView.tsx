@@ -105,9 +105,17 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `store-${index}`),
         primary: toStringValue(item.storeName, "Unnamed store"),
+        // Verified / Featured are rendered here because an admin's first
+        // question about a store is whether it carries either, and the row
+        // is where that gets scanned. The API has always returned both
+        // (route.ts serialises isVerified/isFeatured) and the editor already
+        // seeds from them — only the list never showed them, so the flags
+        // were invisible until you opened each store one at a time.
         secondary: [
           toStringValue(item.storeSlug, "No slug"),
           toStringValue(item.ownerId, "No owner"),
+          ...(item.isVerified ? ["Verified"] : []),
+          ...(item.isFeatured ? ["Featured"] : []),
         ].join(" · "),
         status: toStringValue(item.status, "Pending"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
