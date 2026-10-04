@@ -8,6 +8,8 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
 import { Badge, Button, Div, FilterChipGroup, RecordDetailModal, Span, Text, useToast } from "../../../ui";
 import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
+import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
+import type { BidDocument } from "../../auctions/schemas/firestore";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -50,7 +52,30 @@ interface BidRow {
   userName: string;
   bidAmount: number;
   status: string;
+  /** Display-formatted and RELATIVE ("1d ago") — for the table column only. */
   bidDate: string;
+  /**
+   * 🛑 The untouched API document, carried so the detail modal can be built
+   * from the BID rather than from this row.
+   *
+   * The modal used to call `buildBidDetailFields(detail as never, "seller")`
+   * with the row itself, and the `as never` is what made it compile. A `BidRow`
+   * is seven DISPLAY fields; a `BidDocument` is the record. Three consequences,
+   * all of which shipped:
+   *
+   *  - `Placed` rendered "—". The builder does `when(bid.bidDate)`, and this
+   *    row's `bidDate` is `toRelativeDate(...)` — the string "1d ago", which
+   *    `new Date()` cannot parse. The table column looked right because it
+   *    prints that string directly; only the modal re-parsed it.
+   *  - Six optional rows could never appear, because the row has no
+   *    `currency`, `autoMaxBid`, `previousBidAmount`, `isBuyout` or `orderId`.
+   *  - No history, because there is no `statusHistory` to pass.
+   *
+   * `AdminBidsView` never had any of this: it keeps the document as
+   * `detail.detail` and builds from that. Carrying the raw item is simply the
+   * same thing, named.
+   */
+  raw: BidDocument;
 }
 
 interface SellerBidsResponse {
@@ -160,6 +185,9 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         bidAmount: Number(item.bidAmount ?? 0),
         status: toStringValue(item.status, "active"),
         bidDate: toRelativeDate(item.bidDate ?? item.createdAt),
+        // The one cast, at the JSON -> document boundary where it belongs, so
+        // that every CONSUMER of `raw` typechecks for real.
+        raw: item as unknown as BidDocument,
       })),
     getTotal: (response, mappedRows) => (typeof response.total === "number" ? response.total : mappedRows.length),
     buildFilters: (state) => (state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined),
@@ -256,8 +284,8 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         onClose={() => setDetail(null)}
         title={detail?.productTitle || "Bid"}
         badges={detailBadge ? [{ label: detailBadge.label }] : undefined}
-        fields={detail ? buildBidDetailFields(detail as never, "seller") : undefined}
-              footer={
+        fields={detail ? buildBidDetailFields(detail.raw, "seller") : undefined}
+        footer={
           detail ? (
             // The full page — a modal cannot be linked, bookmarked or reloaded
             // into, which is the whole reason the page exists.
@@ -265,6 +293,19 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
               Open full page →
             </TextLink>
           ) : undefined
+        }
+        extra={
+          // Present on the seller's full page and absent from this modal until
+          // 2026-10-04, which is a label the two surfaces disagreed about —
+          // exactly what the modal-vs-page case exists to catch. Mirrors
+          // AdminBidsView: absent history renders the empty label, never a
+          // step invented from `updatedAt`.
+          <RecordStatusTimeline
+            entries={(detail?.raw as { statusHistory?: never[] } | undefined)?.statusHistory}
+            truncatedCount={
+              (detail?.raw as { statusHistoryTruncated?: number } | undefined)?.statusHistoryTruncated
+            }
+          />
         }
       />
     </>
