@@ -22,6 +22,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 import { ValidationError } from "../../../../errors";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
+import { firestoreTimestampToDate } from "../../../../utils/type.converter";
 import {
   PRODUCT_COLLECTION,
   PRODUCT_CODES_SUBCOLLECTION,
@@ -230,8 +231,28 @@ export async function listPoolEntries(
       status: c.status,
       ...(c.fileName ? { fileName: c.fileName } : {}),
       ...(c.orderId ? { orderId: c.orderId } : {}),
-      ...(c.claimedAt ? { claimedAt: new Date(c.claimedAt).toISOString() } : {}),
-      ...(c.createdAt ? { createdAt: new Date(c.createdAt).toISOString() } : {}),
+      /*
+       * 🛑 firestoreTimestampToDate, never `new Date(value)`.
+       *
+       * addPoolEntries writes `createdAt: new Date()`, and the Admin SDK stores
+       * that as a Firestore Timestamp and reads it back as one — NOT as a Date.
+       * `new Date(aTimestamp)` is an Invalid Date, and `.toISOString()` on an
+       * Invalid Date THROWS RangeError, so this map took the whole route down
+       * with a 500.
+       *
+       * It hid for as long as it possibly could: mapping over ZERO documents
+       * never throws, so GET answered `[]` for the entire period the pool had
+       * no writer (Root Cause #103) and only began failing once the first entry
+       * existed. The seller then saw "Nothing in the pool yet" — the component
+       * rendering a failed load as an empty state — and the rational response
+       * is to add the codes again, which silently accumulates duplicates.
+       */
+      ...(c.claimedAt
+        ? { claimedAt: firestoreTimestampToDate(c.claimedAt).toISOString() }
+        : {}),
+      ...(c.createdAt
+        ? { createdAt: firestoreTimestampToDate(c.createdAt).toISOString() }
+        : {}),
     };
   });
 }
