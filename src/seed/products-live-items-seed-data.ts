@@ -58,6 +58,27 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
       seedPhoto("live-image-golden-retriever-1-20260816", 900, 900),
       seedPhoto("live-image-golden-retriever-2-20260816", 900, 900),
     ],
+    /*
+     * 🛑 A LIVE LISTING WITHOUT A VIDEO IS NOT A LISTING THE PRODUCT WOULD ACCEPT.
+     *
+     * `/store/live/new` refuses to save one — "a buyer purchasing an animal or
+     * plant needs to see it move" — so a seeded live fixture carrying only
+     * stills is data no seller could have created through the form, and every
+     * case written against the real creation flow then asserts against a
+     * fixture that contradicts it. Found 2026-10-04 driving
+     * `live-item-detail`, whose expectation that the gallery strip offers a
+     * "View video" entry was correct about the product and wrong about the
+     * data: the page shipped `video: undefined` and rendered 2 image slides.
+     *
+     * `url` stays RAW and unwrapped (Root Cause #27) — the media proxy is
+     * image-only and 400s on video/mp4 — while `thumbnailUrl` is wrapped,
+     * because a poster frame IS an image and should carry the watermark.
+     */
+    video: {
+      url: "/demo-media/sample-video.mp4",
+      thumbnailUrl: seedPhoto("live-video-thumb-golden-retriever-20261004", 800, 450),
+      duration: 15,
+    },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
@@ -105,6 +126,12 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     isSold: false,
     mainImage: seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900),
     images: [seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900)],
+    // Required for a live listing — see the note on the retriever above.
+    video: {
+      url: "/demo-media/sample-video.mp4",
+      thumbnailUrl: seedPhoto("live-video-thumb-bearded-dragon-20261004", 800, 450),
+      duration: 15,
+    },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
@@ -156,6 +183,12 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
       seedPhoto("live-image-bonsai-juniper-1-20260818", 900, 900),
       seedPhoto("live-image-bonsai-juniper-2-20260818", 900, 900),
     ],
+    // Required for a live listing — see the note on the retriever above.
+    video: {
+      url: "/demo-media/sample-video.mp4",
+      thumbnailUrl: seedPhoto("live-video-thumb-bonsai-juniper-20261004", 800, 450),
+      duration: 15,
+    },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
@@ -206,6 +239,15 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     images: [
       seedPhoto("live-image-juniper-bonsai-sold-1-20260824", 900, 900),
     ],
+    // Required for a live listing — see the note on the retriever above. A SOLD
+    // fixture needs it just as much: it is the row the "Sold & Ended" scope
+    // renders, and a sold listing that could never have been created is no
+    // more representative than an available one.
+    video: {
+      url: "/demo-media/sample-video.mp4",
+      thumbnailUrl: seedPhoto("live-video-thumb-juniper-bonsai-sold-20261004", 800, 450),
+      duration: 15,
+    },
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
