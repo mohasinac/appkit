@@ -23,6 +23,7 @@
  */
 
 import { offerRepository } from "../../../../features/seller/repository/offer.repository";
+import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 import { bidRepository } from "../../../../repositories";
 import { OfferStatusValues } from "../../../../features/seller/schemas";
 import { BID_COLLECTION } from "../../../../features/auctions/schemas/firestore";
@@ -239,8 +240,32 @@ export async function assertLockedLinesStillValid(
     if (!item.offerId) continue;
     const offer = await offerRepository.findById(item.offerId);
     if (!offer) {
+      /*
+       * 🛑 PRUNE IT, do not just refuse. This used to throw "Remove it and
+       * try again" — an instruction the buyer cannot follow, because
+       * `cartRepository.removeItem` rejects any `locked` line and the cart
+       * page renders no remove control for one. Three guards then disagreed
+       * about one fact and trapped the buyer between them: checkout said
+       * remove it, remove said the line requires payment, and
+       * `assertCanAddNewItems` said settle the offer lane first — so the
+       * whole cart, including unrelated standard items, became unbuyable
+       * with no way out. Measured on production: three real items stranded
+       * behind one tombstone line.
+       *
+       * At THIS point the lock protects nothing. The lock exists so a buyer
+       * cannot walk away from a committed purchase; an offer record that no
+       * longer exists is not a commitment to anything, and the line can never
+       * be fulfilled. `removeItemsByOfferId` is the same path admin
+       * cancellation already uses, so it is allowed to clear a locked line.
+       *
+       * Still a ValidationError rather than a silent continue: the buyer's
+       * total just changed, and a checkout that quietly drops a line and
+       * charges a different amount than the screen showed is its own defect.
+       * They retry once and it goes through.
+       */
+      await cartRepository.removeItemsByOfferId(buyerUid, item.offerId);
       throw new ValidationError(
-        "The offer for one of your items no longer exists. Remove it and try again.",
+        "One item was removed because its offer no longer exists. Please review your cart and try again.",
       );
     }
     if (offer.buyerUid !== buyerUid) {
