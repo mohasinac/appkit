@@ -48,8 +48,19 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The twin of the guest case above — the bid figures and the working bid form are exactly what the gate must not cost a signed-in buyer.",
     expectedUiState:
-      "'Current bid ₹15,000.00' is shown, a minimum increment of ₹1,000.00 is stated, and the bid panel carries a real amount input and a submit button. Neither 'Sign in to see the current bid' nor 'Bidding is for members' appears anywhere on the page.",
-    expectedData: { currentBid: 15000, minIncrement: 1000 },
+      /*
+       * Literals corrected 2026-10-04 to the auction this case actually opens.
+       * They read '₹15,000.00' and a '₹1,000.00' increment, which are the
+       * numbers of a DIFFERENT fixture — `auction-money-flows-closing`, seeded
+       * by fixtures/money-flows__auction-win-to-payment.mjs at
+       * startingBid/currentBid 15000 with a 1000 increment, because its own
+       * case enters 16000 against it. This case's startPage is
+       * auction-beyblade-original-dragoon-storm, seeded startingBid 2999 /
+       * currentBid 3499 / buyNowPrice 5999, and the page renders exactly that.
+       * The product was never wrong; the expectation named another auction.
+       */
+      "'Current bid ₹3,499.00' is shown with its bid count, a 'min increment ₹200.00' is stated, a Buy Now price of ₹5,999.00 is offered, and the bid panel carries a real amount input and a 'Place bid' submit button. Neither 'Sign in to see price' nor any other gate prompt appears anywhere on the page.",
+    expectedData: { currentBid: 3499, minIncrement: 200 },
     endResult: "Nothing persists unless a bid is actually submitted, which this case does not do.",
   },
   "checklist-buying-product-detail-bundle-purchase": {
