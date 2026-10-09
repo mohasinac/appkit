@@ -52,6 +52,7 @@ import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
 import type { CustomSection } from "../../products/schemas/firestore";
 import { AuctionBottomActions } from "./AuctionBottomActions";
+import { AuctionLiveStatusBadge } from "./AuctionLiveStatusBadge";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
@@ -127,11 +128,9 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       <Div>
         <Row gap="xs" wrap className="mb-2">
           <Span size="xs" weight="semibold" className={CLS_LIVE_BADGE}>🏷️ Live Auction</Span>
-          {isEnded ? (
-            <Span color="error" surface="danger-surface" size="xs" weight="medium" className="inline-block" padding="pill-sm" rounded="full">Ended</Span>
-          ) : (
-            <Span color="success" surface="success-surface" size="xs" weight="medium" className="inline-block" padding="pill-sm" rounded="full">Active</Span>
-          )}
+          {/* Client-derived: this used to be a server boolean frozen into cached
+              HTML, directly above a countdown that correctly said "Ended". */}
+          <AuctionLiveStatusBadge auctionEndDate={endDate} initialIsEnded={isEnded} />
         </Row>
         <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">{title}</Heading>
       </Div>

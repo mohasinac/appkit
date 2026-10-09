@@ -168,6 +168,30 @@ export interface PublicProductListInput {
   pageSize?: number;
   sorts?: string;
   cursor?: string | null;
+  /**
+   * How many documents the BOUNDED-WINDOW path may fetch. Defaults to
+   * `PUBLIC_PRODUCT_MAX_PAGE_SIZE` (50) — today's behaviour for every caller
+   * that omits it.
+   *
+   * 🛑 Only meaningful when the query lands on the in-memory path, which is
+   * almost always: `hidesTestData` is true for EVERY anonymous viewer, so
+   * `inMemory` is true for essentially all public browsing. On that path the
+   * fetch is pinned to `page: 1, pageSize: 50` regardless of the caller's
+   * `pageSize`, because the filter is a per-row predicate applied after the
+   * fetch and before the slice.
+   *
+   * That is correct for a browse page, which must be able to page deeply. It is
+   * wasteful for a FIXED-SIZE homepage strip: `getFeaturedProducts(12)` read 51
+   * documents to render 12, and the homepage did that four times — ~200 reads
+   * for 44 cards, on a 50K-reads/day free tier (measured 2.1M/week).
+   *
+   * Set it only where the caller genuinely wants N items and will never page:
+   * a larger value than `pageSize` is still needed as headroom, because rows are
+   * dropped by the predicate after the fetch. Too small a window silently yields
+   * fewer items than asked for — which is why this is opt-in rather than derived
+   * from `pageSize`, and why `truncated` still reports honestly below.
+   */
+  windowSize?: number;
 }
 
 export interface PublicProductListResult {
@@ -883,11 +907,18 @@ export async function listPublicProducts(
         ? FACET_FETCH_SORT
         : sorts;
 
+  // Clamped to the 50-doc ceiling so an opt-in can only ever make the window
+  // SMALLER — a caller cannot widen the public read budget through this door.
+  const windowSize = Math.min(
+    Math.max(1, input.windowSize ?? PUBLIC_PRODUCT_MAX_PAGE_SIZE),
+    PUBLIC_PRODUCT_MAX_PAGE_SIZE,
+  );
+
   const result = await runQuery(executor, {
     filters,
     sorts: fetchSorts,
     page: inMemory ? 1 : page,
-    pageSize: inMemory ? PUBLIC_PRODUCT_MAX_PAGE_SIZE : pageSize,
+    pageSize: inMemory ? windowSize : pageSize,
     cursor: inMemory ? null : (input.cursor ?? null),
     search: input.q,
   });
@@ -902,7 +933,12 @@ export async function listPublicProducts(
   let truncated = false;
 
   if (inMemory) {
-    truncated = items.length >= PUBLIC_PRODUCT_MAX_PAGE_SIZE;
+    // Against `windowSize`, NOT the 50 ceiling. A caller that opted into a
+    // smaller window saturates it at that size, so comparing with 50 would
+    // report `truncated: false` for a window that was in fact full — and
+    // `truncated` is what makes `total` render as "50+" and keeps the pager
+    // offering Next instead of claiming a false last page.
+    truncated = items.length >= windowSize;
     /** OR semantics, matching the single-value `array-contains` pushdown. */
     const matchesAny = (raw: unknown, wanted: readonly string[]): boolean => {
       if (!Array.isArray(raw)) return false;

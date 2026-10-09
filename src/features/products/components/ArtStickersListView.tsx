@@ -54,7 +54,9 @@ export async function ArtStickersListView({ searchParams = {} }: ArtStickersList
       <Container size="xl" padding="x-md">
         <AdSlot id="listing-sidebar-top" className="mb-4 mt-4" />
         <ProductsIndexListing
-          initialData={result ?? null}
+          // `undefined`, not `null` — React Query treats null as defined data,
+          // so a failed query froze an empty grid. See ProductsIndexPageView.
+          initialData={result ?? undefined}
           listingTypes={ART_STICKERS_LISTING_TYPES}
           typeTabs={ART_STICKERS_TYPE_FILTER_TABS}
           searchPlaceholder="Search art & stickers..."

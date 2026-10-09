@@ -90,7 +90,25 @@ export async function GET(request: Request): Promise<NextResponse> {
       meta,
     };
 
-    return NextResponse.json({ success: true, data: body });
+    const response = NextResponse.json({ success: true, data: body });
+    /*
+     * The only public listing API that set NO Cache-Control — `/api/products`,
+     * `/api/stores`, `/api/events` and `/api/reviews` all do, and CLAUDE.md
+     * Rule #6.5 requires it of every public GET (20 of 378 routes complied).
+     *
+     * It mattered little while anonymous browsing never reached this route (the
+     * dynamic `/blog` page rendered server-side and seeded the client), but it
+     * is on the critical path the moment a filtered view misses the page cache.
+     * Window matched to its siblings deliberately — a blog post is no more
+     * volatile than a product.
+     *
+     * Errors below stay uncached: a 500 must not be pinned at the edge.
+     */
+    response.headers.set(
+      "Cache-Control",
+      "public, max-age=60, s-maxage=120, stale-while-revalidate=60",
+    );
+    return response;
   } catch (error) {
     void normalizeError(error);
     console.error("[feat-blog] GET /api/blog failed", error);

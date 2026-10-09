@@ -13,6 +13,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { placeBidSchema } from "../schemas/bid-input";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
+import { useIsAuctionEnded } from "../hooks/useIsAuctionEnded";
 import { AUCTION_BUYOUT_WINDOW_MINUTES } from "../../../_internal/shared/checkout/lanes";
 import {
   BID_PRESET_MULTIPLIERS,
@@ -97,7 +98,7 @@ export function PlaceBidFormClient({
   tiers,
   minBidIncrementOverride,
   currency,
-  isEnded,
+  isEnded: ssrIsEnded,
   auctionEndDate,
   buyNowPrice,
   bidCount: ssrBidCount,
@@ -105,6 +106,19 @@ export function PlaceBidFormClient({
   onPlaceBid,
   onBuyNow,
 }: PlaceBidFormClientProps) {
+  /*
+   * 🛑 Derived here, not trusted from the server.
+   *
+   * `isEnded` arrives baked into cached HTML. On a page cached while the auction
+   * was live it says "still open" indefinitely, so every gate below it — the
+   * amount field, the presets, the submit button, Buy Now — stayed enabled on a
+   * closed lot. The server prop is the INITIAL value only; `auctionEndDate` was
+   * already being passed in and used for display, and it is the real answer.
+   *
+   * The bid itself was never at risk: `placeBid` re-reads the product and
+   * rejects on an expired `auctionEndDate`. This fixes the affordance.
+   */
+  const isEnded = useIsAuctionEnded(auctionEndDate, ssrIsEnded);
   const router = useRouter();
   // Declared with the other hooks, never inside the early return below — a
   // conditional hook is a render-order violation, and this component early-
@@ -530,16 +544,20 @@ export function PlaceBidFormClient({
 export function PlaceBidModalButton(props: PlaceBidFormClientProps & { triggerLabel?: string; triggerClassName?: string }) {
   const { triggerLabel = "Place a bid", triggerClassName = "", ...formProps } = props;
   const [open, setOpen] = useState(false);
+  // Same reason as inside the form: this trigger is THE affordance a buyer sees
+  // on a cached auction page, so it must decide for itself rather than trust a
+  // boolean that was true whenever the HTML happened to be generated.
+  const isEnded = useIsAuctionEnded(props.auctionEndDate, props.isEnded);
   return (
     <>
       <Button
         variant="primary"
         size="md"
         className={triggerClassName}
-        disabled={props.isEnded}
+        disabled={isEnded}
         onClick={() => setOpen(true)}
       >
-        {props.isEnded ? "Auction Ended" : triggerLabel}
+        {isEnded ? "Auction Ended" : triggerLabel}
       </Button>
       <Modal isOpen={open} onClose={() => setOpen(false)} size="md" title="Place your bid">
         <PlaceBidFormClient {...formProps} />

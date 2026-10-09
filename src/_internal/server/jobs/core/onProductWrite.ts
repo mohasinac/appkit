@@ -12,6 +12,7 @@ import {
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
+import { notifyRevalidate, productCacheFieldsChanged } from "./revalidateNotify";
 import type { JobContext } from "../runtime/types";
 
 export type ProductDoc = Record<string, JsonValue>;
@@ -215,6 +216,40 @@ export async function handleProductWrite(
   ctx: JobContext,
 ): Promise<void> {
   const { productId, before, after } = input;
+
+  /*
+   * Drop the ISR entries for every page that renders this product.
+   *
+   * Deliberately folded into THIS handler rather than given a trigger of its
+   * own. `products/{productId}` already carries two `documentWritten` triggers;
+   * a third would add a whole function's worth of invocations for one `fetch`,
+   * and Root Cause #92's collateral is the standing warning about what happens
+   * when several functions share one hot path.
+   *
+   * Gated on a real content change so a stock decrement invalidates and an
+   * `updatedAt` bump does not. Awaited — not fire-and-forget — because a Cloud
+   * Function may be frozen the moment its promise settles, and a detached fetch
+   * would be cancelled mid-flight often enough to make invalidation unreliable
+   * without ever reporting a failure.
+   */
+  if (productCacheFieldsChanged(before, after)) {
+    const doc = after ?? before;
+    await notifyRevalidate(
+      {
+        collection: "products",
+        id: productId,
+        hints: {
+          listingType: doc?.listingType as string | undefined,
+          categorySlugs: Array.isArray(doc?.categorySlugs)
+            ? (doc!.categorySlugs as string[])
+            : undefined,
+          brandSlug: doc?.brandSlug as string | undefined,
+          storeId: doc?.storeId as string | undefined,
+        },
+      },
+      ctx,
+    );
+  }
 
   const beforeStatus = (before?.status as string | undefined) ?? null;
   const afterStatus = (after?.status as string | undefined) ?? null;

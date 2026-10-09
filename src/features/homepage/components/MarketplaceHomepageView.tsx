@@ -2,7 +2,13 @@ import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Main } from "../../../ui";
-import { carouselRepository, faqsRepository, siteSettingsRepository } from "../../../repositories";
+import { carouselRepository } from "../../../repositories";
+// Both are React.cache wrappers around a single repository call, shared with
+// other readers in the same request tree (the locale layout for settings,
+// page.tsx's FAQ JSON-LD for the FAQs). Importing the repositories directly
+// here is what made each of those a second Firestore read.
+import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { getHomepageFaqsCached } from "../../faq/utils/getHomepageFaqsCached";
 import { safeRead } from "../../../errors/safe-read";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
@@ -84,7 +90,10 @@ export async function MarketplaceHomepageView({
   const slides = await safeRead(() => carouselRepository.getActiveSlides(), {
     route: "/", key: "homepage.carouselSlides", fallback: [],
   });
-  const siteSettings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+  // getSiteSettingsGlobal, not the repository directly — the locale layout and
+  // generateMetadata already read the same singleton through it, so this is one
+  // Firestore read for the whole request tree instead of a second one.
+  const siteSettings = await safeRead(() => getSiteSettingsGlobal(), {
     route: "/", key: "homepage.siteSettings", fallback: null,
   });
   // The fallback used to be a hardcoded seasonal Pokémon TCG discount, which
@@ -98,7 +107,8 @@ export async function MarketplaceHomepageView({
     safeRead(() => homepageSectionsRepository.getEnabledSections(), {
       route: "/", key: "homepage.enabledSections", fallback: [] as HomepageSectionDocument[],
     }),
-    safeRead(() => faqsRepository.getHomepageFAQs(), {
+    // Shared with the FAQ JSON-LD built in src/app/[locale]/page.tsx — one read.
+    safeRead(() => getHomepageFaqsCached(), {
       route: "/", key: "homepage.faqs", fallback: [],
     }),
   ]);

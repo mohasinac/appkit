@@ -110,7 +110,12 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
       {/* Listing with sticky toolbar */}
       <Container size="xl" padding="x-md">
         <AdSlot id="listing-sidebar-top" className="mb-4 mt-4" />
-        <ProductsIndexListing initialData={products} />
+        {/* `?? undefined`, never `null`. React Query treats `null` as DEFINED
+            data, so a failed query rendered an empty grid instead of fetching,
+            and `staleTime`'s `initialData != null` test then resolved to 0 —
+            the opposite of what passing initialData is for. Every sibling view
+            normalises this way; these two did not. */}
+        <ProductsIndexListing initialData={products ?? undefined} />
         <AdSlot id="listing-sidebar-bottom" className="mt-8" />
       </Container>
     </Main>

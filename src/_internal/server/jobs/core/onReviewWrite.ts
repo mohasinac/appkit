@@ -1,3 +1,4 @@
+import { notifyRevalidate } from "./revalidateNotify";
 import { reviewRepository, storeRepository } from "../../../../repositories";
 import { ReviewStatusValues } from "../../../../features/reviews/schemas/firestore";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
@@ -15,6 +16,14 @@ export async function handleReviewWrite(
   ctx: JobContext,
 ): Promise<void> {
   const { reviewId, before: beforeData, after: afterData } = input;
+
+  /*
+   * A review changes the product's rating badge AND the homepage's
+   * `platform_rating` / `total_reviews` stats, so the targets are the listing
+   * pages rather than a per-review page (there isn't one). Uses the review's own
+   * id purely for log correlation. No Firestore write here (Root Cause #92).
+   */
+  await notifyRevalidate({ collection: "reviews", id: reviewId }, ctx);
 
   const beforeStatus = (beforeData?.status as string | undefined) ?? null;
   const afterStatus = (afterData?.status as string | undefined) ?? null;

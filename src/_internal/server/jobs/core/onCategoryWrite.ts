@@ -1,3 +1,4 @@
+import { notifyRevalidate } from "./revalidateNotify";
 import { normalizeError } from "../../../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit";
 /**
@@ -114,6 +115,11 @@ export async function handleCategoryWrite(
   ctx: JobContext,
 ): Promise<void> {
   const { categoryId, before, after } = input;
+
+  // Drop the ISR entries for this category/brand/bundle page and the listings
+  // that link it. Folded into the existing trigger rather than given its own —
+  // see the note in onProductWrite. No Firestore write here (Root Cause #92).
+  await notifyRevalidate({ collection: "categories", id: categoryId }, ctx);
   const isCreate = !before && !!after;
   const isDelete = !!before && !after;
   const isUpdate = !!before && !!after;

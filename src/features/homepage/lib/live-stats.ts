@@ -86,17 +86,25 @@ export async function fetchLiveStats(
   }
   if (neededPresets.has("total_reviews") || neededPresets.has("platform_rating")) {
     tasks.push(
-      reviewRepository.findAll()
-        .then((res: any) => {
-          const all: Array<{ rating: number; status?: string }> =
-            Array.isArray(res) ? res : (res?.data ?? []);
-          const approved = all.filter((r) => !r.status || r.status === "approved");
+      /*
+       * 🛑 One aggregation, ~1 read — was `findAll()`, an UNBOUNDED full-collection
+       * scan of `reviews` on every cold homepage render, whose entire output was
+       * these two strings. Billed one read per document, it was the largest single
+       * Firestore read on the site (Hobby free tier is 50K reads/day, and the
+       * project measured 2.1M/week).
+       *
+       * The dropped `!r.status ||` branch was dead: `status` is a REQUIRED field
+       * defaulting to `"pending"` (features/reviews/schemas/firestore.ts), so no
+       * stored review lacks it, and treating a missing status as approved would
+       * have counted unmoderated reviews anyway.
+       */
+      reviewRepository.getApprovedSiteRatingSummary()
+        .then(({ count, average }) => {
           if (neededPresets.has("total_reviews")) {
-            resolvedPresets.total_reviews = String(approved.length);
+            resolvedPresets.total_reviews = String(count);
           }
-          if (neededPresets.has("platform_rating") && approved.length > 0) {
-            const avg = approved.reduce((sum, r) => sum + (r.rating ?? 0), 0) / approved.length;
-            resolvedPresets.platform_rating = avg.toFixed(1) + "★";
+          if (neededPresets.has("platform_rating") && average !== null) {
+            resolvedPresets.platform_rating = average.toFixed(1) + "★";
           }
         })
         .catch((err: unknown) => { void normalizeError(err); serverLogger.warn("live-stats: reviews/rating query failed — stat omitted", { error: err instanceof Error ? err.message : String(err) }); }),

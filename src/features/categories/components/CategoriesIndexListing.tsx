@@ -110,12 +110,21 @@ const SORT_OPTIONS = [
 ];
 
 export interface CategoriesIndexListingProps {
-  initialData?: CategoryItem[];
+  /*
+   * 🛑 `initialData` was REMOVED 2026-10-09, not deprecated.
+   *
+   * It was destructured as `initialData: _` and discarded — this component has
+   * always fetched through `useCategoriesFiltered` regardless — while
+   * `CategoriesIndexPageView` paid a 200-document Firestore read on every render
+   * to produce it. Removing the prop rather than ignoring it is deliberate: a
+   * prop that exists invites someone to pass it again, and the compiler is the
+   * only thing that reliably prevents that.
+   */
   /** When true, filters to brands only (for the standalone /brands page) */
   brandsOnly?: boolean;
 }
 
-export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: CategoriesIndexListingProps) {
+export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);

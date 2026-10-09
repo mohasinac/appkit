@@ -1729,6 +1729,15 @@ export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions }
 export { checkActionAllowed } from "./features/admin/utils/checkActionAllowed";
 export { getDisabledRoutes } from "./features/admin/utils/getDisabledRoutes";
 export { getSiteSettingsGlobal } from "./features/admin/utils/getSiteSettingsGlobal";
+// Same React.cache dedup, for the FAQ list the homepage reads twice per render
+// (once for the section, once for its JSON-LD).
+export { getHomepageFaqsCached } from "./features/faq/utils/getHomepageFaqsCached";
+// Which PAGE paths a write makes stale — the input to revalidatePath(). Long
+// detail-route TTLs are only safe because this exists.
+export {
+  revalidateTargetsFor,
+  type RevalidateHints,
+} from "./_internal/shared/cache/revalidate-targets";
 // Null-safe wrapper — returns null on Firestore failure instead of throwing.
 export { getSiteSettingsSafe } from "./_internal/server/features/site-settings/safe-settings";
 

@@ -73,9 +73,11 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
  */
 const SEED_EPOCH = new Date("2026-01-01T00:00:00.000Z");
 
-// Deterministic per-product thumbnail — picsum.photos returns a stable image
-// for any seed string, so this doesn't need to match the real product seed's
-// own image, just be present and consistent across reseeds. Backfills the
+// Deterministic per-product thumbnail — `seedPhoto` maps a seed string to one
+// of six LOCAL tiles, so this doesn't need to match the real product seed's
+// own image, just be present and consistent across reseeds. (It used to name
+// picsum.photos here; seeded imagery stopped being a third-party fetch on
+// 2026-10-09 — see seedPhoto's header.) Backfills the
 // `image`/`imageUrls` fields real checkout orders only started carrying
 // 2026-08-20 (see OrderDocumentItem.image), so seeded order fixtures show a
 // thumbnail on My Orders / order-detail like real orders do.

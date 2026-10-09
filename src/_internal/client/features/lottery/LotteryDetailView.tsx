@@ -13,6 +13,7 @@ import {
   Anchor,
 } from "../../../../ui";
 import { MediaImage } from "../../../../features/media/MediaImage";
+import { useOptionalSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
@@ -47,6 +48,26 @@ interface LotteryDetailViewProps {
  * Shows cover + description + slot grid + pull form (if active + logged in).
  */
 export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailViewProps) {
+  /*
+   * 🛑 Viewer identity is read on the CLIENT, not taken from the `user` prop.
+   *
+   * The page used to `await getServerSessionUser()` to supply that prop, which
+   * cost twice over: `cookies()` forced dynamic rendering, so the route's
+   * `revalidate = 30` was silently inert (Root Cause #94) and every visit paid a
+   * full render; and the HTML then varied per viewer, so it could never be
+   * cached or shared even once the TTL was fixed.
+   *
+   * `useOptionalSession` — not `useSession` — because library code that adjusts
+   * for the viewer must not require a provider to be mounted (Root Cause #20);
+   * absent, it fails CLOSED to the signed-out branch.
+   *
+   * The `user` prop is kept as an optional SEED so a caller that genuinely has
+   * the viewer (an authenticated dashboard mount) still renders correctly on
+   * first paint.
+   */
+  const session = useOptionalSession();
+  const isAuthResolving = session?.loading ?? false;
+  const viewer = session?.user ?? user ?? null;
   const [pulledEntry, setPulledEntry] = useState<{
     userLotteryNumber: number;
     assignedPrizeSlotNumber: number;
@@ -130,7 +151,16 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
           {/* Pull Form or Result */}
           {isActive && config && (
             <Div padding="md" rounded="2xl" surface="card" className="border border-[var(--appkit-color-border)]">
-              {!user ? (
+              {/* Three states, not two. `loading` starts true on every hard
+                  load because SessionProvider mounts with initialUser={null}
+                  (the root layout must stay static) — so a two-state gate would
+                  flash "Log In to Enter" at an already-signed-in buyer on every
+                  page load. Same contract as GatedPrice. */}
+              {isAuthResolving ? (
+                <Stack gap="md" className="text-center">
+                  <Text color="muted">Checking your session…</Text>
+                </Stack>
+              ) : !viewer ? (
                 <Stack gap="md" className="text-center">
                   <Heading level={2} size="xl" weight="semibold">
                     Want to Participate?

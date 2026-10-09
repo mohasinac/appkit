@@ -114,6 +114,29 @@ function toListResult(
  * page — and an auction rendered as a generic product card shows Buy-Now chrome
  * instead of bid affordances.
  */
+/**
+ * How many documents a fixed-size homepage strip may read.
+ *
+ * 🛑 These strips land on `listPublicProducts`' in-memory window path — every
+ * anonymous viewer sets `hidesTestData`, which forces it — and that path pins
+ * the fetch to 50 documents regardless of the requested `pageSize`. So
+ * `getFeaturedProducts(12)` read 51 to render 12, and the homepage does this
+ * four times: ~200 reads for 44 cards, against a 50K-reads/day free tier that
+ * the project was exceeding 6× (2.1M/week, measured 2026-10-09).
+ *
+ * Headroom is genuinely required, not optional: availability and test-data are
+ * per-row predicates applied AFTER the fetch, so a window equal to `pageSize`
+ * would under-fill the strip the moment one row is unavailable. 2× with a floor
+ * of +8 absorbs that while still cutting the read roughly in half.
+ *
+ * Deliberately NOT derived inside `listPublicProducts` from `pageSize` — a
+ * browse page must keep the full 50 so it can page deeply, and silently
+ * shrinking its window would drop rows from page 2 onward.
+ */
+function featuredWindow(pageSize: number): number {
+  return Math.max(pageSize * 2, pageSize + 8);
+}
+
 export async function getFeaturedProducts(
   pageSize = 8,
 ): Promise<ProductListResult> {
@@ -125,6 +148,7 @@ export async function getFeaturedProducts(
       sorts: sortBy("createdAt", "DESC"),
       page: 1,
       pageSize,
+      windowSize: featuredWindow(pageSize),
     }),
     pageSize,
   );
@@ -153,6 +177,7 @@ export async function getFeaturedAuctions(
       sorts: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"),
       page: 1,
       pageSize,
+      windowSize: featuredWindow(pageSize),
     }),
     pageSize,
   );
@@ -203,6 +228,7 @@ export async function getFeaturedPreOrders(
       sorts: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"),
       page: 1,
       pageSize,
+      windowSize: featuredWindow(pageSize),
     }),
     pageSize,
   );

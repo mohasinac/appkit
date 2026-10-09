@@ -575,9 +575,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "seed-images-are-labelled-tiles",
-          label: "Every seeded product image is a readable tile showing the item's own name — NOT a broken-image icon and NOT an empty grey box",
+          label: "Every seeded product image is a coloured local tile — NOT a broken-image icon, and NOT all the same colour",
           description:
-            "Fixed 2026-08-31. BEFORE: 409 of the ~437 seeded image URLs pointed at picsum.photos, which went down (503 from its origin AND its CDN), so nearly every image on the site returned 502 and rendered as the browser's broken-image icon. AFTER: images come from `seedPhoto()`, which names its host in ONE place and renders the item's name on the tile. Open a product grid and confirm the tiles show text like \"Dranzer Phoenix\" rather than broken icons. A grid of identical blank tiles is also a fail — each should differ.",
+            "Updated 2026-10-09. BEFORE: seeded images were fetched from a third party through /api/media/ext — one Node lambda plus a sharp re-encode PER IMAGE, 160 of them on the homepage alone. That is what exceeded the Vercel Hobby caps and suspended the site (HTTP 402). AFTER: `seedPhoto()` returns a static local file under `/images/seed-tiles/<hex>.svg`, so a seeded image costs no function and no upstream request. Open a product grid and confirm each card shows a coloured tile with a faint ring motif. Two checks that matter: view-source on a card image and confirm the src starts with `/images/seed-tiles/` and NOT `/api/media/ext`; and confirm the tiles are not all one colour (the colour is hashed per item, so a grid should show several). NOTE: tiles deliberately no longer render the item's NAME — that text cost a function invocation per card to draw, and the card already displays the title beside the image.", // audit-hardcoded-api-routes-ok: prose, not a call site — the tester must be told the exact string to look for in an image src, and "the external-media proxy route" is not checkable
           href: "/products",
         },
         {

@@ -45,6 +45,123 @@ export const APPROVED_MEDIA_DOMAINS: readonly string[] = [
 export const MEDIA_URL_MESSAGE =
   "Must be a stored media reference (/media/<slug>) or a URL on an approved CDN domain";
 
+/* ── Placeholder imagery ─────────────────────────────────────────────────── */
+
+/**
+ * Local, static stand-ins for seed photography. Served straight out of
+ * `public/` — no function, no upstream fetch, no sharp pipeline.
+ *
+ * 🛑 This is the single most load-bearing cost control in the app. Every seed
+ * image used to resolve to `/api/media/ext?url=https://placehold.co/…`, i.e. a
+ * Node lambda that fetched a third party (up to 2 × 4 s) and ran a full sharp
+ * decode/watermark/encode — ONE INVOCATION PER IMAGE. Measured 2026-10-09: the
+ * homepage referenced **160** such images at ~49.5 KB each, and
+ * `52.52 GB of Fast Origin Transfer ÷ 49.5 KB ≈ 1.06 M` proxy responses in a
+ * week. That is what suspended the project (HTTP 402).
+ *
+ * Six tiles, because the stored URL already encodes which of the six
+ * `SEED_PHOTO_COLOURS` it was generated with — so the mapping needs no new
+ * data and no migration. The homepage goes 160 images → 6.
+ */
+export const SEED_TILE_PREFIX = "/images/seed-tiles/";
+
+/**
+ * Must stay in lockstep with `SEED_PHOTO_COLOURS` in
+ * `appkit/src/seed/_helpers/media.ts`, and with the filenames in
+ * `public/images/seed-tiles/`. A colour missing here is not an error — it falls
+ * back to a deterministic pick — so the failure mode is "less variety", never a
+ * broken image.
+ */
+const SEED_TILE_COLOURS: readonly string[] = [
+  "1e293b",
+  "334155",
+  "3f3f46",
+  "44403c",
+  "312e81",
+  "164e63",
+];
+
+/**
+ * Hosts that only ever serve synthetic placeholder imagery.
+ *
+ * These are the four the seed helper documents having cycled through as each
+ * one fell over (picsum 503 on 2026-08-31, placekitten 521, loremflickr too
+ * slow for the proxy's 4 s timeout). Watermarking a generated placeholder is
+ * pointless, and proxying one costs a function invocation plus full origin
+ * transfer for an image we can synthesise locally for free.
+ */
+const PLACEHOLDER_MEDIA_HOSTS: ReadonlySet<string> = new Set([
+  "placehold.co",
+  "placeholder.com",
+  "via.placeholder.com",
+  "picsum.photos",
+  "fastly.picsum.photos",
+  "placekitten.com",
+  "loremflickr.com",
+  "dummyimage.com",
+]);
+
+/** Deterministic 32-bit hash — same input, same tile, every render. */
+function tileHash(input: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < input.length; i += 1) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/**
+ * The inner `url=` of a stored `/api/media/ext?url=…` value, or null.
+ *
+ * This is what lets the fix reach data that is ALREADY in Firestore. `seedPhoto`
+ * persisted the wrapped form for ~400 assets, and `resolveMediaUrl` used to hand
+ * such a value straight back untouched — `new URL()` throws on the relative path
+ * and the `catch` returns the input — so the proxy was entered on every render.
+ * Unwrapping here fixes every stored row with no migration.
+ */
+function innerExtUrl(value: string): string | null {
+  if (!value.startsWith(MEDIA_ENDPOINTS.EXT)) return null;
+  const q = value.indexOf("?");
+  if (q === -1) return null;
+  try {
+    return new URLSearchParams(value.slice(q + 1)).get("url");
+  } catch (_err) {
+    void normalizeError(_err);
+    return null;
+  }
+}
+
+/**
+ * A local tile for `absUrl` when it points at a placeholder host, else undefined.
+ *
+ * placehold.co bakes its colours into the path (`/{w}x{h}/{bg}/{fg}/png`), so the
+ * first 6-hex segment IS the background the fixture was generated with — the
+ * size segment contains an `x` and cannot match, and the foreground comes after
+ * the background, so `.find()` picks the right one.
+ */
+export function placeholderTileFor(absUrl: string): string | undefined {
+  let parsed: URL;
+  try {
+    parsed = new URL(absUrl);
+  } catch (_err) {
+    void normalizeError(_err);
+    return undefined;
+  }
+  const host = parsed.hostname.replace(/^www\./, "");
+  if (!PLACEHOLDER_MEDIA_HOSTS.has(host)) return undefined;
+  const bg = parsed.pathname
+    .split("/")
+    .find((seg) => /^[0-9a-fA-F]{6}$/.test(seg))
+    ?.toLowerCase();
+  if (bg && SEED_TILE_COLOURS.includes(bg)) return `${SEED_TILE_PREFIX}${bg}.svg`;
+  // Unknown or absent colour (picsum/placekitten carry none) — pick
+  // deterministically from the path so the same fixture always gets the same
+  // tile and the grid keeps its variety.
+  const fallback = SEED_TILE_COLOURS[tileHash(parsed.pathname) % SEED_TILE_COLOURS.length];
+  return `${SEED_TILE_PREFIX}${fallback}.svg`;
+}
+
 /**
  * Is `value` something we are willing to PERSIST as a media reference?
  *
@@ -103,6 +220,10 @@ export function isStoredMediaRef(value: string): boolean {
   }
   if (!value || value.length > MEDIA_URL_MAX_LENGTH) return false;
   if (value.startsWith(MEDIA_PROXY_PREFIX)) return true;
+  // A local seed tile (`/images/seed-tiles/<hex>.svg`). Persistable: it is a
+  // static asset we ship, so unlike the `/api/media/ext?url=` form rejected
+  // below it is not a render-time transform and does not double-wrap.
+  if (value.startsWith(SEED_TILE_PREFIX)) return true;
   if (value.startsWith("blob:") || value.startsWith("data:")) return false;
   if (value.startsWith(MEDIA_ENDPOINTS.EXT)) return false;
   try {
@@ -171,14 +292,34 @@ export function resolveMediaUrl(
     return undefined;
   }
   if (url.startsWith(PROXY_PREFIX)) return url;
+  if (url.startsWith(SEED_TILE_PREFIX)) return url;
   // A blob:/data: URI is only ever valid in the tab that created it (e.g. a
   // freshly-selected file preview via URL.createObjectURL, or a FileReader
   // data URL fed to a crop modal). Routing it through the external-URL
   // watermark proxy would try to fetch it server-side and 400 — it must be
   // rendered directly instead.
   if (url.startsWith("blob:") || url.startsWith("data:")) return url;
+  /*
+   * An ALREADY-WRAPPED `/api/media/ext?url=…` value, which is what the seed
+   * catalogue persisted ~400 times. Unwrap and look at what it actually points
+   * at: a placeholder host becomes a local tile (no function, no fetch), and
+   * anything else falls through to the old behaviour of returning the wrapped
+   * value untouched. Without this the branch below is unreachable for stored
+   * data, because `new URL()` throws on the relative path.
+   */
+  const inner = innerExtUrl(url);
+  if (inner) {
+    const innerTile = placeholderTileFor(inner);
+    if (innerTile) return innerTile;
+    return url;
+  }
   try {
     const parsed = new URL(url);
+    // Synthetic placeholder imagery: never worth a function invocation. The
+    // placeholder hosts and our own Storage hosts are disjoint sets, so this
+    // can sit before the own-bucket branches without shadowing a real asset.
+    const tile = placeholderTileFor(url);
+    if (tile) return tile;
     if (parsed.hostname.endsWith(FIREBASE_STORAGE_HOST)) {
       const m = parsed.pathname.match(/\/o\/([^?]+)/);
       if (m) return `${PROXY_PREFIX}${decodeURIComponent(m[1])}`;

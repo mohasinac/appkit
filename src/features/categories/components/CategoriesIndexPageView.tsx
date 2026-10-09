@@ -39,45 +39,36 @@ function buildCategoryFilters(params: SearchParams): string {
 }
 
 export interface CategoriesIndexPageViewProps {
+  /**
+   * @deprecated Accepted and ignored. Kept so the consumer page shim compiles
+   * either way; remove once no caller passes it.
+   */
   searchParams?: SearchParams;
 }
 
-export async function CategoriesIndexPageView({ searchParams = {} }: CategoriesIndexPageViewProps) {
-  /*
-   * 🛑 MUST MATCH CategoriesIndexListing's DEFAULT_SORT.
-   *
-   * This defaulted to "name" while the client listing defaulted to the same,
-   * and both were wrong: the roots fell off page 1. Now both default to tier
-   * ascending — and they have to agree, because this view hands its result to
-   * the listing as initialData and every public listing hook sets
-   * `staleTime: Infinity` when given it. A disagreement here is not a
-   * transient wrong first paint; it is frozen for that query key
-   * (Root Cause #30).
-   */
-  const sort = sp(searchParams, "sort") || sortBy(CATEGORY_FIELDS.TIER, "ASC");
-  const page = Number(sp(searchParams, "page")) || 1;
-  const filters = buildCategoryFilters(searchParams);
-
-  const result = await safeRead(
-    () =>
-      categoriesRepository.list({
-        page,
-        pageSize: 200,
-        sorts: sort,
-        ...(filters ? { filters } : {}),
-      }),
-    { route: "/categories", key: "categories.list", fallback: null },
-  );
-
-  /*
-   * This one page carries THREE entity kinds — categories, brands and bundles
-   * are all `CategoryDocument` rows discriminated by `categoryType` — so a
-   * single unfiltered read published sandbox fixtures of all three.
-   */
-  const initialData = hidePublicTestData(
-    (result?.items ?? []) as unknown as (CategoryItem & { isTestData?: boolean })[],
-  ) as unknown as CategoryItem[];
-
+/**
+ * The categories index.
+ *
+ * 🛑 This view deliberately performs NO Firestore read.
+ *
+ * It used to fetch `pageSize: 200` and hand the result to
+ * `CategoriesIndexListing` as `initialData` — which destructured it as
+ * `initialData: _` and threw it away, then fetched `/api/categories?flat=true`
+ * regardless. So the read was 200 documents per render, on a route that
+ * regenerated every 300s, rendering nothing. Measured 2026-10-09 while tracing
+ * 2.1M Firestore reads/week against a 50K/day free tier.
+ *
+ * Deleting it also removes this page from Root Cause #30's blast radius
+ * entirely: you cannot freeze the wrong data under a `staleTime: Infinity` key
+ * you never seeded. The long "MUST MATCH CategoriesIndexListing's DEFAULT_SORT"
+ * warning that used to live here is now moot for the same reason — there is no
+ * second parser to keep in sync.
+ *
+ * Unlike the other listing pages, making this one static costs no SEO: its grid
+ * was already client-rendered, so there was never a server-rendered grid to
+ * lose (contrast `/products`, where the grid IS in the SSR HTML and must stay).
+ */
+export async function CategoriesIndexPageView(_props: CategoriesIndexPageViewProps = {}) {
   return (
     <Main>
       <Section padding="y-2xl">
@@ -86,7 +77,7 @@ export async function CategoriesIndexPageView({ searchParams = {} }: CategoriesI
             Categories
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <CategoriesIndexListing initialData={initialData} />
+          <CategoriesIndexListing />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

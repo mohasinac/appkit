@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { serverLogger } from "../../../monitoring";
 import { categoriesRepository } from "../repository/categories.repository";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
@@ -74,24 +75,35 @@ export async function listCategories(params?: {
   return categoriesRepository.list(sieve);
 }
 
-export async function listTopLevelCategories(
+/*
+ * Both of these fetched the ENTIRE matching set and `.slice()`d it to 12, on
+ * every homepage render. The bound is now pushed into Firestore (with headroom
+ * for the post-fetch filters), and both are `cache()`-wrapped so a second reader
+ * in the same request tree — the nav, a footer, a sibling section — costs
+ * nothing. Measured 2026-10-09 against a 50K-reads/day free tier.
+ *
+ * The in-memory `isActive !== false` filter is gone: both queries already
+ * require `isActive == true`, and a Firestore equality excludes documents
+ * lacking the field, so it could never match anything the query had not already
+ * admitted. `hidePublicTestData` stays — that one is a real post-filter, which
+ * is why the repository fetches with headroom rather than exactly `limit`.
+ */
+export const listTopLevelCategories = cache(async (
   limit = 12,
-): Promise<CategoryDocument[]> {
-  const all = await categoriesRepository.getCategoriesByTier(0);
+): Promise<CategoryDocument[]> => {
+  const all = await categoriesRepository.getCategoriesByTier(0, limit);
   return hidePublicTestData(all)
-    .filter((c) => c.isActive !== false)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .slice(0, limit);
-}
+});
 
-export async function listBrandCategories(
+export const listBrandCategories = cache(async (
   limit = 12,
-): Promise<CategoryDocument[]> {
-  const brands = await categoriesRepository.getBrandCategories();
-  return hidePublicTestData(brands)
-    .filter((c) => c.isActive !== false)
-    .slice(0, limit);
-}
+): Promise<CategoryDocument[]> => {
+  // Over-fetch a small margin so `hidePublicTestData` cannot under-fill the row.
+  const brands = await categoriesRepository.getBrandCategories(limit + 8);
+  return hidePublicTestData(brands).slice(0, limit);
+});
 
 export async function getCategoryById(
   id: string,

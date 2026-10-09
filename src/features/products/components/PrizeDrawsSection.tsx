@@ -45,6 +45,11 @@ export async function PrizeDrawsSection({
     sorts: sortBy(PRODUCT_FIELDS.CREATED_AT, "DESC"),
     page: 1,
     pageSize: config.maxItems ?? 8,
+    // Fixed-size strip that never pages — cap the bounded window instead of
+    // inheriting the 50-document default. Headroom over `pageSize` because
+    // availability and test-data are per-row predicates applied after the fetch.
+    // See `featuredWindow` in features/products/actions/product-actions.ts.
+    windowSize: Math.max((config.maxItems ?? 8) * 2, (config.maxItems ?? 8) + 8),
   });
 
   const draws = (result?.items ?? []) as unknown as ProductDocument[];

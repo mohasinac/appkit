@@ -209,14 +209,25 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     }
   }
 
-  async getCategoriesByTier(tier: number): Promise<CategoryDocument[]> {
+  /**
+   * @param limit 0 = unbounded (the historical behaviour). When > 0 the bound is
+   *   pushed into Firestore instead of slicing after the read.
+   *
+   * 🛑 The limit is applied with HEADROOM, not exactly, because `!isBrand` is a
+   * post-fetch filter: brand rows live in this same collection (they are
+   * `CategoryDocument`s discriminated by `isBrand`), so a bare `.limit(n)` could
+   * return n brand rows, filter all of them out, and yield an empty tier. The
+   * caller still slices to its own limit.
+   */
+  async getCategoriesByTier(tier: number, limit = 0): Promise<CategoryDocument[]> {
     try {
-      const snapshot = await this.db
+      let query = this.db
         .collection(this.collection)
         .where(CATEGORY_FIELDS.TIER, "==", tier)
         .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
-        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
-        .get();
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc");
+      if (limit > 0) query = query.limit(limit * 4);
+      const snapshot = await query.get();
 
       return snapshot.docs
         .map((doc) => this.mapDoc<CategoryDocument>(doc))
@@ -345,12 +356,17 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
   async getBrandCategories(limit = 0): Promise<CategoryDocument[]> {
     try {
-      const snapshot = await this.db
+      // The limit is pushed into Firestore rather than sliced after the read.
+      // It used to fetch EVERY brand and `.slice()` — so `limit` reduced what
+      // the caller saw but not what was billed. Exact here (no post-filter to
+      // under-fill), unlike `getCategoriesByTier` above.
+      let query = this.db
         .collection(this.collection)
         .where("isBrand", "==", true)
         .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
-        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
-        .get();
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc");
+      if (limit > 0) query = query.limit(limit);
+      const snapshot = await query.get();
 
       const brands = snapshot.docs.map((doc) =>
         this.mapDoc<CategoryDocument>(doc),

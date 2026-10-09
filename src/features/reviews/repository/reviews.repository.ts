@@ -200,6 +200,47 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return this.findBy(REVIEW_FIELDS.STATUS, status);
   }
 
+  /**
+   * How many approved reviews there are site-wide, and their mean rating.
+   *
+   * 🛑 Replaces `reviewRepository.findAll()` on the homepage render path, which
+   * was an **unbounded full-collection scan** whose entire output was a count
+   * and an average: two numbers, billed one read per document, on every cold
+   * render. It was the single largest Firestore read on the site and it existed
+   * to print `"35+"` and `"4.6★"`.
+   *
+   * A Firestore aggregation is billed at **one read per 1000 index entries
+   * matched**, so this is ~1 read at any catalogue size this project will see,
+   * and it is EXACT rather than a daily-stale rollup — which is why no scheduled
+   * job was added for it (the three sibling presets in `live-stats.ts` already
+   * use `count()` for the same reason).
+   *
+   * Returns `average: null` when there are no approved reviews, so the caller
+   * renders nothing rather than `0.0★` — an empty catalogue is not a bad rating.
+   */
+  async getApprovedSiteRatingSummary(): Promise<{ count: number; average: number | null }> {
+    const base = this.getCollection().where(REVIEW_FIELDS.STATUS, "==", "approved");
+
+    const buckets: number[] = [];
+    for (let r = REVIEW_MIN_RATING; r <= REVIEW_MAX_RATING; r++) buckets.push(r);
+
+    const counts = await Promise.all(
+      buckets.map((rating) => getFirestoreCount(base.where(REVIEW_FIELDS.RATING, "==", rating))),
+    );
+
+    let count = 0;
+    let weighted = 0;
+    buckets.forEach((rating, i) => {
+      const n = counts[i] ?? 0;
+      count += n;
+      weighted += n * rating;
+    });
+
+    // null, not 0 — an empty catalogue has no rating, and rendering "0.0★" would
+    // state the opposite of the truth.
+    return { count, average: count > 0 ? weighted / count : null };
+  }
+
   async findFeatured(limit = 18): Promise<ReviewDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)

@@ -6,6 +6,7 @@ import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTION_ID, ACTION_META } from "../../products/constants/action-defs";
 import { useCountdown, type CountdownRemaining } from "../../../react";
+import { useIsAuctionEnded } from "../hooks/useIsAuctionEnded";
 import { Modal } from "../../../ui";
 import { isBuyNowAvailable } from "../../../_internal/shared/features/auctions/config";
 import {
@@ -46,8 +47,16 @@ function formatCountdownLabel(
  * button can report an error or route to `/checkout?lane=auction`.
  */
 export function AuctionBottomActions(props: AuctionBottomActionsProps) {
-  const { currentBid, currency, bidCount, isEnded, auctionEndDate, buyNowPrice } =
+  const { currentBid, currency, bidCount, isEnded: ssrIsEnded, auctionEndDate, buyNowPrice } =
     props;
+  /*
+   * Derived client-side — see `useIsAuctionEnded`. This bar is a FIXED, always-
+   * visible row on mobile, so a stale "Place bid" here is the most prominent
+   * wrong affordance on the page. `useCountdown` below already knew the truth
+   * (it returns null past the target) but only fed a label; the bar's actions
+   * were gated on the frozen server boolean.
+   */
+  const isEnded = useIsAuctionEnded(auctionEndDate, ssrIsEnded);
   const [open, setOpen] = useState(false);
   const remaining = useCountdown(auctionEndDate ?? undefined);
   const { canSeePrices } = useCanSeePrices();

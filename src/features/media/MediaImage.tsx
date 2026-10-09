@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Div, Row, Span } from "../../ui";
 import { ROUNDED_MAP, SHADOW_MAP, type RoundedKey, type ShadowKey } from "../../ui/components/surface-tokens";
-import { resolveMediaUrl } from "../../utils/media-url";
+import { MEDIA_PROXY_PREFIX, resolveMediaUrl } from "../../utils/media-url";
 
 // --- Size presets -------------------------------------------------------------
 
@@ -44,6 +44,24 @@ const FALLBACK_ICONS: Record<MediaImageSize, string> = {
 // icon, instead of failing permanently on the very first request.
 const MAX_LOAD_RETRIES = 3;
 const RETRY_BACKOFF_MS = [600, 1200, 2400];
+
+/**
+ * Only `/media/<slug>` may be retried.
+ *
+ * 🛑 The retry appends `?retry=N`, which mints a BRAND-NEW CDN cache key that is
+ * guaranteed cold — so a failing image costs up to 4 cold function invocations
+ * instead of 1, on precisely the images that are already flaky. That is a real
+ * cost multiplier and it suspended this project once (HTTP 402, 2026-10-09).
+ *
+ * It is worth paying for our own Storage objects, because the post-upload race
+ * above is genuine and transient — retrying actually succeeds. It is NOT worth
+ * paying for `/api/media/ext`: there is no upload, the upstream is a third party
+ * we do not control, and an upstream that just failed will almost certainly fail
+ * again. Those fall straight through to the fallback icon on the first error.
+ */
+function isRetryableSrc(resolvedSrc: string): boolean {
+  return resolvedSrc.startsWith(MEDIA_PROXY_PREFIX);
+}
 
 // --- MediaImageProps ----------------------------------------------------------
 
@@ -186,7 +204,7 @@ export function MediaImage({
   ].filter(Boolean).join(" ");
 
   const handleError = () => {
-    if (retryCount < MAX_LOAD_RETRIES) {
+    if (resolvedSrc && isRetryableSrc(resolvedSrc) && retryCount < MAX_LOAD_RETRIES) {
       retryTimeoutRef.current = setTimeout(() => {
         setRetryCount((count) => count + 1);
       }, RETRY_BACKOFF_MS[retryCount]);

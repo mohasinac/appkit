@@ -50,17 +50,50 @@ export function seedExtMedia(url: string): string {
  * can mistake seeded data for real inventory.
  */
 
-/** The one place a seed image host is named. Changing it is a one-line edit. */
-const SEED_PHOTO_HOST = "https://placehold.co";
+/*
+ * 🛑 SUPERSEDED 2026-10-09 — seed photography is now LOCAL and costs nothing.
+ *
+ * The reasoning above is still correct about third-party fragility, and the
+ * one-line-to-move property is still the goal. What it missed is the cost: every
+ * one of these URLs was persisted as `/api/media/ext?url=…`, so every render of
+ * every card was a Node lambda doing a third-party fetch (up to 2 × 4 s) plus a
+ * full sharp decode/watermark/encode — ONE INVOCATION PER IMAGE. The homepage
+ * alone referenced 160 of them at ~49.5 KB; `52.52 GB of origin transfer ÷
+ * 49.5 KB ≈ 1.06 M` proxy responses in a week, which suspended the project
+ * (HTTP 402).
+ *
+ * A placeholder is synthetic by definition, so there was never anything to
+ * fetch. Six static tiles ship in `public/images/seed-tiles/`, chosen by the
+ * same deterministic hash, and the homepage goes 160 images → 6.
+ *
+ * The trade accepted: the tile no longer renders the item's NAME. That text was
+ * a genuine gain and it is lost here — but it cost a function invocation per
+ * card to render text the card already displays beside the image, and `alt` still
+ * carries it for assistive tech. `seedPhotoLabel` is kept and still exported for
+ * exactly that use.
+ *
+ * 🛑 Do NOT reintroduce a third-party host here, and do NOT encode width/height
+ * into the path — a per-size URL is a per-size CDN cache key, which is how 6
+ * files become 400 again. `audit-media-proxy-hosts` blocks the first; this
+ * comment is the only thing guarding the second.
+ */
+const SEED_TILE_PREFIX = "/images/seed-tiles/";
 
 /**
  * Muted backgrounds, all dark enough for the same light foreground.
  *
- * Raw hex rather than theme tokens because these are baked into a URL that a
- * third party renders — no stylesheet and no CSS custom property is in scope.
+ * Raw hex rather than theme tokens because an SVG served as the body of an
+ * `<img>` has no stylesheet and no `var(--appkit-color-*)` in scope — the same
+ * reason `_placeholder.ts` keeps its artwork in an asset file.
+ *
+ * 🛑 These six values ARE the filenames in `public/images/seed-tiles/`, and they
+ * are mirrored a third time in `PLACEHOLDER_MEDIA_HOSTS`' sibling
+ * `SEED_TILE_COLOURS` (`appkit/src/utils/media-url.ts`), which maps a legacy
+ * stored `placehold.co` URL back to the same tile. Add a colour and all three
+ * must move together; a missing one degrades to a deterministic fallback tile
+ * rather than a broken image, so the failure mode is "less variety", never a 404.
  */
 const SEED_PHOTO_COLOURS = ["1e293b", "334155", "3f3f46", "44403c", "312e81", "164e63"] as const;
-const SEED_PHOTO_FG = "f8fafc";
 
 /** Deterministic 32-bit hash. Same seed, same colour, every reseed. */
 function seedHash(input: string): number {
@@ -101,10 +134,11 @@ export function seedPhotoLabel(seed: string): string {
  * `appkit-seed` invocation, so anything non-stable here would give the same
  * fixture a different URL on every run.
  */
-export function seedPhoto(seed: string, width: number, height: number): string {
+export function seedPhoto(seed: string, _width?: number, _height?: number): string {
   const bg = SEED_PHOTO_COLOURS[seedHash(seed) % SEED_PHOTO_COLOURS.length];
-  const text = encodeURIComponent(seedPhotoLabel(seed));
-  return seedExtMedia(
-    `${SEED_PHOTO_HOST}/${width}x${height}/${bg}/${SEED_PHOTO_FG}/png?text=${text}`,
-  );
+  // Width/height are accepted and ignored. All 366 call sites pass them, and the
+  // tiles carry `preserveAspectRatio="xMidYMid slice"` so one file fits every
+  // aspect — baking the dimensions into the path would mint a separate cache
+  // entry per size, which is the thing this change removes.
+  return `${SEED_TILE_PREFIX}${bg}.svg`;
 }
