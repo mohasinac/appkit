@@ -409,6 +409,19 @@ export { CONFIRMATION_MESSAGES } from "./values/index";
 // INFO_MESSAGES - Constant used across modules.
 export { INFO_MESSAGES } from "./values/index";
 // [CONFIG]-Application configuration constant â€" route path, API endpoint, design token, or feature flag.
+/*
+ * The warehouse-location helpers (C4). `formatPhysicalLocation` was already
+ * here in spirit — three appkit views deep-import it — but nothing was
+ * exported, so the consumer's two bulk-location routes each hand-rolled their
+ * own validation. That is why there were two validators and the one in force
+ * was neither.
+ */
+export {
+  formatPhysicalLocation,
+  normalisePhysicalLocation,
+  physicalLocationTokens,
+} from "./utils/physical-location";
+export type { PhysicalLocationParts } from "./utils/physical-location";
 export { deepClone } from "./utils/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // deepMerge - Shared export for deep merge.

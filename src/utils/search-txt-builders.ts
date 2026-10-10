@@ -29,6 +29,7 @@
  */
 
 import { buildSearchTxt } from "./search-txt";
+import { physicalLocationTokens } from "./physical-location";
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import type { CategoryDocument } from "../features/categories/schemas/firestore";
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
@@ -58,6 +59,29 @@ export function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
     p.card?.cardNumber,
     p.grading?.service,
     p.specifications?.map((s) => `${s.name} ${s.value}`),
+    /*
+     * The warehouse location — C4, and this one line is what makes the hard
+     * direction work.
+     *
+     * "Where is item X" was already answerable from the Location column.
+     * "What is in bin A-3" had **no mechanism at all**: `physicalLocation` was
+     * absent from the products Sieve config, from `PRODUCT_INDEXED_FIELDS`,
+     * from the seller search field list and from this builder — so a seller
+     * could set a location and then never query it.
+     *
+     * 🛑 Indexed as TOKENS rather than queried as a field. A
+     * `physicalLocation.bin == "3"` clause needs its own composite index per
+     * sort field, and the `FAILED_PRECONDITION` would be swallowed into an
+     * empty page (Root Cause #59). `searchTxt` is already
+     * `array-contains`-indexed, so this is more tokens in an existing index
+     * and **no new index** — and it gives both directions through the one
+     * search box the seller already uses.
+     *
+     * See `physicalLocationTokens` for how the match really happens: the
+     * query tokeniser applies the same normaliser as the index, so the PARTS
+     * AND-refine and the separators are irrelevant on both sides.
+     */
+    physicalLocationTokens(p.physicalLocation),
   ]);
 }
 
@@ -155,6 +179,15 @@ export function buildOrderSearchTxt(o: Partial<OrderDocument>): string[] {
     o.storeName,
     o.trackingNumber,
     (o.items ?? []).map((i) => i.productTitle),
+    /*
+     * The pick/pack location — C4, same mechanism as the product side.
+     *
+     * `OrderDocument` carries `physicalLocation` too (it is where the parcel
+     * is staged), and the seller bulk-sets it from the orders list. Without
+     * this a seller could file an order to a bin and then not search for it,
+     * which is the same half-built state the product side was in.
+     */
+    physicalLocationTokens(o.physicalLocation),
   ]);
 }
 

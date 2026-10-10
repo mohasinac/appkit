@@ -1104,6 +1104,29 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     isSold: { canFilter: true, canSort: true },
     isPartOfBundle: { canFilter: true, canSort: false },
     isTestData: { canFilter: true, canSort: false },
+    /*
+     * The warehouse location — C4.
+     *
+     * 🛑 `physicalLocation` was absent from this config entirely, so a filter
+     * on it was DROPPED SILENTLY: `sieve.ts` sets `throwExceptions: false`, so
+     * `findField()` returning undefined removes the clause rather than
+     * raising. A seller could set a location and then filter by it to no
+     * effect, with nothing anywhere saying so — Root Cause #62's
+     * EMITTED_BUT_UNFILTERABLE shape.
+     *
+     * Nested paths, because that is what Firestore filters on
+     * (`physicalLocation.zone`), and `canSort: false` on all three: sorting by
+     * bin would pair an orderBy with whatever else is filtered and demand a
+     * composite index per combination, which is the trap next door
+     * (Root Cause #59). Browsing a bin is a FILTER, not a sort.
+     *
+     * The primary way to find a location is still `searchTxt` — see
+     * `physicalLocationTokens`. These exist so a dashboard can ask the precise
+     * question ("zone A exactly") where search answers the loose one.
+     */
+    "physicalLocation.zone": { canFilter: true, canSort: false },
+    "physicalLocation.shelf": { canFilter: true, canSort: false },
+    "physicalLocation.bin": { canFilter: true, canSort: false },
     brandSlug: { canFilter: true, canSort: false },
     sublistingCategoryId: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },

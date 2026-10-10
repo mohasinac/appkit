@@ -427,14 +427,25 @@ export function SellerProductsView({
     portal: "seller",
     title: "Products",
     search: {
-      placeholder: "Search by name, description, brand or tag…",
+      placeholder: "Search by name, brand, tag — or a bin like A-3…",
       /*
        * The box understated itself: `/api/store/products` routes `q` through
        * `buildProductSearchTxt`, which indexes far more than the title. A
        * seller searching a brand or a tag got results and had no reason to
        * expect them.
        */
-      fields: ["title", "description", "brand", "categoryNames", "tags", "features"],
+      /*
+       * 🛑 `physicalLocation` is listed because C4 indexes it, and this list
+       * is what the placeholder is derived from — an indexed field absent here
+       * is a capability the seller is never told about. That is how "what is
+       * in bin A-3" had no mechanism: the field was in no Sieve config, no
+       * indexed-fields list, no searchTxt builder and no search field list,
+       * so a seller could set a location and never query it.
+       *
+       * Both directions now run through this ONE box: search an item and read
+       * its bin from the Location column; search a bin and get its contents.
+       */
+      fields: ["title", "description", "brand", "categoryNames", "tags", "features", "physicalLocation"],
     },
     emptyLabel: listingKind !== "all" ? `No ${listingKind} listings found` : "No products listed yet",
     filterKeys: FILTER_KEYS,

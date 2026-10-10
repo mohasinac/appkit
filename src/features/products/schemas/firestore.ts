@@ -561,6 +561,23 @@ export const PRODUCT_INDEXED_FIELDS = [
   "searchTxt",
   "createdAt",
   "barcodeId",
+  /*
+   * The warehouse location — C4.
+   *
+   * 🛑 A single-field entry, deliberately, and the distinction matters.
+   * Firestore indexes single fields automatically, so this list is
+   * documentation of what the collection is QUERIED by rather than the
+   * mechanism — and the real answer for location is `searchTxt`, which is
+   * already here. Listing the nested paths records that they are now a
+   * supported query shape (the Sieve config accepts them), so the next person
+   * adding a composite sees them rather than discovering a dropped clause.
+   *
+   * `physicalLocation.zone` is the only part worth naming: a zone is the
+   * coarse bucket a dashboard groups by, while shelf and bin are what search
+   * resolves. Naming all three would imply three query shapes exist when one
+   * does.
+   */
+  "physicalLocation.zone",
 ] as const;
 
 export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
