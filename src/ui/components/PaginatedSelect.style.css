@@ -260,3 +260,43 @@
 :is(.dark) .appkit-ps__create-btn:hover {
   background-color: var(--appkit-color-slate-800);
 }
+
+/* ── edit the selected option (C2c) ──
+   Absolutely positioned inside `.appkit-ps` (which is `position: relative`)
+   rather than being a flex sibling of the trigger: the trigger is a
+   full-width button and the pencil has to sit ON it visually while remaining
+   OUTSIDE it in the DOM. A button nested inside a button is invalid HTML and
+   the browser's recovery hoists it out, after which which element receives
+   the click is an engine decision — so the pencil would open the dropdown on
+   some browsers and the editor on others.
+
+   `right` clears the ▾ caret. The hover fill uses the theme-inverting
+   surface-hover token, never a named palette tint: `hover:bg-zinc-50` and
+   friends are the SAME near-white in every theme, which is white-on-white
+   under dark ink (Root Cause #79). */
+.appkit-ps__edit-btn {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--appkit-radius-md, 0.375rem);
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--appkit-color-text-muted);
+  transition: background-color 0.1s, color 0.1s;
+}
+
+.appkit-ps__edit-btn:hover {
+  background-color: var(--appkit-color-surface-hover);
+  color: var(--appkit-color-primary);
+}
+
+.appkit-ps__edit-btn:focus-visible {
+  outline: 2px solid var(--appkit-color-focus-ring);
+  outline-offset: 1px;
+}
