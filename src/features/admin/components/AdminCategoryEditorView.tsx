@@ -4,13 +4,156 @@ import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Card, CardBody, ConfirmDeleteModal, Div, Input, PaginatedSelect, Stack, StackedViewShell, Text, Toggle, useToast, Show, StickyToolbar } from "../../../ui";
+import { Button, Card, CardBody, ConfirmDeleteModal, Div, Input, PaginatedSelect, Select, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast, Show, StickyToolbar } from "../../../ui";
+import { usedPlaceholders } from "../../../_internal/shared/templating/placeholders";
+import type { CategoryProductDefaults, CategoryPriceGuidance } from "../../categories/schemas/category-content";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+
+/*
+ * ── Content & Templates (C2c) ────────────────────────────────────────────────
+ *
+ * 🛑 `highlights` and `faqs` have had NO editor since they shipped, and B3
+ * added `contentBody`, `descriptionTemplates` and `productDefaults` with none
+ * either. All five are in `CATEGORIES_UPDATABLE_FIELDS`, so the repository has
+ * always been willing — the only thing missing was somewhere to type them.
+ *
+ * ## Why string arrays are newline-separated textareas
+ *
+ * `highlights`, `inTheBox` and `seoKeywords` are flat `string[]`. A drag-handle
+ * repeater for each would be three widgets to build and three to maintain, and
+ * an admin pasting six bullets from a competitor's page wants to paste six
+ * lines. The textarea IS the better tool here, not a shortcut — order is
+ * preserved, reordering is a cut-and-paste, and a blank line is dropped rather
+ * than stored as an empty bullet.
+ *
+ * Repeaters are reserved for the shapes that genuinely need per-row fields:
+ * FAQs (question + answer), specifications (name + value + unit) and templates
+ * (label + variant + body).
+ */
+const linesToList = (raw: string): string[] =>
+  raw
+    .split("\n")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+const listToLines = (list: readonly string[] | undefined): string =>
+  (list ?? []).join("\n");
+
+const TEMPLATE_VARIANT_OPTIONS = [
+  { value: "default", label: "Default — any condition" },
+  { value: "new_in_box", label: "New in box" },
+  { value: "new_in_packet", label: "New in packet" },
+  { value: "pre_owned", label: "Pre-owned / used" },
+  { value: "replica", label: "Reproduction" },
+];
+
+const AUTHENTICITY_OPTIONS = [
+  { value: "", label: "Not set — the seller chooses" },
+  { value: "original", label: "Original" },
+  { value: "reproduction", label: "Reproduction (midfake)" },
+  { value: "unverified", label: "Unverified" },
+];
+
+const CONDITION_DEFAULT_OPTIONS = [
+  { value: "", label: "Not set — the seller chooses" },
+  { value: "new", label: "New" },
+  { value: "like_new", label: "Like New" },
+  { value: "good", label: "Good" },
+  { value: "fair", label: "Fair" },
+  { value: "used", label: "Used" },
+  { value: "refurbished", label: "Refurbished" },
+];
+
+interface CategoryFaq {
+  question: string;
+  answer: string;
+}
+interface CategorySpecRow {
+  name: string;
+  value: string;
+  unit?: string;
+}
+interface CategoryTemplateRow {
+  id: string;
+  label: string;
+  variant: string;
+  body: string;
+}
+
+/**
+ * A minimal add/remove repeater.
+ *
+ * Deliberately NOT a new appkit primitive: three local shapes with three
+ * different row renderers is not yet the Rule of Three on a *component* — it
+ * is one container used three times with a render prop, which is what this is.
+ * Promote it when a fourth caller appears outside this file.
+ */
+function Repeater<T>({
+  rows,
+  onChange,
+  blank,
+  addLabel,
+  renderRow,
+  max,
+}: {
+  rows: T[];
+  onChange: (next: T[]) => void;
+  blank: () => T;
+  addLabel: string;
+  renderRow: (row: T, set: (patch: Partial<T>) => void) => React.ReactNode;
+  max: number;
+}) {
+  return (
+    <Stack gap="sm">
+      {rows.map((row, i) => (
+        <Div key={i} rounded="lg" border="default" padding="sm">
+          <Stack gap="xs">
+            {renderRow(row, (patch) =>
+              onChange(rows.map((r, j) => (j === i ? { ...r, ...patch } : r))),
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onChange(rows.filter((_, j) => j !== i))}
+            >
+              Remove
+            </Button>
+          </Stack>
+        </Div>
+      ))}
+      {rows.length < max ? (
+        <Button variant="secondary" size="sm" onClick={() => onChange([...rows, blank()])}>
+          {addLabel}
+        </Button>
+      ) : (
+        <Text size="xs" color="muted">
+          Maximum of {max} reached.
+        </Text>
+      )}
+    </Stack>
+  );
+}
+
+async function loadTaxCodeOptions(query: string, page: number) {
+  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
+  if (query) params.set("q", query);
+  const res = await apiClient.get(`${ADMIN_ENDPOINTS.TAX_CODES}?${params.toString()}`);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const payload = (res as any)?.data ?? res;
+  const items: { id: string; label?: string; hsnCode?: string; gstRate?: number }[] =
+    payload?.items ?? payload?.data ?? [];
+  return {
+    items: items.map((t) => ({
+      value: t.id,
+      label: t.label ?? `${t.hsnCode ?? t.id} — ${t.gstRate ?? "?"}%`,
+    })),
+    hasMore: payload?.hasMore ?? false,
+  };
+}
 
 /**
  * Covers every field the form actually edits.
@@ -35,6 +178,32 @@ const categoryFormSchema = z.object({
     .or(z.literal("")),
   isActive: z.boolean().optional(),
   showInMenu: z.boolean().optional(),
+  // ── Content & Templates ──────────────────────────────────────────────────
+  contentBody: z
+    .string()
+    .max(12000, "Keep the body under 12,000 characters")
+    .optional()
+    .or(z.literal("")),
+  highlightsText: z.string().optional().or(z.literal("")),
+  taxCodeId: z.string().optional().or(z.literal("")),
+  defaultCondition: z.string().optional().or(z.literal("")),
+  defaultAuthenticity: z.string().optional().or(z.literal("")),
+  inTheBoxText: z.string().optional().or(z.literal("")),
+  seoTitleTemplate: z.string().max(200).optional().or(z.literal("")),
+  seoDescriptionTemplate: z.string().max(400).optional().or(z.literal("")),
+  seoKeywordsText: z.string().optional().or(z.literal("")),
+  /*
+   * Typed in a text input and sent through `Number()`, so validated as a
+   * numeric STRING here rather than coerced — the same treatment `order`
+   * already gets two fields up. A category default is a PACKED weight (C5a),
+   * which is why the helper text says so: it drives the shipping estimate, and
+   * seeding an item weight there under-estimates every booking.
+   */
+  weightG: z.string().regex(/^\d*$/, "Weight must be a whole number of grams").optional().or(z.literal("")),
+  dimL: z.string().regex(/^\d*\.?\d*$/, "Length must be a number").optional().or(z.literal("")),
+  dimW: z.string().regex(/^\d*\.?\d*$/, "Width must be a number").optional().or(z.literal("")),
+  dimH: z.string().regex(/^\d*\.?\d*$/, "Height must be a number").optional().or(z.literal("")),
+  fragile: z.boolean().optional(),
 });
 
 /**
@@ -52,6 +221,20 @@ interface CategoryFormValues {
   order: string;
   isActive: boolean;
   showInMenu: boolean;
+  contentBody: string;
+  highlightsText: string;
+  taxCodeId: string;
+  defaultCondition: string;
+  defaultAuthenticity: string;
+  inTheBoxText: string;
+  seoTitleTemplate: string;
+  seoDescriptionTemplate: string;
+  seoKeywordsText: string;
+  weightG: string;
+  dimL: string;
+  dimW: string;
+  dimH: string;
+  fragile: boolean;
 }
 
 const EMPTY_VALUES: CategoryFormValues = {
@@ -62,6 +245,20 @@ const EMPTY_VALUES: CategoryFormValues = {
   order: "",
   isActive: true,
   showInMenu: true,
+  contentBody: "",
+  highlightsText: "",
+  taxCodeId: "",
+  defaultCondition: "",
+  defaultAuthenticity: "",
+  inTheBoxText: "",
+  seoTitleTemplate: "",
+  seoDescriptionTemplate: "",
+  seoKeywordsText: "",
+  weightG: "",
+  dimL: "",
+  dimW: "",
+  dimH: "",
+  fragile: false,
 };
 
 const __P = {
@@ -89,6 +286,21 @@ interface CategoryPayload {
   order?: number;
   isActive: boolean;
   display?: { showInMenu: boolean };
+  // ── Content & Templates. EDIT ONLY — see buildContentPayload. ───────────
+  contentBody?: string;
+  highlights?: string[];
+  faqs?: CategoryFaq[];
+  descriptionTemplates?: CategoryTemplateRow[];
+  /*
+   * The REAL type, not a `Record<string, unknown>`.
+   *
+   * The loose version typechecked and then every hydration read came back as
+   * `{}` — `cat.productDefaults?.dimensionsCm?.l` does not exist on an index
+   * signature of `unknown`, and the fix available at each of those fifteen
+   * sites would have been a cast. One honest type at the boundary instead;
+   * `audit-unknown-leakage` exists for exactly this.
+   */
+  productDefaults?: CategoryProductDefaults;
 }
 
 async function loadCategoryOptions(query: string, page: number) {
@@ -101,6 +313,88 @@ async function loadCategoryOptions(query: string, page: number) {
   return {
     items: items.map((c) => ({ value: c.id, label: c.name })),
     hasMore: payload?.hasMore ?? false,
+  };
+}
+
+/**
+ * The content half of the PUT payload.
+ *
+ * 🛑 Every field is sent on EVERY save, including as an empty array or an
+ * omitted key — because the route spreads this straight into
+ * `categoriesRepository.update()`, and an admin who DELETES all five
+ * highlights must end up with no highlights rather than with the old five.
+ * Only sending non-empty values is how a removal silently fails, which is the
+ * defect the whole C2b-fix commit was about one layer down.
+ *
+ * `productDefaults` is rebuilt whole rather than merged, for the same reason —
+ * clearing the tax code has to mean clearing it. The advisory
+ * `priceGuidance` half is CARRIED THROUGH from the loaded document and never
+ * edited here: it is seed-owned market data plus C1's rollup output, and an
+ * editor that round-tripped it would let an admin overwrite a measured band by
+ * hand with nothing recording that they had.
+ */
+function buildContentPayload(
+  v: CategoryFormValues,
+  faqs: CategoryFaq[],
+  specs: CategorySpecRow[],
+  templates: CategoryTemplateRow[],
+  carriedPriceGuidance?: CategoryPriceGuidance,
+): Partial<CategoryPayload> {
+  const num = (s: string): number | undefined => {
+    const t = s.trim();
+    if (t === "") return undefined;
+    const n = Number(t);
+    return Number.isFinite(n) ? n : undefined;
+  };
+  const str = (s: JsonValue | undefined): string | undefined => {
+    const t = String(s ?? "").trim();
+    return t === "" ? undefined : t;
+  };
+  const list = (s: JsonValue | undefined): string[] | undefined => {
+    const out = linesToList(String(s ?? ""));
+    return out.length === 0 ? undefined : out;
+  };
+  const l = num(String(v.dimL ?? ""));
+  const w = num(String(v.dimW ?? ""));
+  const h = num(String(v.dimH ?? ""));
+  const keptSpecs = specs.filter((s) => s.name.trim() !== "" && s.value.trim() !== "");
+  const authenticity = str(v.defaultAuthenticity);
+
+  /*
+   * Assembled field by field rather than through a `Record<string, unknown>`
+   * accumulator. The accumulator version was shorter and `audit-unknown-leakage`
+   * was right to reject it: `unknown` in a payload builder is how a wrong key
+   * or a wrong shape reaches Firestore with nothing to catch it, and this
+   * object's whole job is to be the right shape.
+   */
+  const defaults: CategoryProductDefaults = {
+    ...(str(v.taxCodeId) ? { taxCodeId: str(v.taxCodeId) } : {}),
+    ...(str(v.defaultCondition) ? { defaultCondition: str(v.defaultCondition) } : {}),
+    ...(authenticity === "original" || authenticity === "reproduction" || authenticity === "unverified"
+      ? { defaultAuthenticity: authenticity }
+      : {}),
+    ...(list(v.inTheBoxText) ? { inTheBox: list(v.inTheBoxText) } : {}),
+    ...(str(v.seoTitleTemplate) ? { seoTitleTemplate: str(v.seoTitleTemplate) } : {}),
+    ...(str(v.seoDescriptionTemplate)
+      ? { seoDescriptionTemplate: str(v.seoDescriptionTemplate) }
+      : {}),
+    ...(list(v.seoKeywordsText) ? { seoKeywords: list(v.seoKeywordsText) } : {}),
+    ...(num(String(v.weightG ?? "")) != null ? { weightG: num(String(v.weightG ?? "")) } : {}),
+    ...(keptSpecs.length > 0 ? { specifications: keptSpecs } : {}),
+    // All three or none — a box with a length and no width is not a dimension.
+    ...(l != null && w != null && h != null ? { dimensionsCm: { l, w, h } } : {}),
+    ...(v.fragile === true ? { fragile: true } : {}),
+    ...(carriedPriceGuidance !== undefined ? { priceGuidance: carriedPriceGuidance } : {}),
+  };
+
+  return {
+    contentBody: String(v.contentBody ?? ""),
+    highlights: linesToList(String(v.highlightsText ?? "")),
+    faqs: faqs.filter((f) => f.question.trim() !== "" && f.answer.trim() !== ""),
+    descriptionTemplates: templates
+      .filter((t) => t.label.trim() !== "" && t.body.trim() !== "")
+      .map((t) => ({ ...t, id: t.id || toCategorySlug(t.label) || "template" })),
+    productDefaults: defaults,
   };
 }
 
@@ -123,6 +417,19 @@ export function AdminCategoryEditorView({
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   const [values, setValues] = React.useState<CategoryFormValues>(EMPTY_VALUES);
+  /*
+   * The three repeater arrays live OUTSIDE `values`.
+   *
+   * `CategoryFormValues` carries an index signature of `JsonValue` so
+   * `SectionForm` can map a Zod path back to the panel that owns it, and an
+   * array of objects satisfies that only after a cast at every read. Keeping
+   * them as their own typed state costs one extra dependency on the sections
+   * memo and buys real types at every use — the alternative is a `as any` in a
+   * render loop, which is where this codebase's worst defects live.
+   */
+  const [faqs, setFaqs] = React.useState<CategoryFaq[]>([]);
+  const [specs, setSpecs] = React.useState<CategorySpecRow[]>([]);
+  const [templates, setTemplates] = React.useState<CategoryTemplateRow[]>([]);
   /* UI state, not a form value — whether the user has taken the slug over. */
   const [slugManual, setSlugManual] = React.useState(false);
   const { showToast } = useToast();
@@ -164,7 +471,31 @@ export function AdminCategoryEditorView({
       order: cat.order !== undefined ? String(cat.order) : "",
       isActive: cat.isActive ?? true,
       showInMenu: cat.display?.showInMenu ?? true,
+      contentBody: cat.contentBody ?? "",
+      highlightsText: listToLines(cat.highlights),
+      taxCodeId: cat.productDefaults?.taxCodeId ?? "",
+      defaultCondition: cat.productDefaults?.defaultCondition ?? "",
+      defaultAuthenticity: cat.productDefaults?.defaultAuthenticity ?? "",
+      inTheBoxText: listToLines(cat.productDefaults?.inTheBox),
+      seoTitleTemplate: cat.productDefaults?.seoTitleTemplate ?? "",
+      seoDescriptionTemplate: cat.productDefaults?.seoDescriptionTemplate ?? "",
+      seoKeywordsText: listToLines(cat.productDefaults?.seoKeywords),
+      weightG: cat.productDefaults?.weightG != null ? String(cat.productDefaults.weightG) : "",
+      dimL: cat.productDefaults?.dimensionsCm?.l != null ? String(cat.productDefaults.dimensionsCm.l) : "",
+      dimW: cat.productDefaults?.dimensionsCm?.w != null ? String(cat.productDefaults.dimensionsCm.w) : "",
+      dimH: cat.productDefaults?.dimensionsCm?.h != null ? String(cat.productDefaults.dimensionsCm.h) : "",
+      fragile: cat.productDefaults?.fragile ?? false,
     });
+    setFaqs((cat.faqs ?? []).map((f) => ({ ...f })));
+    setSpecs((cat.productDefaults?.specifications ?? []).map((s) => ({ ...s })));
+    setTemplates(
+      (cat.descriptionTemplates ?? []).map((t) => ({
+        id: t.id,
+        label: t.label,
+        variant: t.variant,
+        body: t.body,
+      })),
+    );
   }, [categoryQuery.data]);
 
   const saveMutation = useApiMutation({
@@ -181,7 +512,33 @@ export function AdminCategoryEditorView({
         display: { showInMenu: values.showInMenu ?? true },
       };
       if (isEdit) {
-        return apiClient.put(ADMIN_ENDPOINTS.CATEGORY_BY_ID(categoryId!), payload);
+        /*
+         * 🛑 The content fields go on the PUT only, and that is not a
+         * limitation to work around.
+         *
+         * `POST /api/admin/categories`' schema is a `z.object()` naming nine
+         * keys, and Zod STRIPS unknown ones — so sending a description
+         * template on create would return 200, show a success toast and write
+         * nothing (Root Cause #76b, the admin grouped-listings shape). The
+         * section renders only in edit mode so the form never shows a field it
+         * is about to discard.
+         *
+         * It is also the right workflow: creating a category is naming it and
+         * placing it in the tree. Writing its SEO body and its five
+         * description templates is a separate sitting.
+         */
+        return apiClient.put(ADMIN_ENDPOINTS.CATEGORY_BY_ID(categoryId!), {
+          ...payload,
+          ...buildContentPayload(
+            values,
+            faqs,
+            specs,
+            templates,
+            (categoryQuery.data as CategoryPayload | undefined)?.productDefaults?.[
+              "priceGuidance"
+            ],
+          ),
+        });
       }
       return apiClient.post(ADMIN_ENDPOINTS.CATEGORIES, payload);
     },
@@ -307,7 +664,279 @@ export function AdminCategoryEditorView({
         </Stack>
       ),
     },
-  ], []);
+    /*
+     * 🛑 EDIT ONLY. The create route's `z.object()` would strip every one of
+     * these and answer 200, so the form must not offer them yet. See
+     * buildContentPayload's header.
+     */
+    ...(isEdit
+      ? [
+          {
+            id: "content",
+            label: "Content & Templates",
+            fields: ["contentBody", "highlightsText"],
+            render: ({ values: v, onChange, errors }) => (
+              <Stack gap="md">
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">Category page body</Text>
+                  <Textarea
+                    value={String(v.contentBody ?? "")}
+                    onChange={(e) => onChange({ contentBody: e.target.value })}
+                    rows={8}
+                    placeholder="400–900 characters of keyword-rich HTML with links to sibling and parent categories…"
+                  />
+                  {errors.contentBody ? (
+                    <Text size="sm" variant="error" role="alert">{errors.contentBody}</Text>
+                  ) : (
+                    <Text size="xs" color="muted">
+                      Rendered on the category page. Distinct from the short
+                      Description above, which also feeds the SEO meta and every
+                      card. 36 of worldhobbyshop&apos;s 46 categories carry one of
+                      these and it is their actual ranking mechanism; no Shopify
+                      competitor in the crawl has any.
+                    </Text>
+                  )}
+                </Stack>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">Highlights — one per line</Text>
+                  <Textarea
+                    value={String(v.highlightsText ?? "")}
+                    onChange={(e) => onChange({ highlightsText: e.target.value })}
+                    rows={4}
+                    placeholder={"Genuine Takara Tomy stock\nChecked and photographed before listing"}
+                  />
+                  <Text size="xs" color="muted">
+                    Short &quot;why shop this&quot; bullets, shown above the FAQs.
+                    Blank lines are dropped. Up to 12.
+                  </Text>
+                </Stack>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">Category FAQs</Text>
+                  <Text size="xs" color="muted">
+                    Rendered as an accordion on the category page and emitted as
+                    FAQPage structured data. Keep platform-wide answers in the
+                    global FAQ collection instead — two copies of one answer
+                    means the one that gets fixed is never the one being read.
+                  </Text>
+                  <Repeater
+                    rows={faqs}
+                    onChange={setFaqs}
+                    blank={() => ({ question: "", answer: "" })}
+                    addLabel="Add an FAQ"
+                    max={20}
+                    renderRow={(row, set) => (
+                      <>
+                        <Input
+                          label="Question"
+                          value={row.question}
+                          onChange={(e) => set({ question: e.target.value })}
+                          placeholder="Are these compatible with Burst launchers?"
+                        />
+                        <Textarea
+                          value={row.answer}
+                          onChange={(e) => set({ answer: e.target.value })}
+                          rows={3}
+                          placeholder="Answer…"
+                        />
+                      </>
+                    )}
+                  />
+                </Stack>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">Description templates</Text>
+                  <Text size="xs" color="muted">
+                    What the seller form offers when a listing is filed here. One
+                    per condition band — worldhobbyshop reuses exactly two across
+                    1,195 listings. Slots like{" "}
+                    <Span family="mono">{"{{title}}"}</Span>,{" "}
+                    <Span family="mono">{"{{brand}}"}</Span>,{" "}
+                    <Span family="mono">{"{{condition}}"}</Span> and{" "}
+                    <Span family="mono">{"{{series}}"}</Span> are filled from the
+                    listing; an unresolved one becomes empty and is reported to the
+                    seller, never left as a literal brace pair.
+                  </Text>
+                  <Repeater
+                    rows={templates}
+                    onChange={setTemplates}
+                    blank={() => ({ id: "", label: "", variant: "default", body: "" })}
+                    addLabel="Add a template"
+                    max={8}
+                    renderRow={(row, set) => (
+                      <>
+                        <Div layout="grid" gap="4" className="sm:grid-cols-2">
+                          <Input
+                            label="Label"
+                            value={row.label}
+                            onChange={(e) => set({ label: e.target.value })}
+                            placeholder="Pre-owned — condition as pictured"
+                          />
+                          <Select
+                            label="Condition band"
+                            value={row.variant}
+                            onChange={(e) => set({ variant: e.target.value })}
+                            options={TEMPLATE_VARIANT_OPTIONS}
+                          />
+                        </Div>
+                        <Textarea
+                          value={row.body}
+                          onChange={(e) => set({ body: e.target.value })}
+                          rows={6}
+                          placeholder="Important things to know about {{title}} — HTML permitted…"
+                        />
+                        <Text size="xs" color="muted">
+                          {usedPlaceholders(row.body).length > 0
+                            ? `Slots used: ${usedPlaceholders(row.body).map((p) => `{{${p}}}`).join(", ")}`
+                            : "No slots used — this body will read identically on every listing."}
+                        </Text>
+                      </>
+                    )}
+                  />
+                </Stack>
+              </Stack>
+            ),
+          } satisfies SectionDef<CategoryFormValues>,
+          {
+            id: "defaults",
+            label: "Product defaults",
+            fields: ["taxCodeId", "weightG", "dimL", "dimW", "dimH", "seoTitleTemplate", "seoDescriptionTemplate"],
+            render: ({ values: v, onChange, errors }) => (
+              <Stack gap="md">
+                <Text size="xs" color="muted">
+                  What a listing filed under this category inherits. Written
+                  server-side when the product omits the field, and resolved PER
+                  FIELD up the ancestor chain — so a named-model leaf can supply
+                  its own features while the tax code and spec rows come from the
+                  line above it.
+                </Text>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">Tax code</Text>
+                  <PaginatedSelect
+                    value={String(v.taxCodeId ?? "") || null}
+                    onChange={(val) => onChange({ taxCodeId: val ?? "" })}
+                    loadOptions={loadTaxCodeOptions}
+                    placeholder="Search tax codes…"
+                    searchPlaceholder="HSN or label…"
+                    noResultsText="No tax codes found"
+                    ariaLabel="Tax code"
+                  />
+                  <Text size="xs" color="muted">
+                    🛑 This is the GST mechanism, not a nicety. A listing whose
+                    category resolves no tax code falls back to a default rate
+                    and is flagged for triage — and the measure of success is
+                    that the fallback fires for nothing.
+                  </Text>
+                </Stack>
+
+                <Div layout="grid" gap="4" className="sm:grid-cols-2">
+                  <Select
+                    label="Default condition"
+                    value={String(v.defaultCondition ?? "")}
+                    onChange={(e) => onChange({ defaultCondition: e.target.value })}
+                    options={CONDITION_DEFAULT_OPTIONS}
+                  />
+                  <Select
+                    label="Default authenticity"
+                    value={String(v.defaultAuthenticity ?? "")}
+                    onChange={(e) => onChange({ defaultAuthenticity: e.target.value })}
+                    options={AUTHENTICITY_OPTIONS}
+                  />
+                </Div>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">Specification rows</Text>
+                  <Repeater
+                    rows={specs}
+                    onChange={setSpecs}
+                    blank={() => ({ name: "", value: "", unit: "" })}
+                    addLabel="Add a specification"
+                    max={20}
+                    renderRow={(row, set) => (
+                      <Div layout="grid" gap="4" className="sm:grid-cols-3">
+                        <Input label="Name" value={row.name} onChange={(e) => set({ name: e.target.value })} placeholder="System" />
+                        <Input label="Value" value={row.value} onChange={(e) => set({ value: e.target.value })} placeholder="Magne Core" />
+                        <Input label="Unit" value={row.unit ?? ""} onChange={(e) => set({ unit: e.target.value })} placeholder="g" />
+                      </Div>
+                    )}
+                  />
+                </Stack>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">What&apos;s in the box — one per line</Text>
+                  <Textarea
+                    value={String(v.inTheBoxText ?? "")}
+                    onChange={(e) => onChange({ inTheBoxText: e.target.value })}
+                    rows={4}
+                    placeholder={"Beyblade top\nLauncher\nRipcord\nManual"}
+                  />
+                  <Text size="xs" color="muted">
+                    Read by the description-template endpoint to fill the
+                    new-in-box body&apos;s list. Deliberately NOT written to the
+                    product&apos;s `features` field, which holds feature ids —
+                    putting prose there would break every facet on the listing.
+                  </Text>
+                </Stack>
+
+                <Div layout="grid" gap="4" className="sm:grid-cols-2">
+                  <Input
+                    label="SEO title template"
+                    value={String(v.seoTitleTemplate ?? "")}
+                    onChange={(e) => onChange({ seoTitleTemplate: e.target.value })}
+                    placeholder="{{title}} — {{brand}} | {{siteName}}"
+                    error={errors.seoTitleTemplate}
+                  />
+                  <Input
+                    label="SEO description template"
+                    value={String(v.seoDescriptionTemplate ?? "")}
+                    onChange={(e) => onChange({ seoDescriptionTemplate: e.target.value })}
+                    placeholder="Buy {{title}} in India…"
+                    error={errors.seoDescriptionTemplate}
+                  />
+                </Div>
+
+                <Stack gap="xs">
+                  <Text size="sm" weight="medium">SEO keywords — one per line</Text>
+                  <Textarea
+                    value={String(v.seoKeywordsText ?? "")}
+                    onChange={(e) => onChange({ seoKeywordsText: e.target.value })}
+                    rows={3}
+                  />
+                </Stack>
+
+                <Div layout="grid" gap="4" className="sm:grid-cols-4">
+                  <Input
+                    label="Packed weight (g)"
+                    value={String(v.weightG ?? "")}
+                    onChange={(e) => onChange({ weightG: e.target.value })}
+                    placeholder="300"
+                    error={errors.weightG}
+                    helperText="Boxed, not the bare item."
+                  />
+                  <Input label="Length (cm)" value={String(v.dimL ?? "")} onChange={(e) => onChange({ dimL: e.target.value })} error={errors.dimL} />
+                  <Input label="Width (cm)" value={String(v.dimW ?? "")} onChange={(e) => onChange({ dimW: e.target.value })} error={errors.dimW} />
+                  <Input label="Height (cm)" value={String(v.dimH ?? "")} onChange={(e) => onChange({ dimH: e.target.value })} error={errors.dimH} />
+                </Div>
+                <Text size="xs" color="muted">
+                  🛑 The weight is a PACKED weight — a bey is ~30 g and ~300 g
+                  boxed. This figure drives the shipping estimate the buyer pays,
+                  and the seller&apos;s booking is capped at what was collected,
+                  so an item weight here under-estimates every booking and the
+                  difference is absorbed silently. All three dimensions or none.
+                </Text>
+                <Toggle
+                  label="Fragile by default"
+                  checked={v.fragile === true}
+                  onChange={(checked) => onChange({ fragile: checked })}
+                />
+              </Stack>
+            ),
+          } satisfies SectionDef<CategoryFormValues>,
+        ]
+      : []),
+  ], [isEdit, faqs, specs, templates]);
 
   const nav = useSectionFormNav(sections, values);
   const { shellCtx } = useFormShellState(categoryFormSchema, {

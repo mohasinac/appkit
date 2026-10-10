@@ -9493,6 +9493,21 @@ export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } 
 // [CLIENT] CategoryInlineSelect â€" searchable category selector with optional inline quick-create.
 export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
 export type { CategoryInlineSelectProps } from "./features/seller/components/CategoryInlineSelect";
+/*
+ * 🛑 The category-content Zod schemas are deliberately NOT exported, and this
+ * note exists so nobody adds them.
+ *
+ * Measured 2026-10-11: appkit compiles against **zod 3.25.76**
+ * (`appkit/node_modules/zod`, pinned `^3.24.0`) while the consumer resolves
+ * **zod 4.4.3**. Those are different majors with incompatible type identities,
+ * so an appkit `ZodObject` nested inside a consumer `z.array(...)` fails to
+ * typecheck — it is not a `dedupe-peer-deps` miss but a genuine version split.
+ *
+ * The direction that DOES work is consumer-schema → appkit handler, which is
+ * why every route declaring its own schema and handing it to
+ * `createRouteHandler` is fine. Sharing a schema the other way is not
+ * available until the two agree on a major.
+ */
 // [CLIENT] CategoryTemplatePicker — the seller form's category description-template
 // picker (C2c). Fills SellerProductShell's `renderTemplateSelector` slot.
 export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
