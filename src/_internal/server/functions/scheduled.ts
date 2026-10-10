@@ -28,7 +28,7 @@ import {
   pageViewPruneHandler,
   dailyStatusDigestHandler,
   weeklyPayoutEligibilityHandler,
-  testerSandboxCleanupHandler,
+  testDataCleanupHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -221,11 +221,24 @@ export const draftPrune = defineFunction({
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
-export const testerSandboxCleanup = defineFunction({
-  name: "testerSandboxCleanup",
-  description: "Delete expired tester QA sandbox test data (daily 05:00 UTC).",
+/*
+ * 🛑 RENAMED from `testerSandboxCleanup` (2026-10-10, plan §7). The job never
+ * had anything to do with the tester HARNESS — it sweeps any document carrying
+ * `isTestData: true` past its `testDataExpiresAt`, which is a seed-data concern
+ * and outlives the human tester programme being retired in B2.
+ *
+ * 🛑 A Scheduler job rename is DELETE-AND-RECREATE on deploy, not a rename:
+ * `firebase deploy --only functions` creates `testDataCleanup` and leaves
+ * `testerSandboxCleanup` running until it is explicitly deleted. Two jobs
+ * sweeping the same documents is not redundancy — it is the two-owners race
+ * that got `testerSandboxRefresh` removed (see the note below). Delete the old
+ * function in the same deploy.
+ */
+export const testDataCleanup = defineFunction({
+  name: "testDataCleanup",
+  description: "Delete expired isTestData documents past their TTL (daily 05:00 UTC).",
   trigger: { kind: "schedule", cron: "0 5 * * *", timeZone: "UTC" },
-  handler: testerSandboxCleanupHandler,
+  handler: testDataCleanupHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -292,7 +305,7 @@ export const SCHEDULED_FUNCTIONS = [
   cleanupRtdbEvents,
   mediaTmpCleanup,
   draftPrune,
-  testerSandboxCleanup,
+  testDataCleanup,
   prizeDrawExpiryReveal,
   bundleStockSync,
   emiInstallmentReminder,

@@ -17,17 +17,17 @@ import { BID_FIELDS } from "../../../../constants/field-names";
  * (This used to be shared with testerSandboxRefresh.ts, which was removed when
  * the tester runner took over fixture state — see scheduled.ts.)
  */
-export const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events", "offers"] as const;
+export const TEST_DATA_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events", "offers"] as const;
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 
-export interface TesterSandboxCleanupOptions {
+export interface TestDataCleanupOptions {
   /** true = wipe every isTestData:true doc regardless of testDataExpiresAt (manual force-purge). */
   force?: boolean;
 }
 
-export async function runTesterSandboxCleanup(
+export async function runTestDataCleanup(
   ctx: JobContext,
-  opts: TesterSandboxCleanupOptions = {},
+  opts: TestDataCleanupOptions = {},
 ): Promise<void> {
   const cutoff = opts.force ? null : new Date();
   ctx.logger.info(
@@ -39,7 +39,7 @@ export async function runTesterSandboxCleanup(
   const allRefs: FirebaseFirestore.DocumentReference[] = [];
   let deletedProductIds: string[] = [];
 
-  for (const collection of SANDBOX_COLLECTIONS) {
+  for (const collection of TEST_DATA_COLLECTIONS) {
     const refs = await getTestDataRefs(ctx.db, collection, cutoff);
     allRefs.push(...refs);
     if (collection === "products") {

@@ -75,7 +75,7 @@ export { onScamReportUpdateHandler } from "./onScamReportUpdate";
 // SB-UNI-Y-1 — 30-day draft prune
 export { draftPruneHandler } from "./draftPrune";
 // Tester program — 7-day auto-expiry sweep for the shared admin-seeded test sandbox
-export { testerSandboxCleanupHandler } from "./testerSandboxCleanup";
+export { testDataCleanupHandler } from "./testDataCleanup";
 // Tester program — every-4h revert-live-edits + prune-extras refresh (faster than the 7-day sweep above)
 // EMI — installment reminder + overdue-flagging sweep
 export { emiInstallmentReminderHandler } from "./emiInstallmentReminder";

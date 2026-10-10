@@ -20,9 +20,9 @@ export interface EventDocument extends BaseDocument {
   description: string;
   status: EventStatus;
 
-  /** Tester sandbox flag — set on the shared admin-seeded test event; swept by testerSandboxCleanup. */
+  /** Test-data flag — set on the shared admin-seeded test event; swept by testDataCleanup. */
   isTestData?: boolean;
-  /** When isTestData, the cutoff after which testerSandboxCleanup deletes this doc. */
+  /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
   startsAt: Date;
   endsAt: Date;

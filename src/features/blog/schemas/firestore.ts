@@ -22,9 +22,9 @@ export interface BlogPostDocument extends BaseDocument {
   slug: string;
   excerpt: string;
 
-  /** Tester sandbox flag — set on the shared admin-seeded test post; swept by testerSandboxCleanup. */
+  /** Test-data flag — set on the shared admin-seeded test post; swept by testDataCleanup. */
   isTestData?: boolean;
-  /** When isTestData, the cutoff after which testerSandboxCleanup deletes this doc. */
+  /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
   content: string;
   coverImage?: MediaFieldInput;

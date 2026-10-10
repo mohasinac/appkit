@@ -169,9 +169,9 @@ export interface ProductDocument extends BaseDocument {
   description: string;
   slug?: string;
 
-  /** Tester sandbox flag — set on shared admin-seeded test products; swept by testerSandboxCleanup. */
+  /** Test-data flag — set on shared admin-seeded test products; swept by testDataCleanup. */
   isTestData?: boolean;
-  /** When isTestData, the cutoff after which testerSandboxCleanup deletes this doc (cascades to bids). */
+  /** When isTestData, the cutoff after which testDataCleanup deletes this doc (cascades to bids). */
   testDataExpiresAt?: Date;
   seoTitle?: string;
   seoDescription?: string;

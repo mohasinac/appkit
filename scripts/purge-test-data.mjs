@@ -7,8 +7,8 @@
  * sandbox collections (categories, stores, products, blogPosts, events) plus any bids
  * referencing a deleted test product, regardless of testDataExpiresAt.
  *
- * This mirrors runTesterSandboxCleanup(ctx, { force: true }) in
- * appkit/src/_internal/server/jobs/core/testerSandboxCleanup.ts — the scheduled
+ * This mirrors runTestDataCleanup(ctx, { force: true }) in
+ * appkit/src/_internal/server/jobs/core/testDataCleanup.ts — the scheduled
  * Firebase Function (testerSandboxCleanup, daily 05:00 UTC) does the same sweep but
  * respects testDataExpiresAt. Keep them in sync.
  *
@@ -89,9 +89,9 @@ const db = admin.firestore();
 console.log(`✓ Connected to project: ${process.env.FIREBASE_ADMIN_PROJECT_ID || "(service-account)"}`);
 
 // ---------------------------------------------------------------------------
-// Purge — mirrors runTesterSandboxCleanup(ctx, { force: true })
+// Purge — mirrors runTestDataCleanup(ctx, { force: true })
 // ---------------------------------------------------------------------------
-const SANDBOX_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"];
+const TEST_DATA_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"];
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 const BATCH_LIMIT = 500; // Firestore write-batch hard ceiling
 
@@ -110,7 +110,7 @@ async function batchDelete(refs) {
 const allRefs = [];
 let deletedProductIds = [];
 
-for (const collection of SANDBOX_COLLECTIONS) {
+for (const collection of TEST_DATA_COLLECTIONS) {
   const snap = await db.collection(collection).where("isTestData", "==", true).limit(200).get();
   allRefs.push(...snap.docs.map((d) => d.ref));
   if (collection === "products") {

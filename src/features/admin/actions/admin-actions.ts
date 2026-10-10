@@ -236,7 +236,7 @@ export async function adminUpdateUser(
  * removed. Orders, reviews, addresses, payouts, etc. are left untouched —
  * they're business/audit records that reference this uid and deleting
  * them would corrupt other parties' (sellers', buyers') own history, the
- * same reasoning testerSandboxCleanup already documents for why it leaves
+ * same reasoning testDataCleanup already documents for why it leaves
  * orders/reviews/wishlists/history alone when a test product disappears.
  */
 export async function adminDeleteUser(

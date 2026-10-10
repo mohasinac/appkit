@@ -21,7 +21,7 @@ const PRODUCT_UPDATED_AT = "updatedAt";
 
 /**
  * Tester-sandbox fixtures must never reach the public sitemap. They are created
- * and destroyed on a cycle by `testerSandboxCleanup` and by each tester run's
+ * and destroyed on a cycle by `testDataCleanup` and by each tester run's
  * wipe/seed, so anything Google indexes from them 404s shortly after. 34 of 182 sitemap
  * URLs were disposable test fixtures before this filter existed.
  *

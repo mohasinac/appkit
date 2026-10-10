@@ -71,9 +71,9 @@ export interface StoreDocument extends BaseDocument {
   storeSlug: string;
   ownerId: string; // references users/{uid}
 
-  /** Tester sandbox flag — set on the shared admin-seeded test store; swept by testerSandboxCleanup. */
+  /** Test-data flag — set on the shared admin-seeded test store; swept by testDataCleanup. */
   isTestData?: boolean;
-  /** When isTestData, the cutoff after which testerSandboxCleanup deletes this doc. */
+  /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
 
   storeName: string;

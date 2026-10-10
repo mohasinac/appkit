@@ -99,9 +99,9 @@ export interface CategoryDocument extends BaseDocument {
   slug: string;
   description?: string;
 
-  /** Tester sandbox flag — set on shared admin-seeded test categories/brands/bundles; swept by testerSandboxCleanup. */
+  /** Test-data flag — set on shared admin-seeded test categories/brands/bundles; swept by testDataCleanup. */
   isTestData?: boolean;
-  /** When isTestData, the cutoff after which testerSandboxCleanup deletes this doc. */
+  /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
 
   rootId: string;
