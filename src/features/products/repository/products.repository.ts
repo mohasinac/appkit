@@ -240,6 +240,20 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
    */
   private async deriveTaxonomy(
     input: Partial<ProductDocument>,
+    /**
+     * Whether this is the product's FIRST write.
+     *
+     * 🛑 Load-bearing for one field — see `applyCategoryDefaults`' features
+     * block. Inheriting a merge-shaped default on every save makes a seller's
+     * REMOVAL un-stickable: they untick an inherited feature, the next save
+     * that touches the category silently puts it back, and nothing reports it.
+     * Merge is right for create and wrong for update.
+     *
+     * Defaults to `false`, which is the safe direction: the worst a missed
+     * `true` can do is skip an inheritance the seller can tick themselves,
+     * whereas a wrongly-passed `true` resurrects a value they deleted.
+     */
+    isCreate = false,
   ): Promise<Partial<ProductDocument>> {
     const out: Partial<ProductDocument> = {};
     const cats = this.db.collection(CATEGORIES_COLLECTION);
@@ -327,7 +341,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     }
 
     if (catSnap?.exists) {
-      await this.applyCategoryDefaults(input, out, catSnap);
+      await this.applyCategoryDefaults(input, out, catSnap, isCreate);
     }
 
     await this.applyInclusivePricing(input, out);
@@ -469,6 +483,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * and the one cast here is already narrow and stated.
      */
     catSnap: DocumentSnapshot,
+    isCreate: boolean,
   ): Promise<void> {
     const cats = this.db.collection(CATEGORIES_COLLECTION);
     const leafData = catSnap.data() as {
@@ -589,13 +604,32 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * reason the blader linkage works: a seller who ticks "Japan Import" keeps
      * it and also gets `feature-blader-tyson-granger` from the Dragoon G leaf.
      *
+     * 🛑 BUT ONLY ON CREATE, OR WHEN THE PRODUCT CARRIES NONE. This was a real
+     * defect in C2a as shipped.
+     *
+     * `update` calls `deriveTaxonomy({ ...current, ...data })`, so `input`
+     * holds the stored document merged with the patch — which is exactly what
+     * makes every other guard here correct, because a seller's edited
+     * `specifications` or `condition` is present and the `!input.X` test is
+     * false. Features were the one field that did not test presence: they
+     * merged unconditionally. So a seller who UNTICKED an inherited feature —
+     * removing `feature-type-attack` because their build is actually defense —
+     * had it silently re-added by the next save that touched the category or
+     * the brand. The removal could not stick and nothing reported it.
+     *
+     * On update the seller's array IS the answer. They have had the chance to
+     * curate it, and a removal is a decision. An update that carries no
+     * features at all still inherits, so a listing created before its category
+     * had defaults picks them up the first time it is edited.
+     *
      * Capped at MAX_FEATURES_PER_PRODUCT because `features[]` feeds
      * `buildProductSearchTxt`, which truncates at 600 tokens SILENTLY — an
      * unbounded list would evict real title tokens nobody chose to drop. The
      * product's OWN features are kept first so it is always the inherited ones
      * that fall off the end.
      */
-    if (resolved.defaultFeatures?.length) {
+    const mayInheritFeatures = isCreate || !input.features?.length;
+    if (resolved.defaultFeatures?.length && mayInheritFeatures) {
       const merged = [...(input.features ?? [])];
       for (const f of resolved.defaultFeatures) {
         if (!merged.includes(f)) merged.push(f);
@@ -622,7 +656,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         out,
       );
     }
-    if (resolved.seoKeywords?.length) {
+    /*
+     * 🛑 Same create-only gate as features, and for the same reason — plus
+     * this one also contradicted the stated contract three lines above it.
+     * "FILL-BLANK: seo* fills only an empty field, never overwrites a
+     * seller's own words" was true of `seoTitle` and `seoDescription` and
+     * false of `seoKeywords`, which merged on every save. A seller who
+     * deleted an inherited keyword got it back.
+     *
+     * Lower stakes than features — nobody watches their keyword list the way
+     * they watch a type chip — which is precisely why it would have gone
+     * unnoticed indefinitely.
+     */
+    if (resolved.seoKeywords?.length && (isCreate || !input.seoKeywords?.length)) {
       const merged = [...(input.seoKeywords ?? [])];
       for (const k of resolved.seoKeywords) if (!merged.includes(k)) merged.push(k);
       out.seoKeywords = merged;
@@ -752,7 +798,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // what makes a UI-created product reachable from its own category page at
     // all. A seed row already carrying the correct chain derives to the same
     // value, so this is a no-op for every existing fixture.
-    const derived = await this.deriveTaxonomy(input as Partial<ProductDocument>);
+    const derived = await this.deriveTaxonomy(input as Partial<ProductDocument>, true);
     const withTaxonomy = { ...input, ...derived };
     const productData: Omit<ProductDocument, "id"> = {
       ...withTaxonomy,
