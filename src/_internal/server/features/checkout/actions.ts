@@ -24,12 +24,13 @@ import {
   addressesRepository,
   productRepository,
 } from "../../../../repositories";
-import { calculateGst } from "../../../shared/fees/calculator";
+import { calculateGst, isIntraStateSupply } from "../../../shared/fees/calculator";
 import {
   computePreOrderDepositAmount,
   lineTotalFor,
   sumGroupGst,
   unitPriceFor,
+  type GroupGstSummary,
 } from "../../../shared/checkout/order-math";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
@@ -715,22 +716,46 @@ async function createOrderForGroup(
   // then split the group total into a single cgst/sgst/igst breakdown for the
   // order document. Skipped entirely when GST is off or the buyer's state is
   // unknown (digital-only carts have no shipping address).
-  let gstBreakdown: { taxableAmount: number; cgst: number; sgst: number; igst: number; gstAmount: number } | undefined;
+  let gstBreakdown: GroupGstSummary | undefined;
   if (gstSettings?.enabled && buyerState) {
-    const intraState = !!storeState && storeState === buyerState;
+    /*
+     * 🛑 `isIntraStateSupply`, not `storeState === buyerState`. That raw
+     * comparison read "Karnataka" / "karnataka" / "KA" as three different
+     * states — the exact drift `constants/geo/subdivisions.ts` opens by
+     * documenting — and a store with no address resolved to `false`, i.e.
+     * silently inter-state. `null` means "cannot tell" and is logged rather
+     * than guessed; the AMOUNT is identical either way (IGST total ==
+     * CGST+SGST total), so what was wrong was the split on the invoice.
+     */
+    const intra = isIntraStateSupply(storeState, buyerState);
+    if (intra === null) {
+      serverLogger.warn(
+        "[gst] place of supply undetermined — defaulting to inter-state (IGST)",
+        { storeId: firstItem.storeId, hasStoreState: !!storeState },
+      );
+    }
     // Per-member, not per-line: a bundle or grouped line spans several products
     // with several different rates, and taxing the whole line at one product's
     // rate is wrong in both directions. Shared with previewCheckoutPricing so
     // the figure shown and the figure charged cannot drift.
-    const { taxableAmount, gstAmount } = sumGroupGst(
+    const summary = sumGroupGst(
       group.map(({ item }) => item),
       ctx.productById,
-      intraState,
+      intra ?? false,
     );
-    if (taxableAmount > 0) {
-      gstBreakdown = intraState
-        ? { taxableAmount, cgst: Math.round(gstAmount / 2), sgst: gstAmount - Math.round(gstAmount / 2), igst: 0, gstAmount }
-        : { taxableAmount, cgst: 0, sgst: 0, igst: gstAmount, gstAmount };
+    /*
+     * The split is taken AS COMPUTED, per slice, by `calculateGst` inside
+     * `sumGroupGst`. It used to be re-derived here as
+     * `Math.round(gstAmount / 2)` — whole rupees, so ₹161.82 became
+     * 81.00/80.82 rather than 80.91/80.91, and a ₹0.52 total rounded to 0 and
+     * was then dropped off the invoice entirely by the `|| undefined` below.
+     *
+     * The guard is on EITHER base: an order of purely exempt goods has a real
+     * taxable value to report and zero tax, and skipping it left the invoice
+     * unable to reconcile.
+     */
+    if (summary.taxableAmount > 0 || summary.exemptAmount > 0) {
+      gstBreakdown = summary;
     }
   }
 
@@ -867,6 +892,14 @@ async function createOrderForGroup(
     shipmentProtectionAddon: !adminBypass && shipmentProtectionFee > 0 ? true : undefined,
     shipmentProtectionFee: !adminBypass && shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
     taxableAmount: gstBreakdown?.taxableAmount,
+    /* Exempt goods are a reportable nil-rated supply, kept OUT of
+     * `taxableAmount` so the taxed base stays the base the tax was charged on,
+     * and recorded here so the invoice's columns can reconcile. */
+    exemptAmount: gstBreakdown?.exemptAmount || undefined,
+    /* Per-rate, for Rule 46. Computed by `sumGroupGst` rather than re-derived
+     * downstream — a mixed 5%+18% order cannot produce a compliant invoice
+     * from the aggregate triple alone. */
+    gstByRate: gstBreakdown?.byRate.length ? gstBreakdown.byRate : undefined,
     /*
      * 🛑 This must include the GST on the PLATFORM FEE, not just product GST.
      *
@@ -1524,14 +1557,21 @@ export async function previewCheckoutPricing(
 
     let groupGstAmount = 0;
     if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
-      const intraState = !!storeState && storeState === resolvedAddress.state;
+      /*
+       * `isIntraStateSupply`, matching `createOrderForGroup` exactly — this
+       * was the same raw `===` and had to change with it, or the figure SHOWN
+       * and the figure CHARGED would split on different state comparisons.
+       * The total is unaffected by the answer (IGST total == CGST+SGST total),
+       * but using one rule in both places is what keeps that true.
+       */
+      const intra = isIntraStateSupply(storeState, resolvedAddress.state);
       // Same helper createOrderForGroup uses — the two disagreeing is the
       // recurring defect here (Root Cause #59), and it is the buyer seeing one
       // tax figure and being charged another.
       groupGstAmount = sumGroupGst(
         group.map(({ item }) => item),
         resolvedProductById,
-        intraState,
+        intra ?? false,
       ).gstAmount;
     }
 

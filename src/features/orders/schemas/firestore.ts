@@ -402,6 +402,36 @@ export interface OrderDocument extends BaseDocument {
   sgst?: number;
   /** Inter-state: buyer and seller/store pickup address are in different states. */
   igst?: number;
+  /**
+   * Taxable value of 0%-rated (EXEMPT) goods in this order — live plants and
+   * animals. **Not** part of `taxableAmount`, which covers positively-rated
+   * slices only.
+   *
+   * 🛑 Without it a mixed exempt/taxed order cannot reconcile its own invoice:
+   * `sumGroupGst` skipped exempt slices entirely, so `taxableAmount` excluded
+   * them while `items[]` included them, and the Taxable column could never
+   * sum to the summary. Exempt is a real, reportable state (nil-rated supply),
+   * not an absence.
+   */
+  exemptAmount?: number;
+  /**
+   * Per-rate rollup — taxable value and tax for each distinct `gstRate` in the
+   * order.
+   *
+   * 🛑 Required for a Rule 46-compliant invoice, which asks for taxable value
+   * and tax **per rate**. The aggregate `taxableAmount`/`gstAmount`/cgst/sgst/
+   * igst fields above lose that dimension, so a mixed 5% + 18% order could not
+   * produce a compliant document without re-deriving the split downstream —
+   * i.e. a second implementation of the loop that already computed it.
+   */
+  gstByRate?: Array<{
+    gstRate: number;
+    taxableAmount: number;
+    cgst: number;
+    sgst: number;
+    igst: number;
+    gstAmount: number;
+  }>;
 
   // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
   emiEnabled?: boolean;

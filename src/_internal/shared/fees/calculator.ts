@@ -206,6 +206,70 @@ export interface GstBreakdown {
   gstAmount: number;
 }
 
+/**
+ * The rate used when nobody has determined one — HSN 95030020, non-electronic
+ * toys, which is nearly this whole catalogue.
+ *
+ * 🛑 A LAST RESORT, not a mechanism. The real resolution order is the
+ * product's own `gstRate` → the category's `taxCodeId` → this. A listing that
+ * reaches this constant means its category has no tax code, and THAT is the
+ * defect to fix; every use must warn and flag the product for triage. The
+ * measure of success is that it fires for nothing.
+ *
+ * It exists because the alternative is worse in one direction specifically:
+ * under GST-inclusive pricing the tax is already inside the price, so backing
+ * out 0% would treat the whole amount as taxable value, pay the seller all of
+ * it, and leave us owing tax on money already handed over. Exclusive pricing
+ * merely fails to collect, which does not lose money we hold.
+ *
+ * Belongs in `siteSettings.gst` the day a rate revision has to land without a
+ * deploy — `TaxCodeDocument.effectiveFrom` records that toys have already
+ * moved once — but a constant is the honest starting point rather than a
+ * settings field nobody has a reason to change.
+ */
+export const DEFAULT_GST_RATE = 5;
+
+/**
+ * Whether this is an intra-state supply (CGST+SGST) or inter-state (IGST).
+ *
+ * 🛑 NOT a raw `===` on two strings, which is what `createOrderForGroup` and
+ * `previewCheckoutPricing` both did. `constants/geo/subdivisions.ts` opens by
+ * recording why that fails: the same `state` field held *"Karnataka",
+ * "karnataka", "KA" and "Karnatka" depending on which of the three surfaces
+ * created the row*. A picker now fixes new addresses, but the store's state
+ * and every pre-picker row still arrive unnormalised.
+ *
+ * 🛑 Returns `null` for "cannot tell", and the distinction matters. The old
+ * expression was `!!storeState && storeState === buyerState`, so a store with
+ * no address resolved to `false` — i.e. **silently inter-state**, reported as
+ * full IGST. Note what this defect is and is not: IGST total equals
+ * CGST+SGST total, so **the buyer pays exactly the same amount either way**.
+ * It is a compliance and reporting defect on the invoice, not an overcharge —
+ * which is why it is safe to surface as `null` and let the caller log rather
+ * than guess.
+ */
+export function isIntraStateSupply(
+  storeState: string | undefined | null,
+  buyerState: string | undefined | null,
+): boolean | null {
+  const a = normaliseStateName(storeState);
+  const b = normaliseStateName(buyerState);
+  if (!a || !b) return null;
+  return a === b;
+}
+
+/** Lowercase, collapse whitespace, drop punctuation — "Tamil  Nadu." → "tamil nadu". */
+function normaliseStateName(raw: string | undefined | null): string | null {
+  if (!raw) return null;
+  const cleaned = raw
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return cleaned.length > 0 ? cleaned : null;
+}
+
 export function calculateGst(
   rate: number,
   intraState: boolean,

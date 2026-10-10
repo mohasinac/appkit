@@ -185,17 +185,107 @@ export function sumGroupGst(
   items: readonly CartItemDocument[],
   productById: Map<string, ProductDocument>,
   intraState: boolean,
-): { taxableAmount: number; gstAmount: number } {
+): GroupGstSummary {
   let taxableAmount = 0;
+  let exemptAmount = 0;
+  let cgst = 0;
+  let sgst = 0;
+  let igst = 0;
   let gstAmount = 0;
+  const byRate = new Map<number, GstRateSlice>();
+
   for (const item of items) {
     for (const slice of lineTaxComponentsFor(item, productById)) {
-      if (slice.gstRate <= 0) continue;
+      /*
+       * 🛑 A 0%-rated slice is EXEMPT, not absent. It was `continue`d
+       * entirely, so `order.taxableAmount` excluded exempt goods while
+       * `items[]` included them — and no mixed exempt/taxed order could ever
+       * reconcile its own Taxable column against its own summary. It is
+       * accumulated separately instead: representable, without inflating the
+       * base the tax was actually charged on.
+       */
+      if (slice.gstRate <= 0) {
+        exemptAmount += slice.taxable;
+        continue;
+      }
+      /*
+       * The split comes from `calculateGst` PER SLICE and is accumulated.
+       * `createOrderForGroup` used to re-derive it from the total with
+       * `Math.round(gstAmount / 2)` — whole rupees, so ₹161.82 split to
+       * 81.00/80.82 instead of 80.91/80.91, and ₹0.52 rounded to 0 and then
+       * `|| undefined` dropped the CGST line off the invoice entirely.
+       */
+      const b = calculateGst(slice.gstRate, intraState, slice.taxable);
       taxableAmount += slice.taxable;
-      gstAmount += calculateGst(slice.gstRate, intraState, slice.taxable).gstAmount;
+      cgst += b.cgst;
+      sgst += b.sgst;
+      igst += b.igst;
+      gstAmount += b.gstAmount;
+
+      /*
+       * Per-rate, because Rule 46 wants taxable value and tax PER RATE on the
+       * invoice. A mixed 5%+18% order cannot produce a compliant document from
+       * one aggregate triple, and re-deriving it downstream means a second
+       * implementation of this loop.
+       */
+      const prev = byRate.get(slice.gstRate);
+      if (prev) {
+        prev.taxableAmount = roundRupees(prev.taxableAmount + slice.taxable);
+        prev.cgst = roundRupees(prev.cgst + b.cgst);
+        prev.sgst = roundRupees(prev.sgst + b.sgst);
+        prev.igst = roundRupees(prev.igst + b.igst);
+        prev.gstAmount = roundRupees(prev.gstAmount + b.gstAmount);
+      } else {
+        byRate.set(slice.gstRate, {
+          gstRate: slice.gstRate,
+          taxableAmount: roundRupees(slice.taxable),
+          cgst: b.cgst,
+          sgst: b.sgst,
+          igst: b.igst,
+          gstAmount: b.gstAmount,
+        });
+      }
     }
   }
-  return { taxableAmount, gstAmount };
+
+  return {
+    taxableAmount: roundRupees(taxableAmount),
+    exemptAmount: roundRupees(exemptAmount),
+    cgst: roundRupees(cgst),
+    sgst: roundRupees(sgst),
+    igst: roundRupees(igst),
+    gstAmount: roundRupees(gstAmount),
+    byRate: [...byRate.values()].sort((x, y) => x.gstRate - y.gstRate),
+  };
+}
+
+/** One rate's rollup within an order group — what Rule 46 asks an invoice to show. */
+export interface GstRateSlice {
+  gstRate: number;
+  taxableAmount: number;
+  cgst: number;
+  sgst: number;
+  igst: number;
+  gstAmount: number;
+}
+
+/**
+ * What one order group owes, with the split and the rate dimension intact.
+ *
+ * Widened from `{ taxableAmount, gstAmount }` — additive, so both existing
+ * callers keep working while neither has to re-derive a split the per-slice
+ * `calculateGst` calls above already computed correctly.
+ */
+export interface GroupGstSummary {
+  /** Taxable value of slices carrying a POSITIVE rate. */
+  taxableAmount: number;
+  /** Taxable value of 0%-rated (exempt) slices. Not part of `taxableAmount`. */
+  exemptAmount: number;
+  cgst: number;
+  sgst: number;
+  igst: number;
+  gstAmount: number;
+  byRate: GstRateSlice[];
 }
 
 /**
