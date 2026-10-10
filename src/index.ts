@@ -9493,6 +9493,10 @@ export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } 
 // [CLIENT] CategoryInlineSelect â€" searchable category selector with optional inline quick-create.
 export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
 export type { CategoryInlineSelectProps } from "./features/seller/components/CategoryInlineSelect";
+// [CLIENT] CategoryTemplatePicker — the seller form's category description-template
+// picker (C2c). Fills SellerProductShell's `renderTemplateSelector` slot.
+export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
+export type { CategoryTemplatePickerProps, CategoryTemplateApply } from "./features/categories/components/CategoryTemplatePicker";
 // [CLIENT] BrandInlineSelect â€" searchable brand selector with inline quick-create (default: allowCreate=true).
 export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
 export type { BrandInlineSelectProps } from "./features/seller/components/BrandInlineSelect";

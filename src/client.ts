@@ -1196,6 +1196,8 @@ export type {
 export { FAQPageContent } from "./features/faq/index";
 export type { FAQCategory, FAQCategoryItem, FAQSortOption } from "./features/faq/index";
 export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
+export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
+export type { CategoryTemplatePickerProps, CategoryTemplateApply } from "./features/categories/components/CategoryTemplatePicker";
 export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
 export { API_ENDPOINTS } from "./constants/index";
 

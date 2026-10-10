@@ -640,6 +640,42 @@ export const ACTIONS: ActionTree = {
       description: "Navigate to the full product listing for this store.",
       kind: "link",
     },
+    // ── Category description templates (C2c) ─────────────────────────────
+    "apply-template": {
+      iconKey: "edit",
+      id: "store.apply-template",
+      label: "Use this description",
+      ariaLabel: "Fill the description from this category template",
+      description:
+        "Fill the description field from the category's description template, with the listing's own details interpolated.",
+      kind: "secondary",
+      permissions: ["seller", "admin"],
+    },
+    "replace-description": {
+      iconKey: "edit",
+      id: "store.replace-description",
+      label: "Replace description",
+      ariaLabel: "Replace the description you have written with the category template",
+      description:
+        "Overwrite the description with the category's template. The text currently in the field is lost.",
+      /*
+       * 🛑 `danger` with a confirmation, because it destroys authored text.
+       *
+       * The picker only ever offers this when `isDescriptionDirty` — i.e. the
+       * seller has typed something that is not a body we filled in. Rule #7:
+       * an action that cannot be undone needs the confirmation ON the
+       * ActionDef, not a `window.confirm` at the call site, so the copy lives
+       * with the action and is translatable.
+       */
+      kind: "danger",
+      permissions: ["seller", "admin"],
+      confirmation: {
+        title: "Replace what you have written?",
+        body: "The description you typed will be overwritten by the category template. This cannot be undone.",
+        confirmLabel: "Replace it",
+        confirmKind: "danger",
+      },
+    },
     // ── Offer management ─────────────────────────────────────────────────
     "accept-offer": {
       iconKey: "approve",
