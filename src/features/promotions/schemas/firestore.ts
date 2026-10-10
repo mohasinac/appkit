@@ -307,9 +307,83 @@ export function canUserUseCoupon(
   return userUsageCount < coupon.usage.perUserLimit;
 }
 
+/** One cart line, as much of it as a BOGO calculation needs. */
+export interface DiscountableLine {
+  price: number;
+  quantity: number;
+}
+
+/**
+ * "Buy X, get Y free" over the ELIGIBLE lines.
+ *
+ * 🛑 THE BUG THIS CLOSES: a BOGO coupon discounted ₹0.
+ *
+ * `calculateDiscount` had `case "buy_x_get_y": discountAmount = 0`, sharing a
+ * branch with `free_shipping`. That zero is CORRECT for free shipping — the
+ * waiver is honoured downstream as a shipping line, not as a discount — but
+ * `buy_x_get_y` had no second path anywhere: `coupon.bxgy` had **zero read
+ * sites in the repo**. So an admin could create and save a BOGO coupon,
+ * `validateCouponForCart` would answer "Coupon is valid", `CouponCard` would
+ * render a BOGO badge, and the buyer paid full price.
+ *
+ * WHY THIS NEEDS ITS OWN FUNCTION: BOGO cannot be computed from a total. Which
+ * units are free depends on individual unit prices, so the line items are
+ * required input. `calculateDiscount(coupon, total)` structurally could not
+ * express it, which is how the `= 0` came to look like a complete branch.
+ *
+ * THE RULE: units are grouped in blocks of `buyQuantity + getQuantity`, and in
+ * each complete block the CHEAPEST `getQuantity` units are free. Cheapest-free
+ * is the conventional retail reading of "buy 2 get 1 free" and the one a buyer
+ * expects to be charged; awarding the dearest would make the same promotion
+ * worth a different amount depending on basket order.
+ *
+ * 🛑 An INCOMPLETE block earns nothing. "Buy 2 get 1" on 2 units is a block of
+ * 2 against a required 3, so the discount is 0 — not a partial credit.
+ */
+export function calculateBxgyDiscount(
+  bxgy: BXGYConfig | undefined,
+  lines: readonly DiscountableLine[],
+): number {
+  if (!bxgy) return 0;
+  const buy = Math.floor(bxgy.buyQuantity);
+  const get = Math.floor(bxgy.getQuantity);
+  // A non-positive `get` awards nothing; a non-positive `buy` would make every
+  // unit free, which is a misconfiguration, not a promotion.
+  if (!Number.isFinite(buy) || !Number.isFinite(get) || buy <= 0 || get <= 0) return 0;
+
+  // Expand to one entry per UNIT — a line of quantity 3 contributes 3 prices,
+  // because the free units are counted in units, not in lines.
+  const unitPrices: number[] = [];
+  for (const line of lines) {
+    const qty = Math.floor(line.quantity);
+    if (!Number.isFinite(qty) || qty <= 0) continue;
+    if (!Number.isFinite(line.price) || line.price < 0) continue;
+    for (let i = 0; i < qty; i++) unitPrices.push(line.price);
+  }
+
+  const blockSize = buy + get;
+  const freeUnits = Math.floor(unitPrices.length / blockSize) * get;
+  if (freeUnits <= 0) return 0;
+
+  unitPrices.sort((a, b) => a - b);
+  let discount = 0;
+  for (let i = 0; i < freeUnits; i++) discount += unitPrices[i];
+  return discount;
+}
+
 export function calculateDiscount(
   coupon: CouponDocument,
   orderTotal: number,
+  /**
+   * The eligible lines, for the types that need them.
+   *
+   * Optional because one of the two callers — `validateCoupon(code, userId,
+   * orderTotal)` — only ever has a total. That caller gets 0 for a BOGO
+   * coupon, which is honest: the discount is genuinely unknowable without the
+   * basket. `validateCouponForCart` DOES hold the eligible lines (it already
+   * reduces them to `eligibleSubtotal`) and passes them.
+   */
+  lines?: readonly DiscountableLine[],
 ): number {
   if (coupon.discount.minPurchase && orderTotal < coupon.discount.minPurchase)
     return 0;
@@ -328,8 +402,17 @@ export function calculateDiscount(
     case "fixed":
       discountAmount = Math.min(coupon.discount.value, orderTotal);
       break;
-    case "free_shipping":
     case "buy_x_get_y":
+      // Needs the basket — see calculateBxgyDiscount. Capped at the total so a
+      // misconfigured coupon cannot discount more than is being bought.
+      discountAmount = Math.min(
+        calculateBxgyDiscount(coupon.bxgy, lines ?? []),
+        orderTotal,
+      );
+      break;
+    case "free_shipping":
+      // Genuinely 0 HERE. The waiver is applied as a shipping line downstream,
+      // not as a discount — this is the one type for which zero is the answer.
       discountAmount = 0;
       break;
   }

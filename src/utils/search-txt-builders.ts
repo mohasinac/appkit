@@ -30,6 +30,7 @@
 
 import { buildSearchTxt } from "./search-txt";
 import type { ProductDocument } from "../features/products/schemas/firestore";
+import type { CategoryDocument } from "../features/categories/schemas/firestore";
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
 import type { StoreDocument } from "../features/stores/schemas/firestore";
 import type { EventDocument } from "../features/events/schemas/firestore";
@@ -57,6 +58,36 @@ export function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
     p.card?.cardNumber,
     p.grading?.service,
     p.specifications?.map((s) => `${s.name} ${s.value}`),
+  ]);
+}
+
+/**
+ * categories — name, slug, path, ancestor names, item code, editorial copy.
+ *
+ * Covers brand and bundle rows too, since they share the collection: hence
+ * `brandCountry` and `itemCode`, which only one kind ever carries.
+ *
+ * 🛑 `ancestors[].name` is in here deliberately, and it is what makes a leaf
+ * findable by its lineage — typing "burst" reaches `category-lost-longinus`
+ * because Beyblade Burst is one of its ancestors. Without it, the only way to
+ * find a tier-4 model is to already know its exact name.
+ *
+ * `description` is stripped of HTML because `contentBody`-style copy is
+ * keyword-rich markup and the tags are not search terms.
+ *
+ * NOT indexed: `createdBy` (a raw uid), `createdByStoreName` (operator
+ * identity), `position`/`subtreeSize` (internal coordinates), and the
+ * `metrics` counters (numbers nobody searches by).
+ */
+export function buildCategorySearchTxt(c: Partial<CategoryDocument>): string[] {
+  return buildSearchTxt([
+    c.name,
+    c.slug,
+    stripHtml(c.description),
+    c.path,
+    c.itemCode,
+    c.brandCountry,
+    ...(c.ancestors ?? []).map((a) => a.name),
   ]);
 }
 

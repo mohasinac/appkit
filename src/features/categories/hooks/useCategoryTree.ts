@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CategoryItem } from "../types";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
+import { isListingCategory } from "../constants/listing-categories";
 
 interface CategoryListResponse {
   items?: CategoryItem[];
@@ -18,13 +19,38 @@ export function useCategoryTree(opts?: { enabled?: boolean }) {
   const { data, isLoading } = useQuery<CategoryItem[]>({
     queryKey: ["categories", "tree"],
     queryFn: async () => {
+      /*
+       * 🛑 `flat=true` is load-bearing, not a preference.
+       *
+       * `/api/categories` computes `isFiltered` from flat/parentId/featured/
+       * isBrand/showOnHomepage/tier/type. `pageSize` and `sort` are NOT in
+       * that set — so a request carrying only those falls through to TREE
+       * mode, which returns a NESTED payload with only roots at the top
+       * level. `flattenTree` below then builds its adjacency map from roots
+       * alone and `dfs(null)` emits tier-0 only.
+       *
+       * Measured against production data before this fix: the category
+       * facet on /products, /auctions, /pre-orders and /prize-draws showed
+       * **11 options instead of 47** — and 9 of those 11 were not categories
+       * at all. It listed "Takara-Tomy", "Hasbro", "Burst Battlers Pack" and
+       * "X-Series Starter Set", because brand and bundle rows live in the
+       * same collection with empty `parentIds`, so tree mode surfaced them
+       * as roots.
+       *
+       * It failed silently because a short list of plausible-looking names
+       * is indistinguishable from a correct one.
+       *
+       * `sort` was also dropped: BOTH branches hardcode `sort: "order"`, and
+       * this hook re-orders by DFS anyway, so passing it implied a control
+       * that never existed.
+       */
       const res = await apiClient.get<CategoryListResponse | CategoryItem[]>(
-        `${CATEGORY_ENDPOINTS.LIST}?pageSize=300&sort=tier,order,name`,
+        `${CATEGORY_ENDPOINTS.LIST}?flat=true&pageSize=500`,
       );
       const items: CategoryItem[] = Array.isArray(res)
         ? res
         : (res as CategoryListResponse).items ?? (res as CategoryListResponse).data ?? [];
-      return flattenTree(items);
+      return flattenTree(items.filter(isListingCategory));
     },
     enabled: opts?.enabled ?? true,
     staleTime: 5 * 60 * 1000, // 5 min

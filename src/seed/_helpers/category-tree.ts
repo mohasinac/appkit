@@ -61,7 +61,23 @@ export function buildCategoryTree(
   opts: BuildCategoryTreeOptions,
 ): Partial<CategoryDocument>[] {
   const rows: Partial<CategoryDocument>[] = [];
-  let position = 0;
+  /*
+   * 🛑 1-BASED, and that is not cosmetic — it must match `positionsReconcile`,
+   * which starts its own DFS at `let counter = 1`.
+   *
+   * This counter started at 0 until 2026-10-10. The nightly reconcile then
+   * found every row off by one (`current.position !== position`) and rewrote
+   * the entire collection on the first run after any reseed — 58 writes then,
+   * ~330 once the catalogue grows, each re-entering `onCategoryWrite` as a
+   * no-op invocation. Measured in production before the change: seed emits
+   * 0..57, live data reads 1..58, i.e. the reconcile had already corrected
+   * all of it.
+   *
+   * It also makes position 0 UNAMBIGUOUS, which `handleCategoryWrite` now
+   * relies on: a document arriving with `position >= 1` was numbered by this
+   * builder, and one with 0/absent was not.
+   */
+  let position = 1;
 
   function visit(
     node: CategoryTreeNode,

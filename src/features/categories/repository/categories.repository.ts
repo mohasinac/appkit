@@ -9,10 +9,17 @@ import {
   BaseRepository,
   prepareForFirestore,
   parseSieveDateValue,
+  applySieveToFirestore,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
+import { buildCategorySearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import {
   CATEGORY_FIELDS,
@@ -28,7 +35,7 @@ import {
   type CategoryMoveInput,
   type CategoryTreeNode,
 } from "../schemas";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
 
 /** One pending document write, for `commitChunked`. */
 type CategoryWrite = { id: string; data: FirestoreDocument };
@@ -41,6 +48,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     isActive: { canFilter: true, canSort: false },
     isFeatured: { canFilter: true, canSort: false },
     isBrand: { canFilter: true, canSort: false },
+    searchTxt: { canFilter: true, canSort: false },
     categoryType: { canFilter: true, canSort: false },
     isSearchable: { canFilter: true, canSort: false },
     parentId: { canFilter: true, canSort: false, path: "parentIds" },
@@ -69,13 +77,51 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     super(CATEGORIES_COLLECTION);
   }
 
+  /** Derived on every write path via `applyWriteHooks`. */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildCategorySearchTxt(data as Partial<CategoryDocument>);
+  }
+
   async list(
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<CategoryDocument>> {
-    return this.sieveQuery<CategoryDocument>(
+    /*
+     * `q` is a searchTxt pushdown, NOT a Sieve filter.
+     *
+     * `plan.head` becomes one `array-contains` on the longest term and
+     * `plan.rest` is AND-refined in memory — the same two-part shape the other
+     * ten migrated collections use. Going through `planSearchTxt` rather than
+     * hand-rolling it is what buys the `empty` guard: a query that normalises
+     * to no usable token (`"!!!"`, `"—"`) must return NOTHING, because
+     * emitting no clause at all returns the whole collection and calls it a
+     * search result. That is the live bug `products` still has (A2).
+     */
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<CategoryDocument>();
+
+    if (!plan.head) {
+      return this.sieveQuery<CategoryDocument>(
+        model,
+        CategoriesRepository.SIEVE_FIELDS,
+      );
+    }
+
+    const baseQuery = this.getCollection().where(
+      CATEGORY_FIELDS.SEARCH_TXT,
+      "array-contains",
+      plan.head,
+    ) as FirebaseFirestore.Query;
+
+    const result = await applySieveToFirestore<CategoryDocument>({
+      baseQuery,
       model,
-      CategoriesRepository.SIEVE_FIELDS,
-    );
+      fields: CategoriesRepository.SIEVE_FIELDS,
+      mapDoc: (snap) => this.mapDoc<CategoryDocument>(snap),
+    });
+    return refineSearchTxt(result, plan.rest);
   }
 
   async createWithHierarchy(
@@ -240,16 +286,50 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     }
   }
 
-  async getCategoriesByRootId(rootId: string): Promise<CategoryDocument[]> {
+  /**
+   * Every category sharing a root, tier-then-order.
+   *
+   * 🛑 `limit` is for DISPLAY callers only, and it is a real truncation.
+   * `buildTree(rootId)` must pass nothing: a tree built from a truncated node
+   * list silently drops whole branches, which is the exact failure
+   * `getDescendants`'s docstring was rewritten to avoid. A display grid of
+   * sibling categories, by contrast, renders ~20 tiles and has no reason to
+   * read 1,500 documents to do it.
+   *
+   * Paginated rather than one unbounded `.get()`: the previous form read the
+   * whole root subtree into memory on every category page render, which at the
+   * ~330-node forest this plan seeds is ~9% of a 50K/day Firestore budget for
+   * ONE page view.
+   */
+  async getCategoriesByRootId(
+    rootId: string,
+    opts?: { limit?: number },
+  ): Promise<CategoryDocument[]> {
     try {
-      const snapshot = await this.db
-        .collection(this.collection)
-        .where(CATEGORY_FIELDS.ROOT_ID, "==", rootId)
-        .orderBy(CATEGORY_FIELDS.TIER, "asc")
-        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
-        .get();
+      const cap = opts?.limit;
+      const pageSize = cap ? Math.min(cap, 300) : 300;
+      const out: CategoryDocument[] = [];
+      let cursor: FirebaseFirestore.QueryDocumentSnapshot | null = null;
 
-      return snapshot.docs.map((doc) => this.mapDoc<CategoryDocument>(doc));
+      for (;;) {
+        let q = this.db
+          .collection(this.collection)
+          .where(CATEGORY_FIELDS.ROOT_ID, "==", rootId)
+          .orderBy(CATEGORY_FIELDS.TIER, "asc")
+          .orderBy(CATEGORY_FIELDS.ORDER, "asc")
+          .limit(pageSize);
+        if (cursor) q = q.startAfter(cursor);
+
+        const page = await q.get();
+        if (page.empty) break;
+
+        for (const doc of page.docs) out.push(this.mapDoc<CategoryDocument>(doc));
+        if (cap && out.length >= cap) return out.slice(0, cap);
+        if (page.size < pageSize) break;
+        cursor = page.docs[page.docs.length - 1]!;
+      }
+
+      return out;
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError(
@@ -281,17 +361,16 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     }
   }
 
-  /**
-   * IDs of every descendant category at any depth (not just direct
-   * children) — `parentIds` stores the full ancestor chain, so a single
-   * array-contains query on that field already returns the whole subtree
-   * with no recursion needed. Used to expand a parent category's product
-   * listing/count to include products filed under any of its children.
+  /*
+   * 🛑 `getDescendantIds` was DELETED (2026-10-10). It was
+   * `getDescendants(id).then(d => d.map(x => x.id))`, and its only caller —
+   * CategoryDetailPageView — already held the documents from its own
+   * `getDescendants` call in the same render. So it re-ran the identical
+   * paginated subtree query and discarded everything but the ids: ~330 wasted
+   * reads per page view at the forest size this plan seeds, and two answers
+   * that could disagree whenever one read failed and the other did not.
+   * Call `getDescendants` and `.map(d => d.id)` at the one site that needs it.
    */
-  async getDescendantIds(categoryId: string): Promise<string[]> {
-    const docs = await this.getDescendants(categoryId);
-    return docs.map((d) => d.id);
-  }
 
   /**
    * Every descendant DOCUMENT at any depth.
@@ -896,24 +975,20 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
   }
 
+  /*
+   * 🛑 `incrementViewCount` DELETED 2026-10-10 — zero callers since
+   * 2026-08-31, when it was removed from the category-detail render path (a
+   * Firestore write per render, and a second counter racing `pageViews`).
+   *
+   * Measured: `viewCount` is absent from all 58 category documents. Deleting
+   * the writer nobody calls is what stops the dead field reading as live. See
+   * the products repository for the same removal.
+   */
+
   /**
    * SB-UNI-B — derive the canonical `sublisting-{slug}` ID from a
    * human-entered category name.
    */
-  async incrementViewCount(categoryId: string): Promise<void> {
-    try {
-      await this.db
-        .collection(this.collection)
-        .doc(categoryId)
-        .update({ [CATEGORY_FIELDS.VIEW_COUNT]: increment(1) });
-      // Fire-and-forget analytics: a lost view increment changes nothing that
-      // renders, so it must never break the category read path it rides along
-      // with — the count is approximate by design.
-    } catch (_err) {
-      void normalizeError(_err);
-    }
-  }
-
   generateSublistingId(name: string): string {
     const base = name
       .toLowerCase()

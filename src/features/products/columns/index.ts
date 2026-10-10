@@ -19,7 +19,11 @@ export const PRODUCT_SORT_VALUES = {
   PRICE_LOW: "price",
   PRICE_HIGH: "-price",
   RATING_HIGH: "-avgRating",
-  POPULAR: "-viewCount",
+  // 🛑 `POPULAR: "-viewCount"` removed 2026-10-10 — `viewCount` is on no
+  // document (0/72 products, 0/58 categories) and nothing writes it, so a
+  // Firestore orderBy on it excludes every row. Verified: 0 results against a
+  // valid index. See STANDARD_SORT_OPTIONS for the full writeup.
+  // `RATING_HIGH` above is fine by contrast — `avgRating` is present on 72/72.
   NAME_AZ: "title",
   NAME_ZA: "-title",
 } as const;

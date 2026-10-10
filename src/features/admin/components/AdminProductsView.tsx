@@ -42,6 +42,14 @@ interface AdminProductsResponse {
 type ProductRow = AdminListingScaffoldRow;
 type FlagField = "featured" | "isPromoted" | "isOnSale" | "isSold";
 
+/** `POST /api/admin/products/bulk` — named so the partial-failure shape is
+ *  type-checked rather than read off an inline generic. */
+interface BulkFlagResult {
+  updated: string[];
+  failed: { id: string; reason: string }[];
+  summary: { requested: number; updated: number; failed: number };
+}
+
 const FLAG_DEFS: { key: FlagField; label: string }[] = [
   { key: "featured", label: "Featured" },
   { key: "isPromoted", label: "Promoted" },
@@ -112,6 +120,74 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       }
     },
     [showToast, overrides],
+  );
+
+  /** Flip one flag across a selection, optimistically, in chunks. */
+  const setFlagOverrides = useCallback(
+    (ids: readonly string[], field: FlagField, value: boolean) => {
+      setOverrides((o) => {
+        const next = { ...o };
+        for (const id of ids) next[id] = { ...next[id], [field]: value };
+        return next;
+      });
+    },
+    [],
+  );
+
+  const handleBulkToggle = useCallback(
+    async (ids: string[], field: FlagField, value: boolean) => {
+      setFlagOverrides(ids, field, value);
+
+      /*
+       * Chunked at the route's own bound.
+       *
+       * Select-all takes the CURRENT PAGE (`setSelectedIds(rows.map(...))` in
+       * DataListingView) and `pageSize` is user-settable from the pagination
+       * control, so a selection larger than the route's `max(50)` is
+       * reachable — sending it whole would 400 the entire batch on a Zod
+       * error. Chunking keeps the server's bound honest without making the UI
+       * enforce a number it does not own.
+       *
+       * Still a collapse, not a fan-out: 200 rows is 4 sequential requests
+       * rather than the 200 concurrent ones this replaced.
+       */
+      const CHUNK = 50;
+      let updated = 0;
+      let failedCount = 0;
+      const failedIds: string[] = [];
+
+      try {
+        for (let i = 0; i < ids.length; i += CHUNK) {
+          const part = await apiClient.post<BulkFlagResult>(
+            ADMIN_ENDPOINTS.PRODUCTS_BULK,
+            { field, value, ids: ids.slice(i, i + CHUNK) },
+          );
+          updated += part?.summary?.updated ?? 0;
+          failedCount += part?.summary?.failed ?? 0;
+          for (const f of part?.failed ?? []) failedIds.push(f.id);
+        }
+      } catch (err) {
+        void normalizeError(err);
+        // The request itself failed — roll every row back, including any
+        // earlier chunk, because the admin cannot tell which landed.
+        setFlagOverrides(ids, field, !value);
+        showToast((err as Error)?.message ?? "Bulk update failed.", "error");
+        return;
+      }
+
+      if (failedIds.length > 0) {
+        // Roll back ONLY the rows the server named, so the ones that
+        // succeeded keep their new state.
+        setFlagOverrides(failedIds, field, !value);
+        showToast(
+          `Updated ${updated} of ${ids.length}; ${failedCount} failed.`,
+          "warning",
+        );
+        return;
+      }
+      showToast(`Updated ${updated} product${updated === 1 ? "" : "s"}.`, "success");
+    },
+    [setFlagOverrides, showToast],
   );
 
   const handleQuickEdit = useCallback(
@@ -278,12 +354,29 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
         [ROW_ACTION_ID.PROMOTE]: "isPromoted",
         [ROW_ACTION_ID.SALE]: "isOnSale",
       };
-      const toggleField = (rowId: string, field: FlagField) => {
-        const row = selection.rows.find((r) => r.id === rowId);
-        if (row) void handleToggle(rowId, field, !row[field]);
-      };
-      const bulkToggle = (field: FlagField) => () => {
-        selection.selectedIds.forEach((rowId) => toggleField(rowId, field));
+      /*
+       * 🛑 ONE request, not one per row.
+       *
+       * This was `selectedIds.forEach((rowId) => toggleField(rowId, field))`
+       * — a fire-and-forget `forEach` of single-row PATCHes. Selecting 200
+       * products and clicking Feature fired **200 concurrent requests**, each
+       * its own function invocation, with `clearSelection()` running
+       * immediately so nothing reported what actually happened. A row that
+       * failed raised its own toast, up to 200 of them.
+       *
+       * The bulk route returns `{updated, failed, summary}`, so a partial
+       * failure is now a single message naming the count instead of silence.
+       * Selection is cleared only AFTER the request resolves — clearing first
+       * is what made it look finished the instant it was clicked.
+       *
+       * The optimistic `overrides` are still applied per row so the switches
+       * move immediately; a failure rolls back only the ids the server names.
+       */
+      const bulkToggle = (field: FlagField) => async () => {
+        const ids = [...selection.selectedIds];
+        if (ids.length === 0) return;
+        const value = !selection.rows.find((r) => r.id === ids[0])?.[field];
+        await handleBulkToggle(ids, field, value);
         selection.clearSelection();
       };
       return ADMIN_BULK_ACTIONS.products.map((id) => ({

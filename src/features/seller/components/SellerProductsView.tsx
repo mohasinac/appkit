@@ -1,4 +1,5 @@
 "use client";
+import { formatPhysicalLocation } from "../../../utils/physical-location";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
@@ -190,14 +191,19 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     key: "physicalLocation",
     header: "Location",
     className: "w-28",
-    render: (row) =>
-      row.physicalLocation ? (
+    render: (row) => {
+      // One formatter, shared with SellerOrdersView and PrintCenterView. It
+      // also returns undefined for an all-blank location, which the bulk
+      // routes genuinely allow — this used to print a bare "//".
+      const loc = formatPhysicalLocation(row.physicalLocation);
+      return loc ? (
         <Span size="xs" className="font-mono text-[var(--appkit-color-text-muted)]">
-          {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
+          {loc}
         </Span>
       ) : (
         <Span size="xs" color="faint">—</Span>
-      ),
+      );
+    },
   },
 ];
 

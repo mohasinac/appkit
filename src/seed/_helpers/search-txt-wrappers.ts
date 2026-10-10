@@ -8,6 +8,7 @@
  * the backfill script; keeping the wrappers as thin delegations means there is
  * no third copy for it to have to check.
  */
+import type { CategoryDocument } from "../../features/categories/schemas/firestore";
 import type { StoreDocument } from "../../features/stores/schemas/firestore";
 import type { ScammerDocument } from "../../features/scams/schemas/firestore";
 import type { EventDocument } from "../../features/events/schemas/firestore";
@@ -17,6 +18,7 @@ import type { OrderDocument } from "../../features/orders/schemas/firestore";
 import type { CouponDocument } from "../../features/promotions/schemas/firestore";
 import type { OfferDocument } from "../../features/seller/schemas/firestore";
 import {
+  buildCategorySearchTxt,
   buildStoreSearchTxt,
   buildEventSearchTxt,
   buildBlogSearchTxt,
@@ -26,6 +28,18 @@ import {
   buildOfferSearchTxt,
   buildScammerSearchTxt,
 } from "../../utils/search-txt-builders";
+
+/**
+ * 🛑 Apply AFTER `buildCategoryTree`, never before.
+ *
+ * `buildCategorySearchTxt` indexes `path` and `ancestors[].name`, and both are
+ * DERIVED by the tree builder — a row wrapped before derivation gets tokens
+ * from `name`/`slug`/`description` only, and silently loses the lineage search
+ * that is the whole reason ancestors are indexed.
+ */
+export function withCategorySearchTxt<T extends Partial<CategoryDocument>>(p: T): T {
+  return { ...p, searchTxt: buildCategorySearchTxt(p) };
+}
 
 export function withStoreSearchTxt<T extends Partial<StoreDocument>>(p: T): T {
   return { ...p, searchTxt: buildStoreSearchTxt(p) };

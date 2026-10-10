@@ -7,6 +7,10 @@ import { Heading, Text } from "../../../ui/components/Typography";
 import { Stack, Row } from "../../../ui/components/Layout";
 import { Button } from "../../../ui/components/Button";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
+import {
+  formatPhysicalLocation,
+  type PhysicalLocationParts,
+} from "../../../utils/physical-location";
 
 interface PrintCenterStore {
   id: string;
@@ -24,7 +28,12 @@ interface PrintCenterProduct {
   listingType?: string;
   condition?: string;
   stockCount?: number;
-  physicalLocation?: string;
+  /* 🛑 An OBJECT, not a string. This was declared `string` while
+   * `PrintCenterPanel` passed the raw `{zone, shelf, bin}` straight through,
+   * so the render below put an object into JSX — "Objects are not valid as a
+   * React child". Both mappers there are `(x: any)` and the products array is
+   * cast `as any`, which is why neither side complained. */
+  physicalLocation?: PhysicalLocationParts;
   barcodeId?: string;
 }
 
@@ -35,7 +44,12 @@ interface PrintCenterOrder {
   buyerDisplayName?: string;
   buyerCity?: string;
   items: { productName: string; quantity: number; price: number; barcodeId?: string }[];
-  physicalLocation?: string;
+  /* 🛑 An OBJECT, not a string. This was declared `string` while
+   * `PrintCenterPanel` passed the raw `{zone, shelf, bin}` straight through,
+   * so the render below put an object into JSX — "Objects are not valid as a
+   * React child". Both mappers there are `(x: any)` and the products array is
+   * cast `as any`, which is why neither side complained. */
+  physicalLocation?: PhysicalLocationParts;
 }
 
 interface PrintCenterViewProps {
@@ -78,8 +92,10 @@ function ProductLabel({ product }: { product: PrintCenterProduct }) {
       )}
       <Text size="xs" weight="medium" truncate={1}>{product.name}</Text>
       <Text size="xs" color="muted">₹{product.price.toLocaleString("en-IN")}</Text>
-      {product.physicalLocation && (
-        <Text size="xs" color="muted">{product.physicalLocation}</Text>
+      {formatPhysicalLocation(product.physicalLocation) && (
+        <Text size="xs" color="muted">
+          {formatPhysicalLocation(product.physicalLocation)}
+        </Text>
       )}
     </Stack>
   );
@@ -95,8 +111,10 @@ function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName:
       <Text size="xs" color="muted">{new Date(order.createdAt).toLocaleDateString("en-IN")}</Text>
       {order.buyerDisplayName && <Text size="sm" weight="medium">{order.buyerDisplayName}</Text>}
       {order.buyerCity && <Text size="xs" color="muted">{order.buyerCity}</Text>}
-      {order.physicalLocation && (
-        <Text size="xs" color="muted">Staging: {order.physicalLocation}</Text>
+      {formatPhysicalLocation(order.physicalLocation) && (
+        <Text size="xs" color="muted">
+          Staging: {formatPhysicalLocation(order.physicalLocation)}
+        </Text>
       )}
       <Stack border="top" padding="t-xs" className="mt-3">
         {order.items.map((item, i) => (

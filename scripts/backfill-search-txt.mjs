@@ -133,6 +133,14 @@ const SOURCES = {
     (d.specifications ?? []).map((s) => `${s.name} ${s.value}`),
   ],
   testerChecklistItems: (d) => [d.label, d.description, d.groupLabel, d.pageLabel],
+  // Mirrors buildCategorySearchTxt. `ancestors[].name` is the load-bearing one
+  // — it is what makes a tier-4 model findable by its lineage ("burst" reaches
+  // a model filed under Beyblade Burst). `createdBy` is a raw uid and
+  // `createdByStoreName` is operator identity; neither may feed searchTxt (D1).
+  categories: (d) => [
+    d.name, d.slug, stripHtml(d.description), d.path, d.itemCode, d.brandCountry,
+    (d.ancestors ?? []).map((a) => a.name),
+  ],
   stores: (d) => [d.storeName, stripHtml(d.storeDescription), d.storeCategory],
   events: (d) => [d.title, stripHtml(d.description), d.type, d.tags ?? []],
   // `content` is deliberately excluded — see buildBlogSearchTxt. Blog bodies

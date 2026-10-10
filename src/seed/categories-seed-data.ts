@@ -38,6 +38,7 @@ import type { CategoryDocument } from "../features/categories/schemas";
 import { CATEGORY_FIELDS } from "../constants/field-names";
 import { seedPhoto } from "./_helpers/media";
 import { buildCategoryTree } from "./_helpers/category-tree";
+import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
 
 const NOW = new Date();
@@ -510,18 +511,29 @@ const bundleRows: Partial<CategoryDocument>[] = [
   },
 ];
 
-export const categoriesSeedData: Partial<CategoryDocument>[] = [
+/*
+ * One array, wrapped once.
+ *
+ * `categoriesSeedData` and `categoriesP1SeedData` were two byte-identical
+ * literals, so every change had to be made twice — and `searchTxt` would have
+ * been two derivations to keep in step, which is the exact drift
+ * `search-txt-wrappers.ts` exists to prevent.
+ *
+ * 🛑 `withCategorySearchTxt` is applied AFTER the spread, deliberately:
+ * `buildCategorySearchTxt` indexes `path` and `ancestors[].name`, both DERIVED
+ * by `buildCategoryTree`. Wrapping a row before derivation would index
+ * name/slug/description only and silently drop the lineage search — typing
+ * "burst" would stop reaching a tier-4 model under Beyblade Burst.
+ */
+const allCategoryRows: Partial<CategoryDocument>[] = [
   ...rawCategories.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
   ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
   ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
-];
+].map(withCategorySearchTxt);
+
+export const categoriesSeedData: Partial<CategoryDocument>[] = allCategoryRows;
 
 // P-1 default seed: identical to categoriesSeedData (bundle rows included — P-17
 // re-added them 2026-08-15 after the earlier removal referenced below).
-export const categoriesP1SeedData: Partial<CategoryDocument>[] = [
-  ...rawCategories.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
-  ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
-  ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
-  ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
-];
+export const categoriesP1SeedData: Partial<CategoryDocument>[] = allCategoryRows;

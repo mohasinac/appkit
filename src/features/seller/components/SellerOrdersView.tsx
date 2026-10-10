@@ -1,4 +1,5 @@
 "use client";
+import { formatPhysicalLocation } from "../../../utils/physical-location";
 import { OrderAddonBadges } from "../../orders/components/OrderAddonBadges";
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit/client";
@@ -749,14 +750,17 @@ export function SellerOrdersView({
       key: "physicalLocation",
       header: "Staging",
       className: "w-28",
-      render: (row) =>
-        row.physicalLocation ? (
+      render: (row) => {
+        // Shared formatter — see utils/physical-location.ts.
+        const loc = formatPhysicalLocation(row.physicalLocation);
+        return loc ? (
           <Span size="xs" className="font-mono" color="muted">
-            {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
+            {loc}
           </Span>
         ) : (
           <Span size="xs" color="muted">—</Span>
-        ),
+        );
+      },
     },
     {
       key: "updatedAt",

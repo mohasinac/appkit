@@ -629,7 +629,12 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       };
     }
 
-    const discountAmount = calculateDiscount(coupon, eligibleSubtotal);
+    /*
+     * `eligible` is passed through, not just its subtotal — `buy_x_get_y`
+     * needs the individual unit prices to know which units are free, and
+     * without them it silently returned 0 for every BOGO coupon ever created.
+     */
+    const discountAmount = calculateDiscount(coupon, eligibleSubtotal, eligible);
 
     return {
       valid: true,

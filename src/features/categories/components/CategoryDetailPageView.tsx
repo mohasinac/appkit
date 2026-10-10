@@ -31,6 +31,17 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
+/**
+ * Read and display bounds for this page. Every one of these replaced an
+ * unbounded read — see the comments at each use site for what each one cost.
+ */
+/** Tiles rendered in "Related Categories". A sample, not an index. */
+const RELATED_CATEGORY_LIMIT = 24;
+/** Documents read to fill those tiles. Headroom for the non-listing filter. */
+const RELATED_CATEGORY_FETCH = 60;
+/** Descendant slugs the Stores tab will match on → at most 4 chunked queries. */
+const STORE_CATEGORY_SLUG_MAX = 120;
+
 export interface CategoryDetailPageViewProps {
   slug: string;
 }
@@ -102,8 +113,18 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     // Related categories — every other category sharing this category's root
     // (siblings + cousins across the tree, up to the tier-0/1/2 depth the
     // catalog actually uses), not just direct children.
+    //
+    // 🛑 BOUNDED. This read is a display grid, and it used to be an unbounded
+    // `.get()` over the whole root subtree — ~9% of a 50K/day Firestore budget
+    // for one page render once the forest reaches ~330 nodes, and it rendered
+    // every one of those as a tile. The section is a SAMPLE of nearby
+    // categories; the tier-grouped children grid above it is the real index.
+    // Fetch headroom is larger than the display cap because the filter below
+    // drops this category plus every brand/bundle/sublisting row.
+    // `buildTree` still passes no limit — a truncated node list there would
+    // silently drop whole branches.
     category?.rootId
-      ? safeRead(() => categoriesRepository.getCategoriesByRootId(category.rootId!), {
+      ? safeRead(() => categoriesRepository.getCategoriesByRootId(category.rootId!, { limit: RELATED_CATEGORY_FETCH }), {
           route: "/categories/[slug]",
           key: "category.rootSiblings",
           fallback: [],
@@ -126,9 +147,9 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     }),
   ]);
 
-  const relatedCategories = rootSiblingCategories.filter(
-    (c) => c.id !== category?.id && (!c.categoryType || c.categoryType === "category"),
-  );
+  const relatedCategories = rootSiblingCategories
+    .filter((c) => c.id !== category?.id && (!c.categoryType || c.categoryType === "category"))
+    .slice(0, RELATED_CATEGORY_LIMIT);
 
   // Stores tab — stores whose storeCategory is this category or ANY descendant.
   //
@@ -139,14 +160,25 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // an unbounded N+1. Both are fixed by pipe-joining the slugs into OR-groups:
   // the enhanced Sieve adapter turns a same-field OR into a Firestore `in`,
   // which caps at 30 values, hence the chunking.
-  const storeCategorySlugs = [
-    slug,
-    ...(await safeRead(() => categoriesRepository.getDescendantIds(category?.id ?? ""), {
-      route: "/categories/[slug]",
-      key: "category.descendantIds",
-      fallback: [] as string[],
-    })),
-  ].filter(Boolean);
+  //
+  // 🛑 The descendant ids are REUSED from `childCategories` above, not fetched
+  // again. `getDescendantIds` is literally `getDescendants().map(d => d.id)`,
+  // so calling it here ran the identical paginated subtree query a second time
+  // and threw the documents away — on a ~330-node root that is ~330 wasted
+  // reads per page view, and the two answers could disagree if one read failed
+  // while the other succeeded.
+  //
+  // 🛑 And the fan-out is CAPPED, nearest-first. One `listStores` query per 30
+  // slugs is 11 queries at ~330 nodes and 51 at ~1,500; sorting by tier takes
+  // the closest descendants, which is what someone browsing a root cares
+  // about. `storeCount` was already a floor (each chunk caps at pageSize 50),
+  // so this tightens a floor rather than making an exact number wrong.
+  const descendantIdsByProximity = [...childCategories]
+    .sort((a, b) => (a.tier ?? 0) - (b.tier ?? 0))
+    .map((c) => c.id);
+  const storeCategorySlugs = [slug, ...descendantIdsByProximity]
+    .filter(Boolean)
+    .slice(0, STORE_CATEGORY_SLUG_MAX);
   const SLUG_CHUNK = 30;
   const slugChunks: string[][] = [];
   for (let i = 0; i < storeCategorySlugs.length; i += SLUG_CHUNK) {

@@ -83,7 +83,31 @@ export const STANDARD_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.FEATURED), label: "Featured First" },
   { value: sortBy(PRODUCT_FIELDS.IS_PROMOTED), label: "Promoted First" },
   { value: sortBy(PRODUCT_FIELDS.UPDATED_AT), label: "Recently Updated" },
-  { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },
+  /*
+   * 🛑 "Most Viewed" REMOVED 2026-10-10 — it returned zero products, always.
+   *
+   * It sorted by `viewCount`, and **no document has that field**: measured on
+   * production, 0 of 72 published products and 0 of 58 categories carry it.
+   * Nothing writes it either — `incrementViewCount` was removed from the
+   * render path on 2026-08-31 (correctly: a Firestore write per render) and
+   * both repositories' copies have had zero callers since.
+   *
+   * A Firestore `orderBy` EXCLUDES every document that lacks the ordering
+   * field, so this was Root Cause #100 verbatim. Confirmed against the real
+   * query shape — `status==published` + `listingType==standard`:
+   *
+   *     no sort            -> 16 rows
+   *     orderBy title      -> 16 rows
+   *     orderBy viewCount  ->  0 rows      <- and the index EXISTS
+   *
+   * So it was not a missing index. It was a served query, costing a real
+   * round trip, guaranteed to return nothing — and picking it emptied the
+   * catalogue with no error anywhere.
+   *
+   * Real view counts arrive from the `pageViews` collection (already
+   * collected on ~30 surfaces) as `metrics.views7d`/`views30d`, rolled up by
+   * the daily job. A sort can come back then, against a field that exists.
+   */
 ] as const satisfies readonly SortOption[];
 
 export const STANDARD_PUBLIC_SORT_OPTIONS = [
@@ -93,7 +117,16 @@ export const STANDARD_PUBLIC_SORT_OPTIONS = [
   STANDARD_SORT_OPTIONS[3],
   STANDARD_SORT_OPTIONS[4],
   STANDARD_SORT_OPTIONS[5],
-  STANDARD_SORT_OPTIONS[9],
+  /*
+   * 🛑 `STANDARD_SORT_OPTIONS[9]` removed — it WAS "Most Viewed", and its
+   * presence here means the zero-result sort was offered on the PUBLIC
+   * products page, not only in admin. A shopper picking it emptied the
+   * catalogue.
+   *
+   * Indices 6–8 (Featured First / Promoted First / Recently Updated) are
+   * omitted deliberately and always have been — this list is a curated public
+   * subset, not a prefix.
+   */
 ] as const satisfies readonly SortOption[];
 
 // ---------------------------------------------------------------------------

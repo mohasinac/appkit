@@ -219,6 +219,20 @@ export interface CategoryDocument extends BaseDocument {
   isSearchable: boolean;
   showOnHomepage?: boolean;
 
+  /**
+   * Prefix-expanded search tokens, derived on every write by
+   * `CategoriesRepository.buildSearchTxtFor` → `buildCategorySearchTxt`.
+   *
+   * 🛑 Distinct from `isSearchable`, which is an admin visibility flag. This is
+   * the index that makes a category findable AT ALL: before it existed,
+   * `CATEGORY_SEARCH_SCAN_LIMIT` was capped at 100 by `SIEVE_DEFAULTS.maxPageSize`
+   * — so raising that number did nothing — and a tier-4 model like
+   * "Lost Longinus" was unfindable in every picker.
+   *
+   * Never fed any PII: no `createdBy` (a raw uid) and no `createdByStoreName`.
+   */
+  searchTxt?: string[];
+
   createdBy: string;
   /** Whether this category was created by admin or a store owner. */
   createdByType?: "admin" | "store";
@@ -245,6 +259,7 @@ export const CATEGORIES_INDEXED_FIELDS = [
   "isActive",
   "isSearchable",
   "showOnHomepage",
+  "searchTxt",
   "createdBy",
   "createdByType",
   "createdByStoreId",
@@ -457,6 +472,7 @@ export const CATEGORY_FIELDS = {
   VIEW_COUNT: "viewCount",
   IS_ACTIVE: "isActive",
   IS_SEARCHABLE: "isSearchable",
+  SEARCH_TXT: "searchTxt",
   CATEGORY_TYPE: "categoryType",
   CREATED_BY: "createdBy",
   CREATED_AT: "createdAt",
@@ -466,18 +482,47 @@ export const CATEGORY_FIELDS = {
 
 /**
  * Build a category tree from a flat list of CategoryDocument objects.
+ *
+ * 🛑 ONE INDEXING PASS, then recursion — not a `.filter()` per node.
+ * This used to scan the whole array once per category to find its children,
+ * which is O(n²): 2,209 comparisons at today's 47 nodes, ~109,000 at the ~330
+ * this plan seeds, and **2.25 million** at 1,500. It runs inside
+ * `categoriesRepository.buildTree()`, i.e. on a request path. Grouping by
+ * parent id first makes it O(n log n) (the sorts) and the output is
+ * byte-identical: same roots, same child order, same depths.
+ *
+ * 🛑 The `seen` set is not defensive padding. A root is picked by
+ * `tier === 0`, and nothing stops a corrupt row from being tier 0 *and* a
+ * descendant of its own child (`parentIds` is a denormalised chain that four
+ * different write paths maintain). The old code would recurse forever on that,
+ * and a hung SSR render is worse than a failed one — it holds a function open
+ * for its whole timeout and reports nothing. A revisited node is dropped from
+ * the second position it appears in rather than throwing: a malformed edge
+ * should cost one tile, not the category page.
  */
 export function buildCategoryTree(
   categories: CategoryDocument[],
   rootId?: string,
 ): CategoryTreeNode[] {
+  const byParent = new Map<string, CategoryDocument[]>();
+  for (const cat of categories) {
+    const parentId = cat.parentIds[cat.parentIds.length - 1];
+    if (!parentId) continue;
+    const bucket = byParent.get(parentId);
+    if (bucket) bucket.push(cat);
+    else byParent.set(parentId, [cat]);
+  }
+  for (const bucket of byParent.values()) bucket.sort((a, b) => a.order - b.order);
+
+  const seen = new Set<string>();
+
   function buildTree(
     category: CategoryDocument,
     depth: number,
   ): CategoryTreeNode {
-    const children = categories
-      .filter((cat) => cat.parentIds[cat.parentIds.length - 1] === category.id)
-      .sort((a, b) => a.order - b.order)
+    seen.add(category.id);
+    const children = (byParent.get(category.id) ?? [])
+      .filter((child) => !seen.has(child.id))
       .map((child) => buildTree(child, depth + 1));
 
     return { category, children, depth };

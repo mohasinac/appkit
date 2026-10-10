@@ -25,7 +25,9 @@ export interface AdminAnalyticsResult {
     revenue: number;
     orders: number;
     mainImage: string;
-    viewCount: number;
+    // `viewCount` removed 2026-10-10 — it was a REQUIRED field fed by
+    // `?? 0`, i.e. a guaranteed zero typed as a measurement. Real view
+    // data comes from the `pageViews` rollup.
   }>;
 }
 
@@ -124,7 +126,15 @@ export async function runAdminAnalytics(
   const topProductsWithImages = topProducts.map((p, i) => ({
     ...p,
     mainImage: topProductDocs[i]?.mainImage ?? "",
-    viewCount: topProductDocs[i]?.viewCount ?? 0,
+    /*
+     * 🛑 `viewCount: … ?? 0` removed 2026-10-10. The `?? 0` was the active
+     * ingredient: `viewCount` is absent from every product document, and
+     * coercing that absence to `0` made it pass `AdminTopProductsTable`'s
+     * `!= null` guard, so the table rendered a permanent "0 views".
+     *
+     * Dropping the key leaves it `undefined`, which is the truth. Real counts
+     * come from the `pageViews` collection once it is rolled up.
+     */
   }));
 
   return {

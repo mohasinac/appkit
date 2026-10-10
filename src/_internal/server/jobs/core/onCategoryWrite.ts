@@ -39,6 +39,12 @@ import type { JsonValue } from "@mohasinac/appkit";
  * itself, and each of those writes spawns a no-op invocation. A full reseed of the
  * 58-category forest therefore costs on the order of thousands of invocations, all
  * of them terminating. That is a cost worth knowing before a reseed, not a runaway.
+ *
+ * 🛑 AND THAT COST IS QUADRATIC, which is why the CREATE branch now has a
+ * precomputed-coordinates escape hatch (see the block at the top of `isCreate`).
+ * ~n²/4 writes: 58 nodes ≈ 840, 330 ≈ 27,000, 1,500 ≈ 560,000 — the last two
+ * being 1.4x and 28x the 20k/day Firestore write budget. A seed that already
+ * carries correct DFS coordinates skips the branch entirely.
  */
 
 import { FieldValue } from "firebase-admin/firestore";
@@ -126,6 +132,57 @@ export async function handleCategoryWrite(
 
   try {
     if (isCreate) {
+      /*
+       * 🛑 BULK-WRITE ESCAPE HATCH — skip everything when the writer already
+       * computed valid DFS coordinates.
+       *
+       * The branch below is O(n) reads + O(n) writes PER CATEGORY CREATED:
+       * `shiftPositions` runs an unbounded `where("position", ">=", t)` and
+       * rewrites every row it returns, because a new node is inserted as its
+       * parent's FIRST child and everything after it moves. Averaged over a
+       * build that is ~n/2 rows shifted per insert, so seeding N categories
+       * costs Σ(i/2) ≈ n²/4 writes:
+       *
+       *     58 nodes  ->    ~840 writes   (tolerable, and what we pay today)
+       *    330 nodes  -> ~27,000 writes   (above the 20k/day Firestore budget)
+       *  1,500 nodes  -> ~560,000 writes  (28x the daily budget, in one run)
+       *
+       * `buildCategoryTree` already computes `position` and `subtreeSize` as
+       * a correct global DFS pre-order — the exact numbering this handler
+       * would otherwise recompute one insert at a time. Worse than wasteful:
+       * the CREATE branch OVERWRITES that work with `subtreeSize: 1` and a
+       * locally-derived position, leaving the collection wrong until the
+       * nightly reconcile repairs it.
+       *
+       * So a document that arrives already numbered is left alone.
+       *
+       * The test is `position >= 1`, which is unambiguous because BOTH
+       * writers of a precomputed position are 1-based: `buildCategoryTree`
+       * and `positionsReconcile`. A category created through the admin/store
+       * routes carries `position: 0` (the `createWithHierarchy` default) and
+       * therefore still gets the full treatment.
+       *
+       * 🛑 This is NOT the Root Cause #92 shape. It is not a value-equality
+       * guard on a field this handler writes — it is a precondition on the
+       * INCOMING document, and the handler takes no action at all when it
+       * holds. There is nothing to compare and nothing to re-trigger.
+       */
+      const precomputedPosition = (after as CategoryDoc).position;
+      const precomputedSubtree = (after as CategoryDoc).subtreeSize;
+      if (
+        typeof precomputedPosition === "number" &&
+        precomputedPosition >= 1 &&
+        typeof precomputedSubtree === "number" &&
+        precomputedSubtree >= 1
+      ) {
+        ctx.logger.info("Category created with precomputed DFS coords — skipping position assignment", {
+          categoryId,
+          position: precomputedPosition,
+          subtreeSize: precomputedSubtree,
+        });
+        return;
+      }
+
       const parentIds = ((after as CategoryDoc).parentIds as string[]) ?? [];
       const parentId = parentIds.length > 0 ? parentIds[parentIds.length - 1] : null;
 

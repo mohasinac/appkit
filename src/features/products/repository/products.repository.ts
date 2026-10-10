@@ -15,10 +15,15 @@ import {
 import { cacheManager } from "../../../core";
 import { serverLogger } from "../../../monitoring";
 import { generateUniqueId, slugify, generateBarcodeId } from "../../../utils";
+import { parseSearchTxtQuery } from "../../../utils/search-txt";
+// The shared search plan/refine the other eleven migrated collections use.
+// `planSearchTxt` carries the `empty` guard that keeps a punctuation-only query
+// from returning the whole catalogue.
 import {
-  matchesAllSearchTerms,
-  parseSearchTxtQuery,
-} from "../../../utils/search-txt";
+  planSearchTxt,
+  refineSearchTxt,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 // One definition of "which fields feed searchTxt", shared with the seed
 // wrapper. Three copies existed and two were missing the same three fields.
 import { buildProductSearchTxt } from "../../../utils/search-txt-builders";
@@ -279,6 +284,68 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     "brandSlug",
   ] as const;
 
+  /**
+   * Keep `availableQuantity` in step when a seller edits `stockQuantity`.
+   *
+   * 🛑 THE BUG THIS CLOSES: A SELLER COULD NOT RESTOCK.
+   *
+   * There are two stock numbers. `stockQuantity` is seller-authored and is the
+   * only one any of the three product forms exposes. `availableQuantity` is
+   * system-owned, seeded from `stockQuantity` **once, at create**, and
+   * thereafter driven by checkout decrements and timeout restores.
+   *
+   * Nothing re-synced them. `updateProduct` is a bare spread, and grep for
+   * `availableQuantity` across `src/app/api/store/products/**` and
+   * `seller-actions.ts` returns ZERO. So: a product sells out
+   * (`availableQuantity: 0`), the seller edits `stockQuantity` 0 → 10, and the
+   * product STAYS UNBUYABLE — purchasability gates on `availableQuantity > 0`
+   * in three independent places (`service.ts`, the cart route, and the public
+   * list filter). The only field the seller can reach is the one that does not
+   * control availability.
+   *
+   * With 76–93% of competitor catalogues sold out, restock is the main
+   * lifecycle event, not an edge case.
+   *
+   * WHY A DELTA AND NOT `availableQuantity = stockQuantity`: the difference
+   * between the two IS the outstanding reservation — units held by placed-but-
+   * unpaid orders. Overwriting would hand those units back to the shelf and
+   * oversell them. So carry the reservation forward:
+   *
+   *     reserved = prevStock - prevAvailable        (clamped at 0)
+   *     available = nextStock - reserved            (clamped at 0)
+   *
+   * Examples: 10 stock / 10 available, edit to 12 → 12. 10 stock / 7 available
+   * (3 reserved), edit to 12 → 9. Sold out at 0/0, edit to 10 → 10.
+   *
+   * 🛑 Returns `{}` — not a value — whenever the write does not name
+   * `stockQuantity`, or names `availableQuantity` explicitly. The second case
+   * is what keeps the checkout decrement, the stock-restore job and
+   * `updateAvailableQuantity` authoritative: they write `availableQuantity`
+   * directly and must never have it recomputed from a stale `stockQuantity`
+   * underneath them.
+   */
+  private static resyncAvailableQuantity(
+    current: ProductDocument | null,
+    data: Partial<ProductDocument>,
+  ): Partial<ProductDocument> {
+    if (!current) return {};
+    if (!("stockQuantity" in data)) return {};
+    // An explicit availableQuantity write wins — see the 🛑 above.
+    if ("availableQuantity" in data) return {};
+
+    const nextStock = data.stockQuantity;
+    if (typeof nextStock !== "number" || !Number.isFinite(nextStock)) return {};
+
+    const prevStock = typeof current.stockQuantity === "number" ? current.stockQuantity : 0;
+    const prevAvailable =
+      typeof current.availableQuantity === "number" ? current.availableQuantity : prevStock;
+
+    const reserved = Math.max(0, prevStock - prevAvailable);
+    const nextAvailable = Math.max(0, nextStock - reserved);
+    if (nextAvailable === prevAvailable) return {};
+    return { availableQuantity: nextAvailable };
+  }
+
   override async update(
     id: string,
     data: Partial<ProductDocument>,
@@ -297,10 +364,12 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const derived = touchesTaxonomy
       ? await this.deriveTaxonomy({ ...current, ...data })
       : {};
-    const merged = { ...current, ...data, ...derived } as ProductDocument;
+    const stock = ProductRepository.resyncAvailableQuantity(current, data);
+    const merged = { ...current, ...data, ...derived, ...stock } as ProductDocument;
     const updated = await super.update(id, {
       ...data,
       ...derived,
+      ...stock,
       searchTxt: buildProductSearchTxt(merged),
     });
     this.cacheSet(updated);
@@ -937,6 +1006,31 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     model: SieveModel,
     opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string },
   ): Promise<FirebaseSieveResult<ProductDocument>> {
+    /*
+     * 🛑 THE EMPTY GUARD — a non-blank query that yields NO usable token must
+     * return nothing, not everything.
+     *
+     * `parseSearchTxtQuery` normalises away punctuation, so `"!!!"`, `"—"`,
+     * `"???"` and `"@#$"` all reduce to `[]`. `buildScopedQuery` then takes its
+     * `searchTxt.length > 0` branch as FALSE and emits **no clause at all**, so
+     * the query falls back to the caller's other filters — on the public
+     * listing that is `status==published` — and **the entire published
+     * catalogue is returned as search results.**
+     *
+     * `products` was the only one of the twelve MIGRATED collections still
+     * hand-rolling this. The other eleven go through `planSearchTxt`, whose
+     * whole reason for existing is this guard (see the header of
+     * `utils/search-txt-query.ts`); adopting it here closes the gap rather
+     * than adding a twelfth private copy of the rule.
+     *
+     * `planSearchTxt` is built on the same `parseSearchTxtQuery` this method
+     * already called, and `plan.head`/`plan.rest` are exactly the previous
+     * `searchTxt[0]`/`.slice(1)` — so apart from the guard this is behaviour-
+     * identical, which is what makes it safe for a path four executors share.
+     */
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<ProductDocument>();
+
     const result = await this.sieveQuery<ProductDocument>(
       model,
       ProductRepository.SIEVE_FIELDS,
@@ -954,27 +1048,13 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // nothing actually refined them — so "red dranzer" returned everything
     // matching "dranzer" and the second word did nothing at all.
     //
-    // Same shape as faqsRepository.list, deliberately: one implementation of
-    // "AND the remaining terms" that both collections read the same way.
-    const terms = parseSearchTxtQuery(opts?.search ?? "");
-    const extraTerms = terms.slice(1);
-    if (extraTerms.length === 0) return result;
-
-    const items = result.items.filter((p) =>
-      matchesAllSearchTerms(p.searchTxt, extraTerms),
-    );
-
-    // `total` becomes a FLOOR once rows are dropped after the page was cut —
-    // it counts this page only. That is the known post-pagination-filter debt
-    // (Phase 5), not a new invention: reporting the pre-filter total here would
-    // promise pages that render empty.
-    return {
-      ...result,
-      items,
-      total: items.length,
-      totalPages: items.length === 0 ? 0 : 1,
-      hasMore: false,
-    };
+    // `refineSearchTxt` is that AND-refine, shared with the other eleven
+    // migrated collections. It also owns the `total`-becomes-a-FLOOR
+    // bookkeeping: once rows are dropped after the page was cut, `total` counts
+    // this page only. That is the known post-pagination-filter debt, not a new
+    // invention — reporting the pre-filter total would promise pages that
+    // render empty.
+    return refineSearchTxt(result, plan.rest);
   }
 
   /**
@@ -1009,20 +1089,21 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     );
   }
 
-  async incrementViewCount(productId: string): Promise<void> {
-    try {
-      await this.db
-        .collection(this.collection)
-        .doc(productId)
-        .update({
-          [PRODUCT_FIELDS.VIEW_COUNT]: increment(1),
-        });
-      // Fire-and-forget analytics: a lost view increment changes no rendered
-      // content, so it must never break the product read path it rides with.
-    } catch (_err) {
-      void normalizeError(_err);
-    }
-  }
+  /*
+   * 🛑 `incrementViewCount` DELETED 2026-10-10 — zero callers since
+   * 2026-08-31.
+   *
+   * It was removed from the product-detail render path then, for two good
+   * reasons recorded in `_internal/server/features/products/data.ts`: it was a
+   * Firestore WRITE on every render (Rule #6), and it double-counted against
+   * `pageViews`, which is now the single counter. The method itself was left
+   * behind, so `viewCount` has had a writer in the codebase and none in
+   * practice ever since — which is how a "Most Viewed" sort and a "0 views"
+   * column both shipped against a field no document has.
+   *
+   * Keeping a writer nobody calls is what makes the dead field look alive.
+   * `pageViews` is the counter; roll it up rather than reviving this.
+   */
 
   /**
    * Cloud Functions: find published auctions whose end date has already passed.

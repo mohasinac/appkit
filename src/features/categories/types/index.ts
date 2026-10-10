@@ -70,6 +70,15 @@ export interface CategoryItem {
   metrics?: CategoryMetrics;
   isFeatured?: boolean;
   featuredPriority?: number;
+  /**
+   * Whether the category is live. Declared here because `AdminCategoriesView`
+   * reads it off THIS route to render its Status column, and its fallback is
+   * `toStringValue(item.status, "Active")` — a field `CategoryDocument` does
+   * not have. So an absent `isActive` does not render "unknown", it renders
+   * **every row as "Active"**, which is the same silent-wrong-value shape the
+   * `parentId` comment in that file documents.
+   */
+  isActive?: boolean;
   /** @deprecated Use categoryType === "brand" */ isBrand?: boolean;
   seo?: CategorySeo;
   display?: CategoryDisplay;

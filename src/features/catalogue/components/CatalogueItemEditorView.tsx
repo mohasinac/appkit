@@ -62,8 +62,16 @@ interface Values {
 }
 
 /** PUBLIC endpoints — this is a buyer surface; the admin ones would 403. */
-async function loadOptionsFrom(endpoint: string, query: string, page: number) {
-  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
+async function loadOptionsFrom(
+  endpoint: string,
+  query: string,
+  page: number,
+  /** Extra query params. Passed as an object rather than baked into
+   *  `endpoint`, because this builds its own `?` and a pre-existing query
+   *  string would produce `...?listingOnly=true?page=1`. */
+  extra?: Record<string, string>,
+) {
+  const params = new URLSearchParams({ page: String(page), pageSize: "25", ...extra });
   if (query) params.set("q", query);
   const res = await apiClient.get(`${endpoint}?${params.toString()}`);
   const data = (res as { items?: { id: string; name: string }[]; hasMore?: boolean }) ?? {};
@@ -73,7 +81,15 @@ async function loadOptionsFrom(endpoint: string, query: string, page: number) {
   };
 }
 
-const loadCategoryOptions = (q: string, p: number) => loadOptionsFrom(CATEGORY_ENDPOINTS.LIST, q, p);
+/*
+ * 🛑 `listingOnly=true` is load-bearing. Without it this picker offered brand
+ * and bundle rows as categories — measured against production: "Takara-Tomy",
+ * "Original Collector's Set", "Metal Fusion Duo". They share the `categories`
+ * collection and a plain listing category omits `categoryType`, so the test
+ * cannot be a query clause; the route applies it in memory.
+ */
+const loadCategoryOptions = (q: string, p: number) =>
+  loadOptionsFrom(CATEGORY_ENDPOINTS.LIST, q, p, { listingOnly: "true" });
 const loadBrandOptions = (q: string, p: number) => loadOptionsFrom(BRAND_ENDPOINTS.LIST, q, p);
 
 export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorViewProps) {

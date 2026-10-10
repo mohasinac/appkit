@@ -6,6 +6,8 @@ import { PRODUCT_COLLECTION } from "../../../..";
 import { EVENTS_COLLECTION, EVENT_FIELDS } from "../../../../features/events";
 import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog";
 import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories";
+// Imported from the DEFINING module, not the feature barrel (Root Cause #18).
+import { isListingCategory } from "../../../../features/categories/constants/listing-categories";
 import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
@@ -71,6 +73,56 @@ function sitemapSectionFailed(label: string, err: unknown): [] {
 
 export interface SitemapOptions {
   baseUrl: string;
+}
+
+/**
+ * Read every document a query matches, in pages.
+ *
+ * 🛑 WHY: three category fetchers below carried a bare `.limit(500)` and then
+ * filtered in memory, so past 500 active rows the sitemap emitted an
+ * **unpredictable subset** — and `scripts/deploy.mjs` only asserts a section is
+ * non-ZERO, so truncation passes the deploy gate silently. The taxonomy this
+ * plan seeds takes `categories` from 58 to ~330 rows, which is still under 500
+ * today; the point is that crossing it would be invisible.
+ *
+ * `MAX_SITEMAP_DOCS` is a real ceiling, kept well under the 50,000-URL
+ * sitemap-file limit, and crossing it is LOGGED rather than swallowed — the
+ * opposite of a bare `.limit()`, which cannot tell you it truncated.
+ *
+ * An explicit `orderBy("__name__")` is required: `startAfter(docSnapshot)`
+ * needs a defined sort to page against, and a `where`-only query's implicit
+ * document order is not something to rely on across pages.
+ */
+const SITEMAP_PAGE_SIZE = 500;
+const MAX_SITEMAP_DOCS = 10_000;
+
+async function readAllDocs(
+  query: FirebaseFirestore.Query,
+  label: string,
+): Promise<FirebaseFirestore.QueryDocumentSnapshot[]> {
+  const out: FirebaseFirestore.QueryDocumentSnapshot[] = [];
+  let cursor: FirebaseFirestore.QueryDocumentSnapshot | null = null;
+
+  for (;;) {
+    let page = query.orderBy("__name__").limit(SITEMAP_PAGE_SIZE);
+    if (cursor) page = page.startAfter(cursor);
+
+    const snap = await page.get();
+    if (snap.empty) break;
+
+    out.push(...snap.docs);
+    if (out.length >= MAX_SITEMAP_DOCS) {
+      serverLogger.error(
+        `sitemap: section "${label}" hit the ${MAX_SITEMAP_DOCS}-document ceiling and is TRUNCATED`,
+        { section: label, scanned: out.length },
+      );
+      return out.slice(0, MAX_SITEMAP_DOCS);
+    }
+    if (snap.size < SITEMAP_PAGE_SIZE) break;
+    cursor = snap.docs[snap.docs.length - 1]!;
+  }
+
+  return out;
 }
 
 function staticPages(baseUrl: string): MetadataRoute.Sitemap {
@@ -288,14 +340,15 @@ async function fetchCategoryTypeUrls(
 ): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
-    const snap = await db
-      .collection(CATEGORIES_COLLECTION)
-      .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", categoryType)
-      .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
-      .select(CATEGORY_FIELDS.SLUG, CATEGORY_FIELDS.UPDATED_AT, TEST_DATA_FIELD)
-      .limit(500)
-      .get();
-    return snap.docs
+    const docs = await readAllDocs(
+      db
+        .collection(CATEGORIES_COLLECTION)
+        .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", categoryType)
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+        .select(CATEGORY_FIELDS.SLUG, CATEGORY_FIELDS.UPDATED_AT, TEST_DATA_FIELD),
+      label,
+    );
+    return docs
       .filter((doc) => !isTestDoc(doc.data()))
       .map((doc) => {
         const data = doc.data();
@@ -327,28 +380,28 @@ async function fetchCategoryTypeUrls(
  * stay in the `.select()` list or it comes back undefined and nothing is
  * rejected.
  */
-const NON_LISTING_CATEGORY_TYPES = new Set(["brand", "bundle", "sublisting"]);
-
 async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
-    const snap = await db
-      .collection(CATEGORIES_COLLECTION)
-      .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
-      .select(
-        CATEGORY_FIELDS.SLUG,
-        CATEGORY_FIELDS.UPDATED_AT,
-        CATEGORY_FIELDS.CATEGORY_TYPE,
-        TEST_DATA_FIELD,
-      )
-      .limit(500)
-      .get();
-    return snap.docs
+    const docs = await readAllDocs(
+      db
+        .collection(CATEGORIES_COLLECTION)
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+        .select(
+          CATEGORY_FIELDS.SLUG,
+          CATEGORY_FIELDS.UPDATED_AT,
+          CATEGORY_FIELDS.CATEGORY_TYPE,
+          TEST_DATA_FIELD,
+        ),
+      "category",
+    );
+    return docs
       .filter((doc) => {
         const data = doc.data();
         if (isTestDoc(data)) return false;
-        const kind = data[CATEGORY_FIELDS.CATEGORY_TYPE];
-        return typeof kind !== "string" || !NON_LISTING_CATEGORY_TYPES.has(kind);
+        return isListingCategory({
+          categoryType: data[CATEGORY_FIELDS.CATEGORY_TYPE] as string | undefined,
+        });
       })
       .map((doc) => {
         const data = doc.data();

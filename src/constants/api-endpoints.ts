@@ -148,6 +148,9 @@ export const ADMIN_ENDPOINTS = {
   PAYMENTS_SETTINGS: "/api/admin/payments/settings",
   PRODUCTS: "/api/admin/products",
   PRODUCT_BY_ID: (id: string) => `/api/admin/products/${id}`,
+  /** One request for up to 50 flag writes — replaces a client-side `forEach`
+   *  of single-row PATCHes that fired one invocation per selected row. */
+  PRODUCTS_BULK: "/api/admin/products/bulk",
   ORDERS: "/api/admin/orders",
   ORDER_BY_ID: (id: string) => `/api/admin/orders/${id}`,
   ORDER_REFUND: (id: string) => `/api/admin/orders/${id}/refund`,
