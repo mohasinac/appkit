@@ -13,7 +13,7 @@ import {
 import { BATCH_LIMIT } from "../handlers/messages";
 import { getDefaultCurrency } from "../../../../core";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
-import { ordersGoodsValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
+import { ordersTaxableValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
 import type { JobContext } from "../runtime/types";
 
 export interface WeeklyPayoutEligibilityResult {
@@ -63,10 +63,10 @@ export async function runWeeklyPayoutEligibility(
       continue;
     }
 
-    /* The GOODS VALUE, not `totalPrice` — see `orderGoodsValue`. This job and
+    /* The TAXABLE VALUE — see `orderTaxableValue`. This job and
      * `autoPayoutEligibility` must agree, or the weekly run and the automatic
      * one pay different amounts for the same orders. */
-    const grossAmount = ordersGoodsValue(
+    const grossAmount = ordersTaxableValue(
       orders.map((o) => o.data as PayableOrderLike),
     );
     const { platformFee, gatewayFee, gstOnFee, netAmount } = computePayoutDeduction(grossAmount, commissions);

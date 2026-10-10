@@ -270,6 +270,94 @@ function normaliseStateName(raw: string | undefined | null): string | null {
   return cleaned.length > 0 ? cleaned : null;
 }
 
+/**
+ * Back the tax OUT of a tax-inclusive amount: `gross × 100 / (100 + rate)`.
+ *
+ * 🛑 **Every price in this system is tax-inclusive.** A listing's `price` is
+ * what the buyer pays; the GST is inside it and is remitted from it. That is
+ * the Indian B2C convention, it is what worldhobbyshop asserts in its own
+ * JSON-LD (`valueAddedTaxIncluded: true`), and it is what makes two listings
+ * at ₹999 cost the same regardless of which seller posted them.
+ *
+ * A seller who would rather think in ex-tax terms sets
+ * `StoreDocument.pricesIncludeGst: false`, and their typed price is grossed up
+ * **once, at write time**, by `ProductRepository`. So the flag is an
+ * AUTHORING convenience and never a display or checkout mode — the money
+ * paths have no branch on it at all, which is the whole point: a mode flag
+ * read in five places is five places to drift.
+ *
+ * `rate <= 0` returns the amount unchanged — an exempt supply has no tax to
+ * back out, and dividing by 100 would be a silent no-op that merely looked
+ * like arithmetic.
+ */
+export function taxableFromInclusive(gross: number, rate: number): number {
+  if (rate <= 0) return roundRupees(gross);
+  return roundRupees((gross * 100) / (100 + rate)); // audit-money-units-ok: tax back-out, not a paise conversion
+}
+
+/**
+ * The inverse: gross an EX-TAX amount up to its tax-inclusive equivalent,
+ * `taxable × (100 + rate) / 100`.
+ *
+ * Used in exactly one place — `ProductRepository`, when a store with
+ * `pricesIncludeGst: false` saves a price. That is the whole extent of the
+ * flag: one conversion, at write time, after which the stored price is
+ * tax-inclusive like every other and no money path can tell the difference.
+ *
+ * ₹999 ex-tax at 5% → ₹1,048.95 inclusive, which backs out to ₹999.00 again.
+ * The round trip is exact at 2dp for every rate in the union, asserted rather
+ * than assumed.
+ */
+export function grossFromTaxable(taxable: number, rate: number): number {
+  if (rate <= 0) return roundRupees(taxable);
+  return roundRupees((taxable * (100 + rate)) / 100); // audit-money-units-ok: tax gross-up, not a paise conversion
+}
+
+/**
+ * The breakdown of a tax-INCLUSIVE amount, with two invariants guaranteed by
+ * construction rather than by arithmetic luck:
+ *
+ *   **taxable + gstAmount === gross**      (to the paisa)
+ *   **cgst + sgst === gstAmount**          (to the paisa)
+ *
+ * 🛑 Why this exists instead of `calculateGst(rate, intra, taxableFromInclusive(...))`.
+ *
+ * That composition rounds TWICE and overshoots. Measured on the ₹999 @ 5% case
+ * the plan itself specifies: the taxable rounds UP to 951.43, then
+ * `calculateGst`'s intra branch takes `half = round(47.5715 / 2) = 23.79` and
+ * returns `round(half × 2) = 47.58` — so taxable + tax came to **₹999.01** and
+ * the invoice no longer reconciled with the ₹999 the buyer was charged.
+ *
+ * Under the old add-on-top model that could not happen: the tax was whatever
+ * it was and the total was defined as price + tax, so the invariant was free.
+ * Making prices inclusive is what turns it into something that must be
+ * enforced — the tax is now a PARTITION of a fixed amount, not an addition to
+ * it.
+ *
+ * So the tax is the **exact complement** of the taxable value, and the split
+ * assigns the remainder to the second half rather than rounding both. This is
+ * the same discipline `allocateAcrossMembers` already applies, and the same
+ * class of defect as the `Math.round(gstAmount / 2)` split that C0c's defect 2
+ * removed — one level further out.
+ */
+export function calculateGstInclusive(
+  rate: number,
+  intraState: boolean,
+  gross: number,
+): GstBreakdown {
+  if (rate <= 0) {
+    const t = roundRupees(gross);
+    return { taxableAmount: t, cgst: 0, sgst: 0, igst: 0, gstAmount: 0 };
+  }
+  const taxableAmount = taxableFromInclusive(gross, rate);
+  const gstAmount = roundRupees(gross - taxableAmount);
+  if (intraState) {
+    const cgst = roundRupees(gstAmount / 2); // audit-money-units-ok: halving a tax amount
+    return { taxableAmount, cgst, sgst: roundRupees(gstAmount - cgst), igst: 0, gstAmount };
+  }
+  return { taxableAmount, cgst: 0, sgst: 0, igst: gstAmount, gstAmount };
+}
+
 export function calculateGst(
   rate: number,
   intraState: boolean,

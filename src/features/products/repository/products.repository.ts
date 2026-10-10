@@ -34,6 +34,11 @@ import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type 
 // the Turbopack import-chain trap (Root Cause #6/#18).
 import { CATEGORIES_COLLECTION } from "../../categories/schemas/firestore";
 import { TAX_CODES_COLLECTION } from "../../tax-codes/schemas/firestore";
+// Collection id only, never the stores repository — no repository in this
+// codebase imports another feature's (the Turbopack import-chain trap).
+import { STORE_COLLECTION } from "../../stores/schemas/firestore";
+// Pure money math — no Firestore, no server-only imports.
+import { DEFAULT_GST_RATE, grossFromTaxable } from "../../../_internal/shared/fees/calculator";
 import type { CategoryProductDefaults } from "../../categories/schemas/category-content";
 import { MAX_FEATURES_PER_PRODUCT } from "../schemas/product-features";
 // The ONE `{{placeholder}}` implementation, promoted out of the FAQ schema in
@@ -325,7 +330,92 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       await this.applyCategoryDefaults(input, out, catSnap);
     }
 
+    await this.applyInclusivePricing(input, out);
+
     return out;
+  }
+
+  /**
+   * Resolve the GST rate floor, and gross up an ex-tax price if the seller
+   * authors that way.
+   *
+   * ## The rate resolution order, in full
+   *
+   *  1. the product's own `gstRate`, if a human set one — including `0`, a
+   *     deliberate exemption;
+   *  2. the CATEGORY's rate via `taxCodeId` → `taxCodes`, applied just above
+   *     by `applyCategoryDefaults`. **This is the mechanism**, and the ~330-node
+   *     forest carries a tax code on every listing branch, so it answers for
+   *     effectively the whole catalogue;
+   *  3. `DEFAULT_GST_RATE` — a floor, warned about, never a feature.
+   *
+   * 🛑 Step 3 fires only when steps 1 and 2 both came up empty, which means
+   * the category has no tax code — and THAT is the defect to fix. The measure
+   * of success is that this warning never appears. It exists because the
+   * alternative fails asymmetrically: with prices tax-inclusive, treating an
+   * unrated item as 0% hands the seller the full amount and leaves us owing
+   * tax on money already paid out, which is C0's bug in miniature.
+   *
+   * ## The gross-up
+   *
+   * A store with `pricesIncludeGst: false` types EX-TAX prices, so the typed
+   * number is converted ONCE here and stored tax-inclusive like every other
+   * price. No money path branches on the flag; see `taxableFromInclusive`.
+   *
+   * Gated on the write actually carrying a price, so a stock decrement or a
+   * status flip pays nothing for this — the same discipline `update` already
+   * applies to the taxonomy derivation itself.
+   */
+  private async applyInclusivePricing(
+    input: Partial<ProductDocument>,
+    out: Partial<ProductDocument>,
+  ): Promise<void> {
+    const rate = out.gstRate ?? input.gstRate;
+    if (rate == null) {
+      out.gstRate = DEFAULT_GST_RATE;
+      serverLogger.warn(
+        "[gst] no rate from the product or its category — applying DEFAULT_GST_RATE; the category is missing a taxCodeId",
+        { category: input.category, defaultRate: DEFAULT_GST_RATE },
+      );
+    }
+
+    /*
+     * Only a write that sets a price can need converting. `input.price` is the
+     * merged current-document-plus-patch (see `update`), so an unrelated save
+     * would re-convert an already-converted price — which is why the guard is
+     * on the PATCH carrying a price, resolved by the callers below.
+     */
+    if (input.price == null || !input.storeId) return;
+
+    const storeSnap = await this.db
+      .collection(STORE_COLLECTION)
+      .doc(input.storeId)
+      .get();
+    const store = storeSnap.exists
+      ? (storeSnap.data() as { pricesIncludeGst?: boolean })
+      : null;
+    // Absent means inclusive — the documented default, and the one that keeps
+    // every existing listing's price meaning exactly what it meant before.
+    if (store?.pricesIncludeGst !== false) return;
+
+    const effectiveRate = out.gstRate ?? input.gstRate ?? DEFAULT_GST_RATE;
+    if (effectiveRate <= 0) return; // an exempt item has nothing to gross up
+
+    out.price = grossFromTaxable(input.price, effectiveRate);
+    /*
+     * 🛑 `compareAtPrice` is deliberately NOT converted here, because it does
+     * not exist. `SellerProductShell`'s pricing section lists it among its
+     * `fields` and renders an input for it, but `ProductDocument` has no such
+     * property — so whatever a seller types there is stripped by the schema and
+     * never stored. A declared-but-unpersisted form field is its own defect
+     * (and a strike-through price is a money figure, so it would need the same
+     * gross-up the day it becomes real); logged rather than silently worked
+     * around, since converting a field that is discarded would be theatre.
+     */
+    serverLogger.info("[gst] grossed up an ex-tax price for a pricesIncludeGst:false store", {
+      storeId: input.storeId,
+      rate: effectiveRate,
+    });
   }
 
   /**

@@ -37,7 +37,7 @@ import { couponsRepository } from "../../promotions/repository/coupons.repositor
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { computePayoutDeduction } from "../../../_internal/shared/fees/calculator";
-import { ordersGoodsValue } from "../../../_internal/shared/checkout/order-math";
+import { ordersTaxableValue } from "../../../_internal/shared/checkout/order-math";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   finalizeStagedMediaUrl,
@@ -426,12 +426,17 @@ async function computeSellerEarnings(sellerId: string) {
   const eligibleOrders = deliveredOrders.filter((o) => !paidOutIds.has(o.id));
 
   /*
-   * The GOODS VALUE, not `totalPrice` — see `orderGoodsValue`. This figure is
-   * what the seller sees as their earnings, so it must match what the two
-   * payout JOBS compute to the rupee; a seller shown one number and paid
-   * another is worse than either number being wrong on its own.
+   * The TAXABLE VALUE — see `orderTaxableValue`. This figure is what the
+   * seller sees as their earnings, so it must match what the two payout JOBS
+   * compute to the rupee; a seller shown one number and paid another is worse
+   * than either number being wrong on its own.
+   *
+   * Prices are tax-inclusive, so a seller listing at ₹999 @5% earns from a
+   * ₹951.43 taxable value — the ₹47.57 is GST we remit. A seller who would
+   * rather net ₹999 sets `pricesIncludeGst: false` and their typed price is
+   * grossed up at write time.
    */
-  const grossAmount = ordersGoodsValue(eligibleOrders);
+  const grossAmount = ordersTaxableValue(eligibleOrders);
   const siteSettings = await siteSettingsRepository.getSingleton();
   const deduction = computePayoutDeduction(grossAmount, siteSettings.commissions);
 
@@ -562,10 +567,10 @@ export async function bulkSellerOrder(
   if (eligible.length === 0)
     throw new ValidationError("No eligible orders found.");
 
-  /* The GOODS VALUE, not `totalPrice` — see `orderGoodsValue`. Fourth and last
-   * of the four paths C0 converged; a half-migration means the manual button
-   * and the scheduled job pay differently for the same orders. */
-  const grossAmount = ordersGoodsValue(eligible);
+  /* The TAXABLE VALUE — see `orderTaxableValue`. Fourth and last of the four
+   * paths C0 converged; a half-migration means the manual button and the
+   * scheduled job pay differently for the same orders. */
+  const grossAmount = ordersTaxableValue(eligible);
   const bulkSiteSettings = await siteSettingsRepository.getSingleton();
   const bulkDeduction = computePayoutDeduction(grossAmount, bulkSiteSettings.commissions);
 

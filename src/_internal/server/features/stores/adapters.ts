@@ -71,6 +71,12 @@ export const PRIVATE_STORE_FIELDS = [
   "googleReviews", // placeId is billed-API config; the RSC reads it server-side
   "shippingConfig", // resolved server-side into per-item shipping at cart time
   "emiEnabled", // read server-side by the checkout/product RSCs, never from a public payload
+  // A seller AUTHORING preference with no public reader by construction: the
+  // stored `price` is always tax-inclusive, so a buyer never needs to know how
+  // the seller typed it. Read only by `ProductRepository` at write time, and
+  // publishing it would invite a client to "correct" a price that is already
+  // correct.
+  "pricesIncludeGst",
   "isFeatured", // ranking input; not part of the public store profile
   "vacationReturnDate", // not rendered by StoreAboutView; add to PUBLIC when a reader exists
   "isTestData", // tester-sandbox tagging; filtered by filterTestDataForViewer

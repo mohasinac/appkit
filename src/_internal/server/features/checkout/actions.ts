@@ -807,7 +807,18 @@ async function createOrderForGroup(
   // be added only on the online-payment path, so COD / UPI-manual / cash / EMI
   // buyers silently never paid it.
   const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
+    /*
+     * 🛑 Product GST is NOT a term here, and its absence is the model.
+     *
+     * Prices are tax-INCLUSIVE: the GST is already inside `groupTotal`, backed
+     * out by `sumGroupGst` for reporting rather than added on top. A ₹999
+     * listing at 5% charges ₹999, of which ₹47.57 is tax we remit.
+     *
+     * `platformFeeGst` IS a term, and the asymmetry is correct: that is GST on
+     * OUR service fee to the seller, charged to the buyer on top of the fee —
+     * not tax on the goods.
+     */
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0);
 
   const imageUrls = [
     ...new Set(
@@ -1599,6 +1610,15 @@ export async function previewCheckoutPricing(
       whatsappNotifyFee: groupWhatsappFee,
       giftWrapFee: groupGiftWrapFee,
       shipmentProtectionFee: groupShipmentProtectionFee,
+      /*
+       * INFORMATIONAL — the tax already INSIDE these prices, so checkout can
+       * render "incl. GST ₹47.57". 🛑 Deliberately NOT added to `total` below:
+       * it was, under the old add-on-top math, and removing it from all five
+       * money sites together is what the tax-inclusive model consists of. A
+       * preview that still added it would show a total ₹47.57 higher than the
+       * order it previews — the shown-vs-charged drift this field exists to
+       * prevent, reintroduced from the other direction.
+       */
       gstAmount: groupGstAmount,
       couponDiscount: groupCouponDiscount,
       total:
@@ -1607,8 +1627,7 @@ export async function previewCheckoutPricing(
         groupCodHandlingFee +
         groupWhatsappFee +
         groupGiftWrapFee +
-        groupShipmentProtectionFee +
-        groupGstAmount,
+        groupShipmentProtectionFee,
     });
   }
 
@@ -1998,8 +2017,11 @@ async function createPhonePeGroupOrder(
     if (summary.taxableAmount > 0 || summary.exemptAmount > 0) phonepeGst = summary;
   }
 
+  /* Product GST is not a term — prices are tax-inclusive, so it is already
+   * inside `groupTotal`. Matches the COD/UPI path exactly; `platformFeeGst`
+   * stays because that is GST on our fee, charged on top. */
   const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (phonepeGst?.gstAmount ?? 0);
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst;
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
@@ -2432,16 +2454,23 @@ export async function verifyAndPlacePhonePeOrderAction(
      * combinations, and this comparison already carries a ₹1 tolerance.
      * Only the split needs the address, and the split is not checked here.
      */
-    const expectedProductGst = siteSettings?.gst?.enabled
-      ? expectedShippingGroups.reduce(
-          (sum, g) =>
-            sum +
-            sumGroupGst(g.items.map(({ item }) => item), productByIdPaid, false).gstAmount,
-          0,
-        )
-      : 0;
+    /*
+     * 🛑 No product-GST term, and the reason is the tax-inclusive model rather
+     * than the omission this guard was fixed for an hour earlier.
+     *
+     * Defect 1's fix added `expectedProductGst` here, because the three money
+     * sites had to AGREE with the preview and the preview added the tax. The
+     * model then changed: every price carries its tax inside, so the correct
+     * shared value became zero-added — at the capture route, at both order
+     * paths, at the preview, and here. The agreement defect 1 established is
+     * preserved; what changed is the figure all five agree on.
+     *
+     * `cartSubtotalRs` therefore already contains the GST, and adding it again
+     * would make this guard demand ~₹580 more than the buyer owes on a
+     * ₹5,547 cart — rejecting every correctly-charged order.
+     */
     const expectedPaymentAmountRs =
-      cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee + expectedProductGst;
+      cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee;
     // Reuses the order already fetched above to confirm COMPLETED — PhonePe's
     // own amount is in its wire-format smallest unit. // audit-money-units-ok: describes the PhonePe boundary conversion this line performs, not our storage convention
     const paidAmountRs = paiseToRupees(phonepeOrder.amount);

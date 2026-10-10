@@ -156,6 +156,36 @@ export interface StoreDocument extends BaseDocument {
    */
   emiEnabled?: boolean;
 
+  /**
+   * How this seller THINKS about the prices they type. An authoring
+   * convenience, and nothing more.
+   *
+   * 🛑 **Every stored `price` in this system is tax-INCLUSIVE** — it is what
+   * the buyer pays, with GST inside it, remitted from it. No money path
+   * branches on this flag, and that is deliberate: a mode read in five places
+   * is five places to drift, which is the defect family C0/C0c spent its
+   * whole length removing.
+   *
+   * `true` (the default) — the seller types the buyer-facing price. ₹999 at 5%
+   * means the buyer pays ₹999 and the seller earns from a ₹951.43 taxable
+   * value.
+   *
+   * `false` — the seller types an EX-TAX price, and `ProductRepository`
+   * grosses it up **once, at write time**: ₹999 at 5% is stored as ₹1,048.95,
+   * so the buyer pays ₹1,048.95 and the seller earns from ₹999.00.
+   *
+   * Default `true`, which matters twice. It is the Indian B2C convention
+   * (and what worldhobbyshop asserts in its own JSON-LD via
+   * `valueAddedTaxIncluded: true`); and it means enabling GST changes no
+   * displayed price, where defaulting to `false` would raise every listing in
+   * the catalogue the moment the switch was flipped.
+   *
+   * 🛑 Flipping this does NOT re-price existing listings. The gross-up happens
+   * at write, so a seller who switches must re-save (or have re-derived) the
+   * products they want converted — see `ProductRepository`.
+   */
+  pricesIncludeGst?: boolean;
+
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {
     /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */

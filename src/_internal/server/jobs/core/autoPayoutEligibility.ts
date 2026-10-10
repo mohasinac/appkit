@@ -7,7 +7,7 @@ import {
 } from "../../../../repositories";
 import { getDefaultCurrency } from "../../../../core/index";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
-import { ordersGoodsValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
+import { ordersTaxableValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
 import type { JobContext } from "../runtime/types";
 import { BATCH_LIMIT } from "../handlers/messages";
 
@@ -69,13 +69,18 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
     const sellerId = store!.ownerId;
 
     /*
-     * The GOODS VALUE, not `totalPrice`. See `orderGoodsValue` — the grand
-     * total folds in GST, the platform fee the buyer already paid, shipping,
-     * COD handling, add-ons and the EMI surcharge, so using it here paid the
-     * seller our GST, charged the platform fee a second time, and computed
-     * every percentage on an inflated base.
+     * The TAXABLE VALUE — see `orderTaxableValue`. Two narrowings, both
+     * needed, and the variable keeps the name `grossAmount` only because
+     * `PayoutDocument.grossAmount` does:
+     *
+     *  1. not `totalPrice`, the grand total, which folds in GST, the platform
+     *     fee the buyer already paid, shipping, COD handling, add-ons and the
+     *     EMI surcharge — so it paid out our GST, took the fee twice, and
+     *     computed every percentage on an inflated base;
+     *  2. not the gross goods value either, because prices are tax-INCLUSIVE,
+     *     so the goods value still has our GST inside it.
      */
-    const grossAmount = ordersGoodsValue(
+    const grossAmount = ordersTaxableValue(
       orders.map((o) => o.data as PayableOrderLike),
     );
     const { platformFee, gatewayFee, gstOnFee: gstAmount, netAmount } = computePayoutDeduction(grossAmount, commissions);

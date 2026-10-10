@@ -7,7 +7,7 @@
 import type { CartItemDocument, CartLineKind, CartLineMember } from "../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../features/products/schemas/firestore";
 import { roundRupees } from "../../../utils/number.formatter";
-import { calculateGst } from "../fees/calculator";
+import { calculateGstInclusive, taxableFromInclusive } from "../fees/calculator";
 
 /**
  * Exactly the fields `unitPriceFor` reads.
@@ -225,14 +225,29 @@ export function sumGroupGst(
         continue;
       }
       /*
-       * The split comes from `calculateGst` PER SLICE and is accumulated.
-       * `createOrderForGroup` used to re-derive it from the total with
-       * `Math.round(gstAmount / 2)` — whole rupees, so ₹161.82 split to
-       * 81.00/80.82 instead of 80.91/80.91, and ₹0.52 rounded to 0 and then
-       * `|| undefined` dropped the CGST line off the invoice entirely.
+       * 🛑 `slice.taxable` is the line's GROSS share — prices are
+       * tax-INCLUSIVE — so the tax is backed OUT of it, never added on top.
+       * `lineTaxComponentsFor`'s documented invariant ("slices of a line sum
+       * to its line total") stays true of the gross, which is why the
+       * back-out lives here rather than in there.
+       *
+       * ₹999 @ 5% → taxable ₹951.43 + tax ₹47.57 = ₹999.00 exactly.
+       *
+       * `calculateGstInclusive`, not `calculateGst(…, taxableFromInclusive(…))`:
+       * that composition rounds twice and came to ₹999.01, so the invoice
+       * stopped reconciling with the amount charged. Under inclusive pricing
+       * the tax is a PARTITION of a fixed amount, not an addition to it.
        */
-      const b = calculateGst(slice.gstRate, intraState, slice.taxable);
-      taxableAmount += slice.taxable;
+      const b = calculateGstInclusive(slice.gstRate, intraState, slice.taxable);
+      const slabTaxable = b.taxableAmount;
+      /*
+       * The split comes PER SLICE and is accumulated. `createOrderForGroup`
+       * used to re-derive it from the total with `Math.round(gstAmount / 2)` —
+       * whole rupees, so ₹161.82 split to 81.00/80.82 instead of 80.91/80.91,
+       * and ₹0.52 rounded to 0 and then `|| undefined` dropped the CGST line
+       * off the invoice entirely.
+       */
+      taxableAmount += slabTaxable;
       cgst += b.cgst;
       sgst += b.sgst;
       igst += b.igst;
@@ -246,7 +261,7 @@ export function sumGroupGst(
        */
       const prev = byRate.get(slice.gstRate);
       if (prev) {
-        prev.taxableAmount = roundRupees(prev.taxableAmount + slice.taxable);
+        prev.taxableAmount = roundRupees(prev.taxableAmount + slabTaxable);
         prev.cgst = roundRupees(prev.cgst + b.cgst);
         prev.sgst = roundRupees(prev.sgst + b.sgst);
         prev.igst = roundRupees(prev.igst + b.igst);
@@ -254,7 +269,7 @@ export function sumGroupGst(
       } else {
         byRate.set(slice.gstRate, {
           gstRate: slice.gstRate,
-          taxableAmount: roundRupees(slice.taxable),
+          taxableAmount: roundRupees(slabTaxable),
           cgst: b.cgst,
           sgst: b.sgst,
           igst: b.igst,
@@ -329,16 +344,19 @@ export function allocateAcrossMembers(total: number, weights: number[]): number[
   return out;
 }
 
-/** Exactly the fields `orderGoodsValue` reads. */
+/** Exactly the fields `orderGoodsValue` / `orderTaxableValue` read. */
 export interface PayableOrderLike {
   items?: Array<{
     quantity: number;
     unitPrice: number;
     cancelledQuantity?: number;
+    /** Snapshotted at purchase. Absent or 0 means no tax to back out. */
+    gstRate?: number;
   }>;
   /** The flat shape, authoritative when `items` is absent. */
   quantity?: number;
   unitPrice?: number;
+  gstRate?: number;
 }
 
 /**
@@ -388,9 +406,60 @@ export function orderGoodsValue(order: PayableOrderLike): number {
   return roundRupees((order.quantity ?? 0) * (order.unitPrice ?? 0));
 }
 
-/** Sum of `orderGoodsValue` across orders — the payout base for a batch. */
+/** Sum of `orderGoodsValue` across orders — the GROSS, not the payout base. */
 export function ordersGoodsValue(orders: readonly PayableOrderLike[]): number {
   return roundRupees(orders.reduce((sum, o) => sum + orderGoodsValue(o), 0));
+}
+
+/**
+ * The TAXABLE VALUE of an order — **the payout base.**
+ *
+ * 🛑 This is the second of two narrowings, and the distinction between them is
+ * worth keeping straight:
+ *
+ *  - C0 established the base is the **goods value**, not the order grand total
+ *    (which folded in GST, the platform fee the buyer already paid, shipping,
+ *    COD handling, add-ons and the EMI surcharge).
+ *  - This establishes it is the **taxable value**, not the gross goods value —
+ *    because every price here is tax-INCLUSIVE, so the goods value still has
+ *    our GST sitting inside it, and paying that out is the very thing C0 set
+ *    out to stop.
+ *
+ * The second narrowing was not possible until the pricing model was settled:
+ * under the old add-on-top math the goods value WAS the taxable value, so the
+ * two were indistinguishable and C0's fix was complete as written.
+ *
+ * One sentence covers both seller modes, which is the reason the flag is an
+ * authoring convenience and nothing more:
+ *
+ *   **the payout base is the taxable value, never the gross.**
+ *
+ *   - inclusive seller, ₹999 @5% → buyer pays ₹999, taxable ₹951.43, payout ₹951.43
+ *   - exclusive seller types ₹999 → grossed up on write to ₹1,048.95, buyer
+ *     pays ₹1,048.95, taxable ₹999.00, payout ₹999.00
+ *
+ * Per ITEM, using each line's own snapshotted `gstRate`: a mixed 5% + 18%
+ * order cannot be backed out with a single blended rate, and an order-level
+ * rate does not exist.
+ */
+export function orderTaxableValue(order: PayableOrderLike): number {
+  const items = order.items;
+  if (items?.length) {
+    const raw = items.reduce((sum, i) => {
+      const live = Math.max(0, i.quantity - (i.cancelledQuantity ?? 0));
+      return sum + taxableFromInclusive(live * i.unitPrice, i.gstRate ?? 0);
+    }, 0);
+    return roundRupees(raw);
+  }
+  return taxableFromInclusive(
+    (order.quantity ?? 0) * (order.unitPrice ?? 0),
+    order.gstRate ?? 0,
+  );
+}
+
+/** Sum of `orderTaxableValue` across orders — the payout base for a batch. */
+export function ordersTaxableValue(orders: readonly PayableOrderLike[]): number {
+  return roundRupees(orders.reduce((sum, o) => sum + orderTaxableValue(o), 0));
 }
 
 /**
