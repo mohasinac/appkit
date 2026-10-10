@@ -144,10 +144,16 @@ export const analyticsCardsSeedData: Partial<AnalyticsCardDocument>[] = [
 
 // ───── analyticsAlerts (4 records) ────────────────────────────────────────
 export const analyticsAlertsSeedData: Partial<AnalyticsAlertDocument>[] = [
-  { id: "alert-low-stock-arena", scope: "seller", ownerId: "user-tyson-blader", label: "Low stock", metric: "min-stock", operator: "<", threshold: 5, windowHours: 24, isActive: true, notifyChannels: ["in-app", "email"] },
-  { id: "alert-no-sales-arena", scope: "seller", ownerId: "user-tyson-blader", label: "Zero sales 48h", metric: "orders-window", operator: "==", threshold: 0, windowHours: 48, isActive: true, notifyChannels: ["in-app"] },
-  { id: "alert-platform-error-rate", scope: "admin", ownerId: "user-admin-letitrip", label: "API error rate > 5%", metric: "api-error-rate", operator: ">", threshold: 0.05, windowHours: 1, isActive: true, notifyChannels: ["in-app", "email", "whatsapp"] },
-  { id: "alert-fraud-surge", scope: "admin", ownerId: "user-admin-letitrip", label: "Fraud reports surge", metric: "reports-1h", operator: ">", threshold: 10, windowHours: 1, isActive: true, notifyChannels: ["in-app", "email"] },
+  // 🛑 Re-keyed in C3a. These four carried `min-stock`, `orders-window`,
+  // `api-error-rate` and `reports-1h` — four kebab-case values that shared ZERO
+  // tokens with the seven snake_case ones the seller picker offered, and which
+  // nothing read because no evaluator existed. `api-error-rate` is gone rather
+  // than renamed: a RATE needs a denominator this platform does not record, so
+  // seeding it would be re-promising what the first version could not keep.
+  { id: "alert-low-stock-arena", scope: "seller", ownerId: "user-tyson-blader", label: "Low stock", metric: "low_stock", operator: ">", threshold: 0, windowHours: 24, isActive: true, notifyChannels: ["in-app", "email"] },
+  { id: "alert-no-sales-arena", scope: "seller", ownerId: "user-tyson-blader", label: "Zero sales 48h", metric: "orders_count", operator: "==", threshold: 0, windowHours: 48, isActive: true, notifyChannels: ["in-app"] },
+  { id: "alert-platform-pending-moderation", scope: "admin", ownerId: "user-admin-letitrip", label: "Listings awaiting review", metric: "pending_moderation", operator: ">", threshold: 5, windowHours: 1, isActive: true, notifyChannels: ["in-app", "email"] },
+  { id: "alert-fraud-surge", scope: "admin", ownerId: "user-admin-letitrip", label: "Open reports surge", metric: "open_reports", operator: ">", threshold: 10, windowHours: 1, isActive: true, notifyChannels: ["in-app", "email"] },
 ];
 
 // ───── storeCategories (4 records) ────────────────────────────────────────

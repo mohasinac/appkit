@@ -25,6 +25,7 @@ import {
   productStatsSyncHandler,
   revenueRollupHandler,
   priceIndexRollupHandler,
+  analyticsAlertEvaluateHandler,
   pageViewRollupHandler,
   pageViewPruneHandler,
   dailyStatusDigestHandler,
@@ -109,16 +110,6 @@ export const revenueRollup = defineFunction({
 });
 
 /*
- * The rollup runs BEFORE the prune, and both before the retention boundary
- * moves. `pageViews` had neither until 2026-08-31: it wrote one document per
- * entity per day, forever, and was the only unbounded writer among 27 scheduled
- * functions.
- *
- * Order matters — the prune deletes the day-buckets the rollup reads, so a
- * prune that ran first would delete views nobody had counted yet. 01:45 then
- * 02:15, either side of nothing else.
- */
-/*
  * The realised-price index — 04:30 UTC, i.e. **10:00 IST**, the cadence the
  * page states as "prices as of".
  *
@@ -143,6 +134,38 @@ export const priceIndexRollup = defineFunction({
   options: { region: REGION, timeoutSeconds: 540, memory: "512MiB", maxInstances: 1 },
 });
 
+/*
+ * Evaluate the alert rules sellers and admins configured — hourly, 20 past.
+ *
+ * 🛑 This feature had a schema, a CRUD UI, two API routes, four seeded
+ * fixtures and **no evaluator anywhere**: zero references across all 59 job
+ * files, with `lastTriggeredAt` declared and written nowhere. So every alert a
+ * seller configured could never fire.
+ *
+ * Hourly rather than daily, because an alert whose point is "tell me when
+ * nothing is selling" is useless a day late — and the job's own 24h
+ * re-notify cooldown is what stops hourly evaluation becoming hourly mail.
+ * 20 past the hour keeps it clear of the dense :00/:15 band.
+ */
+export const analyticsAlertEvaluate = defineFunction({
+  name: "analyticsAlertEvaluate",
+  description:
+    "Evaluate seller and admin analytics alerts against live metrics and notify on a crossing (hourly at :20).",
+  trigger: { kind: "schedule", cron: "20 * * * *", timeZone: "UTC" },
+  handler: analyticsAlertEvaluateHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
+/*
+ * The rollup runs BEFORE the prune, and both before the retention boundary
+ * moves. `pageViews` had neither until 2026-08-31: it wrote one document per
+ * entity per day, forever, and was the only unbounded writer among 27 scheduled
+ * functions.
+ *
+ * Order matters — the prune deletes the day-buckets the rollup reads, so a
+ * prune that ran first would delete views nobody had counted yet. 01:45 then
+ * 02:15, either side of nothing else.
+ */
 export const pageViewRollup = defineFunction({
   name: "pageViewRollup",
   description: "Fold new page-view day-buckets into analytics/pageViewRollup so the prune below cannot delete uncounted views (daily 01:45 UTC).",
@@ -319,6 +342,7 @@ export const SCHEDULED_FUNCTIONS = [
   productStatsSync,
   revenueRollup,
   priceIndexRollup,
+  analyticsAlertEvaluate,
   pageViewRollup,
   pageViewPrune,
   dailyStatusDigest,

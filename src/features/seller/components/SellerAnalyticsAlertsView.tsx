@@ -2,6 +2,7 @@
 
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
+import { alertMetricsForScope } from "../../store-extensions/constants/alert-metrics";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Heading, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -48,16 +49,27 @@ const OPERATOR_OPTIONS = ANALYTICS_ALERT_OPERATORS.map((value) => ({
   label: OPERATOR_LABELS[value] ?? value,
 }));
 
-const METRIC_OPTIONS = [
-  { value: "daily_revenue", label: "Daily Revenue (₹)" },
-  { value: "daily_orders", label: "Daily Orders" },
-  { value: "low_stock", label: "Low Stock (products)" },
-  { value: "cancelled_orders", label: "Cancelled Orders" },
-  { value: "pending_payouts", label: "Pending Payouts (₹)" },
-  { value: "avg_rating", label: "Average Rating" },
-  { value: "reviews_count", label: "New Reviews" },
-];
+/*
+ * 🛑 DERIVED, never a hand-written list — that list WAS the defect.
+ *
+ * These seven values (daily_revenue, daily_orders, low_stock,
+ * cancelled_orders, pending_payouts, avg_rating, reviews_count) shared ZERO
+ * tokens with the four the seed wrote, and nothing validated either because
+ * `metric` was `string`. It stayed invisible because no evaluator read the
+ * field at all, so an alert a seller configured could never fire.
+ *
+ * Now from `alertMetricsForScope("seller")`, which the evaluator switches
+ * over exhaustively — so a metric the job cannot compute is not offerable.
+ */
+const METRIC_OPTIONS = alertMetricsForScope("seller").map(({ value, def }) => ({
+  value,
+  label: def.label,
+}));
 
+/** Helper text per metric, so "Orders in the window" says what it counts. */
+const METRIC_DESCRIPTIONS: Record<string, string> = Object.fromEntries(
+  alertMetricsForScope("seller").map(({ value, def }) => [value, def.describes]),
+);
 const WINDOW_OPTIONS = [
   { value: "1", label: "Last 1 hour" },
   { value: "6", label: "Last 6 hours" },
@@ -109,6 +121,26 @@ function AlertCard({
         <Text className="mb-1" color="muted" size="xs">
           {metricLabel} {opLabel} {alert.threshold} · {windowLabel}
         </Text>
+        {/*
+          What the metric COUNTS, from the one vocabulary.
+
+          "Daily Orders" does not say whether a cancelled order counts, and an
+          alert whose definition the seller has to guess at is one they will
+          not trust when it fires. It also surfaces a stale stored metric: a
+          value outside the vocabulary has no description, which is the only
+          visible signal that a row predates C3a.
+        */}
+        {METRIC_DESCRIPTIONS[alert.metric] ? (
+          <Text className="mb-1" color="muted" size="xs">
+            {METRIC_DESCRIPTIONS[alert.metric]}
+          </Text>
+        ) : null}
+        {alert.lastTriggeredAt ? (
+          <Text className="mb-1" color="muted" size="xs">
+            Last fired {new Date(alert.lastTriggeredAt).toLocaleString()}
+            {alert.lastObservedValue != null ? ` at ${alert.lastObservedValue}` : ""}
+          </Text>
+        ) : null}
         <Row gap="xs" wrap>
           {alert.notifyChannels.map((ch) => (
             <Badge key={ch} variant={OPERATOR_BADGE[alert.operator] ?? "default"}>
@@ -166,7 +198,7 @@ interface CreateAlertDraft {
 
 const EMPTY_DRAFT: CreateAlertDraft = {
   label: "",
-  metric: "daily_orders",
+  metric: "orders_count",
   operator: ">",
   threshold: "",
   windowHours: "24",

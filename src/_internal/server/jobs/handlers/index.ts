@@ -30,6 +30,7 @@ export { paymentReviewAutoApproveHandler } from "./paymentReviewAutoApprove";
 export { productStatsSyncHandler } from "./productStatsSync";
 export { revenueRollupHandler } from "./revenueRollup";
 export { priceIndexRollupHandler } from "./priceIndexRollup";
+export { analyticsAlertEvaluateHandler } from "./analyticsAlertEvaluate";
 export { pageViewRollupHandler } from "./pageViewRollup";
 export { pageViewPruneHandler } from "./pageViewPrune";
 export { dailyStatusDigestHandler } from "./dailyStatusDigest";

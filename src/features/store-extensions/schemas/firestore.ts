@@ -1,3 +1,4 @@
+import type { AlertMetric } from "../constants/alert-metrics";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 /**
@@ -140,13 +141,30 @@ export interface AnalyticsAlertDocument extends BaseDocument {
   scope: AnalyticsScope;
   ownerId: string;
   label: string;
-  metric: string;
+  /**
+   * 🛑 Was `string`, and that is what let the two producers share ZERO tokens:
+   * the seller picker offered seven snake_case values and the seed wrote four
+   * kebab-case ones, with no overlap and nothing to notice. Narrowed to the
+   * one vocabulary in `constants/alert-metrics.ts`, which the picker derives
+   * from and the evaluator switches over exhaustively.
+   */
+  metric: AlertMetric;
   operator: AlertOperator;
   threshold: number;
   windowHours: number;
   isActive: boolean;
   notifyChannels: Array<"in-app" | "email" | "whatsapp">;
+  /**
+   * When this alert last fired.
+   *
+   * Declared from the start and written NOWHERE until C3b, because there was
+   * no evaluator — which is also why nobody noticed the metric vocabulary was
+   * two disjoint lists. It is now the re-notify guard: an alert that is still
+   * true must not mail every run.
+   */
   lastTriggeredAt?: Date;
+  /** The value observed at `lastTriggeredAt`, so the message can quote it. */
+  lastObservedValue?: number;
 }
 
 export const ANALYTICS_ALERTS_COLLECTION = "analyticsAlerts" as const;
