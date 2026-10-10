@@ -63,6 +63,12 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
         // cannot tell a final-sale line from a returnable one and offers
         // every reason on every order (Root Cause #57).
         ...(item.finalSale != null ? { finalSale: item.finalSale } : {}),
+        // Snapshotted tax terms. Without these the invoice cannot render an
+        // HSN or a rate column — the SAME omission as `finalSale` above, one
+        // field family over, and the reason the buyer-facing invoice showed
+        // only Item / Qty / Price (Root Cause #57).
+        ...(item.hsnCode ? { hsnCode: item.hsnCode } : {}),
+        ...(item.gstRate != null ? { gstRate: item.gstRate } : {}),
       }))
     : [
         {
@@ -170,6 +176,21 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
      * GST-compliance problem, not a cosmetic one.
      */
     tax: doc.gstAmount,
+    /*
+     * The rest of the breakdown. `tax` alone was all this adapter mapped, so
+     * the invoice had one aggregate "Tax (GST)" row and no way to show a
+     * CGST/SGST vs IGST split, a taxable value, or a per-rate table — i.e. it
+     * could not be Rule 46-compliant no matter how it was rendered.
+     */
+    taxableAmount: doc.taxableAmount,
+    exemptAmount: doc.exemptAmount,
+    cgst: doc.cgst,
+    sgst: doc.sgst,
+    igst: doc.igst,
+    gstByRate: doc.gstByRate,
+    supplierGstin: doc.supplierGstin,
+    supplierLegalName: doc.supplierLegalName,
+    supplierAddress: doc.supplierAddress,
     codHandlingFee: doc.codHandlingFee,
     trackingNumber: doc.trackingNumber,
     shippingCarrier: doc.shippingCarrier,

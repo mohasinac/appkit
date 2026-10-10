@@ -896,6 +896,12 @@ async function createOrderForGroup(
      * `taxableAmount` so the taxed base stays the base the tax was charged on,
      * and recorded here so the invoice's columns can reconcile. */
     exemptAmount: gstBreakdown?.exemptAmount || undefined,
+    /* Our registration AS IT STANDS NOW. A tax invoice without the supplier's
+     * GSTIN is not a tax invoice, and the invoice page cannot read it from
+     * site settings — `gst` is in PRIVATE_SITE_FIELDS. See the schema. */
+    supplierGstin: gstSettings?.enabled ? gstSettings.gstin || undefined : undefined,
+    supplierLegalName: gstSettings?.enabled ? gstSettings.legalName || undefined : undefined,
+    supplierAddress: gstSettings?.enabled ? gstSettings.address || undefined : undefined,
     /* Per-rate, for Rule 46. Computed by `sumGroupGst` rather than re-derived
      * downstream — a mixed 5%+18% order cannot produce a compliant invoice
      * from the aggregate triple alone. */
@@ -2093,6 +2099,11 @@ async function createPhonePeGroupOrder(
      */
     taxableAmount: phonepeGst?.taxableAmount,
     exemptAmount: phonepeGst?.exemptAmount || undefined,
+    // Our registration at the moment of supply — see the schema. Mirrors the
+    // COD/UPI path so both produce an invoiceable order.
+    supplierGstin: siteSettings?.gst?.enabled ? siteSettings.gst.gstin || undefined : undefined,
+    supplierLegalName: siteSettings?.gst?.enabled ? siteSettings.gst.legalName || undefined : undefined,
+    supplierAddress: siteSettings?.gst?.enabled ? siteSettings.gst.address || undefined : undefined,
     gstByRate: phonepeGst?.byRate.length ? phonepeGst.byRate : undefined,
     gstAmount: (phonepeGst?.gstAmount ?? 0) + platformFeeGst || undefined,
     cgst: phonepeGst?.cgst || undefined,

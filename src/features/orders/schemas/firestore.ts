@@ -432,6 +432,27 @@ export interface OrderDocument extends BaseDocument {
     igst: number;
     gstAmount: number;
   }>;
+  /**
+   * OUR GST registration as it stood at the moment of supply — LetItRip is the
+   * seller of record and invoices under its own GSTIN.
+   *
+   * 🛑 Snapshotted for two independent reasons, and both matter.
+   *
+   * **Compliance**: changing our registered details must never rewrite an
+   * invoice already issued. Same discipline as `items[].hsnCode` / `gstRate` /
+   * `finalSale`, and the same reason `TaxCodeDocument` edits change future
+   * derivations only.
+   *
+   * **Access**: `gst` sits in `PRIVATE_SITE_FIELDS` — withheld from the public
+   * site-settings projection precisely because an earlier deny-list version
+   * shipped the GSTIN and registered legal name to anonymous callers (Root
+   * Cause #70). So the invoice page cannot read it from site settings, and it
+   * should not: the buyer is entitled to the GSTIN *on their own invoice*,
+   * which is an authenticated per-order read, not public data.
+   */
+  supplierGstin?: string;
+  supplierLegalName?: string;
+  supplierAddress?: string;
 
   // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
   emiEnabled?: boolean;

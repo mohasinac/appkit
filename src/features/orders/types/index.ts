@@ -72,6 +72,18 @@ export interface OrderItem {
    * gate reads the document, so this is a rendering hint only.
    */
   finalSale?: boolean;
+  /**
+   * HSN code and GST rate, snapshotted onto the order item at purchase.
+   *
+   * 🛑 Surfaced here because the INVOICE needs them per line and could not
+   * previously get them: `orderDocumentToOrder` mapped `tax: doc.gstAmount`
+   * and nothing else tax-related, so the buyer-facing invoice rendered
+   * `["Item", "Qty", "Price"]` and one aggregate Tax row — not because the
+   * renderer was lazy, but because the adapter never handed it a rate, an HSN
+   * or a split to show. Root Cause #57's exact shape.
+   */
+  hsnCode?: string;
+  gstRate?: 0 | 5 | 12 | 18 | 28;
 }
 
 /**
@@ -122,7 +134,50 @@ export interface Order {
   subtotal: number;
   shippingCost?: number;
   discount?: number;
+  /** Total GST — product GST plus the GST on our platform fee. */
   tax?: number;
+  /**
+   * The GST breakdown the INVOICE needs, and which the adapter did not map
+   * until 2026-10-10 — so `/user/orders/[id]/invoice` had no GSTIN, no HSN
+   * column, no rate column and one undifferentiated "Tax (GST)" row, and was
+   * therefore not Rule 46-compliant in any respect.
+   *
+   * 🛑 `taxableAmount` excludes `exemptAmount`: a 0%-rated supply is a real
+   * reportable state, not an absence, and keeping them separate is what lets
+   * the invoice's columns reconcile against its own summary.
+   */
+  taxableAmount?: number;
+  exemptAmount?: number;
+  cgst?: number;
+  sgst?: number;
+  igst?: number;
+  /**
+   * Taxable value and tax PER RATE — what Rule 46 actually asks for.
+   *
+   * ✅ This is also why no per-item `gstAmount` was added. Rule 46 requires the
+   * tax amount per **rate**, not per **line**; the per-line requirements are
+   * HSN, quantity, taxable value and rate, all of which the item already
+   * carries or derives from `price × quantity`. A per-item tax amount would be
+   * a denormalised mirror of what this array already holds — Root Cause #42's
+   * shape — so it was deliberately NOT added.
+   */
+  gstByRate?: Array<{
+    gstRate: number;
+    taxableAmount: number;
+    cgst: number;
+    sgst: number;
+    igst: number;
+    gstAmount: number;
+  }>;
+  /**
+   * Our GST registration as snapshotted on this order. A tax invoice without
+   * the supplier's GSTIN is not a tax invoice — and the invoice page cannot
+   * read it from site settings, because `gst` is in `PRIVATE_SITE_FIELDS`
+   * after an earlier deny-list projection shipped it publicly (Root Cause #70).
+   */
+  supplierGstin?: string;
+  supplierLegalName?: string;
+  supplierAddress?: string;
   total: number;
   currency: string;
   /**
