@@ -287,10 +287,18 @@ export {
 // consumer's Razorpay create-order route needs it: that route used to hand-roll
 // the rule and reproduced only the bundle branch, so it captured the LIST price
 // for an accepted offer. Pure math — no Firestore, no server-only imports.
+// `sumGroupGst` joins them for exactly the same reason, one defect later: that
+// same create-order route decides what the gateway CAPTURES and omitted product
+// GST entirely, so the buyer was shown the tax, charged without it, and the
+// order recorded none — with the verify-side mismatch guard omitting it too, so
+// the three were consistently wrong and the undercharge was undetectable.
 export {
   unitPriceFor,
   lineTotalFor,
+  sumGroupGst,
   computePreOrderDepositAmount,
+  type GroupGstSummary,
+  type GstRateSlice,
 } from "./_internal/shared/checkout/order-math";
 
 // S-SBUNI-RULES: refund action

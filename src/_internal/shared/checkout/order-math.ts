@@ -132,7 +132,21 @@ export interface LineTaxComponent {
  */
 export function lineTaxComponentsFor(
   item: CartItemDocument,
-  productById: Map<string, ProductDocument>,
+  /*
+   * Tolerates a null value, and always did — every read below is
+   * `?.gstRate ?? 0` / `?? null`. The type was merely narrower than the
+   * behaviour, which forced the consumer's create-order route (whose
+   * `findById` map is honestly `| null`) to cast. `lineTotalFor` already
+   * declares `ProductDocument | null` for the same reason.
+   *
+   * 🛑 Caveat worth knowing: a MISSING product yields `gstRate ?? 0`, and
+   * since 2026-10-10 a 0 rate is accumulated into `exemptAmount` — so an
+   * unloadable product would be reported as exempt rather than as unknown.
+   * Every caller validates products before reaching here (the route throws on
+   * a missing or unpublished one), so this is theoretical; it would stop being
+   * theoretical if a caller ever skipped that check.
+   */
+  productById: Map<string, ProductDocument | null>,
 ): LineTaxComponent[] {
   const lineTotal = lineTotalFor(item, productById.get(item.productId) ?? null);
 
@@ -183,7 +197,9 @@ export function lineTaxComponentsFor(
  */
 export function sumGroupGst(
   items: readonly CartItemDocument[],
-  productById: Map<string, ProductDocument>,
+  /* `| null` to match `lineTaxComponentsFor` and `lineTotalFor` — see the note
+   * there. The consumer's create-order route holds an honestly-nullable map. */
+  productById: Map<string, ProductDocument | null>,
   intraState: boolean,
 ): GroupGstSummary {
   let taxableAmount = 0;

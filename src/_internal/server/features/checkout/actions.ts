@@ -1872,6 +1872,13 @@ async function createPhonePeGroupOrder(
     couponUsageAccumulator: Map<string, CouponAccumEntry>;
     /** Every product touched, members included — see OrderGroupContext.productById. */
     productById: Map<string, ProductDocument>;
+    /**
+     * The buyer's delivery state, for the CGST/SGST vs IGST split.
+     *
+     * Threaded in 2026-10-10 to close C0c defect 1 — this path previously had
+     * no access to it, which is why product GST was omitted here entirely.
+     */
+    buyerState?: string;
   },
 ): Promise<number> {
   const {
@@ -1894,6 +1901,7 @@ async function createPhonePeGroupOrder(
     emailsToSend,
     couponUsageAccumulator,
     productById: phonepeProductById,
+    buyerState,
   } = ctx;
 
 
@@ -1906,7 +1914,7 @@ async function createPhonePeGroupOrder(
   // Reuses the same store/seller lookup as the COD/UPI path above instead
   // of re-implementing it inline — was two sequential findById calls per
   // seller group here, duplicated from resolveShippingCost.
-  const { shippingFee, storeOwnerId } = await resolveShippingCost(firstItem.storeId);
+  const { shippingFee, storeOwnerId, storeState } = await resolveShippingCost(firstItem.storeId);
 
   const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
   const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
@@ -1952,16 +1960,40 @@ async function createPhonePeGroupOrder(
     addons.shipmentProtectionAddon ?? false,
     commissionRates,
   );
-  const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst;
-  // P-8 GST — deliberately NOT wired into this PhonePe-verify path. The
-  // amount-mismatch check above (expectedPaymentAmountRs) compares against
-  // what the buyer already paid via the PhonePe order created earlier in
-  // the flow; adding product GST here without also adding it to that
-  // upstream pre-payment amount calculation would either fail the mismatch
-  // check or silently under/over-charge. Wiring GST through the full
-  // PhonePe create→confirm round-trip is separate follow-up work, tracked
-  // alongside P-13 (PhonePe is disabled by default today, so this order
-  // type doesn't currently carry a GST breakdown).
+  /*
+   * P-8 GST — now wired through this path. C0c defect 1.
+   *
+   * The comment that used to sit here deferred it, correctly identifying the
+   * blocker: `expectedPaymentAmountRs` compares against what PhonePe already
+   * captured, so adding product GST here WITHOUT adding it to the upstream
+   * pre-payment amount would either fail the mismatch check or silently
+   * under-charge. Both halves move in this change, plus the create-order route
+   * that decides the captured amount.
+   *
+   * 🛑 What unblocked it: the GST TOTAL does not depend on the place of
+   * supply. IGST total equals CGST+SGST total, so `/api/payment/create-order`
+   * can compute the amount before the delivery address is even known — which
+   * is the thing it genuinely cannot see. Measured across ~285k rate/base
+   * combinations, the two differ by at most ₹0.01 (from `round(half × 2)` in
+   * the intra branch), and the guard's tolerance is ₹1.
+   *
+   * Only the SPLIT needs the address, and this function has it.
+   */
+  let phonepeGst: GroupGstSummary | undefined;
+  if (siteSettings?.gst?.enabled && buyerState) {
+    const intra = isIntraStateSupply(storeState, buyerState);
+    if (intra === null) {
+      serverLogger.warn(
+        "[gst] place of supply undetermined on the online path — defaulting to inter-state (IGST)",
+        { storeId: firstItem.storeId, hasStoreState: !!storeState },
+      );
+    }
+    const summary = sumGroupGst(group.map(({ item }) => item), phonepeProductById, intra ?? false);
+    if (summary.taxableAmount > 0 || summary.exemptAmount > 0) phonepeGst = summary;
+  }
+
+  const orderTotal =
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (phonepeGst?.gstAmount ?? 0);
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
@@ -2051,6 +2083,21 @@ async function createPhonePeGroupOrder(
     giftWrapMessage: giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
     shipmentProtectionAddon: shipmentProtectionFee > 0 ? true : undefined,
     shipmentProtectionFee: shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
+    /*
+     * The tax breakdown, matching `createOrderForGroup` field for field.
+     * This path recorded NONE of it before C0c defect 1 — so an online order
+     * carried no `taxableAmount`, no `gstAmount` and no split, and the order
+     * page's Tax row could not render even once GST was enabled. Both the
+     * product GST and the platform-fee GST are summed into `gstAmount`, which
+     * is what makes the order's own lines reconcile to its total.
+     */
+    taxableAmount: phonepeGst?.taxableAmount,
+    exemptAmount: phonepeGst?.exemptAmount || undefined,
+    gstByRate: phonepeGst?.byRate.length ? phonepeGst.byRate : undefined,
+    gstAmount: (phonepeGst?.gstAmount ?? 0) + platformFeeGst || undefined,
+    cgst: phonepeGst?.cgst || undefined,
+    sgst: phonepeGst?.sgst || undefined,
+    igst: phonepeGst?.igst || undefined,
     couponCode: appliedDiscounts[0]?.code,
     couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
     appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
@@ -2360,8 +2407,30 @@ export async function verifyAndPlacePhonePeOrderAction(
         computeShipmentProtectionFee(groupSubtotal, addons.shipmentProtectionAddon ?? false, commissionRates)
       );
     }, 0);
+    /*
+     * Product GST, matching what `/api/payment/create-order` charged.
+     *
+     * 🛑 This term's ABSENCE was half of C0c defect 1. The guard agreed with
+     * the create path only because both omitted it, so an undercharge could
+     * never trip the check — the two were consistently wrong together, which
+     * is the worst available state for a guard.
+     *
+     * `intraState: false` is deliberate and is not a guess about the buyer's
+     * address: the TOTAL does not depend on the place of supply (IGST total ==
+     * CGST+SGST total), measured to within ₹0.01 across ~285k rate/base
+     * combinations, and this comparison already carries a ₹1 tolerance.
+     * Only the split needs the address, and the split is not checked here.
+     */
+    const expectedProductGst = siteSettings?.gst?.enabled
+      ? expectedShippingGroups.reduce(
+          (sum, g) =>
+            sum +
+            sumGroupGst(g.items.map(({ item }) => item), productByIdPaid, false).gstAmount,
+          0,
+        )
+      : 0;
     const expectedPaymentAmountRs =
-      cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee;
+      cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee + expectedProductGst;
     // Reuses the order already fetched above to confirm COMPLETED — PhonePe's
     // own amount is in its wire-format smallest unit. // audit-money-units-ok: describes the PhonePe boundary conversion this line performs, not our storage convention
     const paidAmountRs = paiseToRupees(phonepeOrder.amount);
@@ -2437,6 +2506,10 @@ export async function verifyAndPlacePhonePeOrderAction(
       phonepeOrderId: phonepeOrder.gatewayOrderId,
       transactionId: phonepeOrder.transactionId,
       shippingAddress,
+      // For the CGST/SGST vs IGST split. The TOTAL does not depend on it
+      // (see createPhonePeGroupOrder), which is what let the pre-payment
+      // amount be computed before this address was known.
+      buyerState: resolvedAddressPp?.state,
       notes,
       outOfStockPolicy,
       unavailablePaid,
