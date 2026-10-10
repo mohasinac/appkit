@@ -131,6 +131,38 @@ export const PRIVATE_CATEGORY_FIELDS = [
   "bundleCategorySlugs",
   "bundleOriginalTotal",
   "bundleItemDetails",
+  /*
+   * ── Category-owned content (B3) ──────────────────────────────────────────
+   *
+   * All three are PRIVATE on this route and that is a payload decision, not a
+   * secrecy one — they are genuinely public content, just not from here.
+   *
+   * This is the LIST projection, and `CategoryInlineSelect` calls it with
+   * `pageSize=200` on every seller-form open. `contentBody` alone is 400–900
+   * chars of HTML per row, so publishing it here would add ~180 KB to a
+   * response whose only job is to fill a picker — the Fast-Origin-Transfer
+   * shape of Root Cause #104, on the resource this project is most over on.
+   *
+   * Each has exactly one real reader and neither is this route:
+   *
+   *   contentBody          — the category DETAIL page, which holds the raw
+   *                          CategoryDocument server-side (getCategoryBySlug).
+   *   descriptionTemplates — the seller form, via the narrow
+   *                          /api/categories/[id]/description-template
+   *                          endpoint (C2), one category at a time, edge-cached
+   *                          for an hour.
+   *   productDefaults      — `deriveTaxonomy`, server-side, on the product
+   *                          write path; plus the same narrow endpoint for the
+   *                          seller-facing price hint.
+   *
+   * 🛑 If a surface ever needs one of these from the list route, promote it
+   * here AND add it to `CategoryItem` AND to the literal in
+   * `toCategoryListItem` — do not cast at the call site, which is Root Cause
+   * #70's exact mechanism.
+   */
+  "contentBody",
+  "descriptionTemplates",
+  "productDefaults",
   // Test-data plumbing. `hidePublicTestData()` filters on these server-side;
   // a client has no business branching on them.
   "isTestData",

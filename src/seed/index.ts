@@ -198,6 +198,7 @@ export {
   testerResponsesSeedData,
 } from "../features/tester/seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
+export { taxCodesSeedData } from "./tax-codes-seed-data";
 export { offersSeedData } from "./offers-seed-data";
 
 // S-STORE Extensions (Tier S-STORE) — 11 new collections

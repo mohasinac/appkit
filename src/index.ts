@@ -1858,11 +1858,19 @@ export {
 // SB-UNI-B â€" sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer â€" uses firebase-admin; server-only.
+// AdminTaxCodesView / AdminTaxCodeEditorView (B3) — /admin/tax-codes.
+export { AdminTaxCodesView } from "./features/admin/components/AdminTaxCodesView";
+export type { AdminTaxCodesViewProps } from "./features/admin/components/AdminTaxCodesView";
+export { AdminTaxCodeEditorView } from "./features/admin/components/AdminTaxCodeEditorView";
+export type { AdminTaxCodeEditorViewProps } from "./features/admin/components/AdminTaxCodeEditorView";
 // productFeaturesRepository - Server-only repository for productFeatures (FI1).
 export { productFeaturesRepository } from "./repositories/index";
 export type { ProductFeatureListFilter } from "./repositories/index";
 // loadProductFeaturesForStore - SSR helper combining listPlatform + listForStore (FI6).
 export { loadProductFeaturesForStore } from "./repositories/index";
+// taxCodesRepository - Server-only repository for taxCodes (B3). An HSN code and
+// its GST rate as an ENTITY, so a rate change is one edit rather than ~330.
+export { taxCodesRepository } from "./repositories/index";
 // productTemplateRepository - Server-only repository for store product templates.
 export { productTemplateRepository } from "./repositories/index";
 export type {
@@ -9151,8 +9159,43 @@ export {
   MAX_STORE_CUSTOM_FEATURES,
   MAX_FEATURES_PER_PRODUCT,
   PRODUCT_FEATURE_SIEVE_FIELDS,
+  FEATURE_GROUP_VALUES,
+  FEATURE_GROUP_LABEL,
   isFeatureIconPath,
 } from "./features/products/schemas/product-features";
+export type { FeatureGroup } from "./features/products/schemas/product-features";
+
+// Tax codes feature schemas (B3) — HSN + GST rate as an entity.
+export {
+  TAX_CODES_COLLECTION,
+  TAX_CODE_PREFIX,
+  TAX_CODE_FIELDS,
+  TAX_CODE_SIEVE_FIELDS,
+  TAX_CODE_UPDATABLE_FIELDS,
+  GST_RATE_VALUES,
+  createTaxCodeId,
+  isValidHsnCode,
+} from "./features/tax-codes/schemas/firestore";
+export type {
+  TaxCodeDocument,
+  TaxCodeCreateInput,
+  TaxCodeUpdateInput,
+  GstRate,
+  HsnChapter,
+} from "./features/tax-codes/schemas/firestore";
+export { taxCodeFormSchema, GST_RATE_OPTIONS, HSN_CHAPTER_OPTIONS } from "./features/tax-codes/schemas/tax-code-form";
+export type { TaxCodeFormValues } from "./features/tax-codes/schemas/tax-code-form";
+// Wire contracts for /api/admin/tax-codes. BOTH are .strict(): z.object()
+// strips unknown keys (a PATCH returning 200 having written nothing),
+// .passthrough() writes whatever arrives.
+export {
+  taxCodeCreateSchema,
+  taxCodeUpdateSchema,
+} from "./features/tax-codes/schemas/tax-codes.validators";
+export type {
+  TaxCodeCreatePayload,
+  TaxCodeUpdatePayload,
+} from "./features/tax-codes/schemas/tax-codes.validators";
 export type {
   ProductFeatureDocument,
   ProductFeatureCreateInput,
@@ -9331,6 +9374,14 @@ export { scammersSeedData } from "./seed/index";
 
 // Product features â€" seed data (FI2)
 export { productFeaturesSeedData } from "./seed/index";
+/*
+ * 🛑 Registering a seed collection takes FOUR edits and three of them are
+ * silent if missed: seed/index.ts, THIS re-export, and seed-cli's own import
+ * plus its two maps. With this line absent, `appkit-seed status` reported
+ * `taxCodes  seed 0  in db 0` — the collection looked registered and simply
+ * had no data, which is indistinguishable from an empty fixture set.
+ */
+export { taxCodesSeedData } from "./seed/index";
 
 // Scam registry â€" schema types and constants
 export {

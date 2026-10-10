@@ -233,6 +233,11 @@ export {
 export type { ProductFeatureListFilter } from "../features/products/repository/product-features.repository";
 export { loadProductFeaturesForStore } from "../features/products/repository/loadProductFeatures";
 
+export {
+  TaxCodesRepository,
+  taxCodesRepository,
+} from "../features/tax-codes/repository/tax-codes.repository";
+
 // SB-UNI-V — BundlesRepository deleted; bundles live on categoriesRepository
 // with categoryType:"bundle". See features/categories/repository for the
 // listByType / findBySlugAndType helpers.

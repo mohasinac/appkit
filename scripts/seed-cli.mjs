@@ -195,7 +195,7 @@ const {
   siteSettingsSeedData, faqSeedData,
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
-  scammersSeedData, productFeaturesSeedData,
+  scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
   testerChecklistSeedData, testerResponsesSeedData,
   supportTicketsSeedData, catalogueSeedData,
   shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
@@ -210,6 +210,7 @@ const {
   CART_COLLECTION,
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
+  TAX_CODES_COLLECTION,
   TESTER_CHECKLIST_ITEM_COLLECTION,
   TESTER_CHECKLIST_RESPONSE_COLLECTION,
   // PII field/index constants (plain data, still in the main barrel — the
@@ -285,6 +286,7 @@ const COLLECTION_MAP = {
   groupedListings: GROUPED_LISTINGS_COLLECTION,
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
+  taxCodes: TAX_CODES_COLLECTION,
   testerChecklistItems: TESTER_CHECKLIST_ITEM_COLLECTION,
   /*
    * Tester submissions. DERIVED tier in the tester's own map (wiped at setup so
@@ -370,6 +372,7 @@ const SEED_DATA_MAP = {
   groupedListings: groupedListingsSeedData,
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
+  taxCodes: taxCodesSeedData,
   testerChecklistItems: testerChecklistSeedData,
   testerChecklistResponses: testerResponsesSeedData,
 };

@@ -338,6 +338,35 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     }
   }
 
+  /**
+   * Categories whose `productDefaults.taxCodeId` points at `taxCodeId`.
+   *
+   * 🛑 Exists so DELETE on a tax code can REFUSE while it is referenced.
+   * `taxCodeId` is a plain string with no referential integrity, and a
+   * dangling reference does not error — `findResolvable` answers `null`,
+   * whose correct handling is "leave the product's gstRate alone", so every
+   * subsequent listing under that category silently derives NO TAX. It does
+   * not fail; it under-charges, until someone reads an invoice.
+   *
+   * One equality on a dot-path — served by the automatic index, no composite
+   * to declare. Bounded at 200: the answer is used to NAME referrers in a 409
+   * message, and the first five are what the admin reads.
+   */
+  async findByTaxCodeId(taxCodeId: string): Promise<CategoryDocument[]> {
+    try {
+      const snap = await this.getCollection()
+        .where(CATEGORY_FIELDS.PRODUCT_DEFAULTS_TAX_CODE_ID, "==", taxCodeId)
+        .limit(200)
+        .get();
+      return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to find categories by tax code: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
   async getChildren(parentId: string): Promise<CategoryDocument[]> {
     try {
       const snapshot = await this.db

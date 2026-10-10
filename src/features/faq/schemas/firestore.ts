@@ -6,6 +6,11 @@ import type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 export type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 import { generateFAQId } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+// Imported from the DEFINING module, not a barrel (Root Cause #18).
+import {
+  extractPlaceholders,
+  missingPlaceholders,
+} from "../../../_internal/shared/templating/placeholders";
 
 export interface FAQSEO {
   slug: string;
@@ -141,14 +146,23 @@ export const faqQueryHelpers = {
   byCreator: (userId: string) => ["createdBy", "==", userId] as const,
 } as const;
 
-export function extractVariablePlaceholders(text: string): string[] {
-  const regex = /\{\{(\w+)\}\}/g;
-  return Array.from(text.matchAll(regex), (m) => m[1]);
-}
+/*
+ * The `{{placeholder}}` grammar moved to `_internal/shared/templating/
+ * placeholders.ts` so category description templates can share it instead of
+ * carrying a second regex (Root Cause #75).
+ *
+ * These three keep their original NAMES and signatures on purpose: they have
+ * FAQ-specific behaviour layered on the shared primitive — both gate on
+ * `useSiteSettings`, and `validateFAQVariables` merges the FAQ's own
+ * `variables` over the site-settings map. That layer is why this is a
+ * re-export-with-wrapper rather than a plain re-export, and why no FAQ call
+ * site changed.
+ */
+export const extractVariablePlaceholders = extractPlaceholders;
 
 export function usesVariableInterpolation(faq: FAQDocument): boolean {
   if (!faq.useSiteSettings) return false;
-  return extractVariablePlaceholders(faq.answer.text).length > 0;
+  return extractPlaceholders(faq.answer.text).length > 0;
 }
 
 export function validateFAQVariables(
@@ -156,9 +170,10 @@ export function validateFAQVariables(
   siteSettingsVariables: Record<string, string | number>,
 ): string[] {
   if (!faq.useSiteSettings) return [];
-  const placeholders = extractVariablePlaceholders(faq.answer.text);
-  const available = { ...siteSettingsVariables, ...(faq.variables || {}) };
-  return placeholders.filter((v) => !(v in available));
+  return missingPlaceholders(faq.answer.text, {
+    ...siteSettingsVariables,
+    ...(faq.variables || {}),
+  });
 }
 
 export function isPopularFAQ(faq: FAQDocument): boolean {

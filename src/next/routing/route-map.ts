@@ -391,6 +391,7 @@ export const DEFAULT_ROUTE_MAP = {
     SUBLISTING_CATEGORIES_NEW: "/admin/sublisting-categories/new",
     SUBLISTING_CATEGORIES_EDIT: (id: string) => `/admin/sublisting-categories/${id}/edit`,
     FEATURES: "/admin/features",
+    TAX_CODES: "/admin/tax-codes",
     FEATURES_NEW: "/admin/features/new",
     FEATURES_EDIT: (id: string) => `/admin/features/${id}/edit`,
     // SB1-J — bundles + prize draws (admin moderation)

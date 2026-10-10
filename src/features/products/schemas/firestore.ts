@@ -164,6 +164,31 @@ export interface ProductPrintMeta {
   editionSize?: number;
 }
 
+/**
+ * Licensed manufacture vs. an unbranded 1st copy vs. not established.
+ *
+ * 🛑 THERE IS NO "fake" VALUE, and that is a product decision rather than an
+ * omission. A poor-quality counterfeit — BAS's own buying guide names cadmium
+ * and lead in the metal parts — is not a listing state we offer. It is a
+ * report, and it belongs in the scam registry, which already has 27 scam
+ * types and an evidence model.
+ *
+ * "reproduction" is the midfake tier: largely Chinese, no manufacturer's
+ * marque, generally decent quality, and some WBO formats permit certain repro
+ * parts — so it is sellable WHEN LABELLED. "unverified" exists because the
+ * alternative is far worse: without it, an honest seller who does not know
+ * would have to pick "original", and silence would be indistinguishable from
+ * a genuine claim.
+ *
+ * 🛑 And the buyer-facing framing to design against is NOT "fake". The
+ * counterfeit seller in the crawl makes no authenticity claim at all — zero
+ * occurrences of original/Takara/authentic/replica/fake across 1,277 products
+ * — and sells itself as an "aftermarket brand" with "upgraded components".
+ * "Aftermarket" and "custom" are the words our buyers will be sold, so the
+ * help copy has to answer that, not a word nobody uses.
+ */
+export type ProductAuthenticity = "original" | "reproduction" | "unverified";
+
 export interface ProductDocument extends BaseDocument {
   title: string;
   description: string;
@@ -304,10 +329,47 @@ export interface ProductDocument extends BaseDocument {
   isSold?: boolean;
   /** When true, an EMI order for this product ships as soon as it's confirmed instead of waiting for every installment to be paid. Default false. */
   allowShipBeforeEmiComplete?: boolean;
-  /** P-8 GST — buyer-facing tax rate on this product (%). Unset/0 = exempt. */
+  /**
+   * P-8 GST — buyer-facing tax rate on this product (%).
+   *
+   * 🛑 `undefined` and `0` MEAN DIFFERENT THINGS. Zero is a deliberate
+   * exemption (live plants and animals); undefined is "nobody has said".
+   * So the test is `== null`, NEVER `input.gstRate || default`, which would
+   * silently overwrite every exempt row with the default rate. And there is
+   * deliberately no entry for this in `DEFAULT_PRODUCT_DATA` — a default
+   * there makes `undefined` unreachable in new rows while existing rows
+   * still lack it, which is the `finalSale` trap one field over.
+   *
+   * Written by `deriveTaxonomy` from the category's `taxCodeId`, but the
+   * SCALAR is what every reader and the order-item snapshot use: a tax-code
+   * edit must change future derivations, never retroactively re-rate an
+   * invoice already issued.
+   */
   gstRate?: 0 | 5 | 12 | 18 | 28;
-  /** P-8 GST — Harmonized System of Nomenclature code for GST-compliant invoices. */
+  /** P-8 GST — HSN code for GST-compliant invoices. Resolved alongside `gstRate`. */
   hsnCode?: string;
+
+  /**
+   * WHO MADE IT — distinct from `condition` (how worn) and from `brand`
+   * (whose marque is on it, which a reproduction has none of). The two axes
+   * are independent: an original can be broken and a reproduction can be
+   * mint.
+   *
+   * 🛑 This is BOTH a field and a feature, deliberately, and it is the only
+   * place in this schema where that duplication is justified. Structurally
+   * it is a classifier and belongs in the `authenticity` FeatureGroup — but
+   * a feature can be OMITTED and nothing notices. A mislabelled
+   * reproduction is a refund; a mislabelled counterfeit is a child handling
+   * leaded metal. The enum makes the question unskippable and writes the
+   * matching feature, so the facet, the badge and search all read one
+   * vocabulary.
+   *
+   * Validated by the competitor crawl: worldhobbyshop ships a nav category
+   * called "MidFake Beyblades" and an FAQ promising that authenticity and
+   * condition are both disclosed per listing. Hence "Midfake" as the LABEL
+   * on the reproduction tier — it is the word buyers search.
+   */
+  authenticity?: ProductAuthenticity;
   /** Print-specific metadata for "art" / "stickers" listings — printed-only physical goods. Optional on every listing type; only populated for art/stickers. */
   printMeta?: ProductPrintMeta;
   promotionEndDate?: Date;
@@ -651,6 +713,15 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "isOnSale",
   "isSold",
   "allowShipBeforeEmiComplete",
+  /*
+   * B3 — these three were MISSING, so the fields existed on the document
+   * and were not type-legal to update: ProductUpdateInput is derived from
+   * this list, so an admin or seller form could accept a GST rate and the
+   * repository would refuse to write it.
+   */
+  "gstRate",
+  "hsnCode",
+  "authenticity",
   "printMeta",
   "seoTitle",
   "seoDescription",

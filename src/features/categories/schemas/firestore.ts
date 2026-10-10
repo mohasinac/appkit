@@ -13,6 +13,17 @@ import type {
   CategoryDisplay,
 } from "../types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type {
+  CategoryDescriptionTemplate,
+  CategoryProductDefaults,
+} from "./category-content";
+export type {
+  CategoryDescriptionTemplate,
+  CategoryProductDefaults,
+  CategoryPriceGuidance,
+  CategorySpecification,
+  CategoryTemplateVariant,
+} from "./category-content";
 
 export type { CategoryAncestor, CategoryMetrics };
 
@@ -155,6 +166,24 @@ export interface CategoryDocument extends BaseDocument {
   highlights?: string[];
   /** A handful of Q&A pairs shown on the category/brand detail page. */
   faqs?: { question: string; answer: string }[];
+
+  // ── Category-owned content (B3) — see schemas/category-content.ts ─────
+  /**
+   * 400–900 chars of keyword-rich HTML with sibling/parent cross-links,
+   * rendered via `<RichTextRenderer>`.
+   *
+   * 🛑 DISTINCT from `description`, which is a <=230-char blurb that also
+   * feeds `seo.description` and every card. Conflating them would put a
+   * 900-char body in a card and a 230-char stub on the page.
+   *
+   * 36 of worldhobbyshop's 46 categories carry one and it is their actual
+   * ranking mechanism; no Shopify competitor in the crawl has any.
+   */
+  contentBody?: string;
+  /** Condition-keyed description bodies. A SET, because WHS reuses two per category. */
+  descriptionTemplates?: CategoryDescriptionTemplate[];
+  /** What this category hands down to a product filed under it. */
+  productDefaults?: CategoryProductDefaults;
 
   // ── Bundle fields — categoryType==="bundle" (SB-UNI-D) ────────────────
   /**
@@ -319,6 +348,22 @@ export const CATEGORIES_PUBLIC_FIELDS = [
   "display",
   "isActive",
   "ancestors",
+  /*
+   * B3. `highlights` and `faqs` were MISSING from both this list and the
+   * updatable one, which is the more interesting half: `CategoryUpdateInput`
+   * derives from UPDATABLE_FIELDS, so a field absent from it is not even
+   * TYPE-LEGAL to update — and both had shipped with no editor at all.
+   * Precedent-by-omission gets closed, not copied.
+   *
+   * `productDefaults` is public because its advisory half (priceGuidance,
+   * specifications, inTheBox) is rendered to buyers and sellers. Its
+   * `taxCodeId` is a reference to an admin-only row, not a secret.
+   */
+  "highlights",
+  "faqs",
+  "contentBody",
+  "descriptionTemplates",
+  "productDefaults",
 ] as const;
 
 export const CATEGORIES_UPDATABLE_FIELDS = [
@@ -333,6 +378,13 @@ export const CATEGORIES_UPDATABLE_FIELDS = [
   "display",
   "isActive",
   "isSearchable",
+  // B3 — see the note in CATEGORIES_PUBLIC_FIELDS. Without these five,
+  // CategoryUpdateInput cannot express them and no editor can save them.
+  "highlights",
+  "faqs",
+  "contentBody",
+  "descriptionTemplates",
+  "productDefaults",
 ] as const;
 
 export type CategoryCreateInput = Omit<
@@ -473,6 +525,11 @@ export const CATEGORY_FIELDS = {
   IS_ACTIVE: "isActive",
   IS_SEARCHABLE: "isSearchable",
   SEARCH_TXT: "searchTxt",
+  CONTENT_BODY: "contentBody",
+  DESCRIPTION_TEMPLATES: "descriptionTemplates",
+  PRODUCT_DEFAULTS: "productDefaults",
+  /* Dot-path, so a referrer query is one equality and needs no index. */
+  PRODUCT_DEFAULTS_TAX_CODE_ID: "productDefaults.taxCodeId",
   CATEGORY_TYPE: "categoryType",
   CREATED_BY: "createdBy",
   CREATED_AT: "createdAt",

@@ -257,6 +257,8 @@ export const ADMIN_ENDPOINTS = {
   SUBLISTING_CATEGORY_BY_ID: (id: string) => `/api/admin/sublisting-categories/${id}`,
   PRODUCT_FEATURES: "/api/admin/features",
   PRODUCT_FEATURE_BY_ID: (id: string) => `/api/admin/features/${id}`,
+  TAX_CODES: "/api/admin/tax-codes",
+  TAX_CODE_BY_ID: (id: string) => `/api/admin/tax-codes/${id}`,
   TEAM: "/api/admin/team",
   TEAM_MEMBER: (uid: string) => `/api/admin/team/${uid}`,
   USER_HARD_BAN: (uid: string) => `/api/admin/users/${uid}/hard-ban`,

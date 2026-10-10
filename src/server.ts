@@ -1407,6 +1407,9 @@ export { siteSettingsRepository } from "./repositories/index";
 export { storeRepository } from "./repositories/index";
 // orderRepository - Shared export for order repository (needed by consumer Firebase Functions, e.g. invoice PDF generation).
 export { orderRepository } from "./repositories/index";
+// taxCodesRepository (B3) — resolved by deriveTaxonomy on every product write
+// that names a taxonomy field, so it is a server-only read on a hot path.
+export { taxCodesRepository } from "./repositories/index";
 export type { OrderDocument } from "./features/orders/index";
 export type { OrderDocumentItem } from "./features/orders/index";
 // SB-UNI-V — bundlesRepository deleted; use categoriesRepository with categoryType:"bundle".

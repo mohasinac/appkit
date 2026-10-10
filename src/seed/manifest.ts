@@ -61,6 +61,7 @@ import { groupedListingsSeedData } from "./grouped-listings-seed-data";
 import { scammersSeedData } from "./scammers-seed-data";
 import { supportTicketsSeedData } from "./support-tickets-seed-data";
 import { productFeaturesSeedData } from "./product-features-seed-data";
+import { taxCodesSeedData } from "./tax-codes-seed-data";
 import { offersSeedData } from "./offers-seed-data";
 import { couponUsageSeedData } from "./coupon-usage-seed-data";
 import { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
@@ -80,7 +81,7 @@ export type SeedCollectionName =
   | "homepageSections" | "siteSettings" | "faqs" | "notifications" | "payouts"
   | "blogPosts" | "events" | "eventEntries" | "sessions" | "carts" | "wishlists"
   | "history" | "groupedListings" | "scammerProfiles"
-  | "supportTickets" | "productFeatures" | "offers" | "couponUsage" | "claimedCoupons"
+  | "supportTickets" | "productFeatures" | "taxCodes" | "offers" | "couponUsage" | "claimedCoupons"
   | "payoutMethods" | "shippingConfigs" | "analyticsCards" | "analyticsAlerts"
   | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
   | "itemRequests" | "storeWhatsAppConfig" | "storeGoogleConfig" | "roleOverrides"
@@ -275,6 +276,12 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(productFeaturesSeedData).map((f) => ({
       ...f,
       name: f.label ?? f.id,
+    })),
+  ),
+  taxCodes: pick(
+    asArr(taxCodesSeedData).map((t) => ({
+      ...t,
+      name: t.label ?? t.id,
     })),
   ),
   offers: pick(
