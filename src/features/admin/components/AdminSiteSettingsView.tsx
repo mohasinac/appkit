@@ -28,6 +28,7 @@ import {
   DEFAULT_AUCTION_BID_INCREMENT_TIERS,
   type BidIncrementTier,
 } from "../../../_internal/shared/features/auctions/config";
+import { validateGstEnablement } from "../../../_internal/shared/features/site-settings/gst-registration";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
 import { siteSettingsFormSchema } from "../schemas/site-settings-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
@@ -296,6 +297,28 @@ export function AdminSiteSettingsView({
   const [gstin, setGstin] = React.useState("");
   const [gstLegalName, setGstLegalName] = React.useState("");
   const [gstAddress, setGstAddress] = React.useState("");
+  /*
+   * Shown inline, live, and ONLY while the toggle is on — the same rule the
+   * server enforces. `/api/admin/site` rejects the save, so without this the
+   * admin would get a generic "save failed" with no indication of which of the
+   * four fields it meant.
+   *
+   * Live rather than on-submit because the toggle is the action: an admin who
+   * flips it on sees immediately what else is needed, instead of discovering
+   * it after a round trip. Empty when the toggle is off, so an admin editing
+   * their address with GST disabled is never shown errors about it
+   * (Root Cause #74 — a summary that accuses before anything was attempted).
+   */
+  const gstProblems = React.useMemo(
+    () =>
+      validateGstEnablement({
+        enabled: gstEnabled,
+        gstin,
+        legalName: gstLegalName,
+        address: gstAddress,
+      }),
+    [gstEnabled, gstin, gstLegalName, gstAddress],
+  );
   const [platformFeePercent, setPlatformFeePercent] = React.useState(5);
   const [gstPercent, setGstPercent] = React.useState(18);
   const [minimumTransactionFee, setMinimumTransactionFee] = React.useState(0);
@@ -1478,6 +1501,7 @@ export function AdminSiteSettingsView({
                 <Input
                   label="GSTIN"
                   helperText="15-character GST Identification Number."
+                  error={gstProblems.gstin}
                   value={gstin}
                   onChange={(e) => setGstin(e.target.value)}
                   placeholder="29AAAAA0000A1Z5"
@@ -1486,6 +1510,7 @@ export function AdminSiteSettingsView({
                 <Input
                   label="Legal name"
                   helperText="Registered business name for invoices."
+                  error={gstProblems.legalName}
                   value={gstLegalName}
                   onChange={(e) => setGstLegalName(e.target.value)}
                   placeholder="LetItRip Collectibles Pvt Ltd"
@@ -1499,6 +1524,11 @@ export function AdminSiteSettingsView({
                   placeholder="Registered business address for GST invoices…"
                   rows={3}
                 />
+                {gstProblems.address ? (
+                  <Text size="sm" variant="error" role="alert">
+                    {gstProblems.address}
+                  </Text>
+                ) : null}
               </Stack>
             </SettingsTabForm>
           </TabsContent>

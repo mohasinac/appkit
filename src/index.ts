@@ -7273,6 +7273,21 @@ export type {
   BuyerFacingFees,
   BuyerEmiSettings,
 } from "./_internal/shared/features/site-settings/fees";
+// The gate on turning product GST on. Exported because BOTH ends need the same
+// implementation — `/api/admin/site` refuses the write and the admin form
+// shows the problem inline — and two copies of a compliance rule is the shape
+// of Root Cause #75.
+export {
+  GSTIN_PATTERN,
+  gstinCheckCharacter,
+  isValidGstin,
+  validateGstEnablement,
+  canEnableGst,
+} from "./_internal/shared/features/site-settings/gst-registration";
+export type {
+  GstEnablementInput,
+  GstEnablementProblems,
+} from "./_internal/shared/features/site-settings/gst-registration";
 export type {
   EmiSettings,
   EmiIneligibleReason,

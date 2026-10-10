@@ -438,6 +438,30 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     autoExtendWindowMinutes: 5,
     settlementGracePeriodHours: 24,
   },
+  /*
+   * 🛑 There is deliberately NO `gst` block here, and it must stay that way.
+   *
+   * It looks like the `auctionConfig` defect one block up — a key the schema
+   * default declares and the seed does not, so `appkit-seed load` can never
+   * create it — but the two are opposite cases, and seeding this one would be
+   * destructive rather than corrective.
+   *
+   *   `auctionConfig` was broken BY its absence: every reader resolved
+   *   `?? []` and fell back to a ₹1 bid increment, so the feature was
+   *   measurably wrong until the key existed.
+   *
+   *   `gst` is CORRECT when absent: readers do `settings.gst?.enabled ??
+   *   false`, which is the intended default — product GST off until a real
+   *   registration is entered.
+   *
+   * And the seed writes `set(..., { merge: true })`, so declaring
+   * `gst: { gstin: "", ... }` here would overwrite a live GSTIN with an empty
+   * string on **every** subsequent `appkit-seed load`. A registration number
+   * is admin-entered identity, not platform config; the only writer is the
+   * Site Settings → Gst tab, and `/api/admin/site` now refuses to enable GST
+   * until the GSTIN passes its own check digit and the legal name and address
+   * are present (see `validateGstEnablement`).
+   */
   commissions: {
     platformFeePercent: 5,
     gstPercent: 18,
