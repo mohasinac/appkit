@@ -21,7 +21,7 @@ import { randomUUID } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
 import { normalizeError } from "../../../../errors/normalize";
 import { rupeesToPaise } from "../../../../core/money";
-import { orderRepository } from "../../../..";
+import { orderRepository } from "../../../../features/orders/repository/orders.repository";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { NotFoundError, ValidationError } from "../../../../errors";
 import { serverLogger } from "../../../../monitoring";

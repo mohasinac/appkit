@@ -2,7 +2,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import type { MetadataRoute } from "next";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { ROUTES } from "../../../../next/routing/route-map";
-import { PRODUCT_COLLECTION } from "../../../..";
+import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { EVENTS_COLLECTION, EVENT_FIELDS } from "../../../../features/events";
 import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog";
 import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories";

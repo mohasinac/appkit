@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Details, Div, Row, Stack, Summary, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
-import { useApiMutation } from "../../../client";
+import { useApiMutation } from "../../../client/api/useApiMutation";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 

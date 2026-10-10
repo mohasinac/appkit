@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { FilterChipGroup, Heading, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { apiClient } from "../../../http";
-import { useApiMutation } from "../../../client";
+import { useApiMutation } from "../../../client/api/useApiMutation";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";

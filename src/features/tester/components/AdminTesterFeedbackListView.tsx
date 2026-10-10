@@ -1,6 +1,7 @@
 "use client";
 
-import { useApiMutation, type JsonArray } from "../../../client";
+import { useApiMutation } from "../../../client/api/useApiMutation";
+import type { JsonArray } from "../../../schemas/types";
 import { SIEVE_OP, sieveFilter } from "../../../utils/sieve-builder";
 import { sortBy } from "../../../constants/sort";
 import { TESTER_CHECKLIST_RESPONSE_FIELDS } from "../schemas/firestore";
