@@ -90,6 +90,23 @@ export interface SellerDashboardStats {
   totalRevenue: number;
   pendingPayouts: number;
   activeListings: number;
+  /**
+   * Published listings at or below `LOW_STOCK_THRESHOLD`, and at zero.
+   *
+   * 🛑 Two numbers rather than one "needs attention" count, because the two
+   * call for different actions: low means reorder, out means the listing
+   * cannot be bought right now. A combined figure hides which.
+   *
+   * Both from `availableQuantity`, not `stockQuantity` — purchasability gates
+   * on the first in three places, and reporting the second would tell a seller
+   * they have stock while buyers cannot buy.
+   *
+   * Optional because a store that does not exist yet returns the zeroed
+   * payload, and because an older client reading a newer field is a nicer
+   * failure than a required field a stale route omits.
+   */
+  lowStockListings?: number;
+  outOfStockListings?: number;
   totalOrders: number;
   pendingOrders: number;
   averageRating?: number;

@@ -9508,6 +9508,24 @@ export type { CategoryInlineSelectProps } from "./features/seller/components/Cat
  * `createRouteHandler` is fine. Sharing a schema the other way is not
  * available until the two agree on a major.
  */
+// The ONE alert-metric vocabulary (C3a) plus the shared low-stock threshold.
+// Exported because the consumer needs the threshold too: the alert evaluator,
+// the seller products column and the store dashboard tile must agree on what
+// "low" means, or a seller gets a warning from one and a clean bill from
+// another.
+export {
+  ALERT_METRIC_VALUES,
+  ALERT_METRICS,
+  isAlertMetric,
+  alertMetricsForScope,
+  LOW_STOCK_THRESHOLD,
+} from "./features/store-extensions/constants/alert-metrics";
+export type {
+  AlertMetric,
+  AlertMetricDef,
+  AlertMetricScope,
+  AlertMetricUnit,
+} from "./features/store-extensions/constants/alert-metrics";
 // [CLIENT] CategoryTemplatePicker — the seller form's category description-template
 // picker (C2c). Fills SellerProductShell's `renderTemplateSelector` slot.
 export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
