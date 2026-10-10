@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
+import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Span, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { SectionDef, SectionForm, useSectionFormNav, annotate } from "../../shell";
@@ -57,6 +57,17 @@ const payoutSettingsDraftSchema = z.object({
   }),
   minimumThreshold: annotate(z.string(), { section: "preferences", order: 2, row: "pair" }),
   emiEnabled: annotate(z.boolean(), { section: "preferences", order: 3, row: "quarter" }),
+  /*
+   * How the seller types prices. Lives in PAYOUT settings, not the store
+   * profile, because payout is what it actually changes: at 5% a ₹999
+   * inclusive listing pays out ₹951.43, while the same number typed ex-tax is
+   * stored as ₹1,048.95 and pays out ₹999.00.
+   *
+   * 🛑 It does NOT re-price existing listings — the gross-up happens at write
+   * time — so the label has to say so, or a seller flips it and assumes their
+   * catalogue moved.
+   */
+  pricesIncludeGst: annotate(z.boolean(), { section: "preferences", order: 4, row: "quarter" }),
 }).superRefine((v, ctx) => {
   if (v.method === "upi") {
     if (!v.upiId.trim()) {
@@ -94,6 +105,7 @@ interface PayoutDraft {
   autoPayout: boolean;
   minimumThreshold: string;
   emiEnabled: boolean;
+  pricesIncludeGst: boolean;
 }
 
 interface SafePayoutDetails {
@@ -127,6 +139,8 @@ const DEFAULT_DRAFT: PayoutDraft = {
   autoPayout: true,
   minimumThreshold: "",
   emiEnabled: false,
+  // Inclusive is the documented default — see StoreDocument.pricesIncludeGst.
+  pricesIncludeGst: true,
 };
 
 export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
@@ -159,6 +173,8 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             ? String(res.data.preferences.minimumThreshold)
             : "",
           emiEnabled: res?.data?.emiEnabled ?? false,
+          // Absent means inclusive, matching the schema default exactly.
+          pricesIncludeGst: res?.data?.pricesIncludeGst ?? true,
         });
       })
       .catch(console.error)
@@ -190,6 +206,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       const body = {
         ...methodFields,
         emiEnabled: draft.emiEnabled,
+        pricesIncludeGst: draft.pricesIncludeGst,
         taxInfo: {
           gstin: draft.gstin.trim(),
           pan: draft.pan.trim(),
@@ -412,7 +429,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     {
       id: "preferences",
       label: "Preferences",
-      fields: ["autoPayout", "minimumThreshold", "emiEnabled"],
+      fields: ["autoPayout", "minimumThreshold", "emiEnabled", "pricesIncludeGst"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Preferences</Heading>
@@ -449,6 +466,31 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             cart subtotal from your store exceeds the site&apos;s minimum order
             value. Orders on an EMI plan hold your payout until every installment
             is paid, unless you mark the item &quot;ship before EMI completes&quot;.
+          </Text>
+          <Toggle
+            checked={values.pricesIncludeGst}
+            onChange={(checked) => onChange({ pricesIncludeGst: checked })}
+            label="The prices I enter already include GST"
+            disabled={busy}
+          />
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            Buyers always see a tax-inclusive price, so this only changes how
+            your own entry is read. Leave it{" "}
+            <Span weight="semibold">on</Span> and a ₹999 listing at 5% GST
+            means the buyer pays ₹999 and you earn ₹951.43 — the ₹47.57 is GST
+            we collect and remit for you. Turn it{" "}
+            <Span weight="semibold">off</Span> and ₹999 is treated as your
+            ex-GST price: the listing is shown at ₹1,048.95 and you earn ₹999.
+          </Text>
+          {/*
+            🛑 This has to be said. The gross-up happens when a product is
+            SAVED, so flipping the toggle leaves every existing listing exactly
+            as it is — a seller who assumed otherwise would believe their whole
+            catalogue had just been repriced.
+          */}
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            Changing this does not re-price listings you have already published.
+            It applies to products you save from now on.
           </Text>
         </Stack>
       ),
