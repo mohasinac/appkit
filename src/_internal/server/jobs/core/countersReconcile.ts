@@ -266,21 +266,38 @@ async function reconcileStores(ctx: JobContext): Promise<void> {
 
   for (const storeId of storeIds) {
     try {
-      const storeSnap = await ctx.db.collection(STORES_COLLECTION).doc(storeId).get();
-      if (!storeSnap.exists) continue;
-      const sellerId = (storeSnap.data() as { ownerId?: string }).ownerId;
-      if (!sellerId) continue;
-
+      /*
+       * 🛑 `storeId`, NOT a `sellerId` resolved from `ownerId`. Every store on
+       * the platform has been getting 0 products and 0 delivered orders
+       * written to its stats, nightly, in silence.
+       *
+       * Two compounding defects were here. The field `sellerId` **exists on
+       * neither `ProductDocument` nor `OrderDocument`** — measured, zero
+       * occurrences in either schema; both carry `storeId`. And the value was
+       * `store.ownerId`, which is the Auth UID, while `storeId` IS the store
+       * slug (§ Store Identity Architecture). So the query named a field no
+       * document has, with a value from the wrong namespace.
+       *
+       * Firestore answers an equality on a missing field with ZERO rows and
+       * raises nothing, so `setStats(storeId, 0, 0, …)` wrote confident zeros
+       * over whatever the live triggers had computed. That is Root Cause
+       * #100's family: a reader whose field no document carries returns
+       * nothing and reads as "this store has sold nothing".
+       *
+       * The store document read is gone with it — the loop already holds the
+       * id it needed, so resolving `ownerId` was a read per store spent on
+       * getting the answer wrong.
+       */
       const [productsSnap, ordersSnap, reviewStats] = await Promise.all([
         ctx.db
           .collection(PRODUCT_COLLECTION)
-          .where(ORDER_FIELDS.SELLER_ID, "==", sellerId)
+          .where(PRODUCT_FIELDS.STORE_ID, "==", storeId)
           .where(ORDER_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
           .limit(QUERY_LIMIT)
           .get(),
         ctx.db
           .collection(ORDERS_COLLECTION)
-          .where(ORDER_FIELDS.SELLER_ID, "==", sellerId)
+          .where(ORDER_FIELDS.STORE_ID, "==", storeId)
           .where(ORDER_FIELDS.STATUS, "==", ORDER_FIELDS.STATUS_VALUES.DELIVERED)
           .limit(QUERY_LIMIT)
           .get(),

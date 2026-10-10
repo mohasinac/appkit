@@ -219,6 +219,25 @@ export interface OrderDocumentItem {
   totalPrice: number;
   /** SB8-F â€" set when the item is a prize-draw entry; drives the reveals badge. */
  listingType?: ListingType;
+  /**
+   * The product's LEAF category, snapshotted at order time (C1).
+   *
+   * 🛑 A SNAPSHOT, not a join, and not for performance alone. `priceIndexRollup`
+   * needs to know which category band a realised sale belongs to, and this
+   * interface carried no taxonomy field at all — `bundleCategorySlug` is a
+   * bundle key, not a category — so the only route was a full products scan
+   * per run, which answers nothing for an item whose product has since been
+   * deleted.
+   *
+   * It is also the correct answer rather than the cheap one: a product
+   * re-categorised next year must not retroactively move last year's sale into
+   * a band it was never part of. Same reasoning as the `hsnCode` / `gstRate` /
+   * `finalSale` snapshots below — a past sale's facts are fixed.
+   *
+   * Absent on every order written before C1, which is why the rollup keeps the
+   * products-map fallback rather than treating absence as "no category".
+   */
+  categorySlug?: string;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */

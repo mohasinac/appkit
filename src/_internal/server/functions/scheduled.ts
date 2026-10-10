@@ -24,6 +24,7 @@ import {
   prizeDrawExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
+  priceIndexRollupHandler,
   pageViewRollupHandler,
   pageViewPruneHandler,
   dailyStatusDigestHandler,
@@ -117,6 +118,31 @@ export const revenueRollup = defineFunction({
  * prune that ran first would delete views nobody had counted yet. 01:45 then
  * 02:15, either side of nothing else.
  */
+/*
+ * The realised-price index — 04:30 UTC, i.e. **10:00 IST**, the cadence the
+ * page states as "prices as of".
+ *
+ * 🛑 Its OWN function rather than a pass inside `countersReconcile`, which
+ * already runs at its 540s ceiling. A separate job can fail without taking
+ * category metrics down with it, and the two share nothing beyond reading
+ * products.
+ *
+ * It writes `priceIndex/{leafId}` and never `categories` — see the
+ * repository's header for why that is not a preference. A job writing a price
+ * band onto the collection `onCategoryWrite` watches is Root Cause #92's exact
+ * shape (1,017,548 invocations in 24h), and `notifyRevalidate` would
+ * additionally drop each category page's ISR entry nightly on a project that
+ * was paused for exceeding ISR writes by 15.5×.
+ */
+export const priceIndexRollup = defineFunction({
+  name: "priceIndexRollup",
+  description:
+    "Roll up realised sale prices per leaf category into priceIndex/{leafId} (daily 04:30 UTC = 10:00 IST).",
+  trigger: { kind: "schedule", cron: "30 4 * * *", timeZone: "UTC" },
+  handler: priceIndexRollupHandler,
+  options: { region: REGION, timeoutSeconds: 540, memory: "512MiB", maxInstances: 1 },
+});
+
 export const pageViewRollup = defineFunction({
   name: "pageViewRollup",
   description: "Fold new page-view day-buckets into analytics/pageViewRollup so the prune below cannot delete uncounted views (daily 01:45 UTC).",
@@ -292,6 +318,7 @@ export const SCHEDULED_FUNCTIONS = [
   offerExpiry,
   productStatsSync,
   revenueRollup,
+  priceIndexRollup,
   pageViewRollup,
   pageViewPrune,
   dailyStatusDigest,

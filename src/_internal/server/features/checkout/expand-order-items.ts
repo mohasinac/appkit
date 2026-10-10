@@ -64,6 +64,29 @@ export function expandCartLineToOrderRows(
       // through `isFinalSale` so this is always an explicit boolean, even
       // though the product field is optional and absent means true.
       finalSale: isFinalSale(representative),
+      /*
+       * 🛑 The LEAF category, snapshotted — beside `hsnCode`, `gstRate` and
+       * `finalSale`, and for the same reason the first two are here.
+       *
+       * `OrderDocumentItem` carried no taxonomy field at all (`bundleCategorySlug`
+       * is a bundle key, not a category), so `priceIndexRollup` could only find
+       * a sale's category by joining every order item back to its product — a
+       * full products scan per run, and nothing at all for an item whose
+       * product has since been deleted.
+       *
+       * Snapshotting makes the join disappear for every future order. And a
+       * snapshot is the CORRECT answer rather than merely the cheap one: a
+       * product re-categorised next year must not retroactively move last
+       * year's sale into a band it was never part of.
+       *
+       * `categorySlugs[0]` is the leaf — the chain is stored self-first — and
+       * a sale rolls up to exactly one leaf, so there is nothing to
+       * double-count.
+       */
+      ...(representative.categorySlugs?.[0]
+        ? { categorySlug: representative.categorySlugs[0] }
+        : {}),
+      ...(representative.listingType ? { listingType: representative.listingType } : {}),
       // Legacy collapsed bundle rows (no groupMembers) keep their old shape so
       // orders already in flight and their UI stay untouched.
       ...(item.bundleCategorySlug && item.bundleProductIds
@@ -109,6 +132,17 @@ export function expandCartLineToOrderRows(
       // Kept on bundle rows so the pre-existing receipt grouping (which keys on
       // this) keeps working for bundles without any UI change.
       ...(item.bundleCategorySlug ? { bundleCategorySlug: item.bundleCategorySlug } : {}),
+      /*
+       * Per MEMBER, like `finalSale` and the GST pair above it — a bundle
+       * genuinely spans categories, and attributing every member's sale to the
+       * bundle's own leaf would put a ₹1,299 bey's realised price into a
+       * sticker leaf's band.
+       *
+       * Falls back to the cart-line member snapshot when the product has since
+       * been deleted, which is the whole reason that snapshot exists.
+       */
+      ...(product?.categorySlugs?.[0] ? { categorySlug: product.categorySlugs[0] } : {}),
+      ...(product?.listingType ? { listingType: product.listingType } : {}),
       ...(gstRate != null ? { gstRate, ...(hsnCode ? { hsnCode } : {}) } : {}),
     };
   });
