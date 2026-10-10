@@ -114,7 +114,37 @@ export type FeatureGroup =
   /** Figure scale, finish and packaging state. */
   | "figure"
   /** WBO / limited format legality. */
-  | "tournament";
+  | "tournament"
+  /**
+   * The CHARACTER the item is of, or belongs to.
+   *
+   * ONE axis across every vertical here, which is the point: a bey's anime
+   * blader (Dragoon G -> Tyson Granger), a comic figure's hero (a Marvel
+   * Legends Spider-Man -> Spider-Man), an anime figure's character
+   * (Nendoroid Luffy -> Monkey D. Luffy), a card's franchise face. A
+   * collector who wants "everything Spider-Man" wants the figure, the card
+   * and the die-cast together, and no category tree can give them that —
+   * each of those three lives under a different root.
+   *
+   * 93 bladers ship with B5, GENERATED from the corpus. Figure and card
+   * characters join in B6, as the same group with the same mechanics; only
+   * the slug prefix differs (`blader-` vs `character-`), so a URL says which
+   * kind of name it is.
+   *
+   * 🛑 A FEATURE and never a tree node, for the reason §4.4 gives: a
+   * character crosses every generation. Tyson Granger owns nine beys spanning
+   * Spin Gear, Magnacore, Engine Gear and HMS, so a `category-tyson-granger`
+   * node would either duplicate all nine under a second parent or break the
+   * one-chain-per-product invariant that lets a category page match on its
+   * own id alone.
+   *
+   * As a feature it is clickable from any listing surface
+   * (`?features=feature-blader-tyson-granger`), it faceted-filters, it is
+   * indexed into `searchTxt` so "Tyson" finds Dragoon, and it composes with
+   * the generation tree rather than competing with it — browse Beyblade
+   * Original, then narrow to Tyson's.
+   */
+  | "character";
 
 export const FEATURE_GROUP_VALUES = [
   "condition",
@@ -130,6 +160,7 @@ export const FEATURE_GROUP_VALUES = [
   "tcg-format",
   "figure",
   "tournament",
+  "character",
 ] as const satisfies readonly FeatureGroup[];
 
 /**
@@ -153,6 +184,7 @@ export const FEATURE_GROUP_LABEL: Record<FeatureGroup, string> = {
   "tcg-format": "Card format",
   figure: "Figure details",
   tournament: "Tournament legality",
+  character: "Blader & character",
 };
 
 export interface ProductFeatureDocument {

@@ -88,6 +88,13 @@ export function buildCategorySearchTxt(c: Partial<CategoryDocument>): string[] {
     c.itemCode,
     c.brandCountry,
     ...(c.ancestors ?? []).map((a) => a.name),
+    /*
+     * B5 — LAST on purpose. `buildSearchTxt` truncates at 600 tokens and does
+     * it silently, so whatever sits at the end of this array is what gets
+     * dropped first. A model leaf's own name and its lineage must survive
+     * ahead of "also known as" spellings.
+     */
+    ...(c.aliases ?? []),
   ]);
 }
 

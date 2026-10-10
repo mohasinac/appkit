@@ -55,6 +55,101 @@ export const bundleQueryRuleSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
+/*
+ * ── Category-owned content (B3), mirrored here in B5 ────────────────────────
+ *
+ * 🛑 These three were added to `CategoryDocument` in B3 and NOT to this
+ * schema, which is the drift this file has a history of: `highlights` and
+ * `faqs` sat in the interface with no mirror for months, and nothing enforces
+ * parity between the two. Mirroring them is what lets the admin category
+ * editor (C2) validate a template body server-side instead of trusting the
+ * form.
+ */
+export const categoryDescriptionTemplateSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  variant: z.enum(["default", "new_in_box", "new_in_packet", "pre_owned", "replica"]),
+  body: z.string(),
+  /** Absent means "re-parse", never "no slots" — see the field's own doc. */
+  placeholders: z.array(z.string()).optional(),
+  isTested: z.boolean().optional(),
+  version: z.number().int().optional(),
+});
+
+export const categorySpecificationSchema = z.object({
+  name: z.string(),
+  value: z.string(),
+  unit: z.string().optional(),
+});
+
+export const categoryPriceGuidanceSchema = z.object({
+  currency: z.literal("INR"),
+  market: z
+    .object({
+      median: rupeesSchema,
+      // Optional on purpose — see the field docs in category-content.ts. The
+      // crawl measured quartiles for some verticals and a median-plus-range
+      // for others, and a required p25 would force a range to be retyped as a
+      // quartile.
+      p25: rupeesSchema.optional(),
+      p75: rupeesSchema.optional(),
+      sampleSize: z.number().int().positive().optional(),
+      asOf: firestoreDateSchema,
+      soldOutShare: z.number().min(0).max(1).optional(),
+      source: z.string().optional(),
+    })
+    .optional(),
+  /*
+   * 🛑 No `.default()` anywhere in here. An absent `sold` means "we have no
+   * sales yet" and a zeroed one would render as "things sell here for ₹0" —
+   * which is worse than silence, and is exactly what a defaulting schema would
+   * manufacture on the first quiet night.
+   */
+  sold: z
+    .object({
+      min: rupeesSchema,
+      median: rupeesSchema,
+      max: rupeesSchema,
+      sampleSize: z.number().int().positive(),
+      windowDays: z.number().int().positive(),
+      byPath: z
+        .object({
+          standard: z.number().int().nonnegative().optional(),
+          auction: z.number().int().nonnegative().optional(),
+          offer: z.number().int().nonnegative().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
+  lastSold: z
+    .object({
+      amount: rupeesSchema,
+      at: firestoreDateSchema,
+      via: z.enum(["standard", "auction", "offer"]).optional(),
+    })
+    .optional(),
+});
+
+export const categoryProductDefaultsSchema = z.object({
+  taxCodeId: z.string().optional(),
+  specifications: z.array(categorySpecificationSchema).optional(),
+  defaultFeatures: z.array(z.string()).optional(),
+  defaultCondition: z.string().optional(),
+  defaultAuthenticity: z.enum(["original", "reproduction", "unverified"]).optional(),
+  inTheBox: z.array(z.string()).optional(),
+  priceGuidance: categoryPriceGuidanceSchema.optional(),
+  seoTitleTemplate: z.string().optional(),
+  seoDescriptionTemplate: z.string().optional(),
+  seoKeywords: z.array(z.string()).optional(),
+  weightG: z.number().nonnegative().optional(),
+  dimensionsCm: z
+    .object({ l: z.number().positive(), w: z.number().positive(), h: z.number().positive() })
+    .optional(),
+  shippingPaidBy: z.string().optional(),
+  fragile: z.boolean().optional(),
+  faqTemplates: z.array(z.object({ question: z.string(), answer: z.string() })).optional(),
+});
+
 export const bundleItemDetailSchema = z.object({
   productId: z.string(),
   drawCount: z.number().int().nonnegative().optional(),
@@ -87,6 +182,11 @@ export const categoryFirestoreSchema = z.object({
   brandFounded: z.number().int().optional(),
   highlights: z.array(z.string()).optional(),
   faqs: z.array(z.object({ question: z.string(), answer: z.string() })).optional(),
+  aliases: z.array(z.string()).optional(),
+  contentBody: z.string().optional(),
+  descriptionTemplates: z.array(categoryDescriptionTemplateSchema).optional(),
+  productDefaults: categoryProductDefaultsSchema.optional(),
+  searchTxt: z.array(z.string()).optional(),
   bundleKind: z.enum(["special", "brand"]).optional(),
   brandSlug: z.string().optional(),
   bundlePrice: rupeesSchema.optional(),

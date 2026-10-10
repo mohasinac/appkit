@@ -52,7 +52,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories/category-x-tops — a parent whose children are category-x-starters and category-x-boosters — every category id carries the `category-` prefix, and a URL without it does not resolve.",
+      "Open /categories/category-x-tops — a parent whose children are the four Beyblade X retail lines, category-x-basic, category-x-unique-ux, category-x-custom-cx and category-x-over — every category id carries the `category-` prefix, and a URL without it does not resolve.",
       "Write down the count on the parent's tile.",
       "Open the parent and write down the count shown on each of its child chips.",
       "Add the children's counts together.",
@@ -87,7 +87,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories/category-x-tops, a parent that shows a row of child chips — category-x-starters and category-x-boosters.",
+      "Open /categories/category-x-tops, a parent that shows a row of child chips — category-x-basic, category-x-unique-ux, category-x-custom-cx and category-x-over.",
       "Write down the number in the page header.",
       "Write down the number on each child chip.",
       "Open one child and compare its own header number to the number its chip showed.",

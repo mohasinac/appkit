@@ -30,8 +30,20 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-dranzer-phoenix-poster",
     title: "Dranzer Phoenix Rising — Fan Art Poster",
     description: "A vibrant fan-art poster of Dranzer erupting in phoenix flame, hand-illustrated and giclée-printed on matte photo paper.",
-    categorySlugs: ["category-stadiums-standard","category-gear-stadiums","category-battle-gear","category-spinning-tops"],
-    categoryNames: ["Standard Stadiums","Stadiums","Battle Gear","Spinning Tops"],
+    /*
+     * 🛑 Re-filed in B5, and the old chain was wrong twice over: it pointed at
+     * `category-stadiums-standard` -> `category-gear-stadiums` ->
+     * `category-battle-gear`, all three of which were renamed when stadiums
+     * moved to per-generation nodes — AND a fan-art poster of Dranzer was
+     * never a stadium to begin with.
+     *
+     * The named-model leaf is where it belongs, and that is the whole point of
+     * having them: a Dranzer poster, a Dranzer sticker sheet and the Dranzer
+     * bey itself are siblings under one leaf, so "related items" is literally
+     * one `array-contains` rather than a heuristic.
+     */
+    categorySlugs: ["category-dranzer-f","category-original-spin-gear","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Dranzer F","Spin Gear System","Original Tops","Beyblade Original","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 599,
@@ -114,8 +126,8 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     slug: "art-beyblade-x-lineup-canvas",
     title: "Beyblade X Full Lineup — Canvas Print",
     description: "A gallery-style canvas print featuring the full current Beyblade X roster in battle formation. Stretched and ready to hang.",
-    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 2499,

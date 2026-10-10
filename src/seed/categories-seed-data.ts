@@ -1,16 +1,33 @@
 /*
- * WHY: Provides the Beyblade-focused category hierarchy plus brand entries for the
- *      demo seed. The site itself stays generically branded as a collectibles marketplace —
- *      only the seeded catalog data is narrowed to Beyblade so the demo has a coherent
- *      dataset instead of a sprawling multi-franchise catalog.
- * WHAT: Exports categoriesSeedData — a 4-level, TWO-root category forest
- *       (`Spinning Tops` + `Living Collectibles`, see _helpers/category-forest.ts),
- *       brand rows (categoryType:"brand") and pricing bundles (categoryType:"bundle").
+ * WHY: The real catalogue taxonomy. 🛑 This file is NO LONGER Beyblade-only —
+ *      its header said "narrowed to Beyblade so the demo has a coherent
+ *      dataset instead of a sprawling multi-franchise catalog" and B5 reversed
+ *      that deliberately, on evidence: a 15-site crawl of ~25,900 live Indian
+ *      listings showed trading cards, collectible figures and Hot Wheels are
+ *      each a real vertical with its own measured price bands, and three of
+ *      the five largest competitors sell more than one of them.
  *
- *       The tree was 2 levels under a single root until 2026-08-24. That made
+ *      The old framing is not contradicted here, it is superseded — coherence
+ *      now comes from the TREE being one axis deep per vertical rather than
+ *      from the catalogue being one franchise wide.
+ *
+ * WHAT: Exports categoriesSeedData — a 5-level, SIX-root forest (Spinning Tops,
+ *       Trading Cards, Collectible Figures, Hot Wheels, Model Kits, Living
+ *       Collectibles — see _helpers/category-forest.ts), 28 brand rows
+ *       (categoryType:"brand", _helpers/brand-rows.ts), two sublisting rows and
+ *       five pricing bundles (categoryType:"bundle").
+ *
+ *       The tree was 2 levels under a single root until 2026-08-24 and 47 nodes
+ *       across 2 roots until B5. The first state made
  *       `categoryType:"sublisting"` — documented as "tier-4 leaf groups under a
  *       parent category" — structurally unreachable, and left the live-item
  *       products with no category at all.
+ *
+ *       The tier-4 layer is 216 NAMED MODEL leaves (Lost Longinus, Storm
+ *       Pegasus, Dran Sword …), GENERATED from the canonical corpus in
+ *       _helpers/category-models.ts rather than typed by hand — a slug is the
+ *       document id, the public URL and a searchTxt source, so it is the one
+ *       field that cannot be quietly corrected later.
  *
  *       Products tag their FULL ancestor chain (leaf -> … -> root) so a single
  *       array-contains at any level returns the whole subtree. That is what lets
@@ -40,6 +57,10 @@ import { seedPhoto } from "./_helpers/media";
 import { buildCategoryTree } from "./_helpers/category-tree";
 import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
+import { BRAND_ROW_COUNT, buildBrandRows } from "./_helpers/brand-rows";
+import { MODEL_LEAF_COUNT } from "./_helpers/category-models";
+import { MARKET_BAND_LEAF_IDS } from "./_helpers/category-content";
+import { productsStandardSeedData } from "./products-standard-seed-data";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -56,9 +77,14 @@ const emptyMetrics = {
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Categories — 47 rows across 4 tiers and 2 roots, all structural fields derived.
-// The shape lives in _helpers/category-forest.ts; the derivation in
-// _helpers/category-tree.ts.
+// Categories — 381 rows across 5 tiers and 6 roots, every structural field
+// derived. The shape lives in _helpers/category-forest.ts, the named-model
+// tier-4 leaves in the GENERATED _helpers/category-models.ts, and the
+// derivation in _helpers/category-tree.ts.
+//
+// 🛑 Never quote this count without running `buildCategoryTree` against the
+// forest — it was 47 before B5 and the comment here said so for months after
+// the tree changed underneath it.
 // ──────────────────────────────────────────────────────────────────────────────
 const rawCategories: Partial<CategoryDocument>[] = buildCategoryTree(
   CATEGORY_FOREST,
@@ -162,162 +188,64 @@ const sublistingRows: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(30),
   },
 ];
-
 // ──────────────────────────────────────────────────────────────────────────────
-// Brands (categoryType:"brand").
+// Brands (categoryType:"brand") — 4 rows -> 28, built by a factory.
 //
-// ⚠️ `BrandDetailPageView` matches products on the free-text `brand` DISPLAY
-// NAME (`sieveFilter("brand", EQ, brandName)`), not on `brandSlug`. So a brand
-// row's `name` here and the `brand:` string on every product that belongs to it
-// must match EXACTLY — renaming a brand silently orphans its whole catalogue.
-// Keep `brand` and `brandSlug` in lockstep on the product side.
+// The shape, the three live traps (display-name matching, icon-beats-cover,
+// and why a brand with no products is worse than no brand) and the logo
+// decision all live in _helpers/brand-rows.ts. Four inline rows at ~35 lines
+// each was already the wrong shape for 28.
 // ──────────────────────────────────────────────────────────────────────────────
-const brandRows: Partial<CategoryDocument>[] = [
-  {
-    id: "brand-takara-tomy",
-    slug: "brand-takara-tomy",
-    name: "Takara-Tomy",
-    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BRAND,
-    description: "Japanese toy company behind Beyblade, Tomica, Transformers (Japan), and Duel Masters. Known for premium quality and Japan-exclusive releases.",
-    brandWebsite: "https://www.takaratomy.co.jp",
-    brandCountry: "Japan",
-    brandFounded: 2006,
-    highlights: [
-      "The Japanese toy company that manufactures every Beyblade generation",
-      "Also behind Tomica, Transformers (Japan region), and Duel Masters",
-      "Known for Japan-exclusive releases and premium tooling quality",
-    ],
-    faqs: [
-      { question: "Is Takara-Tomy the same company as Hasbro's Beyblade line?", answer: "No — Takara-Tomy manufactures and sells Beyblade in Japan and most of Asia; Hasbro licenses and distributes a separate (sometimes different) product line internationally, primarily in North America." },
-      { question: "Are Takara-Tomy imports compatible with Hasbro Beyblade parts?", answer: "Within the same generation (e.g. Burst-to-Burst), yes, in most cases — cross-generation compatibility is not guaranteed." },
-    ],
-    rootId: "brand-takara-tomy",
-    parentIds: [],
-    tier: 0,
-    path: "brand-takara-tomy",
-    isLeaf: true,
-    order: 1,
-    display: { coverImage: seedPhoto("brand-logo-takara-tomy-20260101", 800, 800), showInMenu: false, showInFooter: true },
-    isFeatured: true,
-    isBrand: true,
-    isActive: true,
-    isSearchable: true,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(30),
-    seo: { title: "Takara-Tomy | LetItRip", description: "Shop Takara-Tomy collectibles — Beyblade, Tomica, Transformers.", keywords: ["takara tomy", "takara tomy beyblade", "tomica takara"] },
-  },
-  {
-    id: "brand-beyblade",
-    slug: "brand-beyblade",
-    name: "Beyblade",
-    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BRAND,
-    description: "Spinning top battle franchise by Takara-Tomy (Japan) and Hasbro (international). Covers the Original series, Metal Fight, Burst, and the latest Beyblade X generation.",
-    brandWebsite: "https://beyblade.takaratomy.co.jp",
-    brandCountry: "Japan",
-    brandFounded: 1999,
-    highlights: [
-      "The franchise itself — spanning four generations since 1999",
-      "One of the best-selling spinning-top toy lines in the world",
-      "A competitive tournament scene alongside casual collecting",
-    ],
-    faqs: [
-      { question: "What age range is Beyblade designed for?", answer: "Most sets are labeled for ages 8+ due to small parts and launcher spring mechanisms — always check the age rating on the listing before buying for a young child." },
-      { question: "Where can I find official tournament rules?", answer: "Takara-Tomy and Hasbro both publish official battle rules for their respective regions — check the manufacturer's site linked from this page's \"Website\" field for the current rulebook." },
-    ],
-    rootId: "brand-beyblade",
-    parentIds: [],
-    tier: 0,
-    path: "brand-beyblade",
-    isLeaf: true,
-    order: 2,
-    display: { coverImage: seedPhoto("brand-logo-beyblade-20260101", 800, 800), showInMenu: false, showInFooter: true },
-    isFeatured: true,
-    isBrand: true,
-    isActive: true,
-    isSearchable: true,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(30),
-    seo: { title: "Beyblade | LetItRip", description: "Shop Beyblade — Original, X, Burst, Metal Fight tops and stadiums.", keywords: ["beyblade", "beyblade x", "beyblade burst", "spinning top battle"] },
-  },
-  {
-    id: "brand-hasbro",
-    slug: "brand-hasbro",
-    name: "Hasbro",
-    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BRAND,
-    description:
-      "The international Beyblade licensee — Hasbro distributes its own Beyblade product line outside Japan, with different packaging, part names and sometimes different mould tolerances from the Takara-Tomy originals.",
-    brandWebsite: "https://shop.hasbro.com",
-    brandCountry: "United States",
-    brandFounded: 1923,
-    highlights: [
-      "The Beyblade line most collectors outside Japan grew up with",
-      "Widely available and generally cheaper than Japanese imports",
-      "Same-generation parts are usually cross-compatible with Takara-Tomy",
-    ],
-    faqs: [
-      { question: "Is a Hasbro Beyblade worse than the Takara-Tomy version?", answer: "Not worse, but often different — Hasbro releases can use different plastics and slightly looser tolerances, which competitive players notice. For casual play they perform comparably." },
-      { question: "Can I mix Hasbro and Takara-Tomy parts?", answer: "Within the same generation, almost always yes. Across generations, no — the launcher and locking systems differ." },
-    ],
-    rootId: "brand-hasbro",
-    parentIds: [],
-    tier: 0,
-    path: "brand-hasbro",
-    isLeaf: true,
-    order: 3,
-    display: { coverImage: seedPhoto("brand-logo-hasbro-20260101", 800, 800), showInMenu: false, showInFooter: true },
-    isFeatured: false,
-    isBrand: true,
-    isActive: true,
-    isSearchable: true,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(30),
-    seo: { title: "Hasbro | LetItRip", description: "Shop Hasbro Beyblade — the international product line.", keywords: ["hasbro", "hasbro beyblade", "beyblade burst hasbro"] },
-  },
-  {
-    // The Living Collectibles root needs a brand of its own: live listings are
-    // sold by individual keepers and breeders, not by a manufacturer. Without
-    // one, the three live-item products carried a `brand: "Beyblade Arena"`
-    // string (a STORE name in a brand field) that matched no brand row, so they
-    // were invisible on every brand page.
-    id: "brand-independent-keepers",
-    slug: "brand-independent-keepers",
-    name: "Independent Keepers",
-    categoryType: CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BRAND,
-    description:
-      "Live animals and plants come from individual keepers, breeders and growers rather than a manufacturer. This entry groups those listings so they are reachable from brand browsing like everything else.",
-    brandCountry: "India",
-    highlights: [
-      "Every seller is verified before a live listing can go public",
-      "Provenance, age and health information disclosed per listing",
-    ],
-    faqs: [
-      { question: "Why is there a \"brand\" for living things at all?", answer: "Purely so live listings behave like every other listing in browse and search. It identifies the class of seller, not a manufacturer." },
-    ],
-    rootId: "brand-independent-keepers",
-    parentIds: [],
-    tier: 0,
-    path: "brand-independent-keepers",
-    isLeaf: true,
-    order: 4,
-    display: { coverImage: seedPhoto("brand-logo-independent-keepers-20260101", 800, 800), showInMenu: false, showInFooter: false },
-    isFeatured: false,
-    isBrand: true,
-    isActive: true,
-    isSearchable: true,
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(300),
-    updatedAt: daysAgo(30),
-    seo: { title: "Independent Keepers | LetItRip", description: "Live animals and plants from verified independent keepers and growers.", keywords: ["independent keepers", "breeders", "live plants"] },
-  },
-];
+const brandRows: Partial<CategoryDocument>[] = buildBrandRows({
+  createdBy: "user-admin-letitrip",
+  createdAt: daysAgo(300),
+  updatedAt: daysAgo(30),
+});
 
 // P-17 — 5 bundle rows (categoryType:"bundle") grouping the Beyblade-minimal
 // standard products by generation, plus one cross-generation starter pack.
 // Every bundle references real seeded product ids (products-standard-seed-data.ts),
 // all currently under store-beyblade-arena.
+/*
+ * 🛑 `bundleCategorySlugs` is DERIVED, because it is a MIRROR and mirrors
+ * drift (Root Cause #42).
+ *
+ * The field is the union of the members' `categorySlugs`, and it is what lets
+ * a category page scope its Bundles tab at all. It was hand-written across
+ * all five bundles — and it drifted in B5 the moment the Beyblade X tree
+ * changed: two bundles still named `category-x-starters` and
+ * `category-x-boosters`, leaves that no longer exist, so those bundles had
+ * silently stopped appearing under any Beyblade X category.
+ *
+ * Worse, the stale strings were still being READ as valid seed ids by
+ * `audit-tester-plugin-wiring` R7 once its id scan was widened, which briefly
+ * made two genuinely-broken authored tester cases stop being reported. A
+ * hand-maintained mirror does not only go wrong — it can keep the check that
+ * would have caught it quiet.
+ *
+ * Deriving from the members' own chains means the union cannot disagree with
+ * them, and a member whose chain moves updates every bundle holding it.
+ */
+const PRODUCT_CHAINS = new Map<string, string[]>(
+  productsStandardSeedData.map((p) => [String(p.id), (p.categorySlugs ?? []) as string[]]),
+);
+
+function bundleCategorySlugsFor(productIds: string[]): string[] {
+  const out: string[] = [];
+  for (const id of productIds) {
+    const chain = PRODUCT_CHAINS.get(id);
+    /*
+     * A member missing from the standard seed is a BUG, not something to shrug
+     * past: the bundle would silently lose that member's categories and the
+     * Bundles tab would under-report. All eight current members are standard
+     * products; if that changes, widen the map rather than softening this.
+     */
+    if (!chain) throw new Error(`bundle member ${id} is not in productsStandardSeedData`);
+    for (const c of chain) if (!out.includes(c)) out.push(c);
+  }
+  return out;
+}
+
 const bundleRows: Partial<CategoryDocument>[] = [
   {
     id: "bundle-original-collectors-set",
@@ -333,7 +261,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
     },
     bundleProductIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
-    bundleCategorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops","category-original-plastic-gen","category-metal-masters","category-metal-tops","category-beyblade-metal"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"]),
     bundleOriginalTotal: 4597, // 1499 + 1799 + 1299
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-original-collectors-set-20260101", 1200, 900), showInFooter: false },
@@ -368,7 +296,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
     },
     bundleProductIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
-    bundleCategorySlugs: ["category-metal-masters","category-metal-tops","category-beyblade-metal","category-spinning-tops","category-metal-fury","category-original-hms","category-original-tops","category-beyblade-original"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"]),
     bundleOriginalTotal: 3997, // 1299 + 1199 + 1499
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-metal-fusion-duo-20260101", 1200, 900), showInFooter: false },
@@ -405,7 +333,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
     },
     bundleProductIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
-    bundleCategorySlugs: ["category-burst-superking","category-burst-tops","category-beyblade-burst","category-spinning-tops","category-burst-classic","category-metal-fury","category-metal-tops","category-beyblade-metal"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"]),
     bundleOriginalTotal: 3597, // 999 + 1399 + 1199
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-burst-battlers-pack-20260101", 1200, 900), showInFooter: false },
@@ -440,7 +368,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       productIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
     },
     bundleProductIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
-    bundleCategorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops","category-x-boosters","category-burst-superking","category-burst-tops","category-beyblade-burst"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"]),
     bundleOriginalTotal: 2847, // 899 + 949 + 999
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-x-series-starter-20260101", 1200, 900), showInFooter: false },
@@ -488,7 +416,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
       "product-beyblade-burst-valkyrie",
       "product-beyblade-x-wizard-arrow",
     ],
-    bundleCategorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops","category-metal-masters","category-metal-tops","category-beyblade-metal","category-burst-superking","category-burst-tops","category-beyblade-burst","category-x-starters","category-x-tops","category-beyblade-x"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus", "product-beyblade-burst-valkyrie", "product-beyblade-x-wizard-arrow"]),
     bundleOriginalTotal: 4996, // 1799 + 1299 + 999 + 899
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-every-generation-starter-pack-20260101", 1200, 900), showInFooter: false },
@@ -531,6 +459,48 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
   ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
 ].map(withCategorySearchTxt);
+
+/*
+ * ── Assertions, at MODULE LOAD, so a silent drop is loud ─────────────────────
+ *
+ * 🛑 These exist because of a specific failure shape this file is exposed to:
+ * `appkit-seed status` counts documents BY ID, so it cannot see content drift
+ * at all, and `load` is a `set(…, {merge:true})` that never removes a field.
+ * A generated map that silently emptied — `MODEL_LEAVES` keyed on a line id
+ * the forest renamed, say — would produce a tree that builds, typechecks,
+ * seeds without error, reports perfectly in sync, and is missing 216 pages.
+ *
+ * Throwing at import is the right severity: every consumer of this module
+ * (the seed CLI, the tester fixtures, the audits) wants to fail before writing
+ * rather than after.
+ */
+const modelLeafRows = rawCategories.filter((c) => c.tier === 4).length;
+if (modelLeafRows !== MODEL_LEAF_COUNT) {
+  throw new Error(
+    `category seed: ${modelLeafRows} tier-4 model leaves reached the tree but ` +
+      `category-models.ts generated ${MODEL_LEAF_COUNT}. A line id in the ` +
+      `forest no longer matches a key in MODEL_LEAVES — re-run ` +
+      `node scripts/gen-category-models.mjs and check the line ids.`,
+  );
+}
+if (brandRows.length !== BRAND_ROW_COUNT) {
+  throw new Error(`category seed: ${brandRows.length} brand rows built, expected ${BRAND_ROW_COUNT}`);
+}
+{
+  /*
+   * A price band keyed on a leaf that does not exist is dead weight that READS
+   * AS COVERAGE — the hint renders nowhere and nothing says so. Cheap to
+   * check, and it is the most likely thing to rot as the tree is edited.
+   */
+  const ids = new Set(rawCategories.map((c) => c.id));
+  const orphans = MARKET_BAND_LEAF_IDS.filter((id) => !ids.has(id));
+  if (orphans.length) {
+    throw new Error(
+      `category seed: ${orphans.length} market band(s) key a non-existent ` +
+        `leaf: ${orphans.join(", ")}`,
+    );
+  }
+}
 
 export const categoriesSeedData: Partial<CategoryDocument>[] = allCategoryRows;
 

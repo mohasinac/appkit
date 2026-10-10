@@ -137,9 +137,16 @@ const SOURCES = {
   // — it is what makes a tier-4 model findable by its lineage ("burst" reaches
   // a model filed under Beyblade Burst). `createdBy` is a raw uid and
   // `createdByStoreName` is operator identity; neither may feed searchTxt (D1).
+  // `aliases` is LAST, matching the builder's order, because buildSearchTxt
+  // truncates at 600 tokens SILENTLY — whatever sits at the end is dropped
+  // first, and a model leaf's own name and lineage must outrank its "also
+  // known as" spellings. For a named-model leaf the aliases carry the Hasbro
+  // name and the product code, so this is what makes a row findable by "Lost
+  // Longinus" when its stored name is "Luinor L2".
   categories: (d) => [
     d.name, d.slug, stripHtml(d.description), d.path, d.itemCode, d.brandCountry,
     (d.ancestors ?? []).map((a) => a.name),
+    d.aliases ?? [],
   ],
   stores: (d) => [d.storeName, stripHtml(d.storeDescription), d.storeCategory],
   events: (d) => [d.title, stripHtml(d.description), d.type, d.tags ?? []],

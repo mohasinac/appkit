@@ -36,10 +36,20 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
   {
     id: "classified-beyblade-stadium-set",
     slug: "classified-beyblade-stadium-set",
-    title: "Used Beyblade Stadium Set — Local Pickup Only",
+    title: "Used Beyblade Burst Stadium Set — Local Pickup Only",
     description: "Well-loved Beyblade stadium with 6 tops and 2 launchers, sold as-is. Meet up locally — price is negotiable.",
-    categorySlugs: ["category-storage-cases","category-gear-storage","category-battle-gear","category-spinning-tops"],
-    categoryNames: ["Cases & Trays","Storage & Care","Battle Gear","Spinning Tops"],
+    /*
+     * 🛑 Re-filed in B5. A stadium is GENERATION-SPECIFIC — a BX-10 Xtreme
+     * Stadium is a Beyblade X product and a BB-10 Attack Type is Metal Fight —
+     * so stadiums moved out of the one `battle-gear` bucket into four
+     * per-generation nodes. The old chain's three ids no longer exist.
+     *
+     * The title now says Burst too. Filing a generically-titled stadium under
+     * a specific generation while the title stays silent makes the data
+     * disagree with itself, and the title is the half a buyer reads.
+     */
+    categorySlugs: ["category-burst-standard-stadiums","category-burst-stadiums","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Standard BeyStadiums","Burst Stadiums","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 1200,
@@ -136,8 +146,8 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     slug: "classified-beyblade-x-starter-pune",
     title: "Beyblade X Starter Pack — Pune, Phone Contact Only",
     description: "Barely used Beyblade X starter pack, selling because I upgraded to a full set. Call or WhatsApp only, no chat.",
-    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 650,
@@ -284,8 +294,8 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     slug: "classified-beyblade-x-tournament-kit-hyderabad",
     title: "Tournament-Ready Beyblade X Kit — Hyderabad",
     description: "Complete tournament-legal kit including 3 tops, stadium, and a scorecard pad from our last local meetup event.",
-    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 2400,

@@ -40,8 +40,8 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     listingType: "pre-order" as const,
-    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
     images: [
       seedPhoto("preorder-image-beyblade-x-bx-08-wave-1-20260101", 900, 900),
@@ -82,8 +82,8 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     listingType: "pre-order" as const,
-    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
     images: [
       seedPhoto("preorder-image-beyblade-x-bx-09-glide-ring-1-20260814", 900, 900),
@@ -157,8 +157,8 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     listingType: "pre-order" as const,
-    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
     images: [
       seedPhoto("preorder-image-beyblade-x-bx-11-sold-out-1-20260812", 900, 900),
@@ -277,8 +277,8 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     listingType: "pre-order" as const,
-    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
     images: [
       seedPhoto("preorder-image-beyblade-x-bx-12-closed-1-20260824", 900, 900),

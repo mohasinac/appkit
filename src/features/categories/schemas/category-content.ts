@@ -165,12 +165,42 @@ export interface CategoryPriceGuidance {
    * must never write here, or a quiet night would erase the baseline.
    */
   market?: {
-    p25: number;
+    /**
+     * The one figure every measured band has. Required for exactly that
+     * reason — a band with no central value is not a band.
+     */
     median: number;
-    p75: number;
-    sampleSize: number;
+    /**
+     * 🛑 OPTIONAL, and that is load-bearing. The crawl recorded quartiles for
+     * parts, launchers, TCG and figures and only a MEDIAN AND A RANGE for Hot
+     * Wheels (n=7,418, ₹99–36,500). Requiring p25/p75 would have forced a
+     * range to be retyped as quartiles, which is a different statistic
+     * presented as the one the field is named after. Absent means "not
+     * measured", and the hint renders as "around ₹850" rather than a span.
+     */
+    p25?: number;
+    p75?: number;
+    /**
+     * 🛑 Also optional, for the same reason: the crawl's Beyblade-top table
+     * carries no per-leaf sample size at all, and the one place two sources
+     * disagreed (HMS: beybladeshopindia n=39 against worldhobbyshop n=2) is
+     * recorded precisely because an n=2 median is a coin flip presented as
+     * data. Absent must render as absent — never as a confident figure, and
+     * never as a number somebody filled in to satisfy the type.
+     */
+    sampleSize?: number;
     asOf: Date;
     soldOutShare?: number;
+    /**
+     * Which crawl this came from, and any caveat about it — "worldhobbyshop",
+     * "raikages n=68 (the only component-level pricing anywhere)",
+     * "toycollectorsindia 1:64 POOLED across mainline and premium".
+     *
+     * Carried so the question "where did this number come from" is answerable
+     * from the data rather than from a markdown file nobody has open, and so a
+     * source-priority decision can be applied without re-deriving the bands.
+     */
+    source?: string;
   };
   /**
    * OUR completed sales only, including won auctions and accepted offers.

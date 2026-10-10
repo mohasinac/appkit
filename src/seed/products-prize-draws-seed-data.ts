@@ -32,8 +32,19 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-mystery-box",
     title: "Beyblade Mystery Box — Prize Draw",
     description: "Buy an entry for ₹99 and reveal your prize instantly — win anything from a rare limited-edition Beyblade down to a spare launcher grip. 4 prizes available, revealed on a first-come basis.",
-    categorySlugs: ["category-storage-cases","category-gear-storage","category-battle-gear","category-spinning-tops"],
-    categoryNames: ["Cases & Trays","Storage & Care","Battle Gear","Spinning Tops"],
+    /*
+     * 🛑 Re-filed in B5, and it files at the ROOT on purpose. Its own
+     * description says the prizes run "from a rare limited-edition Beyblade
+     * down to a spare launcher grip" — so it spans generations and part
+     * families, and there is no leaf that honestly describes it. The old chain
+     * put it under Cases & Trays, which described none of its contents.
+     *
+     * A root-level chain is valid and is what a mixed-content listing should
+     * have: `deriveTaxonomy` resolves a root leaf to a one-element chain, the
+     * root page matches it, and no leaf page claims it.
+     */
+    categorySlugs: ["category-spinning-tops"],
+    categoryNames: ["Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 99,
@@ -85,8 +96,14 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-scheduled-demo",
     title: "Beyblade Champion's Draw — Prize Draw",
     description: "Two entries, two prizes — the winners are revealed automatically the moment the draw closes (3 days) or sells out, whichever comes first.",
-    categorySlugs: ["category-stadiums-standard","category-gear-stadiums","category-battle-gear","category-spinning-tops"],
-    categoryNames: ["Standard Stadiums","Stadiums","Battle Gear","Spinning Tops"],
+    /*
+     * Re-filed in B5 from the removed `battle-gear` stadium chain. Both its
+     * prizes are Beyblade X (a Champion Set and a tip multipack), so it
+     * belongs on the X tops branch rather than under stadiums — which it was
+     * never a stadium to be under.
+     */
+    categorySlugs: ["category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
     price: 149,
@@ -138,8 +155,8 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-x-legendary-vault",
     title: "Beyblade X Legendary Vault — Prize Draw",
     description: "6 entries, 6 prizes ranging from a legendary chase top to spare parts — over half the draw is already sold, don't miss the remaining slots.",
-    categorySlugs: ["category-x-starters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Starter Sets","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 199,
@@ -372,8 +389,8 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     slug: "prizedraw-beyblade-x-vault-closed-pending-reveal",
     title: "Beyblade X Vault Draw — Closed Early",
     description: "The seller closed this draw before every slot sold. Remaining entries were refunded; no further entries are accepted.",
-    categorySlugs: ["category-x-boosters","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Boosters","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
     price: 249,

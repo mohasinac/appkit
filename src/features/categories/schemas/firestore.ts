@@ -167,6 +167,23 @@ export interface CategoryDocument extends BaseDocument {
   /** A handful of Q&A pairs shown on the category/brand detail page. */
   faqs?: { question: string; answer: string }[];
 
+  /**
+   * Alternate names this category is searched by — indexed into `searchTxt`
+   * and rendered nowhere.
+   *
+   * B5. A named-model leaf is the case that needs it: *Lost Longinus* is sold
+   * in the west as *Lost Luinor L2* and its product code is *B-66*, and a
+   * buyer types whichever one they learned first. `name` can only hold one of
+   * the three.
+   *
+   * 🛑 Watch the 600-token ceiling in `buildSearchTxt`, which truncates
+   * SILENTLY. A category's own tokens (name, slug, description, path, every
+   * ancestor name) come first in the array, so an unbounded alias list would
+   * evict the lineage tokens that are the whole reason ancestors are indexed.
+   * The generator caps a model leaf at the Hasbro name plus the product code.
+   */
+  aliases?: string[];
+
   // ── Category-owned content (B3) — see schemas/category-content.ts ─────
   /**
    * 400–900 chars of keyword-rich HTML with sibling/parent cross-links,
@@ -364,6 +381,15 @@ export const CATEGORIES_PUBLIC_FIELDS = [
   "contentBody",
   "descriptionTemplates",
   "productDefaults",
+  /*
+   * B5. `aliases` is public because it is already published in a form nobody
+   * can withhold: every alias is tokenised into `searchTxt`, which is what the
+   * search endpoint matches on, so the facts are inferable from search results
+   * whether or not the array is in the payload. Withholding it would hide a
+   * useful "also known as" line from the page while changing nothing about
+   * what is reachable.
+   */
+  "aliases",
 ] as const;
 
 export const CATEGORIES_UPDATABLE_FIELDS = [
@@ -385,6 +411,7 @@ export const CATEGORIES_UPDATABLE_FIELDS = [
   "contentBody",
   "descriptionTemplates",
   "productDefaults",
+  "aliases",
 ] as const;
 
 export type CategoryCreateInput = Omit<

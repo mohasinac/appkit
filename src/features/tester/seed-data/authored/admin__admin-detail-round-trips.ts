@@ -74,15 +74,15 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/categories",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /categories/category-x-starters as a visitor in a second tab and write down its product count. Note the FULL id — /categories/x-starters serves 'Category Not Found'; every category id carries the category- prefix.",
-      "In the first tab open /admin/categories and find Starter Sets — that is the display name of category-x-starters; there is no category called 'X Starters'.",
+      "Open /categories/category-x-basic as a visitor in a second tab and write down its product count. Note the FULL id — /categories/x-basic serves 'Category Not Found'; every category id carries the category- prefix.",
+      "In the first tab open /admin/categories and find Basic Line — that is the display name of category-x-basic; there is no category called 'X Basic'.",
       "Write down its parent and how many children it has.",
       "Open its Edit action, change ONLY its description, and press Save.",
       "Reload the admin list and reopen it.",
       "Reload the public category page in the second tab.",
       "Restore the description by removing the word you appended, then save again. Three of the cases on this page append a marker and this one accumulated 'roundtrip' from an earlier run — categories is SEED_OWNED, but a run does not reseed.",
     ],
-    inputs: { categorySlug: "x-starters" },
+    inputs: { categorySlug: "x-basic" },
     expectedBehaviour:
       "A rename or a description edit touches that field alone. The hierarchy fields — parent, children, ancestors, tier — are derived and must never be rewritten from form state, and the product count is derived from a trigger rather than typed.",
     expectedUiState:

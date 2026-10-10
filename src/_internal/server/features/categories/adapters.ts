@@ -123,6 +123,24 @@ export const PRIVATE_CATEGORY_FIELDS = [
    *     Root Cause #104 was about.
    */
   "searchTxt",
+  /*
+   * `aliases` — B5. The alternate names a leaf is searched by ("Lost
+   * Longinus" for the row stored as "Luinor L2", plus its product code).
+   *
+   * Withheld from THIS route because nothing reads it here: the aliases exist
+   * to be folded into `searchTxt` at write time, and the matching happens
+   * server-side. `CategoryItem` declares no such field, and the only consumer
+   * of this route at scale is `CategoryInlineSelect` at `pageSize=200`, which
+   * shows a name and nothing else.
+   *
+   * 🛑 Not secret, and the distinction matters for the next person: every
+   * alias is ALREADY inferable from search results, because it is tokenised
+   * into the index this route helps query. If a detail page ever wants to
+   * render an "also known as" line — which would be genuinely useful on a
+   * named-model leaf — promote it here AND add it to `CategoryItem`, rather
+   * than casting at the call site (Root Cause #70's exact mechanism).
+   */
+  "aliases",
   "brandSlug",
   "bundleKind",
   "bundlePrice",
