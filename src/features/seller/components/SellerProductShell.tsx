@@ -58,6 +58,23 @@ export interface SellerProductDraft {
   brand?: string;
   condition?: string;
   tags?: string[];
+  /*
+   * ── Template provenance. DRAFT-ONLY: never sent to Firestore ────────────
+   *
+   * These two exist so the clobber rule can tell "the seller has written
+   * something" from "the seller has written nothing and is looking at a body
+   * we filled in". Without them the form can only ask "is the description
+   * empty?", which makes applying a template a one-way door: the next
+   * category change either destroys the applied body (if it overwrites) or
+   * leaves a mismatched one (if it refuses).
+   *
+   * `appliedTemplateBody` is compared BYTE-FOR-BYTE against the current
+   * description. The moment a seller edits one character the two diverge, the
+   * description counts as dirty, and nothing overwrites it again without an
+   * explicit confirmed action.
+   */
+  appliedTemplateId?: string;
+  appliedTemplateBody?: string;
   // Media
   mainImage?: string;
   images?: string[];
@@ -216,10 +233,29 @@ export interface SellerProductShellProps {
     onChange: (v: string) => void;
   }) => React.ReactNode;
   /**
-   * Render a template selector at the top of the Basic step.
-   * Receives a callback to apply the selected template to the draft.
+   * Render the category description-template picker, between the
+   * Category/Condition row and the Description field.
+   *
+   * 🛑 The slot existed with ZERO consumers and a single `onApply` prop, which
+   * was not enough to build a picker with: it could apply a body but could not
+   * know WHICH body to fetch, or whether applying one would destroy something
+   * the seller had written. C2b widens it rather than adding a second slot.
+   *
+   * `isDescriptionDirty` is the one that matters. It is the clobber rule in a
+   * boolean: true when the description is non-empty after trim AND not
+   * byte-identical to a body applied this session. The picker must not
+   * overwrite when it is true — it offers a "Replace description" action
+   * instead, which is destructive and therefore carries a confirmation.
    */
   renderTemplateSelector?: (props: {
+    /** The leaf the seller has chosen. Empty until they pick one. */
+    categoryId: string;
+    /** Drives which `variant` is fetched — new_in_box vs pre_owned. */
+    condition: string;
+    /** Resolved `{{slot}}` values the picker fills the body with. */
+    context: Record<string, string>;
+    /** See above. The picker must not silently overwrite when true. */
+    isDescriptionDirty: boolean;
     onApply: (partial: Partial<SellerProductDraft>) => void;
   }) => React.ReactNode;
   /** Called with current draft when user clicks "Save as Template". */
@@ -268,9 +304,41 @@ function StepBasic({
   renderBrandSelector?: SellerProductShellProps["renderBrandSelector"];
   renderTemplateSelector?: SellerProductShellProps["renderTemplateSelector"];
 }) {
+  /*
+   * 🛑 The clobber rule, in one expression.
+   *
+   * Dirty means: non-empty after trim, AND not byte-identical to a body this
+   * session applied. A seller who has typed anything owns the field; a seller
+   * looking at a body we filled in does not, so a category change may refresh
+   * it silently.
+   *
+   * Byte-identical rather than "did they focus the box": a seller can click
+   * into the description, change nothing, and click away, and that must not
+   * count as authorship.
+   */
+  const description = values.description ?? "";
+  const isDescriptionDirty =
+    description.trim() !== "" && description !== (values.appliedTemplateBody ?? "");
+
+  /*
+   * The `{{slot}}` values the picker interpolates. Only what the draft
+   * genuinely knows — an unresolvable slot becomes the empty string and the
+   * picker reports it, which is `interpolate`'s contract. Never a literal
+   * `{{series}}` in a published description.
+   *
+   * `condition` resolves to the LABEL, not the raw enum: a body reading
+   * "Condition: like_new" is a template leaking its storage format.
+   */
+  const templateContext: Record<string, string> = {
+    title: values.title ?? "",
+    brand: values.brand ?? "",
+    condition:
+      CONDITION_OPTIONS.find((o) => o.value === (values.condition ?? "new"))?.label ?? "",
+    siteName: "LetItRip",
+  };
+
   return (
     <Stack gap="md">
-      {renderTemplateSelector?.({ onApply: onChange })}
       <FormField
         name="title"
         label="Title"
@@ -279,14 +347,21 @@ function StepBasic({
         onChange={(v) => onChange({ title: v })}
         placeholder="e.g. Charizard Base Set PSA 9"
       />
-      <FormField
-        name="description"
-        label="Description"
-        type="textarea"
-        value={values.description ?? ""}
-        onChange={(v) => onChange({ description: v })}
-        placeholder="Describe your listing in detail…"
-      />
+      {/*
+        🛑 CATEGORY AND CONDITION SIT ABOVE DESCRIPTION, and the order is the
+        feature rather than a tidy-up.
+
+        Description used to be authored first and the category picker came
+        after it. A template that fills Description therefore filled a field
+        the seller had already walked past — which reads as data loss whatever
+        the clobber rule does, because they watched their cursor leave an empty
+        box and come back to find words in it.
+
+        Asking what it IS before asking them to describe it also means the
+        picker has a category to fetch a body for by the time they reach the
+        description at all. It follows the precedent already in this file,
+        where slug and seoTitle auto-fill from title downstream of it.
+      */}
       <FormGroup columns={2}>
         {renderCategorySelector ? (
           <>
@@ -312,6 +387,21 @@ function StepBasic({
           options={CONDITION_OPTIONS}
         />
       </FormGroup>
+      {renderTemplateSelector?.({
+        categoryId: values.category ?? "",
+        condition: values.condition ?? "new",
+        context: templateContext,
+        isDescriptionDirty,
+        onApply: onChange,
+      })}
+      <FormField
+        name="description"
+        label="Description"
+        type="textarea"
+        value={description}
+        onChange={(v) => onChange({ description: v })}
+        placeholder="Describe your listing in detail…"
+      />
       {renderBrandSelector ? (
         <>
           <Text className="text-[var(--appkit-color-text)] mb-1" size="sm" weight="medium">Brand</Text>
