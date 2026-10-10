@@ -17,7 +17,6 @@ export const DEFAULT_ROUTE_MAP = {
   PUBLIC: {
     FAQS: "/faqs",
     FAQ_CATEGORY: (category: string) => `/faqs/${category}`,
-    BUG_HUNTERS: "/bug-hunters",
     PROFILE: (userId: string) => `/profile/${userId}`,
     PRODUCTS: "/products",
     PRODUCT_DETAIL: (slugOrId: string) => `/products/${slugOrId}`,
@@ -189,7 +188,6 @@ export const DEFAULT_ROUTE_MAP = {
     CATALOGUE: "/user/catalogue",
     CATALOGUE_NEW: "/user/catalogue/new",
     CATALOGUE_EDIT: (id: string) => `/user/catalogue/${id}/edit`,
-    TESTER_HUB: "/user/tester",
   },
   STORE: {
     DASHBOARD: "/store",

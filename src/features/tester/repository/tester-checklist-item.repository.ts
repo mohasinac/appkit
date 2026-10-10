@@ -10,7 +10,6 @@ import {
   type TesterChecklistItemDocument,
   type TesterChecklistItemCreateInput,
   type TesterChecklistItemUpdateInput,
-  type BugHunterLeaderboardEntry,
 } from "../schemas/firestore";
 
 export class TesterChecklistItemRepository extends BaseRepository<TesterChecklistItemDocument> {
@@ -126,59 +125,18 @@ export class TesterChecklistItemRepository extends BaseRepository<TesterChecklis
     return newItem;
   }
 
-  /**
-   * Ids of automated (non-human) accounts, excluded from the PUBLIC leaderboard.
+  /*
+   * 🛑 `botHunterIds()` and `getBugHunterLeaderboard()` were DELETED (B2,
+   * 2026-10-10) with the public /bug-hunters page they fed. Both were correct;
+   * the feature they served — crediting human testers on a public board —
+   * retired with the human tester programme. The bug credit itself stays on
+   * the checklist item (`bugConfirmed`, `bugHunterId`, `bugHunterName`), so
+   * admin triage at /admin/tester-feedback is unaffected.
    *
-   * Read as a bare collection query rather than through `userRepository` on purpose:
-   * no repository in this codebase imports another, and this needs a key set, not
-   * user documents. `.select()` with no fields returns refs only, so the read is as
-   * cheap as Firestore allows, and `isBot == true` is a single-field equality served
-   * by the automatic index — no composite index to declare.
+   * Do not reinstate the aggregation without the page: it was a full
+   * collection scan of every bug-confirmed item plus a users query, which is
+   * only justifiable when something renders the result.
    */
-  private async botHunterIds(): Promise<Set<string>> {
-    const snapshot = await this.db
-      .collection(USER_COLLECTION)
-      .where("isBot", "==", true)
-      .select()
-      .get();
-    return new Set(snapshot.docs.map((d) => d.id));
-  }
-
-  /** Single-query, in-memory aggregation of bug credits per hunter — mirrors
-   * EventEntryRepository.getLeaderboard()'s shape. Includes old/disabled/
-   * superseded items, since bug credit is permanent.
-   *
-   * Bot accounts are aggregated out (not merely ranked last): the board exists to
-   * credit people, and a runner working all 943 cases would otherwise dominate it.
-   * The credit still lives on the item, so admin triage and the item's own
-   * `bugHunterName` are unaffected. */
-  async getBugHunterLeaderboard(limit = 50): Promise<BugHunterLeaderboardEntry[]> {
-    const [snapshot, botIds] = await Promise.all([
-      this.db
-        .collection(this.collection)
-        .where(TESTER_CHECKLIST_ITEM_FIELDS.BUG_CONFIRMED, "==", true)
-        .get(),
-      this.botHunterIds(),
-    ]);
-
-    const byHunter = new Map<string, { name: string; count: number }>();
-    for (const doc of snapshot.docs) {
-      const item = this.mapDoc<TesterChecklistItemDocument>(doc);
-      if (!item.bugHunterId || botIds.has(item.bugHunterId)) continue;
-      const entry = byHunter.get(item.bugHunterId) ?? {
-        name: item.bugHunterName ?? "Unknown tester",
-        count: 0,
-      };
-      entry.count += 1;
-      byHunter.set(item.bugHunterId, entry);
-    }
-
-    return Array.from(byHunter.entries())
-      .map(([hunterId, v]) => ({ hunterId, hunterName: v.name, bugCount: v.count }))
-      .sort((a, b) => b.bugCount - a.bugCount)
-      .slice(0, limit)
-      .map((entry, index) => ({ ...entry, rank: index + 1 }));
-  }
 }
 
 export const testerChecklistItemRepository = new TesterChecklistItemRepository();

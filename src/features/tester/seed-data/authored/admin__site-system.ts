@@ -648,15 +648,14 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /admin/tester-checklist and read the catalogue.",
       "Create a case with a label, a description, a group, a page, roles, a start page and steps.",
       "Save, RELOAD, and read every field including roles and steps.",
-      "Open /user/tester as a tester and find the new case.",
-      "Check its roles, steps and expectations all render there.",
+      "Reopen the catalogue list and find the new case by searching its label.",
       "Delete the case and confirm it disappears from both surfaces.",
     ],
     expectedBehaviour:
-      "The admin editor accepts every field a case carries, including the roles list, the input values and the expected data — fields added to the document type reach this form too, or the admin can create cases the hub cannot fully display.",
+      "The admin editor accepts every field a case carries, including the roles list, the input values and the expected data — a field added to the document type must reach this form too, or an admin can create a case the harness cannot read.",
     expectedUiState:
-      "After the reload the case holds every field. The Tester Hub shows its roles, steps, both value tables and the expectations. A field the editor accepts but the hub never shows, or the reverse, is the finding.",
-    endResult: "The case is deleted from both surfaces.",
+      "After the reload the case holds every field, including roles, steps, both value tables and the expectations. A field the editor accepts but does not read back is the finding.",
+    endResult: "The case is deleted from the catalogue.",
   },
   "checklist-admin-site-system-tester-feedback-report-export": {
     roles: ["admin"],

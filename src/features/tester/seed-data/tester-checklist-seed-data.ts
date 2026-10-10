@@ -3,8 +3,9 @@
  * WHAT: Default test cases across 8 groups (Account & Auth, Buying, Selling, Content & Discovery,
  *       Community & Support, Design & UX, Public & Marketing Pages, Admin (Testing)). Admins add/edit
  *       further cases via /admin/tester-checklist — this array is a starting point, not the source of
- *       truth. Every case is searchable by title or route in the Tester Hub (/user/tester), which any
- *       isTester account OR admin can open. Items in the "admin" group carry adminOnly:true — only
+ *       truth. Every case is searchable by title or route at /admin/tester-checklist — the human-facing
+ *       Tester Hub at /user/tester was deleted in B2, and the Claude tester reads the catalogue
+ *       through GET /api/user/tester-checklist instead. Items in the "admin" group carry adminOnly:true — only
  *       visible to a tester with canTestAdmin (or a real admin); see `group()`'s `opts.adminOnly`.
  *
  * EXPORTS:
@@ -4060,7 +4061,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "detail-page-tags-readable",
           label: "Opening an individual auction, pre-order, prize draw, classified, digital code and live-item page, each one's type tag and status chips are readable in light mode",
-          description: "Card grids and detail pages don't always share the same component, so check both. Use the sandbox listings linked from the Tester Hub if you need one of each type.",
+          description: "Card grids and detail pages don't always share the same component, so check both. Use the seeded listings of each type if you need one of each.",
           href: "/auctions/auction-beyblade-original-dragoon-storm",
         },
         {
@@ -4901,21 +4902,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "What /seller-guide/prize-draws promises about entries, reveal and refunds matches the prize-draw a seller can actually create",
           href: "/seller-guide/prize-draws",
         },
-      ],
-    },
-    {
-      pageKey: "bug-hunters",
-      pageLabel: "Bug Hunters Leaderboard",
-      href: "/bug-hunters",
-      cases: [
-        {
-          key: "leaderboard-loads",
-          label: "The public Bug Hunters leaderboard (/bug-hunters) loads and lists testers ranked by confirmed-bug count, most bugs first",
-          description: "Verify against the seeded demo fixture — \"Mock User 3\" should appear on the leaderboard with 1 confirmed bug (from the \"Demo fixture\" case under Admin (Testing) → Bug Hunter Rewards).",
-          href: "/bug-hunters",
-        },
-        { key: "leaderboard-empty-state", label: "If no bugs have been confirmed yet, the leaderboard shows a clear \"No confirmed bugs yet\" empty state instead of a blank page or error" },
-        { key: "leaderboard-footer-link", label: "A \"Bug Hunters\" link is present in the site footer's Support column and navigates to /bug-hunters" },
       ],
     },
   ]),
@@ -5949,7 +5935,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "confirm-bug",
             label: "Admin can mark a tester's \"No\" answer as a confirmed bug from the Main Issues tab (or the All Submissions tab) — the reporting tester is credited as the bug hunter and the case is disabled so no other tester can answer it",
-            description: "From /admin/tester-feedback → Main Issues, click \"Mark as Bug\" on any open issue. Confirm: (1) the confirmation dialog appears before it commits, (2) the issue's card now shows a \"🐛 Confirmed — credited to [tester name]\" badge, (3) re-opening the Tester Hub as any other tester no longer shows that case at all.",
+            description: "From /admin/tester-feedback → Main Issues, click \"Mark as Bug\" on any open issue. Confirm: (1) the confirmation dialog appears before it commits, (2) the issue's card now shows a \"🐛 Confirmed — credited to [tester name]\" badge, (3) the case no longer appears for any other tester in GET /api/user/tester-checklist.",
             href: "/admin/tester-feedback",
           },
           {
@@ -5959,7 +5945,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "reopen-case",
             label: "Admin can reopen a bug-confirmed case as a new version for retest — the new version is active and answerable again, while the old case stays disabled in the catalog with its bug-hunter credit intact",
-            description: "Verify against the seeded \"Demo fixture — reported bug, already confirmed and reopened\" pair under this page: the v1 case should show Status \"Bug Confirmed\" and be hidden from the catalog's default (Active-only) view, while its v2 case shows Status \"Active\" and is answerable from the Tester Hub. From /admin/tester-checklist, switch the Status filter to \"Inactive\" or \"Bug status → Bug Confirmed\" to find v1, then use its \"Reopen as New Test Case\" row action on any other bug-confirmed case to try the flow live.",
+            description: "Verify against the seeded \"Demo fixture — reported bug, already confirmed and reopened\" pair under this page: the v1 case should show Status \"Bug Confirmed\" and be hidden from the catalog's default (Active-only) view, while its v2 case shows Status \"Active\" and is answerable. From /admin/tester-checklist, switch the Status filter to \"Inactive\" or \"Bug status → Bug Confirmed\" to find v1, then use its \"Reopen as New Test Case\" row action on any other bug-confirmed case to try the flow live.",
             href: "/admin/tester-checklist",
           },
           {
@@ -6349,7 +6335,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   // (bugConfirmed/bugHunterId/version/previousVersionId/supersededByItemId
   // are not part of the CaseInput shape group() builds). Lets an admin/
   // tester see the full state machine immediately after a fresh reseed,
-  // and gives the /bug-hunters leaderboard a non-empty first entry.
+  // The /bug-hunters leaderboard this also fed was deleted in B2; the pair
+  // stays because /admin/tester-feedback reads the same credit fields.
   {
     id: "checklist-admin-bug-hunter-rewards-demo-fixture",
     groupKey: "admin",
@@ -6502,13 +6489,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description:
             "Walk the public header nav, the sidebar support links and every footer column. All 55 hrefs must land on a real page. No audit checked ANY of them until this wave — the nav audit only ever looked at the three portal sidebars.",
           href: "/",
-        },
-        {
-          key: "user-tester-hub-reachable-from-user-sidebar",
-          label: "A tester reaches the Tester Hub from their OWN sidebar",
-          description:
-            "As a user with the tester flag, open /user and find Tester Hub in the sidebar under Testing. The group is injected at runtime and is empty for non-testers — confirm a NON-tester account does not see it.",
-          href: "/user",
         },
       ],
     },

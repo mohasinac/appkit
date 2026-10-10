@@ -3314,14 +3314,8 @@ export type { AdminTesterChecklistViewProps } from "./features/admin/index";
 // AdminTesterChecklistItemEditorView - Component for admin tester-checklist item create/edit form.
 export { AdminTesterChecklistItemEditorView } from "./features/admin/index";
 export type { AdminTesterChecklistItemEditorViewProps } from "./features/admin/index";
-// TesterHubView - Component for the tester-facing checklist hub page.
-export { TesterHubView } from "./features/tester/index";
-export type { TesterHubViewProps } from "./features/tester/index";
 // AdminTesterFeedbackView - Component for the admin Tester Feedback report/issues/submissions page.
 export { AdminTesterFeedbackView } from "./features/tester/index";
-// BugHunterLeaderboardView - Public component ranking testers by confirmed-bug count.
-export { BugHunterLeaderboardView } from "./features/tester/index";
-export type { BugHunterLeaderboardViewProps } from "./features/tester/index";
 // AdminNavEditorView - SideDrawer form for nav item create/edit.
 export { AdminNavEditorView } from "./features/admin/index";
 export type { AdminNavEditorViewProps, NavItemData } from "./features/admin/index";
@@ -5448,8 +5442,6 @@ export { getEventSpinResults } from "./features/events/server";
 // getUserSpinResultsForEvent - The CALLER'S OWN spins for an event, unmasked. Companion to the masked public feed above.
 export { getUserSpinResultsForEvent } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getBugHunterLeaderboard - Ranks testers by confirmed-bug count.
-export { getBugHunterLeaderboard } from "./features/tester/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPublicEventById - Helper for get public event by id.
 export { getPublicEventById } from "./features/events/server";
@@ -5520,8 +5512,6 @@ export type { TesterChecklistResponseDocument } from "./features/tester/index";
 export type { TesterAnswer } from "./features/tester/index";
 // TesterFeedbackStatus - Type contract for tester feedback status.
 export type { TesterFeedbackStatus } from "./features/tester/index";
-// BugHunterLeaderboardEntry - Type contract for a ranked bug-hunter leaderboard row.
-export type { BugHunterLeaderboardEntry } from "./features/tester/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // FAQS_PUBLIC_FIELDS - Constant used across modules.
 export { FAQS_PUBLIC_FIELDS } from "./features/faq/index";

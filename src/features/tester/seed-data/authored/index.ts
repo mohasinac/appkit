@@ -97,7 +97,6 @@ import { authored as a_design_ux__hand_mode_layout } from "./design-ux__hand-mod
 import { authored as a_design_ux__homepage_carousels } from "./design-ux__homepage-carousels";
 import { authored as a_page_wiring__data_loss } from "./page-wiring__data-loss";
 import { authored as a_public_pages__auth_error_pages } from "./public-pages__auth-error-pages";
-import { authored as a_public_pages__bug_hunters } from "./public-pages__bug-hunters";
 import { authored as a_public_pages__core_listing_pages } from "./public-pages__core-listing-pages";
 import { authored as a_public_pages__help_how_it_works } from "./public-pages__help-how-it-works";
 import { authored as a_public_pages__legal_policy_pages } from "./public-pages__legal-policy-pages";
@@ -218,7 +217,6 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_design_ux__homepage_carousels,
   ...a_page_wiring__data_loss,
   ...a_public_pages__auth_error_pages,
-  ...a_public_pages__bug_hunters,
   ...a_public_pages__core_listing_pages,
   ...a_public_pages__help_how_it_works,
   ...a_public_pages__legal_policy_pages,

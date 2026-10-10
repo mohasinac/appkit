@@ -98,16 +98,16 @@ export interface UserDocument extends BaseDocument {
   // `role`. Meaningless unless isTester is also true.
   canTestAdmin?: boolean;
 
-  // Automated (non-human) account. It grants nothing — its only job is to keep a bot
-  // off the PUBLIC Bug Hunters leaderboard, which exists to credit people.
-  //
-  // 🛑 No seeded row carries it as of 2026-09-14. It was set on `user-claude-tester`,
-  // which was deleted along with the rest of the tester personas when the runner moved
-  // to answering as `admin@letitrip.in` (the admin branch of the checklist gate). Keep
-  // the field: the leaderboard still reads it, and the next automated identity needs it.
-  // Bot findings are still confirmable and still credit-stamped on the item; they just
-  // do not compete with humans for public credit. See getBugHunterLeaderboard().
-  isBot?: boolean;
+  /*
+   * 🛑 `isBot?: boolean` was DELETED here (B2, 2026-10-10) and the reasoning is
+   * worth keeping: it had **no writer and no reader**. Its own comment recorded
+   * that no seeded row had carried it since 2026-09-14, and its only consumer
+   * was the public Bug Hunters leaderboard's exclusion query — retired with the
+   * human tester programme. A field with neither end wired is Root Cause #52.
+   *
+   * If an automated identity ever needs marking again, add it back WITH the
+   * thing that reads it in the same change.
+   */
 
   // Public profile settings
   publicProfile?: {

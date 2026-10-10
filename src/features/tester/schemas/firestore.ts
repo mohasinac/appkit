@@ -238,13 +238,6 @@ export const testerChecklistItemQueryHelpers = {
   confirmedBugs: () => ["bugConfirmed", "==", true] as const,
 } as const;
 
-export interface BugHunterLeaderboardEntry {
-  rank: number;
-  hunterId: string;
-  hunterName: string;
-  bugCount: number;
-}
-
 export function slugifyChecklistLabel(label: string): string {
   return label
     .toLowerCase()
