@@ -342,6 +342,16 @@ export const CATEGORY_ENDPOINTS = {
   ROOT: (pageSize = 20) => `/api/categories?tier=0&pageSize=${pageSize}`,
   /** @param qs — pre-built querystring (no leading `?`) for structured filters */
   FILTERED: (qs: string) => `/api/categories?${qs}`,
+  /**
+   * The inherited description template plus the category's public product
+   * defaults, for the seller form's template picker.
+   *
+   * `variant` narrows which body is wanted (`pre_owned`, `new_in_box`, …) and
+   * is part of the cache key — the response is edge-cached for an hour, so a
+   * category change in the form costs zero function invocations on a hit.
+   */
+  DESCRIPTION_TEMPLATE: (id: string, variant?: string) =>
+    `/api/categories/${id}/description-template${variant ? `?variant=${variant}` : ""}`,
 } as const;
 
 // ---------------------------------------------------------------------------

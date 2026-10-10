@@ -753,6 +753,8 @@ export { categoryItemDELETE } from "./features/categories/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoryItemGET - Shared export for category item get.
 export { categoryItemGET } from "./features/categories/server";
+// categoryDescriptionTemplateGET - the seller form's inherited-template read.
+export { categoryDescriptionTemplateGET } from "./features/categories/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoryItemPATCH - Shared export for category item patch.
 export { categoryItemPATCH } from "./features/categories/server";

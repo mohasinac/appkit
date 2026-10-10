@@ -301,6 +301,65 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
    * ~330-node forest this plan seeds is ~9% of a 50K/day Firestore budget for
    * ONE page view.
    */
+  /**
+   * Several categories by id, in ONE round trip, in the order asked for.
+   *
+   * The ancestor-walk primitive. A five-tier tree means a leaf has up to four
+   * ancestors, and resolving an inherited description template or an inherited
+   * `productDefaults` means reading them nearest-first until the answer is
+   * found — which as four sequential `findById` calls is four round trips, on
+   * a route the seller form hits on every category change. Rule #6 budgets
+   * about three for a whole request.
+   *
+   * 🛑 Order is PRESERVED and missing ids are DROPPED, not nulled. Callers
+   * walk the result looking for the first document that declares a thing, so
+   * "nearest first" has to survive the round trip — Firestore's `getAll`
+   * already answers in argument order, and this keeps that guarantee explicit
+   * rather than incidental. A caller needing to know WHICH id was missing
+   * should compare lengths; none does, because an ancestor that no longer
+   * exists is a data problem for the reconcile job, not a reason to fail a
+   * form.
+   *
+   * Bounded at 30 to match `array-contains-any`'s cap, so this cannot become
+   * the unbounded read that `getCategoriesByRootId` had to be rewritten to
+   * avoid being.
+   */
+  async findByIds(ids: string[]): Promise<CategoryDocument[]> {
+    const unique = Array.from(new Set(ids.filter(Boolean))).slice(0, 30);
+    if (unique.length === 0) return [];
+    try {
+      const refs = unique.map((id) => this.db.collection(this.collection).doc(id));
+      const snaps = await this.db.getAll(...refs);
+      return snaps
+        .filter((s) => s.exists)
+        .map((s) => this.mapDoc<CategoryDocument>(s));
+    } catch (err) {
+      const e = normalizeError(err);
+      /*
+       * 🛑 The raw `.message` is NOT interpolated into the thrown error — only
+       * the normalised `kind` and a count.
+       *
+       * Several older methods in this file do interpolate it, and
+       * `audit-raw-error-text` flagged this one for trying. The reasoning is
+       * Root Cause #86's: a thrown value's message is written for a developer,
+       * and this one reaches a user through the route's 500 branch — which is
+       * how a Node `MODULE_NOT_FOUND` with a full require stack ended up
+       * rendered inside the "Place your bid" modal.
+       *
+       * The ids are counted rather than listed. A category id is not
+       * sensitive, but 30 of them in one line is noise against Hobby's ~4 KB/s
+       * log budget.
+       *
+       * (`normalizeError` has to be the FIRST statement, not merely nearby:
+       * `audit-catch-normalize` looks within a few lines of the catch, and the
+       * first draft put this comment above the call and tripped it.)
+       */
+      throw new DatabaseError(
+        `Failed to read categories by id (${unique.length} requested): ${e.kind}`,
+      );
+    }
+  }
+
   async getCategoriesByRootId(
     rootId: string,
     opts?: { limit?: number },
