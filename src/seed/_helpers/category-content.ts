@@ -557,7 +557,7 @@ export function tcgDefaults(leafId: string, game: string, format: string): Categ
     priceGuidance: marketBand(leafId),
     seoTitleTemplate: "{{title}} — {{category}} | {{siteName}}",
     seoDescriptionTemplate:
-      "Buy {{title}}, {{game}} {{category}}, on {{siteName}}. Condition {{condition}}, language and print run stated on the listing.",
+      "Buy {{title}}, a {{categoryPath}} listing on {{siteName}}. Condition {{condition}}, language and print run stated on the listing.",
     seoKeywords: [game.toLowerCase(), "trading cards", format.toLowerCase()],
     weightG: format === "Sealed" ? 450 : 15,
     dimensionsCm: format === "Sealed" ? { l: 20, w: 15, h: 10 } : { l: 10, w: 7, h: 1 },

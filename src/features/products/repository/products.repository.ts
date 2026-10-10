@@ -28,9 +28,17 @@ import {
 // wrapper. Three copies existed and two were missing the same three fields.
 import { buildProductSearchTxt } from "../../../utils/search-txt-builders";
 import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
-// Collection NAME only — deliberately not `categoriesRepository`. See
-// deriveTaxonomy()'s header for why this is a raw read.
+// Collection NAMES only — deliberately not `categoriesRepository` or
+// `taxCodesRepository`. See deriveTaxonomy()'s header for why these are raw
+// reads: no repository in this codebase imports another feature's, because of
+// the Turbopack import-chain trap (Root Cause #6/#18).
 import { CATEGORIES_COLLECTION } from "../../categories/schemas/firestore";
+import { TAX_CODES_COLLECTION } from "../../tax-codes/schemas/firestore";
+import type { CategoryProductDefaults } from "../../categories/schemas/category-content";
+import { MAX_FEATURES_PER_PRODUCT } from "../schemas/product-features";
+// The ONE `{{placeholder}}` implementation, promoted out of the FAQ schema in
+// B3. A second regex here would be Root Cause #75's shape.
+import { interpolate } from "../../../_internal/shared/templating/placeholders";
 import type { ProductStatus } from "../types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
@@ -102,6 +110,46 @@ function buildListingKindClause(
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
 
+
+/**
+ * Fill an SEO template's slots from what the write actually carries.
+ *
+ * 🛑 A SERVER-SIDE subset on purpose, and smaller than the picker's.
+ *
+ * The seller form's template picker resolves nine slots because it has the
+ * whole draft in hand — the condition LABEL, the category path, the tier-1
+ * series, the tier-2 system. This runs inside a repository write with only the
+ * input and what `deriveTaxonomy` has just derived, and fetching more to fill
+ * an SEO title would spend a round trip on a field a seller can overwrite in
+ * one keystroke.
+ *
+ * So the slots it cannot fill resolve to EMPTY and the sentence closes around
+ * them, which `interpolate` guarantees — never the literal `{{series}}`. The
+ * templates in `category-content.ts` are written to read correctly with any
+ * slot missing for exactly this reason.
+ *
+ * 🛑 No `{{price}}` slot, here or anywhere: a price in free text is an
+ * ungated public price `<GatedPrice>` cannot wrap, and `audit-guest-price-leak`
+ * R2 blocks it.
+ */
+function interpolateDefaults(
+  template: string,
+  input: Partial<ProductDocument>,
+  derived: Partial<ProductDocument>,
+): string {
+  const names = derived.categoryNames ?? input.categoryNames ?? [];
+  return interpolate(template, {
+    title: input.title,
+    brand: derived.brand ?? input.brand,
+    condition: input.condition,
+    // `categoryNames` is self-first / root-last, so [0] is the leaf and the
+    // path reads root-first the way a breadcrumb does.
+    category: names[0],
+    categoryPath: names.length ? [...names].reverse().join(" › ") : undefined,
+    series: names[names.length - 2],
+    siteName: "LetItRip",
+  }).text;
+}
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;
@@ -273,8 +321,224 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       }
     }
 
+    if (catSnap?.exists) {
+      await this.applyCategoryDefaults(input, out, catSnap);
+    }
+
     return out;
   }
+
+  /**
+   * Hand down what the category declares: the tax code, the spec rows, the
+   * in-the-box list, the inherited features and the SEO templates.
+   *
+   * ## 🛑 Why this is server-side and not a form default
+   *
+   * GST is tax CORRECTNESS. A client-side default is bypassable by all ~14
+   * write paths, and the defect this closes is recorded in our own source:
+   * *"0 of 40 live orders had a `gstAmount`, and the order page's Tax row had
+   * never rendered."* The rate has to be applied where every path funnels, and
+   * that is here.
+   *
+   * ## 🛑 The three behaviours are different, and the difference is the design
+   *
+   *   WRITTEN     tax, specifications, inTheBox, features — written when the
+   *               product omits them.
+   *   FILL-BLANK  seo* — fills only an empty field, never overwrites a
+   *               seller's own words.
+   *   ADVISORY    priceGuidance — NEVER touched here. It renders as a hint
+   *               beside the price input and nothing else. Writing a suggested
+   *               price onto `price` would be the platform setting a seller's
+   *               price, which is not a default, it is a decision.
+   *
+   * ## 🛑 Resolution is PER FIELD across the ancestor chain
+   *
+   * Not "the nearest category that declares a `productDefaults` object wins".
+   * B5's named-model leaves carry `defaultFeatures` (the blader, the battle
+   * type, the spin) while the tax code, the spec rows and the price band live
+   * on the tier-3 LINE above them. An object-level "nearest wins" would hand a
+   * Dragoon G its blader and NO TAX CODE — silently deriving no GST, which is
+   * the quiet under-charging failure the whole tax-code indirection exists to
+   * prevent.
+   *
+   * ## Cost
+   *
+   * One `getAll` over at most four ancestors, fired only when the leaf leaves
+   * something unresolved, plus one read for the tax code. With the leaf+brand
+   * read that is three round trips worst case against Rule #6's ~3 budget —
+   * and `update` only re-derives when a write names a taxonomy field, so a
+   * stock decrement or a status flip pays none of it.
+   */
+  private async applyCategoryDefaults(
+    input: Partial<ProductDocument>,
+    out: Partial<ProductDocument>,
+    /*
+     * The real snapshot type, not a `{ data(): unknown }` shape. The first
+     * draft used the latter and `audit-unknown-leakage` was right to reject
+     * it: `unknown` at a parameter boundary is how a callee ends up casting,
+     * and the one cast here is already narrow and stated.
+     */
+    catSnap: DocumentSnapshot,
+  ): Promise<void> {
+    const cats = this.db.collection(CATEGORIES_COLLECTION);
+    const leafData = catSnap.data() as {
+      parentIds?: string[];
+      productDefaults?: CategoryProductDefaults;
+    };
+
+    const resolved: CategoryProductDefaults = { ...(leafData.productDefaults ?? {}) };
+
+    /*
+     * Which fields still need an answer. `priceGuidance` is deliberately absent
+     * from this list — it is never applied, so walking ancestors to find one
+     * would be a round trip spent on a value this function will not use.
+     */
+    const WANTED = [
+      "taxCodeId",
+      "specifications",
+      "defaultFeatures",
+      "defaultCondition",
+      "defaultAuthenticity",
+      "inTheBox",
+      "seoTitleTemplate",
+      "seoDescriptionTemplate",
+      "seoKeywords",
+    ] as const;
+    const isEmpty = (v: unknown) =>
+      v == null || (Array.isArray(v) && v.length === 0);
+    const unresolved = () => WANTED.filter((k) => isEmpty(resolved[k]));
+
+    if (unresolved().length > 0 && (leafData.parentIds ?? []).length > 0) {
+      /*
+       * `parentIds` is root-first / nearest-last, so walk it REVERSED —
+       * nearest ancestor first. One `getAll`, not a read per level: four
+       * sequential `doc().get()` calls would be four round trips and breach
+       * Rule #6 on a path that already spends two.
+       */
+      const nearestFirst = [...(leafData.parentIds ?? [])].reverse();
+      const snaps = await this.db.getAll(...nearestFirst.map((id) => cats.doc(id)));
+      for (const snap of snaps) {
+        if (unresolved().length === 0) break;
+        if (!snap.exists) continue;
+        const d = (snap.data() as { productDefaults?: CategoryProductDefaults })
+          .productDefaults;
+        if (!d) continue;
+        for (const k of unresolved()) {
+          if (!isEmpty(d[k])) (resolved as Record<string, unknown>)[k] = d[k];
+        }
+      }
+    }
+
+    // ── tax: resolve the REFERENCE to a SNAPSHOT on the product ────────────
+    /*
+     * 🛑 `input.gstRate == null`, NEVER `!input.gstRate`.
+     *
+     * Zero is a DELIBERATE exemption — `tax-exempt-0` exists for live plants
+     * and animals — and a falsy test would overwrite every one of them with
+     * the category's rate. The schema's own comment at `gstRate` says so.
+     */
+    const needsRate = input.gstRate == null;
+    const needsHsn = !input.hsnCode;
+    if (resolved.taxCodeId && (needsRate || needsHsn)) {
+      const taxSnap = await this.db
+        .collection(TAX_CODES_COLLECTION)
+        .doc(resolved.taxCodeId)
+        .get();
+      const tax = taxSnap.exists
+        ? (taxSnap.data() as { gstRate?: 0 | 5 | 12 | 18 | 28; hsnCode?: string; isActive?: boolean })
+        : null;
+      if (tax?.isActive) {
+        if (needsRate && tax.gstRate != null) out.gstRate = tax.gstRate;
+        if (needsHsn && tax.hsnCode) out.hsnCode = tax.hsnCode;
+      } else {
+        /*
+         * 🛑 A dangling or deactivated tax code must be LOUD, because its
+         * silent failure mode is under-charging.
+         *
+         * `findResolvable` answers null for both cases and the correct
+         * handling is "leave `gstRate` alone" — so every later listing under
+         * that category derives NO TAX and the order invoices zero. Nothing
+         * errors, the save succeeds, and the shortfall only surfaces in a
+         * filing. DELETE already refuses while a category references a code;
+         * this covers a code deactivated after the fact.
+         */
+        serverLogger.warn("Category tax code does not resolve to an active taxCodes row", {
+          taxCodeId: resolved.taxCodeId,
+          productId: input.id,
+        });
+      }
+    }
+
+    // ── WRITTEN: only when the product omits them ──────────────────────────
+    if (resolved.specifications?.length && !input.specifications?.length) {
+      out.specifications = resolved.specifications.map((s) => ({ ...s }));
+    }
+    /*
+     * 🛑 `inTheBox` is deliberately NOT written to the product.
+     *
+     * `ProductDocument` has no such field, and the plan's suggestion —
+     * `out.features = d.inTheBox` — predates the vocabulary merge: `features`
+     * now holds feature IDS, so writing "Beyblade top, Manual (where
+     * supplied)" into it would put prose where `array-contains` expects
+     * `feature-nib`, breaking every facet on that product and tokenising
+     * "where" and "supplied" into its search index.
+     *
+     * It stays a CATEGORY-side value, read by the description-template
+     * endpoint (C2b) to fill the "What's in the box?" block the new-in-box
+     * body already renders. That is the only consumer it ever needed.
+     */
+    if (resolved.defaultCondition && !input.condition) {
+      out.condition = resolved.defaultCondition as ProductDocument["condition"];
+    }
+    if (resolved.defaultAuthenticity && !input.authenticity) {
+      out.authenticity = resolved.defaultAuthenticity;
+    }
+
+    /*
+     * Features MERGE rather than replace — the field's own contract, and the
+     * reason the blader linkage works: a seller who ticks "Japan Import" keeps
+     * it and also gets `feature-blader-tyson-granger` from the Dragoon G leaf.
+     *
+     * Capped at MAX_FEATURES_PER_PRODUCT because `features[]` feeds
+     * `buildProductSearchTxt`, which truncates at 600 tokens SILENTLY — an
+     * unbounded list would evict real title tokens nobody chose to drop. The
+     * product's OWN features are kept first so it is always the inherited ones
+     * that fall off the end.
+     */
+    if (resolved.defaultFeatures?.length) {
+      const merged = [...(input.features ?? [])];
+      for (const f of resolved.defaultFeatures) {
+        if (!merged.includes(f)) merged.push(f);
+      }
+      if (merged.length > MAX_FEATURES_PER_PRODUCT) {
+        serverLogger.warn("Category default features exceeded the per-product cap", {
+          productId: input.id,
+          kept: MAX_FEATURES_PER_PRODUCT,
+          dropped: merged.length - MAX_FEATURES_PER_PRODUCT,
+        });
+      }
+      out.features = merged.slice(0, MAX_FEATURES_PER_PRODUCT);
+    }
+
+    // ── FILL-BLANK: a template never overwrites what a seller wrote ─────────
+    const title = input.title ?? "";
+    if (resolved.seoTitleTemplate && !input.seoTitle && title) {
+      out.seoTitle = interpolateDefaults(resolved.seoTitleTemplate, input, out);
+    }
+    if (resolved.seoDescriptionTemplate && !input.seoDescription && title) {
+      out.seoDescription = interpolateDefaults(
+        resolved.seoDescriptionTemplate,
+        input,
+        out,
+      );
+    }
+    if (resolved.seoKeywords?.length) {
+      const merged = [...(input.seoKeywords ?? [])];
+      for (const k of resolved.seoKeywords) if (!merged.includes(k)) merged.push(k);
+      out.seoKeywords = merged;
+    }
+  }
+
 
   /** The keys whose presence means a write could change the product's taxonomy. */
   private static readonly TAXONOMY_KEYS = [
