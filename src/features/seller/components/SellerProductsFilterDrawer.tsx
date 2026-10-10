@@ -23,12 +23,22 @@ const CONDITION_OPTIONS = [
 export interface SellerProductsFilterFieldsProps {
   pendingFilters: Record<string, string>;
   statusOptions: ReadonlyArray<{ id: string; label: string }>;
+  /**
+   * The stock-level options, PASSED IN rather than declared here.
+   *
+   * They are derived from `LOW_STOCK_THRESHOLD`, and the predicate that reads
+   * the chosen value lives in `SellerProductsView` beside them — so declaring
+   * a second copy of the labels here is how the picker and the filter end up
+   * disagreeing about what "low" means.
+   */
+  stockStateOptions: { value: string; label: string }[];
   onChange: (next: Record<string, string>) => void;
 }
 
 export function SellerProductsFilterFields({
   pendingFilters,
   statusOptions,
+  stockStateOptions,
   onChange,
 }: SellerProductsFilterFieldsProps) {
   const patch = (k: string, v: string) => onChange({ ...pendingFilters, [k]: v });
@@ -64,6 +74,29 @@ export function SellerProductsFilterFields({
         onChange={(v) => patch("condition", v)}
         options={CONDITION_OPTIONS}
       />
+      {/*
+        The stock quick-filter. `FILTER_KEYS` had no stock key at all, so stock
+        was visible only inside a row's subtitle and there was no way to ask
+        "what needs restocking" short of reading every row — with 76–93% of
+        competitor catalogues sold out, restock is the main lifecycle event.
+
+        The helper text states the honest limitation rather than leaving the
+        seller to infer it: the predicate runs over the loaded page, because
+        `availableQuantity <= N` is an inequality and pushing one alongside the
+        default sort demands an index nobody declares (Root Cause #59).
+      */}
+      <Stack gap="xs">
+        <FieldSelect
+          name="stockState"
+          label="Stock level"
+          value={pendingFilters.stockState ?? ""}
+          onChange={(v) => patch("stockState", v)}
+          options={stockStateOptions}
+        />
+        <Text size="xs" color="muted">
+          Applied to the listings on this page.
+        </Text>
+      </Stack>
       <Stack gap="xs">
         <Text size="xs" weight="semibold" color="muted" transform="uppercase">Price (₹ Rupees)</Text>
         <Row gap="sm">

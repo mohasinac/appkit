@@ -5,6 +5,7 @@ import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit/client";
+import { LOW_STOCK_THRESHOLD } from "../../store-extensions/constants/alert-metrics";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -48,7 +49,52 @@ const FILTER_KEYS = [
   "tags",
   "badges",
   "listingType",
+  /*
+   * The stock quick-filter. `FILTER_KEYS` had no stock key at all — stock
+   * appeared only inside a row's subtitle string, so there was no way to ask
+   * "what needs restocking" short of reading every row.
+   *
+   * Registered here (not in `buildExtraParams`) because it IS a drawer facet:
+   * it narrows the list the way `condition` does, so it should inflate the
+   * filter badge and be cleared by the drawer's Clear button. That is the
+   * opposite call from the availability SCOPE, which is a tab and deliberately
+   * stays out of `filterKeys` so a tab selection cannot be silently reset by
+   * Clear.
+   */
+  "stockState",
 ];
+
+/**
+ * 🛑 Applied IN MEMORY, never as a Firestore clause.
+ *
+ * `availableQuantity <= N` is an inequality, and Firestore appends an
+ * inequality's field to the `orderBy` implicitly — so pairing one with the
+ * default `-createdAt` sort demands a composite index nobody declares, and the
+ * `FAILED_PRECONDITION` gets swallowed into an empty page (Root Cause #59).
+ * Same reasoning as the alert evaluator's `low_stock` branch.
+ *
+ * The honest cost is that it filters the PAGE rather than the collection: a
+ * seller on page 1 of 200 listings sees the low-stock rows from those 50. That
+ * is stated in the facet's own label rather than left for them to infer.
+ */
+const STOCK_STATE_OPTIONS = [
+  { value: "", label: "Any stock level" },
+  { value: "low", label: `Low — ${LOW_STOCK_THRESHOLD} or fewer left` },
+  { value: "out", label: "Out of stock" },
+  { value: "in", label: "In stock" },
+];
+
+function matchesStockState(stockValue: number | null, state: string): boolean {
+  if (!state) return true;
+  // 🛑 An unknown quantity matches NOTHING rather than everything. A listing
+  // whose stock the API did not report is not evidence of being low, and
+  // including it would put rows a seller cannot act on into a worklist.
+  if (stockValue == null) return false;
+  if (state === "out") return stockValue <= 0;
+  if (state === "low") return stockValue > 0 && stockValue <= LOW_STOCK_THRESHOLD;
+  if (state === "in") return stockValue > LOW_STOCK_THRESHOLD;
+  return true;
+}
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -80,6 +126,19 @@ interface ProductRow {
   listingKind: ListingKind;
   price: string;
   stock: string;
+  /**
+   * The number, for the column — `stock` is the human string for the row
+   * subtitle. Two fields rather than parsing the string back out: a column
+   * that re-derives a number from "5 in stock" breaks the day the suffix
+   * changes, and silently.
+   *
+   * 🛑 `availableQuantity` when the API supplies it, else `stockQuantity`.
+   * Those are two different numbers — `availableQuantity` is what
+   * purchasability actually gates on in three places, and a seller shown
+   * `stockQuantity` while the product is unbuyable is shown the figure that
+   * does not decide anything (the restock bug A4 fixed, one surface over).
+   */
+  stockValue: number | null;
   physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
@@ -166,6 +225,51 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     render: (row) => (
       <Span size="sm" weight="medium" className="text-[var(--appkit-color-text)]">{row.price}</Span>
     ),
+  },
+  /*
+   * 🛑 `row.stock` was COMPUTED in `mapRows` and no column rendered it.
+   *
+   * Data fetched and discarded — Root Cause #52's shape — and the reason it
+   * stayed invisible is that the figure also appears inside the row's
+   * `secondary` string, so the information was technically on screen while
+   * being unsortable, unfilterable and impossible to scan down a column.
+   *
+   * Both stock fields have been `canFilter`/`canSort` at the repository layer
+   * the whole time; only the view omitted them.
+   */
+  {
+    key: "stock",
+    header: "Stock",
+    className: "w-24 text-right",
+    render: (row) => {
+      if (row.stockValue == null) return <Span size="xs" color="faint">—</Span>;
+      /*
+       * Three states, not two, and the middle one is the point of the column.
+       * `LOW_STOCK_THRESHOLD` is imported rather than re-picked here: the
+       * alert, this column and the dashboard tile must agree on what "low"
+       * means, or a seller gets a warning from one and a clean bill from
+       * another.
+       */
+      /*
+       * Three states, and `Span` has no `warning` variant — so "low" is
+       * carried by WEIGHT plus a suffix rather than by colour alone. That is
+       * better anyway: `audit-a11y` records that white-on-warning fails
+       * contrast in this theme set, and a status conveyed only by colour is
+       * invisible to a colour-blind seller.
+       */
+      const isOut = row.stockValue <= 0;
+      const isLow = !isOut && row.stockValue <= LOW_STOCK_THRESHOLD;
+      return (
+        <Span
+          size="sm"
+          weight={isOut || isLow ? "semibold" : "normal"}
+          color={isOut ? "error" : isLow ? "primary" : "muted"}
+        >
+          {row.stockValue}
+          {isOut ? " · out" : isLow ? " · low" : ""}
+        </Span>
+      );
+    },
   },
   {
     key: "status",
@@ -399,7 +503,10 @@ export function SellerProductsView({
          * reserve and the current bid, both already in `auctionSecondary`, and
          * a "price" beside them would read as a third, competing figure.
          */
+        const availableRaw =
+          typeof item.availableQuantity === "number" ? item.availableQuantity : null;
         const stockRaw = typeof item.stockQuantity === "number" ? item.stockQuantity : null;
+        const stockValue = availableRaw ?? stockRaw;
         const priceLabel =
           kind !== "auction" && priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "";
         const stockLabel = stockRaw === null ? "" : `${stockRaw} in stock`;
@@ -415,6 +522,7 @@ export function SellerProductsView({
           listingKind: kind,
           price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
           stock: stockLabel || "—",
+          stockValue,
           physicalLocation:
             item.physicalLocation &&
             typeof (item.physicalLocation as Record<string, JsonValue>).zone === "string"
@@ -422,9 +530,18 @@ export function SellerProductsView({
               : undefined,
         };
       });
-      return rows.filter((r) => !deletedIds.has(r.id)).map((r) =>
-        statusOverrides.has(r.id) ? { ...r, status: statusOverrides.get(r.id)! } : r,
-      );
+      /*
+       * The stock predicate runs HERE, in the same pass that already drops
+       * optimistically-deleted rows and applies status overrides — so there is
+       * one place a row can be removed from the rendered list rather than two
+       * that could disagree about which rows exist.
+       */
+      const stockState = sideTable.get("stockState") ?? "";
+      return rows
+        .filter((r) => !deletedIds.has(r.id) && matchesStockState(r.stockValue, stockState))
+        .map((r) =>
+          statusOverrides.has(r.id) ? { ...r, status: statusOverrides.get(r.id)! } : r,
+        );
     },
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
@@ -441,6 +558,7 @@ export function SellerProductsView({
       <SellerProductsFilterFields
         pendingFilters={pendingFilters}
         statusOptions={STATUS_OPTIONS}
+        stockStateOptions={STOCK_STATE_OPTIONS}
         onChange={setPendingFilters}
       />
     ),
