@@ -7,6 +7,7 @@ import {
 } from "../../../../repositories";
 import { getDefaultCurrency } from "../../../../core/index";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
+import { ordersGoodsValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
 import type { JobContext } from "../runtime/types";
 import { BATCH_LIMIT } from "../handlers/messages";
 
@@ -67,9 +68,15 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
     }
     const sellerId = store!.ownerId;
 
-    const grossAmount = orders.reduce(
-      (sum, o) => sum + ((o.data as { totalPrice?: number }).totalPrice ?? 0),
-      0,
+    /*
+     * The GOODS VALUE, not `totalPrice`. See `orderGoodsValue` — the grand
+     * total folds in GST, the platform fee the buyer already paid, shipping,
+     * COD handling, add-ons and the EMI surcharge, so using it here paid the
+     * seller our GST, charged the platform fee a second time, and computed
+     * every percentage on an inflated base.
+     */
+    const grossAmount = ordersGoodsValue(
+      orders.map((o) => o.data as PayableOrderLike),
     );
     const { platformFee, gatewayFee, gstOnFee: gstAmount, netAmount } = computePayoutDeduction(grossAmount, commissions);
 

@@ -223,6 +223,70 @@ export function allocateAcrossMembers(total: number, weights: number[]): number[
   return out;
 }
 
+/** Exactly the fields `orderGoodsValue` reads. */
+export interface PayableOrderLike {
+  items?: Array<{
+    quantity: number;
+    unitPrice: number;
+    cancelledQuantity?: number;
+  }>;
+  /** The flat shape, authoritative when `items` is absent. */
+  quantity?: number;
+  unitPrice?: number;
+}
+
+/**
+ * The GOODS VALUE of an order — the only correct base for a seller payout.
+ *
+ * 🛑 This is NOT `OrderDocument.totalPrice`, and conflating the two was a live
+ * money bug in all four payout paths (`autoPayoutEligibility`,
+ * `weeklyPayoutEligibility`, and both `seller-actions` entry points). That
+ * field is the GRAND TOTAL — `checkout/actions.ts` builds it as
+ * `goods − coupon + shipping + codHandling + whatsappNotify + giftWrap +
+ * shipmentProtection + platformFee + platformFeeGst + emiSurcharge + gstAmount`
+ * — so using it as the payout base did three wrong things at once:
+ *
+ *  1. **paid the seller the GST we collected** and must remit ourselves;
+ *  2. **took the platform fee twice** — the buyer already paid it as a term of
+ *     `totalPrice`, and `computePayoutDeduction` then charged the seller a
+ *     percentage of a figure that already included it;
+ *  3. **computed every percentage on an inflated base**, since shipping, COD
+ *     handling, add-on fees and the EMI surcharge were all inside it.
+ *
+ * The payout base is the **taxable value**, never the gross. That one sentence
+ * also covers GST-inclusive pricing: an inclusive ₹999 @5% backs out to a
+ * ₹951.43 taxable value and that is what is paid, while an exclusive ₹999
+ * charges the buyer ₹1,048.95 and pays ₹999.
+ *
+ * 🛑 Computed from `quantity − cancelledQuantity`, NOT from `item.totalPrice`.
+ * A partial cancellation sets `cancelledQuantity: item.quantity` and
+ * **deliberately leaves `totalPrice` untouched** (`order-actions.ts:97-106`),
+ * so summing `totalPrice` would pay the seller in full for lines the buyer
+ * cancelled. `stock-restore.ts:20` already derives the live quantity this way.
+ *
+ * 🛑 Falls back to the FLAT `quantity × unitPrice` when `items` is absent.
+ * `items?` is optional on `OrderDocument` and the flat fields are the primary
+ * shape, not legacy residue — a bare `Σ items[]` would silently pay **zero**
+ * on any flat-shaped order, which is indistinguishable from "this seller is
+ * owed nothing".
+ */
+export function orderGoodsValue(order: PayableOrderLike): number {
+  const items = order.items;
+  if (items?.length) {
+    const raw = items.reduce((sum, i) => {
+      const live = Math.max(0, i.quantity - (i.cancelledQuantity ?? 0));
+      return sum + live * i.unitPrice;
+    }, 0);
+    return roundRupees(raw);
+  }
+  return roundRupees((order.quantity ?? 0) * (order.unitPrice ?? 0));
+}
+
+/** Sum of `orderGoodsValue` across orders — the payout base for a batch. */
+export function ordersGoodsValue(orders: readonly PayableOrderLike[]): number {
+  return roundRupees(orders.reduce((sum, o) => sum + orderGoodsValue(o), 0));
+}
+
 /**
  * P-6 — pre-order groups charge each product's own `preOrderDepositPercent`
  * (falling back to the generic COD deposit % when a product doesn't have one

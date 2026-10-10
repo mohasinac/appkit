@@ -37,6 +37,7 @@ import { couponsRepository } from "../../promotions/repository/coupons.repositor
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { computePayoutDeduction } from "../../../_internal/shared/fees/calculator";
+import { ordersGoodsValue } from "../../../_internal/shared/checkout/order-math";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   finalizeStagedMediaUrl,
@@ -424,10 +425,13 @@ async function computeSellerEarnings(sellerId: string) {
   const paidOutIds = await payoutRepository.getPaidOutOrderIds(sellerId);
   const eligibleOrders = deliveredOrders.filter((o) => !paidOutIds.has(o.id));
 
-  const grossAmount = eligibleOrders.reduce(
-    (sum, o) => sum + (o.totalPrice ?? 0),
-    0,
-  );
+  /*
+   * The GOODS VALUE, not `totalPrice` — see `orderGoodsValue`. This figure is
+   * what the seller sees as their earnings, so it must match what the two
+   * payout JOBS compute to the rupee; a seller shown one number and paid
+   * another is worse than either number being wrong on its own.
+   */
+  const grossAmount = ordersGoodsValue(eligibleOrders);
   const siteSettings = await siteSettingsRepository.getSingleton();
   const deduction = computePayoutDeduction(grossAmount, siteSettings.commissions);
 
@@ -558,7 +562,10 @@ export async function bulkSellerOrder(
   if (eligible.length === 0)
     throw new ValidationError("No eligible orders found.");
 
-  const grossAmount = eligible.reduce((sum, o) => sum + (o.totalPrice ?? 0), 0);
+  /* The GOODS VALUE, not `totalPrice` — see `orderGoodsValue`. Fourth and last
+   * of the four paths C0 converged; a half-migration means the manual button
+   * and the scheduled job pay differently for the same orders. */
+  const grossAmount = ordersGoodsValue(eligible);
   const bulkSiteSettings = await siteSettingsRepository.getSingleton();
   const bulkDeduction = computePayoutDeduction(grossAmount, bulkSiteSettings.commissions);
 
