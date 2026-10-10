@@ -349,6 +349,13 @@ export function AdminProductEditorView({
                 <ProductForm
                   product={product}
                   onChange={setProduct}
+                  /*
+                   * The ONLY place the Tax & GST section is shown. LetItRip
+                   * invoices under its own GSTIN, so the rate is an admin
+                   * determination — the seller forms deliberately omit it and
+                   * let `deriveTaxonomy` resolve it from the category.
+                   */
+                  canEditTax
                   renderGroupSettings={
                     isEdit && productId
                       ? (p) => (

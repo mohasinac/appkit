@@ -1280,27 +1280,22 @@ function StepShipping({
           placeholder="0"
         />
       )}
-      <FormField
-        name="gstRate"
-        label="GST Rate"
-        type="select"
-        value={String(values.gstRate ?? 0)}
-        onChange={(v) => onChange({ gstRate: Number(v) as 0 | 5 | 12 | 18 | 28 })}
-        options={[
-          { value: "0", label: "Exempt (0%)" },
-          { value: "5", label: "5%" },
-          { value: "12", label: "12%" },
-          { value: "18", label: "18%" },
-          { value: "28", label: "28%" },
-        ]}
-      />
-      <FormField
-        name="hsnCode"
-        label="HSN Code"
-        value={values.hsnCode ?? ""}
-        onChange={(v) => onChange({ hsnCode: v })}
-        placeholder="e.g. 9503"
-      />
+      {/*
+        🛑 The GST rate and HSN code are deliberately NOT here.
+        LetItRip is the seller of record and invoices under its own GSTIN, so
+        the rate is a tax determination owned by the category (via
+        `productDefaults.taxCodeId`, resolved server-side by `deriveTaxonomy`)
+        and by the admin who maintains the tax codes — never by the supplier.
+        The admin editor is the one surface that shows them: `ProductForm`
+        gates the section behind `canEditTax`.
+
+        This control was additionally the worse of the two copies: it labelled
+        `0` as "Exempt (0%)" and defaulted to it, so every seller was shown an
+        explicit — and usually false — exemption claim about their own listing.
+        Picking it wrote a hard `0`, which `deriveTaxonomy` then treats as a
+        deliberate exemption and never overrides, permanently suppressing the
+        category's rate.
+      */}
     </Stack>
   );
 }
@@ -1633,7 +1628,8 @@ export function SellerProductShell({
       label: "Pricing",
       required: true,
       quick: true,
-      fields: ["price", "compareAtPrice", "stockQuantity", "allowOffers", "minOfferPercent", "gstRate", "hsnCode"],
+      // `gstRate` / `hsnCode` deliberately absent — admin-only, see StepPricing.
+      fields: ["price", "compareAtPrice", "stockQuantity", "allowOffers", "minOfferPercent"],
       render: ({ values, onChange }) => (
         <StepPricing values={values} onChange={onChange} listingType={listingType} />
       ),

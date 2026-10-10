@@ -116,6 +116,32 @@ export interface ProductFormProps {
   onChange: (updated: ProductFormValue) => void;
   isReadonly?: boolean;
   /**
+   * Show the Tax & GST section (`gstRate` + `hsnCode`). **Admin only.**
+   *
+   * 🛑 Defaults to `false`, and the default is the point. LetItRip is the
+   * seller of record and invoices under its OWN GSTIN, so a supplier choosing
+   * the tax rate on goods we invoice is a compliance hole, not a convenience.
+   * The rate is a tax determination: it belongs to the category (via
+   * `productDefaults.taxCodeId`, resolved server-side by `deriveTaxonomy`) and
+   * to the admin who maintains the tax codes.
+   *
+   * There is also a one-click foot-gun behind it. The select renders
+   * `String(gstRate ?? 0)`, so an undetermined rate DISPLAYS as "0%" — and
+   * because `0` is a deliberate exemption while `undefined` means "nobody has
+   * said" (see `ProductDocument.gstRate`), a seller who touches that control
+   * at all, even re-picking the 0% already shown, writes a hard `0` and
+   * **permanently suppresses the category derivation**: `deriveTaxonomy` only
+   * derives when `input.gstRate == null`.
+   *
+   * 🛑 The display default does NOT corrupt the field on its own. `FormField`'s
+   * select fires `onChange` from a real DOM event only, and the draft is
+   * seeded from the stored document — so an untouched save preserves
+   * `undefined`. Verified rather than assumed; an earlier plan revision
+   * asserted every save converted "nobody has said" into "exempt", and that
+   * was not true of this code.
+   */
+  canEditTax?: boolean;
+  /**
    * Render a custom rich-text description editor.
    * If omitted, a standard textarea field is used.
    */
@@ -173,6 +199,8 @@ export function ProductForm({
   product,
   onChange,
   isReadonly = false,
+  /* Defaults to false — the seller path must not reach it. See the prop's docs. */
+  canEditTax = false,
   renderDescriptionEditor,
   renderCategorySelector,
   renderBrandSelector,
@@ -580,39 +608,65 @@ export function ProductForm({
         </>
       )}
 
-      <Heading level={4} className="mt-4">
-        {t("sectionTaxGst")}
-      </Heading>
+      {/*
+        🛑 ADMIN ONLY — see `canEditTax`. We invoice under our own GSTIN, so the
+        rate is a tax determination owned by the category and the admin, never
+        by the supplier. Hidden (not merely disabled) for a seller, because a
+        disabled control still shows "0%" and teaches that an undetermined rate
+        is an exemption.
+      */}
+      {canEditTax ? (
+        <>
+          <Heading level={4} className="mt-4">
+            {t("sectionTaxGst")}
+          </Heading>
 
-      <FormGroup columns={2}>
-        <FormField
-          name="gstRate"
-          label={t("formGstRate")}
-          type="select"
-          // Unset is semantically "exempt" (see ProductDocument.gstRate JSDoc),
-          // same as 0% — default the control to 0 so the select stays a fixed
-          // 5-option enum instead of adding a 6th "unset" placeholder entry.
-          value={String(product.gstRate ?? 0)}
-          onChange={(value) => update({ gstRate: Number(value) as 0 | 5 | 12 | 18 | 28 })}
-          disabled={isReadonly}
-          options={[
-            { value: "0", label: "0%" },
-            { value: "5", label: "5%" },
-            { value: "12", label: "12%" },
-            { value: "18", label: "18%" },
-            { value: "28", label: "28%" },
-          ]}
-        />
-        <FormField
-          name="hsnCode"
-          label={t("formHsnCode")}
-          type="text"
-          value={product.hsnCode ?? ""}
-          onChange={(value) => update({ hsnCode: value })}
-          disabled={isReadonly}
-          placeholder="e.g. 9503"
-        />
-      </FormGroup>
+          <FormGroup columns={2}>
+            <FormField
+              name="gstRate"
+              label={t("formGstRate")}
+              type="select"
+              /*
+               * 🛑 "" is the UNSET option, and it is not cosmetic.
+               * `ProductDocument.gstRate` documents that `undefined` and `0`
+               * mean different things — zero is a deliberate exemption (live
+               * plants and animals), undefined is "nobody has said" — and
+               * `deriveTaxonomy` only derives the category's rate while it is
+               * `== null`. Collapsing unset to "0%", which this control did
+               * until 2026-10-10, made an undetermined rate read as exempt and
+               * put a hard `0` one click away.
+               */
+              value={product.gstRate == null ? "" : String(product.gstRate)}
+              onChange={(value) =>
+                update({
+                  gstRate:
+                    value === ""
+                      ? undefined
+                      : (Number(value) as 0 | 5 | 12 | 18 | 28),
+                })
+              }
+              disabled={isReadonly}
+              options={[
+                { value: "", label: t("formGstRateUnset") },
+                { value: "0", label: "0%" },
+                { value: "5", label: "5%" },
+                { value: "12", label: "12%" },
+                { value: "18", label: "18%" },
+                { value: "28", label: "28%" },
+              ]}
+            />
+            <FormField
+              name="hsnCode"
+              label={t("formHsnCode")}
+              type="text"
+              value={product.hsnCode ?? ""}
+              onChange={(value) => update({ hsnCode: value })}
+              disabled={isReadonly}
+              placeholder="e.g. 9503"
+            />
+          </FormGroup>
+        </>
+      ) : null}
 
       <Heading level={4} className="mt-4">
         {t("sectionConditionShipping")}
