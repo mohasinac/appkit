@@ -19,6 +19,8 @@ import {
   PRODUCT_IMAGE_INDEX_MAX,
 } from "../../../_internal/shared/media/limits";
 import { isFinalSale } from "../../products/constants/final-sale";
+import { ProductFeaturesSelector } from "../../products/components/ProductFeaturesSelector";
+import type { ProductFeatureProductType } from "../../products/schemas/product-features";
 import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -58,6 +60,40 @@ export interface SellerProductDraft {
   brand?: string;
   condition?: string;
   tags?: string[];
+  /*
+   * ── Inherited-but-editable (C2c) ────────────────────────────────────────
+   *
+   * Every one of these is derived from the category by `deriveTaxonomy` when
+   * the product omits it, and every one was previously UNRENDERED anywhere a
+   * seller could reach — so "the derived value is a default, not a lock" was
+   * true of the repository and theoretical in the product.
+   *
+   * 🛑 `authenticity` is REQUIRED, and it is the only tag-shaped concept in
+   * this plan that gets a schema field. A tag can be omitted and nobody
+   * notices; a mislabelled reproduction is a refund, and a mislabelled FAKE is
+   * a child handling leaded metal. That asymmetry is the whole argument —
+   * there is no "fake" option because a counterfeit is a scam report, not a
+   * listing state we offer.
+   */
+  authenticity?: "original" | "reproduction" | "unverified";
+  specifications?: { name: string; value: string; unit?: string }[];
+  /** Feature IDS, never prose — `array-contains` is what faceting runs on. */
+  features?: string[];
+  /**
+   * 🛑 OPTIONAL, on purpose, and the reason is C5a.
+   *
+   * The figure a carrier bills on is the PACKED PARCEL, not the item: a bey is
+   * ~30 g and ~300 g boxed. A required product weight would therefore be an
+   * item weight that systematically under-estimates every booking — and since
+   * the booking is capped at the amount collected from the buyer, systematic
+   * under-estimation means silently absorbing the difference.
+   *
+   * So the category's PACKED default drives the checkout estimate, this field
+   * refines it when a seller bothers, and the real parcel figure is entered at
+   * shipment time, when the seller has the box in front of them.
+   */
+  weightG?: number;
+  dimensionsCm?: { l: number; w: number; h: number };
   /*
    * ── Template provenance. DRAFT-ONLY: never sent to Firestore ────────────
    *
@@ -429,6 +465,172 @@ function StepBasic({
         onScan={(v) => onChange({ barcodeId: v })}
         helperText="Leave blank to auto-generate. Scan a pre-printed sticker to link it."
       />
+    </Stack>
+  );
+}
+
+// ── Step 1b: Details — the inherited-but-editable fields (C2c) ───────────────
+
+const AUTHENTICITY_OPTIONS = [
+  { value: "original", label: "Original — licensed manufacture (Takara, Takara Tomy, Hasbro…)" },
+  { value: "reproduction", label: "Reproduction / midfake — a copy with no manufacturer's marque" },
+  { value: "unverified", label: "Unverified — I cannot confirm which it is" },
+];
+
+/**
+ * 🛑 Three options, and there is deliberately no fourth.
+ *
+ * A poor-quality counterfeit — brittle plastic, cadmium or lead in the metal
+ * parts — is not a listing state this marketplace offers. It is a scam report.
+ * Offering "fake" as a dropdown value would make selling one a supported
+ * workflow.
+ *
+ * `unverified` exists so a seller who genuinely does not know has an honest
+ * answer available. Without it the only way to list is to claim something they
+ * cannot stand behind, and the field stops meaning anything.
+ */
+function StepDetails({
+  values,
+  onChange,
+  storeId,
+  listingType,
+}: {
+  values: SellerProductDraft;
+  onChange: (p: Partial<SellerProductDraft>) => void;
+  storeId?: string;
+  listingType: ProductListingMode;
+}) {
+  const specs = values.specifications ?? [];
+  const setSpecs = (next: typeof specs) => onChange({ specifications: next });
+  const dims = values.dimensionsCm;
+  const setDim = (key: "l" | "w" | "h", raw: string) => {
+    const n = Number(raw);
+    const base = dims ?? { l: 0, w: 0, h: 0 };
+    const next = { ...base, [key]: Number.isFinite(n) ? n : 0 };
+    // All three or none: a box with a length and no width is not a dimension,
+    // and the shipping estimate reads all three or ignores the field.
+    onChange({ dimensionsCm: next.l > 0 && next.w > 0 && next.h > 0 ? next : undefined });
+  };
+
+  return (
+    <Stack gap="md">
+      <FormField
+        name="authenticity"
+        label="Authenticity"
+        type="select"
+        required
+        value={values.authenticity ?? ""}
+        onChange={(v) => onChange({ authenticity: v as SellerProductDraft["authenticity"] })}
+        options={[{ value: "", label: "Choose one…" }, ...AUTHENTICITY_OPTIONS]}
+      />
+      <Text size="xs" color="muted">
+        Shown on the listing whenever it is not Original. A reproduction is a
+        legitimate thing to sell here as long as it is labelled — what is not
+        allowed is selling one as the real thing. If you believe an item is a
+        cheap counterfeit, report it rather than listing it.
+      </Text>
+
+      <Stack gap="xs">
+        <Text size="sm" weight="medium">Features</Text>
+        <Text size="xs" color="muted">
+          Condition, authenticity, release type, battle type and spin direction.
+          Some are filled in from the category when you save — remove any that
+          do not apply and your choice sticks.
+        </Text>
+        <ProductFeaturesSelector
+          value={values.features ?? []}
+          onChange={(next) => onChange({ features: next })}
+          productType={listingType === "bundle" ? "all" : (listingType as ProductFeatureProductType)}
+          {...(storeId ? { storeId } : {})}
+        />
+      </Stack>
+
+      <Stack gap="xs">
+        <Text size="sm" weight="medium">Specifications</Text>
+        <Text size="xs" color="muted">
+          Left blank, the category fills these in. Anything you enter here is
+          kept.
+        </Text>
+        {specs.map((row, i) => (
+          <FormGroup columns={3} key={i}>
+            <FormField
+              name={`spec-name-${i}`}
+              label="Name"
+              type="text"
+              value={row.name}
+              onChange={(v) => setSpecs(specs.map((r, j) => (j === i ? { ...r, name: v } : r)))}
+            />
+            <FormField
+              name={`spec-value-${i}`}
+              label="Value"
+              type="text"
+              value={row.value}
+              onChange={(v) => setSpecs(specs.map((r, j) => (j === i ? { ...r, value: v } : r)))}
+            />
+            <Row gap="sm" align="end">
+              <FormField
+                name={`spec-unit-${i}`}
+                label="Unit"
+                type="text"
+                value={row.unit ?? ""}
+                onChange={(v) => setSpecs(specs.map((r, j) => (j === i ? { ...r, unit: v } : r)))}
+              />
+              <Button variant="ghost" size="sm" onClick={() => setSpecs(specs.filter((_, j) => j !== i))}>
+                Remove
+              </Button>
+            </Row>
+          </FormGroup>
+        ))}
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => setSpecs([...specs, { name: "", value: "" }])}
+        >
+          Add a specification
+        </Button>
+      </Stack>
+
+      <Stack gap="xs">
+        <Text size="sm" weight="medium">Weight and size (optional)</Text>
+        <Text size="xs" color="muted">
+          🛑 Leave these blank unless you know them — the category&apos;s own
+          packed-parcel figures are used for the shipping estimate, and you
+          enter the real weight of the box when you book the shipment. A figure
+          here should be the PACKED weight, not the bare item.
+        </Text>
+        <FormGroup columns={4}>
+          <FormField
+            name="weightG"
+            label="Packed weight (g)"
+            type="number"
+            value={values.weightG != null ? String(values.weightG) : ""}
+            onChange={(v) =>
+              onChange({ weightG: v.trim() === "" ? undefined : Math.max(0, Number(v) || 0) })
+            }
+          />
+          <FormField
+            name="dimL"
+            label="Length (cm)"
+            type="number"
+            value={dims?.l ? String(dims.l) : ""}
+            onChange={(v) => setDim("l", v)}
+          />
+          <FormField
+            name="dimW"
+            label="Width (cm)"
+            type="number"
+            value={dims?.w ? String(dims.w) : ""}
+            onChange={(v) => setDim("w", v)}
+          />
+          <FormField
+            name="dimH"
+            label="Height (cm)"
+            type="number"
+            value={dims?.h ? String(dims.h) : ""}
+            onChange={(v) => setDim("h", v)}
+          />
+        </FormGroup>
+      </Stack>
     </Stack>
   );
 }
@@ -1621,6 +1823,49 @@ export function SellerProductShell({
         <StepMedia values={values} onChange={onChange} storeSlug={storeSlug} />
       ),
       schema: sectionSchemas.media,
+    },
+    /*
+     * 🛑 Details sits between Basic and the type-specific step, not at the end.
+     *
+     * `authenticity` is required, and a required field buried after the
+     * optional ones is a field sellers reach by being bounced back to it from
+     * a failed submit. It also reads in the right order: what it IS, then what
+     * it is LIKE, then what it costs.
+     */
+    {
+      id: "details",
+      label: "Details",
+      required: true,
+      fields: ["authenticity", "features", "specifications", "weightG", "dimensionsCm"],
+      render: ({ values, onChange }) => (
+        <StepDetails
+          values={values}
+          onChange={onChange}
+          listingType={listingType}
+          /*
+           * `storeSlug`, because storeId IS the storeSlug on this platform —
+           * the public identifier, as distinct from `ownerId`, which is the
+           * Auth UID. Passing a uid here would load no store-scope features
+           * and report nothing, which is the shape of the ownership-check
+           * defect in Root Cause #98.
+           */
+          {...(storeSlug ? { storeId: storeSlug } : {})}
+        />
+      ),
+      /*
+       * The one required field in the section, and the message says what to do
+       * rather than naming the field — "Authenticity is required" tells a
+       * seller nothing they cannot see.
+       */
+      schema: z
+        .object({
+          authenticity: z.enum(["original", "reproduction", "unverified"], {
+            errorMap: () => ({
+              message: "Say whether this is an original, a reproduction, or that you cannot confirm",
+            }),
+          }),
+        })
+        .passthrough(),
     },
     ...(typeSpecificSection ? [typeSpecificSection] : []),
     {

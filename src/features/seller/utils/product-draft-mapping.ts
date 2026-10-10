@@ -51,6 +51,11 @@ import type { SellerProductDraft } from "../components/SellerProductShell";
 export interface StoredProductBlocks {
   finalSale?: boolean;
   returnPolicy?: string;
+  authenticity?: "original" | "reproduction" | "unverified";
+  specifications?: { name: string; value: string; unit?: string }[];
+  features?: string[];
+  weightG?: number;
+  dimensionsCm?: { l: number; w: number; h: number };
   classified?: {
     meetupArea?: { city?: string; locality?: string; pincode?: string };
     acceptsShipping?: boolean;
@@ -220,6 +225,24 @@ export function productToDraft(product: StoredProductBlocks): Partial<SellerProd
      */
     finalSale: product.finalSale,
     returnPolicy: product.returnPolicy,
+
+    /*
+     * The inherited-but-editable fields (C2c). Same category as `finalSale`:
+     * flat, stored, and absent from the ten hand-written `initialValues`
+     * literals — so the Details section would open EMPTY on a listing that
+     * already carries them, and a seller saving anything else would appear to
+     * have cleared their own specifications.
+     *
+     * (The write is partial, so an untouched save does not actually clear
+     * them. But a form that shows a listing's authenticity as unanswered when
+     * it is answered is telling the seller something untrue, which is exactly
+     * the argument `finalSale` above is making.)
+     */
+    authenticity: product.authenticity,
+    specifications: product.specifications,
+    features: product.features,
+    weightG: product.weightG,
+    dimensionsCm: product.dimensionsCm,
 
     classifiedCity: classified?.meetupArea?.city,
     classifiedLocality: classified?.meetupArea?.locality,
