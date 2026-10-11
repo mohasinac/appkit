@@ -4,7 +4,7 @@ import React from "react";
 import { SectionCarousel } from "./SectionCarousel";
 import { useBlogArticles } from "../hooks/useBlogArticles";
 import { BlogFeaturedCard } from "../../blog/components/BlogFeaturedCard";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { BlogPost } from "../../blog/types";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 import { SECTION_TITLE, VIEW_MORE_LABEL } from "../constants/section-copy";

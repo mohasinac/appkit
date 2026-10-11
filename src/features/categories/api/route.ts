@@ -17,7 +17,7 @@ import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../validation/schemas";
 import { getProviders } from "../../../contracts";
-import { createRouteHandler } from "../../../next";
+import { createRouteHandler } from "../../../next/api/routeHandler";
 import type { CategoryItem } from "../types/index";
 import type { CategoryDocument } from "../schemas/firestore";
 import { toCategoryListItem } from "../../../_internal/server/features/categories/adapters";

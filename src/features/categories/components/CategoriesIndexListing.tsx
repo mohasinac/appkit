@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 
 import { useCategoriesFiltered } from "../hooks/useCategories";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Button, Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";

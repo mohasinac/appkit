@@ -13,7 +13,7 @@
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import { getProviders } from "../../../../contracts";
-import { createRouteHandler } from "../../../../next";
+import { createRouteHandler } from "../../../../next/api/routeHandler";
 import type { ProductItem } from "../../types/index";
 
 import { mediaFieldSchema } from "../../../media/types/index";

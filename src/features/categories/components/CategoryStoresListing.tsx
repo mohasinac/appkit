@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { InteractiveStoreCard } from "../../stores/components/InteractiveStoreCard";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Div, Grid, Stack, Text } from "../../../ui";
 import type { StoreListItem } from "../../stores/types";
 

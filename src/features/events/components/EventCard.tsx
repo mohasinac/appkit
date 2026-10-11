@@ -7,7 +7,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EVENT_FIELDS } from "../schemas";
 import { EventStatusBadge } from "./EventStatusBadge";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __P = {

@@ -113,7 +113,83 @@
       "default": "./dist/configs/index.js"
     },
     "./tsconfig.base.json": "./tsconfig.base.json",
-    "./messages/*": "./dist/features/*/messages/en.json"
+    "./messages/*": "./dist/features/*/messages/en.json",
+    "./features/*": {
+      "types": "./dist/features/*.d.ts",
+      "import": "./dist/features/*.js"
+    },
+    "./ui/*": {
+      "types": "./dist/ui/*.d.ts",
+      "import": "./dist/ui/*.js"
+    },
+    "./constants/*": {
+      "types": "./dist/constants/*.d.ts",
+      "import": "./dist/constants/*.js"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
+    },
+    "./next/*": {
+      "types": "./dist/next/*.d.ts",
+      "import": "./dist/next/*.js"
+    },
+    "./utils/*": {
+      "types": "./dist/utils/*.d.ts",
+      "import": "./dist/utils/*.js"
+    },
+    "./errors/*": {
+      "types": "./dist/errors/*.d.ts",
+      "import": "./dist/errors/*.js"
+    },
+    "./core/*": {
+      "types": "./dist/core/*.d.ts",
+      "import": "./dist/core/*.js"
+    },
+    "./contracts/*": {
+      "types": "./dist/contracts/*.d.ts",
+      "import": "./dist/contracts/*.js"
+    },
+    "./validation/*": {
+      "types": "./dist/validation/*.d.ts",
+      "import": "./dist/validation/*.js"
+    },
+    "./seo/*": {
+      "types": "./dist/seo/*.d.ts",
+      "import": "./dist/seo/*.js"
+    },
+    "./schemas/*": {
+      "types": "./dist/schemas/*.d.ts",
+      "import": "./dist/schemas/*.js"
+    },
+    "./security/*": {
+      "types": "./dist/security/*.d.ts",
+      "import": "./dist/security/*.js"
+    },
+    "./react/*": {
+      "types": "./dist/react/*.d.ts",
+      "import": "./dist/react/*.js"
+    },
+    "./monitoring/*": {
+      "types": "./dist/monitoring/*.d.ts",
+      "import": "./dist/monitoring/*.js"
+    },
+    "./values/*": {
+      "types": "./dist/values/*.d.ts",
+      "import": "./dist/values/*.js"
+    },
+    "./http/*": {
+      "types": "./dist/http/*.d.ts",
+      "import": "./dist/http/*.js"
+    },
+    "./theme/*": {
+      "types": "./dist/theme/*.d.ts",
+      "import": "./dist/theme/*.js"
+    },
+    "./hooks/*": {
+      "types": "./dist/hooks/*.d.ts",
+      "import": "./dist/hooks/*.js"
+    }
   },
   "files": [
     "dist",

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
 import { Div, Heading, Stack } from "../../../ui";

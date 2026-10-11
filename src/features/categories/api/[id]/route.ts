@@ -13,7 +13,7 @@ import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../../validation/schemas";
 import { getProviders } from "../../../../contracts";
-import { createRouteHandler } from "../../../../next";
+import { createRouteHandler } from "../../../../next/api/routeHandler";
 import type { CategoryItem } from "../../types/index";
 import { normalizeError } from "../../../../errors/normalize";
 

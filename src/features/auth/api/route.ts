@@ -8,7 +8,7 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { createRouteHandler } from "../../../next";
+import { createRouteHandler } from "../../../next/api/routeHandler";
 import { getProviders } from "../../../contracts";
 import type { AuthUser as ContractsAuthUser } from "../../../contracts";
 import type { AuthUser, UserRole } from "../types/index";

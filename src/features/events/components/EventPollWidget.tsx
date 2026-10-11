@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Button, Checkbox, Div, LoginRequiredModal, Span, Stack, Text, Textarea, TextLink } from "../../../ui";
 import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";

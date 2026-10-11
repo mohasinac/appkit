@@ -1,6 +1,6 @@
 import { normalizeError } from "../errors/normalize";
 import { isAccountDisabled } from "../features/auth/role-predicates";
-import { createApiHandlerFactory } from "../next";
+import { createApiHandlerFactory } from "../next/api/apiHandler";
 import { applyRateLimit } from "../security";
 import {
   AuthenticationError,
@@ -9,7 +9,7 @@ import {
   handleApiError,
 } from "../errors";
 import type { AuthPayload } from "../contracts";
-import { errorResponse } from "../next";
+import { errorResponse } from "../next/api/api-response";
 import { serverLogger } from "../monitoring";
 import { getProviders } from "../contracts";
 import type { UserDocument } from "../features/auth/schemas/firestore";

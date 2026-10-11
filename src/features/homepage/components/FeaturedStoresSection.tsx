@@ -4,7 +4,7 @@ import React from "react";
 import { SectionCarousel } from "./SectionCarousel";
 import { useFeaturedStores } from "../hooks/useFeaturedStores";
 import { InteractiveStoreCard } from "../../stores/components/InteractiveStoreCard";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { StoreListItem } from "../../stores/types";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 

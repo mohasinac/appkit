@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Anchor, Button, GatedPrice, Stack, Text, LoginRequiredModal } from "../../../ui";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";

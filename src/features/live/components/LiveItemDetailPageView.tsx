@@ -8,7 +8,7 @@ const CLS_WARN_BOX = "rounded-lg border border-warning bg-warning-surface p-[var
 const CLS_WARN_TITLE = "font-medium text-warning";
 const CLS_WARN_BODY = "mt-1 text-warning";
 
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";

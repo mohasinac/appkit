@@ -2,8 +2,8 @@
 import React from "react";
 import { CustomerReviewsSection } from "./CustomerReviewsSection";
 import { useHomepageReviews } from "../hooks/useHomepageReviews";
-import type { Review } from "../../reviews";
-import { ReviewCard } from "../../reviews/components";
+import type { Review } from "../../reviews/types";
+import { ReviewCard } from "../../reviews/components/ReviewsList";
 import { SECTION_TITLE, VIEW_MORE_LABEL } from "../constants/section-copy";
 
 export interface HomepageCustomerReviewsSectionProps {

@@ -1,6 +1,6 @@
 import { Badge } from "../../../ui/components/Badge";
 import { TextLink } from "../../../ui/components/TextLink";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { SellerTrustResult } from "../actions/scam-actions";
 
 export interface SellerTrustBadgeProps {

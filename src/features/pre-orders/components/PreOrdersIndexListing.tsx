@@ -11,7 +11,7 @@ import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../../products/constants/action-defs";
 import { CompareOverlay } from "../../products/components/CompareOverlay";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
 import { PreOrderFilters } from "./PreOrderFilters";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";

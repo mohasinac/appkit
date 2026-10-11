@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import type { Review } from "../../reviews";
+import type { Review } from "../../reviews/types";
 import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface UseHomepageReviewsOptions {

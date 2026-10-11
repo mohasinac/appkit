@@ -8,7 +8,7 @@ import { useLongPress } from "../../../react/hooks/useLongPress";
 import { MediaImage } from "../../media";
 import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
 import { useCountdown, type CountdownRemaining } from "../../../react";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { BaseListingCard, Button, Caption, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";

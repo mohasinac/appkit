@@ -18,7 +18,7 @@ import type { Review } from "../types";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 // --- ReviewCard ---------------------------------------------------------------

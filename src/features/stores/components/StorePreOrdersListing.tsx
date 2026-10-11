@@ -6,7 +6,7 @@ import { useProducts } from "../../products/hooks/useProducts";
 import { Div, FilterDrawer, Grid, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";
 import { ProductFilters } from "../../products/components/ProductFilters";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 import { PREORDER_PUBLIC_SORT_OPTIONS } from "../../products/constants/sieve";

@@ -12,7 +12,7 @@ import { withoutPriceSorts } from "../constants/sieve";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { CompareOverlay } from "./CompareOverlay";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";

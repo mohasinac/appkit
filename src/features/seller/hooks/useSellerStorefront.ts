@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import type { ProductItem } from "../../products";
+import type { ProductItem } from "../../products/types";
 import type {
   PublicUserProfile,
   SellerReviewsData,

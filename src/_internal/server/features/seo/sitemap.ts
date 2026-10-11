@@ -4,11 +4,11 @@ import { getAdminDb } from "../../../../providers/db-firebase";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { EVENTS_COLLECTION, EVENT_FIELDS } from "../../../../features/events";
-import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog";
-import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories";
+import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog/schemas/firestore";
+import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories/schemas/firestore";
 // Imported from the DEFINING module, not the feature barrel (Root Cause #18).
 import { isListingCategory } from "../../../../features/categories/constants/listing-categories";
-import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores";
+import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores/schemas/firestore";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";

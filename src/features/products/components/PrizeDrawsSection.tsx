@@ -4,7 +4,7 @@
 // (Root Cause #18). That is exactly what took `section-prize-draws` down.
 import { sortBy } from "../../../constants/sort";
 import { Container, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { PrizeDrawsSectionConfig } from "../../homepage/schemas/firestore";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
 import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-names";

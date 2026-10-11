@@ -12,7 +12,7 @@ import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../../validation/schemas";
 import { getProviders } from "../../../../contracts";
-import { createRouteHandler } from "../../../../next";
+import { createRouteHandler } from "../../../../next/api/routeHandler";
 import type { CarouselSlide } from "../../types/index";
 
 /** Read `__session` cookie from request headers (HTTP cookie string). */

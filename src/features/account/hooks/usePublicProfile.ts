@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { hasRole } from "../../auth/auth-helpers";
 import { apiClient } from "../../../http";
-import type { ProductItem } from "../../products";
+import type { ProductItem } from "../../products/types";
 import type { UserRole } from "../../auth/types";
 import {
   ACCOUNT_ENDPOINTS,

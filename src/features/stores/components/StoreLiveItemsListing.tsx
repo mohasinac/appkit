@@ -8,7 +8,7 @@ import { LiveItemFilters } from "../../live/components/LiveItemFilters";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { TABLE_KEYS } from "../../../constants/table-keys";

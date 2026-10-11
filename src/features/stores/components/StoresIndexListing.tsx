@@ -7,7 +7,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
 import { BulkActionBar, Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Text, StickyToolbar } from "../../../ui";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
 import { StoreFilters } from "./StoreFilters";
 import type { UrlTable } from "../../filters/FilterPanel";

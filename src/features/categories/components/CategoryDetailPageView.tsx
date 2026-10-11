@@ -7,7 +7,7 @@ import {
   productRepository,
   storeRepository,
 } from "../../../repositories";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";

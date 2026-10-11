@@ -22,11 +22,11 @@ import type {
 import type { OrderDocument } from "../../orders";
 import type { PayoutDocument } from "../../payments";
 import type { UserDocument } from "../../auth";
-import type { ProductDocument } from "../../products";
+import type { ProductDocument } from "../../products/schemas/firestore";
 import { ProductStatusValues } from "../../products/schemas";
-import type { BlogPostDocument } from "../../blog";
-import type { StoreDocument } from "../../stores";
-import type { BidDocument } from "../../auctions";
+import type { BlogPostDocument } from "../../blog/schemas/firestore";
+import type { StoreDocument } from "../../stores/schemas/firestore";
+import type { BidDocument } from "../../auctions/schemas/firestore";
 
 export async function getAdminDashboardStats() {
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);

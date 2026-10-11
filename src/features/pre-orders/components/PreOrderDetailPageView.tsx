@@ -14,7 +14,7 @@ const __O = {
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-indigo-700 dark:text-indigo-300";
 const CLS_STATUS_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-warning dark:text-warning";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";

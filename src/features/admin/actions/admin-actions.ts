@@ -24,11 +24,7 @@ import { isAdminUser } from "../../auth/role-predicates";
 import type { OrderAdminUpdateInput, OrderDocument } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";
 import type { UserAdminUpdateInput, UserDocument } from "../../auth";
-import type {
-  ProductAdminUpdateInput,
-  ProductCreateInput,
-  ProductDocument,
-} from "../../products";
+import type { ProductAdminUpdateInput, ProductCreateInput, ProductDocument } from "../../products/schemas/firestore";
 import {
   assertPrizeDrawNotLocked,
   assertPrizeDrawWonItemsImmutable,

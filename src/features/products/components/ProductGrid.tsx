@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { LayoutSlots } from "../../../contracts";
 import { BaseListingCard, Button, Div, GatedPrice, Grid, PriceDisplay, PricesOnly, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";

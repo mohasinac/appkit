@@ -15,7 +15,7 @@
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
-import { createRouteHandler } from "../../../../next";
+import { createRouteHandler } from "../../../../next/api/routeHandler";
 import { storeRepository } from "../../../stores/repository/store.repository";
 import type { JsonValue } from "../../../../schemas/types";
 

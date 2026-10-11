@@ -3,7 +3,7 @@ import React, { cache } from "react";
 import type { ReactNode } from "react";
 import { storeRepository, siteSettingsRepository, reviewRepository, couponsRepository } from "../../../repositories";
 import { safeRead } from "../../../errors/safe-read";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Container, Main, Section, Text } from "../../../ui";
 import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { isListingTypeEnabled, isCategoryTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";

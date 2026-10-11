@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text } from "../../../ui";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { resolveMediaUrl } from "../../../utils/media-url";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";

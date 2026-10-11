@@ -12,7 +12,7 @@
 
 import { Badge, Container, DataTable, Div, Heading, Row, Section, Stack, Text, TextLink, type DataTableColumn } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 
 export interface PrizeDrawWinnerMappingRow {
   itemNumber: number;

@@ -6,7 +6,7 @@ import {
   categoriesRepository,
   productRepository,
 } from "../../../repositories";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Anchor, Container, Div, Dl, Dt, Dd, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { reviewRepository } from "../../../repositories";
 import { safeRead } from "../../../errors/safe-read";
 import { Container, Div, Grid, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
 import { ReviewCard } from "./ReviewsList";

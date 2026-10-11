@@ -7,7 +7,7 @@ const __P = {
 } as const;
 
 const CLS_PRIZE_BADGE = "inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-fuchsia-700 dark:text-fuchsia-300";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";

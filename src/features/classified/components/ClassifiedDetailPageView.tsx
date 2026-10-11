@@ -5,7 +5,7 @@ import { getClassifiedForDetail } from "../../../_internal/server/features/class
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_CLASSIFIED_BADGE = "inline-block rounded-full bg-cyan-100 dark:bg-cyan-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-cyan-700 dark:text-cyan-300";
 
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";

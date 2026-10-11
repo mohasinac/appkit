@@ -25,7 +25,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { apiClient } from "../../../http";
 import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";

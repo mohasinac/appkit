@@ -1,5 +1,5 @@
 import React from "react";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { cleanTitle, parseWelcomeDescription } from "./section-helpers";
 import { DEFAULT_TRUST_FEATURES, DEFAULT_SECURITY_ITEMS } from "./section-defaults";
 import {

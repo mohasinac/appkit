@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBlogPosts } from "../hooks/useBlog";
 import { Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
-import { ROUTES } from "../../../next";
+import { ROUTES } from "../../../next/routing/route-map";
 import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
