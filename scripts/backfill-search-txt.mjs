@@ -144,6 +144,60 @@ function locationTokens(loc) {
   return [...parts, parts.join("-"), parts.join("/")];
 }
 
+/**
+ * MIRRORS `appkit/src/_internal/shared/search/alias-variants.ts`.
+ *
+ * 🛑 This copy exists for the reason stated at the top of this file — the
+ * backfill must run against a checkout whose appkit/dist is stale — and it is
+ * the copy `audit-search-parity` R1 CANNOT see. R1 compares FIELD NAMES, and
+ * these variants are generated from `title` / `name`, which are already in
+ * both lists. So the rule reports clean while a misspelling matches a row
+ * written through the app and never a row written by a reseed. Keep the two in
+ * step by hand, and change them together.
+ *
+ * Why it is needed at all: `buildSearchTxt` stores PREFIXES, and "dragon" is
+ * not a prefix of "dragoon" — they diverge at the sixth character. Measured:
+ * tokens for "Dragoon G" are `dragoon d dr dra drag drago dragoo g`, which
+ * contains "dragon" nowhere.
+ */
+const ALIAS_MAX_VARIANTS_PER_WORD = 4;
+const ALIAS_MIN_WORD_LENGTH = 4;
+const ALIAS_SUFFIX_SWAPS = [
+  ["us", "is"], ["us", "as"], ["er", "ar"], ["ze", "se"],
+  ["ic", "ec"], ["on", "an"], ["el", "al"],
+];
+function aliasVariantsForWord(word) {
+  const w = (word ?? "").trim().toLowerCase();
+  if (w.length < ALIAS_MIN_WORD_LENGTH) return [];
+  const candidates = [];
+  for (let i = 0; i < w.length - 1; i++) {
+    if (w[i] === w[i + 1]) candidates.push(w.slice(0, i) + w.slice(i + 1));
+  }
+  for (const [a, b] of ALIAS_SUFFIX_SWAPS) {
+    if (w.endsWith(a)) candidates.push(w.slice(0, -a.length) + b);
+    if (w.endsWith(b)) candidates.push(w.slice(0, -b.length) + a);
+  }
+  const seen = new Set();
+  for (const v of candidates) {
+    if (v === w || w.startsWith(v)) continue;
+    if (v.length < ALIAS_MIN_WORD_LENGTH) continue;
+    seen.add(v);
+    if (seen.size >= ALIAS_MAX_VARIANTS_PER_WORD) break;
+  }
+  return [...seen];
+}
+function aliasVariantsForName(name) {
+  const words = (name ?? "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  const out = new Set();
+  for (const w of words) for (const v of aliasVariantsForWord(w)) out.add(v);
+  return [...out];
+}
+
 const SOURCES = {
   faqs: (d) => [d.question, d.category, ...(d.tags ?? []), stripHtml(d.answer?.text ?? d.answer)],
   products: (d) => [
@@ -156,6 +210,7 @@ const SOURCES = {
     d.card?.setName, d.card?.cardNumber, d.grading?.service,
     (d.specifications ?? []).map((s) => `${s.name} ${s.value}`),
     locationTokens(d.physicalLocation),
+    aliasVariantsForName(d.title),
   ],
   testerChecklistItems: (d) => [d.label, d.description, d.groupLabel, d.pageLabel],
   // Mirrors buildCategorySearchTxt. `ancestors[].name` is the load-bearing one
@@ -172,6 +227,10 @@ const SOURCES = {
     d.name, d.slug, stripHtml(d.description), d.path, d.itemCode, d.brandCountry,
     (d.ancestors ?? []).map((a) => a.name),
     d.aliases ?? [],
+    // Mirrors the builder: generated AFTER the authored aliases, so the guess
+    // is what the 600-token cap drops first, and generated from name + aliases
+    // only (never `description`/`path`).
+    aliasVariantsForName([d.name, ...(d.aliases ?? [])].filter(Boolean).join(" ")),
   ],
   stores: (d) => [d.storeName, stripHtml(d.storeDescription), d.storeCategory],
   events: (d) => [d.title, stripHtml(d.description), d.type, d.tags ?? []],

@@ -29,6 +29,7 @@
  */
 
 import { buildSearchTxt } from "./search-txt";
+import { aliasVariantsForName } from "../_internal/shared/search/alias-variants";
 import { physicalLocationTokens } from "./physical-location";
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import type { CategoryDocument } from "../features/categories/schemas/firestore";
@@ -82,6 +83,16 @@ export function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
      * AND-refine and the separators are irrelevant on both sides.
      */
     physicalLocationTokens(p.physicalLocation),
+    /*
+     * Misspelling variants of the TITLE only — last, so they are what the
+     * 600-token cap drops first.
+     *
+     * 🛑 Title only, not `description`. A 300-word body would generate
+     * hundreds of variants and push the real tokens off the end, making exact
+     * search worse to make misspelled search better. The title is what buyers
+     * mistype; prose is what they read.
+     */
+    aliasVariantsForName(p.title ?? ""),
   ]);
 }
 
@@ -119,6 +130,22 @@ export function buildCategorySearchTxt(c: Partial<CategoryDocument>): string[] {
      * ahead of "also known as" spellings.
      */
     ...(c.aliases ?? []),
+    /*
+     * Mechanical misspelling variants, after the authored aliases for the same
+     * truncation reason: a human-written alias is evidence, a generated one is
+     * a guess, and the guess is what should fall off the end first.
+     *
+     * 🛑 This is what makes "dragon g" find "Dragoon G". Measured against the
+     * built helper: `buildSearchTxt(["Dragoon G"])` yields
+     * `dragoon d dr dra drag drago dragoo g`, and "dragon" is in that set
+     * NOWHERE — it is not a prefix of "dragoon", the two diverge at the sixth
+     * character. Prefix n-grams cannot reach it; an alias can.
+     *
+     * Generated from the NAME and the authored aliases only — deliberately not
+     * from `description` or `path`, which would spend the token budget varying
+     * prose nobody searches by spelling.
+     */
+    ...aliasVariantsForName([c.name, ...(c.aliases ?? [])].filter(Boolean).join(" ")),
   ]);
 }
 

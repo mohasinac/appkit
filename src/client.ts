@@ -1467,3 +1467,13 @@ export {
   draftToProductInput,
   productToDraft,
 } from "./features/seller/utils/product-draft-mapping";
+
+// The realised-price lookup view. Client — it owns a search box and a fetch.
+export { PriceIndexToolView } from "./features/price-index/components/PriceIndexToolView";
+export type {
+  PriceIndexToolViewProps,
+  PriceIndexToolResponse,
+  PriceIndexResultRow,
+  PriceIndexBandRow,
+  PriceIndexConditionRow,
+} from "./features/price-index/components/PriceIndexToolView";

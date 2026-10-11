@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import { Div, Li, Nav, Row, Span, Ul } from "../../ui";
 import { NavbarChevron } from "../../ui/components/NavbarChevron";
 import { findActiveNavItem } from "../../_internal/client/features/layout/navActive";
@@ -13,6 +14,21 @@ export interface NavbarLayoutItem {
   label: string;
   icon: React.ReactNode;
   highlighted?: boolean;
+  /**
+   * Sub-items, rendered as a dropdown instead of a plain link.
+   *
+   * 🛑 `href` stays REQUIRED on a parent that has children, and it must point
+   * somewhere real. The trigger is a link that also opens a menu, so a keyboard
+   * or touch user who activates it lands on a page rather than on nothing —
+   * and a crawler follows it. A `href: "#"` parent is a nav entry
+   * `audit-nav-page-wiring` cannot check and a dead end for anyone whose
+   * pointer does not hover.
+   *
+   * One level only. A nested dropdown in a top navbar is a menu nobody can
+   * operate on a phone, and the bottom nav / sidebar already carry the deep
+   * structure.
+   */
+  children?: Array<{ href: string; label: string; description?: string }>;
 }
 
 export interface NavbarLayoutProps {
@@ -44,7 +60,7 @@ function DefaultNavItem({
       ? "bg-primary-50 dark:bg-[var(--appkit-color-surface-elevated)] text-primary-800 dark:text-white font-semibold px-[var(--appkit-space-3)] border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
       : "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-[var(--appkit-space-3)]";
 
-  return (
+  const trigger = (
     <Link
       href={item.href}
       aria-current={isActive ? "page" : undefined}
@@ -52,7 +68,58 @@ function DefaultNavItem({
     >
       {item.icon}
       <Span>{item.label}</Span>
+      {item.children && item.children.length > 0 && (
+        <ChevronDown className="w-3.5 h-3.5 shrink-0 opacity-70" aria-hidden="true" />
+      )}
     </Link>
+  );
+
+  if (!item.children || item.children.length === 0) return trigger;
+
+  /*
+   * 🛑 Hover/focus-within CSS, not React state, and the trigger is still a real
+   * link.
+   *
+   * Two things this buys. The group stays usable without JS and without a
+   * pointer — `focus-within` opens it on Tab, so a keyboard user reaches the
+   * children; and `aria-haspopup`/`aria-expanded` are deliberately NOT faked,
+   * because nothing here manages expanded state and announcing a state we do
+   * not track is worse than announcing none. The parent is a link whose
+   * children are also reachable from the page it leads to, which is the
+   * progressive-enhancement shape rather than a menu that traps people.
+   *
+   * The `pt` on the panel is a hover bridge: without it the gap between the
+   * trigger and the panel closes the menu as the pointer crosses it.
+   */
+  return (
+    <Div className="relative group">
+      {trigger}
+      <Div className="absolute left-0 top-full z-20 hidden pt-[var(--appkit-space-1)] group-hover:block group-focus-within:block">
+        <Div surface="elevated" border="default" rounded="lg" shadow="lg" padding="xs">
+        <Ul className="min-w-[15rem] list-none">
+          {item.children.map((child) => (
+            <Li key={child.href}>
+              <Link
+                href={child.href}
+                className="block rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] hover:bg-surface-hover transition-colors duration-150"
+              >
+                <Span weight="medium">{child.label}</Span>
+                {child.description && (
+                  <Span
+                    size="xs"
+                    color="muted"
+                    className="block mt-[var(--appkit-space-0-5)] whitespace-normal"
+                  >
+                    {child.description}
+                  </Span>
+                )}
+              </Link>
+            </Li>
+          ))}
+        </Ul>
+        </Div>
+      </Div>
+    </Div>
   );
 }
 

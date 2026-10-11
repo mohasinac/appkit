@@ -7267,6 +7267,16 @@ export {
 // C5e buyer protections — the pure three-tier gate plus the one fee pair
 // every money path must agree on. Public API because the capture route
 // (/api/payment/create-order) is one of the three sites that must agree.
+// The realised-price search tool (C1 + the search-first redirect). SERVER
+// only: it reads Firestore through two repositories, so it must never reach
+// client.ts (verify-entries would catch firebase-admin, but the import chain
+// is the thing to keep clean — Root Cause #6).
+export { searchPriceIndex, PRICE_INDEX_SEARCH_LIMIT, PRICE_INDEX_MIN_QUERY_LENGTH } from "./_internal/server/features/price-index/search";
+export type {
+  PriceIndexSearchResponse,
+  PriceIndexSearchResult,
+  PriceIndexSearchResultBand,
+} from "./_internal/server/features/price-index/search";
 export {
   protectionAvailability,
   computeProtectionFees,
@@ -10055,3 +10065,13 @@ export {
   draftToProductInput,
   productToDraft,
 } from "./features/seller/utils/product-draft-mapping";
+
+// The realised-price lookup view. Client — it owns a search box and a fetch.
+export { PriceIndexToolView } from "./features/price-index/components/PriceIndexToolView";
+export type {
+  PriceIndexToolViewProps,
+  PriceIndexToolResponse,
+  PriceIndexResultRow,
+  PriceIndexBandRow,
+  PriceIndexConditionRow,
+} from "./features/price-index/components/PriceIndexToolView";

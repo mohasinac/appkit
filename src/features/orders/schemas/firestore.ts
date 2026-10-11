@@ -238,6 +238,19 @@ export interface OrderDocumentItem {
    * products-map fallback rather than treating absence as "no category".
    */
   categorySlug?: string;
+  /**
+   * The condition this unit was in AT THE TIME OF SALE.
+   *
+   * 🛑 Snapshotted for the same reason as `hsnCode` / `gstRate` / `finalSale` /
+   * `categorySlug` above: reading `product.condition` at rollup time lets a
+   * seller who refurbishes and relists the same slug retroactively re-file
+   * every past sale under the new condition, and the per-condition price band
+   * would then describe a market that never existed.
+   *
+   * Absent on every order written before this, which is why the rollup keeps
+   * its products-map fallback rather than treating absence as a condition.
+   */
+  condition?: string;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
