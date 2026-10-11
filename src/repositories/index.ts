@@ -36,6 +36,10 @@ export {
 export {
   ProductRepository,
   productRepository,
+  // The seller-authored vs system-owned stock delta. Exported because a BULK
+  // stock edit cannot go through `ProductRepository.update` and must apply the
+  // SAME rule — see its own docstring, and Root Cause #75.
+  resolveStockResync,
 } from "../features/products/repository/products.repository";
 export {
   OrderRepository,

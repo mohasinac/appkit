@@ -8,7 +8,15 @@ export type FAQCategory =
   | "account_security"
   | "technical_support"
   | "general"
-  | "scam_awareness";
+  | "scam_awareness"
+  /**
+   * D6b. Money questions, kept out of `orders_payment` on purpose: that
+   * category is about an ORDER (where is it, how do I pay, can I cancel),
+   * while these are about the PLATFORM'S economics (is GST included, what is
+   * the platform fee, who pays shipping). A buyer looking for one is not
+   * looking for the other, and merging them buries both.
+   */
+  | "fees_and_taxes";
 
 export interface FAQAnswer {
   text: string;

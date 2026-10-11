@@ -224,6 +224,9 @@ export interface Order {
   giftWrapMessage?: string;
   shipmentProtectionAddon?: boolean;
   shipmentProtectionFee?: number;
+  /** Sale protection — the item itself rather than the transit (C5e). */
+  saleProtectionAddon?: boolean;
+  saleProtectionFee?: number;
   /** Buyer-facing platform commission apportioned to this order. */
   platformFee?: number;
   /** COD handling fee, charged only on cash-on-delivery orders. */

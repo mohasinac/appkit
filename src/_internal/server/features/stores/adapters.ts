@@ -43,9 +43,20 @@ export const PUBLIC_STORE_FIELDS = [
   "website",
   "socialLinks",
   "returnPolicy",
+  // The seller's free-text shipping PROSE, rendered by StoreAboutView. Not to
+  // be confused with `shippingPricing` below, which is the rule that computes
+  // money and is private — the names are one word apart and mean opposite
+  // things about disclosure.
   "shippingPolicy",
   "isVacationMode",
   "vacationMessage",
+  // C5e, and the only two new store fields in this plan that are public. The
+  // safety badge and the pre-purchase risk notice are both rendered to an
+  // anonymous visitor on the listing and in the cart — withholding them would
+  // make "has not opted in" indistinguishable from "we did not tell you",
+  // which is the one outcome the tri-state rule forbids.
+  "supportsShippingProtection",
+  "supportsSaleProtection",
   "createdAt",
 ] as const;
 
@@ -77,6 +88,30 @@ export const PRIVATE_STORE_FIELDS = [
   // publishing it would invite a client to "correct" a price that is already
   // correct.
   "pricesIncludeGst",
+  /*
+   * C5b. A commercial setting, and `estimate` additionally reveals that this
+   * seller's parcels are booked through OUR carrier account — which is
+   * operational detail about us, not a fact about the store. A buyer sees the
+   * resulting amount at checkout; the rule that produced it is ours.
+   *
+   * 🛑 One word from `shippingPolicy` in the PUBLIC list above, and the
+   * opposite answer. That is a real hazard — a blind find-replace during this
+   * change swapped the two and `tsc` was silent, because both are valid
+   * strings in a `const` array. `audit-public-projection-parity` is what would
+   * have caught it: a PUBLIC field no projection emits fails.
+   */
+  "shippingPricing",
+  /*
+   * C5g. An ADMIN trust decision about this seller, and the opposite call from
+   * the two `supports*Protection` flags in the PUBLIC list — which is the point
+   * of them being different kinds of field.
+   *
+   * The `supports*` pair is a PROMISE the seller made and a buyer needs before
+   * purchase. This is an internal exemption from our inspection step: it tells
+   * a buyer nothing they can act on, and publishing it would advertise which
+   * sellers' returns we do not check — a map of where to try a swap.
+   */
+  "returnsDirectToSeller",
   "isFeatured", // ranking input; not part of the public store profile
   "vacationReturnDate", // not rendered by StoreAboutView; add to PUBLIC when a reader exists
   "isTestData", // tester-sandbox tagging; filtered by filterTestDataForViewer
@@ -134,6 +169,15 @@ export function toStoreListItem(
     itemsSold: stats?.itemsSold ?? doc.itemsSold,
     totalReviews: stats?.totalReviews ?? doc.totalReviews,
     averageRating: stats?.averageRating ?? doc.averageRating,
+    /*
+     * 🛑 `?? false` rather than passed through, which is the tri-state rule
+     * resolved once. An absent field must reach the client as a definite "not
+     * supported" so the risk notice renders; forwarding `undefined` would let a
+     * `!== false` test read it as supported, or a truthiness test render
+     * neither badge nor notice — the one outcome that tells the buyer nothing.
+     */
+    supportsShippingProtection: doc.supportsShippingProtection ?? false,
+    supportsSaleProtection: doc.supportsSaleProtection ?? false,
     createdAt: toIsoString(doc.createdAt),
   };
 }

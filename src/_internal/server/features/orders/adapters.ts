@@ -159,6 +159,8 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     giftWrapMessage: doc.giftWrapMessage,
     shipmentProtectionAddon: doc.shipmentProtectionAddon,
     shipmentProtectionFee: doc.shipmentProtectionFee,
+    saleProtectionAddon: doc.saleProtectionAddon,
+    saleProtectionFee: doc.saleProtectionFee,
     platformFee: doc.platformFee,
     /*
      * 🛑 `gstAmount` -> `tax`, and codHandlingFee alongside it.

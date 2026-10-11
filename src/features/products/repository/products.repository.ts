@@ -21,6 +21,7 @@ import { parseSearchTxtQuery } from "../../../utils/search-txt";
 // from returning the whole catalogue.
 import {
   planSearchTxt,
+  SEARCH_REFINE_WINDOW,
   refineSearchTxt,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
@@ -154,6 +155,81 @@ function interpolateDefaults(
     series: names[names.length - 2],
     siteName: "LetItRip",
   }).text;
+}
+
+/**
+ * Keep `availableQuantity` in step when a seller edits `stockQuantity`.
+ *
+ * 🛑 THE BUG THIS CLOSES: A SELLER COULD NOT RESTOCK.
+ *
+ * There are two stock numbers. `stockQuantity` is seller-authored and is the
+ * only one any of the three product forms exposes. `availableQuantity` is
+ * system-owned, seeded from `stockQuantity` **once, at create**, and
+ * thereafter driven by checkout decrements and timeout restores.
+ *
+ * Nothing re-synced them. `updateProduct` is a bare spread, and grep for
+ * `availableQuantity` across `src/app/api/store/products/**` and
+ * `seller-actions.ts` returns ZERO. So: a product sells out
+ * (`availableQuantity: 0`), the seller edits `stockQuantity` 0 → 10, and the
+ * product STAYS UNBUYABLE — purchasability gates on `availableQuantity > 0`
+ * in three independent places (`service.ts`, the cart route, and the public
+ * list filter). The only field the seller can reach is the one that does not
+ * control availability.
+ *
+ * With 76–93% of competitor catalogues sold out, restock is the main
+ * lifecycle event, not an edge case.
+ *
+ * WHY A DELTA AND NOT `availableQuantity = stockQuantity`: the difference
+ * between the two IS the outstanding reservation — units held by placed-but-
+ * unpaid orders. Overwriting would hand those units back to the shelf and
+ * oversell them. So carry the reservation forward:
+ *
+ *     reserved = prevStock - prevAvailable        (clamped at 0)
+ *     available = nextStock - reserved            (clamped at 0)
+ *
+ * Examples: 10 stock / 10 available, edit to 12 → 12. 10 stock / 7 available
+ * (3 reserved), edit to 12 → 9. Sold out at 0/0, edit to 10 → 10.
+ *
+ * 🛑 Returns `{}` — not a value — whenever the write does not name
+ * `stockQuantity`, or names `availableQuantity` explicitly. The second case
+ * is what keeps the checkout decrement, the stock-restore job and
+ * `updateAvailableQuantity` authoritative: they write `availableQuantity`
+ * directly and must never have it recomputed from a stale `stockQuantity`
+ * underneath them.
+ *
+ * 🛑 EXPORTED, and not merely for tidiness. A BULK stock edit cannot go
+ * through `update` — that is 50 sequential round trips, and Rule #6 budgets a
+ * request at ~3 — so it writes through `batchUpdateEach`. But the delta is
+ * PER DOCUMENT (each product carries its own reservation), which means a bulk
+ * route has to apply this rule itself. Re-deriving it there is Root Cause
+ * #75's shape on the one field whose whole history is that nothing re-synced
+ * it. So the rule is exported and the bulk route calls THIS.
+ *
+ * 🛑 It cannot become a `BaseRepository` write hook, which was the first
+ * thing I tried. A hook receives `{...doc, ...patch}`, where `stockQuantity`
+ * is already the NEXT value — so `prevStock` is gone and `reserved` is
+ * uncomputable. The rule genuinely needs both documents.
+ */
+export function resolveStockResync(
+  current: ProductDocument | null,
+  data: Partial<ProductDocument>,
+): Partial<ProductDocument> {
+  if (!current) return {};
+  if (!("stockQuantity" in data)) return {};
+  // An explicit availableQuantity write wins — see the 🛑 above.
+  if ("availableQuantity" in data) return {};
+
+  const nextStock = data.stockQuantity;
+  if (typeof nextStock !== "number" || !Number.isFinite(nextStock)) return {};
+
+  const prevStock = typeof current.stockQuantity === "number" ? current.stockQuantity : 0;
+  const prevAvailable =
+    typeof current.availableQuantity === "number" ? current.availableQuantity : prevStock;
+
+  const reserved = Math.max(0, prevStock - prevAvailable);
+  const nextAvailable = Math.max(0, nextStock - reserved);
+  if (nextAvailable === prevAvailable) return {};
+  return { availableQuantity: nextAvailable };
 }
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
@@ -508,6 +584,24 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       "seoTitleTemplate",
       "seoDescriptionTemplate",
       "seoKeywords",
+      /*
+       * C5a — the PACKED parcel figures.
+       *
+       * 🛑 These are resolved up the ancestor chain like everything else here,
+       * and the field they fill is deliberately OPTIONAL on the product: the
+       * figure a carrier bills on is the packed box, not the item, and a bey
+       * is ~30 g against ~300 g boxed. A required product weight would
+       * therefore be an ITEM weight, systematically under-estimating every
+       * booking — and because the booking is capped at the amount collected
+       * from the buyer, systematic under-estimation means silently absorbing
+       * the difference.
+       *
+       * So the category's packed default drives the checkout ESTIMATE, this
+       * fills it when the leaf declares one, the product may refine it, and
+       * the real parcel figure is entered at shipment time.
+       */
+      "weightG",
+      "dimensionsCm",
     ] as const;
     const isEmpty = (v: unknown) =>
       v == null || (Array.isArray(v) && v.length === 0);
@@ -600,6 +694,23 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     }
 
     /*
+     * C5a — fill-blank, never overwrite. A seller who weighed their own packed
+     * box has measured something the category only estimates.
+     *
+     * 🛑 `input.weightG == null`, not `!input.weightG`. A zero is nonsense for
+     * a parcel but it is an explicit value, and the falsy test would replace
+     * it with the category's figure on every save — the same distinction
+     * `gstRate` needs two blocks up, and for the same reason: "nobody said"
+     * and "somebody said zero" are different facts.
+     */
+    if (resolved.weightG != null && input.weightG == null) {
+      out.weightG = resolved.weightG;
+    }
+    if (resolved.dimensionsCm && !input.dimensionsCm) {
+      out.dimensionsCm = { ...resolved.dimensionsCm };
+    }
+
+    /*
      * Features MERGE rather than replace — the field's own contract, and the
      * reason the blader linkage works: a seller who ticks "Japan Import" keeps
      * it and also gets `feature-blader-tyson-granger` from the Dragoon G leaf.
@@ -684,68 +795,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     "brandSlug",
   ] as const;
 
-  /**
-   * Keep `availableQuantity` in step when a seller edits `stockQuantity`.
-   *
-   * 🛑 THE BUG THIS CLOSES: A SELLER COULD NOT RESTOCK.
-   *
-   * There are two stock numbers. `stockQuantity` is seller-authored and is the
-   * only one any of the three product forms exposes. `availableQuantity` is
-   * system-owned, seeded from `stockQuantity` **once, at create**, and
-   * thereafter driven by checkout decrements and timeout restores.
-   *
-   * Nothing re-synced them. `updateProduct` is a bare spread, and grep for
-   * `availableQuantity` across `src/app/api/store/products/**` and
-   * `seller-actions.ts` returns ZERO. So: a product sells out
-   * (`availableQuantity: 0`), the seller edits `stockQuantity` 0 → 10, and the
-   * product STAYS UNBUYABLE — purchasability gates on `availableQuantity > 0`
-   * in three independent places (`service.ts`, the cart route, and the public
-   * list filter). The only field the seller can reach is the one that does not
-   * control availability.
-   *
-   * With 76–93% of competitor catalogues sold out, restock is the main
-   * lifecycle event, not an edge case.
-   *
-   * WHY A DELTA AND NOT `availableQuantity = stockQuantity`: the difference
-   * between the two IS the outstanding reservation — units held by placed-but-
-   * unpaid orders. Overwriting would hand those units back to the shelf and
-   * oversell them. So carry the reservation forward:
-   *
-   *     reserved = prevStock - prevAvailable        (clamped at 0)
-   *     available = nextStock - reserved            (clamped at 0)
-   *
-   * Examples: 10 stock / 10 available, edit to 12 → 12. 10 stock / 7 available
-   * (3 reserved), edit to 12 → 9. Sold out at 0/0, edit to 10 → 10.
-   *
-   * 🛑 Returns `{}` — not a value — whenever the write does not name
-   * `stockQuantity`, or names `availableQuantity` explicitly. The second case
-   * is what keeps the checkout decrement, the stock-restore job and
-   * `updateAvailableQuantity` authoritative: they write `availableQuantity`
-   * directly and must never have it recomputed from a stale `stockQuantity`
-   * underneath them.
-   */
-  private static resyncAvailableQuantity(
-    current: ProductDocument | null,
-    data: Partial<ProductDocument>,
-  ): Partial<ProductDocument> {
-    if (!current) return {};
-    if (!("stockQuantity" in data)) return {};
-    // An explicit availableQuantity write wins — see the 🛑 above.
-    if ("availableQuantity" in data) return {};
-
-    const nextStock = data.stockQuantity;
-    if (typeof nextStock !== "number" || !Number.isFinite(nextStock)) return {};
-
-    const prevStock = typeof current.stockQuantity === "number" ? current.stockQuantity : 0;
-    const prevAvailable =
-      typeof current.availableQuantity === "number" ? current.availableQuantity : prevStock;
-
-    const reserved = Math.max(0, prevStock - prevAvailable);
-    const nextAvailable = Math.max(0, nextStock - reserved);
-    if (nextAvailable === prevAvailable) return {};
-    return { availableQuantity: nextAvailable };
-  }
-
   override async update(
     id: string,
     data: Partial<ProductDocument>,
@@ -764,7 +813,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const derived = touchesTaxonomy
       ? await this.deriveTaxonomy({ ...current, ...data })
       : {};
-    const stock = ProductRepository.resyncAvailableQuantity(current, data);
+    const stock = resolveStockResync(current, data);
     const merged = { ...current, ...data, ...derived, ...stock } as ProductDocument;
     const updated = await super.update(id, {
       ...data,
@@ -1104,6 +1153,29 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     isSold: { canFilter: true, canSort: true },
     isPartOfBundle: { canFilter: true, canSort: false },
     isTestData: { canFilter: true, canSort: false },
+    /*
+     * The warehouse location — C4.
+     *
+     * 🛑 `physicalLocation` was absent from this config entirely, so a filter
+     * on it was DROPPED SILENTLY: `sieve.ts` sets `throwExceptions: false`, so
+     * `findField()` returning undefined removes the clause rather than
+     * raising. A seller could set a location and then filter by it to no
+     * effect, with nothing anywhere saying so — Root Cause #62's
+     * EMITTED_BUT_UNFILTERABLE shape.
+     *
+     * Nested paths, because that is what Firestore filters on
+     * (`physicalLocation.zone`), and `canSort: false` on all three: sorting by
+     * bin would pair an orderBy with whatever else is filtered and demand a
+     * composite index per combination, which is the trap next door
+     * (Root Cause #59). Browsing a bin is a FILTER, not a sort.
+     *
+     * The primary way to find a location is still `searchTxt` — see
+     * `physicalLocationTokens`. These exist so a dashboard can ask the precise
+     * question ("zone A exactly") where search answers the loose one.
+     */
+    "physicalLocation.zone": { canFilter: true, canSort: false },
+    "physicalLocation.shelf": { canFilter: true, canSort: false },
+    "physicalLocation.bin": { canFilter: true, canSort: false },
     brandSlug: { canFilter: true, canSort: false },
     sublistingCategoryId: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
@@ -1431,13 +1503,47 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const plan = planSearchTxt(opts?.search);
     if (plan.empty) return emptySearchResult<ProductDocument>();
 
+    /*
+     * ── D2 Fix 2: a MULTI-TERM search over-fetches a window ────────────────
+     *
+     * 🛑 The bug: `refineSearchTxt` used to filter the already-paginated page,
+     * so a two-word search could only ever return matches that happened to fall
+     * inside one page window — rows 51+ matching both terms were unreachable,
+     * and `hasMore: false` asserted there was no page 2. A search returning 7
+     * of 40 real matches reported "7 results" and disabled Next, which reads as
+     * a working search.
+     *
+     * So for a multi-term query the FETCH asks for a bounded window and the
+     * refine slices the requested page out of it. A single-term query is
+     * untouched: its one `array-contains` clause paginates exactly, there is
+     * nothing to refine, and over-fetching would be pure cost.
+     *
+     * 🛑 Bounded, not unbounded (Rule #6): one read of at most
+     * `SEARCH_REFINE_WINDOW`, and when that saturates the result carries
+     * `truncated` so the total renders as a floor rather than a false total.
+     */
+    const isMultiTerm = plan.rest.length > 0;
+    const requestedPage = Math.max(1, Number(model?.page ?? 1) || 1);
+    const requestedPageSize = Math.max(1, Number(model?.pageSize ?? 20) || 20);
+
     const result = await this.sieveQuery<ProductDocument>(
-      model,
+      /*
+       * The window is requested through the MODEL, not a new `SieveOptions`
+       * field — `sieveQuery` already derives its page from `model.page` /
+       * `model.pageSize`, so overriding them needs no API change and no second
+       * way to express a page size.
+       */
+      isMultiTerm ? { ...model, page: 1, pageSize: SEARCH_REFINE_WINDOW } : model,
       ProductRepository.SIEVE_FIELDS,
       {
         baseQuery: this.buildScopedQuery(opts),
         defaultPageSize: 20,
-        maxPageSize: 100,
+        /*
+         * 🛑 `maxPageSize` has to rise with the window or Sieve clamps the
+         * request back to 100 — and the window would silently be a page again,
+         * which is the original bug with a larger constant.
+         */
+        maxPageSize: isMultiTerm ? SEARCH_REFINE_WINDOW : 100,
         aliases: ProductRepository.FILTER_ALIASES,
       },
     );
@@ -1454,7 +1560,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // this page only. That is the known post-pagination-filter debt, not a new
     // invention — reporting the pre-filter total would promise pages that
     // render empty.
-    return refineSearchTxt(result, plan.rest);
+    return refineSearchTxt(
+      result,
+      plan.rest,
+      isMultiTerm
+        ? {
+            page: requestedPage,
+            pageSize: requestedPageSize,
+            // Saturated means more may exist beyond the window, so `total` is a
+            // FLOOR and `truncated` says so.
+            windowSaturated: (result.items?.length ?? 0) >= SEARCH_REFINE_WINDOW,
+          }
+        : undefined,
+    );
   }
 
   /**

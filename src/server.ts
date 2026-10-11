@@ -940,7 +940,40 @@ export {
   computeWhatsAppNotifyFee,
   computeGiftWrapFee,
   computeShipmentProtectionFee,
+  computeSaleProtectionFee,
 } from "./_internal/shared/fees/calculator";
+// C5e buyer protections — the pure three-tier gate plus the one fee pair
+// every money path must agree on. Public API because the capture route
+// (/api/payment/create-order) is one of the three sites that must agree.
+// The realised-price search tool (C1 + the search-first redirect). SERVER
+// only: it reads Firestore through two repositories, so it must never reach
+// client.ts (verify-entries would catch firebase-admin, but the import chain
+// is the thing to keep clean — Root Cause #6).
+export { searchPriceIndex, PRICE_INDEX_SEARCH_LIMIT, PRICE_INDEX_MIN_QUERY_LENGTH } from "./_internal/server/features/price-index/search";
+export type {
+  PriceIndexSearchResponse,
+  PriceIndexSearchResult,
+  PriceIndexSearchResultBand,
+} from "./_internal/server/features/price-index/search";
+export {
+  protectionAvailability,
+  computeProtectionFees,
+  adjudicateClaim,
+  badgesFor,
+  showsRiskNotice,
+  showsSafetyBadge,
+  returnDestination,
+  rtoDestination,
+  PROTECTION_KINDS,
+} from "./_internal/shared/features/shipping/protections";
+export type {
+  ProtectionKind,
+  ProtectionAvailability,
+  ProtectionTierInput,
+  ProtectionUnavailableReason,
+  ClaimFinding,
+  ClaimOutcome,
+} from "./_internal/shared/features/shipping/protections";
 export type {
   FeeCommissionRates,
   CheckoutFees,
@@ -949,6 +982,7 @@ export type {
   WhatsAppNotifyFeeRates,
   GiftWrapFeeRates,
   ShipmentProtectionFeeRates,
+  SaleProtectionFeeRates,
 } from "./_internal/shared/fees/calculator";
 // [SERVER-ONLY] Payout refund deduction action
 export {
@@ -1923,3 +1957,48 @@ export {
   draftToProductInput,
   productToDraft,
 } from "./features/seller/utils/product-draft-mapping";
+
+// C5g/C5h/C5i — return custody, destination resolution and the abuse signal.
+// Pure: no Firestore, no repository. The counters the abuse signal reads are
+// PRE-COMPUTED by the daily job and passed in (Root Cause #104).
+export {
+  RETURN_CUSTODY_STATES,
+  RETURN_CUSTODY_COPY,
+  isTerminalCustody,
+  canAdvanceCustody,
+  nextCustodyState,
+  custodyOwner,
+  isActionableBy,
+} from "./_internal/shared/features/returns/custody";
+export type { ReturnCustodyState } from "./_internal/shared/features/returns/custody";
+export {
+  resolveReturnAddress,
+  RTO_ENTRY_CUSTODY,
+  rtoCostBearer,
+  RETURN_ABUSE_SCAM_TYPES,
+  RETURN_ABUSE_THRESHOLDS,
+  returnAbuseSignals,
+  enforcementFor,
+} from "./_internal/shared/features/returns/destination";
+export type {
+  ReturnAddressResolution,
+  ResolveReturnAddressInput,
+  ReturnAbuseSignal,
+  ReturnAbuseCounters,
+  RtoCostBearer,
+} from "./_internal/shared/features/returns/destination";
+
+// C5f — courier ratings. Two numbers, never blended; see the module header.
+export {
+  COURIER_RATING_MIN_CONFIDENT_SAMPLES,
+  courierRatingDisplay,
+  isValidCourierVote,
+  courierVoteId,
+  rollUpCourierVotes,
+} from "./_internal/shared/features/shipping/courier-rating";
+export type {
+  CourierRatingPair,
+  CourierRatingDisplay,
+  CourierRatingVote,
+  CourierStats,
+} from "./_internal/shared/features/shipping/courier-rating";

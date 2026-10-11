@@ -320,6 +320,9 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   shipping: {
     estimatedDays: 7,
     minOrderForFree: 999,
+    // C5c — manual until a Shiprocket provider AND credentials exist. A
+    // seeded `shiprocket` would throw at boot by design.
+    provider: "manual" as const,
   },
   returns: {
     windowDays: 7,
@@ -479,6 +482,9 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     shipmentProtectionFeeEnabled: true,
     shipmentProtectionFeePercent: 2,
     shipmentProtectionFeeMin: 30,
+    saleProtectionFeeEnabled: true,
+    saleProtectionFeePercent: 3,
+    saleProtectionFeeMin: 49,
     sellerShippingFixed: 0,
     platformShippingPercent: 0,
     platformShippingFixedMin: 0,

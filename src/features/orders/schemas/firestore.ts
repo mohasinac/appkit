@@ -9,6 +9,7 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 import type { ListingType } from "../../products/types";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
 import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
+import type { ReturnCustodyState } from "../../../_internal/shared/features/returns/custody";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
 //
@@ -238,6 +239,19 @@ export interface OrderDocumentItem {
    * products-map fallback rather than treating absence as "no category".
    */
   categorySlug?: string;
+  /**
+   * The condition this unit was in AT THE TIME OF SALE.
+   *
+   * 🛑 Snapshotted for the same reason as `hsnCode` / `gstRate` / `finalSale` /
+   * `categorySlug` above: reading `product.condition` at rollup time lets a
+   * seller who refurbishes and relists the same slug retroactively re-file
+   * every past sale under the new condition, and the per-condition price band
+   * would then describe a market that never existed.
+   *
+   * Absent on every order written before this, which is why the rollup keeps
+   * its products-map fallback rather than treating absence as a condition.
+   */
+  condition?: string;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
@@ -377,6 +391,54 @@ export interface OrderDocument extends BaseDocument {
   /** Optional buyer elaboration alongside the coded reason. */
   returnReasonNote?: string;
   returnRequestedAt?: Date;
+
+  // ── C5g: custody. Where the parcel is, and who owns the next step ─────────
+  /**
+   * The return's own state machine — `requested` → `approved` → `in_transit`
+   * → `received` → `inspected` → `resolved`.
+   *
+   * 🛑 A SUB-STATUS, not five new `OrderStatus` members. `OrderStatus` keeps
+   * its two return values (`return_requested` / `returned`) because it drives
+   * nine status chips, the Active/Closed scope `Record`, badges and filters —
+   * and five extra members would appear in all of them while applying only to
+   * a return, all mapping to "Active", adding a chip and no information. See
+   * `_internal/shared/features/returns/custody.ts` for the full argument.
+   *
+   * Absent on every order that has never had a return requested.
+   */
+  returnCustody?: ReturnCustodyState;
+  /**
+   * Where the buyer was told to send it — SNAPSHOTTED at approval.
+   *
+   * 🛑 Derived by `returnDestination()` and then frozen, never recomputed. The
+   * inputs are `saleProtectionAddon` and the store's admin-granted
+   * `returnsDirectToSeller`, and an admin flipping that flag while a parcel is
+   * in the post must not retroactively change where the buyer was told to post
+   * it. Same reasoning as every other snapshot on this document
+   * (`hsnCode`/`gstRate`/`finalSale`/`condition`): a past instruction is fixed.
+   */
+  returnDestination?: "warehouse" | "seller";
+  /** The address the buyer was given, resolved once and recorded verbatim. */
+  returnAddress?: string;
+  /** Set when the buyer marks it posted; `in_transit` without one is a bug. */
+  returnPostedAt?: Date;
+  returnReceivedAt?: Date;
+  /**
+   * What a human found on opening it.
+   *
+   * 🛑 `finding` decides WHO PAYS and never whether a protected buyer is
+   * refunded — see `adjudicateClaim`. If inspection could block a protected
+   * refund then "no questions asked" is false, and this field would be
+   * rebuilding the dead-badge problem one level up.
+   */
+  returnInspection?: {
+    finding: "genuine" | "change-of-mind";
+    note?: string;
+    /** Actor uid only. 🛑 Never a name or an email — this document is not
+     *  PII-encrypted on these paths and `statusHistory` carries the same rule. */
+    inspectedBy?: string;
+    inspectedAt?: Date;
+  };
   /**
    * Which lines the buyer wants to return. Absent means the whole order —
    * the same convention `processRefundAction`'s `itemIds` already uses.
@@ -406,10 +468,23 @@ export interface OrderDocument extends BaseDocument {
   giftWrapFee?: number;
   /** Optional buyer-written gift message, shown to the seller for fulfilment. Capped length. */
   giftWrapMessage?: string;
-  /** Buyer opted into shipment protection (loss/damage insurance) at checkout (unchecked by default). */
+  /** Buyer opted into shipment protection (loss/damage IN TRANSIT) at checkout (unchecked by default). */
   shipmentProtectionAddon?: boolean;
   /** Fee charged for shipment protection, decimal rupees — snapshot of siteSettings.commissions.shipmentProtectionFeePercent/Min at order time. */
   shipmentProtectionFee?: number;
+  /**
+   * Buyer opted into SALE protection — the item itself, not the transit (C5e).
+   *
+   * 🛑 These two flags are what a claim reads, and they are the record that the
+   * three tiers passed at the time of sale. A seller who later withdraws
+   * `supportsSaleProtection`, or an admin who disables the add-on
+   * platform-wide, must not retroactively void cover already paid for — which
+   * is why eligibility at claim time reads THIS field and
+   * `OrderDocumentItem.finalSale`, never the live store or product.
+   */
+  saleProtectionAddon?: boolean;
+  /** Fee charged for sale protection, decimal rupees — snapshot of siteSettings.commissions.saleProtectionFeePercent/Min at order time. */
+  saleProtectionFee?: number;
 
   // ── P-8 GST — buyer-facing tax breakdown, all decimal rupees, set when siteSettings.gst.enabled ──
   /** Order subtotal before GST — the amount GST is computed on. */
@@ -491,6 +566,27 @@ export interface OrderDocument extends BaseDocument {
   shippingMethod?: ShippingMethod;
   shippingCarrier?: string;
   trackingUrl?: string;
+  /**
+   * The carrier's label PDF, once a shipment has been booked.
+   *
+   * 🛑 DECLARED 2026-10-11, and the reason is that it was being READ without
+   * being declared. `GET /api/user/orders/[id]/label` reached it through an
+   * inline `(order as { shippingLabelUrl?: string })` cast — a cast at a
+   * boundary, which is where this class of bug lives (Root Cause #70/#98) — so
+   * the field existed in exactly one expression, on no schema, with no writer.
+   * That route could therefore only ever return its 404 branch, and nothing
+   * said so: `tsc` cannot check a field nobody declared, and a 404 from a
+   * "download label" button reads as "not shipped yet" rather than as a route
+   * that cannot succeed.
+   *
+   * Declaring it is the part that can be done and verified now. 🛑 It still has
+   * NO WRITER — `ManualShippingProvider.generateLabel` throws, and the
+   * Shiprocket provider that would populate it cannot be built against the live
+   * API without credentials (C5c). So the route's 404 remains correct for every
+   * order today; what changes is that the field is now type-checked, and
+   * whatever writes it will be caught by the compiler rather than by a cast.
+   */
+  shippingLabelUrl?: string;
   payoutStatus?: OrderPayoutStatus;
   payoutId?: string;
   offerId?: string;

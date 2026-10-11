@@ -1067,6 +1067,16 @@ export const FAQ_FIELDS = {
     ACCOUNT_SECURITY: "account_security",
     TECHNICAL_SUPPORT: "technical_support",
     GENERAL: "general",
+    /*
+     * 🛑 `scam_awareness` was MISSING here and from the chips, while THREE
+     * seeded FAQs already carried it — so those rows had no chip and were
+     * unreachable from the category UI. Exactly Root Cause #72's coverage gap:
+     * the audit that checks no chip names a dead value never checked that every
+     * real value HAS a chip.
+     */
+    SCAM_AWARENESS: "scam_awareness",
+    /* D6b — see the `FAQCategory` union for why this is not `orders_payment`. */
+    FEES_AND_TAXES: "fees_and_taxes",
   },
 } as const;
 

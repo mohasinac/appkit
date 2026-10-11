@@ -194,6 +194,41 @@ export function computeShipmentProtectionFee(subtotal: number, addonSelected: bo
 }
 
 /**
+ * Sale protection — C5e. The SECOND cover, and a separate fee because it
+ * answers a different failure.
+ *
+ * Shipment protection covers loss or damage in TRANSIT; this covers the item
+ * itself (not as described, wrong item, item issues). A parcel that arrives
+ * intact containing the wrong bey is a sale problem, not a shipping one — see
+ * `_internal/shared/features/shipping/protections.ts` for why the two must not
+ * be blended, and for the `finalSale` asymmetry that makes it impossible.
+ *
+ * Priced higher than shipment protection (3% / ₹49 floor) because the claim it
+ * underwrites is unconditional: a protected change-of-mind refund is still
+ * paid, and absorbed by the platform. That absorption is what the fee buys.
+ */
+export interface SaleProtectionFeeRates {
+  /** Admin master toggle — the addon isn't charged (even if the buyer selected it) unless this is true. */
+  saleProtectionFeeEnabled?: boolean;
+  /** Percent of subtotal. Falls back to 3%. */
+  saleProtectionFeePercent?: number;
+  /** Rupee floor. Falls back to ₹49. */
+  saleProtectionFeeMin?: number;
+}
+
+const DEFAULT_SALE_PROTECTION_FEE_PERCENT = 3;
+const DEFAULT_SALE_PROTECTION_FEE_MIN = 49;
+
+/** Sale-protection addon fee: max(fixed floor, subtotal × percent) — charged only when the buyer opted in AND the admin has the addon enabled. */
+export function computeSaleProtectionFee(subtotal: number, addonSelected: boolean, rates: SaleProtectionFeeRates): number {
+  if (!addonSelected || !rates.saleProtectionFeeEnabled) return 0;
+  const percent = rates.saleProtectionFeePercent ?? DEFAULT_SALE_PROTECTION_FEE_PERCENT;
+  const min = rates.saleProtectionFeeMin ?? DEFAULT_SALE_PROTECTION_FEE_MIN;
+  const percentFee = roundRupees(subtotal * (percent / 100));
+  return Math.max(min, percentFee);
+}
+
+/**
  * P-8 GST — buyer-facing product tax, distinct from the platform-commission
  * GST above. Intra-state orders split the rate evenly between CGST + SGST;
  * inter-state orders charge the full rate as IGST. All amounts in decimal rupees.

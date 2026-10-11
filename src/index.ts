@@ -409,6 +409,19 @@ export { CONFIRMATION_MESSAGES } from "./values/index";
 // INFO_MESSAGES - Constant used across modules.
 export { INFO_MESSAGES } from "./values/index";
 // [CONFIG]-Application configuration constant â€" route path, API endpoint, design token, or feature flag.
+/*
+ * The warehouse-location helpers (C4). `formatPhysicalLocation` was already
+ * here in spirit — three appkit views deep-import it — but nothing was
+ * exported, so the consumer's two bulk-location routes each hand-rolled their
+ * own validation. That is why there were two validators and the one in force
+ * was neither.
+ */
+export {
+  formatPhysicalLocation,
+  normalisePhysicalLocation,
+  physicalLocationTokens,
+} from "./utils/physical-location";
+export type { PhysicalLocationParts } from "./utils/physical-location";
 export { deepClone } from "./utils/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // deepMerge - Shared export for deep merge.
@@ -1017,6 +1030,12 @@ export { blogPostJsonLd } from "./seo/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // breadcrumbJsonLd - Shared export for breadcrumb json ld.
 export { breadcrumbJsonLd } from "./seo/index";
+// D4 — the two builders the category/brand pages needed and that did not exist.
+// `collectionPageJsonLd` says what a listing page IS; `itemListJsonLd` says what
+// it contains. Neither ever carries a price: the page shows a signed-out crawler
+// none, and `audit-guest-price-leak` R3 blocks it.
+export { collectionPageJsonLd, itemListJsonLd } from "./seo/index";
+export type { CollectionPageJsonLdInput, ItemListJsonLdEntry } from "./seo/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // createSeoConfig - Helper for create seo config.
 export { createSeoConfig } from "./seo/index";
@@ -1788,7 +1807,7 @@ export { catalogueRepository } from "./repositories/index";
 export { savedPaymentMethodsRepository, SavedPaymentMethodsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // productRepository - Shared export for product repository.
-export { productRepository } from "./repositories/index";
+export { productRepository, resolveStockResync } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // pageViewsRepository - day-bucketed page-view counters by entity + URL.
 export { pageViewsRepository, PAGE_VIEW_ENTITY_TYPES } from "./repositories/index";
@@ -7248,8 +7267,41 @@ export {
   computeWhatsAppNotifyFee,
   computeGiftWrapFee,
   computeShipmentProtectionFee,
+  computeSaleProtectionFee,
   calculateGst,
 } from "./_internal/shared/fees/calculator";
+// C5e buyer protections — the pure three-tier gate plus the one fee pair
+// every money path must agree on. Public API because the capture route
+// (/api/payment/create-order) is one of the three sites that must agree.
+// The realised-price search tool (C1 + the search-first redirect). SERVER
+// only: it reads Firestore through two repositories, so it must never reach
+// client.ts (verify-entries would catch firebase-admin, but the import chain
+// is the thing to keep clean — Root Cause #6).
+export { searchPriceIndex, PRICE_INDEX_SEARCH_LIMIT, PRICE_INDEX_MIN_QUERY_LENGTH } from "./_internal/server/features/price-index/search";
+export type {
+  PriceIndexSearchResponse,
+  PriceIndexSearchResult,
+  PriceIndexSearchResultBand,
+} from "./_internal/server/features/price-index/search";
+export {
+  protectionAvailability,
+  computeProtectionFees,
+  adjudicateClaim,
+  badgesFor,
+  showsRiskNotice,
+  showsSafetyBadge,
+  returnDestination,
+  rtoDestination,
+  PROTECTION_KINDS,
+} from "./_internal/shared/features/shipping/protections";
+export type {
+  ProtectionKind,
+  ProtectionAvailability,
+  ProtectionTierInput,
+  ProtectionUnavailableReason,
+  ClaimFinding,
+  ClaimOutcome,
+} from "./_internal/shared/features/shipping/protections";
 export type {
   FeeCommissionRates,
   CheckoutFees,
@@ -7258,6 +7310,7 @@ export type {
   WhatsAppNotifyFeeRates,
   GiftWrapFeeRates,
   ShipmentProtectionFeeRates,
+  SaleProtectionFeeRates,
   GstBreakdown,
 } from "./_internal/shared/fees/calculator";
 // EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).
@@ -10018,3 +10071,58 @@ export {
   draftToProductInput,
   productToDraft,
 } from "./features/seller/utils/product-draft-mapping";
+
+// The realised-price lookup view. Client — it owns a search box and a fetch.
+export { PriceIndexToolView } from "./features/price-index/components/PriceIndexToolView";
+export type {
+  PriceIndexToolViewProps,
+  PriceIndexToolResponse,
+  PriceIndexResultRow,
+  PriceIndexBandRow,
+  PriceIndexConditionRow,
+} from "./features/price-index/components/PriceIndexToolView";
+
+// C5g/C5h/C5i — return custody, destination resolution and the abuse signal.
+// Pure: no Firestore, no repository. The counters the abuse signal reads are
+// PRE-COMPUTED by the daily job and passed in (Root Cause #104).
+export {
+  RETURN_CUSTODY_STATES,
+  RETURN_CUSTODY_COPY,
+  isTerminalCustody,
+  canAdvanceCustody,
+  nextCustodyState,
+  custodyOwner,
+  isActionableBy,
+} from "./_internal/shared/features/returns/custody";
+export type { ReturnCustodyState } from "./_internal/shared/features/returns/custody";
+export {
+  resolveReturnAddress,
+  RTO_ENTRY_CUSTODY,
+  rtoCostBearer,
+  RETURN_ABUSE_SCAM_TYPES,
+  RETURN_ABUSE_THRESHOLDS,
+  returnAbuseSignals,
+  enforcementFor,
+} from "./_internal/shared/features/returns/destination";
+export type {
+  ReturnAddressResolution,
+  ResolveReturnAddressInput,
+  ReturnAbuseSignal,
+  ReturnAbuseCounters,
+  RtoCostBearer,
+} from "./_internal/shared/features/returns/destination";
+
+// C5f — courier ratings. Two numbers, never blended; see the module header.
+export {
+  COURIER_RATING_MIN_CONFIDENT_SAMPLES,
+  courierRatingDisplay,
+  isValidCourierVote,
+  courierVoteId,
+  rollUpCourierVotes,
+} from "./_internal/shared/features/shipping/courier-rating";
+export type {
+  CourierRatingPair,
+  CourierRatingDisplay,
+  CourierRatingVote,
+  CourierStats,
+} from "./_internal/shared/features/shipping/courier-rating";

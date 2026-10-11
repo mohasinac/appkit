@@ -47,6 +47,7 @@ import {
   priceIndexRepository,
   type PriceIndexBand,
   type PriceIndexByPath,
+  type PriceIndexConditionBand,
 } from "../../../../features/categories/repository/price-index.repository";
 import type { JobContext } from "../runtime/types";
 
@@ -69,6 +70,18 @@ interface SaleSample {
   amount: number;
   at: Date;
   via: "standard" | "auction" | "offer";
+  /**
+   * The condition this unit was in when it sold, or `undefined` when nothing
+   * recorded it.
+   *
+   * 🛑 `undefined` is carried rather than defaulted to anything. Bucketing an
+   * unknown condition under `"used"` — or under a synthetic `"unknown"` that
+   * then renders as a band — would publish a figure for a market nobody
+   * measured. A sample with no condition still counts toward the parent band,
+   * because its AMOUNT is a real sale; it is only the per-condition slice it
+   * cannot inform.
+   */
+  condition?: string;
 }
 
 /** An order item as this job reads it. Structural, because documents vary. */
@@ -80,6 +93,8 @@ interface OrderItemLike {
   /** Snapshotted leaf (new orders). Absent on anything written before it. */
   categorySlug?: string;
   listingType?: string;
+  /** Snapshotted condition (new orders); falls back to the product map. */
+  condition?: string;
 }
 
 interface OrderLike {
@@ -136,20 +151,76 @@ function median(sorted: number[]): number {
   return Math.round(raw * 100) / 100;
 }
 
-function toBand(samples: SaleSample[]): PriceIndexBand {
+/**
+ * The arithmetic mean, to the paisa.
+ *
+ * 🛑 Not a substitute for the median — see `PriceIndexBand.mean`. Both are
+ * computed and both are stored, because on a collectibles leaf one grail sale
+ * moves the mean and not the median, and the gap is the thing worth seeing.
+ */
+function mean(amounts: number[]): number {
+  if (amounts.length === 0) return 0;
+  const total = amounts.reduce((s, a) => s + a, 0);
+  return Math.round((total / amounts.length) * 100) / 100;
+}
+
+/** The newest sample, or null for an empty set. */
+function latestOf(samples: SaleSample[]): SaleSample | null {
+  return samples.reduce<SaleSample | null>((best, s) => (!best || s.at > best.at ? s : best), null);
+}
+
+function toConditionBand(samples: SaleSample[]): PriceIndexConditionBand {
   const amounts = samples.map((s) => s.amount).sort((a, b) => a - b);
-  const byPath: PriceIndexByPath = {};
-  for (const s of samples) byPath[s.via] = (byPath[s.via] ?? 0) + 1;
-  const latest = samples.reduce<SaleSample | null>(
-    (best, s) => (!best || s.at > best.at ? s : best),
-    null,
-  );
+  const latest = latestOf(samples);
   return {
     min: amounts[0]!,
     median: median(amounts),
     max: amounts[amounts.length - 1]!,
+    mean: mean(amounts),
+    sampleSize: samples.length,
+    ...(latest ? { lastSold: { amount: latest.amount, at: latest.at } } : {}),
+  };
+}
+
+function toBand(samples: SaleSample[]): PriceIndexBand {
+  const amounts = samples.map((s) => s.amount).sort((a, b) => a - b);
+  const byPath: PriceIndexByPath = {};
+  for (const s of samples) byPath[s.via] = (byPath[s.via] ?? 0) + 1;
+  const latest = latestOf(samples);
+
+  /*
+   * The per-condition slice.
+   *
+   * 🛑 Samples with no recorded condition are SKIPPED here while still counting
+   * toward the parent band above — their amount is a real sale, but they cannot
+   * tell us what condition sold for what. Bucketing them anywhere would invent
+   * a market.
+   *
+   * 🛑 And the key is omitted entirely rather than written as `{}` when nothing
+   * qualifies. An empty object renders as "we measured conditions and found
+   * none", which is false; absence renders as "no breakdown available", which
+   * is true. Same reasoning as `undefined` vs `0` on a count (Root Cause #72).
+   */
+  const byConditionSamples = new Map<string, SaleSample[]>();
+  for (const s of samples) {
+    if (!s.condition) continue;
+    const bucket = byConditionSamples.get(s.condition) ?? [];
+    bucket.push(s);
+    byConditionSamples.set(s.condition, bucket);
+  }
+  const byCondition: Record<string, PriceIndexConditionBand> = {};
+  for (const [condition, bucket] of byConditionSamples) {
+    byCondition[condition] = toConditionBand(bucket);
+  }
+
+  return {
+    min: amounts[0]!,
+    median: median(amounts),
+    max: amounts[amounts.length - 1]!,
+    mean: mean(amounts),
     sampleSize: samples.length,
     byPath,
+    ...(Object.keys(byCondition).length > 0 ? { byCondition } : {}),
     ...(latest ? { lastSold: { amount: latest.amount, at: latest.at, via: latest.via } } : {}),
   };
 }
@@ -182,11 +253,13 @@ export async function runPriceIndexRollup(ctx: JobContext): Promise<void> {
   }
   const leafOf = new Map<string, string>();
   const typeOf = new Map<string, string>();
+  const conditionOf = new Map<string, string>();
   for (const p of rows) {
     if (!p.id) continue;
     const leaf = p.categorySlugs?.[0];
     if (leaf) leafOf.set(p.id, leaf);
     if (p.listingType) typeOf.set(p.id, p.listingType);
+    if (p.condition) conditionOf.set(p.id, p.condition);
   }
 
   const delivered = (await orderRepository.findByStatus("delivered")) as unknown as OrderLike[];
@@ -230,8 +303,21 @@ export async function runPriceIndexRollup(ctx: JobContext): Promise<void> {
         item.listingType ?? (item.productId ? typeOf.get(item.productId) : undefined) ?? "standard";
 
       const types = byLeaf.get(leaf) ?? new Map<string, SaleSample[]>();
+      /*
+       * 🛑 The product's CURRENT condition is a fallback, not the answer.
+       *
+       * A seller who relists the same slug after refurbishing it changes
+       * `product.condition`, which would retroactively re-file an old sale
+       * under the new condition — the same class of lie as recomputing GST
+       * from a changed tax code, which is why `hsnCode`/`gstRate`/`finalSale`
+       * are all snapshotted on the order item. `condition` now is too, and
+       * the map only answers for orders written before that.
+       */
+      const condition =
+        item.condition ?? (item.productId ? conditionOf.get(item.productId) : undefined);
+
       const samples = types.get(listingType) ?? [];
-      samples.push({ amount, at, via });
+      samples.push({ amount, at, via, ...(condition ? { condition } : {}) });
       types.set(listingType, samples);
       byLeaf.set(leaf, types);
       considered += 1;

@@ -65,6 +65,21 @@ export interface PriceIndexBand {
   median: number;
   max: number;
   /**
+   * The arithmetic MEAN, carried alongside the median rather than instead of
+   * it.
+   *
+   * 🛑 They are different quantities and the gap between them is information,
+   * so neither substitutes for the other — the same discipline the market-vs-
+   * sold pair is held to. On a collectibles leaf the two routinely diverge:
+   * nine ₹900 sales and one ₹9,000 grail give a median of ₹900 and a mean of
+   * ₹1,710, and a buyer told only the mean concludes the item costs ₹1,710,
+   * while a seller told only the median prices a mint example like a loose one.
+   *
+   * Which is "the average" depends on the question, which is exactly why the
+   * renderer shows both and labels them rather than picking.
+   */
+  mean: number;
+  /**
    * 🛑 The confidence signal, and the UI must render a small one as a sample
    * size with NO headline number — the same discipline as `truncated`
    * rendering "50+" rather than a false total. A median of two sales is a coin
@@ -72,7 +87,42 @@ export interface PriceIndexBand {
    */
   sampleSize: number;
   byPath?: PriceIndexByPath;
+  /**
+   * Per-CONDITION bands within this listing type.
+   *
+   * 🛑 The single most requested breakdown and the one the blended band hides.
+   * Condition is the dominant price variable in collectibles — the crawl
+   * measured WHS keeping midfake/damaged/incomplete stock in a separate
+   * Clearance category precisely because it cannot be priced with the rest, and
+   * hobson's "Without Box" group runs at a ₹599 median against ₹4,499 for the
+   * same boxed figures. A leaf band spanning `new` and `poor` is an average of
+   * two different markets.
+   *
+   * Keyed by `ProductDocument.condition`. Absent when no sale in the window
+   * recorded one — NOT zeroed, and not back-filled with a guess: "we do not
+   * know what condition these sold in" is a different statement from "they sold
+   * in unknown condition", and only the first is true.
+   */
+  byCondition?: Record<string, PriceIndexConditionBand>;
   lastSold?: { amount: number; at: Date; via?: "standard" | "auction" | "offer" };
+}
+
+/**
+ * A condition slice. Deliberately NARROWER than `PriceIndexBand` — no
+ * `byPath`, no nested `byCondition`, no recursion.
+ *
+ * Slicing a 90-day leaf window by both listing type and condition leaves
+ * single-digit samples fast, so a third axis inside it would be arithmetic on
+ * one sale. `sampleSize` is here for exactly that reason and the renderer must
+ * gate on it with the same threshold as the parent.
+ */
+export interface PriceIndexConditionBand {
+  min: number;
+  median: number;
+  max: number;
+  mean: number;
+  sampleSize: number;
+  lastSold?: { amount: number; at: Date };
 }
 
 /** One day's point, for a series. */
@@ -103,6 +153,35 @@ export class PriceIndexRepository extends BaseRepository<PriceIndexDocument> {
 
   async getForLeaf(leafId: string): Promise<PriceIndexDocument | null> {
     return this.findById(leafId);
+  }
+
+  /**
+   * Bands for several leaves in ONE round trip.
+   *
+   * 🛑 `db.getAll`, not N `findById` calls. The search tool resolves a query to
+   * up to 8 candidate leaves and needs a band for each; eight sequential reads
+   * is eight round trips against the ~3 Rule #6 budgets for a request, and it
+   * is the exact shape `storeAnalytics.ts:94` is cited as the pattern NOT to
+   * copy. `deriveTaxonomy`'s ancestor resolution made the same call for the
+   * same reason.
+   *
+   * 🛑 A missing document is OMITTED from the map, never returned as an empty
+   * band. A leaf with no completed sales must render "no sales recorded yet",
+   * and a zeroed band would render "₹0" — a confident, wrong figure, which is
+   * the failure mode the whole index is written to avoid (`market` vs `sold`,
+   * never blended, never zeroed).
+   */
+  async getManyForLeaves(leafIds: readonly string[]): Promise<Map<string, PriceIndexDocument>> {
+    const ids = [...new Set(leafIds.filter(Boolean))];
+    const out = new Map<string, PriceIndexDocument>();
+    if (ids.length === 0) return out;
+    const refs = ids.map((id) => this.db.collection(PRICE_INDEX_COLLECTION).doc(id));
+    const snaps = await this.db.getAll(...refs);
+    for (const snap of snaps) {
+      if (!snap.exists) continue;
+      out.set(snap.id, { ...(snap.data() as PriceIndexDocument), id: snap.id });
+    }
+    return out;
   }
 
   /**

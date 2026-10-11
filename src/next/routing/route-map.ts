@@ -111,6 +111,15 @@ export const DEFAULT_ROUTE_MAP = {
     ITEM_REQUESTS: "/item-requests",
     ITEM_REQUEST_DETAIL: (id: string) => `/item-requests/${id}`,
     ITEM_REQUESTS_NEW: "/item-requests/new",
+    /*
+     * The TOOLS group — surfaces that answer a question rather than sell
+     * something. `/tools` itself is a real index page, not a `#` placeholder:
+     * the navbar dropdown's trigger is a link, so anyone without a hovering
+     * pointer has to land somewhere, and `audit-nav-page-wiring` checks that
+     * every nav href resolves to a real page.
+     */
+    TOOLS: "/tools",
+    TOOL_PRICE_INDEX: "/tools/price-index",
     SCAM_TYPES: "/scams/types",
     SCAM_FAQS: "/scams/faqs",
     CLASSIFIED: "/classified",

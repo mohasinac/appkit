@@ -52,6 +52,28 @@ export interface StoreShippingConfig {
   defaultProviderId: string;
 }
 
+/**
+ * How this store prices shipping — C5b.
+ *
+ * 🛑 On the STORE, not on the owner's user document, which is where the old
+ * flat number lived (`user.shippingConfig.customShippingPrice`). Shipping is
+ * charged per store and `splitCartIntoOrderGroups` groups on `storeId`, so the
+ * policy has to live at the granularity it is billed at — a user who owns two
+ * stores would otherwise price both the same (Root Cause #65's shape).
+ *
+ * Absent means `DEFAULT_STORE_SHIPPING_POLICY` (`free`), which preserves what
+ * an unconfigured store already did: the old `?? 0` charged the buyer nothing.
+ * See `toStoreShippingPolicy` for why `free` and not `estimate`.
+ */
+export interface StoreShippingPolicyField {
+  mode:
+    | { kind: "free" }
+    | { kind: "flat"; amount: number }
+    | { kind: "estimate" };
+  /** Goods value at or above which shipping is free, whatever the mode. */
+  freeAbove?: number;
+}
+
 // -- Store Document -----------------------------------------------------------
 
 export const StoreStatusValues = {
@@ -185,6 +207,70 @@ export interface StoreDocument extends BaseDocument {
    * products they want converted — see `ProductRepository`.
    */
   pricesIncludeGst?: boolean;
+
+  /**
+   * How this store PRICES shipping — C5b. Absent means `free`.
+   *
+   * 🛑 Named `shippingPricing`, not `shippingPolicy`, because
+   * `shippingPolicy` is ALREADY taken on this document by the seller's
+   * free-text shipping prose. `tsc` caught the collision; the two are
+   * genuinely different things (prose a buyer reads vs. a rule that computes
+   * money) and sharing a name would have made one of them unreadable.
+   *
+   * 🛑 PRIVATE. It is a commercial setting, and `estimate` additionally
+   * reveals that this seller's parcels are booked through our carrier
+   * account. Triaged into `PRIVATE_STORE_FIELDS`; the buyer sees the
+   * resulting AMOUNT at checkout, never the rule that produced it.
+   */
+  shippingPricing?: StoreShippingPolicyField;
+
+  /**
+   * ── Buyer protections, TIER 2 — C5e ──────────────────────────────────────
+   *
+   * Whether this seller has agreed to be held to each cover. Seller-settable
+   * in their own settings; the admin's platform-wide toggles are TIER 1
+   * (`siteSettings.commissions.*FeeEnabled`) and item eligibility is TIER 3.
+   * All three must pass. See
+   * `_internal/shared/features/shipping/protections.ts`.
+   *
+   * 🛑 ABSENT MEANS NOT SUPPORTED, never "unknown". A tri-state where
+   * `undefined` renders neither a badge nor a risk notice is the worst of the
+   * three outcomes — the buyer gets no signal at all and cannot tell a seller
+   * who declined from one who has not been asked. So both default `false`,
+   * which honestly means every existing store shows the notice on day one.
+   * That is the correct starting state, not a migration problem: defaulting
+   * them `true` would enrol every existing seller in a liability they never
+   * accepted.
+   *
+   * 🛑 Both are PUBLIC and deliberately so — the safety badge and the
+   * pre-purchase risk notice are buyer-facing by definition. That is the rare
+   * case where public is right for a new store field, and it has to be NAMED
+   * in `PUBLIC_STORE_FIELDS` rather than assumed (Root Cause #70).
+   */
+  supportsShippingProtection?: boolean;
+  supportsSaleProtection?: boolean;
+
+  /**
+   * ── C5g: ADMIN-GRANTED trust. Routes even a protected claim to the seller ──
+   *
+   * A sale-protection claim normally ships to our warehouse, because we are the
+   * ones underwriting the refund and therefore the ones who need to inspect it.
+   * This flag sends it to the seller instead and skips our inspection.
+   *
+   * 🛑 ADMIN-ONLY, and deliberately NOT next to the two seller-settable
+   * `supports*` flags above despite sitting in the same block. The distinction
+   * is the whole mechanism: a seller who could set this would be **granting
+   * themselves exemption from inspection**, which is exactly the control it
+   * exists to impose.
+   *
+   * 🛑 It must stay out of every seller PATCH schema. A field a seller can send
+   * is a field a seller can set (Root Cause #76's write-shape lesson) — and
+   * `z.object()` STRIPS unknown keys rather than rejecting them, so a seller
+   * route that merely omits it is already safe, while one that spreads the body
+   * is not. The verification asserts its absence from the seller routes rather
+   * than trusting that nobody adds it.
+   */
+  returnsDirectToSeller?: boolean;
 
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {

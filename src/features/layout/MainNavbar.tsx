@@ -17,6 +17,8 @@ export interface MainNavbarItem {
   id?: string;
   /** RBAC permission key — item hidden when user lacks this permission. */
   requiredPermission?: string;
+  /** Sub-items, rendered as a dropdown. One level only — see NavbarLayoutItem. */
+  children?: Array<{ href: string; label: string; description?: string }>;
 }
 
 export interface MainNavbarProps {
@@ -48,6 +50,7 @@ export function MainNavbar({
       label: item.label,
       icon: item.icon,
       highlighted: item.highlighted,
+      ...(item.children?.length ? { children: item.children } : {}),
     }));
 
   const dashboardToggle =

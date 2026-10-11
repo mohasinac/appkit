@@ -355,6 +355,24 @@ export const CATEGORY_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
+// Tools — public surfaces that answer a question rather than sell something
+// ---------------------------------------------------------------------------
+
+export const TOOL_ENDPOINTS = {
+  /**
+   * The realised-price lookup: a query in, matching leaves and their sold
+   * bands out.
+   *
+   * 🛑 `q` is in the PATH QUERY and is the whole cache key, which is the point:
+   * the response is a day-stale aggregate, so it is edge-cacheable for an hour
+   * and a repeated lookup costs no function invocation. A POST body would have
+   * made every search a cache miss on a project that was paused for exceeding
+   * its invocation allowance.
+   */
+  PRICE_INDEX_SEARCH: (q: string) => `/api/tools/price-index?q=${encodeURIComponent(q)}`,
+} as const;
+
+// ---------------------------------------------------------------------------
 // Checkout
 // ---------------------------------------------------------------------------
 
@@ -618,6 +636,7 @@ export const SELLER_ENDPOINTS = {
   FEATURES: "/api/store/features",
   FEATURE_BY_ID: (id: string) => `/api/store/features/${id}`,
   PRODUCTS_BULK_LOCATION: "/api/store/products/bulk-location",
+  PRODUCTS_BULK_STOCK: "/api/store/products/bulk-stock",
   ORDERS_BULK_LOCATION: "/api/store/orders/bulk-location",
   GROUPED_LISTINGS: "/api/store/grouped-listings",
   GROUPED_LISTING_BY_ID: (id: string) => `/api/store/grouped-listings/${id}`,

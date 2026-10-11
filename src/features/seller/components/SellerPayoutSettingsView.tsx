@@ -68,6 +68,21 @@ const payoutSettingsDraftSchema = z.object({
    * catalogue moved.
    */
   pricesIncludeGst: annotate(z.boolean(), { section: "preferences", order: 4, row: "quarter" }),
+  /*
+   * ── C5e, tier 2 of three ─────────────────────────────────────────────────
+   *
+   * Whether this seller agrees to be held to each buyer protection. Alongside
+   * payout settings on purpose: supporting a cover means genuine claims are
+   * charged back to this seller, so it is a payout consequence, not a profile
+   * decoration.
+   *
+   * 🛑 Both default OFF and that is deliberate — see StoreDocument. The
+   * copy below has to say what declining COSTS, because a buyer sees a risk
+   * notice on every listing either way; a seller who does not know that will
+   * read the default as neutral.
+   */
+  supportsShippingProtection: annotate(z.boolean(), { section: "preferences", order: 5, row: "quarter" }),
+  supportsSaleProtection: annotate(z.boolean(), { section: "preferences", order: 6, row: "quarter" }),
 }).superRefine((v, ctx) => {
   if (v.method === "upi") {
     if (!v.upiId.trim()) {
@@ -106,6 +121,8 @@ interface PayoutDraft {
   minimumThreshold: string;
   emiEnabled: boolean;
   pricesIncludeGst: boolean;
+  supportsShippingProtection: boolean;
+  supportsSaleProtection: boolean;
 }
 
 interface SafePayoutDetails {
@@ -141,6 +158,9 @@ const DEFAULT_DRAFT: PayoutDraft = {
   emiEnabled: false,
   // Inclusive is the documented default — see StoreDocument.pricesIncludeGst.
   pricesIncludeGst: true,
+  // OFF by default — matches StoreDocument, and absence must read as declined.
+  supportsShippingProtection: false,
+  supportsSaleProtection: false,
 };
 
 export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
@@ -175,6 +195,8 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           emiEnabled: res?.data?.emiEnabled ?? false,
           // Absent means inclusive, matching the schema default exactly.
           pricesIncludeGst: res?.data?.pricesIncludeGst ?? true,
+          supportsShippingProtection: res?.data?.supportsShippingProtection ?? false,
+          supportsSaleProtection: res?.data?.supportsSaleProtection ?? false,
         });
       })
       .catch(console.error)
@@ -207,6 +229,8 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         ...methodFields,
         emiEnabled: draft.emiEnabled,
         pricesIncludeGst: draft.pricesIncludeGst,
+        supportsShippingProtection: draft.supportsShippingProtection,
+        supportsSaleProtection: draft.supportsSaleProtection,
         taxInfo: {
           gstin: draft.gstin.trim(),
           pan: draft.pan.trim(),
@@ -429,7 +453,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     {
       id: "preferences",
       label: "Preferences",
-      fields: ["autoPayout", "minimumThreshold", "emiEnabled", "pricesIncludeGst"],
+      fields: ["autoPayout", "minimumThreshold", "emiEnabled", "pricesIncludeGst", "supportsShippingProtection", "supportsSaleProtection"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Preferences</Heading>
@@ -481,6 +505,44 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             we collect and remit for you. Turn it{" "}
             <Span weight="semibold">off</Span> and ₹999 is treated as your
             ex-GST price: the listing is shown at ₹1,048.95 and you earn ₹999.
+          </Text>
+
+          <Heading level={3} className="mb-2 mt-4">Buyer Protections</Heading>
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            Two separate covers a buyer can pay for at checkout. Supporting one
+            earns a safety badge on your listings;{" "}
+            <Span weight="semibold">declining shows buyers a risk notice
+            instead</Span> — there is no neutral option, because a buyer who is
+            told nothing cannot tell a seller who declined from one who was
+            never asked.
+          </Text>
+          <Toggle
+            checked={values.supportsShippingProtection}
+            onChange={(checked) => onChange({ supportsShippingProtection: checked })}
+            label="Offer shipment protection — loss or damage in transit"
+            disabled={busy}
+          />
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            The parcel never arrived or arrived damaged. We pursue the courier,
+            not you, and the buyer is refunded from the funds we hold — so a
+            genuine transit loss costs you the item, not an argument.
+          </Text>
+          <Toggle
+            checked={values.supportsSaleProtection}
+            onChange={(checked) => onChange({ supportsSaleProtection: checked })}
+            label="Offer sale protection — item not as described"
+            disabled={busy}
+          />
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            A no-questions-asked refund on the item itself. Be clear about what
+            this means:{" "}
+            <Span weight="semibold">
+              a claim we inspect and find genuine is charged back to you
+            </Span>{" "}
+            — that is the cover. A claim we find to be a change of mind is
+            absorbed by us, which is what the buyer&apos;s fee pays for. Not
+            offered on your final-sale listings, since &quot;no returns&quot;
+            and &quot;no questions asked&quot; cannot both be true.
           </Text>
           {/*
             🛑 This has to be said. The gross-up happens when a product is

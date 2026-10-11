@@ -10,7 +10,7 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   codDepositPercent: 10,
   codHandlingFeeMin: 200,
   codHandlingFeePercent: 10,
-  // Mirrors the SiteSettingsDocument defaults, which enable all three add-ons.
+  // Mirrors the SiteSettingsDocument defaults, which enable every add-on.
   // Consequence of the mirror: if the settings read fails, an add-on already
   // ticked on the cart document is still billed rather than silently dropped.
   whatsappNotifyFeeEnabled: true,
@@ -20,6 +20,9 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   shipmentProtectionFeeEnabled: true,
   shipmentProtectionFeePercent: 2,
   shipmentProtectionFeeMin: 30,
+  saleProtectionFeeEnabled: true,
+  saleProtectionFeePercent: 3,
+  saleProtectionFeeMin: 49,
   sellerShippingFixed: 50,
   platformShippingPercent: 10,
   platformShippingFixedMin: 50,

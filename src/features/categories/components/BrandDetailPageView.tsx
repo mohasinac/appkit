@@ -13,6 +13,11 @@ import { MediaImage } from "../../media/MediaImage";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
+import {
+  breadcrumbJsonLd,
+  collectionPageJsonLd,
+  faqJsonLd,
+} from "../../../seo/json-ld";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsForBrand } from "../../../_internal/server/features/grouped/data";
 import {
@@ -133,8 +138,68 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     0,
   );
 
+  /*
+   * ── D4: structured data on the brand page ───────────────────────────────
+   *
+   * Same gap as the category page and the same fix — verified: zero `JsonLd`
+   * references in this file before this change. §5 item 4 asks for exactly
+   * this trio here, and notes the `revalidate` half was already banked by
+   * `7d9dcf7c7` (this route is 3600 now), so the JSON-LD was all that remained.
+   *
+   * 🛑 `CollectionPage`, NOT `Brand`. A `Brand` node describes the brand as an
+   * entity; this page is a LISTING of that brand's items, and the markup should
+   * say what the page IS. The brand's own identity facts (website, country,
+   * founded) are rendered in the About panel for a human — turning them into a
+   * `Brand` node is a separate decision with its own rich-result implications,
+   * and claiming one without being the brand's own site invites a wrong one.
+   *
+   * Costs no extra read: `brand`, `counts` and `faqs` are already in hand.
+   */
+  const brandPath = String(ROUTES.PUBLIC.BRAND_DETAIL(slug));
+
+  const ldBreadcrumb = breadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Brands", url: String(ROUTES.PUBLIC.BRANDS) },
+    { name: brand?.name ?? "Brand", url: brandPath },
+  ]);
+
+  /*
+   * 🛑 No `items`, deliberately. A brand page's contents are the brand's
+   * PRODUCTS, and an `ItemList` of products without prices is the weaker half
+   * of a node whose useful form is blocked here (`audit-guest-price-leak` R3,
+   * because the page shows a signed-out crawler no prices at all). The
+   * category page lists child CATEGORIES because taxonomy routing is its real
+   * contribution; a brand has no sub-brands, so there is nothing equivalent to
+   * list. `totalItems` still states the scale, which is the part worth saying.
+   */
+  const ldCollection = collectionPageJsonLd({
+    name: brand?.name ?? "Brand",
+    url: brandPath,
+    ...(brand?.description ? { description: brand.description } : {}),
+    totalItems,
+  });
+
+  const ldFaq =
+    brand?.faqs && brand.faqs.length > 0
+      ? faqJsonLd(brand.faqs.map((f) => ({ question: f.question, answer: f.answer })))
+      : null;
+
   return (
     <Main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldCollection) }}
+      />
+      {ldFaq && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
+        />
+      )}
       {/* ── Brand Hero ──────────────────────────────────────────────────── */}
       <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
         {hasCover && (

@@ -30,9 +30,14 @@ export interface CartPriceBreakdownStore {
   whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
+  saleProtectionFee: number;
   gstAmount: number;
   couponDiscount: number;
   total: number;
+  /** C5e tiers 2+3 for this store — see CheckoutPricingPreviewStore. */
+  supportsShippingProtection: boolean;
+  supportsSaleProtection: boolean;
+  hasFinalSaleItem: boolean;
 }
 
 /** Mirrors `CheckoutPricingPreview` without importing server code. */
@@ -43,6 +48,7 @@ export interface CartPriceBreakdownData {
   whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
+  saleProtectionFee: number;
   gstAmount: number;
   couponDiscount: number;
   platformFee: number;
@@ -177,6 +183,12 @@ export function CartPriceBreakdown({
         <Line
           label={withStoreCount("Shipment protection", countCharged((s) => s.shipmentProtectionFee))}
           amount={money(preview.shipmentProtectionFee)}
+        />
+      )}
+      {preview.saleProtectionFee > 0 && (
+        <Line
+          label={withStoreCount("Sale protection", countCharged((s) => s.saleProtectionFee))}
+          amount={money(preview.saleProtectionFee)}
         />
       )}
       {/* One commission on one transaction — never multiplied per store. */}

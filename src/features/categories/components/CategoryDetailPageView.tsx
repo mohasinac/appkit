@@ -23,6 +23,11 @@ import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
 import { siteSettingsRepository } from "../../../repositories";
 import { safeRead } from "../../../errors/safe-read";
+import {
+  breadcrumbJsonLd,
+  collectionPageJsonLd,
+  faqJsonLd,
+} from "../../../seo/json-ld";
 import type { CategoryItem } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
@@ -219,6 +224,24 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       itemsSold: s.stats?.itemsSold,
       totalReviews: s.stats?.totalReviews,
       averageRating: s.stats?.averageRating,
+      /*
+       * 🛑 This whole `.map()` is a SIXTH hand-rolled copy of
+       * `toStoreListItem` — the adapter Root Cause #70 created precisely to
+       * collapse the three that existed then, and which three public store
+       * APIs now share. It is recorded as an F1 defect rather than fixed here
+       * (the defect policy: a found defect goes in the backlog, not in the
+       * step's commit), and the reason it cannot be a drive-by is a boundary:
+       * the adapter lives in `_internal/server/` and this file is in
+       * `features/`, so adopting it is an import-graph decision, not a rename.
+       *
+       * These two fields are added rather than deferred because `tsc` demands
+       * them — which is the whole value of having made them REQUIRED on
+       * `StoreListItem`: the compiler enumerated every copy, and this is the
+       * one the audit's "union of what the registered builders emit" check
+       * cannot see.
+       */
+      supportsShippingProtection: s.supportsShippingProtection ?? false,
+      supportsSaleProtection: s.supportsSaleProtection ?? false,
       createdAt: s.createdAt as unknown as string,
     }));
 
@@ -237,8 +260,111 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
+  /*
+   * ── D4: structured data. This page emitted NONE ─────────────────────────
+   *
+   * Verified before building: zero `ld+json` anywhere under
+   * `features/categories/`, and `collectionPageJsonLd`/`itemListJsonLd` did
+   * not exist at all. Meanwhile worldhobbyshop — the SEO leader of the fifteen
+   * crawled — ships a 6-level `BreadcrumbList` plus a `CollectionPage`, and no
+   * Shopify competitor has either. §5 ranks this the highest-impact SEO change
+   * in the plan.
+   *
+   * 🛑 It costs ZERO extra reads. The route is already fully dynamic SSR, and
+   * `ancestors[]`, `name`, `description`, `faqs` and the counts all ride reads
+   * this component already performs — which is why it was worth doing here
+   * rather than deferring it behind a data change.
+   */
+  const categoryPath = String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug));
+
+  /*
+   * 🛑 SORTED BY TIER, not trusted in stored order.
+   *
+   * My first version asserted `ancestors[]` is stored root-first and used it as
+   * given. The existing `BreadcrumbTrail` — the visible breadcrumb on this very
+   * page — explicitly does `.sort((a, b) => a.tier - b.tier)` before rendering,
+   * so the stored order is NOT relied on anywhere else either. Following the
+   * precedent rather than my assumption: a `BreadcrumbList` is the one node
+   * whose entire value is the order, and a leaf announced before its parent is
+   * worse than no breadcrumb at all.
+   *
+   * `.slice()` first because `sort` mutates, and this array came off the
+   * category document that the rest of the render still reads.
+   *
+   * The URL uses `ancestor.id`, matching `BreadcrumbTrail` — `CategoryAncestor`
+   * carries `id`/`name`/`tier` and no `slug`.
+   */
+  const ldBreadcrumb = breadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Categories", url: String(ROUTES.PUBLIC.CATEGORIES) },
+    ...(category?.ancestors ?? [])
+      .slice()
+      .sort((a, b) => a.tier - b.tier)
+      .map((a) => ({
+        name: a.name,
+        url: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.id)),
+      })),
+    { name: category?.name ?? "Category", url: categoryPath },
+  ]);
+
+  /*
+   * 🛑 Items are the CHILD CATEGORIES, not the products.
+   *
+   * Two reasons, and the second is the one that matters. A product list would
+   * want prices to be useful markup, and a price here is blocked outright
+   * (`audit-guest-price-leak` R3) because the page shows none to a signed-out
+   * crawler — which is exactly what hobbykartindia does and §2 records as the
+   * thing not to copy. And a category page's real contribution to a crawl is
+   * TAXONOMY ROUTING: telling the crawler which sub-collections exist is what
+   * made worldhobbyshop's 6-level tree its biggest edge, and it is the one
+   * thing a grid of product cards does not say in markup.
+   */
+  const ldCollection = collectionPageJsonLd({
+    name: category?.name ?? "Category",
+    url: categoryPath,
+    ...(category?.description ? { description: category.description } : {}),
+    items: childCategories.map((c) => ({
+      name: c.name,
+      url: String(ROUTES.PUBLIC.CATEGORY_DETAIL(c.id)),
+    })),
+    /*
+     * The real total, so page 1 of a paginated collection does not declare the
+     * collection's size as this page's length — the list-envelope lesson,
+     * applied to markup.
+     */
+    totalItems: childCategories.length,
+  });
+
+  /*
+   * 🛑 Per-category FAQs, which is the tcgindia pattern nobody else in the
+   * crawl uses and which no page here emitted. Omitted entirely when the
+   * category has none — an empty `FAQPage` is a claim that there are no
+   * questions, which is different from having nothing to say.
+   */
+  const ldFaq =
+    category?.faqs && category.faqs.length > 0
+      ? faqJsonLd(category.faqs.map((f) => ({ question: f.question, answer: f.answer })))
+      : null;
+
   return (
     <Main>
+      {/* One script per node, which is what every other page here does — a
+          single @graph would also be valid but would make the three
+          independently-omittable nodes a single all-or-nothing blob. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldCollection) }}
+      />
+      {ldFaq && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
+        />
+      )}
       {/* ── Hero / Banner ───────────────────────────────────────────────── */}
       <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
         {hasCover && (

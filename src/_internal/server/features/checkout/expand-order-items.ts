@@ -87,6 +87,7 @@ export function expandCartLineToOrderRows(
         ? { categorySlug: representative.categorySlugs[0] }
         : {}),
       ...(representative.listingType ? { listingType: representative.listingType } : {}),
+      ...(representative.condition ? { condition: representative.condition } : {}),
       // Legacy collapsed bundle rows (no groupMembers) keep their old shape so
       // orders already in flight and their UI stay untouched.
       ...(item.bundleCategorySlug && item.bundleProductIds
@@ -143,6 +144,9 @@ export function expandCartLineToOrderRows(
        */
       ...(product?.categorySlugs?.[0] ? { categorySlug: product.categorySlugs[0] } : {}),
       ...(product?.listingType ? { listingType: product.listingType } : {}),
+      // Per MEMBER — a bundle can mix a sealed item with a loose one, and a
+      // blended condition would describe neither.
+      ...(product?.condition ? { condition: product.condition } : {}),
       ...(gstRate != null ? { gstRate, ...(hsnCode ? { hsnCode } : {}) } : {}),
     };
   });

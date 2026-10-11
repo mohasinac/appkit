@@ -200,6 +200,125 @@ export abstract class BaseRepository<T extends DocumentData> {
     return out;
   }
 
+  /**
+   * Apply the SAME patch to many documents in ONE atomic batch — C4.
+   *
+   * 🛑 TWO defects this closes, and the second one is why the obvious fix is
+   * not enough on its own.
+   *
+   * **Atomicity.** Both bulk-location routes did
+   * `Promise.all(ids.map((id) => repo.update(id, patch)))` — 50 independent
+   * writes, not batched and not transactional. A failure part-way leaves a
+   * PARTIAL result and the route still returned `{ updated: ids.length }`,
+   * i.e. a count it had not achieved, with no way for the caller to learn
+   * which half landed. `batchCreate` and `batchDelete` have existed here all
+   * along; the update case was simply missing, so every bulk edit reached for
+   * `Promise.all`.
+   *
+   * **`searchTxt`.** A raw `batch.update()` writes the fields it is given and
+   * nothing else, while `update()` routes through `applyWriteHooks` and
+   * re-derives the index. So converting a bulk route to a plain batch is an
+   * atomicity win and a silent SEARCH REGRESSION in the same change: the rows
+   * a seller just filed to a bin become exactly the rows the search cannot
+   * find. That failure is invisible in the usual way — the field is stored,
+   * the column renders, nothing errors, and only a query comes back empty.
+   *
+   * Hence the caller passes the DOCUMENTS it already holds. Every bulk route
+   * fetches them for the ownership check, so this costs no extra read, and
+   * `applyWriteHooks` can then run against the merged shape — which also
+   * means PII encryption and blind indices apply, exactly as on a single
+   * write. A collection that overrides nothing behaves like a plain batch.
+   *
+   * `null` entries are skipped rather than throwing: the ownership check
+   * upstream already rejects the request on a missing document, so a `null`
+   * here means a concurrent delete, and failing the whole batch for it would
+   * turn a race into an error the seller cannot act on.
+   */
+  async batchUpdateMany(
+    docs: ReadonlyArray<T | null | undefined>,
+    patch: Partial<T>,
+  ): Promise<number> {
+    const present = docs.filter((d): d is T => !!d);
+    if (present.length === 0) return 0;
+    /*
+     * 🛑 Firestore caps a WriteBatch at 500 operations. Throwing rather than
+     * looping commits is deliberate: a loop of commits is NOT atomic, so it
+     * would quietly reintroduce the partial-write problem this method exists
+     * to remove. The real bound belongs at the route, which already caps at
+     * 50 (Rule #6).
+     */
+    if (present.length > 500) {
+      throw new Error(
+        `batchUpdateMany: ${present.length} documents exceeds Firestore's 500-operation batch limit; chunk at the call site`,
+      );
+    }
+
+    const batch: WriteBatch = this.db.batch();
+    const now = new Date();
+    for (const doc of present) {
+      const id = (doc as unknown as { id?: string }).id;
+      if (!id) continue;
+      const merged = { ...(doc as object), ...(patch as object) };
+      const hooked = this.applyWriteHooks(merged) as Record<string, JsonValue>;
+      /*
+       * Only the patched keys plus whatever the hooks derived are written —
+       * never the whole merged document. Writing it back wholesale would
+       * resurrect any field a concurrent writer had changed since this
+       * document was read, which is a lost update dressed up as a bulk edit.
+       */
+      const payload: Record<string, JsonValue> = { updatedAt: now as unknown as JsonValue };
+      for (const key of Object.keys(patch as object)) payload[key] = hooked[key];
+      if (hooked.searchTxt) payload.searchTxt = hooked.searchTxt;
+      batch.update(this.getCollection().doc(id), prepareForFirestore(payload));
+    }
+    await batch.commit();
+    return present.length;
+  }
+
+  /**
+   * Same atomic single-batch write as `batchUpdateMany`, but with a PER-DOCUMENT
+   * patch.
+   *
+   * 🛑 It exists because not every bulk edit is one value applied N times. A
+   * bulk STOCK edit is the forcing case: `availableQuantity` carries each
+   * product's own outstanding reservation forward
+   * (`resolveStockResync`), so the figure written differs per row even when the
+   * seller typed one number. `batchUpdateMany` would have to be called once per
+   * distinct patch, which is one batch per row — i.e. not atomic, which is the
+   * whole property these two methods exist to provide.
+   *
+   * Hooks, the patched-keys-only write and the 500-op refusal are identical to
+   * `batchUpdateMany`; see its comments for why each is that way.
+   */
+  async batchUpdateEach(
+    entries: ReadonlyArray<{ doc: T | null | undefined; patch: Partial<T> }>,
+  ): Promise<number> {
+    const present = entries.filter(
+      (e): e is { doc: T; patch: Partial<T> } => !!e.doc && Object.keys(e.patch as object).length > 0,
+    );
+    if (present.length === 0) return 0;
+    if (present.length > 500) {
+      throw new Error(
+        `batchUpdateEach: ${present.length} documents exceeds Firestore's 500-operation batch limit; chunk at the call site`,
+      );
+    }
+
+    const batch: WriteBatch = this.db.batch();
+    const now = new Date();
+    for (const { doc, patch } of present) {
+      const id = (doc as unknown as { id?: string }).id;
+      if (!id) continue;
+      const merged = { ...(doc as object), ...(patch as object) };
+      const hooked = this.applyWriteHooks(merged) as Record<string, JsonValue>;
+      const payload: Record<string, JsonValue> = { updatedAt: now as unknown as JsonValue };
+      for (const key of Object.keys(patch as object)) payload[key] = hooked[key];
+      if (hooked.searchTxt) payload.searchTxt = hooked.searchTxt;
+      batch.update(this.getCollection().doc(id), prepareForFirestore(payload));
+    }
+    await batch.commit();
+    return present.length;
+  }
+
   async create(data: Partial<T> | FirestoreDocument): Promise<T> {
     try {
       const cleanData = prepareForFirestore({

@@ -29,6 +29,8 @@
  */
 
 import { buildSearchTxt } from "./search-txt";
+import { aliasVariantsForName } from "../_internal/shared/search/alias-variants";
+import { physicalLocationTokens } from "./physical-location";
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import type { CategoryDocument } from "../features/categories/schemas/firestore";
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
@@ -58,6 +60,39 @@ export function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
     p.card?.cardNumber,
     p.grading?.service,
     p.specifications?.map((s) => `${s.name} ${s.value}`),
+    /*
+     * The warehouse location — C4, and this one line is what makes the hard
+     * direction work.
+     *
+     * "Where is item X" was already answerable from the Location column.
+     * "What is in bin A-3" had **no mechanism at all**: `physicalLocation` was
+     * absent from the products Sieve config, from `PRODUCT_INDEXED_FIELDS`,
+     * from the seller search field list and from this builder — so a seller
+     * could set a location and then never query it.
+     *
+     * 🛑 Indexed as TOKENS rather than queried as a field. A
+     * `physicalLocation.bin == "3"` clause needs its own composite index per
+     * sort field, and the `FAILED_PRECONDITION` would be swallowed into an
+     * empty page (Root Cause #59). `searchTxt` is already
+     * `array-contains`-indexed, so this is more tokens in an existing index
+     * and **no new index** — and it gives both directions through the one
+     * search box the seller already uses.
+     *
+     * See `physicalLocationTokens` for how the match really happens: the
+     * query tokeniser applies the same normaliser as the index, so the PARTS
+     * AND-refine and the separators are irrelevant on both sides.
+     */
+    physicalLocationTokens(p.physicalLocation),
+    /*
+     * Misspelling variants of the TITLE only — last, so they are what the
+     * 600-token cap drops first.
+     *
+     * 🛑 Title only, not `description`. A 300-word body would generate
+     * hundreds of variants and push the real tokens off the end, making exact
+     * search worse to make misspelled search better. The title is what buyers
+     * mistype; prose is what they read.
+     */
+    aliasVariantsForName(p.title ?? ""),
   ]);
 }
 
@@ -95,6 +130,22 @@ export function buildCategorySearchTxt(c: Partial<CategoryDocument>): string[] {
      * ahead of "also known as" spellings.
      */
     ...(c.aliases ?? []),
+    /*
+     * Mechanical misspelling variants, after the authored aliases for the same
+     * truncation reason: a human-written alias is evidence, a generated one is
+     * a guess, and the guess is what should fall off the end first.
+     *
+     * 🛑 This is what makes "dragon g" find "Dragoon G". Measured against the
+     * built helper: `buildSearchTxt(["Dragoon G"])` yields
+     * `dragoon d dr dra drag drago dragoo g`, and "dragon" is in that set
+     * NOWHERE — it is not a prefix of "dragoon", the two diverge at the sixth
+     * character. Prefix n-grams cannot reach it; an alias can.
+     *
+     * Generated from the NAME and the authored aliases only — deliberately not
+     * from `description` or `path`, which would spend the token budget varying
+     * prose nobody searches by spelling.
+     */
+    ...aliasVariantsForName([c.name, ...(c.aliases ?? [])].filter(Boolean).join(" ")),
   ]);
 }
 
@@ -155,6 +206,15 @@ export function buildOrderSearchTxt(o: Partial<OrderDocument>): string[] {
     o.storeName,
     o.trackingNumber,
     (o.items ?? []).map((i) => i.productTitle),
+    /*
+     * The pick/pack location — C4, same mechanism as the product side.
+     *
+     * `OrderDocument` carries `physicalLocation` too (it is where the parcel
+     * is staged), and the seller bulk-sets it from the orders list. Without
+     * this a seller could file an order to a bin and then not search for it,
+     * which is the same half-built state the product side was in.
+     */
+    physicalLocationTokens(o.physicalLocation),
   ]);
 }
 
