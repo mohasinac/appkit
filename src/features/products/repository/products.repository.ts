@@ -21,6 +21,7 @@ import { parseSearchTxtQuery } from "../../../utils/search-txt";
 // from returning the whole catalogue.
 import {
   planSearchTxt,
+  SEARCH_REFINE_WINDOW,
   refineSearchTxt,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
@@ -1502,13 +1503,47 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const plan = planSearchTxt(opts?.search);
     if (plan.empty) return emptySearchResult<ProductDocument>();
 
+    /*
+     * ── D2 Fix 2: a MULTI-TERM search over-fetches a window ────────────────
+     *
+     * 🛑 The bug: `refineSearchTxt` used to filter the already-paginated page,
+     * so a two-word search could only ever return matches that happened to fall
+     * inside one page window — rows 51+ matching both terms were unreachable,
+     * and `hasMore: false` asserted there was no page 2. A search returning 7
+     * of 40 real matches reported "7 results" and disabled Next, which reads as
+     * a working search.
+     *
+     * So for a multi-term query the FETCH asks for a bounded window and the
+     * refine slices the requested page out of it. A single-term query is
+     * untouched: its one `array-contains` clause paginates exactly, there is
+     * nothing to refine, and over-fetching would be pure cost.
+     *
+     * 🛑 Bounded, not unbounded (Rule #6): one read of at most
+     * `SEARCH_REFINE_WINDOW`, and when that saturates the result carries
+     * `truncated` so the total renders as a floor rather than a false total.
+     */
+    const isMultiTerm = plan.rest.length > 0;
+    const requestedPage = Math.max(1, Number(model?.page ?? 1) || 1);
+    const requestedPageSize = Math.max(1, Number(model?.pageSize ?? 20) || 20);
+
     const result = await this.sieveQuery<ProductDocument>(
-      model,
+      /*
+       * The window is requested through the MODEL, not a new `SieveOptions`
+       * field — `sieveQuery` already derives its page from `model.page` /
+       * `model.pageSize`, so overriding them needs no API change and no second
+       * way to express a page size.
+       */
+      isMultiTerm ? { ...model, page: 1, pageSize: SEARCH_REFINE_WINDOW } : model,
       ProductRepository.SIEVE_FIELDS,
       {
         baseQuery: this.buildScopedQuery(opts),
         defaultPageSize: 20,
-        maxPageSize: 100,
+        /*
+         * 🛑 `maxPageSize` has to rise with the window or Sieve clamps the
+         * request back to 100 — and the window would silently be a page again,
+         * which is the original bug with a larger constant.
+         */
+        maxPageSize: isMultiTerm ? SEARCH_REFINE_WINDOW : 100,
         aliases: ProductRepository.FILTER_ALIASES,
       },
     );
@@ -1525,7 +1560,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // this page only. That is the known post-pagination-filter debt, not a new
     // invention — reporting the pre-filter total would promise pages that
     // render empty.
-    return refineSearchTxt(result, plan.rest);
+    return refineSearchTxt(
+      result,
+      plan.rest,
+      isMultiTerm
+        ? {
+            page: requestedPage,
+            pageSize: requestedPageSize,
+            // Saturated means more may exist beyond the window, so `total` is a
+            // FLOOR and `truncated` says so.
+            windowSaturated: (result.items?.length ?? 0) >= SEARCH_REFINE_WINDOW,
+          }
+        : undefined,
+    );
   }
 
   /**
