@@ -416,3 +416,117 @@ export function auctionJsonLd(
     }),
   };
 }
+
+// ── D4: collection pages and item lists ─────────────────────────────────────
+
+export interface ItemListJsonLdEntry {
+  name: string;
+  /** Path or absolute URL. Absolutised against the ONE canonical host. */
+  url: string;
+  image?: string;
+}
+
+/**
+ * `ItemList` — the names and URLs of what a listing page shows.
+ *
+ * 🛑 NO `offers`, NO price, and this is not a style choice.
+ *
+ * Two independent reasons, and either alone settles it. Prices are hidden from
+ * signed-out visitors and Googlebot crawls signed out, so a price here would be
+ * markup the user cannot see — the mismatch `gatedPriceWebPageJsonLd` exists to
+ * declare, except there is nothing to declare on a list because the list never
+ * shows a price at all. And `audit-guest-price-leak` R3 blocks it outright.
+ *
+ * It is also exactly what hobbykartindia.com does — server-side `ItemList`
+ * carrying price — and §2 records it as the thing not to copy.
+ *
+ * A list of names and URLs is still worth emitting: it tells a crawler what the
+ * page is a list OF, which is the one thing a grid of cards does not say in
+ * markup.
+ */
+export function itemListJsonLd(
+  entries: readonly ItemListJsonLdEntry[],
+): Record<string, JsonLdValue> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    numberOfItems: entries.length,
+    itemListElement: entries.map((e, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: e.name,
+      url: absoluteUrl(e.url),
+      ...(e.image ? { image: absoluteUrl(e.image) } : {}),
+    })),
+  };
+}
+
+export interface CollectionPageJsonLdInput {
+  name: string;
+  /** Path or absolute URL for this collection. */
+  url: string;
+  description?: string;
+  /**
+   * The items shown, if any. Omitted or empty emits a `CollectionPage` with no
+   * `mainEntity` — which is correct for a collection whose contents are
+   * paginated or filtered, and far better than an `ItemList` of zero claiming
+   * the collection is empty.
+   */
+  items?: readonly ItemListJsonLdEntry[];
+  /**
+   * Total across all pages, when it differs from `items.length`.
+   *
+   * 🛑 `truncated` matters here for the same reason it does in the list
+   * envelope: a `CollectionPage` on page 1 of 12 that declares
+   * `numberOfItems: 24` is telling a crawler the collection has 24 items. Pass
+   * the real total and the markup stops lying about scale.
+   */
+  totalItems?: number;
+}
+
+/**
+ * `CollectionPage` — what a category, brand or listing index actually is.
+ *
+ * 🛑 The category tab page emitted NO JSON-LD whatsoever (verified: zero
+ * `ld+json` under `features/categories/`), while worldhobbyshop — the SEO
+ * leader of the fifteen crawled — ships a 6-level `BreadcrumbList` and a
+ * `CollectionPage`, and no Shopify competitor has either. §5 ranks this the
+ * highest-impact SEO change in the plan, and it costs nothing at render: the
+ * route is already dynamic SSR and `ancestors[]` rides a read it already does.
+ *
+ * Pair it with `breadcrumbJsonLd` — the two answer different questions ("what
+ * is this page" and "where does it sit"), and the breadcrumb is the half the
+ * competition does not have.
+ */
+export function collectionPageJsonLd(
+  input: CollectionPageJsonLdInput,
+): Record<string, JsonLdValue> {
+  const items = input.items ?? [];
+  const total = input.totalItems ?? items.length;
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: input.name,
+    url: absoluteUrl(input.url),
+    ...(input.description ? { description: input.description } : {}),
+    /*
+     * `mainEntity` is omitted entirely for an empty collection rather than
+     * emitted as an `ItemList` of zero. "This page lists things, and here are
+     * none of them" is a claim; saying nothing is not.
+     */
+    ...(items.length > 0
+      ? {
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: total,
+            itemListElement: items.map((e, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: e.name,
+              url: absoluteUrl(e.url),
+            })),
+          },
+        }
+      : {}),
+  };
+}

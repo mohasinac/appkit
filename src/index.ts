@@ -1030,6 +1030,12 @@ export { blogPostJsonLd } from "./seo/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // breadcrumbJsonLd - Shared export for breadcrumb json ld.
 export { breadcrumbJsonLd } from "./seo/index";
+// D4 — the two builders the category/brand pages needed and that did not exist.
+// `collectionPageJsonLd` says what a listing page IS; `itemListJsonLd` says what
+// it contains. Neither ever carries a price: the page shows a signed-out crawler
+// none, and `audit-guest-price-leak` R3 blocks it.
+export { collectionPageJsonLd, itemListJsonLd } from "./seo/index";
+export type { CollectionPageJsonLdInput, ItemListJsonLdEntry } from "./seo/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // createSeoConfig - Helper for create seo config.
 export { createSeoConfig } from "./seo/index";
