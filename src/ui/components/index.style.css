@@ -77,6 +77,10 @@
 @import "./UnsavedChangesModal.style.css";
 @import "../DataTable.style.css";
 @import "../rich-text/RichText.style.css";
+/* Was ORPHANED — @imported from nowhere, so `.appkit-quick-create-modal` (used
+   by QuickCreateModal.tsx) shipped to no one. Found by audit-css-shipped.mjs,
+   which exists because FormShell.style.css had the same defect. */
+@import "./QuickCreateModal.style.css";
 /* Last on purpose: hand-mode rules are cross-cutting overrides keyed on
    `[data-hand]`, not a component's own base styles. */
 @import "./HandMode.style.css";
