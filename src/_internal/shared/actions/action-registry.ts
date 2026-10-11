@@ -911,6 +911,16 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
       permissions: ["seller", "admin"],
     },
+    "set-stock": {
+      iconKey: "edit",
+      id: "store.set-stock",
+      label: "Set Stock",
+      ariaLabel: "Set stock quantity for selected products",
+      description:
+        "Set the same stock quantity on every selected listing. Units already reserved by unpaid orders stay reserved.",
+      kind: "ghost",
+      permissions: ["seller", "admin"],
+    },
     "set-location": {
       iconKey: "settings",
       id: "store.set-location",

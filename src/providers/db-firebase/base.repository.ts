@@ -275,6 +275,50 @@ export abstract class BaseRepository<T extends DocumentData> {
     return present.length;
   }
 
+  /**
+   * Same atomic single-batch write as `batchUpdateMany`, but with a PER-DOCUMENT
+   * patch.
+   *
+   * 🛑 It exists because not every bulk edit is one value applied N times. A
+   * bulk STOCK edit is the forcing case: `availableQuantity` carries each
+   * product's own outstanding reservation forward
+   * (`resolveStockResync`), so the figure written differs per row even when the
+   * seller typed one number. `batchUpdateMany` would have to be called once per
+   * distinct patch, which is one batch per row — i.e. not atomic, which is the
+   * whole property these two methods exist to provide.
+   *
+   * Hooks, the patched-keys-only write and the 500-op refusal are identical to
+   * `batchUpdateMany`; see its comments for why each is that way.
+   */
+  async batchUpdateEach(
+    entries: ReadonlyArray<{ doc: T | null | undefined; patch: Partial<T> }>,
+  ): Promise<number> {
+    const present = entries.filter(
+      (e): e is { doc: T; patch: Partial<T> } => !!e.doc && Object.keys(e.patch as object).length > 0,
+    );
+    if (present.length === 0) return 0;
+    if (present.length > 500) {
+      throw new Error(
+        `batchUpdateEach: ${present.length} documents exceeds Firestore's 500-operation batch limit; chunk at the call site`,
+      );
+    }
+
+    const batch: WriteBatch = this.db.batch();
+    const now = new Date();
+    for (const { doc, patch } of present) {
+      const id = (doc as unknown as { id?: string }).id;
+      if (!id) continue;
+      const merged = { ...(doc as object), ...(patch as object) };
+      const hooked = this.applyWriteHooks(merged) as Record<string, JsonValue>;
+      const payload: Record<string, JsonValue> = { updatedAt: now as unknown as JsonValue };
+      for (const key of Object.keys(patch as object)) payload[key] = hooked[key];
+      if (hooked.searchTxt) payload.searchTxt = hooked.searchTxt;
+      batch.update(this.getCollection().doc(id), prepareForFirestore(payload));
+    }
+    await batch.commit();
+    return present.length;
+  }
+
   async create(data: Partial<T> | FirestoreDocument): Promise<T> {
     try {
       const cleanData = prepareForFirestore({

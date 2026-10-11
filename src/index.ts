@@ -1801,7 +1801,7 @@ export { catalogueRepository } from "./repositories/index";
 export { savedPaymentMethodsRepository, SavedPaymentMethodsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // productRepository - Shared export for product repository.
-export { productRepository } from "./repositories/index";
+export { productRepository, resolveStockResync } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // pageViewsRepository - day-bucketed page-view counters by entity + URL.
 export { pageViewsRepository, PAGE_VIEW_ENTITY_TYPES } from "./repositories/index";

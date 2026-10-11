@@ -156,6 +156,81 @@ function interpolateDefaults(
   }).text;
 }
 
+/**
+ * Keep `availableQuantity` in step when a seller edits `stockQuantity`.
+ *
+ * 🛑 THE BUG THIS CLOSES: A SELLER COULD NOT RESTOCK.
+ *
+ * There are two stock numbers. `stockQuantity` is seller-authored and is the
+ * only one any of the three product forms exposes. `availableQuantity` is
+ * system-owned, seeded from `stockQuantity` **once, at create**, and
+ * thereafter driven by checkout decrements and timeout restores.
+ *
+ * Nothing re-synced them. `updateProduct` is a bare spread, and grep for
+ * `availableQuantity` across `src/app/api/store/products/**` and
+ * `seller-actions.ts` returns ZERO. So: a product sells out
+ * (`availableQuantity: 0`), the seller edits `stockQuantity` 0 → 10, and the
+ * product STAYS UNBUYABLE — purchasability gates on `availableQuantity > 0`
+ * in three independent places (`service.ts`, the cart route, and the public
+ * list filter). The only field the seller can reach is the one that does not
+ * control availability.
+ *
+ * With 76–93% of competitor catalogues sold out, restock is the main
+ * lifecycle event, not an edge case.
+ *
+ * WHY A DELTA AND NOT `availableQuantity = stockQuantity`: the difference
+ * between the two IS the outstanding reservation — units held by placed-but-
+ * unpaid orders. Overwriting would hand those units back to the shelf and
+ * oversell them. So carry the reservation forward:
+ *
+ *     reserved = prevStock - prevAvailable        (clamped at 0)
+ *     available = nextStock - reserved            (clamped at 0)
+ *
+ * Examples: 10 stock / 10 available, edit to 12 → 12. 10 stock / 7 available
+ * (3 reserved), edit to 12 → 9. Sold out at 0/0, edit to 10 → 10.
+ *
+ * 🛑 Returns `{}` — not a value — whenever the write does not name
+ * `stockQuantity`, or names `availableQuantity` explicitly. The second case
+ * is what keeps the checkout decrement, the stock-restore job and
+ * `updateAvailableQuantity` authoritative: they write `availableQuantity`
+ * directly and must never have it recomputed from a stale `stockQuantity`
+ * underneath them.
+ *
+ * 🛑 EXPORTED, and not merely for tidiness. A BULK stock edit cannot go
+ * through `update` — that is 50 sequential round trips, and Rule #6 budgets a
+ * request at ~3 — so it writes through `batchUpdateEach`. But the delta is
+ * PER DOCUMENT (each product carries its own reservation), which means a bulk
+ * route has to apply this rule itself. Re-deriving it there is Root Cause
+ * #75's shape on the one field whose whole history is that nothing re-synced
+ * it. So the rule is exported and the bulk route calls THIS.
+ *
+ * 🛑 It cannot become a `BaseRepository` write hook, which was the first
+ * thing I tried. A hook receives `{...doc, ...patch}`, where `stockQuantity`
+ * is already the NEXT value — so `prevStock` is gone and `reserved` is
+ * uncomputable. The rule genuinely needs both documents.
+ */
+export function resolveStockResync(
+  current: ProductDocument | null,
+  data: Partial<ProductDocument>,
+): Partial<ProductDocument> {
+  if (!current) return {};
+  if (!("stockQuantity" in data)) return {};
+  // An explicit availableQuantity write wins — see the 🛑 above.
+  if ("availableQuantity" in data) return {};
+
+  const nextStock = data.stockQuantity;
+  if (typeof nextStock !== "number" || !Number.isFinite(nextStock)) return {};
+
+  const prevStock = typeof current.stockQuantity === "number" ? current.stockQuantity : 0;
+  const prevAvailable =
+    typeof current.availableQuantity === "number" ? current.availableQuantity : prevStock;
+
+  const reserved = Math.max(0, prevStock - prevAvailable);
+  const nextAvailable = Math.max(0, nextStock - reserved);
+  if (nextAvailable === prevAvailable) return {};
+  return { availableQuantity: nextAvailable };
+}
+
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;
 
@@ -719,68 +794,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     "brandSlug",
   ] as const;
 
-  /**
-   * Keep `availableQuantity` in step when a seller edits `stockQuantity`.
-   *
-   * 🛑 THE BUG THIS CLOSES: A SELLER COULD NOT RESTOCK.
-   *
-   * There are two stock numbers. `stockQuantity` is seller-authored and is the
-   * only one any of the three product forms exposes. `availableQuantity` is
-   * system-owned, seeded from `stockQuantity` **once, at create**, and
-   * thereafter driven by checkout decrements and timeout restores.
-   *
-   * Nothing re-synced them. `updateProduct` is a bare spread, and grep for
-   * `availableQuantity` across `src/app/api/store/products/**` and
-   * `seller-actions.ts` returns ZERO. So: a product sells out
-   * (`availableQuantity: 0`), the seller edits `stockQuantity` 0 → 10, and the
-   * product STAYS UNBUYABLE — purchasability gates on `availableQuantity > 0`
-   * in three independent places (`service.ts`, the cart route, and the public
-   * list filter). The only field the seller can reach is the one that does not
-   * control availability.
-   *
-   * With 76–93% of competitor catalogues sold out, restock is the main
-   * lifecycle event, not an edge case.
-   *
-   * WHY A DELTA AND NOT `availableQuantity = stockQuantity`: the difference
-   * between the two IS the outstanding reservation — units held by placed-but-
-   * unpaid orders. Overwriting would hand those units back to the shelf and
-   * oversell them. So carry the reservation forward:
-   *
-   *     reserved = prevStock - prevAvailable        (clamped at 0)
-   *     available = nextStock - reserved            (clamped at 0)
-   *
-   * Examples: 10 stock / 10 available, edit to 12 → 12. 10 stock / 7 available
-   * (3 reserved), edit to 12 → 9. Sold out at 0/0, edit to 10 → 10.
-   *
-   * 🛑 Returns `{}` — not a value — whenever the write does not name
-   * `stockQuantity`, or names `availableQuantity` explicitly. The second case
-   * is what keeps the checkout decrement, the stock-restore job and
-   * `updateAvailableQuantity` authoritative: they write `availableQuantity`
-   * directly and must never have it recomputed from a stale `stockQuantity`
-   * underneath them.
-   */
-  private static resyncAvailableQuantity(
-    current: ProductDocument | null,
-    data: Partial<ProductDocument>,
-  ): Partial<ProductDocument> {
-    if (!current) return {};
-    if (!("stockQuantity" in data)) return {};
-    // An explicit availableQuantity write wins — see the 🛑 above.
-    if ("availableQuantity" in data) return {};
-
-    const nextStock = data.stockQuantity;
-    if (typeof nextStock !== "number" || !Number.isFinite(nextStock)) return {};
-
-    const prevStock = typeof current.stockQuantity === "number" ? current.stockQuantity : 0;
-    const prevAvailable =
-      typeof current.availableQuantity === "number" ? current.availableQuantity : prevStock;
-
-    const reserved = Math.max(0, prevStock - prevAvailable);
-    const nextAvailable = Math.max(0, nextStock - reserved);
-    if (nextAvailable === prevAvailable) return {};
-    return { availableQuantity: nextAvailable };
-  }
-
   override async update(
     id: string,
     data: Partial<ProductDocument>,
@@ -799,7 +812,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const derived = touchesTaxonomy
       ? await this.deriveTaxonomy({ ...current, ...data })
       : {};
-    const stock = ProductRepository.resyncAvailableQuantity(current, data);
+    const stock = resolveStockResync(current, data);
     const merged = { ...current, ...data, ...derived, ...stock } as ProductDocument;
     const updated = await super.update(id, {
       ...data,

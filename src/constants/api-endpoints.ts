@@ -618,6 +618,7 @@ export const SELLER_ENDPOINTS = {
   FEATURES: "/api/store/features",
   FEATURE_BY_ID: (id: string) => `/api/store/features/${id}`,
   PRODUCTS_BULK_LOCATION: "/api/store/products/bulk-location",
+  PRODUCTS_BULK_STOCK: "/api/store/products/bulk-stock",
   ORDERS_BULK_LOCATION: "/api/store/orders/bulk-location",
   GROUPED_LISTINGS: "/api/store/grouped-listings",
   GROUPED_LISTING_BY_ID: (id: string) => `/api/store/grouped-listings/${id}`,

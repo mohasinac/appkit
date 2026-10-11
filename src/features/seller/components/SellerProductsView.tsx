@@ -10,8 +10,9 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin } from "lucide-react";
+import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin, Boxes } from "lucide-react";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
+import { BulkStockModal } from "./BulkStockModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { Badge, Button, Div, Row, Select, Span, Text, useToast } from "../../../ui";
@@ -338,6 +339,17 @@ export function SellerProductsView({
   const [statusOverrides, setStatusOverrides] = useState<Map<string, string>>(new Map());
   const [setLocationOpen, setSetLocationOpen] = useState(false);
   const [selectedIdsForLocation, setSelectedIdsForLocation] = useState<string[]>([]);
+  const [setStockOpen, setSetStockOpen] = useState(false);
+  const [selectedIdsForStock, setSelectedIdsForStock] = useState<string[]>([]);
+  const [stockBusy, setStockBusy] = useState(false);
+  /*
+   * 🛑 A local override, mirroring `statusOverrides` above, because this view
+   * has no refetch handle — `DataListingView` owns the query. Without it a
+   * bulk stock edit leaves the Stock column showing the OLD figure, which is
+   * indistinguishable from the edit not having worked and is precisely the
+   * class of defect this plan keeps finding (a 200 with a stale view).
+   */
+  const [stockOverrides, setStockOverrides] = useState<Map<string, number>>(new Map());
 
   const handleKindChange = useCallback(
     (kind: ListingKind) => {
@@ -420,6 +432,47 @@ export function SellerProductsView({
         toUserMessage(e.code, undefined, { fallback: "Failed to update location." }),
         "error",
       );
+    }
+  }, [showToast]);
+
+  const handleSetStock = useCallback(async (stockQuantity: number, ids: string[]) => {
+    setStockBusy(true);
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCTS_BULK_STOCK, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productIds: ids, stockQuantity }),
+      });
+      const body = (await res.json().catch(() => null)) as
+        | { data?: { updated?: number; unchanged?: number; reservedHeld?: number }; error?: string }
+        | null;
+      if (!res.ok) throw new Error(body?.error ?? "Failed to update stock");
+      /*
+       * 🛑 Reports what the route actually DID, not what was asked for.
+       *
+       * `unchanged` is rows already at this figure — not written — and a toast
+       * claiming "12 updated" over them would be exactly the count-it-had-not-
+       * achieved defect `bulk-location`'s own header records.
+       *
+       * `reservedHeld` pre-empts the support ticket: a seller who sets 12 and
+       * then sees 9 available has to be told why HERE, not after they report
+       * the bulk edit as broken.
+       */
+      const d = body?.data ?? {};
+      const parts = [`Stock set on ${d.updated ?? 0} listing(s)`];
+      if (d.unchanged) parts.push(`${d.unchanged} already at that figure`);
+      if (d.reservedHeld) parts.push(`${d.reservedHeld} still hold reserved units`);
+      showToast(parts.join(" · ") + ".", "success");
+      setStockOverrides((prev) => new Map([...prev, ...ids.map((id) => [id, stockQuantity] as const)]));
+      setSetStockOpen(false);
+    } catch (err) {
+      const e = normalizeError(err);
+      showToast(
+        toUserMessage(e.code, undefined, { fallback: "Failed to update stock." }),
+        "error",
+      );
+    } finally {
+      setStockBusy(false);
     }
   }, [showToast]);
 
@@ -514,16 +567,27 @@ export function SellerProductsView({
          * reserve and the current bid, both already in `auctionSecondary`, and
          * a "price" beside them would read as a third, competing figure.
          */
+        const rowId = toStringValue(item.id, `product-${index}`);
+        /*
+         * A just-bulk-edited row reads from the override, mirroring how
+         * `statusOverrides` repaints a toggled publish. 🛑 It overrides the
+         * SELLER-authored figure only — `availableQuantity` is system-owned and
+         * may legitimately be lower (reserved units), so claiming the new stock
+         * as available would be the overwrite `resolveStockResync` exists to
+         * prevent, rendered rather than written.
+         */
+        const stockOverride = stockOverrides.get(rowId);
         const availableRaw =
           typeof item.availableQuantity === "number" ? item.availableQuantity : null;
-        const stockRaw = typeof item.stockQuantity === "number" ? item.stockQuantity : null;
-        const stockValue = availableRaw ?? stockRaw;
+        const stockRaw =
+          stockOverride ?? (typeof item.stockQuantity === "number" ? item.stockQuantity : null);
+        const stockValue = stockOverride ?? availableRaw ?? stockRaw;
         const priceLabel =
           kind !== "auction" && priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "";
         const stockLabel = stockRaw === null ? "" : `${stockRaw} in stock`;
         const secondaryBase = auctionSecondary || toStringValue(item.condition, "");
         return {
-          id: toStringValue(item.id, `product-${index}`),
+          id: rowId,
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
           secondary: [priceLabel, stockLabel, secondaryBase, statusLabel].filter(Boolean).join(" · "),
           status: statusLabel,
@@ -591,6 +655,7 @@ export function SellerProductsView({
       return [
         buildBulkAction(ACTIONS.STORE["print-labels"], handleBulkPrintLabels, { icon: <Printer className="w-4 h-4" /> }),
         buildBulkAction(ACTIONS.STORE["set-location"], () => { setSelectedIdsForLocation(selection.selectedIds); setSetLocationOpen(true); }, { icon: <MapPin className="w-4 h-4" /> }),
+        buildBulkAction(ACTIONS.STORE["set-stock"], () => { setSelectedIdsForStock(selection.selectedIds); setSetStockOpen(true); }, { icon: <Boxes className="w-4 h-4" /> }),
       ] as BulkActionItem[];
     },
     renderCards: (rows, view, selection, isLoading) => (
@@ -668,6 +733,14 @@ export function SellerProductsView({
           count={selectedIdsForLocation.length}
           onSave={(loc) => handleSetLocation(loc, selectedIdsForLocation)}
           onClose={() => setSetLocationOpen(false)}
+        />
+      )}
+      {setStockOpen && (
+        <BulkStockModal
+          count={selectedIdsForStock.length}
+          busy={stockBusy}
+          onSave={(qty) => handleSetStock(qty, selectedIdsForStock)}
+          onClose={() => setSetStockOpen(false)}
         />
       )}
     </>
