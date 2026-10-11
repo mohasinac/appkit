@@ -146,7 +146,7 @@ export const PURGEABLE: Record<SeedPurpose, boolean> = {
  * a site with no real data: the cost of clearing something re-seedable is one
  * command, and the cost of being unable to clear it is the state this replaced.
  */
-sxdexport const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
+export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   /*
    * ── permanent: content, not scaffolding ─────────────────────────────────
    *
@@ -304,3 +304,25 @@ export function asSeedPurpose<T>(
 ): Array<T & WithSeedPurpose> {
   return rows.map((row) => ({ ...row, seedPurpose: purpose }));
 }
+
+/**
+ * How long a `test` row survives before a purge may take it.
+ *
+ * 🛑 STOP-GAP, added 2026-10-12 to unbreak the build — NOT a design decision,
+ * and whoever owns `seedPurpose` should replace it with the real declaration.
+ *
+ * This file arrived with `src/seed/index.ts:247` and `src/index.ts:1935` ALREADY
+ * re-exporting `SEED_TEST_TTL_DAYS` from here while nothing declared it, so
+ * `tsc` failed with TS2305 and appkit did not compile at all — the half-finished
+ * public-surface rename of Root Cause #20, where the barrel landed without the
+ * definition. (The same commit also carried `sxdexport const` on line 149,
+ * i.e. stray keystrokes, which is the likelier reading of what happened here.)
+ *
+ * Aliased to the EXISTING value rather than given a fresh number: a retention
+ * window is a product decision and inventing one would have been worse than the
+ * compile error. `TEST_DATA_TTL_DAYS` is 7 and is what `testDataExpiresAt()`
+ * already stamps on every test row, so this is behaviour-preserving by
+ * construction — and when the two names are reconciled, there is exactly one
+ * number to change.
+ */
+export { TEST_DATA_TTL_DAYS as SEED_TEST_TTL_DAYS } from "./test-data-ttl";

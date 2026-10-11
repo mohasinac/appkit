@@ -41,11 +41,8 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-<<<<<<< HEAD
 import { maskComments } from "./lib/mask-comments.mjs";
 
-=======
->>>>>>> 8455bd3161f074ede55320d63b7327c55614b389
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(ROOT, "dist");
 const CHECK = process.argv.includes("--check");
@@ -91,7 +88,6 @@ const files = [];
  */
 const SPECIFIER = /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(["'])(\.[^"']*)\2/g;
 
-<<<<<<< HEAD
 /*
  * Bare subpaths of dependencies that publish NO exports map.
  *
@@ -142,92 +138,6 @@ function resolveBareSpecifier(spec) {
   if (packageHasExportsMap(pkgName)) return null;
   if (!existsSync(join(NODE_MODULES, pkgName, `${sub}.js`))) return null;
   return `${spec}.js`;
-=======
-/**
- * Blank out comments, preserving length and newlines so every index still
- * lines up with the original source.
- *
- * 🛑 REQUIRED, not tidiness. `tsc` keeps JSDoc in the emitted JS, and appkit's
- * JSDoc is full of usage EXAMPLES that look exactly like imports:
- *     cli/index.js            *   import features from "../../features.config";
- *     instrumentation/index.js  * await import("./src/providers.config");
- *     bind-all.js             *   import { CONSUMER_FUNCTIONS } from "./consumer-functions";
- * Matching those reported 4 "specifiers that resolve to nothing" — all four
- * documentation, none of them code. Rewriting inside a comment is harmless but
- * the false ERROR is not: it would have failed this script on every build.
- *
- * 🛑 AND IT MUST BE A CHARACTER WALK, NOT A REGEX. The obvious
- * `/\/\*[\s\S]*?\*\//g` is wrong here and wrong loudly: a `/*` occurring inside
- * a STRING LITERAL opens a comment the scanner never intended, and the
- * non-greedy match then blanks everything up to the next `*​/` — swallowing real
- * code wholesale. Measured on dist/server.js: the regex version masked away
- * exactly the 227 extensionless specifiers (544 raw matches -> 317 masked, 0
- * extensionless left), so the script silently "fixed" 317 of 544 and declared
- * success. Same failure CLAUDE.md records for audit-theme-drift, where a `}`
- * inside a CSS comment truncated the block and hid every token below it.
- */
-function maskComments(src) {
-  /*
-   * 🛑 `split("")`, NOT `Array.from(src)`.
-   *
-   * `Array.from` iterates CODE POINTS, so a surrogate pair — every 🛑 in
-   * appkit's JSDoc — becomes ONE element, while `src[i]` indexes CODE UNITS.
-   * The two then disagree by one for everything after the first emoji, and the
-   * mask lands at the wrong offset.
-   *
-   * It corrupted 34 of 2,387 files before being caught, and the symptom named
-   * the cause once seen: `}from`, `awaitimport`, `Text from "…"i"` — edits
-   * applied a character or two to the left, eating the space or the brace
-   * before them. Only files with an emoji ABOVE an import were affected, which
-   * is why it looked random.
-   */
-  const out = src.split("");
-  let i = 0;
-  const n = src.length;
-
-  while (i < n) {
-    const c = src[i];
-    const next = src[i + 1];
-
-    /* String and template literals — skipped whole, never masked. */
-    if (c === '"' || c === "'" || c === "`") {
-      const quote = c;
-      i += 1;
-      while (i < n) {
-        if (src[i] === "\\") {
-          i += 2;
-          continue;
-        }
-        if (src[i] === quote) {
-          i += 1;
-          break;
-        }
-        i += 1;
-      }
-      continue;
-    }
-
-    if (c === "/" && next === "*") {
-      const start = i;
-      i += 2;
-      while (i < n && !(src[i] === "*" && src[i + 1] === "/")) i += 1;
-      i = Math.min(i + 2, n);
-      for (let k = start; k < i; k += 1) if (out[k] !== "\n") out[k] = " ";
-      continue;
-    }
-
-    if (c === "/" && next === "/") {
-      const start = i;
-      while (i < n && src[i] !== "\n") i += 1;
-      for (let k = start; k < i; k += 1) out[k] = " ";
-      continue;
-    }
-
-    i += 1;
-  }
-
-  return out.join("");
->>>>>>> 8455bd3161f074ede55320d63b7327c55614b389
 }
 
 let filesChanged = 0;
@@ -250,7 +160,6 @@ for (const file of files) {
     edits.push({ start: m.index, end: m.index + match.length, text: `${head}${quote}${fixed}${quote}` });
   }
 
-<<<<<<< HEAD
   for (const m of masked.matchAll(BARE_SPECIFIER)) {
     const [match, head, quote, spec] = m;
     const fixed = resolveBareSpecifier(spec);
@@ -264,10 +173,6 @@ for (const file of files) {
    * apply loop below slices forward from a cursor. Sort before applying. */
   edits.sort((a, b) => a.start - b.start);
 
-=======
-  if (!edits.length) continue;
-
->>>>>>> 8455bd3161f074ede55320d63b7327c55614b389
   let next = "";
   let cursor = 0;
   for (const e of edits) {
