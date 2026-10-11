@@ -67,6 +67,7 @@ export const FAQ_CATEGORY_LABELS: Record<FAQCategory, string> = {
   technical_support: "Technical Support",
   general: "General Questions",
   scam_awareness: "Scam Awareness",
+  fees_and_taxes: "Fees & Taxes",
 };
 
 export const DEFAULT_FAQ_DATA: Partial<FAQDocument> = {
