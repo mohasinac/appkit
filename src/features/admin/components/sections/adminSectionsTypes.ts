@@ -1,6 +1,10 @@
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { ROUTES } from "../../../../next/routing/route-map";
 import type { SectionType as CanonicalSectionType } from "../../../homepage/schemas/firestore";
+/* The canonical category→label map. `FAQ_CATEGORY_OPTIONS` is derived from it
+ * at the bottom of this file; see that comment for why a local list was a
+ * data-destroying defect rather than a duplicate. */
+import { FAQ_CATEGORY_LABELS } from "../../../faq/schemas/firestore";
 const LABEL_VERIFIED_SELLERS = "Verified Sellers";
 
 /*
@@ -285,7 +289,41 @@ export interface WhatsAppBuilderState {
   testimonial: string;
 }
 
-export type FAQCategory = "general" | "shipping" | "returns" | "payment" | "account" | "products" | "sellers";
+/**
+ * 🛑 This was a FOURTH, LOCAL `FAQCategory` with its own spellings, and it was
+ * destroying admin-authored data on every save.
+ *
+ * It read:
+ *
+ *   type FAQCategory = "general" | "shipping" | "returns" | "payment"
+ *                    | "account" | "products" | "sellers";
+ *
+ * Six of those seven are not values any FAQ document has ever carried — the
+ * real ones are `shipping_delivery`, `returns_refunds`, `orders_payment`,
+ * `product_information`, `account_security`. So:
+ *
+ *   - `parseFAQBuilder` filters the stored array against `FAQ_CATEGORY_OPTIONS`,
+ *     and the seeded config `["general","orders_payment","shipping_delivery",
+ *     "returns_refunds","product_information"]` came back as `["general"]`;
+ *   - the admin saw ONE of five boxes ticked on a form that looked complete;
+ *   - saving wrote `categories: ["general"]`, PERMANENTLY dropping four;
+ *   - and had they ticked "Shipping", the homepage tab would have rendered the
+ *     raw lowercase `shipping` as its label and filtered to zero items, because
+ *     the renderer compares it against `item.category` (Root Cause #33).
+ *
+ * Nothing caught it because `buildFAQConfig` returns `JsonObjectWithUndefined`,
+ * so the mismatch between this union and `FAQSectionConfig.categories` is
+ * laundered through an index signature before `tsc` can see it.
+ *
+ * Re-exported under the same name so the ~6 references in this module and its
+ * build/parse sibling keep working, while the VALUE SET can no longer differ.
+ *
+ * 🛑 Imported AND re-exported, not `export type { X } from "…"` — that form
+ * re-exports without binding the name locally, so the three uses further down
+ * this file stopped compiling (`TS2304: Cannot find name 'FAQCategory'`).
+ */
+import type { FAQCategory } from "../../../faq/types";
+export type { FAQCategory };
 
 export interface FAQBuilderState {
   title: string;
@@ -634,7 +672,15 @@ export const DEFAULT_FAQ_BUILDER: FAQBuilderState = {
   displayCount: 5,
   expandedByDefault: false,
   linkToFullPage: true,
-  categories: ["general", "shipping", "returns"],
+  /*
+   * 🛑 This read `["general", "shipping", "returns"]`, and two of the three
+   * were values no FAQ document has ever carried — so a newly created homepage
+   * FAQ section shipped with two tabs that rendered their raw slug as a label
+   * and filtered to zero items. `tsc` found this line the moment the shadow
+   * union was collapsed, which is the whole reason the fix was a type change
+   * rather than a data edit (Root Cause #45).
+   */
+  categories: ["general", "shipping_delivery", "returns_refunds"],
 };
 
 export const DEFAULT_BLOG_BUILDER: BlogBuilderState = {
@@ -760,12 +806,21 @@ export const RESOURCE_SORT_OPTIONS = [
   { label: "Popular", value: "popular" },
 ] as const;
 
-export const FAQ_CATEGORY_OPTIONS: Array<{ label: string; value: FAQCategory }> = [
-  { label: "General", value: "general" },
-  { label: "Shipping", value: "shipping" },
-  { label: "Returns", value: "returns" },
-  { label: "Payment", value: "payment" },
-  { label: "Account", value: "account" },
-  { label: "Products", value: "products" },
-  { label: "Sellers", value: "sellers" },
-];
+/**
+ * 🛑 DERIVED, never hand-written — and `parseFAQBuilder` filters stored values
+ * against this list, so a missing entry is not a cosmetic gap: it silently
+ * DROPS that category on the admin's next save.
+ *
+ * `FAQ_CATEGORY_LABELS` is a `Record<FAQCategory, string>`, so a tenth
+ * category is a compile error there and appears here with no edit. The seven
+ * hand-typed entries this replaced had six wrong spellings and were missing
+ * `scam_awareness` and `fees_and_taxes` — see the `FAQCategory` re-export
+ * above for the full writeup.
+ *
+ * Order follows the canonical map's own declaration order rather than being
+ * re-sorted: the admin picks from a checkbox list, so the order is a display
+ * choice, and having one owner of it is worth more than having it alphabetical.
+ */
+export const FAQ_CATEGORY_OPTIONS: Array<{ label: string; value: FAQCategory }> = (
+  Object.entries(FAQ_CATEGORY_LABELS) as Array<[FAQCategory, string]>
+).map(([value, label]) => ({ label, value }));

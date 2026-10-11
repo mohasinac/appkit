@@ -8,6 +8,9 @@ import {
   generateHomepageSectionId,
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+/* The ONE FAQ-category union. See `FAQCategoryKey` below for why this import
+ * replaced a local copy. Type-only, so it adds nothing to the import graph. */
+import type { FAQCategory } from "../../faq/types";
 
 // --- Carousel Slides ----------------------------------------------------------
 
@@ -504,14 +507,31 @@ export interface FeaturesSectionConfig {
   learnMoreLink?: string;
 }
 
-export type FAQCategoryKey =
-  | "general"
-  | "orders_payment"
-  | "shipping_delivery"
-  | "returns_refunds"
-  | "product_information"
-  | "account_security"
-  | "technical_support";
+/**
+ * 🛑 An ALIAS, no longer its own union.
+ *
+ * There were FOUR same-named-or-equivalent FAQ-category unions and they had
+ * drifted in two different directions:
+ *
+ *   1. `FAQCategory`      (features/faq/types)            — 9 values, the REAL one
+ *   2. `FAQCategoryKey`   (here)                          — 7, missing scam_awareness + fees_and_taxes
+ *   3. `FAQCategory`      (admin/.../adminSectionsTypes)  — 7, DIFFERENT SPELLINGS
+ *   4. `FAQ_CATEGORY_LABELS` (homepage/constants)         — 7 keys, loosely typed
+ *
+ * (2) merely lagged. (3) was a live DATA-DESTROYING defect: its options were
+ * `shipping` / `returns` / `payment` / `account` / `products` / `sellers`, so
+ * `parseFAQBuilder` filtered every stored value against that list and only
+ * `general` survived. An admin opening the homepage FAQ section to change its
+ * TITLE saw one of five categories ticked, and saving wrote `["general"]` —
+ * permanently dropping the other four, silently, with a form that looked
+ * complete. Root Cause #76's write-shape lesson: a form that can only express
+ * a subset destroys the rest on every save.
+ *
+ * Keeping the NAME rather than deleting it: it is referenced by two fields
+ * below and by consumer code, and a rename would be churn for no gain. What
+ * matters is that it can no longer hold a different value set.
+ */
+export type FAQCategoryKey = FAQCategory;
 
 export interface FAQSectionConfig {
   title: string;
