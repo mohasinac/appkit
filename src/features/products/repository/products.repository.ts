@@ -508,6 +508,24 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       "seoTitleTemplate",
       "seoDescriptionTemplate",
       "seoKeywords",
+      /*
+       * C5a — the PACKED parcel figures.
+       *
+       * 🛑 These are resolved up the ancestor chain like everything else here,
+       * and the field they fill is deliberately OPTIONAL on the product: the
+       * figure a carrier bills on is the packed box, not the item, and a bey
+       * is ~30 g against ~300 g boxed. A required product weight would
+       * therefore be an ITEM weight, systematically under-estimating every
+       * booking — and because the booking is capped at the amount collected
+       * from the buyer, systematic under-estimation means silently absorbing
+       * the difference.
+       *
+       * So the category's packed default drives the checkout ESTIMATE, this
+       * fills it when the leaf declares one, the product may refine it, and
+       * the real parcel figure is entered at shipment time.
+       */
+      "weightG",
+      "dimensionsCm",
     ] as const;
     const isEmpty = (v: unknown) =>
       v == null || (Array.isArray(v) && v.length === 0);
@@ -597,6 +615,23 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     }
     if (resolved.defaultAuthenticity && !input.authenticity) {
       out.authenticity = resolved.defaultAuthenticity;
+    }
+
+    /*
+     * C5a — fill-blank, never overwrite. A seller who weighed their own packed
+     * box has measured something the category only estimates.
+     *
+     * 🛑 `input.weightG == null`, not `!input.weightG`. A zero is nonsense for
+     * a parcel but it is an explicit value, and the falsy test would replace
+     * it with the category's figure on every save — the same distinction
+     * `gstRate` needs two blocks up, and for the same reason: "nobody said"
+     * and "somebody said zero" are different facts.
+     */
+    if (resolved.weightG != null && input.weightG == null) {
+      out.weightG = resolved.weightG;
+    }
+    if (resolved.dimensionsCm && !input.dimensionsCm) {
+      out.dimensionsCm = { ...resolved.dimensionsCm };
     }
 
     /*

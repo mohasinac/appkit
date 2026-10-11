@@ -43,6 +43,10 @@ export const PUBLIC_STORE_FIELDS = [
   "website",
   "socialLinks",
   "returnPolicy",
+  // The seller's free-text shipping PROSE, rendered by StoreAboutView. Not to
+  // be confused with `shippingPricing` below, which is the rule that computes
+  // money and is private — the names are one word apart and mean opposite
+  // things about disclosure.
   "shippingPolicy",
   "isVacationMode",
   "vacationMessage",
@@ -77,6 +81,19 @@ export const PRIVATE_STORE_FIELDS = [
   // publishing it would invite a client to "correct" a price that is already
   // correct.
   "pricesIncludeGst",
+  /*
+   * C5b. A commercial setting, and `estimate` additionally reveals that this
+   * seller's parcels are booked through OUR carrier account — which is
+   * operational detail about us, not a fact about the store. A buyer sees the
+   * resulting amount at checkout; the rule that produced it is ours.
+   *
+   * 🛑 One word from `shippingPolicy` in the PUBLIC list above, and the
+   * opposite answer. That is a real hazard — a blind find-replace during this
+   * change swapped the two and `tsc` was silent, because both are valid
+   * strings in a `const` array. `audit-public-projection-parity` is what would
+   * have caught it: a PUBLIC field no projection emits fails.
+   */
+  "shippingPricing",
   "isFeatured", // ranking input; not part of the public store profile
   "vacationReturnDate", // not rendered by StoreAboutView; add to PUBLIC when a reader exists
   "isTestData", // tester-sandbox tagging; filtered by filterTestDataForViewer

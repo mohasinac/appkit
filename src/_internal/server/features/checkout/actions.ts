@@ -36,6 +36,12 @@ import type { SiteSettingsDocument } from "../../../../features/admin/schemas/fi
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
 import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
+import {
+  DEFAULT_STORE_SHIPPING_POLICY,
+  quoteShipping,
+  toStoreShippingPolicy,
+  type StoreShippingPolicy,
+} from "../../../shared/features/shipping/mode";
 import { resolveCouponCategorySlugs } from "../../../../features/promotions/actions/coupon-actions";
 import {
   assertCheckoutLane,
@@ -314,17 +320,101 @@ function accumulateCouponUsage(
  */
 export async function resolveShippingCost(
   storeId: string | undefined,
-): Promise<{ shippingFee: number; storeOwnerId: string | undefined; storeEmiEnabled: boolean; storeState: string | undefined }> {
-  if (!storeId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled: false, storeState: undefined };
+): Promise<{
+  shippingFee: number;
+  storeOwnerId: string | undefined;
+  storeEmiEnabled: boolean;
+  storeState: string | undefined;
+  /** C5b — the resolved policy, so a caller can quote with the cart in hand. */
+  shippingPolicy: StoreShippingPolicy;
+  /**
+   * 🛑 True when the mode is `estimate` and no carrier rate was supplied.
+   *
+   * The caller MUST act on this rather than trusting `shippingFee: 0` — a
+   * zero there would ship every parcel free at our expense, silently, until
+   * somebody noticed. Returning both is what makes the distinction visible.
+   */
+  shippingUnavailable: boolean;
+}> {
+  if (!storeId) {
+    return {
+      shippingFee: 0,
+      storeOwnerId: undefined,
+      storeEmiEnabled: false,
+      storeState: undefined,
+      shippingPolicy: DEFAULT_STORE_SHIPPING_POLICY,
+      shippingUnavailable: false,
+    };
+  }
   const store = await storeRepository.findById(storeId);
   const storeOwnerId = store?.ownerId;
   const storeEmiEnabled = store?.emiEnabled === true;
   const storeState = await resolveStoreState(storeId);
-  if (!storeOwnerId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled, storeState };
+
+  /*
+   * ── C5b: the store's shipping MODE, not a flat number ──────────────────
+   *
+   * This read `sellerUser.shippingConfig.customShippingPrice ?? 0` — one flat
+   * rupee figure off the store OWNER's user document, with no weight,
+   * destination, pincode or courier in it. Meanwhile `ShippingConfigDocument`
+   * (zones, per-kg rates, free-above, express surcharge, full CRUD, seed data)
+   * was read by NO money path at all, so there were two shipping-config
+   * systems and the authoritative one was the flat number by accident.
+   *
+   * 🛑 The policy lives on the STORE, because shipping is charged per store
+   * and `splitCartIntoOrderGroups` groups on `storeId` — a user who owns two
+   * stores would otherwise price both the same, which is Root Cause #65's
+   * granularity mismatch.
+   *
+   * 🛑 The LEGACY flat number is still honoured as a `flat` mode when a store
+   * has no policy of its own. Not for compatibility's sake — for correctness:
+   * a seller who set ₹100 on the old surface and has not seen the new one must
+   * keep charging ₹100, not silently drop to free. Migration is a seller
+   * visiting their settings, not a reseed.
+   */
+  const policy = store?.shippingPricing
+    ? toStoreShippingPolicy(store.shippingPricing)
+    : await legacyFlatPolicy(storeOwnerId);
+
+  /*
+   * 🛑 `goodsValue: 0` and no carrier rate here, deliberately.
+   *
+   * This function resolves the POLICY; it does not know the cart. A caller
+   * that needs the charged amount calls `quoteShipping` with the group's goods
+   * value and, for `estimate` mode, a rate — and `shippingFee` below stays the
+   * non-carrier answer so every existing caller behaves exactly as before
+   * until it is converted. An `estimate`-mode store therefore reports
+   * `shippingUnavailable`, which is the signal to go and get a rate rather
+   * than a zero that would ship for free at our expense.
+   */
+  const quote = quoteShipping({ policy, goodsValue: 0, carrierRate: null });
+
+  return {
+    shippingFee: quote.kind === "charge" ? quote.amount : 0,
+    storeOwnerId: storeOwnerId ?? undefined,
+    storeEmiEnabled,
+    storeState,
+    shippingPolicy: policy,
+    shippingUnavailable: quote.kind === "unavailable",
+  };
+}
+
+/**
+ * The pre-C5b flat number, read as a `flat` mode.
+ *
+ * One extra read, and only for a store that has never saved a policy — so it
+ * disappears as sellers touch their settings rather than needing a migration.
+ */
+async function legacyFlatPolicy(
+  storeOwnerId: string | undefined,
+): Promise<StoreShippingPolicy> {
+  if (!storeOwnerId) return DEFAULT_STORE_SHIPPING_POLICY;
   const sellerUser = await userRepository.findById(storeOwnerId);
-  const shippingConfig = sellerUser?.shippingConfig;
-  if (!shippingConfig?.isConfigured) return { shippingFee: 0, storeOwnerId, storeEmiEnabled, storeState };
-  return { shippingFee: shippingConfig.customShippingPrice ?? 0, storeOwnerId, storeEmiEnabled, storeState };
+  const legacy = sellerUser?.shippingConfig;
+  if (!legacy?.isConfigured) return DEFAULT_STORE_SHIPPING_POLICY;
+  const amount = legacy.customShippingPrice ?? 0;
+  if (!(amount > 0)) return DEFAULT_STORE_SHIPPING_POLICY;
+  return { mode: { kind: "flat", amount } };
 }
 
 /** P-8 GST — the seller's registered/pickup state, used to determine intra- vs inter-state tax. */

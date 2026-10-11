@@ -502,6 +502,28 @@ export interface ProductDocument extends BaseDocument {
     }>;
   };
 
+  /**
+   * The PACKED parcel — C5a. Optional on purpose.
+   *
+   * 🛑 The figure a carrier bills on is the packed box, not the item: a bey is
+   * ~30 g and ~300 g boxed. A REQUIRED product weight would therefore be an
+   * item weight that systematically under-estimates every booking — and
+   * because a booking is capped at the amount collected from the buyer,
+   * systematic under-estimation means silently absorbing the difference on
+   * every order.
+   *
+   * So three tiers: the category's packed default drives the checkout
+   * estimate, this refines it when a seller has actually weighed a box, and
+   * the real figure is entered at shipment time. See
+   * `_internal/shared/features/shipping/parcel.ts`.
+   *
+   * `dimensionsCm` is all three or nothing — a box with a length and no width
+   * is not a dimension, and a volumetric calculation fed two of three yields a
+   * quote for a flat sheet.
+   */
+  weightG?: number;
+  dimensionsCm?: { l: number; w: number; h: number };
+
   /** Physical storage location for inventory management (Print & Label Center). */
   physicalLocation?: {
     zone: string;

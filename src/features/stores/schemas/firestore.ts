@@ -52,6 +52,28 @@ export interface StoreShippingConfig {
   defaultProviderId: string;
 }
 
+/**
+ * How this store prices shipping — C5b.
+ *
+ * 🛑 On the STORE, not on the owner's user document, which is where the old
+ * flat number lived (`user.shippingConfig.customShippingPrice`). Shipping is
+ * charged per store and `splitCartIntoOrderGroups` groups on `storeId`, so the
+ * policy has to live at the granularity it is billed at — a user who owns two
+ * stores would otherwise price both the same (Root Cause #65's shape).
+ *
+ * Absent means `DEFAULT_STORE_SHIPPING_POLICY` (`free`), which preserves what
+ * an unconfigured store already did: the old `?? 0` charged the buyer nothing.
+ * See `toStoreShippingPolicy` for why `free` and not `estimate`.
+ */
+export interface StoreShippingPolicyField {
+  mode:
+    | { kind: "free" }
+    | { kind: "flat"; amount: number }
+    | { kind: "estimate" };
+  /** Goods value at or above which shipping is free, whatever the mode. */
+  freeAbove?: number;
+}
+
 // -- Store Document -----------------------------------------------------------
 
 export const StoreStatusValues = {
@@ -185,6 +207,22 @@ export interface StoreDocument extends BaseDocument {
    * products they want converted — see `ProductRepository`.
    */
   pricesIncludeGst?: boolean;
+
+  /**
+   * How this store PRICES shipping — C5b. Absent means `free`.
+   *
+   * 🛑 Named `shippingPricing`, not `shippingPolicy`, because
+   * `shippingPolicy` is ALREADY taken on this document by the seller's
+   * free-text shipping prose. `tsc` caught the collision; the two are
+   * genuinely different things (prose a buyer reads vs. a rule that computes
+   * money) and sharing a name would have made one of them unreadable.
+   *
+   * 🛑 PRIVATE. It is a commercial setting, and `estimate` additionally
+   * reveals that this seller's parcels are booked through our carrier
+   * account. Triaged into `PRIVATE_STORE_FIELDS`; the buyer sees the
+   * resulting AMOUNT at checkout, never the rule that produced it.
+   */
+  shippingPricing?: StoreShippingPolicyField;
 
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {
