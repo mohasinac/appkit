@@ -1477,3 +1477,18 @@ export type {
   PriceIndexBandRow,
   PriceIndexConditionRow,
 } from "./features/price-index/components/PriceIndexToolView";
+
+// C5f — courier ratings. Two numbers, never blended; see the module header.
+export {
+  COURIER_RATING_MIN_CONFIDENT_SAMPLES,
+  courierRatingDisplay,
+  isValidCourierVote,
+  courierVoteId,
+  rollUpCourierVotes,
+} from "./_internal/shared/features/shipping/courier-rating";
+export type {
+  CourierRatingPair,
+  CourierRatingDisplay,
+  CourierRatingVote,
+  CourierStats,
+} from "./_internal/shared/features/shipping/courier-rating";
