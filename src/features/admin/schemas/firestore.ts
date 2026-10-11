@@ -764,6 +764,21 @@ export interface SiteSettingsDocument extends BaseDocument {
   shipping: {
     estimatedDays: number;
     minOrderForFree: number;
+    /**
+     * Which shipping provider is registered at boot — C5c.
+     *
+     * 🛑 A SETTING, not a code swap, and `manual` is the default. A self-ship
+     * seller must be unaffected by a carrier integration merely existing, which
+     * is why this is a runtime toggle rather than a build-time choice.
+     *
+     * 🛑 Selecting `shiprocket` without credentials must FAIL LOUDLY and must
+     * never degrade to manual. A silent fallback means a seller clicks "Book
+     * with Shiprocket", receives a synthetic `manual_{orderId}` tracking id,
+     * and nobody is told the parcel was never booked — a 200 carrying an
+     * AWB-shaped string that no carrier has ever seen. That is the worst
+     * failure available on this path, and it is the one a fallback produces.
+     */
+    provider?: "manual" | "shiprocket";
   };
   returns: {
     windowDays: number;
@@ -1013,6 +1028,9 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   shipping: {
     estimatedDays: 5,
     minOrderForFree: 0,
+    // Explicit rather than left `undefined` — see the field's own note on why a
+    // missing provider must resolve to manual and never to a silent carrier.
+    provider: "manual",
   },
   returns: {
     windowDays: 7,

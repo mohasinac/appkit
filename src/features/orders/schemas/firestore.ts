@@ -517,6 +517,27 @@ export interface OrderDocument extends BaseDocument {
   shippingMethod?: ShippingMethod;
   shippingCarrier?: string;
   trackingUrl?: string;
+  /**
+   * The carrier's label PDF, once a shipment has been booked.
+   *
+   * 🛑 DECLARED 2026-10-11, and the reason is that it was being READ without
+   * being declared. `GET /api/user/orders/[id]/label` reached it through an
+   * inline `(order as { shippingLabelUrl?: string })` cast — a cast at a
+   * boundary, which is where this class of bug lives (Root Cause #70/#98) — so
+   * the field existed in exactly one expression, on no schema, with no writer.
+   * That route could therefore only ever return its 404 branch, and nothing
+   * said so: `tsc` cannot check a field nobody declared, and a 404 from a
+   * "download label" button reads as "not shipped yet" rather than as a route
+   * that cannot succeed.
+   *
+   * Declaring it is the part that can be done and verified now. 🛑 It still has
+   * NO WRITER — `ManualShippingProvider.generateLabel` throws, and the
+   * Shiprocket provider that would populate it cannot be built against the live
+   * API without credentials (C5c). So the route's 404 remains correct for every
+   * order today; what changes is that the field is now type-checked, and
+   * whatever writes it will be caught by the compiler rather than by a cast.
+   */
+  shippingLabelUrl?: string;
   payoutStatus?: OrderPayoutStatus;
   payoutId?: string;
   offerId?: string;

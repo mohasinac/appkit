@@ -320,6 +320,9 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   shipping: {
     estimatedDays: 7,
     minOrderForFree: 999,
+    // C5c — manual until a Shiprocket provider AND credentials exist. A
+    // seeded `shiprocket` would throw at boot by design.
+    provider: "manual" as const,
   },
   returns: {
     windowDays: 7,
