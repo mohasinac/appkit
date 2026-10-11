@@ -227,7 +227,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/dedupe-peer-deps.mjs",
-    "build": "node scripts/dedupe-peer-deps.mjs && node -e \"const fs=require('fs');for(const t of ['tsconfig.build.tsbuildinfo','dist']){try{fs.rmSync(t,{recursive:true})}catch(e){}}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && node scripts/fix-esm-extensions.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/bundle-css.mjs && node scripts/verify-css-build.mjs && node scripts/verify-esm-dist.mjs --quick",
+    "build": "node scripts/dedupe-peer-deps.mjs && node -e \"const fs=require('fs');for(const t of ['tsconfig.build.tsbuildinfo','dist']){try{fs.rmSync(t,{recursive:true})}catch(e){}}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && node scripts/fix-esm-extensions.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/bundle-css.mjs && node scripts/verify-css-build.mjs && node scripts/verify-esm-dist.mjs --quick && node scripts/write-build-stamp.mjs",
     "prepublishOnly": "npm run build",
     "watch": "concurrently --kill-others --restart-tries 0 --names \"ts,css\" \"tsc -p tsconfig.build.json --watch\" \"npm run watch:css\"",
     "watch:css": "tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --watch",
