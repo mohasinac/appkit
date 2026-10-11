@@ -101,6 +101,17 @@ export const PRIVATE_STORE_FIELDS = [
    * have caught it: a PUBLIC field no projection emits fails.
    */
   "shippingPricing",
+  /*
+   * C5g. An ADMIN trust decision about this seller, and the opposite call from
+   * the two `supports*Protection` flags in the PUBLIC list — which is the point
+   * of them being different kinds of field.
+   *
+   * The `supports*` pair is a PROMISE the seller made and a buyer needs before
+   * purchase. This is an internal exemption from our inspection step: it tells
+   * a buyer nothing they can act on, and publishing it would advertise which
+   * sellers' returns we do not check — a map of where to try a swap.
+   */
+  "returnsDirectToSeller",
   "isFeatured", // ranking input; not part of the public store profile
   "vacationReturnDate", // not rendered by StoreAboutView; add to PUBLIC when a reader exists
   "isTestData", // tester-sandbox tagging; filtered by filterTestDataForViewer

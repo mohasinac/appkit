@@ -9,6 +9,7 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 import type { ListingType } from "../../products/types";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
 import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
+import type { ReturnCustodyState } from "../../../_internal/shared/features/returns/custody";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
 //
@@ -390,6 +391,54 @@ export interface OrderDocument extends BaseDocument {
   /** Optional buyer elaboration alongside the coded reason. */
   returnReasonNote?: string;
   returnRequestedAt?: Date;
+
+  // ── C5g: custody. Where the parcel is, and who owns the next step ─────────
+  /**
+   * The return's own state machine — `requested` → `approved` → `in_transit`
+   * → `received` → `inspected` → `resolved`.
+   *
+   * 🛑 A SUB-STATUS, not five new `OrderStatus` members. `OrderStatus` keeps
+   * its two return values (`return_requested` / `returned`) because it drives
+   * nine status chips, the Active/Closed scope `Record`, badges and filters —
+   * and five extra members would appear in all of them while applying only to
+   * a return, all mapping to "Active", adding a chip and no information. See
+   * `_internal/shared/features/returns/custody.ts` for the full argument.
+   *
+   * Absent on every order that has never had a return requested.
+   */
+  returnCustody?: ReturnCustodyState;
+  /**
+   * Where the buyer was told to send it — SNAPSHOTTED at approval.
+   *
+   * 🛑 Derived by `returnDestination()` and then frozen, never recomputed. The
+   * inputs are `saleProtectionAddon` and the store's admin-granted
+   * `returnsDirectToSeller`, and an admin flipping that flag while a parcel is
+   * in the post must not retroactively change where the buyer was told to post
+   * it. Same reasoning as every other snapshot on this document
+   * (`hsnCode`/`gstRate`/`finalSale`/`condition`): a past instruction is fixed.
+   */
+  returnDestination?: "warehouse" | "seller";
+  /** The address the buyer was given, resolved once and recorded verbatim. */
+  returnAddress?: string;
+  /** Set when the buyer marks it posted; `in_transit` without one is a bug. */
+  returnPostedAt?: Date;
+  returnReceivedAt?: Date;
+  /**
+   * What a human found on opening it.
+   *
+   * 🛑 `finding` decides WHO PAYS and never whether a protected buyer is
+   * refunded — see `adjudicateClaim`. If inspection could block a protected
+   * refund then "no questions asked" is false, and this field would be
+   * rebuilding the dead-badge problem one level up.
+   */
+  returnInspection?: {
+    finding: "genuine" | "change-of-mind";
+    note?: string;
+    /** Actor uid only. 🛑 Never a name or an email — this document is not
+     *  PII-encrypted on these paths and `statusHistory` carries the same rule. */
+    inspectedBy?: string;
+    inspectedAt?: Date;
+  };
   /**
    * Which lines the buyer wants to return. Absent means the whole order —
    * the same convention `processRefundAction`'s `itemIds` already uses.

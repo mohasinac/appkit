@@ -250,6 +250,28 @@ export interface StoreDocument extends BaseDocument {
   supportsShippingProtection?: boolean;
   supportsSaleProtection?: boolean;
 
+  /**
+   * ── C5g: ADMIN-GRANTED trust. Routes even a protected claim to the seller ──
+   *
+   * A sale-protection claim normally ships to our warehouse, because we are the
+   * ones underwriting the refund and therefore the ones who need to inspect it.
+   * This flag sends it to the seller instead and skips our inspection.
+   *
+   * 🛑 ADMIN-ONLY, and deliberately NOT next to the two seller-settable
+   * `supports*` flags above despite sitting in the same block. The distinction
+   * is the whole mechanism: a seller who could set this would be **granting
+   * themselves exemption from inspection**, which is exactly the control it
+   * exists to impose.
+   *
+   * 🛑 It must stay out of every seller PATCH schema. A field a seller can send
+   * is a field a seller can set (Root Cause #76's write-shape lesson) — and
+   * `z.object()` STRIPS unknown keys rather than rejecting them, so a seller
+   * route that merely omits it is already safe, while one that spreads the body
+   * is not. The verification asserts its absence from the seller routes rather
+   * than trusting that nobody adds it.
+   */
+  returnsDirectToSeller?: boolean;
+
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {
     /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */
