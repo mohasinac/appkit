@@ -12,7 +12,28 @@
  */
 
 import { useEffect } from "react";
-import { Button, Heading, Pre, Text } from "../../ui";
+/*
+ * 🛑 FROM THE DEFINING MODULES, NOT `../../ui`.
+ *
+ * This file is re-exported by `next/index.ts`, which is appkit's SERVER
+ * integration surface (middleware, route handlers, metadata). Importing the UI
+ * barrel from here is what put a stylesheet in the server graph: `ui/index.ts`
+ * opens with
+ *     import "./components/index.style.css";
+ *     import "./forms/FormShell.style.css";
+ * and Node cannot load CSS at any path. That single edge — three hops,
+ * next/index -> GlobalError -> ui/index — is what made
+ * `serverExternalPackages: ["@mohasinac/appkit"]` fail with
+ * ERR_UNKNOWN_FILE_EXTENSION.
+ *
+ * The CSS lives on the BARREL, not on the components, so importing Button /
+ * Typography / Semantic directly keeps the component behaviour identical and
+ * drops the stylesheet edge. It also pulls ~258 modules of UI graph out of the
+ * `/next` entry. Root Cause #18 — import from the file that defines the symbol.
+ */
+import { Button } from "../../ui/components/Button";
+import { Heading, Text } from "../../ui/components/Typography";
+import { Pre } from "../../ui/components/Semantic";
 import {
   trackError,
   ErrorCategory,

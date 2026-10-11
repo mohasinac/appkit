@@ -9,7 +9,22 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Cropper, CropperRef } from "react-advanced-cropper";
-import "react-advanced-cropper/dist/style.css";
+/*
+ * 🛑 NO `import "react-advanced-cropper/dist/style.css"` HERE.
+ *
+ * The stylesheet is vendored into dist/vendor by copy-assets.mjs and pulled in
+ * through src/styles.css's @import chain, so it still ships — via
+ * `@mohasinac/appkit/styles`, which every consumer already loads.
+ *
+ * As a JS import it was invisible to bundle-css (which only flattens relative
+ * @imports) and fatal to anything resolving with Node, because Node cannot
+ * load CSS at any path. This single line put a third-party stylesheet into
+ * appkit's SERVER graph —
+ *   server.js -> …/seo/sitemap -> features/blog -> BlogPostForm
+ *             -> features/media -> ImageEditor -> …/style.css
+ * — and was the last thing blocking
+ * `serverExternalPackages: ["@mohasinac/appkit"]`.
+ */
 import { Button, Div, Modal, Row, Stack, Text, useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 export interface ImageEditorProps {

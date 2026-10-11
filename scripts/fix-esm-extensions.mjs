@@ -88,6 +88,58 @@ const files = [];
  */
 const SPECIFIER = /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(["'])(\.[^"']*)\2/g;
 
+/*
+ * Bare subpaths of dependencies that publish NO exports map.
+ *
+ * 🛑 `next` is the case that matters and it has no `exports` field at all, so
+ * Node resolves `next/server` as a plain path — and under ESM a plain path
+ * needs its extension. Node even suggests the fix in the error:
+ *   Cannot find module '…/node_modules/next/server' …
+ *   Did you mean to import "next/server.js"?
+ * 117 such specifiers across appkit's dist.
+ *
+ * Deliberately NARROW. A package WITH an exports map must never be rewritten:
+ * its map may declare `./server` and not `./server.js`, so appending would
+ * break what currently works. The rule is therefore: no exports field, and the
+ * `.js` file must already exist on disk.
+ *
+ * 🛑 FORWARD-COMPAT RISK, stated rather than buried: the day Next adds an
+ * exports map declaring `./server` but not `./server.js`, this inverts and the
+ * rewrite becomes the bug. The guard below will stop rewriting at that point
+ * (the package would then have an exports field), but anything already emitted
+ * must be rebuilt. verify-esm-dist.mjs is what would catch it.
+ */
+const BARE_SPECIFIER = /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(["'])([a-z@][^"'.][^"']*)\2/g;
+
+const NODE_MODULES = resolve(ROOT, "..", "node_modules");
+const exportsMapCache = new Map();
+
+function packageHasExportsMap(pkgName) {
+  if (exportsMapCache.has(pkgName)) return exportsMapCache.get(pkgName);
+  let has = true; /* fail CLOSED — an unknown package is never rewritten */
+  try {
+    const pkgJson = JSON.parse(
+      readFileSync(join(NODE_MODULES, pkgName, "package.json"), "utf8"),
+    );
+    has = Boolean(pkgJson.exports);
+  } catch {
+    has = true;
+  }
+  exportsMapCache.set(pkgName, has);
+  return has;
+}
+
+function resolveBareSpecifier(spec) {
+  if (HAS_EXTENSION.test(spec)) return null;
+  const parts = spec.split("/");
+  const pkgName = spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0];
+  const sub = spec.slice(pkgName.length + 1);
+  if (!sub) return null;
+  if (packageHasExportsMap(pkgName)) return null;
+  if (!existsSync(join(NODE_MODULES, pkgName, `${sub}.js`))) return null;
+  return `${spec}.js`;
+}
+
 let filesChanged = 0;
 let rewritten = 0;
 const unresolved = [];
@@ -108,7 +160,18 @@ for (const file of files) {
     edits.push({ start: m.index, end: m.index + match.length, text: `${head}${quote}${fixed}${quote}` });
   }
 
+  for (const m of masked.matchAll(BARE_SPECIFIER)) {
+    const [match, head, quote, spec] = m;
+    const fixed = resolveBareSpecifier(spec);
+    if (!fixed) continue;
+    edits.push({ start: m.index, end: m.index + match.length, text: `${head}${quote}${fixed}${quote}` });
+  }
+
   if (!edits.length) continue;
+
+  /* Both passes append to one list, so order is not guaranteed — and the
+   * apply loop below slices forward from a cursor. Sort before applying. */
+  edits.sort((a, b) => a.start - b.start);
 
   let next = "";
   let cursor = 0;

@@ -4,7 +4,25 @@ import { Input } from "./Input";
 import { Select, type SelectOption } from "./Select";
 import { Textarea } from "./Textarea";
 import { Label, Text, Span } from "./Typography";
-import { ImageUpload, MediaUploadField } from "../../features/media";
+/*
+ * 🛑 FROM THE DEFINING MODULES, NOT the `features/media` barrel.
+ *
+ * This is a UI PRIMITIVE reaching into a feature barrel, and the barrel pulls
+ * the whole media surface — including ImageEditor, which imports
+ * `react-advanced-cropper/dist/style.css`. Node cannot load CSS at any path,
+ * so that one line put a third-party stylesheet in appkit's SERVER graph:
+ *   server.js -> GoogleReviewsSection -> ui/index -> FormField
+ *             -> features/media/index -> ImageEditor -> …/style.css
+ * which is what made `serverExternalPackages` fail with
+ * ERR_UNKNOWN_FILE_EXTENSION.
+ *
+ * It is also one of the edges in the 43-module `ui` <-> `features/media`
+ * import cycle that audit-import-cycles.mjs tracks — a UI primitive and a
+ * feature importing each other. Root Cause #18: import from the file that
+ * defines the symbol.
+ */
+import { ImageUpload } from "../../features/media/upload/ImageUpload";
+import { MediaUploadField } from "../../features/media/upload/MediaUploadField";
 import { FormShellContext } from "../forms/FormShell";
 
 export interface FormFieldProps {

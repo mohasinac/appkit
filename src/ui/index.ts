@@ -1,5 +1,25 @@
-import "./components/index.style.css";
-import "./forms/FormShell.style.css";
+/*
+ * 🛑 NO CSS IMPORTS HERE. Both moved into src/styles.css's @import chain, which
+ * is what `@mohasinac/appkit/styles` resolves to and what bundle-css.mjs
+ * flattens.
+ *
+ * They used to be `import "./components/index.style.css"` and
+ * `import "./forms/FormShell.style.css"`, and that was wrong twice over:
+ *
+ *   - components/index.style.css was ALREADY in the @import chain, so the JS
+ *     import was pure duplication.
+ *   - forms/FormShell.style.css was NOT, so it shipped only to consumers who
+ *     happened to pull this barrel — a real gap, measured as zero occurrences
+ *     of `.appkit-formshell` in the built styles.css.
+ *
+ * And a JS->CSS edge on a BARREL poisons every graph that touches it. Node
+ * cannot load CSS at any path, so this one import pair is what made
+ * `serverExternalPackages: ["@mohasinac/appkit"]` fail: appkit's server entry
+ * reaches this barrel in a few hops and died on ERR_UNKNOWN_FILE_EXTENSION.
+ *
+ * Styles now arrive exactly one way — the stylesheet — which is also the only
+ * way a consumer can control ordering.
+ */
 
 // --- Form-state provider (SB-UNI-Y-1) -----------------------------------------
 // The step-wizard `<FormShell>` component lives in features/shell, not here —

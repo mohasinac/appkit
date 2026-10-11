@@ -18,4 +18,22 @@
 
 @import "./tokens/tokens.css";
 @import "./ui/components/index.style.css";
+/*
+ * 🛑 FormShell was MISSING from this bundle, and that was a live defect.
+ *
+ * It reached consumers only through a JS import at the top of ui/index.ts, so
+ * an app that imported `@mohasinac/appkit/styles` and did not also pull the UI
+ * barrel got no FormShell styles at all. Measured before this line existed:
+ * `.appkit-formshell` appeared ZERO times in the built dist/styles.css.
+ *
+ * bundle-css.mjs flattens only the @import chain rooted here, which is why a
+ * stylesheet reachable just from JS never made it in.
+ */
+@import "./ui/forms/FormShell.style.css";
+/*
+ * Third-party stylesheet, vendored into dist/vendor by copy-assets.mjs.
+ * It used to be a JS import inside ImageEditor.tsx, which made it invisible to
+ * this bundle and fatal to Node-based resolution — see that script's header.
+ */
+@import "./vendor/react-advanced-cropper.css";
 @import "./tailwind-utilities.css";
