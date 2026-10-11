@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Gift, MessageCircle, ShieldCheck, Tag } from "lucide-react";
+import { Gift, MessageCircle, ShieldAlert, ShieldCheck, Tag } from "lucide-react";
 import { Row, Span, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -10,8 +10,8 @@ import { formatCurrency } from "../../../utils/number.formatter";
  *
  * These are fulfilment instructions, not decoration: WhatsApp tells the
  * status-change notifier to message this buyer, gift wrap tells the packer to
- * wrap the parcel and enclose the message, shipment protection changes how a
- * loss claim is handled. They are recorded on the order (and filterable in the
+ * wrap the parcel and enclose the message, and either protection changes how a
+ * claim is handled. They are recorded on the order (and filterable in the
  * `orders` Sieve config) so nobody has to keep a separate list of who asked for
  * what — the order IS the record.
  *
@@ -28,6 +28,8 @@ export interface OrderAddonBadgesOrder {
   giftWrapMessage?: string;
   shipmentProtectionAddon?: boolean;
   shipmentProtectionFee?: number;
+  saleProtectionAddon?: boolean;
+  saleProtectionFee?: number;
   couponCode?: string;
   couponDiscount?: number;
 }
@@ -84,6 +86,7 @@ export function OrderAddonBadges({
     order.whatsappNotifyAddon ||
     order.giftWrapAddon ||
     order.shipmentProtectionAddon ||
+    order.saleProtectionAddon ||
     hasCoupon;
   if (!hasAny) return null;
 
@@ -113,7 +116,15 @@ export function OrderAddonBadges({
             icon={<ShieldCheck size={12} />}
             label={isDetail && money(order.shipmentProtectionFee) ? `Protected · ${money(order.shipmentProtectionFee)}` : "Protected"}
             tone="info"
-            title="Shipment protection purchased — loss or damage in transit is covered."
+            title="Shipment protection purchased — loss or damage in transit is covered, claimed against the held funds."
+          />
+        )}
+        {order.saleProtectionAddon && (
+          <Chip
+            icon={<ShieldAlert size={12} />}
+            label={isDetail && money(order.saleProtectionFee) ? `Sale protected · ${money(order.saleProtectionFee)}` : "Sale protected"}
+            tone="info"
+            title="Sale protection purchased — if the item is not as described the buyer is refunded, no questions asked."
           />
         )}
         {hasCoupon && (

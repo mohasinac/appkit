@@ -17,6 +17,16 @@ export interface StoreListItem {
   itemsSold?: number;
   totalReviews?: number;
   averageRating?: number;
+  /**
+   * Buyer protections this seller supports — C5e, tier 2 of three.
+   *
+   * 🛑 On the LIST item, not just the detail, because the safety badge and the
+   * risk notice both belong on a store card. And NOT optional here even though
+   * the document field is: the projection resolves absence to `false` so the
+   * client never has to decide what `undefined` means (see `toStoreListItem`).
+   */
+  supportsShippingProtection: boolean;
+  supportsSaleProtection: boolean;
   createdAt?: string;
 }
 

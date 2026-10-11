@@ -219,6 +219,24 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       itemsSold: s.stats?.itemsSold,
       totalReviews: s.stats?.totalReviews,
       averageRating: s.stats?.averageRating,
+      /*
+       * 🛑 This whole `.map()` is a SIXTH hand-rolled copy of
+       * `toStoreListItem` — the adapter Root Cause #70 created precisely to
+       * collapse the three that existed then, and which three public store
+       * APIs now share. It is recorded as an F1 defect rather than fixed here
+       * (the defect policy: a found defect goes in the backlog, not in the
+       * step's commit), and the reason it cannot be a drive-by is a boundary:
+       * the adapter lives in `_internal/server/` and this file is in
+       * `features/`, so adopting it is an import-graph decision, not a rename.
+       *
+       * These two fields are added rather than deferred because `tsc` demands
+       * them — which is the whole value of having made them REQUIRED on
+       * `StoreListItem`: the compiler enumerated every copy, and this is the
+       * one the audit's "union of what the registered builders emit" check
+       * cannot see.
+       */
+      supportsShippingProtection: s.supportsShippingProtection ?? false,
+      supportsSaleProtection: s.supportsSaleProtection ?? false,
       createdAt: s.createdAt as unknown as string,
     }));
 

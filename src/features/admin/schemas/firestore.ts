@@ -597,6 +597,20 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Shipment protection fee: max(shipmentProtectionFeeMin, subtotal × shipmentProtectionFeePercent / 100). */
     shipmentProtectionFeePercent: number;
     shipmentProtectionFeeMin: number;
+    /**
+     * Admin master toggle — whether the SALE-protection addon (C5e) is offered
+     * at checkout at all. Distinct from shipment protection: that one covers
+     * loss or damage in transit, this one covers the item itself.
+     *
+     * 🛑 This flag and the SELLER's `supportsSaleProtection` default OPPOSITE
+     * ways, and it is not an inconsistency. This one answers "do we offer this
+     * product at all" — we built it, so `true`. The seller's answers "has this
+     * seller agreed to be held to it" — they have not been asked, so `false`.
+     */
+    saleProtectionFeeEnabled: boolean;
+    /** Sale protection fee: max(saleProtectionFeeMin, subtotal × saleProtectionFeePercent / 100). */
+    saleProtectionFeePercent: number;
+    saleProtectionFeeMin: number;
     sellerShippingFixed: number;
     platformShippingPercent: number;
     platformShippingFixedMin: number;
@@ -930,7 +944,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     codDepositPercent: 10,
     codHandlingFeeMin: 200,
     codHandlingFeePercent: 10,
-    // The three buyer add-ons ship ENABLED. They were `false`, which made
+    // The buyer add-ons ship ENABLED. They were `false`, which made
     // StoreAddonsPicker return null on both the cart and checkout, so a fresh
     // install had no add-ons at all and no indication why. `undefined` still
     // means disabled everywhere (computeWhatsAppNotifyFee et al. read
@@ -943,6 +957,9 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     shipmentProtectionFeeEnabled: true,
     shipmentProtectionFeePercent: 2,
     shipmentProtectionFeeMin: 30,
+    saleProtectionFeeEnabled: true,
+    saleProtectionFeePercent: 3,
+    saleProtectionFeeMin: 49,
     sellerShippingFixed: 0,
     platformShippingPercent: 10,
     platformShippingFixedMin: 0,

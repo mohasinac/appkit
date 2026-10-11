@@ -7261,8 +7261,31 @@ export {
   computeWhatsAppNotifyFee,
   computeGiftWrapFee,
   computeShipmentProtectionFee,
+  computeSaleProtectionFee,
   calculateGst,
 } from "./_internal/shared/fees/calculator";
+// C5e buyer protections — the pure three-tier gate plus the one fee pair
+// every money path must agree on. Public API because the capture route
+// (/api/payment/create-order) is one of the three sites that must agree.
+export {
+  protectionAvailability,
+  computeProtectionFees,
+  adjudicateClaim,
+  badgesFor,
+  showsRiskNotice,
+  showsSafetyBadge,
+  returnDestination,
+  rtoDestination,
+  PROTECTION_KINDS,
+} from "./_internal/shared/features/shipping/protections";
+export type {
+  ProtectionKind,
+  ProtectionAvailability,
+  ProtectionTierInput,
+  ProtectionUnavailableReason,
+  ClaimFinding,
+  ClaimOutcome,
+} from "./_internal/shared/features/shipping/protections";
 export type {
   FeeCommissionRates,
   CheckoutFees,
@@ -7271,6 +7294,7 @@ export type {
   WhatsAppNotifyFeeRates,
   GiftWrapFeeRates,
   ShipmentProtectionFeeRates,
+  SaleProtectionFeeRates,
   GstBreakdown,
 } from "./_internal/shared/fees/calculator";
 // EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).

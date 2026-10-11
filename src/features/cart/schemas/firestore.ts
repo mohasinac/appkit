@@ -203,7 +203,17 @@ export interface CartStoreAddons {
   whatsappNotifyAddon?: boolean;
   giftWrapAddon?: boolean;
   giftWrapMessage?: string;
+  /** Loss or damage IN TRANSIT. */
   shipmentProtectionAddon?: boolean;
+  /**
+   * The ITEM itself — not as described, wrong item, item issues (C5e).
+   *
+   * 🛑 A separate selection from `shipmentProtectionAddon`, not a rename of it,
+   * because the two failures are independent and a `finalSale` item is eligible
+   * for one and not the other. See
+   * `_internal/shared/features/shipping/protections.ts`.
+   */
+  saleProtectionAddon?: boolean;
 }
 
 export interface CartDocument extends BaseDocument {

@@ -50,6 +50,13 @@ export const PUBLIC_STORE_FIELDS = [
   "shippingPolicy",
   "isVacationMode",
   "vacationMessage",
+  // C5e, and the only two new store fields in this plan that are public. The
+  // safety badge and the pre-purchase risk notice are both rendered to an
+  // anonymous visitor on the listing and in the cart — withholding them would
+  // make "has not opted in" indistinguishable from "we did not tell you",
+  // which is the one outcome the tri-state rule forbids.
+  "supportsShippingProtection",
+  "supportsSaleProtection",
   "createdAt",
 ] as const;
 
@@ -151,6 +158,15 @@ export function toStoreListItem(
     itemsSold: stats?.itemsSold ?? doc.itemsSold,
     totalReviews: stats?.totalReviews ?? doc.totalReviews,
     averageRating: stats?.averageRating ?? doc.averageRating,
+    /*
+     * 🛑 `?? false` rather than passed through, which is the tri-state rule
+     * resolved once. An absent field must reach the client as a definite "not
+     * supported" so the risk notice renders; forwarding `undefined` would let a
+     * `!== false` test read it as supported, or a truthiness test render
+     * neither badge nor notice — the one outcome that tells the buyer nothing.
+     */
+    supportsShippingProtection: doc.supportsShippingProtection ?? false,
+    supportsSaleProtection: doc.supportsSaleProtection ?? false,
     createdAt: toIsoString(doc.createdAt),
   };
 }

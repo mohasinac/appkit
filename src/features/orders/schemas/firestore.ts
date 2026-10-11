@@ -406,10 +406,23 @@ export interface OrderDocument extends BaseDocument {
   giftWrapFee?: number;
   /** Optional buyer-written gift message, shown to the seller for fulfilment. Capped length. */
   giftWrapMessage?: string;
-  /** Buyer opted into shipment protection (loss/damage insurance) at checkout (unchecked by default). */
+  /** Buyer opted into shipment protection (loss/damage IN TRANSIT) at checkout (unchecked by default). */
   shipmentProtectionAddon?: boolean;
   /** Fee charged for shipment protection, decimal rupees — snapshot of siteSettings.commissions.shipmentProtectionFeePercent/Min at order time. */
   shipmentProtectionFee?: number;
+  /**
+   * Buyer opted into SALE protection — the item itself, not the transit (C5e).
+   *
+   * 🛑 These two flags are what a claim reads, and they are the record that the
+   * three tiers passed at the time of sale. A seller who later withdraws
+   * `supportsSaleProtection`, or an admin who disables the add-on
+   * platform-wide, must not retroactively void cover already paid for — which
+   * is why eligibility at claim time reads THIS field and
+   * `OrderDocumentItem.finalSale`, never the live store or product.
+   */
+  saleProtectionAddon?: boolean;
+  /** Fee charged for sale protection, decimal rupees — snapshot of siteSettings.commissions.saleProtectionFeePercent/Min at order time. */
+  saleProtectionFee?: number;
 
   // ── P-8 GST — buyer-facing tax breakdown, all decimal rupees, set when siteSettings.gst.enabled ──
   /** Order subtotal before GST — the amount GST is computed on. */

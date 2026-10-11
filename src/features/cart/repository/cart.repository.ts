@@ -691,7 +691,8 @@ export class CartRepository extends BaseRepository<CartDocument> {
       !addons ||
       (!addons.whatsappNotifyAddon &&
         !addons.giftWrapAddon &&
-        !addons.shipmentProtectionAddon);
+        !addons.shipmentProtectionAddon &&
+        !addons.saleProtectionAddon);
 
     await this.db
       .collection(this.collection)

@@ -42,6 +42,7 @@ import {
   toStoreShippingPolicy,
   type StoreShippingPolicy,
 } from "../../../shared/features/shipping/mode";
+import { computeProtectionFees } from "../../../shared/features/shipping/protections";
 import { resolveCouponCategorySlugs } from "../../../../features/promotions/actions/coupon-actions";
 import {
   assertCheckoutLane,
@@ -63,6 +64,8 @@ import {
   type GiftWrapFeeRates,
   computeShipmentProtectionFee,
   type ShipmentProtectionFeeRates,
+  computeSaleProtectionFee,
+  type SaleProtectionFeeRates,
   computeCheckoutFees,
   allocateCheckoutFees,
 } from "../../../shared/fees/calculator";
@@ -335,6 +338,20 @@ export async function resolveShippingCost(
    * somebody noticed. Returning both is what makes the distinction visible.
    */
   shippingUnavailable: boolean;
+  /**
+   * C5e tier 2 — which protections this seller has agreed to be held to.
+   *
+   * Carried here rather than read separately because this function already
+   * holds the store document, and a second `findById` per order group would
+   * spend a Firestore read against Rule #6's ~3-round-trip budget to learn two
+   * booleans. (The function already returns `storeEmiEnabled` and `storeState`
+   * for the same reason; it resolves per-store checkout facts, and its name is
+   * narrower than its job.)
+   *
+   * 🛑 Absence resolves to `false` HERE, once, so no caller has to decide what
+   * `undefined` means on a liability flag.
+   */
+  storeProtections: { shipping: boolean; sale: boolean };
 }> {
   if (!storeId) {
     return {
@@ -344,6 +361,7 @@ export async function resolveShippingCost(
       storeState: undefined,
       shippingPolicy: DEFAULT_STORE_SHIPPING_POLICY,
       shippingUnavailable: false,
+      storeProtections: { shipping: false, sale: false },
     };
   }
   const store = await storeRepository.findById(storeId);
@@ -396,6 +414,10 @@ export async function resolveShippingCost(
     storeState,
     shippingPolicy: policy,
     shippingUnavailable: quote.kind === "unavailable",
+    storeProtections: {
+      shipping: store?.supportsShippingProtection === true,
+      sale: store?.supportsSaleProtection === true,
+    },
   };
 }
 
@@ -676,7 +698,7 @@ interface OrderGroupContext {
   paymentMethod: CheckoutPaymentMethod;
   emiTenureMonths?: number;
   emiSettings: EmiSettings;
-  commissions: CodHandlingFeeRates & WhatsAppNotifyFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & { codDepositPercent: number };
+  commissions: CodHandlingFeeRates & WhatsAppNotifyFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & SaleProtectionFeeRates & { codDepositPercent: number };
   appliedCoupons: CartAppliedCoupon[];
   cartSubtotal: number;
   couponUsageAccumulator: Map<string, CouponAccumEntry>;
@@ -777,6 +799,7 @@ async function createOrderForGroup(
     giftWrapAddon = false,
     giftWrapMessage,
     shipmentProtectionAddon = false,
+    saleProtectionAddon = false,
   } = storeAddons?.[firstItem.storeId] ?? {};
   const { platformFee = 0, gstOnFee: platformFeeGst = 0 } =
     platformFeeByStore.get(firstItem.storeId) ?? {};
@@ -798,9 +821,8 @@ async function createOrderForGroup(
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
-  const { shippingFee, storeOwnerId, storeEmiEnabled, storeState } = await resolveShippingCost(
-    firstItem.storeId,
-  );
+  const { shippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections } =
+    await resolveShippingCost(firstItem.storeId);
 
   // P-8 GST — sum per-line-item tax (each product may carry its own gstRate),
   // then split the group total into a single cgst/sgst/igst breakdown for the
@@ -875,7 +897,33 @@ async function createOrderForGroup(
     paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
   const whatsappNotifyFee = computeWhatsAppNotifyFee(whatsappNotifyAddon, commissions);
   const giftWrapFee = computeGiftWrapFee(giftWrapAddon, commissions);
-  const shipmentProtectionFee = computeShipmentProtectionFee(groupTotal, shipmentProtectionAddon, commissions);
+  /*
+   * ── C5e: all three protection tiers, enforced SERVER-SIDE ────────────────
+   *
+   * 🛑 The picker filtering the checkbox is not enough. `storeAddons` is a
+   * field on the cart document, so a hand-crafted `PUT /api/cart/addons` can
+   * tick a protection the seller declined — and billing for cover we will not
+   * honour is worse than any of the defects C5e exists to close. So the fee is
+   * gated here too, on the same three tiers the picker renders.
+   *
+   * The `finalSale` test reads the ORDER ITEMS we are about to write, i.e. the
+   * snapshot, never the live product — `OrderDocumentItem.finalSale` exists
+   * precisely so a seller cannot flip the switch after the sale.
+   */
+  const groupHasFinalSale = orderItems.some((line) => line.finalSale === true);
+  const { shippingProtectionFee: shipmentProtectionFee, saleProtectionFee } = computeProtectionFees({
+    subtotal: groupTotal,
+    selected: { shipping: shipmentProtectionAddon, sale: saleProtectionAddon },
+    tiers: {
+      platformShipping: commissions.shipmentProtectionFeeEnabled === true,
+      platformSale: commissions.saleProtectionFeeEnabled === true,
+      sellerShipping: storeProtections.shipping,
+      sellerSale: storeProtections.sale,
+      finalSale: groupHasFinalSale,
+    },
+    shippingFee: (s, sel) => computeShipmentProtectionFee(s, sel, commissions),
+    saleFee: (s, sel) => computeSaleProtectionFee(s, sel, commissions),
+  });
 
   const groupCouponCodes = new Set<string>();
   const groupLines = group.map(({ item }) => ({ itemId: item.itemId, lineTotal: item.price * item.quantity }));
@@ -908,7 +956,7 @@ async function createOrderForGroup(
      * OUR service fee to the seller, charged to the buyer on top of the fee —
      * not tax on the goods.
      */
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0);
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0);
 
   const imageUrls = [
     ...new Set(
@@ -992,6 +1040,8 @@ async function createOrderForGroup(
     giftWrapMessage: !adminBypass && giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
     shipmentProtectionAddon: !adminBypass && shipmentProtectionFee > 0 ? true : undefined,
     shipmentProtectionFee: !adminBypass && shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
+    saleProtectionAddon: !adminBypass && saleProtectionFee > 0 ? true : undefined,
+    saleProtectionFee: !adminBypass && saleProtectionFee > 0 ? saleProtectionFee : undefined,
     taxableAmount: gstBreakdown?.taxableAmount,
     /* Exempt goods are a reportable nil-rated supply, kept OUT of
      * `taxableAmount` so the taxed base stays the base the tax was charged on,
@@ -1507,9 +1557,30 @@ export interface CheckoutPricingPreviewStore {
   whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
+  saleProtectionFee: number;
   gstAmount: number;
   couponDiscount: number;
   total: number;
+  /**
+   * ── C5e tiers 2 and 3, resolved SERVER-SIDE for this store ───────────────
+   *
+   * 🛑 Carried on the preview rather than fetched by the client, for two
+   * reasons that both matter. The cart has neither the store document nor the
+   * products — `CartItemDocument` snapshots only `storeId`/`storeName` — so a
+   * client-side gate would need a store fetch per seller, which is both a
+   * read per render and an invitation to pass a raw `StoreDocument` into a
+   * `"use client"` component (Root Cause #70, the leak this plan's projection
+   * work exists to close).
+   *
+   * And the tiers are already computed here to price the fee. Returning the
+   * same three booleans the fee was computed from is what makes the checkbox
+   * the buyer sees and the amount they are charged provably the same decision
+   * — rather than two gates that agree by discipline.
+   */
+  supportsShippingProtection: boolean;
+  supportsSaleProtection: boolean;
+  /** True when any of this store's priced lines is `finalSale`. */
+  hasFinalSaleItem: boolean;
 }
 
 export interface CheckoutPricingPreview {
@@ -1519,6 +1590,7 @@ export interface CheckoutPricingPreview {
   whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
+  saleProtectionFee: number;
   gstAmount: number;
   couponDiscount: number;
   /** Buyer-facing platform commission, capped, charged once for this checkout. */
@@ -1543,6 +1615,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   whatsappNotifyFee: 0,
   giftWrapFee: 0,
   shipmentProtectionFee: 0,
+  saleProtectionFee: 0,
   gstAmount: 0,
   couponDiscount: 0,
   platformFee: 0,
@@ -1643,7 +1716,8 @@ export async function previewCheckoutPricing(
     const firstItem = group[0].item;
     const groupTotal = group.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0);
 
-    const { shippingFee: groupShippingFee, storeState } = await resolveShippingCost(firstItem.storeId);
+    const { shippingFee: groupShippingFee, storeState, storeProtections } =
+      await resolveShippingCost(firstItem.storeId);
 
     // Add-ons are per store, read off the cart document — the same entry
     // createOrderForGroup will read when the order is actually placed.
@@ -1656,11 +1730,37 @@ export async function previewCheckoutPricing(
       paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
     const groupWhatsappFee = computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissions);
     const groupGiftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissions);
-    const groupShipmentProtectionFee = computeShipmentProtectionFee(
-      groupTotal,
-      addons.shipmentProtectionAddon ?? false,
-      commissions,
-    );
+    /*
+     * C5e — the same three tiers `createOrderForGroup` enforces, so the figure
+     * SHOWN and the figure CHARGED cannot differ over an add-on the seller
+     * declined.
+     *
+     * 🛑 `finalSale` is read off the LIVE product here, not a snapshot, and
+     * that is correct rather than an oversight: at preview time no order exists
+     * to have snapshotted it. The snapshot matters at the other two moments —
+     * order creation (so the written row is authoritative) and claim time (so a
+     * seller cannot flip the switch after the sale).
+     */
+    const groupHasFinalSale = group.some(({ product }) => product?.finalSale === true);
+    const {
+      shippingProtectionFee: groupShipmentProtectionFee,
+      saleProtectionFee: groupSaleProtectionFee,
+    } = computeProtectionFees({
+      subtotal: groupTotal,
+      selected: {
+        shipping: addons.shipmentProtectionAddon ?? false,
+        sale: addons.saleProtectionAddon ?? false,
+      },
+      tiers: {
+        platformShipping: commissions.shipmentProtectionFeeEnabled === true,
+        platformSale: commissions.saleProtectionFeeEnabled === true,
+        sellerShipping: storeProtections.shipping,
+        sellerSale: storeProtections.sale,
+        finalSale: groupHasFinalSale,
+      },
+      shippingFee: (s, sel) => computeShipmentProtectionFee(s, sel, commissions),
+      saleFee: (s, sel) => computeSaleProtectionFee(s, sel, commissions),
+    });
 
     let groupGstAmount = 0;
     if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
@@ -1700,6 +1800,7 @@ export async function previewCheckoutPricing(
       whatsappNotifyFee: groupWhatsappFee,
       giftWrapFee: groupGiftWrapFee,
       shipmentProtectionFee: groupShipmentProtectionFee,
+      saleProtectionFee: groupSaleProtectionFee,
       /*
        * INFORMATIONAL — the tax already INSIDE these prices, so checkout can
        * render "incl. GST ₹47.57". 🛑 Deliberately NOT added to `total` below:
@@ -1717,7 +1818,11 @@ export async function previewCheckoutPricing(
         groupCodHandlingFee +
         groupWhatsappFee +
         groupGiftWrapFee +
-        groupShipmentProtectionFee,
+        groupShipmentProtectionFee +
+        groupSaleProtectionFee,
+      supportsShippingProtection: storeProtections.shipping,
+      supportsSaleProtection: storeProtections.sale,
+      hasFinalSaleItem: groupHasFinalSale,
     });
   }
 
@@ -1729,6 +1834,7 @@ export async function previewCheckoutPricing(
   const whatsappNotifyFeeTotal = sum((s) => s.whatsappNotifyFee);
   const giftWrapFeeTotal = sum((s) => s.giftWrapFee);
   const shipmentProtectionFeeTotal = sum((s) => s.shipmentProtectionFee);
+  const saleProtectionFeeTotal = sum((s) => s.saleProtectionFee);
   const gstAmount = sum((s) => s.gstAmount);
   const couponDiscount = sum((s) => s.couponDiscount);
 
@@ -1743,6 +1849,7 @@ export async function previewCheckoutPricing(
     whatsappNotifyFeeTotal +
     giftWrapFeeTotal +
     shipmentProtectionFeeTotal +
+    saleProtectionFeeTotal +
     platformFee +
     gstOnFee +
     gstAmount;
@@ -1754,6 +1861,7 @@ export async function previewCheckoutPricing(
     whatsappNotifyFee: whatsappNotifyFeeTotal,
     giftWrapFee: giftWrapFeeTotal,
     shipmentProtectionFee: shipmentProtectionFeeTotal,
+    saleProtectionFee: saleProtectionFeeTotal,
     gstAmount,
     couponDiscount,
     platformFee,

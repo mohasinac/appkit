@@ -35,6 +35,9 @@ export interface BuyerFacingFees {
   shipmentProtectionFeeEnabled?: boolean;
   shipmentProtectionFeePercent?: number;
   shipmentProtectionFeeMin?: number;
+  saleProtectionFeeEnabled?: boolean;
+  saleProtectionFeePercent?: number;
+  saleProtectionFeeMin?: number;
   codHandlingFeeMin?: number;
   codHandlingFeePercent?: number;
   codDepositPercent?: number;
@@ -63,6 +66,9 @@ export function toBuyerFacingFees(
     shipmentProtectionFeeEnabled: commissions.shipmentProtectionFeeEnabled,
     shipmentProtectionFeePercent: commissions.shipmentProtectionFeePercent,
     shipmentProtectionFeeMin: commissions.shipmentProtectionFeeMin,
+    saleProtectionFeeEnabled: commissions.saleProtectionFeeEnabled,
+    saleProtectionFeePercent: commissions.saleProtectionFeePercent,
+    saleProtectionFeeMin: commissions.saleProtectionFeeMin,
     codHandlingFeeMin: commissions.codHandlingFeeMin,
     codHandlingFeePercent: commissions.codHandlingFeePercent,
     codDepositPercent: commissions.codDepositPercent,

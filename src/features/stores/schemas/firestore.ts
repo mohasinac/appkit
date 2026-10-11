@@ -224,6 +224,32 @@ export interface StoreDocument extends BaseDocument {
    */
   shippingPricing?: StoreShippingPolicyField;
 
+  /**
+   * ── Buyer protections, TIER 2 — C5e ──────────────────────────────────────
+   *
+   * Whether this seller has agreed to be held to each cover. Seller-settable
+   * in their own settings; the admin's platform-wide toggles are TIER 1
+   * (`siteSettings.commissions.*FeeEnabled`) and item eligibility is TIER 3.
+   * All three must pass. See
+   * `_internal/shared/features/shipping/protections.ts`.
+   *
+   * 🛑 ABSENT MEANS NOT SUPPORTED, never "unknown". A tri-state where
+   * `undefined` renders neither a badge nor a risk notice is the worst of the
+   * three outcomes — the buyer gets no signal at all and cannot tell a seller
+   * who declined from one who has not been asked. So both default `false`,
+   * which honestly means every existing store shows the notice on day one.
+   * That is the correct starting state, not a migration problem: defaulting
+   * them `true` would enrol every existing seller in a liability they never
+   * accepted.
+   *
+   * 🛑 Both are PUBLIC and deliberately so — the safety badge and the
+   * pre-purchase risk notice are buyer-facing by definition. That is the rare
+   * case where public is right for a new store field, and it has to be NAMED
+   * in `PUBLIC_STORE_FIELDS` rather than assumed (Root Cause #70).
+   */
+  supportsShippingProtection?: boolean;
+  supportsSaleProtection?: boolean;
+
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {
     /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */

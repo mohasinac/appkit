@@ -449,6 +449,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     whatsappNotifyAddon: { canFilter: true, canSort: false },
     giftWrapAddon: { canFilter: true, canSort: false },
     shipmentProtectionAddon: { canFilter: true, canSort: false },
+    saleProtectionAddon: { canFilter: true, canSort: false },
     couponCode: { canFilter: true, canSort: false },
   };
 
@@ -573,6 +574,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     whatsappNotifyAddon: { canFilter: true, canSort: false },
     giftWrapAddon: { canFilter: true, canSort: false },
     shipmentProtectionAddon: { canFilter: true, canSort: false },
+    saleProtectionAddon: { canFilter: true, canSort: false },
     couponCode: { canFilter: true, canSort: false },
   };
 
