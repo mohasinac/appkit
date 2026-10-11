@@ -649,14 +649,112 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
       data: encryptSeedPii(colName, stripUndefined(data)),
     });
   }
-  const BATCH = 500;
-  for (let i = 0; i < items.length; i += BATCH) {
-    const chunk = items.slice(i, i + BATCH);
+  /*
+   * 🛑 Chunk by INDEX ENTRIES, not just by operation count.
+   *
+   * This loop capped at 500 operations and nothing else. That was invisible for
+   * years because every seeded collection had small documents; B5's 416
+   * categories are the first that do not. Measured 2026-10-11: one 416-op
+   * commit failed with `INVALID_ARGUMENT: Transaction too big` and wrote
+   * **0 of 416** — not a partial load, nothing at all.
+   *
+   * 🛑 The failure mode is what makes this worth a real fix rather than a
+   * retry: `✓ Load complete — created 2097, errors 1` reads as a near-complete
+   * run, and the ONE missing collection was the taxonomy that every product's
+   * `categorySlugs` chain points into. A purge-then-load left 70 products
+   * referencing ids that did not exist, with a cheerful summary line.
+   *
+   * ## What actually binds, measured by bisection rather than assumed
+   *
+   * My first fix capped PAYLOAD BYTES, on the theory that these documents are
+   * large. They are not: 416 categories are **1.51 MiB total**, mean 3.7 KiB,
+   * largest 7.9 KiB — nowhere near the 10 MiB request limit, and the byte cap
+   * never once triggered. The commit failed anyway.
+   *
+   * Bisecting the op count found the real boundary, and counting array elements
+   * explains it exactly:
+   *
+   *     416 ops -> 60,787 array elements -> FAILS
+   *     250 ops -> 42,912               -> FAILS
+   *     100 ops -> 17,578               -> works
+   *      50 ops ->  8,791               -> works
+   *
+   * The threshold sits right at **40,000**, which is Firestore's documented
+   * maximum index entries — applied per COMMIT here, not per document. Every
+   * element of an indexed array is an index entry, and a category carries ~146
+   * of them (`searchTxt` alone is ~150 tokens, plus `parentIds`, `ancestors`,
+   * `categoryNames`, `faqs`, `highlights`, `descriptionTemplates`).
+   *
+   * So the cap is on array elements at **20,000** — half the real limit, the
+   * same margin the byte cap keeps — and it is kept alongside the op and byte
+   * caps rather than replacing them, because all three are real Firestore
+   * limits and only one of them has bitten so far.
+   *
+   * 🛑 Do NOT "simplify" this back to a lower fixed op count. 100 would work
+   * for categories and silently triple the commit count for `faqs` and the
+   * 1,337 tester checklist items, which carry almost no arrays. The cap has to
+   * key on the thing that varies.
+   */
+  const MAX_OPS = Number(process.env.SEED_BATCH_OPS ?? 500);
+  const MAX_BYTES = 4 * 1024 * 1024;
+  const MAX_INDEX_ENTRIES = Number(process.env.SEED_BATCH_INDEX_ENTRIES ?? 20_000);
+
+  /** Array elements, recursively — a proxy for index entries written. */
+  const countArrayElements = (v) => {
+    if (Array.isArray(v)) return v.length + v.reduce((s, x) => s + countArrayElements(x), 0);
+    if (v && typeof v === "object" && !(v instanceof Date)) {
+      return Object.values(v).reduce((s, x) => s + countArrayElements(x), 0);
+    }
+    return 0;
+  };
+
+  let chunk = [];
+  let chunkBytes = 0;
+  let chunkEntries = 0;
+  const flush = async () => {
+    if (chunk.length === 0) return;
     const batch = db.batch();
     for (const { ref, data } of chunk) batch.set(ref, data, { merge: true });
     await batch.commit();
     stats.created += chunk.length;
+    chunk = [];
+    chunkBytes = 0;
+    chunkEntries = 0;
+  };
+
+  for (const item of items) {
+    let size = 0;
+    try {
+      size = Buffer.byteLength(JSON.stringify(item.data), "utf8");
+    } catch {
+      /*
+       * A payload that cannot be serialised cannot be measured. Treat it as a
+       * whole chunk's worth rather than as zero — guessing small is how a
+       * commit silently grows past a limit again, and a document that resists
+       * measurement is the one most likely to be large.
+       */
+      size = MAX_BYTES;
+    }
+    const entries = countArrayElements(item.data);
+    /*
+     * A single document over any cap still has to be written, and alone: a
+     * one-document commit is the smallest thing committable, so if Firestore
+     * rejects THAT the document itself is the problem and the error says so,
+     * rather than the failure being absorbed into a chunking bug.
+     */
+    if (
+      chunk.length > 0 &&
+      (chunk.length >= MAX_OPS ||
+        chunkBytes + size > MAX_BYTES ||
+        chunkEntries + entries > MAX_INDEX_ENTRIES)
+    ) {
+      await flush();
+    }
+    chunk.push(item);
+    chunkBytes += size;
+    chunkEntries += entries;
   }
+  await flush();
 }
 
 // ---------------------------------------------------------------------------
