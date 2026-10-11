@@ -1920,6 +1920,26 @@ export type { WishlistItem } from "./repositories/index";
 // ./seed/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ADDRESS_FIXTURES - Constant used across modules.
+/*
+ * Seed provenance. Exported from the MAIN barrel because `appkit-seed` (a plain
+ * .mjs script) imports it from there, and because `BaseDocument.seedPurpose`
+ * means every consumer document type references the union.
+ */
+export {
+  type SeedPurpose,
+  type SeedPurposeFields,
+  type WithSeedPurpose,
+  SEED_PURPOSE_VALUES,
+  ALL_SEED_PURPOSES,
+  SEED_COLLECTION_PURPOSE,
+  SEED_TEST_TTL_DAYS,
+  isSeedPurpose,
+  resolveSeedPurpose,
+  seedPurposeFields,
+  stampSeedPurpose,
+  asSeedPurpose,
+} from "./seed/index";
+
 export { ADDRESS_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // BID_FIXTURES - Constant used across modules.

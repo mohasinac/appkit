@@ -220,6 +220,16 @@ const {
   REVIEW_PII_FIELDS, OFFER_PII_FIELDS, EVENT_ENTRY_PII_FIELDS,
   // misc
   generateFAQId,
+  /*
+   * Seed provenance. `stampSeedPurpose` is the ONE place a `seedPurpose` (and
+   * the `isTestData` / `testDataExpiresAt` derived from it) is produced, shared
+   * with `seed/runner.ts` so the two loaders cannot disagree about what a
+   * purpose means — Root Cause #75's shape on the seed axis.
+   */
+  stampSeedPurpose,
+  resolveSeedPurpose,
+  SEED_COLLECTION_PURPOSE,
+  ALL_SEED_PURPOSES,
 } = appkit;
 
 // ---------------------------------------------------------------------------
@@ -578,7 +588,22 @@ async function loadUsers(seed, stats) {
       // The previous form relied on ordering alone (indices first, THEN
       // encrypt) — correct, but one line-swap away from spreading plaintext
       // back over ciphertext, which is why `addPiiIndices` no longer exists.
-      const plain = stripUndefined({ ...u });
+      /*
+       * 🛑 Provenance is stamped here too, and `users` is the collection the
+       * whole scheme exists for.
+       *
+       * It had no permanence marker of any kind, so a seeded persona could not
+       * be told apart from a real signup — and a seeded user is the most
+       * expensive thing to delete wrongly: it owns an **Auth record**, a
+       * `userSlugs` index entry, addresses, a cart, orders, bids and reviews,
+       * and `users` sits in the tester harness's PRESERVE tier precisely
+       * because a wrong sweep there is the only permanent damage a run can do.
+       *
+       * Stamped before the PII pass so `plain` carries it: the indices are
+       * hashed from plaintext and the encryption must not see a hashed value,
+       * so nothing may be added to `docData` after that pair runs.
+       */
+      const plain = stripUndefined(stampSeedPurpose("users", { ...u }, LOAD_STARTED_AT));
       let docData = {
         ...encryptPiiFields(plain, [...USER_PII_FIELDS]),
         ...piiIndicesFor(plain, USER_PII_INDEX_MAP),
@@ -603,7 +628,15 @@ async function loadSubcollection(seed, parentColl, parentKey, subColl, idKey, pi
       if (!parent || !id) { stats.errors++; continue; }
       const { [parentKey]: _p, [idKey]: _i, ...data } = d;
       const docRef = db.collection(parentColl).doc(parent).collection(subColl).doc(id);
-      const payload = piiFields ? encryptPiiFields(stripUndefined(data), [...piiFields]) : stripUndefined(data);
+      /*
+       * Subcollection rows inherit the SUBCOLLECTION's purpose, not the
+       * parent's — `subColl` is the key in `SEED_COLLECTION_PURPOSE`. A
+       * `couponUsage` row under a permanent user is still its own record, and
+       * conflating the two would make a parent's classification silently
+       * govern children it knows nothing about.
+       */
+      const stamped = stripUndefined(stampSeedPurpose(subColl, data, LOAD_STARTED_AT));
+      const payload = piiFields ? encryptPiiFields(stamped, [...piiFields]) : stamped;
       await docRef.set(payload, { merge: true });
       stats.created++;
     } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
@@ -615,8 +648,25 @@ async function loadOneDocPerUser(seed, coll, stats) {
     try {
       const { id, userId, items, updatedAt } = d;
       if (!id || !userId) { stats.errors++; continue; }
+      /*
+       * 🛑 `merge: false` — this loader REPLACES the document, which is correct
+       * for a wishlist or a history list (the array IS the record), and is
+       * exactly why the stamp has to be inside the payload rather than added
+       * by a later merge-write that would be wiped on the next load.
+       *
+       * `coll` is the real Firestore collection name here rather than the seed
+       * key, and for `wishlists`/`history` the two are identical — the only two
+       * callers. `resolveSeedPurpose` falls back to `permanent` if that ever
+       * stops being true, which is the safe direction.
+       */
       await db.collection(coll).doc(id).set(
-        stripUndefined({ userId, items: items ?? [], updatedAt: updatedAt ?? new Date() }),
+        stripUndefined(
+          stampSeedPurpose(
+            coll,
+            { userId, items: items ?? [], updatedAt: updatedAt ?? new Date() },
+            LOAD_STARTED_AT,
+          ),
+        ),
         { merge: false },
       );
       stats.created++;
@@ -646,7 +696,20 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
     if (!data.slug) data.slug = docData.slug ?? docId;
     items.push({
       ref: db.collection(firestoreCollection).doc(docId),
-      data: encryptSeedPii(colName, stripUndefined(data)),
+      /*
+       * 🛑 Stamp provenance BEFORE `stripUndefined`, not after.
+       *
+       * `seedPurposeFields` deliberately OMITS `isTestData` for a `permanent`
+       * row rather than writing `false` — so stamping afterwards would be
+       * indistinguishable from not stamping, and stripping afterwards is what
+       * keeps the absence genuine instead of writing `undefined` keys.
+       *
+       * One call, one choke point: every one of the ~2,500 documents this
+       * loader writes gets a `seedPurpose`, so the purge is a query rather than
+       * a heuristic, and `users`/`orders` are reachable by it for the first
+       * time.
+       */
+      data: encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, LOAD_STARTED_AT))),
     });
   }
   /*

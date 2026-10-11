@@ -230,3 +230,24 @@ export {
 // Test utilities (Firestore emulator + PII assertion)
 export { assertPiiRoundTrip, seedForTest } from "./test-utils";
 export type { TestSeedHandles } from "./test-utils";
+
+/*
+ * Seed provenance — the ONE declaration of whether a seeded row is permanent
+ * demo content or a disposable fixture. Read the file's header before touching
+ * anything here; in particular, `isTestData` is DERIVED from `seedPurpose` and
+ * must never be hand-written beside it (`audit-seed-purpose` blocks it).
+ */
+export {
+  type SeedPurpose,
+  type SeedPurposeFields,
+  type WithSeedPurpose,
+  SEED_PURPOSE_VALUES,
+  ALL_SEED_PURPOSES,
+  SEED_COLLECTION_PURPOSE,
+  SEED_TEST_TTL_DAYS,
+  isSeedPurpose,
+  resolveSeedPurpose,
+  seedPurposeFields,
+  stampSeedPurpose,
+  asSeedPurpose,
+} from "./seed-purpose";
