@@ -266,6 +266,32 @@ export interface ProductDocument extends BaseDocument {
    * always accepted. See `_internal/shared/features/orders/return-reasons`.
    */
   finalSale?: boolean;
+
+  /**
+   * This listing is a multi-item LOT rather than a single item.
+   *
+   * 🛑 A lot files under a NON-LEAF category and a single may file anywhere —
+   * enforced one-directionally in `ProductRepository.deriveTaxonomy`, which
+   * already holds the leaf document so the check costs no extra read. The
+   * reason is a claim about the ITEMS, not about counting: filing "12 assorted
+   * Burst beys" under `category-dragoon-g` asserts all twelve are Dragoon G.
+   *
+   * Counting is disambiguated separately, by `categoryCounts` carrying its own
+   * `lots` pair — so singles and lots are never summed into one number.
+   *
+   * A lot is the INVERSE of per-unit selling: many objects, one listing, one
+   * stock count. Two physically distinct units of one model are two listings
+   * each at `stockQuantity: 1` (see `unitLabel`), never one listing of two.
+   */
+  isLot?: boolean;
+  /**
+   * How many items the lot contains. Drives the "lot of 12" label and the
+   * per-item price hint.
+   *
+   * Deliberately NOT required when `isLot` is true: a seller who knows it is a
+   * lot but has not counted the pile yet must still be able to save a draft.
+   */
+  lotSize?: number;
   condition?: "new" | "like_new" | "good" | "fair" | "poor" | "used" | "refurbished" | "broken" | "graded";
   insurance?: boolean;
   insuranceCost?: number;
@@ -653,6 +679,11 @@ export const PRODUCT_PUBLIC_FIELDS = [
   // Buyer-facing: drives the "Final Sale" card pill and the detail-page
   // Delivery & Returns line. Absent means final sale — read via isFinalSale().
   "finalSale",
+  // Buyer-facing by necessity: "lot of 12" is the single most important thing
+  // about a lot listing, and a buyer who cannot see it thinks they are bidding
+  // on one item.
+  "isLot",
+  "lotSize",
   "listingType",
   "auctionEndDate",
   "startingBid",
@@ -721,6 +752,13 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "shippingInfo",
   "returnPolicy",
   "finalSale",
+  /* 🛑 Listed here or an update STRIPS them. The write schema has no
+   * `.passthrough()`, so a field absent from this list is dropped before it
+   * reaches Firestore while the write still returns 200 — exactly how a
+   * UI-created product lost its `categorySlugs` chain (Root Cause #101) and how
+   * `compareAtPrice` is silently discarded today (F1 #25). */
+  "isLot",
+  "lotSize",
   "pickupAddressId",
   "condition",
   "insurance",

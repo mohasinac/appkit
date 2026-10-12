@@ -3,7 +3,11 @@ import { normalizeError } from "../../../errors/normalize";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
-import { DatabaseError } from "../../../errors";
+// 🛑 `../../../errors` re-exports the REAL ValidationError (errors/validation-error),
+// which is the one `mapToHttpError` instanceof-checks to produce a 400. The
+// unrelated same-named class under `_internal/shared/errors` falls through every
+// classified branch to a generic 500 — Root Cause #53.
+import { DatabaseError, ValidationError } from "../../../errors";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -388,7 +392,52 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         name?: string;
         parentIds?: string[];
         ancestors?: { name?: string }[];
+        isLeaf?: boolean;
       };
+
+      /*
+       * G3 — THE FILING RULE, and it is enforced in ONE direction only:
+       * a LOT may not file at a LEAF. A single may file anywhere.
+       *
+       * Checked here because `catSnap` is ALREADY in hand for the ancestor
+       * chain, so it costs zero extra reads — the same argument that put
+       * `applyCategoryDefaults` in this method.
+       *
+       * 🛑 The plan specified it symmetrically ("a lot takes a non-leaf while
+       * single take leaves") and MEASUREMENT showed the second half would have
+       * been a severe regression: of 70 production products, **58 file at a
+       * non-leaf** and not one is a lot. Every art print, auction, classified
+       * and digital code would have started failing on its next update, with
+       * nothing wrong with any of them — a leaf here is the tier-4 NAMED MODEL
+       * (345 of 416 nodes), and `category-x-basic` is the honest node for an X
+       * Basic bey that has no model leaf yet. 104 corpus rows are still
+       * unidentified, so that state is normal rather than transitional.
+       *
+       * And re-reading the plan's own justification, only this direction was
+       * ever argued: a lot at a model leaf is a FALSE CLAIM ABOUT THE ITEMS —
+       * filing "12 assorted Burst beys" under `category-dragoon-g` asserts all
+       * twelve are Dragoon G. That is wrong independent of counting.
+       *
+       * The counting half needs no refusal at all, because `categoryCounts`
+       * carries a SEPARATE `lots` pair (see G3b): singles and lots are counted
+       * in different fields, so a leaf's own count means one thing whatever
+       * else is filed there. Separate counters disambiguate; a rejected write
+       * was never required for it.
+       *
+       * REFUSED, never corrected. Silently refiling one tier up would decide a
+       * taxonomy question on the seller's behalf and leave them a listing they
+       * can no longer find — Root Cause #76's write-shape lesson inverted.
+       *
+       * `isLeaf` absent is treated as NOT a leaf, so the lot is allowed: a
+       * category with no `isLeaf` means `buildCategoryTree` has not rebuilt the
+       * tree, and refusing a write over OUR stale derived field would turn a
+       * data-maintenance gap into a seller-facing error.
+       */
+      if (input.isLot === true && cat.isLeaf === true) {
+        throw new ValidationError(
+          `A lot holds several different items, so it cannot be filed under "${cat.name ?? leaf}", which is a single-item category. Pick a broader category — its parent.`,
+        );
+      }
       // `parentIds` is ordered root-first / nearest-last (category-tree.ts:107),
       // and the stored chain is self-first / root-last. Reversing is what makes
       // the derived value byte-identical to what the seed hand-writes — verified
