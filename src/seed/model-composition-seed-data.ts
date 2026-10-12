@@ -16,7 +16,7 @@ import type { ModelCompositionDocument } from "../features/parts/schemas/firesto
 export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   {
     "id": "gen1-hms-advance-averazer",
-    "name": "gen1/hms/advance-averazer",
+    "name": "Advance Averazer",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -48,11 +48,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--metal-semi-flat-core"
       }
     ],
-    "source": "gen1/hms/advance-averazer.md"
+    "source": "gen1/hms/advance-averazer.md",
+    "categoryId": "category-advance-averazer"
   },
   {
     "id": "gen1-hms-advance-eterner",
-    "name": "gen1/hms/advance-eterner",
+    "name": "Advance Eterner",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -84,11 +85,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--metal-sharp-core"
       }
     ],
-    "source": "gen1/hms/advance-eterner.md"
+    "source": "gen1/hms/advance-eterner.md",
+    "categoryId": "category-advance-eterner"
   },
   {
     "id": "gen1-hms-advance-guardian",
-    "name": "gen1/hms/advance-guardian",
+    "name": "Advance Guardian",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -120,11 +122,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--grip-sharp-core"
       }
     ],
-    "source": "gen1/hms/advance-guardian.md"
+    "source": "gen1/hms/advance-guardian.md",
+    "categoryId": "category-advance-guardian"
   },
   {
     "id": "gen1-hms-advance-striker",
-    "name": "gen1/hms/advance-striker",
+    "name": "Advance Striker",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -156,11 +159,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--metal-flat-core"
       }
     ],
-    "source": "gen1/hms/advance-striker.md"
+    "source": "gen1/hms/advance-striker.md",
+    "categoryId": "category-advance-striker"
   },
   {
     "id": "gen1-hms-aero-knight-ms",
-    "name": "gen1/hms/aero-knight-ms",
+    "name": "Aero Knight MS (Aero Knight Metal Sky)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -200,11 +204,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/aero-knight-ms.md"
+    "source": "gen1/hms/aero-knight-ms.md",
+    "categoryId": "category-aero-knight-ms"
   },
   {
     "id": "gen1-hms-bloody-devil-ms",
-    "name": "gen1/hms/bloody-devil-ms",
+    "name": "Bloody Devil MS (Bloody Devil Metal Satan)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -244,11 +249,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/bloody-devil-ms.md"
+    "source": "gen1/hms/bloody-devil-ms.md",
+    "categoryId": "category-bloody-devil-ms"
   },
   {
     "id": "gen1-hms-dark-leopard-ms",
-    "name": "gen1/hms/dark-leopard-ms",
+    "name": "Dark Leopard MS (Dark Leopard Metal Sweeper)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -289,11 +295,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/dark-leopard-ms.md"
+    "source": "gen1/hms/dark-leopard-ms.md",
+    "categoryId": "category-dark-leopard-ms"
   },
   {
     "id": "gen1-hms-death-gargoyle-ms",
-    "name": "gen1/hms/death-gargoyle-ms",
+    "name": "Death Gargoyle MS (Death Gargoyle Metal Scream)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -324,11 +331,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--metal-change-core"
       }
     ],
-    "source": "gen1/hms/death-gargoyle-ms.md"
+    "source": "gen1/hms/death-gargoyle-ms.md",
+    "categoryId": "category-death-gargoyle-ms"
   },
   {
     "id": "gen1-hms-draciel-ms",
-    "name": "gen1/hms/draciel-ms",
+    "name": "Draciel MS (Draciel Metal Shield)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution / manga Volume 13, Chapter 2",
@@ -359,11 +367,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--sharp-core"
       }
     ],
-    "source": "gen1/hms/draciel-ms.md"
+    "source": "gen1/hms/draciel-ms.md",
+    "categoryId": "category-draciel-ms"
   },
   {
     "id": "gen1-hms-dragoon-mf",
-    "name": "gen1/hms/dragoon-mf",
+    "name": "Dragoon MF (Dragoon Metal Phantom)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle / Beyblade: G-Revolution (manga)",
@@ -403,11 +412,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/dragoon-mf.md"
+    "source": "gen1/hms/dragoon-mf.md",
+    "categoryId": "category-dragoon-mf"
   },
   {
     "id": "gen1-hms-dragoon-ms-uv",
-    "name": "gen1/hms/dragoon-ms-uv",
+    "name": "Dragoon MS Ultimate Version (Dragoon MSUV)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution (series finale) / Bakuten Shoot Beyblade manga final volumes + epilogue \"The New Generation!!\"",
@@ -438,11 +448,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--grip-flat-core"
       }
     ],
-    "source": "gen1/hms/dragoon-ms-uv.md"
+    "source": "gen1/hms/dragoon-ms-uv.md",
+    "categoryId": "category-dragoon-ms-ultimate-version"
   },
   {
     "id": "gen1-hms-dragoon-ms",
-    "name": "gen1/hms/dragoon-ms",
+    "name": "Dragoon MS (Dragoon Metal Storm)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution (late arc) / manga Volume 12, Chapter 2",
@@ -473,11 +484,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--grip-flat-core"
       }
     ],
-    "source": "gen1/hms/dragoon-ms.md"
+    "source": "gen1/hms/dragoon-ms.md",
+    "categoryId": "category-dragoon-ms"
   },
   {
     "id": "gen1-hms-dranzer-mf",
-    "name": "gen1/hms/dranzer-mf",
+    "name": "Dranzer MF (Dranzer Metal Flame)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -517,11 +529,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/dranzer-mf.md"
+    "source": "gen1/hms/dranzer-mf.md",
+    "categoryId": "category-dranzer-mf"
   },
   {
     "id": "gen1-hms-dranzer-ms",
-    "name": "gen1/hms/dranzer-ms",
+    "name": "Dranzer MS (Dranzer Metal Spiral)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution / manga Volume 13, Chapter 1",
@@ -552,11 +565,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--manual-change-core"
       }
     ],
-    "source": "gen1/hms/dranzer-ms.md"
+    "source": "gen1/hms/dranzer-ms.md",
+    "categoryId": "category-dranzer-ms"
   },
   {
     "id": "gen1-hms-driger-ms",
-    "name": "gen1/hms/driger-ms",
+    "name": "Driger MS (Driger Metal Slash)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution / manga Volume 12, Chapter 3",
@@ -587,11 +601,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--semi-flat-core"
       }
     ],
-    "source": "gen1/hms/driger-ms.md"
+    "source": "gen1/hms/driger-ms.md",
+    "categoryId": "category-driger-ms"
   },
   {
     "id": "gen1-hms-einstein-ms",
-    "name": "gen1/hms/einstein-ms",
+    "name": "Einstein MS (Einstein Metal Spring)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution / Flash Booster sub-line",
@@ -631,11 +646,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/einstein-ms.md"
+    "source": "gen1/hms/einstein-ms.md",
+    "categoryId": "category-einstein-ms"
   },
   {
     "id": "gen1-hms-gaia-dragoon-ms",
-    "name": "gen1/hms/gaia-dragoon-ms",
+    "name": "Gaia Dragoon MS (Strata Dragoon MS / Metal Spike)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution late arc",
@@ -666,11 +682,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--flat-core"
       }
     ],
-    "source": "gen1/hms/gaia-dragoon-ms.md"
+    "source": "gen1/hms/gaia-dragoon-ms.md",
+    "categoryId": "category-gaia-dragoon-ms"
   },
   {
     "id": "gen1-hms-jiraiya-ms",
-    "name": "gen1/hms/jiraiya-ms",
+    "name": "Jiraiya MS (Jiraiya Metal Spirits)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -710,11 +727,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/jiraiya-ms.md"
+    "source": "gen1/hms/jiraiya-ms.md",
+    "categoryId": "category-jiraiya-ms"
   },
   {
     "id": "gen1-hms-magical-ape-ms",
-    "name": "gen1/hms/magical-ape-ms",
+    "name": "Magical Ape MS (Magical Ape Metal Skill)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -754,11 +772,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/magical-ape-ms.md"
+    "source": "gen1/hms/magical-ape-ms.md",
+    "categoryId": "category-magical-ape-ms"
   },
   {
     "id": "gen1-hms-phantom-fox-ms",
-    "name": "gen1/hms/phantom-fox-ms",
+    "name": "Phantom Fox MS (Phantom Fox Metal Shadow)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -798,11 +817,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/phantom-fox-ms.md"
+    "source": "gen1/hms/phantom-fox-ms.md",
+    "categoryId": "category-phantom-fox-ms"
   },
   {
     "id": "gen1-hms-round-shell-ms",
-    "name": "gen1/hms/round-shell-ms",
+    "name": "Round Shell MS (Round Shell Metal Snipe)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -836,11 +856,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/round-shell-ms.md"
+    "source": "gen1/hms/round-shell-ms.md",
+    "categoryId": "category-round-shell-ms"
   },
   {
     "id": "gen1-hms-samurai-changer-ms",
-    "name": "gen1/hms/samurai-changer-ms",
+    "name": "Samurai Changer MS (Samurai Changer Metal Sword)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -880,11 +901,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/samurai-changer-ms.md"
+    "source": "gen1/hms/samurai-changer-ms.md",
+    "categoryId": "category-samurai-changer-ms"
   },
   {
     "id": "gen1-hms-sea-dragon",
-    "name": "gen1/hms/sea-dragon",
+    "name": "Sea Dragon",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution era (HMS line)",
@@ -915,11 +937,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--metal-ball-core"
       }
     ],
-    "source": "gen1/hms/sea-dragon.md"
+    "source": "gen1/hms/sea-dragon.md",
+    "categoryId": "category-sea-dragon"
   },
   {
     "id": "gen1-hms-shining-god-ms",
-    "name": "gen1/hms/shining-god-ms",
+    "name": "Shining God MS (Shining God Metal Sun)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -959,11 +982,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/shining-god-ms.md"
+    "source": "gen1/hms/shining-god-ms.md",
+    "categoryId": "category-shining-god-ms"
   },
   {
     "id": "gen1-hms-slash-riger-ms",
-    "name": "gen1/hms/slash-riger-ms",
+    "name": "Slash Riger MS (Slash Riger Metal Scratch)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle",
@@ -1003,11 +1027,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         ]
       }
     ],
-    "source": "gen1/hms/slash-riger-ms.md"
+    "source": "gen1/hms/slash-riger-ms.md",
+    "categoryId": "category-slash-riger-ms"
   },
   {
     "id": "gen1-hms-strata-dragoon-ms",
-    "name": "gen1/hms/strata-dragoon-ms",
+    "name": "Strata Dragoon MS (Gaia Dragoon MS / Gaia Dragoon MS Metal Spike)",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution (HMS arc)",
@@ -1039,11 +1064,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--flat-core"
       }
     ],
-    "source": "gen1/hms/strata-dragoon-ms.md"
+    "source": "gen1/hms/strata-dragoon-ms.md",
+    "categoryId": "category-strata-dragoon-ms"
   },
   {
     "id": "gen1-hms-thunder-dragon",
-    "name": "gen1/hms/thunder-dragon",
+    "name": "Thunder Dragon",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Beyblade: G-Revolution era / New Generation Custom Beigoma HMS Heavy Metal Battle (game)",
@@ -1078,7 +1104,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-hms-wolborg-ms",
-    "name": "gen1/hms/wolborg-ms",
+    "name": "Wolborg MS (Metal Survive)",
     "generation": "gen1",
     "system": "Heavy Metal System / Hard Metal System (HMS)",
     "series": "New Generation Custom Beigoma — Beyblade: HMS Heavy Metal Battle / Beyblade manga",
@@ -1109,11 +1135,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--bearing-core-s-tier"
       }
     ],
-    "source": "gen1/hms/wolborg-ms.md"
+    "source": "gen1/hms/wolborg-ms.md",
+    "categoryId": "category-wolborg-ms"
   },
   {
     "id": "gen1-hms-wyvern-dj",
-    "name": "gen1/hms/wyvern-dj",
+    "name": "Wyvern DJ",
     "generation": "gen1",
     "system": "Hard Metal System (HMS)",
     "series": "Bakuten Shoot Beyblade / G-Revolution era",
@@ -1144,11 +1171,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "running-core--metal-sharp-core"
       }
     ],
-    "source": "gen1/hms/wyvern-dj.md"
+    "source": "gen1/hms/wyvern-dj.md",
+    "categoryId": "category-wyvern-dj"
   },
   {
     "id": "gen1-plastic-apollon",
-    "name": "gen1/plastic/apollon",
+    "name": "Apollon (アポロン)",
     "generation": "gen1",
     "system": "Magnacore System (Engine Gear System in wiki categories)",
     "series": "Beyblade: G-Revolution (2003)",
@@ -1185,11 +1213,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-semi-flat-base"
       }
     ],
-    "source": "gen1/plastic/apollon.md"
+    "source": "gen1/plastic/apollon.md",
+    "categoryId": "category-apollon"
   },
   {
     "id": "gen1-plastic-black-dranzer",
-    "name": "gen1/plastic/black-dranzer",
+    "name": "Black Dranzer",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade / Beyblade S1 (anime); V-Force toyline (retail release)",
@@ -1230,7 +1259,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-cyber-draciel",
-    "name": "gen1/plastic/cyber-draciel",
+    "name": "Cyber Draciel",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -1252,7 +1281,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-cyber-dragoon",
-    "name": "gen1/plastic/cyber-dragoon",
+    "name": "Cyber Dragoon",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -1293,7 +1322,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-cyber-dranzer",
-    "name": "gen1/plastic/cyber-dranzer",
+    "name": "Cyber Dranzer",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -1316,7 +1345,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-cyber-driger",
-    "name": "gen1/plastic/cyber-driger",
+    "name": "Cyber Driger",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -1339,7 +1368,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-dark-gargoyle",
-    "name": "gen1/plastic/dark-gargoyle",
+    "name": "Death Gargoyle (Dark Gargoyle)",
     "generation": "gen1",
     "system": "Magnacore System (Takara release uses NEO Right SG with Metal Weight Core — non-magnetic)",
     "series": "Beyblade: G-Revolution (2003)",
@@ -1376,11 +1405,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-flat-base"
       }
     ],
-    "source": "gen1/plastic/dark-gargoyle.md"
+    "source": "gen1/plastic/dark-gargoyle.md",
+    "categoryId": "category-death-gargoyle"
   },
   {
     "id": "gen1-plastic-death-driger",
-    "name": "gen1/plastic/death-driger",
+    "name": "Shadow Driger (Death Driger)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Next Generation Beigoma Battle: Beyblade (Gen1 Season 1, 2001)",
@@ -1417,11 +1447,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-sharp-base"
       }
     ],
-    "source": "gen1/plastic/death-driger.md"
+    "source": "gen1/plastic/death-driger.md",
+    "categoryId": "category-shadow-driger"
   },
   {
     "id": "gen1-plastic-draciel-f",
-    "name": "gen1/plastic/draciel-f",
+    "name": "Draciel F (Draciel Fortress)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 (2001) / Bakuten Shoot Beyblade",
@@ -1458,11 +1489,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--fortress-base"
       }
     ],
-    "source": "gen1/plastic/draciel-f.md"
+    "source": "gen1/plastic/draciel-f.md",
+    "categoryId": "category-draciel-f"
   },
   {
     "id": "gen1-plastic-draciel-g",
-    "name": "gen1/plastic/draciel-g",
+    "name": "Draciel G (Draciel Gravity)",
     "generation": "gen1",
     "system": "Engine Gear System (Hit Release / Final Clutch)",
     "series": "Beyblade: G-Revolution",
@@ -1499,11 +1531,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--hit-release-draciel"
       }
     ],
-    "source": "gen1/plastic/draciel-g.md"
+    "source": "gen1/plastic/draciel-g.md",
+    "categoryId": "category-draciel-g"
   },
   {
     "id": "gen1-plastic-draciel-mbd",
-    "name": "gen1/plastic/draciel-mbd",
+    "name": "Draciel MBD (Draciel Metal Ball Defenser)",
     "generation": "gen1",
     "system": "Spin Gear System (4 Layer System)",
     "series": "Next Generation Beigoma Battle: Beyblade (original manga series) / Beyblade Season 1 anime",
@@ -1544,7 +1577,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-draciel-s",
-    "name": "gen1/plastic/draciel-s",
+    "name": "Draciel S (Draciel Shield)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade / Beyblade: 2000 (Gen1 S1)",
@@ -1585,7 +1618,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-draciel-v",
-    "name": "gen1/plastic/draciel-v",
+    "name": "Draciel V (Draciel Viper)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -1622,11 +1655,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--viper-metal-ball-base"
       }
     ],
-    "source": "gen1/plastic/draciel-v.md"
+    "source": "gen1/plastic/draciel-v.md",
+    "categoryId": "category-draciel-v"
   },
   {
     "id": "gen1-plastic-draciel-v2",
-    "name": "gen1/plastic/draciel-v2",
+    "name": "Draciel V2 (Draciel Viper 2)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (Season 2)",
@@ -1663,11 +1697,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--switch-metal-ball"
       }
     ],
-    "source": "gen1/plastic/draciel-v2.md"
+    "source": "gen1/plastic/draciel-v2.md",
+    "categoryId": "category-draciel-v2"
   },
   {
     "id": "gen1-plastic-dragoon-f",
-    "name": "gen1/plastic/dragoon-f",
+    "name": "Dragoon F (Dragoon Fighter)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 (2000)",
@@ -1704,11 +1739,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--fantom-grip-base"
       }
     ],
-    "source": "gen1/plastic/dragoon-f.md"
+    "source": "gen1/plastic/dragoon-f.md",
+    "categoryId": "category-dragoon-f"
   },
   {
     "id": "gen1-plastic-dragoon-g",
-    "name": "gen1/plastic/dragoon-g",
+    "name": "Dragoon G (Dragoon Galaxy)",
     "generation": "gen1",
     "system": "Engine Gear System ⭐ (debut system for G-Revolution era)",
     "series": "Beyblade: G-Revolution",
@@ -1745,11 +1781,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--galaxy-hit-release"
       }
     ],
-    "source": "gen1/plastic/dragoon-g.md"
+    "source": "gen1/plastic/dragoon-g.md",
+    "categoryId": "category-dragoon-g"
   },
   {
     "id": "gen1-plastic-dragoon-gt",
-    "name": "gen1/plastic/dragoon-gt",
+    "name": "Dragoon GT (Dragoon Galaxy Turbo)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (2003)",
@@ -1786,11 +1823,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--instant-release"
       }
     ],
-    "source": "gen1/plastic/dragoon-gt.md"
+    "source": "gen1/plastic/dragoon-gt.md",
+    "categoryId": "category-dragoon-gt"
   },
   {
     "id": "gen1-plastic-dragoon-s",
-    "name": "gen1/plastic/dragoon-s",
+    "name": "Dragoon Storm (Dragoon S)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Next Generation Beigoma Battle: Beyblade / Bakuten Shoot Beyblade (Gen1 S1)",
@@ -1827,11 +1865,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--storm-grip"
       }
     ],
-    "source": "gen1/plastic/dragoon-s.md"
+    "source": "gen1/plastic/dragoon-s.md",
+    "categoryId": "category-dragoon-storm"
   },
   {
     "id": "gen1-plastic-dragoon-v",
-    "name": "gen1/plastic/dragoon-v",
+    "name": "Dragoon V (Dragoon Victory)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (Gen1 S2)",
@@ -1868,11 +1907,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--magne-flat-base"
       }
     ],
-    "source": "gen1/plastic/dragoon-v.md"
+    "source": "gen1/plastic/dragoon-v.md",
+    "categoryId": "category-dragoon-v"
   },
   {
     "id": "gen1-plastic-dragoon-v2",
-    "name": "gen1/plastic/dragoon-v2",
+    "name": "Dragoon V2 (Dragoon Velocity 2)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (2002)",
@@ -1909,11 +1949,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--customize-grip-base"
       }
     ],
-    "source": "gen1/plastic/dragoon-v2.md"
+    "source": "gen1/plastic/dragoon-v2.md",
+    "categoryId": "category-dragoon-v2"
   },
   {
     "id": "gen1-plastic-dranzer-f",
-    "name": "gen1/plastic/dranzer-f",
+    "name": "Dranzer F (Dranzer Flame)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 (2001)",
@@ -1950,11 +1991,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--flame-change-base"
       }
     ],
-    "source": "gen1/plastic/dranzer-f.md"
+    "source": "gen1/plastic/dranzer-f.md",
+    "categoryId": "category-dranzer-f"
   },
   {
     "id": "gen1-plastic-dranzer-g",
-    "name": "gen1/plastic/dranzer-g",
+    "name": "Dranzer G (Dranzer Gigs)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (Season 3, 2003)",
@@ -1991,11 +2033,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--hit-release"
       }
     ],
-    "source": "gen1/plastic/dranzer-g.md"
+    "source": "gen1/plastic/dranzer-g.md",
+    "categoryId": "category-dranzer-g"
   },
   {
     "id": "gen1-plastic-dranzer-gt",
-    "name": "gen1/plastic/dranzer-gt",
+    "name": "Dranzer GT (Dranzer Gigs Turbo)",
     "generation": "gen1",
     "system": "Engine Gear System (Type 6 — Hit Reverse)",
     "series": "Beyblade: G-Revolution",
@@ -2032,11 +2075,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--hit-release-dranzer-gt"
       }
     ],
-    "source": "gen1/plastic/dranzer-gt.md"
+    "source": "gen1/plastic/dranzer-gt.md",
+    "categoryId": "category-dranzer-gt"
   },
   {
     "id": "gen1-plastic-dranzer-s",
-    "name": "gen1/plastic/dranzer-s",
+    "name": "Dranzer S (Dranzer Spiral)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade (Gen1 S1)",
@@ -2077,7 +2121,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-dranzer-v",
-    "name": "gen1/plastic/dranzer-v",
+    "name": "Dranzer V (Dranzer Volcano)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -2114,11 +2158,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--volcano-change-base"
       }
     ],
-    "source": "gen1/plastic/dranzer-v.md"
+    "source": "gen1/plastic/dranzer-v.md",
+    "categoryId": "category-dranzer-v"
   },
   {
     "id": "gen1-plastic-dranzer-v2",
-    "name": "gen1/plastic/dranzer-v2",
+    "name": "Dranzer V2 (Dranzer Volcano 2)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (2002)",
@@ -2155,11 +2200,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--customize-clutch-base"
       }
     ],
-    "source": "gen1/plastic/dranzer-v2.md"
+    "source": "gen1/plastic/dranzer-v2.md",
+    "categoryId": "category-dranzer-v2"
   },
   {
     "id": "gen1-plastic-driger-f",
-    "name": "gen1/plastic/driger-f",
+    "name": "Driger F (Driger Fang)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade (Gen1 S1) / Beyblade: V-Force (Gen1 S2 cameo)",
@@ -2196,11 +2242,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--full-auto-clutch-base"
       }
     ],
-    "source": "gen1/plastic/driger-f.md"
+    "source": "gen1/plastic/driger-f.md",
+    "categoryId": "category-driger-f"
   },
   {
     "id": "gen1-plastic-driger-g",
-    "name": "gen1/plastic/driger-g",
+    "name": "Driger G (Driger Gatling)",
     "generation": "gen1",
     "system": "Engine Gear System (Type 1 — Instant Release / First Clutch)",
     "series": "Beyblade: G-Revolution",
@@ -2237,11 +2284,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--first-clutch-base"
       }
     ],
-    "source": "gen1/plastic/driger-g.md"
+    "source": "gen1/plastic/driger-g.md",
+    "categoryId": "category-driger-g"
   },
   {
     "id": "gen1-plastic-driger-gt",
-    "name": "gen1/plastic/driger-gt",
+    "name": "Driger GT (Driger Gigs Turbo)",
     "generation": "gen1",
     "system": "Engine Gear System (Hit Release / Second Clutch)",
     "series": "Beyblade: G-Revolution",
@@ -2278,11 +2326,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--hit-release-base"
       }
     ],
-    "source": "gen1/plastic/driger-gt.md"
+    "source": "gen1/plastic/driger-gt.md",
+    "categoryId": "category-driger-gt"
   },
   {
     "id": "gen1-plastic-driger-s",
-    "name": "gen1/plastic/driger-s",
+    "name": "Driger S (Driger Slash)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Next Generation Beigoma Battle: Beyblade / Bakuten Shoot Beyblade (Gen1 S1)",
@@ -2323,7 +2372,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-driger-v",
-    "name": "gen1/plastic/driger-v",
+    "name": "Driger V (Driger Vulcan)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (Gen1 S2)",
@@ -2354,11 +2403,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-metal-flat-base"
       }
     ],
-    "source": "gen1/plastic/driger-v.md"
+    "source": "gen1/plastic/driger-v.md",
+    "categoryId": "category-driger-v"
   },
   {
     "id": "gen1-plastic-driger-v2",
-    "name": "gen1/plastic/driger-v2",
+    "name": "Driger V2 (Driger Vulcan 2)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -2395,11 +2445,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--custom-metal-change"
       }
     ],
-    "source": "gen1/plastic/driger-v2.md"
+    "source": "gen1/plastic/driger-v2.md",
+    "categoryId": "category-driger-v2"
   },
   {
     "id": "gen1-plastic-flash-leopard-2",
-    "name": "gen1/plastic/flash-leopard-2",
+    "name": "Flash Leopard 2",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (2002)",
@@ -2436,11 +2487,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--metal-sharp-base"
       }
     ],
-    "source": "gen1/plastic/flash-leopard-2.md"
+    "source": "gen1/plastic/flash-leopard-2.md",
+    "categoryId": "category-flash-leopard-2"
   },
   {
     "id": "gen1-plastic-flash-leopard",
-    "name": "gen1/plastic/flash-leopard",
+    "name": "Flash Leopard",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (2002)",
@@ -2477,11 +2529,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-semi-flat-base-2"
       }
     ],
-    "source": "gen1/plastic/flash-leopard.md"
+    "source": "gen1/plastic/flash-leopard.md",
+    "categoryId": "category-flash-leopard"
   },
   {
     "id": "gen1-plastic-gaia-dragoon-g",
-    "name": "gen1/plastic/gaia-dragoon-g",
+    "name": "Gaia Dragoon G (Strata Dragoon G)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution",
@@ -2518,11 +2571,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--hit-release-strata"
       }
     ],
-    "source": "gen1/plastic/gaia-dragoon-g.md"
+    "source": "gen1/plastic/gaia-dragoon-g.md",
+    "categoryId": "category-gaia-dragoon-g"
   },
   {
     "id": "gen1-plastic-gaia-dragoon-v",
-    "name": "gen1/plastic/gaia-dragoon-v",
+    "name": "Strata Dragoon V (Gaia Dragoon V)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade V-Force (Season 2) + Beyblade: G-Revolution (Season 3)",
@@ -2559,11 +2613,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-metal-flat-2"
       }
     ],
-    "source": "gen1/plastic/gaia-dragoon-v.md"
+    "source": "gen1/plastic/gaia-dragoon-v.md",
+    "categoryId": "category-strata-dragoon-v"
   },
   {
     "id": "gen1-plastic-galeon-2",
-    "name": "gen1/plastic/galeon-2",
+    "name": "Galeon 2",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade G-Revolution (Gen1 S3)",
@@ -2600,11 +2655,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-semi-flat-base"
       }
     ],
-    "source": "gen1/plastic/galeon-2.md"
+    "source": "gen1/plastic/galeon-2.md",
+    "categoryId": "category-galeon-2"
   },
   {
     "id": "gen1-plastic-galeon",
-    "name": "gen1/plastic/galeon",
+    "name": "Galeon",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade / Beyblade (Gen1 S1)",
@@ -2641,11 +2697,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-semi-flat"
       }
     ],
-    "source": "gen1/plastic/galeon.md"
+    "source": "gen1/plastic/galeon.md",
+    "categoryId": "category-galeon"
   },
   {
     "id": "gen1-plastic-galman",
-    "name": "gen1/plastic/galman",
+    "name": "Galman",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade: 2000 (Season 1)",
@@ -2682,11 +2739,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-sharp"
       }
     ],
-    "source": "gen1/plastic/galman.md"
+    "source": "gen1/plastic/galman.md",
+    "categoryId": "category-galman"
   },
   {
     "id": "gen1-plastic-galzzly",
-    "name": "gen1/plastic/galzzly",
+    "name": "Galzzly (War Bear)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade: 2000 (Season 1)",
@@ -2723,11 +2781,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-flat-base"
       }
     ],
-    "source": "gen1/plastic/galzzly.md"
+    "source": "gen1/plastic/galzzly.md",
+    "categoryId": "category-galzzly"
   },
   {
     "id": "gen1-plastic-gigars",
-    "name": "gen1/plastic/gigars",
+    "name": "Gigars (ギガース)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (2003)",
@@ -2752,11 +2811,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "weight-disk--ten-balance"
       }
     ],
-    "source": "gen1/plastic/gigars.md"
+    "source": "gen1/plastic/gigars.md",
+    "categoryId": "category-gigars"
   },
   {
     "id": "gen1-plastic-griffolyon",
-    "name": "gen1/plastic/griffolyon",
+    "name": "Griffolyon",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade / Beyblade: 2000 (Gen1 S1)",
@@ -2793,11 +2853,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--griffolyon-base"
       }
     ],
-    "source": "gen1/plastic/griffolyon.md"
+    "source": "gen1/plastic/griffolyon.md",
+    "categoryId": "category-griffolyon"
   },
   {
     "id": "gen1-plastic-hopper",
-    "name": "gen1/plastic/hopper",
+    "name": "Hopper (Einstein)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 (Original Series); also appears in V-Force and G-Revolution",
@@ -2838,7 +2899,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-keel-shark",
-    "name": "gen1/plastic/keel-shark",
+    "name": "SharkEdge 3-60LF (Keel Shark)",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX / Basic Line",
@@ -2862,11 +2923,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--lf"
       }
     ],
-    "source": "gen1/plastic/keel-shark.md"
+    "source": "gen1/plastic/keel-shark.md",
+    "categoryId": "category-sharkedge-3-60lf"
   },
   {
     "id": "gen1-plastic-master-dranzer",
-    "name": "gen1/plastic/master-dranzer",
+    "name": "Master Dranzer",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade / Beyblade Season 1 (Spin Gear System era)",
@@ -2906,7 +2968,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-metal-draciel",
-    "name": "gen1/plastic/metal-draciel",
+    "name": "Metal Draciel (メタルドラシエル)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Next Generation Beigoma Battle: Beyblade / Bakuten Shoot Beyblade (Season 1 era)",
@@ -2943,11 +3005,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--metal-sting-base"
       }
     ],
-    "source": "gen1/plastic/metal-draciel.md"
+    "source": "gen1/plastic/metal-draciel.md",
+    "categoryId": "category-metal-draciel"
   },
   {
     "id": "gen1-plastic-metal-driger",
-    "name": "gen1/plastic/metal-driger",
+    "name": "Metal Driger (メタルドライガー)",
     "generation": "gen1",
     "system": "Engine Gear System (Type 1 — Instant Release / First Clutch)",
     "series": "Beyblade: G-Revolution (2003)",
@@ -2984,11 +3047,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--instant-release-base"
       }
     ],
-    "source": "gen1/plastic/metal-driger.md"
+    "source": "gen1/plastic/metal-driger.md",
+    "categoryId": "category-metal-driger"
   },
   {
     "id": "gen1-plastic-rapid-eagle",
-    "name": "gen1/plastic/rapid-eagle",
+    "name": "Killer Eagle (Rapid Eagle)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (2003)",
@@ -3025,11 +3089,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-flat-base"
       }
     ],
-    "source": "gen1/plastic/rapid-eagle.md"
+    "source": "gen1/plastic/rapid-eagle.md",
+    "categoryId": "category-killer-eagle"
   },
   {
     "id": "gen1-plastic-rock-bison",
-    "name": "gen1/plastic/rock-bison",
+    "name": "Rock Bison",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade G-Revolution (Bakuten Shoot Beyblade G-Revolution)",
@@ -3054,11 +3119,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "weight-disk--ten-heavy"
       }
     ],
-    "source": "gen1/plastic/rock-bison.md"
+    "source": "gen1/plastic/rock-bison.md",
+    "categoryId": "category-rock-bison"
   },
   {
     "id": "gen1-plastic-rushing-boar",
-    "name": "gen1/plastic/rushing-boar",
+    "name": "Rushing Boar",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (2003)",
@@ -3099,7 +3165,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-salamalyon",
-    "name": "gen1/plastic/salamalyon",
+    "name": "Salamalyon (Salamalyon",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade: 2000 / Bakuten Shoot Beyblade (Season 1)",
@@ -3134,7 +3200,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-seaborg-2",
-    "name": "gen1/plastic/seaborg-2",
+    "name": "Seaborg 2",
     "generation": "gen1",
     "system": "Spin Gear System (SGS)",
     "series": "Beyblade: 2000 (Season 1)",
@@ -3171,11 +3237,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-flat"
       }
     ],
-    "source": "gen1/plastic/seaborg-2.md"
+    "source": "gen1/plastic/seaborg-2.md",
+    "categoryId": "category-seaborg-2"
   },
   {
     "id": "gen1-plastic-sharkrash",
-    "name": "gen1/plastic/sharkrash",
+    "name": "Sharkrash (シャークラッシュ",
     "generation": "gen1",
     "system": "Spin Gear System (Magnacore / NEO SG variant — V-Force era)",
     "series": "Beyblade: V-Force (2002)",
@@ -3216,7 +3283,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-strata-dragoon-g",
-    "name": "gen1/plastic/strata-dragoon-g",
+    "name": "Strata Dragoon G (Gaia Dragoon G)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (Season 3)",
@@ -3253,11 +3320,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--hit-release"
       }
     ],
-    "source": "gen1/plastic/strata-dragoon-g.md"
+    "source": "gen1/plastic/strata-dragoon-g.md",
+    "categoryId": "category-strata-dragoon-g"
   },
   {
     "id": "gen1-plastic-strata-dragoon",
-    "name": "gen1/plastic/strata-dragoon",
+    "name": "Strata Dragoon (Gaia Dragoon)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade V-Force (Season 2) — movie debut; G-Revolution (Season 3) — late cameo",
@@ -3298,7 +3366,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-thunder-pegasus",
-    "name": "gen1/plastic/thunder-pegasus",
+    "name": "Thunder Pegasus (サンダーペガサス)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution",
@@ -3329,11 +3397,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--engine-stopper-base"
       }
     ],
-    "source": "gen1/plastic/thunder-pegasus.md"
+    "source": "gen1/plastic/thunder-pegasus.md",
+    "categoryId": "category-thunder-pegasus"
   },
   {
     "id": "gen1-plastic-torch-pegasus",
-    "name": "gen1/plastic/torch-pegasus",
+    "name": "Torch Pegasus (Flame Pegasus)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution",
@@ -3358,11 +3427,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "layer--engine-gear"
       }
     ],
-    "source": "gen1/plastic/torch-pegasus.md"
+    "source": "gen1/plastic/torch-pegasus.md",
+    "categoryId": "category-torch-pegasus"
   },
   {
     "id": "gen1-plastic-trygle-2",
-    "name": "gen1/plastic/trygle-2",
+    "name": "Trygle 2",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade GRevolution (Gen1 S3)",
@@ -3399,11 +3469,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-sharp"
       }
     ],
-    "source": "gen1/plastic/trygle-2.md"
+    "source": "gen1/plastic/trygle-2.md",
+    "categoryId": "category-trygle-2"
   },
   {
     "id": "gen1-plastic-trygle",
-    "name": "gen1/plastic/trygle",
+    "name": "Trygle",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade (Gen1 S1) — Americas arc",
@@ -3440,11 +3511,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-jumping-base"
       }
     ],
-    "source": "gen1/plastic/trygle.md"
+    "source": "gen1/plastic/trygle.md",
+    "categoryId": "category-trygle"
   },
   {
     "id": "gen1-plastic-tryhorn",
-    "name": "gen1/plastic/tryhorn",
+    "name": "Tryhorn (トライホーン)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 — Beyblade: 2000",
@@ -3485,7 +3557,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-trypio-g",
-    "name": "gen1/plastic/trypio-g",
+    "name": "Trypio G (Trypio Gyro)",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (Season 3, 2003)",
@@ -3522,11 +3594,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--jumping-base"
       }
     ],
-    "source": "gen1/plastic/trypio-g.md"
+    "source": "gen1/plastic/trypio-g.md",
+    "categoryId": "category-trypio-g"
   },
   {
     "id": "gen1-plastic-trypio",
-    "name": "gen1/plastic/trypio",
+    "name": "Trypio (トライピオ)",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 — Beyblade (2001–2002)",
@@ -3563,11 +3636,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-sharp-base"
       }
     ],
-    "source": "gen1/plastic/trypio.md"
+    "source": "gen1/plastic/trypio.md",
+    "categoryId": "category-trypio"
   },
   {
     "id": "gen1-plastic-vanishing-moot",
-    "name": "gen1/plastic/vanishing-moot",
+    "name": "Vanishing Moot (バニシングムート)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force (2002)",
@@ -3608,7 +3682,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen1-plastic-vortex-ape-2",
-    "name": "gen1/plastic/vortex-ape-2",
+    "name": "Vortex Ape 2",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade V-Force (2002)",
@@ -3645,11 +3719,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--customize-metal-sharp"
       }
     ],
-    "source": "gen1/plastic/vortex-ape-2.md"
+    "source": "gen1/plastic/vortex-ape-2.md",
+    "categoryId": "category-vortex-ape-2"
   },
   {
     "id": "gen1-plastic-vortex-ape",
-    "name": "gen1/plastic/vortex-ape",
+    "name": "Vortex Ape (Voltaic Ape)",
     "generation": "gen1",
     "system": "Magnacore System",
     "series": "Beyblade: V-Force",
@@ -3686,11 +3761,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--customize-metal-sharp"
       }
     ],
-    "source": "gen1/plastic/vortex-ape.md"
+    "source": "gen1/plastic/vortex-ape.md",
+    "categoryId": "category-vortex-ape"
   },
   {
     "id": "gen1-plastic-wolborg-2",
-    "name": "gen1/plastic/wolborg-2",
+    "name": "Wolborg 2",
     "generation": "gen1",
     "system": "Spin Gear System (released in V-Force era, but uses SGS, not Magnacore)",
     "series": "Beyblade (Gen1 S1 anime late arc / V-Force)",
@@ -3727,11 +3803,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--defense-grip-base-2"
       }
     ],
-    "source": "gen1/plastic/wolborg-2.md"
+    "source": "gen1/plastic/wolborg-2.md",
+    "categoryId": "category-wolborg-2"
   },
   {
     "id": "gen1-plastic-wolborg-4",
-    "name": "gen1/plastic/wolborg-4",
+    "name": "Wolborg 4",
     "generation": "gen1",
     "system": "Engine Gear System (EG) ⭐ — the defining G-Revolution era system",
     "series": "Beyblade: G-Revolution",
@@ -3768,11 +3845,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--normal-base"
       }
     ],
-    "source": "gen1/plastic/wolborg-4.md"
+    "source": "gen1/plastic/wolborg-4.md",
+    "categoryId": "category-wolborg-4"
   },
   {
     "id": "gen1-plastic-wolborg",
-    "name": "gen1/plastic/wolborg",
+    "name": "Wolborg",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Bakuten Shoot Beyblade (Gen1 S1) — manga (\"Invasion of the Russian Army Corps, Borg!!\")",
@@ -3809,11 +3887,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-bearing-base"
       }
     ],
-    "source": "gen1/plastic/wolborg.md"
+    "source": "gen1/plastic/wolborg.md",
+    "categoryId": "category-wolborg"
   },
   {
     "id": "gen1-plastic-wyborg",
-    "name": "gen1/plastic/wyborg",
+    "name": "Wyborg",
     "generation": "gen1",
     "system": "Spin Gear System",
     "series": "Beyblade Season 1 / Bakuten Shoot Beyblade (2000–2001)",
@@ -3850,11 +3929,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--spike-base"
       }
     ],
-    "source": "gen1/plastic/wyborg.md"
+    "source": "gen1/plastic/wyborg.md",
+    "categoryId": "category-wyborg"
   },
   {
     "id": "gen1-plastic-zeus",
-    "name": "gen1/plastic/zeus",
+    "name": "Zeus",
     "generation": "gen1",
     "system": "Engine Gear System",
     "series": "Beyblade: G-Revolution (BEGA arc)",
@@ -3891,11 +3971,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--first-clutch-base-zeus"
       }
     ],
-    "source": "gen1/plastic/zeus.md"
+    "source": "gen1/plastic/zeus.md",
+    "categoryId": "category-zeus"
   },
   {
     "id": "gen2-mfb-basalt-horogium",
-    "name": "gen2/mfb/basalt-horogium",
+    "name": "Basalt Horogium 145WD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MM era)",
     "series": "Beyblade: Metal Masters",
@@ -3932,11 +4013,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd"
       }
     ],
-    "source": "gen2/mfb/basalt-horogium.md"
+    "source": "gen2/mfb/basalt-horogium.md",
+    "categoryId": "category-basalt-horogium-145wd"
   },
   {
     "id": "gen2-mfb-beat-lynx-ad145wd",
-    "name": "gen2/mfb/beat-lynx-ad145wd",
+    "name": "Beat Lynx AD145WD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fury (Hasbro HWS release)",
@@ -3973,11 +4055,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd-wide-defense"
       }
     ],
-    "source": "gen2/mfb/beat-lynx-ad145wd.md"
+    "source": "gen2/mfb/beat-lynx-ad145wd.md",
+    "categoryId": "category-beat-lynx-ad145wd"
   },
   {
     "id": "gen2-mfb-big-bang-pegasus",
-    "name": "gen2/mfb/big-bang-pegasus",
+    "name": "Big Bang Pegasus F:D",
     "generation": "gen2",
     "system": "4D System (MM-era — Final Drive-class)",
     "series": "Beyblade: Metal Masters",
@@ -3990,11 +4073,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "face-bolt--pegasus"
       }
     ],
-    "source": "gen2/mfb/big-bang-pegasus.md"
+    "source": "gen2/mfb/big-bang-pegasus.md",
+    "categoryId": "category-big-bang-pegasus-f-d"
   },
   {
     "id": "gen2-mfb-blitz-striker-100rsf",
-    "name": "gen2/mfb/blitz-striker-100rsf",
+    "name": "Blitz Unicorno 100RSF",
     "generation": "gen2",
     "system": "4D System (Metal Fury era, gen2)",
     "series": "Beyblade: Metal Fury",
@@ -4031,11 +4115,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--rsf-rubber-semi-flat"
       }
     ],
-    "source": "gen2/mfb/blitz-striker-100rsf.md"
+    "source": "gen2/mfb/blitz-striker-100rsf.md",
+    "categoryId": "category-blitz-unicorno-100rsf"
   },
   {
     "id": "gen2-mfb-bull-145s",
-    "name": "gen2/mfb/bull-145s",
+    "name": "Bull 145S",
     "generation": "gen2",
     "system": "Metal System (early MFB release)",
     "series": "Beyblade: Metal Fight Beyblade",
@@ -4073,11 +4158,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--s"
       }
     ],
-    "source": "gen2/mfb/bull-145s.md"
+    "source": "gen2/mfb/bull-145s.md",
+    "categoryId": "category-bull-145s"
   },
   {
     "id": "gen2-mfb-burn-fireblaze",
-    "name": "gen2/mfb/burn-fireblaze",
+    "name": "Burn Fireblaze 135MS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion (mid-arc onwards)",
@@ -4114,11 +4200,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--ms-metal-sharp"
       }
     ],
-    "source": "gen2/mfb/burn-fireblaze.md"
+    "source": "gen2/mfb/burn-fireblaze.md",
+    "categoryId": "category-burn-fireblaze-135ms"
   },
   {
     "id": "gen2-mfb-cosmic-pegasus",
-    "name": "gen2/mfb/cosmic-pegasus",
+    "name": "Cosmic Pegasis . F:D",
     "generation": "gen2",
     "system": "4D System (MFury — Legendary Blader era)",
     "series": "Beyblade: Metal Fury",
@@ -4131,11 +4218,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "face-bolt--pegasus"
       }
     ],
-    "source": "gen2/mfb/cosmic-pegasus.md"
+    "source": "gen2/mfb/cosmic-pegasus.md",
+    "categoryId": "category-cosmic-pegasis-f-d"
   },
   {
     "id": "gen2-mfb-dark-bull",
-    "name": "gen2/mfb/dark-bull",
+    "name": "Dark Bull H145SD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion (early arc opponent)",
@@ -4172,11 +4260,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--sd-semi-defense"
       }
     ],
-    "source": "gen2/mfb/dark-bull.md"
+    "source": "gen2/mfb/dark-bull.md",
+    "categoryId": "category-dark-bull-h145sd"
   },
   {
     "id": "gen2-mfb-dark-libra-ed145sd",
-    "name": "gen2/mfb/dark-libra-ed145sd",
+    "name": "Dark Libra ED145SD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -4213,11 +4302,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--sd-semi-defense"
       }
     ],
-    "source": "gen2/mfb/dark-libra-ed145sd.md"
+    "source": "gen2/mfb/dark-libra-ed145sd.md",
+    "categoryId": "category-dark-libra-ed145sd"
   },
   {
     "id": "gen2-mfb-dark-wolf-df145fs",
-    "name": "gen2/mfb/dark-wolf-df145fs",
+    "name": "Dark Wolf DF145FS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -4254,11 +4344,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--fs-flat-spike"
       }
     ],
-    "source": "gen2/mfb/dark-wolf-df145fs.md"
+    "source": "gen2/mfb/dark-wolf-df145fs.md",
+    "categoryId": "category-dark-wolf-df145fs"
   },
   {
     "id": "gen2-mfb-death-quetzalcoatl",
-    "name": "gen2/mfb/death-quetzalcoatl",
+    "name": "Death Quetzalcoatl 125RDF",
     "generation": "gen2",
     "system": "4D System (Metal Fury era)",
     "series": "Beyblade: Metal Fury (Gen2 MFury — third season of Metal series)",
@@ -4296,7 +4387,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen2-mfb-earth-aquila-145wd",
-    "name": "gen2/mfb/earth-aquila-145wd",
+    "name": "Earth Aquila 145WD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS / MFB)",
     "series": "Beyblade: Metal Fusion / Metal Masters",
@@ -4333,11 +4424,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd-wide-defense"
       }
     ],
-    "source": "gen2/mfb/earth-aquila-145wd.md"
+    "source": "gen2/mfb/earth-aquila-145wd.md",
+    "categoryId": "category-earth-aquila-145wd"
   },
   {
     "id": "gen2-mfb-earth-eagle",
-    "name": "gen2/mfb/earth-eagle",
+    "name": "Earth Eagle 145WD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion (mountain arc)",
@@ -4374,11 +4466,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd-wide-defense"
       }
     ],
-    "source": "gen2/mfb/earth-eagle.md"
+    "source": "gen2/mfb/earth-eagle.md",
+    "categoryId": "category-earth-eagle-145wd"
   },
   {
     "id": "gen2-mfb-evil-befall",
-    "name": "gen2/mfb/evil-befall",
+    "name": "Evil Befall UW145EWD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MM era)",
     "series": "Beyblade: Metal Masters",
@@ -4415,11 +4508,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--ewd-eternal-wide-defense"
       }
     ],
-    "source": "gen2/mfb/evil-befall.md"
+    "source": "gen2/mfb/evil-befall.md",
+    "categoryId": "category-evil-befall-uw145ewd"
   },
   {
     "id": "gen2-mfb-evil-gemios-df145fs",
-    "name": "gen2/mfb/evil-gemios-df145fs",
+    "name": "Evil Gemios DF145FS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -4456,11 +4550,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--fs"
       }
     ],
-    "source": "gen2/mfb/evil-gemios-df145fs.md"
+    "source": "gen2/mfb/evil-gemios-df145fs.md",
+    "categoryId": "category-evil-gemios-df145fs"
   },
   {
     "id": "gen2-mfb-fang-leone",
-    "name": "gen2/mfb/fang-leone",
+    "name": "Fang Leone 130W2D",
     "generation": "gen2",
     "system": "4D System (Metal Fury era)",
     "series": "Beyblade: Metal Fury (Gen2 MFury — third season of Metal series)",
@@ -4491,11 +4586,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--w2d"
       }
     ],
-    "source": "gen2/mfb/fang-leone.md"
+    "source": "gen2/mfb/fang-leone.md",
+    "categoryId": "category-fang-leone-130w2d"
   },
   {
     "id": "gen2-mfb-flame-aries-h145fs",
-    "name": "gen2/mfb/flame-aries-h145fs",
+    "name": "Flame Aries H145FS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS / MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -4533,11 +4629,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--fs"
       }
     ],
-    "source": "gen2/mfb/flame-aries-h145fs.md"
+    "source": "gen2/mfb/flame-aries-h145fs.md",
+    "categoryId": "category-flame-aries-h145fs"
   },
   {
     "id": "gen2-mfb-flame-byxis",
-    "name": "gen2/mfb/flame-byxis",
+    "name": "Flame Byxis 230WD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MM era)",
     "series": "Beyblade: Metal Masters",
@@ -4574,11 +4671,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd"
       }
     ],
-    "source": "gen2/mfb/flame-byxis.md"
+    "source": "gen2/mfb/flame-byxis.md",
+    "categoryId": "category-flame-byxis-230wd"
   },
   {
     "id": "gen2-mfb-flame-sagittario-c145s",
-    "name": "gen2/mfb/flame-sagittario-c145s",
+    "name": "Flame Sagittario C145S",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -4615,11 +4713,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--s"
       }
     ],
-    "source": "gen2/mfb/flame-sagittario-c145s.md"
+    "source": "gen2/mfb/flame-sagittario-c145s.md",
+    "categoryId": "category-flame-sagittario-c145s"
   },
   {
     "id": "gen2-mfb-flash-sagittario",
-    "name": "gen2/mfb/flash-sagittario",
+    "name": "Flash Sagittario 230WD",
     "generation": "gen2",
     "system": "4D System (Metal Fury era)",
     "series": "Beyblade: Metal Fury (Gen2 MFury — third season of Metal series)",
@@ -4653,11 +4752,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd"
       }
     ],
-    "source": "gen2/mfb/flash-sagittario.md"
+    "source": "gen2/mfb/flash-sagittario.md",
+    "categoryId": "category-flash-sagittario-230wd"
   },
   {
     "id": "gen2-mfb-galaxy-pegasus",
-    "name": "gen2/mfb/galaxy-pegasus",
+    "name": "Galaxy Pegasus W105R²F",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion (late arc) / Metal Masters carry-over",
@@ -4694,11 +4794,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--r-f-double-rubber-flat"
       }
     ],
-    "source": "gen2/mfb/galaxy-pegasus.md"
+    "source": "gen2/mfb/galaxy-pegasus.md",
+    "categoryId": "category-galaxy-pegasus-w105r2f"
   },
   {
     "id": "gen2-mfb-gemios-df145fs",
-    "name": "gen2/mfb/gemios-df145fs",
+    "name": "Gemios DF145FS",
     "generation": "gen2",
     "system": "Metal System (MS) — predecessor generation to HWS",
     "series": "Beyblade: Metal Fight Beyblade (Metal Fusion)",
@@ -4723,11 +4824,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--fs"
       }
     ],
-    "source": "gen2/mfb/gemios-df145fs.md"
+    "source": "gen2/mfb/gemios-df145fs.md",
+    "categoryId": "category-gemios-df145fs"
   },
   {
     "id": "gen2-mfb-gravity-destroyer",
-    "name": "gen2/mfb/gravity-destroyer",
+    "name": "Gravity Destroyer AD145WD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MM era)",
     "series": "Beyblade: Metal Masters",
@@ -4764,11 +4866,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd"
       }
     ],
-    "source": "gen2/mfb/gravity-destroyer.md"
+    "source": "gen2/mfb/gravity-destroyer.md",
+    "categoryId": "category-gravity-destroyer-ad145wd"
   },
   {
     "id": "gen2-mfb-hades-kerbecs",
-    "name": "gen2/mfb/hades-kerbecs",
+    "name": "Hades Kerbecs . BD145DS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MFury era)",
     "series": "Beyblade: Metal Fury / Metal Masters late-game",
@@ -4805,11 +4908,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--ds"
       }
     ],
-    "source": "gen2/mfb/hades-kerbecs.md"
+    "source": "gen2/mfb/hades-kerbecs.md",
+    "categoryId": "category-hades-kerbecs-bd145ds"
   },
   {
     "id": "gen2-mfb-hell-kerbecs-bd145ds",
-    "name": "gen2/mfb/hell-kerbecs-bd145ds",
+    "name": "Hell Kerbecs BD145DS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS) — Metal Masters era",
     "series": "Beyblade: Metal Masters",
@@ -4850,11 +4954,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--ds"
       }
     ],
-    "source": "gen2/mfb/hell-kerbecs-bd145ds.md"
+    "source": "gen2/mfb/hell-kerbecs-bd145ds.md",
+    "categoryId": "category-hell-kerbecs-bd145ds"
   },
   {
     "id": "gen2-mfb-inferno-sagittario-145s",
-    "name": "gen2/mfb/inferno-sagittario-145s",
+    "name": "Inferno Sagittario 145S",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion (initial release); re-released in Beyblade: Metal Masters toyline",
@@ -4891,11 +4996,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--s"
       }
     ],
-    "source": "gen2/mfb/inferno-sagittario-145s.md"
+    "source": "gen2/mfb/inferno-sagittario-145s.md",
+    "categoryId": "category-inferno-sagittario-145s"
   },
   {
     "id": "gen2-mfb-jade-jupiter",
-    "name": "gen2/mfb/jade-jupiter",
+    "name": "Jade Jupiter . S130RB",
     "generation": "gen2",
     "system": "4D System",
     "series": "Beyblade: Metal Fury",
@@ -4932,11 +5038,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--rb-rubber-ball"
       }
     ],
-    "source": "gen2/mfb/jade-jupiter.md"
+    "source": "gen2/mfb/jade-jupiter.md",
+    "categoryId": "category-jade-jupiter-s130rb"
   },
   {
     "id": "gen2-mfb-kreis-cygnus-145wd",
-    "name": "gen2/mfb/kreis-cygnus-145wd",
+    "name": "Kreis Cygnus 145WD",
     "generation": "gen2",
     "system": "4D System (Metal Fury)",
     "series": "Beyblade: Metal Fury",
@@ -4975,11 +5082,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd-wide-defense"
       }
     ],
-    "source": "gen2/mfb/kreis-cygnus-145wd.md"
+    "source": "gen2/mfb/kreis-cygnus-145wd.md",
+    "categoryId": "category-kreis-cygnus-145wd"
   },
   {
     "id": "gen2-mfb-l-drago-destroy",
-    "name": "gen2/mfb/l-drago-destroy",
+    "name": "L-Drago Destructor . F:S",
     "generation": "gen2",
     "system": "4D System (MFury — Legendary Blader era)",
     "series": "Beyblade: Metal Fury",
@@ -4992,11 +5100,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "face-bolt--l-drago"
       }
     ],
-    "source": "gen2/mfb/l-drago-destroy.md"
+    "source": "gen2/mfb/l-drago-destroy.md",
+    "categoryId": "category-l-drago-destructor-f-s"
   },
   {
     "id": "gen2-mfb-leone-145d",
-    "name": "gen2/mfb/leone-145d",
+    "name": "Leone 145D",
     "generation": "gen2",
     "system": "Metal System (predecessor to Hybrid Wheel System)",
     "series": "Metal Fight Beyblade (manga; not the anime — Leone 145D is manga-only)",
@@ -5021,11 +5130,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--d-defense"
       }
     ],
-    "source": "gen2/mfb/leone-145d.md"
+    "source": "gen2/mfb/leone-145d.md",
+    "categoryId": "category-leone-145d"
   },
   {
     "id": "gen2-mfb-libra-df145bs",
-    "name": "gen2/mfb/libra-df145bs",
+    "name": "Libra DF145BS",
     "generation": "gen2",
     "system": "Metal System (MFB)",
     "series": "Beyblade: Metal Fight Beyblade (manga); sold separately as a booster",
@@ -5065,11 +5175,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bs"
       }
     ],
-    "source": "gen2/mfb/libra-df145bs.md"
+    "source": "gen2/mfb/libra-df145bs.md",
+    "categoryId": "category-libra-df145bs"
   },
   {
     "id": "gen2-mfb-lightning-l-drago",
-    "name": "gen2/mfb/lightning-l-drago",
+    "name": "Lightning L-Drago 100HF",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion (villain bey, debut Ep 12 \"Forbidden Beyblade\")",
@@ -5106,11 +5217,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--hf"
       }
     ],
-    "source": "gen2/mfb/lightning-l-drago.md"
+    "source": "gen2/mfb/lightning-l-drago.md",
+    "categoryId": "category-lightning-l-drago-100hf"
   },
   {
     "id": "gen2-mfb-meteo-l-drago",
-    "name": "gen2/mfb/meteo-l-drago",
+    "name": "Meteo L-Drago . LW105LF",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MM era)",
     "series": "Beyblade: Metal Masters",
@@ -5147,11 +5259,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--lf"
       }
     ],
-    "source": "gen2/mfb/meteo-l-drago.md"
+    "source": "gen2/mfb/meteo-l-drago.md",
+    "categoryId": "category-meteo-l-drago-lw105lf"
   },
   {
     "id": "gen2-mfb-night-virgo-df145bs",
-    "name": "gen2/mfb/night-virgo-df145bs",
+    "name": "Night Virgo DF145BS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS / MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -5191,11 +5304,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bs"
       }
     ],
-    "source": "gen2/mfb/night-virgo-df145bs.md"
+    "source": "gen2/mfb/night-virgo-df145bs.md",
+    "categoryId": "category-night-virgo-df145bs"
   },
   {
     "id": "gen2-mfb-phantom-orion-bd",
-    "name": "gen2/mfb/phantom-orion-bd",
+    "name": "Phantom Orion B:D",
     "generation": "gen2",
     "system": "4D System (Metal Fury era)",
     "series": "Beyblade: Metal Fury (Gen2 MFury — third season of Metal series)",
@@ -5214,11 +5328,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "layer--4d-clear-wheel-orion"
       }
     ],
-    "source": "gen2/mfb/phantom-orion-bd.md"
+    "source": "gen2/mfb/phantom-orion-bd.md",
+    "categoryId": "category-phantom-orion-b-d"
   },
   {
     "id": "gen2-mfb-poison-serpent-sw145sd",
-    "name": "gen2/mfb/poison-serpent-sw145sd",
+    "name": "Poison Serpent SW145SD",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -5259,11 +5374,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--sd-semi-defense"
       }
     ],
-    "source": "gen2/mfb/poison-serpent-sw145sd.md"
+    "source": "gen2/mfb/poison-serpent-sw145sd.md",
+    "categoryId": "category-poison-serpent-sw145sd"
   },
   {
     "id": "gen2-mfb-proto-nemesis-ad145d",
-    "name": "gen2/mfb/proto-nemesis-ad145d",
+    "name": "Proto Nemesis AD145D",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS) — Hasbro exclusive; NOT the 4D System",
     "series": "Beyblade: Metal Fury (Hasbro Starter Pack — USD$7.99, September 2012)",
@@ -5300,11 +5416,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--d"
       }
     ],
-    "source": "gen2/mfb/proto-nemesis-ad145d.md"
+    "source": "gen2/mfb/proto-nemesis-ad145d.md",
+    "categoryId": "category-proto-nemesis-ad145d"
   },
   {
     "id": "gen2-mfb-ray-striker",
-    "name": "gen2/mfb/ray-striker",
+    "name": "Ray Striker D125CS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MM era)",
     "series": "Beyblade: Metal Masters",
@@ -5341,11 +5458,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--cs-counter-sharp"
       }
     ],
-    "source": "gen2/mfb/ray-striker.md"
+    "source": "gen2/mfb/ray-striker.md",
+    "categoryId": "category-ray-striker-d125cs"
   },
   {
     "id": "gen2-mfb-rock-aries-ed145b",
-    "name": "gen2/mfb/rock-aries-ed145b",
+    "name": "Rock Aries ED145B",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -5382,11 +5500,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--b"
       }
     ],
-    "source": "gen2/mfb/rock-aries-ed145b.md"
+    "source": "gen2/mfb/rock-aries-ed145b.md",
+    "categoryId": "category-rock-aries-ed145b"
   },
   {
     "id": "gen2-mfb-rock-leone",
-    "name": "gen2/mfb/rock-leone",
+    "name": "Rock Leone 145WB",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -5423,11 +5542,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wb-wide-ball"
       }
     ],
-    "source": "gen2/mfb/rock-leone.md"
+    "source": "gen2/mfb/rock-leone.md",
+    "categoryId": "category-rock-leone-145wb"
   },
   {
     "id": "gen2-mfb-rock-zurafa-r145wb",
-    "name": "gen2/mfb/rock-zurafa-r145wb",
+    "name": "Rock Zurafa R145WB",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB — Metal Masters era)",
     "series": "Beyblade: Metal Masters",
@@ -5464,11 +5584,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wb-wide-ball"
       }
     ],
-    "source": "gen2/mfb/rock-zurafa-r145wb.md"
+    "source": "gen2/mfb/rock-zurafa-r145wb.md",
+    "categoryId": "category-rock-zurafa-r145wb"
   },
   {
     "id": "gen2-mfb-sagittario-145s",
-    "name": "gen2/mfb/sagittario-145s",
+    "name": "Sagittario 145S",
     "generation": "gen2",
     "system": "Metal System (MFB early release — predates HWS)",
     "series": "Beyblade: Metal Fight Beyblade (manga debut)",
@@ -5505,11 +5626,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--s"
       }
     ],
-    "source": "gen2/mfb/sagittario-145s.md"
+    "source": "gen2/mfb/sagittario-145s.md",
+    "categoryId": "category-sagittario-145s"
   },
   {
     "id": "gen2-mfb-scythe-kronos",
-    "name": "gen2/mfb/scythe-kronos",
+    "name": "Scythe Kronos T125EDS",
     "generation": "gen2",
     "system": "4D System (Metal Fury era)",
     "series": "Beyblade: Metal Fury (Gen2 MFury — third season of Metal series)",
@@ -5540,11 +5662,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--eds"
       }
     ],
-    "source": "gen2/mfb/scythe-kronos.md"
+    "source": "gen2/mfb/scythe-kronos.md",
+    "categoryId": "category-scythe-kronos-t125eds"
   },
   {
     "id": "gen2-mfb-sol-blaze",
-    "name": "gen2/mfb/sol-blaze",
+    "name": "Sol Blaze . V145AS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB / MFury era)",
     "series": "Beyblade: Metal Fury",
@@ -5581,11 +5704,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--as"
       }
     ],
-    "source": "gen2/mfb/sol-blaze.md"
+    "source": "gen2/mfb/sol-blaze.md",
+    "categoryId": "category-sol-blaze-v145as"
   },
   {
     "id": "gen2-mfb-storm-aquario",
-    "name": "gen2/mfb/storm-aquario",
+    "name": "Storm Aquario . 100HF/S",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -5622,11 +5746,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--hf-s-hole-flat-sharp"
       }
     ],
-    "source": "gen2/mfb/storm-aquario.md"
+    "source": "gen2/mfb/storm-aquario.md",
+    "categoryId": "category-storm-aquario-100hf-s"
   },
   {
     "id": "gen2-mfb-storm-capricorne-m145q",
-    "name": "gen2/mfb/storm-capricorne-m145q",
+    "name": "Storm Capricorne M145Q",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS / MFB)",
     "series": "Beyblade: Metal Fusion",
@@ -5663,11 +5788,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--q-gimmick-tip"
       }
     ],
-    "source": "gen2/mfb/storm-capricorne-m145q.md"
+    "source": "gen2/mfb/storm-capricorne-m145q.md",
+    "categoryId": "category-storm-capricorne-m145q"
   },
   {
     "id": "gen2-mfb-storm-pegasus",
-    "name": "gen2/mfb/storm-pegasus",
+    "name": "Storm Pegasus 105RF",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS / MFB)",
     "series": "Beyblade: Metal Fusion (Gen2 MF — first season of Metal series)",
@@ -5704,11 +5830,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--rf-key-gimmick"
       }
     ],
-    "source": "gen2/mfb/storm-pegasus.md"
+    "source": "gen2/mfb/storm-pegasus.md",
+    "categoryId": "category-storm-pegasus-105rf"
   },
   {
     "id": "gen2-mfb-thunder-libra-df145bs",
-    "name": "gen2/mfb/thunder-libra-df145bs",
+    "name": "Thunder Libra DF145BS",
     "generation": "gen2",
     "system": "Hybrid Wheel System (HWS / MFB)",
     "series": "Released as part of Hasbro's \"Legend Beyblades\" toyline; sold as a Starter Pack (USD $9.99 in the US); also included in BB-18A Super Vortex Battle Set (Sonic Series)",
@@ -5747,11 +5874,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bs"
       }
     ],
-    "source": "gen2/mfb/thunder-libra-df145bs.md"
+    "source": "gen2/mfb/thunder-libra-df145bs.md",
+    "categoryId": "category-thunder-libra-df145bs"
   },
   {
     "id": "gen2-mfb-twisted-tempo-145wd",
-    "name": "gen2/mfb/twisted-tempo-145wd",
+    "name": "Twisted Tempo 145WD",
     "generation": "gen2",
     "system": "HWS — Hybrid Wheel System (Metal Masters era)",
     "series": "Beyblade: Metal Masters (Gen2 MFB — second season of Metal series)",
@@ -5788,11 +5916,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd"
       }
     ],
-    "source": "gen2/mfb/twisted-tempo-145wd.md"
+    "source": "gen2/mfb/twisted-tempo-145wd.md",
+    "categoryId": "category-twisted-tempo-145wd"
   },
   {
     "id": "gen2-mfb-variares",
-    "name": "gen2/mfb/variares",
+    "name": "Variares D:D",
     "generation": "gen2",
     "system": "4D System (MM-era)",
     "series": "Beyblade: Metal Masters",
@@ -5805,11 +5934,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "face-bolt--variares"
       }
     ],
-    "source": "gen2/mfb/variares.md"
+    "source": "gen2/mfb/variares.md",
+    "categoryId": "category-variares-d-d"
   },
   {
     "id": "gen2-mfb-vulcan-horuseus-145d",
-    "name": "gen2/mfb/vulcan-horuseus-145d",
+    "name": "Vulcan Horuseus 145D",
     "generation": "gen2",
     "system": "Hybrid Wheel System (MFB)",
     "series": "Beyblade: Metal Masters",
@@ -5846,11 +5976,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--d-defense"
       }
     ],
-    "source": "gen2/mfb/vulcan-horuseus-145d.md"
+    "source": "gen2/mfb/vulcan-horuseus-145d.md",
+    "categoryId": "category-vulcan-horuseus-145d"
   },
   {
     "id": "gen2-zerog-archer-gargoyle",
-    "name": "gen2/zerog/archer-gargoyle",
+    "name": "Archer Gargoyle SA165WSF",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -5887,11 +6018,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wsf"
       }
     ],
-    "source": "gen2/zerog/archer-gargoyle.md"
+    "source": "gen2/zerog/archer-gargoyle.md",
+    "categoryId": "category-archer-gargoyle-sa165wsf"
   },
   {
     "id": "gen2-zerog-bandid-genbull",
-    "name": "gen2/zerog/bandid-genbull",
+    "name": "Bandid Genbull . F230TB",
     "generation": "gen2",
     "system": "Synchrome System",
     "series": "Beyblade: Shogun Steel",
@@ -5922,11 +6054,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--tb"
       }
     ],
-    "source": "gen2/zerog/bandid-genbull.md"
+    "source": "gen2/zerog/bandid-genbull.md",
+    "categoryId": "category-bandid-genbull-f230tb"
   },
   {
     "id": "gen2-zerog-berserker-begirados-sr200bwd",
-    "name": "gen2/zerog/berserker-begirados-sr200bwd",
+    "name": "Berserker Begirados SR200BWD",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -5957,11 +6090,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bwd"
       }
     ],
-    "source": "gen2/zerog/berserker-begirados-sr200bwd.md"
+    "source": "gen2/zerog/berserker-begirados-sr200bwd.md",
+    "categoryId": "category-berserker-begirados-sr200bwd"
   },
   {
     "id": "gen2-zerog-berserker-behemoth",
-    "name": "gen2/zerog/berserker-behemoth",
+    "name": "Berserker Behemoth . SR200BWD",
     "generation": "gen2",
     "system": "Synchrome System",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -5992,11 +6126,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bwd"
       }
     ],
-    "source": "gen2/zerog/berserker-behemoth.md"
+    "source": "gen2/zerog/berserker-behemoth.md",
+    "categoryId": "category-berserker-behemoth-sr200bwd"
   },
   {
     "id": "gen2-zerog-gladiator-bahamoote",
-    "name": "gen2/zerog/gladiator-bahamoote",
+    "name": "Gladiator Bahamoote SP230GF",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6033,11 +6168,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--gf"
       }
     ],
-    "source": "gen2/zerog/gladiator-bahamoote.md"
+    "source": "gen2/zerog/gladiator-bahamoote.md",
+    "categoryId": "category-gladiator-bahamoote-sp230gf"
   },
   {
     "id": "gen2-zerog-guardian-revizer",
-    "name": "gen2/zerog/guardian-revizer",
+    "name": "Guardian Leviathan 160SB",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6074,11 +6210,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--sb"
       }
     ],
-    "source": "gen2/zerog/guardian-revizer.md"
+    "source": "gen2/zerog/guardian-revizer.md",
+    "categoryId": "category-guardian-leviathan-160sb"
   },
   {
     "id": "gen2-zerog-killerken-dragooon",
-    "name": "gen2/zerog/killerken-dragooon",
+    "name": "Killerken Dragooon DF105BSF",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6106,7 +6243,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen2-zerog-pirate-leviathan",
-    "name": "gen2/zerog/pirate-leviathan",
+    "name": "Pirate Leviathan 160D",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6146,7 +6283,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen2-zerog-pirate-orochi",
-    "name": "gen2/zerog/pirate-orochi",
+    "name": "Pirate Orochi . 500E",
     "generation": "gen2",
     "system": "Synchrome System",
     "series": "Beyblade: Shogun Steel",
@@ -6177,11 +6314,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--e"
       }
     ],
-    "source": "gen2/zerog/pirate-orochi.md"
+    "source": "gen2/zerog/pirate-orochi.md",
+    "categoryId": "category-pirate-orochi-500e"
   },
   {
     "id": "gen2-zerog-ronin-dragoon-lw160bsf",
-    "name": "gen2/zerog/ronin-dragoon-lw160bsf",
+    "name": "Ronin Dragoon LW160BSF",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6216,7 +6354,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen2-zerog-samurai-ifraid",
-    "name": "gen2/zerog/samurai-ifraid",
+    "name": "Samurai Ifraid . W145CF",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6247,11 +6385,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--cf"
       }
     ],
-    "source": "gen2/zerog/samurai-ifraid.md"
+    "source": "gen2/zerog/samurai-ifraid.md",
+    "categoryId": "category-samurai-ifraid-w145cf"
   },
   {
     "id": "gen2-zerog-samurai-pegasis-w105r2f",
-    "name": "gen2/zerog/samurai-pegasis-w105r2f",
+    "name": "Samurai Pegasis W105R²F",
     "generation": "gen2",
     "system": "Synchrome System (Zero-G / Shogun Steel)",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -6282,11 +6421,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--r-f"
       }
     ],
-    "source": "gen2/zerog/samurai-pegasis-w105r2f.md"
+    "source": "gen2/zerog/samurai-pegasis-w105r2f.md",
+    "categoryId": "category-samurai-pegasis-w105r2f"
   },
   {
     "id": "gen2-zerog-thief-phoenic",
-    "name": "gen2/zerog/thief-phoenic",
+    "name": "Thief Phoenic . E230GCF",
     "generation": "gen2",
     "system": "Synchrome System",
     "series": "Beyblade: Shogun Steel",
@@ -6317,11 +6457,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--gcf"
       }
     ],
-    "source": "gen2/zerog/thief-phoenic.md"
+    "source": "gen2/zerog/thief-phoenic.md",
+    "categoryId": "category-thief-phoenic-e230gcf"
   },
   {
     "id": "gen3-bu-astral-spriggan",
-    "name": "gen3/bu/astral-spriggan",
+    "name": "Astral Spriggan . Over . Quattro-0",
     "generation": "gen3",
     "productCode": "**B-188 Customize Set** (Takara Tomy, August 7, 2021, 3960円) — Customize Set ships with multiple swappable DB Core + Blade configurations",
     "slots": [
@@ -6338,11 +6479,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--quattro-0"
       }
     ],
-    "source": "gen3/bu/astral-spriggan.md"
+    "source": "gen3/bu/astral-spriggan.md",
+    "categoryId": "category-astral-spriggan-over-quattro-0"
   },
   {
     "id": "gen3-bu-chain-kerbeus",
-    "name": "gen3/bu/chain-kerbeus",
+    "name": "Chain Kerbeus",
     "generation": "gen3",
     "system": "QuadDrive System / QuadStrike System — Beyblade Burst QuadStrike",
     "series": "Beyblade Burst QuadStrike",
@@ -6367,11 +6509,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "armour--yard"
       }
     ],
-    "source": "gen3/bu/chain-kerbeus.md"
+    "source": "gen3/bu/chain-kerbeus.md",
+    "categoryId": "category-chain-kerbeus"
   },
   {
     "id": "gen3-bu-draciel-fortress",
-    "name": "gen3/bu/draciel-fortress",
+    "name": "Draciel Fortress (Takara Tomy Burst)",
     "generation": "gen3",
     "system": "Burst System (Standard Layer — Beyblade Burst Rise / 20th Anniversary release)",
     "series": "Beyblade Burst Rise (20th Anniversary Set) / also in Random Booster Vol. 18",
@@ -6396,11 +6539,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--variable-per-combo"
       }
     ],
-    "source": "gen3/bu/draciel-fortress.md"
+    "source": "gen3/bu/draciel-fortress.md",
+    "categoryId": "category-draciel-fortress"
   },
   {
     "id": "gen3-bu-dranzer-flame-yell-zeta-tt",
-    "name": "gen3/bu/dranzer-flame-yell-zeta-tt",
+    "name": "Dranzer Flame Yell Zeta (Takara Tomy)",
     "generation": "gen3",
     "system": "Burst System (Standard Layer — Beyblade Burst Evolution era)",
     "series": "Beyblade Burst Evolution / Random Booster Vol. 9",
@@ -6425,11 +6569,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--zeta"
       }
     ],
-    "source": "gen3/bu/dranzer-flame-yell-zeta-tt.md"
+    "source": "gen3/bu/dranzer-flame-yell-zeta-tt.md",
+    "categoryId": "category-dranzer-flame-yell-zeta"
   },
   {
     "id": "gen3-bu-gaia-dragoon-ah",
-    "name": "gen3/bu/gaia-dragoon-ah",
+    "name": "Gaia Dragoon Around Hunter'",
     "generation": "gen3",
     "system": "Burst System (Standard Layer — Beyblade Burst Rise era)",
     "series": "Beyblade Burst Rise / Bakuten Shoot Beyblade: Rising (manga crossover)",
@@ -6454,11 +6599,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--hunter"
       }
     ],
-    "source": "gen3/bu/gaia-dragoon-ah.md"
+    "source": "gen3/bu/gaia-dragoon-ah.md",
+    "categoryId": "category-gaia-dragoon-around-hunter"
   },
   {
     "id": "gen3-bu-jet-wyvern-aj1d",
-    "name": "gen3/bu/jet-wyvern-aj1d",
+    "name": "Jet Wyvern Around Just 1D",
     "generation": "gen3",
     "system": "Superking Layer System — Beyblade Burst Surge",
     "series": "Beyblade Burst Surge",
@@ -6483,11 +6629,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--just"
       }
     ],
-    "source": "gen3/bu/jet-wyvern-aj1d.md"
+    "source": "gen3/bu/jet-wyvern-aj1d.md",
+    "categoryId": "category-jet-wyvern-around-just-1d"
   },
   {
     "id": "gen3-bu-lucius-endbringer",
-    "name": "gen3/bu/lucius-endbringer",
+    "name": "Lucifer The End . Kou . Drift",
     "generation": "gen3",
     "productCode": "**B-175 Booster** (Takara Tomy)",
     "slots": [
@@ -6498,11 +6645,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--drift"
       }
     ],
-    "source": "gen3/bu/lucius-endbringer.md"
+    "source": "gen3/bu/lucius-endbringer.md",
+    "categoryId": "category-lucifer-the-end-kou-drift"
   },
   {
     "id": "gen3-bu-savior-valkyrie-s7",
-    "name": "gen3/bu/savior-valkyrie-s7",
+    "name": "Savior Valkyrie Shot-7",
     "generation": "gen3",
     "system": "Dynamite Battle (DB) Layer System — Beyblade Burst QuadDrive",
     "series": "Beyblade Burst QuadDrive",
@@ -6531,7 +6679,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-bu-wolborg-tt",
-    "name": "gen3/bu/wolborg-tt",
+    "name": "Wolborg 8 Bearing (Takara Tomy)",
     "generation": "gen3",
     "system": "Burst System (Cho-Z / Turbo era)",
     "series": "Beyblade Burst Turbo / Bakuten Shoot Beyblade: Rising (manga)",
@@ -6556,11 +6704,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bearing"
       }
     ],
-    "source": "gen3/bu/wolborg-tt.md"
+    "source": "gen3/bu/wolborg-tt.md",
+    "categoryId": "category-wolborg-8-bearing"
   },
   {
     "id": "gen3-burst-kerbeus-k2",
-    "name": "gen3/burst/kerbeus-k2",
+    "name": "Kerbeus K2 2Glaive Yell",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System (Gen3 S1)",
     "series": "Beyblade Burst (Gen3 S1)",
@@ -6586,11 +6735,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--yell"
       }
     ],
-    "source": "gen3/burst/kerbeus-k2.md"
+    "source": "gen3/burst/kerbeus-k2.md",
+    "categoryId": "category-kerbeus-k2-2glaive-yell"
   },
   {
     "id": "gen3-burst-luinor-l2",
-    "name": "gen3/burst/luinor-l2",
+    "name": "Luinor L2",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System (Burst Evolution / Gen3 S1-S2 carryover)",
     "series": "Beyblade Burst Evolution (Hasbro release Nov 2017)",
@@ -6616,11 +6766,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--spiral"
       }
     ],
-    "source": "gen3/burst/luinor-l2.md"
+    "source": "gen3/burst/luinor-l2.md",
+    "categoryId": "category-luinor-l2"
   },
   {
     "id": "gen3-burst-spryzen-s2",
-    "name": "gen3/burst/spryzen-s2",
+    "name": "Spryzen S2 0Q (Requiem Spryzen / Spryzen Requiem)",
     "generation": "gen3",
     "system": "Burst System",
     "series": "Beyblade Burst (Gen3 S1)",
@@ -6643,7 +6794,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-burst-storm-spriggan-ku",
-    "name": "gen3/burst/storm-spriggan-ku",
+    "name": "Storm Spriggan Knuckle Unite",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System",
     "series": "Beyblade Burst (S1 — Standard Burst)",
@@ -6668,11 +6819,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--unite"
       }
     ],
-    "source": "gen3/burst/storm-spriggan-ku.md"
+    "source": "gen3/burst/storm-spriggan-ku.md",
+    "categoryId": "category-storm-spriggan-knuckle-unite"
   },
   {
     "id": "gen3-burst-victory-valkyrie-bv",
-    "name": "gen3/burst/victory-valkyrie-bv",
+    "name": "Victory Valkyrie Boost Variable",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System",
     "series": "Beyblade Burst (S1 — Standard Burst)",
@@ -6697,11 +6849,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--variable"
       }
     ],
-    "source": "gen3/burst/victory-valkyrie-bv.md"
+    "source": "gen3/burst/victory-valkyrie-bv.md",
+    "categoryId": "category-victory-valkyrie-boost-variable"
   },
   {
     "id": "gen3-burst-xeno-xcalibur-ml",
-    "name": "gen3/burst/xeno-xcalibur-ml",
+    "name": "Xeno Xcalibur Magnet Loop",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System",
     "series": "Beyblade Burst (S1 — Standard Burst)",
@@ -6726,11 +6879,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--loop"
       }
     ],
-    "source": "gen3/burst/xeno-xcalibur-ml.md"
+    "source": "gen3/burst/xeno-xcalibur-ml.md",
+    "categoryId": "category-xeno-xcalibur-magnet-loop"
   },
   {
     "id": "gen3-choz-cho-z-achilles",
-    "name": "gen3/choz/cho-z-achilles",
+    "name": "Cho-Z Achilles 00 Dimension",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System",
     "productCode": "B-129 Cho-Z Starter (Takara Tomy, Dec 27, 2018, 2160円)",
@@ -6748,11 +6902,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--dimension"
       }
     ],
-    "source": "gen3/choz/cho-z-achilles.md"
+    "source": "gen3/choz/cho-z-achilles.md",
+    "categoryId": "category-cho-z-achilles-00-dimension"
   },
   {
     "id": "gen3-choz-cho-z-spriggan-0wz",
-    "name": "gen3/choz/cho-z-spriggan-0wz",
+    "name": "Cho-Z Spriggan . 0Wall . Zeta",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System",
     "series": "Beyblade Burst Turbo (Chouzetsu, Gen3 S3)",
@@ -6771,11 +6926,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--zeta"
       }
     ],
-    "source": "gen3/choz/cho-z-spriggan-0wz.md"
+    "source": "gen3/choz/cho-z-spriggan-0wz.md",
+    "categoryId": "category-cho-z-spriggan-0wall-zeta"
   },
   {
     "id": "gen3-choz-cho-z-spriggan",
-    "name": "gen3/choz/cho-z-spriggan",
+    "name": "Cho-Z Spriggan . 0Wall . Zeta'",
     "generation": "gen3",
     "productCode": "**B-128 Cho-Z Customize Set** (Takara Tomy, November 17, 2018, 5184円) — premium Customize Set release (not a standard Starter; ships with sub-parts for player reconfiguration)",
     "slots": [
@@ -6792,11 +6948,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--xtend-zeta"
       }
     ],
-    "source": "gen3/choz/cho-z-spriggan.md"
+    "source": "gen3/choz/cho-z-spriggan.md",
+    "categoryId": "category-cho-z-spriggan-0wall-zeta"
   },
   {
     "id": "gen3-choz-cho-z-valkyrie-ze",
-    "name": "gen3/choz/cho-z-valkyrie-ze",
+    "name": "Cho-Z Valkyrie . Zenith . Evolution",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System",
     "series": "Beyblade Burst Turbo (Chouzetsu, Gen3 S3)",
@@ -6819,7 +6976,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-choz-cho-z-valtryek",
-    "name": "gen3/choz/cho-z-valtryek",
+    "name": "Cho-Z Valkyrie . Zenith . Evolution",
     "generation": "gen3",
     "productCode": "**B-127 Cho-Z Starter** (Takara Tomy, November 17, 2018)",
     "slots": [
@@ -6840,7 +6997,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-choz-dead-phoenix-0a",
-    "name": "gen3/choz/dead-phoenix-0a",
+    "name": "Dead Phoenix . 0 . Atomic",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System",
     "series": "Beyblade Burst Turbo (Chouzetsu, Gen3 S3)",
@@ -6863,7 +7020,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-choz-kaiser-kerbeus-lp",
-    "name": "gen3/choz/kaiser-kerbeus-lp",
+    "name": "Kaiser Kerbeus . Limited . Press",
     "generation": "gen3",
     "productCode": "Booster (Takara Tomy, April 2, 2016, 972円).",
     "slots": [
@@ -6890,7 +7047,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-choz-revive-phoenix-10f",
-    "name": "gen3/choz/revive-phoenix-10f",
+    "name": "Revive Phoenix . 10 . Friction",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System",
     "series": "Beyblade Burst Turbo (Chouzetsu, Gen3 S3)",
@@ -6909,11 +7066,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--friction"
       }
     ],
-    "source": "gen3/choz/revive-phoenix-10f.md"
+    "source": "gen3/choz/revive-phoenix-10f.md",
+    "categoryId": "category-revive-phoenix-10-friction"
   },
   {
     "id": "gen3-choz-slash-valkyrie",
-    "name": "gen3/choz/slash-valkyrie",
+    "name": "Slash Valkyrie . Blitz . Power Retsu",
     "generation": "gen3",
     "productCode": "**B-134 GT Booster** (Takara Tomy, March 16, 2019, 1296円)",
     "slots": [
@@ -6930,11 +7088,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--power"
       }
     ],
-    "source": "gen3/choz/slash-valkyrie.md"
+    "source": "gen3/choz/slash-valkyrie.md",
+    "categoryId": "category-slash-valkyrie-blitz-power-retsu"
   },
   {
     "id": "gen3-choz-spryzen-requiem",
-    "name": "gen3/choz/spryzen-requiem",
+    "name": "Spriggan Requiem . 0 . Zeta",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System / SwitchStrike System",
     "series": "Beyblade Burst Evolution (Gen3 S2)",
@@ -6959,11 +7118,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--cross-zeta"
       }
     ],
-    "source": "gen3/choz/spryzen-requiem.md"
+    "source": "gen3/choz/spryzen-requiem.md",
+    "categoryId": "category-spriggan-requiem-0-zeta"
   },
   {
     "id": "gen3-choz-variant-bael",
-    "name": "gen3/choz/variant-bael",
+    "name": "Variant Lucifer . Mobius . 2D",
     "generation": "gen3",
     "productCode": "**B-169 Superking Starter** (Takara Tomy)",
     "slots": [
@@ -6978,7 +7138,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-choz-z-achilles",
-    "name": "gen3/choz/z-achilles",
+    "name": "Z Achilles 11 Xtend",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System (TT's first metal-in-Layer system)",
     "productCode": "B-128 Cho-Z Starter (Takara Tomy, March 17, 2018, 2160円)",
@@ -6996,11 +7156,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--xtend"
       }
     ],
-    "source": "gen3/choz/z-achilles.md"
+    "source": "gen3/choz/z-achilles.md",
+    "categoryId": "category-z-achilles-11-xtend"
   },
   {
     "id": "gen3-choz-zero-artemis",
-    "name": "gen3/choz/zero-artemis",
+    "name": "Zero Artemis . 88WD",
     "generation": "gen3",
     "system": "Synchrome System",
     "series": "Beyblade: Shogun Steel",
@@ -7031,11 +7192,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--wd"
       }
     ],
-    "source": "gen3/choz/zero-artemis.md"
+    "source": "gen3/choz/zero-artemis.md",
+    "categoryId": "category-zero-artemis-88wd"
   },
   {
     "id": "gen3-db-dynamite-belial",
-    "name": "gen3/db/dynamite-belial",
+    "name": "Dynamite Belial . Nexus . Venture-2",
     "generation": "gen3",
     "productCode": "**B-180 Booster** (Takara Tomy, April 24, 2021, 1507円)",
     "slots": [
@@ -7056,7 +7218,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-db-guilty-longinus-db",
-    "name": "gen3/db/guilty-longinus-db",
+    "name": "Guilty Longinus . Karma . Metal Destroy-2",
     "generation": "gen3",
     "productCode": "**B-189 Booster** (Takara Tomy, September 11, 2021)",
     "slots": [
@@ -7077,7 +7239,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-db-imperial-dragon",
-    "name": "gen3/db/imperial-dragon",
+    "name": "Imperial Dragon . Ignition'",
     "generation": "gen3",
     "productCode": "**B-154 GT DX Booster** (Takara Tomy, November 16, 2019, 3080円)",
     "slots": [
@@ -7088,11 +7250,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--ignition"
       }
     ],
-    "source": "gen3/db/imperial-dragon.md"
+    "source": "gen3/db/imperial-dragon.md",
+    "categoryId": "category-imperial-dragon-ignition"
   },
   {
     "id": "gen3-db-infinite-achilles-d1b",
-    "name": "gen3/db/infinite-achilles-d1b",
+    "name": "Infinite Achilles Dimension' 1B",
     "generation": "gen3",
     "system": "Superking Layer System — Beyblade Burst Surge",
     "series": "Beyblade Burst Surge / Beyblade Burst: Pro Series (Hasbro)",
@@ -7115,7 +7278,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-db-mirage-fafnir",
-    "name": "gen3/db/mirage-fafnir",
+    "name": "Mirage Fafnir . Nothing . 2S",
     "generation": "gen3",
     "system": "Beyblade Burst — Superking Layer System (canonical) / Gatinko (Hypersphere release)",
     "series": "Beyblade Burst Rise → Surge (Gen3 S4-S5 transition)",
@@ -7134,11 +7297,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--nothing"
       }
     ],
-    "source": "gen3/db/mirage-fafnir.md"
+    "source": "gen3/db/mirage-fafnir.md",
+    "categoryId": "category-mirage-fafnir-nothing-2s"
   },
   {
     "id": "gen3-db-prominence-phoenix-tmu10",
-    "name": "gen3/db/prominence-phoenix-tmu10",
+    "name": "Prominence Phoenix . Tapered Metal . Universe-10",
     "generation": "gen3",
     "productCode": "B-196 or B-197 Booster (Takara Tomy, ~early 2022 — late DB / BU transition).",
     "slots": [
@@ -7155,11 +7319,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--universe-10"
       }
     ],
-    "source": "gen3/db/prominence-phoenix-tmu10.md"
+    "source": "gen3/db/prominence-phoenix-tmu10.md",
+    "categoryId": "category-prominence-phoenix-tapered-metal-universe-10"
   },
   {
     "id": "gen3-db-rage-longinus-s5",
-    "name": "gen3/db/rage-longinus-s5",
+    "name": "Rage Longinus . Destroy' . 3A",
     "generation": "gen3",
     "productCode": "**B-168 Booster** (Takara Tomy, June 27, 2020)",
     "slots": [
@@ -7174,7 +7339,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-db-tact-longinus",
-    "name": "gen3/db/tact-longinus",
+    "name": "Tact Longinus . 12Expand . Trans' . Sou",
     "generation": "gen3",
     "productCode": "**B-151 01** — Takara Tomy Random Booster Vol. 17 prize Beyblade (October 19, 2019)",
     "slots": [
@@ -7185,11 +7350,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--trans"
       }
     ],
-    "source": "gen3/db/tact-longinus.md"
+    "source": "gen3/db/tact-longinus.md",
+    "categoryId": "category-tact-longinus-12expand-trans-sou"
   },
   {
     "id": "gen3-db-ultimate-valkyrie-lv9",
-    "name": "gen3/db/ultimate-valkyrie-lv9",
+    "name": "Ultimate Valkyrie . Legacy . Variable'-9",
     "generation": "gen3",
     "productCode": "B-191 Booster (Takara Tomy, October 2021, ~1507円).",
     "slots": [
@@ -7206,11 +7372,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--variable-2"
       }
     ],
-    "source": "gen3/db/ultimate-valkyrie-lv9.md"
+    "source": "gen3/db/ultimate-valkyrie-lv9.md",
+    "categoryId": "category-ultimate-valkyrie-legacy-variable-9"
   },
   {
     "id": "gen3-db-vanish-fafnir",
-    "name": "gen3/db/vanish-fafnir",
+    "name": "Vanish Fafnir . Tapered . Kick-3",
     "generation": "gen3",
     "productCode": "B-180-class Booster (Takara Tomy, ~2021)",
     "slots": [
@@ -7227,11 +7394,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--kick-3"
       }
     ],
-    "source": "gen3/db/vanish-fafnir.md"
+    "source": "gen3/db/vanish-fafnir.md",
+    "categoryId": "category-vanish-fafnir-tapered-kick-3"
   },
   {
     "id": "gen3-god-dark-deathscyther-fj",
-    "name": "gen3/god/dark-deathscyther-fj",
+    "name": "Dark Deathscyther Force Jaggy",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System",
     "series": "Beyblade Burst (S1 — Standard Burst)",
@@ -7256,11 +7424,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--jaggy"
       }
     ],
-    "source": "gen3/god/dark-deathscyther-fj.md"
+    "source": "gen3/god/dark-deathscyther-fj.md",
+    "categoryId": "category-dark-deathscyther-force-jaggy"
   },
   {
     "id": "gen3-god-drain-fafnir-8n",
-    "name": "gen3/god/drain-fafnir-8n",
+    "name": "Drain Fafnir 8Nothing",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System",
     "series": "Beyblade Burst Evolution (S2 — God Layer era)",
@@ -7285,11 +7454,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--nothing"
       }
     ],
-    "source": "gen3/god/drain-fafnir-8n.md"
+    "source": "gen3/god/drain-fafnir-8n.md",
+    "categoryId": "category-drain-fafnir-8nothing"
   },
   {
     "id": "gen3-god-genesis-valtryek",
-    "name": "gen3/god/genesis-valtryek",
+    "name": "God Valkyrie / Strike God Valkyrie",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System / SwitchStrike System",
     "series": "Beyblade Burst Evolution (Gen3 S2)",
@@ -7314,11 +7484,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--reboot"
       }
     ],
-    "source": "gen3/god/genesis-valtryek.md"
+    "source": "gen3/god/genesis-valtryek.md",
+    "categoryId": "category-god-valkyrie-strike-god-valkyrie"
   },
   {
     "id": "gen3-god-god-valkyrie-6vr",
-    "name": "gen3/god/god-valkyrie-6vr",
+    "name": "God Valkyrie 6Vortex Reboot",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System",
     "series": "Beyblade Burst Evolution (S2 — God Layer era)",
@@ -7343,11 +7514,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--reboot"
       }
     ],
-    "source": "gen3/god/god-valkyrie-6vr.md"
+    "source": "gen3/god/god-valkyrie-6vr.md",
+    "categoryId": "category-god-valkyrie-6vortex-reboot"
   },
   {
     "id": "gen3-god-legend-spriggan-7m",
-    "name": "gen3/god/legend-spriggan-7m",
+    "name": "Legend Spriggan 7Merge",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System",
     "series": "Beyblade Burst Evolution (S2 — God Layer era)",
@@ -7372,11 +7544,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--merge"
       }
     ],
-    "source": "gen3/god/legend-spriggan-7m.md"
+    "source": "gen3/god/legend-spriggan-7m.md",
+    "categoryId": "category-legend-spriggan-7merge"
   },
   {
     "id": "gen3-god-maximum-garum-8fa",
-    "name": "gen3/god/maximum-garum-8fa",
+    "name": "Maximum Garum 8Flow Atomic",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System",
     "series": "Beyblade Burst Evolution (S2 — God Layer era)",
@@ -7401,11 +7574,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--atomic"
       }
     ],
-    "source": "gen3/god/maximum-garum-8fa.md"
+    "source": "gen3/god/maximum-garum-8fa.md",
+    "categoryId": "category-maximum-garum-8flow-atomic"
   },
   {
     "id": "gen3-god-sieg-xcalibur-1i",
-    "name": "gen3/god/sieg-xcalibur-1i",
+    "name": "Sieg Xcalibur 1Iron",
     "generation": "gen3",
     "system": "Beyblade Burst — God Layer System",
     "series": "Beyblade Burst Evolution (S2 — God Layer era)",
@@ -7430,11 +7604,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--iron"
       }
     ],
-    "source": "gen3/god/sieg-xcalibur-1i.md"
+    "source": "gen3/god/sieg-xcalibur-1i.md",
+    "categoryId": "category-sieg-xcalibur-1iron"
   },
   {
     "id": "gen3-gt-ace-dragon",
-    "name": "gen3/gt/ace-dragon",
+    "name": "Ace Dragon . Sting . Charge . Zan",
     "generation": "gen3",
     "productCode": "**B-133 GT DX Starter** (Takara Tomy, April 27, 2019, 5500円) — DX Starter includes the bey + Launcher (Rock) + Grand Forge Disc (additional swappable parts).",
     "slots": [
@@ -7451,11 +7626,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--charge"
       }
     ],
-    "source": "gen3/gt/ace-dragon.md"
+    "source": "gen3/gt/ace-dragon.md",
+    "categoryId": "category-ace-dragon-sting-charge-zan"
   },
   {
     "id": "gen3-gt-erase-devolos",
-    "name": "gen3/gt/erase-devolos",
+    "name": "Erase Diabolos . Vanguard . Bullet (Vn . Bl)",
     "generation": "gen3",
     "productCode": "**B-145 GT DX Starter Set** (Takara Tomy, July 6, 2019) — set includes BOTH Venom Diabolos (right-spin) AND Erase Diabolos (left-spin) as swappable configurations, plus a launcher and Long Bullet driver.",
     "slots": [
@@ -7472,11 +7648,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--bullet"
       }
     ],
-    "source": "gen3/gt/erase-devolos.md"
+    "source": "gen3/gt/erase-devolos.md",
+    "categoryId": "category-erase-diabolos-vanguard-bullet"
   },
   {
     "id": "gen3-gt-harmony-pegasus",
-    "name": "gen3/gt/harmony-pegasus",
+    "name": "Heaven Pegasus . 10 . Proof . Low . Sen",
     "generation": "gen3",
     "productCode": "**B-148 GT Booster** (Takara Tomy, August 10, 2019, 1296円)",
     "slots": [
@@ -7487,11 +7664,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--low"
       }
     ],
-    "source": "gen3/gt/harmony-pegasus.md"
+    "source": "gen3/gt/harmony-pegasus.md",
+    "categoryId": "category-heaven-pegasus-10-proof-low-sen"
   },
   {
     "id": "gen3-gt-judgment-joker-00tt",
-    "name": "gen3/gt/judgment-joker-00tt",
+    "name": "Judgment Joker . 00Turn . Trick",
     "generation": "gen3",
     "system": "Beyblade Burst — Gatinko Layer System (GT Layer System)",
     "series": "Beyblade Burst Rise (GT / Gatinko, Gen3 S4)",
@@ -7510,11 +7688,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--trick"
       }
     ],
-    "source": "gen3/gt/judgment-joker-00tt.md"
+    "source": "gen3/gt/judgment-joker-00tt.md",
+    "categoryId": "category-judgment-joker-00turn-trick"
   },
   {
     "id": "gen3-gt-judgment-joker",
-    "name": "gen3/gt/judgment-joker",
+    "name": "Judgment Joker J6 00Cross",
     "generation": "gen3",
     "system": "Beyblade Burst — Gatinko Layer System / Superking compatible",
     "series": "Beyblade Burst Gatinko / Surge transitional (Gen3 S4-S5)",
@@ -7536,7 +7715,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-gt-obelisk-odin-tx",
-    "name": "gen3/gt/obelisk-odin-tx",
+    "name": "Obelisk Odin . Triple . Xtreme",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System",
     "series": "Beyblade Burst (original Dual Layer era, Gen3 S1); Delta uses this in Rise context as a legacy combo",
@@ -7561,11 +7740,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--xtreme"
       }
     ],
-    "source": "gen3/gt/obelisk-odin-tx.md"
+    "source": "gen3/gt/obelisk-odin-tx.md",
+    "categoryId": "category-obelisk-odin-triple-xtreme"
   },
   {
     "id": "gen3-gt-ronin-dragoon",
-    "name": "gen3/gt/ronin-dragoon",
+    "name": "Ronin Dragoon . LW160BSF",
     "generation": "gen3",
     "system": "Synchrome System",
     "series": "Beyblade: Shogun Steel / Zero-G",
@@ -7600,7 +7780,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-gt-wild-wyvern-vm",
-    "name": "gen3/gt/wild-wyvern-vm",
+    "name": "Wild Wyvern . Vertical . Massive",
     "generation": "gen3",
     "system": "Beyblade Burst — Dual Layer System",
     "series": "Beyblade Burst (original Dual Layer era, Gen3 S1/Rise context)",
@@ -7625,11 +7805,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--massive"
       }
     ],
-    "source": "gen3/gt/wild-wyvern-vm.md"
+    "source": "gen3/gt/wild-wyvern-vm.md",
+    "categoryId": "category-wild-wyvern-vertical-massive"
   },
   {
     "id": "gen3-gt-zwei-longinus-ds",
-    "name": "gen3/gt/zwei-longinus-ds",
+    "name": "Zwei Longinus . Drake . Spiral",
     "generation": "gen3",
     "system": "Beyblade Burst — Cho-Z Layer System",
     "series": "Beyblade Burst Turbo (Chouzetsu, Gen3 S3)",
@@ -7648,11 +7829,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--spiral"
       }
     ],
-    "source": "gen3/gt/zwei-longinus-ds.md"
+    "source": "gen3/gt/zwei-longinus-ds.md",
+    "categoryId": "category-zwei-longinus-drake-spiral"
   },
   {
     "id": "gen3-superking-brave-valtryek",
-    "name": "gen3/superking/brave-valtryek",
+    "name": "Brave Valkyrie . Evolution' . 2A",
     "generation": "gen3",
     "productCode": "**B-163 Booster** (Takara Tomy, April 25, 2020)",
     "slots": [
@@ -7667,7 +7849,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-cyclone-ragnaruk",
-    "name": "gen3/superking/cyclone-ragnaruk",
+    "name": "(Hasbro-only) Cyclone Ragnaruk QS",
     "generation": "gen3",
     "system": "Beyblade Burst — QuadStrike Layer System",
     "series": "Beyblade Burst QuadStrike (Gen3 S7)",
@@ -7683,7 +7865,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-infinity-achilles",
-    "name": "gen3/superking/infinity-achilles",
+    "name": "Infinite Achilles . Dimension' . 1B",
     "generation": "gen3",
     "generationNote": "S5 Sparking-era",
     "productCode": "**B-173 01** — Takara Tomy Random Booster Vol. 22 prize Beyblade (Oct 24, 2020, 1188円). Later released by Hasbro as a Pro Series Starter Pack ($22.99 USD).",
@@ -7699,7 +7881,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-rage-longinus-d3a",
-    "name": "gen3/superking/rage-longinus-d3a",
+    "name": "Rage Longinus . Destroy' . 3A",
     "generation": "gen3",
     "productCode": "**B-168 Booster** (Takara Tomy, June 27, 2020, 1188円).",
     "slots": [
@@ -7714,7 +7896,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-triumph-dragon",
-    "name": "gen3/superking/triumph-dragon",
+    "name": "(Hasbro-only) Triumph Dragon",
     "generation": "gen3",
     "system": "Beyblade Burst — Superking / SpeedStorm transitional Layer System",
     "series": "Beyblade Burst Surge (Gen3 S5 — TRACKER's S4 entry)",
@@ -7737,7 +7919,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-union-achilles-r",
-    "name": "gen3/superking/union-achilles-r",
+    "name": "Union Achilles . Cn . Xt+ . Retsu",
     "generation": "gen3",
     "productCode": "B-155 Booster (Takara Tomy, August 29, 2020).",
     "slots": [
@@ -7754,11 +7936,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--retsu"
       }
     ],
-    "source": "gen3/superking/union-achilles-r.md"
+    "source": "gen3/superking/union-achilles-r.md",
+    "categoryId": "category-union-achilles-cn-xt-retsu"
   },
   {
     "id": "gen3-superking-variant-lucifer-m2d",
-    "name": "gen3/superking/variant-lucifer-m2d",
+    "name": "Variant Lucifer . Mobius . 2D",
     "generation": "gen3",
     "productCode": "B-183 Booster (Takara Tomy, ~June 2021).",
     "slots": [
@@ -7779,7 +7962,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-venom-diabolos-vb",
-    "name": "gen3/superking/venom-diabolos-vb",
+    "name": "Venom Diabolos Vanguard Bullet",
     "generation": "gen3",
     "system": "Gatinko Layer System (Beyblade Burst Rise)",
     "series": "Beyblade Burst Rise",
@@ -7804,11 +7987,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bullet"
       }
     ],
-    "source": "gen3/superking/venom-diabolos-vb.md"
+    "source": "gen3/superking/venom-diabolos-vb.md",
+    "categoryId": "category-venom-diabolos-vanguard-bullet"
   },
   {
     "id": "gen3-superking-world-spriggan",
-    "name": "gen3/superking/world-spriggan",
+    "name": "World Spriggan . Unite' . 2B",
     "generation": "gen3",
     "system": "Beyblade Burst — Superking Layer System (canonical) / Hypersphere (Hasbro Lord Spryzen S5 variant)",
     "series": "Beyblade Burst Rise → Surge (Gen3 S4-S5 transition)",
@@ -7831,7 +8015,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen3-superking-world-spryzen",
-    "name": "gen3/superking/world-spryzen",
+    "name": "World Spriggan . Unite' . 2B",
     "generation": "gen3",
     "productCode": "**B-172 Booster** (Takara Tomy, September 19, 2020)",
     "slots": [
@@ -7846,7 +8030,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-aeropegasus-3-70a",
-    "name": "gen4/bx/aeropegasus-3-70a",
+    "name": "AeroPegasus 3-70A",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Unique Line",
@@ -7870,11 +8054,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--accel"
       }
     ],
-    "source": "gen4/bx/aeropegasus-3-70a.md"
+    "source": "gen4/bx/aeropegasus-3-70a.md",
+    "categoryId": "category-aeropegasus-3-70a"
   },
   {
     "id": "gen4-bx-blazebringer",
-    "name": "gen4/bx/blazebringer",
+    "name": "Helios Volcano . Ou . Zone'+Z",
     "generation": "gen3",
     "productCode": "**B-174 Limit Break DX Set** (Takara Tomy, November 14, 2020, ¥7480) — premium DX Set with stadium + launcher",
     "slots": [
@@ -7885,11 +8070,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--zone-z"
       }
     ],
-    "source": "gen4/bx/blazebringer.md"
+    "source": "gen4/bx/blazebringer.md",
+    "categoryId": "category-helios-volcano-ou-zone-z"
   },
   {
     "id": "gen4-bx-cobalt-dragoon",
-    "name": "gen4/bx/cobalt-dragoon",
+    "name": "CobaltDragoon 2-60C",
     "generation": "gen4",
     "generationNote": "canonical",
     "system": "Beyblade X — BX Blade/Ratchet/Bit system",
@@ -7915,11 +8101,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--60c"
       }
     ],
-    "source": "gen4/bx/cobalt-dragoon.md"
+    "source": "gen4/bx/cobalt-dragoon.md",
+    "categoryId": "category-cobaltdragoon-2-60c"
   },
   {
     "id": "gen4-bx-cobalt-drake",
-    "name": "gen4/bx/cobalt-drake",
+    "name": "CobaltDrake 4-60F",
     "generation": "gen4",
     "system": "Beyblade X — BX Basic Line (Blade / Ratchet / Bit)",
     "series": "Beyblade X (Gen4)",
@@ -7948,7 +8135,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-cobaltdrake-4-60f",
-    "name": "gen4/bx/cobaltdrake-4-60f",
+    "name": "CobaltDrake 4-60F",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Basic Line",
@@ -7976,7 +8163,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-crimsongaruda-4-70tp",
-    "name": "gen4/bx/crimsongaruda-4-70tp",
+    "name": "CrimsonGaruda 4-70TP",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Basic Line",
@@ -8000,11 +8187,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--trans-point"
       }
     ],
-    "source": "gen4/bx/crimsongaruda-4-70tp.md"
+    "source": "gen4/bx/crimsongaruda-4-70tp.md",
+    "categoryId": "category-crimsongaruda-4-70tp"
   },
   {
     "id": "gen4-bx-dran-buster",
-    "name": "gen4/bx/dran-buster",
+    "name": "DranBuster 1-60A",
     "generation": "gen4",
     "system": "Beyblade X — UX (Unique) Line (Blade / Ratchet / Bit)",
     "series": "Beyblade X (Gen4)",
@@ -8027,7 +8215,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-dran-sword",
-    "name": "gen4/bx/dran-sword",
+    "name": "DranSword 3-60F (Sword Dran)",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX / Basic Line",
@@ -8051,11 +8239,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--f"
       }
     ],
-    "source": "gen4/bx/dran-sword.md"
+    "source": "gen4/bx/dran-sword.md",
+    "categoryId": "category-dransword-3-60f"
   },
   {
     "id": "gen4-bx-dranbuster-1-60a",
-    "name": "gen4/bx/dranbuster-1-60a",
+    "name": "DranBuster 1-60A",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX / UX Line (Blade + Ratchet + Bit)",
@@ -8083,7 +8272,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-drandagger-4-60r",
-    "name": "gen4/bx/drandagger-4-60r",
+    "name": "DranDagger 4-60R",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8107,11 +8296,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--r"
       }
     ],
-    "source": "gen4/bx/drandagger-4-60r.md"
+    "source": "gen4/bx/drandagger-4-60r.md",
+    "categoryId": "category-drandagger-4-60r"
   },
   {
     "id": "gen4-bx-dransword-3-60f",
-    "name": "gen4/bx/dransword-3-60f",
+    "name": "DranSword 3-60F",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8135,11 +8325,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--f"
       }
     ],
-    "source": "gen4/bx/dransword-3-60f.md"
+    "source": "gen4/bx/dransword-3-60f.md",
+    "categoryId": "category-dransword-3-60f"
   },
   {
     "id": "gen4-bx-dranzerspiral-3-80t",
-    "name": "gen4/bx/dranzerspiral-3-80t",
+    "name": "DranzerSpiral 3-80T",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Basic Line, X-Over Project",
@@ -8163,11 +8354,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--taper"
       }
     ],
-    "source": "gen4/bx/dranzerspiral-3-80t.md"
+    "source": "gen4/bx/dranzerspiral-3-80t.md",
+    "categoryId": "category-dranzerspiral-3-80t"
   },
   {
     "id": "gen4-bx-drigerslash-4-80p",
-    "name": "gen4/bx/drigerslash-4-80p",
+    "name": "DrigerSlash 4-80P",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Basic Line, X-Over Project",
@@ -8191,11 +8383,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--point"
       }
     ],
-    "source": "gen4/bx/drigerslash-4-80p.md"
+    "source": "gen4/bx/drigerslash-4-80p.md",
+    "categoryId": "category-drigerslash-4-80p"
   },
   {
     "id": "gen4-bx-flamebringer",
-    "name": "gen4/bx/flamebringer",
+    "name": "Hyperion Burn . Cho . Xceed'+X",
     "generation": "gen3",
     "productCode": "**B-174 Limit Break DX Set** (Takara Tomy, November 14, 2020) — same DX Set as Helios Volcano (brothers launch together)",
     "slots": [
@@ -8206,11 +8399,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--xceed-x"
       }
     ],
-    "source": "gen4/bx/flamebringer.md"
+    "source": "gen4/bx/flamebringer.md",
+    "categoryId": "category-hyperion-burn-cho-xceed-x"
   },
   {
     "id": "gen4-bx-ghostcircle-0-80gb",
-    "name": "gen4/bx/ghostcircle-0-80gb",
+    "name": "GhostCircle 0-80GB",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Unique Line",
@@ -8234,11 +8428,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--gear-ball"
       }
     ],
-    "source": "gen4/bx/ghostcircle-0-80gb.md"
+    "source": "gen4/bx/ghostcircle-0-80gb.md",
+    "categoryId": "category-ghostcircle-0-80gb"
   },
   {
     "id": "gen4-bx-hell-scythe",
-    "name": "gen4/bx/hell-scythe",
+    "name": "HellsScythe 4-60T",
     "generation": "gen4",
     "generationNote": "canonical",
     "system": "Beyblade X — BX Basic Line",
@@ -8263,11 +8458,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--t-variants-ht-b-lf"
       }
     ],
-    "source": "gen4/bx/hell-scythe.md"
+    "source": "gen4/bx/hell-scythe.md",
+    "categoryId": "category-hellsscythe-4-60t"
   },
   {
     "id": "gen4-bx-hellshammer-3-70h",
-    "name": "gen4/bx/hellshammer-3-70h",
+    "name": "HellsHammer 3-70H",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Unique Line",
@@ -8291,11 +8487,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--hexa"
       }
     ],
-    "source": "gen4/bx/hellshammer-3-70h.md"
+    "source": "gen4/bx/hellshammer-3-70h.md",
+    "categoryId": "category-hellshammer-3-70h"
   },
   {
     "id": "gen4-bx-hellsscythe-4-60t",
-    "name": "gen4/bx/hellsscythe-4-60t",
+    "name": "HellsScythe 4-60T",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8319,11 +8516,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--t"
       }
     ],
-    "source": "gen4/bx/hellsscythe-4-60t.md"
+    "source": "gen4/bx/hellsscythe-4-60t.md",
+    "categoryId": "category-hellsscythe-4-60t"
   },
   {
     "id": "gen4-bx-helm-knight",
-    "name": "gen4/bx/helm-knight",
+    "name": "KnightShield 3-80N (Helm Knight)",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX / Basic Line",
@@ -8347,11 +8545,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--n"
       }
     ],
-    "source": "gen4/bx/helm-knight.md"
+    "source": "gen4/bx/helm-knight.md",
+    "categoryId": "category-knightshield-3-80n"
   },
   {
     "id": "gen4-bx-knightshield-3-80n",
-    "name": "gen4/bx/knightshield-3-80n",
+    "name": "KnightShield 3-80N",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8375,11 +8574,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--n"
       }
     ],
-    "source": "gen4/bx/knightshield-3-80n.md"
+    "source": "gen4/bx/knightshield-3-80n.md",
+    "categoryId": "category-knightshield-3-80n"
   },
   {
     "id": "gen4-bx-leonclaw-5-60p",
-    "name": "gen4/bx/leonclaw-5-60p",
+    "name": "LeonClaw 5-60P",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8403,11 +8603,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--p"
       }
     ],
-    "source": "gen4/bx/leonclaw-5-60p.md"
+    "source": "gen4/bx/leonclaw-5-60p.md",
+    "categoryId": "category-leonclaw-5-60p"
   },
   {
     "id": "gen4-bx-phoenix-wing",
-    "name": "gen4/bx/phoenix-wing",
+    "name": "PhoenixWing 9-60GF",
     "generation": "gen4",
     "system": "Beyblade X — BX Basic Line (Blade / Ratchet / Bit)",
     "series": "Beyblade X (Gen4)",
@@ -8436,7 +8637,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-phoenixwing-9-60gf",
-    "name": "gen4/bx/phoenixwing-9-60gf",
+    "name": "PhoenixWing 9-60GF",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8464,7 +8665,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
   },
   {
     "id": "gen4-bx-scythe-incendio",
-    "name": "gen4/bx/scythe-incendio",
+    "name": "HellsScythe 4-60T (Scythe Incendio)",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX / Basic Line",
@@ -8488,11 +8689,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--t"
       }
     ],
-    "source": "gen4/bx/scythe-incendio.md"
+    "source": "gen4/bx/scythe-incendio.md",
+    "categoryId": "category-hellsscythe-4-60t"
   },
   {
     "id": "gen4-bx-sharkedge-3-60lf",
-    "name": "gen4/bx/sharkedge-3-60lf",
+    "name": "SharkEdge 3-60LF",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8516,11 +8718,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--lf"
       }
     ],
-    "source": "gen4/bx/sharkedge-3-60lf.md"
+    "source": "gen4/bx/sharkedge-3-60lf.md",
+    "categoryId": "category-sharkedge-3-60lf"
   },
   {
     "id": "gen4-bx-silverwolf-3-80fb",
-    "name": "gen4/bx/silverwolf-3-80fb",
+    "name": "SilverWolf 3-80FB",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Unique Line",
@@ -8544,11 +8747,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--free-ball"
       }
     ],
-    "source": "gen4/bx/silverwolf-3-80fb.md"
+    "source": "gen4/bx/silverwolf-3-80fb.md",
+    "categoryId": "category-silverwolf-3-80fb"
   },
   {
     "id": "gen4-bx-tyrannobeat-4-70q",
-    "name": "gen4/bx/tyrannobeat-4-70q",
+    "name": "TyrannoBeat 4-70Q",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8572,11 +8776,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--q"
       }
     ],
-    "source": "gen4/bx/tyrannobeat-4-70q.md"
+    "source": "gen4/bx/tyrannobeat-4-70q.md",
+    "categoryId": "category-tyrannobeat-4-70q"
   },
   {
     "id": "gen4-bx-unicornsting-5-60gp",
-    "name": "gen4/bx/unicornsting-5-60gp",
+    "name": "UnicornSting 5-60GP",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8600,11 +8805,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--gp"
       }
     ],
-    "source": "gen4/bx/unicornsting-5-60gp.md"
+    "source": "gen4/bx/unicornsting-5-60gp.md",
+    "categoryId": "category-unicornsting-5-60gp"
   },
   {
     "id": "gen4-bx-valkyrielvolt-s4-70v",
-    "name": "gen4/bx/valkyrielvolt-s4-70v",
+    "name": "ValkyrieVolt S4-70V",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX Custom Line (Lock Chip + Main Blade + Assist Blade + Ratchet + Bit)",
@@ -8622,11 +8828,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--vortex"
       }
     ],
-    "source": "gen4/bx/valkyrielvolt-s4-70v.md"
+    "source": "gen4/bx/valkyrielvolt-s4-70v.md",
+    "categoryId": "category-valkyrievolt-s4-70v"
   },
   {
     "id": "gen4-bx-vipertail-5-80o",
-    "name": "gen4/bx/vipertail-5-80o",
+    "name": "ViperTail 5-80O",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8650,11 +8857,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--o"
       }
     ],
-    "source": "gen4/bx/vipertail-5-80o.md"
+    "source": "gen4/bx/vipertail-5-80o.md",
+    "categoryId": "category-vipertail-5-80o"
   },
   {
     "id": "gen4-bx-wizardarrow-4-80b",
-    "name": "gen4/bx/wizardarrow-4-80b",
+    "name": "WizardArrow 4-80B",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit)",
@@ -8678,11 +8886,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--b"
       }
     ],
-    "source": "gen4/bx/wizardarrow-4-80b.md"
+    "source": "gen4/bx/wizardarrow-4-80b.md",
+    "categoryId": "category-wizardarrow-4-80b"
   },
   {
     "id": "gen4-bx-wizardrod-5-70db",
-    "name": "gen4/bx/wizardrod-5-70db",
+    "name": "WizardRod 5-70DB",
     "generation": "gen4",
     "generationNote": "Beyblade X",
     "system": "BX (Blade + Ratchet + Bit) — Unique Line",
@@ -8706,6 +8915,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--disk-ball"
       }
     ],
-    "source": "gen4/bx/wizardrod-5-70db.md"
+    "source": "gen4/bx/wizardrod-5-70db.md",
+    "categoryId": "category-wizardrod-5-70db"
   }
 ];
