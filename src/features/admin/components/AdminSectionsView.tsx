@@ -32,6 +32,12 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
 import { DataTable } from "./DataTable";
 import {
+  type SectionTemplate,
+  templatesForType,
+  templateById,
+  profileById,
+} from "./sections/sectionTemplates";
+import {
   SECTION_TYPE_OPTIONS,
   SUPPORTED_TYPED_BUILDERS,
   RESOURCE_SORT_OPTIONS,
@@ -93,6 +99,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [mode, setMode] = React.useState<"create" | "edit">("create");
   const [selectedSectionId, setSelectedSectionId] = React.useState("");
   const [sectionType, setSectionType] = React.useState<SectionType>("products");
+  /*
+   * D1 — which template the admin picked, or "" for the type's defaults.
+   * Cleared whenever the type changes, because a template belongs to exactly
+   * one type and keeping a stale id would offer a selection that no longer
+   * applies.
+   */
+  const [selectedTemplateId, setSelectedTemplateId] = React.useState("");
   const [enabled, setEnabled] = React.useState(true);
   const [order, setOrder] = React.useState("");
   const [configJson, setConfigJson] = React.useState("{}");
@@ -344,39 +357,72 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
   }, [mode, sections, selectedSectionId]);
 
-  React.useEffect(() => {
-    if (!isModalOpen || mode !== "create") {
-      return;
-    }
+  /**
+   * D1 — set the builder for one section type, from a TEMPLATE or from the
+   * type's default.
+   *
+   * 🛑 ONE function for both, because they are the same operation: "set the
+   * builder for this type". This was a 25-arm switch serving only the reset,
+   * and a template pick would have been a second 25-arm switch beside it —
+   * two enumerations of one union, which is Root Cause #61 in the shape this
+   * codebase has already paid for ten times.
+   *
+   * Narrowing works because `SectionTemplate` is discriminated on
+   * `sectionType`: inside each case, `template.builder` is known to be exactly
+   * that type's state. A raw `SectionConfig` could not be narrowed this way at
+   * all — it is a non-discriminated union of 25 untagged interfaces.
+   *
+   * `template` undefined means "use the default", so the existing
+   * reset-on-type-change behaviour is this function called with one argument
+   * and is byte-identical.
+   */
+  const applyBuilderFor = React.useCallback((
+    type: SectionType,
+    template?: SectionTemplate,
+  ) => {
+    const pick = <T,>(fallback: T): T =>
+      template && template.sectionType === type ? (template.builder as T) : fallback;
 
-    switch (sectionType) {
-      case "products": setProductsBuilder(DEFAULT_PRODUCTS_BUILDER); break;
-      case "auctions": setAuctionsBuilder(DEFAULT_AUCTIONS_BUILDER); break;
-      case "stats": setStatsBuilder(DEFAULT_STATS_BUILDER); break;
-      case "pre-orders": setPreOrdersBuilder(DEFAULT_PRE_ORDERS_BUILDER); break;
-      case "stores": setStoresBuilder(DEFAULT_STORES_BUILDER); break;
-      case "events": setEventsBuilder(DEFAULT_EVENTS_BUILDER); break;
-      case "social-feed": setSocialFeedBuilder(DEFAULT_SOCIAL_FEED_BUILDER); break;
-      case "welcome": setWelcomeBuilder(DEFAULT_WELCOME_BUILDER); break;
-      case "trust-indicators": setTrustIndicatorsBuilder(DEFAULT_TRUST_INDICATORS_BUILDER); break;
-      case "categories": setCategoriesBuilder(DEFAULT_CATEGORIES_BUILDER); break;
-      case "brands": setBrandsBuilder(DEFAULT_BRANDS_BUILDER); break;
-      case "banner": setBannerBuilder(DEFAULT_BANNER_BUILDER); break;
-      case "features": setFeaturesBuilder(DEFAULT_FEATURES_BUILDER); break;
-      case "reviews": setReviewsBuilder(DEFAULT_REVIEWS_BUILDER); break;
-      case "whatsapp-community": setWhatsappBuilder(DEFAULT_WHATSAPP_BUILDER); break;
-      case "faq": setFaqBuilder(DEFAULT_FAQ_BUILDER); break;
-      case "blog-articles": setBlogBuilder(DEFAULT_BLOG_BUILDER); break;
-      case "newsletter": setNewsletterBuilder(DEFAULT_NEWSLETTER_BUILDER); break;
-      case "carousel": setCarouselBuilder(DEFAULT_CAROUSEL_BUILDER); break;
-      case "custom-cards": setCustomCardsBuilder(DEFAULT_CUSTOM_CARDS_BUILDER); break;
-      case "google-reviews": setGoogleReviewsBuilder(DEFAULT_GOOGLE_REVIEWS_BUILDER); break;
-      case "featured-bundles": setFeaturedBundlesBuilder(DEFAULT_FEATURED_BUNDLES_BUILDER); break;
-      case "prize-draws": setPrizeDrawsBuilder(DEFAULT_PRIZE_DRAWS_BUILDER); break;
-      case "event-raffles": setEventRafflesBuilder(DEFAULT_EVENT_RAFFLES_BUILDER); break;
-      case "collection-cards": setCollectionCardsBuilder(DEFAULT_COLLECTION_CARDS_BUILDER); break;
+    switch (type) {
+      case "products": setProductsBuilder(pick(DEFAULT_PRODUCTS_BUILDER)); break;
+      case "auctions": setAuctionsBuilder(pick(DEFAULT_AUCTIONS_BUILDER)); break;
+      case "stats": setStatsBuilder(pick(DEFAULT_STATS_BUILDER)); break;
+      case "pre-orders": setPreOrdersBuilder(pick(DEFAULT_PRE_ORDERS_BUILDER)); break;
+      case "stores": setStoresBuilder(pick(DEFAULT_STORES_BUILDER)); break;
+      case "events": setEventsBuilder(pick(DEFAULT_EVENTS_BUILDER)); break;
+      case "social-feed": setSocialFeedBuilder(pick(DEFAULT_SOCIAL_FEED_BUILDER)); break;
+      case "welcome": setWelcomeBuilder(pick(DEFAULT_WELCOME_BUILDER)); break;
+      case "trust-indicators": setTrustIndicatorsBuilder(pick(DEFAULT_TRUST_INDICATORS_BUILDER)); break;
+      case "categories": setCategoriesBuilder(pick(DEFAULT_CATEGORIES_BUILDER)); break;
+      case "brands": setBrandsBuilder(pick(DEFAULT_BRANDS_BUILDER)); break;
+      case "banner": setBannerBuilder(pick(DEFAULT_BANNER_BUILDER)); break;
+      case "features": setFeaturesBuilder(pick(DEFAULT_FEATURES_BUILDER)); break;
+      case "reviews": setReviewsBuilder(pick(DEFAULT_REVIEWS_BUILDER)); break;
+      case "whatsapp-community": setWhatsappBuilder(pick(DEFAULT_WHATSAPP_BUILDER)); break;
+      case "faq": setFaqBuilder(pick(DEFAULT_FAQ_BUILDER)); break;
+      case "blog-articles": setBlogBuilder(pick(DEFAULT_BLOG_BUILDER)); break;
+      case "newsletter": setNewsletterBuilder(pick(DEFAULT_NEWSLETTER_BUILDER)); break;
+      case "carousel": setCarouselBuilder(pick(DEFAULT_CAROUSEL_BUILDER)); break;
+      case "custom-cards": setCustomCardsBuilder(pick(DEFAULT_CUSTOM_CARDS_BUILDER)); break;
+      case "google-reviews": setGoogleReviewsBuilder(pick(DEFAULT_GOOGLE_REVIEWS_BUILDER)); break;
+      case "featured-bundles": setFeaturedBundlesBuilder(pick(DEFAULT_FEATURED_BUNDLES_BUILDER)); break;
+      case "prize-draws": setPrizeDrawsBuilder(pick(DEFAULT_PRIZE_DRAWS_BUILDER)); break;
+      case "event-raffles": setEventRafflesBuilder(pick(DEFAULT_EVENT_RAFFLES_BUILDER)); break;
+      case "collection-cards": setCollectionCardsBuilder(pick(DEFAULT_COLLECTION_CARDS_BUILDER)); break;
     }
-  }, [isModalOpen, mode, sectionType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 25 stable setters
+  }, []);
+
+  /*
+   * Reset to the type's defaults when the admin picks a different type while
+   * creating. Unchanged behaviour — it is now `applyBuilderFor(type)` with no
+   * template rather than its own 25-arm switch.
+   */
+  React.useEffect(() => {
+    if (!isModalOpen || mode !== "create") return;
+    applyBuilderFor(sectionType);
+    setSelectedTemplateId("");
+  }, [isModalOpen, mode, sectionType, applyBuilderFor]);
 
   function toggleCategorySelection(
     ids: string[],
@@ -2526,6 +2572,54 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))}
             disabled={mode === "edit"}
           />
+          {/*
+            * D1 — START FROM A TEMPLATE.
+            *
+            * 🛑 CREATE MODE ONLY, and only when this type actually has one.
+            * In edit mode it would silently replace an admin's authored
+            * section with a preset, which is the all-or-nothing failure that
+            * ruled out whole-page layouts in the first place.
+            *
+            * It sets the builder and nothing else, so drag-drop reorder, the
+            * 30-deep undo stack and revert-to-server all keep working on the
+            * result — a template is `create-with-preset`, not a second
+            * rendering path.
+            */}
+          {mode === "create" && templatesForType(sectionType).length > 0 && (
+            <>
+              <Select
+                label="Start from a template"
+                value={selectedTemplateId}
+                onValueChange={(value) => {
+                  setSelectedTemplateId(value);
+                  // "" means the type's own defaults — `applyBuilderFor` takes
+                  // no template and behaves exactly as the reset effect does.
+                  applyBuilderFor(sectionType, templateById(value));
+                }}
+                options={[
+                  { label: "Blank — this type's defaults", value: "" },
+                  ...templatesForType(sectionType).map((t) => ({ label: t.label, value: t.id })),
+                ]}
+              />
+              {(() => {
+                const t = templateById(selectedTemplateId);
+                if (!t) return null;
+                const p = profileById(t.sourceProfileId);
+                return (
+                  <Div surface="muted" padding="sm" rounded="md">
+                    {t.notes && <Text size="xs" color="muted">{t.notes}</Text>}
+                    {p && (
+                      <Text size="xs" color="faint">
+                        {p.label} · {p.platform} · {p.measured.products.toLocaleString()} products ·{" "}
+                        {Math.round(p.measured.soldOutShare * 100)}% sold out
+                        {p.measured.uniqueInternalLinks ? ` · ${p.measured.uniqueInternalLinks} internal links` : ""}
+                      </Text>
+                    )}
+                  </Div>
+                );
+              })()}
+            </>
+          )}
           <Input
             label="Order"
             type="number"
