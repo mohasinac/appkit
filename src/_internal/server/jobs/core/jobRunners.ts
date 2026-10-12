@@ -17,6 +17,7 @@ import { runWhatsAppNotify, type WhatsAppNotifyPayload } from "./whatsappNotify"
 import { runNewsletterExport } from "./newsletterExport";
 import { runWhatsAppCatalogImport } from "./whatsappCatalogImport";
 import { runStoreNameBackfill } from "./storeNameBackfill";
+import { runCategoryTaxonomyBackfill } from "./categoryTaxonomyBackfill";
 import type { JsonValue } from "@mohasinac/appkit";
 
 export interface JobRunResult {
@@ -106,6 +107,23 @@ async function runStoreNameBackfillJob(
   return runStoreNameBackfill({ storeId: String(payload.storeId ?? "") }, ctx);
 }
 
+async function runCategoryTaxonomyBackfillJob(
+  payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  /*
+   * `kind` is narrowed here rather than cast. An unrecognised value falls to
+   * "reparent", which is the SAFE default: it re-derives the product closure
+   * and skips the subtree ancestor refresh. The reverse default would run a
+   * subtree-wide write for a move that changed no name.
+   */
+  const kind = payload.kind === "rename" ? "rename" : "reparent";
+  return runCategoryTaxonomyBackfill(
+    { categoryId: String(payload.categoryId ?? ""), kind },
+    ctx,
+  );
+}
+
 export const JOB_RUNNERS: Record<string, JobRunner> = {
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,
@@ -114,4 +132,5 @@ export const JOB_RUNNERS: Record<string, JobRunner> = {
   newsletterExport: runNewsletterExportJob,
   whatsappCatalogImport: runWhatsAppCatalogImportJob,
   storeNameBackfill: runStoreNameBackfillJob,
+  categoryTaxonomyBackfill: runCategoryTaxonomyBackfillJob,
 };

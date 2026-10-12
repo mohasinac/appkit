@@ -1060,6 +1060,33 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   /**
+   * I4 — products ASSIGNED to this category, not merely descended from it.
+   *
+   * 🛑 The distinction is the whole point, and the category-delete cascade is
+   * what needs it. `findByCategory` matches the derived CLOSURE, so it also
+   * returns every product in the descendant subtree — those belong to the
+   * children and travel with them when the children are reparented.
+   * `findBy("category", id)` matches only the scalar, i.e. the DEFAULT leaf, so
+   * a product that named this category as its SECOND assignment was invisible
+   * and the delete left a dangling id in its `categoryIds`.
+   *
+   * This matches the assigned list, and falls back to the scalar for every row
+   * written before `categoryIds` existed — two queries, because Firestore
+   * permits one array operator per query and there is no OR across fields.
+   */
+  async findByAssignment(categoryId: string): Promise<ProductDocument[]> {
+    const [assigned, legacy] = await Promise.all([
+      this.getCollection().where("categoryIds", "array-contains", categoryId).get(),
+      this.getCollection().where(PRODUCT_FIELDS.CATEGORY, "==", categoryId).get(),
+    ]);
+    const byId = new Map<string, ProductDocument>();
+    for (const d of [...assigned.docs, ...legacy.docs]) {
+      byId.set(d.id, this.mapDoc<ProductDocument>(d));
+    }
+    return [...byId.values()];
+  }
+
+  /**
    * Published products sharing at least one tag with the given list — "you
    * might also like" style discovery. `array-contains-any` caps at 10 values,
    * so only the first 10 tags are used.

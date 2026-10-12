@@ -1111,6 +1111,89 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   }
 
   /**
+   * I4 — re-cache a renamed node's name into every descendant's `ancestors[]`,
+   * and rebuild their `searchTxt`.
+   *
+   * 🛑 WHY A RENAME NEEDS THIS AT ALL. `ancestors[]` is `{id, name, tier}` —
+   * a denormalised copy of a name that lives on another document. Nothing
+   * re-synced it, so renaming "Beyblade Burst" left every node beneath it
+   * holding the old string, and `buildCategorySearchTxt` indexes those names
+   * deliberately: typing "burst" reaches `category-lost-longinus` BECAUSE
+   * Beyblade Burst is one of its ancestors. So a rename silently broke lineage
+   * search for the whole subtree while the node's own page looked perfect.
+   *
+   * Mirror-drift (Root Cause #42) on the taxonomy's own axis, and the same
+   * class as `storeName` on a product — which already has a backfill job for
+   * exactly this reason.
+   *
+   * Returns the ids actually written. A node already carrying the right names
+   * is skipped, so a re-run costs nothing — which is what lets an
+   * at-least-once trigger start the job that calls this.
+   */
+  async refreshSubtreeAncestors(categoryId: string): Promise<string[]> {
+    const descendants = await this.getDescendants(categoryId);
+    if (descendants.length === 0) return [];
+
+    /*
+     * Every id named by any descendant's chain, resolved once. `parentIds`
+     * holds the FULL chain, so this is a single pass rather than a walk — and
+     * the ids are deduped across the subtree, so a 200-node subtree sharing
+     * four ancestors costs four reads, not 800.
+     */
+    const needed = new Set<string>();
+    for (const d of descendants) for (const id of d.parentIds ?? []) needed.add(id);
+    const byId = new Map<string, CategoryDocument>();
+    const ids = [...needed];
+    for (let i = 0; i < ids.length; i += 30) {
+      const refs = ids.slice(i, i + 30).map((id) => this.db.collection(this.collection).doc(id));
+      const snaps = await this.db.getAll(...refs);
+      for (const snap of snaps) {
+        if (snap.exists) byId.set(snap.id, { id: snap.id, ...snap.data() } as CategoryDocument);
+      }
+    }
+
+    const writes: CategoryWrite[] = [];
+    for (const d of descendants) {
+      /*
+       * `ancestors` is root-first, matching `parentIds`. Rebuilt from the live
+       * documents rather than patched in place, so a tier that also changed is
+       * picked up in the same pass.
+       */
+      const ancestors = (d.parentIds ?? [])
+        .map((id) => byId.get(id))
+        .filter((c): c is CategoryDocument => !!c)
+        .map((c) => ({ id: c.id, name: c.name, tier: c.tier }));
+
+      const same =
+        (d.ancestors ?? []).length === ancestors.length &&
+        (d.ancestors ?? []).every(
+          (a, i) => a?.id === ancestors[i]?.id && a?.name === ancestors[i]?.name,
+        );
+      if (same) continue;
+
+      /*
+       * `searchTxt` is rebuilt with the NEW ancestors, not the stored ones —
+       * `buildSearchTxtFor` reads the document it is handed, so passing the
+       * stale row would re-index the stale names and the rename would appear
+       * to have worked while changing nothing searchable.
+       */
+      const searchTxt = buildCategorySearchTxt({ ...d, ancestors });
+      writes.push({
+        id: d.id,
+        data: {
+          ancestors,
+          ...(searchTxt ? { searchTxt } : {}),
+          updatedAt: new Date(),
+        },
+      });
+    }
+
+    if (writes.length === 0) return [];
+    await this.commitChunked(writes);
+    return writes.map((w) => w.id);
+  }
+
+  /**
    * SB-UNI-B — delete a sublisting category and unlink all products
    * that referenced it. Mirrors the cascade behavior of the old
    * SublistingCategoriesRepository.delete().

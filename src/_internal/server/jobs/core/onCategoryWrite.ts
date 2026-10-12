@@ -24,6 +24,13 @@ import type { JsonValue } from "@mohasinac/appkit";
  *                   equal and does nothing. The cascade stops.
  *   MOVE          → writes `positionDirty`, which is also not `parentIds`, so its
  *                   own re-entry likewise does nothing. One extra hop, then stop.
+ *   RENAME/MOVE   → (I4) also ENQUEUES `categoryTaxonomyBackfill`. That write
+ *                   goes to `jobs`, a different collection, so it cannot
+ *                   re-enter here at all. The job then writes `products` and,
+ *                   on a rename, descendant `categories` rows — and those DO
+ *                   re-enter, as updates carrying an unchanged `name` and
+ *                   `parentIds`, so both branches compare equal and nothing
+ *                   cascades. One hop per descendant, then stop.
  *
  * The guard is STRUCTURAL, not a value comparison — that is what makes it stronger
  * than #92's. `onShipmentHeaderWrite` recomputed and rewrote the same derived field
@@ -32,8 +39,9 @@ import type { JsonValue } from "@mohasinac/appkit";
  * forever. Here there is nothing to compare: the handler cannot write the field it
  * branches on.
  *
- * 🛑 If you ever make this handler write `parentIds`, it becomes a true loop. Do
- * not — a move is deliberately deferred to the nightly reconcile for this reason.
+ * 🛑 If you ever make this handler write `parentIds` OR `name`, it becomes a
+ * true loop — `name` joined `parentIds` as a branch condition in I4. Do not; a
+ * move is deliberately deferred to the nightly reconcile for this reason.
  *
  * Not free, though: creating one category writes to its siblings, its ancestors and
  * itself, and each of those writes spawns a no-op invocation. A full reseed of the
@@ -48,6 +56,7 @@ import type { JsonValue } from "@mohasinac/appkit";
  */
 
 import { FieldValue } from "firebase-admin/firestore";
+import { enqueueJob } from "../../../../features/jobs/actions/enqueue-job";
 import { BATCH_LIMIT } from "../handlers/messages";
 import type { JobContext } from "../runtime/types";
 
@@ -106,6 +115,38 @@ async function getMaxPosition(ctx: JobContext, excludeId?: string): Promise<numb
     return (doc.data().position as number) ?? 0;
   }
   return 0;
+}
+
+/**
+ * I4 — hand a rename or a reparent to the backfill job.
+ *
+ * Extracted to module scope rather than inlined, because inline it sat at
+ * brace-depth 6 and `audit-code-quality` is right to refuse that: the
+ * interesting part of this function is the self-write argument in the header,
+ * and burying a try/catch four levels in obscures it.
+ */
+async function enqueueTaxonomyBackfill(
+  ctx: JobContext,
+  categoryId: string,
+  kind: "rename" | "reparent",
+): Promise<void> {
+  try {
+    const { jobId } = await enqueueJob({
+      jobType: "categoryTaxonomyBackfill",
+      payload: { categoryId, kind },
+      requestedBy: "system:onCategoryWrite",
+    });
+    ctx.logger.info("Category taxonomy backfill enqueued", { categoryId, kind, jobId });
+  } catch (err) {
+    void normalizeError(err);
+    /*
+     * Non-fatal, and deliberately so: a failed enqueue must not fail the
+     * category write the admin just made. The cost of the miss is a stale
+     * subtree until someone re-saves — which the nightly `countersReconcile`
+     * reports as drift rather than hiding.
+     */
+    ctx.logger.error("Category taxonomy backfill could not be enqueued", err, { categoryId });
+  }
 }
 
 export type CategoryDoc = Record<string, JsonValue>;
@@ -236,7 +277,12 @@ export async function handleCategoryWrite(
       const afterParents = ((after as CategoryDoc).parentIds as string[]) ?? [];
       const beforeParent = beforeParents[beforeParents.length - 1] ?? null;
       const afterParent = afterParents[afterParents.length - 1] ?? null;
-      if (beforeParent !== afterParent) {
+      const moved = beforeParent !== afterParent;
+      const renamed =
+        (before as CategoryDoc).name !== (after as CategoryDoc).name &&
+        typeof (after as CategoryDoc).name === "string";
+
+      if (moved) {
         await ctx.db
           .collection(CATEGORIES)
           .doc(categoryId)
@@ -246,6 +292,37 @@ export async function handleCategoryWrite(
           fromParent: beforeParent,
           toParent: afterParent,
         });
+      }
+
+      /*
+       * I4 — a RENAME had no handler at all, and that was the live gap.
+       *
+       * `ancestors[]` on every descendant, and `categoryNames` on every product
+       * in the subtree, are denormalised copies of THIS node's name. Both feed
+       * `searchTxt` — `buildCategorySearchTxt` indexes ancestor names so that
+       * typing "burst" reaches a Lost Longinus leaf, and
+       * `buildProductSearchTxt` indexes `categoryNames`. So renaming a node
+       * left its whole subtree findable by the OLD name and not the new one,
+       * with this node's own page looking perfectly correct.
+       *
+       * A reparent is enqueued too. `reparentSubtree` already calls
+       * `rewriteProductChains` synchronously, which fixes the chains — but it is
+       * unbounded inside a request, and it does not rebuild `searchTxt`. The job
+       * is idempotent, so running after it costs only the rows it still has to
+       * fix.
+       *
+       * 🛑 THE SELF-WRITE GUARD STILL HOLDS, and it must be checked rather than
+       * assumed: this handler is a `documentWritten` trigger on `categories`
+       * that writes back to `categories` (Root Cause #92's shape, 1,017,548
+       * invocations in 24h). `enqueueJob` writes to `jobs` — a DIFFERENT
+       * collection — so it cannot re-enter here. The job itself writes
+       * `products` and, on a rename, descendant `categories` rows: those DO
+       * re-enter, as updates whose `parentIds` and `name` are unchanged, so both
+       * branches above compare equal and nothing cascades. The structural rule
+       * is unchanged: this handler must never write `parentIds` or `name`.
+       */
+      if (moved || renamed) {
+        await enqueueTaxonomyBackfill(ctx, categoryId, renamed ? "rename" : "reparent");
       }
     }
   } catch (err) {
