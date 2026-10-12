@@ -1,5 +1,9 @@
 import { normalizeError } from "../../../errors/normalize";
 import {
+  CATEGORY_COUNTS_COLLECTION,
+  type CategoryCountsDocument,
+} from "../schemas/category-counts";
+import {
   increment,
   arrayUnion,
   arrayRemove,
@@ -953,6 +957,26 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
    * a true 65. Nothing errored, and no page looked broken; a wrong number is
    * simply a number.
    */
+  /**
+   * G3b — this category's OWN and ROLLUP counts, as one document read.
+   *
+   * 🛑 Returns `null` when no counts document exists, NEVER a zeroed object.
+   * An unknown count must stay distinguishable from a count of nothing (Root
+   * Cause #72), so the caller falls back to `metrics` and renders exactly as
+   * it did before — which is what makes `categoryCounts` additive rather than
+   * a regression on every category until its first product mutation.
+   *
+   * One doc by id: no index, no query, and safe inside a page already at Rule
+   * #6's round-trip budget provided the caller runs it in parallel.
+   */
+  async getLiveCounts(categoryId: string): Promise<CategoryCountsDocument | null> {
+    const snap = await this.db
+      .collection(CATEGORY_COUNTS_COLLECTION)
+      .doc(categoryId)
+      .get();
+    return snap.exists ? (snap.data() as CategoryCountsDocument) : null;
+  }
+
   async setMetrics(
     categoryId: string,
     m: {

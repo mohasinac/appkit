@@ -2,6 +2,7 @@ import { Row, SIEVE_OP, sieveAnd, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { categoryCrumbs, withTrailHead } from "../utils/breadcrumb-chain";
+import { ownTotalFor, descendantTotalFor } from "../schemas/category-counts";
 import Link from "next/link";
 import {
   categoriesRepository,
@@ -68,7 +69,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // page rather than an error (Root Cause #59).
   const categoriesIn = category?.id ? [category.id] : null;
 
-  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings] = await Promise.all([
+  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings, liveCounts] = await Promise.all([
     categoriesIn
       ? safeRead<Awaited<ReturnType<typeof productRepository.list>> | null>(
           () =>
@@ -151,6 +152,27 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       key: "category.siteSettings",
       fallback: null,
     }),
+    /*
+     * G3b — this category's OWN vs ROLLUP counts, so the page can say "1 here,
+     * 53 in subcategories" instead of one ambiguous number.
+     *
+     * 🛑 ONE document by id, not a query — `categoryCounts/{id}` holds both
+     * figures, so the distinction costs a single read and `getAll` is not even
+     * needed. Added to this `Promise.all`, so it is PARALLEL with the other
+     * seven and adds no latency: Rule #6's budget is ~3 SEQUENTIAL round trips,
+     * and the plan's warning that "a sidecar collection would add an eighth"
+     * was about latency, which parallelism answers.
+     *
+     * 🛑 `null` on failure, never a zero. An unknown count must stay
+     * distinguishable from a count of nothing (Root Cause #72), so the caller
+     * falls back to the single `metrics` figure and renders exactly as before.
+     */
+    category?.id
+      ? safeRead(
+          () => categoriesRepository.getLiveCounts(category.id),
+          { route: "/categories/[slug]", key: "category.liveCounts", fallback: null },
+        )
+      : Promise.resolve(null),
   ]);
 
   const relatedCategories = rootSiblingCategories
@@ -258,6 +280,32 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   const productCount = counts.products ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
   const auctionCount = counts.auctions ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
   const preOrderCount = counts["pre-orders"] ?? 0;
+
+  /*
+   * G3b — OWN vs CHILDREN, so one number stops answering two questions.
+   *
+   * 🛑 `total` ALREADY INCLUDES `own`, so these are never added: the children
+   * figure is `total − own`, derived by `descendantTotalFor`. Summing them
+   * double-counts everything filed directly here, and on a LEAF — where
+   * `total === own` — it doubles the whole count.
+   *
+   * Verified across the live tree: for all 67 branch nodes
+   * `own + Σ(direct children's total) === total` exactly, and for all 314
+   * leaves `total === own`. The root reads `own 1 + children 53 = 54`.
+   *
+   * 🛑 Shown only when there IS something below. On a leaf the children figure
+   * is 0 and "0 in subcategories" is noise that reads as a missing number
+   * rather than an inapplicable one — the same reason the invoice table hides
+   * its HSN column when no line carries one.
+   *
+   * `undefined` when no counts document exists yet, so nothing renders and the
+   * single `metrics` figure above stands unchanged.
+   */
+  const ownHere = liveCounts ? ownTotalFor(liveCounts) : undefined;
+  const inSubcategories = liveCounts ? descendantTotalFor(liveCounts) : undefined;
+  const showCountSplit =
+    ownHere !== undefined && inSubcategories !== undefined && inSubcategories > 0;
+
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
@@ -424,6 +472,20 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             {productCount > 0 && (
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"} rounded="full" padding="pill-sm-tall">
                 {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
+              </Span>
+            )}
+            {/*
+              * G3b — the split, as its own pill rather than inside the one above.
+              *
+              * 🛑 The two figures are NEVER added: `total` already includes
+              * `own`, so `ownHere + inSubcategories === total` by construction
+              * and printing their sum would double every item filed here. Shown
+              * only when something is actually below (a leaf would read
+              * "0 in subcategories", which looks like a missing number).
+              */}
+            {showCountSplit && (
+              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "muted"} size="xs" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                {ownHere!.toLocaleString()} here · {inSubcategories!.toLocaleString()} in subcategories
               </Span>
             )}
             {auctionCount > 0 && (
