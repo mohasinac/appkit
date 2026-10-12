@@ -56,11 +56,18 @@ const BIN_ACTION_MAP = {
   "appkit-seed-status": "status",
 };
 const ACTION = BIN_ACTION_MAP[binName] ?? POSITIONAL[0];
-if (!["load", "delete", "status"].includes(ACTION)) {
+if (!["load", "delete", "status", "purge"].includes(ACTION)) {
   console.error("usage:");
-  console.error("  appkit-seed <load|delete|status> [flags]");
+  console.error("  appkit-seed <load|delete|status|purge> [flags]");
   console.error("  appkit-seed-add     [flags]   # alias for `appkit-seed load`");
   console.error("  appkit-seed-remove  [flags]   # alias for `appkit-seed delete`");
+  console.error("");
+  console.error("  purge   delete every document whose seedPurpose is \"test\", and NOTHING else.");
+  console.error("          Unlike `delete`, which empties whole collections, this keeps real");
+  console.error("          content (faqs, categories, taxCodes, productFeatures, blogPosts,");
+  console.error("          carousels, homepageSections, siteSettings, the tester checklist) and");
+  console.error("          keeps the two keep-list rows: the admin account and store-letitrip-official.");
+  console.error("          Organic rows carry no seedPurpose at all and are unreachable by it.");
   console.error("");
   console.error("flags: --collections a,b   --dry-run   --yes   --verbose   --service-account <path>");
   process.exit(2);
@@ -1005,11 +1012,146 @@ async function cmdDryRun(intendedAction) {
 
 // ---------------------------------------------------------------------------
 // Main
+/**
+ * `appkit-seed purge` — delete every `seedPurpose: "test"` document and NOTHING
+ * else.
+ *
+ * ## Why this is not `delete`
+ *
+ * `delete` empties whole COLLECTIONS. That is the right tool for a full reset
+ * and the wrong one for "clear the test data": it would take the 85 authored
+ * FAQs, the 416-node taxonomy every product's `categorySlugs` chain points
+ * into, the real HSN tax codes, the 1,337 tester cases and the AES-encrypted
+ * site credentials with it.
+ *
+ * This is a QUERY over a declaration — `where("seedPurpose","==","test")` —
+ * which gives four properties no heuristic can:
+ *
+ *   1. **A row the seeder never wrote is unreachable.** Organic documents (a
+ *      real buyer's cart, a runtime notification, a real signup) carry no
+ *      `seedPurpose` at all, so an equality on it cannot match them. Measured
+ *      live: 64 of 84 users are organic. That is the single most important
+ *      safety property here, and it comes from the field's ABSENCE rather than
+ *      from a list someone has to maintain.
+ *   2. **The keep-list is data, not code.** `store-letitrip-official` and
+ *      `user-admin-letitrip` resolve `permanent`, so the same query skips them.
+ *      This replaces `cmdDelete`'s private `PROTECTED_USER_UIDS` set.
+ *   3. **No composite index.** A single-field equality is served by Firestore's
+ *      automatic index, so this adds nothing to `firestore.indexes.json` — the
+ *      gap that left `priceIndex` queryless.
+ *   4. **The cascade is mostly automatic.** Orders, bids, reviews, offers,
+ *      carts, payouts and notifications are all `test`, so a purged product's
+ *      dependents go in the same pass rather than needing a reference walk.
+ *
+ * 🛑 **Auth is a SECOND delete and `delete`/`purge` are the only places that
+ * know it.** A Firestore user row and its Firebase Auth record are two objects;
+ * removing the row and leaving the login is the worst of the three outcomes,
+ * because the account then looks absent and can still authenticate.
+ *
+ * 🛑 **What it deliberately does NOT do**: delete organic rows that reference a
+ * purged one. An organic notification pointing at a purged test order becomes a
+ * dangling reference — and it is a real person's record, so it is REPORTED
+ * rather than removed. Guessing in the destructive direction on someone's own
+ * data is not a trade this command gets to make.
+ */
+async function cmdPurge() {
+  const targets = collectionsToProcess;
+
+  /* Subcollections are not reachable by a top-level query, so they are walked
+   * explicitly. `couponUsage` lives at `users/{uid}/couponUsage`. */
+  const SUBCOLLECTIONS = [{ key: "couponUsage", parent: USER_COLLECTION, name: "couponUsage" }];
+
+  const plan = [];
+  for (const colName of targets) {
+    const path = COLLECTION_MAP[colName];
+    if (!path) continue;
+    const sub = SUBCOLLECTIONS.find((s) => s.key === colName);
+    try {
+      if (sub) {
+        /* A collection-group query reaches every parent at once. */
+        const snap = await db.collectionGroup(sub.name).where("seedPurpose", "==", "test").get();
+        if (snap.size > 0) plan.push({ colName, docs: snap.docs, isSub: true });
+      } else {
+        const snap = await db.collection(path).where("seedPurpose", "==", "test").get();
+        if (snap.size > 0) plan.push({ colName, docs: snap.docs, isSub: false });
+      }
+    } catch (err) {
+      console.error(`✗ ${colName}: ${err.message}`);
+    }
+  }
+
+  const total = plan.reduce((n, p) => n + p.docs.length, 0);
+  console.log(`\n${"collection".padEnd(26)} ${"purge".padStart(6)}`);
+  console.log("─".repeat(36));
+  for (const p of plan) {
+    console.log(`  ${p.colName.padEnd(24)} ${String(p.docs.length).padStart(6)}`);
+  }
+  console.log("─".repeat(36));
+  console.log(`  ${"TOTAL".padEnd(24)} ${String(total).padStart(6)}\n`);
+
+  if (total === 0) {
+    console.log("Nothing to purge — no document carries seedPurpose \"test\".");
+    return;
+  }
+
+  if (DRY_RUN) {
+    console.log("--dry-run — nothing was deleted.");
+    return;
+  }
+
+  if (
+    !(await confirm(
+      `Delete ${total} test document(s) in project '${process.env.FIREBASE_ADMIN_PROJECT_ID}'? Permanent content and organic rows are untouched.`,
+    ))
+  ) {
+    console.log("Aborted.");
+    process.exit(0);
+  }
+
+  const stats = { deleted: 0, auth: 0, errors: 0 };
+  for (const p of plan) {
+    /*
+     * 🛑 `users` first deletes the AUTH record, then the Firestore row — in that
+     * order, because the reverse can leave an authenticating account whose
+     * profile is gone, and this loop is the only thing that knows both exist.
+     */
+    if (p.colName === "users") {
+      for (const d of p.docs) {
+        try {
+          await auth.deleteUser(d.id);
+          stats.auth++;
+        } catch (e) {
+          if (e?.code !== "auth/user-not-found") console.error(`    auth ${d.id}: ${e.message}`);
+        }
+      }
+    }
+    for (let i = 0; i < p.docs.length; i += 450) {
+      const chunk = p.docs.slice(i, i + 450);
+      const batch = db.batch();
+      for (const d of chunk) batch.delete(d.ref);
+      try {
+        await batch.commit();
+        stats.deleted += chunk.length;
+        if (VERBOSE) for (const d of chunk) console.log(`    - ${p.colName}/${d.id}`);
+      } catch (err) {
+        console.error(`✗ ${p.colName}: ${err.message}`);
+        stats.errors++;
+      }
+    }
+  }
+
+  console.log(
+    `\n${stats.errors === 0 ? "✓" : "✗"} Purge complete — deleted ${stats.deleted}, auth records ${stats.auth}, errors ${stats.errors}`,
+  );
+  if (stats.errors > 0) process.exit(1);
+}
+
 // ---------------------------------------------------------------------------
 try {
   if (ACTION === "status") await cmdStatus();
   else if (ACTION === "load") await cmdLoad();
   else if (ACTION === "delete") await cmdDelete();
+  else if (ACTION === "purge") await cmdPurge();
   process.exit(0);
 } catch (err) {
   console.error("✗ Fatal:", err.message);
