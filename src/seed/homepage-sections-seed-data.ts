@@ -472,20 +472,62 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       title: "Frequently Asked Questions",
       subtitle: "The questions new buyers ask most.",
       showOnHomepage: true,
-      displayCount: 6,
+      /*
+       * B6b — 6 → 10. The FAQ block is the densest single SEO win on the page
+       * (worldhobbyshop's 10-question block is a measured part of why it leads
+       * the fifteen on SEO) and it is an answer-engine surface, so it feeds
+       * `faqJsonLd`. 20 rows are flagged `showOnHomepage`; showing 10 of them
+       * is the intended shape.
+       */
+      displayCount: 10,
       linkToFullPage: true,
       viewMoreLabel: "View all FAQs →",
       showCategoryTabs: true,
-      visibleTabs: ["shipping_delivery", "returns_refunds", "orders_payment"],
+      /*
+       * 🛑 EMPTY ON PURPOSE — the tabs DERIVE from the items actually shown.
+       *
+       * This listed `["shipping_delivery", "returns_refunds",
+       * "orders_payment"]` and measured live on 2026-10-12 **all three
+       * rendered EMPTY PANELS**, while the three categories whose rows were
+       * actually displayed (`general`, `product_information`,
+       * `fees_and_taxes`) had no tab at all.
+       *
+       * The cause is that the two halves answer different questions and
+       * neither knows about the other: the ITEMS come from
+       * `getHomepageFAQs()` — `showOnHomepage` ordered by `priority` DESC,
+       * then sliced to `displayCount` — while the TABS were a hand-written
+       * list. Raise a row's priority, or add a higher-priority row in another
+       * category (B6b's FAQ half added 22, including a whole new
+       * `fees_and_taxes`), and the slice moves out from under the tabs
+       * silently. That is Root Cause #72's shape: a tab you can click with
+       * nothing behind it.
+       *
+       * `FAQSection` already derives tabs from its items when `tabs` is empty
+       * (`if (tabsProp && tabsProp.length > 0) return tabsProp;`), so an empty
+       * array makes an empty tab STRUCTURALLY IMPOSSIBLE rather than something
+       * to re-sync by hand. A hand-maintained enumeration beside a query is
+       * the defect, not the list's contents.
+       *
+       * 🛑 `[]` rather than deleting the key, because `appkit-seed load` is a
+       * MERGE write and cannot remove a field — dropping it from the seed
+       * would leave the three stale values in Firestore forever and the fix
+       * would read as applied while changing nothing.
+       */
+      visibleTabs: [],
       allowMultipleOpen: false,
       defaultOpenCount: 1,
-      categories: [
-        "general",
-        "orders_payment",
-        "shipping_delivery",
-        "returns_refunds",
-        "product_information",
-      ],
+      /*
+       * 🛑 NOT a filter, despite the name. The renderer uses this ONLY as a
+       * fallback tab list when `visibleTabs` is empty
+       * (`cfg?.visibleTabs?.length ? cfg.visibleTabs : cfg?.categories`), and
+       * the items are never filtered by it. So a category absent from here is
+       * still displayed — which is why `fees_and_taxes` rows appear on the
+       * homepage today while being absent from this list.
+       *
+       * Emptied too, or it would simply become the hand-written tab list this
+       * change exists to delete.
+       */
+      categories: [],
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(16),
@@ -545,5 +587,125 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    * 🛑 `appkit-seed load` UPSERTS and never deletes. Dropping them from this
    * array does not remove them from Firestore — delete both documents at
    * /admin/sections after seeding, or they keep rendering.
+   */
+  /*
+   * ── B6b — THE SYSTEMS MATRIX ─────────────────────────────────────────────
+   *
+   * worldhobbyshop's single biggest SEO asset, and it is TAXONOMY ROUTING
+   * rather than merchandising: 25 internal links telling a crawler which
+   * sub-collections exist. It is most of why they have 79 unique internal
+   * links (BAS has 57) while running the FEWEST products and words on their
+   * homepage of the fifteen crawled — 8 product cards and 1,816 words.
+   *
+   * 🛑 `custom-cards`, NOT `collection-cards`, and the plan had this wrong.
+   * `collection-cards` is capped at `COLLECTION_CARDS_MAX_ENTRIES = 3` and its
+   * entries are LIVE-CONTENT queries (`{type, limit, categorySlug}`), so it
+   * cannot express a link matrix at all. `custom-cards` carries
+   * `cards[].buttons[]` of `{label, href}`, which is exactly a matrix.
+   *
+   * 🛑 Every href is a REAL post-B5 category id, read off `categoriesSeedData`
+   * rather than typed from memory. A dead link here is the Root Cause #33
+   * shape on the routing axis — it 404s, and `audit-nav-page-wiring` does not
+   * reach section configs.
+   *
+   * No prices anywhere, which is what makes this safe where a price-band tile
+   * is not — see the note below the array.
+   */
+  {
+    id: "section-systems-matrix",
+    type: "custom-cards",
+    order: 5,
+    enabled: true,
+    config: {
+      title: "Every system, every part family",
+      layout: "grid",
+      columns: 4,
+      autoScroll: false,
+      loop: false,
+      cards: [
+        {
+          id: "matrix-original",
+          eyebrow: "1999–2003",
+          title: "Beyblade Original",
+          body: "Four part systems in four years, and they do not interchange. Plastic Generation through Heavy Metal System.",
+          buttons: [
+            { label: "Plastic Generation", href: "/categories/category-original-plastic-gen", variant: "ghost" as const },
+            { label: "Spin Gear", href: "/categories/category-original-spin-gear", variant: "ghost" as const },
+            { label: "Magnacore", href: "/categories/category-original-magnacore", variant: "ghost" as const },
+            { label: "Engine Gear", href: "/categories/category-original-engine-gear", variant: "ghost" as const },
+            { label: "Heavy Metal System", href: "/categories/category-original-hms", variant: "ghost" as const },
+            { label: "Parts", href: "/categories/category-original-parts", variant: "outline" as const },
+            { label: "Launchers", href: "/categories/category-original-launchers", variant: "outline" as const },
+          ],
+        },
+        {
+          id: "matrix-metal",
+          eyebrow: "2008–2013",
+          title: "Metal Fight",
+          body: "The tuning era, and the only generation where loose parts outnumber complete tops.",
+          buttons: [
+            { label: "Metal System", href: "/categories/category-metal-phws", variant: "ghost" as const },
+            { label: "Metal Fusion", href: "/categories/category-metal-fusion", variant: "ghost" as const },
+            { label: "Metal Masters", href: "/categories/category-metal-masters", variant: "ghost" as const },
+            { label: "Metal Fury (4D)", href: "/categories/category-metal-fury-4d", variant: "ghost" as const },
+            { label: "Shogun Steel", href: "/categories/category-metal-shogun-steel", variant: "ghost" as const },
+            { label: "Parts", href: "/categories/category-metal-parts", variant: "outline" as const },
+            { label: "Launchers", href: "/categories/category-metal-launchers", variant: "outline" as const },
+          ],
+        },
+        {
+          id: "matrix-burst",
+          eyebrow: "2015–2023",
+          title: "Beyblade Burst",
+          body: "Seven waves of the bursting mechanic, from single-layer Classic to Burst Ultimate.",
+          buttons: [
+            { label: "Burst Classic", href: "/categories/category-burst-classic", variant: "ghost" as const },
+            { label: "Burst God", href: "/categories/category-burst-god", variant: "ghost" as const },
+            { label: "Cho-Z", href: "/categories/category-burst-cho-z", variant: "ghost" as const },
+            { label: "GT", href: "/categories/category-burst-gt", variant: "ghost" as const },
+            { label: "Superking", href: "/categories/category-burst-superking", variant: "ghost" as const },
+            { label: "Dynamite Battle", href: "/categories/category-burst-db", variant: "ghost" as const },
+            { label: "Burst Ultimate", href: "/categories/category-burst-bu", variant: "ghost" as const },
+            { label: "Parts", href: "/categories/category-burst-parts", variant: "outline" as const },
+          ],
+        },
+        {
+          id: "matrix-x",
+          eyebrow: "2023–",
+          title: "Beyblade X",
+          body: "The Xtreme Line rail is the centre of the design — blades, ratchets and bits, and a stadium that is part of the game.",
+          buttons: [
+            { label: "Basic Line", href: "/categories/category-x-basic", variant: "ghost" as const },
+            { label: "Unique Line (UX)", href: "/categories/category-x-unique-ux", variant: "ghost" as const },
+            { label: "Custom Line (CX)", href: "/categories/category-x-custom-cx", variant: "ghost" as const },
+            { label: "X-Over Project", href: "/categories/category-x-over", variant: "ghost" as const },
+            { label: "Parts", href: "/categories/category-x-parts", variant: "outline" as const },
+            { label: "Launchers", href: "/categories/category-x-launchers", variant: "outline" as const },
+            { label: "Stadiums", href: "/categories/category-x-stadiums", variant: "outline" as const },
+          ],
+        },
+      ],
+    },
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+
+  /*
+   * 🛑 TCI's five BUDGET TILES ("Under ₹499 / ₹799 / ₹999 / ₹1499") are
+   * DELIBERATELY NOT SEEDED, and this is a decision rather than an omission.
+   *
+   * The plan argued they are safe because "the tiles are LINKS, not prices".
+   * That is true of the tile and false of the mechanism. Prices are hidden from
+   * signed-out visitors, and the price-range facet and every money sort are
+   * withheld specifically because "hiding the number is not hiding the value" —
+   * bracketing a hidden price with a range filter is the one casually reachable
+   * way around the gate. The documented residue is that a HAND-WRITTEN
+   * `?f=price<499` still works, and five tiles on the homepage promote that
+   * residue to the most prominent path on the site: a guest could bucket the
+   * entire catalogue into five price bands in five clicks, without an account.
+   *
+   * The matrix above has no such property — a category link reveals no amount.
+   * Revisit if guest price-gating is ever relaxed; until then this is a tile
+   * that would quietly undo a gate another step built.
    */
 ];
