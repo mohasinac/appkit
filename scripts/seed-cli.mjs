@@ -603,7 +603,7 @@ async function loadUsers(seed, stats) {
        * hashed from plaintext and the encryption must not see a hashed value,
        * so nothing may be added to `docData` after that pair runs.
        */
-      const plain = stripUndefined(stampSeedPurpose("users", { ...u }, LOAD_STARTED_AT));
+      const plain = stripUndefined(stampSeedPurpose("users", { ...u }));
       let docData = {
         ...encryptPiiFields(plain, [...USER_PII_FIELDS]),
         ...piiIndicesFor(plain, USER_PII_INDEX_MAP),
@@ -635,7 +635,7 @@ async function loadSubcollection(seed, parentColl, parentKey, subColl, idKey, pi
        * conflating the two would make a parent's classification silently
        * govern children it knows nothing about.
        */
-      const stamped = stripUndefined(stampSeedPurpose(subColl, data, LOAD_STARTED_AT));
+      const stamped = stripUndefined(stampSeedPurpose(subColl, data));
       const payload = piiFields ? encryptPiiFields(stamped, [...piiFields]) : stamped;
       await docRef.set(payload, { merge: true });
       stats.created++;
@@ -661,11 +661,11 @@ async function loadOneDocPerUser(seed, coll, stats) {
        */
       await db.collection(coll).doc(id).set(
         stripUndefined(
-          stampSeedPurpose(
-            coll,
-            { userId, items: items ?? [], updatedAt: updatedAt ?? new Date() },
-            LOAD_STARTED_AT,
-          ),
+          stampSeedPurpose(coll, {
+            userId,
+            items: items ?? [],
+            updatedAt: updatedAt ?? new Date(),
+          }),
         ),
         { merge: false },
       );
@@ -709,7 +709,7 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
        * a heuristic, and `users`/`orders` are reachable by it for the first
        * time.
        */
-      data: encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, LOAD_STARTED_AT))),
+      data: encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data))),
     });
   }
   /*
