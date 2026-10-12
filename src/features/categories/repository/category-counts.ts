@@ -29,6 +29,8 @@ import type { ListingType } from "../../products/types";
 
 /** The only product fields this module reads. */
 export interface CountableProductRow {
+  /** I3 — the ASSIGNED categories. Absent on every product written before I1. */
+  categoryIds?: string[] | null;
   categorySlugs?: string[] | null;
   category?: string | null;
   brandSlug?: string | null;
@@ -47,8 +49,17 @@ export interface CountableProductRow {
  * predicate cost.
  */
 export interface CountDelta {
-  /** The leaf the row is filed under — where `own` moves. */
-  leaf: string;
+  /**
+   * The ASSIGNED categories — where `own` moves. One entry per assignment.
+   *
+   * 🛑 I3: this was a single `leaf`. A product can now be filed under several
+   * categories (at most one per root), and it is genuinely "here" in each of
+   * them — so `own` bumps at every one, not just the default.
+   *
+   * `owns[0]` is the DEFAULT assignment, because the closure is ordered
+   * default-chain-first and this is read from its head.
+   */
+  owns: string[];
   /**
    * The whole chain — where `total` moves. INCLUDES the leaf.
    *
@@ -87,17 +98,44 @@ const DEFAULT_LISTING_TYPE: ListingType = "standard";
  */
 export function describeCountable(row: CountableProductRow): CountDelta | null {
   const chainRaw = Array.isArray(row.categorySlugs) ? row.categorySlugs : [];
-  const leaf = chainRaw[0] || row.category || null;
-  if (!leaf) return null;
 
   /*
-   * Dedupe the chain. The one real duplicate risk the stored chain does NOT
+   * I3 — the ASSIGNED list is what `own` keys on, and it is read from
+   * `categoryIds` with the old single-leaf selection as the fallback.
+   *
+   * 🛑 The fallback is not legacy tidiness, it is required: `categoryIds` was
+   * added in I1, so every product written before it has only `categorySlugs`,
+   * and the nightly reconciler reads the same two fields in the same order. Two
+   * different selections would drift silently and the reconciler would
+   * "correct" a count that was right.
+   */
+  const ownsRaw = Array.isArray(row.categoryIds) && row.categoryIds.length > 0
+    ? row.categoryIds
+    : [chainRaw[0] || row.category || ""];
+
+  const ownSeen = new Set<string>();
+  const owns: string[] = [];
+  for (const id of ownsRaw) {
+    if (!id || ownSeen.has(id)) continue;
+    ownSeen.add(id);
+    owns.push(id);
+  }
+  if (owns.length === 0) return null;
+
+  /*
+   * Dedupe the chain. The one real duplicate risk the stored closure does NOT
    * remove is a product filed under two leaves that share an ancestor — the
    * shared ancestor would otherwise be incremented twice for one listing.
+   *
+   * 🛑 Under the one-per-root rule that cannot happen, and the dedupe stays
+   * anyway: the rule is enforced at ONE write path, while this runs on every
+   * row that reaches Firestore — including a seeded row and an admin
+   * `.passthrough()` write, neither of which passes through it. A belt, and the
+   * cheaper of the two places to be wrong.
    */
   const seen = new Set<string>();
   const chain: string[] = [];
-  for (const id of [leaf, ...chainRaw]) {
+  for (const id of [...owns, ...chainRaw]) {
     if (!id || seen.has(id)) continue;
     seen.add(id);
     chain.push(id);
@@ -114,7 +152,7 @@ export function describeCountable(row: CountableProductRow): CountDelta | null {
   const brand = brandSlug && !seen.has(brandSlug) ? brandSlug : null;
 
   return {
-    leaf,
+    owns,
     chain,
     brand,
     listingType: (row.listingType as ListingType) || DEFAULT_LISTING_TYPE,
@@ -143,7 +181,8 @@ export function countsChanged(
   if (!b && !a) return false;
   if (!b || !a) return true;
   return (
-    b.leaf !== a.leaf ||
+    b.owns.length !== a.owns.length ||
+    b.owns.some((id, i) => id !== a.owns[i]) ||
     b.brand !== a.brand ||
     b.listingType !== a.listingType ||
     b.isLot !== a.isLot ||
@@ -180,8 +219,16 @@ export function buildCountPatch(
     if (!delta) continue;
     const ownField = delta.isLot ? "lots.own" : `own.${delta.listingType}`;
     const totalField = delta.isLot ? "lots.total" : `total.${delta.listingType}`;
-    // The leaf gets `own`; the whole chain (leaf included) gets `total`.
-    bump(patch, delta.leaf, ownField, sign);
+    /*
+     * Every ASSIGNMENT gets `own`; the whole deduped closure gets `total`.
+     *
+     * 🛑 `own` at each one is the point of I3: a product assigned to both
+     * category-dragoon-g and category-beyblade is genuinely filed in both, and
+     * each page's "N here" must say so. `total` is still one bump per closure
+     * entry, so a shared ancestor moves by 1 for the listing rather than by the
+     * number of assignments that reach it.
+     */
+    for (const id of delta.owns) bump(patch, id, ownField, sign);
     for (const id of delta.chain) bump(patch, id, totalField, sign);
     // A brand is flat: own and total move together, so its descendant count
     // derives to 0 rather than to a negative number.

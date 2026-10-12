@@ -896,39 +896,94 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     auctionDelta: number,
     productId?: string,
   ): void {
+    this.updateMetricsForAssignmentsInBatch(
+      batch,
+      [{ id: categoryId, parentIds }],
+      productDelta,
+      auctionDelta,
+      productId,
+    );
+  }
+
+  /**
+   * I3 — the same live metric update, for a product filed under SEVERAL
+   * categories at once.
+   *
+   * 🛑 WHY THIS EXISTS RATHER THAN CALLING THE SINGLE VERSION IN A LOOP.
+   * **Firestore rejects a batch containing two writes to the same document.**
+   * Two assignments whose chains share an ancestor would each stage a
+   * `batch.update` on that ancestor, and the whole batch throws — losing every
+   * increment in it, not just the duplicate.
+   *
+   * Under the one-per-root rule the chains are disjoint and it cannot happen.
+   * That is not sufficient grounds to skip the aggregation: the rule is
+   * enforced at ONE write path (`deriveTaxonomy`), while this trigger fires for
+   * whatever reached Firestore — including a seeded row and the admin
+   * `.passthrough()` route, neither of which passes through it. Aggregating
+   * costs a Map; being wrong costs a silently dropped counter.
+   *
+   * So: one `batch.update` per DISTINCT document, with the own-deltas and the
+   * rollup-deltas summed per id first.
+   *
+   * 🛑 `own` lands on every assignment and `total` lands once per distinct id
+   * across all their chains — which is the arithmetic `CategoryCountsDocument`
+   * states: `total` already includes `own`, and the two are never summed.
+   */
+  updateMetricsForAssignmentsInBatch(
+    batch: import("firebase-admin/firestore").WriteBatch,
+    assignments: Array<{ id: string; parentIds: string[] }>,
+    productDelta: number,
+    auctionDelta: number,
+    productId?: string,
+    /** A brand row: flat, so own and rollup move together. */
+    brandId?: string | null,
+  ): void {
     const now = new Date();
     const colRef = this.db.collection(this.collection);
 
-    const directRef = colRef.doc(categoryId);
-    const directUpdate: FirestoreDocument = {
-      "metrics.productCount": increment(productDelta),
-      "metrics.auctionCount": increment(auctionDelta),
-      "metrics.totalProductCount": increment(productDelta),
-      "metrics.totalAuctionCount": increment(auctionDelta),
-      "metrics.totalItemCount": increment(productDelta + auctionDelta),
-      "metrics.lastUpdated": now,
-      updatedAt: now,
-    };
+    /** id → how many times `own` moves, and whether the rollup moves. */
+    const own = new Map<string, number>();
+    const rollup = new Set<string>();
 
-    if (productId && productDelta !== 0) {
-      directUpdate["metrics.productIds"] =
-        productDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+    for (const a of assignments) {
+      if (!a.id) continue;
+      own.set(a.id, (own.get(a.id) ?? 0) + 1);
+      rollup.add(a.id);
+      for (const ancestorId of a.parentIds) if (ancestorId) rollup.add(ancestorId);
     }
-    if (productId && auctionDelta !== 0) {
-      directUpdate["metrics.auctionIds"] =
-        auctionDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+    if (brandId) {
+      own.set(brandId, (own.get(brandId) ?? 0) + 1);
+      rollup.add(brandId);
     }
 
-    batch.update(directRef, directUpdate);
-
-    for (const ancestorId of parentIds) {
-      batch.update(colRef.doc(ancestorId), {
+    for (const id of rollup) {
+      /*
+       * `ownTimes` is 0 for a pure ancestor and 1 for an assignment. It is only
+       * ever >1 if the SAME id was assigned twice, which `readAssignments`
+       * dedupes — kept as a multiplier rather than a boolean so that case
+       * stays arithmetically honest instead of silently collapsing.
+       */
+      const ownTimes = own.get(id) ?? 0;
+      const update: FirestoreDocument = {
         "metrics.totalProductCount": increment(productDelta),
         "metrics.totalAuctionCount": increment(auctionDelta),
         "metrics.totalItemCount": increment(productDelta + auctionDelta),
         "metrics.lastUpdated": now,
         updatedAt: now,
-      });
+      };
+      if (ownTimes > 0) {
+        update["metrics.productCount"] = increment(productDelta * ownTimes);
+        update["metrics.auctionCount"] = increment(auctionDelta * ownTimes);
+        if (productId && productDelta !== 0) {
+          update["metrics.productIds"] =
+            productDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+        }
+        if (productId && auctionDelta !== 0) {
+          update["metrics.auctionIds"] =
+            auctionDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+        }
+      }
+      batch.update(colRef.doc(id), update);
     }
   }
 

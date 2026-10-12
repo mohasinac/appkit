@@ -23,22 +23,58 @@ const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
 
 void UNAVAILABLE_PRODUCT_STATUSES;
 
-function getEffectiveCategory(doc: ProductDoc | null): string | null {
-  if (!doc) return null;
+/**
+ * I3 — the ASSIGNED categories, where `own` moves.
+ *
+ * 🛑 The selection order must stay byte-identical to `describeCountable` and to
+ * `countersReconcile.tallyProduct`. All three read the same two fields in the
+ * same order, and if any one of them disagreed the nightly recount would
+ * "correct" a live count that was right — drift that is invisible precisely
+ * because the job overwrites rather than compares.
+ */
+function getEffectiveCategories(doc: ProductDoc | null): string[] {
+  if (!doc) return [];
+  const ids = doc.categoryIds as string[] | undefined;
+  if (Array.isArray(ids) && ids.length > 0) return ids.filter(Boolean);
   const categorySlugs = doc.categorySlugs as string[] | undefined;
-  if (Array.isArray(categorySlugs) && categorySlugs.length > 0) return categorySlugs[0];
-  return (doc.category as string | undefined) ?? null;
+  if (Array.isArray(categorySlugs) && categorySlugs.length > 0) {
+    return [categorySlugs[0]!].filter(Boolean);
+  }
+  const scalar = doc.category as string | undefined;
+  return scalar ? [scalar] : [];
 }
 
-async function getParentIds(categoryId: string): Promise<string[]> {
-  if (!categoryId) return [];
-  return (await categoriesRepository.findById(categoryId))?.parentIds ?? [];
+/**
+ * Each assignment paired with its ancestor chain, read from the LIVE tree.
+ *
+ * 🛑 From the category documents, never from the product's stored closure —
+ * that is what makes a reparent self-heal here as well as in the nightly job.
+ * One read per assignment, in parallel, and at most
+ * `MAX_CATEGORY_ASSIGNMENTS` of them.
+ */
+async function withParents(
+  categoryIds: string[],
+): Promise<Array<{ id: string; parentIds: string[] }>> {
+  if (categoryIds.length === 0) return [];
+  return Promise.all(
+    categoryIds.map(async (id) => ({
+      id,
+      parentIds: (await categoriesRepository.findById(id))?.parentIds ?? [],
+    })),
+  );
+}
+
+/** True when the two assignment lists differ as SETS, not as ordered arrays. */
+function assignmentsMoved(before: string[], after: string[]): boolean {
+  if (before.length !== after.length) return true;
+  const a = new Set(after);
+  return before.some((id) => !a.has(id));
 }
 
 interface DispatchInput {
   productId: string;
-  beforeCategory: string | null;
-  afterCategory: string | null;
+  beforeCategories: string[];
+  afterCategories: string[];
   beforeBrand: string | null;
   afterBrand: string | null;
   beforeStoreId: string | null;
@@ -72,31 +108,31 @@ interface DispatchInput {
  * own count equals its rollup by construction.
  */
 async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
-  const { productId, beforeCategory, afterCategory, beforeBrand, afterBrand,
+  const { productId, beforeCategories, afterCategories, beforeBrand, afterBrand,
     beforeStoreId, afterStoreId,
     isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx } = p;
 
-  /** Stage one category (and, if given, one brand) at `sign` × 1 item. */
+  /** Stage every assignment (and, if given, one brand) at `sign` x 1 item. */
   const stage = (
     batch: FirebaseFirestore.WriteBatch,
-    categoryId: string | null,
+    assignments: Array<{ id: string; parentIds: string[] }>,
     brandId: string | null,
-    parentIds: string[],
     auction: boolean,
     sign: 1 | -1,
   ): void => {
     const productDelta = auction ? 0 : sign;
     const auctionDelta = auction ? sign : 0;
-    if (categoryId) {
-      categoriesRepository.updateMetricsInBatch(
-        batch, categoryId, parentIds, productDelta, auctionDelta, productId,
-      );
-    }
-    if (brandId) {
-      categoriesRepository.updateMetricsInBatch(
-        batch, brandId, [], productDelta, auctionDelta, productId,
-      );
-    }
+    if (assignments.length === 0 && !brandId) return;
+    /*
+     * ONE call, which aggregates per document id — see
+     * `updateMetricsForAssignmentsInBatch`. Looping the single-category version
+     * instead would stage two writes on a shared ancestor, and Firestore
+     * rejects a batch containing two writes to the same document, losing every
+     * increment in it rather than just the duplicate.
+     */
+    categoriesRepository.updateMetricsForAssignmentsInBatch(
+      batch, assignments, productDelta, auctionDelta, productId, brandId,
+    );
   };
 
   /*
@@ -113,26 +149,26 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
     ctx.logger.info(what, { productId, ...meta });
   };
 
-  if (isDelete && wasPublished && (beforeCategory || beforeBrand)) {
+  if (isDelete && wasPublished && (beforeCategories.length > 0 || beforeBrand)) {
     const batch = ctx.db.batch();
-    stage(batch, beforeCategory, beforeBrand, await getParentIds(beforeCategory ?? ""), beforeIsAuction, -1);
-    await commit(batch, "Decremented counters on hard-delete", { category: beforeCategory, brand: beforeBrand, storeId: beforeStoreId });
+    stage(batch, await withParents(beforeCategories), beforeBrand, beforeIsAuction, -1);
+    await commit(batch, "Decremented counters on hard-delete", { categories: beforeCategories, brand: beforeBrand, storeId: beforeStoreId });
     if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
     return;
   }
 
-  if (!wasPublished && isPublished && (afterCategory || afterBrand)) {
+  if (!wasPublished && isPublished && (afterCategories.length > 0 || afterBrand)) {
     const batch = ctx.db.batch();
-    stage(batch, afterCategory, afterBrand, await getParentIds(afterCategory ?? ""), isAuction, 1);
-    await commit(batch, "Incremented counters on publish", { category: afterCategory, brand: afterBrand, storeId: afterStoreId });
+    stage(batch, await withParents(afterCategories), afterBrand, isAuction, 1);
+    await commit(batch, "Incremented counters on publish", { categories: afterCategories, brand: afterBrand, storeId: afterStoreId });
     if (afterStoreId) await storeRepository.incrementTotalProducts(afterStoreId, 1);
     return;
   }
 
-  if (wasPublished && !isPublished && (beforeCategory || beforeBrand)) {
+  if (wasPublished && !isPublished && (beforeCategories.length > 0 || beforeBrand)) {
     const batch = ctx.db.batch();
-    stage(batch, beforeCategory, beforeBrand, await getParentIds(beforeCategory ?? ""), beforeIsAuction, -1);
-    await commit(batch, "Decremented counters on unpublish", { category: beforeCategory, brand: beforeBrand, storeId: beforeStoreId });
+    stage(batch, await withParents(beforeCategories), beforeBrand, beforeIsAuction, -1);
+    await commit(batch, "Decremented counters on unpublish", { categories: beforeCategories, brand: beforeBrand, storeId: beforeStoreId });
     if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
     return;
   }
@@ -146,7 +182,7 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
    * through every branch and silently leave both brand rows wrong.
    */
   if (wasPublished && isPublished) {
-    const categoryMoved = beforeCategory !== afterCategory;
+    const categoryMoved = assignmentsMoved(beforeCategories, afterCategories);
     const brandMoved = beforeBrand !== afterBrand;
     /*
      * A listing can also change WHICH counter it belongs in without moving at
@@ -167,20 +203,12 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
      * correctly does not move — the item did not come or go, it changed shape.
      */
     if (!categoryMoved && !brandMoved) {
-      const parents = await getParentIds(afterCategory ?? "");
       const productDelta = isAuction ? -1 : 1;
       const auctionDelta = isAuction ? 1 : -1;
       const batch = ctx.db.batch();
-      if (afterCategory) {
-        categoriesRepository.updateMetricsInBatch(
-          batch, afterCategory, parents, productDelta, auctionDelta, productId,
-        );
-      }
-      if (afterBrand) {
-        categoriesRepository.updateMetricsInBatch(
-          batch, afterBrand, [], productDelta, auctionDelta, productId,
-        );
-      }
+      categoriesRepository.updateMetricsForAssignmentsInBatch(
+        batch, await withParents(afterCategories), productDelta, auctionDelta, productId, afterBrand,
+      );
       await commit(batch, "Listing type changed", {
         productId,
         from: beforeIsAuction ? "auction" : "product",
@@ -190,15 +218,35 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
     }
 
     const [beforeParents, afterParents] = await Promise.all([
-      getParentIds(categoryMoved ? beforeCategory ?? "" : ""),
-      getParentIds(categoryMoved ? afterCategory ?? "" : ""),
+      withParents(categoryMoved ? beforeCategories : []),
+      withParents(categoryMoved ? afterCategories : []),
     ]);
+    /*
+     * TWO BATCHES, not one, and this is the I3 change that matters most.
+     *
+     * The -1 and the +1 both touch the rows that did NOT move: a listing
+     * re-filed from one leaf to a sibling shares every ancestor above them, and
+     * a product gaining a SECOND assignment keeps its first one entirely. In
+     * one batch those are two writes to the same document, which Firestore
+     * rejects outright — so the whole re-file would throw and BOTH counters
+     * would be left wrong.
+     *
+     * It worked before only because a single assignment's -1 and +1 were staged
+     * with ids that happened to be disjoint whenever the branch ran at all.
+     *
+     * Sequential commits are not atomic together: a crash between them leaves
+     * the decrement applied and the increment missing. That is the right trade,
+     * because it is self-healing — `countersReconcile` rewrites from scratch
+     * nightly and reports it as `drifted` — whereas a rejected batch is silent.
+     */
+    const outBatch = ctx.db.batch();
+    stage(outBatch, beforeParents, brandMoved ? beforeBrand : null, beforeIsAuction, -1);
+    await outBatch.commit();
     const batch = ctx.db.batch();
-    stage(batch, categoryMoved ? beforeCategory : null, brandMoved ? beforeBrand : null, beforeParents, beforeIsAuction, -1);
-    stage(batch, categoryMoved ? afterCategory : null, brandMoved ? afterBrand : null, afterParents, isAuction, 1);
+    stage(batch, afterParents, brandMoved ? afterBrand : null, isAuction, 1);
     await commit(batch, "Re-filed product", {
-      fromCategory: categoryMoved ? beforeCategory : undefined,
-      toCategory: categoryMoved ? afterCategory : undefined,
+      fromCategories: categoryMoved ? beforeCategories : undefined,
+      toCategories: categoryMoved ? afterCategories : undefined,
       fromBrand: brandMoved ? beforeBrand : undefined,
       toBrand: brandMoved ? afterBrand : undefined,
     });
@@ -257,8 +305,8 @@ export async function handleProductWrite(
   // mapDoc() normalizes this on read, but a raw trigger snapshot bypasses that,
   // so a product written via categorySlugs-only paths would otherwise silently
   // no-op category metrics here. Prefer categorySlugs[0], fall back to legacy category.
-  const beforeCategory = getEffectiveCategory(before);
-  const afterCategory = getEffectiveCategory(after);
+  const beforeCategories = getEffectiveCategories(before);
+  const afterCategories = getEffectiveCategories(after);
   /*
    * `brandSlug` is the brand ROW's document id in this same `categories`
    * collection. `brand` is the display NAME and is not a key — CLAUDE.md's
@@ -306,7 +354,7 @@ export async function handleProductWrite(
 
   try {
     await dispatchProductWriteEvent({
-      productId, beforeCategory, afterCategory, beforeBrand, afterBrand,
+      productId, beforeCategories, afterCategories, beforeBrand, afterBrand,
       beforeStoreId, afterStoreId,
       isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx,
     });

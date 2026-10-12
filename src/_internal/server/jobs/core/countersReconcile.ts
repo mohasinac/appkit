@@ -98,6 +98,16 @@ interface ProductTallyRow {
   category?: string;
   /** G3b — a lot is counted separately from singles. */
   isLot?: boolean;
+  /**
+   * I3 — the ASSIGNED categories, where `own` moves. Absent on every row
+   * written before I1.
+   *
+   * 🛑 This job reads the whole document with no `.select()` projection, which
+   * is what makes the field present at runtime. If a projection is ever added
+   * here, this field must be in it — a projected-away field reads `undefined`
+   * and the fallback would silently take over for every product.
+   */
+  categoryIds?: string[];
   categorySlugs?: string[];
   brandSlug?: string;
   listingType?: string;
@@ -146,21 +156,46 @@ function tallyProduct(
    */
   if (!isListingRowAvailable(data as never, new Date())) return false;
 
-  // `category` is @deprecated in favour of `categorySlugs[]`; mirror the live
-  // trigger's selection exactly so the two agree (onProductWrite.ts).
-  const leaf =
-    (Array.isArray(data.categorySlugs) && data.categorySlugs[0]) ||
-    data.category ||
-    null;
+  /*
+   * I3 — the ASSIGNED categories. `categoryIds` first, falling back to the old
+   * single-leaf selection for every row written before I1 added the field.
+   *
+   * 🛑 This selection must stay byte-identical to `describeCountable`'s. Two
+   * different ones drift silently, and the drift is invisible in the worst
+   * possible way: this job RECOUNTS FROM SCRATCH and overwrites, so it would
+   * "correct" a count the live trigger had right.
+   */
+  const owns =
+    Array.isArray(data.categoryIds) && data.categoryIds.length > 0
+      ? data.categoryIds.filter(Boolean)
+      : [((Array.isArray(data.categorySlugs) && data.categorySlugs[0]) || data.category || "")].filter(
+          Boolean,
+        );
 
   let unknown = false;
-  if (leaf && !tallies.has(leaf)) {
-    unknown = true;
-  } else if (leaf) {
-    countOwn(tallies.get(leaf)!, productId, isAuction, listingType, isLot);
-    // Roll up through self + every ancestor. `parentIds` already holds the
-    // WHOLE chain, so this is one pass rather than a walk.
-    for (const id of [leaf, ...(parentsOf.get(leaf) ?? [])]) {
+  /*
+   * ✅ Ancestors come from `parentsOf` — the LIVE tree, seeded from every
+   * category document — and NOT from the product's stored closure. Do not
+   * "simplify" that: it is what makes a reparent self-heal overnight. A version
+   * reading the stored chain would agree with a stale one, and then the drift
+   * this job exists to catch would be undetectable by it.
+   *
+   * 🛑 `own` bumps at EVERY assignment; `total` bumps once per distinct id
+   * across all their chains. Without the dedupe, two assignments sharing an
+   * ancestor would roll that ancestor up twice for one listing — which under
+   * one-per-root cannot happen, but this job reads whatever is in Firestore
+   * rather than whatever the write path allowed.
+   */
+  const rolledUp = new Set<string>();
+  for (const own of owns) {
+    if (!tallies.has(own)) {
+      unknown = true;
+      continue;
+    }
+    countOwn(tallies.get(own)!, productId, isAuction, listingType, isLot);
+    for (const id of [own, ...(parentsOf.get(own) ?? [])]) {
+      if (rolledUp.has(id)) continue;
+      rolledUp.add(id);
       countRollup(tallies.get(id), isAuction, listingType, isLot);
     }
   }
@@ -174,9 +209,7 @@ function tallyProduct(
   // it is guarded rather than trusted — the prefixes are a convention and this
   // is an arithmetic invariant. Mirrors `describeCountable`'s own guard so the
   // nightly and incremental values cannot disagree here.
-  const countedByChain = leaf
-    ? new Set([leaf, ...(parentsOf.get(leaf) ?? [])])
-    : new Set<string>();
+  const countedByChain = rolledUp;
   if (data.brandSlug && !countedByChain.has(data.brandSlug) && tallies.has(data.brandSlug)) {
     countOwn(tallies.get(data.brandSlug)!, productId, isAuction, listingType, isLot);
     countRollup(tallies.get(data.brandSlug), isAuction, listingType, isLot);
