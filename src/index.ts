@@ -2142,6 +2142,9 @@ export { catalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
 export { productsStandardSeedData } from "./seed/index";
+// productsCatalogueSeedData - GENERATED: one listing per tier-4 leaf, so the
+// 1,173-node taxonomy has a catalogue in it (967 of 968 leaves were empty).
+export { productsCatalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsAuctionsSeedData - Seed data for auction product listings.
 export { productsAuctionsSeedData } from "./seed/index";
