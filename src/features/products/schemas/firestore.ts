@@ -215,6 +215,14 @@ export interface ProductDocument extends BaseDocument {
    */
   categoryIds?: string[];
   /**
+   * I5b — DERIVED. One display name per assignment, parallel to `categoryIds`.
+   *
+   * Lets the breadcrumb row offer the OTHER categories as real links without a
+   * second read on a cached page. Deliberately not their full chains: the
+   * alternate crumb shows the other categories, never N stacked trails.
+   */
+  categoryIdNames?: string[];
+  /**
    * DERIVED closure over every assignment — the field every category QUERY
    * matches on, via `array-contains` / `array-contains-any`.
    *
@@ -804,6 +812,7 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "category",
   /* Public: the chips on a detail page render the assignments. */
   "categoryIds",
+  "categoryIdNames",
   "subcategory",
   "brand",
   "price",

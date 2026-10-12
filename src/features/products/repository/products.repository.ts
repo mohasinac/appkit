@@ -465,10 +465,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
       const defaultIdx = pickDefaultAssignment(resolved, counts);
       const closure = buildTaxonomyClosure(resolved, defaultIdx);
-      out.categoryIds = resolved.map((c) => c.id);
+      /*
+       * 🛑 `categoryIds` is written in the DEFAULT-FIRST order, not the order
+       * the seller picked, so it is parallel to `categoryIdNames` and index 0
+       * agrees with `categorySlugs[0]`. Three fields that must line up, lined
+       * up at the one place that produces all three.
+       */
+      out.categoryIds = closure.categoryIdNames.length
+        ? [resolved[defaultIdx]!.id, ...resolved.filter((_, i) => i !== defaultIdx).map((c) => c.id)]
+        : resolved.map((c) => c.id);
       out.categorySlugs = closure.categorySlugs;
       out.category = closure.categorySlugs[0]!;
       if (closure.categoryNames.length) out.categoryNames = closure.categoryNames;
+      if (closure.categoryIdNames.length) out.categoryIdNames = closure.categoryIdNames;
     }
 
     /*

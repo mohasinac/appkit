@@ -329,8 +329,10 @@ export function pickDefaultAssignment(
 export function buildTaxonomyClosure(
   resolved: ResolvedCategory[],
   defaultIdx: number,
-): { categorySlugs: string[]; categoryNames: string[] } {
-  if (resolved.length === 0) return { categorySlugs: [], categoryNames: [] };
+): { categorySlugs: string[]; categoryNames: string[]; categoryIdNames: string[] } {
+  if (resolved.length === 0) {
+    return { categorySlugs: [], categoryNames: [], categoryIdNames: [] };
+  }
 
   const def = resolved[defaultIdx] ?? resolved[0]!;
   const ordered = [def, ...resolved.filter((c) => c.id !== def.id)];
@@ -351,5 +353,13 @@ export function buildTaxonomyClosure(
     (n): n is string => !!n,
   );
 
-  return { categorySlugs, categoryNames };
+  /*
+   * I5b — one display name per ASSIGNMENT, in the same order, so the breadcrumb
+   * row can offer the other categories as links without a second read on a
+   * cached page. Deliberately NOT their full chains: the alternate crumb shows
+   * the other categories, not N stacked trails.
+   */
+  const categoryIdNames = ordered.map((c) => c.name ?? c.id);
+
+  return { categorySlugs, categoryNames, categoryIdNames };
 }
