@@ -172,6 +172,24 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   siteSettings: "permanent",
 
   /*
+   * ── permanent, second tranche: the site's own CONTENT and COMPOSITION ────
+   *
+   * Added on the user's explicit list. The same test applies and they pass it:
+   * clearing any of these means re-AUTHORING, not re-running a loader.
+   *
+   * 🛑 But "permanent" obliges us to make them REAL — see G1c in the plan.
+   * Marking a placeholder permanent only makes the placeholder unpurgeable, so
+   * each of these has to trace to a crawl source: blogPosts to the buying/rules
+   * guide split, homepageSections to worldhobbyshop's generation tiles and
+   * 25-link systems matrix, carouselSlides to beybladeartshop's 5-slide hero
+   * including the anti-counterfeit slide.
+   */
+  blogPosts: "permanent",
+  carousels: "permanent",
+  carouselSlides: "permanent",
+  homepageSections: "permanent",
+
+  /*
    * 🛑 The tester checklist cases are PERMANENT CONTENT, not scaffolding.
    *
    * 1,162 authored cases, each a six-part procedure with an explicit
@@ -213,20 +231,14 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   notifications: "test",
   supportTickets: "test",
   catalogueItems: "test",
-  blogPosts: "test",
   events: "test",
   eventEntries: "test",
   groupedListings: "test",
   scammerProfiles: "test",
-  carousels: "test",
-  carouselSlides: "test",
-  homepageSections: "test",
   procurementShipments: "test",
   shipmentLots: "test",
   shipmentItems: "test",
   payoutMethods: "test",
-  shippingConfigs: "test",
-  analyticsCards: "test",
   analyticsAlerts: "test",
   storeCategories: "test",
   listingTemplates: "test",
@@ -236,20 +248,175 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   storeGoogleConfig: "test",
 };
 
+/**
+ * Individual rows that differ from their collection's default, by document id.
+ *
+ * 🛑 This is the "clear all out EXCEPT our admin creds and the original single
+ * store" instruction, made declarative. Both collections default to `test` —
+ * every persona and every other store is disposable — and exactly two rows are
+ * not.
+ *
+ * ✅ The precedent already existed and this replaces it: `cmdDelete` has
+ * carried `PROTECTED_USER_UIDS = new Set(["user-admin-letitrip"])` for a long
+ * time, skipping that uid on a wholesale delete. One mechanism is better than a
+ * list the purge path happens to know about privately.
+ *
+ * 🛑 Keyed **`"<collection>:<id>"`**, and the collection half is load-bearing.
+ *
+ * It was a bare id, and a live read-back caught the consequence: `carts`,
+ * `wishlists` and `history` are all keyed on the USER id (CLAUDE.md: "Doc id =
+ * userId"), so `"user-admin-letitrip"` matched the admin's **cart** as well as
+ * the admin's user row — making a disposable cart permanently unpurgeable.
+ * Subtle, silent, and it would have left a stale cart surviving every purge
+ * forever.
+ *
+ * The id half is the DOCUMENT id, which for `users` is the Auth uid (`uid` on
+ * the seed row) and for everything else is `id`. `resolveSeedPurpose` checks
+ * both, because a seeded user row carries `uid` and no `id`.
+ */
+export const SEED_ROW_PURPOSE: Record<string, SeedPurpose> = {
+  /* Our own admin account. Clearing it locks us out of our own site — and the
+   * Auth record is the half most easily missed, since `appkit-seed delete` does
+   * not touch Firebase Auth at all. */
+  "users:user-admin-letitrip": "permanent",
+  /* The platform's own default store. The other three seeded stores
+   * (beyblade-arena, blader-bazaar, vintage-vault-co) are test fixtures. */
+  "stores:store-letitrip-official": "permanent",
+};
+
+/**
+ * Collections whose purpose FOLLOWS a referenced row rather than being declared.
+ *
+ * 🛑 This exists to hold one invariant: **a `permanent` row may not reference a
+ * `test` row**, because the purge would leave it behind as a dangling FK that
+ * still looks like real config.
+ *
+ * Measured in `store-extensions-seed-data.ts`: **14** rows reference
+ * `store-beyblade-arena` (test) and **9** reference `store-letitrip-official`
+ * (permanent). So marking `shippingConfigs` / `analyticsCards` permanent at the
+ * COLLECTION level — which the user's list implies and an earlier draft of the
+ * plan did — would strand 14 rows pointing at a store the purge deletes.
+ *
+ * Deriving is better than 23 hand-maintained per-row overrides for the usual
+ * reason: a hand-kept mirror drifts the moment a store is added (Root Cause
+ * #42), and a derivation is correct for stores that do not exist yet.
+ */
+export const SEED_PURPOSE_DERIVED_FROM: Record<
+  string,
+  { readonly field: SeedReferenceField; readonly collection: string }
+> = {
+  shippingConfigs: { field: "storeId", collection: "stores" },
+  /*
+   * 🛑 `ownerId` → `users`, NOT `storeId` → `stores`. I wrote the store form
+   * first and the data disproved it: measured, `analyticsCardsSeedData` carries
+   * **zero** `storeId` fields — every row is `{ scope: "seller", ownerId:
+   * "user-tyson-blader", … }`. So these follow the USER whose dashboard they
+   * compose, and since that user is a test persona all nine correctly resolve
+   * `test`.
+   *
+   * Worth recording because the wrong field does not error: a derived row whose
+   * named field is absent falls to `test`, which happened to be the right
+   * answer here and would have silently been the WRONG one for a card owned by
+   * the admin.
+   */
+  analyticsCards: { field: "ownerId", collection: "users" },
+};
+
 /** A seeded row may override its collection's default inline. */
 export interface WithSeedPurpose {
   seedPurpose?: SeedPurpose;
 }
 
 /**
- * The row's own declaration wins; otherwise the collection default; otherwise
- * `test`.
+ * The fields `resolveSeedPurpose` reads off a row — all optional, because it is
+ * handed rows from 47 differently-shaped collections.
+ *
+ * 🛑 Declared explicitly rather than as `Record<string, unknown>`, which
+ * `audit-unknown-leakage` blocks and which is worse anyway: an index signature
+ * accepts ANY field name, so a typo in `SEED_PURPOSE_DERIVED_FROM.field` would
+ * read `undefined` and fall through to `test` silently — the exact mistake
+ * already made once, where `analyticsCards` was declared to derive from
+ * `storeId` and the rows carry `ownerId`.
+ *
+ * `SeedReferenceField` then constrains that `field` to one of these, so the
+ * same typo becomes a compile error.
+ */
+export interface SeedRowIdentity extends WithSeedPurpose {
+  /** Document id, on every collection except `users`. */
+  id?: string;
+  /** `users` seed rows carry the Auth uid and no `id`. */
+  uid?: string;
+  storeId?: string;
+  ownerId?: string;
+  userId?: string;
+  sellerId?: string;
+}
+
+/** The reference fields a derived collection may follow. */
+export type SeedReferenceField = "storeId" | "ownerId" | "userId" | "sellerId";
+
+/**
+ * Resolution order, most specific first:
+ *
+ *   1. the row's own inline `seedPurpose`
+ *   2. a per-row override in `SEED_ROW_PURPOSE`, by `id` or `uid`
+ *   3. for a DERIVED collection, the purpose of the row it references
+ *   4. the collection default
+ *   5. `test`
+ *
+ * 🛑 Step 3 is what holds the referential invariant. A `shippingConfig` for
+ * `store-letitrip-official` resolves `permanent`; one for
+ * `store-beyblade-arena` resolves `test` and is purged alongside the store it
+ * configures, rather than outliving it.
  */
 export function resolveSeedPurpose(
   collection: string,
-  row?: WithSeedPurpose | null,
+  row?: SeedRowIdentity | null,
+  /**
+   * The document id, when the caller has it and the row does not.
+   *
+   * 🛑 Required by `loadGeneric`, which does `let { id, ...data } = docData`
+   * and therefore hands this function a row with **no `id` at all**. Without
+   * this parameter the per-row overrides silently did not apply: measured,
+   * `store-letitrip-official` loaded as `test` — i.e. the platform's own store
+   * would have been purged, which is exactly the row the keep-list exists to
+   * protect. `loadUsers` was unaffected because `{ ...u }` keeps `uid`, which
+   * is why the admin override worked and the store one did not.
+   */
+  docId?: string | null,
 ): SeedPurpose {
   if (row && isSeedPurpose(row.seedPurpose)) return row.seedPurpose;
+
+  /* `"<collection>:<id>"` — the collection half is what stops a users
+   * override also matching that user's CART, which is keyed on the same id. */
+  const rowKey = (coll: string, id: string) => `${coll}:${id}`;
+  if (docId && isSeedPurpose(SEED_ROW_PURPOSE[rowKey(collection, docId)]))
+    return SEED_ROW_PURPOSE[rowKey(collection, docId)]!;
+
+  if (row) {
+    /* `users` seed rows carry `uid` and no `id`; everything else carries `id`. */
+    const ownId = typeof row.id === "string" ? row.id : typeof row.uid === "string" ? row.uid : null;
+    if (ownId && isSeedPurpose(SEED_ROW_PURPOSE[rowKey(collection, ownId)]))
+      return SEED_ROW_PURPOSE[rowKey(collection, ownId)]!;
+
+    const derived = SEED_PURPOSE_DERIVED_FROM[collection];
+    if (derived) {
+      const refId = row[derived.field];
+      if (typeof refId === "string") {
+        const refOverride = SEED_ROW_PURPOSE[rowKey(derived.collection, refId)];
+        if (isSeedPurpose(refOverride)) return refOverride;
+        const refDefault = SEED_COLLECTION_PURPOSE[derived.collection];
+        return isSeedPurpose(refDefault) ? refDefault : "test";
+      }
+      /*
+       * A derived row with no reference cannot inherit, and guessing
+       * `permanent` would be the dangling-FK failure this map exists to
+       * prevent. `test` is the safe answer: it is re-seedable.
+       */
+      return "test";
+    }
+  }
+
   const declared = SEED_COLLECTION_PURPOSE[collection];
   return isSeedPurpose(declared) ? declared : "test";
 }
@@ -286,8 +453,24 @@ export function seedPurposeFields(purpose: SeedPurpose): SeedPurposeFields {
 export function stampSeedPurpose<T extends WithSeedPurpose>(
   collection: string,
   row: T,
+  /** Pass this whenever the caller holds the id and the row does not — see
+   *  `resolveSeedPurpose`'s `docId` for why `loadGeneric` must. */
+  docId?: string | null,
 ): T & SeedPurposeFields {
-  return { ...row, ...seedPurposeFields(resolveSeedPurpose(collection, row)) };
+  /*
+   * The cast is to `Record<string, unknown>` only, which is a WIDENING — every
+   * object satisfies it structurally, and `resolveSeedPurpose` reads `id`,
+   * `uid` and the derived `field` with `typeof` guards rather than trusting the
+   * type. 🛑 Deliberately NOT `as any`: that would silence the `collection`
+   * argument's check too, which is the mistake the plan records at the
+   * `sendNotification`/`as never` sites.
+   */
+  const purpose = resolveSeedPurpose(
+    collection,
+    row as SeedRowIdentity,
+    docId,
+  );
+  return { ...row, ...seedPurposeFields(purpose) };
 }
 
 /**

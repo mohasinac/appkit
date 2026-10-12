@@ -709,7 +709,14 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
        * a heuristic, and `users`/`orders` are reachable by it for the first
        * time.
        */
-      data: encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data))),
+      /*
+       * 🛑 `docId` is passed EXPLICITLY because this loader destructures `id`
+       * out (`let { id, ...data } = docData`), so the row it hands over has no
+       * id for the per-row overrides to match on. Measured without it:
+       * `store-letitrip-official` loaded as `test` — the platform's own store,
+       * which is one of exactly two rows the keep-list exists to protect.
+       */
+      data: encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, docId))),
     });
   }
   /*
@@ -846,7 +853,10 @@ async function cmdLoad() {
           try {
             const { id, ownerType, ownerId, ...data } = d;
             if (!id || !ownerType || !ownerId) { stats.errors++; continue; }
-            const payload = encryptPiiFields(stripUndefined({ ownerType, ownerId, ...data }), [...ADDRESS_PII_FIELDS]);
+            const payload = encryptPiiFields(
+              stripUndefined(stampSeedPurpose("addresses", { ownerType, ownerId, ...data }, id)),
+              [...ADDRESS_PII_FIELDS],
+            );
             await db.collection("addresses").doc(id).set(payload, { merge: true });
             stats.created++;
           } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
@@ -860,8 +870,17 @@ async function cmdLoad() {
           try {
             const { id, storeSlug, ...data } = d;
             if (!id || !storeSlug) { stats.errors++; continue; }
+            /*
+             * Stamped under the SEED KEY `storeAddresses`, not the target
+             * collection `addresses`. Both resolve `test`, so nothing differs
+             * today — but the purpose table is keyed on the seed key, and
+             * stamping under the write target would make the two disagree the
+             * day one of them changes.
+             */
             const payload = encryptPiiFields(
-              stripUndefined({ ownerType: "store", ownerId: storeSlug, ...data }),
+              stripUndefined(
+                stampSeedPurpose("storeAddresses", { ownerType: "store", ownerId: storeSlug, ...data }, id),
+              ),
               [...ADDRESS_PII_FIELDS],
             );
             await db.collection("addresses").doc(id).set(payload, { merge: true });
@@ -875,7 +894,10 @@ async function cmdLoad() {
             const { userId, couponId, ...data } = d;
             if (!userId || !couponId) { stats.errors++; continue; }
             await db.collection(USER_COLLECTION).doc(userId).collection("couponUsage").doc(couponId)
-              .set(stripUndefined({ couponId, ...data }), { merge: true });
+              .set(
+                stripUndefined(stampSeedPurpose("couponUsage", { couponId, ...data }, couponId)),
+                { merge: true },
+              );
             stats.created++;
           } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
         }
@@ -886,7 +908,8 @@ async function cmdLoad() {
       } else if (colName === "siteSettings") {
         const settings = seed[0];
         if (settings) {
-          await db.collection(SITE_SETTINGS_COLLECTION).doc("global").set(stripUndefined(settings), { merge: true });
+          await db.collection(SITE_SETTINGS_COLLECTION).doc("global").set(
+          stripUndefined(stampSeedPurpose("siteSettings", settings, "global")), { merge: true });
           stats.created++;
         }
       } else {
