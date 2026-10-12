@@ -324,12 +324,42 @@ export async function idExists(
   }
 }
 
+/**
+ * Find the first id a `checkExists` probe says is free, trying
+ * `generateId(0)`, `generateId(1)`, … up to `maxAttempts`.
+ *
+ * 🛑 **The loop starts at 0, and it used to start at 1.** That one-character
+ * difference made the first candidate unreachable, because its only caller
+ * passes:
+ *
+ *     (count) => (count === 0 ? baseSlug : `${baseSlug}-${count}`)
+ *
+ * so `count === 0` — the BARE slug, which is obviously what the author
+ * intended as the first choice — was dead code. Every product created through
+ * the UI got a gratuitous suffix: the first-ever Dragoon G listing became
+ * `product-dragoon-g-1`, not `product-dragoon-g`.
+ *
+ * Verified by simulating the real helper against the real closure: three
+ * creations yielded `-1`, `-2`, `-3` and never the bare slug.
+ *
+ * It stayed invisible because all 70 production products come from the seed,
+ * which hand-writes clean ids and never calls this — so the catalogue looks
+ * right and only a UI-created listing shows the defect. Same shape as Root
+ * Cause #101: a path exercised by no fixture.
+ *
+ * 🛑 A product id is a URL and a `categorySlugs` reference, and the slug is
+ * immutable after creation by convention, so this is not cosmetic — a listing
+ * created today keeps the wrong URL forever.
+ *
+ * `maxAttempts` still bounds the ATTEMPTS, so the loop runs `0..maxAttempts`
+ * and the random-suffix fallback is unchanged.
+ */
 export async function generateUniqueId(
   generateId: (count: number) => string,
   checkExists: (id: string) => Promise<boolean>,
   maxAttempts: number = 100,
 ): Promise<string> {
-  for (let count = 1; count <= maxAttempts; count++) {
+  for (let count = 0; count <= maxAttempts; count++) {
     const id = generateId(count);
     if (!(await checkExists(id))) return id;
   }

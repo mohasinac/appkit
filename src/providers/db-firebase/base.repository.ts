@@ -336,6 +336,37 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
   }
 
+  /**
+   * Write a document at a CALLER-CHOSEN id.
+   *
+   * 🛑 **This OVERWRITES. It is an upsert, not a create**, despite the name —
+   * `.set()` with no merge option replaces the whole document, and there is no
+   * existence check. Writing an id that already exists silently discards
+   * everything that was there and returns a success.
+   *
+   * That is **deliberate and load-bearing for most of its 28 callers**, which
+   * are genuine upserts keyed on a deterministic id:
+   *
+   *   - `testerChecklistResponses` — one doc per (tester, case), re-answered
+   *     every time a verdict changes. CLAUDE.md records that this upsert is
+   *     *"what makes Yes/No answers + comments + screenshots survive a page
+   *     reload"*, so a create-only variant here would break verdict recording.
+   *   - `sessions`, analytics rollups, `priceIndex` — all rewritten by design.
+   *
+   * 🛑 **So do NOT "fix" this to `.create()`.** I was about to: the plan carried
+   * it as a severity-1 silent-overwrite risk for products, on the reasoning that
+   * two physical units of one model would derive the same slug and the second
+   * would destroy the first. **Measured, that is false** —
+   * `ProductRepository.create` OVERRIDES this method and runs `generateUniqueId`
+   * with a real `findById` probe, so units get `-1`, `-2`, … and never collide.
+   * A blanket `.create()` would have broken the tester harness to fix a defect
+   * products do not have.
+   *
+   * **A caller that needs create-only semantics must probe first**, the way
+   * `ProductRepository.create` does. The hazard this docstring removes is the
+   * NAME: `createWithId` reads as "create" and behaves as "replace", and that
+   * gap is what made the wrong conclusion so easy to reach.
+   */
   async createWithId(id: string, data: Partial<T>): Promise<T> {
     try {
       const now = new Date();
