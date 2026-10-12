@@ -17,7 +17,33 @@ import { BID_FIELDS } from "../../../../constants/field-names";
  * (This used to be shared with testerSandboxRefresh.ts, which was removed when
  * the tester runner took over fixture state — see scheduled.ts.)
  */
-export const TEST_DATA_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events", "offers"] as const;
+/*
+ * 🛑 `offers` was in this list and could only ever match ZERO rows.
+ *
+ * `OfferDocument` (features/seller/schemas/firestore.ts) does not declare
+ * `isTestData` at all, and `getTestDataRefs` queries on exactly that field — so
+ * the entry read as coverage and swept nothing. Measured live before removal:
+ * 10 offers, 0 carrying the field. Removed rather than given the field, because
+ * no offer fixture has ever needed hiding from the public.
+ *
+ * 🛑 And a wider measurement worth recording, because it changes how to read
+ * this job: **zero documents in ANY of the five remaining collections carry
+ * `isTestData` either** — 416 categories, 70 products, 20 blogPosts, 12 events,
+ * 4 stores, all absent. So this sweep is DORMANT in production, which is
+ * correct rather than broken: the only two `isTestData` fixtures the seed ever
+ * had were deleted 2026-10-10, and nothing has needed hiding since.
+ *
+ * 🛑 Do NOT confuse this list with `seedPurpose`. They answer different
+ * questions and conflating them hides the catalogue:
+ *
+ *   isTestData + testDataExpiresAt  -> may the PUBLIC see this row? (this job)
+ *   seedPurpose                     -> may a PURGE delete this row?
+ *
+ * A demo product is `seedPurpose: "test"` and fully visible; a sandbox fixture
+ * is both `test` AND `isTestData`. `audit-seed-purpose` R6 now asserts every
+ * entry here declares the field, so the `offers` shape cannot return.
+ */
+export const TEST_DATA_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"] as const;
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 
 export interface TestDataCleanupOptions {
