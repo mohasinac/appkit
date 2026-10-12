@@ -1,6 +1,7 @@
 import { Row, SIEVE_OP, sieveAnd, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
+import { categoryCrumbs, withTrailHead } from "../utils/breadcrumb-chain";
 import Link from "next/link";
 import {
   categoriesRepository,
@@ -294,18 +295,28 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
    * The URL uses `ancestor.id`, matching `BreadcrumbTrail` — `CategoryAncestor`
    * carries `id`/`name`/`tier` and no `slug`.
    */
-  const ldBreadcrumb = breadcrumbJsonLd([
-    { name: "Home", url: "/" },
-    { name: "Categories", url: String(ROUTES.PUBLIC.CATEGORIES) },
-    ...(category?.ancestors ?? [])
-      .slice()
-      .sort((a, b) => a.tier - b.tier)
-      .map((a) => ({
-        name: a.name,
-        url: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.id)),
-      })),
-    { name: category?.name ?? "Category", url: categoryPath },
-  ]);
+  /*
+   * D4b — ONE chain builder shared with the brand page, the product pages and
+   * the visible `BreadcrumbTrail`, so a crawler and a visitor cannot be shown
+   * different hierarchies for this page. `categoryCrumbs` sorts by tier (never
+   * trusting stored order), omits an ancestor it cannot label rather than
+   * leaving a gap, and `withTrailHead` drops the last crumb's URL because the
+   * final breadcrumb is the page you are on.
+   */
+  const ldBreadcrumb = breadcrumbJsonLd(
+    withTrailHead(
+      categoryCrumbs({
+        name: category?.name ?? "Category",
+        url: categoryPath,
+        ancestors: category?.ancestors,
+        hrefFor: (id) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(id)),
+      }),
+      [
+        { name: "Home", url: "/" },
+        { name: "Categories", url: String(ROUTES.PUBLIC.CATEGORIES) },
+      ],
+    ),
+  );
 
   /*
    * 🛑 Items are the CHILD CATEGORIES, not the products.

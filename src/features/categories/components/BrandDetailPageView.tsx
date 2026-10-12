@@ -13,6 +13,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
+import { categoryCrumbs, withTrailHead } from "../utils/breadcrumb-chain";
 import {
   breadcrumbJsonLd,
   collectionPageJsonLd,
@@ -157,11 +158,26 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
    */
   const brandPath = String(ROUTES.PUBLIC.BRAND_DETAIL(slug));
 
-  const ldBreadcrumb = breadcrumbJsonLd([
-    { name: "Home", url: "/" },
-    { name: "Brands", url: String(ROUTES.PUBLIC.BRANDS) },
-    { name: brand?.name ?? "Brand", url: brandPath },
-  ]);
+  /*
+   * A brand is FLAT — tier 0, no ancestors, so the chain is genuinely three
+   * crumbs and `categoryCrumbs` returns just the brand itself. Routed through
+   * the shared builder anyway, so the last-crumb rule (no self-link) is applied
+   * once for every surface rather than remembered three times.
+   */
+  const ldBreadcrumb = breadcrumbJsonLd(
+    withTrailHead(
+      categoryCrumbs({
+        name: brand?.name ?? "Brand",
+        url: brandPath,
+        ancestors: brand?.ancestors,
+        hrefFor: (id) => String(ROUTES.PUBLIC.BRAND_DETAIL(id)),
+      }),
+      [
+        { name: "Home", url: "/" },
+        { name: "Brands", url: String(ROUTES.PUBLIC.BRANDS) },
+      ],
+    ),
+  );
 
   /*
    * 🛑 No `items`, deliberately. A brand page's contents are the brand's

@@ -128,7 +128,16 @@ export interface FaqJsonLdInput {
 
 export interface BreadcrumbJsonLdItem {
   name: string;
-  url: string;
+  /**
+   * Absent on the LAST crumb — the page you are already on.
+   *
+   * 🛑 This was required, and `url.startsWith(...)` threw on a missing one. It
+   * is optional because schema.org's own breadcrumb guidance is that the final
+   * element identifies the current page and its `item` may be omitted; a
+   * self-link there is accepted but says nothing. Every existing caller passes
+   * a url, so widening it breaks none of them.
+   */
+  url?: string;
 }
 
 export interface BlogPostJsonLdInput {
@@ -298,7 +307,15 @@ export function breadcrumbJsonLd(
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}`,
+      /*
+       * `item` is OMITTED rather than emitted empty when there is no url.
+       * `item: ""` would resolve to the site root, so every page's final crumb
+       * would link to the homepage — a wrong link is worse than an absent one,
+       * and absent is what the spec asks for on the current page.
+       */
+      ...(item.url
+        ? { item: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}` }
+        : {}),
     })),
   };
 }
