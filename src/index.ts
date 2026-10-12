@@ -9510,6 +9510,13 @@ export {
   PartClassificationPageView,
 } from "./features/parts/components/PartsIndexPageView";
 export { PartDetailPageView } from "./features/parts/components/PartDetailPageView";
+export { AssemblyDrawer } from "./features/parts/components/AssemblyDrawer";
+export type {
+  AssemblyDrawerProps,
+  AssemblyPartOption,
+  AssemblyRow,
+  AssemblyOutcome,
+} from "./features/parts/components/AssemblyDrawer";
 export type { PartListingRow } from "./features/parts/components/PartDetailPageView";
 
 // Scam registry â€" schema types and constants

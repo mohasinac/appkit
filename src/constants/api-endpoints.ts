@@ -637,6 +637,12 @@ export const SELLER_ENDPOINTS = {
   FEATURE_BY_ID: (id: string) => `/api/store/features/${id}`,
   PRODUCTS_BULK_LOCATION: "/api/store/products/bulk-location",
   PRODUCTS_BULK_STOCK: "/api/store/products/bulk-stock",
+  /**
+   * D13 — assemble / part out. GET returns what the drawer needs (the model's
+   * composition and the seller's part listings); POST performs the transaction.
+   * One path for both because they are two sides of one operation.
+   */
+  PRODUCT_ASSEMBLE: (id: string) => `/api/store/products/${id}/assemble`,
   ORDERS_BULK_LOCATION: "/api/store/orders/bulk-location",
   GROUPED_LISTINGS: "/api/store/grouped-listings",
   GROUPED_LISTING_BY_ID: (id: string) => `/api/store/grouped-listings/${id}`,

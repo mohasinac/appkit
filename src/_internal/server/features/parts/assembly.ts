@@ -180,8 +180,11 @@ export function planAssembly(args: {
     // 🛑 THE GATE, and it reads `availableQuantity` — see the file header.
     if (direction === -1 && available < -delta) {
       // 409, not 400: the request is well formed and the world changed.
+      // Figures in `data`, words in the client — see the part-out branch above.
       throw new ConflictError(
-        `Not enough available: needs ${-delta}, has ${available}.`,
+        `component insufficient: needs ${-delta}, has ${available}`,
+        "ASSEMBLY_INSUFFICIENT",
+        { kind: "component", productId: request.productId, needs: -delta, has: available },
       );
     }
 

@@ -1,6 +1,11 @@
 "use client";
 import { formatPhysicalLocation } from "../../../utils/physical-location";
 import { normalizeError } from "../../../errors/normalize";
+import {
+  trackError,
+  ErrorCategory,
+  ErrorSeverity,
+} from "../../../monitoring/error-tracking";
 import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 
@@ -10,7 +15,7 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin, Boxes } from "lucide-react";
+import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin, Boxes, Wrench, Scissors } from "lucide-react";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import { BulkStockModal } from "./BulkStockModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
@@ -37,6 +42,12 @@ import { listingBadgeVariant } from "../../products/utils/listing-badge-variant"
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
+import {
+  AssemblyDrawer,
+  type AssemblyPartOption,
+  type AssemblyErrorDetail,
+} from "../../parts/components/AssemblyDrawer";
+import type { ModelCompositionDocument } from "../../parts/schemas/firestore";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 
@@ -340,6 +351,132 @@ export function SellerProductsView({
   const [setLocationOpen, setSetLocationOpen] = useState(false);
   const [selectedIdsForLocation, setSelectedIdsForLocation] = useState<string[]>([]);
   const [setStockOpen, setSetStockOpen] = useState(false);
+
+  /*
+   * ── D13: assembly ──────────────────────────────────────────────────────
+   *
+   * 🛑 The drawer's data is fetched when it OPENS, not with the page. 50 part
+   * listings and a composition per row would be a read nobody asked for on a
+   * view that renders 50 rows — and the drawer is used on a handful of them.
+   */
+  const [assembleFor, setAssembleFor] = useState<{
+    id: string;
+    title: string;
+    direction: "assemble" | "part-out";
+  } | null>(null);
+  const [assembleData, setAssembleData] = useState<{
+    compositions: ModelCompositionDocument[];
+    options: AssemblyPartOption[];
+    targetAvailable: number;
+  } | null>(null);
+  const [assembleLoading, setAssembleLoading] = useState(false);
+
+  const openAssembly = useCallback(
+    async (row: { id: string; primary?: string }, direction: "assemble" | "part-out") => {
+      setAssembleFor({ id: row.id, title: row.primary ?? row.id, direction });
+      setAssembleData(null);
+      setAssembleLoading(true);
+      try {
+        const res = await fetch(SELLER_ENDPOINTS.PRODUCT_ASSEMBLE(row.id));
+        const body = (await res.json().catch(() => null)) as
+          | {
+              data?: {
+                compositions?: ModelCompositionDocument[];
+                options?: AssemblyPartOption[];
+                targetAvailable?: number;
+              };
+              error?: string;
+            }
+          | null;
+        if (!res.ok) throw new Error(body?.error ?? "Could not load your parts");
+        setAssembleData({
+          compositions: body?.data?.compositions ?? [],
+          options: body?.data?.options ?? [],
+          targetAvailable: body?.data?.targetAvailable ?? 0,
+        });
+      } catch (err) {
+        const e = normalizeError(err);
+        /*
+         * 🛑 Closed and reported, never left open and empty. An empty picker
+         * with no explanation is the state in which a seller concludes they
+         * hold no parts — which may be false.
+         */
+        setAssembleFor(null);
+        /*
+         * 🛑 AUTHORED copy, not `e.message`. Unlike the 409 (which carries
+         * `{needs, has}` and composes a sentence around the real figures),
+         * a load failure has no number worth surfacing — so this is one honest
+         * line, and the raw text goes to the recorder where it belongs.
+         */
+        showToast("Could not load your parts. Please try again.", "error");
+        trackError(e.message, ErrorCategory.API, ErrorSeverity.MEDIUM, {
+          component: "SellerProductsView",
+          action: "openAssembly",
+        });
+      } finally {
+        setAssembleLoading(false);
+      }
+    },
+    [showToast],
+  );
+
+  const submitAssembly = useCallback(
+    async (input: {
+      direction: "assemble" | "part-out";
+      components: Array<{ slotKey: string; productId: string; quantity: number }>;
+      units: number;
+    }) => {
+      const id = assembleFor?.id;
+      if (!id) throw new Error("No listing selected");
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCT_ASSEMBLE(id), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+      });
+      const body = (await res.json().catch(() => null)) as
+        | {
+            data?: {
+              unitsBuilt?: number;
+              consumed?: Array<{ productId: string; before: number; after: number; taken: number }>;
+            };
+            error?: string;
+            code?: string;
+            details?: AssemblyErrorDetail;
+          }
+        | null;
+      /*
+       * 🛑 THROWS with the server's own message, which the drawer renders. A
+       * 409 reads "Not enough available: needs 6, has 5" — the one sentence
+       * that tells the seller what to do. Swallowing it into a generic failure
+       * would turn "restock" into "retry".
+       */
+      if (!res.ok) {
+        /*
+         * 🛑 Carries the structured DETAIL to the drawer and never a rendered
+         * sentence. The drawer composes its own copy around `{needs, has}`;
+         * `message` here is for the recorder (Root Cause #86 —
+         * `audit-raw-error-text` blocks showing a thrown `.message`).
+         */
+        const err = new Error(body?.error ?? "assembly failed") as Error & {
+          detail?: AssemblyErrorDetail;
+        };
+        /*
+         * Typed rather than `unknown`: the 409's shape is OURS — the planner
+         * throws `{ kind, productId, needs, has }` — so declaring it is what
+         * lets the drawer compose a sentence around real figures instead of
+         * casting at the boundary (Root Cause #57/#70: a cast at a boundary is
+         * where this class of bug lives).
+         */
+        err.detail = { code: body?.code, ...(body?.details ?? {}) };
+        throw err;
+      }
+      return {
+        unitsBuilt: body?.data?.unitsBuilt ?? input.units,
+        consumed: body?.data?.consumed ?? [],
+      };
+    },
+    [assembleFor?.id],
+  );
   const [selectedIdsForStock, setSelectedIdsForStock] = useState<string[]>([]);
   const [stockBusy, setStockBusy] = useState(false);
   /*
@@ -689,6 +826,29 @@ export function SellerProductsView({
           >
             <Pencil className="w-4 h-4" />
           </Button>
+          {/* D13 — both registered in ACTIONS.STORE (Rule #7), and part-out
+              carries a confirmation there because it decrements a sellable
+              listing. Labels and aria come from the registry, never inline. */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); void openAssembly(row, "assemble"); }}
+            aria-label={ACTIONS.STORE["assemble-from-parts"].ariaLabel}
+            title={ACTIONS.STORE["assemble-from-parts"].label}
+            disabled={assembleLoading}
+          >
+            <Wrench className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); void openAssembly(row, "part-out"); }}
+            aria-label={ACTIONS.STORE["part-out-listing"].ariaLabel}
+            title={ACTIONS.STORE["part-out-listing"].label}
+            disabled={assembleLoading}
+          >
+            <Scissors className="w-4 h-4" />
+          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -741,6 +901,27 @@ export function SellerProductsView({
           busy={stockBusy}
           onSave={(qty) => handleSetStock(qty, selectedIdsForStock)}
           onClose={() => setSetStockOpen(false)}
+        />
+      )}
+      {assembleFor && assembleData && (
+        <AssemblyDrawer
+          isOpen
+          /*
+           * 🛑 No refetch on close, and that is a stated limitation rather than
+           * a silent one: `DataListingView` owns the query and exposes no
+           * refetch handle to a consumer. The drawer reports the real
+           * before/after per component, so the seller SEES what moved — but the
+           * row behind it still shows the pre-build figure until the next
+           * navigation. Wiring a refetch means giving `ListingViewConfig` a
+           * handle, which is a shared-surface change and its own commit.
+           */
+          onClose={() => { setAssembleFor(null); setAssembleData(null); }}
+          direction={assembleFor.direction}
+          targetTitle={assembleFor.title}
+          targetAvailable={assembleData.targetAvailable}
+          compositions={assembleData.compositions}
+          options={assembleData.options}
+          onSubmit={submitAssembly}
         />
       )}
     </>

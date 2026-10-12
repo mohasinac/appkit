@@ -911,6 +911,44 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
       permissions: ["seller", "admin"],
     },
+    /*
+     * D13 — assemble a complete bey from component listings, and part one back
+     * out. Registered here rather than inlined because Rule #7 is not
+     * negotiable and because PART-OUT IS DESTRUCTIVE: it decrements a sellable
+     * listing, so it carries a `confirmation` and a `danger` kind. An action
+     * with `destructive: true` and no confirmation executes immediately with no
+     * warning, which is what has cost data in prior sessions.
+     */
+    "assemble-from-parts": {
+      iconKey: "create",
+      id: "store.assemble-from-parts",
+      label: "Assemble from parts",
+      ariaLabel: "Build this listing from component parts in your inventory",
+      description:
+        "Build one or more of this listing from parts you already hold. Each component's stock is decremented; units already reserved by unpaid orders are never consumed.",
+      kind: "secondary",
+      permissions: ["seller", "admin"],
+    },
+    "part-out-listing": {
+      iconKey: "delete",
+      id: "store.part-out-listing",
+      label: "Part out",
+      ariaLabel: "Break this listing down into its component parts",
+      description:
+        "Break this listing down and add its parts back to inventory. The complete listing's stock is decremented.",
+      kind: "danger",
+      permissions: ["seller", "admin"],
+      confirmation: {
+        title: "Part this out?",
+        /*
+         * Names what is LOST and what is GAINED, because a confirmation that
+         * only says "are you sure" leaves the seller to guess which direction
+         * the stock moves.
+         */
+        body: "This listing's stock goes down and each component's stock goes up. It cannot be undone automatically — re-assembling is a separate action.",
+        confirmLabel: "Part out",
+      },
+    },
     "set-stock": {
       iconKey: "edit",
       id: "store.set-stock",
