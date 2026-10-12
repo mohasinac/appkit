@@ -1283,7 +1283,21 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     price: { canFilter: true, canSort: true },
     stockQuantity: { canFilter: true, canSort: true },
     availableQuantity: { canFilter: true, canSort: true },
-    viewCount: { canFilter: true, canSort: true },
+    /*
+     * 🛑 D8 closes F1 #1. `viewCount` was `canFilter`/`canSort` here with NO
+     * writer on any document — measured: absent from all 72 products and all 58
+     * categories — and a Firestore `orderBy` EXCLUDES every document lacking
+     * the ordering field, so `?sort=viewCount` returned zero rows with a valid
+     * index present (Root Cause #100). A5 removed the UI sort and the reachable
+     * field survived.
+     *
+     * Replaced by two fields that have a real nightly writer
+     * (`runProductViewWindows`) and whose names state the window, which
+     * `viewCount` never did — it read as a lifetime figure while nothing
+     * maintained it.
+     */
+    views7d: { canFilter: true, canSort: true },
+    views30d: { canFilter: true, canSort: true },
     currentBid: { canFilter: true, canSort: true },
     bidCount: { canFilter: true, canSort: true },
     bidsHaveStarted: { canFilter: true, canSort: false },

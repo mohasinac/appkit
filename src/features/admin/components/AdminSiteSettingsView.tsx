@@ -358,6 +358,9 @@ export function AdminSiteSettingsView({
   const [gaMeasurementId, setGaMeasurementId] = React.useState("");
   const [fbPixelId, setFbPixelId] = React.useState("");
   const [gtmContainerId, setGtmContainerId] = React.useState("");
+  // D7b — Microsoft Clarity. Blank keeps it OFF; there is no enable toggle, and
+  // the absence of an id IS the off state (the same shape as the other three).
+  const [clarityProjectId, setClarityProjectId] = React.useState("");
   // Social platform API credentials (for Social Feed section)
   const [metaPageAccessToken, setMetaPageAccessToken] = React.useState("");
   const [metaPageId, setMetaPageId] = React.useState("");
@@ -599,6 +602,7 @@ export function AdminSiteSettingsView({
     setGaMeasurementId(s.integrations?.googleAnalyticsId ?? "");
     setFbPixelId(s.integrations?.facebookPixelId ?? "");
     setGtmContainerId(s.integrations?.gtmContainerId ?? "");
+    setClarityProjectId(s.integrations?.clarityProjectId ?? "");
     setMetaPageAccessToken(s.credentialsMasked?.metaPageAccessToken ?? "");
     setMetaPageId(s.credentialsMasked?.metaPageId ?? "");
     setTiktokClientKey(s.credentialsMasked?.tiktokClientKey ?? "");
@@ -850,7 +854,7 @@ export function AdminSiteSettingsView({
           sms: 50,
         },
       },
-      integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
+      integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
       payment: { phonepeEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
@@ -1623,6 +1627,18 @@ export function AdminSiteSettingsView({
                   <Input label="Google Analytics ID" value={gaMeasurementId} onChange={(e) => setGaMeasurementId(e.target.value)} placeholder="G-XXXXXXXXXX" />
                   <Input label="Facebook Pixel ID" value={fbPixelId} onChange={(e) => setFbPixelId(e.target.value)} placeholder="XXXXXXXXXXXXXXXX" />
                   <Input label="GTM Container ID" value={gtmContainerId} onChange={(e) => setGtmContainerId(e.target.value)} placeholder="GTM-XXXXXXX" />
+                  {/* 🛑 The help text states the masking, because an admin
+                      pasting an id here is switching on SESSION RECORDING on a
+                      site with no consent gate. It ships masked (no text, no
+                      input values) and the field should say so where the
+                      decision is made, not only in a code comment. */}
+                  <Input
+                    label="Microsoft Clarity Project ID"
+                    value={clarityProjectId}
+                    onChange={(e) => setClarityProjectId(e.target.value)}
+                    placeholder="abcdefghij"
+                    helperText="Heatmaps and session replay. Recording is strictly masked — no text or input values are captured. Leave blank to keep Clarity off."
+                  />
                 </Grid>
               </Stack>
               <Stack gap="sm">

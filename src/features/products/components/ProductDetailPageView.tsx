@@ -276,6 +276,25 @@ export async function ProductDetailPageView({
     typeof p.avgRating === "number" ? (p.avgRating as number) : null;
   const reviewCount =
     typeof p.reviewCount === "number" ? (p.reviewCount as number) : null;
+  /*
+   * D8/H2 — real social proof. "N people viewed this in the last week" is a
+   * number we MEASURED, which is what makes it usable: H2's whole boundary is
+   * "use persuasion that is TRUE, refuse persuasion that is FALSE", and
+   * nobody in the fifteen-site crawl shows this despite 76–93% of their
+   * catalogues being sold out.
+   *
+   * 🛑 `typeof === "number"`, not truthiness. `undefined` means the nightly
+   * pass has not rolled this product up yet; `0` means measured and nobody
+   * looked. Rendering "0 people viewed this" is worse than rendering nothing,
+   * and `?? 0` is exactly how the admin Top Products table came to show
+   * "0 views" on every row as though it were a measurement (A5).
+   *
+   * 🛑 And a floor of 2, so a single visitor is never told "1 person viewed
+   * this" — which on a quiet listing is usually them. Below the floor there is
+   * no claim rather than a technically-true one that reads as desperate.
+   */
+  const views7d = typeof p.views7d === "number" ? (p.views7d as number) : null;
+  const showViews = views7d !== null && views7d >= 2;
 
   const category =
     typeof p.category === "string" ? (p.category as string) : null;
@@ -485,6 +504,11 @@ export async function ProductDetailPageView({
                     {avgRating.toFixed(1)}
                     {reviewCount ? ` (${reviewCount} reviews)` : ""}
                   </Span>
+                  {showViews && (
+                    <Span size="sm" color="muted">
+                      · {views7d!.toLocaleString()} viewed this week
+                    </Span>
+                  )}
                   <Span
                     size="xs"
                     weight="medium"

@@ -106,7 +106,6 @@ export const PRODUCT_FIELDS = {
   SEO_TITLE: "seoTitle",
   SEO_DESCRIPTION: "seoDescription",
   SEO_KEYWORDS: "seoKeywords",
-  VIEW_COUNT: "viewCount",
   // Prize draw fields (SB4)
   PRIZE_REVEAL_STATUS: "prizeRevealStatus",
   PRIZE_REVEAL_WINDOW_START: "prizeRevealWindowStart",
@@ -649,7 +648,6 @@ export const CATEGORY_FIELDS = {
   BUNDLE_QUERY_RESOLVED_AT: "bundleQueryResolvedAt",
   BUNDLE_ORIGINAL_TOTAL: "bundleOriginalTotal",
   DISPLAY: "display",
-  VIEW_COUNT: "viewCount",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 

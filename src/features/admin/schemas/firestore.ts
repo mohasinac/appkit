@@ -409,6 +409,21 @@ export interface SiteSettingsIntegrations {
   googleAnalyticsId?: string;
   facebookPixelId?: string;
   gtmContainerId?: string;
+  /**
+   * D7b — Microsoft Clarity. Free session recording and heatmaps; two of the
+   * fifteen crawled competitors run it and we run nothing.
+   *
+   * It is the only way to answer empirically what section 10.4 currently argues
+   * from contrast ratios alone: whether the 13px/15px type and the borders that
+   * measure 1.22:1 against the page actually cost conversions, and where forms
+   * are abandoned.
+   *
+   * 🛑 Clarity RECORDS SESSIONS, and this site has no consent gate of any kind
+   * — not for GA, GTM or Pixel either. So it ships with `content: false`
+   * (strict masking: no text, no input values), and a real consent gate is its
+   * own follow-up because it would have to cover all four.
+   */
+  clarityProjectId?: string;
 }
 
 /** Admin-tunable platform caps. Enforced server-side; not buyer-facing. */

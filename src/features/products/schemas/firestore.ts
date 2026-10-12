@@ -369,6 +369,28 @@ export interface ProductDocument extends BaseDocument {
    * the oversell this avoids, five components at a time.
    */
   assembledFrom?: Array<{ slotKey: string; productId: string; quantity: number }>;
+
+  // ── D8: real view counts, with a real writer ────────────────────────────
+  //
+  // 🛑 These replace `viewCount`, which was `canFilter: true, canSort: true`
+  // in the Sieve config with NO writer on any document — so a hand-written
+  // `?sort=viewCount` returned zero rows, because a Firestore `orderBy`
+  // excludes every document lacking the ordering field (Root Cause #100).
+  // A5 removed the UI sort; the reachable field survived as F1 #1.
+  //
+  // 🛑 FLAT, not nested under `metrics`. A nested sort field needs its own
+  // composite index per sort shape, and the window is the thing being ordered.
+  // The names state the window, which `viewCount` never did: it read as a
+  // lifetime figure while nothing maintained it.
+  //
+  // Written nightly by `runProductViewWindows` from the `pageViews` day
+  // buckets. Absent means NOT YET ROLLED UP — not zero. The first run writes
+  // every product, including the ones at 0, precisely so absence stops being
+  // ambiguous.
+  /** Views in the trailing 7 days. */
+  views7d?: number;
+  /** Views in the trailing 30 days. */
+  views30d?: number;
   condition?: "new" | "like_new" | "good" | "fair" | "poor" | "used" | "refurbished" | "broken" | "graded";
   insurance?: boolean;
   insuranceCost?: number;
@@ -771,6 +793,12 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "colourway",
   "mouldVariant",
   "assembledFrom",
+  /* D8 — public because "N people viewed this this week" is the honest social
+   * proof H2 is built on, and it is a figure we measured. 🛑 Deliberately NOT
+   * in PRODUCT_UPDATABLE_FIELDS: a seller who could write their own view count
+   * turns a measurement into a claim. */
+  "views7d",
+  "views30d",
   /* 🛑 D13/D14. Listed here or an update STRIPS them: the write schema has no
    * `.passthrough()`, so a field absent from this list is dropped before it
    * reaches Firestore while the write still returns 200 (Root Cause #101). */

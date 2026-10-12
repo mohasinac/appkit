@@ -151,6 +151,15 @@ interface ProductRow {
    * does not decide anything (the restock bug A4 fixed, one surface over).
    */
   stockValue: number | null;
+  /**
+   * D8 — trailing 7-day views.
+   *
+   * 🛑 `undefined` means NOT YET ROLLED UP and `0` means measured-and-nobody-
+   * looked. Two different facts, and collapsing them with `?? 0` is what made
+   * the admin Top Products table render "0 views" on every row as though it
+   * were a measurement.
+   */
+  views7d?: number;
   physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
@@ -249,6 +258,33 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
    * Both stock fields have been `canFilter`/`canSort` at the repository layer
    * the whole time; only the view omitted them.
    */
+  /*
+   * D8 — views, which were collected on ~30 surfaces and joined to NOTHING.
+   * A seller could not see how many people looked at their listing: the metric
+   * every competitor platform leads with.
+   *
+   * 🛑 Three states, and the middle one is the whole reason this is a column
+   * rather than a number in a subtitle. `undefined` means NOT YET ROLLED UP —
+   * the nightly pass has not run — and renders an em-dash; `0` means measured
+   * and nobody looked, and renders `0`. Collapsing them with `?? 0` is exactly
+   * what made the admin Top Products table show "0 views" on every row as
+   * though it were a measurement (A5).
+   */
+  {
+    key: "views",
+    header: "7d views",
+    className: "w-24 text-right",
+    render: (row) => {
+      if (typeof row.views7d !== "number") {
+        return <Span size="xs" color="faint">—</Span>;
+      }
+      return (
+        <Span size="xs" color={row.views7d > 0 ? "primary" : "muted"} numeric>
+          {row.views7d.toLocaleString()}
+        </Span>
+      );
+    },
+  },
   {
     key: "stock",
     header: "Stock",
@@ -735,6 +771,9 @@ export function SellerProductsView({
           price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
           stock: stockLabel || "—",
           stockValue,
+          // Carried through ONLY when the document really has it — see the
+          // field's own note on undefined-vs-zero.
+          ...(typeof item.views7d === "number" ? { views7d: item.views7d } : {}),
           physicalLocation:
             item.physicalLocation &&
             typeof (item.physicalLocation as Record<string, JsonValue>).zone === "string"

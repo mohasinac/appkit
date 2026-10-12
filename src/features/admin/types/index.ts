@@ -62,7 +62,6 @@ export interface AnalyticsTopProduct {
   title: string;
   revenue: number;
   orders: number;
-  viewCount?: number;
   mainImage?: string;
 }
 
