@@ -25,6 +25,13 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createRequire } from "node:module";
+/*
+ * 🛑 From `../dist`, which means this script requires `npm --prefix appkit run
+ * build` to have run — the same requirement the seed CLI already has. A stale
+ * dist here would backfill tokens the app no longer emits, which is the drift
+ * this import exists to prevent, so it is checked rather than assumed.
+ */
+import { partAliasTokens } from "../dist/_internal/shared/search/part-aliases.js";
 
 const rawArgs = process.argv.slice(2);
 function flag(name, fallback = undefined) {
@@ -210,7 +217,28 @@ const SOURCES = {
     d.card?.setName, d.card?.cardNumber, d.grading?.service,
     (d.specifications ?? []).map((s) => `${s.name} ${s.value}`),
     locationTokens(d.physicalLocation),
-    aliasVariantsForName(d.title),
+    /*
+     * D2 Fix 3 — the part code ⇄ name bridge.
+     *
+     * 🛑 IMPORTED from the built dist, not re-implemented here, and that is a
+     * deliberate departure from this file's other generators.
+     *
+     * F1 #29 records the exact defect: `audit-search-parity`'s R1 compares the
+     * FIELD NAMES this map reads against the builder's, and these tokens come
+     * from `title`/`specifications`, which are already in both lists — so R1
+     * reports clean while the two implementations diverge. It has happened:
+     * a heredoc ate a backslash, this file's split regex became `/s+/`, and it
+     * emitted `["dragon g"]` where appkit emitted `["dragon","dragoan"]`.
+     *
+     * A copy cannot drift if there is no copy. The older
+     * `aliasVariantsForWord`/`aliasVariantsForName` above remain duplicated
+     * and should move the same way; that is a separate change with its own
+     * output comparison.
+     */
+    partAliasTokens([
+      d.title ?? "",
+      ...(d.specifications ?? []).map((sp) => `${sp.name} ${sp.value}`),
+    ].join(" ")),
   ],
   testerChecklistItems: (d) => [d.label, d.description, d.groupLabel, d.pageLabel],
   // Mirrors buildCategorySearchTxt. `ancestors[].name` is the load-bearing one

@@ -30,6 +30,7 @@
 
 import { buildSearchTxt } from "./search-txt";
 import { aliasVariantsForName } from "../_internal/shared/search/alias-variants";
+import { partAliasTokens } from "../_internal/shared/search/part-aliases";
 import { physicalLocationTokens } from "./physical-location";
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import type { CategoryDocument } from "../features/categories/schemas/firestore";
@@ -60,6 +61,27 @@ export function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
     p.card?.cardNumber,
     p.grading?.service,
     p.specifications?.map((s) => `${s.name} ${s.value}`),
+    /*
+     * D2 Fix 3 — the PART CODE ⇄ NAME bridge, so "rubber flat" finds a listing
+     * titled "Storm Pegasus 105RF" and `RF` finds one titled "… Rubber Flat".
+     *
+     * Firestore cannot fuzzy-match, but nothing stops us indexing MORE tokens
+     * per document — which is the whole mechanism, and it costs nothing at
+     * query time because `searchTxt` is already `array-contains`-indexed.
+     *
+     * 🛑 Fed the TITLE and the specs only, not `description`. A 300-word body
+     * mentioning a dozen parts would add a dozen aliases and push real tokens
+     * off the 600 cap — the same reasoning the misspelling generator records
+     * for itself, and the cap TRUNCATES SILENTLY.
+     *
+     * Emitted BEFORE the misspelling variants: a glossary alias is evidence
+     * from the corpus, a generated misspelling is a guess, so the guess is what
+     * should be dropped first if anything is.
+     */
+    partAliasTokens([
+      p.title ?? "",
+      ...(p.specifications ?? []).map((sp) => `${sp.name} ${sp.value}`),
+    ].join(" ")),
     /*
      * The warehouse location — C4, and this one line is what makes the hard
      * direction work.
