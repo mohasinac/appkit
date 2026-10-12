@@ -668,6 +668,59 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     createdAt: new Date("2026-08-24"),
     updatedAt: new Date("2026-08-24"),
   },
+  /*
+   * B6 — THE ONLY 18% GST ROW IN THE CATALOGUE.
+   *
+   * 🛑 `tax-hsn-95030010` (electronic toys, 18%) has existed as a `taxCodes`
+   * row since B3 with nothing referencing it, so the 18% arm of
+   * `calculateGst`, `gstByRate` (C0c defect 4), the per-rate invoice table and
+   * the blended-rate payout all had NO DATA that could exercise them. Four
+   * code paths that cannot be wrong because nothing reaches them.
+   *
+   * A BeyPointer is a battery-powered scoring device, which is what 9503 0010
+   * covers — so this is a genuinely electronic good rather than a flag planted
+   * on a convenient row.
+   *
+   * 🛑 No `gstRate`/`hsnCode` HERE, deliberately. They derive from
+   * `category-accessory-counters` through `deriveTaxonomy`, which is the path
+   * that will carry them in production. Hand-writing 18 would satisfy step 1 of
+   * the resolution order and leave the DERIVATION untested — a fixture that
+   * passes while the mechanism it exists to prove is never run, which is the
+   * shape of Root Cause #101.
+   *
+   * It is also what makes a MIXED-RATE cart possible for the first time: this
+   * row at 18% beside any bey at 5% is the one case C0c's §13 check 6b asks for
+   * and the catalogue could not previously express.
+   */
+  {
+    id: "product-beypointer-digital-battle-counter",
+    slug: "product-beypointer-digital-battle-counter",
+    barcodeId: "LIR-BEY-ACC-018",
+    title: "BeyPointer Digital Battle Counter",
+    description:
+      "Battery-powered digital battle counter used for tournament scoring — tracks points across a best-of series, with a reset and a hold. Takes two AAA cells (not included). An electronic accessory, so it is taxed at the 18% electronic-toy rate rather than the 5% that applies to tops and parts.",
+    categorySlugs: ["category-accessory-counters", "category-accessories", "category-spinning-tops"],
+    categoryNames: ["Counters & BeyPointers", "Accessories", "Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    price: 1299,
+    currency: "INR",
+    stockQuantity: 6,
+    availableQuantity: 6,
+    isSold: false,
+    mainImage: seedPhoto("product-image-beypointer-digital-battle-counter-1-20261012", 900, 900),
+    images: [
+      seedPhoto("product-image-beypointer-digital-battle-counter-1-20261012", 900, 900),
+      seedPhoto("product-image-beypointer-digital-battle-counter-2-20261012", 900, 900),
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["accessory"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+  },
 ];
 
 export const productsStandardSeedData: Partial<ProductDocument>[] = [

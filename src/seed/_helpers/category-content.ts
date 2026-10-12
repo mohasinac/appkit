@@ -396,6 +396,54 @@ const TAX_TOY = "tax-hsn-95030020"; // non-electronic toys incl. spinning tops �
 const TAX_TOY_OTHER = "tax-hsn-95030099"; // other toys — 5%
 const TAX_EXEMPT = "tax-exempt-0";
 
+/**
+ * B6 — the ROOT-LEVEL tax fallback, one per root.
+ *
+ * 🛑 Measured 2026-10-12: the tax code sat on tiers 1–3 only (t1=4, t2=47,
+ * t3=71) and on NO root, so **3 of 70 live products resolved no tax code at
+ * all** and would have fallen to `DEFAULT_GST_RATE` — a listing filed at
+ * `category-spinning-tops`, `category-burst-tops` or `category-x-tops`.
+ *
+ * C0c's own rule is that reaching that constant is a TRIAGE SIGNAL, not a
+ * feature: "a listing reaching step 3 at all means its category has no tax
+ * code — and that, not the constant, is the defect to fix. The measure of
+ * success is that step 3 fires for nothing."
+ *
+ * Putting it at the root is what makes that true for every branch, including
+ * branches nobody has filed under yet — `resolveCategoryDefaults` walks the
+ * chain nearest-first, so a tier-2 or tier-3 entry still WINS as a
+ * more-specific override. This is a floor, not a replacement.
+ *
+ * 🛑 Deliberately NOT a single shared constant. Each root is a different HSN
+ * question and a wrong HSN on a real invoice is worse than an absent one —
+ * printed cards are chapter 4911, not 9503, and a live plant is exempt. Only
+ * 9503 was verified (section 3.2); the three non-9503 roots therefore take the
+ * closest VERIFIED code rather than an unverified guess, and say so.
+ */
+export const ROOT_TAX_DEFAULTS: Record<string, { taxCodeId: string }> = {
+  // Verified: HSN 9503 0020 — non-electronic toys including spinning tops, 5%.
+  "category-spinning-tops": { taxCodeId: TAX_TOY },
+  // Verified: HSN 9503 0099 — "other toys", 5%. A built model kit and a
+  // die-cast car are both toys under 9503; neither is a spinning top.
+  "category-hot-wheels": { taxCodeId: TAX_TOY_OTHER },
+  "category-model-kits": { taxCodeId: TAX_TOY_OTHER },
+  "category-collectible-figures": { taxCodeId: TAX_TOY_OTHER },
+  /*
+   * 🛑 Trading cards are chapter 4911 (printed matter) or 9504 (playing cards)
+   * and NEITHER was verified — section 3.2 confirmed 9503 only, and § "Still
+   * open" records "verify each before seeding; 9503 is the only one I
+   * confirmed". `9503 0099` is used as the floor because a TCG single sold as
+   * a collectible is a toy-chapter good at the same 5% rate, so the RATE is
+   * right even where the chapter may not be. It must be re-chaptered before
+   * the first real TCG invoice, and that is a data task with a source, not a
+   * guess to make here.
+   */
+  "category-trading-cards": { taxCodeId: TAX_TOY_OTHER },
+  // A live plant or animal is nil-rated — a deliberate exemption, which is
+  // exactly why `gstRate: 0` must survive derivation rather than be "corrected".
+  "category-living-collectibles": { taxCodeId: TAX_EXEMPT },
+};
+
 /** Shared across every Beyblade-family node. */
 const BEY_FAQ_TEMPLATES = [
   {
@@ -666,9 +714,30 @@ export function diecastDefaults(leafId: string, line: string): CategoryProductDe
   };
 }
 
+const TAX_TOY_ELECTRONIC = "tax-hsn-95030010"; // electronic toys — 18%
+
+/**
+ * 🛑 THE ONLY 18% BRANCH IN THE CATALOGUE, and it is derived rather than
+ * hand-written on a product.
+ *
+ * `tax-hsn-95030010` (electronic toys, 18%) has existed as a `taxCodes` row
+ * since B3 with **nothing referencing it** — so the 18% arm of `calculateGst`
+ * and every mixed-rate path (C0c defect 4's `gstByRate`, the per-rate invoice
+ * table, the blended-rate payout) had no data that could exercise it. A code
+ * with no referrer is the vocabulary-with-no-rows shape of Root Cause #90.
+ *
+ * Counters and BeyPointers are battery-powered scoring devices, which is what
+ * 9503 0010 covers — so this is the honest home for it, not a flag planted on
+ * an arbitrary row. Putting it on the CATEGORY rather than on a product means
+ * the 18% is proven through `deriveTaxonomy`, i.e. through the mechanism that
+ * will actually carry it in production, instead of through a literal that
+ * would pass while the derivation stayed untested.
+ */
+const ELECTRONIC_ACCESSORY_LEAVES = new Set(["category-accessory-counters"]);
+
 export function accessoryDefaults(leafId: string, kind: string): CategoryProductDefaults {
   return {
-    taxCodeId: TAX_TOY_OTHER,
+    taxCodeId: ELECTRONIC_ACCESSORY_LEAVES.has(leafId) ? TAX_TOY_ELECTRONIC : TAX_TOY_OTHER,
     specifications: [SPEC("Accessory type", kind)],
     defaultAuthenticity: "unverified",
     priceGuidance: marketBand(leafId),

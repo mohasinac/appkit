@@ -67,6 +67,7 @@ import {
   partDefaults,
   stadiumDefaults,
   tcgDefaults,
+  ROOT_TAX_DEFAULTS,
 } from "./category-content";
 import { seedPhoto } from "./media";
 
@@ -708,6 +709,40 @@ const LIVING_COLLECTIBLES: CategoryTreeNode = {
   ],
 };
 
+/**
+ * B6 — attach each root's tax floor HERE rather than inside six `extra` blocks.
+ *
+ * 🛑 One place, because the failure mode is an OMISSION. Six hand-edited
+ * blocks is six chances to add a seventh root with no tax code, and the symptom
+ * would be three products silently resolving `DEFAULT_GST_RATE` — exactly what
+ * was measured before this (3 of 70, at `category-spinning-tops`,
+ * `category-burst-tops` and `category-x-tops`). Here, a root missing from
+ * `ROOT_TAX_DEFAULTS` is a THROW at seed time, which is a visible failure
+ * rather than a wrong rate on an invoice.
+ *
+ * It MERGES rather than overwrites: a root that already declares
+ * `productDefaults` (none does today) keeps everything it has, and a
+ * `taxCodeId` it declared itself wins. The root value is a floor.
+ */
+function withRootTax(root: CategoryTreeNode): CategoryTreeNode {
+  const tax = ROOT_TAX_DEFAULTS[root.id];
+  if (!tax) {
+    throw new Error(
+      `category-forest: root "${root.id}" has no entry in ROOT_TAX_DEFAULTS. ` +
+        "Every root needs a tax floor, or products under it resolve DEFAULT_GST_RATE " +
+        "— which C0c defines as a triage signal, not a feature.",
+    );
+  }
+  const extra = (root.extra ?? {}) as Partial<CategoryDocument>;
+  return {
+    ...root,
+    extra: {
+      ...extra,
+      productDefaults: { ...tax, ...(extra.productDefaults ?? {}) },
+    },
+  };
+}
+
 export const CATEGORY_FOREST: CategoryTreeNode[] = [
   SPINNING_TOPS,
   TRADING_CARDS,
@@ -715,7 +750,7 @@ export const CATEGORY_FOREST: CategoryTreeNode[] = [
   HOT_WHEELS,
   MODEL_KITS,
   LIVING_COLLECTIBLES,
-];
+].map(withRootTax);
 
 /*
  * Keeps `marketBand` honest: a band keyed on a leaf id that no longer exists is

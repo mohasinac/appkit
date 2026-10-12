@@ -318,6 +318,78 @@ const COLLECTION_MAP = {
   testerChecklistResponses: TESTER_CHECKLIST_RESPONSE_COLLECTION,
 };
 
+/*
+ * B6 — stamp `gstRate` + `hsnCode` onto every seeded product.
+ *
+ * 🛑 WITHOUT THIS, EVERY SEEDED PRODUCT IS TAXED AT ZERO, and the Tax row can
+ * never render no matter what the GSTIN says.
+ *
+ * The resolution order C0c settled lives in `ProductRepository.deriveTaxonomy`
+ * — product rate, else the CATEGORY's via `taxCodeId`, else a warned floor —
+ * and it runs on a repository write. **The seed writes through
+ * `set(..., { merge: true })` and never touches the repository**, so no seeded
+ * row has ever carried a rate: measured 2026-10-12, `gstRate` was absent on
+ * all 70 live products. At checkout `sumGroupGst` reads `product.gstRate`
+ * directly with a `?? 0`, so the whole catalogue would have computed GST = 0
+ * with a valid GSTIN and `gstSettings.enabled: true`.
+ *
+ * That is the same class as Root Cause #101 (a schema that strips a field plus
+ * a read-side backfill equals a field no query can see) — here it is a
+ * write-side derivation the seed path does not run.
+ *
+ * 🛑 This is NOT a second implementation of the resolution. The product seed
+ * already hand-writes the FULL `categorySlugs` chain, so there is no walk to
+ * re-derive: take the chain, find the first element whose category declares a
+ * `taxCodeId`, and read the rate off the `taxCodes` seed. Nearest-first, which
+ * is the order `resolveCategoryDefaults` uses, so a more specific category
+ * still wins.
+ *
+ * 🛑 An explicit rate on a product WINS and is never overwritten — including
+ * `gstRate: 0`, which is a deliberate exemption and not an absence
+ * (`ProductDocument.gstRate`'s own JSDoc: "undefined and 0 MEAN DIFFERENT
+ * THINGS"). The test is `== null`, never falsy.
+ *
+ * 🛑 And it REFUSES rather than defaulting. A product whose chain resolves no
+ * tax code throws at load time: C0c defines reaching the floor as a triage
+ * signal, so a silent 5% here would hide exactly what it is meant to surface —
+ * and a wrong rate on a real invoice is worse than a failed load.
+ */
+function withDerivedTax(products) {
+  const catById = new Map((categoriesSeedData || []).map((c) => [String(c.id), c]));
+  const taxById = new Map((taxCodesSeedData || []).map((t) => [String(t.id), t]));
+  const unresolved = [];
+  const out = products.map((p) => {
+    if (p.gstRate != null && p.hsnCode) return p;
+    const chain = Array.isArray(p.categorySlugs) && p.categorySlugs.length
+      ? p.categorySlugs
+      : (p.category ? [p.category] : []);
+    let code = null;
+    for (const id of chain) {
+      const c = catById.get(String(id));
+      const t = c?.productDefaults?.taxCodeId;
+      if (t) { code = t; break; }
+    }
+    const tax = code ? taxById.get(String(code)) : null;
+    if (!tax) { unresolved.push(`${p.id} (leaf ${chain[0] ?? "none"})`); return p; }
+    return {
+      ...p,
+      gstRate: p.gstRate != null ? p.gstRate : tax.gstRate,
+      // An exempt code has no HSN, and `hsnCode: ""` would read as a declared
+      // empty code rather than as an inapplicable one.
+      ...(p.hsnCode || !tax.hsnCode ? {} : { hsnCode: tax.hsnCode }),
+    };
+  });
+  if (unresolved.length) {
+    const detail = unresolved.slice(0, 10).join(", ");
+    throw new Error(
+      `seed: ${unresolved.length} product(s) resolve NO taxCodeId from their category chain, ` +
+        "so they would be taxed at zero. Give the category a taxCodeId " +
+        `(the roots carry a floor - see ROOT_TAX_DEFAULTS): ${detail}`,
+    );
+  }
+  return out;
+}
+
 const SEED_DATA_MAP = {
   users: usersSeedData,
   /*
@@ -343,7 +415,7 @@ const SEED_DATA_MAP = {
   // standalone brands collection/seed exists anymore.
   categories: categoriesSeedData,
   stores: storesSeedData,
-  products: [
+  products: withDerivedTax([
     ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never
@@ -351,7 +423,7 @@ const SEED_DATA_MAP = {
     // /stickers were permanently empty, and listingType=art|stickers returned 0.
     // Root Cause #58's family one layer down: added everywhere except the runner.
     ...(productsArtSeedData || []), ...(productsStickersSeedData || []),
-  ],
+  ]),
   orders: ordersSeedData,
   reviews: reviewsSeedData,
   bids: bidsSeedData,
