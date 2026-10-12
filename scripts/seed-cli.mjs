@@ -203,6 +203,7 @@ const {
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
+  partGlossarySeedData, modelCompositionSeedData,
   testerChecklistSeedData, testerResponsesSeedData,
   supportTicketsSeedData, catalogueSeedData,
   shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
@@ -218,6 +219,8 @@ const {
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
   TAX_CODES_COLLECTION,
+  PART_GLOSSARY_COLLECTION,
+  MODEL_COMPOSITION_COLLECTION,
   TESTER_CHECKLIST_ITEM_COLLECTION,
   TESTER_CHECKLIST_RESPONSE_COLLECTION,
   // PII field/index constants (plain data, still in the main barrel — the
@@ -304,6 +307,9 @@ const COLLECTION_MAP = {
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
   taxCodes: TAX_CODES_COLLECTION,
+  // E4/D12 — extracted from the local corpus, generated into the seed.
+  partGlossary: PART_GLOSSARY_COLLECTION,
+  modelComposition: MODEL_COMPOSITION_COLLECTION,
   testerChecklistItems: TESTER_CHECKLIST_ITEM_COLLECTION,
   /*
    * Tester submissions. DERIVED tier in the tester's own map (wiped at setup so
@@ -493,6 +499,8 @@ const SEED_DATA_MAP = {
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
   taxCodes: taxCodesSeedData,
+  partGlossary: partGlossarySeedData,
+  modelComposition: modelCompositionSeedData,
   testerChecklistItems: testerChecklistSeedData,
   testerChecklistResponses: testerResponsesSeedData,
 };

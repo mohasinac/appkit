@@ -203,6 +203,15 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
    * default is for.
    */
   testerChecklistItems: "permanent",
+  /*
+   * E4/D12 — PERMANENT. These are extracted from a corpus by committed
+   * scripts, not fixtures: clearing them means re-running an extraction over a
+   * 7 GB local crawl, which is the test § G1c sets ("if clearing it means
+   * somebody has to WRITE it again rather than re-run a loader"). Re-running
+   * the extractor is possible but needs a corpus a clone will not have.
+   */
+  partGlossary: "permanent",
+  modelComposition: "permanent",
   testerChecklistResponses: "test",
 
   /*

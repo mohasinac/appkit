@@ -251,3 +251,7 @@ export {
   stampSeedPurpose,
   asSeedPurpose,
 } from "./seed-purpose";
+
+// E4/D12 — generated from `docs/research/part-composition-2026-10/`.
+export { partGlossarySeedData } from "./part-glossary-seed-data";
+export { modelCompositionSeedData } from "./model-composition-seed-data";

@@ -9472,6 +9472,33 @@ export { productFeaturesSeedData } from "./seed/index";
  * had no data, which is indistinguishable from an empty fixture set.
  */
 export { taxCodesSeedData } from "./seed/index";
+/*
+ * E4/D12 — generated from the extracted corpus research.
+ *
+ * 🛑 Exported from the MAIN barrel, because `seed-cli.mjs` destructures all of
+ * its seed data from `appkit` (not from `/server`, which is what I assumed
+ * first). Adding a collection to `seed/index.ts` and `COLLECTION_MAP` alone
+ * leaves the loader reading `undefined` — and `appkit-seed status` then reports
+ * "0 seed rows", i.e. a collection that looks registered and loads nothing.
+ * That is Root Cause #90 exactly: the PII half was wired and the LOADING half
+ * was not, so every grep found real hits while the collection stayed empty.
+ */
+// E4/D12 — the collection constants and types.
+export {
+  PART_GLOSSARY_COLLECTION,
+  MODEL_COMPOSITION_COLLECTION,
+  PART_SLOT_VALUES,
+  partGlossaryId,
+} from "./features/parts/schemas/firestore";
+export type {
+  PartGlossaryDocument,
+  ModelCompositionDocument,
+  ModelSlot,
+  ModelSlotMerge,
+  PartSlot,
+} from "./features/parts/schemas/firestore";
+export { partGlossarySeedData } from "./seed/index";
+export { modelCompositionSeedData } from "./seed/index";
 
 // Scam registry â€" schema types and constants
 export {
