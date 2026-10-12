@@ -420,6 +420,8 @@ const TAX_EXEMPT = "tax-exempt-0";
  * 9503 was verified (section 3.2); the three non-9503 roots therefore take the
  * closest VERIFIED code rather than an unverified guess, and say so.
  */
+export const ROOT_AUTHENTICITY_DEFAULT = "unverified" as const;
+
 export const ROOT_TAX_DEFAULTS: Record<string, { taxCodeId: string }> = {
   // Verified: HSN 9503 0020 — non-electronic toys including spinning tops, 5%.
   "category-spinning-tops": { taxCodeId: TAX_TOY },

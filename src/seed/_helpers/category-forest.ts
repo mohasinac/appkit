@@ -68,6 +68,7 @@ import {
   stadiumDefaults,
   tcgDefaults,
   ROOT_TAX_DEFAULTS,
+  ROOT_AUTHENTICITY_DEFAULT,
 } from "./category-content";
 import { seedPhoto } from "./media";
 
@@ -738,7 +739,28 @@ function withRootTax(root: CategoryTreeNode): CategoryTreeNode {
     ...root,
     extra: {
       ...extra,
-      productDefaults: { ...tax, ...(extra.productDefaults ?? {}) },
+      productDefaults: {
+        ...tax,
+        /*
+         * 🛑 `unverified` AS THE ROOT FLOOR, and the value choice is the whole
+         * point. 43 of 381 listing nodes resolved NO `defaultAuthenticity` —
+         * tier 0, tier 1 and several tier-2 branches — so a product filed
+         * there got nothing.
+         *
+         * `unverified` exists precisely for this: `ProductAuthenticity`'s own
+         * docstring records that "without it, an honest seller who does not
+         * know would have to pick 'original', and silence would be
+         * indistinguishable from a genuine claim." Defaulting to `original`
+         * would have the platform make an authenticity claim nobody checked,
+         * on a marketplace whose differentiator is that it does not do that.
+         *
+         * A more specific category still WINS — `resolveCategoryDefaults`
+         * walks nearest-first, and the 6 nodes that legitimately declare
+         * `original` keep it.
+         */
+        defaultAuthenticity: ROOT_AUTHENTICITY_DEFAULT,
+        ...(extra.productDefaults ?? {}),
+      },
     },
   };
 }

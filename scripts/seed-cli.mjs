@@ -354,12 +354,14 @@ const COLLECTION_MAP = {
  * signal, so a silent 5% here would hide exactly what it is meant to surface —
  * and a wrong rate on a real invoice is worse than a failed load.
  */
-function withDerivedTax(products) {
+function withDerivedCategoryFields(products) {
   const catById = new Map((categoriesSeedData || []).map((c) => [String(c.id), c]));
   const taxById = new Map((taxCodesSeedData || []).map((t) => [String(t.id), t]));
   const unresolved = [];
   const out = products.map((p) => {
-    if (p.gstRate != null && p.hsnCode) return p;
+    // 🛑 Must NOT early-exit on tax alone now that authenticity rides along —
+    // a product with a hand-written rate would silently keep no authenticity.
+    if (p.gstRate != null && p.hsnCode && p.authenticity) return p;
     const chain = Array.isArray(p.categorySlugs) && p.categorySlugs.length
       ? p.categorySlugs
       : (p.category ? [p.category] : []);
@@ -371,12 +373,41 @@ function withDerivedTax(products) {
     }
     const tax = code ? taxById.get(String(code)) : null;
     if (!tax) { unresolved.push(`${p.id} (leaf ${chain[0] ?? "none"})`); return p; }
+
+    /*
+     * 🛑 AUTHENTICITY, the same gap one field over — and it was making a HERO
+     * CLAIM false.
+     *
+     * `productDefaults.defaultAuthenticity` is declared on 122 categories and
+     * `authenticity` was absent on **all 71 live products**, because it derives
+     * on a repository write and the seed does not make one. The homepage
+     * authenticity slide says "the seller has to pick one before it can go
+     * live" — which was untrue in two ways at once: the write schema has it
+     * `.optional()`, and not one product carried a value.
+     *
+     * `unverified` is the floor, never `original`: `ProductAuthenticity`'s own
+     * docstring says that without it "an honest seller who does not know would
+     * have to pick 'original', and silence would be indistinguishable from a
+     * genuine claim." The platform must not make an authenticity claim nobody
+     * checked.
+     *
+     * An explicit product value always wins, so the 6 categories that declare
+     * `original` still reach their products.
+     */
+    let authenticity = null;
+    for (const id of chain) {
+      const c = catById.get(String(id));
+      const a = c?.productDefaults?.defaultAuthenticity;
+      if (a) { authenticity = a; break; }
+    }
+
     return {
       ...p,
       gstRate: p.gstRate != null ? p.gstRate : tax.gstRate,
       // An exempt code has no HSN, and `hsnCode: ""` would read as a declared
       // empty code rather than as an inapplicable one.
       ...(p.hsnCode || !tax.hsnCode ? {} : { hsnCode: tax.hsnCode }),
+      ...(p.authenticity || !authenticity ? {} : { authenticity }),
     };
   });
   if (unresolved.length) {
@@ -415,7 +446,7 @@ const SEED_DATA_MAP = {
   // standalone brands collection/seed exists anymore.
   categories: categoriesSeedData,
   stores: storesSeedData,
-  products: withDerivedTax([
+  products: withDerivedCategoryFields([
     ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never

@@ -199,8 +199,46 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     updatedAt: daysAgo(3),
   },
   {
+    /*
+     * ── G1c — THE AUTHENTICITY SLIDE ────────────────────────────────────────
+     *
+     * 🛑 This slide's id has said `authenticated-originals` since it was
+     * written and its copy said "Turn your collection into income" — a
+     * seller-acquisition message under an authenticity name. So authenticity,
+     * which is this marketplace's actual differentiator, had NO hero surface
+     * at all while the id implied it did.
+     *
+     * It is the one hero message the crawl independently validates three ways:
+     * beybladeartshop runs it as their slide 5 ("100% original Takara Tomy
+     * Beyblades. Don't fall for cheap imitations!"); worldhobbyshop — the SEO
+     * leader of the fifteen — ships a top-level "MidFake Beyblades" category
+     * and an FAQ promising that midfake and reproduction stock is kept
+     * separate with authenticity disclosed; and we already have the feature
+     * (`ProductAuthenticity` is a REQUIRED field with a badge and four FAQ
+     * rows) with nowhere on the homepage that says so.
+     *
+     * 🛑 THE COPY ANSWERS "AFTERMARKET", NOT "FAKE", and that is the finding
+     * that matters. The counterfeit seller measured in section 3.7 makes **zero**
+     * authenticity claims across 1,277 listings — no "original", no "replica",
+     * no "fake" — and sells itself as "a popular brand" offering "custom parts
+     * or upgraded components", "like many other aftermarket brands". So
+     * "aftermarket" and "custom" are the words our buyers will actually be
+     * sold, and a slide that only rebuts the word "fake" rebuts nothing they
+     * will hear.
+     *
+     * It also states the three-tier vocabulary rather than a binary, because
+     * the tiers are the honest part: a reproduction IS sellable when labelled,
+     * and claiming everything is original would be the same unfalsifiable
+     * promise the counterfeiter makes in reverse.
+     *
+     * 🛑 Seller acquisition is NOT lost — it keeps its own `banner` section
+     * ("Have collectibles to sell?" → "Start selling →"), the `features` and
+     * `stats` sections, and two nav entries. Verified before this was changed.
+     * `MAX_ACTIVE_SLIDES` is 5 and all five were taken, so this is a swap
+     * rather than an addition.
+     */
     id: "slide-authenticated-originals",
-    title: "Sell on the marketplace",
+    title: "Original, reproduction, or unverified — every listing says which",
     order: 5,
     active: true,
     background: {
@@ -210,18 +248,54 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     },
     overlay: {
       enabled: true,
-      subtitle: "For sellers",
-      title: "Turn your collection into income",
-      description: "Open a store in minutes, list for free, and get paid on a predictable schedule.",
+      subtitle: "Authenticity, stated",
+      // 🛑 "We make sellers say which" was the same overclaim as the body —
+      // the field is optional, so nobody is MADE to. What is true is that
+      // every listing carries a label, which is the verifiable version.
+      title: "“Aftermarket” is not a brand. Every listing says which.",
+      /*
+       * 🛑 THE CLAIM WAS FALSE WHEN FIRST WRITTEN, and the check is the point.
+       *
+       * It read "the seller has to pick one before it can go live" — and
+       * `authenticity` is `.optional()` in the write schema while being ABSENT
+       * on all 71 live products. A hero promise nobody could keep, on the one
+       * subject where this marketplace's credibility rests.
+       *
+       * Both halves were fixed before the copy was: the root default now makes
+       * 381/381 listing nodes resolve a value, and `withDerivedCategoryFields`
+       * stamps it on every seeded product (measured after loading:
+       * `original=4`, `unverified=67`, zero absent).
+       *
+       * The copy still says what is TRUE rather than what would be strongest.
+       * A seller may still omit the field — the category then decides, and it
+       * decides `unverified`, never `original`. So the promise is "every
+       * listing carries a label and we never silently claim original", which
+       * is both accurate and the more useful thing to say.
+       */
+      description:
+        "Every listing carries one of three labels — original, reproduction or unverified. A seller can say which; if they do not, it reads “unverified”, because we will not claim “original” on your behalf. Reproductions are welcome here when they are labelled; a listing that leaves you guessing is not.",
       button: {
-        id: "slide-sell-cta",
-        text: "Start selling",
-        link: String(ROUTES.PUBLIC.SELLER_GUIDE),
+        id: "slide-authenticity-cta",
+        text: "How to spot a fake",
+        /*
+         * 🛑 `/faqs/product_information`, the CATEGORY — not a question slug.
+         * The route is `/faqs/[category]` and it matches on
+         * `CATEGORY_KEYS.includes(category)`, so `/faqs/faq-how-to-spot-a-fake`
+         * would silently fall back to "all" and land the reader on the full
+         * index instead of the answer. Verified against the route before
+         * writing it, because the FAQ documents DO carry a `seo.slug` of
+         * exactly that shape, which makes the wrong link the obvious one.
+         *
+         * This category holds both authenticity answers — "How do I spot a fake
+         * Beyblade?" and "What is a reproduction or midfake? Is it a fake?" —
+         * which is the pair the slide's claim rests on.
+         */
+        link: "/faqs/product_information",
         variant: "primary",
         openInNewTab: false,
       },
     },
-    link: { url: String(ROUTES.PUBLIC.SELLER_GUIDE), openInNewTab: false },
+    link: { url: "/faqs/product_information", openInNewTab: false },
     settings: SLIDE_SETTINGS,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(40),
