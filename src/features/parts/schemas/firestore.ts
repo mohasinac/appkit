@@ -65,6 +65,57 @@ export const PART_SLOT_VALUES = {
 
 export type PartSlot = (typeof PART_SLOT_VALUES)[keyof typeof PART_SLOT_VALUES];
 
+/**
+ * Buyer-facing label per slot.
+ *
+ * 🛑 A `Record<PartSlot, string>`, so a 21st slot is a COMPILE ERROR rather
+ * than a page heading that reads `performance-tip`. That is the whole reason
+ * it is not derived by title-casing the key: "Armour" is not "armour"
+ * title-cased in the corpus, and `bit-chip` is "Bit Chip" rather than
+ * "Bit-chip".
+ *
+ * Every label here was read off the live documents' own `classification`
+ * field, not invented — all 20 slots are populated (87 attack rings down to
+ * 4 armour pieces), so none of these is a guess about an empty bucket.
+ */
+export const PART_SLOT_LABEL: Record<PartSlot, string> = {
+  "bit-chip": "Bit Chip",
+  "attack-ring": "Attack Ring",
+  "weight-disk": "Weight Disk",
+  "spin-gear": "Spin Gear",
+  "engine-gear": "Engine Gear",
+  "blade-base": "Blade Base",
+  "running-core": "Running Core",
+  "face-bolt": "Face Bolt",
+  "energy-ring": "Energy Ring",
+  "fusion-wheel": "Fusion Wheel",
+  "chrome-wheel": "Chrome Wheel",
+  "spin-track": "Spin Track",
+  "performance-tip": "Performance Tip",
+  layer: "Layer",
+  disc: "Disc",
+  driver: "Driver",
+  armour: "Armour",
+  blade: "Blade",
+  ratchet: "Ratchet",
+  bit: "Bit",
+};
+
+/** Every slot key, for an index page that must not hand-write the list. */
+export const ALL_PART_SLOTS = Object.values(PART_SLOT_VALUES) as readonly PartSlot[];
+
+/**
+ * A URL segment to a slot, or `null`.
+ *
+ * 🛑 Returns `null` rather than casting. A bare `as PartSlot` on a URL segment
+ * is how `/parts/nonsense/x` becomes a doc read for `nonsense--x` that quietly
+ * misses — the route must 404, which it can only do if the guard says so.
+ */
+export function partSlotFromSegment(segment: string): PartSlot | null {
+  const hit = ALL_PART_SLOTS.find((s) => s === segment);
+  return hit ?? null;
+}
+
 /** One part. */
 export interface PartGlossaryDocument extends BaseDocument {
   /** `${slot}--${codeOrSlug}` — both halves, because a code is not unique. */
@@ -155,3 +206,41 @@ export function partGlossaryId(slot: PartSlot, codeOrName: string): string {
     .replace(/^-+|-+$/g, "");
   return `${slot}--${tail}`;
 }
+
+/**
+ * Whether a listing of this TYPE is the physical assembly the composition
+ * describes.
+ *
+ * 🛑 Found by measuring rather than by reasoning, and it is a real defect the
+ * first version of D12 shipped: of 71 live products exactly ONE files under a
+ * leaf that has a composition, and that one is
+ * `art-dranzer-phoenix-poster` — so the only listing in the whole catalogue
+ * that got a "Parts" tab was a POSTER, offering an attack ring, a weight disk
+ * and a blade base as its contents. Nothing errored; it rendered a correct
+ * part list for the wrong kind of object.
+ *
+ * The distinction is whether the listing IS the model or merely DEPICTS or
+ * REFERENCES it. A print, a sticker sheet and a redemption code all sit under
+ * the model's leaf on purpose (section 4.4: a sticker sheet belongs beside the
+ * bey it is for) and none of them is made of its parts.
+ *
+ * 🛑 A `Record<ListingType, boolean>`, so a tenth listing type cannot compile
+ * without answering the question — the lesson of Root Cause #61, which this
+ * codebase has paid for ten hand-written enumerations of one union.
+ */
+export const LISTING_TYPE_HAS_COMPOSITION: Record<
+  import("../../products/types/index").ListingType,
+  boolean
+> = {
+  standard: true,
+  auction: true,
+  "pre-order": true,
+  "prize-draw": true,
+  classified: true,
+  live: true,
+  // Depicts the model; is not the model.
+  art: false,
+  stickers: false,
+  // A redemption code has no physical parts at all.
+  "digital-code": false,
+};

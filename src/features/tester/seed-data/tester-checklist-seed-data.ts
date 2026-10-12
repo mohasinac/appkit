@@ -3253,6 +3253,34 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       /*
+       * D12 — the parts database, the composition panel, and the part line in a
+       * seller's auto-filled description.
+       *
+       * 🛑 Four defects this feature has already produced, every one of them a
+       * 200 with plausible content: a read against a field the collection does
+       * not have; a composition `name` that was a FILE PATH for all 259 rows so
+       * nothing joined; a join that reached 150 of 259 until a paren-stripped
+       * fallback took it to 210; and a Parts tab on an ART POSTER offering it
+       * an attack ring. None of them errored, and three of them rendered as an
+       * ABSENT panel — indistinguishable from a model we have no data for.
+       */
+      pageKey: "parts-database",
+      pageLabel: "Parts database, composition panel and the part line in a description",
+      href: "/parts",
+      cases: [
+        { key: "index-lists-every-classification", label: "The parts index lists all 20 classifications, labelled as names and not as URL slugs" },
+        { key: "index-shows-no-fabricated-counts", label: "No classification tile shows a part count — not even a zero" },
+        { key: "classification-page-lists-its-parts", label: "A classification's stated count equals the rows it lists, and a missing weight renders as nothing rather than 0 g" },
+        { key: "unknown-classification-404s", label: "An unknown classification 404s instead of rendering an empty page — with a real one as the control" },
+        { key: "part-page-shows-which-models-use-it", label: "A part page names the models that use it, and an unjoined model reads as text rather than a broken link" },
+        { key: "part-page-shows-no-prices", label: "A part page's listing rows carry no price and no sign-in-to-see-price placeholder" },
+        { key: "model-page-shows-its-composition", label: "A named-model leaf shows what it is made of with linked parts; the generation line above it shows none" },
+        { key: "art-listing-has-no-parts-tab", label: "An art print filed under a model leaf has NO Parts tab" },
+        { key: "seller-description-lists-parts", label: "A listing under a model leaf gets a Parts line in its filled description, and a non-Beyblade category gets no empty one" },
+      ],
+    },
+    {
+      /*
        * Store reviews. The endpoint answered 200 with zero reviews for EVERY
        * store while 79 approved ones existed, because it ordered products by a
        * field no product has (Root Cause #100) — and once it returned rows it

@@ -6,6 +6,8 @@ import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 const STATIC_TABS = [
   { id: "description", label: "Description" },
   { id: "specs", label: "Specifications" },
+  /** D12 — the part composition, when the listing is filed under a named model. */
+  { id: "parts", label: "Parts" },
   { id: "grading", label: "Grading" },
   { id: "ingredients", label: "Ingredients" },
   { id: "howToUse", label: "How to Use" },
@@ -25,6 +27,8 @@ export interface CustomTabDef {
 export interface ProductTabsShellProps {
   descriptionContent?: React.ReactNode;
   specsContent?: React.ReactNode;
+  /** D12 — part composition. Pass non-null to surface the tab. */
+  partsContent?: React.ReactNode;
   /** W1-34 — grading tab content (PSA/BGS/CGC etc). Pass non-null to surface the tab. */
   gradingContent?: React.ReactNode;
   ingredientsContent?: React.ReactNode;
@@ -40,6 +44,7 @@ export interface ProductTabsShellProps {
 export function ProductTabsShell({
   descriptionContent,
   specsContent,
+  partsContent,
   gradingContent,
   ingredientsContent,
   howToUseContent,
@@ -51,6 +56,7 @@ export function ProductTabsShell({
   const staticContentMap: Record<StaticTabId, React.ReactNode | undefined> = {
     description: descriptionContent,
     specs: specsContent,
+    parts: partsContent,
     grading: gradingContent,
     ingredients: ingredientsContent,
     howToUse: howToUseContent,

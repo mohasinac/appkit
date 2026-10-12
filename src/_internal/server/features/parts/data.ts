@@ -19,6 +19,9 @@ import { getAdminDb } from "../../../../providers/db-firebase";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { normalizeError } from "../../../../errors/normalize";
 
+/** The bucket cap. 87 is the largest real classification, so this clears it. */
+export const PART_SLOT_PAGE_SIZE = 120;
+
 /** One part, by `(slot, code|name)` — the only key this collection has. */
 export const getPartByKey = cache(
   async (slot: PartSlot, codeOrName: string): Promise<PartGlossaryDocument | null> => {
@@ -144,6 +147,42 @@ export const getCompositionsForCategory = cache(
       const e = normalizeError(err);
       serverLogger.warn("getCompositionsForCategory failed", { categoryId, error: e.message });
       return [];
+    }
+  },
+);
+
+/**
+ * Every part in one classification, alphabetical.
+ *
+ * 🛑 ONE equality on `slot`, bounded. The biggest bucket is 87 rows (attack
+ * rings) and the smallest 4 (armour) — measured, not assumed — so a page size
+ * of 120 shows every one of them today without a pager, and `truncated` tells
+ * the view to stop claiming a total the moment that stops being true.
+ *
+ * Firestore needs no composite index for one equality plus an `orderBy` on
+ * the SAME field it is already keyed by document id within… except it does
+ * for `(slot ==, name asc)`. So the sort is applied IN MEMORY: 87 rows is
+ * nothing to sort, and a declared index that exists only to order a bucket
+ * this small is an index to deploy, wait on, and remember.
+ */
+export const listPartsBySlot = cache(
+  async (
+    slot: PartSlot,
+  ): Promise<{ parts: PartGlossaryDocument[]; truncated: boolean }> => {
+    try {
+      const snap = await getAdminDb()
+        .collection(PART_GLOSSARY_COLLECTION)
+        .where("slot", "==", slot)
+        .limit(PART_SLOT_PAGE_SIZE)
+        .get();
+      const parts = snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }) as PartGlossaryDocument)
+        .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
+      return { parts, truncated: snap.size >= PART_SLOT_PAGE_SIZE };
+    } catch (err) {
+      const e = normalizeError(err);
+      serverLogger.warn("listPartsBySlot failed", { slot, error: e.message });
+      return { parts: [], truncated: false };
     }
   },
 );

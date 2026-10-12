@@ -54,6 +54,7 @@ import type { CategoryDescriptionTemplate } from "../../features/categories/sche
 import type { CategoryTreeNode } from "./category-tree";
 import { MODEL_LEAVES } from "./category-models";
 import {
+  BEY_TEMPLATES,
   COLLECTIBLE_TEMPLATES,
   PART_TEMPLATES,
   SEALED_TEMPLATES,
@@ -158,11 +159,11 @@ const BEYBLADE_ORIGINAL: CategoryTreeNode = {
   },
   children: [
     branch("category-original-tops", "Original Tops", "Complete original-series Beyblades, from the first Spin Gear releases through HMS.", [
-      line("category-original-plastic-gen", "Plastic Generation", "The earliest 1999–2000 plastic-series releases, before the Spin Gear system was formalised.", beyDefaults("category-original-plastic-gen", "Beyblade (Original)", "Plastic Generation"), COLLECTIBLE_TEMPLATES),
-      line("category-original-spin-gear", "Spin Gear System", "The 2000–2001 Spin Gear releases — the system that set the Attack Ring / Weight Disk / Blade Base template.", beyDefaults("category-original-spin-gear", "Beyblade (Original)", "Spin Gear System"), COLLECTIBLE_TEMPLATES),
-      line("category-original-magnacore", "Magnacore System", "The 2002 V-Force Magnacore line, with magnets in the base that pull a top toward or away from the stadium centre.", beyDefaults("category-original-magnacore", "Beyblade V-Force", "Magnacore System"), COLLECTIBLE_TEMPLATES),
-      line("category-original-engine-gear", "Engine Gear System", "The 2003 G-Revolution Engine Gear line — a wound spring inside the top that releases mid-battle.", beyDefaults("category-original-engine-gear", "Beyblade G-Revolution", "Engine Gear System"), COLLECTIBLE_TEMPLATES),
-      line("category-original-hms", "Heavy Metal System", "The 2003 HMS line — metal throughout, the last and heaviest of the original generation, and the highest-value tier here.", beyDefaults("category-original-hms", "Beyblade HMS", "Heavy Metal System"), COLLECTIBLE_TEMPLATES),
+      line("category-original-plastic-gen", "Plastic Generation", "The earliest 1999–2000 plastic-series releases, before the Spin Gear system was formalised.", beyDefaults("category-original-plastic-gen", "Beyblade (Original)", "Plastic Generation"), BEY_TEMPLATES),
+      line("category-original-spin-gear", "Spin Gear System", "The 2000–2001 Spin Gear releases — the system that set the Attack Ring / Weight Disk / Blade Base template.", beyDefaults("category-original-spin-gear", "Beyblade (Original)", "Spin Gear System"), BEY_TEMPLATES),
+      line("category-original-magnacore", "Magnacore System", "The 2002 V-Force Magnacore line, with magnets in the base that pull a top toward or away from the stadium centre.", beyDefaults("category-original-magnacore", "Beyblade V-Force", "Magnacore System"), BEY_TEMPLATES),
+      line("category-original-engine-gear", "Engine Gear System", "The 2003 G-Revolution Engine Gear line — a wound spring inside the top that releases mid-battle.", beyDefaults("category-original-engine-gear", "Beyblade G-Revolution", "Engine Gear System"), BEY_TEMPLATES),
+      line("category-original-hms", "Heavy Metal System", "The 2003 HMS line — metal throughout, the last and heaviest of the original generation, and the highest-value tier here.", beyDefaults("category-original-hms", "Beyblade HMS", "Heavy Metal System"), BEY_TEMPLATES),
     ]),
     branch("category-original-parts", "Original Parts", "Loose Attack Rings, Weight Disks and Blade Bases for rebuilding an original-era combo.", [
       node("category-original-attack-rings", "Attack Rings", "The upper contact ring — what actually strikes an opponent, and the part that decides a combo's attack profile.", partDefaults("category-original-attack-rings", "Attack Ring"), PART_TEMPLATES),
@@ -203,11 +204,11 @@ const BEYBLADE_METAL: CategoryTreeNode = {
   },
   children: [
     branch("category-metal-tops", "Metal Fight Tops", "Complete Metal Fight Beyblades across all five sub-generations.", [
-      line("category-metal-phws", "Metal System", "The 2008 debut system that preceded the Hybrid Wheel System — the first metal-weighted tops.", beyDefaults("category-metal-phws", "Beyblade: Metal Fusion", "Metal System"), COLLECTIBLE_TEMPLATES),
-      line("category-metal-fusion", "Metal Fusion", "The Hybrid Wheel System wave that defined the era — Face Bolt, Energy Ring, Fusion Wheel, Spin Track, Tip.", beyDefaults("category-metal-fusion", "Beyblade: Metal Fusion", "Hybrid Wheel System"), COLLECTIBLE_TEMPLATES),
-      line("category-metal-masters", "Metal Masters", "Later Hybrid Wheel releases with heavier wheels and tighter tolerances.", beyDefaults("category-metal-masters", "Beyblade: Metal Masters", "Hybrid Wheel System"), COLLECTIBLE_TEMPLATES),
-      line("category-metal-fury-4d", "Metal Fury (4D)", "The 4D System wave — multi-mode wheels and switchable bottoms, and the heaviest tops of the era.", beyDefaults("category-metal-fury-4d", "Beyblade: Metal Fury", "4D System"), COLLECTIBLE_TEMPLATES),
-      line("category-metal-shogun-steel", "Shogun Steel / Zero-G", "The 2012–2013 Zero-G line, built for the rocking Zero-G stadium rather than a static dish.", beyDefaults("category-metal-shogun-steel", "Beyblade: Shogun Steel", "Synchrom System"), COLLECTIBLE_TEMPLATES),
+      line("category-metal-phws", "Metal System", "The 2008 debut system that preceded the Hybrid Wheel System — the first metal-weighted tops.", beyDefaults("category-metal-phws", "Beyblade: Metal Fusion", "Metal System"), BEY_TEMPLATES),
+      line("category-metal-fusion", "Metal Fusion", "The Hybrid Wheel System wave that defined the era — Face Bolt, Energy Ring, Fusion Wheel, Spin Track, Tip.", beyDefaults("category-metal-fusion", "Beyblade: Metal Fusion", "Hybrid Wheel System"), BEY_TEMPLATES),
+      line("category-metal-masters", "Metal Masters", "Later Hybrid Wheel releases with heavier wheels and tighter tolerances.", beyDefaults("category-metal-masters", "Beyblade: Metal Masters", "Hybrid Wheel System"), BEY_TEMPLATES),
+      line("category-metal-fury-4d", "Metal Fury (4D)", "The 4D System wave — multi-mode wheels and switchable bottoms, and the heaviest tops of the era.", beyDefaults("category-metal-fury-4d", "Beyblade: Metal Fury", "4D System"), BEY_TEMPLATES),
+      line("category-metal-shogun-steel", "Shogun Steel / Zero-G", "The 2012–2013 Zero-G line, built for the rocking Zero-G stadium rather than a static dish.", beyDefaults("category-metal-shogun-steel", "Beyblade: Shogun Steel", "Synchrom System"), BEY_TEMPLATES),
     ]),
     branch("category-metal-parts", "Metal Fight Parts", "The four-part system sold loose — this is where a custom Metal Fight combo gets built.", [
       node("category-metal-face-bolts", "Face Bolts", "The screw and face sticker at the top. Mostly cosmetic, occasionally a weight tweak.", partDefaults("category-metal-face-bolts", "Face Bolt"), PART_TEMPLATES),
@@ -253,13 +254,13 @@ const BEYBLADE_BURST: CategoryTreeNode = {
   },
   children: [
     branch("category-burst-tops", "Burst Tops", "Complete Burst-system Beyblades across every wave.", [
-      line("category-burst-classic", "Burst Classic", "The original 2015–2017 single- and dual-layer waves, before any metal entered the Layer.", beyDefaults("category-burst-classic", "Beyblade Burst", "Burst System"), COLLECTIBLE_TEMPLATES),
-      line("category-burst-god", "Burst God", "The God Layer wave, which added spring-loaded Layers and the first real burst-resistance tuning.", beyDefaults("category-burst-god", "Beyblade Burst God", "God Layer System"), COLLECTIBLE_TEMPLATES),
-      line("category-burst-cho-z", "Cho-Z", "The metal-layer wave — heavier Layers and roughly double the burst resistance of what came before.", beyDefaults("category-burst-cho-z", "Beyblade Burst Cho-Z", "Cho-Z Layer System"), COLLECTIBLE_TEMPLATES),
-      line("category-burst-gt", "GT", "The Gatinko wave, with a swappable chip inside the Layer for a third tuning axis.", beyDefaults("category-burst-gt", "Beyblade Burst GT", "Gatinko Layer System"), COLLECTIBLE_TEMPLATES),
-      line("category-burst-superking", "Superking", "The Sparking / Superking wave and its five-sided ratchet, which changed launch dynamics entirely.", beyDefaults("category-burst-superking", "Beyblade Burst Superking", "Sparking Layer System"), COLLECTIBLE_TEMPLATES),
-      line("category-burst-db", "Dynamite Battle", "The DB wave — Armour Tips and the heaviest Layers Burst had shipped to that point.", beyDefaults("category-burst-db", "Beyblade Burst Dynamite Battle", "Dynamite Battle Layer System"), COLLECTIBLE_TEMPLATES),
-      line("category-burst-bu", "Burst Ultimate", "The final Burst wave, closing the line in 2023 before Beyblade X replaced it.", beyDefaults("category-burst-bu", "Beyblade Burst Ultimate", "Burst Ultimate Layer System"), COLLECTIBLE_TEMPLATES),
+      line("category-burst-classic", "Burst Classic", "The original 2015–2017 single- and dual-layer waves, before any metal entered the Layer.", beyDefaults("category-burst-classic", "Beyblade Burst", "Burst System"), BEY_TEMPLATES),
+      line("category-burst-god", "Burst God", "The God Layer wave, which added spring-loaded Layers and the first real burst-resistance tuning.", beyDefaults("category-burst-god", "Beyblade Burst God", "God Layer System"), BEY_TEMPLATES),
+      line("category-burst-cho-z", "Cho-Z", "The metal-layer wave — heavier Layers and roughly double the burst resistance of what came before.", beyDefaults("category-burst-cho-z", "Beyblade Burst Cho-Z", "Cho-Z Layer System"), BEY_TEMPLATES),
+      line("category-burst-gt", "GT", "The Gatinko wave, with a swappable chip inside the Layer for a third tuning axis.", beyDefaults("category-burst-gt", "Beyblade Burst GT", "Gatinko Layer System"), BEY_TEMPLATES),
+      line("category-burst-superking", "Superking", "The Sparking / Superking wave and its five-sided ratchet, which changed launch dynamics entirely.", beyDefaults("category-burst-superking", "Beyblade Burst Superking", "Sparking Layer System"), BEY_TEMPLATES),
+      line("category-burst-db", "Dynamite Battle", "The DB wave — Armour Tips and the heaviest Layers Burst had shipped to that point.", beyDefaults("category-burst-db", "Beyblade Burst Dynamite Battle", "Dynamite Battle Layer System"), BEY_TEMPLATES),
+      line("category-burst-bu", "Burst Ultimate", "The final Burst wave, closing the line in 2023 before Beyblade X replaced it.", beyDefaults("category-burst-bu", "Beyblade Burst Ultimate", "Burst Ultimate Layer System"), BEY_TEMPLATES),
     ]),
     branch("category-burst-parts", "Burst Parts", "Layers, Discs, Drivers and the chips and armour that bolt onto them.", [
       node("category-burst-layers", "Layers", "The top piece — attack profile and burst resistance. The most expensive part of a Burst build.", partDefaults("category-burst-layers", "Layer"), PART_TEMPLATES),
@@ -304,10 +305,10 @@ const BEYBLADE_X: CategoryTreeNode = {
   },
   children: [
     branch("category-x-tops", "Beyblade X Tops", "Complete Beyblade X tops — starters, boosters and the X-Over reissues.", [
-      line("category-x-basic", "Basic Line", "Standard three-part X tops. The entry point into the format and the bulk of its catalogue.", beyDefaults("category-x-basic", "Beyblade X", "Xtreme Gear (Basic Line)"), COLLECTIBLE_TEMPLATES),
-      line("category-x-unique-ux", "Unique Line (UX)", "UX releases, each Blade carrying a mechanical gimmick the Basic Line does not have.", beyDefaults("category-x-unique-ux", "Beyblade X", "Xtreme Gear (Unique Line)"), COLLECTIBLE_TEMPLATES),
-      line("category-x-custom-cx", "Custom Line (CX)", "CX releases, whose Blade splits into a Lock Chip, a Main Blade and an Assist Blade.", beyDefaults("category-x-custom-cx", "Beyblade X", "Xtreme Gear (Custom Line)"), COLLECTIBLE_TEMPLATES),
-      line("category-x-over", "X-Over Project", "Classic designs from earlier generations reissued on Beyblade X hardware.", beyDefaults("category-x-over", "Beyblade X", "Xtreme Gear (X-Over)"), COLLECTIBLE_TEMPLATES),
+      line("category-x-basic", "Basic Line", "Standard three-part X tops. The entry point into the format and the bulk of its catalogue.", beyDefaults("category-x-basic", "Beyblade X", "Xtreme Gear (Basic Line)"), BEY_TEMPLATES),
+      line("category-x-unique-ux", "Unique Line (UX)", "UX releases, each Blade carrying a mechanical gimmick the Basic Line does not have.", beyDefaults("category-x-unique-ux", "Beyblade X", "Xtreme Gear (Unique Line)"), BEY_TEMPLATES),
+      line("category-x-custom-cx", "Custom Line (CX)", "CX releases, whose Blade splits into a Lock Chip, a Main Blade and an Assist Blade.", beyDefaults("category-x-custom-cx", "Beyblade X", "Xtreme Gear (Custom Line)"), BEY_TEMPLATES),
+      line("category-x-over", "X-Over Project", "Classic designs from earlier generations reissued on Beyblade X hardware.", beyDefaults("category-x-over", "Beyblade X", "Xtreme Gear (X-Over)"), BEY_TEMPLATES),
     ]),
     branch("category-x-parts", "Beyblade X Parts", "Blades, Ratchets and Bits sold loose for custom X builds.", [
       node("category-x-blades", "Blades", "The upper piece that defines an X combo's attack shape and its ability to hold the rail.", partDefaults("category-x-blades", "Blade"), PART_TEMPLATES),

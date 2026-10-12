@@ -14,6 +14,20 @@ export type {
   SearchEverythingResult,
 } from "./_internal/server/features/search/search-everything";
 export { SEARCH_SOURCES } from "./_internal/server/features/search/search-sources";
+// D12 — part + composition reads. Every one is by document id or ONE
+// indexed equality; none needs a composite index.
+export {
+  getPartByKey,
+  getModelsUsingPart,
+  getCompositionById,
+  getPartsForComposition,
+  getCompositionsForCategory,
+  listPartsBySlot,
+} from "./_internal/server/features/parts/data";
+export {
+  renderPartOg,
+  renderPartClassificationOg,
+} from "./_internal/server/features/parts/og";
 // Persists DEGRADED_READ rows via the installed reporter; returns typed fallback on error.
 export {
   safeRead,

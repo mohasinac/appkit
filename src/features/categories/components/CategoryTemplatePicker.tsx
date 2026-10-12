@@ -71,6 +71,16 @@ interface TemplateResponse {
   template: (CategoryDescriptionTemplate & { placeholders?: string[] }) | null;
   inheritedFrom: string | null;
   inheritedFromName: string | null;
+  /**
+   * D12 — slot values the client cannot compute, from the server.
+   *
+   * `{{partBreakdown}}` is a Firestore read against the leaf's
+   * `modelComposition`, so the form has no way to resolve it. Absent when the
+   * body does not ask for it; absent ALSO when it asks and the model has no
+   * recorded composition — in that case the server has already stripped the
+   * line from `body`, so there is nothing left to fill.
+   */
+  slots?: Record<string, string>;
   defaults: {
     specifications?: CategorySpecification[];
     inTheBox?: string[];
@@ -171,9 +181,21 @@ export function CategoryTemplatePicker({
    * accurate BEFORE the seller commits. A note that appears only after the
    * text lands is a report on something they can no longer choose about.
    */
+  /*
+   * 🛑 Server slots merge UNDERNEATH the form's context, so a draft-derived
+   * value always wins. The two key spaces are disjoint today — the form knows
+   * the listing, the server knows the category — and this ordering is what
+   * keeps it safe if they ever overlap: the more specific source is the one
+   * holding the item in front of the seller.
+   */
+  const resolved = React.useMemo(
+    () => ({ ...(data?.slots ?? {}), ...context }),
+    [data?.slots, context],
+  );
+
   const filled = React.useMemo(
-    () => (template ? interpolate(template.body, context) : null),
-    [template, context],
+    () => (template ? interpolate(template.body, resolved) : null),
+    [template, resolved],
   );
 
   /*

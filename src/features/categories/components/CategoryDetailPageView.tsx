@@ -9,13 +9,15 @@ import {
   productRepository,
   storeRepository,
 } from "../../../repositories";
-import { ROUTES } from "../../../next/routing/route-map";
-import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
+import { ModelCompositionPanel } from "../../parts/components/ModelCompositionPanel";
+import { getCompositionsForCategory } from "../../../_internal/server/features/parts/data";
+import { ROUTES } from "../../../next/routing/route-map";
 import { getGroupsForCategory } from "../../../_internal/server/features/grouped/data";
 import {
   listingTabCounts,
@@ -69,7 +71,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // page rather than an error (Root Cause #59).
   const categoriesIn = category?.id ? [category.id] : null;
 
-  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings, liveCounts] = await Promise.all([
+  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings, liveCounts, compositions] = await Promise.all([
     categoriesIn
       ? safeRead<Awaited<ReturnType<typeof productRepository.list>> | null>(
           () =>
@@ -173,6 +175,31 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           { route: "/categories/[slug]", key: "category.liveCounts", fallback: null },
         )
       : Promise.resolve(null),
+    /*
+     * D12 — the PART COMPOSITION, when this category is a named model.
+     *
+     * 🛑 ONE indexed equality on `categoryId`, added to this same
+     * `Promise.all` for the reason G3b's read above records: Rule #6's budget
+     * is ~3 SEQUENTIAL round trips, and a ninth PARALLEL read adds no
+     * latency. The plan's "a sidecar collection would add an eighth read"
+     * warning was about latency; parallelism is the answer to it, and the
+     * sibling collection is what keeps `onCategoryWrite` — which calls
+     * `notifyRevalidate` unconditionally — from dropping this page's ISR
+     * entry every time a composition is reseeded.
+     *
+     * 🛑 Resolved against this category's OWN id, so only a model leaf gets a
+     * panel. A line or generation node matches nothing and renders nothing,
+     * which is correct: "Burst GT" is not made of parts, the beys under it
+     * are. 210 of 259 compositions joined to a category, so the 49 that did
+     * not simply render no panel rather than a wrong one.
+     */
+    category?.id
+      ? safeRead(() => getCompositionsForCategory(category.id), {
+          route: "/categories/[slug]",
+          key: "parts.compositionsForCategory",
+          fallback: [],
+        })
+      : Promise.resolve([]),
   ]);
 
   const relatedCategories = rootSiblingCategories
@@ -508,6 +535,28 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       </Section>
 
       <CategoryHighlightsAndFaqSection highlights={category?.highlights} faqs={category?.faqs} />
+
+      {/* ── D12: what this model is MADE OF ─────────────────────────────────
+          Renders only on a named-model leaf, because only a leaf has a
+          composition. No `parts` map is passed: 963 of 963 slots carry their
+          own `weightG`, which is the weight AS FITTED and the better figure
+          than the mould's — so hydrating the glossary would be a second read
+          for a value we already have. */}
+      {compositions.length > 0 && (
+        <Section border="subtle" surface="default" className="border-b">
+          <Div className="max-w-7xl mx-auto" padding="section">
+            <Stack gap="md" className="min-w-0">
+              <Heading level={2} size="lg">
+                What it is made of
+              </Heading>
+              <ModelCompositionPanel
+                compositions={compositions}
+                hrefForPart={(slot, tail) => String(ROUTES.PUBLIC.PART_DETAIL(slot, tail))}
+              />
+            </Stack>
+          </Div>
+        </Section>
+      )}
 
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (

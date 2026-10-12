@@ -161,6 +161,45 @@ export const TEMPLATES: Record<CategoryTemplateVariant, CategoryDescriptionTempl
   },
 };
 
+/**
+ * ── D12: the BEYBLADE bodies, which are the only ones that state PARTS ─────
+ *
+ * 🛑 A separate set rather than adding the slot to the shared bodies, and the
+ * reason is mechanical: `COLLECTIBLE_TEMPLATES` is also what every figure,
+ * Hot Wheels and TCG category uses, and a `{{partBreakdown}}` on a Marvel
+ * Legends listing resolves to nothing. The endpoint strips the line when
+ * there is no composition, so the artifact would be invisible rather than
+ * wrong — but it would also be a read attempted on four roots that can never
+ * satisfy it, on an endpoint the seller form hits on every category change.
+ *
+ * Assigned to the 21 `line(...)` nodes, which are Beyblade generation lines
+ * and nothing else — their children are `MODEL_LEAVES`. A model leaf carries
+ * no body of its own and INHERITS this one, while the slot resolves against
+ * the leaf's OWN composition. That is the whole design: one body per
+ * generation, 216 models' worth of parts.
+ */
+const BEY_PARTS_LINE = `  <li><strong>Parts:</strong> {{partBreakdown}}</li>`;
+
+/** The slot sits on its own source line, because the strip is line-based. */
+function withPartsLine(body: string): string {
+  return body.replace(
+    "</ul>",
+    `${BEY_PARTS_LINE}
+</ul>`,
+  );
+}
+
+const BEY_TEMPLATE_VARIANTS: readonly CategoryTemplateVariant[] = [
+  "new_in_box",
+  "pre_owned",
+  "replica",
+  "default",
+];
+
+export const BEY_TEMPLATES: CategoryDescriptionTemplate[] = BEY_TEMPLATE_VARIANTS.map(
+  (v) => ({ ...TEMPLATES[v], body: withPartsLine(TEMPLATES[v].body) }),
+);
+
 /** The set a normal collectible category offers. */
 export const COLLECTIBLE_TEMPLATES: CategoryDescriptionTemplate[] = [
   TEMPLATES.new_in_box,

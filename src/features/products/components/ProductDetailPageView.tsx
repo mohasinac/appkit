@@ -89,6 +89,19 @@ export interface ProductDetailPageViewProps {
    */
   initialProduct?: import("../schemas/firestore").ProductDocument | null;
   /**
+   * D12 — the part composition for this listing's model, as a ready node.
+   *
+   * 🛑 A NODE, not a document: the composition is a Firestore read and this
+   * component is already at its read budget, so the page resolves it (where
+   * it is already reading the product) and passes the rendered panel down.
+   * Passing the raw documents would make this component read too, and a
+   * second reader of the same data is the drift this codebase keeps closing.
+   *
+   * Absent for every listing that is not filed under a named-model leaf,
+   * which is most of them — the tab then does not render at all.
+   */
+  compositionContent?: React.ReactNode;
+  /**
    * Render prop for offer UI. Receives the resolved product fields.
    *
    * Called only when both offer gates pass: the listing type's `canMakeOffer`
@@ -188,6 +201,7 @@ export async function ProductDetailPageView({
   initialProduct,
   renderOfferAction,
   renderPrimaryActions,
+  compositionContent,
   productFeatures,
   codEnabled,
   emiEnabled,
@@ -849,6 +863,7 @@ export async function ProductDetailPageView({
           }
           renderTabs={() => (
             <ProductTabsShell
+              partsContent={compositionContent}
               descriptionContent={
                 descriptionHtml ? (
                   <RichText

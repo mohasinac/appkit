@@ -9488,6 +9488,10 @@ export {
   PART_GLOSSARY_COLLECTION,
   MODEL_COMPOSITION_COLLECTION,
   PART_SLOT_VALUES,
+  PART_SLOT_LABEL,
+  ALL_PART_SLOTS,
+  LISTING_TYPE_HAS_COMPOSITION,
+  partSlotFromSegment,
   partGlossaryId,
 } from "./features/parts/schemas/firestore";
 export type {
@@ -9499,6 +9503,14 @@ export type {
 } from "./features/parts/schemas/firestore";
 export { partGlossarySeedData } from "./seed/index";
 export { modelCompositionSeedData } from "./seed/index";
+// D12 — the public part surfaces.
+export { ModelCompositionPanel } from "./features/parts/components/ModelCompositionPanel";
+export {
+  PartsIndexPageView,
+  PartClassificationPageView,
+} from "./features/parts/components/PartsIndexPageView";
+export { PartDetailPageView } from "./features/parts/components/PartDetailPageView";
+export type { PartListingRow } from "./features/parts/components/PartDetailPageView";
 
 // Scam registry â€" schema types and constants
 export {

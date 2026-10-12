@@ -57,6 +57,12 @@ import type {
   CategoryTemplateVariant,
 } from "../../../schemas/category-content";
 import { usedPlaceholders } from "../../../../../_internal/shared/templating/placeholders";
+import { getCompositionsForCategory } from "../../../../../_internal/server/features/parts/data";
+import {
+  PART_BREAKDOWN_SLOT,
+  formatPartBreakdown,
+  stripSlotLine,
+} from "../../../../parts/utils/part-breakdown";
 
 /**
  * The variants a caller may ask for.
@@ -278,13 +284,49 @@ export async function GET(
      */
     const placeholders = template ? usedPlaceholders(template.body) : [];
 
+    /*
+     * ── D12: the `{{partBreakdown}}` slot ──────────────────────────────────
+     *
+     * 🛑 READ ONLY IF THE BODY ASKS FOR IT. Nothing outside the Beyblade lines
+     * carries the slot, so this is a third read on roughly a fifth of the
+     * tree and zero reads everywhere else — a TCG set or a Hot Wheels casting
+     * pays nothing for a concept it does not have.
+     *
+     * 🛑 Resolved against the LEAF, never an ancestor. A composition describes
+     * one model; inheriting a line's would hand every Burst GT listing the
+     * parts of whichever model happened to join to the line node.
+     *
+     * 🛑 And when there is none, the LINE IS STRIPPED rather than left to
+     * interpolate to an empty string — otherwise a listing with no recorded
+     * composition renders an empty "Parts:" bullet, which reads as broken
+     * data rather than as absent data.
+     *
+     * Safe on a `public` cache: part names, slots and weights are facts about
+     * mouldings. No money, no seller identity, nothing gated.
+     */
+    let body = template?.body ?? "";
+    const slots: Record<string, string> = {};
+    if (template && placeholders.includes(PART_BREAKDOWN_SLOT)) {
+      const compositions = await getCompositionsForCategory(id);
+      const breakdown = formatPartBreakdown(compositions);
+      if (breakdown) slots[PART_BREAKDOWN_SLOT] = breakdown;
+      else body = stripSlotLine(body, PART_BREAKDOWN_SLOT);
+    }
+
     return NextResponse.json(
       {
         success: true,
         data: {
           template: template
-            ? { ...template, placeholders }
+            ? { ...template, body, placeholders: usedPlaceholders(body) }
             : null,
+          /**
+           * Slot values the CLIENT cannot compute, merged UNDER the form's own
+           * context so a draft-derived value always wins — the two key spaces
+           * are disjoint today and this is what keeps them safe if they stop
+           * being.
+           */
+          slots,
           /** Null when the template came from the category itself. */
           inheritedFrom,
           inheritedFromName,

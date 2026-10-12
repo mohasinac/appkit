@@ -120,6 +120,21 @@ export const DEFAULT_ROUTE_MAP = {
      */
     TOOLS: "/tools",
     TOOL_PRICE_INDEX: "/tools/price-index",
+    /*
+     * The PARTS database. A reference surface, so it lives beside the other
+     * two things that answer a question rather than sell you something.
+     *
+     * 🛑 `/parts/{classification}/{code}` — the classification is REQUIRED in
+     * the path, because a code alone is ambiguous: `105` is a Metal Fight
+     * spin-track height, a bare number in Burst is a disc, and `1-60` is a
+     * Beyblade X ratchet. The two segments together are the document id
+     * (`${slot}--${tail}`), so the page is a direct doc read with no query
+     * and no index.
+     */
+    PARTS: "/parts",
+    PART_CLASSIFICATION: (classification: string) => `/parts/${classification}`,
+    PART_DETAIL: (classification: string, code: string) =>
+      `/parts/${classification}/${code}`,
     SCAM_TYPES: "/scams/types",
     SCAM_FAQS: "/scams/faqs",
     CLASSIFIED: "/classified",
