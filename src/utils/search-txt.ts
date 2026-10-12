@@ -38,6 +38,24 @@ const MIN_PREFIX_LENGTH = 1;
  * each array element costs one per index containing the field, so a long body
  * left unbounded is a real limit to hit.
  */
+/**
+ * The field every MIGRATED collection stores its tokens in.
+ *
+ * 🛑 ONE shared constant because `searchTxt` is a CROSS-COLLECTION convention,
+ * not a per-feature field: 12 collections carry it (products, categories,
+ * stores, blogPosts, events, faqs, reviews, coupons, offers, orders,
+ * scammerProfiles, supportTickets) and the name is identical in all of them by
+ * design.
+ *
+ * `field-names.ts` declares `SEARCH_TXT: "searchTxt"` FOUR separate times —
+ * once each in the product, order, FAQ and category blocks — which is the very
+ * duplication `audit-registry-constants` exists to stop, one level up. A module
+ * that queries SIX collections cannot honestly borrow any single feature's
+ * copy: `PRODUCT_FIELDS.SEARCH_TXT` naming the field on a `faqs` query is a
+ * true string and a false statement.
+ */
+export const SEARCH_TXT_FIELD = "searchTxt";
+
 const MAX_TOKENS = 600;
 /** Words longer than this contribute whole-word only — no prefix expansion. */
 const LONG_WORD_LIMIT = 24;

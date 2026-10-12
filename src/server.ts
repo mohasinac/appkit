@@ -3,6 +3,17 @@
 export { isAuthError } from "./utils/auth-error";
 
 // [SERVER-ONLY] safeRead — wraps optional reads whose failure must not break a page.
+// D2 Fix 4 — cross-resource search. Exported from `server.ts` because it takes
+// a Firestore handle and runs only server-side; `_internal/` is not an
+// exported subpath, and a consumer page must not reach into it.
+export { searchEverything } from "./_internal/server/features/search/search-everything";
+export type {
+  SearchHit,
+  SearchGroup,
+  SearchSource,
+  SearchEverythingResult,
+} from "./_internal/server/features/search/search-everything";
+export { SEARCH_SOURCES } from "./_internal/server/features/search/search-sources";
 // Persists DEGRADED_READ rows via the installed reporter; returns typed fallback on error.
 export {
   safeRead,
