@@ -53,6 +53,7 @@ import type { CategoryDocument } from "../../features/categories/schemas";
 import type { CategoryDescriptionTemplate } from "../../features/categories/schemas/category-content";
 import type { CategoryTreeNode } from "./category-tree";
 import { MODEL_LEAVES } from "./category-models";
+import { PART_LEAVES } from "./category-parts";
 import {
   BEY_TEMPLATES,
   COLLECTIBLE_TEMPLATES,
@@ -113,12 +114,27 @@ function node(
   const extra: Partial<CategoryDocument> = {};
   if (defaults) extra.productDefaults = defaults;
   if (templates) extra.descriptionTemplates = templates;
+  /*
+   * 🛑 D13 — a part-type node's children are its PART LEAVES, threaded here
+   * rather than at the 20 call sites.
+   *
+   * Same shape as `line()` and `MODEL_LEAVES`: the generated map is keyed by
+   * parent id, so a node with no entry gets `[]` and is unchanged. Doing it in
+   * the helper means adding a part classification is a generator run plus one
+   * `node(...)` line, not an edit in two places that must agree.
+   *
+   * An explicit `children` argument still wins, so a node that hand-authors
+   * its children is not silently overwritten — there is none today, and the
+   * precedence has to be decided rather than discovered.
+   */
+  const generated = PART_LEAVES[id];
+  const kids = children ?? generated;
   return {
     id,
     name,
     description,
     ...(Object.keys(extra).length ? { extra } : {}),
-    ...(children ? { children } : {}),
+    ...(kids && kids.length ? { children: kids } : {}),
   };
 }
 
@@ -169,6 +185,17 @@ const BEYBLADE_ORIGINAL: CategoryTreeNode = {
       node("category-original-attack-rings", "Attack Rings", "The upper contact ring — what actually strikes an opponent, and the part that decides a combo's attack profile.", partDefaults("category-original-attack-rings", "Attack Ring"), PART_TEMPLATES),
       node("category-original-weight-disks", "Weight Disks", "The metal disk between ring and base. Heavier disks buy stamina; lighter ones buy speed.", partDefaults("category-original-weight-disks", "Weight Disk"), PART_TEMPLATES),
       node("category-original-blade-bases", "Blade Bases", "The bottom assembly — tip shape, spin gear housing and, on later systems, the magnet or engine.", partDefaults("category-original-blade-bases", "Blade Base"), PART_TEMPLATES),
+      /*
+       * D13 — five part-type nodes the forest was missing, so every one of the
+       * 20 part classifications has a home. Measured before adding: 135 of 753
+       * parts (bit chips 66, running cores 25, chrome wheels 25, spin gears 14,
+       * engine gears 5) had no node to be filed under, and a part leaf with no
+       * parent is a tier-0 orphan.
+       */
+      node("category-original-bit-chips", "Bit Chips", "The small chip at the centre of a Plastic-Gen Attack Ring, carrying the beast art. Collected in its own right and routinely swapped.", partDefaults("category-original-bit-chips", "Bit Chip"), PART_TEMPLATES),
+      node("category-original-spin-gears", "Spin Gears", "The 2000–2001 Spin Gear module that sets spin direction and locks the Blade Base to the Weight Disk.", partDefaults("category-original-spin-gears", "Spin Gear"), PART_TEMPLATES),
+      node("category-original-engine-gears", "Engine Gears", "The G-Revolution wound-spring module that releases mid-battle. Only a handful of releases used one.", partDefaults("category-original-engine-gears", "Engine Gear"), PART_TEMPLATES),
+      node("category-original-running-cores", "Running Cores", "HMS combines the Spin Gear and Blade Base into one moulded Running Core, which is why an HMS breakdown has fewer slots than a Plastic-Gen one.", partDefaults("category-original-running-cores", "Running Core"), PART_TEMPLATES),
     ]),
     branch("category-original-launchers", "Original Launchers", "Ripcord launchers, grips and winders for original-series tops.", [
       node("category-original-ripcord-launchers", "Ripcord Launchers", "The classic pull-cord launchers used across the original series.", launcherDefaults("category-original-ripcord-launchers", "Beyblade (Original)"), PART_TEMPLATES),
@@ -216,6 +243,7 @@ const BEYBLADE_METAL: CategoryTreeNode = {
       node("category-metal-fusion-wheels", "Fusion Wheels", "The metal mass of the top — the single part that most decides whether a combo attacks or endures.", partDefaults("category-metal-fusion-wheels", "Fusion Wheel"), PART_TEMPLATES),
       node("category-metal-spin-tracks", "Spin Tracks", "The height component. 85, 100, 105, 125, 145, 230 — taller clears a dish's slope, lower sits under an opponent.", partDefaults("category-metal-spin-tracks", "Spin Track"), PART_TEMPLATES),
       node("category-metal-performance-tips", "Performance Tips", "The floor contact: Rubber Flat, Wide Defense, Eternal Sharp, Metal Ball and the rest of the bottom vocabulary.", partDefaults("category-metal-performance-tips", "Performance Tip"), PART_TEMPLATES),
+      node("category-metal-chrome-wheels", "Chrome Wheels", "The 4D System's upper metal wheel, sold loose and the heaviest single part in the generation.", partDefaults("category-metal-chrome-wheels", "Chrome Wheel"), PART_TEMPLATES),
     ]),
     branch("category-metal-launchers", "Metal Fight Launchers", "String launchers, ripcord launchers and grips for the Metal Fight era.", [
       node("category-metal-string-launchers", "String Launchers", "The pull-string launchers that replaced ripcords, giving far more consistent launch power.", launcherDefaults("category-metal-string-launchers", "Beyblade: Metal Fight"), PART_TEMPLATES),

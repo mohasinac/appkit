@@ -3,7 +3,7 @@
  * Source: `docs/research/part-composition-2026-10/` (E4a/E4b), itself
  * extracted from the LOCAL corpus with no network crawl.
  *
- * The part glossary, keyed (slot, code|name) — 753 rows.
+ * The part glossary, keyed (slot, code|name) — 752 rows.
  *
  * 🛑 Facts only. Fandom is CC-BY-SA, so names, codes, weights and slot
  * structure are taken and the PROSE is not — our own descriptions come from
@@ -3102,12 +3102,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Blade Base",
     "slot": "blade-base",
     "code": null,
-    "name": "First Clutch Base (Zeus",
+    "name": "First Clutch Base (Zeus)",
     "usedBy": [
       "gen1-plastic-zeus"
     ],
     "aliases": [
-      "first clutch base (zeus"
+      "first clutch base (zeus)"
     ],
     "source": "composition"
   },
@@ -3202,12 +3202,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Blade Base",
     "slot": "blade-base",
     "code": null,
-    "name": "Hit Release (Draciel",
+    "name": "Hit Release (Draciel)",
     "usedBy": [
       "gen1-plastic-draciel-g"
     ],
     "aliases": [
-      "hit release (draciel"
+      "hit release (draciel)"
     ],
     "source": "composition"
   },
@@ -3216,12 +3216,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Blade Base",
     "slot": "blade-base",
     "code": null,
-    "name": "Hit Release (Dranzer GT",
+    "name": "Hit Release (Dranzer GT)",
     "usedBy": [
       "gen1-plastic-dranzer-gt"
     ],
     "aliases": [
-      "hit release (dranzer gt"
+      "hit release (dranzer gt)"
     ],
     "source": "composition"
   },
@@ -3230,12 +3230,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Blade Base",
     "slot": "blade-base",
     "code": null,
-    "name": "Hit Release (Strata",
+    "name": "Hit Release (Strata)",
     "usedBy": [
       "gen1-plastic-gaia-dragoon-g"
     ],
     "aliases": [
-      "hit release (strata"
+      "hit release (strata)"
     ],
     "source": "composition"
   },
@@ -3517,10 +3517,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "name": "SG Semi Flat Base",
     "usedBy": [
       "gen1-plastic-apollon",
-      "gen1-plastic-galeon-2"
+      "gen1-plastic-galeon-2",
+      "gen1-plastic-flash-leopard",
+      "gen1-plastic-sharkrash"
     ],
     "aliases": [
-      "sg semi flat base"
+      "sg semi flat base",
+      "SG Semi-Flat Base"
     ],
     "source": "composition"
   },
@@ -3535,21 +3538,6 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     ],
     "aliases": [
       "sg semi-flat"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "blade-base--sg-semi-flat-base-2",
-    "classification": "Blade Base",
-    "slot": "blade-base",
-    "code": null,
-    "name": "SG Semi-Flat Base",
-    "usedBy": [
-      "gen1-plastic-flash-leopard",
-      "gen1-plastic-sharkrash"
-    ],
-    "aliases": [
-      "sg semi-flat base"
     ],
     "source": "composition"
   },
@@ -4687,17 +4675,17 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Driver",
     "slot": "driver",
     "code": null,
-    "name": "Cyclone (aggressive",
+    "name": "Cyclone (aggressive)",
     "usedBy": [
       "gen3-superking-cyclone-ragnaruk"
     ],
     "aliases": [
-      "cyclone (aggressive"
+      "cyclone (aggressive)"
     ],
     "source": "composition"
   },
   {
-    "id": "driver--destroy",
+    "id": "driver--destroy-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -4726,7 +4714,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "driver--dimension-2",
+    "id": "driver--dimension-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -4768,7 +4756,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "driver--evolution",
+    "id": "driver--evolution-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -4782,7 +4770,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "driver--ignition",
+    "id": "driver--ignition-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -5050,7 +5038,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "driver--unite-2",
+    "id": "driver--unite-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -5092,7 +5080,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "driver--variable-2",
+    "id": "driver--variable-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -5148,7 +5136,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "driver--xtend-zeta",
+    "id": "driver--xtend-zeta-dash",
     "classification": "Driver",
     "slot": "driver",
     "code": null,
@@ -8174,7 +8162,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "performance-tip--dimension",
+    "id": "performance-tip--dimension-dash",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
@@ -8374,7 +8362,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "performance-tip--hunter",
+    "id": "performance-tip--hunter-dash",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
@@ -8761,7 +8749,7 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "performance-tip--trans",
+    "id": "performance-tip--trans-dash",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
@@ -9596,12 +9584,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Spin Gear",
     "slot": "spin-gear",
     "code": null,
-    "name": "Neo-Right (Metal Weight",
+    "name": "Neo-Right (Metal Weight)",
     "usedBy": [
       "gen1-plastic-driger-v2"
     ],
     "aliases": [
-      "neo-right (metal weight"
+      "neo-right (metal weight)"
     ],
     "source": "composition"
   },
@@ -9685,13 +9673,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Spin Gear",
     "slot": "spin-gear",
     "code": null,
-    "name": "Right SG (Bearing",
+    "name": "Right SG (Bearing)",
     "usedBy": [
       "gen1-plastic-wolborg",
       "gen1-plastic-wolborg-2"
     ],
     "aliases": [
-      "right sg (bearing"
+      "right sg (bearing)"
     ],
     "source": "composition"
   },
@@ -9700,12 +9688,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "classification": "Spin Gear",
     "slot": "spin-gear",
     "code": null,
-    "name": "Right SG (Full Auto",
+    "name": "Right SG (Full Auto)",
     "usedBy": [
       "gen1-plastic-driger-f"
     ],
     "aliases": [
-      "right sg (full auto"
+      "right sg (full auto)"
     ],
     "source": "composition"
   },

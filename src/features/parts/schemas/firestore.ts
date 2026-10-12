@@ -101,6 +101,68 @@ export const PART_SLOT_LABEL: Record<PartSlot, string> = {
   bit: "Bit",
 };
 
+/**
+ * Which CATEGORY node a part of this classification is filed under.
+ *
+ * ── 🛑 A PART IS A PLAIN CATEGORY LEAF, `categoryType` OMITTED ──────────────
+ *
+ * The user's instruction was *"treat parts as also categories, let admins
+ * create or add more of them"*, and this map is how both halves are answered at
+ * once: a part leaf under these nodes gets `deriveTaxonomy`'s ancestor chain,
+ * `countersReconcile`'s tally, the sitemap, breadcrumbs, SEO, an OG image and
+ * **the existing admin category editor** — create, edit and delete included —
+ * for no new code.
+ *
+ * 🛑 `categoryType` is OMITTED rather than given a new `"part"` value, and that
+ * is the decisive design point. 92 files read `categoryType`, and section 4.4
+ * records that `categoryType: "sublisting"` carries SEVEN live defects
+ * precisely because a new discriminator value opts out of every path that
+ * works — `deriveTaxonomy` never reads it, `countersReconcile` leaves its count
+ * permanently 0, and the sitemap excludes it by name. An omitted type changes
+ * none of those 92 files and inherits every one of those paths.
+ *
+ * ── 🛑 KEYED ON THE SLOT ALONE, NOT ON (slot, generation) ───────────────────
+ *
+ * The first version derived a part's generation from its `usedBy` models, which
+ * measured **681 of 753 placeable, 72 unplaceable and 1 spanning two
+ * generations**. That was solving a problem that does not exist: each of the 20
+ * classification names belongs to exactly ONE generation's vocabulary. A
+ * "Performance Tip" is Metal-era by definition, a "Driver" is Burst, a "Bit" is
+ * X and a "Bit Chip" is Plastic Gen — the words are not shared. Keying on the
+ * slot places **all 753** and cannot be wrong about a part whose `usedBy` is
+ * thin.
+ *
+ * A `Record<PartSlot, string>`, so a 21st classification cannot compile without
+ * being given a home — and a part leaf with no parent is a tier-0 orphan, which
+ * is the live defect the store sublisting POST still has.
+ */
+export const PART_SLOT_CATEGORY: Record<PartSlot, string> = {
+  // Plastic Generation / HMS — Takara, pre-2006.
+  "attack-ring": "category-original-attack-rings",
+  "weight-disk": "category-original-weight-disks",
+  "blade-base": "category-original-blade-bases",
+  "bit-chip": "category-original-bit-chips",
+  "spin-gear": "category-original-spin-gears",
+  "engine-gear": "category-original-engine-gears",
+  "running-core": "category-original-running-cores",
+  // Metal Fight / 4D.
+  "face-bolt": "category-metal-face-bolts",
+  "energy-ring": "category-metal-energy-rings",
+  "fusion-wheel": "category-metal-fusion-wheels",
+  "chrome-wheel": "category-metal-chrome-wheels",
+  "spin-track": "category-metal-spin-tracks",
+  "performance-tip": "category-metal-performance-tips",
+  // Burst.
+  layer: "category-burst-layers",
+  disc: "category-burst-discs",
+  driver: "category-burst-drivers",
+  armour: "category-burst-chips-armour",
+  // Beyblade X.
+  blade: "category-x-blades",
+  ratchet: "category-x-ratchets",
+  bit: "category-x-bits",
+};
+
 /** Every slot key, for an index page that must not hand-write the list. */
 export const ALL_PART_SLOTS = Object.values(PART_SLOT_VALUES) as readonly PartSlot[];
 

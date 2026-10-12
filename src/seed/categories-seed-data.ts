@@ -59,6 +59,7 @@ import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
 import { BRAND_ROW_COUNT, buildBrandRows } from "./_helpers/brand-rows";
 import { MODEL_LEAF_COUNT } from "./_helpers/category-models";
+import { PART_LEAF_COUNT } from "./_helpers/category-parts";
 import { MARKET_BAND_LEAF_IDS } from "./_helpers/category-content";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 
@@ -474,13 +475,55 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
  * (the seed CLI, the tester fixtures, the audits) wants to fail before writing
  * rather than after.
  */
-const modelLeafRows = rawCategories.filter((c) => c.tier === 4).length;
-if (modelLeafRows !== MODEL_LEAF_COUNT) {
+/*
+ * 🛑 TIER 4 IS NOW TWO GENERATED FAMILIES, not one.
+ *
+ * This assertion compared the tier-4 count against `MODEL_LEAF_COUNT` alone,
+ * and it CAUGHT the part leaves the moment they landed — 968 against an
+ * expected 216 — which is precisely the job it was written for. Widening it to
+ * the sum is the fix; deleting it or loosening it to `>=` would retire the one
+ * check that can see a generated map silently empty.
+ *
+ * Kept as an exact equality for the same reason: a `>=` would pass with
+ * `PART_LEAVES` entirely gone.
+ */
+/*
+ * 🛑 DISTINCT IDS. This assertion did not exist, and its absence is what let 20
+ * part leaves overwrite 20 model leaves in production.
+ *
+ * The whole failure was silent at every layer: the forest walked 1,138 nodes
+ * with only 1,118 distinct ids, `appkit-seed load` is a `set(…, {merge:true})`
+ * so the second row with an id quietly replaced the first, and the CLI reported
+ * `created 1173, errors 0` while Firestore held 1,153 documents. A buyer opening
+ * `/categories/category-galeon` got the attack ring instead of the bey.
+ *
+ * Counting rows is not counting documents, and this is the one check that can
+ * tell the difference BEFORE anything is written.
+ */
+const allIds = allCategoryRows.map((c) => c.id).filter((x): x is string => typeof x === "string");
+const duplicateIds = [...new Set(allIds.filter((id, i) => allIds.indexOf(id) !== i))];
+if (duplicateIds.length > 0) {
   throw new Error(
-    `category seed: ${modelLeafRows} tier-4 model leaves reached the tree but ` +
-      `category-models.ts generated ${MODEL_LEAF_COUNT}. A line id in the ` +
-      `forest no longer matches a key in MODEL_LEAVES — re-run ` +
-      `node scripts/gen-category-models.mjs and check the line ids.`,
+    `category seed: ${duplicateIds.length} duplicate id(s) — a merge write would ` +
+      `silently overwrite, so the load would report success and lose rows. ` +
+      `First few: ${duplicateIds.slice(0, 8).join(", ")}`,
+  );
+}
+if (allIds.length !== allCategoryRows.length) {
+  throw new Error(
+    `category seed: ${allCategoryRows.length - allIds.length} row(s) have no string id`,
+  );
+}
+
+const tier4Rows = rawCategories.filter((c) => c.tier === 4).length;
+const expectedTier4 = MODEL_LEAF_COUNT + PART_LEAF_COUNT;
+if (tier4Rows !== expectedTier4) {
+  throw new Error(
+    `category seed: ${tier4Rows} tier-4 leaves reached the tree but the generated ` +
+      `maps declare ${expectedTier4} (${MODEL_LEAF_COUNT} models + ${PART_LEAF_COUNT} parts). ` +
+      `A parent id in the forest no longer matches a key in MODEL_LEAVES or PART_LEAVES — ` +
+      `re-run node scripts/gen-category-models.mjs and node scripts/gen-category-parts.mjs ` +
+      `and check the parent ids.`,
   );
 }
 if (brandRows.length !== BRAND_ROW_COUNT) {

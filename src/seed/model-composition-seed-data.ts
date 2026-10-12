@@ -1214,7 +1214,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/apollon.md",
-    "categoryId": "category-apollon"
+    "categoryId": "category-bit-chip-apollon"
   },
   {
     "id": "gen1-plastic-black-dranzer",
@@ -1255,7 +1255,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--flame-change-base"
       }
     ],
-    "source": "gen1/plastic/black-dranzer.md"
+    "source": "gen1/plastic/black-dranzer.md",
+    "categoryId": "category-black-dranzer"
   },
   {
     "id": "gen1-plastic-cyber-draciel",
@@ -1277,7 +1278,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "layer--attack-ring"
       }
     ],
-    "source": "gen1/plastic/cyber-draciel.md"
+    "source": "gen1/plastic/cyber-draciel.md",
+    "categoryId": "category-cyber-draciel"
   },
   {
     "id": "gen1-plastic-cyber-dragoon",
@@ -1318,7 +1320,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-jumping-base-2"
       }
     ],
-    "source": "gen1/plastic/cyber-dragoon.md"
+    "source": "gen1/plastic/cyber-dragoon.md",
+    "categoryId": "category-cyber-dragoon"
   },
   {
     "id": "gen1-plastic-cyber-dranzer",
@@ -1341,7 +1344,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "layer--attack-ring"
       }
     ],
-    "source": "gen1/plastic/cyber-dranzer.md"
+    "source": "gen1/plastic/cyber-dranzer.md",
+    "categoryId": "category-cyber-dranzer"
   },
   {
     "id": "gen1-plastic-cyber-driger",
@@ -1364,7 +1368,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "layer--attack-ring"
       }
     ],
-    "source": "gen1/plastic/cyber-driger.md"
+    "source": "gen1/plastic/cyber-driger.md",
+    "categoryId": "category-cyber-driger"
   },
   {
     "id": "gen1-plastic-dark-gargoyle",
@@ -1448,7 +1453,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/death-driger.md",
-    "categoryId": "category-shadow-driger"
+    "categoryId": "category-bit-chip-shadow-driger"
   },
   {
     "id": "gen1-plastic-draciel-f",
@@ -2526,11 +2531,11 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Semi-Flat Base",
-        "partId": "blade-base--sg-semi-flat-base-2"
+        "partId": "blade-base--sg-semi-flat-base"
       }
     ],
     "source": "gen1/plastic/flash-leopard.md",
-    "categoryId": "category-flash-leopard"
+    "categoryId": "category-bit-chip-flash-leopard"
   },
   {
     "id": "gen1-plastic-gaia-dragoon-g",
@@ -2698,7 +2703,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/galeon.md",
-    "categoryId": "category-galeon"
+    "categoryId": "category-bit-chip-galeon"
   },
   {
     "id": "gen1-plastic-galman",
@@ -2740,7 +2745,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/galman.md",
-    "categoryId": "category-galman"
+    "categoryId": "category-bit-chip-galman"
   },
   {
     "id": "gen1-plastic-galzzly",
@@ -2782,7 +2787,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/galzzly.md",
-    "categoryId": "category-galzzly"
+    "categoryId": "category-bit-chip-galzzly"
   },
   {
     "id": "gen1-plastic-gigars",
@@ -2812,7 +2817,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/gigars.md",
-    "categoryId": "category-gigars"
+    "categoryId": "category-bit-chip-gigars"
   },
   {
     "id": "gen1-plastic-griffolyon",
@@ -2854,7 +2859,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/griffolyon.md",
-    "categoryId": "category-griffolyon"
+    "categoryId": "category-bit-chip-griffolyon"
   },
   {
     "id": "gen1-plastic-hopper",
@@ -2895,7 +2900,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--jumping-base"
       }
     ],
-    "source": "gen1/plastic/hopper.md"
+    "source": "gen1/plastic/hopper.md",
+    "categoryId": "category-hopper"
   },
   {
     "id": "gen1-plastic-keel-shark",
@@ -2964,7 +2970,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--metal-sting-base"
       }
     ],
-    "source": "gen1/plastic/master-dranzer.md"
+    "source": "gen1/plastic/master-dranzer.md",
+    "categoryId": "category-master-dranzer"
   },
   {
     "id": "gen1-plastic-metal-draciel",
@@ -3006,7 +3013,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/metal-draciel.md",
-    "categoryId": "category-metal-draciel"
+    "categoryId": "category-bit-chip-metal-draciel"
   },
   {
     "id": "gen1-plastic-metal-driger",
@@ -3048,7 +3055,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/metal-driger.md",
-    "categoryId": "category-metal-driger"
+    "categoryId": "category-bit-chip-metal-driger"
   },
   {
     "id": "gen1-plastic-rapid-eagle",
@@ -3120,7 +3127,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/rock-bison.md",
-    "categoryId": "category-rock-bison"
+    "categoryId": "category-bit-chip-rock-bison"
   },
   {
     "id": "gen1-plastic-rushing-boar",
@@ -3161,7 +3168,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-sharp-base"
       }
     ],
-    "source": "gen1/plastic/rushing-boar.md"
+    "source": "gen1/plastic/rushing-boar.md",
+    "categoryId": "category-rushing-boar"
   },
   {
     "id": "gen1-plastic-salamalyon",
@@ -3276,10 +3284,11 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Semi-Flat Base",
-        "partId": "blade-base--sg-semi-flat-base-2"
+        "partId": "blade-base--sg-semi-flat-base"
       }
     ],
-    "source": "gen1/plastic/sharkrash.md"
+    "source": "gen1/plastic/sharkrash.md",
+    "categoryId": "category-bit-chip-sharkrash"
   },
   {
     "id": "gen1-plastic-strata-dragoon-g",
@@ -3362,7 +3371,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--strata-dragoon"
       }
     ],
-    "source": "gen1/plastic/strata-dragoon.md"
+    "source": "gen1/plastic/strata-dragoon.md",
+    "categoryId": "category-bit-chip-strata-dragoon"
   },
   {
     "id": "gen1-plastic-thunder-pegasus",
@@ -3398,7 +3408,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/thunder-pegasus.md",
-    "categoryId": "category-thunder-pegasus"
+    "categoryId": "category-bit-chip-thunder-pegasus"
   },
   {
     "id": "gen1-plastic-torch-pegasus",
@@ -3428,7 +3438,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/torch-pegasus.md",
-    "categoryId": "category-torch-pegasus"
+    "categoryId": "category-bit-chip-torch-pegasus"
   },
   {
     "id": "gen1-plastic-trygle-2",
@@ -3512,7 +3522,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/trygle.md",
-    "categoryId": "category-trygle"
+    "categoryId": "category-bit-chip-trygle"
   },
   {
     "id": "gen1-plastic-tryhorn",
@@ -3553,7 +3563,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--drag-ship"
       }
     ],
-    "source": "gen1/plastic/tryhorn.md"
+    "source": "gen1/plastic/tryhorn.md",
+    "categoryId": "category-tryhorn"
   },
   {
     "id": "gen1-plastic-trypio-g",
@@ -3637,7 +3648,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/trypio.md",
-    "categoryId": "category-trypio"
+    "categoryId": "category-bit-chip-trypio"
   },
   {
     "id": "gen1-plastic-vanishing-moot",
@@ -3678,7 +3689,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--sg-sharp-base"
       }
     ],
-    "source": "gen1/plastic/vanishing-moot.md"
+    "source": "gen1/plastic/vanishing-moot.md",
+    "categoryId": "category-bit-chip-vanishing-moot"
   },
   {
     "id": "gen1-plastic-vortex-ape-2",
@@ -3762,7 +3774,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/vortex-ape.md",
-    "categoryId": "category-vortex-ape"
+    "categoryId": "category-bit-chip-vortex-ape"
   },
   {
     "id": "gen1-plastic-wolborg-2",
@@ -3888,7 +3900,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/wolborg.md",
-    "categoryId": "category-wolborg"
+    "categoryId": "category-layer-wolborg"
   },
   {
     "id": "gen1-plastic-wyborg",
@@ -3930,7 +3942,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/wyborg.md",
-    "categoryId": "category-wyborg"
+    "categoryId": "category-bit-chip-wyborg"
   },
   {
     "id": "gen1-plastic-zeus",
@@ -3972,7 +3984,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/zeus.md",
-    "categoryId": "category-zeus"
+    "categoryId": "category-bit-chip-zeus"
   },
   {
     "id": "gen2-mfb-basalt-horogium",
@@ -6540,7 +6552,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen3/bu/draciel-fortress.md",
-    "categoryId": "category-draciel-fortress"
+    "categoryId": "category-layer-draciel-fortress"
   },
   {
     "id": "gen3-bu-dranzer-flame-yell-zeta-tt",
@@ -6596,7 +6608,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
         "partName": "Hunter'",
-        "partId": "performance-tip--hunter"
+        "partId": "performance-tip--hunter-dash"
       }
     ],
     "source": "gen3/bu/gaia-dragoon-ah.md",
@@ -6945,7 +6957,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Xtend+ / Zeta'",
-        "partId": "driver--xtend-zeta"
+        "partId": "driver--xtend-zeta-dash"
       }
     ],
     "source": "gen3/choz/cho-z-spriggan.md",
@@ -7247,7 +7259,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "DRIVER",
         "partName": "Ignition'",
-        "partId": "driver--ignition"
+        "partId": "driver--ignition-dash"
       }
     ],
     "source": "gen3/db/imperial-dragon.md",
@@ -7271,7 +7283,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
         "partName": "Dimension'",
-        "partId": "performance-tip--dimension"
+        "partId": "performance-tip--dimension-dash"
       }
     ],
     "source": "gen3/db/infinite-achilles-d1b.md"
@@ -7332,7 +7344,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "DRIVER",
         "partName": "Destroy'",
-        "partId": "driver--destroy"
+        "partId": "driver--destroy-dash"
       }
     ],
     "source": "gen3/db/rage-longinus-s5.md"
@@ -7347,7 +7359,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
         "partName": "Trans'",
-        "partId": "performance-tip--trans"
+        "partId": "performance-tip--trans-dash"
       }
     ],
     "source": "gen3/db/tact-longinus.md",
@@ -7369,7 +7381,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Variable'",
-        "partId": "driver--variable-2"
+        "partId": "driver--variable-dash"
       }
     ],
     "source": "gen3/db/ultimate-valkyrie-lv9.md",
@@ -7842,7 +7854,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Evolution'",
-        "partId": "driver--evolution"
+        "partId": "driver--evolution-dash"
       }
     ],
     "source": "gen3/superking/brave-valtryek.md"
@@ -7874,7 +7886,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Dimension'",
-        "partId": "driver--dimension-2"
+        "partId": "driver--dimension-dash"
       }
     ],
     "source": "gen3/superking/infinity-achilles.md"
@@ -7889,7 +7901,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "DRIVER",
         "partName": "Destroy'",
-        "partId": "driver--destroy"
+        "partId": "driver--destroy-dash"
       }
     ],
     "source": "gen3/superking/rage-longinus-d3a.md"
@@ -8023,7 +8035,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Unite'",
-        "partId": "driver--unite-2"
+        "partId": "driver--unite-dash"
       }
     ],
     "source": "gen3/superking/world-spryzen.md"
