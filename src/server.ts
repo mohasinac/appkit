@@ -28,6 +28,22 @@ export {
   renderPartOg,
   renderPartClassificationOg,
 } from "./_internal/server/features/parts/og";
+// D13 — assembly and part-out. Both run in a real transaction that RE-READS.
+export {
+  assembleFromComponents,
+  partOutToComponents,
+  planAssembly,
+  assertAssemblyInput,
+  MAX_ASSEMBLY_COMPONENTS,
+} from "./_internal/server/features/parts/assembly";
+export type {
+  AssemblyComponent,
+  AssembleInput,
+  PartOutInput,
+  AssemblyResult,
+  AssemblyPlan,
+  StockWrite,
+} from "./_internal/server/features/parts/assembly";
 // Persists DEGRADED_READ rows via the installed reporter; returns typed fallback on error.
 export {
   safeRead,

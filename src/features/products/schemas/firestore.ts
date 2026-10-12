@@ -292,6 +292,83 @@ export interface ProductDocument extends BaseDocument {
    * lot but has not counted the pile yet must still be able to save a draft.
    */
   lotSize?: number;
+
+  // ── D13/D14: the THIRD variant level, and part identity ─────────────────
+  //
+  // Three levels, three mechanisms, and only the middle one needed building:
+  //   1 MODEL              a tree leaf          `category-dragoon-g`
+  //   2 CATALOGUE VARIANT  facets               release × colourway × brand
+  //   3 PHYSICAL UNIT      one listing each     Dragoon G "A" vs "B"
+  //
+  // Level 3 is what ecommerce usually means by a variant and it needed no new
+  // concept, because a ProductDocument already IS one physical unit.
+
+  /**
+   * Distinguishes two physically distinct units of the SAME model and the same
+   * catalogue variant — both white Dragoon G, one with a scuffed attack ring.
+   *
+   * 🛑 Referenced by `isLot`'s comment above since G3a and declared NOWHERE
+   * until now, so the rule that comment states had no field to state it about.
+   *
+   * 🛑 NOT `itemCode`, which is the grading axis and documents `"PSA 10"` as
+   * its example — a grade is a third party's claim about condition. A unit
+   * label is a disambiguator the seller chose.
+   *
+   * It exists because the alternative is what the crawl measured at
+   * thelimitlesscorner: one listing per physical unit with the condition
+   * defects welded into the TITLE.
+   */
+  unitLabel?: string;
+
+  /**
+   * This listing is a COMPONENT, and this is which one.
+   *
+   * The `partGlossary` document id (`${slot}--${tail}`), stored whole.
+   *
+   * 🛑 A single id rather than the `{classification, code}` pair the plan
+   * proposed, and the departure is deliberate: a pair is a second place the
+   * key gets composed, and `partGlossaryId()` is already the one place that
+   * composes it. Two composers of one key is Root Cause #75's shape, and the
+   * id is also directly the URL (`/parts/{slot}/{tail}`) with no re-derivation.
+   *
+   * Optional even on a part listing: the glossary holds 753 rows and does not
+   * cover every component ever moulded, so a spare we cannot classify is still
+   * sellable and still countable.
+   */
+  partGlossaryId?: string;
+
+  /**
+   * What distinguishes two physical units of the same part code — "pink",
+   * "translucent blue", "gold".
+   *
+   * 🛑 NOT a `productFeature`. That vocabulary is ~169 curated terms in 13
+   * groups and `colour` is not one of them, deliberately: colourways are
+   * open-ended and per-part, and pouring them into a shared vocabulary gives a
+   * facet with hundreds of single-use values — the long-tail-tag anti-pattern
+   * this project REJECTED when redeyemerch was crawled (50–160 tags per
+   * product, 162 products on one tag).
+   *
+   * 🛑 Free text, and the VOCABULARY is deliberately not seeded. The corpus
+   * carries part names, codes and weights and no colours at all, so a seeded
+   * list would be invented. It accumulates from real spares (GAP-8: data
+   * entry, not code).
+   */
+  colourway?: string;
+
+  /** Mould/version variant — the "storm pegasus version" of a shared part. */
+  mouldVariant?: string;
+
+  /**
+   * Built HERE from components. Each entry decremented a part listing's stock.
+   *
+   * 🛑 The decrement must happen in a real transaction that RE-READS, and it
+   * must read `availableQuantity` rather than `stockQuantity`: a component with
+   * 10 in stock and 3 reserved has SEVEN assemblable, and assembling from the
+   * wrong field builds a bey out of parts somebody has already bought. The
+   * PhonePe path's `runBatch` over a snapshot read outside any transaction is
+   * the oversell this avoids, five components at a time.
+   */
+  assembledFrom?: Array<{ slotKey: string; productId: string; quantity: number }>;
   condition?: "new" | "like_new" | "good" | "fair" | "poor" | "used" | "refurbished" | "broken" | "graded";
   insurance?: boolean;
   insuranceCost?: number;
@@ -684,6 +761,24 @@ export const PRODUCT_PUBLIC_FIELDS = [
   // on one item.
   "isLot",
   "lotSize",
+  /* D13/D14 — buyer-facing by definition: a colourway is WHY someone buys that
+   * particular spare, and a unit label is how they tell two identical listings
+   * apart. `assembledFrom` is listed too — it names product ids that are
+   * already public listings, and "built from these parts" is provenance a
+   * buyer should see. */
+  "unitLabel",
+  "partGlossaryId",
+  "colourway",
+  "mouldVariant",
+  "assembledFrom",
+  /* 🛑 D13/D14. Listed here or an update STRIPS them: the write schema has no
+   * `.passthrough()`, so a field absent from this list is dropped before it
+   * reaches Firestore while the write still returns 200 (Root Cause #101). */
+  "unitLabel",
+  "partGlossaryId",
+  "colourway",
+  "mouldVariant",
+  "assembledFrom",
   "listingType",
   "auctionEndDate",
   "startingBid",
