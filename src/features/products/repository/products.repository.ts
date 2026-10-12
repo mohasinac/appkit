@@ -38,6 +38,15 @@ import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type 
 // reads: no repository in this codebase imports another feature's, because of
 // the Turbopack import-chain trap (Root Cause #6/#18).
 import { CATEGORIES_COLLECTION } from "../../categories/schemas/firestore";
+import { CATEGORY_COUNTS_COLLECTION, sumCounts } from "../../categories/schemas/category-counts";
+import {
+  ENFORCE_LEAF_FILING,
+  assertAssignmentShape,
+  buildTaxonomyClosure,
+  pickDefaultAssignment,
+  readAssignments,
+  type ResolvedCategory,
+} from "./category-assignment";
 import {
   describeCountable,
   countsChanged,
@@ -373,10 +382,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * either way. The two can only disagree when one of them is stale, and the
      * derived one is the one that goes stale.
      */
-    const leaf =
-      input.category ||
-      (Array.isArray(input.categorySlugs) && input.categorySlugs[0]) ||
-      null;
+    const assignments = readAssignments(input);
+    const leaf = assignments[0] ?? null;
     /*
      * The brand selector's option value is the brand ROW's id (`brand-beyblade`),
      * but `ProductDocument.brand` is matched by DISPLAY NAME —
@@ -390,80 +397,92 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      */
     const brandRef = input.brandSlug || input.brand || null;
 
-    const [catSnap, brandSnap] = await Promise.all([
-      leaf ? cats.doc(leaf).get() : Promise.resolve(null),
-      brandRef ? cats.doc(brandRef).get() : Promise.resolve(null),
-    ]);
+    /*
+     * ONE `getAll` for every assignment plus the brand, rather than a read per
+     * assignment. Rule #6 budgets ~3 sequential Firestore round-trips for a
+     * write path and this method is already one of them.
+     */
+    const refs = [...assignments.map((id) => cats.doc(id)), ...(brandRef ? [cats.doc(brandRef)] : [])];
+    const snaps = refs.length > 0 ? await this.db.getAll(...refs) : [];
+    const assignmentSnaps = snaps.slice(0, assignments.length);
+    const brandSnap = brandRef ? (snaps[assignments.length] ?? null) : null;
+    const catSnap = assignmentSnaps[0] ?? null;
 
-    if (catSnap?.exists) {
-      const cat = catSnap.data() as {
+    /*
+     * I1/I2 — resolve every assignment, refuse the disallowed shapes, pick the
+     * default, then derive the ordered closure from all of them.
+     *
+     * 🛑 A row that does not resolve is DROPPED from the assignment list and
+     * warned about, never silently kept: an unresolvable id cannot be checked
+     * against the one-per-root rule and cannot contribute a chain, so keeping
+     * it would put an id in the closure that resolves to no page.
+     */
+    const resolved: ResolvedCategory[] = [];
+    for (let i = 0; i < assignmentSnaps.length; i += 1) {
+      const snap = assignmentSnaps[i];
+      const id = assignments[i]!;
+      if (!snap?.exists) {
+        // Never destroy a chain we cannot improve on — see the `else if` below.
+        serverLogger.warn("Product category id does not resolve to a category", { leaf: id });
+        continue;
+      }
+      const d = snap.data() as {
         name?: string;
+        rootId?: string;
+        tier?: number;
+        isLeaf?: boolean;
         parentIds?: string[];
         ancestors?: { name?: string }[];
-        isLeaf?: boolean;
       };
-
-      /*
-       * G3 — THE FILING RULE, and it is enforced in ONE direction only:
-       * a LOT may not file at a LEAF. A single may file anywhere.
-       *
-       * Checked here because `catSnap` is ALREADY in hand for the ancestor
-       * chain, so it costs zero extra reads — the same argument that put
-       * `applyCategoryDefaults` in this method.
-       *
-       * 🛑 The plan specified it symmetrically ("a lot takes a non-leaf while
-       * single take leaves") and MEASUREMENT showed the second half would have
-       * been a severe regression: of 70 production products, **58 file at a
-       * non-leaf** and not one is a lot. Every art print, auction, classified
-       * and digital code would have started failing on its next update, with
-       * nothing wrong with any of them — a leaf here is the tier-4 NAMED MODEL
-       * (345 of 416 nodes), and `category-x-basic` is the honest node for an X
-       * Basic bey that has no model leaf yet. 104 corpus rows are still
-       * unidentified, so that state is normal rather than transitional.
-       *
-       * And re-reading the plan's own justification, only this direction was
-       * ever argued: a lot at a model leaf is a FALSE CLAIM ABOUT THE ITEMS —
-       * filing "12 assorted Burst beys" under `category-dragoon-g` asserts all
-       * twelve are Dragoon G. That is wrong independent of counting.
-       *
-       * The counting half needs no refusal at all, because `categoryCounts`
-       * carries a SEPARATE `lots` pair (see G3b): singles and lots are counted
-       * in different fields, so a leaf's own count means one thing whatever
-       * else is filed there. Separate counters disambiguate; a rejected write
-       * was never required for it.
-       *
-       * REFUSED, never corrected. Silently refiling one tier up would decide a
-       * taxonomy question on the seller's behalf and leave them a listing they
-       * can no longer find — Root Cause #76's write-shape lesson inverted.
-       *
-       * `isLeaf` absent is treated as NOT a leaf, so the lot is allowed: a
-       * category with no `isLeaf` means `buildCategoryTree` has not rebuilt the
-       * tree, and refusing a write over OUR stale derived field would turn a
-       * data-maintenance gap into a seller-facing error.
-       */
-      if (input.isLot === true && cat.isLeaf === true) {
-        throw new ValidationError(
-          `A lot holds several different items, so it cannot be filed under "${cat.name ?? leaf}", which is a single-item category. Pick a broader category — its parent.`,
-        );
-      }
-      // `parentIds` is ordered root-first / nearest-last (category-tree.ts:107),
-      // and the stored chain is self-first / root-last. Reversing is what makes
-      // the derived value byte-identical to what the seed hand-writes — verified
-      // against products-standard-seed-data.ts:197.
-      out.categorySlugs = [leaf!, ...(cat.parentIds ?? []).slice().reverse()];
-      out.category = leaf!;
-      const names = [
-        cat.name,
-        ...(cat.ancestors ?? []).map((a) => a?.name).reverse(),
-      ].filter((n): n is string => !!n);
-      if (names.length) out.categoryNames = names;
-    } else if (leaf) {
-      // Never destroy a chain we cannot improve on. A leaf that is not a real
-      // category row is a data problem to report, not a reason to blank the field.
-      serverLogger.warn("Product category id does not resolve to a category", {
-        leaf,
+      resolved.push({
+        id,
+        name: d.name,
+        rootId: d.rootId,
+        tier: d.tier,
+        isLeaf: d.isLeaf,
+        parentIds: d.parentIds ?? [],
+        ancestorNames: (d.ancestors ?? []).map((a) => a?.name ?? ""),
       });
     }
+
+    if (resolved.length > 0) {
+      assertAssignmentShape(resolved, input.isLot === true, {
+        enforceLeafFiling: ENFORCE_LEAF_FILING,
+        warn: (msg, meta) => serverLogger.warn(msg, { productTitle: input.title, ...meta }),
+      });
+
+      /*
+       * The default's tie-break reads listing counts — and ONLY on a genuine
+       * tie, so a single-assignment product (the overwhelming majority) pays
+       * nothing for it. See `pickDefaultAssignment` for why depth, not count,
+       * is the first criterion.
+       */
+      let counts: Map<string, number> | undefined;
+      const deepest = Math.max(...resolved.map((c) => c.tier ?? -1));
+      if (resolved.filter((c) => (c.tier ?? -1) === deepest).length > 1) {
+        counts = await this.readAssignmentCounts(resolved.map((c) => c.id));
+      }
+
+      const defaultIdx = pickDefaultAssignment(resolved, counts);
+      const closure = buildTaxonomyClosure(resolved, defaultIdx);
+      out.categoryIds = resolved.map((c) => c.id);
+      out.categorySlugs = closure.categorySlugs;
+      out.category = closure.categorySlugs[0]!;
+      if (closure.categoryNames.length) out.categoryNames = closure.categoryNames;
+    }
+
+    /*
+     * 🛑 The old single-leaf block that stood here is GONE, and its two jobs
+     * moved for different reasons:
+     *
+     *   - the chain + names build -> `buildTaxonomyClosure`, because it now has
+     *     to span every assignment while keeping index 0 the default leaf;
+     *   - the lot filing rule -> `assertAssignmentShape`, because it has to run
+     *     per assignment and is now one half of a two-directional rule.
+     *
+     * Its `else if (leaf)` warn also moved, into the resolve loop above, where
+     * it fires per unresolvable assignment instead of only for the first.
+     */
 
     if (brandSnap?.exists) {
       const brand = brandSnap.data() as { name?: string; categoryType?: string };
@@ -479,6 +498,46 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
     await this.applyInclusivePricing(input, out);
 
+    return out;
+  }
+
+  /**
+   * Listing counts for a handful of category ids, for the default tie-break.
+   *
+   * 🛑 Called ONLY when two assignments tie at the deepest tier, so the common
+   * single-assignment write pays nothing. One `getAll` of at most
+   * `MAX_CATEGORY_ASSIGNMENTS` documents by id — no index, no query.
+   *
+   * 🛑 A missing row is OMITTED from the map rather than defaulted to 0.
+   * `categoryCounts` documents the same rule: `undefined` means "not counted
+   * yet", and defaulting it to zero would let an uncounted node lose a tie it
+   * might have won.
+   *
+   * Reads the collection through `this.db` rather than importing
+   * `categoryCountsRepository` — no repository here imports another feature's
+   * (Root Cause #6/#18), and a raw read by id has neither problem.
+   */
+  private async readAssignmentCounts(ids: string[]): Promise<Map<string, number>> {
+    const out = new Map<string, number>();
+    if (ids.length === 0) return out;
+    try {
+      const refs = ids.map((id) => this.db.collection(CATEGORY_COUNTS_COLLECTION).doc(id));
+      const snaps = await this.db.getAll(...refs);
+      for (const snap of snaps) {
+        if (!snap.exists) continue;
+        const d = snap.data() as { total?: Record<string, number> };
+        if (!d.total) continue;
+        out.set(snap.id, sumCounts(d.total));
+      }
+    } catch (err) {
+      /*
+       * A tie-break is not worth failing a product write over. Falling through
+       * with an empty map drops to level 3 — the order the seller picked — which
+       * is a deterministic answer rather than a wrong one.
+       */
+      void normalizeError(err);
+      serverLogger.warn("Could not read category counts for the default tie-break", { ids });
+    }
     return out;
   }
 

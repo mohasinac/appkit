@@ -201,11 +201,49 @@ export interface ProductDocument extends BaseDocument {
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string[];
-  /** Primary category FK slugs (1-to-many). Use categorySlugs[0] for display. */
+  /**
+   * I1 — the ASSIGNED categories. What a human picked, and the only one of the
+   * three category fields that is authored rather than derived.
+   *
+   * At most `MAX_CATEGORY_ASSIGNMENTS` (4), and 🛑 **at most ONE per root** —
+   * "a category can be multiple, they should not be under same tree". A single
+   * files at LEAVES, a lot at NON-LEAVES. All of it is enforced in
+   * `assertAssignmentShape`, which `deriveTaxonomy` calls on every write path.
+   *
+   * `categoryIds[0]` is NOT the default — the default is the DEEPEST assignment
+   * (count breaks a tie), and `categorySlugs[0]` is what carries it.
+   */
+  categoryIds?: string[];
+  /**
+   * DERIVED closure over every assignment — the field every category QUERY
+   * matches on, via `array-contains` / `array-contains-any`.
+   *
+   * 🛑 ORDERED, and that is load-bearing: the DEFAULT chain first (so
+   * `categorySlugs[0]` is still the default leaf, which ~30 call sites read it
+   * as), then each remaining chain leaf-first, deduped. A set-shaped union
+   * would break all of them silently — see `category-assignment.ts`'s header.
+   *
+   * Never authored. An inbound value is treated as a legacy single leaf: only
+   * its HEAD is read, as one assignment.
+   */
   categorySlugs: string[];
-  /** Display-name cache parallel to categorySlugs[]. */
+  /**
+   * Display-name cache for the DEFAULT chain only, leaf-first.
+   *
+   * 🛑 Deliberately NOT parallel to `categorySlugs` once a product has two
+   * assignments: a union of two chains has no readable path, and the breadcrumb
+   * builder reverses this array to render root-first. Keeping it single-chain
+   * is what leaves every existing breadcrumb byte-identical.
+   */
   categoryNames?: string[];
-  /** @deprecated Read-only alias — normalised from legacy docs on load. */
+  /**
+   * The default leaf, mirrored. 🛑 NOT dead and NOT read-only, whatever the
+   * `@deprecated` tag here said for a long time: it is in
+   * `PRODUCT_UPDATABLE_FIELDS`, it is what `CategoryInlineSelect` writes, it is
+   * the one category key `productCreateSchema` declares, and `deriveTaxonomy`
+   * prefers it over the derived chain. Sending it alone still means exactly
+   * "one assignment".
+   */
   category?: string;
   /** @deprecated Read-only alias. */
   categoryName?: string;
@@ -700,6 +738,10 @@ export const PRODUCT_INDEXED_FIELDS = [
   "storeId",
   "status",
   "category",
+  /* Indexed: `array-contains` on the ASSIGNED list is what the category
+   * delete cascade queries to find a product filed here as its SECOND
+   * category — `findBy("category", id)` sees only the default leaf. */
+  "categoryIds",
   "featured",
   "listingType",
   "isPromoted",
@@ -760,6 +802,8 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "title",
   "description",
   "category",
+  /* Public: the chips on a detail page render the assignments. */
+  "categoryIds",
   "subcategory",
   "brand",
   "price",
@@ -863,6 +907,12 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "title",
   "description",
   "category",
+  /* I1 — the ASSIGNED list. 🛑 Named here or an update STRIPS it while still
+   * returning 200 (Root Cause #101), which is exactly how a UI-created
+   * product lost its chain. `categorySlugs`/`categoryNames` stay OUT: they
+   * are derived, and a caller that could set them could desync the closure
+   * from the assignments it is supposed to be the closure OF. */
+  "categoryIds",
   "subcategory",
   "brand",
   "price",
