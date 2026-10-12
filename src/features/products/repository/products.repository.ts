@@ -38,6 +38,14 @@ import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type 
 // reads: no repository in this codebase imports another feature's, because of
 // the Turbopack import-chain trap (Root Cause #6/#18).
 import { CATEGORIES_COLLECTION } from "../../categories/schemas/firestore";
+import {
+  describeCountable,
+  countsChanged,
+  buildCountPatch,
+  applyCountPatch,
+} from "../../categories/repository/category-counts";
+// The ONE availability predicate — never a second copy (Root Cause #73).
+import { isListingRowAvailable } from "../../../_internal/shared/listing-types/_registry";
 import { TAX_CODES_COLLECTION } from "../../tax-codes/schemas/firestore";
 // Collection id only, never the stores repository — no repository in this
 // codebase imports another feature's (the Turbopack import-chain trap).
@@ -871,7 +879,61 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       searchTxt: buildProductSearchTxt(merged),
     });
     this.cacheSet(updated);
+    await this.syncCategoryCounts(current ?? null, updated);
     return updated;
+  }
+
+  /**
+   * G3b — move the leaf→root listing counters for one product transition.
+   *
+   * 🛑 Called from HERE rather than from a Firestore trigger because
+   * `FieldValue.increment` is atomic but **not idempotent** and a trigger is
+   * at-least-once: a redelivered trigger double-counts permanently and
+   * invisibly. See `repository/category-counts.ts` for the full argument.
+   *
+   * 🛑 And the guard is on (chain, leaf, type, isLot, AVAILABILITY) — not on
+   * the taxonomy alone. `draft → published` changes no `categorySlugs`, so a
+   * taxonomy-only guard would never move the count on the one transition that
+   * matters most, with nothing to notice.
+   *
+   * Availability comes from `isListingRowAvailable`, the SAME predicate the
+   * listing query and `countersReconcile` use, so the incremental and nightly
+   * values can agree. Four partial copies of that predicate is what Root Cause
+   * #73 cost; this module takes the verdict as an argument rather than
+   * recomputing it.
+   */
+  private async syncCategoryCounts(
+    before: ProductDocument | null,
+    after: ProductDocument | null,
+  ): Promise<void> {
+    const now = new Date();
+    const side = (row: ProductDocument | null) => ({
+      delta: row ? describeCountable(row) : null,
+      // A draft or archived row is not "available" and must not be counted —
+      // the count is of what a visitor can actually see, which is why the
+      // badge and the tab agree.
+      countsNow: !!row
+        && row.status === ProductStatusValues.PUBLISHED
+        && isListingRowAvailable(row as never, now),
+    });
+    const b = side(before);
+    const a = side(after);
+    if (!countsChanged(b, a)) return;
+
+    const patch = buildCountPatch([
+      { delta: b.countsNow ? b.delta : null, sign: -1 },
+      { delta: a.countsNow ? a.delta : null, sign: 1 },
+    ]);
+    await applyCountPatch(this.db, patch, (err) => {
+      // Never fails the product write: a count is a display number, and losing
+      // a seller's publish over an ancestor counter would trade a cosmetic
+      // staleness for real data. The nightly reconciler's `drifted` is how a
+      // missed increment becomes visible.
+      serverLogger.warn("categoryCounts increment failed", {
+        productId: after?.id ?? before?.id,
+        error: err.message,
+      });
+    });
   }
 
   override async create(input: ProductCreateInput): Promise<ProductDocument> {
@@ -915,6 +977,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
     const created = { id, ...productData };
     this.cacheSet(created);
+    await this.syncCategoryCounts(null, created);
     return created;
   }
 
@@ -1169,7 +1232,32 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
   override async delete(id: string): Promise<void> {
     this.cacheInvalidateForId(id);
-    return super.delete(id);
+    /*
+     * 🛑 Read BEFORE deleting, or there is no chain left to decrement and the
+     * counters keep the row forever — the one case where the delta cannot be
+     * recovered from the write itself. One extra read on a delete, which is
+     * the rarest product mutation there is.
+     *
+     * `safeRead`-shaped on purpose: a product that cannot be read must still
+     * be deletable, and the nightly reconciler corrects the count.
+     */
+    let prior: ProductDocument | null = null;
+    try {
+      prior = await super.findById(id);
+    } catch (err) {
+      const e = normalizeError(err);
+      // 🛑 Logged, not swallowed. A failed pre-read means this product's
+      // contribution stays on its ancestors' counters until the nightly
+      // reconciler corrects them — bounded and self-healing, but invisible
+      // unless it is said. `void normalizeError(err)` alone would look handled
+      // while reporting nothing (audit-silent-degrade's normalize theatre).
+      serverLogger.warn("product delete: pre-read failed, counts will drift until reconcile", {
+        productId: id,
+        error: e.message,
+      });
+    }
+    await super.delete(id);
+    await this.syncCategoryCounts(prior, null);
   }
 
   static readonly SIEVE_FIELDS = {

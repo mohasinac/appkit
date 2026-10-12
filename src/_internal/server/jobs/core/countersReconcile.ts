@@ -6,6 +6,7 @@ import {
 } from "../../../../repositories";
 import { ProductStatusValues, PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { CATEGORIES_COLLECTION } from "../../../../features/categories/schemas/firestore";
+import { CATEGORY_COUNTS_COLLECTION } from "../../../../features/categories/schemas/category-counts";
 import { ORDER_FIELDS, PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
 import type { JobContext } from "../runtime/types";
@@ -21,6 +22,19 @@ interface Tally {
   auctionIds: string[];
   totalProducts: number;
   totalAuctions: number;
+  /*
+   * G3b — the per-listing-type and lot counters that back `categoryCounts`.
+   *
+   * 🛑 Kept ALONGSIDE the four fields above rather than replacing them. Those
+   * four are what `metrics.*` is written from, and two Sieve SORTS order by
+   * `metrics.productCount` through Firestore — so changing their meaning would
+   * silently re-rank "Most Products" on the public categories index and "Most
+   * listings" in the admin sublisting view.
+   */
+  own: Record<string, number>;
+  total: Record<string, number>;
+  lotsOwn: number;
+  lotsTotal: number;
 }
 
 const emptyTally = (): Tally => ({
@@ -28,19 +42,40 @@ const emptyTally = (): Tally => ({
   auctionIds: [],
   totalProducts: 0,
   totalAuctions: 0,
+  own: {},
+  total: {},
+  lotsOwn: 0,
+  lotsTotal: 0,
 });
 
 /** Filed DIRECTLY under this row — `metrics.productCount` / `auctionCount`. */
-function countOwn(t: Tally, productId: string, isAuction: boolean): void {
+function countOwn(
+  t: Tally,
+  productId: string,
+  isAuction: boolean,
+  listingType: string,
+  isLot: boolean,
+): void {
   if (isAuction) t.auctionIds.push(productId);
   else t.productIds.push(productId);
+  // G3b: lots are counted SEPARATELY from singles, which is what lets a leaf's
+  // own count mean one thing wherever a lot is filed.
+  if (isLot) t.lotsOwn++;
+  else t.own[listingType] = (t.own[listingType] ?? 0) + 1;
 }
 
 /** This row or any ancestor — `metrics.totalProductCount` / `totalAuctionCount`. */
-function countRollup(t: Tally | undefined, isAuction: boolean): void {
+function countRollup(
+  t: Tally | undefined,
+  isAuction: boolean,
+  listingType: string,
+  isLot: boolean,
+): void {
   if (!t) return;
   if (isAuction) t.totalAuctions++;
   else t.totalProducts++;
+  if (isLot) t.lotsTotal++;
+  else t.total[listingType] = (t.total[listingType] ?? 0) + 1;
 }
 
 /*
@@ -61,6 +96,8 @@ function countRollup(t: Tally | undefined, isAuction: boolean): void {
  */
 interface ProductTallyRow {
   category?: string;
+  /** G3b — a lot is counted separately from singles. */
+  isLot?: boolean;
   categorySlugs?: string[];
   brandSlug?: string;
   listingType?: string;
@@ -96,6 +133,11 @@ function tallyProduct(
 ): boolean {
   const isAuction =
     data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+  // G3b. Default to "standard" for a row written before `listingType` was
+  // required — the same default `describeCountable` applies, so the nightly
+  // and the incremental value land on the same key rather than on two.
+  const listingType = data.listingType || "standard";
+  const isLot = data.isLot === true;
 
   /*
    * Count only what a visitor can actually see. A published-but-sold, ended,
@@ -115,20 +157,29 @@ function tallyProduct(
   if (leaf && !tallies.has(leaf)) {
     unknown = true;
   } else if (leaf) {
-    countOwn(tallies.get(leaf)!, productId, isAuction);
+    countOwn(tallies.get(leaf)!, productId, isAuction, listingType, isLot);
     // Roll up through self + every ancestor. `parentIds` already holds the
     // WHOLE chain, so this is one pass rather than a walk.
     for (const id of [leaf, ...(parentsOf.get(leaf) ?? [])]) {
-      countRollup(tallies.get(id), isAuction);
+      countRollup(tallies.get(id), isAuction, listingType, isLot);
     }
   }
 
   // Brands are a flat dimension: a brand row has no product children of its own
   // beyond what points at it, so own === total by construction — which is why
   // it is counted on both axes at once.
-  if (data.brandSlug && tallies.has(data.brandSlug)) {
-    countOwn(tallies.get(data.brandSlug)!, productId, isAuction);
-    countRollup(tallies.get(data.brandSlug), isAuction);
+  // 🛑 ...and never on the same row the chain already counted. If a leaf id were
+  // also a brand id, `countOwn` would fire twice for one listing. Today's
+  // `category-` / `brand-` prefixes make it impossible, which is precisely why
+  // it is guarded rather than trusted — the prefixes are a convention and this
+  // is an arithmetic invariant. Mirrors `describeCountable`'s own guard so the
+  // nightly and incremental values cannot disagree here.
+  const countedByChain = leaf
+    ? new Set([leaf, ...(parentsOf.get(leaf) ?? [])])
+    : new Set<string>();
+  if (data.brandSlug && !countedByChain.has(data.brandSlug) && tallies.has(data.brandSlug)) {
+    countOwn(tallies.get(data.brandSlug)!, productId, isAuction, listingType, isLot);
+    countRollup(tallies.get(data.brandSlug), isAuction, listingType, isLot);
   }
   return unknown;
 }
@@ -216,11 +267,73 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
     if (page.size < PAGE_SIZE) break;
   }
 
+  /*
+   * G3b — the live `categoryCounts` documents, read so `drifted` stays an
+   * honest signal across BOTH stores of the count.
+   *
+   * 🛑 Read rather than blind-written. Writing only when `metrics` drifts would
+   * leave a counts document wrong forever in the narrow case where the
+   * product/auction aggregate happens to be right while a per-type split or a
+   * lot count is not — and that case is precisely what an incremental counter
+   * gets wrong, so it is the one the audit must see.
+   *
+   * One extra read per category row, once a night: 416 reads against a
+   * 50,000/day budget, under 1%.
+   */
+  const countsSnap = await ctx.db.collection(CATEGORY_COUNTS_COLLECTION).get();
+  /** Only the three fields this pass compares — not an opaque bag. */
+  type LiveCountsRow = {
+    own?: Record<string, number>;
+    total?: Record<string, number>;
+    lots?: { own?: number; total?: number };
+  };
+  const liveCounts = new Map<string, LiveCountsRow>();
+  for (const d of countsSnap.docs) liveCounts.set(d.id, d.data() as LiveCountsRow);
+
+  /** Field-by-field, because a key present as 0 and a key absent are the same count. */
+  const sameMap = (a: Record<string, number>, b: Record<string, number> | undefined) => {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b ?? {})]);
+    for (const k of keys) if ((a[k] ?? 0) !== ((b ?? {})[k] ?? 0)) return false;
+    return true;
+  };
+
   let written = 0;
   let drifted = 0;
+  let countsWritten = 0;
   for (const doc of catSnap.docs) {
     const t = tallies.get(doc.id) ?? emptyTally();
     const m = (doc.data() as { metrics?: Record<string, number> }).metrics ?? {};
+    const c = liveCounts.get(doc.id);
+    const countsSame =
+      !!c &&
+      sameMap(t.own, c.own) &&
+      sameMap(t.total, c.total) &&
+      (c.lots?.own ?? 0) === t.lotsOwn &&
+      (c.lots?.total ?? 0) === t.lotsTotal;
+
+    if (!countsSame) {
+      try {
+        /*
+         * 🛑 A FULL OVERWRITE, not a merge. The reconciler is the authority and
+         * it enumerates the CATEGORIES rather than the products — which is what
+         * lets a row whose last listing was deleted reset to zero. Root Cause
+         * #102 is what a reconciler that could only ever add cost: 19 of 65
+         * rows wrong, every one low.
+         */
+        await ctx.db.collection(CATEGORY_COUNTS_COLLECTION).doc(doc.id).set({
+          id: doc.id,
+          own: t.own,
+          total: t.total,
+          lots: { own: t.lotsOwn, total: t.lotsTotal },
+          updatedAt: new Date(),
+        });
+        countsWritten++;
+      } catch (err) {
+        void normalizeError(err);
+        ctx.logger.error(`[categories] categoryCounts write failed for ${doc.id}`, err);
+      }
+    }
+
     const same =
       (m.productCount ?? 0) === t.productIds.length &&
       (m.auctionCount ?? 0) === t.auctionIds.length &&
@@ -253,6 +366,10 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
     publishedProductsScanned: scanned,
     drifted,
     written,
+    // G3b — a non-zero value here on a quiet day means the repository's
+    // incremental counter missed something. That is the whole reason the
+    // nightly pass survives an incremental model.
+    countsWritten,
     unknownCategory,
   });
 }
