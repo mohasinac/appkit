@@ -84,6 +84,36 @@ export interface OrderItem {
    */
   hsnCode?: string;
   gstRate?: 0 | 5 | 12 | 18 | 28;
+  /**
+   * I8 — the TAXONOMY snapshot, surfaced for the first time.
+   *
+   * 🛑 The third instance of Root Cause #57 in this one adapter. `categorySlug`
+   * has been snapshotted onto the order document since C1, with a recorded
+   * reason — *"a product re-categorised next year must not retroactively move
+   * last year's sale into a band it was never part of"* — and
+   * `orderDocumentToOrder` forwarded 13 fields, none of them this one. So the
+   * data was right on the document and reached no client surface, which is why
+   * no order or invoice page could show a category even though the facts were
+   * there.
+   *
+   * `categoryName` and `brand` are new. A slug survives a rename; a NAME is
+   * what a receipt must show, and re-resolving it at render time would let a
+   * renamed or deleted category change what a past invoice says. Snapshotting
+   * is the whole point: *"the transaction data still keeps it."*
+   */
+  categorySlug?: string;
+  categoryName?: string;
+  brand?: string;
+  /** Snapshotted condition — the price-index band's dominant variable. */
+  condition?: string;
+  /**
+   * The grouped-line keys. `groupOrderItemsByLine` collapses a bundle or a
+   * grouped cart line for the receipt and keys on exactly these, so without
+   * them a client renders N rows where the buyer bought one thing.
+   */
+  groupSlug?: string;
+  groupTitle?: string;
+  groupSource?: "bundle" | "product-group" | "grouped-listing";
 }
 
 /**

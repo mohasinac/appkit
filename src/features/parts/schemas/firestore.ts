@@ -221,6 +221,38 @@ export interface ModelSlot {
   weightG?: number;
   /** The `partGlossary` id, when the part resolved to a glossary row. */
   partId?: string;
+  /**
+   * I9 — which COLOURWAY of that part this model needs.
+   *
+   * ── 🛑 THE CASE THIS EXISTS FOR, in the user's own words ────────────────
+   *
+   * *"there is a part called metal ball, it comes with 2 beyblades — Poison
+   * Zurafa S130MB and L-Drago Guardian S130MB. But the L-Drago version is very
+   * rare and costly and is in silver, while the Zurafa one is transparent black
+   * with a metal tip. Both behave the same way and have the same design, but to
+   * make an L-Drago bey I need the silver one and for Zurafa the black
+   * transparent one. Same with their S130s."*
+   *
+   * So: ONE glossary row (`performance-tip--mb`), same mould, same weight, same
+   * stats — and TWO physical variants that are NOT interchangeable and differ
+   * wildly in value. No stat distinguishes them.
+   *
+   * ── 🛑 WHY THIS FIELD RATHER THAN MATCHING ON `partId` ALONE ────────────
+   *
+   * The "buildable now" rollup would otherwise report *"you can build an
+   * L-Drago Guardian S130MB"* while the only MB on the shelf is the Zurafa
+   * black. A confident, specific, wrong answer with no error anywhere — and the
+   * seller discovers it holding the wrong part. Matching has to be
+   * `(partId, colourway)`.
+   *
+   * ── 🛑 UNSET MEANS "ANY", AND NEVER "THE FIRST ONE FOUND" ───────────────
+   *
+   * Most slots are genuinely colour-agnostic. Forcing a value everywhere would
+   * invent a constraint the corpus does not support, and defaulting to whatever
+   * happened to be in the bin is the same class of guess the price index
+   * refuses when its sample is too small.
+   */
+  expectedColourway?: string;
 }
 
 /**

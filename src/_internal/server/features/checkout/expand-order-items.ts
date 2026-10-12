@@ -86,6 +86,19 @@ export function expandCartLineToOrderRows(
       ...(representative.categorySlugs?.[0]
         ? { categorySlug: representative.categorySlugs[0] }
         : {}),
+      /*
+       * I8 — the category and brand DISPLAY NAMES, beside the slug.
+       *
+       * `categoryNames[0]` is the default leaf's name, parallel to
+       * `categorySlugs[0]`. Snapshotted for the reason the slug alone is not
+       * enough: a slug survives a rename, but a receipt has to show a NAME, and
+       * re-resolving it at render time would let a renamed category change what
+       * a past invoice says.
+       */
+      ...(representative.categoryNames?.[0]
+        ? { categoryName: representative.categoryNames[0] }
+        : {}),
+      ...(representative.brand ? { brand: representative.brand } : {}),
       ...(representative.listingType ? { listingType: representative.listingType } : {}),
       ...(representative.condition ? { condition: representative.condition } : {}),
       // Legacy collapsed bundle rows (no groupMembers) keep their old shape so
@@ -143,6 +156,10 @@ export function expandCartLineToOrderRows(
        * been deleted, which is the whole reason that snapshot exists.
        */
       ...(product?.categorySlugs?.[0] ? { categorySlug: product.categorySlugs[0] } : {}),
+      // I8 - the same snapshot per member. `product` may be gone by order time,
+      // which is exactly why the member snapshot exists, so both are guarded.
+      ...(product?.categoryNames?.[0] ? { categoryName: product.categoryNames[0] } : {}),
+      ...(product?.brand ? { brand: product.brand } : {}),
       ...(product?.listingType ? { listingType: product.listingType } : {}),
       // Per MEMBER — a bundle can mix a sealed item with a loose one, and a
       // blended condition would describe neither.

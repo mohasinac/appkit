@@ -251,6 +251,19 @@ export interface OrderDocumentItem {
    * Absent on every order written before this, which is why the rollup keeps
    * its products-map fallback rather than treating absence as a condition.
    */
+  /**
+   * I8 — the category's DISPLAY NAME at order time, beside `categorySlug`.
+   *
+   * 🛑 A slug survives a rename; a NAME does not. `categorySlug` alone lets the
+   * price index band a past sale correctly, which is what it was added for —
+   * but a receipt has to SHOW something, and re-resolving the name at render
+   * time would make a renamed or deleted category change what a past invoice
+   * says. Same reasoning as `hsnCode` / `gstRate` / `finalSale` above: a past
+   * sale's facts are fixed.
+   */
+  categoryName?: string;
+  /** I8 — the brand display name at order time, for the same reason. */
+  brand?: string;
   condition?: string;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";

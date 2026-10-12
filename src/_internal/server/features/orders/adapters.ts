@@ -69,6 +69,35 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
         // only Item / Qty / Price (Root Cause #57).
         ...(item.hsnCode ? { hsnCode: item.hsnCode } : {}),
         ...(item.gstRate != null ? { gstRate: item.gstRate } : {}),
+        /*
+         * I8 — the TAXONOMY snapshot, which this adapter dropped.
+         *
+         * 🛑 Root Cause #57's exact shape, for the THIRD time in this one
+         * mapper: the fields exist on the document, are deliberately
+         * snapshotted at order time, and never reached any client. `finalSale`
+         * and the tax pair above were each added after the same discovery.
+         *
+         * `categorySlug` has carried a reason since C1 — *"a product
+         * re-categorised next year must not retroactively move last year's sale
+         * into a band it was never part of"* — and no order surface could read
+         * it. `categoryName` and `brand` are new, because a slug survives a
+         * rename and a NAME is what a receipt has to show: the whole point of
+         * snapshotting is that the record still reads correctly after the
+         * category or product it came from is renamed or deleted.
+         */
+        ...(item.categorySlug ? { categorySlug: item.categorySlug } : {}),
+        ...(item.categoryName ? { categoryName: item.categoryName } : {}),
+        ...(item.brand ? { brand: item.brand } : {}),
+        ...(item.condition ? { condition: item.condition } : {}),
+        /*
+         * The grouped-line keys. `groupOrderItemsByLine` collapses a bundle or
+         * grouped cart line for the receipt and keys on exactly these — so
+         * without them the client saw N separate rows where the buyer bought
+         * one thing.
+         */
+        ...(item.groupSlug ? { groupSlug: item.groupSlug } : {}),
+        ...(item.groupTitle ? { groupTitle: item.groupTitle } : {}),
+        ...(item.groupSource ? { groupSource: item.groupSource } : {}),
       }))
     : [
         {
