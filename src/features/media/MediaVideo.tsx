@@ -1,6 +1,8 @@
 "use client"
 import { useRef, useEffect } from "react";
-import { Div, Row, Span } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 import { resolveMediaUrl, resolveVideoUrl, getYouTubeVideoId } from "../../utils/media-url";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 

@@ -11,7 +11,10 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { MediaImage } from "./MediaImage";
-import { Button, Div, Row, Span } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 export interface LightboxItem {
   src: string;
   alt: string;

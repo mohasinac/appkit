@@ -9,7 +9,7 @@ import {
   productRepository,
   storeRepository,
 } from "../../../repositories";
-import { Container, Div, Heading, Main, Section, Span, Stack, Text } from "../../../ui";
+import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
@@ -36,6 +36,7 @@ import {
   faqJsonLd,
 } from "../../../seo/json-ld";
 import type { CategoryItem } from "../types";
+import type { ProductDocument } from "../../products/schemas/firestore";
 import { toStoreListItem } from "../../../_internal/server/features/stores/adapters";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
@@ -43,6 +44,9 @@ const __O = {
   hidden: "overflow-hidden",
   xAuto: "overflow-x-auto",
 } as const;
+
+/** The page's content width, repeated across every section on this view. */
+const __W = "max-w-7xl mx-auto";
 
 /**
  * Read and display bounds for this page. Every one of these replaced an
@@ -338,6 +342,24 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
+  /*
+   * D3 — when the category has no cover photo of its own, the hero draws a
+   * mosaic of the products ALREADY fetched for the grid below. Zero extra
+   * reads: these are the same rows, and the band was otherwise a flat colour
+   * strip on roughly 1,100 categories that have no photographer.
+   *
+   * 🛑 Only when there are at least `MOSAIC_MIN` images. Two thumbnails beside
+   * a title is not a pattern, it is two thumbnails — the component returns null
+   * below the floor and the hero keeps its plain background, which is a correct
+   * answer rather than a half-built one.
+   */
+  const mosaicImages = hasCover
+    ? []
+    : (productsResult?.items ?? [])
+        .map((row: ProductDocument) => row.mainImage ?? row.images?.[0] ?? null)
+        .filter((src): src is string => !!src)
+        .slice(0, 5);
+  const hasMosaic = mosaicImages.length >= MOSAIC_MIN;
 
   /*
    * ── D4: structured data. This page emitted NONE ─────────────────────────
@@ -470,6 +492,24 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </>
         )}
 
+        {/*
+          * D3 — the mosaic, for a category with no cover photo of its own.
+          *
+          * 🛑 Rendered as CONTENT above the title rather than as a background
+          * behind it. A faint collage under white text is the pattern that made
+          * `tone="on-media"` necessary in the first place, and these are
+          * unknown product photos rather than an art-directed banner: some are
+          * light, some dark, and no single ink colour is readable over all of
+          * them. Above the title it needs no scrim and no contrast gamble.
+          */}
+        {!hasCover && hasMosaic && (
+          <Div className="relative z-10 max-w-7xl mx-auto" padding="x-md">
+            <Div padding="t-lg">
+              <ImageMosaic images={mosaicImages} alt={`${category?.name ?? slug} on LetItRip`} />
+            </Div>
+          </Div>
+        )}
+
         <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
           {/*
             * 🛑 ONE trail component, fed the SAME `trail` array the JSON-LD
@@ -569,7 +609,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           for a value we already have. */}
       {compositions.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
-          <Div className="max-w-7xl mx-auto" padding="section">
+          <Div className={__W} padding="section">
             <Stack gap="md" className="min-w-0">
               <Heading level={2} size="lg">
                 What it is made of
@@ -583,10 +623,49 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         </Section>
       )}
 
+      {/* ── D3: two real branches, side by side ─────────────────────────────
+          Only when this is a ROOT with EXACTLY TWO tier-1 children and BOTH
+          carry a real cover photo. Three or more is what the scroller below
+          already does; one or zero photographed children means there is
+          nothing honest to split — so it falls through silently to the
+          scroller rather than inventing a placeholder side. */}
+      {(() => {
+        if (category?.tier !== 0) return null;
+        const branches = childCategories.filter((c) => c.tier === 1);
+        if (branches.length !== 2) return null;
+        const [a, b] = branches;
+        const coverOf = (c: typeof a) => c?.display?.coverImage;
+        if (!a || !b || !coverOf(a) || !coverOf(b)) return null;
+        const countOf = (c: typeof a) => {
+          const n = c?.metrics?.totalProductCount ?? c?.metrics?.productCount ?? 0;
+          return n > 0 ? `${n.toLocaleString()} listing${n === 1 ? "" : "s"}` : undefined;
+        };
+        return (
+          <Section padding="y-lg">
+            <Div className={__W} padding="x-md">
+              <SplitTile
+                left={{
+                  href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.slug)),
+                  label: a.name,
+                  imageUrl: coverOf(a)!,
+                  countLabel: countOf(a),
+                }}
+                right={{
+                  href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(b.slug)),
+                  label: b.name,
+                  imageUrl: coverOf(b)!,
+                  countLabel: countOf(b),
+                }}
+              />
+            </Div>
+          </Section>
+        );
+      })()}
+
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
-          <Div className="max-w-7xl mx-auto" padding="inline">
+          <Div className={__W} padding="inline">
             {/*
               * Grouped by DEPTH BELOW THIS CATEGORY, not by absolute tier — the
               * same subtree shape has to read the same whether you opened it from

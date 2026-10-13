@@ -2,7 +2,12 @@
 import { normalizeError } from "../../errors/normalize";
 import React, { useState, useCallback } from "react";
 import { Modal } from "../../ui/components/Modal";
-import { Button, Div, Input, Label, Row, Stack, Text, Alert } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Input } from "../../ui/components/Input";
+import { Label, Text } from "../../ui/components/Typography";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Alert } from "../../ui/components/Alert";
 import { MediaImage } from "./MediaImage";
 import { MediaUploadField } from "./upload/MediaUploadField";
 import { useMediaUpload, useMediaCleanup } from "./index";

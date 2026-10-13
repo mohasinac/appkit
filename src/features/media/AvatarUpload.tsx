@@ -1,7 +1,14 @@
 "use client"
 import { IMAGE_ACCEPT_ATTR } from "../../_internal/shared/media/limits";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Div, Input, Progress, Row, Stack, Text, useToast } from "../../ui";
+import { Alert } from "../../ui/components/Alert";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Input } from "../../ui/components/Input";
+import { Progress } from "../../ui/components/Progress";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Text } from "../../ui/components/Typography";
+import { useToast } from "../../ui/components/Toast";
 import { useMediaUpload } from "./hooks/useMedia";
 import { ImageCropModal, type ImageCropData } from "./modals/ImageCropModal";
 import { AvatarDisplay } from "../../ui/components/AvatarDisplay";

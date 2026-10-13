@@ -1,0 +1,69 @@
+/*
+ * D3 — the collection mosaic.
+ *
+ * 🛑 A fixed HEIGHT, not an aspect ratio. This band sits behind a hero title
+ * whose length varies with the category name, and an aspect-ratio box would
+ * change the title's vertical position per category — so the page would jump
+ * around as a visitor moves through the tree. A fixed height per breakpoint is
+ * the one shape that keeps the hero stable.
+ *
+ * 🛑 `overflow: hidden` on the grid and `object-fit: cover` on the images, so a
+ * portrait product photo cannot stretch the band. Every image here is a
+ * thumbnail of unknown aspect ratio; cropping is the only option that does not
+ * distort the subject.
+ */
+.appkit-image-mosaic {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--appkit-space-2);
+  height: 180px;
+  overflow: hidden;
+  border-radius: var(--appkit-radius-xl);
+}
+
+@media (min-width: 768px) {
+  .appkit-image-mosaic {
+    height: 260px;
+  }
+}
+
+.appkit-image-mosaic__lead,
+.appkit-image-mosaic__tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--appkit-radius-lg);
+  background: var(--appkit-color-surface);
+}
+
+.appkit-image-mosaic__lead img,
+.appkit-image-mosaic__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.appkit-image-mosaic__rest {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--appkit-space-2);
+}
+
+/*
+ * The small column holds at most two tiles on a phone — four 60px squares beside
+ * a title is visual noise rather than a preview. The remaining tiles are
+ * dropped by CSS rather than by a second render path, so SSR output is one
+ * shape at every width (no layout shift on hydration).
+ */
+.appkit-image-mosaic__rest .appkit-image-mosaic__tile:nth-child(n + 3) {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .appkit-image-mosaic__rest {
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .appkit-image-mosaic__rest .appkit-image-mosaic__tile:nth-child(n + 3) {
+    display: block;
+  }
+}

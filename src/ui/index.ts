@@ -300,6 +300,12 @@ export { StarRating } from "./components/StarRating";
 
 export type { BreadcrumbProps, BreadcrumbItem } from "./components/Breadcrumb";
 export { Breadcrumb } from "./components/Breadcrumb";
+/* D3 — the collection mosaic, for a hero with no cover photo of its own. */
+export { ImageMosaic, MOSAIC_MIN } from "./components/ImageMosaic";
+export type { ImageMosaicProps } from "./components/ImageMosaic";
+/* D3 — two real branches, side by side with real photos and real counts. */
+export { SplitTile } from "./components/SplitTile";
+export type { SplitTileProps, SplitTilePane } from "./components/SplitTile";
 
 export type {
   ImageLightboxProps,

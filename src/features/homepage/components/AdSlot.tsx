@@ -134,7 +134,15 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
  */
 export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
   const [hydrated, setHydrated] = useState(false);
-  const { ad: activeAd } = useActiveAd(id);
+  const slotRef = useRef<HTMLDivElement>(null);
+  /*
+   * H3 — `useActiveAd` takes the sentinel below and does not fetch until it is
+   * near the viewport. The sentinel has to be rendered BEFORE the fetch
+   * resolves, or there is nothing to observe and the slot could never become
+   * "near" — so the early returns below happen AFTER this hook runs, not
+   * before, and the sentinel wrapper renders unconditionally once hydrated.
+   */
+  const { ad: activeAd } = useActiveAd(id, slotRef);
 
   useEffect(() => {
     setHydrated(true);
@@ -154,10 +162,9 @@ export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
   const resolvedManualContent = manualContent ?? (activeAd ? <ManualAdBanner ad={activeAd} /> : null);
   const content = renderProvider(config.provider, config, resolvedManualContent);
 
-  if (!content) return null;
-
   return (
     <Div
+      ref={slotRef}
       className={className}
       data-ad-slot-id={id}
       aria-label="Advertisement"

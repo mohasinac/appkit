@@ -1,7 +1,9 @@
 "use client"
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { Div, Row, Span } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 import { ROUNDED_MAP, SHADOW_MAP, type RoundedKey, type ShadowKey } from "../../ui/components/surface-tokens";
 import { MEDIA_PROXY_PREFIX, resolveMediaUrl } from "../../utils/media-url";
 
