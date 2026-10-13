@@ -223,7 +223,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     slug: "auction-beyblade-original-seaborg",
     title: "Beyblade Original — Seaborg 2000 (Reserve Auction)",
     description: "Rare Seaborg 2000 defense-type top from the original series. Reserve price set by the seller — current bids haven't met it yet.",
-    categorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    /*
+     * Was filed at `category-original-hms` — the Heavy Metal System line, a
+     * DIFFERENT generation from the one its own copy names ("from the original
+     * series"). Seaborg 2000 is the Spin Gear System release the canonical
+     * corpus carries as "Seaborg 2", which is its leaf.
+     */
+    categorySlugs: ["category-seaborg-2","category-original-spin-gear","category-original-tops","category-beyblade-original","category-spinning-tops"],
     categoryNames: ["Heavy Metal System","Original Tops","Beyblade Original","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
