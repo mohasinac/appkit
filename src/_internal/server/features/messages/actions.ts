@@ -7,6 +7,7 @@ import { userRepository } from "../../../../features/auth/repository/user.reposi
 import { isSoftBanned } from "../../../../features/auth/server/checkSoftBan";
 import { isSellerUser } from "../../../../features/auth/role-predicates";
 import { conversationsRepository } from "../../../../features/messages/repository/conversations.repository";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import {
   createMessage,
   listMessages,
@@ -122,6 +123,26 @@ export async function createOrOpenConversation(
   };
 
   return conversationsRepository.createBetween(userId, otherUserId, roles);
+}
+
+/**
+ * D11 surfaced this gap: the backend had a full create/open path and no UI
+ * entry point ever called it — "Message Seller" did not exist anywhere. A
+ * product/store page knows `storeId` (the slug), never the seller's uid
+ * (Store Identity Architecture: storeId=storeSlug, ownerId=Auth UID), so the
+ * resolution happens here, server-side, rather than piping ownerId through
+ * every page that might want this button.
+ */
+export async function openConversationWithSeller(
+  buyerId: string,
+  storeId: string,
+): Promise<ConversationDocument> {
+  const store = await storeRepository.findById(storeId);
+  if (!store) throw new NotFoundError("Store not found.");
+  if (store.ownerId === buyerId) {
+    throw new ValidationError("You cannot message your own store.");
+  }
+  return createOrOpenConversation(buyerId, store.ownerId);
 }
 
 export async function listConversationsForUser(

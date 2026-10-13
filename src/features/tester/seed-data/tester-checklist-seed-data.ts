@@ -3722,6 +3722,76 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
 
   ...group("community-support", "Community & Support", [
     {
+      /*
+       * D9 chat. 🛑 Chat is OFF by default (`siteSettings.chat.enabled`, and
+       * `undefined` reads as off), so case 1 asserts the off-state and case 2
+       * turns it on — every case after depends on that order. Steps live in
+       * ./authored/community-support__messages.ts.
+       */
+      pageKey: "messages",
+      pageLabel: "Messages (chat)",
+      href: "/messages",
+      cases: [
+        {
+          key: "chat-off-hides-everything",
+          label: "With chat disabled, no Message Seller button, no header icon, and no unread-count request — absent, not disabled",
+          description:
+            "The baseline. `siteSettings.chat.enabled` is undefined on a fresh seed and must read as OFF. A feature that half-renders when disabled is the shape the original chat died of.",
+        },
+        {
+          key: "enable-chat-reveals-entry-points",
+          label: "Turning the Chat setting on makes both entry points appear with no code change or redeploy",
+        },
+        {
+          key: "message-seller-creates-thread",
+          label: "Message Seller creates ONE conversation, and clicking it again reuses that same thread rather than making a second",
+          description:
+            "A conversation is between two USERS, not per listing — a buyer with three questions about three items gets one thread. The storeId→ownerId resolution happens server-side because a product page never knows the owner's Auth UID.",
+        },
+        {
+          key: "send-and-recipient-sees-it",
+          label: "A sent message reaches the other participant with an unread badge, and opening the thread clears it",
+          roles: ["buyer", "seller"],
+        },
+        {
+          key: "pii-is-stripped-from-the-body",
+          label: "A phone number, a dotted VPA and a bare name@bank VPA are ALL redacted before the message is stored",
+          description:
+            "The rule order is the fix: specific before general. A bare `name@bank` has no TLD dot so it matches neither the email nor the phone rule, and running phone first mangles `9876543210@upi` before the UPI rule sees it.",
+        },
+        {
+          key: "retry-does-not-double-post",
+          label: "Retrying a failed send posts the SAME message once, never a duplicate",
+          description:
+            "clientMessageId is generated once at compose time, not per attempt, and is the message's document id — so a replay resolves to the existing document.",
+        },
+        {
+          key: "soft-ban-blocks-sending",
+          label: "A user soft-banned from 'Send messages' is refused with the ban's own reason",
+          description:
+            "send_messages was a live BannedAction with NO reader anywhere — an admin could set it and nothing checked it. The check now lives in the domain function so every caller is covered.",
+          roles: ["admin", "buyer"],
+        },
+        {
+          key: "block-stops-the-other-side",
+          label: "Blocking a participant refuses their next message with a clear reason, and leaves existing history readable",
+          roles: ["buyer", "seller"],
+        },
+        {
+          key: "live-ping-surfaces-failure",
+          label: "When the realtime channel cannot connect, a visible warning says so — the failure is never swallowed",
+          description:
+            "THE control for the bug that killed the old feature: it swallowed permission-denied into setIsConnected(false) and a literal `// ignore`, so the channel looked implemented and was inert for its whole life. The message is still delivered; only the live notification is lost.",
+        },
+        {
+          key: "inbox-read-is-bounded",
+          label: "The inbox and thread reads are both cursor-paginated and capped — open 50 threads and the read count does not scale with them",
+          description:
+            "The negative control. The absence of a .limit() is literally what turned 20 messages into ~1,600 reads the first time this existed. Visible only in the network panel, never on the rendered page.",
+        },
+      ],
+    },
+    {
       pageKey: "support-tickets",
       pageLabel: "Support Tickets",
       href: "/user/support",

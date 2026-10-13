@@ -634,9 +634,12 @@ export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-
  */
 export { ConversationsInboxView } from "./features/messages/components/ConversationsInboxView";
 export { ConversationThreadView } from "./features/messages/components/ConversationThreadView";
+export { MessageSellerButton } from "./features/messages/components/MessageSellerButton";
+export type { MessageSellerButtonProps } from "./features/messages/components/MessageSellerButton";
 export {
   useConversations,
   useOpenConversation,
+  useOpenConversationWithSeller,
   useConversationThread,
   useSendMessage,
   useMarkConversationRead,

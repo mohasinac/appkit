@@ -3,6 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getClientRealtimeProvider, type Unsubscribe } from "../../../contracts/client-realtime";
 import { acquireRealtimeSession } from "../../../contracts/realtime-session";
+import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";
 
 /**
  * D9 — subscribe to `chat_events/{conversationId}` and fire `onPing` on every
@@ -65,7 +66,15 @@ export function useConversationChannel(
 
         const provider = lease.provider ?? getClientRealtimeProvider();
         unsubscribeRef.current = provider.subscribe(
-          `chat_events/${conversationId}`,
+          /*
+           * 🛑 From RTDB_PATHS, not a literal — found by the G2 sweep. The
+           * SERVER writes this ping via `RTDB_PATHS.CHAT_EVENTS` and the
+           * client was subscribing to a hardcoded copy of the same string:
+           * two owners of one path, where a rename on either side produces a
+           * channel that connects, authenticates, and never fires. Exactly
+           * Root Cause #42's shape on the realtime-path axis.
+           */
+          `${RTDB_PATHS.CHAT_EVENTS}/${conversationId}`,
           (snapshot) => {
             if (!snapshot.exists()) return;
             onPingRef.current();

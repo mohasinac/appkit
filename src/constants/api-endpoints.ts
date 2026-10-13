@@ -445,6 +445,7 @@ export const MESSAGE_ENDPOINTS = {
     return `/api/messages${qs ? `?${qs}` : ""}`;
   },
   OPEN: "/api/messages",
+  OPEN_WITH_SELLER: "/api/messages/with-seller",
   THREAD: (
     conversationId: string,
     opts?: { limit?: number; cursor?: string },

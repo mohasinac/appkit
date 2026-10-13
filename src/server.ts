@@ -1908,6 +1908,7 @@ export {
  */
 export {
   createOrOpenConversation,
+  openConversationWithSeller,
   listConversationsForUser,
   listMessagesForConversation,
   sendMessage,

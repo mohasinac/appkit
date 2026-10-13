@@ -74,6 +74,7 @@ import { authored as a_buying__user_dashboard_extras } from "./buying__user-dash
 import { authored as a_buying__offers } from "./buying__offers";
 import { authored as a_buying__cart } from "./buying__cart";
 import { authored as a_community_support__public_profile } from "./community-support__public-profile";
+import { authored as a_community_support__messages } from "./community-support__messages";
 import { authored as a_community_support__support_tickets } from "./community-support__support-tickets";
 import { authored as a_content_discovery__blog } from "./content-discovery__blog";
 import { authored as a_content_discovery__coupons } from "./content-discovery__coupons";
@@ -195,6 +196,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_buying__offers,
   ...a_buying__cart,
   ...a_community_support__public_profile,
+  ...a_community_support__messages,
   ...a_community_support__support_tickets,
   ...a_content_discovery__blog,
   ...a_content_discovery__coupons,

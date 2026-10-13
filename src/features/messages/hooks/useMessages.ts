@@ -33,6 +33,15 @@ export function useOpenConversation() {
   });
 }
 
+/** D11 — the entry point a product/store page actually has: a storeId, not
+ * the owner's uid. Resolution happens server-side. */
+export function useOpenConversationWithSeller() {
+  return useApiMutation<ConversationDocument, unknown, { storeId: string }>({
+    mutationFn: ({ storeId }) => apiClient.post(MESSAGE_ENDPOINTS.OPEN_WITH_SELLER, { storeId }),
+    errorMessage: "Could not message this seller.",
+  });
+}
+
 /**
  * One thread. Combines the bounded REST page with the RTDB ping channel —
  * a ping triggers `refetch()`, never a client Firestore listener

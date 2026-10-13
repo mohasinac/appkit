@@ -75,6 +75,7 @@ import { getGroupsWithItemsForProduct } from "../../../_internal/server/features
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
+import { MessageSellerButton } from "../../messages/components/MessageSellerButton";
 import { normalizeListingType } from "../utils/listing-type";
 import {
   DEFAULT_MIN_OFFER_PERCENT,
@@ -727,14 +728,17 @@ export async function ProductDetailPageView({
                         </Row>
                       )}
                     </Div>
-                    {storeHref && (
-                      <Link
-                        href={storeHref}
-                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
-                      >
-                        Visit Store →
-                      </Link>
-                    )}
+                    <Row gap="xs" align="center" className="shrink-0">
+                      {storeId && <MessageSellerButton storeId={storeId} />}
+                      {storeHref && (
+                        <Link
+                          href={storeHref}
+                          className="rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+                        >
+                          Visit Store →
+                        </Link>
+                      )}
+                    </Row>
                   </Row>
                 </Div>
               )}

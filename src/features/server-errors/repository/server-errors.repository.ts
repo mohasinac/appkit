@@ -60,6 +60,17 @@ export class ServerErrorsRepository extends BaseRepository<ServerErrorDocument> 
         requestId: input.requestId,
         ...(input.userAgent ? { userAgent: input.userAgent } : {}),
         ...(input.bodyDigest ? { bodyDigest: input.bodyDigest } : {}),
+        /*
+         * 🛑 D10, and the G2 sweep is what found it: this hand-picked
+         * field list is exactly Root Cause #38's shape. `entityType` and
+         * `entityId` were on `ServerErrorDocument` AND accepted by this
+         * method's own `Omit<…>` input type — so a caller passing them
+         * type-checked clean and the fields died right here, on the one
+         * line nobody re-reads. A write that succeeds is not a field that
+         * persists.
+         */
+        ...(input.entityType ? { entityType: input.entityType } : {}),
+        ...(input.entityId ? { entityId: input.entityId } : {}),
       };
       await ref.set(doc);
     } catch (err) {

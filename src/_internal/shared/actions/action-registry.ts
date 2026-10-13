@@ -271,6 +271,14 @@ export const ACTIONS: ActionTree = {
       description: "Open the native share sheet or copy the listing URL.",
       kind: "ghost",
     },
+    "message-seller": {
+      iconKey: "message",
+      id: "product.message-seller",
+      label: "Message Seller",
+      ariaLabel: "Message this listing's seller",
+      description: "Open or start a conversation with the seller. Absent entirely when chat is off.",
+      kind: "ghost",
+    },
     "compare": {
       iconKey: "analytics",
       id: "product.compare",
