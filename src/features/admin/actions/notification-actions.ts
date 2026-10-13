@@ -339,6 +339,10 @@ export async function sendNotification(
      */
     support_ticket_update: "system",
     scam_report_update: "system",
+    // D9 — same reasoning: a tenth key would have no stored value on any
+    // existing user, and a chat message is a reply to a thread the user is
+    // already a participant in, not something to silence independently.
+    message_received: "system",
   };
   const typeKey = typeToPrefsKey[type as NotificationType];
   // If the user has explicitly disabled this notification type, skip all external channels.

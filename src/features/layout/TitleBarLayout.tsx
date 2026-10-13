@@ -37,6 +37,9 @@ export interface TitleBarLayoutProps {
    * navigates to the user notifications page by default.
    */
   notificationsHref?: string;
+  /** D9 — chat. Rendered beside the notification bell when provided; absent entirely when chat is off (`siteSettings.chat.enabled !== true`), not merely empty. */
+  messagesHref?: string;
+  unreadMessageCount?: number;
   loginHref?: string;
   registerHref?: string;
   user?: TitleBarUser | null;
@@ -122,6 +125,8 @@ export function TitleBarLayout({
   profileHref,
   unreadNotificationCount = 0,
   notificationsHref,
+  messagesHref,
+  unreadMessageCount = 0,
   loginHref,
   registerHref,
   user,
@@ -228,6 +233,22 @@ export function TitleBarLayout({
     </Link>
   ) : null;
 
+  // D9 — chat. Same shape as the notification bell: absent entirely when no
+  // href is supplied (the consumer only passes one when
+  // `siteSettings.chat.enabled === true`), never rendered-but-disabled.
+  const messagesEl = messagesHref ? (
+    <Link
+      href={messagesHref}
+      aria-label={`Messages${unreadMessageCount > 0 ? `, ${unreadMessageCount} unread` : ""}`}
+      className={`relative ${iconBtn}`}
+    >
+      <Icon name="message" size="lg" />
+      {unreadMessageCount > 0 && (
+        <Span className={countBadge}>{unreadMessageCount > 99 ? "99+" : unreadMessageCount}</Span>
+      )}
+    </Link>
+  ) : null;
+
   const wishlistEl = wishlistHref ? (
     <Link
       href={wishlistHref}
@@ -295,7 +316,7 @@ export function TitleBarLayout({
     </Row>
   ) : null;
 
-  const hasTb2 = !!(notificationsEl || wishlistEl || cartEl || profileEl);
+  const hasTb2 = !!(notificationsEl || messagesEl || wishlistEl || cartEl || profileEl);
 
   // ── Render ───────────────────────────────────────────────────────────────────
 
@@ -360,6 +381,7 @@ export function TitleBarLayout({
             {compareEl}
             {notificationSlot}
             {notificationsEl && <Div className="hidden lg:flex">{notificationsEl}</Div>}
+            {messagesEl && <Div className="hidden lg:flex">{messagesEl}</Div>}
             {wishlistEl && <Div className="hidden lg:flex">{wishlistEl}</Div>}
             {cartEl && <Div className="hidden lg:flex">{cartEl}</Div>}
             {user
@@ -393,6 +415,7 @@ export function TitleBarLayout({
             className="flex lg:hidden h-10 border-t px-[var(--appkit-space-1)]"
           >
             {notificationsEl}
+            {messagesEl}
             {wishlistEl}
             {cartEl}
             {profileEl}

@@ -42,6 +42,8 @@ export interface PublicSiteSettings {
   listings: {
     listingTypes?: NonNullable<SiteSettingsDocument["listings"]>["listingTypes"];
   };
+  /** D9 — off by default; `enabled: false` is emitted rather than omitted, same `always-present` reasoning as `disabledRoutes` below. */
+  chat?: { enabled: boolean };
   notificationChannels?: NotificationChannelConfig;
   announcementBar?: SiteSettingsDocument["announcementBar"];
   navConfig?: SiteSettingsDocument["navConfig"];

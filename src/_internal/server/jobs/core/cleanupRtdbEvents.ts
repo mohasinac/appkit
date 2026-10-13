@@ -15,6 +15,9 @@ const BULK_STALE_MS = 15 * 60 * 1000;
  * exist to prevent.
  */
 const EMAIL_STALE_MS = 60 * 60 * 1000;
+/** Long enough for an open thread to notice a ping before it prunes; the
+ * message itself lives in Firestore regardless — this only clears the ping. */
+const CHAT_STALE_MS = 15 * 60 * 1000;
 const JOBS_TTL_DAYS = 30;
 
 export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
@@ -118,6 +121,33 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
   } catch (emailErr) {
     void normalizeError(emailErr);
     ctx.logger.error("Email events cleanup failed (non-fatal)", emailErr);
+  }
+
+  /*
+   * D9 — chat new-message pings. Its own file says it: "an unpruned RTDB
+   * channel is precisely the thing that quietly accumulates… Do not make it
+   * the second" (see the email block above, which is the first). The message
+   * content never lived here — only a ping — so pruning this touches nothing
+   * a thread needs; the Firestore conversation/message documents are handled
+   * by `notificationPrune`'s retention stages, entirely separately.
+   */
+  try {
+    const chatSnap = await rtdb.ref(RTDB_PATHS.CHAT_EVENTS).get();
+    if (chatSnap.exists()) {
+      const allChatEvents = chatSnap.val() as Record<string, { updatedAt?: number }>;
+      const staleChatIds = Object.entries(allChatEvents)
+        .filter(([, node]) => (node.updatedAt ?? 0) < now - CHAT_STALE_MS)
+        .map(([id]) => id);
+      if (staleChatIds.length > 0) {
+        await Promise.all(
+          staleChatIds.map((id) => rtdb.ref(`${RTDB_PATHS.CHAT_EVENTS}/${id}`).remove()),
+        );
+        ctx.logger.info("Chat event pings removed", { count: staleChatIds.length });
+      }
+    }
+  } catch (chatErr) {
+    void normalizeError(chatErr);
+    ctx.logger.error("Chat events cleanup failed (non-fatal)", chatErr);
   }
 
   try {

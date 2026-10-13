@@ -69,6 +69,9 @@ export interface AppLayoutShellProps {
   promotionsHref?: string;
   cartHref: string;
   wishlistHref?: string;
+  /** D9 — chat. Absent entirely when `siteSettings.chat.enabled !== true`; the consumer decides, this shell only forwards. */
+  messagesHref?: string;
+  unreadMessageCount?: number;
   /** Auth UID passed through to TitleBar for wishlist merge-on-login and sync. */
   userId?: string | null;
   profileHref: string;
@@ -660,6 +663,8 @@ export function AppLayoutShell({
   promotionsHref,
   cartHref,
   wishlistHref,
+  messagesHref,
+  unreadMessageCount,
   userId,
   profileHref,
   loginHref,
@@ -811,6 +816,8 @@ export function AppLayoutShell({
             promotionsHref={promotionsHref}
             cartHref={cartHref}
             wishlistHref={wishlistHref}
+            messagesHref={messagesHref}
+            unreadMessageCount={unreadMessageCount}
             userId={userId}
             profileHref={profileHref}
             loginHref={loginHref}

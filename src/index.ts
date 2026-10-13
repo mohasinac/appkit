@@ -2191,8 +2191,8 @@ export type { FirestoreIndexConfig } from "./seed/index";
 export type { HomepageSectionType } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NotificationType - Type contract for notification type.
-export type { NotificationType } from "./features/admin/schemas/firestore";
-export { NOTIFICATION_TYPE_VALUES } from "./features/admin/schemas/firestore";
+export type { NotificationType, NotificationRelatedType } from "./features/admin/schemas/firestore";
+export { NOTIFICATION_TYPE_VALUES, NOTIFICATION_RELATED_TYPE_VALUES } from "./features/admin/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PayoutStatus - Type contract for payout status.
 export type { PayoutStatus } from "./seed/index";
@@ -10161,3 +10161,17 @@ export type {
   CourierRatingVote,
   CourierStats,
 } from "./_internal/shared/features/shipping/courier-rating";
+
+/**
+ * D9 — chat. Plain data types, safe for client components that render a
+ * conversation/message prop — the write path (actions) stays server-only, see
+ * server.ts.
+ */
+export type {
+  ConversationDocument,
+  ConversationStatus,
+  ConversationLastMessage,
+  ParticipantRole,
+  MessageDocument,
+  MessageProductRef,
+} from "./features/messages/schemas/firestore";

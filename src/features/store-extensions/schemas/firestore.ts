@@ -329,7 +329,10 @@ export type ReportEntityType =
    * step, a 500 on a listing page or a layout that will not scroll had to be
    * filed as a complaint about a product. `entityId` then carries the PATH.
    */
-  | "page";
+  | "page"
+  // D9 — a chat message. `entityId` carries the message id; the report
+  // handler resolves the owning conversation from it when staff need context.
+  | "message";
 export type ReportStatus =
   | "pending"
   | "under-review"
@@ -378,6 +381,8 @@ const REPORT_ENTITY_TYPE_MAP: Record<ReportEntityType, true> = {
   comment: true,
   // D10 — a broken PAGE. `entityId` carries the path.
   page: true,
+  // D9 — a chat message.
+  message: true,
 };
 export const REPORT_ENTITY_TYPES = Object.keys(REPORT_ENTITY_TYPE_MAP) as [
   ReportEntityType,

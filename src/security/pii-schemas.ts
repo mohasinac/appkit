@@ -96,15 +96,23 @@ export const TOKEN_PII_INDEX_MAP: Record<string, string> = {
   email: "emailIndex",
 };
 
-/*
- * `CONVERSATION_PII_FIELDS` (`lastMessage`, `messages[].body`) was removed with
- * the conversations feature on 2026-08-31.
+/**
+ * D9 — chat. Re-created against the SUBCOLLECTION redesign, not the old
+ * embedded-array one the comment below used to describe.
  *
- * 🛑 Its array-path form was the ONLY user of `encryptPiiFields`' `[]` syntax
- * outside status history. If a future schema needs to encrypt a field inside an
- * array, check that machinery still works before relying on it — a path that no
- * caller exercises is a path nothing proves.
+ * `messages/{id}` is a true Firestore subcollection now (one document per
+ * message, not `conversations.messages[]`), so there is no array to walk and
+ * the old `messages[].body` `[]`-syntax path does not apply here — `body` is a
+ * plain top-level field on each message document. Only `lastMessage.body`, a
+ * nested object on the PARENT `conversations` document, needs the dotted-path
+ * form `encryptPiiFields` already supports.
+ *
+ * No blind index on either: nothing queries chat by body content, and a
+ * `searchTxt` over an encrypted body would hand back only what the encryption
+ * withheld — chat search, if it exists, indexes participant names only.
  */
+export const CONVERSATION_PII_FIELDS = ["lastMessage.body"] as const;
+export const MESSAGE_PII_FIELDS = ["body"] as const;
 
 /** PII fields in reviews */
 export const REVIEW_PII_FIELDS = ["userName"] as const;

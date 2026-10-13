@@ -268,3 +268,11 @@ export type {
   PageViewEntityType,
   RecordPageViewInput,
 } from "../features/analytics/repository/page-views.repository";
+
+// D9 — chat. Messages themselves are a subcollection (functional module, see
+// features/messages/repository/messages.repository.ts and server.ts), not a
+// BaseRepository class — there is no subcollection form of BaseRepository.
+export {
+  ConversationsRepository,
+  conversationsRepository,
+} from "../features/messages/repository/conversations.repository";

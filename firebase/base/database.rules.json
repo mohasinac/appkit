@@ -150,6 +150,36 @@
         ".read": "auth != null && auth.token.bulkJobId == $jobId",
         ".write": false
       }
+    },
+
+    // ============================================================
+    // Chat Event Bridge — D9, a new-message ping channel
+    // ============================================================
+    // RTDB-ping-plus-REST, not onSnapshot — `firestore.rules` is
+    // `allow read, write: if false` on every document, so the client
+    // Firestore listener every chat guide assumes is forbidden here. The
+    // ping tells an open thread's client "something changed, refetch";
+    // the actual messages come from the bounded, cursor-paginated REST route.
+    //
+    // Flow:
+    //   1. The route that OPENS a thread mints a per-conversation custom
+    //      token with { conversationId }, matching { authEventId } /
+    //      { paymentEventId } / { bulkJobId } — no broad token, ever.
+    //   2. Client signInWithCustomToken, subscribes read-only to
+    //      /chat_events/{conversationId}.
+    //   3. The send-message route writes { updatedAt } here after persisting
+    //      the message (Admin SDK — bypasses these rules).
+    //   4. Client handler fires -> refetches the thread's latest page via
+    //      GET /api/messages/[conversationId].
+    //
+    // Cleanup: cleanupRtdbEvents' sixth block prunes nodes older than 15 min —
+    // an unpruned channel is the one thing this family exists to avoid being.
+    // ============================================================
+    "chat_events": {
+      "$conversationId": {
+        ".read": "auth != null && auth.token.conversationId == $conversationId",
+        ".write": false
+      }
     }
   }
 }

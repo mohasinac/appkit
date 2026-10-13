@@ -128,6 +128,11 @@ export const NOTIFICATION_EMAIL_TEMPLATES: Record<NotificationType, Notification
    */
   support_ticket_update: { lead: "There's an update on your support ticket.", cta: "View ticket" },
   scam_report_update: { lead: "There's an update on a scam report you filed.", cta: "View report" },
+
+  // D9 — email-INELIGIBLE (EMAIL_ELIGIBLE_TYPES), same reasoning as
+  // support_ticket_update: the conversation lives in the UI. A real entry
+  // anyway, for the same future-override reason as scam_report_update.
+  message_received: { lead: "You have a new message.", cta: "View conversation" },
 };
 
 /**

@@ -1901,6 +1901,26 @@ export {
   type SignedDigitalContent,
   type FinalizedDigitalContent,
 } from "./_internal/server/features/digital-code/upload";
+/**
+ * D9 — chat. The one writer path for conversations and messages; every
+ * mutation runs through the Admin SDK here, never a client Firestore write
+ * (`firestore.rules` is `allow read, write: if false` on every document).
+ */
+export {
+  createOrOpenConversation,
+  listConversationsForUser,
+  listMessagesForConversation,
+  sendMessage,
+  markConversationRead,
+  blockConversationParticipant,
+  softDeleteOwnMessage,
+  mintChatEventToken,
+  getUnreadConversationCount,
+  deleteAllMessages as deleteAllConversationMessages,
+  listAllAttachmentUrls as listConversationAttachmentUrls,
+  stripPii as stripChatPii,
+  type SendMessageInput,
+} from "./_internal/server/features/messages/actions";
 export {
   resolveCodeAssetForOrder,
   codeAssetHeaders,

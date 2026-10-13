@@ -628,6 +628,22 @@ export {
   isAdSlotRenderable,
 } from "./features/homepage/ad-registry";
 export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-registry";
+/**
+ * D9 — chat. Client-only (every hook here is "use client"); the write path
+ * (actions) is server-only and lives in server.ts, never here.
+ */
+export { ConversationsInboxView } from "./features/messages/components/ConversationsInboxView";
+export { ConversationThreadView } from "./features/messages/components/ConversationThreadView";
+export {
+  useConversations,
+  useOpenConversation,
+  useConversationThread,
+  useSendMessage,
+  useMarkConversationRead,
+  useBlockConversation,
+  useUnreadMessageCount,
+} from "./features/messages/hooks/useMessages";
+export type { PendingMessage } from "./features/messages/hooks/useMessages";
 export { WishlistView, useGuestWishlist, useWishlistWithGuest } from "./features/wishlist/index";
 export type { WishlistViewProps, GuestWishlistItem, WishlistItem, WishlistResponse, WishlistProductData, EnrichedWishlistItem } from "./features/wishlist/index";
 export { WishlistCapWatcher } from "./features/wishlist/components/WishlistCapWatcher";

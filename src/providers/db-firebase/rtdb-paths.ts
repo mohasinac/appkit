@@ -26,4 +26,12 @@ export const RTDB_PATHS = {
    * `cleanupRtdbEvents` alongside the other three.
    */
   EMAIL_EVENTS: "email_events",
+  /**
+   * D9 — new-message ping per conversation. RTDB-ping-plus-REST: the actual
+   * message content never crosses this channel, only "something changed,
+   * refetch" — `firestore.rules` forbids client Firestore access entirely, so
+   * this plus the bounded REST route is the only option, not a cost choice.
+   * Pruned by `cleanupRtdbEvents`'s sixth block.
+   */
+  CHAT_EVENTS: "chat_events",
 } as const;

@@ -38,6 +38,9 @@ const NON_PUBLIC_TOP_LEVELS = new Set([
   "settings",
   "promotions",
   "social",
+  // D9 — a private conversation between two users. Never publicly shareable,
+  // same category as cart/wishlist/user, not a listing with a canonical OG card.
+  "messages",
 ]);
 
 // Dynamic-segment routes whose only purpose is param-driven server logic

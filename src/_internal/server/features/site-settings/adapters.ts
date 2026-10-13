@@ -68,6 +68,10 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
    * alternative is putting a per-request Firestore read back on the Edge.
    */
   "disabledRoutes",
+  // D9 — a signed-out visitor's listing/detail view needs to know whether to
+  // render a "Message seller" CTA at all. Narrowed to `enabled` only; there is
+  // nothing else in the group.
+  "chat",
 ] as const;
 
 /** Everything else, with the reason it stays server-side. */
@@ -155,5 +159,7 @@ export function toPublicSiteSettings(
     // and leave the next person wondering whether the projection ran at all.
     disabledRoutes: doc.disabledRoutes ?? [],
     effectiveWatermark: opts?.effectiveWatermark,
+    // D9 — undefined reads as OFF, never a default-true `??`.
+    chat: { enabled: doc.chat?.enabled === true },
   };
 }

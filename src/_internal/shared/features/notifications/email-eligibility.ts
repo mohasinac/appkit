@@ -126,6 +126,10 @@ export const EMAIL_ELIGIBLE_TYPES: Record<NotificationType, boolean> = {
   // digest. This was the second 100-way fan-out — `onScamReportCreate` sent one
   // notification per employee, up to 100, for every report filed.
   scam_report_update: false,
+
+  // D9 — the conversation lives in the UI, same reasoning as
+  // support_ticket_update. A chat message is not a deadline.
+  message_received: false,
 };
 
 /**

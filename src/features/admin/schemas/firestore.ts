@@ -88,6 +88,12 @@ export const NOTIFICATION_TYPE_VALUES = [
   // it stayed off this union: the cast silenced the one signal that would
   // have said so, and with it every other field's type-check on that call.
   "catalogue_images_stale",
+  /**
+   * D9 — a new chat message. Bell-only — `EMAIL_ELIGIBLE_TYPES` is `false`,
+   * following `support_ticket_update`'s recorded reasoning: the conversation
+   * lives in the UI, not the inbox.
+   */
+  "message_received",
 ] as const;
 
 export type NotificationType = (typeof NOTIFICATION_TYPE_VALUES)[number];
@@ -113,6 +119,8 @@ export const NOTIFICATION_RELATED_TYPE_VALUES = [
   "catalogueItem",
   "payout",
   "store",
+  // D9 — the chat thread the message belongs to.
+  "conversation",
 ] as const;
 
 export type NotificationRelatedType =
@@ -695,6 +703,16 @@ export interface SiteSettingsDocument extends BaseDocument {
       whatsapp: number;
       sms: number;
     };
+  };
+  /**
+   * D9 — chat. Off by default, and `undefined` reads as OFF (never a
+   * default-true `??`) — a real setting with a real cost: every conversation
+   * is a Firestore subcollection plus an RTDB ping channel, and the feature
+   * was deleted once already for shipping broken and earning low usage it
+   * never had a chance to prove.
+   */
+  chat?: {
+    enabled: boolean;
   };
   emailSettings: {
     fromName: string;

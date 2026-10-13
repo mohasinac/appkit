@@ -235,6 +235,9 @@ export const DEFAULT_ROUTE_MAP = {
     CATALOGUE: "/user/catalogue",
     CATALOGUE_NEW: "/user/catalogue/new",
     CATALOGUE_EDIT: (id: string) => `/user/catalogue/${id}/edit`,
+    /** D9 — one universal inbox, same real-top-level-path precedent as WISHLIST/CART. */
+    MESSAGES: "/messages",
+    MESSAGE_THREAD: (conversationId: string) => `/messages/${conversationId}`,
   },
   STORE: {
     DASHBOARD: "/store",

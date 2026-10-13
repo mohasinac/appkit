@@ -127,6 +127,13 @@ export function resolveNotificationActionUrl(
         ? String(ROUTES.ADMIN.STORE_DETAIL(relatedId))
         : String(ROUTES.STORE.DASHBOARD);
 
+    case "conversation":
+      // D9 — one universal inbox, reachable from any portal; there is no
+      // admin-specific thread view (admins moderate via reports, not a
+      // parallel inbox route). Lives under ROUTES.USER, same precedent as
+      // WISHLIST/CART — a real top-level path, not /user/messages.
+      return String(ROUTES.USER.MESSAGE_THREAD(relatedId));
+
     default: {
       /*
        * Exhaustiveness. A new `relatedType` cannot compile without an answer
@@ -195,4 +202,6 @@ export const TYPE_AUDIENCE: Record<NotificationType, NotificationAudience> = {
    */
   support_ticket_update: "buyer",
   scam_report_update: "buyer",
+  // D9 — one universal inbox; which human reads it is not role-dependent.
+  message_received: "buyer",
 };

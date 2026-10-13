@@ -433,6 +433,35 @@ export const AD_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
+// Messages — D9 chat
+// ---------------------------------------------------------------------------
+
+export const MESSAGE_ENDPOINTS = {
+  LIST: (opts?: { limit?: number; cursor?: string }) => {
+    const params = new URLSearchParams();
+    if (opts?.limit !== undefined) params.set("limit", String(opts.limit));
+    if (opts?.cursor) params.set("cursor", opts.cursor);
+    const qs = params.toString();
+    return `/api/messages${qs ? `?${qs}` : ""}`;
+  },
+  OPEN: "/api/messages",
+  THREAD: (
+    conversationId: string,
+    opts?: { limit?: number; cursor?: string },
+  ) => {
+    const params = new URLSearchParams();
+    if (opts?.limit !== undefined) params.set("limit", String(opts.limit));
+    if (opts?.cursor) params.set("cursor", opts.cursor);
+    const qs = params.toString();
+    return `/api/messages/${conversationId}${qs ? `?${qs}` : ""}`;
+  },
+  READ: (conversationId: string) => `/api/messages/${conversationId}/read`,
+  BLOCK: (conversationId: string) => `/api/messages/${conversationId}/block`,
+  TOKEN: (conversationId: string) => `/api/messages/${conversationId}/token`,
+  UNREAD_COUNT: "/api/messages/unread-count",
+} as const;
+
+// ---------------------------------------------------------------------------
 // Events
 // ---------------------------------------------------------------------------
 
@@ -791,6 +820,7 @@ export const API_ENDPOINTS = {
   CORPORATE: CORPORATE_ENDPOINTS,
   CONTACT: CONTACT_ENDPOINTS,
   ADS: AD_ENDPOINTS,
+  MESSAGES: MESSAGE_ENDPOINTS,
   EVENTS: EVENT_ENDPOINTS,
   LOTTERY: LOTTERY_ENDPOINTS,
   FAQS: FAQ_ENDPOINTS,
