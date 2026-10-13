@@ -48,6 +48,8 @@
  */
 
 import { ConflictError, ValidationError } from "../../../errors";
+import { LISTING_TYPE_HAS_COMPOSITION } from "../../parts/schemas/firestore";
+import type { ListingType } from "../types/index";
 
 /**
  * 🛑 A CAP, because the closure is `array-contains`-indexed and Firestore's
@@ -152,12 +154,45 @@ export function readAssignments(input: {
   return out;
 }
 
+/**
+ * 🛑 THE LEAF RULE DOES NOT APPLY TO EVERY LISTING TYPE, and measuring the data
+ * is what showed that — the rule was wrong, not the catalogue.
+ *
+ * Of the 70 non-leaf singles, **31 are types that are not an instance of a
+ * named model at all**: 8 app/coaching redemption codes, 8 city classifieds
+ * (collections, kits, spare-part bundles), 6 sticker sheets, 5 art prints and
+ * 4 live animals or plants. "Beyblade X App — Starter Pack Code" is not a
+ * Dragoon G. A golden retriever puppy has no model leaf and never will.
+ *
+ * So the rule is scoped by the SAME predicate that already answers this
+ * question for the Parts tab: does a listing of this type HAVE a part
+ * composition — i.e. IS it the assembly, or does it merely depict one. Reusing
+ * it rather than writing a second list is the point: a tenth listing type must
+ * answer the question once, not twice, and two hand-written enumerations of one
+ * union is Root Cause #61.
+ *
+ * `classified` and `live` stay `true` there, and that is deliberate: a
+ * classified CAN be a single bey, and the seeded ones that are collections are
+ * `isLot: true`, which the lot branch already permits at a non-leaf.
+ */
+export function leafRuleApplies(listingType: string | undefined): boolean {
+  if (!listingType) return true;
+  return LISTING_TYPE_HAS_COMPOSITION[listingType as ListingType] !== false;
+}
+
 /** Which assignments break the leaf rule, and why. Reporting shape, no throw. */
 export function findLeafRuleOffenders(
   resolved: ResolvedCategory[],
   isLot: boolean,
+  listingType?: string,
 ): { id: string; name?: string; reason: "lot-at-leaf" | "single-at-branch" | "not-indexed" }[] {
   const out: { id: string; name?: string; reason: "lot-at-leaf" | "single-at-branch" | "not-indexed" }[] = [];
+  /*
+   * The LOT half still applies to every type — filing a lot of twelve beys
+   * under one model's leaf is a false claim about the items whatever the
+   * listing type is. Only the SINGLE half is scoped.
+   */
+  if (!isLot && !leafRuleApplies(listingType)) return out;
   for (const c of resolved) {
     if (isLot) {
       if (c.isLeaf === true) out.push({ id: c.id, name: c.name, reason: "lot-at-leaf" });
@@ -183,7 +218,12 @@ export function findLeafRuleOffenders(
 export function assertAssignmentShape(
   resolved: ResolvedCategory[],
   isLot: boolean,
-  opts: { enforceLeafFiling?: boolean; warn?: (msg: string, meta?: object) => void } = {},
+  opts: {
+    enforceLeafFiling?: boolean;
+    /** Scopes the SINGLE half of the leaf rule — see `leafRuleApplies`. */
+    listingType?: string;
+    warn?: (msg: string, meta?: object) => void;
+  } = {},
 ): void {
   if (resolved.length > MAX_CATEGORY_ASSIGNMENTS) {
     throw new ValidationError(
@@ -216,7 +256,7 @@ export function assertAssignmentShape(
     );
   }
 
-  const offenders = findLeafRuleOffenders(resolved, isLot);
+  const offenders = findLeafRuleOffenders(resolved, isLot, opts.listingType);
   if (offenders.length === 0) return;
 
   /*

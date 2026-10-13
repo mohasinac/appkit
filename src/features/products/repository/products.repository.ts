@@ -448,6 +448,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     if (resolved.length > 0) {
       assertAssignmentShape(resolved, input.isLot === true, {
         enforceLeafFiling: ENFORCE_LEAF_FILING,
+        listingType: input.listingType,
         warn: (msg, meta) => serverLogger.warn(msg, { productTitle: input.title, ...meta }),
       });
 
