@@ -105,6 +105,17 @@ export const DEFAULT_ROUTE_MAP = {
      * claim at all, so the signals are silence + price, then code, then weight.
      */
     SPOT_A_FAKE: "/spot-a-fake",
+    /* D6 — the content hub. Fourteen explainers whose only entry point was the
+     * footer; a footer link is reachable but it is not a destination, so it
+     * cannot rank and gives a crawler no page establishing the cluster. */
+    GUIDES: "/guides",
+    /*
+     * D5 — local SEO, one page per city a classified listing actually names.
+     * 🛑 STATIC (`generateStaticParams`): a city page that awaited
+     * `searchParams` would be dynamic, and this is the surface most likely to
+     * be crawled widely (Root Cause #94).
+     */
+    CITY_COLLECTIBLES: (city: string) => `/collectibles/${city}`,
     EVENTS: "/events",
     EVENT_DETAIL: (id: string) => `/events/${id}`,
     EVENT_PARTICIPATE: (id: string) => `/events/${id}/participate`,

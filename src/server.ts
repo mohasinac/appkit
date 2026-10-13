@@ -30,6 +30,8 @@ export {
  * on (`matchSlotToHoldings`) stays internal, since a caller reaching for the
  * matcher directly would be re-deriving the rollup's (part, colourway) rule.
  */
+/* D5 — the city OG card. No money on it, by rule (Root Cause #93). */
+export { renderCityOg, type CityOgData } from "./_internal/server/features/products/og";
 export {
   listBuildableModels,
   BUILDABLE_HOLDINGS_LIMIT,
