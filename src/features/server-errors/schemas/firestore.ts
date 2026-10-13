@@ -33,6 +33,21 @@ export type ServerErrorDocument = {
   userAgent?: string;
   /** sha256(requestBody) — for diagnosis without leaking PII. */
   bodyDigest?: string;
+  /**
+   * D10 — WHAT the failure was about, when that is narrower than `route`.
+   *
+   * 🛑 Absent means UNKNOWN, never "not a page". Every row written before this
+   * field existed has no value, so any filter over it must treat a missing
+   * `entityType` as INCLUDED — a default-exclusive filter would hide every
+   * pre-existing row and manufacture a backfill nobody budgeted for.
+   *
+   * `"page"` is the one value a user-submitted report can produce (see
+   * `ReportEntityType`), which is what lets an operator line a visitor's
+   * "this page is broken" up against the server-side rows for the same route.
+   */
+  entityType?: "page" | "product" | "store" | "order" | "listing";
+  /** The entity the failure was about — a path for `entityType: "page"`. */
+  entityId?: string;
 }
 
 export const SERVER_ERROR_FIELDS = {
@@ -49,6 +64,8 @@ export const SERVER_ERROR_FIELDS = {
   REQUEST_ID: "requestId",
   USER_AGENT: "userAgent",
   BODY_DIGEST: "bodyDigest",
+  ENTITY_TYPE: "entityType",
+  ENTITY_ID: "entityId",
 } as const;
 
 export const SERVER_ERROR_STACK_MAX_BYTES = 4096;

@@ -15,14 +15,25 @@ export interface BreadcrumbItem {
   href?: string;
 }
 
+export type BreadcrumbTone = "default" | "on-media";
+
 export interface BreadcrumbProps {
   items: BreadcrumbItem[];
   className?: string;
+  /**
+   * `"on-media"` for a trail drawn over a cover photo — fixed white ink on the
+   * scrim, in both themes. See the tone block in `Breadcrumb.style.css` for why
+   * it is not a theme token.
+   */
+  tone?: BreadcrumbTone;
 }
 
-export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
+export function Breadcrumb({ items, className = "", tone = "default" }: BreadcrumbProps) {
   return (
-    <Nav aria-label="Breadcrumb" className={`appkit-breadcrumb ${className}`}>
+    <Nav
+      aria-label="Breadcrumb"
+      className={`appkit-breadcrumb ${tone === "on-media" ? "appkit-breadcrumb--on-media" : ""} ${className}`}
+    >
       <Ol className="appkit-breadcrumb__list">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;

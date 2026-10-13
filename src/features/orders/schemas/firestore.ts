@@ -265,6 +265,17 @@ export interface OrderDocumentItem {
   /** I8 — the brand display name at order time, for the same reason. */
   brand?: string;
   condition?: string;
+  /**
+   * I9 — which physical variant of a PART this unit was, snapshotted.
+   *
+   * 🛑 Snapshotted for the same reason `condition` and `gstRate` are: the
+   * price index slices by colourway, and reading the product's CURRENT
+   * colourway would retroactively re-file an old sale under a value the seller
+   * changed later. For a part this is a bigger price variable than condition —
+   * the silver Metal Ball and the transparent-black one are the same mould
+   * with the same stats, and one is rare and costly.
+   */
+  colourway?: string;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */

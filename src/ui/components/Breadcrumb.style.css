@@ -58,3 +58,40 @@
 .dark .appkit-breadcrumb__link:hover {
   color: var(--appkit-color-primary-400);
 }
+
+/*
+ * ── tone="on-media" ─────────────────────────────────────────────────────────
+ *
+ * A trail rendered ON a cover photo. The category hero does exactly this, and
+ * before this tone existed that page hand-rolled its own `<Nav>` with
+ * `text-white/70` conditionals purely to stay readable — which is why the
+ * shared component had no caller there, and why its visible trail (three
+ * crumbs) disagreed with its own JSON-LD (eight).
+ *
+ * 🛑 Fixed white rather than a theme token, deliberately. The backdrop is a
+ * photograph with a dark scrim over it in BOTH themes, so a theme-inverting
+ * token would be invisible in one of them — the trap Root Cause #67 is about.
+ * An alpha on white is the spelling that rule prescribes for a control on a
+ * fixed dark scrim.
+ */
+.appkit-breadcrumb--on-media .appkit-breadcrumb__list,
+.appkit-breadcrumb--on-media .appkit-breadcrumb__text,
+.dark .appkit-breadcrumb--on-media .appkit-breadcrumb__list,
+.dark .appkit-breadcrumb--on-media .appkit-breadcrumb__text {
+  color: rgb(255 255 255 / 0.7);
+}
+
+.appkit-breadcrumb--on-media .appkit-breadcrumb__separator,
+.dark .appkit-breadcrumb--on-media .appkit-breadcrumb__separator {
+  color: rgb(255 255 255 / 0.4);
+}
+
+.appkit-breadcrumb--on-media .appkit-breadcrumb__current,
+.dark .appkit-breadcrumb--on-media .appkit-breadcrumb__current {
+  color: rgb(255 255 255);
+}
+
+.appkit-breadcrumb--on-media .appkit-breadcrumb__link:hover,
+.dark .appkit-breadcrumb--on-media .appkit-breadcrumb__link:hover {
+  color: rgb(255 255 255);
+}

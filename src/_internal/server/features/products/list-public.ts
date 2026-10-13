@@ -48,6 +48,7 @@ import {
   sieveFilter,
   expandSieveParam,
 } from "../../../../utils/sieve-builder";
+import { planSearchTxt } from "../../../../utils/search-txt-query";
 import { ALL_LISTING_TYPES } from "../../../shared/listing-types/feature-flags";
 import {
   isListingRowAvailable,
@@ -232,6 +233,23 @@ export interface PublicProductQuery {
    * rows.
    */
   search?: string;
+  /**
+   * Category ids to scope to, carried outside `filters` for the same reason
+   * `search` is — and set ONLY when both are present.
+   *
+   * 🛑 Firestore permits one array operator per query, and the category clause
+   * (`categorySlugs` array-contains) and the search clause (`searchTxt`
+   * array-contains) are both one. So when a visitor searches inside a
+   * category, the category leaves the filter string and arrives here, where
+   * the repository can refine it in memory over the search window.
+   *
+   * 🛑 Only the DEFAULT executor honours this. The colocated Function is
+   * handed a filter string and cannot refine anything, which is why
+   * `listPublicProducts` routes this one query shape to the default executor
+   * rather than hoping a remote executor forwards the option (Root Cause #85:
+   * one query, two paths, different capabilities).
+   */
+  categoriesIn?: readonly string[];
 }
 
 export interface ExecutorResult {
@@ -480,7 +498,18 @@ export function parsePublicProductParams(
  * index in an order nobody declares — it fails with FAILED_PRECONDITION, which
  * upstream reads as a bare "no results".
  */
-function buildFirestoreSafeFilters(input: PublicProductListInput): string {
+/**
+ * The Firestore-safe Sieve filter string.
+ *
+ * `omitCategory` exists for the one query Firestore cannot express as written:
+ * a search term inside a category. Both are array operators and Firestore
+ * permits one, so the category leaves `filters` and travels as `categoriesIn`,
+ * where the repository refines it in memory over the search window.
+ */
+function buildFirestoreSafeFilters(
+  input: PublicProductListInput,
+  opts?: { omitCategory?: boolean },
+): string {
   const parts: string[] = [];
 
   // Published-only unless the caller explicitly asks otherwise. Without this
@@ -501,7 +530,7 @@ function buildFirestoreSafeFilters(input: PublicProductListInput): string {
     parts.push(sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, types.join("|")));
   }
 
-  if (input.category) {
+  if (input.category && !opts?.omitCategory) {
     parts.push(
       expandSieveParam(PRODUCT_FIELDS.CATEGORY_SLUGS, input.category, SIEVE_OP.CONTAINS),
     );
@@ -644,7 +673,15 @@ async function defaultExecutor(query: PublicProductQuery): Promise<ExecutorResul
     // Without this second argument the repository's searchTxt read path is
     // unreachable on the default executor, which is what every SSR listing view
     // uses. It was implemented and simply never called.
-    query.search ? { search: query.search } : undefined,
+    //
+    // `categoriesIn` rides along for the one query Firestore cannot express as
+    // two array clauses — a search inside a category. See `PublicProductQuery`.
+    query.search || query.categoriesIn?.length
+      ? {
+          ...(query.search ? { search: query.search } : {}),
+          ...(query.categoriesIn?.length ? { categoriesIn: [...query.categoriesIn] } : {}),
+        }
+      : undefined,
   );
   return {
     items: result.items,
@@ -697,6 +734,39 @@ export async function listPublicProducts(
   const requestedSortField = sorts.replace(/^-/, "");
   const sortDesc = sorts.startsWith("-");
 
+  /*
+   * 🛑 THE EMPTY GUARD, HERE RATHER THAN ONLY IN THE REPOSITORY — measured
+   * live: `/api/products?q=!!!` returned the WHOLE CATALOGUE (50+, capped),
+   * which is A2's bug still reachable in production.
+   *
+   * `productRepository.list` has carried this guard for a while, but this
+   * function prefers the colocated `listingProcessor` Function on the one
+   * route that serves `/api/products`, and that Function has no such guard: it
+   * is handed a filter string with no search clause in it and answers with an
+   * unfiltered page. So the rule has to live where BOTH executors pass, which
+   * is here.
+   *
+   * `parseSearchTxtQuery` normalises punctuation away, so `"!!!"`, `"—"` and
+   * `"@#$"` all reduce to no usable token — and a query that produced none
+   * must return NOTHING. Falling through to the other filters is what turns a
+   * one-character search into "here is everything".
+   */
+  if (planSearchTxt(input.q).empty) {
+    return {
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: 0,
+      totalPages: 0,
+      hasMore: false,
+      cursor: null,
+      // Not truncated — this is an exact zero, not a saturated window.
+      truncated: false,
+      filters: "",
+      sorts: input.sorts || DEFAULT_SORTS,
+    };
+  }
+
   const availability = input.availability ?? AVAILABILITY_VALUES.ALL;
   const wantAvailable = availability === AVAILABILITY_VALUES.AVAILABLE;
   const wantUnavailable = availability === AVAILABILITY_VALUES.UNAVAILABLE;
@@ -707,7 +777,43 @@ export async function listPublicProducts(
   // field, so a matching date facet can still be pushed down.
   const canPushDate = hasDateRange && !wantAvailable && requestedSortField === dateField;
 
-  const safeFilters = buildFirestoreSafeFilters(input);
+  /*
+   * 🛑 A SEARCH INSIDE A CATEGORY CANNOT RUN ON THE REMOTE EXECUTOR, and
+   * measured against the live container it returned **zero rows**, not a wrong
+   * set — which reads as "this category has nothing matching" and is the most
+   * convincing way to be wrong.
+   *
+   * The reason is Firestore's one-array-operator rule meeting two array
+   * clauses: the category travels inside `filters` as `categorySlugs @= …`
+   * (array-contains) and the search term becomes a second `array-contains` on
+   * `searchTxt` inside the repository. One of the two has to be refined in
+   * memory, and the colocated Function CANNOT do that — it is handed a filter
+   * string and returns a page.
+   *
+   * So when both are present this query runs on the DEFAULT executor, which
+   * holds the repository's refine (`beginSearchWindow` + the `categoriesIn`
+   * predicate). Measured live before the fix: `?q=dragoon` → 30,
+   * `?category=category-spinning-tops` → 50+, and the two together → 0.
+   *
+   * 🛑 The alternative — moving the category OUT of `filters` so the Function
+   * only sees the search — is strictly worse: the Function would then return
+   * the UNSCOPED catalogue and the page would silently widen instead of
+   * silently emptying. Same family as Root Cause #85: one handler reachable
+   * through two paths with different capabilities, where an env var decides
+   * which one answers.
+   */
+  const needsMemoryRefine = Boolean(input.q && input.category);
+  const executor = needsMemoryRefine ? defaultExecutor : (opts?.executor ?? defaultExecutor);
+  /*
+   * The category ids, as the repository's `categoriesIn` option rather than as
+   * a Sieve clause. Products carry their FULL ancestor chain, so a page passing
+   * its own id still matches its whole subtree — the refine and the pushdown
+   * agree by construction.
+   */
+  const categoriesIn = needsMemoryRefine
+    ? (input.category as string).split("|").filter(Boolean)
+    : undefined;
+  const safeFilters = buildFirestoreSafeFilters(input, { omitCategory: needsMemoryRefine });
   const dateClauses = [
     ...(canPushDate && input.dateFrom
       ? [sieveFilter(dateField as string, SIEVE_OP.GTE, input.dateFrom)]
@@ -717,7 +823,6 @@ export async function listPublicProducts(
       : []),
   ];
 
-  const executor = opts?.executor ?? defaultExecutor;
   const types = asListingTypes(input.listingTypes);
 
   // ── Path B: one type whose unavailability IS a pushable inequality, and the
@@ -755,6 +860,7 @@ export async function listPublicProducts(
       pageSize,
       cursor: input.cursor ?? null,
       search: input.q,
+      categoriesIn,
     });
     if (!result) return null;
     return finish({
@@ -794,6 +900,7 @@ export async function listPublicProducts(
           pageSize: PUBLIC_PRODUCT_MAX_PAGE_SIZE,
           cursor: null,
           search: input.q,
+      categoriesIn,
         });
       }),
     );
@@ -921,6 +1028,7 @@ export async function listPublicProducts(
     pageSize: inMemory ? windowSize : pageSize,
     cursor: inMemory ? null : (input.cursor ?? null),
     search: input.q,
+    categoriesIn,
   });
   if (!result) return null;
 

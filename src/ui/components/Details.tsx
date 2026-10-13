@@ -120,6 +120,16 @@ export interface SummaryProps {
   align?: SummaryAlign;
   /** Main-axis distribution — takes effect when `layout` is set. */
   justify?: SummaryJustify;
+  /**
+   * Accessible name for the disclosure control.
+   *
+   * A summary whose visible label is a shorthand ("… 3 more") reads as nothing
+   * useful to a screen reader, and the alternative — padding the visible label
+   * — costs the horizontal space the collapse exists to save. A prop rather
+   * than a caller's raw attribute, because a raw `aria-label` on a primitive is
+   * the className escape hatch by another name (Rule #21).
+   */
+  ariaLabel?: string;
 }
 
 const TONE_CLS: Record<DetailsTone, string> = {
@@ -168,9 +178,10 @@ export function Details({
   );
 }
 
-export function Summary({ children, className, size, weight, paddingX, paddingY, color, layout, align, justify }: SummaryProps) {
+export function Summary({ children, className, size, weight, paddingX, paddingY, color, layout, align, justify, ariaLabel }: SummaryProps) {
   return (
     <summary
+      aria-label={ariaLabel}
       className={[
         "cursor-pointer select-none font-medium text-[var(--appkit-color-text)] list-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-focus-ring)] rounded",
         size ? SUMMARY_SIZE_MAP[size] : "",

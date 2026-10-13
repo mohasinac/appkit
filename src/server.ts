@@ -24,6 +24,20 @@ export {
   getCompositionsForCategory,
   listPartsBySlot,
 } from "./_internal/server/features/parts/data";
+/*
+ * D13's last item — "which models can I build from the parts I hold".
+ * Exported because its only caller is a consumer route; the matcher it is built
+ * on (`matchSlotToHoldings`) stays internal, since a caller reaching for the
+ * matcher directly would be re-deriving the rollup's (part, colourway) rule.
+ */
+export {
+  listBuildableModels,
+  BUILDABLE_HOLDINGS_LIMIT,
+  BUILDABLE_CANDIDATE_LIMIT,
+  type BuildableModel,
+  type BuildableResult,
+  type BuildableSlot,
+} from "./_internal/server/features/parts/buildable";
 export {
   renderPartOg,
   renderPartClassificationOg,

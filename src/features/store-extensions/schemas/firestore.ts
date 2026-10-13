@@ -319,7 +319,17 @@ export type ReportEntityType =
   | "event"
   | "user"
   | "blog"
-  | "comment";
+  | "comment"
+  /*
+   * D10 — "this PAGE is broken", which is the commonest thing a visitor
+   * actually wants to report and the one thing this enum could not express.
+   *
+   * 🛑 The absence was not cosmetic: `/report` exists and is linked from the
+   * footer, but every option it offered named an ENTITY, so a broken checkout
+   * step, a 500 on a listing page or a layout that will not scroll had to be
+   * filed as a complaint about a product. `entityId` then carries the PATH.
+   */
+  | "page";
 export type ReportStatus =
   | "pending"
   | "under-review"
@@ -366,6 +376,8 @@ const REPORT_ENTITY_TYPE_MAP: Record<ReportEntityType, true> = {
   user: true,
   blog: true,
   comment: true,
+  // D10 — a broken PAGE. `entityId` carries the path.
+  page: true,
 };
 export const REPORT_ENTITY_TYPES = Object.keys(REPORT_ENTITY_TYPE_MAP) as [
   ReportEntityType,

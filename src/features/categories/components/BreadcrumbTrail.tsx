@@ -1,20 +1,37 @@
 import React from "react";
 import { Breadcrumb } from "../../../ui";
 import type { BreadcrumbItem } from "../../../ui";
-import { Text } from "../../../ui/components/Typography";
+import { Details, Summary, Div, Row, Stack } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { CategoryItem, CategoryAncestor } from "../types";
-import { alternateAssignments, collapseTrail } from "../utils/breadcrumb-chain";
+import {
+  alternateAssignments,
+  collapseTrail,
+  type BreadcrumbCrumb,
+} from "../utils/breadcrumb-chain";
 
 // --- BreadcrumbTrail ----------------------------------------------------------
 
 export interface BreadcrumbTrailProps {
   /**
-   * The current (leaf) category whose ancestry should be shown as breadcrumbs.
-   * Uses `category.ancestors` if present, otherwise only the category itself.
+   * The chain to render, root-first, with the final crumb carrying no `url`.
+   *
+   * 🛑 PREFER THIS over `category`. It is the same array the page hands to
+   * `breadcrumbJsonLd`, which is what makes the visible trail, the markup and
+   * `categoryNames` agree by construction rather than by discipline — D4b's
+   * rule. Before this prop existed the category page and the product page each
+   * hand-rolled their own `<Nav>`, and the product one rendered three crumbs
+   * (`Home / Products / Category`) while its JSON-LD carried all eight.
    */
-  category: CategoryItem;
+  crumbs?: readonly BreadcrumbCrumb[];
+  /**
+   * Legacy input: a category whose `ancestors` array becomes the chain.
+   * Kept because it is the published prop shape; `crumbs` wins when both are
+   * passed.
+   */
+  category?: CategoryItem;
   /**
    * Label for the implicit root item prepended to the trail.
    * Default: "All Categories"
@@ -40,10 +57,10 @@ export interface BreadcrumbTrailProps {
   /**
    * I5b — collapse the middle of a long trail behind a dropdown.
    *
-   * 🛑 Needed independently of multi-assignment: a tier-4 part leaf is SEVEN
-   * crumbs (`All Categories > Spinning Tops > Beyblade Metal > Metal Parts >
-   * Performance Tips > Rubber Flat`) and 390px cannot hold it. D4b measured
-   * that depth and never addressed how it wraps.
+   * 🛑 Needed independently of multi-assignment: a tier-4 part leaf is EIGHT
+   * crumbs (`Home > Categories > Spinning Tops > Beyblade Metal > Metal Parts >
+   * Performance Tips > Rubber Flat > <title>`) and 390px cannot hold it. D4b
+   * measured that depth and never addressed how it wraps.
    *
    * Defaults ON, because the only trails long enough to collapse are the ones
    * that already overflow.
@@ -57,25 +74,35 @@ export interface BreadcrumbTrailProps {
    * all for a single assignment, which is the overwhelming majority.
    */
   alternates?: { ids?: readonly string[] | null; names?: readonly string[] | null };
+  /**
+   * `"on-media"` when the trail sits over a cover photo — the category hero
+   * does. Forwarded to the `Breadcrumb` primitive, which owns the ink.
+   */
+  tone?: "default" | "on-media";
 }
 
 /**
- * BreadcrumbTrail — a category-aware breadcrumb component.
+ * BreadcrumbTrail — one row of crumbs, with the middle and the alternates
+ * collapsed behind real `<details>` dropdowns.
  *
- * Renders the full ancestor chain for a category using the `ancestors` array
- * stored on `CategoryItem`. Falls back gracefully when `ancestors` is absent
- * (shows only the root + current category).
+ * 🛑 BOTH DROPDOWNS CONTAIN REAL `<a>` ELEMENTS IN THE SERVER-RENDERED DOM.
+ * `<details>`/`<summary>` is native, needs no JavaScript, works on a keyboard,
+ * and — the reason it was chosen over a hover menu — a crawler parsing the HTML
+ * sees every link whether or not anything ever opens it. Links injected on
+ * open would trade the SEO this exists for against tidiness, which is the
+ * opposite of *"better for both crawler and users"*.
+ *
+ * 🛑 Collapsing is PRESENTATION ONLY. The JSON-LD is emitted by the page from
+ * the full chain and must stay that way: a crawler never receives a truncated
+ * hierarchy because a phone could not show it.
  *
  * @example
  * ```tsx
- * <BreadcrumbTrail
- * category={category}
- * rootHref="/categories"
- * basePath="/categories"
- * />
+ * <BreadcrumbTrail crumbs={withTrailHead(categoryCrumbs(category), HEAD)} />
  * ```
  */
 export function BreadcrumbTrail({
+  crumbs,
   category,
   rootLabel = "All Categories",
   rootHref = String(ROUTES.PUBLIC.CATEGORIES),
@@ -84,21 +111,25 @@ export function BreadcrumbTrail({
   className,
   collapse = true,
   alternates,
+  tone = "default",
 }: BreadcrumbTrailProps) {
-  const full: BreadcrumbItem[] = [
-    // Root
-    { label: rootLabel, href: rootHref },
-    // Ancestors (sorted by tier ascending so root → leaf order)
-    ...(category.ancestors ?? [])
-      .slice()
-      .sort((a: CategoryAncestor, b: CategoryAncestor) => a.tier - b.tier)
-      .map((ancestor: CategoryAncestor) => ({
-        label: ancestor.name,
-        href: `${basePath}/${ancestor.id}`,
-      })),
-    // Current category (no href so it renders as the active item)
-    ...(showCurrent ? [{ label: category.name }] : []),
-  ];
+  const chain: BreadcrumbCrumb[] = crumbs?.length
+    ? [...crumbs]
+    : category
+      ? [
+          { name: rootLabel, url: rootHref },
+          ...(category.ancestors ?? [])
+            .slice()
+            .sort((a: CategoryAncestor, b: CategoryAncestor) => a.tier - b.tier)
+            .map((ancestor: CategoryAncestor) => ({
+              name: ancestor.name,
+              url: `${basePath}/${ancestor.id}`,
+            })),
+          ...(showCurrent ? [{ name: category.name }] : []),
+        ]
+      : [];
+
+  if (chain.length === 0) return null;
 
   /*
    * I5b — the alternates become ONE extra crumb, never a second row. Two rows
@@ -111,56 +142,78 @@ export function BreadcrumbTrail({
     hrefFor: (slug) => `${basePath}/${slug}`,
   });
 
+  const split = collapse ? collapseTrail(chain) : null;
+  const hasCollapsed = Boolean(split && split.collapsed.length > 0);
+
+  const visible: BreadcrumbItem[] = hasCollapsed
+    ? [...split!.lead.map(fromCrumb), ...split!.tail.map(fromCrumb)]
+    : chain.map(fromCrumb);
+
   /*
-   * 🛑 Collapsing is PRESENTATION. The JSON-LD is emitted elsewhere, from the
-   * full chain, and must stay that way — a crawler never receives a truncated
-   * hierarchy because a phone could not show it.
+   * The collapsed middle is injected AFTER the lead rather than rendered as a
+   * label-only crumb, so the hidden ancestors stay clickable. The previous
+   * version rendered `… 3 more` as plain text, which told the visitor what was
+   * missing and gave them no way to reach it.
    */
-  const split = collapse ? collapseTrail(toCrumbs(full)) : null;
-  const items: BreadcrumbItem[] =
-    split && split.collapsed.length > 0
-      ? [
-          ...split.lead.map(fromCrumb),
-          /*
-           * The collapsed group as ONE crumb whose label names what it hides.
-           * 🛑 Rendered as a real crumb with no href rather than a menu,
-           * because `Breadcrumb` is a plain list primitive — and the hidden
-           * ancestors are still reachable: every one of them is an ancestor of
-           * the crumbs either side, so no path is lost, only shortened.
-           */
-          { label: `… ${split.collapsed.length} more` },
-          ...split.tail.map(fromCrumb),
-        ]
-      : full;
+  const leadCount = hasCollapsed ? split!.lead.length : 0;
 
   return (
-    <>
-      <Breadcrumb items={items} className={className} />
-      {alt.mode !== "none" && (
-        <Text size="xs" color="muted">
-          {/*
-            * 🛑 Real <a> elements in the server-rendered DOM. A crawler does
-            * not open menus, so alternates injected on open would trade the SEO
-            * this exists for against tidiness — the opposite of "better for
-            * both crawler and users".
-            */}
+    <Div className={className}>
+      <Row align="center" gap="xs" wrap>
+        <Breadcrumb items={visible.slice(0, leadCount)} tone={tone} />
+        {hasCollapsed && (
+          <Details tone="card" padding="sm" rounded="lg">
+            <Summary size="xs" color="muted" ariaLabel={`Show ${split!.collapsed.length} hidden category levels`}>
+              {`… ${split!.collapsed.length} more`}
+            </Summary>
+            <Div padding="t-xs">
+              <Stack align="start" gap="xs">
+                {split!.collapsed.map((c) => (
+                  <TextLink key={c.url ?? c.name} href={c.url ?? rootHref} size="xs">
+                    {c.name}
+                  </TextLink>
+                ))}
+              </Stack>
+            </Div>
+          </Details>
+        )}
+        <Breadcrumb items={hasCollapsed ? visible.slice(leadCount) : visible} tone={tone} />
+      </Row>
+
+      {alt.mode === "inline" && (
+        <Span size="xs" color="muted">
           Also in{" "}
           {alt.items.map((a, i) => (
             <React.Fragment key={a.url ?? a.name}>
               {i > 0 && " · "}
-              <TextLink href={a.url ?? "#"}>{a.name}</TextLink>
+              <TextLink href={a.url ?? rootHref} size="xs">
+                {a.name}
+              </TextLink>
             </React.Fragment>
           ))}
-        </Text>
+        </Span>
       )}
-    </>
+
+      {alt.mode === "dropdown" && (
+        <Details tone="card" padding="sm" rounded="lg">
+          <Summary size="xs" color="muted" ariaLabel="Other categories this listing is filed under">
+            {`Also in ${alt.items.length} more`}
+          </Summary>
+          <Div padding="t-xs">
+            <Stack align="start" gap="xs">
+              {alt.items.map((a) => (
+                <TextLink key={a.url ?? a.name} href={a.url ?? rootHref} size="xs">
+                  {a.name}
+                </TextLink>
+              ))}
+            </Stack>
+          </Div>
+        </Details>
+      )}
+    </Div>
   );
 }
 
-/** `BreadcrumbItem` ⇄ `BreadcrumbCrumb` — two names for one shape. */
-function toCrumbs(items: readonly BreadcrumbItem[]) {
-  return items.map((i) => ({ name: i.label, url: i.href }));
-}
-function fromCrumb(c: { name: string; url?: string }): BreadcrumbItem {
+function fromCrumb(c: BreadcrumbCrumb): BreadcrumbItem {
   return c.url ? { label: c.name, href: c.url } : { label: c.name };
 }

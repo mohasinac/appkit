@@ -104,6 +104,31 @@ export interface PriceIndexBand {
    * in unknown condition", and only the first is true.
    */
   byCondition?: Record<string, PriceIndexConditionBand>;
+  /**
+   * I9 — the per-COLOURWAY slice, for a part whose one glossary row is two
+   * physically different units.
+   *
+   * 🛑 Why colourway earns a dimension when nothing else does. This index
+   * already slices by condition precisely because condition is the dominant
+   * price variable — and here two units of ONE part differ by more than
+   * condition ever does: the silver Metal Ball ships with L-Drago Guardian and
+   * is *"very rare and costly"*, the transparent-black one ships with Poison
+   * Zurafa and is ordinary. Same mould, same weight, same stats, one code, two
+   * markets. A single band across both reports a median no buyer or seller of
+   * either can use.
+   *
+   * Keyed on the NORMALISED colourway (`normaliseColourway`), so "Transparent
+   * Black", "transparent-black" and sloppy spacing are one bucket rather than
+   * three single-sample ones.
+   *
+   * Absent — never `{}` — when no sale in the window recorded a colourway, for
+   * the same reason `byCondition` is: "we do not know" and "we measured and
+   * found none" are different statements and only the first is true. Most
+   * buckets will fall under `PRICE_INDEX_MIN_CONFIDENT_SAMPLES` and render as
+   * "not enough data yet", which is the honest outcome and already the
+   * behaviour.
+   */
+  byColourway?: Record<string, PriceIndexConditionBand>;
   lastSold?: { amount: number; at: Date; via?: "standard" | "auction" | "offer" };
 }
 

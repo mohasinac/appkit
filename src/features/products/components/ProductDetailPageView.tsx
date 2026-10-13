@@ -7,7 +7,6 @@ const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;
 
-const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const ACTION_NOT_WIRED = "Action not wired";
 
 const CLS_STAR_FULL = "text-warning text-[length:var(--appkit-text-sm)]";
@@ -26,6 +25,8 @@ const CLS_BUNDLE_ROW = "flex items-center justify-between gap-[var(--appkit-spac
 const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
 const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next/routing/route-map";
+import { ContextualTrail } from "../../categories/components/ContextualTrail";
+import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   Button,
@@ -33,7 +34,7 @@ import {
   Div,
   Heading,
   Main,
-  Nav,
+  
   PriceDisplay,
   RichText,
   Row,
@@ -310,6 +311,59 @@ export async function ProductDetailPageView({
   const categoryNames: string[] = Array.isArray(p.categoryNames)
     ? (p.categoryNames as string[])
     : categoryName ? [categoryName] : [];
+  /*
+   * I5b — the VISIBLE trail, from the same `productCrumbs` builder the route's
+   * JSON-LD uses.
+   *
+   * 🛑 This page rendered `Home / Products / <Category>` — three crumbs — while
+   * its own `BreadcrumbList` carried the full 8-level chain. The data was on
+   * the row the whole time; only the markup read it. Same builder, same
+   * inputs, so the two cannot describe different hierarchies.
+   */
+  const categoryIds: string[] = Array.isArray(p.categoryIds) ? (p.categoryIds as string[]) : [];
+  const categoryIdNames: string[] = Array.isArray(p.categoryIdNames)
+    ? (p.categoryIdNames as string[])
+    : [];
+  const defaultTrail = withTrailHead(
+    [
+      ...productCrumbs({
+        categorySlugs,
+        categoryNames,
+        hrefFor: (s) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(s)),
+      }),
+      { name: title || String(p.slug ?? ""), url: String(ROUTES.PUBLIC.PRODUCT_DETAIL(String(p.slug ?? ""))) },
+    ],
+    [
+      { name: "Home", url: String(ROUTES.HOME) },
+      { name: "Products", url: String(ROUTES.PUBLIC.PRODUCTS) },
+    ],
+  );
+  /*
+   * One trail per assignment, default first. The alternates are a SINGLE-crumb
+   * chain each: a non-default assignment has no stored ancestor names on the
+   * product (only `categoryIdNames`), and inventing its ancestry from the
+   * default chain would describe a hierarchy that may not exist. A one-level
+   * trail is a true statement; a padded one is not.
+   */
+  const trails = categoryIds.length > 1
+    ? [
+        { categoryId: categoryIds[0] ?? "", crumbs: defaultTrail },
+        ...categoryIds.slice(1).map((id, i) => ({
+          categoryId: id,
+          crumbs: withTrailHead(
+            [
+              { name: categoryIdNames[i + 1] ?? id, url: String(ROUTES.PUBLIC.CATEGORY_DETAIL(id)) },
+              { name: title || String(p.slug ?? "") },
+            ],
+            [
+              { name: "Home", url: String(ROUTES.HOME) },
+              { name: "Products", url: String(ROUTES.PUBLIC.PRODUCTS) },
+            ],
+          ),
+        })),
+      ]
+    : [{ categoryId: categoryIds[0] ?? primaryCategorySlug ?? "", crumbs: defaultTrail }];
+
   const subcategory =
     typeof p.subcategory === "string" ? (p.subcategory as string) : null;
   const brand = typeof p.brand === "string" ? (p.brand as string) : null;
@@ -430,41 +484,19 @@ export async function ProductDetailPageView({
         <ProductDetailView
           renderBreadcrumb={() => (
             <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
-              <Nav aria-label="Breadcrumb" layout="flex-wrap" gap="2xs" textSize="xs" color="muted">
-                <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>
-                  Home
-                </Link>
-                <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className={CLS_BREADCRUMB_LINK}>
-                  Products
-                </Link>
-                {(primaryCategorySlug || category) && (
-                  <>
-                    <Span aria-hidden>/</Span>
-                    {/*
-                      🛑 Label from `categoryNames`, the array — NOT the singular
-                      `categoryName`, which is not a field the repository writes.
-
-                      The link already targets `categorySlugs[0]`, so the label has
-                      to come from the matching entry of the matching array or the
-                      two describe different things. It read `categoryName || category`
-                      and `categoryName` was always null, so every product detail page
-                      rendered its RAW SLUG as the final crumb — "category-burst-superking"
-                      — while the category chips ten lines down, which correctly read
-                      `categoryNames[i] ?? slug`, rendered "Superking" on the same screen.
-                    */}
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(primaryCategorySlug ?? category!))} className={CLS_BREADCRUMB_LINK}>
-                      {categoryNames[0] || categoryName || category}
-                    </Link>
-                  </>
-                )}
-                {subcategory && (
-                  <>
-                    <Span aria-hidden>/</Span>
-                    <Span transform="capitalize">{subcategory}</Span>
-                  </>
-                )}
-              </Nav>
+              {/*
+                * I5b — one row of crumbs, the full chain, with the middle
+                * collapsed behind a real `<details>` dropdown and the other
+                * assignments in one extra crumb. `ContextualTrail` renders the
+                * DEFAULT chain on the server and may swap to the trail matching
+                * the category page the visitor came from after hydration —
+                * suppressed entirely for a single assignment, which is almost
+                * every row, so the common case gains no layout shift.
+                */}
+              <ContextualTrail
+                trails={trails}
+                alternates={{ ids: categoryIds, names: categoryIdNames }}
+              />
               <ShareButton title={title || undefined} />
             </Row>
           )}

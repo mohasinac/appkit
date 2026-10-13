@@ -49,6 +49,7 @@ import {
   type PriceIndexByPath,
   type PriceIndexConditionBand,
 } from "../../../../features/categories/repository/price-index.repository";
+import { normaliseColourway } from "../../../../features/parts/utils/colourway-match";
 import type { JobContext } from "../runtime/types";
 
 /** How far back a band looks. */
@@ -82,6 +83,11 @@ interface SaleSample {
    * cannot inform.
    */
   condition?: string;
+  /**
+   * I9 — which physical variant of the part this unit was. Normalised, so one
+   * colour typed three ways is one bucket.
+   */
+  colourway?: string;
 }
 
 /** An order item as this job reads it. Structural, because documents vary. */
@@ -95,6 +101,8 @@ interface OrderItemLike {
   listingType?: string;
   /** Snapshotted condition (new orders); falls back to the product map. */
   condition?: string;
+  /** Snapshotted colourway (new orders); falls back to the product map. */
+  colourway?: string;
 }
 
 interface OrderLike {
@@ -213,6 +221,28 @@ function toBand(samples: SaleSample[]): PriceIndexBand {
     byCondition[condition] = toConditionBand(bucket);
   }
 
+  /*
+   * The per-COLOURWAY slice (I9), on exactly the same terms as the condition
+   * slice above — skipped when unrecorded, omitted rather than emitted empty.
+   *
+   * 🛑 It earns an axis because for a part it is a BIGGER price variable than
+   * condition: the silver Metal Ball and the transparent-black one are the same
+   * mould with the same stats, and one is rare and costly while the other is
+   * ordinary. One band over both reports a median that describes neither.
+   */
+  const byColourwaySamples = new Map<string, SaleSample[]>();
+  for (const s of samples) {
+    const key = normaliseColourway(s.colourway);
+    if (!key) continue;
+    const bucket = byColourwaySamples.get(key) ?? [];
+    bucket.push(s);
+    byColourwaySamples.set(key, bucket);
+  }
+  const byColourway: Record<string, PriceIndexConditionBand> = {};
+  for (const [colourway, bucket] of byColourwaySamples) {
+    byColourway[colourway] = toConditionBand(bucket);
+  }
+
   return {
     min: amounts[0]!,
     median: median(amounts),
@@ -221,6 +251,7 @@ function toBand(samples: SaleSample[]): PriceIndexBand {
     sampleSize: samples.length,
     byPath,
     ...(Object.keys(byCondition).length > 0 ? { byCondition } : {}),
+    ...(Object.keys(byColourway).length > 0 ? { byColourway } : {}),
     ...(latest ? { lastSold: { amount: latest.amount, at: latest.at, via: latest.via } } : {}),
   };
 }
@@ -254,12 +285,14 @@ export async function runPriceIndexRollup(ctx: JobContext): Promise<void> {
   const leafOf = new Map<string, string>();
   const typeOf = new Map<string, string>();
   const conditionOf = new Map<string, string>();
+  const colourwayOf = new Map<string, string>();
   for (const p of rows) {
     if (!p.id) continue;
     const leaf = p.categorySlugs?.[0];
     if (leaf) leafOf.set(p.id, leaf);
     if (p.listingType) typeOf.set(p.id, p.listingType);
     if (p.condition) conditionOf.set(p.id, p.condition);
+    if (p.colourway) colourwayOf.set(p.id, p.colourway);
   }
 
   const delivered = (await orderRepository.findByStatus("delivered")) as unknown as OrderLike[];
@@ -315,9 +348,18 @@ export async function runPriceIndexRollup(ctx: JobContext): Promise<void> {
        */
       const condition =
         item.condition ?? (item.productId ? conditionOf.get(item.productId) : undefined);
+      // Snapshot first, join second — same rule, same reason as `condition`.
+      const colourway =
+        item.colourway ?? (item.productId ? colourwayOf.get(item.productId) : undefined);
 
       const samples = types.get(listingType) ?? [];
-      samples.push({ amount, at, via, ...(condition ? { condition } : {}) });
+      samples.push({
+        amount,
+        at,
+        via,
+        ...(condition ? { condition } : {}),
+        ...(colourway ? { colourway } : {}),
+      });
       types.set(listingType, samples);
       byLeaf.set(leaf, types);
       considered += 1;

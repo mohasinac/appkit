@@ -101,6 +101,8 @@ export function expandCartLineToOrderRows(
       ...(representative.brand ? { brand: representative.brand } : {}),
       ...(representative.listingType ? { listingType: representative.listingType } : {}),
       ...(representative.condition ? { condition: representative.condition } : {}),
+      // I9 — the physical variant, for the price index's colourway slice.
+      ...(representative.colourway ? { colourway: representative.colourway } : {}),
       // Legacy collapsed bundle rows (no groupMembers) keep their old shape so
       // orders already in flight and their UI stay untouched.
       ...(item.bundleCategorySlug && item.bundleProductIds
@@ -164,6 +166,7 @@ export function expandCartLineToOrderRows(
       // Per MEMBER — a bundle can mix a sealed item with a loose one, and a
       // blended condition would describe neither.
       ...(product?.condition ? { condition: product.condition } : {}),
+      ...(product?.colourway ? { colourway: product.colourway } : {}),
       ...(gstRate != null ? { gstRate, ...(hsnCode ? { hsnCode } : {}) } : {}),
     };
   });

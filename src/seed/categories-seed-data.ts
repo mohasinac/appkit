@@ -61,6 +61,10 @@ import { BRAND_ROW_COUNT, buildBrandRows } from "./_helpers/brand-rows";
 import { MODEL_LEAF_COUNT } from "./_helpers/category-models";
 import { PART_LEAF_COUNT } from "./_helpers/category-parts";
 import { MARKET_BAND_LEAF_IDS } from "./_helpers/category-content";
+import {
+  GENERATED_CATEGORY_CONTENT,
+  GENERATED_CATEGORY_CONTENT_COUNT,
+} from "./_helpers/category-content-generated";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 
 const NOW = new Date();
@@ -454,12 +458,42 @@ const bundleRows: Partial<CategoryDocument>[] = [
  * name/slug/description only and silently drop the lineage search — typing
  * "burst" would stop reaching a tier-4 model under Beyblade Burst.
  */
+/**
+ * I7 — attach the GENERATED body to any row that has one and does not already
+ * carry a hand-authored one.
+ *
+ * 🛑 The generator ran and its 745 bodies were imported by NOBODY. The corpus
+ * sat in the repo as 128 KB of dead weight: not seeded, so not in Firestore,
+ * so unreadable by the page that renders it. The generator being written is
+ * not the same as its output being wired, and the second half is invisible —
+ * a category page with no body renders perfectly well, it just ranks on
+ * nothing.
+ *
+ * 🛑 A HAND-AUTHORED body always wins. The four generation roots and several
+ * tier-1 nodes carry prose written against the crawl research; the generator
+ * composes from facts and is deliberately the weaker writer at those tiers
+ * (its own header says the part leaves are its strongest tier). Overwriting
+ * authored copy with composed copy would be a silent downgrade of the exact
+ * pages this is for.
+ *
+ * 🛑 And nothing is INVENTED here: a row absent from the map keeps no body at
+ * all, because `GENERATED_CATEGORY_CONTENT` omits a node it has nothing
+ * factual to say about rather than emitting an empty one.
+ */
+function withGeneratedContent<T extends Partial<CategoryDocument>>(row: T): T {
+  if (typeof row.contentBody === "string" && row.contentBody.trim().length > 0) return row;
+  const generated = row.id ? GENERATED_CATEGORY_CONTENT[row.id] : undefined;
+  return generated ? { ...row, contentBody: generated } : row;
+}
+
 const allCategoryRows: Partial<CategoryDocument>[] = [
   ...rawCategories.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
   ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
   ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
-].map(withCategorySearchTxt);
+]
+  .map(withGeneratedContent)
+  .map(withCategorySearchTxt);
 
 /*
  * ── Assertions, at MODULE LOAD, so a silent drop is loud ─────────────────────
@@ -500,6 +534,34 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
  * Counting rows is not counting documents, and this is the one check that can
  * tell the difference BEFORE anything is written.
  */
+/*
+ * 🛑 THE GENERATED BODIES ACTUALLY LANDED ON ROWS.
+ *
+ * I7's corpus is a `Record<id, html>` keyed on category ids, and a key that no
+ * longer matches a row is invisible everywhere: the map still exports 745
+ * entries, the seed still loads 1,173 rows, `appkit-seed status` still reports
+ * in sync, and every one of those category pages renders without a body. That
+ * is the same failure shape as the 20 ids that overwrote each other below —
+ * counting the SOURCE is not counting what reached a row.
+ *
+ * Tolerance rather than exact equality, for one real reason: a hand-authored
+ * body legitimately wins over a generated one, so the number of rows carrying
+ * a GENERATED body is `COUNT` minus however many nodes have been written by
+ * hand since. A floor of 90% catches a key-space break (which drops it to ~0)
+ * without failing on authored prose being added.
+ */
+const generatedApplied = allCategoryRows.filter(
+  (c) => typeof c.id === "string" && GENERATED_CATEGORY_CONTENT[c.id] === c.contentBody,
+).length;
+if (generatedApplied < Math.floor(GENERATED_CATEGORY_CONTENT_COUNT * 0.9)) {
+  throw new Error(
+    `category seed: only ${generatedApplied} of ${GENERATED_CATEGORY_CONTENT_COUNT} generated ` +
+      `content bodies matched a row id. The corpus is keyed on category ids, so this means ` +
+      `the key space has drifted — re-run scripts/gen-category-content.mjs against the ` +
+      `current forest. Nothing would error at load time: the pages would simply have no body.`,
+  );
+}
+
 const allIds = allCategoryRows.map((c) => c.id).filter((x): x is string => typeof x === "string");
 const duplicateIds = [...new Set(allIds.filter((id, i) => allIds.indexOf(id) !== i))];
 if (duplicateIds.length > 0) {

@@ -9,11 +9,14 @@ import {
   productRepository,
   storeRepository,
 } from "../../../repositories";
-import { Container, Div, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
+import { BreadcrumbTrail } from "./BreadcrumbTrail";
+import { LastCategoryBeacon } from "./LastCategoryBeacon";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { ModelCompositionPanel } from "../../parts/components/ModelCompositionPanel";
 import { getCompositionsForCategory } from "../../../_internal/server/features/parts/data";
@@ -60,8 +63,21 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // The category IS this page's subject — a read failure must surface rather
   // than render an anonymous, empty category page. `undefined` still means
   // "no such category slug".
-  const category = ((await categoriesRepository
-    .getCategoryBySlug(slug)) ?? undefined) as CategoryItem | undefined;
+  const categoryDoc = await categoriesRepository.getCategoryBySlug(slug);
+  const category = (categoryDoc ?? undefined) as CategoryItem | undefined;
+  /*
+   * 🛑 Read from the DOCUMENT, not from the `CategoryItem` cast.
+   *
+   * `contentBody` is deliberately PRIVATE on the list projection — it is
+   * 400–900 chars of HTML per row and `CategoryInlineSelect` fetches 200 rows
+   * on every seller-form open, so publishing it there would be the
+   * Fast-Origin-Transfer shape of Root Cause #104. Adding it to `CategoryItem`
+   * to satisfy this one render site would invite exactly that. The detail page
+   * holds the whole document server-side, which is what the adapter's own
+   * comment says this field's reader does.
+   */
+  const contentBody =
+    typeof categoryDoc?.contentBody === "string" ? categoryDoc.contentBody : null;
 
   // Products carry their FULL ancestor chain in `categorySlugs`, so matching on
   // this category's own id already returns the whole subtree — no descendant
@@ -365,20 +381,25 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
    * leaving a gap, and `withTrailHead` drops the last crumb's URL because the
    * final breadcrumb is the page you are on.
    */
-  const ldBreadcrumb = breadcrumbJsonLd(
-    withTrailHead(
-      categoryCrumbs({
-        name: category?.name ?? "Category",
-        url: categoryPath,
-        ancestors: category?.ancestors,
-        hrefFor: (id) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(id)),
-      }),
-      [
-        { name: "Home", url: "/" },
-        { name: "Categories", url: String(ROUTES.PUBLIC.CATEGORIES) },
-      ],
-    ),
+  const trail = withTrailHead(
+    categoryCrumbs({
+      name: category?.name ?? "Category",
+      url: categoryPath,
+      ancestors: category?.ancestors,
+      hrefFor: (id) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(id)),
+    }),
+    [
+      { name: "Home", url: "/" },
+      { name: "Categories", url: String(ROUTES.PUBLIC.CATEGORIES) },
+    ],
   );
+  /*
+   * 🛑 ONE ARRAY, two surfaces. The visible trail below renders `trail` and the
+   * markup here serialises the same `trail` — so they cannot disagree, which is
+   * exactly what happened while the page hand-rolled a three-crumb `<Nav>`
+   * beside an eight-crumb `BreadcrumbList`.
+   */
+  const ldBreadcrumb = breadcrumbJsonLd(trail);
 
   /*
    * 🛑 Items are the CHILD CATEGORIES, not the products.
@@ -450,26 +471,22 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         )}
 
         <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
-          {/* Breadcrumb */}
-          <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
-            <Link
-              href={String(ROUTES.HOME)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
-            >
-              Home
-            </Link>
-            <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
-            <Link
-              href={String(ROUTES.PUBLIC.CATEGORIES)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
-            >
-              Categories
-            </Link>
-            <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
-            <Span weight="medium" className={hasCover ? "text-white" : "text-[var(--appkit-color-text)]"}>
-              {category?.name ?? slug}
-            </Span>
-          </Nav>
+          {/*
+            * 🛑 ONE trail component, fed the SAME `trail` array the JSON-LD
+            * above serialises. This was a hand-rolled `<Nav>` with
+            * `text-white/70` conditionals — three crumbs, no collapse — beside
+            * a `BreadcrumbList` carrying the full chain, so a tier-4 category
+            * showed a visitor three levels and a crawler eight. The cover-photo
+            * ink it existed for is now `tone="on-media"` on the primitive.
+            */}
+          <BreadcrumbTrail
+            crumbs={trail}
+            className="mb-4"
+            tone={hasCover ? "on-media" : "default"}
+          />
+          {/* Records this category for a product page's contextual trail (I5b).
+              sessionStorage, one key, no network. */}
+          {category?.id && <LastCategoryBeacon categoryId={category.id} />}
 
           {/* Title + metrics */}
           <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
@@ -520,6 +537,27 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </Row>
         </Div>
       </Section>
+
+      {/* ── D4 / I7: the category's OWN content ────────────────────────────
+          🛑 `contentBody` has existed on the schema since B3, has an admin
+          editor, and `category-content.ts` claimed it rendered "on the category
+          page" — it had NO render site anywhere. So the one field this plan
+          measured as worldhobbyshop's actual ranking mechanism (36 of their 46
+          categories carry one; no Shopify competitor in the crawl has any) was
+          authorable, storable, and invisible.
+
+          Rendered through `RichTextRenderer`, which is what the field's own
+          docstring specifies and is SSR-safe (content is sanitised at save
+          time by `RichTextEditor`). Omitted entirely when absent — an empty
+          prose block reads as a broken page, which is the `{{partBreakdown}}`
+          lesson. */}
+      {contentBody && contentBody.trim().length > 0 && (
+        <Section padding="y-lg">
+          <Container size="xl">
+            <RichTextRenderer html={contentBody} />
+          </Container>
+        </Section>
+      )}
 
       <CategoryHighlightsAndFaqSection highlights={category?.highlights} faqs={category?.faqs} />
 
