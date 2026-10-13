@@ -22,7 +22,7 @@ import { getLiveCategoryCounts } from "../../../_internal/server/features/catego
 import { buildCategorySearchTxt } from "../../../utils/search-txt-builders";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -120,13 +120,22 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       plan.head,
     ) as FirebaseFirestore.Query;
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await applySieveToFirestore<CategoryDocument>({
       baseQuery,
-      model,
+      model: win.model,
+      options: { maxPageSize: win.maxPageSize(100) },
       fields: CategoriesRepository.SIEVE_FIELDS,
       mapDoc: (snap) => this.mapDoc<CategoryDocument>(snap),
     });
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   async createWithHierarchy(

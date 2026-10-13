@@ -259,6 +259,28 @@ export interface ProductDocument extends BaseDocument {
   brand?: string;
   brandSlug?: string;
   price: number;
+  /**
+   * The strike-through "was ₹X", for a listing the seller is discounting.
+   *
+   * 🛑 F1 #25, and it was TWO OWNERS of one value rather than a missing field.
+   * `SellerProductShell` renders an input called `compareAtPrice` and the eight
+   * store edit pages read `(product as any).compareAtPrice` — a property no
+   * document has ever carried — while BOTH public renderers (`ProductGrid`,
+   * `ProductDetailPageView`) read `originalPrice` and hand it to `GatedPrice`
+   * as `originalAmount`, which is what draws the strike-through and derives
+   * the discount %. The consumer write schema already accepted `originalPrice`
+   * too. So the authoring half wrote one name, the rendering half read
+   * another, and the document declared neither: a seller set a sale price,
+   * saw a 200, and nothing ever showed it.
+   *
+   * Declared here under the name the renderers and the write schema already
+   * use, rather than adding a second field beside them (Root Cause #75).
+   *
+   * 🛑 It is a MONEY figure, so it is grossed up with `price` for a
+   * `pricesIncludeGst: false` store — a "was" price that silently meant
+   * ex-tax while the live price meant inc-tax would overstate the discount.
+   */
+  originalPrice?: number;
   currency: string;
   stockQuantity: number;
   availableQuantity: number;
@@ -816,6 +838,13 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "subcategory",
   "brand",
   "price",
+  /*
+   * The strike-through "was ₹X". Public because that is the only place it
+   * means anything — `GatedPrice` renders it as `originalAmount` and derives
+   * the discount % from it, inside the guest gate, so it is published on
+   * exactly the same terms as `price` itself.
+   */
+  "originalPrice",
   "currency",
   "stockQuantity",
   "availableQuantity",
@@ -925,6 +954,9 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "subcategory",
   "brand",
   "price",
+  /* The strike-through "was" price — see the declaration on ProductDocument
+   * for why it is this name and not `compareAtPrice` (F1 #25). */
+  "originalPrice",
   "stockQuantity",
   "images",
   "status",
@@ -938,7 +970,9 @@ export const PRODUCT_UPDATABLE_FIELDS = [
    * `.passthrough()`, so a field absent from this list is dropped before it
    * reaches Firestore while the write still returns 200 — exactly how a
    * UI-created product lost its `categorySlugs` chain (Root Cause #101) and how
-   * `compareAtPrice` is silently discarded today (F1 #25). */
+   * the strike-through price was silently discarded until F1 #25 was closed —
+   * the form wrote `compareAtPrice`, nothing declared it, and `originalPrice`
+   * (which both renderers read) was not in this list either. */
   "isLot",
   "lotSize",
   "pickupAddressId",

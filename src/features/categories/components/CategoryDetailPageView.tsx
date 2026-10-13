@@ -33,6 +33,7 @@ import {
   faqJsonLd,
 } from "../../../seo/json-ld";
 import type { CategoryItem } from "../types";
+import { toStoreListItem } from "../../../_internal/server/features/stores/adapters";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 const __O = {
@@ -259,41 +260,27 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       seen.add(s.id);
       return true;
     })
-    .map((s) => ({
-      id: s.id,
-      storeSlug: s.storeSlug ?? s.id,
-      ownerId: s.ownerId,
-      storeName: s.storeName,
-      storeDescription: s.storeDescription,
-      storeCategory: s.storeCategory,
-      storeLogoURL: s.storeLogoURL,
-      storeBannerURL: s.storeBannerURL,
-      status: s.status,
-      isPublic: s.isPublic ?? true,
-      totalProducts: s.stats?.totalProducts,
-      itemsSold: s.stats?.itemsSold,
-      totalReviews: s.stats?.totalReviews,
-      averageRating: s.stats?.averageRating,
-      /*
-       * 🛑 This whole `.map()` is a SIXTH hand-rolled copy of
-       * `toStoreListItem` — the adapter Root Cause #70 created precisely to
-       * collapse the three that existed then, and which three public store
-       * APIs now share. It is recorded as an F1 defect rather than fixed here
-       * (the defect policy: a found defect goes in the backlog, not in the
-       * step's commit), and the reason it cannot be a drive-by is a boundary:
-       * the adapter lives in `_internal/server/` and this file is in
-       * `features/`, so adopting it is an import-graph decision, not a rename.
-       *
-       * These two fields are added rather than deferred because `tsc` demands
-       * them — which is the whole value of having made them REQUIRED on
-       * `StoreListItem`: the compiler enumerated every copy, and this is the
-       * one the audit's "union of what the registered builders emit" check
-       * cannot see.
-       */
-      supportsShippingProtection: s.supportsShippingProtection ?? false,
-      supportsSaleProtection: s.supportsSaleProtection ?? false,
-      createdAt: s.createdAt as unknown as string,
-    }));
+    /*
+     * 🛑 F1 #28 CLOSED — this was a SIXTH hand-rolled copy of
+     * `toStoreListItem`, the adapter Root Cause #70 created to collapse the
+     * three that existed then and which three public store APIs now share.
+     *
+     * It was recorded as "not a drive-by fix" because the adapter lives in
+     * `_internal/server/` and this file in `features/`, making adoption an
+     * import-graph decision. MEASURED, that decision is free: the adapter
+     * module's only imports are two `import type` lines, and this file already
+     * imports four other `_internal/server/*` modules (parts, grouped,
+     * listing-tab-counts, tester visibility). So the boundary argument did not
+     * apply to this particular module, and the copy stayed alive on a
+     * hypothetical.
+     *
+     * The behavioural differences the copy carried, both now gone: it defaulted
+     * `storeSlug` to the id and `isPublic` to `true` (the adapter forwards what
+     * the document says, and a store with no `isPublic` is not assumed public),
+     * and it cast `createdAt` through `as unknown as string` where the adapter
+     * converts a Timestamp properly.
+     */
+    .map((s) => toStoreListItem(s));
 
   const storeCount = categoryStores.length;
   // `tabCounts` is keyed by tabSlug and already covers every listing type plus

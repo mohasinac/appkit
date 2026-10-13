@@ -2,7 +2,7 @@ import type { JsonValue } from "../../../schemas/types";
 import { buildOrderSearchTxt } from "../../../utils/search-txt-builders";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 import { normalizeError } from "../../../errors/normalize";
@@ -512,16 +512,24 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await this.sieveQuery<OrderDocument>(
-      model,
+      win.model,
       OrderRepository.SELLER_SIEVE_FIELDS,
       {
         baseQuery,
         defaultPageSize: 20,
-        maxPageSize: 100,
+        maxPageSize: win.maxPageSize(100),
       },
     );
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   async listForUser(
@@ -607,16 +615,24 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await this.sieveQuery<OrderDocument>(
-      model,
+      win.model,
       OrderRepository.ADMIN_SIEVE_FIELDS,
       {
         baseQuery,
         defaultPageSize: 50,
-        maxPageSize: 200,
+        maxPageSize: win.maxPageSize(200),
       },
     );
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   /**

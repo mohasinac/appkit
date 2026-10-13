@@ -25,8 +25,7 @@ import { parseSearchTxtQuery } from "../../../utils/search-txt";
 // from returning the whole catalogue.
 import {
   planSearchTxt,
-  SEARCH_REFINE_WINDOW,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 // One definition of "which fields feed searchTxt", shared with the seed
@@ -619,15 +618,20 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
     out.price = grossFromTaxable(input.price, effectiveRate);
     /*
-     * 🛑 `compareAtPrice` is deliberately NOT converted here, because it does
-     * not exist. `SellerProductShell`'s pricing section lists it among its
-     * `fields` and renders an input for it, but `ProductDocument` has no such
-     * property — so whatever a seller types there is stripped by the schema and
-     * never stored. A declared-but-unpersisted form field is its own defect
-     * (and a strike-through price is a money figure, so it would need the same
-     * gross-up the day it becomes real); logged rather than silently worked
-     * around, since converting a field that is discarded would be theatre.
+     * 🛑 The strike-through price is grossed up TOO, now that it is a real
+     * field (F1 #25 — it was `compareAtPrice` in the form, `originalPrice` in
+     * both renderers, and nowhere in the document).
+     *
+     * It has to move with `price` or the discount it advertises is wrong: an
+     * ex-tax ₹1,000 "was" beside an inc-tax ₹1,050 "now" renders as a price
+     * RISE, and an ex-tax pair converted on one side only overstates the
+     * saving by the GST rate. The guard is the same one `price` uses — only a
+     * patch that carries the field is converted, so an unrelated save cannot
+     * re-convert an already-converted figure.
      */
+    if (input.originalPrice != null && input.originalPrice > 0) {
+      out.originalPrice = grossFromTaxable(input.originalPrice, effectiveRate);
+    }
     serverLogger.info("[gst] grossed up an ex-tax price for a pricesIncludeGst:false store", {
       storeId: input.storeId,
       rate: effectiveRate,
@@ -1803,28 +1807,21 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const needsCategoryRefine = plan.head !== null && categoriesIn.length > 0;
     const wanted = new Set(categoriesIn);
 
-    const isMultiTerm = plan.rest.length > 0 || needsCategoryRefine;
-    const requestedPage = Math.max(1, Number(model?.page ?? 1) || 1);
-    const requestedPageSize = Math.max(1, Number(model?.pageSize ?? 20) || 20);
+    /*
+     * The window, the raised `maxPageSize` and the page slice are all one
+     * decision, so they come from one helper — `beginSearchWindow`. Keeping
+     * them hand-written here is what let the other ten repositories each get
+     * two of the three.
+     */
+    const win = beginSearchWindow(model, plan, { alsoRefining: needsCategoryRefine });
 
     const result = await this.sieveQuery<ProductDocument>(
-      /*
-       * The window is requested through the MODEL, not a new `SieveOptions`
-       * field — `sieveQuery` already derives its page from `model.page` /
-       * `model.pageSize`, so overriding them needs no API change and no second
-       * way to express a page size.
-       */
-      isMultiTerm ? { ...model, page: 1, pageSize: SEARCH_REFINE_WINDOW } : model,
+      win.model,
       ProductRepository.SIEVE_FIELDS,
       {
         baseQuery: this.buildScopedQuery(opts),
         defaultPageSize: 20,
-        /*
-         * 🛑 `maxPageSize` has to rise with the window or Sieve clamps the
-         * request back to 100 — and the window would silently be a page again,
-         * which is the original bug with a larger constant.
-         */
-        maxPageSize: isMultiTerm ? SEARCH_REFINE_WINDOW : 100,
+        maxPageSize: win.maxPageSize(100),
         aliases: ProductRepository.FILTER_ALIASES,
       },
     );
@@ -1841,30 +1838,17 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // this page only. That is the known post-pagination-filter debt, not a new
     // invention — reporting the pre-filter total would promise pages that
     // render empty.
-    return refineSearchTxt(
+    /*
+     * 🛑 The category predicate matches against the CLOSURE, not the leaf.
+     * `categorySlugs` carries the full ancestor chain, so a category page
+     * passing its own id matches every product in its subtree — the same
+     * semantics the pushed-down `array-contains-any` has, which is what makes
+     * the refined result identical to the un-searched one.
+     */
+    return win.finish(
       result,
-      plan.rest,
-      isMultiTerm
-        ? {
-            page: requestedPage,
-            pageSize: requestedPageSize,
-            // Saturated means more may exist beyond the window, so `total` is a
-            // FLOOR and `truncated` says so.
-            windowSaturated: (result.items?.length ?? 0) >= SEARCH_REFINE_WINDOW,
-            /*
-             * 🛑 Matched against the CLOSURE, not the leaf. `categorySlugs`
-             * carries the full ancestor chain, so a category page passing its
-             * own id matches every product in its subtree — the same semantics
-             * the pushed-down `array-contains-any` has, which is what makes
-             * the refined result identical to the un-searched one.
-             */
-            ...(needsCategoryRefine
-              ? {
-                  also: (row: ProductDocument) =>
-                    (row.categorySlugs ?? []).some((slug) => wanted.has(slug)),
-                }
-              : {}),
-          }
+      needsCategoryRefine
+        ? (row: ProductDocument) => (row.categorySlugs ?? []).some((slug) => wanted.has(slug))
         : undefined,
     );
   }

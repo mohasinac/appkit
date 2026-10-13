@@ -15,7 +15,7 @@ import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
 import { buildScammerSearchTxt } from "../../../utils/search-txt-builders";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 
@@ -94,12 +94,20 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         plan.head,
       ) as typeof baseQuery;
     }
-    const result = await this.sieveQuery<ScammerDocument>(model, ScammerRepository.SIEVE_FIELDS, {
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
+    const result = await this.sieveQuery<ScammerDocument>(win.model, ScammerRepository.SIEVE_FIELDS, {
       baseQuery,
       defaultPageSize: 20,
-      maxPageSize: 50,
+      maxPageSize: win.maxPageSize(50),
     });
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   /** Derived on every write path via `applyWriteHooks`. */
@@ -127,12 +135,20 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
       ) as typeof baseQuery;
     }
 
-    const result = await this.sieveQuery<ScammerDocument>(model, ScammerRepository.SIEVE_FIELDS, {
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
+    const result = await this.sieveQuery<ScammerDocument>(win.model, ScammerRepository.SIEVE_FIELDS, {
       baseQuery,
       defaultPageSize: 50,
-      maxPageSize: 200,
+      maxPageSize: win.maxPageSize(200),
     });
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   async findBySeoSlug(seoSlug: string): Promise<ScammerDocument | null> {

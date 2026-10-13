@@ -8,7 +8,7 @@
 import type { JsonValue } from "../../../schemas/types";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 import { buildOfferSearchTxt } from "../../../utils/search-txt-builders";
@@ -121,16 +121,24 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await this.sieveQuery<OfferDocument>(
-      model,
+      win.model,
       OfferRepository.SIEVE_FIELDS,
       {
         baseQuery,
         defaultPageSize: 50,
-        maxPageSize: 200,
+        maxPageSize: win.maxPageSize(200),
       },
     );
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   // --- Create --------------------------------------------------------------
@@ -222,10 +230,19 @@ class OfferRepository extends BaseRepository<OfferDocument> {
         baseQuery = baseQuery.where(OFFER_FIELDS.SEARCH_TXT, "array-contains", plan.head);
       }
 
-      const result = await this.sieveQuery(model, OfferRepository.SIEVE_FIELDS, {
+      /*
+       * One bounded window, one raised `maxPageSize`, one page slice — see
+       * `beginSearchWindow`. Hand-writing the three is how the other ten
+       * repositories each ended up with two of them, which reads as a working
+       * multi-word search and silently cannot reach page 2.
+       */
+      const win = beginSearchWindow(model, plan);
+
+      const result = await this.sieveQuery(win.model, OfferRepository.SIEVE_FIELDS, {
         baseQuery,
+        maxPageSize: win.maxPageSize(100),
       });
-      return refineSearchTxt(result, plan.rest);
+      return win.finish(result);
     }
     const snap = await this.getCollection()
       .where(OFFER_FIELDS.STORE_ID, "==", storeId)

@@ -9,6 +9,7 @@ import {
   WELCOME_TRUST_CHIPS,
 } from "../constants/section-copy";
 import { FAQ_CATEGORY_LABELS } from "../constants/faq-category-labels";
+import { FAQ_HOMEPAGE_READ_CAP } from "../../faq/constants/read-caps";
 import type { LiveStatsMap } from "./live-stats";
 import { AnnouncementBar, hashBannerMessage } from "../components/AnnouncementBar";
 import { HeroCarousel } from "../components/HeroCarousel";
@@ -422,8 +423,17 @@ function renderSectionElement(
       }));
 
       const slicedItems = cfg?.displayCount ? faqItems.slice(0, cfg.displayCount) : faqItems;
+      /*
+       * 🛑 `totalFaqs` is only a REAL total while the repository read did not
+       * saturate its cap (F1 #36 bounded that read). At the cap the true count
+       * is unknown, so the "+N" badge must not state one — `moreCount: 0`
+       * suppresses the badge while the "See all" link still invites. An
+       * unknown count rendered as a precise one is the defect, not the missing
+       * badge.
+       */
+      const readSaturated = faqItems.length >= FAQ_HOMEPAGE_READ_CAP;
       const totalFaqs = faqItems.length;
-      const hasMore = totalFaqs > slicedItems.length;
+      const hasMore = totalFaqs > slicedItems.length || readSaturated;
 
       return (
         <FAQSection
@@ -437,7 +447,7 @@ function renderSectionElement(
           viewMoreHref={cfg?.linkToFullPage ? ROUTES.PUBLIC.FAQS : undefined}
           viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.faq}
           hasMore={hasMore}
-          moreCount={totalFaqs - slicedItems.length}
+          moreCount={readSaturated ? 0 : totalFaqs - slicedItems.length}
         />
       );
     }

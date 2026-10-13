@@ -15,6 +15,7 @@
 
 import { BaseRepository } from "../../../providers/db-firebase";
 import type { DocumentSnapshot } from "firebase-admin/firestore";
+import { arrayUnion, increment } from "../../../contracts/field-ops";
 import { decryptPiiFields } from "../../../security/pii-encrypt";
 import {
   ANALYTICS_ALERTS_COLLECTION,
@@ -31,6 +32,7 @@ import {
   type AnalyticsAlertDocument,
   type AnalyticsCardDocument,
   type ItemRequestDocument,
+  type ItemRequestReply,
   type ListingTemplateDocument,
   type ModerationQueueDocument,
   type PayoutMethodDocument,
@@ -161,6 +163,37 @@ export class ItemRequestsRepository extends BaseRepository<ItemRequestDocument> 
   async listByOwner(opUserId: string): Promise<{ items: ItemRequestDocument[] }> {
     const items = await this.findBy("opUserId", opUserId);
     return { items };
+  }
+
+  /**
+   * Append one reply atomically.
+   *
+   * 🛑 F1 #9 — the route did `replies: [...doc.replies, entry]` plus
+   * `replyCount: doc.replyCount + 1`. That is a read-modify-write on both
+   * fields: two people replying within the same second each read N replies and
+   * each wrote N+1, so the second write silently DISCARDED the first reply and
+   * the count agreed with it. Nothing errored, and the losing reply simply
+   * never existed.
+   *
+   * `arrayUnion` + `increment` are server-side operations, so the two writes
+   * compose instead of racing. `arrayUnion` de-duplicates by deep equality,
+   * which is harmless here and faintly useful: the entry carries a unique
+   * `id`, so a retried request appends once rather than twice.
+   */
+  async appendReply(id: string, reply: ItemRequestReply): Promise<void> {
+    /*
+     * Written through the collection directly rather than `update()`, because
+     * `prepareForFirestore` would walk the sentinels as if they were plain
+     * values. Same shape `categories.repository` uses for its own
+     * `arrayUnion` writes.
+     */
+    await this.getCollection()
+      .doc(id)
+      .update({
+        replies: arrayUnion(reply),
+        replyCount: increment(1),
+        updatedAt: new Date(),
+      });
   }
 }
 

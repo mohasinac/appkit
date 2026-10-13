@@ -67,7 +67,7 @@ export const productDraftSchema = z
 
     // Pricing
     price: z.number().optional(),
-    compareAtPrice: z.number().optional(),
+    originalPrice: z.number().optional(),
     stockQuantity: z.number().optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),

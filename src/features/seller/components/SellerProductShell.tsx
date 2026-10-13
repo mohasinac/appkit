@@ -128,7 +128,10 @@ export interface SellerProductDraft {
   youtubeId?: string;
   // Pricing
   price?: number;
-  compareAtPrice?: number;
+  /* 🛑 Named `originalPrice`, which is the name the DOCUMENT carries and both
+   * public renderers read. It was `compareAtPrice` here and nowhere else, so
+   * every value a seller typed was stripped on write (F1 #25). */
+  originalPrice?: number;
   stockQuantity?: number;
   featured?: boolean;
   isPromoted?: boolean;
@@ -1424,11 +1427,11 @@ function StepPricing({
           placeholder="999"
         />
         <FormField
-          name="compareAtPrice"
+          name="originalPrice"
           label="Compare-at Price (₹, optional)"
           type="number"
-          value={toRupeesString(values.compareAtPrice)}
-          onChange={(v) => onChange({ compareAtPrice: v ? fromRupeesString(v) : undefined })}
+          value={toRupeesString(values.originalPrice)}
+          onChange={(v) => onChange({ originalPrice: v ? fromRupeesString(v) : undefined })}
           placeholder="1299"
           helpText="Original price shown as strikethrough"
         />
@@ -1929,7 +1932,7 @@ export function SellerProductShell({
       required: true,
       quick: true,
       // `gstRate` / `hsnCode` deliberately absent — admin-only, see StepPricing.
-      fields: ["price", "compareAtPrice", "stockQuantity", "allowOffers", "minOfferPercent"],
+      fields: ["price", "originalPrice", "stockQuantity", "allowOffers", "minOfferPercent"],
       render: ({ values, onChange }) => (
         <StepPricing values={values} onChange={onChange} listingType={listingType} />
       ),

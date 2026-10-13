@@ -25,7 +25,7 @@ import { increment } from "../../../contracts/field-ops";
 import { buildEventSearchTxt } from "../../../utils/search-txt-builders";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 
@@ -89,12 +89,20 @@ class EventRepository extends BaseRepository<EventDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await this.sieveQuery<EventDocument>(
-      model,
+      win.model,
       EventRepository.SIEVE_FIELDS,
-      { baseQuery },
+      { baseQuery, maxPageSize: win.maxPageSize(100) },
     );
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   /**

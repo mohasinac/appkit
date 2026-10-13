@@ -35,7 +35,7 @@ import { buildStoreSearchTxt } from "../../../utils/search-txt-builders";
 import type { JsonValue } from "../../../schemas/types";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 
@@ -324,9 +324,18 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       );
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await applySieveToFirestore<StoreDocument>({
       baseQuery,
-      model,
+      model: win.model,
+      options: { maxPageSize: win.maxPageSize(100) },
       fields: sieveFields,
       // Called DIRECTLY, not through `sieveQuery`, so the mapper has to be
       // passed by hand — and it is the list mapper, never `mapDoc`. With
@@ -334,7 +343,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       // WhatsApp bearer token and a list has no use for it.
       mapDoc: (snap) => this.mapDocForList<StoreDocument>(snap),
     });
-    const searched = refineSearchTxt(result, plan.rest);
+    const searched = win.finish(result);
 
     /*
      * 🛑 The rating threshold is applied IN MEMORY, deliberately.

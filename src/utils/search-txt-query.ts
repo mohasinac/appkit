@@ -106,6 +106,93 @@ export const SEARCH_REFINE_WINDOW = 250;
  * false last one. Reporting a saturated window as an exact total is the defect
  * above with a bigger number.
  */
+/**
+ * The page fields `beginSearchWindow` overrides.
+ *
+ * Structural rather than importing `SieveModel`, so `utils/` keeps no
+ * dependency on `providers/db-firebase` (`audit-import-cycles`), and NOT
+ * `unknown` — the shapes are the same `number | string` Sieve itself accepts,
+ * and `unknown` here would be a type-level shrug that `audit-unknown-leakage`
+ * correctly refuses.
+ */
+export interface SearchWindowModel {
+  page?: number | string;
+  pageSize?: number | string;
+}
+
+/**
+ * The three coupled decisions a refined search has to make, in ONE place.
+ *
+ * ## 🛑 Why this exists rather than 13 hand-written copies
+ *
+ * `refineSearchTxt` grew a real-pagination mode, and `products` was the only
+ * caller converted — deliberately, so the other eleven stayed byte-identical.
+ * The conversion is mechanical and has THREE parts that must all happen:
+ *
+ *   1. fetch a bounded WINDOW instead of the requested page;
+ *   2. raise `maxPageSize` to that window, or Sieve clamps the request back to
+ *      its own limit and the window silently becomes a page again — the
+ *      original bug with a larger constant;
+ *   3. pass `{page, pageSize, windowSaturated}` so the refine slices the
+ *      requested page out and reports `truncated`.
+ *
+ * Doing 1 and 3 without 2 reads exactly like a working conversion and is the
+ * half that no-ops. So the three move together here, and a caller cannot have
+ * two of them.
+ *
+ * ```ts
+ * const win = beginSearchWindow(model, plan);
+ * const result = await this.sieveQuery(win.model, FIELDS, {
+ *   baseQuery, defaultPageSize: 20, maxPageSize: win.maxPageSize(100),
+ * });
+ * return win.finish(result);
+ * ```
+ */
+export function beginSearchWindow<M extends SearchWindowModel>(
+  model: M,
+  plan: SearchTxtPlan,
+  /**
+   * True when something OTHER than the extra search terms also has to be
+   * refined in memory — a filter Firestore could not express beside the
+   * search clause. Then the window is needed even for a single-term query.
+   */
+  opts?: { alsoRefining?: boolean },
+): {
+  model: M;
+  maxPageSize(normal: number): number;
+  finish<
+    T extends { searchTxt?: string[] },
+    R extends { items: T[]; total: number; totalPages: number; hasMore: boolean },
+  >(
+    result: R,
+    also?: (row: T) => boolean,
+  ): R & { truncated?: boolean };
+} {
+  const refining = plan.rest.length > 0 || opts?.alsoRefining === true;
+  const page = Math.max(1, Number(model?.page ?? 1) || 1);
+  const pageSize = Math.max(1, Number(model?.pageSize ?? 20) || 20);
+
+  return {
+    model: refining ? { ...model, page: 1, pageSize: SEARCH_REFINE_WINDOW } : model,
+    maxPageSize: (normal: number) => (refining ? SEARCH_REFINE_WINDOW : normal),
+    finish: (result, also) =>
+      refineSearchTxt(
+        result,
+        plan.rest,
+        refining
+          ? {
+              page,
+              pageSize,
+              // Saturated means more may exist beyond the window, so the
+              // refined `total` is a FLOOR and `truncated` says so.
+              windowSaturated: (result.items?.length ?? 0) >= SEARCH_REFINE_WINDOW,
+              ...(also ? { also } : {}),
+            }
+          : undefined,
+      ),
+  };
+}
+
 export function refineSearchTxt<
   T extends { searchTxt?: string[] },
   R extends { items: T[]; total: number; totalPages: number; hasMore: boolean },

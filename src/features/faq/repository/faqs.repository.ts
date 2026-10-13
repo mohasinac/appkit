@@ -17,6 +17,7 @@ import {
   matchesAllSearchTerms,
   parseSearchTxtQuery,
 } from "../../../utils/search-txt";
+import { FAQ_HOMEPAGE_READ_CAP, FAQ_FOOTER_READ_CAP } from "../constants/read-caps";
 import type { FAQ, FAQCategory } from "../types";
 import {
   FAQS_COLLECTION,
@@ -47,23 +48,22 @@ export class FAQsRepository {
     return result.data;
   }
 
-  async findForHomepage(): Promise<FAQ[]> {
-    const result = await this.repo.findAll({
-      filters: "isActive==true,showOnHomepage==true",
-      sort: "priority",
-      perPage: 10,
-    });
-    return result.data;
-  }
-
-  async findForFooter(): Promise<FAQ[]> {
-    const result = await this.repo.findAll({
-      filters: "isActive==true,showInFooter==true",
-      sort: "order",
-      perPage: 20,
-    });
-    return result.data;
-  }
+  /*
+   * 🛑 `findForHomepage()` and `findForFooter()` DELETED — F1 #35.
+   *
+   * Both had zero callers across `appkit/src`, `src` and `functions/src`: the
+   * homepage really uses `getHomepageFAQs()` and the footer `getFooterFAQs()`,
+   * further down this file. And the first was not merely dead, it was a loaded
+   * gun: `sort: "priority"` with no `order` resolves to ASCENDING in
+   * `base.ts`, and `isActive + showOnHomepage + priority ASC` is not a
+   * declared composite (the DESC pairing is, twice), so it returned `code 9
+   * FAILED_PRECONDITION` when measured. Behind `safeRead`'s fallback that is
+   * an empty FAQ section with no error anywhere (Root Cause #59).
+   *
+   * Ascending was also wrong on its own terms — it puts the LEAST important
+   * FAQs on a homepage. Deleting both is the fix; adding an index for a query
+   * nothing runs would have made the dead code look supported.
+   */
 
   async findById(id: string): Promise<FAQ | null> {
     return this.repo.findById(id);
@@ -254,6 +254,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
       .where(FAQ_FIELDS.SHOW_ON_HOMEPAGE, "==", true)
       .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
       .orderBy(FAQ_FIELDS.PRIORITY, "desc")
+      .limit(FAQ_HOMEPAGE_READ_CAP)
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));
@@ -265,6 +266,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
       .where(FAQ_FIELDS.SHOW_IN_FOOTER, "==", true)
       .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
       .orderBy(FAQ_FIELDS.ORDER, "asc")
+      .limit(FAQ_FOOTER_READ_CAP)
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));

@@ -26,7 +26,7 @@ import type { ReviewStatus } from "../types";
 import { buildReviewSearchTxt } from "../../../utils/search-txt-builders";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 
@@ -549,18 +549,26 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await this.sieveQuery<ReviewDocument>(
-      model,
+      win.model,
       ReviewRepository.SIEVE_FIELDS,
       {
         baseQuery,
         defaultPageSize: 50,
-        maxPageSize: 200,
+        maxPageSize: win.maxPageSize(200),
       },
     );
     // Refine BEFORE decrypting: the refine reads `searchTxt`, which is never
     // encrypted, and decrypting rows that are about to be dropped is waste.
-    return this.decryptSieveResult(refineSearchTxt(result, plan.rest));
+    return this.decryptSieveResult(win.finish(result));
   }
 }
 

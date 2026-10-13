@@ -1,7 +1,7 @@
 import type { JsonValue } from "../../../schemas/types";
 import {
   planSearchTxt,
-  refineSearchTxt,
+  beginSearchWindow,
   emptySearchResult,
 } from "../../../utils/search-txt-query";
 import { buildCouponSearchTxt } from "../../../utils/search-txt-builders";
@@ -731,16 +731,24 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * One bounded window, one raised `maxPageSize`, one page slice — see
+     * `beginSearchWindow`. Hand-writing the three is how the other ten
+     * repositories each ended up with two of them, which reads as a working
+     * multi-word search and silently cannot reach page 2.
+     */
+    const win = beginSearchWindow(model, plan);
+
     const result = await this.sieveQuery<CouponDocument>(
-      model,
+      win.model,
       CouponsRepository.SIEVE_FIELDS,
       {
         baseQuery,
         defaultPageSize: 50,
-        maxPageSize: 200,
+        maxPageSize: win.maxPageSize(200),
       },
     );
-    return refineSearchTxt(result, plan.rest);
+    return win.finish(result);
   }
 
   /**

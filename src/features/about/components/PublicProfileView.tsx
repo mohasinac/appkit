@@ -47,6 +47,11 @@ function toProductItem(p: ProductDocument): ProductItem {
     slug: p.slug,
     description: p.description,
     price: p.price,
+    /* The strike-through "was" price. The SHARED `toProductItem` already
+     * carried it and this local copy did not, so a discounted listing lost
+     * its saving on a public profile — the exact drift the comment below
+     * warns about, demonstrated once. */
+    originalPrice: p.originalPrice,
     currency: p.currency,
     mainImage: p.mainImage,
     images: p.images,
