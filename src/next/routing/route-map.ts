@@ -93,6 +93,18 @@ export const DEFAULT_ROUTE_MAP = {
     HOW_REVIEWS_WORK: "/how-reviews-work",
     HOW_PAYOUTS_WORK: "/how-payouts-work",
     FEES: "/fees",
+    /*
+     * D6b — the GST explainer. A differentiator rather than table stakes:
+     * exactly ONE of the seventeen crawled Indian collectibles sites states
+     * tax-inclusive pricing to the buyer in words, and sixteen say nothing.
+     */
+    GST: "/gst",
+    /*
+     * D6 — the anti-counterfeit guide. Framed on what the crawl actually
+     * measured: the biggest copy-seller in this market makes no authenticity
+     * claim at all, so the signals are silence + price, then code, then weight.
+     */
+    SPOT_A_FAKE: "/spot-a-fake",
     EVENTS: "/events",
     EVENT_DETAIL: (id: string) => `/events/${id}`,
     EVENT_PARTICIPATE: (id: string) => `/events/${id}/participate`,
