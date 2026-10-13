@@ -29,6 +29,7 @@ import { withFinalSale } from "./_helpers/final-sale-fixtures";
 const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   {
     id: "preorder-beyblade-x-bx-08-wave",
+    isLot: true,
     storeId: "store-beyblade-arena",
     brandSlug: "brand-takara-tomy",
     title: "Beyblade X BX-08 Booster — Next Wave",
@@ -147,6 +148,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
   {
     id: "preorder-beyblade-x-bx-11-sold-out",
+    isLot: true,
     storeId: "store-beyblade-arena",
     brandSlug: "brand-takara-tomy",
     title: "Beyblade X BX-11 Limited Wave (Sold Out)",
@@ -228,6 +230,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     storeId: "store-beyblade-arena",
     brandSlug: "brand-beyblade",
     title: "Beyblade Original Remaster Set — Announced",
+    isLot: true,
     slug: "preorder-beyblade-original-remaster",
     description: "A 25th-anniversary remaster of the original 1999 lineup, freshly announced. Production hasn't started — early reservations lock in launch pricing.",
     price: 1899,

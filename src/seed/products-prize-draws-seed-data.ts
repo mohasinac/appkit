@@ -29,6 +29,7 @@ import { withFinalSale } from "./_helpers/final-sale-fixtures";
 const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
   {
     id: "prizedraw-beyblade-mystery-box",
+    isLot: true,
     slug: "prizedraw-beyblade-mystery-box",
     title: "Beyblade Mystery Box — Prize Draw",
     description: "Buy an entry for ₹99 and reveal your prize instantly — win anything from a rare limited-edition Beyblade down to a spare launcher grip. 4 prizes available, revealed on a first-come basis.",
@@ -93,6 +94,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
   } as unknown as Partial<ProductDocument>,
   {
     id: "prizedraw-beyblade-scheduled-demo",
+    isLot: true,
     slug: "prizedraw-beyblade-scheduled-demo",
     title: "Beyblade Champion's Draw — Prize Draw",
     description: "Two entries, two prizes — the winners are revealed automatically the moment the draw closes (3 days) or sells out, whichever comes first.",
@@ -152,6 +154,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
   // --- Partially sold: prizeCurrentEntries > 0, main seed never exercised this before ---
   {
     id: "prizedraw-beyblade-x-legendary-vault",
+    isLot: true,
     slug: "prizedraw-beyblade-x-legendary-vault",
     title: "Beyblade X Legendary Vault — Prize Draw",
     description: "6 entries, 6 prizes ranging from a legendary chase top to spare parts — over half the draw is already sold, don't miss the remaining slots.",
@@ -212,6 +215,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
   // --- Closed + revealed: real winners, isWon:true — permanent-catalog example (previously only in tester sandbox) ---
   {
     id: "prizedraw-beyblade-metal-closed-revealed",
+    isLot: true,
     slug: "prizedraw-beyblade-metal-closed-revealed",
     title: "Metal Fight Mystery Draw — Ended (Revealed)",
     description: "This draw has closed and every prize has been revealed to its winner. Browse the results below.",
@@ -266,6 +270,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
   // --- Nearly sold out, scheduled reveal ---
   {
     id: "prizedraw-beyblade-burst-collectors-draw",
+    isLot: true,
     slug: "prizedraw-beyblade-burst-collectors-draw",
     title: "Beyblade Burst Collector's Draw — Almost Sold Out",
     description: "Only 1 entry left — 4 of 5 slots are already claimed for this Burst-generation collector's draw. Winners revealed the moment the draw closes.",
@@ -386,6 +391,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     // isSold true, so it is caught by the shared base check and would still
     // look correct even if the type-specific rule were deleted.
     id: "prizedraw-beyblade-x-vault-closed-pending-reveal",
+    isLot: true,
     slug: "prizedraw-beyblade-x-vault-closed-pending-reveal",
     title: "Beyblade X Vault Draw — Closed Early",
     description: "The seller closed this draw before every slot sold. Remaining entries were refunded; no further entries are accepted.",
