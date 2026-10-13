@@ -119,7 +119,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     listingType: "pre-order" as const,
-    categorySlugs: ["category-burst-superking","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categorySlugs: ["category-union-achilles-cn-xt-retsu","category-burst-superking","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
     categoryNames: ["Superking","Burst Tops","Beyblade Burst","Spinning Tops"],
     brand: "Beyblade",
     images: [

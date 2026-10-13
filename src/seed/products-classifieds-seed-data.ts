@@ -49,7 +49,16 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
      * a specific generation while the title stays silent makes the data
      * disagree with itself, and the title is the half a buyer reads.
      */
-    categorySlugs: ["category-burst-standard-stadiums","category-burst-stadiums","category-beyblade-burst","category-spinning-tops"],
+    /*
+     * 🛑 A LOT FILES AT A NON-LEAF, which is the other half of the leaf rule
+     * and the only offender of its kind in the catalogue. This set was filed
+     * at `category-burst-standard-stadiums` — a LEAF, i.e. one specific
+     * stadium model — while being `isLot: true`. Filing a mixed used set under
+     * a single model's leaf is a false claim about what is in the box, which
+     * is exactly what the lot half of the rule refuses. Its parent is the
+     * correct home.
+     */
+    categorySlugs: ["category-burst-stadiums","category-beyblade-burst","category-spinning-tops"],
     categoryNames: ["Standard BeyStadiums","Burst Stadiums","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
@@ -405,7 +414,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     slug: "classified-beyblade-metal-galaxy-pegasus-sold-mumbai",
     title: "Galaxy Pegasus W105R2F — Sold (Mumbai)",
     description: "Vintage Metal Fight Galaxy Pegasus, sold to a local collector. Listing kept up for reference.",
-    categorySlugs: ["category-metal-masters","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categorySlugs: ["category-galaxy-pegasus-w105r2f","category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
     categoryNames: ["Metal Masters","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",

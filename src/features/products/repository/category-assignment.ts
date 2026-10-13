@@ -65,21 +65,46 @@ export const MAX_CATEGORY_ASSIGNMENTS = 4;
 /**
  * 🛑 THE FLIP. `false` = the leaf/non-leaf rule REPORTS; `true` = it refuses.
  *
- * It ships `false` and is flipped only once the data is clean, and the reason is
- * a measurement: **70 of the 71 hand-authored products file at a non-leaf
- * today** and not one of them is a lot. Enforcing first would make the whole
- * catalogue unsaveable — and worse, it would make the very seed writes that fix
- * the data fail, because those also go through `deriveTaxonomy`.
+ * It ships `false` and is flipped only once the data is clean. Enforcing first
+ * would make the whole catalogue unsaveable — and worse, it would make the very
+ * seed writes that fix the data fail, because those also go through
+ * `deriveTaxonomy`.
  *
  * This is the G3a lesson, which cost a symmetric rule its credibility: the plan
  * specified "a lot takes a non-leaf while singles take leaves", measurement
  * rejected the second half, and the half-rule has been live since. The rule is
  * right; enforcing it before its data is not.
  *
- * Flip procedure, and it is a ratchet rather than a judgement call: run
- * `findLeafRuleOffenders` over every seeded row, confirm **0**, then set `true`.
- * A hand count is not the measurement — the earlier one said 58 of 70 and this
- * pass measured 70 of 71.
+ * ## 🛑 The offender count: FOUR answers, one measurement
+ *
+ * This comment asserted "**70 of the 71** hand-authored products file at a
+ * non-leaf, and not one of them is a lot". Both halves were wrong.
+ *
+ * | Claim | Where it came from |
+ * |---|---|
+ * | 58 of 70 | an early hand count |
+ * | 70 of 71 | this comment, until 2026-10-13 |
+ * | 0 | a first scripted run that measured NOTHING — see below |
+ * | **24** | `scripts/measure-leaf-offenders.mjs`, running the real rule |
+ *
+ * The real figure was **24** (23 `single-at-branch` + **1 `lot-at-leaf`**, so
+ * the "not one is a lot" half was false too), now **14** after re-filing the
+ * ten that had an exact existing leaf.
+ *
+ * The `0` is the instructive one: that script reimplemented
+ * `readAssignments`' precedence inline as "`categoryIds`, else `category`" —
+ * its first two branches only. The seed writes **neither**; it writes
+ * `categorySlugs`, and the real function takes its HEAD. So it found no
+ * assignments on any product, examined nothing, and reported the flip safe.
+ *
+ * ## Flip procedure — a ratchet, not a judgement call
+ *
+ *     node scripts/measure-leaf-offenders.mjs     # must print 0 and exit 0
+ *
+ * Then set `true`. Never flip on a hand count, and never on a zero the script
+ * produced while reporting `unassigned === products` — it exits 2 for exactly
+ * that case now, because a zero out of a corpus nothing could be read from is
+ * not a clean result.
  */
 export const ENFORCE_LEAF_FILING = false;
 
