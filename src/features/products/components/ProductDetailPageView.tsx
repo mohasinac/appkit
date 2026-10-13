@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
+import { priceIndexRepository } from "../../categories/repository/price-index.repository";
+import { MarketPriceAnchor } from "./MarketPriceAnchor";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -456,13 +458,29 @@ export async function ProductDetailPageView({
 
   // -- Fetch reviews + the shared 4-signal related-items computation + grouped listings in parallel --
   // Only page 1 of reviews is fetched here; <ReviewsListingPanel> pages the rest client-side.
-  const [initialReviews, related, groups, siteSettings] = await Promise.all([
+  const [initialReviews, related, groups, siteSettings, priceBand] = await Promise.all([
     getReviewPageForProduct(product.id),
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
     safeRead(() => getSiteSettingsGlobal(), {
       route: "/products/[slug]", key: "product.siteSettings", fallback: null,
     }),
+    /*
+     * H2 — the realised-price band for this leaf, read INSIDE the existing
+     * `Promise.all` rather than beside it: the four reads above already run in
+     * parallel, so a fifth parallel read adds document reads but no latency,
+     * which is the argument Rule #6 cares about (~3 SEQUENTIAL round trips).
+     *
+     * One `findById` by leaf id — no query, no index. `null` when the leaf has
+     * never sold, which is the common case and renders nothing.
+     */
+    primaryCategorySlug
+      ? safeRead(() => priceIndexRepository.getForLeaf(primaryCategorySlug), {
+          route: "/products/[slug]",
+          key: "product.priceIndex",
+          fallback: null,
+        })
+      : Promise.resolve(null),
   ]);
 
   const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
@@ -733,9 +751,34 @@ export async function ProductDetailPageView({
                     currency={currency}
                     variant="detail"
                   />
-                  {inStock && effectiveStock !== null && effectiveStock <= 10 && (
+                  {/*
+                    * H2 — the anchor, made of measurement rather than a
+                    * fabricated RRP. Silent below the confidence threshold and
+                    * silent for a guest; states the window and the direction,
+                    * including when the direction is unflattering.
+                    */}
+                  <MarketPriceAnchor
+                    band={priceBand?.byListingType?.[normalizeListingType(p as never)] ?? null}
+                    windowDays={priceBand?.windowDays ?? null}
+                    currency={currency}
+                    price={price}
+                  />
+                  {/*
+                    * 🛑 H2 — the urgency is PROPORTIONATE to the number, which
+                    * it was not: "Only 10 left — order soon!" is an urgency
+                    * claim about a comfortable stock level, and a visitor who
+                    * notices that once discounts every other signal on the
+                    * page. Three or fewer is genuinely nearly gone; four to ten
+                    * is a fact worth stating without the exclamation mark.
+                    */}
+                  {inStock && effectiveStock !== null && effectiveStock <= 3 && (
                     <Text className="mt-1 text-warning" size="xs">
                       Only {effectiveStock} left — order soon!
+                    </Text>
+                  )}
+                  {inStock && effectiveStock !== null && effectiveStock > 3 && effectiveStock <= 10 && (
+                    <Text className="mt-1" color="muted" size="xs">
+                      {effectiveStock} in stock
                     </Text>
                   )}
                 </Div>
