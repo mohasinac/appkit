@@ -1125,17 +1125,11 @@ export type { NextConfig } from "./cli/index";
 
 // ./core/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// COPILOT_LOGS_COLLECTION - Constant used across modules.
-export { COPILOT_LOGS_COLLECTION } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// COPILOT_LOGS_INDEXED_FIELDS - Constant used across modules.
-export { COPILOT_LOGS_INDEXED_FIELDS } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // CacheManager - Shared export for cache manager.
 export { CacheManager } from "./core/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// CopilotLogRepository - Shared export for copilot log repository.
-export { CopilotLogRepository } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventBus - Shared export for event bus.
 export { EventBus } from "./core/index";
@@ -1174,11 +1168,7 @@ export { cacheManager } from "./core/index";
 // configureMarketDefaults - Shared export for configure market defaults.
 export { configureMarketDefaults } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// copilotLogQueryHelpers - Shared export for copilot log query helpers.
-export { copilotLogQueryHelpers } from "./core/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// copilotLogRepository - Shared export for copilot log repository.
-export { copilotLogRepository } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // createServerAction - Helper for create server action.
 export { createServerAction } from "./core/index";
@@ -1269,14 +1259,8 @@ export type { CacheEntry } from "./core/index";
 // CacheOptions - Type contract for cache options.
 export type { CacheOptions } from "./core/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CopilotFeedback - Type contract for copilot feedback.
-export type { CopilotFeedback } from "./core/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CopilotLogCreateInput - Type contract for copilot log create input.
-export type { CopilotLogCreateInput } from "./core/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CopilotLogDocument - Type contract for copilot log document.
-export type { CopilotLogDocument } from "./core/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // EventSubscription - Type contract for event subscription.
 export type { EventSubscription } from "./core/index";
@@ -2142,9 +2126,7 @@ export { catalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
 export { productsStandardSeedData } from "./seed/index";
-// productsCatalogueSeedData - GENERATED: one listing per tier-4 leaf, so the
 // 1,173-node taxonomy has a catalogue in it (967 of 968 leaves were empty).
-export { productsCatalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsAuctionsSeedData - Seed data for auction product listings.
 export { productsAuctionsSeedData } from "./seed/index";
@@ -5045,28 +5027,13 @@ export type { ContactInfoSidebarProps } from "./features/contact/index";
 // UseContactSubmitOptions - Type contract for use contact submit options.
 export type { UseContactSubmitOptions } from "./features/contact/index";
 
-// ./features/copilot/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminCopilotView - Component for admin copilot view.
-export { AdminCopilotView } from "./features/copilot/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useCopilotChat - React hook for use copilot chat.
-export { useCopilotChat } from "./features/copilot/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useCopilotFeedback - React hook for use copilot feedback.
-export { useCopilotFeedback } from "./features/copilot/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AdminCopilotViewProps - Type contract for admin copilot view props.
-export type { AdminCopilotViewProps } from "./features/copilot/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CopilotChatResponse - Type contract for copilot chat response.
-export type { CopilotChatResponse } from "./features/copilot/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CopilotMessage - Type contract for copilot message.
-export type { CopilotMessage } from "./features/copilot/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UseCopilotFeedbackOptions - Type contract for use copilot feedback options.
-export type { UseCopilotFeedbackOptions } from "./features/copilot/index";
 
 // ./features/corporate/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -9104,7 +9071,6 @@ export {
   API_ENDPOINTS, API_ROUTES, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
   NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, AUCTION_ENDPOINTS,
   BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
-  PAYMENT_ENDPOINTS, COPILOT_ENDPOINTS, CORPORATE_ENDPOINTS, EVENT_ENDPOINTS,
   FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, LOYALTY_ENDPOINTS, ANALYTICS_ENDPOINTS, MEDIA_ENDPOINTS,
   ORDER_ENDPOINTS, PREORDER_ENDPOINTS, PRODUCT_ENDPOINTS, REVIEW_ENDPOINTS,
   SEARCH_ENDPOINTS, SELLER_ENDPOINTS, BLOG_ENDPOINTS, WISHLIST_ENDPOINTS,

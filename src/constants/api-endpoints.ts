@@ -409,15 +409,6 @@ export const CONSULTATION_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Copilot
-// ---------------------------------------------------------------------------
-
-export const COPILOT_ENDPOINTS = {
-  CHAT: "/api/copilot/chat",
-  HISTORY: "/api/copilot/history",
-} as const;
-
-// ---------------------------------------------------------------------------
 // Corporate
 // ---------------------------------------------------------------------------
 
@@ -797,7 +788,6 @@ export const API_ENDPOINTS = {
   PAYMENT: PAYMENT_ENDPOINTS,
   COLLECTIONS: COLLECTION_ENDPOINTS,
   CONSULTATION: CONSULTATION_ENDPOINTS,
-  COPILOT: COPILOT_ENDPOINTS,
   CORPORATE: CORPORATE_ENDPOINTS,
   CONTACT: CONTACT_ENDPOINTS,
   ADS: AD_ENDPOINTS,

@@ -5844,7 +5844,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
               "Found 2026-09-02: this is the only page in the app calling a Google Cloud API rather than Firestore, and the call was unguarded — a permission or outage error took the whole page down (and failed the production build). It now degrades to an empty list and records a DEGRADED_READ. Confirm the page renders its heading and empty state rather than an error boundary.",
             href: "/admin/maintenance/cloud-logs",
           },
-          { key: "copilot-admin", label: "Admin copilot page works correctly", href: "/admin/copilot" },
           { key: "team-admin", label: "Admin team page works correctly", href: "/admin/team" },
           {
             key: "team-permission-group-filter",

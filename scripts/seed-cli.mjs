@@ -191,7 +191,7 @@ const {
   storeCategoriesSeedData, listingTemplatesSeedData, moderationQueueSeedData, reportsSeedData,
   itemRequestsSeedData, storeGoogleConfigSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
-  productsStandardSeedData, productsCatalogueSeedData, productsAuctionsSeedData, productsPreordersSeedData,
+  productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
   productsArtSeedData, productsStickersSeedData,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
@@ -453,7 +453,7 @@ const SEED_DATA_MAP = {
   categories: categoriesSeedData,
   stores: storesSeedData,
   products: withDerivedCategoryFields([
-    ...(productsStandardSeedData || []), ...(productsCatalogueSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
+    ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never
     // spread here — so 13 fixtures had NEVER reached the database, /art and

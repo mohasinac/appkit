@@ -282,12 +282,6 @@ export const SUCCESS_MESSAGES = {
     ROOM_CREATED: "Chat opened",
     ROOM_DELETED: "Chat deleted",
   },
-
-  // AI Copilot
-  COPILOT: {
-    RESPONSE_OK: "Response generated",
-    FEEDBACK_SAVED: "Feedback saved",
-  },
 } as const;
 
 export const INFO_MESSAGES = {

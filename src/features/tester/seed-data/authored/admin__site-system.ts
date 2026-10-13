@@ -477,23 +477,6 @@ export const authored: Record<string, AuthoredCase> = {
       "The page renders logs, or a readable message naming what is unavailable. It does not show a stack trace, and it does not take the rest of the admin panel with it.",
     endResult: "Read-only; nothing persists.",
   },
-  "checklist-admin-site-system-copilot-admin": {
-    roles: ["admin"],
-    startPage: "/admin",
-    steps: [
-      "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/copilot and read what it offers.",
-      "Read whether it states which model or provider it uses.",
-      "Submit a simple request and read the response.",
-      "Read whether any error surfaces a provider key or a raw response body.",
-      "Read whether the feature declines cleanly when unconfigured.",
-    ],
-    expectedBehaviour:
-      "The feature works or declines cleanly, and never surfaces a provider credential or a raw upstream error to the browser. Every 5xx message is scrubbed before it reaches a client, with the real one kept server-side for the error recorder.",
-    expectedUiState:
-      "A response renders, or a readable message names what is missing. No provider key, no raw upstream body, no stack trace.",
-    endResult: "Read-only; nothing persists.",
-  },
   "checklist-admin-site-system-team-admin": {
     roles: ["admin"],
     startPage: "/admin/team",

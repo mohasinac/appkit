@@ -27,20 +27,6 @@ export {
 } from "./site-config";
 export type { RuntimeSiteConfig } from "./site-config";
 
-export {
-  CopilotLogRepository,
-  copilotLogRepository,
-} from "./copilot-log.repository";
-export type {
-  CopilotFeedback,
-  CopilotLogDocument,
-  CopilotLogCreateInput,
-} from "./copilot-log.repository";
-export {
-  COPILOT_LOGS_COLLECTION,
-  COPILOT_LOGS_INDEXED_FIELDS,
-  copilotLogQueryHelpers,
-} from "./copilot-log.repository";
 
 export { useSiteSettings } from "./hooks/useSiteSettings";
 

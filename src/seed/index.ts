@@ -153,7 +153,16 @@ export { storesSeedData } from "./stores-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export { categoriesSeedData, categoriesP1SeedData } from "./categories-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
-export { productsCatalogueSeedData } from "./products-catalogue-seed-data";
+/*
+ * 🛑 `productsCatalogueSeedData` DELETED (I6, 2026-10-13) — 968 generated
+ * listings, one per tier-4 leaf. "I do not need products ... rest is either
+ * standard or test data."
+ *
+ * A merge-write loader CANNOT remove a document, so deleting the file alone
+ * leaves all 968 rows live and `appkit-seed status` reports the collection in
+ * sync either way (it counts ids). The removal is
+ *   npx appkit-seed delete --yes --collections products && npx appkit-seed load
+ */
 export { productsAuctionsSeedData } from "./products-auctions-seed-data";
 export { productsPreordersSeedData } from "./products-preorders-seed-data";
 export { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";

@@ -520,14 +520,6 @@ export const ERROR_MESSAGES = {
       "This product is no longer available at the agreed price. Contact support.",
   },
 
-  // AI Copilot errors
-  COPILOT: {
-    GENERATION_FAILED: "Failed to generate AI response",
-    MODEL_UNAVAILABLE: "AI model is temporarily unavailable",
-    PROMPT_TOO_LONG: "Prompt exceeds the maximum allowed length",
-    HISTORY_FAILED: "Failed to load conversation history",
-    FEEDBACK_FAILED: "Failed to save feedback",
-  },
 
   // Chat errors
   CHAT: {

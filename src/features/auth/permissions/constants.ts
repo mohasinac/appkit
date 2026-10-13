@@ -194,7 +194,6 @@ export type Permission =
   | "admin:wishlists:read"
   | "admin:feature-flags:read"
   | "admin:feature-flags:write"
-  | "admin:copilot:view"
   | "admin:team:read"
   | "admin:team:write"
 
@@ -578,7 +577,6 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/carts": "admin:carts:read",
   "/admin/wishlists": "admin:wishlists:read",
   "/admin/feature-flags": "admin:feature-flags:read",
-  "/admin/copilot": "admin:copilot:view",
   "/admin/team": "admin:team:read",
   // Maintenance & Observability (workstream 10)
   "/admin/maintenance": "admin:maintenance:view-server-errors",
@@ -710,7 +708,6 @@ export const PERMISSION_DOMAINS: { label: string; prefix: string }[] = [
   },
   { label: "Events", prefix: "admin:events:|admin:event-entries:" },
   { label: "Support & Safety", prefix: "admin:support-tickets:|admin:scammers:" },
-  { label: "System", prefix: "admin:sessions:|admin:notifications:|admin:carts:|admin:wishlists:|admin:feature-flags:|admin:copilot:|admin:team:" },
 ];
 
 /** True when `perm` starts with any of the `|`-separated prefixes in `prefix`. */

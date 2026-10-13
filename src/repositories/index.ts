@@ -188,14 +188,10 @@ export type {
   NewsletterListModel,
 } from "../core/newsletter.repository";
 
-export { CopilotLogRepository, copilotLogRepository } from "../core";
 
 // SB-UNI-C — BrandsRepository + BrandDocument deleted; brands live on
 // categoriesRepository with categoryType:"brand".
 export type {
-  CopilotFeedback,
-  CopilotLogDocument,
-  CopilotLogCreateInput,
 } from "../core";
 
 export {
