@@ -21,12 +21,49 @@ import { createRouteHandler } from "../../../next/api/routeHandler";
 import type { CategoryItem } from "../types/index";
 import type { CategoryDocument } from "../schemas/firestore";
 import { toCategoryListItem } from "../../../_internal/server/features/categories/adapters";
+import { categoriesRepository } from "../repository/categories.repository";
 import { isListingCategory } from "../constants/listing-categories";
 import { planSearchTxt } from "../../../utils/search-txt-query";
 import { matchesAllSearchTerms } from "../../../utils/search-txt";
 
 import { normalizeError } from "../../../errors/normalize";
 const CACHE_CONTROL_PUBLIC = "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
+
+/**
+ * Overlay the LIVE rolled-up count onto a projected page of categories.
+ *
+ * 🛑 Why this route and not the grid component: `/categories` renders entirely
+ * client-side from this endpoint (its page.tsx does no Firestore read at all,
+ * deliberately, so the route can stay static), so this is the only server-side
+ * place the numbers it shows pass through. `metrics.totalProductCount` is
+ * written by the nightly reconciler ALONE, so every multi-category surface was
+ * up to a day behind the category's own page, which counts live.
+ *
+ * 🛑 An id with no counts document keeps its `metrics` value. It does NOT
+ * become 0 — a category whose counter has never been written would otherwise
+ * render a confident zero, which is the regression Root Cause #72 names and
+ * would make this change worse than leaving it stale.
+ *
+ * Bounded by construction: the caller has already paginated, and
+ * `getLiveCategoryCounts` hard-caps the batch at 200 ids in ONE `getAll`.
+ */
+async function withLiveTotals(items: CategoryItem[]): Promise<CategoryItem[]> {
+  if (items.length === 0) return items;
+  const live = await categoriesRepository.liveTotalsFor(items.map((i) => i.id));
+  if (live.size === 0) return items;
+  return items.map((item) => {
+    const total = live.get(item.id);
+    /*
+     * `metrics` is optional on `CategoryItem`, and an item without it is left
+     * exactly as it is rather than gaining a half-built one — a metrics object
+     * carrying only `totalProductCount` would read as "0 products, N in
+     * total", which is a worse answer than the absent object the renderer
+     * already handles.
+     */
+    if (total === undefined || !item.metrics) return item;
+    return { ...item, metrics: { ...item.metrics, totalProductCount: total } };
+  });
+}
 
 // --- Tree node (CategoryItem extended with nested children) -------------------
 interface CategoryTreeNode extends CategoryItem {
@@ -287,6 +324,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           .map(toCategoryListItem);
       }
 
+      items = await withLiveTotals(items);
+
       const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / perPage));
 
       /*
@@ -328,7 +367,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     // Project BEFORE nesting — `CategoryTreeNode extends CategoryItem`, so the
     // children carry the public shape too rather than being raw documents
     // reachable one level down.
-    const allItems = allResult.data.map(toCategoryListItem);
+    const allItems = await withLiveTotals(allResult.data.map(toCategoryListItem));
     if (tree === "true" || !flat) {
       const treeNodes = buildTreeFromFlat(allItems, rootId);
       const res = NextResponse.json({ success: true, data: treeNodes });

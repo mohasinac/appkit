@@ -1779,20 +1779,6 @@
       ]
     },
     {
-      "collectionGroup": "copilotLogs",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "conversationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "coupons",
       "queryScope": "COLLECTION",
       "fields": [

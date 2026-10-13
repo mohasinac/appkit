@@ -122,10 +122,29 @@ export function refineSearchTxt<
     pageSize: number;
     /** True when the fetch returned a full window, so more may exist. */
     windowSaturated: boolean;
+    /**
+     * One more AND-condition to apply over the same window, for a filter
+     * Firestore could not express alongside the search clause.
+     *
+     * 🛑 It exists so there is ONE refine-and-paginate implementation rather
+     * than a second copy per filter. Firestore permits a single array operator
+     * per query, so when a search and a category filter arrive together the
+     * search takes the clause — and the category then HAS to be refined here
+     * or it is simply not applied (which is exactly what used to happen:
+     * searching inside a category returned matches from the whole catalogue).
+     * The window bookkeeping, the `total`-is-a-floor rule and `truncated` are
+     * identical for both conditions, which is why they share this function.
+     */
+    also?: (row: T) => boolean;
   },
 ): R & { truncated?: boolean } {
-  if (rest.length === 0) return result;
-  const matched = result.items.filter((row) => matchesAllSearchTerms(row.searchTxt, rest));
+  const also = opts?.also;
+  if (rest.length === 0 && !also) return result;
+  const matched = result.items.filter(
+    (row) =>
+      (rest.length === 0 || matchesAllSearchTerms(row.searchTxt, rest)) &&
+      (!also || also(row)),
+  );
 
   if (!opts) {
     /*

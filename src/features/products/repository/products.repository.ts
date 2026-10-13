@@ -913,8 +913,20 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
 
-  /** The keys whose presence means a write could change the product's taxonomy. */
+  /**
+   * The keys whose presence means a write could change the product's taxonomy.
+   *
+   * 🛑 `categoryIds` is the ASSIGNED field — the one a human picks and the one
+   * `readAssignments` prefers over the `category` scalar. It was absent from
+   * this list, so a write naming only `categoryIds` skipped `deriveTaxonomy`
+   * entirely: the ordered closure, the `category` mirror and `categoryNames`
+   * were never re-derived, and `syncCategoryCounts` compared a document to
+   * itself and moved nothing. The write returned 200 and the product's own
+   * category pages did not change. Same shape as Root Cause #101 — a field
+   * accepted on the way in whose derivation never runs.
+   */
   private static readonly TAXONOMY_KEYS = [
+    "categoryIds",
     "categorySlugs",
     "category",
     "brand",
@@ -1676,7 +1688,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     if (searchTxt.length > 0) {
       // Firestore permits a single array operator per query, so when a search
       // and a category filter are both present the SEARCH takes the clause and
-      // the category is refined by the caller.
+      // the category is refined by the caller — which, since the `also`
+      // predicate in `list()`, is now true rather than merely asserted. This
+      // comment claimed it for as long as the gate below has existed and no
+      // caller did it, so a search inside a category returned the whole
+      // catalogue.
       //
       // Two shapes here have each been reverted once and are both guarded by
       // scripts/audit-search-semantics.mjs:
@@ -1769,7 +1785,25 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * `SEARCH_REFINE_WINDOW`, and when that saturates the result carries
      * `truncated` so the total renders as a floor rather than a false total.
      */
-    const isMultiTerm = plan.rest.length > 0;
+    /*
+     * ── The category filter has to be refined for the SAME reason ───────────
+     *
+     * 🛑 `buildScopedQuery` gates `categoriesIn` on `searchTxt.length === 0`,
+     * because Firestore permits one array operator per query and the search
+     * term takes it. Its comment said "the category is refined by the caller"
+     * — and NO caller did, for as long as the gate has existed. So searching
+     * inside a category silently returned matches from the whole catalogue:
+     * a plausible, populated, wrong grid with a 200 (Root Cause #62's family).
+     *
+     * This is that caller. The refine rides the same bounded window the
+     * multi-term refine already uses, so the cost is one read either way and
+     * there is no second pagination implementation to disagree with the first.
+     */
+    const categoriesIn = opts?.categoriesIn ?? [];
+    const needsCategoryRefine = plan.head !== null && categoriesIn.length > 0;
+    const wanted = new Set(categoriesIn);
+
+    const isMultiTerm = plan.rest.length > 0 || needsCategoryRefine;
     const requestedPage = Math.max(1, Number(model?.page ?? 1) || 1);
     const requestedPageSize = Math.max(1, Number(model?.pageSize ?? 20) || 20);
 
@@ -1817,6 +1851,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
             // Saturated means more may exist beyond the window, so `total` is a
             // FLOOR and `truncated` says so.
             windowSaturated: (result.items?.length ?? 0) >= SEARCH_REFINE_WINDOW,
+            /*
+             * 🛑 Matched against the CLOSURE, not the leaf. `categorySlugs`
+             * carries the full ancestor chain, so a category page passing its
+             * own id matches every product in its subtree — the same semantics
+             * the pushed-down `array-contains-any` has, which is what makes
+             * the refined result identical to the un-searched one.
+             */
+            ...(needsCategoryRefine
+              ? {
+                  also: (row: ProductDocument) =>
+                    (row.categorySlugs ?? []).some((slug) => wanted.has(slug)),
+                }
+              : {}),
           }
         : undefined,
     );

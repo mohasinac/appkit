@@ -18,6 +18,7 @@ import {
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
+import { getLiveCategoryCounts } from "../../../_internal/server/features/categories/live-counts";
 import { buildCategorySearchTxt } from "../../../utils/search-txt-builders";
 import {
   planSearchTxt,
@@ -200,6 +201,34 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         `Failed to create category: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
+  }
+
+  /**
+   * The LIVE rolled-up listing count for a bounded set of category ids.
+   *
+   * 🛑 This is the seam `getLiveCategoryCounts` was written for and never got.
+   * It had zero callers, so the five surfaces that render MANY categories at
+   * once — the `/categories` grid, the homepage tiles, the admin table, the
+   * tree and the child chips — all still read `metrics.totalProductCount`,
+   * which only the nightly reconciler writes. A listing published at 09:00 did
+   * not change any of those numbers until ~04:30 the next morning, while the
+   * category's own page (which counts live) disagreed with every one of them.
+   *
+   * It lives on the REPOSITORY because that is the one place already holding a
+   * Firestore handle: the helper needs `db.getAll`, and reaching for
+   * `getAdminDb()` from a route module would put a static firebase-admin import
+   * into a file the main barrel re-exports (Root Cause #24).
+   *
+   * 🛑 A missing id is ABSENT from the map, never 0 — the caller must fall back
+   * to `metrics`. See `liveTotalFor`: a count that is unknown must not be
+   * indistinguishable from a count of nothing (Root Cause #72).
+   */
+  async liveTotalsFor(ids: readonly string[]): Promise<Map<string, number>> {
+    const { total } = await getLiveCategoryCounts(
+      this.db as unknown as Parameters<typeof getLiveCategoryCounts>[0],
+      ids,
+    );
+    return total;
   }
 
   async getCategoryBySlug(slug: string): Promise<CategoryDocument | null> {
