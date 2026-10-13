@@ -40,11 +40,124 @@ export const PROTECTION_KINDS: readonly ProtectionKind[] = ["shipping", "sale"];
 export type ProtectionUnavailableReason =
   | "platform-disabled"
   | "seller-not-supported"
-  | "final-sale";
+  | "final-sale"
+  | "above-value-cap"
+  | "excluded-category";
 
 export type ProtectionAvailability =
   | { available: true }
   | { available: false; reason: ProtectionUnavailableReason };
+
+/**
+ * C5e — the VALUE CAP on sale protection, and the categories excluded outright.
+ *
+ * The plan's standing rule was that no badge appears on a real listing until
+ * these exist, because *"a no-questions-asked guarantee on a Rs 40,000 graded
+ * slab is a different product from one on a Rs 149 spin track"*. Directed to
+ * "use standard from net" rather than invent them, so both the SHAPE and the
+ * exclusion list follow the two marketplaces that publish theirs, and the
+ * NUMBER follows our own measured price bands.
+ *
+ * ── Where the shape comes from ─────────────────────────────────────────────
+ *
+ * - **Amazon A-to-z** caps a claim at **$2,500 including shipping**, with a
+ *   90-day filing window. So a cap is normal practice, it is inclusive of
+ *   shipping, and it is generous relative to a typical basket.
+ * - **eBay Money Back Guarantee** excludes whole CATEGORIES rather than
+ *   discounting them — vehicles, real estate, services, **digitally delivered
+ *   content**, travel vouchers, NFTs — and applies a different regime above a
+ *   value threshold (authentication at $200 for trading cards, $500 for coins),
+ *   after which an inspected item is **final sale** on the
+ *   "doesn't match the listing" basis. It also SHORTENS the window for
+ *   bullion from 30 days to 3.
+ *
+ * ── 🛑 Why the NUMBER is ours and not a converted dollar figure ────────────
+ *
+ * $2,500 is ~Rs 2.2 lakh, which is above the most expensive thing in the entire
+ * crawled corpus. A cap nothing can reach is not a cap. So it is set from this
+ * catalogue's own measured distribution instead: every band's median and p75
+ * sits under Rs 15,000 and the maxima are Rs 74,999 (Hot Wheels), Rs 75,000
+ * (TCG collection box) and Rs 1,59,102 (otakuisland's range top).
+ *
+ * **Rs 25,000 covers every median and every p75 measured**, and excludes only
+ * the grail tail — graded slabs, booster boxes, premium statues — which is
+ * exactly the tier eBay routes to authentication rather than to a blanket
+ * guarantee.
+ */
+export const SALE_PROTECTION_MAX_VALUE = 25_000;
+
+/**
+ * 🛑 INCLUSIVE of shipping, following Amazon, and compared against the ITEM
+ * LINE's total rather than the order's.
+ *
+ * Per line, because a Rs 40,000 slab in a basket with two Rs 200 tips must not
+ * drag the tips out of cover, and the two Rs 200 tips must not carry the slab
+ * into it. The cover is a promise about an ITEM.
+ */
+export const SALE_PROTECTION_VALUE_BASIS = "line-total-including-shipping" as const;
+
+/**
+ * Listing types sale protection is never offered on, and why each one.
+ *
+ * 🛑 Every entry is a case where the claim is UNADJUDICABLE, not merely
+ * expensive — which is the distinction that keeps this list honest and short.
+ * A value cap handles "expensive"; this handles "we could not tell".
+ */
+export const SALE_PROTECTION_EXCLUDED_LISTING_TYPES: readonly string[] = [
+  /*
+   * A live animal or plant's condition on arrival cannot be adjudicated from
+   * photographs after the fact, and it changes by the hour. eBay excludes the
+   * adjacent categories outright for the same reason.
+   */
+  "live",
+  /*
+   * eBay excludes "digitally delivered content" by name. Once a code is
+   * revealed it cannot be returned, and whether it was already redeemed is not
+   * something we can establish — which is why the reveal is logged rather than
+   * reversible.
+   */
+  "digital-code",
+  /*
+   * A meetup sale with no shipment and no platform custody. There is nothing
+   * to inspect, nothing to route to a warehouse, and the buyer handled the
+   * item before paying — the inspection step the cover depends on has already
+   * happened, in person.
+   */
+  "classified",
+];
+
+/**
+ * Whether a GRADED slab is excluded.
+ *
+ * 🛑 Following eBay's own rule rather than our preference: an item inspected
+ * under its Authenticity Guarantee is **final sale** on the "doesn't match the
+ * listing" basis. A third party has already certified the grade, so a
+ * no-questions-asked refund would let a buyer overturn that certification by
+ * changing their mind — and `ProductGrading.certNumber` deep-links to the
+ * grader, so the buyer can verify before paying.
+ */
+export const SALE_PROTECTION_EXCLUDES_GRADED = true;
+
+/**
+ * Claim windows, in hours from DELIVERY.
+ *
+ * Two windows because the two covers fail on different clocks, which is the
+ * same argument that made them two add-ons:
+ *
+ * - **shipping** 48h — already this platform's stated damage window, in the
+ *   seeded FAQ and in C0c's copy. Transit damage is visible on unboxing, and a
+ *   longer window makes "damaged in transit" indistinguishable from
+ *   "damaged afterwards".
+ * - **sale** 7 days — long enough to actually inspect a collectible against
+ *   its listing (weigh a bey, check a mould, compare a photo), short enough
+ *   that condition can still be attributed. eBay runs 30 days generally and
+ *   **3** for bullion; Amazon runs 90. 7 sits deliberately at the strict end,
+ *   because unlike either of them we are also underwriting the refund.
+ */
+export const PROTECTION_CLAIM_WINDOW_HOURS: Record<ProtectionKind, number> = {
+  shipping: 48,
+  sale: 24 * 7,
+};
 
 export interface ProtectionTierInput {
   /** TIER 1 — admin, platform-wide. `commissions.*FeeEnabled`. Default TRUE. */
@@ -66,6 +179,16 @@ export interface ProtectionTierInput {
    * time, or the product at purchase time.
    */
   finalSale: boolean;
+  /**
+   * TIER 3 — the line's total INCLUDING shipping, for the value cap. Absent
+   * skips the cap check rather than failing it: a missing figure is our gap,
+   * and refusing cover over it would charge a fee and then decline the claim.
+   */
+  lineTotal?: number;
+  /** TIER 3 — the listing type, for the exclusion list. */
+  listingType?: string;
+  /** TIER 3 — whether the item carries a third-party grade. */
+  isGraded?: boolean;
 }
 
 /**
@@ -101,6 +224,27 @@ export function protectionAvailability(
   }
   if (kind === "sale" && input.finalSale) {
     return { available: false, reason: "final-sale" };
+  }
+  /*
+   * C5e's value and category gates, SALE only.
+   *
+   * 🛑 Shipping protection is deliberately exempt from both. A parcel lost in
+   * transit was never delivered, so neither the item's value nor whether it is
+   * a digital code or a graded slab changes what happened — and we are the
+   * carrier's counterparty under escrow, so it is our claim to pursue either
+   * way. Applying the cap here would be withdrawing cover for the one failure
+   * the buyer has no part in.
+   */
+  if (kind === "sale") {
+    if (input.listingType && SALE_PROTECTION_EXCLUDED_LISTING_TYPES.includes(input.listingType)) {
+      return { available: false, reason: "excluded-category" };
+    }
+    if (SALE_PROTECTION_EXCLUDES_GRADED && input.isGraded) {
+      return { available: false, reason: "excluded-category" };
+    }
+    if (typeof input.lineTotal === "number" && input.lineTotal > SALE_PROTECTION_MAX_VALUE) {
+      return { available: false, reason: "above-value-cap" };
+    }
   }
   return { available: true };
 }
