@@ -57,6 +57,16 @@ export interface SellerProductDraft {
   slug?: string;
   description?: string;
   category?: string;
+  /**
+   * I2 — the assignment list, DEFAULT FIRST, with `category` mirroring `[0]`.
+   *
+   * 🛑 Declared on the TYPE as well as the Zod schema. The schema is
+   * `.passthrough()`, so an undeclared key survives at runtime — and stays
+   * untyped, so the picker could not read `values.categoryIds` at all. Both
+   * halves are needed, which is the same trap as a field missing from
+   * `PRODUCT_UPDATABLE_FIELDS` (Root Cause #101) one layer out.
+   */
+  categoryIds?: string[];
   brand?: string;
   condition?: string;
   tags?: string[];
@@ -214,6 +224,15 @@ const sellerProductSchema = z.object({
   description: z.string().max(10000).optional().or(z.literal("")),
   price: z.number().min(0).optional(),
   category: z.string().optional(),
+  /**
+   * I2 — the assignment list, DEFAULT FIRST. `category` mirrors `[0]`.
+   *
+   * Declared even though this schema is `.passthrough()`, because the draft's
+   * TYPE is what the render site reads `values.categoryIds` off — passthrough
+   * keeps an undeclared key at runtime and still leaves it untyped, so the
+   * picker could not see it.
+   */
+  categoryIds: z.array(z.string()).max(4).optional(),
   brand: z.string().optional(),
   isActive: z.boolean().optional(),
   images: z
@@ -253,10 +272,25 @@ export interface SellerProductShellProps {
   onDiscard?: () => void;
   isLoading?: boolean;
   storeSlug?: string;
-  /** Render a custom category selector (e.g. PaginatedSelect with createLabel). */
+  /**
+   * Render a custom category selector (e.g. PaginatedSelect with createLabel).
+   *
+   * I2 — `extraValues`/`onExtraValuesChange` carry the ADDITIONAL assignments.
+   * A selector that ignores them stays exactly single-select, which is what
+   * every surface except this one does.
+   */
   renderCategorySelector?: (props: {
     value: string;
     onChange: (v: string) => void;
+    /**
+     * 🛑 OPTIONAL, and that is the whole point. `QuickProductForm` is a second
+     * consumer of this slot and making these required broke it immediately —
+     * Root Cause #20, a public prop change without its consumers, which the
+     * comment above literally warns about. A selector that ignores them stays
+     * exactly single-select.
+     */
+    extraValues?: string[];
+    onExtraValuesChange?: (ids: string[]) => void;
   }) => React.ReactNode;
   /** Render a custom brand selector. */
   renderBrandSelector?: (props: {
@@ -402,7 +436,28 @@ function StepBasic({
         {renderCategorySelector ? (
           <>
             <Text className="text-[var(--appkit-color-text)] mb-1" size="sm" weight="medium">Category</Text>
-            {renderCategorySelector({ value: values.category ?? "", onChange: (v) => onChange({ category: v }) })}
+            {renderCategorySelector({
+              value: values.category ?? "",
+              onChange: (v) => onChange({ category: v }),
+              /*
+               * 🛑 `categoryIds[0]` is the DEFAULT assignment and is already
+               * rendered by the primary picker above, so the extras list is
+               * everything AFTER it. Passing the whole array would show the
+               * primary twice and let a seller "remove" it from a control that
+               * does not own it.
+               */
+              extraValues: (values.categoryIds ?? []).slice(1),
+              onExtraValuesChange: (ids) =>
+                onChange({
+                  /*
+                   * Rebuilt primary-first on every change, because the server
+                   * derives the default by DEPTH and reorders the stored array
+                   * anyway — sending it in a different order would make the
+                   * form and the saved document disagree until the next load.
+                   */
+                  categoryIds: [values.category ?? "", ...ids].filter(Boolean),
+                }),
+            })}
           </>
         ) : (
           <FormField

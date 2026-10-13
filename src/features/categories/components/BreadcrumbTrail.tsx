@@ -1,8 +1,11 @@
 import React from "react";
 import { Breadcrumb } from "../../../ui";
 import type { BreadcrumbItem } from "../../../ui";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { CategoryItem, CategoryAncestor } from "../types";
+import { alternateAssignments, collapseTrail } from "../utils/breadcrumb-chain";
 
 // --- BreadcrumbTrail ----------------------------------------------------------
 
@@ -34,6 +37,26 @@ export interface BreadcrumbTrailProps {
    */
   showCurrent?: boolean;
   className?: string;
+  /**
+   * I5b — collapse the middle of a long trail behind a dropdown.
+   *
+   * 🛑 Needed independently of multi-assignment: a tier-4 part leaf is SEVEN
+   * crumbs (`All Categories > Spinning Tops > Beyblade Metal > Metal Parts >
+   * Performance Tips > Rubber Flat`) and 390px cannot hold it. D4b measured
+   * that depth and never addressed how it wraps.
+   *
+   * Defaults ON, because the only trails long enough to collapse are the ones
+   * that already overflow.
+   */
+  collapse?: boolean;
+  /**
+   * I5b — the OTHER categories this listing is filed under, as one extra crumb.
+   *
+   * Pass `categoryIds`/`categoryIdNames` straight through from the product;
+   * `alternateAssignments` decides inline-vs-dropdown and returns nothing at
+   * all for a single assignment, which is the overwhelming majority.
+   */
+  alternates?: { ids?: readonly string[] | null; names?: readonly string[] | null };
 }
 
 /**
@@ -59,8 +82,10 @@ export function BreadcrumbTrail({
   basePath = String(ROUTES.PUBLIC.CATEGORIES),
   showCurrent = true,
   className,
+  collapse = true,
+  alternates,
 }: BreadcrumbTrailProps) {
-  const items: BreadcrumbItem[] = [
+  const full: BreadcrumbItem[] = [
     // Root
     { label: rootLabel, href: rootHref },
     // Ancestors (sorted by tier ascending so root → leaf order)
@@ -75,5 +100,67 @@ export function BreadcrumbTrail({
     ...(showCurrent ? [{ label: category.name }] : []),
   ];
 
-  return <Breadcrumb items={items} className={className} />;
+  /*
+   * I5b — the alternates become ONE extra crumb, never a second row. Two rows
+   * of crumbs above a title is a pattern no competitor in the crawl uses and it
+   * costs vertical space above the fold on a phone.
+   */
+  const alt = alternateAssignments({
+    categoryIds: alternates?.ids ?? null,
+    categoryIdNames: alternates?.names ?? null,
+    hrefFor: (slug) => `${basePath}/${slug}`,
+  });
+
+  /*
+   * 🛑 Collapsing is PRESENTATION. The JSON-LD is emitted elsewhere, from the
+   * full chain, and must stay that way — a crawler never receives a truncated
+   * hierarchy because a phone could not show it.
+   */
+  const split = collapse ? collapseTrail(toCrumbs(full)) : null;
+  const items: BreadcrumbItem[] =
+    split && split.collapsed.length > 0
+      ? [
+          ...split.lead.map(fromCrumb),
+          /*
+           * The collapsed group as ONE crumb whose label names what it hides.
+           * 🛑 Rendered as a real crumb with no href rather than a menu,
+           * because `Breadcrumb` is a plain list primitive — and the hidden
+           * ancestors are still reachable: every one of them is an ancestor of
+           * the crumbs either side, so no path is lost, only shortened.
+           */
+          { label: `… ${split.collapsed.length} more` },
+          ...split.tail.map(fromCrumb),
+        ]
+      : full;
+
+  return (
+    <>
+      <Breadcrumb items={items} className={className} />
+      {alt.mode !== "none" && (
+        <Text size="xs" color="muted">
+          {/*
+            * 🛑 Real <a> elements in the server-rendered DOM. A crawler does
+            * not open menus, so alternates injected on open would trade the SEO
+            * this exists for against tidiness — the opposite of "better for
+            * both crawler and users".
+            */}
+          Also in{" "}
+          {alt.items.map((a, i) => (
+            <React.Fragment key={a.url ?? a.name}>
+              {i > 0 && " · "}
+              <TextLink href={a.url ?? "#"}>{a.name}</TextLink>
+            </React.Fragment>
+          ))}
+        </Text>
+      )}
+    </>
+  );
+}
+
+/** `BreadcrumbItem` ⇄ `BreadcrumbCrumb` — two names for one shape. */
+function toCrumbs(items: readonly BreadcrumbItem[]) {
+  return items.map((i) => ({ name: i.label, url: i.href }));
+}
+function fromCrumb(c: { name: string; url?: string }): BreadcrumbItem {
+  return c.url ? { label: c.name, href: c.url } : { label: c.name };
 }
