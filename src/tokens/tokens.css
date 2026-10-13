@@ -608,6 +608,11 @@
   --appkit-color-text:             #431407;    /* orange-950 */
   --appkit-color-text-muted:       #9a3412;    /* orange-800 */
   --appkit-color-text-faint:       #c2410c;    /* orange-700 */
+  /* D7: dark ink on the amber primary. Inherited white measured 2.15:1 and
+     failed AA for UI text; orange-950 is 7.29:1 on primary and 4.91:1 on
+     primary-600. Declared in BOTH places or the first paint disagrees with
+     the hydrated theme (audit-theme-drift). */
+  --appkit-color-text-on-primary:  #431407;
 
   --appkit-color-success:          #15803d;
   --appkit-color-success-surface:  #f0fdf4;

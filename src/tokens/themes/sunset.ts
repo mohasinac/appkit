@@ -26,6 +26,23 @@ export const SUNSET_THEME: ThemeRecord = {
     "appkit-color-primary": "#f59e0b",
     "appkit-color-primary-500": "#f59e0b",
     "appkit-color-primary-600": "#d97706",
+    /*
+     * 🛑 D7 — DARK ink on this primary, declared rather than inherited.
+     *
+     * The light base's `text-on-primary` is `#ffffff`, and white on amber
+     * `#f59e0b` measures **2.15:1** — under the 3:1 AA threshold for
+     * large/UI text, so every primary button, badge and pill in this theme was
+     * unreadable. It survived because the pair was INHERITED: `audit-a11y`
+     * treated a token this theme does not declare as "nothing to check", which
+     * is exactly the pairing a brand theme is most likely to break (a new
+     * brand colour under somebody else's ink).
+     *
+     * `#431407` is this theme's own `text` token, so the fix introduces no new
+     * colour: **7.29:1** on `primary` and **4.91:1** on `primary-600`, which is
+     * the darker shade a hover state uses — both clear AA for normal text, not
+     * just the 3:1 this pair is held to.
+     */
+    "appkit-color-text-on-primary": "#431407",
     "appkit-color-secondary": "#f43f5e",
     "appkit-color-secondary-500": "#f43f5e",
 
