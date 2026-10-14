@@ -26,8 +26,8 @@ import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
   {
-    id: "stickers-beyblade-original-classic-sheet",
-    slug: "stickers-beyblade-original-classic-sheet",
+    id: "sticker-beyblade-original-classic-sheet",
+    slug: "sticker-beyblade-original-classic-sheet",
     title: "Beyblade Original Classic — Sticker Sheet",
     description: "A 5x5 cm sticker sheet featuring Dranzer, Driger, Draciel, and Dragoon in classic original-series art style.",
     categorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops"],
@@ -65,8 +65,8 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ]),
   } as unknown as Partial<ProductDocument>,
   {
-    id: "stickers-beyblade-x-holographic-pack",
-    slug: "stickers-beyblade-x-holographic-pack",
+    id: "sticker-beyblade-x-holographic-pack",
+    slug: "sticker-beyblade-x-holographic-pack",
     title: "Beyblade X Holographic Sticker Pack",
     description: "A holographic-finish sticker pack featuring the current Beyblade X lineup — catches the light with a rainbow shimmer.",
     categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
@@ -107,8 +107,8 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ]),
   } as unknown as Partial<ProductDocument>,
   {
-    id: "stickers-beyblade-burst-diecut-set",
-    slug: "stickers-beyblade-burst-diecut-set",
+    id: "sticker-beyblade-burst-diecut-set",
+    slug: "sticker-beyblade-burst-diecut-set",
     title: "Beyblade Burst Die-Cut Sticker Set (6-Pack)",
     description: "Individually die-cut vinyl stickers of 6 fan-favorite Burst tops — no background, clean edges, weatherproof.",
     categorySlugs: ["category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
@@ -146,8 +146,8 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ]),
   } as unknown as Partial<ProductDocument>,
   {
-    id: "stickers-beyblade-metal-retro-sheet",
-    slug: "stickers-beyblade-metal-retro-sheet",
+    id: "sticker-beyblade-metal-retro-sheet",
+    slug: "sticker-beyblade-metal-retro-sheet",
     title: "Metal Fight Retro Sticker Sheet — Limited /500",
     description: "A limited-edition retro-styled sticker sheet celebrating Metal Fight favorites, numbered out of 500.",
     categorySlugs: ["category-metal-masters","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
@@ -185,8 +185,8 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ]),
   } as unknown as Partial<ProductDocument>,
   {
-    id: "stickers-beyblade-x-glow-in-dark",
-    slug: "stickers-beyblade-x-glow-in-dark",
+    id: "sticker-beyblade-x-glow-in-dark",
+    slug: "sticker-beyblade-x-glow-in-dark",
     title: "Beyblade X Glow-in-the-Dark Sticker Pack",
     description: "Charge these stickers under light and watch the Beyblade X logos glow in the dark. Great for stadium cases and water bottles.",
     categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],

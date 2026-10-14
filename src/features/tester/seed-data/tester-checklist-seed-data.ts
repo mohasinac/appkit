@@ -571,7 +571,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "tester-fixtures-hidden-from-the-public",
           label: "SIGNED OUT, no product on /products has an id containing \"tester\" — the sandbox is invisible to the public",
           description:
-            "Fixed 2026-09-01. BEFORE: the public products endpoint had no viewer concept, so an ANONYMOUS caller got 25 tester fixtures in its first 40 rows — stickers-beyblade-original-classic-sheet, prizedraw-beyblade-metal-closed-revealed, live-golden-retriever-puppy — and they filled the public marketplace. AFTER: open /products in a private window and scan the grid; nothing should be named \"Tester …\". Then sign in AS A TESTER and reload — the sandbox items must come back. Both halves matter: hiding them from everyone would break the tester programme, and a fixture that never reappears is the opposite bug.",
+            "Fixed 2026-09-01. BEFORE: the public products endpoint had no viewer concept, so an ANONYMOUS caller got 25 tester fixtures in its first 40 rows — sticker-beyblade-original-classic-sheet, prizedraw-beyblade-metal-closed-revealed, live-golden-retriever-puppy — and they filled the public marketplace. AFTER: open /products in a private window and scan the grid; nothing should be named \"Tester …\". Then sign in AS A TESTER and reload — the sandbox items must come back. Both halves matter: hiding them from everyone would break the tester programme, and a fixture that never reappears is the opposite bug.",
           href: "/products",
         },
         {

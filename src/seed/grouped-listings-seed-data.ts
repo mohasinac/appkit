@@ -231,8 +231,8 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
     productIds: [
       "art-dranzer-phoenix-poster",
       "art-valkyrie-holographic-print",
-      "stickers-beyblade-original-classic-sheet",
-      "stickers-beyblade-x-holographic-pack",
+      "sticker-beyblade-original-classic-sheet",
+      "sticker-beyblade-x-holographic-pack",
     ],
     coverImage: seedPhoto("group-beyblade-fan-art-and-stickers-20260819", 1200, 900),
     groupTheme: "related",

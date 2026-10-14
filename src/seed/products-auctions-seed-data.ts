@@ -418,15 +418,24 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
   },
 ];
 
-// `.map(withTokens)` is applied to the WHOLE array at the end, not just to the
-// spread above. It used to wrap only the spread, so the ended-unsold fixture
-// appended after it shipped with no searchTxt — the one row that proves the
-// auction availability branch works, invisible to search.
+// 🛑 EVERY wrapper is applied to the WHOLE array at the end, never to the
+// spread. It used to wrap only the spread, so the ended-unsold fixture appended
+// after it shipped with no searchTxt — the one row that proves the auction
+// availability branch works, invisible to search.
+//
+// `listingType` was the SAME BUG, one field over, and survived that fix: it
+// stayed inside the spread while `withTokens` was lifted out, so the appended
+// fixture reached Firestore with no `listingType` at all. Measured 2026-10-14 —
+// 9 of the 10 seeded auctions carried it and this one did not. A missing
+// `listingType` is invisible to inspection (`normalizeListingType` defaults it
+// to "standard" in memory) and fatal to every query, because a Firestore
+// equality cannot match an absent field: `where("listingType","==","auction")`
+// skipped it, so the fixture never appeared on /auctions and the "Ended" tab it
+// exists to prove had nothing to show. Root Cause #101.
+//
+// Anything added to this pipeline goes AFTER the `]`, applied to all rows.
 export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
-  ..._rawProductsAuctionsSeedData.map((a) => ({
-    ...a,
-    listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION,
-  })),
+  ..._rawProductsAuctionsSeedData,
   {
     // Ended with NO winner — reserve never met, zero bids.
     //
@@ -463,4 +472,8 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     createdAt: new Date("2026-08-10"),
     updatedAt: new Date("2026-08-24"),
   },
-].map(withTokens).map(withFinalSale).map(withDerivedCategoryNames);
+]
+  .map((a) => ({ ...a, listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION }))
+  .map(withTokens)
+  .map(withFinalSale)
+  .map(withDerivedCategoryNames);

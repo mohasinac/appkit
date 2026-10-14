@@ -38,7 +38,7 @@ export const RETURNABLE_FIXTURE_IDS: ReadonlySet<string> = new Set([
   // art
   "art-valkyrie-holographic-print",
   // stickers
-  "stickers-beyblade-x-holographic-pack",
+  "sticker-beyblade-x-holographic-pack",
 ]);
 
 /**

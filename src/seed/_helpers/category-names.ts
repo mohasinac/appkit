@@ -69,20 +69,37 @@ interface ForestNode {
 }
 
 let nameById: Map<string, string | undefined> | null = null;
+/** id -> its ancestors, NEAREST FIRST (parent, grandparent, …, root). */
+let ancestorsById: Map<string, string[]> | null = null;
+
+function build(): void {
+  const n = new Map<string, string | undefined>();
+  const a = new Map<string, string[]>();
+  const walk = (nodes: readonly ForestNode[] | undefined, trail: string[]): void => {
+    for (const node of nodes ?? []) {
+      if (typeof node.id === "string") {
+        n.set(node.id, node.name);
+        a.set(node.id, [...trail]);
+        walk(node.children, [node.id, ...trail]);
+      } else {
+        // A node with no id contributes no ancestry, but its children still do.
+        walk(node.children, trail);
+      }
+    }
+  };
+  walk(CATEGORY_FOREST as readonly ForestNode[], []);
+  nameById = n;
+  ancestorsById = a;
+}
 
 function names(): Map<string, string | undefined> {
-  if (!nameById) {
-    const m = new Map<string, string | undefined>();
-    const walk = (nodes: readonly ForestNode[] | undefined): void => {
-      for (const n of nodes ?? []) {
-        if (typeof n.id === "string") m.set(n.id, n.name);
-        walk(n.children);
-      }
-    };
-    walk(CATEGORY_FOREST as readonly ForestNode[]);
-    nameById = m;
-  }
-  return nameById;
+  if (!nameById) build();
+  return nameById as Map<string, string | undefined>;
+}
+
+function ancestors(): Map<string, string[]> {
+  if (!ancestorsById) build();
+  return ancestorsById as Map<string, string[]>;
 }
 
 export function deriveCategoryNames(slugs: readonly string[] | undefined): string[] | undefined {
@@ -92,14 +109,81 @@ export function deriveCategoryNames(slugs: readonly string[] | undefined): strin
 }
 
 /**
- * Pipeline step: replace whatever `categoryNames` a record carries with the
- * derivation. Deliberately an OVERWRITE rather than a fill-if-absent — a
- * hand-written value that disagrees is exactly the defect, so preferring it
- * would preserve all twenty.
+ * Derive the full ancestor closure from the head of an existing chain.
+ *
+ * ## 🛑 The drift this ends — measured, 6 of 1,039 live products
+ *
+ * `categorySlugs` is the ancestor closure and it was hand-written per record
+ * too, so a chain could SKIP A TIER and nothing noticed:
+ *
+ *     product-beyblade-original-driger-v
+ *       got      driger-v > original-tops > beyblade-original > spinning-tops
+ *       expected driger-v > original-magnacore > original-tops > …
+ *
+ * The category page matches `array-contains-any [its own id]` against this
+ * array (CLAUDE.md: "a category page matches on its own id alone"), so a
+ * missing intermediate means the product is **absent from that node's page**
+ * while appearing correctly on every other node in its chain. Six products were
+ * invisible on their own system sub-line.
+ *
+ * `countersReconcile`'s rollup invariant cannot see this: it computes the counts
+ * FROM these closures, so a skipped tier is simply a tier with a lower count,
+ * and `own + Σ(children.total) === total` still holds exactly. The only way to
+ * find it is to re-derive the chain and compare.
+ *
+ * ## 🛑 A SECOND ASSIGNMENT IS LEFT ALONE, NOT COLLAPSED
+ *
+ * This derives from `slugs[0]` — the head, which is what `readAssignments`
+ * treats as the assignment. A product filed under two roots would carry two
+ * concatenated closures, and deriving from the head alone would silently DELETE
+ * the second one, turning a drift-fix into data loss.
+ *
+ * So the rule is: overwrite only when the existing array is a SUBSET of the
+ * derived closure. That is precisely the drift case (ids missing from the
+ * middle). An id outside the derived closure means either a second assignment
+ * or something this helper cannot safely interpret, and both must survive to be
+ * reported rather than be quietly rewritten.
+ *
+ * Measured when this was written: 0 of 71 seeded products carry `categoryIds`
+ * and 0 carry a multi-root closure — so the subset rule fires on all six real
+ * cases and guards a case that does not exist yet.
+ */
+export function deriveCategoryClosure(
+  slugs: readonly string[] | undefined,
+): string[] | undefined {
+  if (!Array.isArray(slugs) || slugs.length === 0) return undefined;
+  const head = slugs[0];
+  const chain = ancestors().get(head);
+  // An unknown head keeps its hand-written chain: inventing one from a node the
+  // forest does not have would be worse than leaving a visibly wrong value for
+  // the dangling-id sweep to find.
+  if (!chain) return undefined;
+  const derived = [head, ...chain];
+  const outside = slugs.filter((s) => !derived.includes(s));
+  if (outside.length > 0) return undefined;
+  return derived;
+}
+
+/**
+ * Pipeline step: replace whatever `categorySlugs` and `categoryNames` a record
+ * carries with the derivation. Deliberately an OVERWRITE rather than a
+ * fill-if-absent — a hand-written value that disagrees IS the defect, so
+ * preferring it would preserve every one of them.
+ *
+ * Order matters: the closure is derived first, then the names from the derived
+ * closure. Deriving names from the stale chain and then fixing the chain would
+ * leave the two mirrors disagreeing again, one tier apart.
  */
 export function withDerivedCategoryNames(
   p: Partial<ProductDocument>,
 ): Partial<ProductDocument> {
-  const names = deriveCategoryNames(p.categorySlugs);
-  return names ? { ...p, categoryNames: names } : p;
+  const closure = deriveCategoryClosure(p.categorySlugs);
+  const slugs = closure ?? p.categorySlugs;
+  const names = deriveCategoryNames(slugs);
+  if (!closure && !names) return p;
+  return {
+    ...p,
+    ...(closure ? { categorySlugs: closure } : {}),
+    ...(names ? { categoryNames: names } : {}),
+  };
 }
