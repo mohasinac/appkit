@@ -24,6 +24,18 @@ export interface CategoryDisplay {
   coverImage?: string;
   color?: string;
   showInMenu?: boolean;
+  /**
+   * Member images for a collage, most important first — what a BUNDLE actually
+   * looks like, which is its contents rather than one tile.
+   *
+   * 🛑 Derived at SEED time from the members' own `mainImage`, not fetched. A
+   * card cannot resolve `bundleProductIds` into images without one query per
+   * bundle per render, and a grid of five bundles would then be five extra
+   * reads for decoration. `<ImageMosaic>` renders nothing below `MOSAIC_MIN`
+   * (3), so a short list degrades to the cover image rather than a broken
+   * collage.
+   */
+  mosaicImages?: string[];
 }
 
 export interface CategoryMetrics {

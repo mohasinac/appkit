@@ -265,6 +265,33 @@ function bundleCategorySlugsFor(productIds: string[]): string[] {
   return out;
 }
 
+/**
+ * Attach a bundle's member images so its card can render a collage.
+ *
+ * 🛑 A bundle IS its contents, so a single placeholder tile is the least
+ * informative thing a bundle card can show. Resolved here, at seed time, from
+ * the members' own `mainImage` — a card cannot do it at render time without one
+ * query per bundle, and a grid of five would be five reads for decoration.
+ *
+ * `<ImageMosaic>` renders nothing below `MOSAIC_MIN` (3), so a bundle with one
+ * or two resolvable members quietly falls back to its cover image rather than
+ * showing a broken collage. A member id that resolves to no product is dropped
+ * rather than defaulted — a wrong photo is worse than one fewer tile.
+ */
+function withBundleMosaic(row: Partial<CategoryDocument>): Partial<CategoryDocument> {
+  const ids = row.bundleProductIds ?? [];
+  // `row.display` must already exist — `CategoryDocumentDisplay` requires
+  // `showInFooter`, so spreading onto `{}` would drop a required field. Every
+  // bundle row declares one; a row without is left untouched rather than
+  // half-built.
+  if (ids.length === 0 || !row.display) return row;
+  const images = ids
+    .map((id) => productsStandardSeedData.find((p) => p.id === id)?.mainImage)
+    .filter((src): src is string => typeof src === "string" && src.length > 0);
+  if (images.length === 0) return row;
+  return { ...row, display: { ...row.display, mosaicImages: images } };
+}
+
 const bundleRows: Partial<CategoryDocument>[] = [
   {
     id: "bundle-original-collectors-set",
@@ -532,7 +559,7 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
   ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
   ...franchiseRows.map((f) => ({ ancestors: [] as any[], ...f, createdByType: "admin" as const })),
-  ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
+  ...bundleRows.map((b) => ({ ancestors: [] as any[], ...withBundleMosaic(b) })),
 ]
   .map(withGeneratedContent)
   .map(withGeneratedCoverImage)

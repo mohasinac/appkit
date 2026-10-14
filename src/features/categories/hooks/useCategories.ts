@@ -39,6 +39,20 @@ export interface CategoriesFilteredParams {
   sort?: string;
   page?: number;
   pageSize?: number;
+  /**
+   * Tab partition, applied BEFORE pagination.
+   *
+   * 🛑 Before, not after — the hook paginates internally, so filtering the
+   * returned page would show a short grid and a page count for a different,
+   * larger set. It is a predicate rather than another flag because the Parts
+   * tab cannot be expressed as one: a part carries no `categoryType` and is
+   * identified by its ancestry (`category-tabs.ts`).
+   *
+   * Not part of the react-query key, deliberately — the FETCH is the same
+   * unfiltered `?flat=true` for every tab, so keying on it would mint five
+   * cache entries for one response.
+   */
+  predicate?: (c: CategoryItem) => boolean;
 }
 
 /** API-driven for structured filters; text search + pagination done in hook (Firestore substring limitation). */
@@ -65,6 +79,7 @@ export function useCategoriesFiltered(params: CategoriesFilteredParams = {}) {
     const lq = q.toLowerCase();
     if (lq) items = items.filter((c) => c.name.toLowerCase().includes(lq) || (c.description ?? "").toLowerCase().includes(lq));
     if (params.isBrand === false) items = items.filter((c) => !c.isBrand);
+    if (params.predicate) items = items.filter(params.predicate);
     if (minProductCount !== undefined) items = items.filter((c) => ((c as any).productCount ?? 0) >= minProductCount);
     if (maxProductCount !== undefined) items = items.filter((c) => ((c as any).productCount ?? 0) <= maxProductCount);
 

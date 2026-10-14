@@ -3,6 +3,12 @@ import React, { useState, useCallback, useMemo } from "react";
 
 
 import { useCategoriesFiltered } from "../hooks/useCategories";
+import {
+  CATEGORY_TABS,
+  DEFAULT_CATEGORY_TAB,
+  matchesCategoryTab,
+  type CategoryTabKey,
+} from "../constants/category-tabs";
 import { ROUTES } from "../../../next/routing/route-map";
 import { Button, Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
@@ -30,6 +36,11 @@ function renderCategoryGrid(props: {
 }) {
   const { isLoading, categories, view, activeSearch, activeTab, brandsOnly } = props;
   const isBrandView = activeTab === "brands" || brandsOnly;
+  /* The empty state names the tab the visitor is actually on. It said
+   * "categories" on all five, so an empty Parts tab reported the wrong thing. */
+  const noun = brandsOnly
+    ? "brands"
+    : (CATEGORY_TABS.find((t) => t.key === activeTab)?.label ?? "categories").toLowerCase();
   if (isLoading) {
     return (
       <Grid cols="categoryCards" gap="md">
@@ -48,7 +59,7 @@ function renderCategoryGrid(props: {
   if (categories.length === 0) {
     return (
       <Text paddingY="3xl" color="muted" size="sm" align="start">
-        {activeSearch ? `No ${isBrandView ? "brands" : "categories"} matching "${activeSearch}"` : isBrandView ? "No brands found" : "No categories found"}
+        {activeSearch ? `No ${noun} matching "${activeSearch}"` : `No ${noun} found`}
       </Text>
     );
   }
@@ -206,14 +217,22 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
-  // Tab state — "all" | "categories" | "brands" (not used when brandsOnly=true)
-  const activeTab = brandsOnly ? "brands" : (table.get(TABLE_KEYS.TAB) || "all");
+  /*
+   * Tab state. Five tabs, no "All" — see `category-tabs.ts`: "All" was the
+   * default and it was what rendered 1,185 undifferentiated rows.
+   */
+  const rawTab = brandsOnly ? "brands" : table.get(TABLE_KEYS.TAB) || DEFAULT_CATEGORY_TAB;
+  const activeTab = (CATEGORY_TABS.some((t) => t.key === rawTab)
+    ? rawTab
+    : DEFAULT_CATEGORY_TAB) as CategoryTabKey;
 
-  const isBrandParam: boolean | undefined =
-    brandsOnly ? true :
-    activeTab === "brands" ? true :
-    activeTab === "categories" ? false :
-    undefined;
+  /*
+   * 🛑 The fetch stays unfiltered (`?flat=true`) and the TABS partition that one
+   * cached response — a per-tab query would turn one request into five for the
+   * same data. `isBrand` is still sent for the brands tab because the API has a
+   * dedicated clause for it; everything else is partitioned below.
+   */
+  const isBrandParam: boolean | undefined = activeTab === "brands" ? true : undefined;
 
   const switchTab = (key: string) => {
     table.set(TABLE_KEYS.TAB, key);
@@ -223,6 +242,8 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
     q: table.get(TABLE_KEYS.QUERY) || undefined,
     isFeatured: table.get(TABLE_KEYS.IS_FEATURED) === "true" || undefined,
     isBrand: isBrandParam,
+    // The tab partition — applied before pagination inside the hook.
+    predicate: (c) => matchesCategoryTab(c as never, activeTab),
     rootOnly: table.get("rootOnly") === "true" || undefined,
     tier: getNumericParam(table, "tier"),
     minProductCount: getNumericParam(table, "minItemCount"),
@@ -234,11 +255,7 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
 
   const activeSearch = table.get(TABLE_KEYS.QUERY) || "";
 
-  const TABS = [
-    { key: "all", label: "All" },
-    { key: "categories", label: "Categories" },
-    { key: "brands", label: "Brands" },
-  ] as const;
+  const TABS = CATEGORY_TABS;
 
   return (
     <Div className="min-h-screen">

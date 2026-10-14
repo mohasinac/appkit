@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
+import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";
 
 import type { CategoryItem } from "../types";
 
@@ -43,7 +44,23 @@ export function CategoryCard({
     <Stack className="h-full">
       {/* Image area — fixed aspect ratio */}
       <Div surface="muted" className={`relative aspect-[4/3] w-full ${__O.hidden} flex-shrink-0`}>
-        {category.display?.coverImage ? (
+        {/*
+          * A BUNDLE is its contents, so its card shows a collage of its members
+          * rather than one tile. Checked BEFORE `coverImage` on purpose: every
+          * bundle also carries a generic placeholder cover, so testing the
+          * cover first would mean the collage never rendered.
+          *
+          * `<ImageMosaic>` returns null below MOSAIC_MIN (3), so a bundle with
+          * too few resolvable members falls through to the cover automatically —
+          * the `??` chain below is the fallback, not a separate branch.
+          */}
+        {(category.display?.mosaicImages?.length ?? 0) >= MOSAIC_MIN ? (
+          <ImageMosaic
+            images={category.display!.mosaicImages!}
+            alt={category.name}
+            className="h-full w-full"
+          />
+        ) : category.display?.coverImage ? (
           <MediaImage
             src={category.display.coverImage}
             alt={category.name}
