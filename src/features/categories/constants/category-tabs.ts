@@ -71,9 +71,18 @@ interface TabbableCategory {
 
 const typeOf = (c: TabbableCategory): string => String(c.categoryType ?? "");
 
-/** A leaf whose ancestry passes through a `*-parts` node. */
+/**
+ * A LEAF whose ancestry passes through a `*-parts` node.
+ *
+ * 🛑 `isLeaf` is required, not incidental. Without it the tab also matches the
+ * 20 classification NODES — "Attack Rings", "Weight Disks" — because their own
+ * `parentIds` include a `*-parts` node too, giving 772 entries that mix groups
+ * with the parts inside them. A part is a leaf by itself; the classification is
+ * a branch you reach by drilling down.
+ */
 export function isPartCategory(c: TabbableCategory): boolean {
   if (typeOf(c)) return false; // brand / bundle / franchise / sublisting
+  if (c.isLeaf !== true) return false;
   return (c.parentIds ?? []).some((p) => PART_PARENT_IDS.includes(String(p)));
 }
 
