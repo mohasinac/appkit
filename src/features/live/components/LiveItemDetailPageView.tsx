@@ -188,7 +188,7 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
               {transport && (
                 <Div textSize="sm" border="subtle" surface="muted" padding="md" rounded="lg">
                   <Text weight="medium">Transport</Text>
-                  <Text className="text-muted-foreground">
+                  <Text className="text-[var(--appkit-color-text-muted)]">
                     Method: {transport.method}
                     {transport.handlingFee !== undefined && (
                       <PricesOnly>{` · Handling: ${formatCurrency(transport.handlingFee, "INR")}`}</PricesOnly>
@@ -201,7 +201,7 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
               {meta?.careInfo && (
                 <Div textSize="sm" border="subtle" surface="muted" padding="md" rounded="lg">
                   <Text weight="medium">Care information</Text>
-                  <Text className="mt-1 text-muted-foreground">{meta.careInfo}</Text>
+                  <Text className="mt-1 text-[var(--appkit-color-text-muted)]">{meta.careInfo}</Text>
                 </Div>
               )}
 

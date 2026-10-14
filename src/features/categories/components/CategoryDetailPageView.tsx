@@ -667,27 +667,44 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         <Section border="subtle" surface="default" className="border-b">
           <Div className={__W} padding="inline">
             {/*
-              * Grouped by DEPTH BELOW THIS CATEGORY, not by absolute tier — the
-              * same subtree shape has to read the same whether you opened it from
-              * a root or from halfway down. One scroller per depth: a flat list of
-              * every descendant is accurate and unreadable, because nothing in it
-              * says which rows are children of which.
+              * 🛑 DIRECT CHILDREN ONLY — one depth, one scroller.
+              *
+              * This used to render one scroller per depth below the category,
+              * labelled "Subcategories" / "2 levels down" / "3 levels down" /
+              * "4 levels down". On a root that is the ENTIRE SUBTREE: the
+              * spinning-tops root produced four rows totalling ~1,289 chips,
+              * including every tier-4 part size ("0 / 0Wall", "00 / 00Turn",
+              * "1-60", "105", "130"…). Those are terminal leaves with one
+              * listing each and no meaning outside their parent, so the row
+              * read as noise and buried the five chips anyone wanted.
+              *
+              * Depth is the wrong axis for this control. Navigating down is
+              * what the page itself is for — `CategoryDetailPageView` already
+              * renders the full descendant set tier-grouped further down, and
+              * clicking a child opens that child's own page with ITS children
+              * in this bar. Showing four generations at once collapses that
+              * walk into a wall and still says nothing about which row belongs
+              * to which parent, which is the defect the per-depth labels were
+              * added to paper over.
               */}
-            {Array.from(
-              new Set(childCategories.map((c) => c.tier)),
-            )
-              .sort((a, b) => a - b)
-              .map((tier) => (
-            <Div key={tier} padding="b-2xs">
+            {(() => {
+              const directChildren = childCategories.filter(
+                (c) => c.tier === (category?.tier ?? 0) + 1,
+              );
+              if (directChildren.length === 0) return null;
+              return (
+            <Div padding="b-2xs">
               <Text size="xs" color="muted" weight="medium" className="mb-[var(--appkit-space-1-5)]">
-                {tier - (category?.tier ?? 0) === 1
-                  ? "Subcategories"
-                  : `${tier - (category?.tier ?? 0)} levels down`}
+                Subcategories
               </Text>
+            {/* 🛑 The leading `.5` here was a real class — a codemod leftover that
+              * Tailwind never generated. Removed; see the audit note in the
+              * session summary for the other ~12 malformed arbitrary-value
+              * classes of the same shape across appkit. */}
             <Div layout="flex" gap="2"
-              className={`.5 ${__O.xAuto} [scrollbar-width:none]`} padding="b-2xs"
+              className={`${__O.xAuto} [scrollbar-width:none]`} padding="b-2xs"
             >
-              {childCategories.filter((c) => c.tier === tier).map((child) => (
+              {directChildren.map((child) => (
                 <Link
                   key={child.id}
                   href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
@@ -724,7 +741,8 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               ))}
             </Div>
             </Div>
-              ))}
+              );
+            })()}
           </Div>
         </Section>
       )}

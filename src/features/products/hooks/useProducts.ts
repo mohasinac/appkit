@@ -11,6 +11,7 @@ import type {
   ProductListParams,
 } from "../types";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { LISTING_PARAM_NAMES } from "../../../utils/listing-params";
 
 // --- useProducts --------------------------------------------------------------
 
@@ -62,7 +63,23 @@ export function useProducts<T extends ProductItem = ProductItem>(
   if (params.listingType !== undefined)
     sp.set("listingType", params.listingType);
   if (params.storeId) sp.set("storeId", params.storeId);
-  if (params.sort) sp.set("sorts", params.sort);
+  /*
+   * 🛑 THE SHARED CONSTANT, not a hand-written string. This read
+   * `sp.set("sorts", …)` while `parsePublicProductParams` read
+   * `TABLE_KEYS.SORT` (= "sort") — two spellings of one concept, neither
+   * derived from the other, so they could not be kept in step by anything.
+   * Every client-side fetch therefore arrived with a sort the server could not
+   * see and fell back to `-createdAt`, while the dropdown displayed the sort
+   * the user had picked. Measured: `?sorts=auctionEndDate` returned byte-identical
+   * row order to sending no sort at all.
+   *
+   * "We have shared constants and it still broke" is exactly this: the
+   * constants existed, and this call site did not use them. The server now
+   * also accepts all three spellings (`s` / `sorts` / `sort`) the way every
+   * sibling listing route already did, so the two halves are belt-and-braces —
+   * but the literal is what made the gap possible and it is gone.
+   */
+  if (params.sort) sp.set(LISTING_PARAM_NAMES.sorts.long, params.sort);
   if (params.page) sp.set("page", String(params.page));
   if (params.perPage) sp.set("pageSize", String(params.perPage));
   if (params.featured !== undefined)

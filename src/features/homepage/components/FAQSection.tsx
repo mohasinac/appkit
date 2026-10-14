@@ -219,7 +219,8 @@ const flex = { between: FLEX_BETWEEN };
           <Div className="text-left mt-10">
             <TextLink rounded="full" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
-              className="inline-flex items-[center] gap-[0.5rem] bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
+              layout="inline-flex" align="center"
+              className="gap-[0.5rem] bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (

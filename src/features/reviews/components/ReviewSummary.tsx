@@ -37,7 +37,7 @@ export function ReviewSummary({
       className={`sm:[flex-direction:row] sm: sm:gap-[2rem] ${className}`} gap="md"
     >
       {/* Score block */}
-      <Stack className="sm:items-[flex-start]" align="center" gap="xs">
+      <Stack className={/* audit-variant-ok: RESPONSIVE alignment override; `align` is base-breakpoint only */ "sm:items-start"} align="center" gap="xs">
         <Span color="inverse" weight="bold" className="leading-none text-[var(--appkit-color-text)] dark:" size="5xl">
           {averageRating.toFixed(1)}
         </Span>

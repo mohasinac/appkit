@@ -221,7 +221,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
         <Text className="text-primary" size="sm" weight="bold">
           <GatedPrice label="Sign in to see the bid">{formatCurrency(displayBid, getDefaultCurrency())}</GatedPrice>
         </Text>
-        <Div layout="inline-flex" gap="1" textWeight="semibold" className={`items-[center] py-[0.125rem] text-[11px] ${countdownClass}`} padding="x-xs" rounded="full">
+        <Div layout="inline-flex" gap="1" textWeight="semibold" align="center" className={`py-[0.125rem] text-[11px] ${countdownClass}`} padding="x-xs" rounded="full">
           <Clock className="h-2.5 w-2.5" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
         </Div>
@@ -269,7 +269,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
         )}
       </Div>
       <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
-        <Div layout="inline-flex" gap="1" textWeight="semibold" textSize="xs" className={`items-[center] ${countdownClass}`} paddingY="y-2xs" paddingX="x-xs" rounded="full">
+        <Div layout="inline-flex" gap="1" textWeight="semibold" textSize="xs" align="center" className={`${countdownClass}`} paddingY="y-2xs" paddingX="x-xs" rounded="full">
           <Clock className="h-3 w-3" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
         </Div>

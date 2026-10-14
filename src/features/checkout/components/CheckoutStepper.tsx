@@ -18,7 +18,7 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
           <React.Fragment key={step.id}>
             <Row gap="2.5">
               <Span layout="flex" color="inverse"
-                className={`h-6 w-6 justify-[center] ${ isDone ? "bg-success " : isActive ? "bg-neutral-900 " : "bg-neutral-200 dark:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)]" }`} rounded="full" size="xs" weight="semibold"
+                className={/* audit-variant-ok: <Span> has `layout`+`gap` but no flex `justify`; its `align` is text-align */ `h-6 w-6 justify-center ${ isDone ? "bg-success " : isActive ? "bg-neutral-900 " : "bg-neutral-200 dark:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)]" }`} rounded="full" size="xs" weight="semibold"
               >
                 {isDone ? "✓" : idx + 1}
               </Span>

@@ -256,12 +256,12 @@ function CarouselCardRenderer({
             className={`${POSITION_FILL} md:p-[1.5rem] ${textAlignClass}`} padding="xs"
           >
           {card.content?.eyebrow && (
-            <Text color="inverse" shadow="sm" className="text-[10px] !/70 mb-0.5 tracking-wider" mdSize="xs" transform="uppercase">
+            <Text color="inverse" shadow="sm" className="text-[10px] opacity-70 mb-0.5 tracking-wider" mdSize="xs" transform="uppercase">
               {card.content.eyebrow}
             </Text>
           )}
           {card.content?.subtitle && (
-            <Text color="inverse" shadow="sm" className="hidden md:block !/90 mb-0.5 md:mb-2" mdSize="sm" size="xs">
+            <Text color="inverse" shadow="sm" className="hidden md:block opacity-90 mb-0.5 md:mb-2" mdSize="sm" size="xs">
               {card.content.subtitle}
             </Text>
           )}
@@ -278,7 +278,7 @@ function CarouselCardRenderer({
           )}
           {card.content?.description && (
             <Text color="inverse" shadow="sm"
-              className={`text-[10px] md:text-[0.875rem] !/80 mb-1 md:mb-4`} truncate
+              className={`text-[10px] md:text-[0.875rem] opacity-80 mb-1 md:mb-4`} truncate
             >
               {card.content.description}
             </Text>
@@ -462,7 +462,7 @@ export function HeroCarousel({
                 {slide.overlay && (
                   <Div layout="flex-col" align="start" justify="center" className={`${POSITION_FILL} text-left md:px-[4rem] lg:px-[8rem]`} padding="x-lg">
                     {slide.overlay.subtitle && (
-                      <Text color="inverse" shadow="sm" className="stagger-1 !/80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
+                      <Text color="inverse" shadow="sm" className="stagger-1 opacity-80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}
                       </Text>
                     )}
@@ -480,7 +480,7 @@ export function HeroCarousel({
                       </Heading>
                     )}
                     {slide.overlay.description && (
-                      <Text color="inverse" shadow="sm" className="stagger-3 !/90 mb-4 md:mb-8 max-w-2xl" mdSize="lg" lgSize="xl" size="sm">
+                      <Text color="inverse" shadow="sm" className="stagger-3 opacity-90 mb-4 md:mb-8 max-w-2xl" mdSize="lg" lgSize="xl" size="sm">
                         {slide.overlay.description}
                       </Text>
                     )}

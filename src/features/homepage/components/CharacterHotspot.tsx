@@ -678,7 +678,7 @@ function CharacterHotspotInner({
 
         {/* Universe zone labels */}
         <Div
-          className="hidden sm:flex absolute left-0 right-0 justify-[space-around] items-[flex-start] pointer-events-none"
+          className={/* audit-variant-ok: flex only from `sm`; align/justify props are base-breakpoint only */ "hidden sm:flex absolute left-0 right-0 justify-around items-start pointer-events-none"}
           style={{ top: "clamp(120px, 18vh, 165px)", zIndex: 5 }}
         >
           {(

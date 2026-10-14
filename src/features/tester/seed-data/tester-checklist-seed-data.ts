@@ -4128,6 +4128,53 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "rich-text-readability",
+      pageLabel: "Admin-Authored Rich Text — Readability in Both Themes",
+      href: "/categories/category-spinning-tops",
+      cases: [
+        {
+          key: "prose-body-readable-dark",
+          label:
+            "IN DARK MODE: the paragraphs of a category's own write-up are clearly readable — not a dim grey that disappears into the page background",
+          description:
+            "Fixed 2026-10-15. BEFORE: every rich-text block on the site rendered the LIGHT-theme prose palette in dark mode — body text at gray-700 — because `dark:prose-invert` has never compiled in this project (the consumer Tailwind build is told `@source not \"../../appkit\"`, and appkit's own build has no typography plugin). AFTER: switch to DARK mode, open /categories/category-spinning-tops and read the four-paragraph write-up under the hero. Every sentence must be comfortably readable at arm's length. A paragraph you have to lean in for is still a bug.",
+          href: "/categories/category-spinning-tops",
+        },
+        {
+          key: "prose-links-visible-dark",
+          label:
+            "IN DARK MODE: links inside that write-up (Beyblade Original, Metal Fight, Burst, Beyblade X, Accessories) are visibly a different colour from the surrounding text and are obviously clickable",
+          description:
+            "The worst half of the same bug, and the one a reader notices first. BEFORE: prose links resolved to gray-900 — near-black on a dark page — so they were effectively invisible; you could only find them by sweeping the mouse for the cursor change. AFTER: each link must read as a link WITHOUT hovering. Check all five in the body copy. Underline alone is not enough: the text colour must differ from the paragraph around it.",
+          href: "/categories/category-spinning-tops",
+        },
+        {
+          key: "prose-readable-light-regression",
+          label:
+            "IN LIGHT MODE: the same write-up and its links are still correct — fixing dark mode must not have broken light mode",
+          description:
+            "A real risk, not a formality: the fix rebinds the prose colour palette to theme tokens, so both themes now come from one place and a mistake affects both. Toggle light/dark a few times on this page. Headings must stay darker than body text, and links must stay distinguishable in BOTH.",
+          href: "/categories/category-spinning-tops",
+        },
+        {
+          key: "prose-readable-across-surfaces",
+          label:
+            "The same readability holds on every other admin-authored rich-text surface — a blog post, a policy page, an FAQ answer and a product description",
+          description:
+            "This was never a category-page bug; ~25 surfaces share one renderer. In DARK mode check: a post under /blog, /terms (or /privacy), an expanded answer on /faqs, and the Description tab of any product. Each must have readable body copy and visible links. One unreadable surface here means the shared fix did not reach it.",
+          href: "/blog",
+        },
+        {
+          key: "prose-follows-custom-theme",
+          label:
+            "Rich-text body copy follows an admin-authored CUSTOM theme, not a fixed grey",
+          description:
+            "Added with the 2026-10-15 fix, and only possible because of it: the old prose palette was hardcoded Tailwind greys that no theme could reach. As admin, open Site Settings → Themes, switch the active theme (e.g. to Cobalt Night or Sunset), then reload a category page with a write-up. The paragraph and link colours must shift with the theme rather than staying the same grey.",
+          href: "/admin/site",
+        },
+      ],
+    },
+    {
       pageKey: "status-badge-legibility",
       pageLabel: "Listing Tags & Status Chips — Light vs Dark Mode",
       href: "/products",

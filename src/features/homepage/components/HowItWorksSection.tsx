@@ -146,7 +146,7 @@ const sectionRef = useRef<HTMLElement>(null);
  }`}
         >
           {pillLabel && (
-            <Div layout="inline-flex" gap="2" align="center" textWeight="medium" textSize="xs" className="mb-4 border border-primary-[500]/30 bg-primary-500/10 py-[0.375rem] tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
+            <Div layout="inline-flex" gap="2" align="center" textWeight="medium" textSize="xs" className={/* audit-variant-ok: colour+alpha border (primary-500/30); the `border` variant takes a token name, not an rgba step */ "mb-4 border border-primary-500/30 bg-primary-500/10 py-[0.375rem] tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm"} padding="x-md" rounded="full">
               {pillLabel}
             </Div>
           )}

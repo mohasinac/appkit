@@ -90,7 +90,7 @@ if (isLoading) {
             {/* Pill badge */}
             {pillLabel && (
               <Div>
-                <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-[500]/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
+                <Span layout="inline-flex" gap="md" size="xs" weight="medium" className={/* audit-variant-ok: colour+alpha border (primary-500/30); the `border` variant takes a token name, not an rgba step */ "border border-primary-500/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm"} rounded="full" transform="uppercase">
                   <Span
                     className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                     aria-hidden="true"
@@ -133,7 +133,8 @@ if (isLoading) {
                 {ctaHref ? (
                   <TextLink rounded="xl"
                     href={ctaHref}
-                    className="inline-flex items-[center] justify-[center] px-[2rem] py-[0.875rem] !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
+                    layout="inline-flex" align="center" justify="center"
+                    className="px-[2rem] py-[0.875rem] !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
                   >
                     {ctaLabel}
                   </TextLink>
@@ -149,7 +150,8 @@ if (isLoading) {
                 {secondaryCtaHref ? (
                   <TextLink rounded="xl"
                     href={secondaryCtaHref}
-                    className="inline-flex items-[center] justify-[center] border-2 border-cobalt/40 dark:border-cobalt-400/40 px-[2rem] py-[0.875rem] text-cobalt-700 dark:text-cobalt-300 hover:bg-primary-surface transition-all hover:scale-[1.02]" size="base" weight="semibold"
+                    layout="inline-flex" align="center" justify="center"
+                    className="border-2 border-cobalt/40 dark:border-cobalt-400/40 px-[2rem] py-[0.875rem] text-cobalt-700 dark:text-cobalt-300 hover:bg-primary-surface transition-all hover:scale-[1.02]" size="base" weight="semibold"
                   >
                     {secondaryCtaLabel}
                   </TextLink>
@@ -172,11 +174,17 @@ if (isLoading) {
                 gap="sm"
                 className="mt-6" justify="start"
               >
+                {/* One theme-INVERTING border token, not a light/dark pair. This
+                  * was `border-zinc-[200] dark:border-slate-[700]` — both
+                  * malformed (a palette step cannot go in brackets), so neither
+                  * ever generated and the chip had no border in either theme.
+                  * Root Cause #79: remove the light class, don't repair two
+                  * classes that fight. */}
                 {trustChips.map((chip) => (
                   <Span layout="inline-flex" gap="xs"
                     key={chip.key}
                     size="xs" weight="medium"
-                    className="border border-zinc-[200] dark:border-slate-[700] px-[0.875rem] py-[0.375rem]" rounded="full" surface="subtle" color="muted"
+                    className="border border-[var(--appkit-color-border)] px-[0.875rem] py-[0.375rem]" rounded="full" surface="subtle" color="muted"
                   >
                     {chip.emoji} {chip.label}
                   </Span>

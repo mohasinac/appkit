@@ -77,7 +77,7 @@ export function CodeRevealPanel({
   }
 
   return (
-    <Div className={`border border-border bg-muted/40 ${__P.p4}`} rounded="lg">
+    <Div className={`border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] ${__P.p4}`} rounded="lg">
       <Stack gap="sm">
         <Text weight="medium">
           {/*
@@ -91,7 +91,7 @@ export function CodeRevealPanel({
         </Text>
         {!revealed ? (
           <Stack gap="sm">
-            {error && <Text className="text-destructive" size="sm">{error}</Text>}
+            {error && <Text className="text-error" size="sm">{error}</Text>}
             <Button
               type="button"
               variant="primary"
@@ -107,7 +107,7 @@ export function CodeRevealPanel({
         ) : (
           <Stack gap="sm">
             {(revealed.contentKind ?? "code") === "code" ? (
-              <Row textSize="lg" className="border border-border bg-background font-mono" padding="inlineSm" align="center" gap="sm" rounded="md">
+              <Row textSize="lg" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] font-mono" padding="inlineSm" align="center" gap="sm" rounded="md">
                 <Span className="flex-1 select-all">{revealed.code}</Span>
                 <Button
                   type="button"
@@ -134,7 +134,7 @@ export function CodeRevealPanel({
                * the browser own the download, including resume and the file
                * name, and never materialises the bytes in JS memory.
                */
-              <Row className="border border-border bg-background" padding="inlineSm" align="center" gap="sm" rounded="md">
+              <Row className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="inlineSm" align="center" gap="sm" rounded="md">
                 <Span className="flex-1 truncate">
                   {revealed.fileName ?? "Your download"}
                 </Span>
@@ -159,7 +159,7 @@ export function CodeRevealPanel({
               * caller that genuinely has better copy.
               */}
             {(redemptionInstructions ?? revealed.redemptionInstructions) && (
-              <Text className="text-muted-foreground" size="sm">
+              <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                 {redemptionInstructions ?? revealed.redemptionInstructions}
               </Text>
             )}

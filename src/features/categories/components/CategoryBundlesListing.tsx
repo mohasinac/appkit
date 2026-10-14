@@ -192,7 +192,7 @@ export function CategoryBundlesListing({
         hideTrigger
       >
         <Stack className={`${__P.p4}`} gap="md">
-          <Label layout="flex" gap="lg" className="justify-[space-between] cursor-pointer">
+          <Label layout="flex" gap="lg" className={/* audit-variant-ok: <Label> exposes no flex `justify` prop */ "justify-between cursor-pointer"}>
             <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
             <Toggle
               checked={pendingShowOutOfStock}

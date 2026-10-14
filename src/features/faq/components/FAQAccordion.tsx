@@ -22,7 +22,8 @@ function FAQAccordionItem({
         variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full justify-[space-between] gap-[1rem] py-[1rem] text-left text-[0.875rem] font-[500] text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)] transition hover:text-primary"
+        justify="between"
+            className="w-full gap-[1rem] py-[1rem] text-left text-[0.875rem] font-[500] text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)] transition hover:text-primary"
       >
         <Span>{faq.question}</Span>
         <Span

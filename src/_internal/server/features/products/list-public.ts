@@ -40,6 +40,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { TABLE_KEYS } from "../../../../constants/table-keys";
+import { LISTING_PARAM_NAMES } from "../../../../utils/listing-params";
 import type { JsonValue } from "../../../../schemas/types";
 import { sortBy } from "../../../../constants/sort";
 import {
@@ -491,7 +492,43 @@ export function parsePublicProductParams(
     dateTo: get(TABLE_KEYS.DATE_TO) || undefined,
     page: num(get(TABLE_KEYS.PAGE)) ?? DEFAULT_PAGE,
     pageSize: num(get(TABLE_KEYS.PAGE_SIZE)) ?? defaults?.pageSize ?? DEFAULT_PAGE_SIZE,
-    sorts: get(TABLE_KEYS.SORT) || defaults?.sorts || DEFAULT_SORTS,
+    /*
+     * 🛑 THREE SPELLINGS, and the middle one is what every client actually
+     * sends. This read `get(TABLE_KEYS.SORT)` — i.e. `"sort"` — alone, while
+     * `useProducts` puts the value on the wire as `sorts`
+     * (`sp.set("sorts", params.sort)`). So EVERY client-side fetch from a
+     * product listing page arrived with a sort this parser could not see, fell
+     * through to `DEFAULT_SORTS` (`-createdAt`), and came back newest-first
+     * while the dropdown displayed the sort the user had picked.
+     *
+     * Measured against the live dev server — identical row order for
+     * `?sorts=auctionEndDate` and for no sort at all, versus a correctly
+     * ordered result for `?sort=auctionEndDate`.
+     *
+     * It survived because the SSR paint IS correct: the listing views pass
+     * `sorts` through `defaults`, and an anonymous visitor with `initialData`
+     * never refetches (`staleTime: Infinity`), so the first paint is right and
+     * stays right. The bug only surfaces once something refetches — touching
+     * the Sort control, paging, or simply being signed in as a tester/admin,
+     * who are handed no `initialData` by design. That is Root Cause #30 with
+     * the two sides swapped: not a default that disagrees, a KEY that does.
+     *
+     * `LISTING_PARAM_NAMES.sorts` already settled this question — short `s`,
+     * long `sorts`, legacy `sort` — and `/api/stores`, `/api/events` and
+     * `/api/faqs` all accept the full set through `parseListingParams`.
+     * `/api/products` was the one listing route that did not, so it is aligned
+     * here rather than by changing what one client sends: any OTHER caller
+     * using the documented spelling was equally broken and is now fixed too.
+     *
+     * Order is widest-to-narrowest to match `parseListingParams`: short form
+     * wins, then the long form, then the legacy key.
+     */
+    sorts:
+      get(LISTING_PARAM_NAMES.sorts.short) ||
+      get(LISTING_PARAM_NAMES.sorts.long) ||
+      get(TABLE_KEYS.SORT) ||
+      defaults?.sorts ||
+      DEFAULT_SORTS,
   };
 }
 

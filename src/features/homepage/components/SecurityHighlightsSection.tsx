@@ -107,7 +107,7 @@ const sectionRef = useRef<HTMLElement>(null);
         {/* Header */}
         <Div className="text-left mb-10">
           {pillLabel && (
-            <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-[500]/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
+            <Span layout="inline-flex" gap="md" size="xs" weight="medium" className={/* audit-variant-ok: colour+alpha border (primary-500/30); the `border` variant takes a token name, not an rgba step */ "border border-primary-500/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm"} rounded="full" transform="uppercase">
               {pillLabel}
             </Span>
           )}

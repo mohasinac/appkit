@@ -278,7 +278,8 @@ const headingGradient: "none" | "brand" =
             <TextLink rounded="lg" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
               shadow={useLightText ? "lg" : "none"}
-              className="inline-flex items-[center] gap-[0.375rem] transition-colors bg-primary text-white hover:bg-primary-600" size="sm" weight="semibold"
+              layout="inline-flex" align="center"
+              className="gap-[0.375rem] transition-colors bg-primary text-white hover:bg-primary-600" size="sm" weight="semibold"
             >
               {viewMoreLabel}
             </TextLink>

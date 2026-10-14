@@ -22,6 +22,7 @@ const CLS_ICON_PURPLE_BARE = "flex h-10 w-10 flex-shrink-0 items-center justify-
 import Link from "next/link";
 import { Button, Div, Grid, Heading, IconButton, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { MediaVideo } from "../../media/MediaVideo";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -236,20 +237,33 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
-            <Div className={`${__O.hidden} border border-[var(--appkit-color-border)] bg-[rgb(0,0,0)] aspect-video`} rounded="xl">
-              <video
+            {/*
+              * <MediaVideo>, not a raw <video>. The raw element could only ever
+              * play a direct file URL, so a review whose video came from
+              * MediaUploadField's YouTube tab rendered "No video with supported
+              * format and MIME type found" — Root Cause #49, which was fixed for
+              * product galleries and never back-ported here.
+              *
+              * Safe for third-party URLs: the primitive resolves through
+              * `resolveVideoUrl`, which maps our own Storage/GCS objects to
+              * /media/… and returns an external URL UNTOUCHED, so it never hits
+              * the image-only /api/media/ext proxy (Root Cause #27). The poster
+              * stays on the normal image path because it is an image.
+              */}
+            <Div className={`${__O.hidden} border border-[var(--appkit-color-border)] bg-[rgb(0,0,0)] aspect-video relative`} rounded="xl">
+              <MediaVideo
                 src={review.video.url}
-                poster={review.video.thumbnailUrl}
-                controls
-                className="h-full w-full"
-                preload="metadata"
+                thumbnailUrl={review.video.thumbnailUrl}
+                alt="Review video"
+                objectFit="contain"
               />
             </Div>
           </Section>
         )}
 
         {/* Helpful votes */}
-        <Section className="flex items-[center] gap-[1rem] border-t border-neutral-100" padding="y-md">
+        {/* audit-variant-ok: <Section> is a semantic landmark and exposes no flex alignment props */}
+        <Section className="flex items-center gap-[1rem] border-t border-neutral-100" padding="y-md">
           <Div textSize="sm" className="text-[var(--appkit-color-text-muted)]">
             {helpfulCount > 0 && (
               <Span>

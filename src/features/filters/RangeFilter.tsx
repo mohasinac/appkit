@@ -207,7 +207,8 @@ export function RangeFilter({
           onClick={handleToggle}
           variant="ghost"
           size="sm"
-          className="flex-1 justify-[space-between] text-[0.875rem] font-[600] text-[var(--appkit-color-text)] py-[0.25rem] hover:opacity-80 transition-opacity"
+          justify="between"
+          className="flex-1 text-[0.875rem] font-[600] text-[var(--appkit-color-text)] py-[0.25rem] hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
           <Span layout="flex" gap="md" >

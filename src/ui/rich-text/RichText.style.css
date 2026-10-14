@@ -43,6 +43,79 @@
 
 
 /* --------------------------------------------------------------------------
+ * THE PROSE PALETTE — rebound to appkit theme tokens.
+ *
+ * 🛑 `dark:prose-invert` CANNOT COMPILE IN THIS PROJECT. Do not "fix" dark-mode
+ * rich text by adding it to a call site, and do not add
+ * `@source inline("dark:prose-invert")` to globals.css.
+ *
+ * Every `proseClass` string in appkit carries `dark:prose-invert` and NONE of
+ * them has ever generated a rule, because:
+ *   - the consumer build excludes appkit from scanning
+ *     (`src/app/globals.css` → `@source not "../../appkit"`), and
+ *   - `appkit/tailwind.config.js` does not load `@tailwindcss/typography`,
+ *     so appkit's own `dist/tailwind-utilities.css` cannot emit it either.
+ *
+ * So `--tw-prose-invert-*` is DEFINED and never switched on. Every rich-text
+ * surface on the site — product and auction descriptions, blog posts, policy
+ * pages, FAQ answers, category `contentBody`, pre-orders, classifieds, digital
+ * codes, live items, prize draws, events — rendered the light-theme palette in
+ * every theme: body at gray-700 and links at gray-900, i.e. near-black on a
+ * dark page. The links were effectively invisible.
+ *
+ * It was not merely unstyled, it was OVERRIDING: `important: true` in
+ * `tailwind.config.js` emits `.prose :where(a) { color: var(--tw-prose-links)
+ * !important }`, which beat the themed `.dark .appkit-rich-text a` rule further
+ * down this file. All that theme-aware CSS was dead on arrival.
+ *
+ * Rebinding the VARIABLES fixes it at the only point both problems meet: every
+ * prose rule reads `var(--tw-prose-*)`, so one block re-themes body, links,
+ * headings, bold, lists, quotes, captions, code and tables at once — in both
+ * built-in themes AND in any admin-authored custom theme, which `prose-invert`
+ * could never have done (its palette is hardcoded Tailwind grays).
+ *
+ * 🛑 The specificity is deliberate and must not be lowered. `.prose` declares
+ * these variables with `!important`, so an equal-importance override is decided
+ * by EMISSION ORDER between two separate stylesheets — the non-deterministic
+ * trap of Root Cause #79. `:root .prose` is (0,2,0) against `.prose`'s (0,1,0),
+ * so specificity decides and the outcome does not depend on bundle order. The
+ * dark block at (0,3,0) also outranks `.dark .prose-invert` (0,2,0), so this
+ * stays correct even if someone later makes `prose-invert` compile.
+ *
+ * Not scoped to `.appkit-rich-text` on purpose: `PolicyPageView` and the scams
+ * FAQ page apply `prose` to a bare `<div>` and had the identical defect.
+ * -------------------------------------------------------------------------- */
+:root .prose {
+  --tw-prose-body: var(--appkit-color-text-muted) !important;
+  --tw-prose-headings: var(--appkit-color-text) !important;
+  --tw-prose-lead: var(--appkit-color-text-muted) !important;
+  --tw-prose-links: var(--appkit-color-primary-600) !important;
+  --tw-prose-bold: var(--appkit-color-text) !important;
+  --tw-prose-counters: var(--appkit-color-text-faint) !important;
+  --tw-prose-bullets: var(--appkit-color-text-faint) !important;
+  --tw-prose-hr: var(--appkit-color-border) !important;
+  --tw-prose-quotes: var(--appkit-color-text) !important;
+  --tw-prose-quote-borders: var(--appkit-color-primary) !important;
+  --tw-prose-captions: var(--appkit-color-text-faint) !important;
+  --tw-prose-kbd: var(--appkit-color-text) !important;
+  --tw-prose-kbd-shadows: 24 24 27 !important;
+  --tw-prose-code: var(--appkit-color-text) !important;
+  --tw-prose-pre-code: var(--appkit-color-slate-200) !important;
+  --tw-prose-pre-bg: var(--appkit-color-slate-800) !important;
+  --tw-prose-th-borders: var(--appkit-color-border) !important;
+  --tw-prose-td-borders: var(--appkit-color-border) !important;
+}
+
+/* Only the values that are genuinely theme-specific. Everything above already
+ * inverts, because `--appkit-color-text`/`-text-muted`/`-border` are redefined
+ * per theme in tokens.css — which is the whole point of binding to them. */
+:root.dark .prose {
+  --tw-prose-links: var(--appkit-color-secondary-400) !important;
+  --tw-prose-kbd-shadows: 250 250 250 !important;
+  --tw-prose-pre-bg: var(--appkit-color-surface) !important;
+}
+
+/* --------------------------------------------------------------------------
  * Base wrapper. All selectors are scoped to .appkit-rich-text so they
  * never leak into surrounding UI.
  * Prose classes (typography plugin) are applied via the `proseClass` prop.

@@ -77,7 +77,7 @@ export function BeforeAfterCard({
   }, [dragging, updatePosition]);
 
   return (
-    <Div className={`border-border ${__O.hidden} border bg-card`} rounded="2xl" shadow="sm">
+    <Div className={`border-[var(--appkit-color-border)] ${__O.hidden} border bg-[var(--appkit-color-surface)]`} rounded="2xl" shadow="sm">
       <Div
         ref={containerRef}
         className="relative aspect-[4/3] cursor-col-resize overflow-hidden select-none"
@@ -129,7 +129,7 @@ export function BeforeAfterCard({
           shadow="md"
           className="absolute top-0 bottom-0 z-10 w-0.5 bg-[var(--appkit-color-surface)]"
         >
-          <Row className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-card" align="center" justify="center" rounded="full" shadow="lg">
+          <Row className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-[var(--appkit-color-surface)]" align="center" justify="center" rounded="full" shadow="lg">
             <svg
               width="16"
               height="16"
@@ -159,7 +159,7 @@ export function BeforeAfterCard({
 
       {/* Caption */}
       <Div className={`${__P.p4}`}>
-        <Text className="text-foreground" size="sm" weight="medium">
+        <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
           {item.caption}
         </Text>
       </Div>

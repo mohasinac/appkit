@@ -147,7 +147,7 @@ export async function PolicyPageView({
         {adminHtml ? (
           /* Admin-set HTML takes priority */
           <Div
-            className="prose prose-neutral dark:prose-invert max-w-none"
+            className="prose max-w-none"
             dangerouslySetInnerHTML={{ __html: adminHtml }}
           />
         ) : (
