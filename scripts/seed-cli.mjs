@@ -194,6 +194,7 @@ const {
   productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
   productsArtSeedData, productsStickersSeedData,
+  productsCatalogueSeedData,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
   couponsSeedData, couponUsageSeedData,
   eventsSeedData, eventEntriesSeedData, payoutsSeedData, offersSeedData,
@@ -468,6 +469,11 @@ const SEED_DATA_MAP = {
     // /stickers were permanently empty, and listingType=art|stickers returned 0.
     // Root Cause #58's family one layer down: added everywhere except the runner.
     ...(productsArtSeedData || []), ...(productsStickersSeedData || []),
+    // The 972 generated catalogue-filler listings (one per taxonomy leaf) —
+    // see scripts/gen-catalogue-listings.mjs. This is what makes `products`
+    // reproducible after a full wipe; without it the collection drops from
+    // 1,039 to 71 the moment someone purges it.
+    ...(productsCatalogueSeedData || []),
   ]),
   orders: ordersSeedData,
   reviews: reviewsSeedData,

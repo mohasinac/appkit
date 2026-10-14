@@ -2186,6 +2186,13 @@ export { groupedListingsSeedData } from "./seed/index";
 // seed/index.ts directly — so an export present only on the inner barrel is
 // invisible to the CLI and silently "no seed data, skipping".
 export { mediaAssetsSeedData, MEDIA_ASSET_SEED_COUNT } from "./seed/index";
+// productsCatalogueSeedData — the 972 generated per-taxonomy-leaf listings.
+// Same Root Cause #18 shape as mediaAssetsSeedData above: seed-cli.mjs imports
+// the bare "@mohasinac/appkit" package, which resolves through THIS file.
+export {
+  productsCatalogueSeedData,
+  CATALOGUE_LISTING_COUNT,
+} from "./seed/index";
 // SB-UNI-V â€" bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.

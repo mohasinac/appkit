@@ -198,6 +198,10 @@ export {
   mediaAssetsSeedData,
   MEDIA_ASSET_SEED_COUNT,
 } from "./media-assets-seed-data";
+export {
+  productsCatalogueSeedData,
+  CATALOGUE_LISTING_COUNT,
+} from "./products-catalogue-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 // Tester checklist/response seed data lives in ../features/tester/seed-data (isolated from
