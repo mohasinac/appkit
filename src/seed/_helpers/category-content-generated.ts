@@ -17,13 +17,13 @@
  * move; a sentence saying "48 listings" is wrong the next day and nothing
  * reports it.
  *
- * Model leaves with a body: 213 of 216
- * Part leaves with a body:  532 of 752
+ * Model leaves with a body: 217 of 220
+ * Part leaves with a body:  534 of 752
  */
 
 export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
   "category-0": `<p><strong>0</strong> is a Disc.</p>
-<p>Shipped with Cho-Z Spriggan 0Wall Zeta, Spriggan Requiem 0 Zeta.</p>`,
+<p>Shipped with Spryzen S2 0Q, Cho-Z Spriggan 0Wall Zeta, Spriggan Requiem 0 Zeta.</p>`,
   "category-0-80": `<p><strong>0-80</strong> is a Ratchet.</p>
 <p>Shipped with GhostCircle 0-80GB.</p>`,
   "category-00": `<p><strong>00</strong> is a Disc.</p>
@@ -420,12 +420,17 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
 <p>Shipped with Evil Gemios DF145FS, Gemios DF145FS, Libra DF145BS, Night Virgo DF145BS, Thunder Libra DF145BS.</p>`,
   "category-df145-down-force-145": `<p><strong>DF145 Down Force 145</strong> is a Spin Track.</p>
 <p>Shipped with Dark Wolf DF145FS.</p>`,
+  "category-diablo-nemesis-x-d": `<p>Diablo Nemesis X:D is a balance-type Beyblade, right-spin, built on the 4D System.</p>
+<p>Product code <strong>BB-122</strong>.</p>
+<p>Released as part of Beyblade: Metal Fury.</p>`,
   "category-disk-ball": `<p><strong>Disk Ball</strong> is a Bit.</p>
 <p>Shipped with WizardRod 5-70DB.</p>`,
   "category-dj-spiker": `<p><strong>DJ Spiker</strong> is an Attack Ring.</p>
 <p>Shipped with Wyvern DJ.</p>`,
   "category-double-horn": `<p><strong>Double Horn</strong> is an Attack Ring.</p>
 <p>Shipped with Rock Bison.</p>`,
+  "category-double-wing": `<p><strong>Double Wing</strong> is an Attack Ring.</p>
+<p>Shipped with Dranzer S.</p>`,
   "category-draciel": `<p><strong>Draciel</strong> is a Bit Chip.</p>
 <p>Shipped with Draciel F, Draciel G, Draciel V, Draciel V2.</p>`,
   "category-draciel-emblem": `<p><strong>Draciel Emblem</strong> is a Bit Chip.</p>
@@ -513,7 +518,7 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
 <p>Sold outside Japan as <strong>Sword Dran 3-60F</strong> — the same mould under a different marque.</p>
 <p>Succeeded by DranDagger 4-60R in the same lineage.</p>`,
   "category-dranzer": `<p><strong>Dranzer</strong> is a Bit Chip.</p>
-<p>Shipped with Dranzer F, Dranzer G, Dranzer GT, Dranzer V, Dranzer V2.</p>`,
+<p>Shipped with Dranzer F, Dranzer G, Dranzer GT, Dranzer S, Dranzer V, Dranzer V2.</p>`,
   "category-dranzer-emblem": `<p><strong>Dranzer Emblem</strong> is a Bit Chip.</p>
 <p>Shipped with Dranzer MF, Dranzer MS.</p>`,
   "category-dranzer-f": `<p>Dranzer F is a balance-type Beyblade, right-spin, built on the Spin Gear System.</p>
@@ -539,6 +544,9 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
   "category-dranzer-ms": `<p>Dranzer MS is a balance-type Beyblade, dual-spin, built on the Hard Metal System.</p>
 <p>Product code <strong>A-131</strong> by Takara.</p>
 <p>Released as part of Beyblade: G-Revolution / manga Volume 13, Chapter 1.</p>`,
+  "category-dranzer-s": `<p>Dranzer S is a balance-type Beyblade, right-spin, built on the Spin Gear System.</p>
+<p>Product code <strong>A-2</strong> by Takara.</p>
+<p>Released as part of Bakuten Shoot Beyblade.</p>`,
   "category-dranzer-v": `<p>Dranzer V is a balance-type Beyblade, right-spin, built on the Magnacore System.</p>
 <p>Product code <strong>A-47</strong> by Takara.</p>
 <p>Released as part of Beyblade: V-Force.</p>
@@ -614,7 +622,7 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
   "category-eight-attacker": `<p><strong>Eight Attacker</strong> is an Attack Ring.</p>
 <p>Shipped with Dragoon V.</p>`,
   "category-eight-balance": `<p><strong>Eight Balance</strong> is a Weight Disk.</p>
-<p>Shipped with Shadow Driger, Draciel F, Driger F, Griffolyon, Metal Draciel, Trypio, and 2 more.</p>`,
+<p>Shipped with Shadow Driger, Draciel F, Dranzer S, Driger F, Griffolyon, Metal Draciel, and 3 more.</p>`,
   "category-eight-heavy": `<p><strong>Eight Heavy</strong> is a Weight Disk.</p>
 <p>Shipped with Dranzer F, Galeon, Galman.</p>`,
   "category-eight-spike": `<p><strong>Eight Spike</strong> is an Attack Ring.</p>
@@ -1294,7 +1302,7 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
   "category-right-mg-south-core": `<p><strong>Right MG South Core</strong> is a Spin Gear.</p>
 <p>Shipped with Flash Leopard 2.</p>`,
   "category-right-sg": `<p><strong>Right SG</strong> is a Spin Gear.</p>
-<p>Shipped with Shadow Driger, Draciel F, Dranzer F, Galeon, Galman, Galzzly, and 6 more.</p>`,
+<p>Shipped with Shadow Driger, Draciel F, Dranzer F, Dranzer S, Galeon, Galman, and 7 more.</p>`,
   "category-right-sg-bearing": `<p><strong>Right SG</strong> is a Spin Gear.</p>
 <p>Shipped with Wolborg, Wolborg 2.</p>`,
   "category-right-sg-full-auto": `<p><strong>Right SG</strong> is a Spin Gear.</p>
@@ -1470,6 +1478,8 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
 <p>Shipped with Wyborg.</p>`,
   "category-spike-dragon": `<p><strong>Spike Dragon</strong> is an Attack Ring.</p>
 <p>Shipped with Dragoon V2.</p>`,
+  "category-spiral-change-base": `<p><strong>Spiral Change Base</strong> is a Blade Base.</p>
+<p>Shipped with Dranzer S.</p>`,
   "category-spiral-upper": `<p><strong>Spiral Upper</strong> is an Attack Ring.</p>
 <p>Shipped with Dranzer MS.</p>`,
   "category-spriggan-requiem-0-zeta": `<p>Spriggan Requiem 0 Zeta is a balance-type Beyblade, dual-spin, built on the God Layer System.</p>
@@ -1479,6 +1489,9 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
 <p>Shipped with Einstein MS.</p>`,
   "category-spryzen-requiem-s3": `<p><strong>Spryzen Requiem S3</strong> is a Layer.</p>
 <p>Shipped with Spriggan Requiem 0 Zeta.</p>`,
+  "category-spryzen-s2-0q": `<p>Spryzen S2 0Q is a balance-type Beyblade, dual-spin, built on the Burst System.</p>
+<p>Product code <strong>E1048</strong> by Hasbro.</p>
+<p>Released as part of Beyblade Burst.</p>`,
   "category-sr200": `<p><strong>SR200</strong> is a Spin Track.</p>
 <p>Shipped with Berserker Begirados SR200BWD.</p>`,
   "category-sr200-slide-ride-200": `<p><strong>SR200 SLIDE-RIDE 200</strong> is a Spin Track.</p>
@@ -1749,6 +1762,9 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
 <p>Shipped with Dranzer G.</p>`,
   "category-wing-upper": `<p><strong>Wing Upper</strong> is an Attack Ring.</p>
 <p>Shipped with Thunder Pegasus, Torch Pegasus.</p>`,
+  "category-wizard-fafnir-ratchet-rise": `<p>Wizard Fafnir Ratchet Rise is a stamina-type Beyblade, left-spin, built on the Gatinko Layer System.</p>
+<p>Product code <strong>B-139</strong> by Takara Tomy.</p>
+<p>Released as part of Beyblade Burst Turbo / Cho-Z late / Burst Rise transition.</p>`,
   "category-wizardarrow": `<p><strong>WizardArrow</strong> is a Blade.</p>
 <p>Shipped with WizardArrow 4-80B.</p>`,
   "category-wizardarrow-4-80b": `<p>WizardArrow 4-80B is a stamina-type Beyblade, right-spin.</p>
@@ -1836,4 +1852,4 @@ export const GENERATED_CATEGORY_CONTENT: Record<string, string> = {
 <p>Sold outside Japan as <strong>Turbo Luinor L4 Drake Spiral</strong> — the same mould under a different marque.</p>`,
 };
 
-export const GENERATED_CATEGORY_CONTENT_COUNT = 745;
+export const GENERATED_CATEGORY_CONTENT_COUNT = 751;
