@@ -202,6 +202,7 @@ const {
   siteSettingsSeedData, faqSeedData,
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
+  mediaAssetsSeedData,
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
   partGlossarySeedData, modelCompositionSeedData,
   testerChecklistSeedData, testerResponsesSeedData,
@@ -304,6 +305,13 @@ const COLLECTION_MAP = {
   wishlists: WISHLIST_COLLECTION,
   history: HISTORY_COLLECTION,
   groupedListings: GROUPED_LISTINGS_COLLECTION,
+  /*
+   * `/media/<shortId>` resolves ONLY through a mediaAssets document, so without
+   * these rows every seeded cover image 404s while its object sits untouched in
+   * the bucket. Seeded rather than left as a side effect of the upload script
+   * precisely so a Firestore wipe cannot orphan Storage.
+   */
+  mediaAssets: "mediaAssets",
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
   taxCodes: TAX_CODES_COLLECTION,
@@ -496,6 +504,9 @@ const SEED_DATA_MAP = {
   wishlists: wishlistsSeedData,
   history: historySeedData,
   groupedListings: groupedListingsSeedData,
+  // The other half of the wiring — load() short-circuits on an empty array, so
+  // the COLLECTION_MAP entry above does nothing on its own (Root Cause #90).
+  mediaAssets: mediaAssetsSeedData,
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
   taxCodes: taxCodesSeedData,

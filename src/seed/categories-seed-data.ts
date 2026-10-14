@@ -65,6 +65,10 @@ import {
   GENERATED_CATEGORY_CONTENT,
   GENERATED_CATEGORY_CONTENT_COUNT,
 } from "./_helpers/category-content-generated";
+import {
+  GENERATED_CATEGORY_IMAGES,
+  GENERATED_CATEGORY_IMAGE_COUNT,
+} from "./_helpers/category-images-generated";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 
 const NOW = new Date();
@@ -486,6 +490,33 @@ function withGeneratedContent<T extends Partial<CategoryDocument>>(row: T): T {
   return generated ? { ...row, contentBody: generated } : row;
 }
 
+/**
+ * Attach a fetched cover image to a bey-model leaf that has no hand-authored one.
+ *
+ * Same three rules as `withGeneratedContent`, for the same reasons: a
+ * hand-authored `display.coverImage` wins, a row absent from the map keeps
+ * nothing rather than being given a placeholder, and the map is keyed on
+ * category id so it needs no transformation here.
+ *
+ * 🛑 These are LOCAL paths under `public/images/beys/`, never `seedExtMedia()`.
+ * Wrapping a third-party image URL in `/api/media/ext` makes every render a
+ * lambda plus an upstream fetch plus a sharp watermark pass — that is Root Cause
+ * #104, and it is part of why this project was suspended on Fast Origin
+ * Transfer. 195 proxied covers would have been a direct repeat.
+ *
+ * 🛑 Measured before this existed: **1,131 of 1,177** categories had no cover at
+ * all, and the 46 that did shared six generic SVG colour tiles. So the
+ * alternative to this map is not "a different image" — it is a grid of blank
+ * cards.
+ */
+function withGeneratedCoverImage<T extends Partial<CategoryDocument>>(row: T): T {
+  const existing = row.display?.coverImage;
+  if (typeof existing === "string" && existing.trim().length > 0) return row;
+  const generated = row.id ? GENERATED_CATEGORY_IMAGES[row.id] : undefined;
+  if (!generated) return row;
+  return { ...row, display: { ...(row.display ?? {}), coverImage: generated } };
+}
+
 const allCategoryRows: Partial<CategoryDocument>[] = [
   ...rawCategories.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
   ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
@@ -493,6 +524,7 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
   ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
 ]
   .map(withGeneratedContent)
+  .map(withGeneratedCoverImage)
   .map(withCategorySearchTxt);
 
 /*
@@ -559,6 +591,28 @@ if (generatedApplied < Math.floor(GENERATED_CATEGORY_CONTENT_COUNT * 0.9)) {
       `content bodies matched a row id. The corpus is keyed on category ids, so this means ` +
       `the key space has drifted — re-run scripts/gen-category-content.mjs against the ` +
       `current forest. Nothing would error at load time: the pages would simply have no body.`,
+  );
+}
+
+/*
+ * The same assertion for the cover images, and the same reasoning: the map is
+ * keyed on category ids, so a key that stops matching a row is invisible —
+ * the map still exports its count, the seed still loads every row, and the
+ * pages simply go back to having no image.
+ *
+ * The floor is 90% for the one legitimate reason a row can be missing: a
+ * hand-authored `display.coverImage` wins, so the number of rows carrying a
+ * GENERATED path is `COUNT` minus however many have been art-directed by hand.
+ */
+const generatedImagesApplied = allCategoryRows.filter(
+  (c) => typeof c.id === "string" && GENERATED_CATEGORY_IMAGES[c.id] === c.display?.coverImage,
+).length;
+if (generatedImagesApplied < Math.floor(GENERATED_CATEGORY_IMAGE_COUNT * 0.9)) {
+  throw new Error(
+    `category seed: only ${generatedImagesApplied} of ${GENERATED_CATEGORY_IMAGE_COUNT} generated ` +
+      `cover images matched a row id — the key space has drifted. Re-run ` +
+      `scripts/fetch-taxonomy-images.mjs against the current forest. Nothing would error ` +
+      `at load time: the category grids would just go back to blank cards.`,
   );
 }
 

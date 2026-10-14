@@ -2179,6 +2179,13 @@ export { historySeedData } from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 // groupedListingsSeedData - Model for grouped listings seed data.
 export { groupedListingsSeedData } from "./seed/index";
+// mediaAssetsSeedData — the mediaAssets rows backing /media/<shortId> cover
+// images. Exported from seed/index.ts but missing here until 2026-10-14,
+// which is exactly Root Cause #18's shape: seed-cli.mjs imports the bare
+// "@mohasinac/appkit" package, which resolves through THIS file, not through
+// seed/index.ts directly — so an export present only on the inner barrel is
+// invisible to the CLI and silently "no seed data, skipping".
+export { mediaAssetsSeedData, MEDIA_ASSET_SEED_COUNT } from "./seed/index";
 // SB-UNI-V â€" bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.

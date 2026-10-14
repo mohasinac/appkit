@@ -164,6 +164,14 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   /* Real HSN codes and GST rates. A wrong rate on a real invoice is a
    * compliance matter, not a fixture. */
   taxCodes: "permanent",
+  /* The `/media/<shortId>` -> Storage-path index. 195 rows back the taxonomy
+   * cover images, and `categories` above is permanent for the same reason:
+   * clearing these orphans the BUCKET — every category cover 404s while its
+   * object sits untouched in Storage, and no amount of re-running the loader
+   * brings it back without re-uploading. Permanent is also what stops
+   * `isTestData` being derived onto them, which would hide every cover from
+   * the public via `hidePublicTestData`. */
+  mediaAssets: "permanent",
   /* The ~169-term feature vocabulary: condition, authenticity, release, type,
    * spin, grade, chase. Hand-curated from the crawl. */
   productFeatures: "permanent",

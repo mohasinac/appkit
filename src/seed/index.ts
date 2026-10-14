@@ -194,6 +194,10 @@ export { carouselsSeedData } from "./carousels-seed-data";
 export { wishlistsSeedData } from "./wishlists-seed-data";
 export { historySeedData } from "./history-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
+export {
+  mediaAssetsSeedData,
+  MEDIA_ASSET_SEED_COUNT,
+} from "./media-assets-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 // Tester checklist/response seed data lives in ../features/tester/seed-data (isolated from
