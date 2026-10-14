@@ -58,6 +58,7 @@ import { buildCategoryTree } from "./_helpers/category-tree";
 import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
 import { BRAND_ROW_COUNT, buildBrandRows } from "./_helpers/brand-rows";
+import { FRANCHISE_ROW_COUNT, buildFranchiseRows } from "./_helpers/franchise-rows";
 import { MODEL_LEAF_COUNT } from "./_helpers/category-models";
 import { PART_LEAF_COUNT } from "./_helpers/category-parts";
 import { MARKET_BAND_LEAF_IDS } from "./_helpers/category-content";
@@ -206,6 +207,15 @@ const sublistingRows: Partial<CategoryDocument>[] = [
 // each was already the wrong shape for 28.
 // ──────────────────────────────────────────────────────────────────────────────
 const brandRows: Partial<CategoryDocument>[] = buildBrandRows({
+  createdBy: "user-admin-letitrip",
+  createdAt: daysAgo(300),
+  updatedAt: daysAgo(30),
+});
+
+// FRANCHISE rows — what a product is FROM, where a brand is who MADE it.
+// Same tier-0, outside-the-forest shape as brands. Seven of the eight are
+// seeded INACTIVE on purpose; see the dead-facet rule in _helpers/franchise-rows.ts.
+const franchiseRows: Partial<CategoryDocument>[] = buildFranchiseRows({
   createdBy: "user-admin-letitrip",
   createdAt: daysAgo(300),
   updatedAt: daysAgo(30),
@@ -521,6 +531,7 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
   ...rawCategories.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
   ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
+  ...franchiseRows.map((f) => ({ ancestors: [] as any[], ...f, createdByType: "admin" as const })),
   ...bundleRows.map((b) => ({ ancestors: [] as any[], ...b })),
 ]
   .map(withGeneratedContent)
@@ -644,6 +655,11 @@ if (tier4Rows !== expectedTier4) {
 }
 if (brandRows.length !== BRAND_ROW_COUNT) {
   throw new Error(`category seed: ${brandRows.length} brand rows built, expected ${BRAND_ROW_COUNT}`);
+}
+if (franchiseRows.length !== FRANCHISE_ROW_COUNT) {
+  throw new Error(
+    `category seed: ${franchiseRows.length} franchise rows built, expected ${FRANCHISE_ROW_COUNT}`,
+  );
 }
 {
   /*

@@ -1698,6 +1698,11 @@ export {
   type StoreProjectionSource,
 } from "./_internal/server/features/stores/adapters";
 export { getBrandForDetail } from "./_internal/server/features/brands/index";
+export {
+  getFranchiseForDetail,
+  listActiveFranchises,
+  renderFranchiseOg,
+} from "./_internal/server/features/franchises/index";
 export { getBlogPostForDetail } from "./_internal/server/features/blog/index";
 export { getEventForDetail } from "./_internal/server/features/events/index";
 export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/index";

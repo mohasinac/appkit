@@ -1440,6 +1440,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     "physicalLocation.shelf": { canFilter: true, canSort: false },
     "physicalLocation.bin": { canFilter: true, canSort: false },
     brandSlug: { canFilter: true, canSort: false },
+    /* 🛑 Must be declared here or the clause is SILENTLY DROPPED — sieve.ts
+     * sets `throwExceptions: false`, so an unallowlisted field does not raise,
+     * it just vanishes and the franchise page returns the whole catalogue
+     * (Root Cause #62). */
+    franchiseSlug: { canFilter: true, canSort: false },
     sublistingCategoryId: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },

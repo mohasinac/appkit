@@ -206,6 +206,11 @@ export {
   GENERATED_PART_COLOURS,
   GENERATED_PART_COLOUR_COUNT,
 } from "./_helpers/part-colours-generated";
+export {
+  FRANCHISE_ROW_COUNT,
+  FRANCHISE_SLUGS,
+  FRANCHISE_BY_CATEGORY_ROOT,
+} from "./_helpers/franchise-rows";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 // Tester checklist/response seed data lives in ../features/tester/seed-data (isolated from

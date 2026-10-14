@@ -124,6 +124,15 @@ export interface PublicProductListInput {
   q?: string;
   category?: string;
   brand?: string;
+  /**
+   * The IP the product is from, matched on `franchiseSlug`.
+   *
+   * 🛑 On the SLUG, not the display name — unlike `brand` directly above,
+   * which filters on `PRODUCT_FIELDS.BRAND` (the display name) and therefore
+   * orphans a brand's whole catalogue the moment anyone renames it. Franchise
+   * is new, so it gets the stable key rather than inheriting that trap.
+   */
+  franchiseSlug?: string;
   /** Pipe-joined multi-select (`new|used`) — emitted as an OR-group, never as AND. */
   condition?: string;
   storeId?: string;
@@ -536,6 +545,9 @@ function buildFirestoreSafeFilters(
     );
   }
   if (input.brand) parts.push(sieveFilter(PRODUCT_FIELDS.BRAND, SIEVE_OP.EQ, input.brand));
+  if (input.franchiseSlug) {
+    parts.push(sieveFilter(PRODUCT_FIELDS.FRANCHISE_SLUG, SIEVE_OP.EQ, input.franchiseSlug));
+  }
   if (input.condition) {
     // Pipe-joined OR-group, NOT `sieveMultiEq` — that emits
     // `condition==new,condition==used`, an AND of two equalities on one field,

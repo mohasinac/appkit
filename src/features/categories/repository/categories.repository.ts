@@ -1263,6 +1263,30 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
   }
 
+  /**
+   * The FRANCHISE rows a visitor may browse — what a product is FROM, where a
+   * brand is who made it.
+   *
+   * 🛑 `isActive == true` is the whole guard against a dead facet. Seven of the
+   * eight seeded franchises have no stock yet and are seeded INACTIVE on
+   * purpose: their pages resolve (so `/franchise/marvel` is not a 404) but they
+   * are kept out of the grid, because a card that opens an empty shop is worse
+   * than no card — the rule `_helpers/brand-rows.ts` states as trap 3.
+   *
+   * Same query shape as `findActiveBrands`, so it rides the SAME
+   * (categoryType, isActive, order) composite index rather than needing a new
+   * one.
+   */
+  async findActiveFranchises(): Promise<CategoryDocument[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", "franchise")
+      .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+      .orderBy(CATEGORY_FIELDS.ORDER, "asc")
+      .get();
+    return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+  }
+
   /*
    * 🛑 `incrementViewCount` DELETED 2026-10-10 — zero callers since
    * 2026-08-31, when it was removed from the category-detail render path (a

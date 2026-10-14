@@ -61,6 +61,15 @@ export const DEFAULT_ROUTE_MAP = {
     CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
     BRANDS: "/brands",
     BRAND_DETAIL: (slug: string) => `/brands/${slug}`,
+    /*
+     * FRANCHISE — what a collectible is FROM, where a brand is who MADE it.
+     * Singular in the path because `CharacterHotspot` already ships eighteen
+     * `/franchise/<slug>` links; matching them is what turns those 404s into
+     * real pages, and changing the segment to `/franchises` would just move
+     * the breakage.
+     */
+    FRANCHISE: "/franchise",
+    FRANCHISE_DETAIL: (slug: string) => `/franchise/${slug}`,
     REVIEWS: "/reviews",
     REVIEW_DETAIL: (id: string) => `/reviews/${id}`,
     SEARCH: "/search",

@@ -2193,6 +2193,13 @@ export {
   productsCatalogueSeedData,
   CATALOGUE_LISTING_COUNT,
 } from "./seed/index";
+// Franchise — the IP a product is FROM (brand is who MADE it). Re-exported
+// from the outer barrel because seed-cli.mjs imports the bare package.
+export {
+  FRANCHISE_ROW_COUNT,
+  FRANCHISE_SLUGS,
+  FRANCHISE_BY_CATEGORY_ROOT,
+} from "./seed/index";
 // SB-UNI-V â€" bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.

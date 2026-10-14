@@ -1,6 +1,16 @@
 // SB-UNI B + C + D — single discriminator for categories vs sublistings vs
 // brands vs bundles. Old "concern" / "collection" values were never used.
-export type CategoryType = "category" | "sublisting" | "brand" | "bundle";
+//
+// `franchise` (2026-10-14) is the IP a product is FROM, where `brand` is who
+// MADE it — Beyblade the franchise, Takara-Tomy the brand. Modelled on brand
+// rather than on category deliberately: both are tier-0 rows that live OUTSIDE
+// the forest's DFS numbering and are pointed at by a product, not lived under.
+export type CategoryType =
+  | "category"
+  | "sublisting"
+  | "brand"
+  | "bundle"
+  | "franchise";
 
 export interface CategorySeo {
   title?: string;

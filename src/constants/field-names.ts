@@ -57,6 +57,10 @@ export const PRODUCT_FIELDS = {
   SUBCATEGORY: "subcategory",
   BRAND: "brand",
   BRAND_SLUG: "brandSlug",
+  /* The IP a product is from. Matched on the SLUG, never the display name —
+   * see the note on `ProductDocument.franchiseSlug`. */
+  FRANCHISE: "franchise",
+  FRANCHISE_SLUG: "franchiseSlug",
   PRICE: "price",
   CURRENCY: "currency",
   STOCK_QUANTITY: "stockQuantity",
@@ -656,6 +660,13 @@ export const CATEGORY_FIELDS = {
     BRAND: "brand",
     SUBLISTING: "sublisting",
     BUNDLE: "bundle",
+    /*
+     * The IP a product belongs to — Beyblade, Pokémon, Marvel. A sibling of
+     * BRAND, not of CATEGORY: both are tier-0 rows outside the forest's DFS
+     * numbering that a product points AT, rather than nodes it lives under.
+     * A brand is who MADE it (Takara-Tomy); a franchise is what it IS FROM.
+     */
+    FRANCHISE: "franchise",
   },
 
   BUNDLE_STOCK_STATUS_VALUES: {

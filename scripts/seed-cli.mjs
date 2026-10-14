@@ -195,6 +195,7 @@ const {
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
   productsArtSeedData, productsStickersSeedData,
   productsCatalogueSeedData,
+  FRANCHISE_BY_CATEGORY_ROOT,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
   couponsSeedData, couponUsageSeedData,
   eventsSeedData, eventEntriesSeedData, payoutsSeedData, offersSeedData,
@@ -369,6 +370,35 @@ const COLLECTION_MAP = {
  * signal, so a silent 5% here would hide exactly what it is meant to surface —
  * and a wrong rate on a real invoice is worse than a failed load.
  */
+/**
+ * Stamp `franchise` / `franchiseSlug` from the product's category ROOT.
+ *
+ * 🛑 Its OWN pass, deliberately NOT folded into `withDerivedCategoryFields`.
+ * That function early-returns on `gstRate && hsnCode && authenticity`, which
+ * every one of the 1,237 generated catalogue rows already satisfies — so a
+ * franchise derived in there would be silently skipped for 95% of the
+ * catalogue. That is the exact bug its own comment records happening when
+ * `authenticity` was added beside `gstRate`; adding a third field to the same
+ * condition is how it happens a third time.
+ *
+ * A root with no mapping yields NO franchise (living collectibles are not an
+ * IP) — see `FRANCHISE_BY_CATEGORY_ROOT`.
+ */
+function withFranchise(products) {
+  let stamped = 0;
+  const out = products.map((p) => {
+    if (p.franchiseSlug) return p;
+    const chain = Array.isArray(p.categorySlugs) ? p.categorySlugs : [];
+    const root = chain.length > 0 ? String(chain[chain.length - 1]) : null;
+    const f = root ? FRANCHISE_BY_CATEGORY_ROOT[root] : null;
+    if (!f) return p;
+    stamped++;
+    return { ...p, franchise: f.name, franchiseSlug: f.slug };
+  });
+  console.log(`  • franchise stamped on ${stamped}/${products.length} products`);
+  return out;
+}
+
 function withDerivedCategoryFields(products) {
   const catById = new Map((categoriesSeedData || []).map((c) => [String(c.id), c]));
   const taxById = new Map((taxCodesSeedData || []).map((t) => [String(t.id), t]));
@@ -461,7 +491,7 @@ const SEED_DATA_MAP = {
   // standalone brands collection/seed exists anymore.
   categories: categoriesSeedData,
   stores: storesSeedData,
-  products: withDerivedCategoryFields([
+  products: withFranchise(withDerivedCategoryFields([
     ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never
@@ -474,7 +504,7 @@ const SEED_DATA_MAP = {
     // reproducible after a full wipe; without it the collection drops from
     // 1,039 to 71 the moment someone purges it.
     ...(productsCatalogueSeedData || []),
-  ]),
+  ])),
   orders: ordersSeedData,
   reviews: reviewsSeedData,
   bids: bidsSeedData,

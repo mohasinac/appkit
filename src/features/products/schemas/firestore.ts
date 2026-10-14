@@ -258,6 +258,19 @@ export interface ProductDocument extends BaseDocument {
   subcategory?: string;
   brand?: string;
   brandSlug?: string;
+  /**
+   * The IP this product is FROM — "Beyblade", "Pokémon". A sibling of `brand`
+   * (who MADE it), matching a `categoryType: "franchise"` row.
+   *
+   * 🛑 `franchiseSlug` is the match key here, NOT the display name — the
+   * opposite of `brand`, which `BrandDetailPageView` filters on by display name
+   * and which therefore orphans its whole catalogue on a rename (see
+   * `_helpers/brand-rows.ts`, trap 1). Franchise is new, so it gets the
+   * correct shape from the start rather than inheriting that trap; `franchise`
+   * is the denormalised label for display only.
+   */
+  franchise?: string;
+  franchiseSlug?: string;
   price: number;
   /**
    * The strike-through "was ₹X", for a listing the seller is discounting.
