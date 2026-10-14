@@ -209,9 +209,9 @@ export const authored: Record<string, AuthoredCase> = {
       "Go back and click a tier-3 category and read its page.",
     ],
     expectedBehaviour:
-      "The index renders the category forest — two roots across four tiers — and every card links to a page that resolves. Products carry their full ancestor chain, so a category page matches on its own id alone and needs no descendant expansion.",
+      "The index renders the SIX roots of the category forest — Spinning Tops, Trading Cards, Collectible Figures, Hot Wheels, Model Kits, Living Collectibles — and every card links to a page that resolves. It shows roots ONLY: the forest is 1,185 rows across five tiers (0-4) and the index used to render every one of them flat. Products carry their full ancestor chain, so a category page matches on its own id alone and needs no descendant expansion.",
     expectedUiState:
-      "Both roots, Spinning Tops and Living Collectibles, are present. Every card shows a name and a count rather than a bare name. Both the root and the tier-3 page render with products rather than an empty grid.",
+      "All six roots are present, and NO tier-1-or-deeper category appears on the Categories tab. Every card shows a name and a count rather than a bare name. Both the root and the tier-3 page render with products rather than an empty grid.",
     expectedData: { rootCategoryCount: 2 },
     endResult:
       "Read-only; nothing persists. A root category page rendering blank with no error is the specific failure worth watching for — the query that produces it is wrapped in a catch that returns nothing.",

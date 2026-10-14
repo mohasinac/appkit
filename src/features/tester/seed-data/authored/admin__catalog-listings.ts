@@ -57,7 +57,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/categories",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/categories and read the tree, noting the two roots and how depth is shown.",
+      "Open /admin/categories and read the tree, noting the six roots and how depth is shown.",
       "Create a child category named 'QA Category admin-crud' under category-beyblade-burst.",
       "Save, RELOAD, and read its parent, its tier and its position in the tree.",
       "Open /categories in a private window and find it beneath its parent.",

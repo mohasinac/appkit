@@ -49,16 +49,16 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/categories",
     steps: [
       "Open /categories and read every top-level category shown.",
-      "Check both Spinning Tops and Living Collectibles are present.",
+      "Check all six roots are present: Spinning Tops, Trading Cards, Collectible Figures, Hot Wheels, Model Kits, Living Collectibles.",
       "Click Living Collectibles and read its children.",
       "Click down to a leaf under it.",
       "Check the leaf lists at least one live-item listing.",
     ],
     inputs: { rootA: "category-spinning-tops", rootB: "category-living-collectibles" },
     expectedBehaviour:
-      "Both roots are on the index. The tree had one root and two tiers before it was rebuilt, so the live-item listings carried no category at all and were unreachable from every category and brand page — a whole listing type invisible to browsing while its detail pages worked fine.",
+      "All SIX roots are on the index. The tree had one root and two tiers before it was rebuilt, so the live-item listings carried no category at all and were unreachable from every category and brand page — a whole listing type invisible to browsing while its detail pages worked fine. Living Collectibles is the one to walk, because it is the root whose leaves hold the live-item listings.",
     expectedUiState:
-      "Two roots on the index, and the Living Collectibles branch walks down to a leaf holding a live listing. One root, or a second root that leads nowhere, is the finding.",
+      "Six roots on the index, and the Living Collectibles branch walks down to a leaf holding a live listing. A missing root, or a root that leads nowhere, is the finding.",
     endResult: "Read-only.",
   },
   "checklist-content-discovery-category-brand-relations-root-page-shows-descendant-products": {

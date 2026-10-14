@@ -3281,6 +3281,43 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       /*
+       * The categories index, the franchise unit and the bundle collage —
+       * 2026-10-14.
+       *
+       * 🛑 Every case here compares two things or counts an exact number,
+       * because every defect this work already produced rendered a perfectly
+       * plausible page:
+       *
+       *   1. The index rendered all 1,185 rows flat. Nothing errored; it just
+       *      buried the six roots under 752 part leaves.
+       *   2. The Parts tab first matched 772 rows — it also caught the 20
+       *      classification NODES, whose own parentIds pass through a
+       *      `*-parts` node. A tab mixing "Attack Rings" with the attack rings
+       *      inside it looks entirely reasonable.
+       *   3. Seven franchises have NO stock. Seeded active they would each be
+       *      a card opening an empty shop; omitted entirely, seventeen
+       *      CharacterHotspot links stay 404. Both failure modes look fine
+       *      from one page.
+       *   4. Every bundle carries a placeholder cover image, so a collage
+       *      checked AFTER the cover would never render — and a card showing
+       *      one grey tile is not visibly broken.
+       */
+      pageKey: "category-tabs-franchise-bundles",
+      pageLabel: "Categories index tabs, the franchise unit and the bundle collage",
+      href: "/categories",
+      cases: [
+        { key: "index-shows-roots-only", label: "The Categories tab lists the six roots and NO deeper category" },
+        { key: "five-tabs-no-all", label: "There are exactly five tabs and none of them is 'All'" },
+        { key: "parts-tab-is-leaves-only", label: "The Parts tab lists part leaves and NOT the 20 classification nodes" },
+        { key: "tabs-do-not-overlap", label: "No single row appears on two tabs" },
+        { key: "franchise-index-hides-unstocked", label: "The franchise index shows only stocked franchises, not all eight" },
+        { key: "unstocked-franchise-page-resolves", label: "An unstocked franchise page loads and says so, rather than 404ing or showing an empty grid" },
+        { key: "franchise-detail-lists-its-products", label: "The Beyblade franchise page lists its listings, with a nonsense slug as the control" },
+        { key: "bundle-card-shows-a-collage", label: "A bundle card shows a collage of its members, not its placeholder cover" },
+      ],
+    },
+    {
+      /*
        * Store reviews. The endpoint answered 200 with zero reviews for EVERY
        * store while 79 approved ones existed, because it ordered products by a
        * field no product has (Root Cause #100) — and once it returned rows it
@@ -3643,14 +3680,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         {
           key: "tier-depth-reachable",
-          label: "The category tree is four tiers deep and every tier is reachable by clicking down from a root",
+          label: "The category tree is five tiers deep and every tier is reachable by clicking down from a root",
           description:
-            "Two roots exist — Spinning Tops and Living Collectibles. Walk one of them all the way to a leaf without typing a URL.",
+            "Six roots exist — Spinning Tops, Trading Cards, Collectible Figures, Hot Wheels, Model Kits, Living Collectibles. Walk one of them all the way to a leaf without typing a URL.",
           href: "/categories",
         },
         {
           key: "second-root-reachable",
-          label: "Both category roots appear on the categories index, not just the Beyblade one",
+          label: "Every category root appears on the categories index, not just the Beyblade one",
           description:
             "BEFORE: the tree had ONE root and TWO tiers, so the live-item listings carried no category at all and were unreachable from every category and brand page.",
           href: "/categories",

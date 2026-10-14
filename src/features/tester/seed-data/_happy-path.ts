@@ -96,7 +96,7 @@ export const happyPathPages: HappyPathPage[] = [
           "Read every category name shown at the top level.",
         ],
         expectedBehaviour:
-          "The index lists the tier-0 roots of the category forest, which are Spinning Tops and Living Collectibles.",
+          "The index lists the tier-0 roots of the category forest — SIX of them: Spinning Tops, Trading Cards, Collectible Figures, Hot Wheels, Model Kits and Living Collectibles. It lists ONLY roots: the forest is 1,185 rows and the index used to render all of them flat.",
         expectedUiState:
           "Both 'Spinning Tops' and 'Living Collectibles' are visible as cards or links. The page is not empty and does not render only leaf categories.",
         expectedData: { rootCategoriesVisible: 2 },
