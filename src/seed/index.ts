@@ -202,6 +202,10 @@ export {
   productsCatalogueSeedData,
   CATALOGUE_LISTING_COUNT,
 } from "./products-catalogue-seed-data";
+export {
+  GENERATED_PART_COLOURS,
+  GENERATED_PART_COLOUR_COUNT,
+} from "./_helpers/part-colours-generated";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 // Tester checklist/response seed data lives in ../features/tester/seed-data (isolated from
