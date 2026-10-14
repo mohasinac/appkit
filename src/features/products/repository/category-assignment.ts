@@ -101,12 +101,34 @@ export const MAX_CATEGORY_ASSIGNMENTS = 4;
  *
  *     node scripts/measure-leaf-offenders.mjs     # must print 0 and exit 0
  *
- * Then set `true`. Never flip on a hand count, and never on a zero the script
- * produced while reporting `unassigned === products` — it exits 2 for exactly
- * that case now, because a zero out of a corpus nothing could be read from is
- * not a clean result.
+ * Never flip on a hand count, and never on a zero the script produced while
+ * reporting `unassigned === products` — it exits 2 for exactly that case now,
+ * because a zero out of a corpus nothing could be read from is not a clean
+ * result.
+ *
+ * ## ✅ FLIPPED 2026-10-14, on a measurement
+ *
+ *     products : 71 · unassigned : 0 · categories : 1177 · offenders : 0
+ *
+ * `unassigned: 0` is the half that makes the zero mean something: every
+ * product resolved to a real assignment and every one of those satisfied the
+ * rule. Getting there took three kinds of fix, and the mix is worth knowing
+ * because it is NOT what the plan predicted:
+ *
+ *   - **11 re-filed** to a leaf that already existed. Nine were also in the
+ *     wrong GENERATION, which several products' own copy already contradicted.
+ *   - **4 corpus rows promoted** out of `review` with verified facts and
+ *     stated provenance (`VERIFIED_RESOLUTIONS` in `parse-bey-corpus.mjs`).
+ *   - **10 fixtures retitled**, because they named products that do not
+ *     exist — a Burst "B-215 Hells Scythe" (every HellsScythe is Beyblade X),
+ *     a "Wizard Fafnir 4-60F" (a Burst layer with an X part code), a ring
+ *     BOOSTER and a release WAVE, neither of which can ever have a model leaf.
+ *
+ * 🛑 If this ever needs to go back to `false`, the honest reason is "the data
+ * regressed", and the measurement will say so before the flag does. Re-run the
+ * script rather than reasoning about it.
  */
-export const ENFORCE_LEAF_FILING = false;
+export const ENFORCE_LEAF_FILING = true;
 
 /** A category document, reduced to the fields assignment actually needs. */
 export interface ResolvedCategory {
