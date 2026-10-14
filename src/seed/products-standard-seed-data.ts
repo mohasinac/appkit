@@ -28,6 +28,7 @@ import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 /*
  * Real Beyblade attributes per fixture — Root Cause #6 (standard was the
@@ -194,7 +195,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     barcodeId: "LIR-BEY-ORIG-001",
     title: "Beyblade Original — Dranzer S",
     description: "Plastic Generation era Dranzer S with launcher and ripcord. A classic from the original 1999-2003 Beyblade series.",
-    categorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categorySlugs: ["category-dranzer-s","category-original-spin-gear","category-original-tops","category-beyblade-original","category-spinning-tops"],
     categoryNames: ["Heavy Metal System","Original Tops","Beyblade Original","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
@@ -584,7 +585,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     barcodeId: "LIR-BEY-VID-004",
     title: "Beyblade Burst B-97 Spryzen S2 (Video Demo, Wikimedia)",
     description: "Spryzen S2 stamina-type top from the God Layer generation. Listed with a Wikimedia-hosted spin video to exercise a second raw-external-host video source.",
-    categorySlugs: ["category-burst-cho-z","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categorySlugs: ["category-spryzen-s2-0q","category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
     categoryNames: ["Cho-Z","Burst Tops","Beyblade Burst","Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
@@ -729,4 +730,4 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     ...(p.id ? SPEC_OVERRIDES[p.id] : undefined),
     listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.STANDARD,
   })),
-].map(withFinalSale);
+].map(withFinalSale).map(withDerivedCategoryNames);

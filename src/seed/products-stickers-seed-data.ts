@@ -22,6 +22,7 @@ import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
   {
@@ -276,4 +277,4 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
  * being hand-written into two records that reviewers would have to find.
  */
 export const productsStickersSeedData: Partial<ProductDocument>[] =
-  _rawProductsStickersSeedData.map(withFinalSale);
+  _rawProductsStickersSeedData.map(withFinalSale).map(withDerivedCategoryNames);

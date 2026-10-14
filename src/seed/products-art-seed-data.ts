@@ -23,6 +23,7 @@ import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
   {
@@ -301,4 +302,4 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
  * being hand-written into two records that reviewers would have to find.
  */
 export const productsArtSeedData: Partial<ProductDocument>[] =
-  _rawProductsArtSeedData.map(withFinalSale);
+  _rawProductsArtSeedData.map(withFinalSale).map(withDerivedCategoryNames);

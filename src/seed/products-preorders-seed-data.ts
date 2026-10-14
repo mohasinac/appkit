@@ -25,6 +25,7 @@ import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   {
@@ -305,15 +306,26 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
 ];
 
-export const productsPreordersSeedData = _rawPreordersSeedData.map((p) => withFinalSale({
+export const productsPreordersSeedData = _rawPreordersSeedData.map((p) => withDerivedCategoryNames(withFinalSale({
   tags: [] as string[],
   stockQuantity: p.availableQuantity ?? 1,
   mainImage: p.images?.[0] ?? "",
   ...p,
   listingType: "pre-order" as const,
+  /*
+   * 🛑 `searchTxt` reads p.categoryNames — the RAW record's, deliberately.
+   *
+   * The derivation wraps the OUTSIDE of this call, so at this point the names
+   * are still whatever the record hand-wrote. That is correct rather than a
+   * sequencing bug: the search index should carry the names a buyer might
+   * type, and a stale-but-real generation name ("Metal Masters") is still a
+   * term worth matching. Swapping to the derived chain would silently narrow
+   * the index. The DISPLAY chain is the one that must be exact, and that is
+   * what the wrapper fixes.
+   */
   searchTxt: buildSearchTxt([
     p.title, p.description, p.brand, p.brandSlug,
     p.categoryNames, p.tags, p.features, p.condition,
     p.specifications?.map((s) => `${s.name} ${s.value}`),
   ]),
-}));
+})));

@@ -32,11 +32,11 @@ export interface CharacterSeed {
 
 export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-tyson-granger", name: "Tyson Granger", beyCount: 9 },
-  { slug: "blader-kai-hiwatari", name: "Kai Hiwatari", beyCount: 7 },
+  { slug: "blader-kai-hiwatari", name: "Kai Hiwatari", beyCount: 8 },
+  { slug: "blader-shu-kurenai", name: "Shu Kurenai", beyCount: 7 },
   { slug: "blader-daichi-sumeragi", name: "Daichi Sumeragi", beyCount: 6 },
   { slug: "blader-max-tate", name: "Max Tate", beyCount: 6 },
   { slug: "blader-ray-kon", name: "Ray Kon", beyCount: 6 },
-  { slug: "blader-shu-kurenai", name: "Shu Kurenai", beyCount: 6 },
   { slug: "blader-gingka-hagane", name: "Gingka Hagane", beyCount: 5 },
   { slug: "blader-lui-shirosagi", name: "Lui Shirosagi", beyCount: 5 },
   { slug: "blader-tala", name: "Tala", beyCount: 5 },
@@ -66,6 +66,7 @@ export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-michael-summers", name: "Michael Summers", beyCount: 2 },
   { slug: "blader-miguel", name: "Miguel", beyCount: 2 },
   { slug: "blader-ozuma", name: "Ozuma", beyCount: 2 },
+  { slug: "blader-rago", name: "Rago", beyCount: 2 },
   { slug: "blader-robin-kazami", name: "Robin Kazami", beyCount: 2 },
   { slug: "blader-tsubasa-otori", name: "Tsubasa Otori", beyCount: 2 },
   { slug: "blader-wakiya-murasaki", name: "Wakiya Murasaki", beyCount: 2 },
@@ -85,6 +86,7 @@ export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-dan-sodo-and-reiki-sodo", name: "Dan Sodo and Reiki Sodo", beyCount: 1 },
   { slug: "blader-doji", name: "Doji", beyCount: 1 },
   { slug: "blader-faust", name: "Faust", beyCount: 1 },
+  { slug: "blader-fubuki-sumiye", name: "Fubuki Sumiye", beyCount: 1 },
   { slug: "blader-garland-siebald", name: "Garland Siebald", beyCount: 1 },
   { slug: "blader-gary", name: "Gary", beyCount: 1 },
   { slug: "blader-ginro", name: "Ginro", beyCount: 1 },
@@ -108,7 +110,6 @@ export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-nine-kurosu", name: "Nine Kurosu", beyCount: 1 },
   { slug: "blader-omega-shiroboshi", name: "Omega Shiroboshi", beyCount: 1 },
   { slug: "blader-phi", name: "Phi", beyCount: 1 },
-  { slug: "blader-rago", name: "Rago", beyCount: 1 },
   { slug: "blader-reiji-mizuchi", name: "Reiji Mizuchi", beyCount: 1 },
   { slug: "blader-reiyu-kuwabara", name: "Reiyu Kuwabara", beyCount: 1 },
   { slug: "blader-rex-jura", name: "Rex Jura", beyCount: 1 },
@@ -126,4 +127,4 @@ export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-zyro-kurogane", name: "Zyro Kurogane", beyCount: 1 },
 ];
 
-export const CHARACTER_SEED_COUNT = 93;
+export const CHARACTER_SEED_COUNT = 94;

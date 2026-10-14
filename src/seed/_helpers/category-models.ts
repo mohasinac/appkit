@@ -165,6 +165,13 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["E1056", "Lost Lúinor L2", "Lost Longinus"], productDefaults: { defaultFeatures: ["feature-blader-lui-shirosagi", "feature-type-attack", "feature-left-spin"] } },
     },
     {
+      id: "category-spryzen-s2-0q",
+      name: "Spryzen S2 0Q",
+      description:
+        "Spryzen S2 0Q — a Balance-type, dual-spin Burst Classic release, product code E1048, released by Hasbro. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
+      extra: { aliases: ["E1048", "Spryzen S2 0Q Layer: Spryzen S2", "Disc: 0", "Driver: Q — later evolves to Spryzen Requiem S3 0Cross"], productDefaults: { defaultFeatures: ["feature-blader-shu-kurenai", "feature-type-balance", "feature-dual-spin"] } },
+    },
+    {
       id: "category-storm-spriggan-7glaive",
       name: "Storm Spriggan 7Glaive",
       description:
@@ -263,6 +270,13 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Vanish Fafnir Tapered Kick-3 — a Stamina-type, left-spin Dynamite Battle release, product code B-180-class, released by Takara Tomy, ~2021. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
       extra: { aliases: ["B-180-class"], productDefaults: { defaultFeatures: ["feature-blader-fumiya-kindo", "feature-type-stamina", "feature-left-spin"] } },
+    },
+    {
+      id: "category-wizard-fafnir-ratchet-rise",
+      name: "Wizard Fafnir Ratchet Rise",
+      description:
+        "Wizard Fafnir Ratchet Rise — a Stamina-type, left-spin Dynamite Battle release, product code B-139, released by Takara Tomy, S3-S4 transitional. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
+      extra: { aliases: ["B-139"], productDefaults: { defaultFeatures: ["feature-blader-fubuki-sumiye", "feature-type-stamina", "feature-left-spin"] } },
     },
   ],
   "category-burst-god": [
@@ -446,6 +460,13 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Cosmic Pegasis F:D — an Attack-type, right-spin Metal Fury (4D) release, product code BB-128, released by Takara Tomy. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
       extra: { aliases: ["BB-128"], productDefaults: { defaultFeatures: ["feature-blader-gingka-hagane", "feature-type-attack", "feature-right-spin"] } },
+    },
+    {
+      id: "category-diablo-nemesis-x-d",
+      name: "Diablo Nemesis X:D",
+      description:
+        "Diablo Nemesis X:D — a Balance-type, right-spin Metal Fury (4D) release, product code BB-122. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
+      extra: { aliases: ["BB-122"], productDefaults: { defaultFeatures: ["feature-blader-rago", "feature-type-balance", "feature-right-spin"] } },
     },
     {
       id: "category-fang-leone-130w2d",
@@ -1332,6 +1353,13 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["A-27", "Dranzer Flame"], productDefaults: { defaultFeatures: ["feature-blader-kai-hiwatari", "feature-type-balance", "feature-right-spin"] } },
     },
     {
+      id: "category-dranzer-s",
+      name: "Dranzer S",
+      description:
+        "Dranzer S — a Balance-type, right-spin Spin Gear System release, product code A-2, released by Takara. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
+      extra: { aliases: ["A-2", "Dranzer Spiral"], productDefaults: { defaultFeatures: ["feature-blader-kai-hiwatari", "feature-type-balance", "feature-right-spin"] } },
+    },
+    {
       id: "category-driger-f",
       name: "Driger F",
       description:
@@ -1581,4 +1609,4 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
 };
 
 /** Total named-model leaves — asserted by the seed so a silent drop is loud. */
-export const MODEL_LEAF_COUNT = 216;
+export const MODEL_LEAF_COUNT = 220;

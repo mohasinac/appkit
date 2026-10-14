@@ -28,6 +28,7 @@ import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -267,7 +268,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     slug: "auction-beyblade-metal-diablo-nemesis",
     title: "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
     description: "Diablo Nemesis XF, the final boss top of Metal Fight Beyblade Zero-G. Auction closed with a winning bidder.",
-    categorySlugs: ["category-metal-fury-4d","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categorySlugs: ["category-diablo-nemesis-x-d","category-metal-fury-4d","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
     categoryNames: ["Metal Fury (4D)","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
@@ -462,4 +463,4 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     createdAt: new Date("2026-08-10"),
     updatedAt: new Date("2026-08-24"),
   },
-].map(withTokens).map(withFinalSale);
+].map(withTokens).map(withFinalSale).map(withDerivedCategoryNames);

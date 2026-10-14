@@ -24,6 +24,7 @@ import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
 
 const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
   {
@@ -405,4 +406,4 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
  * sold/depleted fixture in this file ended up unsearchable.
  */
 export const productsDigitalCodesSeedData: Partial<ProductDocument>[] =
-  _rawproductsDigitalCodesSeedData.map(withProductSearchTxt).map(withFinalSale);
+  _rawproductsDigitalCodesSeedData.map(withProductSearchTxt).map(withFinalSale).map(withDerivedCategoryNames);
