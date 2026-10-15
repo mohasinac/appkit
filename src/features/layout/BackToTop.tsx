@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronUp, X } from "lucide-react";
-import { Button, Div } from "../../ui";
+import { Div, IconButton } from "../../ui";
 import { useHandMode } from "../../_internal/client/hand-mode";
 
 export interface BackToTopProps {
@@ -67,26 +67,44 @@ export function BackToTop({
 
   return (
     <Div layout="flex" align="center" gap="1" className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+var(--appkit-space-4))] transition-[bottom] duration-300 ease-out ${hand === "left" ? "left-4" : "right-4"} z-[var(--appkit-z-back-to-top)] ${className}`}>
-      <Button
+      {/*
+        * 🛑 <IconButton>, NOT <Button size="sm"> with width/height utilities —
+        * Root Cause #80.
+        *
+        * The dismiss control was `<Button size="sm" className="w-6 h-6">`, and
+        * it rendered as an EMPTY outlined pill with no ✕ in it: the reported
+        * "the close button is not showing up". `.appkit-button--sm` sets
+        * `padding: 0.375rem 0.75rem`, i.e. 12px of horizontal padding on each
+        * side, so a 24px-wide (`w-6`) button has exactly ZERO content width —
+        * and `.appkit-button__content` carries `min-width: 0` (the Root Cause
+        * #68 fix), so the 12px glyph obligingly shrank to nothing rather than
+        * overflowing where someone would have seen it. The same rule's
+        * `min-height: 36px` also beat `h-6` under `important: true`, so the box
+        * was a 24×36 ellipse rather than the intended 24px circle.
+        *
+        * `IconButton` boxes set width AND height with no padding and no min,
+        * so they are true squares at every size, and they derive the glyph size
+        * from the box (`ICON_BUTTON_ICON_SIZE`) instead of leaving the two to
+        * be chosen independently and disagree.
+        */}
+      <IconButton
         type="button"
         variant="outline"
-        size="sm"
+        size="touch"
+        rounded="full"
         aria-label={ariaLabel}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] shadow-md text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors"
-      >
-        <ChevronUp className="w-5 h-5" aria-hidden="true" />
-      </Button>
-      <Button
+        icon={<ChevronUp aria-hidden="true" />}
+      />
+      <IconButton
         type="button"
         variant="outline"
         size="sm"
+        rounded="full"
         aria-label="Hide back-to-top button"
         onClick={handleDismiss}
-        className="flex items-center justify-center w-6 h-6 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] shadow-md text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text)] transition-colors"
-      >
-        <X className="w-3 h-3" aria-hidden="true" />
-      </Button>
+        icon={<X aria-hidden="true" />}
+      />
     </Div>
   );
 }

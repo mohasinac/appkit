@@ -64,10 +64,13 @@ function BulkPickerPanel({
       role="listbox"
       aria-label="Bulk actions"
       className={[
-        "absolute bottom-full left-0 right-0 overflow-hidden",
+        // Flips with the tier — see InfoPanel for why.
+        "absolute left-0 right-0 overflow-hidden",
+        "bottom-full lg:bottom-auto lg:top-full",
         BOTTOM_NAV_BG,
-        "border-t border-zinc-200/80 border-[var(--appkit-color-border)]/80",
+        "border-t lg:border-t-0 lg:border-b border-[var(--appkit-color-border)]/80",
         "shadow-[0_-8px_24px_rgba(0,0,0,0.10)] dark:shadow-[0_-8px_24px_rgba(0,0,0,0.35)]",
+        "lg:shadow-[0_8px_24px_rgba(0,0,0,0.10)] dark:lg:shadow-[0_8px_24px_rgba(0,0,0,0.35)]",
         "transition-[max-height,opacity] duration-200 ease-out",
         pickerOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0 pointer-events-none",
       ]
@@ -138,10 +141,16 @@ function InfoPanel({
     <Div
       id={id}
       className={[
-        "absolute bottom-full left-0 right-0 overflow-hidden",
+        // Opens UPWARD from a bottom-edge bar, DOWNWARD from a desktop bar
+        // hanging under the header — a panel must always expand into the
+        // screen, never off it. Border and shadow flip with it, or the sheet
+        // is lit from the wrong side and reads as detached from its bar.
+        "absolute left-0 right-0 overflow-hidden",
+        "bottom-full lg:bottom-auto lg:top-full",
         BOTTOM_NAV_BG,
-        "border-t border-zinc-200/80 border-[var(--appkit-color-border)]/80",
+        "border-t lg:border-t-0 lg:border-b border-[var(--appkit-color-border)]/80",
         "shadow-[0_-8px_24px_rgba(0,0,0,0.10)] dark:shadow-[0_-8px_24px_rgba(0,0,0,0.35)]",
+        "lg:shadow-[0_8px_24px_rgba(0,0,0,0.10)] dark:lg:shadow-[0_8px_24px_rgba(0,0,0,0.35)]",
         "transition-[max-height,opacity] duration-200 ease-out",
         open ? "max-h-[60vh] opacity-100" : "max-h-0 opacity-0 pointer-events-none",
       ]
@@ -460,7 +469,13 @@ export default function BottomActions() {
           <Div
             className={[
               BOTTOM_NAV_BG,
+              // Cast away from the edge the bar is welded to: upward from the
+              // bottom edge, downward from under the header.
               "shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.30)]",
+              "lg:shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:lg:shadow-[0_4px_20px_rgba(0,0,0,0.30)]",
+              // A hairline on the side facing the page, so the bar reads as
+              // chrome rather than as a floating slab.
+              "lg:border-b lg:border-[var(--appkit-color-border)]/80",
               isVisible ? "" : "pointer-events-none",
             ]
               .filter(Boolean)

@@ -4128,6 +4128,108 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "action-bar-placement",
+      pageLabel: "Action Bar & Back-to-Top — Desktop vs Mobile",
+      href: "/products",
+      cases: [
+        {
+          key: "back-to-top-dismiss-visible",
+          label:
+            "The small ✕ beside the back-to-top button actually shows a ✕ — not an empty outlined pill",
+          description:
+            "Fixed 2026-10-15. BEFORE: the dismiss control was a `<Button size=\"sm\">` forced to 24px wide, but that size carries 12px of padding on each side — so the content box was exactly 0px and the ✕ glyph shrank to nothing. The button was there and clickable; the icon was invisible. AFTER: scroll any long page past ~400px. Two round controls appear in the corner: a large one with an up-chevron, and a small one with a clearly visible ✕. Clicking the ✕ hides both until you navigate to another page.",
+          href: "/products",
+        },
+        {
+          key: "action-bar-top-on-desktop",
+          label:
+            "ON DESKTOP (window wider than ~1024px): the page action bar sits directly UNDER the header, not welded to the bottom of the window",
+          description:
+            "Changed 2026-10-15. BEFORE: the same full-width bar was pinned to the bottom edge on every screen size — a mobile pattern on a desktop window, where it reads as a browser download bar and sits as far from the content as possible. AFTER: maximise the window and open a product detail page (or any admin list and tick a row to enter bulk mode). The bar must appear immediately below the site header, full width, with its shadow falling DOWNWARD onto the page.",
+          href: "/products",
+        },
+        {
+          key: "action-bar-bottom-on-mobile",
+          label:
+            "ON MOBILE (narrow window): the same action bar is still at the BOTTOM, stacked directly above the bottom tab bar",
+          description:
+            "The other half of the change, and the real regression risk — the two layouts share one component. Narrow the browser to phone width (or use device emulation) on the same page. The bar must be at the bottom, immediately above the bottom navigation, with its shadow falling UPWARD. Resize the window slowly across the ~1024px line both ways: the bar must move cleanly between the two positions and never appear in both places or in neither.",
+          href: "/products",
+        },
+        {
+          key: "action-bar-no-content-overlap",
+          label:
+            "ON DESKTOP: the top action bar never covers the first rows of page content, and leaves no empty gap when it is absent",
+          description:
+            "The bar is fixed, so the page reserves space for it. Two checks. (1) With the bar showing, the first heading/row of content must be fully readable, not hidden behind it. (2) On a page with NO action bar, there must be no blank band under the header — the reservation collapses to zero when nothing is published.",
+          href: "/products",
+        },
+        {
+          key: "action-bar-panels-open-into-screen",
+          label:
+            "Expandable panels on the action bar open INTO the screen — downward on desktop, upward on mobile",
+          description:
+            "On desktop, open an admin list, tick two rows to enter bulk mode, then open the action-type picker: it must expand DOWNWARD over the page. Repeat at phone width: it must expand UPWARD. A panel that opens off-screen is unusable, and the direction has to follow whichever edge the bar is attached to.",
+          href: "/admin/products",
+        },
+        {
+          key: "back-to-top-clears-the-bar",
+          label:
+            "The back-to-top button never overlaps the action bar or the bottom tab bar at any window width",
+          description:
+            "On mobile the button floats above whatever is stacked at the bottom edge; on desktop the bar is at the top so the button should sit lower. Scroll a long page at phone width with an action bar showing — the button must sit clear above it. Widen to desktop: the button must move down as the bottom tier empties, with no overlap at any point during the resize.",
+          href: "/products",
+        },
+      ],
+    },
+    {
+      pageKey: "feature-badge-picker",
+      pageLabel: "Feature Badges — Searchable Picker",
+      href: "/store/products",
+      cases: [
+        {
+          key: "features-are-searchable",
+          label:
+            "The product form's Feature badges control is a SEARCHABLE dropdown, not a long grid of checkboxes",
+          description:
+            "Changed 2026-10-15. BEFORE: every eligible badge rendered as a bordered checkbox tile in a two-column grid — a wall a seller had to read end-to-end, which grew every time an admin added a badge. AFTER: as a seller, open any product for editing and find 'Feature badges'. It must be a single control that opens a searchable list. Type part of a badge name and confirm the list narrows.",
+          href: "/store/products",
+        },
+        {
+          key: "features-search-matches-description",
+          label:
+            "Searching the badge picker matches a badge's DESCRIPTION, not only its name",
+          description:
+            "The description is folded into each option so it stays searchable. Open the picker and type a word that appears only in a badge's description (e.g. 'factory', which is in Sealed's description but not its label). That badge must still appear in the filtered list.",
+          href: "/store/products",
+        },
+        {
+          key: "features-scope-is-visible",
+          label:
+            "Each badge option says whether it is a platform badge or one of your own store's",
+          description:
+            "The old grid showed two separate headings. A flat searchable list has none, so the scope rides in the option text — every option must end with '(platform)' or '(your store)', and the selected chips must keep that distinction too.",
+          href: "/store/products",
+        },
+        {
+          key: "features-respects-the-cap",
+          label:
+            "Selecting more than the allowed number of badges is prevented, and an over-limit product loads without blocking save",
+          description:
+            "Select badges until you hit the stated limit ('Selected: N of 24'), then try to select one more — the selection must not exceed the cap. This replaced a mechanism that disabled every unticked checkbox at the limit, so confirm the control still communicates that you are full rather than silently ignoring clicks.",
+          href: "/store/products",
+        },
+        {
+          key: "features-inline-create",
+          label:
+            "A seller can create a NEW store badge from inside the picker, and it is immediately selectable",
+          description:
+            "Added 2026-10-15. As a seller, open the badge picker and use 'Create a badge for my store'. Fill in a label and icon and submit. The drawer must close, the new badge must appear as a selected chip, and reopening the picker must list it as a real option marked '(your store)' — not a one-off chip that disappears on reload. Reload the page and confirm it persisted.",
+          href: "/store/products",
+        },
+      ],
+    },
+    {
       pageKey: "rich-text-readability",
       pageLabel: "Admin-Authored Rich Text — Readability in Both Themes",
       href: "/categories/category-spinning-tops",

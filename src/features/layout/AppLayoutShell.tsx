@@ -869,7 +869,14 @@ export function AppLayoutShell({
             // main-to-footer — it never clears the bottom of the page, which is
             // what the fixed nav + tier actually overlap. That reservation now
             // lives on the footer's own padding-bottom.
-            className="w-full flex-1 flex flex-col"
+            //
+            // The TOP tier is the mirror image and does belong here: at `lg` the
+            // chrome tier hangs under the header as a fixed bar, so without this
+            // it would cover the first rows of the page. `--top-chrome-height`
+            // is 0 below `lg` and 0 whenever no bar is published, so this
+            // reserves exactly nothing until there is something to reserve —
+            // which is why it can be unconditional rather than route-gated.
+            className="w-full flex-1 flex flex-col pt-[var(--top-chrome-height,0px)] transition-[padding-top] duration-300 ease-out"
           >
             <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}

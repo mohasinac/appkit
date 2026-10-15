@@ -177,7 +177,7 @@ export function RichTextEditor({
         data-placeholder={placeholder}
         onInput={emitChange}
         onBlur={emitChange}
-        className={`prose prose-sm max-w-none p-3 focus:outline-none dark:prose-invert ${minHeightClassName} ${disabled ? "cursor-not-allowed opacity-70" : ""}`}
+        className={`prose max-w-none p-3 focus:outline-none ${minHeightClassName} ${disabled ? "cursor-not-allowed opacity-70" : ""}`}
       />
     </div>
   );
