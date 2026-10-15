@@ -389,8 +389,25 @@ export function TitleBarLayout({
               : authButtonsEl ?? (profileEl && <Div className="hidden lg:flex">{profileEl}</Div>)
             }
             {searchBtn}
-            {promotionsEl}
-            {tourBtn}
+            {/*
+              * 🛑 Both demoted below `sm` so the HAMBURGER always fits.
+              *
+              * Measured at a 320px viewport (2026-10-15): this row ran from
+              * x=150 to x=384 — 64px past the edge — and the app shell is
+              * `overflow-x-clip`, so the excess was not scrollable, it was
+              * gone. "Open menu" sat entirely at x=340..384 and the theme
+              * toggle was sliced in half. The site's primary menu control was
+              * unreachable on a 320px phone.
+              *
+              * These two are the right things to drop: a product tour and a
+              * promotional link are both discretionary, and "Today's Deals"
+              * already hides its own label below `sm` (so it was contributing
+              * a bare icon). Freeing two 44px targets plus their gaps clears
+              * the 64px with room to spare, and nothing load-bearing is lost —
+              * both remain reachable from the menu the hamburger now opens.
+              */}
+            <Div className="hidden sm:flex">{promotionsEl}</Div>
+            <Div className="hidden sm:flex">{tourBtn}</Div>
             {themeBtn}
             {hamburgerBtn}
           </Row>

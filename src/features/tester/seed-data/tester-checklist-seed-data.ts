@@ -4128,6 +4128,61 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "nav-reachability",
+      pageLabel: "Navigation — Every Item Reachable at Every Width",
+      href: "/products",
+      cases: [
+        {
+          key: "main-nav-first-items-reachable",
+          label:
+            "At a ~1024px window the main navbar still reaches 'Home' and 'Products' — they are not cut off past the left edge",
+          description:
+            "Fixed 2026-10-15. BEFORE: the nav strip was a horizontal scroller centred with `justify-center`. When flex content overflows a centred container the overflow splits across BOTH ends, and the leading half cannot be scrolled to because scrollLeft stops at 0. Measured at 1024px: 14 items needing 1245px in a 990px strip put 'Home' at x=-238 and 'Products' at x=-148, with scrollLeft already 0 — permanently unreachable. AFTER: set the window to roughly 1024px wide and look at the navbar. 'Home' must be the first visible item at the left edge. Scroll the strip right and confirm 'About Us' is reachable too.",
+          href: "/products",
+        },
+        {
+          key: "main-nav-left-chevron-works",
+          label:
+            "After scrolling the navbar right, the left chevron appears and scrolls it back to 'Home'",
+          description:
+            "The chevron existed before the fix but could never appear: it is shown when scrollLeft > 0, and scrollLeft was pinned at 0 by the centring — so the control built for exactly this problem was disabled by the problem. Scroll the nav strip to the right, confirm a left chevron appears, click it, and confirm the strip scrolls back and 'Home' becomes visible.",
+          href: "/products",
+        },
+        {
+          key: "header-hamburger-reachable-at-320",
+          label:
+            "At a 320px-wide window the hamburger (Open menu) is fully visible and tappable in the header",
+          description:
+            "Fixed 2026-10-15. BEFORE: the header action row ran 64px past a 320px viewport and the app shell clips horizontal overflow, so the excess was not scrollable — it was gone. 'Open menu' sat entirely off-screen and the theme toggle was sliced in half. AFTER: narrow the window to 320px (or use an iPhone SE profile). The hamburger must be fully visible at the end of the header row and must open the menu when tapped. The theme toggle beside it must also be whole, not clipped.",
+          href: "/products",
+        },
+        {
+          key: "header-demotes-optional-controls",
+          label:
+            "At 320px the 'Today's Deals' and product-tour icons are hidden from the header, and both reappear on a wider screen",
+          description:
+            "This is how the hamburger was given room — the two most discretionary controls step aside at the narrowest width rather than the most important one falling off. At 320px confirm neither icon is in the header. Widen past ~640px and confirm both come back. Neither is lost at 320px: both remain reachable from the menu the hamburger opens.",
+          href: "/products",
+        },
+        {
+          key: "no-horizontal-page-scroll",
+          label:
+            "No page scrolls sideways at 320px — the whole layout fits the viewport width",
+          description:
+            "A horizontal scrollbar on a phone is the single clearest sign of a broken responsive layout. At 320px, visit the homepage, /products, a product detail page, /categories and /cart. On each, try to drag the page sideways: nothing should move, and no horizontal scrollbar should appear at the bottom of the window.",
+          href: "/",
+        },
+        {
+          key: "lightbox-thumbnails-reachable",
+          label:
+            "In the image lightbox, the FIRST thumbnail is reachable when a gallery has many images",
+          description:
+            "Same defect as the navbar, same fix — the thumbnail strip was a centred flex scroller, so with enough images the leading thumbnails were off the left edge with no way to scroll to them. Open a product with several images, click the main image to open the lightbox, and confirm the thumbnail strip starts at its first image and that every thumbnail can be reached by scrolling the strip.",
+          href: "/products",
+        },
+      ],
+    },
+    {
       pageKey: "action-bar-placement",
       pageLabel: "Action Bar & Back-to-Top — Desktop vs Mobile",
       href: "/products",

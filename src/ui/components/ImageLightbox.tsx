@@ -345,9 +345,15 @@ export function ImageLightbox({
         </div>
       )}
 
-      {/* Thumbnail strip */}
+      {/* Thumbnail strip.
+
+          `safe center`, not `center` — a centred flex scroller splits its
+          overflow across both ends and the leading half cannot be scrolled to,
+          since scrollLeft stops at 0. On a gallery with enough images the first
+          thumbnails would be permanently unreachable. Same defect as the main
+          navbar; see NavbarLayout for the measured case. */}
       {showThumbnails && images.length > 1 && (
-        <div className="flex-shrink-0 flex gap-2 overflow-x-auto px-4 pb-3 justify-center">
+        <div className="flex-shrink-0 flex gap-2 overflow-x-auto px-4 pb-3 justify-center-safe">
           {images.map((thumb, i) => (
             <Button
               key={i}

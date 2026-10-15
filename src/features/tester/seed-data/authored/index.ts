@@ -91,6 +91,7 @@ import { authored as a_cta_layout__product_bottom_bar } from "./cta-layout__prod
 import { authored as a_design_ux__back_to_top_button } from "./design-ux__back-to-top-button";
 import { authored as a_design_ux__rich_text_readability } from "./design-ux__rich-text-readability";
 import { authored as a_design_ux__action_bar_placement } from "./design-ux__action-bar-placement";
+import { authored as a_design_ux__nav_reachability } from "./design-ux__nav-reachability";
 import { authored as a_design_ux__feature_badge_picker } from "./design-ux__feature-badge-picker";
 import { authored as a_design_ux__dashboard_layout } from "./design-ux__dashboard-layout";
 import { authored as a_design_ux__footer_theme } from "./design-ux__footer-theme";
@@ -217,6 +218,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_design_ux__back_to_top_button,
   ...a_design_ux__rich_text_readability,
   ...a_design_ux__action_bar_placement,
+  ...a_design_ux__nav_reachability,
   ...a_design_ux__feature_badge_picker,
   ...a_design_ux__dashboard_layout,
   ...a_design_ux__footer_theme,

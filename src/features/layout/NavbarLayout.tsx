@@ -231,9 +231,30 @@ export function NavbarLayout({
             <NavbarChevron direction="left" onClick={() => scroll("left")} />
           )}
 
+          {/*
+            * 🛑 `safe center`, NEVER a plain `justify-center`, on a scroller.
+            *
+            * When flex content overflows a `justify-content: center` container
+            * the overflow is split across BOTH ends — and the leading half is
+            * then UNREACHABLE, because `scrollLeft` cannot go below 0. Measured
+            * on this exact navbar at a 1024px viewport: 14 items needing 1245px
+            * in a 990px box put "Home" at x=-238 and "Products" at x=-148, with
+            * `scrollLeft` already 0 and a max scroll of 255 that only moves
+            * them further away. The site's two most important links could not
+            * be reached at all, at the most common laptop width.
+            *
+            * The left chevron could not rescue it either: `canScrollLeft` is
+            * derived from `scrollLeft > 0`, which is pinned at 0 here, so the
+            * control that exists for exactly this case was itself unreachable.
+            *
+            * `safe center` centres while it fits and falls back to `start`
+            * the moment it would overflow, which is precisely the rule wanted:
+            * nothing is ever pushed off the leading edge, so every item is
+            * reachable by scrolling and the chevrons start working again.
+            */}
           <Ul
             ref={scrollRef}
-            className="flex items-center justify-center gap-[var(--appkit-space-0-5)] lg:gap-[var(--appkit-space-1)] overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="flex items-center justify-center-safe gap-[var(--appkit-space-0-5)] lg:gap-[var(--appkit-space-1)] overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {items.map((item) => (
               <Li key={item.href} className="shrink-0">
