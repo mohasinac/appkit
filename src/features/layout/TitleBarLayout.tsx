@@ -59,8 +59,6 @@ export interface TitleBarLayoutProps {
   onToggleDashboardNav?: () => void;
   /** Hide the public sidebar toggle button when nested layouts own navigation. */
   hideSidebarToggle?: boolean;
-  /** When provided, renders a tour-start icon button before the theme toggle. Null in Patch 1. */
-  onTourStart?: () => void;
   id?: string;
   className?: string;
 }
@@ -136,7 +134,6 @@ export function TitleBarLayout({
   promoStripText,
   isDark = false,
   onToggleTheme,
-  onTourStart,
   hasDashboardNav,
   onToggleDashboardNav,
   hideSidebarToggle = false,
@@ -164,17 +161,6 @@ export function TitleBarLayout({
       onClick={onToggleTheme}
       className={iconBtn}
       icon={<Icon name={isDark ? "themeLight" : "themeDark"} size="lg" />}
-    />
-  ) : null;
-
-  const tourBtn = onTourStart ? (
-    <IconButton
-      size="touch"
-      variant="ghost"
-      aria-label="Start product tour"
-      onClick={onTourStart}
-      className={iconBtn}
-      icon={<Icon name="help" size="lg" />}
     />
   ) : null;
 
@@ -407,7 +393,6 @@ export function TitleBarLayout({
               * both remain reachable from the menu the hamburger now opens.
               */}
             <Div className="hidden sm:flex">{promotionsEl}</Div>
-            <Div className="hidden sm:flex">{tourBtn}</Div>
             {themeBtn}
             {hamburgerBtn}
           </Row>

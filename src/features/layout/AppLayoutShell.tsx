@@ -133,8 +133,6 @@ export interface AppLayoutShellProps {
    * every offset above them reads.
    */
   showBottomNav?: boolean;
-  /** When provided, renders a tour-start icon button in the title bar. Null in Patch 1. */
-  onTourStart?: () => void;
   /**
    * Override className for the main content wrapper div.
    * When set, replaces the default `w-full px-4 py-6 …`
@@ -693,7 +691,6 @@ export function AppLayoutShell({
   sidebarProfileLabels,
   eventBannerSlot,
   showBottomNav = true,
-  onTourStart,
   contentClassName,
   lightBackground = DEFAULT_LIGHT_BG,
   darkBackground = DEFAULT_DARK_BG,
@@ -829,7 +826,6 @@ export function AppLayoutShell({
             promoStripText={titleBarPromoStripText}
             isDark={theme === "dark"}
             onToggleTheme={showThemeToggle ? toggleTheme : undefined}
-            onTourStart={onTourStart}
             onBeforeToggleDashboardNav={handleBeforeDashboardNavToggle}
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}

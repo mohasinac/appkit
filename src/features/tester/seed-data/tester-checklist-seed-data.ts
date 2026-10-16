@@ -4128,6 +4128,61 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "header-controls-and-messages",
+      pageLabel: "Header Controls — Tour Removed, Messages Enabled",
+      href: "/products",
+      cases: [
+        {
+          key: "no-help-or-tour-icon",
+          label:
+            "The header has NO '?' help / product-tour icon at any window width",
+          description:
+            "Removed 2026-10-15. BEFORE: a '?' icon sat between the theme toggle and the hamburger; it started the product tour (aria-label 'Start product tour'). It was one control, not two — the help glyph WAS the tour button. AFTER: check the header at 320px, 768px, 1024px and 1440px. There must be no '?' icon at any of them. The remaining right-hand controls are search, Today's Deals (sm and up), theme and hamburger — plus the signed-in icons on lg and up.",
+          href: "/products",
+        },
+        {
+          key: "tour-does-not-autostart",
+          label:
+            "No product tour starts on its own, and no tour overlay can be triggered from the header",
+          description:
+            "Removing the button removed the only way to start a tour. Load several pages signed out and signed in and confirm no tour popover, spotlight or step overlay ever appears. If a tour does appear, something still calls startTour and the removal was incomplete.",
+          href: "/",
+        },
+        {
+          key: "messages-icon-visible-when-signed-in",
+          label:
+            "A signed-in user sees a messages/inbox icon in the header that opens the inbox",
+          description:
+            "Enabled 2026-10-15. BEFORE: siteSettings.chat.enabled was absent, and the header renders nothing at all without it — not a disabled icon, nothing — so there was no way into the inbox. AFTER: sign in and look at the header on a desktop width (lg and up). A messages icon must be present beside the notification bell, and clicking it must open /messages, not 404.",
+          href: "/messages",
+        },
+        {
+          key: "messages-icon-on-mobile-row",
+          label:
+            "On mobile the messages icon appears in the secondary header row, not only on desktop",
+          description:
+            "The header hides several signed-in icons below lg and carries them on a second row instead. Signed in at 320–768px, confirm the messages icon is reachable in that secondary row and opens the inbox.",
+          href: "/messages",
+        },
+        {
+          key: "messages-absent-for-guests",
+          label:
+            "A signed-OUT visitor does not see a messages icon",
+          description:
+            "Messages are per-user, so the control should not appear for a guest even with chat enabled. Sign out, reload, and confirm no messages icon is present in either header row.",
+          href: "/products",
+        },
+        {
+          key: "messages-inbox-loads",
+          label:
+            "The /messages inbox page loads for a signed-in user and shows either conversations or a proper empty state",
+          description:
+            "The feature was dormant behind a flag, so this is the first real exercise of the page. Open /messages signed in. It must render the inbox shell with either a conversation list or an explicit empty state — never a crash, a redirect to /unauthorized, or an endless spinner.",
+          href: "/messages",
+        },
+      ],
+    },
+    {
       pageKey: "nav-reachability",
       pageLabel: "Navigation — Every Item Reachable at Every Width",
       href: "/products",
