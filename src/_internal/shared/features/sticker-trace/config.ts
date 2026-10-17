@@ -176,10 +176,24 @@ export function paramsForTier(tier: PrecisionTier, overrides: Partial<TraceParam
     minPartAreaMm2: 12,
     maxParts: MAX_PARTS_PER_SHEET,
     bridgeMm: 0.45,
-    // 1.0 = "merge every boundary weaker than this sheet's median". The median
-    // is a fair split point because a sheet has far more printed edge than cut
-    // line, so the middle of the distribution sits among the printing.
-    mergeStrengthFactor: 1,
+    /*
+     * The fraction of region boundaries dissolved as printing rather than cut,
+     * expressed as factor/2. Measured across the five art scans (parts found
+     * against parts expected):
+     *
+     *   factor      1.0   1.3   1.5   1.7   1.9
+     *   torch  /12   40    28     7     2     0
+     *   posie  /14   25    15    14     1     0
+     *   appol  /20   48    31    24     5     0
+     *   HMS    /12   30    16     9     4     0
+     *   dranz  /12   17     9     5     1     0
+     *
+     * 1.5 is the knee: posiedon lands exactly and appolon within 20%, while
+     * 1.7 and above collapse every sheet to nothing. The curve is steep there,
+     * which is the honest caveat — this is a tuned constant on five sheets,
+     * not a law, and it is exposed as an advanced parameter for that reason.
+     */
+    mergeStrengthFactor: 1.5,
 
     smoothMm: preset.smoothMm,
     borderMm: 0,

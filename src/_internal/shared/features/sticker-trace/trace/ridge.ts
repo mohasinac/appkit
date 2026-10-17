@@ -279,6 +279,23 @@ function robustLocalBackground(
  * Both statistics come from box blurs (mean, and mean-of-squares for the
  * variance), so the whole thing stays O(n) and independent of window size.
  */
+/**
+ * Threshold ANY response field against its own robust local background.
+ *
+ * Exported because the art path feeds it a Hessian line response rather than
+ * this module's edge response — the thresholding policy (local, robust,
+ * hysteresis-linked) is right for both and must not be written twice.
+ */
+export function thresholdAdaptive(
+  response: Float32Array,
+  width: number,
+  height: number,
+  kLow: number,
+  kHigh: number,
+): Uint8Array {
+  return adaptiveHysteresis(response, width, height, kLow, kHigh);
+}
+
 function adaptiveHysteresis(
   response: Float32Array,
   width: number,

@@ -30,6 +30,8 @@
  * @tag sideEffects:none
  */
 
+import { edtWithIndices } from "../math/edt";
+
 export interface MergeResult {
   /** Region id per pixel after merging; 0 stays background/barrier. */
   readonly labels: Int32Array;
@@ -96,22 +98,46 @@ export function mergeWeakBoundaries(
     }
   };
 
+  /*
+   * 🛑 Territory assignment, not a look-across.
+   *
+   * The first version sampled `labels[i-1]` and `labels[i+1]` either side of
+   * each barrier pixel. That records NOTHING whenever the barrier is more than
+   * one pixel thick — both sides are themselves barrier, so both read 0 and the
+   * pair is skipped. The barrier here is hysteresis-GROWN and therefore always
+   * several pixels thick, so the edge set came out empty and the merge silently
+   * performed zero merges on every sheet. It read as "the merge decided not
+   * to" for four measured runs.
+   *
+   * Assigning every barrier pixel to its nearest region first — a watershed by
+   * another name, using the exact EDT that already exists — makes adjacency a
+   * plain neighbour test again, and it is correct for a barrier of any
+   * thickness.
+   */
+  const regionMask = new Uint8Array(labels.length);
+  for (let i = 0; i < labels.length; i++) regionMask[i] = labels[i] !== 0 ? 1 : 0;
+
+  const { index } = edtWithIndices(regionMask, width, height);
+
+  const owner = new Int32Array(labels.length);
+  for (let i = 0; i < labels.length; i++) {
+    owner[i] = labels[i] !== 0 ? labels[i]! : labels[index[i]!]!;
+  }
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const i = y * width + x;
-      if (labels[i] !== 0) continue; // only barrier pixels separate regions
-      const s = response[i]!;
+      const a = owner[i]!;
+      if (a === 0) continue;
 
-      // Look across the barrier in both axes: the two regions a cut separates
-      // sit on opposite sides of it, which a 4-neighbour scan of the barrier
-      // pixel itself would only find one at a time.
-      if (x > 0 && x < width - 1) touch(labels[i - 1]!, labels[i + 1]!, s);
-      if (y > 0 && y < height - 1) touch(labels[i - width]!, labels[i + width]!, s);
+      // Strength is sampled from the BARRIER pixels only. A boundary's
+      // evidence is what the detector saw on the line itself, not on the
+      // territory either side of it, which carries no cut signal at all.
+      const s = labels[i] === 0 ? response[i]! : 0;
+      const weighted = labels[i] === 0;
 
-      // And the immediate neighbours, so a one-pixel-thick barrier between two
-      // regions is still attributed even though neither opposite test fires.
-      if (x > 0) touch(labels[i - 1]!, labels[i + 1] ?? 0, s);
-      if (y > 0) touch(labels[i - width]!, labels[i + width] ?? 0, s);
+      if (x < width - 1 && owner[i + 1] !== a && weighted) touch(a, owner[i + 1]!, s);
+      if (y < height - 1 && owner[i + width] !== a && weighted) touch(a, owner[i + width]!, s);
     }
   }
 
@@ -134,10 +160,22 @@ export function mergeWeakBoundaries(
    * names a real position in the list, whatever the values are. `factor` is
    * reinterpreted as that percentile (1 => merge the weakest half).
    */
-  const quantile = Math.min(0.95, Math.max(0.05, strengthFactor * 0.5));
-  const threshold = sortedStrengths[Math.floor(sortedStrengths.length * quantile)]!;
+  const quantile = Math.min(0.98, Math.max(0.02, strengthFactor * 0.5));
 
   list.sort((p, q) => p.strength - q.strength);
+
+  /*
+   * 🛑 Merge a COUNT of the weakest edges, not everything below a value.
+   *
+   * A value threshold still degenerates under TIES, and ties are the normal
+   * case here: the same-material score is 0 for most boundaries, so the median
+   * is 0, and `strength >= 0` tripped on the very first edge — measured as
+   * 2271 -> 2271 regions with zero merges at the default factor, while the
+   * same function at factor 1.9 collapsed 2271 -> 35. A fraction of the sorted
+   * list cannot do that: it always dissolves exactly the weakest share asked
+   * for, whatever the values are.
+   */
+  const mergeBudget = Math.floor(list.length * quantile);
 
   const parent = new Int32Array(regionCount + 1);
   for (let i = 0; i <= regionCount; i++) parent[i] = i;
@@ -151,8 +189,10 @@ export function mergeWeakBoundaries(
   };
 
   let merges = 0;
+  let considered = 0;
   for (const e of list) {
-    if (e.strength >= threshold) break; // sorted, so nothing after this qualifies
+    if (considered >= mergeBudget) break;
+    considered++;
     const ra = find(e.a);
     const rb = find(e.b);
     if (ra !== rb) {

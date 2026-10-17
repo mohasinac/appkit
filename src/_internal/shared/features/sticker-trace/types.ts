@@ -221,13 +221,12 @@ export interface TraceDiagnostics {
   readonly droppedTouchingBorder: number;
   readonly bridgedComponents: number;
   /**
-   * 🛑 True when this scan has no paper background and the tracer therefore
-   * cannot yet segment it reliably. The parts array is still populated so a
-   * human can see what was found, but it will contain far too many regions and
-   * a caller MUST surface this rather than presenting them as a result.
-   *
-   * Measured on the reference corpus, art sheets returned 153-400 parts
-   * against 12-20 real. See trace/segment for why, and what it needs.
+   * Reserved. Art-background sheets WERE unsupported — see the git history for
+   * the four approaches that failed and why — and are now handled by the
+   * Hessian line filter plus the region merge. Kept as a field rather than
+   * deleted because the art path is the one whose accuracy depends on a tuned
+   * constant (mergeStrengthFactor), so a future sheet that defeats it needs a
+   * way to say so without a schema change.
    */
   readonly artBackgroundUnsupported: boolean;
 }

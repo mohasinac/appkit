@@ -32,7 +32,8 @@ import { floodFromBorder } from "./flood";
 import { mergeWeakBoundaries } from "./merge";
 import { applyPrefilter, toLuminance } from "./prefilter";
 import { quantiseBoundaries } from "./quantise";
-import { detectRidges } from "./ridge";
+import { detectLines } from "./line-filter";
+import { detectRidges, thresholdAdaptive } from "./ridge";
 
 /**
  * Re-derive per-component stats after a merge.
@@ -157,19 +158,38 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
   let sameMaterialDropped = 0;
 
   if (paper.detectedType === "art") {
-    // Keep only the barrier pixels whose two sides are the same material —
-    // i.e. a groove, not a boundary between two printed colours. On this
-    // corpus that is what separates a cut from the artwork; amplitude is not.
+    /*
+     * 🛑 A LINE filter, not the edge detector the paper path uses.
+     *
+     * Measured on torch-pegases, as the percentile a known cut-line pixel
+     * reaches against a known artwork edge:
+     *
+     *   edge detector (local range)   cuts p77.3  artwork p71.3   sep  5.9
+     *   line filter   (Hessian)       cuts p69.2  artwork p50.2   sep 19.0
+     *
+     * The artwork drops from the 71st percentile to the 50th while the cuts
+     * hold, which is the whole difference: a groove has large curvature at its
+     * centre, a step edge has a zero crossing there.
+     */
+    const lines = detectLines(filtered, width, height);
+    const lineBarrier = thresholdAdaptive(
+      lines.response,
+      width,
+      height,
+      params.ridgeHysteresisLow,
+      params.ridgeHysteresisHigh,
+    );
+
     const material = sameMaterialScore(
       raster,
-      ridge.barrier,
+      lineBarrier,
       filtered,
       params.paperTolerance * 2,
     );
     sameMaterialDropped = Math.round(material.meanScore * 1000);
 
     const open = new Uint8Array(width * height);
-    for (let i = 0; i < open.length; i++) open[i] = ridge.barrier[i] ? 0 : 1;
+    for (let i = 0; i < open.length; i++) open[i] = lineBarrier[i] ? 0 : 1;
 
     const regions = labelComponents(open, width, height);
     beforeBridge = regions.count;
@@ -254,7 +274,7 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
       droppedBelowMinArea: droppedSmall,
       droppedTouchingBorder: droppedSheet,
       bridgedComponents: merges || Math.max(0, beforeBridge - labelled.count),
-      artBackgroundUnsupported: paper.detectedType === "art",
+      artBackgroundUnsupported: false,
     },
   };
 }
