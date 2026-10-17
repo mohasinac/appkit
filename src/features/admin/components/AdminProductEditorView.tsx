@@ -495,7 +495,7 @@ export function AdminProductEditorView({
   // Live validation — re-run on every product change, not just on submit.
   React.useEffect(() => {
     validate(product);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [product, validate]);
 
   /*

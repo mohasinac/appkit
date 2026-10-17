@@ -146,7 +146,7 @@ export function AdminTesterChecklistItemEditorView({
       isActive: item.isActive ?? true,
       adminOnly: item.adminOnly ?? false,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [itemQuery.data]);
 
   const saveMutation = useApiMutation({

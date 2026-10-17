@@ -244,7 +244,7 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
 
   useEffect(() => {
     validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [draft, validate]);
 
   return (

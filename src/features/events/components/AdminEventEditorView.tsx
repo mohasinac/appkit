@@ -441,7 +441,7 @@ export function AdminEventEditorView({
 
   useEffect(() => {
     validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [draft, validate]);
 
   const update = React.useCallback((partial: Partial<EventDraft>) => {

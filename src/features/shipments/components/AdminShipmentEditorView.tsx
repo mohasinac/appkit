@@ -118,7 +118,7 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
       laborRatePerHour: doc.laborRatePerHour ?? 0,
       notes: doc.notes ?? "",
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [shipment]);
 
   const saveMutation = useApiMutation<ShipmentDocument>({

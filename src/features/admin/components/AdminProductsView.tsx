@@ -206,6 +206,17 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     [showToast, overrides],
   );
 
+  /*
+   * 🛑 ABOVE the `children` short-circuit, for the same reason as its twin in
+   * `AdminOrdersView`: a hook below a conditional return does not run on every
+   * render, so the hook ORDER differs between the two paths and React reads one
+   * hook's state into another's slot.
+   *
+   * Spans every listing type unless the Type chips narrow it, which is what
+   * makes the middle tab read "Sold & Ended" here rather than one or the other.
+   */
+  const scope = useAvailabilityScope(ALL_LISTING_TYPES);
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -242,10 +253,6 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     ),
   };
 
-
-  // Spans every listing type unless the Type chips narrow it, which is what
-  // makes the middle tab read "Sold & Ended" here rather than one or the other.
-  const scope = useAvailabilityScope(ALL_LISTING_TYPES);
 
   const config: ListingViewConfig<AdminProductsResponse, ProductRow> = {
     portal: "admin",

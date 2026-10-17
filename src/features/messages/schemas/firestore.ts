@@ -50,6 +50,21 @@ export interface MessageProductRef {
   productId: string;
   title: string;
   image?: string;
+  /**
+   * 🛑 Required for the card to LINK anywhere correct.
+   *
+   * Nine listing types have five different detail routes
+   * (`/auctions/…`, `/pre-orders/…`, `/prize-draws/…`, `/classified/…`, …) and
+   * `pluginFor(type).detailRoute()` is the only thing that knows which. A card
+   * that hardcodes `/products/{slug}` sends an auction to the standard product
+   * page — which is Root Cause #48 exactly: a doc→card mapper dropping
+   * `listingType` and the link going wrong because of the one field it lost.
+   *
+   * Optional only because a message sent before this field existed has none;
+   * `normalizeListingType` resolves an absent value to `"standard"`, which is
+   * the correct reading for those rows.
+   */
+  listingType?: string;
   /** Omitted for a guest-gated listing snapshot taken while signed out is not
    * possible here — chat requires auth — but still optional: a product can be
    * archived/deleted between send and render. */

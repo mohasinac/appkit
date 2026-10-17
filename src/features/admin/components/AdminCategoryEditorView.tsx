@@ -142,7 +142,7 @@ async function loadTaxCodeOptions(query: string, page: number) {
   const params = new URLSearchParams({ page: String(page), pageSize: "25" });
   if (query) params.set("q", query);
   const res = await apiClient.get(`${ADMIN_ENDPOINTS.TAX_CODES}?${params.toString()}`);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const payload = (res as any)?.data ?? res;
   const items: { id: string; label?: string; hsnCode?: string; gstRate?: number }[] =
     payload?.items ?? payload?.data ?? [];

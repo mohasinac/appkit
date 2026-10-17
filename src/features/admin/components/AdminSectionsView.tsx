@@ -410,7 +410,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "event-raffles": setEventRafflesBuilder(pick(DEFAULT_EVENT_RAFFLES_BUILDER)); break;
       case "collection-cards": setCollectionCardsBuilder(pick(DEFAULT_COLLECTION_CARDS_BUILDER)); break;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 25 stable setters
+     
   }, []);
 
   /*
@@ -2495,10 +2495,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     return new Map(sections.map((section) => [section.id, section.order]));
   }, [sections]);
 
-  // If children exist, render passthrough mode (detail view)
-  if (hasChildren) {
-    return <>{children}</>;
-  }
 
   // Map sections data to listing rows
   const rows = sections.map((section) => ({
@@ -2680,6 +2676,28 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     onGoToSection: nav.goToSection,
     fieldToSectionIndex: nav.fieldToSectionIndex,
   });
+
+  /*
+   * Passthrough mode (detail view).
+   *
+   * 🛑 The short-circuit sits HERE, after every hook, rather than ~170 lines
+   * up where it used to. Four hooks had accumulated below it — `modalSections`,
+   * `draft`, `nav`, `form` — so passing children skipped all four and the hook
+   * ORDER changed between the two render paths, which is how React ends up
+   * reading one hook's state out of another's slot. The comment on
+   * `sectionOrderMap` above is the record of this same bug being fixed once
+   * already, one hook at a time.
+   *
+   * Moving the RETURN rather than the hooks is deliberate and costs nothing:
+   * a hook must run on every render either way, so hoisting four declarations
+   * past 170 lines of dependent state would do identical work with far more
+   * room to reorder something by accident. `useFormShellState` claims no
+   * bottom bar — `useFormBottomActions` lives in `SectionForm` — so running it
+   * here has no side effect on the detail view below.
+   */
+  if (hasChildren) {
+    return <>{children}</>;
+  }
 
   return (
     <>

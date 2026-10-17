@@ -24,6 +24,7 @@ import type {
 import { finalizeStagedMediaArray } from "../../../../features/media/finalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { productRepository } from "../../../../features/products/repository/products.repository";
+import { normalizeListingType } from "../../../../features/products/utils/listing-type";
 import { siteSettingsRepository } from "../../../../repositories";
 
 const MESSAGE_MAX_LENGTH = 2000;
@@ -215,6 +216,9 @@ export async function sendMessage(input: SendMessageInput): Promise<MessageDocum
         title: product.title,
         image: product.images?.[0],
         price: product.price,
+        // Without this the card cannot pick the right detail route — see the
+        // field's own comment on `MessageProductRef`.
+        listingType: normalizeListingType(product),
       };
     }
     // A missing/deleted product is not an error — the card simply doesn't

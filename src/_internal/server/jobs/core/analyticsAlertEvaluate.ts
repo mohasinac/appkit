@@ -200,7 +200,7 @@ function buildMetricCache(
     return { value: snap.size, saturated: snap.size >= QUERY_LIMIT };
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   type Q = any;
   function buildQuery(): Q {
     return ctx.db.collection(PRODUCT_COLLECTION);

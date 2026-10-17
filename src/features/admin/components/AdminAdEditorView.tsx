@@ -221,7 +221,7 @@ export function AdminAdEditorView({
       adsenseSlot: item.creative?.adsenseSlot || "",
       thirdPartyUrl: item.creative?.thirdPartyUrl || "",
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [adQuery.data]);
 
   const saveMutation = useApiMutation({
@@ -366,7 +366,7 @@ export function AdminAdEditorView({
           ),
         },
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [placements],
   );
 

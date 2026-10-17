@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import {
   useConversationThread,
@@ -14,6 +15,10 @@ import { Button } from "../../../ui/components/Button";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { EmptyState } from "../../../ui/components/EmptyState";
 import { MediaImage } from "../../media/MediaImage";
+import { TextLink } from "../../../ui/components/TextLink";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { isListingType } from "../../../_internal/shared/listing-types/feature-flags";
+import { formatCurrency } from "../../../utils/number.formatter";
 import type { MessageDocument } from "../schemas/firestore";
 
 function newClientMessageId(): string {
@@ -45,16 +50,57 @@ function MessageBubble({ message, isSelf }: { message: MessageDocument; isSelf: 
         className="max-w-[75%]"
       >
         {message.productRef && (
-          <Row gap="sm" surface="card" padding="xs" rounded="md">
-            {message.productRef.image && (
-              <Div className="relative h-10 w-10 flex-shrink-0" rounded="default" overflow="hidden">
-                <MediaImage src={message.productRef.image} alt={message.productRef.title} size="thumbnail" />
-              </Div>
+          /*
+           * A LINK, and it shows the price.
+           *
+           * `MessageProductRef` captures `price` and this block ignored it —
+           * a declared field with no reader (Root Cause #51's shape) — and the
+           * card was not clickable, so the one thing a buyer and seller both
+           * want from it (open the item) was missing. The snapshot is taken at
+           * send time on purpose, so it keeps reading correctly after the
+           * listing changes or is deleted.
+           *
+           * No `GatedPrice` here: chat requires auth, so there is no signed-out
+           * viewer to gate, and the price shown is the one the buyer was
+           * looking at when they asked.
+           */
+          <TextLink
+            variant="inherit"
+            href={String(
+              /*
+               * Narrowed, not cast. The snapshot stores `listingType` as a
+               * plain `string` (a message written before the field existed has
+               * none), and anything unrecognised falls back to the `standard`
+               * route — the correct reading for those older rows and for a type
+               * that has since been removed.
+               */
+              pluginFor(
+                isListingType(message.productRef.listingType)
+                  ? message.productRef.listingType
+                  : "standard",
+              ).detailRoute(message.productRef.productId),
             )}
-            <Text size="xs" weight="semibold" className="truncate">
-              {message.productRef.title}
-            </Text>
-          </Row>
+            layout="flex-col"
+            rounded="md"
+          >
+            <Row gap="sm" surface="card" padding="xs" rounded="md" align="center">
+              {message.productRef.image && (
+                <Div className="relative h-10 w-10 flex-shrink-0" rounded="default" overflow="hidden">
+                  <MediaImage src={message.productRef.image} alt={message.productRef.title} size="thumbnail" />
+                </Div>
+              )}
+              <Stack gap="none" className="min-w-0">
+                <Text size="xs" weight="semibold" className="truncate">
+                  {message.productRef.title}
+                </Text>
+                {typeof message.productRef.price === "number" && (
+                  <Text size="xs" color="muted">
+                    {formatCurrency(message.productRef.price, "INR")}
+                  </Text>
+                )}
+              </Stack>
+            </Row>
+          </TextLink>
         )}
         <Text size="sm" className="whitespace-pre-wrap break-words">
           {message.body}
@@ -73,6 +119,19 @@ export function ConversationThreadView({ conversationId }: { conversationId: str
   const markRead = useMarkConversationRead();
   const block = useBlockConversation();
   const [draft, setDraft] = useState("");
+  /*
+   * The listing the buyer arrived from, attached to the NEXT message and then
+   * cleared — so the card appears once, on the message that asked about it,
+   * rather than on every subsequent reply in the thread.
+   *
+   * Read from `?product=` rather than held on the conversation because the
+   * schema is explicit that a product belongs to a message: one thread per
+   * pair of people, however many items they discuss.
+   */
+  const searchParams = useSearchParams();
+  const [attachedProductId, setAttachedProductId] = useState<string | undefined>(
+    () => searchParams.get("product") ?? undefined,
+  );
   const markedRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -107,8 +166,10 @@ export function ConversationThreadView({ conversationId }: { conversationId: str
     const trimmed = draft.trim();
     if (!trimmed) return;
     const clientMessageId = newClientMessageId();
-    send({ body: trimmed, clientMessageId });
+    send({ body: trimmed, clientMessageId, productId: attachedProductId });
     setDraft("");
+    // Once attached, it is spent — the next message is a plain reply.
+    setAttachedProductId(undefined);
   };
 
   // Newest-first from the API, so reverse for display (oldest at top).

@@ -159,6 +159,25 @@ export function ListingLayout({
   // after a conditional return.
   const bottomChromeSlot = useBottomChromeSlot();
 
+  /* The mobile toolbar is two stacked rows — search + Filter, then a scrolling
+     sort/view/actions chip row — roughly 100px of chrome above the first card.
+     It opens collapsed below `lg` and stays as the user left it thereafter.
+     `forceExpanded` on a selection is load-bearing: the bulk-action bar renders
+     INSIDE this toolbar, so a collapsed one would leave the user no way to act
+     on rows they had just selected.
+
+     🛑 ABOVE the `detailView` short-circuit, with the other hooks. These two
+     sat below it — the THIRD time this component has grown a hook after that
+     return, which is what the two comments above are each a record of. Passing
+     `detailView` skipped them, so the hook ORDER changed between renders and
+     React silently reassigned state between the hooks that did run. */
+  const toolbarPathname = usePathname();
+  const { collapsed: mobileToolbarCollapsed, toggle: toggleMobileToolbar } =
+    useToolbarCollapse({
+      id: `listing-layout${toolbarPathname ? `:${toolbarPathname}` : ""}`,
+      forceExpanded: selectedCount > 0,
+    });
+
   // Detail view short-circuit (folded from ListingViewShell)
   if (detailView) {
     return <>{detailView}</>;
@@ -167,19 +186,6 @@ export function ListingLayout({
   const effectiveIsDashboard =
     isDashboard ?? (portal === "admin" || portal === "seller");
   const l = { ...DEFAULT_LABELS, ...labels };
-
-  /* The mobile toolbar is two stacked rows — search + Filter, then a scrolling
-     sort/view/actions chip row — roughly 100px of chrome above the first card.
-     It opens collapsed below `lg` and stays as the user left it thereafter.
-     `forceExpanded` on a selection is load-bearing: the bulk-action bar renders
-     INSIDE this toolbar, so a collapsed one would leave the user no way to act
-     on rows they had just selected. */
-  const toolbarPathname = usePathname();
-  const { collapsed: mobileToolbarCollapsed, toggle: toggleMobileToolbar } =
-    useToolbarCollapse({
-      id: `listing-layout${toolbarPathname ? `:${toolbarPathname}` : ""}`,
-      forceExpanded: selectedCount > 0,
-    });
 
   const hasFilter = Boolean(filterContent);
   const panelTitle = filterTitle ?? l.filtersTitle;

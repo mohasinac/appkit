@@ -28,11 +28,11 @@ interface PageViewRow {
 const ENTITY_TYPE_OPTIONS = PAGE_VIEW_ENTITY_TYPES.map((t) => ({ value: t, label: t }));
 
 function today() {
-  // eslint-disable-next-line lir/no-raw-date
+   
   return new Date().toISOString().slice(0, 10);
 }
 function daysAgo(n: number) {
-  // eslint-disable-next-line lir/no-raw-date
+   
   const d = new Date();
   d.setDate(d.getDate() - n);
   return d.toISOString().slice(0, 10);

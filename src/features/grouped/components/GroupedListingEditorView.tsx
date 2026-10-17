@@ -203,7 +203,7 @@ export function GroupedListingEditorView({
 
   React.useEffect(() => {
     validate(values);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [values, validate]);
 
   const handleSubmit = async () => {

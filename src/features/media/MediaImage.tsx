@@ -196,7 +196,7 @@ export function MediaImage({
         retryTimeoutRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [resolvedSrc]);
 
   const wrapperExtra = [

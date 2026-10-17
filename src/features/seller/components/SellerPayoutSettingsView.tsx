@@ -569,7 +569,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
 
   useEffect(() => {
     validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [draft, validate]);
 
   return (

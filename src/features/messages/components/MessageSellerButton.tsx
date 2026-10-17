@@ -10,6 +10,20 @@ import type { PublicSiteSettings } from "../../../_internal/shared/features/site
 
 export interface MessageSellerButtonProps {
   storeId: string;
+  /**
+   * The listing this button was clicked from, carried into the thread so the
+   * buyer's first message renders as a PRODUCT CARD.
+   *
+   * 🛑 Without it the whole card pipeline is unreachable. `sendMessage` builds
+   * a `MessageProductRef` from a `productId`, `MessageBubble` renders it, and
+   * `POST /api/messages/[conversationId]` accepts it — but the ONLY caller of
+   * this button is the product detail page, which had the id right there and
+   * never passed it. So a buyer landed in a bare thread and had to TYPE which
+   * item they meant: a block of words where a card belongs. Root Cause #103's
+   * shape — a feature complete in every direction except the one that puts
+   * data in.
+   */
+  productId?: string;
   /** Render nothing when the viewer owns this store — comparing storeId
    * client-side is an optional convenience; the server refuses it either way. */
   isOwnStore?: boolean;
@@ -25,7 +39,7 @@ export interface MessageSellerButtonProps {
  * Absent entirely when chat is off or the viewer is the store's own owner —
  * never rendered-but-disabled, same discipline as the nav icon.
  */
-export function MessageSellerButton({ storeId, isOwnStore, className }: MessageSellerButtonProps) {
+export function MessageSellerButton({ storeId, productId, isOwnStore, className }: MessageSellerButtonProps) {
   const router = useRouter();
   const { user } = useAuth();
   const { data: settings } = useSiteSettings<PublicSiteSettings>();
@@ -44,7 +58,15 @@ export function MessageSellerButton({ storeId, isOwnStore, className }: MessageS
           { storeId },
           {
             onSuccess: (conversation) => {
-              router.push(String(ROUTES.USER.MESSAGE_THREAD(conversation.id)));
+              /*
+               * `?product=` rather than a new conversation per listing. The
+               * schema is explicit that a product attaches to a MESSAGE, never
+               * to the thread — "a buyer with three questions about three items
+               * wants one thread, not three" — so the id rides in the URL and
+               * the composer attaches it to the next message sent.
+               */
+              const href = String(ROUTES.USER.MESSAGE_THREAD(conversation.id));
+              router.push(productId ? `${href}?product=${encodeURIComponent(productId)}` : href);
             },
           },
         );

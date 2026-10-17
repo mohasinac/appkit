@@ -474,7 +474,7 @@ export function AdminBlogEditorView({
   // up the component.
   useEffect(() => {
     validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [draft, validate]);
 
   const formContent = (

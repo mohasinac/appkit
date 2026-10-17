@@ -150,6 +150,15 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     [showToast],
   );
 
+  /*
+   * 🛑 ABOVE the `children` short-circuit. `useOrderScope` sat below it, so a
+   * caller passing children skipped the hook entirely and the hook order
+   * differed between the two render paths — React then reads one hook's state
+   * into another's slot. A hook must run on every render of a component, which
+   * means before any conditional return, always.
+   */
+  const orderScope = useOrderScope();
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -157,8 +166,6 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       </ListingLayout>
     );
   }
-
-  const orderScope = useOrderScope();
 
 
   const config: ListingViewConfig<AdminOrdersResponse, OrderRow> = {

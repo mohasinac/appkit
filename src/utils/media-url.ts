@@ -211,7 +211,7 @@ export function isStoredMediaRef(value: string): boolean {
    * is the obvious candidate) and that is a separate fix at the call site.
    */
   if (typeof value !== "string") {
-    // eslint-disable-next-line no-console -- client-side; the server path has its own recorder
+     
     console.warn(
       "[isStoredMediaRef] expected a string, received",
       Object.prototype.toString.call(value),
@@ -284,7 +284,7 @@ export function resolveMediaUrl(
    * crashing. The warn names the shape so the real caller stays findable.
    */
   if (typeof url !== "string") {
-    // eslint-disable-next-line no-console -- render path; a throw here kills the subtree
+     
     console.warn(
       "[resolveMediaUrl] expected a string, received",
       Object.prototype.toString.call(url),

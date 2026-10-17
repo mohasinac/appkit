@@ -2000,7 +2000,7 @@ export function SellerProductShell({
   // seller types (per the "even on-change errors must be shown" requirement).
   useEffect(() => {
     validate(draft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [draft, validate]);
 
   /*

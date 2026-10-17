@@ -729,7 +729,7 @@ export async function ProductDetailPageView({
                       )}
                     </Div>
                     <Row gap="xs" align="center" className="shrink-0">
-                      {storeId && <MessageSellerButton storeId={storeId} />}
+                      {storeId && <MessageSellerButton storeId={storeId} productId={product.id} />}
                       {storeHref && (
                         <Link
                           href={storeHref}
