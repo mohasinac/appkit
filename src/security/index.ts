@@ -43,8 +43,6 @@ export {
   decryptPayoutDetails,
   encryptShippingConfig,
   decryptShippingConfig,
-  encryptPayoutBankAccount,
-  decryptPayoutBankAccount,
 } from "./pii-encrypt";
 /*
  * The two NAMED PII accessors that replace an unconditional `mapDoc` decrypt.

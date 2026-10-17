@@ -30,8 +30,6 @@ import {
   revealPii,
   PAYOUT_PII_FIELDS,
   PAYOUT_PII_INDEX_MAP,
-  encryptPayoutBankAccount,
-  decryptPayoutBankAccount,
 } from "../../../security";
 
 /** Who/why for a payout write that lands in `statusHistory`. */
@@ -63,13 +61,9 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    * actually pay someone, and for the remittance email.
    */
   revealPayout(doc: PayoutDocument): PayoutPlain {
-    const revealed = revealPii<PayoutPlain>(doc, PAYOUT_PII_FIELDS);
-    if (revealed.bankAccount) {
-      revealed.bankAccount = decryptPayoutBankAccount(
-        revealed.bankAccount,
-      ) as typeof revealed.bankAccount;
-    }
-    return revealed;
+    // `bankAccount` needs no unwrap: its four members are masked or public
+    // bank identifiers, never encrypted. See the tombstone in pii-encrypt.ts.
+    return revealPii<PayoutPlain>(doc, PAYOUT_PII_FIELDS);
   }
 
   /** As `revealPayout`, for a list read. */
@@ -81,30 +75,19 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    * Masked PII — **the default for the admin and seller payout lists**, which
    * need to identify a payee rather than pay them.
    *
-   * `bankAccount` is decrypted and then masked field-by-field: an account
-   * number that reached a list view unmasked is the single most damaging
-   * value in this document.
+   * `bankAccount.accountHolderName` is masked too — it is a person's name, and
+   * a payout list only needs to identify the payee. The other three members
+   * (`accountNumberMasked`, `ifscCode`, `bankName`) are already non-revealing,
+   * so they pass through: masking a bank name would make the row useless
+   * without protecting anything.
    */
   maskedPayout(doc: PayoutDocument): PayoutPlain {
     const masked = maskPii<PayoutPlain>(doc, PAYOUT_PII_FIELDS);
     if (masked.bankAccount) {
-      const plain = decryptPayoutBankAccount(masked.bankAccount);
-      /*
-       * Field list derived from the object itself. `PAYOUT_PII_FIELDS` does not
-       * name the bank-account members, and hard-coding them here would be a
-       * second list to keep in step with `decryptPayoutBankAccount`'s own —
-       * the mirror-drift trap (Root Cause #42). Every string member of a
-       * decrypted bank account is sensitive, so "all of them" is the correct
-       * list rather than an approximation of it.
-       */
-      masked.bankAccount = plain
-        ? maskPii<NonNullable<PayoutPlain["bankAccount"]>>(
-            plain,
-            Object.entries(plain)
-              .filter(([, v]) => typeof v === "string")
-              .map(([k]) => k),
-          )
-        : undefined; // `decryptPayoutBankAccount` can answer null; the field is optional
+      masked.bankAccount = maskPii<NonNullable<PayoutPlain["bankAccount"]>>(
+        masked.bankAccount,
+        ["accountHolderName"],
+      );
     }
     return masked;
   }
@@ -136,12 +119,12 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    * encryption path with one extra step on top, rather than two parallel paths
    * that have to agree — which is what the hand-rolled override was.
    */
-  protected override applyWriteHooks<D extends object>(data: D): D {
-    const out = super.applyWriteHooks(data);
-    const access = out as { bankAccount?: object | null };
-    if (access.bankAccount) access.bankAccount = encryptPayoutBankAccount(access.bankAccount);
-    return out;
-  }
+  /*
+   * No `bankAccount` hook any more. It called `encryptPayoutBankAccount`,
+   * which was `encryptPiiFields(bank, [])` — a no-op — and
+   * `PayoutBankAccount` carries no secret field to encrypt. See the tombstone
+   * in `security/pii-encrypt.ts`.
+   */
 
   /** Override mapDoc to auto-decrypt PII on every Firestore read */
 

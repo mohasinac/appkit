@@ -510,22 +510,26 @@ export function decryptShippingConfig<T extends object>(
   return result as unknown as T;
 }
 
-/**
- * Encrypt PII on a payout bankAccount sub-object for the payouts collection.
+/*
+ * 🛑 `encryptPayoutBankAccount` / `decryptPayoutBankAccount` were DELETED
+ * 2026-10-18. Do not reintroduce them.
+ *
+ * Both were `encryptPiiFields({ ...bank }, [])` — an EMPTY field list, so a
+ * function named "encrypt" encrypted nothing and its decrypt twin undid
+ * nothing. That is R1's own defect (`EMPTY_PII_LIST`) one indirection away
+ * from where R1 looks, which is why no audit caught it.
+ *
+ * They had nothing to protect. `PayoutBankAccount` declares exactly
+ * `accountHolderName`, `accountNumberMasked`, `ifscCode`, `bankName` — the
+ * number is masked by definition and the rest are public bank identifiers. The
+ * real `accountNumber` lives on `UserDocument.payoutDetails`, encrypted there
+ * by `encryptPayoutDetails`, and is deliberately NOT copied onto a payout.
+ *
+ * The danger was the name: it read as protection, so a caller could reasonably
+ * pass a real account number through it and believe it had been encrypted.
+ * `seller-actions.ts` did exactly that — it copied the whole `bankAccount`,
+ * including the encrypted `accountNumber`, and the no-op stored the ciphertext
+ * verbatim where nothing would ever unwrap it.
+ *
+ * `accountHolderName` is still masked for list views, by `maskedPayout`.
  */
-export function encryptPayoutBankAccount<T extends object>(
-  bank: T | undefined | null,
-): T | undefined | null {
-  if (!bank) return bank;
-  return encryptPiiFields({ ...bank }, []);
-}
-
-/**
- * Decrypt PII on a payout bankAccount sub-object from the payouts collection.
- */
-export function decryptPayoutBankAccount<T extends object>(
-  bank: T | undefined | null,
-): T | undefined | null {
-  if (!bank) return bank;
-  return decryptPiiFields({ ...bank }, []);
-}

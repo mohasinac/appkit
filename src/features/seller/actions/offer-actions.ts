@@ -190,6 +190,16 @@ export async function makeOffer(
     throw new ValidationError(ERROR_MESSAGES.OFFER.ACTIVE_OFFER_EXISTS);
 
   const profile = await userRepository.findById(userId);
+  /*
+   * 🛑 REVEALED. `createOffer` encrypts `buyerEmail` (`OFFER_PII_FIELDS`), so
+   * the ciphertext this read returns would have been encrypted a second time
+   * and become permanently unreadable — the seller could never see who made
+   * the offer. The sibling `bid-actions.ts:223,481` was fixed for exactly this;
+   * this line is the same shape, missed.
+   *
+   * `userEmail` (the parameter) is already plaintext, so it needs no unwrap.
+   */
+  const profilePlain = profile ? userRepository.revealUser(profile) : null;
   const buyerDisplayName = profile?.displayName ?? "Buyer";
 
   if (!product.storeId)
@@ -202,7 +212,7 @@ export async function makeOffer(
     productImageUrl: product.mainImage,
     buyerUid: userId,
     buyerName: buyerDisplayName,
-    buyerEmail: profile?.email ?? userEmail ?? "",
+    buyerEmail: profilePlain?.email ?? userEmail ?? "",
     storeId: product.storeId,
     storeName: product.storeName ?? "",
     offerAmount,

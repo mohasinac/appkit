@@ -71,10 +71,20 @@ export async function runWeeklyPayoutEligibility(
     );
     const { platformFee, gatewayFee, gstOnFee, netAmount } = computePayoutDeduction(grossAmount, commissions);
 
+    /*
+     * 🛑 REVEALED before building a payout — see the identical note in
+     * `autoPayoutEligibility.ts`. `findById` is ciphertext-by-default and
+     * `createPayout` encrypts `sellerEmail`/`upiId` again, so the stored
+     * values went in double-encrypted and permanently unreadable, and the
+     * HMAC'd `sellerEmailIndex` could never match a real lookup.
+     */
+    const sellerPlain = userRepository.revealUser(seller);
+
     const payoutInput = {
       storeId,
-      sellerName: (seller.displayName ?? seller.email ?? store.ownerId) as string,
-      sellerEmail: (seller.email ?? "") as string,
+      // `displayName` is plaintext by D1; the email fallback must be revealed.
+      sellerName: (seller.displayName ?? sellerPlain.email ?? store.ownerId) as string,
+      sellerEmail: sellerPlain.email ?? "",
       orderIds: orders.map((o) => o.id),
       amount: netAmount,
       grossAmount,
@@ -87,16 +97,16 @@ export async function runWeeklyPayoutEligibility(
       currency: defaultCurrency,
       status: "pending" as const,
       paymentMethod:
-        seller.payoutDetails?.method === "upi" ? ("upi" as const) : ("bank_transfer" as const),
+        sellerPlain.payoutDetails?.method === "upi" ? ("upi" as const) : ("bank_transfer" as const),
       upiId:
-        seller.payoutDetails?.method === "upi" ? seller.payoutDetails.upiId : undefined,
+        sellerPlain.payoutDetails?.method === "upi" ? sellerPlain.payoutDetails.upiId : undefined,
       bankAccount:
-        seller.payoutDetails?.method === "bank_transfer" && seller.payoutDetails.bankAccount
+        sellerPlain.payoutDetails?.method === "bank_transfer" && sellerPlain.payoutDetails.bankAccount
           ? {
-              accountHolderName: seller.payoutDetails.bankAccount.accountHolderName,
-              accountNumberMasked: seller.payoutDetails.bankAccount.accountNumberMasked,
-              ifscCode: seller.payoutDetails.bankAccount.ifscCode,
-              bankName: seller.payoutDetails.bankAccount.bankName,
+              accountHolderName: sellerPlain.payoutDetails.bankAccount.accountHolderName,
+              accountNumberMasked: sellerPlain.payoutDetails.bankAccount.accountNumberMasked,
+              ifscCode: sellerPlain.payoutDetails.bankAccount.ifscCode,
+              bankName: sellerPlain.payoutDetails.bankAccount.bankName,
             }
           : undefined,
       notes: `Automated weekly payout — ${orders.length} delivered order(s)`,

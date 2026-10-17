@@ -511,6 +511,16 @@ export async function bulkSellerOrder(
 ): Promise<BulkSellerOrderResult> {
   const userDoc = await userRepository.findById(userId);
   if (!userDoc) throw new AuthorizationError("User not found");
+  /*
+   * 🛑 REVEALED before building a payout — the same active corruption the two
+   * payout crons had. `findById` is ciphertext-by-default and `createPayout`
+   * encrypts `upiId` again (`PAYOUT_PII_FIELDS`), so the seller-initiated path
+   * wrote a permanently unreadable payee address too.
+   *
+   * `payoutDetails` is encrypted by `encryptPayoutDetails`, a separate scheme
+   * from the `piiFields` path, which is why `revealUser` unwraps it explicitly.
+   */
+  const userPlain = userRepository.revealUser(userDoc);
   if (!userDoc.payoutDetails?.isConfigured) {
     throw new ValidationError(
       "Payout details are not set up. Please configure your payout method before requesting a payout.",
@@ -589,16 +599,33 @@ export async function bulkSellerOrder(
     gstRate: bulkSiteSettings.commissions.gstPercent / 100,
     currency: getDefaultCurrency(),
     paymentMethod:
-      userDoc.payoutDetails.method === "upi"
+      userPlain.payoutDetails?.method === "upi"
         ? ("upi" as const)
         : ("bank_transfer" as const),
     upiId:
-      userDoc.payoutDetails.method === "upi"
-        ? userDoc.payoutDetails.upiId
+      userPlain.payoutDetails?.method === "upi"
+        ? userPlain.payoutDetails.upiId
         : undefined,
+    /*
+     * 🛑 Only the MASKED subset, matching both payout crons.
+     *
+     * This used to copy the whole `bankAccount`, including the real
+     * `accountNumber` that `encryptPayoutDetails` had encrypted on the user
+     * document. `PAYOUT_PII_FIELDS` does not list it and
+     * `encryptPayoutBankAccount` is a no-op, so the ciphertext was stored
+     * verbatim on the payout where nothing would ever unwrap it — and
+     * revealing it instead would store a real account number in the clear.
+     * A payout does not need the full number; it needs to identify the account.
+     */
     bankAccount:
-      userDoc.payoutDetails.method === "bank_transfer"
-        ? userDoc.payoutDetails.bankAccount
+      userPlain.payoutDetails?.method === "bank_transfer" &&
+      userPlain.payoutDetails.bankAccount
+        ? {
+            accountHolderName: userPlain.payoutDetails.bankAccount.accountHolderName,
+            accountNumberMasked: userPlain.payoutDetails.bankAccount.accountNumberMasked,
+            ifscCode: userPlain.payoutDetails.bankAccount.ifscCode,
+            bankName: userPlain.payoutDetails.bankAccount.bankName,
+          }
         : undefined,
     notes: `Payout request for ${eligible.length} custom-shipped delivered order(s)`,
   });

@@ -184,13 +184,25 @@ export async function getSellerTrustStatus(storeId: string): Promise<SellerTrust
   if (!owner.value) return TRUST_STATUS_CLEAR;
 
   const ownerDoc = owner.value;
+  /*
+   * 🛑 REVEALED — without this, THIS SECURITY CONTROL SILENTLY ALWAYS PASSES.
+   *
+   * `userRepository` is ciphertext-by-default, while the scam registry's
+   * `phones`/`emails` are PLAINTEXT on purpose (decision D1: a victim googles a
+   * UPI id before paying, so SEO is the feature). Comparing ciphertext against
+   * plaintext never matches, so every lookup returned zero rows and
+   * `sellerTrustStatus` answered CLEAR for every seller — including ones
+   * already in the registry. No error, no log, and the one check a buyer
+   * relies on degraded to a constant.
+   */
+  const ownerPlain = userRepository.revealUser(ownerDoc);
   const lookups: Array<() => Promise<ScammerDocument[]>> = [];
-  if (ownerDoc.phoneNumber) {
-    const phone = ownerDoc.phoneNumber;
+  if (ownerPlain.phoneNumber) {
+    const phone = ownerPlain.phoneNumber;
     lookups.push(() => scammerRepository.findByContactField("phones", phone));
   }
-  if (ownerDoc.email) {
-    const email = ownerDoc.email;
+  if (ownerPlain.email) {
+    const email = ownerPlain.email;
     lookups.push(() => scammerRepository.findByContactField("emails", email));
   }
   if (lookups.length === 0) return TRUST_STATUS_CLEAR;
