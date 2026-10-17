@@ -121,7 +121,7 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
       requestedAt: new Date(),
     };
 
-    const { id: payoutId } = await payoutRepository.create(payoutInput);
+    const { id: payoutId } = await payoutRepository.createPayout(payoutInput);
 
     for (let i = 0; i < orders.length; i += BATCH_LIMIT) {
       const slice = orders.slice(i, i + BATCH_LIMIT);

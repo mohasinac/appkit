@@ -9,7 +9,7 @@
  *       stays changed and must be reset explicitly.
  *
  * EXPORTS:
- *   usersSeedData — array of 21 Partial<UserDocument> objects for the seed runner
+ *   usersSeedData — array of 21 Partial<UserPlain> objects for the seed runner
  *
  * @tag domain:users,auth
  * @tag layer:seed
@@ -20,7 +20,7 @@
  */
 
 import { getDefaultPhonePrefix } from "./seed-market-config";
-import type { UserDocument } from "../features/auth/schemas";
+import type { UserDocument, UserPlain } from "../features/auth/schemas";
 import { PERMISSION_GROUPS } from "../features/auth/permissions/constants";
 import { USER_FIELDS } from "../constants/field-names";
 import { seedPhoto } from "./_helpers/media";
@@ -29,7 +29,7 @@ const _ph = getDefaultPhonePrefix();
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const usersSeedData: Partial<UserDocument>[] = [
+export const usersSeedData: Partial<UserPlain>[] = [
   // ── Admin (also acts as buyer — has orders/cart/wishlist/history) ───────────
   {
     uid: "user-admin-letitrip",

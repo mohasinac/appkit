@@ -8,6 +8,7 @@ import {
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 export interface PayoutBankAccount {
   accountHolderName: string;
@@ -44,10 +45,21 @@ export const PayoutStatusValues = {
 
 export type PayoutPaymentMethod = "bank_transfer" | "upi";
 
+/**
+ * `PayoutDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
+ *
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
+ */
+export type PayoutPlain = Plaintext<PayoutDocument>;
+
 export interface PayoutDocument extends BaseDocument {
   storeId: string;
   sellerName: string;
-  sellerEmail: string;
+  sellerEmail: Encrypted<string>;
   amount: number;
   grossAmount: number;
   platformFee: number;
@@ -56,7 +68,7 @@ export interface PayoutDocument extends BaseDocument {
   status: PayoutStatus;
   paymentMethod: PayoutPaymentMethod;
   bankAccount?: PayoutBankAccount;
-  upiId?: string;
+  upiId?: Encrypted<string>;
   notes?: string;
   adminNote?: string;
   orderIds: string[];
@@ -189,8 +201,14 @@ export const PAYOUT_ADMIN_UPDATEABLE_FIELDS = [
 /** The only field a seller may write on their own payout doc. */
 export const PAYOUT_SELLER_UPDATEABLE_FIELDS = ["sellerReminderFlag"] as const;
 
+/*
+ * 🛑 Derived from the PLAIN shape. The caller holds a real email and the
+ * repository encrypts on write; deriving from the document would demand
+ * `Encrypted<string>` nobody has, and `asEncrypted(value)` to satisfy it is
+ * the misuse that helper's docstring forbids.
+ */
 export type PayoutCreateInput = Omit<
-  PayoutDocument,
+  PayoutPlain,
   "id" | "createdAt" | "updatedAt" | "status" | "requestedAt"
 >;
 export type PayoutUpdateInput = Partial<

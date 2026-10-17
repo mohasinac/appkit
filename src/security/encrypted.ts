@@ -77,8 +77,15 @@ export type Encrypted<T extends string = string> = T & {
  * becoming required.
  */
 export type Plaintext<T> = {
-  [K in keyof T]: T[K] extends Encrypted<string> | undefined
-    ? Extract<T[K], undefined> | string
+  /*
+   * `| null` as well as `| undefined`: `UserDocument` declares
+   * `email: string | null`, and a condition written only against `undefined`
+   * left all three of its PII fields un-mapped — so `UserPlain` was identical
+   * to `UserDocument` and every write path stayed broken while the type looked
+   * converted.
+   */
+  [K in keyof T]: T[K] extends Encrypted<string> | null | undefined
+    ? Extract<T[K], null | undefined> | string
     : // Recurse into PLAIN OBJECT members only.
       //
       // 🛑 This was non-recursive at first, on the reasoning that recursion is

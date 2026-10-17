@@ -233,7 +233,21 @@ export function buildReviewSearchTxt(
  * is an address, and a searchTxt for an address IS that address re-encoded.
  * Indexing any of them would undo the encryption they are stored under (D1).
  */
-export function buildOrderSearchTxt(o: Partial<OrderDocument>): string[] {
+/*
+ * Typed to the five fields it READS, all non-PII — the same treatment as the
+ * offer and review builders. `userName`, `userEmail` and `sellerEmail` are
+ * deliberately absent (D1), and naming only the non-PII fields in the
+ * signature both proves that and lets this accept the ciphertext document and
+ * the plaintext seed shape without a cast.
+ */
+export function buildOrderSearchTxt(
+  o: Partial<
+    Pick<
+      OrderDocument,
+      "productTitle" | "storeName" | "trackingNumber" | "items" | "physicalLocation"
+    >
+  >,
+): string[] {
   return buildSearchTxt([
     o.productTitle,
     o.storeName,

@@ -38,7 +38,7 @@
  */
 
 import { withOrderSearchTxt } from "./_helpers/search-txt-wrappers";
-import type { OrderDocument } from "../features/orders/schemas/firestore";
+import type { OrderDocument, OrderPlain } from "../features/orders/schemas/firestore";
 import type { StatusChangeEntry } from "../_internal/shared/history/index";
 import { seedPhoto } from "./_helpers/media";
 
@@ -121,7 +121,7 @@ const USER_EMAILS: Record<string, string> = {
   "user-seto-kaiba": "vivaan.kapoor@gmail.com",
 };
 
-const _rawOrdersSeedData: Partial<OrderDocument>[] = [
+const _rawOrdersSeedData: Partial<OrderPlain>[] = [
   // ────────────────────────────────────────────────────────────────────────────
   // Rehan buying from Beyblade Arena — 4 explicit orders
   // ────────────────────────────────────────────────────────────────────────────
@@ -365,7 +365,7 @@ const buyerStoreMatrix = [
   { userId: "user-seto-kaiba", storeId: "store-beyblade-arena", addressId: "addr-kaiba-mansion" },
 ];
 
-const expandedOrders: Partial<OrderDocument>[] = [];
+const expandedOrders: Partial<OrderPlain>[] = [];
 for (let i = _rawOrdersSeedData.length; i < 50; i++) {
   const combo = buyerStoreMatrix[i % buyerStoreMatrix.length];
   const product = productPool[i % productPool.length];
@@ -423,7 +423,7 @@ for (let i = _rawOrdersSeedData.length; i < 50; i++) {
 
 // P-1 MVP: two cash/UPI manual payment orders for demo purposes.
 // cashOrderPendingProof: buyer submitted proof, admin has NOT yet verified.
-const cashOrderPendingProof: Partial<OrderDocument> = {
+const cashOrderPendingProof: Partial<OrderPlain> = {
   id: "order-1-20260729-cash01",
   productId: "product-beyblade-original-dranzer-s",
   productTitle: "Beyblade Original Dranzer S",
@@ -448,7 +448,7 @@ const cashOrderPendingProof: Partial<OrderDocument> = {
   updatedAt: daysAgo(1),
 };
 
-const cashOrderVerified: Partial<OrderDocument> = {
+const cashOrderVerified: Partial<OrderPlain> = {
   id: "order-1-20260729-cash02",
   productId: "product-beyblade-metal-storm-pegasus",
   productTitle: "Beyblade Metal Storm Pegasus",
@@ -491,7 +491,7 @@ const cashOrderVerified: Partial<OrderDocument> = {
  * multi-line ones, where the flat fields cannot express two products) is
  * passed through untouched.
  */
-function withOrderItems(order: Partial<OrderDocument>): Partial<OrderDocument> {
+function withOrderItems(order: Partial<OrderPlain>): Partial<OrderPlain> {
   if (Array.isArray(order.items) && order.items.length > 0) return order;
   if (!order.productId) return order;
 
@@ -512,14 +512,14 @@ function withOrderItems(order: Partial<OrderDocument>): Partial<OrderDocument> {
         totalPrice: order.totalPrice ?? unitPrice * quantity,
       },
     ],
-  } as Partial<OrderDocument>;
+  } as Partial<OrderPlain>;
 }
 
 // Backfills image/imageUrls (see orderItemImage() above) on every fixture
 // regardless of which shape it uses (multi-item `items[]` vs the legacy
 // single-item top-level fields), so no seeded order silently renders without
 // a thumbnail the way real pre-2026-08-20 orders do.
-function withOrderImages(input: Partial<OrderDocument>): Partial<OrderDocument> {
+function withOrderImages(input: Partial<OrderPlain>): Partial<OrderPlain> {
   const order = withOrderItems(input);
   return {
     ...order,
@@ -556,7 +556,7 @@ const ARENA = "store-beyblade-arena";
  * The two auction fixtures are the point of the set: they are the pair
  * `orderType` alone cannot tell apart.
  */
-const acquisitionOrders: Partial<OrderDocument>[] = [
+const acquisitionOrders: Partial<OrderPlain>[] = [
   // ── standard ──────────────────────────────────────────────────────────
   {
     id: "order-1-20260818-stdctx",
@@ -880,4 +880,4 @@ export const ordersSeedData = [
   ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 42),
 // Derived through the wrapper, never written per record — an inline literal
 // is how five product seed files shipped their last fixture with no tokens.
-].map(withOrderImages).map(withOrderSearchTxt) as OrderDocument[];
+].map(withOrderImages).map(withOrderSearchTxt) as OrderPlain[];

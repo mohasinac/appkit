@@ -15,6 +15,7 @@ import {
 import type { DocumentReference, WriteResult } from "firebase-admin/firestore";
 import type {
   PayoutDocument,
+  PayoutPlain,
   PayoutCreateInput,
   PayoutRefundDeduction,
   PayoutStatus,
@@ -25,7 +26,8 @@ import { withHistory, type HistoryActor } from "../../../_internal/shared/histor
 import type { FirestoreDocument } from "../../../schemas/types";
 
 import {
-  decryptPiiFields,
+  maskPii,
+  revealPii,
   PAYOUT_PII_FIELDS,
   PAYOUT_PII_INDEX_MAP,
   encryptPayoutBankAccount,
@@ -46,17 +48,70 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   }
 
   /** Decrypt PII fields on a payout document after Firestore read */
-  private decryptPayout(doc: PayoutDocument): PayoutDocument {
-    const decrypted = decryptPiiFields(
-      doc,
-      [...PAYOUT_PII_FIELDS],
-    ) as unknown as PayoutDocument;
-    if (decrypted.bankAccount) {
-      decrypted.bankAccount = decryptPayoutBankAccount(
-        decrypted.bankAccount,
-      ) as unknown as typeof decrypted.bankAccount;
+  /*
+   * 🛑 `mapDoc` no longer decrypts — reads return what Firestore holds.
+   *
+   * `bankAccount` is handled here rather than by `revealPii`, because it is
+   * encrypted by its OWN scheme (`decryptPayoutBankAccount`) and not by the
+   * `PAYOUT_PII_FIELDS` path list. A named accessor that silently skipped it
+   * would hand a caller an account number it could not read, which is worse
+   * than refusing: the value looks present.
+   */
+
+  /**
+   * Plaintext PII. **Opt-in and named** — for the payout run that has to
+   * actually pay someone, and for the remittance email.
+   */
+  revealPayout(doc: PayoutDocument): PayoutPlain {
+    const revealed = revealPii<PayoutPlain>(doc, PAYOUT_PII_FIELDS);
+    if (revealed.bankAccount) {
+      revealed.bankAccount = decryptPayoutBankAccount(
+        revealed.bankAccount,
+      ) as typeof revealed.bankAccount;
     }
-    return decrypted;
+    return revealed;
+  }
+
+  /** As `revealPayout`, for a list read. */
+  revealPayouts(docs: readonly PayoutDocument[]): PayoutPlain[] {
+    return docs.map((d) => this.revealPayout(d));
+  }
+
+  /**
+   * Masked PII — **the default for the admin and seller payout lists**, which
+   * need to identify a payee rather than pay them.
+   *
+   * `bankAccount` is decrypted and then masked field-by-field: an account
+   * number that reached a list view unmasked is the single most damaging
+   * value in this document.
+   */
+  maskedPayout(doc: PayoutDocument): PayoutPlain {
+    const masked = maskPii<PayoutPlain>(doc, PAYOUT_PII_FIELDS);
+    if (masked.bankAccount) {
+      const plain = decryptPayoutBankAccount(masked.bankAccount);
+      /*
+       * Field list derived from the object itself. `PAYOUT_PII_FIELDS` does not
+       * name the bank-account members, and hard-coding them here would be a
+       * second list to keep in step with `decryptPayoutBankAccount`'s own —
+       * the mirror-drift trap (Root Cause #42). Every string member of a
+       * decrypted bank account is sensitive, so "all of them" is the correct
+       * list rather than an approximation of it.
+       */
+      masked.bankAccount = plain
+        ? maskPii<NonNullable<PayoutPlain["bankAccount"]>>(
+            plain,
+            Object.entries(plain)
+              .filter(([, v]) => typeof v === "string")
+              .map(([k]) => k),
+          )
+        : undefined; // `decryptPayoutBankAccount` can answer null; the field is optional
+    }
+    return masked;
+  }
+
+  /** As `maskedPayout`, for a list read. */
+  maskedPayouts(docs: readonly PayoutDocument[]): PayoutPlain[] {
+    return docs.map((d) => this.maskedPayout(d));
   }
 
   /**
@@ -89,21 +144,24 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   }
 
   /** Override mapDoc to auto-decrypt PII on every Firestore read */
-  protected override mapDoc<D = PayoutDocument>(
-    snap: import("../../../providers/db-firebase").DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<PayoutDocument>(snap);
-    return this.decryptPayout(raw) as unknown as D;
-  }
 
   /**
    * Create a new payout request
    */
-  override async create(input: PayoutCreateInput): Promise<PayoutDocument> {
+  /*
+   * 🛑 NOT an `override`. It returns the plaintext it was handed (no
+   * read-after-write, which would cost a Firestore read per payout), and
+   * `PayoutPlain` is not assignable to the base's `Promise<T>` — correctly,
+   * because the two genuinely differ. The declaration used to say
+   * `PayoutDocument` directly above a line commented "return plaintext to
+   * caller".
+   */
+  async createPayout(input: PayoutCreateInput): Promise<PayoutPlain> {
     const now = new Date();
     const id = createPayoutId({ sellerName: input.sellerName, date: now });
 
-    const data: Omit<PayoutDocument, "id"> = {
+    // Plain in, ciphertext out — the write hook encrypts below.
+    const data: Omit<PayoutPlain, "id"> = {
       ...input,
       status: "pending",
       requestedAt: now,
@@ -121,7 +179,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       .doc(id)
       .set(prepareForFirestore(encrypted));
 
-    return { id, ...data }; // return plaintext to caller
+    return { id, ...data };
   }
 
   /** Override base update to preserve encryption/indexing for changed PII fields. */
@@ -146,7 +204,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       .get();
 
     return snapshot.docs.map((doc) =>
-      this.decryptPayout({
+      ({
         id: doc.id,
         ...doc.data(),
       } as PayoutDocument),
@@ -168,7 +226,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       .get();
 
     return snapshot.docs.map((doc) =>
-      this.decryptPayout({
+      ({
         id: doc.id,
         ...doc.data(),
       } as PayoutDocument),
@@ -296,7 +354,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       .limit(1)
       .get();
     if (snapshot.empty) return null;
-    return this.decryptPayout({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as PayoutDocument);
+    return ({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as PayoutDocument);
   }
 
   /**
@@ -331,7 +389,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       return { ...doc, refundDeductions: newDeductions, netAmount, updatedAt: new Date() };
     });
 
-    return this.decryptPayout(updated);
+    return (updated);
   }
 
   // ---------------------------------------------------------------------------

@@ -471,7 +471,7 @@ export async function requestPayout(
   if (earnings.netAmount <= 0 || earnings.eligibleOrders.length === 0)
     throw new ValidationError("No eligible earnings available for payout.");
 
-  const payout = await payoutRepository.create({
+  const payout = await payoutRepository.createPayout({
     storeId: userId,
     sellerName: userName,
     sellerEmail: userEmail,
@@ -574,7 +574,7 @@ export async function bulkSellerOrder(
   const bulkSiteSettings = await siteSettingsRepository.getSingleton();
   const bulkDeduction = computePayoutDeduction(grossAmount, bulkSiteSettings.commissions);
 
-  const payoutDoc = await payoutRepository.create({
+  const payoutDoc = await payoutRepository.createPayout({
     storeId: userId,
     sellerName: userDisplayName,
     sellerEmail: userEmail,

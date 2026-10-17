@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+// The defining module, not the `/client` entry — this is reached from
+// server-only metadata paths (Root Cause #76).
+import { ROUTES } from "../../../../next/routing/route-map";
 
 export interface RobotsOptions {
   siteUrl: string;
@@ -18,13 +21,14 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
           "/auth/",
           "/checkout/",
           "/cart/",
-          // A robots.txt disallow PREFIX, not a route reference: the twelve
-          // siblings here are path patterns ending in "/" and only this one
-          // lacks the slash, so it is the sole entry the route-literal selector
-          // sees. Same reasoning as the `audit-hardcoded-api-routes-ok` marker
-          // on "/api/" above.
-          // eslint-disable-next-line no-restricted-syntax
-          "/wishlist",
+          /*
+           * The one entry here that is a PAGE rather than a subtree prefix —
+           * its twelve siblings end in "/" because they disallow a whole tree,
+           * and `/wishlist` is a single route. So it genuinely is a route
+           * reference and takes the constant; the earlier
+           * eslint-disable here was treating a real finding as noise.
+           */
+          ROUTES.USER.WISHLIST,
           "/preview/",
           "/track/",
           "/unauthorized/",

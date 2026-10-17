@@ -15,7 +15,8 @@ import {
   USER_PII_FIELDS,
   USER_PII_INDEX_MAP,
   decryptPayoutDetails,
-  decryptPiiFields,
+  maskPii,
+  revealPii,
   decryptShippingConfig,
   encryptPayoutDetails,
   encryptShippingConfig,
@@ -26,6 +27,7 @@ import {
   USER_COLLECTION,
   USER_FIELDS,
   type UserDocument,
+  type UserPlain,
 } from "../schemas";
 
 export class UserRepository extends BaseRepository<UserDocument> {
@@ -52,22 +54,89 @@ export class UserRepository extends BaseRepository<UserDocument> {
     super(USER_COLLECTION);
   }
 
-  private decryptUser(doc: UserDocument): UserDocument {
-    const decrypted = decryptPiiFields(doc, [...USER_PII_FIELDS]);
+  /*
+   * 🛑 `mapDoc` no longer decrypts. This is the widest-reaching of the
+   * fourteen — 73 files touch this repository — and it is why ciphertext never
+   * leaving the database matters most here: `email` and `phoneNumber` belong
+   * to every account on the platform.
+   *
+   * `payoutDetails` and `shippingConfig` are handled inside the accessors
+   * rather than by `revealPii`, because each is encrypted by its OWN scheme
+   * and not by a `USER_PII_FIELDS` path. An accessor that silently skipped
+   * them would hand a caller a UPI id it could not read — worse than refusing,
+   * because the value looks present.
+   */
 
-    if (decrypted.payoutDetails) {
-      decrypted.payoutDetails = decryptPayoutDetails(
-        decrypted.payoutDetails,
-      ) as typeof decrypted.payoutDetails;
+  /**
+   * Plaintext PII. **Opt-in and named** — for the account's own settings page,
+   * the payout run, and any mail that has to reach the person.
+   */
+  revealUser(doc: UserDocument): UserPlain {
+    const revealed = revealPii<UserPlain>(doc, USER_PII_FIELDS);
+    if (revealed.payoutDetails) {
+      revealed.payoutDetails = decryptPayoutDetails(
+        revealed.payoutDetails,
+      ) as typeof revealed.payoutDetails;
     }
-
-    if (decrypted.shippingConfig) {
-      decrypted.shippingConfig = decryptShippingConfig(
-        decrypted.shippingConfig,
-      ) as typeof decrypted.shippingConfig;
+    if (revealed.shippingConfig) {
+      revealed.shippingConfig = decryptShippingConfig(
+        revealed.shippingConfig,
+      ) as typeof revealed.shippingConfig;
     }
+    return revealed;
+  }
 
-    return decrypted;
+  /** As `revealUser`, for a list read. */
+  revealUsers(docs: readonly UserDocument[]): UserPlain[] {
+    return docs.map((d) => this.revealUser(d));
+  }
+
+  /**
+   * Masked PII — **the default for every admin list and every public
+   * surface.** Decrypts first, then masks, because the mask helpers refuse
+   * ciphertext by design.
+   *
+   * `payoutDetails` and `shippingConfig` are decrypted and then masked
+   * member-by-member: a UPI handle or account number reaching an admin table
+   * unmasked is the most damaging value this document carries.
+   */
+  maskedUser(doc: UserDocument): UserPlain {
+    const masked = maskPii<UserPlain>(doc, USER_PII_FIELDS);
+    if (masked.payoutDetails) {
+      masked.payoutDetails = this.maskNested(
+        decryptPayoutDetails(masked.payoutDetails),
+      ) as typeof masked.payoutDetails;
+    }
+    if (masked.shippingConfig) {
+      masked.shippingConfig = this.maskNested(
+        decryptShippingConfig(masked.shippingConfig),
+      ) as typeof masked.shippingConfig;
+    }
+    return masked;
+  }
+
+  /** As `maskedUser`, for a list read. */
+  maskedUsers(docs: readonly UserDocument[]): UserPlain[] {
+    return docs.map((d) => this.maskedUser(d));
+  }
+
+  /**
+   * Mask every string member of an already-decrypted nested object.
+   *
+   * The field list is derived from the object rather than hard-coded, because
+   * `USER_PII_FIELDS` does not name these members and a second list here would
+   * have to be kept in step with `decryptPayoutDetails`'s own (Root Cause #42).
+   * Every string in a payout or shipping block is sensitive, so "all of them"
+   * is the correct list, not an approximation.
+   */
+  private maskNested<T extends object>(value: T | null | undefined): T | undefined {
+    if (!value) return undefined;
+    return maskPii<T>(
+      value,
+      Object.entries(value)
+        .filter(([, v]) => typeof v === "string")
+        .map(([k]) => k),
+    );
   }
 
   /**
@@ -100,14 +169,15 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return out;
   }
 
-  protected override mapDoc<D = UserDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<UserDocument>(snap);
-    return this.decryptUser(raw) as unknown as D;
-  }
 
+  /*
+   * Takes PLAINTEXT, like the base it overrides — the three real signup paths
+   * hand over the email Firebase just gave them, and `applyWriteHooks` below
+   * is what encrypts it.
+   */
   override async createWithId(
     id: string,
-    data: Partial<UserDocument>,
+    data: Partial<UserPlain>,
   ): Promise<UserDocument> {
     // `uid` is a required UserDocument field read directly off the mapped
     // object (SessionUser.uid, getServerPermissions(uid), etc.) — mapDoc()
@@ -116,13 +186,13 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // that authenticates fine but fails every downstream role/permission
     // check with no error anywhere (found via a live RBAC bug where an
     // admin account created this way couldn't access /admin).
-    const withUid: Partial<UserDocument> = { uid: id, ...data };
+    const withUid: Partial<UserPlain> = { uid: id, ...data };
     const encrypted = this.applyWriteHooks(withUid);
-    return super.createWithId(id, encrypted);
+    return super.createWithId(id, encrypted as Partial<UserPlain>);
   }
 
   override async create(
-    input: Omit<UserDocument, "id" | "createdAt" | "updatedAt">,
+    input: Omit<UserPlain, "id" | "createdAt" | "updatedAt">,
   ): Promise<UserDocument> {
     // A Firestore auto-id, NOT a derived one.
     //
@@ -137,7 +207,8 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // by `reserveUserSlug` from displayName only.
     const id = this.db.collection(this.collection).doc().id;
 
-    const userData: Omit<UserDocument, "id"> = {
+    // Plain in, ciphertext out — `applyWriteHooks` encrypts below.
+    const userData: Omit<UserPlain, "id"> = {
       ...input,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -150,7 +221,15 @@ export class UserRepository extends BaseRepository<UserDocument> {
       .doc(id)
       .set(prepareForFirestore(encrypted));
 
-    return { id, ...userData };
+    /*
+     * Returns what was PERSISTED, not the plaintext input.
+     *
+     * `encrypted` is the exact object just written, so this is both honest and
+     * assignable to the base's `Promise<UserDocument>` — the declaration
+     * previously said `UserDocument` while returning `userData`, the plaintext.
+     * No re-read, so no extra Firestore read (Rule #6).
+     */
+    return { id, ...encrypted } as UserDocument;
   }
 
   async findByUid(uid: string): Promise<UserDocument | null> {
@@ -235,16 +314,21 @@ export class UserRepository extends BaseRepository<UserDocument> {
     }
   }
 
+  /*
+   * Takes PLAINTEXT, like the base it overrides — this method is the thing
+   * that encrypts (`applyWriteHooks`), so demanding ciphertext from callers
+   * inverted its own contract.
+   */
   override async update(
     uid: string,
-    data: Partial<UserDocument>,
+    data: Partial<UserPlain>,
   ): Promise<UserDocument> {
     const encrypted = this.applyWriteHooks(data);
-    return super.update(uid, encrypted);
+    return super.update(uid, encrypted as Partial<UserPlain>);
   }
 
   async markEmailAsVerified(uid: string): Promise<UserDocument> {
-    return this.update(uid, { emailVerified: true } as Partial<UserDocument>);
+    return this.update(uid, { emailVerified: true });
   }
 
   async disable(uid: string): Promise<UserDocument> {
@@ -281,13 +365,24 @@ export class UserRepository extends BaseRepository<UserDocument> {
       throw new DatabaseError(`User not found: ${uid}`);
     }
 
-    const updateData: Partial<UserDocument> = { ...data };
+    /*
+      * Plain in, ciphertext out — `this.update` encrypts via the write hook.
+      *
+      * 🛑 The comparison below (`data.email !== currentUser.email`) now
+      * compares PLAINTEXT to CIPHERTEXT, so it is always true and
+      * `emailVerified` is cleared on every profile save that includes an
+      * email — even an unchanged one. `currentUser` comes from `findById`,
+      * which no longer decrypts. Fixed by comparing against the revealed
+      * value, which is the one place in this method that needs plaintext.
+      */
+    const updateData: Partial<UserPlain> = { ...data };
+    const current = this.revealUser(currentUser);
 
-    if (data.email && data.email !== currentUser.email) {
+    if (data.email && data.email !== current.email) {
       updateData.emailVerified = false;
     }
 
-    if (data.phoneNumber && data.phoneNumber !== currentUser.phoneNumber) {
+    if (data.phoneNumber && data.phoneNumber !== current.phoneNumber) {
       updateData.phoneVerified = false;
     }
 

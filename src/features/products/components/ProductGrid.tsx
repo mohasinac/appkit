@@ -648,11 +648,18 @@ function ProductListRow<T extends ProductItem = ProductItem>({
 function safeHref(href: string | undefined): string | undefined {
   if (!href) return undefined;
   // drop any href that would navigate to a literal "/undefined" segment
-  // "/undefined" and "/null" are the string SHAPES of a broken interpolation,
-  // matched as content. They are not routes and no ROUTES entry could express
-  // them.
-  // eslint-disable-next-line no-restricted-syntax
-  if (href.includes("/undefined") || href.includes("/null")) return undefined;
+  /*
+   * A SEGMENT that is literally "undefined"/"null" means an interpolation
+   * produced one — `/products/${maybeUndefined}`.
+   *
+   * Tested with a regex rather than `.includes("/undefined")`, which kills two
+   * birds: a regex literal is not a string Literal node, so the route-literal
+   * rule has nothing to flag and the eslint-disable that used to sit here is
+   * gone; and `.includes` matched any slug CONTAINING the word, so a real
+   * listing at `/products/undefined-sequence-bey` was silently dropped from
+   * the grid. The anchors make it a whole-segment test.
+   */
+  if (/\/(?:undefined|null)(?:\/|$)/.test(href)) return undefined;
   return href;
 }
 

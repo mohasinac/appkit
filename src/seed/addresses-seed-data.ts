@@ -18,12 +18,12 @@
  * @tag sideEffects:none
  */
 
-import type { AddressDocument } from "../features/addresses/schemas/firestore";
+import type { AddressDocument, AddressPlain } from "../features/addresses/schemas/firestore";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-const _rawAddressesSeedData: Partial<AddressDocument>[] = [
+const _rawAddressesSeedData: Partial<AddressPlain>[] = [
   // Mock User 3 — Home
   {
     id: "addr-yugi-home",
@@ -82,4 +82,4 @@ const _rawAddressesSeedData: Partial<AddressDocument>[] = [
   },
 ];
 
-export const addressesSeedData = _rawAddressesSeedData as AddressDocument[];
+export const addressesSeedData = _rawAddressesSeedData as AddressPlain[];

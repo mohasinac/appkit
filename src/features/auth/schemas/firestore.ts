@@ -50,6 +50,17 @@ export interface AvatarMetadata {
   zoom: number; // 0.1 to 3.0
 }
 
+/**
+ * `UserDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
+ *
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
+ */
+export type UserPlain = Plaintext<UserDocument>;
+
 export interface UserDocument extends BaseDocument {
   uid: string;
   /**
@@ -71,8 +82,14 @@ export interface UserDocument extends BaseDocument {
    * profile resolution falls back to id and then uid.
    */
   slug?: string;
-  email: string | null;
-  phoneNumber: string | null;
+  /**
+   * PII — CIPHERTEXT at rest, kept true by `UserRepository` no longer
+   * decrypting in `mapDoc`. Readers call `userRepository.maskedUser(doc)` (the
+   * default) or `revealUser(doc)` (opt-in, named, greppable).
+   */
+  email: Encrypted<string> | null;
+  /** PII — ciphertext at rest; see `email`. */
+  phoneNumber: Encrypted<string> | null;
   phoneVerified?: boolean;
   displayName: string | null;
   photoURL: string | null;
@@ -193,7 +210,8 @@ export interface UserDocument extends BaseDocument {
    * exchange rather than the client SDK's linkWithCredential(). */
   googleLinked?: boolean;
   /** The Google account email this profile is linked to, once linked. */
-  googleLinkedEmail?: string | null;
+  /** PII — ciphertext at rest; see `email`. */
+  googleLinkedEmail?: Encrypted<string> | null;
 
   // ── UI preferences ───────────────────────────────────────────────────────
   uiPreferences?: {

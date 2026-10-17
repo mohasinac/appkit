@@ -3,7 +3,7 @@
  * WHAT: 10 payouts: COMPLETED (5), PROCESSING (1), PENDING (2 — one with refund deduction), FAILED (2).
  *
  * EXPORTS:
- *   payoutsSeedData — Array of Partial<PayoutDocument> for seed runner
+ *   payoutsSeedData — Array of Partial<PayoutPlain> for seed runner
  *
  * @tag domain:payouts,payments
  * @tag layer:seed
@@ -17,7 +17,7 @@ import { getDefaultCurrency } from "./seed-market-config";
 
 const _CURRENCY = getDefaultCurrency();
 
-import type { PayoutDocument, PayoutRefundDeduction } from "../features/payments/schemas";
+import type { PayoutDocument, PayoutPlain, PayoutRefundDeduction } from "../features/payments/schemas";
 import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 import {
   PAYOUT_FIELDS,
@@ -63,7 +63,7 @@ function seedDeduction(
   return { orderId, refundId, refundedAmount, deductedAmount, reason, appliedAt: daysAgo(daysAgoN) };
 }
 
-export const payoutsSeedData: Partial<PayoutDocument>[] = [
+export const payoutsSeedData: Partial<PayoutPlain>[] = [
   // ── COMPLETED (×5) ──────────────────────────────────────────────────────
 
   // 1. Beyblade Arena — Jan 2026

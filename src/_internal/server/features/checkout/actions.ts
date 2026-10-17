@@ -994,7 +994,7 @@ async function createOrderForGroup(
   // already drifted once before (add-on fees, Root Cause #65).
   const sourceContext = await buildOrderSourceContext(firstItem, firstProduct, orderType);
 
-  const order = await unitOfWork.orders.create({
+  const order = await unitOfWork.orders.createOrder({
     productId: firstItem.productId,
     productTitle: firstItem.productTitle,
     userId: uid,
@@ -2256,7 +2256,7 @@ async function createPhonePeGroupOrder(
   // already drifted once before (add-on fees, Root Cause #65).
   const sourceContext = await buildOrderSourceContext(firstItem, group[0].product!, orderType);
 
-  const order = await unitOfWork.orders.create({
+  const order = await unitOfWork.orders.createOrder({
     productId: firstItem.productId,
     productTitle: firstItem.productTitle,
     userId: uid,

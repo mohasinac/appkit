@@ -14,7 +14,7 @@ import type { ScammerDocument } from "../../features/scams/schemas/firestore";
 import type { EventDocument } from "../../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../../features/blog/schemas/firestore";
 import type { ReviewPlain } from "../../features/reviews/schemas/firestore";
-import type { OrderDocument } from "../../features/orders/schemas/firestore";
+import type { OrderPlain } from "../../features/orders/schemas/firestore";
 import type { CouponDocument } from "../../features/promotions/schemas/firestore";
 import type { OfferPlain } from "../../features/seller/schemas/firestore";
 import {
@@ -64,7 +64,12 @@ export function withReviewSearchTxt<T extends Partial<ReviewPlain>>(p: T): T {
   return { ...p, searchTxt: buildReviewSearchTxt(p) };
 }
 
-export function withOrderSearchTxt<T extends Partial<OrderDocument>>(p: T): T {
+/*
+ * Bounded by `OrderPlain`: seed fixtures hold plaintext and `seed-cli`
+ * encrypts on write. `buildOrderSearchTxt` reads the product, store, tracking
+ * number, items and location — never `userEmail` (D1).
+ */
+export function withOrderSearchTxt<T extends Partial<OrderPlain>>(p: T): T {
   return { ...p, searchTxt: buildOrderSearchTxt(p) };
 }
 

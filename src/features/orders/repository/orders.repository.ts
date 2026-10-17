@@ -19,7 +19,8 @@ import {
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
-  decryptPiiFields,
+  maskPii,
+  revealPii,
   ORDER_PII_FIELDS,
 } from "../../../security";
 import { serverTimestamp, arrayUnion } from "../../../contracts/field-ops";
@@ -30,6 +31,7 @@ import {
   OrderStatusValues,
   type OrderCreateInput,
   type OrderDocument,
+  type OrderPlain,
   type OrderRefundEvent,
 } from "../schemas";
 import { withHistory, type HistoryActor, type FieldChange } from "../../../_internal/shared/history/index";
@@ -79,11 +81,6 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     super(ORDER_COLLECTION);
   }
 
-  private decryptOrder(doc: OrderDocument): OrderDocument {
-    return decryptPiiFields(doc, [
-      ...ORDER_PII_FIELDS,
-    ]) as unknown as OrderDocument;
-  }
 
   /**
    * Declared, not hand-rolled.
@@ -98,18 +95,56 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    */
   protected override piiFields = ORDER_PII_FIELDS;
 
-  protected override mapDoc<D = OrderDocument>(
-    snap: import("../../../providers/db-firebase").DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<OrderDocument>(snap);
-    return this.decryptOrder(raw) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `OrderDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealOrder(doc: OrderDocument): OrderPlain {
+    return revealPii<OrderPlain>(doc, ORDER_PII_FIELDS);
   }
 
-  override async create(input: OrderCreateInput): Promise<OrderDocument> {
+  /** As `revealOrder`, for a list read. */
+  revealOrders(docs: readonly OrderDocument[]): OrderPlain[] {
+    return docs.map((d) => this.revealOrder(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedOrder(doc: OrderDocument): OrderPlain {
+    return maskPii<OrderPlain>(doc, ORDER_PII_FIELDS);
+  }
+
+  /** As `maskedOrder`, for a list read. */
+  maskedOrders(docs: readonly OrderDocument[]): OrderPlain[] {
+    return docs.map((d) => this.maskedOrder(d));
+  }
+
+  /*
+   * 🛑 NOT an `override`. It returns the plaintext it was handed rather than
+   * re-reading (a read-after-write costs a Firestore read per order), so the
+   * return is `OrderPlain` — not assignable to the base's `Promise<T>`, and
+   * correctly so, because the two differ.
+   */
+  async createOrder(input: OrderCreateInput): Promise<OrderPlain> {
     const orderDate = new Date();
     const id = createOrderId(input.quantity, orderDate);
 
-    const orderData: Omit<OrderDocument, "id"> = {
+    // Plain in, ciphertext out — `applyWriteHooks` encrypts below.
+    const orderData: Omit<OrderPlain, "id"> = {
       ...input,
       orderDate,
       createdAt: new Date(),
@@ -285,7 +320,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .limit(200)
       .get();
     return snap.docs.map((doc) =>
-      this.decryptOrder({ id: doc.id, ...doc.data() } as OrderDocument),
+      ({ id: doc.id, ...doc.data() } as OrderDocument),
     );
   }
 
@@ -343,7 +378,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .get();
 
     return snapshot.docs.map((doc) =>
-      this.decryptOrder({
+      ({
         id: doc.id,
         ...doc.data(),
       } as OrderDocument),
@@ -691,7 +726,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .where("paymentBatchId", "==", batchId)
       .limit(20)
       .get();
-    return snap.docs.map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument));
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as OrderDocument));
   }
 
   /**
@@ -708,7 +743,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .where(ORDER_FIELDS.PAYMENT_ID, "==", paymentId)
       .limit(20)
       .get();
-    return snap.docs.map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument));
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as OrderDocument));
   }
 
   /**
@@ -734,7 +769,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return snap.docs.map((d) => ({
       id: d.id,
       ref: d.ref as DocumentReference,
-      data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+      data: ({ id: d.id, ...d.data() } as OrderDocument),
     }));
   }
 
@@ -761,7 +796,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .map((d) => ({
         id: d.id,
         ref: d.ref as DocumentReference,
-        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+        data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
       .filter((entry) => !entry.data.paymentProofUrl);
   }
@@ -791,7 +826,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .map((d) => ({
         id: d.id,
         ref: d.ref as DocumentReference,
-        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+        data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
       .filter((entry) => !!entry.data.paymentProofUrl && !entry.data.paymentReviewOutcome);
   }
@@ -839,7 +874,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .get();
 
     const matches = snap.docs
-      .map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument))
+      .map((d) => ({ id: d.id, ...d.data() } as OrderDocument))
       .filter((order) => MANUAL_PAYMENT_METHODS.includes(order.paymentMethod ?? ""))
       .filter((order) =>
         mode === "awaiting_proof"
@@ -883,7 +918,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .map((d) => ({
         id: d.id,
         ref: d.ref as DocumentReference,
-        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+        data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
       .filter((o) => !o.data.emiEnabled || o.data.emiComplete);
   }
@@ -912,7 +947,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .map((d) => ({
         id: d.id,
         ref: d.ref as DocumentReference,
-        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+        data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
       .filter((o) => !o.data.emiEnabled || o.data.emiComplete);
   }
@@ -936,7 +971,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return snap.docs.map((d) => ({
       id: d.id,
       ref: d.ref as DocumentReference,
-      data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+      data: ({ id: d.id, ...d.data() } as OrderDocument),
     }));
   }
 

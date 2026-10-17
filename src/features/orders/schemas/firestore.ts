@@ -10,6 +10,7 @@ import type { ListingType } from "../../products/types";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
 import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
 import type { ReturnCustodyState } from "../../../_internal/shared/features/returns/custody";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
 //
@@ -362,14 +363,25 @@ export interface AppliedOrderDiscount {
   storeId?: string;
 }
 
+/**
+ * `OrderDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
+ *
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
+ */
+export type OrderPlain = Plaintext<OrderDocument>;
+
 export interface OrderDocument extends BaseDocument {
   /** Word-prefix search tokens. Derived on write; never fed by a PII field. */
   searchTxt?: string[];
   productId: string;
   productTitle: string;
   userId: string;
-  userName: string;
-  userEmail: string;
+  userName: Encrypted<string>;
+  userEmail: Encrypted<string>;
   storeId?: string;
   storeName?: string;
   items?: OrderDocumentItem[];
@@ -904,8 +916,13 @@ export const ORDER_TRACKED_FIELDS = [
   "cancellationReason",
 ] as const;
 
+/*
+ * 🛑 Derived from the PLAIN shape. The caller holds the buyer's real name and
+ * email and this repository encrypts them; deriving from the document demanded
+ * `Encrypted<string>` from checkout, satisfiable only by `asEncrypted(email)`.
+ */
 export type OrderCreateInput = Omit<
-  OrderDocument,
+  OrderPlain,
   "id" | "createdAt" | "updatedAt" | "orderDate"
 >;
 export type OrderUpdateInput = Partial<

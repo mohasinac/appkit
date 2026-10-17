@@ -9,19 +9,31 @@
  */
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 export type AddressOwnerType = "user" | "store";
 
 export type AddressBanStatus = "banned" | "unban_requested" | "suspicious";
 
+/**
+ * `AddressDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
+ *
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
+ */
+export type AddressPlain = Plaintext<AddressDocument>;
+
 export interface AddressDocument extends BaseDocument {
   ownerType: AddressOwnerType;
   ownerId: string;
   label: string;
-  fullName: string;
-  phone: string;
-  addressLine1: string;
-  addressLine2?: string;
+  fullName: Encrypted<string>;
+  phone: Encrypted<string>;
+  addressLine1: Encrypted<string>;
+  addressLine2?: Encrypted<string>;
   landmark?: string;
   city: string;
   state: string;
@@ -105,13 +117,20 @@ export const ADDRESS_UPDATABLE_FIELDS = [
 
 // External create-input excludes the discriminator (added by createForOwner)
 // and the system-managed id/timestamps. Keeps consumer shape backwards-compat.
+/*
+ * 🛑 Derived from the PLAIN shape — a caller types a real name, phone and
+ * street into a form, and the repository encrypts them. Deriving from the
+ * document demanded `Encrypted<string>` from seven routes and actions, and the
+ * only way to produce one without encrypting is `asEncrypted(value)`, which
+ * labels plaintext as ciphertext.
+ */
 export type AddressCreateInput = Omit<
-  AddressDocument,
+  AddressPlain,
   "id" | "ownerType" | "ownerId" | "createdAt" | "updatedAt"
 >;
 
 export type AddressUpdateInput = Partial<
-  Pick<AddressDocument, (typeof ADDRESS_UPDATABLE_FIELDS)[number]>
+  Pick<AddressPlain, (typeof ADDRESS_UPDATABLE_FIELDS)[number]>
 >;
 
 export const ADDRESS_FIELDS = {

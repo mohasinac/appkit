@@ -20,8 +20,9 @@ import {
   type DocumentSnapshot,
 } from "../../../providers/db-firebase";
 import {
+  maskPii,
+  revealPii,
   ADDRESS_PII_FIELDS,
-  decryptPiiFields,
 } from "../../../security";
 import {
   ADDRESS_FIELDS,
@@ -29,6 +30,7 @@ import {
   type AddressBanStatus,
   type AddressCreateInput,
   type AddressDocument,
+  type AddressPlain,
   type AddressOwnerType,
   type AddressUpdateInput,
 } from "../schemas";
@@ -38,9 +40,6 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     super(ADDRESSES_COLLECTION);
   }
 
-  private decryptAddress(doc: AddressDocument): AddressDocument {
-    return decryptPiiFields(doc, [...ADDRESS_PII_FIELDS]) as AddressDocument;
-  }
 
   /**
    * Declared, not hand-rolled.
@@ -55,9 +54,42 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
    */
   protected override piiFields = ADDRESS_PII_FIELDS;
 
-  protected override mapDoc<D = AddressDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<AddressDocument>(snap);
-    return this.decryptAddress(raw) as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `AddressDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealAddress(doc: AddressDocument): AddressPlain {
+    return revealPii<AddressPlain>(doc, ADDRESS_PII_FIELDS);
+  }
+
+  /** As `revealAddress`, for a list read. */
+  revealAddresss(docs: readonly AddressDocument[]): AddressPlain[] {
+    return docs.map((d) => this.revealAddress(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedAddress(doc: AddressDocument): AddressPlain {
+    return maskPii<AddressPlain>(doc, ADDRESS_PII_FIELDS);
+  }
+
+  /** As `maskedAddress`, for a list read. */
+  maskedAddresss(docs: readonly AddressDocument[]): AddressPlain[] {
+    return docs.map((d) => this.maskedAddress(d));
   }
 
   override async createWithId(
@@ -68,12 +100,17 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     return super.createWithId(id, encrypted);
   }
 
+  /*
+   * Takes PLAINTEXT, like the base it overrides — this method is the thing
+   * that encrypts (`applyWriteHooks`), so demanding ciphertext from callers
+   * inverted its own contract.
+   */
   override async update(
     id: string,
-    data: Partial<AddressDocument>,
+    data: Partial<AddressPlain>,
   ): Promise<AddressDocument> {
     const encrypted = this.applyWriteHooks(data);
-    return super.update(id, encrypted);
+    return super.update(id, encrypted as Partial<AddressPlain>);
   }
 
   async listByOwner(
@@ -164,7 +201,8 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
 
       const now = new Date();
       const docRef = this.getCollection().doc();
-      const addressData: Omit<AddressDocument, "id"> = {
+      // Plain in, ciphertext out — the write hook encrypts below.
+      const addressData: Omit<AddressPlain, "id"> = {
         ...input,
         ownerType,
         ownerId,
@@ -247,10 +285,28 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
 
     const updateData: AddressUpdateInput = { ...input };
     if (input.postalCode || input.addressLine1 || input.addressLine2 !== undefined) {
-      const postalCode = input.postalCode ?? existing.postalCode;
-      const line1 = input.addressLine1 ?? existing.addressLine1;
-      const line2 = input.addressLine2 ?? existing.addressLine2;
-      (updateData as Partial<AddressDocument>).addressHash = this.computeAddressHash(postalCode, line1, line2);
+      /*
+       * 🛑 Revealed, because the hash is a BLIND INDEX over plaintext.
+       *
+       * `existing` comes from a find, which no longer decrypts, and these three
+       * fall back to it when the caller did not supply them. Hashing ciphertext
+       * would compute a hash nothing else can reproduce — so every address
+       * edited after this change would stop matching its own duplicates, with
+       * no error and nothing to notice. The brand is what made the fallback
+       * visible; `.postalCode` is not PII and needs no reveal.
+       */
+      const current = this.revealAddress(existing);
+      const postalCode = input.postalCode ?? current.postalCode;
+      const line1 = input.addressLine1 ?? current.addressLine1;
+      const line2 = input.addressLine2 ?? current.addressLine2;
+      /*
+       * The hash is computed from PLAINTEXT, which is the whole point of a
+       * blind index — and `existing` now holds ciphertext, so the three values
+       * feeding it come from the revealed copy above. Casting to the document
+       * shape here would have hashed ciphertext and silently broken
+       * duplicate-detection for every address edited after this change.
+       */
+      (updateData as Partial<AddressPlain>).addressHash = this.computeAddressHash(postalCode, line1, line2);
     }
 
     return this.update(addressId, updateData);

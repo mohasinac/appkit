@@ -28,7 +28,7 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<un
     const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = createOrderSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid order input");
-      return orderRepository.create({
+      return orderRepository.createOrder({
         ...(parsed.data as any),
         userId: user.uid,
         status: "pending",
