@@ -31,8 +31,29 @@ export interface EslintConfigOverride {
  */
 const VARIANT_CATALOGUE_RULES = [
   {
-    // Hardcoded route strings — use ROUTES.* constants.
-    selector: "Literal[value=/^\\/[a-z]+(\\?|#|$)/]",
+    /*
+     * Hardcoded route strings — use ROUTES.* constants.
+     *
+     * 🛑 The `:not(Property[key.name="route"] > Literal)` is load-bearing, not
+     * tidying. `safeRead({ route: "/products", key, fallback })` takes a route
+     * as an OBSERVABILITY LABEL — it is the string that appears on a
+     * DEGRADED_READ row, never something anything navigates to. Flagging it
+     * asked for `ROUTES.PUBLIC.PRODUCTS` in a log field.
+     *
+     * Measured 2026-10-17 across appkit/src: this rule produced 741 warnings
+     * of which 23 were real — a 97% false-positive rate. 653 were tester-case
+     * hrefs that MUST be literals (see the file-scoped exemption in the
+     * consumer's eslint.config.mjs), 43 were inside route-map.ts itself, and
+     * 22 were these labels. A rule at that ratio is not a soft gate, it is
+     * noise that teaches people to scroll past the other 23.
+     *
+     * 🛑 The combinator is DESCENDANT, not child. `>` missed
+     * `route: verifiedOnly ? "/sellers" : "/stores"`, where the literal's
+     * parent is the ConditionalExpression and not the Property — so a label
+     * behind a ternary was still flagged while the plain one beside it was not.
+     */
+    selector:
+      'Literal[value=/^\\/[a-z]+(\\?|#|$)/]:not(Property[key.name="route"] Literal)',
     message:
       "Use ROUTES.* constants from @mohasinac/appkit instead of hardcoded route strings.",
   },

@@ -33,6 +33,8 @@
  */
 
 /** What the caller knows about the written document, when it knows anything. */
+import { ROUTES } from "../../../next/routing/route-map";
+
 export interface RevalidateHints {
   /** `standard` | `auction` | `pre-order` | … — picks the right detail route. */
   listingType?: string;
@@ -77,7 +79,7 @@ function listingTypeFromId(id: string): string | undefined {
 }
 
 function productTargets(id: string | undefined, hints?: RevalidateHints): string[] {
-  const out: string[] = ["/", "/products"];
+  const out: string[] = [ROUTES.HOME, ROUTES.PUBLIC.PRODUCTS];
   if (!id) return out;
 
   const type = hints?.listingType ?? listingTypeFromId(id);
@@ -85,7 +87,7 @@ function productTargets(id: string | undefined, hints?: RevalidateHints): string
     out.push(PRODUCT_DETAIL_BY_TYPE[type](id));
     // The type's own browse page, when it has one distinct from /products.
     const browse = PRODUCT_DETAIL_BY_TYPE[type](id).replace(/\/[^/]+$/, "");
-    if (browse && browse !== "/products") out.push(browse);
+    if (browse && browse !== ROUTES.PUBLIC.PRODUCTS) out.push(browse);
   } else {
     /*
      * Unknown type: revalidate EVERY detail route for this id rather than
@@ -124,23 +126,23 @@ export function revalidateTargetsFor(
     case "categories":
       // Brands and pricing bundles are `categories` rows discriminated by
       // `categoryType`, so all three detail shapes are marked.
-      paths = ["/", "/categories"];
+      paths = [ROUTES.HOME, ROUTES.PUBLIC.CATEGORIES];
       if (id) paths.push(`/categories/${id}`, `/brands/${id}`, `/bundles/${id}`);
       break;
     case "blogPosts":
-      paths = ["/", "/blog"];
+      paths = [ROUTES.HOME, ROUTES.BLOG.LIST];
       if (id) paths.push(`/blog/${id}`);
       break;
     case "events":
-      paths = ["/", "/events"];
+      paths = [ROUTES.HOME, ROUTES.PUBLIC.EVENTS];
       if (id) paths.push(`/events/${id}`);
       break;
     case "reviews":
       // A new review changes the product's rating and the homepage stat.
-      paths = ["/", "/reviews"];
+      paths = [ROUTES.HOME, ROUTES.PUBLIC.REVIEWS];
       break;
     case "stores":
-      paths = ["/", "/stores"];
+      paths = [ROUTES.HOME, ROUTES.PUBLIC.STORES];
       if (id) paths.push(`/stores/${id}`);
       break;
     case "carouselSlides":
@@ -149,7 +151,7 @@ export function revalidateTargetsFor(
       paths = ["/"];
       break;
     case "faqs":
-      paths = ["/", "/faqs"];
+      paths = [ROUTES.HOME, ROUTES.PUBLIC.FAQS];
       break;
     default:
       paths = [];

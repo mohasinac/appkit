@@ -60,7 +60,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   announcementBar: {
     enabled: true,
     message: "🎉 Up to 25% off select listings + free shipping on orders above ₹999 — See Events for codes",
-    link: "/events",
+    link: ROUTES.PUBLIC.EVENTS,
   },
   watermark: {
     type: "text",

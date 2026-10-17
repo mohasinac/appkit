@@ -24,6 +24,7 @@
  * there is nothing on the row to leak.
  */
 import React from "react";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Section, Container, Stack, Row, Div, Heading, Text, Span, TextLink } from "../../../ui";
 import type { SearchEverythingResult } from "../../../_internal/server/features/search/search-everything";
 
@@ -125,7 +126,7 @@ export function SearchResultsPageView({
                 No listings, categories, brands, stores, articles or help pages
                 matched “{q}”.
               </Text>
-              <TextLink href="/products">Browse all listings →</TextLink>
+              <TextLink href={ROUTES.PUBLIC.PRODUCTS}>Browse all listings →</TextLink>
             </Stack>
           )}
         </Stack>

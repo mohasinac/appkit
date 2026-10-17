@@ -648,6 +648,9 @@ function ProductListRow<T extends ProductItem = ProductItem>({
 function safeHref(href: string | undefined): string | undefined {
   if (!href) return undefined;
   // drop any href that would navigate to a literal "/undefined" segment
+  // eslint-disable-next-line no-restricted-syntax -- "/undefined" and "/null"
+  // are the string SHAPES of a broken interpolation, matched as content. They
+  // are not routes and there is no ROUTES entry that could express them.
   if (href.includes("/undefined") || href.includes("/null")) return undefined;
   return href;
 }

@@ -13,6 +13,10 @@
  * share the collection — the same trap that made the `/products` category
  * facet offer "Takara-Tomy" as a browsable category (A1 item 4).
  */
+// Imported from the DEFINING module, not a barrel (Root Cause #18) — and
+// never from `@mohasinac/appkit/client`, which is `"use client"` and would
+// make ROUTES a client-reference proxy in this server file (Root Cause #76).
+import { ROUTES } from "../../../../next/routing/route-map";
 import type { SearchSource, SearchHit, SearchDocData } from "./search-everything";
 
 const str = (v: unknown): string | null =>
@@ -48,7 +52,7 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
         ...(detail ? { detail } : {}),
       };
     },
-    moreHref: (q) => withQ("/products", q),
+    moreHref: (q) => withQ(ROUTES.PUBLIC.PRODUCTS, q),
   },
   {
     key: "categories",
@@ -73,7 +77,7 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
       if (type && type !== "sublisting") return null;
       return { id, title: name, href: `/categories/${id}` };
     },
-    moreHref: (q) => withQ("/categories", q),
+    moreHref: (q) => withQ(ROUTES.PUBLIC.CATEGORIES, q),
   },
   {
     key: "brands",
@@ -88,7 +92,7 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
       const detail = str(d.brandCountry);
       return { id, title: name, href: `/brands/${id}`, ...(detail ? { detail } : {}) };
     },
-    moreHref: (q) => withQ("/brands", q),
+    moreHref: (q) => withQ(ROUTES.PUBLIC.BRANDS, q),
   },
   {
     key: "stores",
@@ -102,7 +106,7 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
       if (!name) return null;
       return { id, title: name, href: `/stores/${id}` };
     },
-    moreHref: (q) => withQ("/stores", q),
+    moreHref: (q) => withQ(ROUTES.PUBLIC.STORES, q),
   },
   {
     key: "blog",
@@ -121,7 +125,7 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
         ...(detail ? { detail } : {}),
       };
     },
-    moreHref: (q) => withQ("/blog", q),
+    moreHref: (q) => withQ(ROUTES.BLOG.LIST, q),
   },
   {
     key: "faqs",
@@ -143,10 +147,10 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
       return {
         id,
         title: question,
-        href: category ? `/faqs/${category}` : "/faqs",
+        href: category ? `${ROUTES.PUBLIC.FAQS}/${category}` : ROUTES.PUBLIC.FAQS,
         ...(category ? { detail: category.replace(/_/g, " ") } : {}),
       };
     },
-    moreHref: (q) => withQ("/faqs", q),
+    moreHref: (q) => withQ(ROUTES.PUBLIC.FAQS, q),
   },
 ] as const;

@@ -18,6 +18,11 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
           "/auth/",
           "/checkout/",
           "/cart/",
+          // eslint-disable-next-line no-restricted-syntax -- a robots.txt disallow
+          // PREFIX, not a route reference: the twelve siblings here are path
+          // patterns ending in "/" and only this one lacks the slash, so it is the
+          // sole entry the route-literal selector sees. Same reasoning as the
+          // `audit-hardcoded-api-routes-ok` marker on "/api/" four lines up.
           "/wishlist",
           "/preview/",
           "/track/",

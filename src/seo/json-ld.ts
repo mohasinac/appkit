@@ -38,6 +38,10 @@ function absoluteUrl(value: string | null | undefined, base: string = SITE_URL):
 
 import { ProductStatusValues } from "../features/products/schemas";
 import { getDefaultCurrency } from "../core/baseline-resolver";
+// The defining module, never the `/client` entry: this file is reached from
+// server-only metadata paths and must not pull in a `"use client"` module
+// (Root Cause #76/#93).
+import { ROUTES } from "../next/routing/route-map";
 import type { ListingType } from "../features/products/types";
 
 /**
@@ -394,7 +398,7 @@ export function organizationJsonLd(opts?: SiteIdentityOptions): Record<string, J
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",
-      url: absoluteUrl("/contact", base),
+      url: absoluteUrl(ROUTES.PUBLIC.CONTACT, base),
     },
   };
 }
