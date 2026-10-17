@@ -19,7 +19,7 @@ import { getSeedLocale } from "./seed-market-config";
 const _locale = getSeedLocale();
 
 import {
-  type SessionDocument,
+  type SessionPlain,
   SESSION_COLLECTION,
 } from "../features/auth/schemas";
 
@@ -29,7 +29,12 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 export { SESSION_COLLECTION };
 
-export const sessionsSeedData: SessionDocument[] = [
+/*
+ * 🛑 `SessionPlain`: these fixtures hold real IPs and user-agent strings, and
+ * `seed-cli` encrypts them on write through the repository's own nested
+ * `piiFields` paths. The document type declares them `Encrypted<string>`.
+ */
+export const sessionsSeedData: SessionPlain[] = [
   // Admin — Chrome Desktop (active)
   {
     id: "session-admin-chrome-desktop-001",

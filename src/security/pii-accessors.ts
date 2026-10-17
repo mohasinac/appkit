@@ -100,20 +100,47 @@ export function maskPii<Plain extends object>(
 
   for (const field of piiFields) {
     /*
-     * Top-level fields only, matching what every staged repository's field
-     * list actually contains. A dotted or `[]` path is left DECRYPTED rather
-     * than silently skipped-as-masked: `decryptPiiFields` understands those
-     * paths, so the value is real plaintext, and pretending otherwise is the
-     * `maskPublicBid`-returned-`{...bid}` defect (Root Cause #50). A
-     * repository that needs nested masking must override the method and say so.
+     * 🛑 DOTTED PATHS ARE MASKED, not skipped.
+     *
+     * The first draft skipped them, with a note saying a repository needing
+     * nested masking should override the method. Then `sessions` turned out to
+     * declare `deviceInfo.ip`, `deviceInfo.userAgent` and `location.city` —
+     * ALL THREE of its PII fields are nested. So the "exception" was the first
+     * real subject, and a `maskPii` returning those three DECRYPTED would be
+     * the `maskPublicBid`-returning-`{...bid}` defect exactly: a function whose
+     * name is the only evidence it masked anything (Root Cause #50).
+     *
+     * `[]` array paths are still skipped, because a per-element mask needs the
+     * array's own shape and guessing it would be the same lie one level down.
      */
-    if (field.includes(".") || field.includes("[]")) continue;
-    const value = revealed[field];
-    if (typeof value !== "string" || value.length === 0) continue;
-    revealed[field] = maskByName(field, value);
+    if (field.includes("[]")) continue;
+    maskAtPath(revealed, field);
   }
 
   return revealed as unknown as Plain;
+}
+
+/**
+ * Mask the string at a dotted path, in place. A missing intermediate object or
+ * a non-string leaf is left alone — this walks what is there rather than
+ * creating structure to mask.
+ */
+function maskAtPath(root: Record<string, unknown>, path: string): void {
+  const parts = path.split(".");
+  let node: Record<string, unknown> = root;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const next = node[parts[i]];
+    if (typeof next !== "object" || next === null) return;
+    // Clone on the way down: `revealPii` shallow-copies, so mutating a nested
+    // object would write through to the caller's document.
+    const copy = { ...(next as Record<string, unknown>) };
+    node[parts[i]] = copy;
+    node = copy;
+  }
+  const leaf = parts[parts.length - 1];
+  const value = node[leaf];
+  if (typeof value !== "string" || value.length === 0) return;
+  node[leaf] = maskByName(leaf, value);
 }
 
 /** Array form of `revealPii`, for list reads. */

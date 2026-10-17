@@ -10,13 +10,14 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { generateSessionId } from "../token-helpers";
-import { decryptPiiFields } from "../../../security/pii-encrypt";
+import { maskPii, revealPii } from "../../../security/pii-accessors";
 import {
   SESSION_COLLECTION,
   SESSION_EXPIRATION_MS,
   SESSION_FIELDS,
   type SessionCreateInput,
   type SessionDocument,
+  type SessionPlain,
   type SessionUpdateInput,
 } from "../schemas";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -63,9 +64,40 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
   }
 
   /** Decrypt on read so callers see the same shape they wrote. */
-  protected override mapDoc<D = SessionDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<SessionDocument>(snap);
-    return decryptPiiFields(raw, [...this.piiFields]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden — it used to decrypt on every read, so the
+   * device IP and user-agent of every session left the database in the clear.
+   *
+   * All three PII fields here are NESTED, which is why `maskPii` had to learn
+   * dotted paths rather than skip them: a masked session that returned the real
+   * IP would be a function whose name is the only evidence it did anything.
+   */
+
+  /**
+   * Plaintext PII. **Opt-in and named** — for the security page that shows a
+   * user their own sessions, and for abuse investigation.
+   */
+  revealSession(doc: SessionDocument): SessionPlain {
+    return revealPii<SessionPlain>(doc, this.piiFields);
+  }
+
+  /** As `revealSession`, for a list read. */
+  revealSessions(docs: readonly SessionDocument[]): SessionPlain[] {
+    return docs.map((d) => this.revealSession(d));
+  }
+
+  /**
+   * Masked PII — the default. `deviceInfo.ip` becomes a last-four mask, which
+   * is what every admin surface here actually needs: enough to tell two
+   * sessions apart, not enough to geolocate a person.
+   */
+  maskedSession(doc: SessionDocument): SessionPlain {
+    return maskPii<SessionPlain>(doc, this.piiFields);
+  }
+
+  /** As `maskedSession`, for a list read. */
+  maskedSessions(docs: readonly SessionDocument[]): SessionPlain[] {
+    return docs.map((d) => this.maskedSession(d));
   }
 
   async list(model: SieveModel): Promise<FirebaseSieveResult<SessionDocument>> {

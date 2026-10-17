@@ -566,9 +566,18 @@ export const TOKEN_FIELDS = {
 // SESSION DOCUMENT
 // ============================================================================
 
-export type SessionDocument = {
-  id: string;
-  userId: string;
+/**
+ * The session shape with its PII as plain `string`.
+ *
+ * 🛑 Hand-written, unlike every other `*Plain` in the codebase, and the reason
+ * is worth stating: `Plaintext<T>` only un-brands TOP-LEVEL members, and all
+ * three of this document's PII fields are NESTED (`deviceInfo.ip`,
+ * `deviceInfo.userAgent`, `location.city`). A recursive mapped type would
+ * un-brand through every object in every document, which is more power than
+ * any of the other thirteen need and would quietly un-brand a future nested
+ * field nobody triaged.
+ */
+export type SessionPlain = Omit<SessionDocument, "deviceInfo" | "location"> & {
   deviceInfo?: {
     userAgent?: string;
     browser?: string;
@@ -576,9 +585,25 @@ export type SessionDocument = {
     device?: string;
     ip?: string;
   };
+  location?: { country?: string; city?: string };
+};
+
+export type SessionDocument = {
+  id: string;
+  userId: string;
+  deviceInfo?: {
+    /** PII — ciphertext at rest. See `SessionRepository.revealSession`. */
+    userAgent?: Encrypted<string>;
+    browser?: string;
+    os?: string;
+    device?: string;
+    /** PII — ciphertext at rest. */
+    ip?: Encrypted<string>;
+  };
   location?: {
     country?: string;
-    city?: string;
+    /** PII — ciphertext at rest. */
+    city?: Encrypted<string>;
   };
   createdAt: Date;
   lastActivity: Date;
@@ -642,9 +667,14 @@ export const sessionQueryHelpers = {
   recentActivity: (since: Date) => ["lastActivity", ">=", since] as const,
 } as const;
 
+/*
+ * Returns the PLAIN device shape: it parses a raw UA header, so everything it
+ * produces is plaintext and the repository's write hook encrypts it. Declaring
+ * `SessionDocument["deviceInfo"]` claimed the parser emitted ciphertext.
+ */
 export function parseUserAgent(
   userAgent: string,
-): SessionDocument["deviceInfo"] {
+): SessionPlain["deviceInfo"] {
   const ua = userAgent.toLowerCase();
 
   const BROWSER_TOKENS: [string, string][] = [
