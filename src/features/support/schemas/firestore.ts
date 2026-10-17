@@ -17,6 +17,7 @@
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
+import type { Encrypted } from "../../../security/encrypted";
 
 // ============================================================================
 // ENUMS
@@ -119,12 +120,30 @@ export interface TicketRelatedParties {
 // SUPPORT TICKET DOCUMENT
 // ============================================================================
 
+/**
+ * `SupportTicketDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type SupportTicketPlain = {
+  [K in keyof SupportTicketDocument]: SupportTicketDocument[K] extends Encrypted<string> | undefined
+    ? Extract<SupportTicketDocument[K], undefined> | string
+    : SupportTicketDocument[K];
+};
+
 export interface SupportTicketDocument extends BaseDocument {
   userId: string;
   /** Denormalized — for admin table display. */
-  userEmail: string;
+  userEmail: Encrypted<string>;
   /** Denormalized — for admin table display. */
-  userDisplayName: string;
+  userDisplayName: Encrypted<string>;
 
   category: TicketCategory;
   subject: string;
@@ -162,7 +181,7 @@ export interface SupportTicketDocument extends BaseDocument {
   /** UID of the assigned employee. */
   assignedTo?: string;
   /** Denormalized display name of the assignee. */
-  assignedToName?: string;
+  assignedToName?: Encrypted<string>;
 
   /**
    * Internal-only notes visible only to admins/employees, never shown to the ticket author.

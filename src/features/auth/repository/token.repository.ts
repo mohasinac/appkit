@@ -6,8 +6,9 @@ import { BaseRepository } from "../../../providers/db-firebase";
 import {
   TOKEN_PII_FIELDS,
   TOKEN_PII_INDEX_MAP,
-  decryptPiiFields,
+  maskPii,
   piiBlindIndex,
+  revealPii,
 } from "../../../security";
 import { resolveDate } from "../../../utils";
 import {
@@ -15,7 +16,9 @@ import {
   PASSWORD_RESET_COLLECTION,
   TOKEN_FIELDS,
   type EmailVerificationTokenDocument,
+  type EmailVerificationTokenPlain,
   type PasswordResetTokenDocument,
+  type PasswordResetTokenPlain,
 } from "../schemas";
 
 export class EmailVerificationTokenRepository extends BaseRepository<EmailVerificationTokenDocument> {
@@ -40,13 +43,42 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
   protected override piiFields = TOKEN_PII_FIELDS;
   protected override piiIndexMap = TOKEN_PII_INDEX_MAP;
 
-  protected override mapDoc<D = EmailVerificationTokenDocument>(
-    snap: DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<EmailVerificationTokenDocument>(snap);
-    return decryptPiiFields(raw, [
-      ...TOKEN_PII_FIELDS,
-    ]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `EmailVerificationTokenDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealToken(doc: EmailVerificationTokenDocument): EmailVerificationTokenPlain {
+    return revealPii<EmailVerificationTokenPlain>(doc, TOKEN_PII_FIELDS);
+  }
+
+  /** As `revealToken`, for a list read. */
+  revealTokens(docs: readonly EmailVerificationTokenDocument[]): EmailVerificationTokenPlain[] {
+    return docs.map((d) => this.revealToken(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedToken(doc: EmailVerificationTokenDocument): EmailVerificationTokenPlain {
+    return maskPii<EmailVerificationTokenPlain>(doc, TOKEN_PII_FIELDS);
+  }
+
+  /** As `maskedToken`, for a list read. */
+  maskedTokens(docs: readonly EmailVerificationTokenDocument[]): EmailVerificationTokenPlain[] {
+    return docs.map((d) => this.maskedToken(d));
   }
 
   async findByToken(
@@ -138,13 +170,42 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
   protected override piiFields = TOKEN_PII_FIELDS;
   protected override piiIndexMap = TOKEN_PII_INDEX_MAP;
 
-  protected override mapDoc<D = PasswordResetTokenDocument>(
-    snap: DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<PasswordResetTokenDocument>(snap);
-    return decryptPiiFields(raw, [
-      ...TOKEN_PII_FIELDS,
-    ]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `PasswordResetTokenDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealResetToken(doc: PasswordResetTokenDocument): PasswordResetTokenPlain {
+    return revealPii<PasswordResetTokenPlain>(doc, TOKEN_PII_FIELDS);
+  }
+
+  /** As `revealResetToken`, for a list read. */
+  revealResetTokens(docs: readonly PasswordResetTokenDocument[]): PasswordResetTokenPlain[] {
+    return docs.map((d) => this.revealResetToken(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedResetToken(doc: PasswordResetTokenDocument): PasswordResetTokenPlain {
+    return maskPii<PasswordResetTokenPlain>(doc, TOKEN_PII_FIELDS);
+  }
+
+  /** As `maskedResetToken`, for a list read. */
+  maskedResetTokens(docs: readonly PasswordResetTokenDocument[]): PasswordResetTokenPlain[] {
+    return docs.map((d) => this.maskedResetToken(d));
   }
 
   async findByToken(token: string): Promise<PasswordResetTokenDocument | null> {

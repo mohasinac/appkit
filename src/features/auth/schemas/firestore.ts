@@ -14,6 +14,7 @@ import type {
 import {
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { Encrypted } from "../../../security/encrypted";
 
 // ============================================================================
 // SCHEMA DEFAULTS
@@ -454,19 +455,55 @@ export const USER_FIELDS = {
 // TOKEN DOCUMENTS
 // ============================================================================
 
+/**
+ * `EmailVerificationTokenDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type EmailVerificationTokenPlain = {
+  [K in keyof EmailVerificationTokenDocument]: EmailVerificationTokenDocument[K] extends Encrypted<string> | undefined
+    ? Extract<EmailVerificationTokenDocument[K], undefined> | string
+    : EmailVerificationTokenDocument[K];
+};
+
 export type EmailVerificationTokenDocument = {
   id?: string;
   userId: string;
-  email: string;
+  email: Encrypted<string>;
   token: string;
   expiresAt: Date;
   createdAt: Date;
 }
 
+/**
+ * `PasswordResetTokenDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type PasswordResetTokenPlain = {
+  [K in keyof PasswordResetTokenDocument]: PasswordResetTokenDocument[K] extends Encrypted<string> | undefined
+    ? Extract<PasswordResetTokenDocument[K], undefined> | string
+    : PasswordResetTokenDocument[K];
+};
+
 export type PasswordResetTokenDocument = {
   id?: string;
   userId: string;
-  email: string;
+  email: Encrypted<string>;
   token: string;
   expiresAt: Date;
   createdAt: Date;

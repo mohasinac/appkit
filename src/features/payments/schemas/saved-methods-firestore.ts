@@ -11,16 +11,35 @@
  */
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { Encrypted } from "../../../security/encrypted";
 
 export type SavedPaymentMethodType = "upi" | "card" | "bank_account" | "wallet";
 
 export type SavedPaymentMethodBanStatus = "banned" | "suspicious" | "unban_requested";
 
+/**
+ * `SavedPaymentMethodDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type SavedPaymentMethodPlain = {
+  [K in keyof SavedPaymentMethodDocument]: SavedPaymentMethodDocument[K] extends Encrypted<string> | undefined
+    ? Extract<SavedPaymentMethodDocument[K], undefined> | string
+    : SavedPaymentMethodDocument[K];
+};
+
 export interface SavedPaymentMethodDocument extends BaseDocument {
   userId: string;
   type: SavedPaymentMethodType;
   /** Full UPI VPA / card PAN / account number — ENCRYPTED at rest. */
-  identifier: string;
+  identifier: Encrypted<string>;
   /** Pre-masked display string, never contains full PII. e.g. "9876...@paytm", "XXXX 4321 (HDFC)" */
   displayLabel: string;
   /** SHA-256(type|normalised(identifier)) — unencrypted; enables cross-account dedup without decrypting. */

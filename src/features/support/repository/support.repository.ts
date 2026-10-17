@@ -16,7 +16,7 @@ import { buildSearchTxt } from "../../../utils/search-txt";
 import { planSearchTxt, emptySearchResult } from "../../../utils/search-txt-query";
 import { sieveAnd, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import type { JsonValue } from "../../../schemas/types";
-import { decryptPiiFields } from "../../../security/pii-encrypt";
+import { maskPii, revealPii } from "../../../security/pii-accessors";
 import type { DocumentSnapshot } from "firebase-admin/firestore";
 import {
   SUPPORT_TICKET_COLLECTION,
@@ -25,6 +25,7 @@ import {
   TicketStatusValues,
   ACTIVE_TICKET_STATUSES,
   type SupportTicketDocument,
+  type SupportTicketPlain,
   type SupportTicketCreateInput,
   type SupportTicketUpdateInput,
   type TicketMessage,
@@ -88,9 +89,42 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   }
 
   /** Decrypt on read so callers see the shape they wrote. */
-  protected override mapDoc<D = SupportTicketDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<SupportTicketDocument>(snap);
-    return decryptPiiFields(raw, [...SUPPORT_TICKET_PII_FIELDS]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `SupportTicketDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealTicket(doc: SupportTicketDocument): SupportTicketPlain {
+    return revealPii<SupportTicketPlain>(doc, SUPPORT_TICKET_PII_FIELDS);
+  }
+
+  /** As `revealTicket`, for a list read. */
+  revealTickets(docs: readonly SupportTicketDocument[]): SupportTicketPlain[] {
+    return docs.map((d) => this.revealTicket(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedTicket(doc: SupportTicketDocument): SupportTicketPlain {
+    return maskPii<SupportTicketPlain>(doc, SUPPORT_TICKET_PII_FIELDS);
+  }
+
+  /** As `maskedTicket`, for a list read. */
+  maskedTickets(docs: readonly SupportTicketDocument[]): SupportTicketPlain[] {
+    return docs.map((d) => this.maskedTicket(d));
   }
 
   async createTicket(
@@ -367,6 +401,13 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   async assignTicket(
     ticketId: string,
     assignedTo: string,
+    /*
+     * PLAINTEXT. `BaseRepository.update` runs `encryptPiiFields` over
+     * `piiFields`, which includes `assignedToName`, so the value is encrypted
+     * on the way down — the parameter is honest about what the caller holds.
+     * `asEncrypted` here would be the misuse its own docstring forbids:
+     * labelling plaintext as ciphertext.
+     */
     assignedToName: string,
     ctx?: TicketWriteContext,
     prior?: SupportTicketDocument | null,
@@ -376,7 +417,13 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
       ticketId,
       this.withTicketHistory(
         current,
-        { assignedTo, assignedToName, updatedAt: new Date() },
+        {
+          assignedTo,
+          // Cast at the ONE place encryption is about to happen, not at the
+          // parameter — see the note on `assignedToName` above.
+          assignedToName: assignedToName as unknown as SupportTicketDocument["assignedToName"],
+          updatedAt: new Date(),
+        },
         ctx,
         "assignTicket",
       ),

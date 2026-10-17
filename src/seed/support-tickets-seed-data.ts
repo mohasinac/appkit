@@ -3,7 +3,7 @@
  * WHAT: open (2), in_progress (2), waiting_on_user (1), resolved (2), closed (1).
  *
  * EXPORTS:
- *   supportTicketsSeedData — Array of Partial<SupportTicketDocument> for seed runner
+ *   supportTicketsSeedData — Array of Partial<SupportTicketPlain> for seed runner
  *
  * @tag domain:support
  * @tag layer:seed
@@ -13,7 +13,14 @@
  * @tag sideEffects:none
  */
 
-import type { SupportTicketDocument, TicketMessage } from "../features/support/schemas/firestore";
+/*
+ * 🛑 `SupportTicketPlain`: these fixtures hold REAL plaintext and `seed-cli`
+ * encrypts the PII fields on write through the same `SUPPORT_TICKET_PII_FIELDS`
+ * map the repository uses. The document type now declares those fields
+ * `Encrypted<string>`, so typing this array as the document would assert that
+ * these literals are ciphertext.
+ */
+import type { SupportTicketPlain, TicketMessage } from "../features/support/schemas/firestore";
 import { SUPPORT_TICKET_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
@@ -51,7 +58,7 @@ function entry(
   return { at, actorRole, trigger, changes, ...extra };
 }
 
-const supportTicketRecords: Partial<SupportTicketDocument>[] = [
+const supportTicketRecords: Partial<SupportTicketPlain>[] = [
   // ── 1. Order issue — in progress ─────────────────────────────────────────
   {
     id: "ticket-yugi-order-001",
@@ -358,7 +365,7 @@ const supportTicketRecords: Partial<SupportTicketDocument>[] = [
  * function of the record's own content, so it stays deterministic and does not
  * reintroduce the `appkit-seed` idempotency problem of Root Cause #25.
  */
-export const supportTicketsSeedData: Partial<SupportTicketDocument>[] =
+export const supportTicketsSeedData: Partial<SupportTicketPlain>[] =
   supportTicketRecords.map((ticket) => ({
     ...ticket,
     searchTxt: ticket.subject ? buildSearchTxt([ticket.subject]) : [],

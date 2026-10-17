@@ -20,15 +20,18 @@ import {
 } from "../../../providers/db-firebase";
 import {
   PAYMENT_METHOD_PII_FIELDS,
-  decryptPiiFields,
   encryptPiiFields,
+  maskPii,
+  revealPii,
 } from "../../../security";
+import { asEncrypted } from "../../../security/encrypted";
 import {
   SAVED_PAYMENT_METHOD_FIELDS,
   SAVED_PAYMENT_METHODS_COLLECTION,
   type SavedPaymentMethodBanStatus,
   type SavedPaymentMethodCreateInput,
   type SavedPaymentMethodDocument,
+  type SavedPaymentMethodPlain,
 } from "../schemas/saved-methods-firestore";
 
 function normaliseIdentifier(s: string): string {
@@ -46,17 +49,46 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
     super(SAVED_PAYMENT_METHODS_COLLECTION);
   }
 
-  private decrypt(doc: SavedPaymentMethodDocument): SavedPaymentMethodDocument {
-    return decryptPiiFields(doc, [...PAYMENT_METHOD_PII_FIELDS]) as SavedPaymentMethodDocument;
-  }
-
   private encrypt<T extends object>(data: T): T {
     return encryptPiiFields(data, [...PAYMENT_METHOD_PII_FIELDS]);
   }
 
-  protected override mapDoc<D = SavedPaymentMethodDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<SavedPaymentMethodDocument>(snap);
-    return this.decrypt(raw) as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `SavedPaymentMethodDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealMethod(doc: SavedPaymentMethodDocument): SavedPaymentMethodPlain {
+    return revealPii<SavedPaymentMethodPlain>(doc, PAYMENT_METHOD_PII_FIELDS);
+  }
+
+  /** As `revealMethod`, for a list read. */
+  revealMethods(docs: readonly SavedPaymentMethodDocument[]): SavedPaymentMethodPlain[] {
+    return docs.map((d) => this.revealMethod(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedMethod(doc: SavedPaymentMethodDocument): SavedPaymentMethodPlain {
+    return maskPii<SavedPaymentMethodPlain>(doc, PAYMENT_METHOD_PII_FIELDS);
+  }
+
+  /** As `maskedMethod`, for a list read. */
+  maskedMethods(docs: readonly SavedPaymentMethodDocument[]): SavedPaymentMethodPlain[] {
+    return docs.map((d) => this.maskedMethod(d));
   }
 
   override async createWithId(
@@ -82,7 +114,18 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
         .get();
       return snap.docs.map((d) => {
         const doc = this.mapDoc<SavedPaymentMethodDocument>(d);
-        doc.identifier = ""; // never expose decrypted PII to caller
+        /*
+         * Dropped, not decrypted-then-dropped.
+         *
+         * This read "never expose decrypted PII to caller" — true, because
+         * `mapDoc` decrypted every identifier and this threw it away
+         * immediately. The decryption was pure waste plus a window in which
+         * plaintext existed. `mapDoc` no longer decrypts, so what arrives here
+         * is ciphertext; the field is still blanked because these list reads
+         * are display-only, and ciphertext a caller cannot use is ciphertext
+         * it should not receive.
+         */
+        doc.identifier = asEncrypted("");
         return doc;
       });
     } catch (error) {
@@ -118,7 +161,9 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
       }
 
       const docRef = this.getCollection().doc();
-      const data: Omit<SavedPaymentMethodDocument, "id"> = {
+      // PLAINTEXT in, ciphertext out: `this.encrypt(data)` below is what makes
+      // the document type true, so the payload is typed as the plain shape.
+      const data: Omit<SavedPaymentMethodPlain, "id"> = {
         userId,
         type: input.type,
         identifier: input.identifier,
@@ -135,7 +180,7 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
 
       const refetched = await this.findById(docRef.id);
       if (!refetched) throw new DatabaseError("Payment method not readable after create");
-      refetched.identifier = "";
+      refetched.identifier = asEncrypted(""); // display-only — see listByUser
       return refetched;
     } catch (error) {
       void normalizeError(error);
@@ -151,7 +196,7 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
         .get();
       return snap.docs.map((d) => {
         const doc = this.mapDoc<SavedPaymentMethodDocument>(d);
-        doc.identifier = "";
+        doc.identifier = asEncrypted(""); // display-only — see listByUser
         return doc;
       });
     } catch (error) {
@@ -235,7 +280,7 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
         .get();
       return snap.docs.map((d) => {
         const doc = this.mapDoc<SavedPaymentMethodDocument>(d);
-        doc.identifier = "";
+        doc.identifier = asEncrypted(""); // display-only — see listByUser
         return doc;
       });
     } catch (error) {
