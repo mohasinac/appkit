@@ -122,19 +122,68 @@ export function BottomChrome({ children }: BottomChromeProps) {
       // published by AppLayoutShell and already accounts for the announcement
       // banner, so this needs no second measurement.
       //
-      // 🛑 The child's `flex-col` ORDER is reversed on desktop: at the bottom
-      // edge the portalled slot must stack above the CTA row, and once the tier
-      // hangs from the top the same visual ordering is the other way round.
+      // The portalled slot and the CTA row stack in opposite visual orders at
+      // the two ends. That reversal is done by swapping the CHILDREN below, not
+      // with `flex-col-reverse` — see the 🛑 above the JSX.
+      //
+      // ── 🛑 WHY THIS BRANCHES IN JS AND NOT ON `lg:` ────────────────────────
+      //
+      // It used to be one class string carrying both states:
+      //
+      //   bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))]
+      //   lg:bottom-auto lg:top-[var(--header-height,0px)] lg:flex-col-reverse
+      //
+      // On a 1440px viewport `lg:top-[…]` applied and **`lg:bottom-auto` and
+      // `lg:flex-col-reverse` did not**. The element was therefore anchored to
+      // BOTH edges at once, and a `position: fixed` box with `left/right/top/
+      // bottom` all set stretches: measured on production it was **801px tall
+      // with both of its children 0px tall** (900 viewport − 99 header − 0 nav).
+      // `BottomChrome` publishes its own `offsetHeight`, so it reported 801px as
+      // `--top-chrome-height`, and `<Main>` reserved all of it — an 801px blank
+      // band under the navbar on every desktop page. Verified by removing the
+      // `bottom-[calc…]` class in the live DOM: height 801 → 0.
+      //
+      // The mechanism is Root Cause #79's. Both configs set `important: true`,
+      // so an arbitrary-value utility and a named one tie on specificity AND on
+      // `!important`, a media query adds no specificity, and the winner is
+      // decided by EMISSION ORDER in the built CSS — which no one can see from
+      // the call site. All four classes are present in `dist/tailwind-utilities.css`;
+      // this was never a purge problem, so no `@source inline(...)` fixes it.
+      //
+      // So: never express this as a `lg:` override of an arbitrary-value base.
+      // The component already computes `isDesktop` (the measurement has to know
+      // which variable to publish), so the conflicting class is simply never
+      // emitted — exactly one anchor exists in the DOM at any time, and the
+      // cascade has nothing to arbitrate.
       className={[
         "fixed left-0 right-0 z-[var(--appkit-z-bottom-nav)] pointer-events-none",
-        "bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))]",
-        "lg:bottom-auto lg:top-[var(--header-height,0px)] lg:flex-col-reverse",
+        isDesktop
+          ? "top-[var(--header-height,0px)]"
+          : "bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))]",
       ].join(" ")}
     >
-      {/* Portalled bars render first so they stack ABOVE the CTA row, which is
-          the ordering the old `--bulk` pagination modifier hardcoded. */}
-      <Div id={BOTTOM_CHROME_SLOT_ID} className="contents" />
-      {children}
+      {/*
+        At the bottom edge the portalled bars must stack ABOVE the CTA row (the
+        ordering the old `--bulk` pagination modifier hardcoded); hanging from
+        the header, the same visual result is the other way round.
+        🛑 The swap is done HERE, in the children, and NOT with
+        `lg:flex-col-reverse`. Verified in the live DOM: applying
+        `flex-col-reverse` to this element leaves `flex-direction: row`, because
+        no appkit source had ever authored that class unprefixed, so Tailwind
+        never generated it and the unknown utility is dropped in silence — the
+        element then falls back to a flex ROW and the tier lays out sideways.
+        That is Root Cause #67's class of bug, and it cost nothing to avoid:
+        array order is not a styling concern and cannot be purged.
+      */}
+      {isDesktop
+        ? [
+            <React.Fragment key="children">{children}</React.Fragment>,
+            <Div key="slot" id={BOTTOM_CHROME_SLOT_ID} className="contents" />,
+          ]
+        : [
+            <Div key="slot" id={BOTTOM_CHROME_SLOT_ID} className="contents" />,
+            <React.Fragment key="children">{children}</React.Fragment>,
+          ]}
     </Div>
   );
 }
