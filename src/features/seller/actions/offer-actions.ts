@@ -26,7 +26,7 @@ import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { OfferStatusValues } from "../schemas";
-import type { OfferDocument } from "../schemas";
+import type { OfferDocument, OfferPlain } from "../schemas";
 import {
   DEFAULT_MIN_OFFER_PERCENT,
   offerIsOnlyPurchasePath,
@@ -70,7 +70,13 @@ export async function makeOffer(
   userId: string,
   userEmail: string,
   input: MakeOfferInput,
-): Promise<OfferDocument> {
+/*
+ * `OfferPlain`: `createOffer` echoes the plaintext it was handed rather than
+ * re-reading the document, so what comes back is plaintext. Declaring
+ * `OfferDocument` claimed the buyer's name and email were ciphertext when
+ * they are not — the mismatch `Encrypted<string>` exists to surface.
+ */
+): Promise<OfferPlain> {
   const { productId, offerAmount, buyerNote } = input;
 
   /**
@@ -189,7 +195,7 @@ export async function makeOffer(
   if (!product.storeId)
     throw new ValidationError("Product is not associated with a store.");
 
-  const offer = await offerRepository.create({
+  const offer = await offerRepository.createOffer({
     productId,
     productTitle: product.title,
     productSlug: product.slug,
@@ -340,7 +346,13 @@ export async function counterOfferByBuyer(
   userId: string,
   userEmail: string,
   input: BuyerCounterInput,
-): Promise<OfferDocument> {
+/*
+ * `OfferPlain`: `createOffer` echoes the plaintext it was handed rather than
+ * re-reading the document, so what comes back is plaintext. Declaring
+ * `OfferDocument` claimed the buyer's name and email were ciphertext when
+ * they are not — the mismatch `Encrypted<string>` exists to surface.
+ */
+): Promise<OfferPlain> {
   const { offerId, counterAmount, buyerNote } = input;
 
   const offer = await offerRepository.findById(offerId);
@@ -397,7 +409,7 @@ export async function counterOfferByBuyer(
   const chainRoot = offer.chainRootOfferId ?? offer.id;
   const nextRound = (offer.counterRound ?? 1) + 1;
 
-  const newOffer = await offerRepository.create({
+  const newOffer = await offerRepository.createOffer({
     productId: offer.productId,
     productTitle: offer.productTitle,
     productSlug: offer.productSlug,

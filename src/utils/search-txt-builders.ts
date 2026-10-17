@@ -254,7 +254,17 @@ export function buildCouponSearchTxt(c: Partial<CouponDocument>): string[] {
  * the PII registry, but it is private correspondence and has no business being
  * findable by substring from an admin list.
  */
-export function buildOfferSearchTxt(o: Partial<OfferDocument>): string[] {
+/*
+ * Typed to the three fields it READS, not to the whole document.
+ *
+ * All three are non-PII, which is the privacy property this builder depends
+ * on — and stating it in the signature is what makes the function accept the
+ * ciphertext document and the plaintext seed shape alike without a cast.
+ * `buyerName`/`buyerEmail` are deliberately absent; see the note above.
+ */
+export function buildOfferSearchTxt(
+  o: Partial<Pick<OfferDocument, "productTitle" | "productSlug" | "storeName">>,
+): string[] {
   return buildSearchTxt([o.productTitle, o.productSlug, o.storeName]);
 }
 

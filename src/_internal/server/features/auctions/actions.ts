@@ -43,7 +43,7 @@ export async function placeBidAction(input: unknown): Promise<ActionResult<unkno
       // bid placed, and the real `setWinningBid(bid.id, …)` below already marks
       // every other bid for this product as outbid.)
 
-      const bid = await bidRepository.create({
+      const bid = await bidRepository.createBid({
         productId: auctionId,
         productTitle: (product as any).title ?? auctionId,
         userId: user.uid,

@@ -28,6 +28,7 @@ import type {
 } from "../../../providers/db-firebase";
 import type {
   BidDocument,
+  BidPlain,
   BidCreateInput,
   BidUpdateInput,
   BidAdminUpdateInput,
@@ -45,8 +46,9 @@ export interface BidWriteContext {
   note?: string;
 }
 import {
-  decryptPiiFields,
   BID_PII_FIELDS,
+  maskPii,
+  revealPii,
 } from "../../../security";
 import { BID_FIELDS } from "../../../constants/field-names";
 
@@ -76,19 +78,62 @@ export class BidRepository extends BaseRepository<BidDocument> {
   protected override piiFields = BID_PII_FIELDS;
 
   /** Override mapDoc to auto-decrypt PII on every bid read */
-  protected override mapDoc<D = BidDocument>(
-    snap: import("../../../providers/db-firebase").DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<BidDocument>(snap);
-    return decryptPiiFields(raw, [
-      ...BID_PII_FIELDS,
-    ]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `BidDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealBid(doc: BidDocument): BidPlain {
+    return revealPii<BidPlain>(doc, BID_PII_FIELDS);
+  }
+
+  /** As `revealBid`, for a list read. */
+  revealBids(docs: readonly BidDocument[]): BidPlain[] {
+    return docs.map((d) => this.revealBid(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedBid(doc: BidDocument): BidPlain {
+    return maskPii<BidPlain>(doc, BID_PII_FIELDS);
+  }
+
+  /** As `maskedBid`, for a list read. */
+  maskedBids(docs: readonly BidDocument[]): BidPlain[] {
+    return docs.map((d) => this.maskedBid(d));
   }
 
   /**
    * Create new bid with auto-generated ID
    */
-  override async create(input: BidCreateInput): Promise<BidDocument> {
+  /*
+   * 🛑 NOT an `override` of `create`, and the rename is forced rather than
+   * stylistic.
+   *
+   * `BaseRepository.create` is declared `(data: Partial<Doc> | FirestoreDocument)`,
+   * i.e. it promises to accept the CIPHERTEXT shape. This method accepts
+   * PLAINTEXT and encrypts. `string` and `Encrypted<string>` are incompatible
+   * in both directions, so an override is a TS2416 no matter which way the
+   * check runs — and it should be, because the two signatures genuinely
+   * disagree about what the caller is holding.
+   *
+   * Five call sites across both repositories; `create` remains inherited for
+   * anything that legitimately has ciphertext already.
+   */
+  async createBid(input: BidCreateInput): Promise<BidPlain> {
     const bidIdInput = {
       productName: input.productTitle,
       userFirstName: input.userName.split(" ")[0] || input.userName,
@@ -97,7 +142,8 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
     const id = createBidId(bidIdInput);
 
-    const bidData: Omit<BidDocument, "id"> = {
+    // Plain in, ciphertext out — the write hook encrypts below.
+    const bidData: Omit<BidPlain, "id"> = {
       ...input,
       status: "active",
       isWinning: false,
@@ -114,7 +160,16 @@ export class BidRepository extends BaseRepository<BidDocument> {
       .doc(id)
       .set(prepareForFirestore(encrypted));
 
-    return { id, ...bidData }; // return plaintext to caller
+    /*
+      * Returns `BidPlain`, and the declared type now says so.
+      *
+      * This line's own comment has always read "return plaintext to caller"
+      * while the signature promised `BidDocument` — the exact mismatch
+      * `Encrypted<string>` exists to surface. It echoes the input rather than
+      * re-reading, which is deliberate (a read-after-write costs a Firestore
+      * read on every bid), so what comes back is the plaintext that went in.
+      */
+    return { id, ...bidData };
   }
 
   /**

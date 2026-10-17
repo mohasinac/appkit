@@ -8,6 +8,7 @@ import {
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
+import type { Encrypted } from "../../../security/encrypted";
 
 export type OfferStatus =
   | "pending"
@@ -29,6 +30,24 @@ export const OfferStatusValues = {
   PAID: "paid",
 } as const satisfies Record<string, OfferStatus>;
 
+/**
+ * `OfferDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type OfferPlain = {
+  [K in keyof OfferDocument]: OfferDocument[K] extends Encrypted<string> | undefined
+    ? Extract<OfferDocument[K], undefined> | string
+    : OfferDocument[K];
+};
+
 export interface OfferDocument extends BaseDocument {
   /** Word-prefix search tokens. Derived on write; never fed by a PII field. */
   searchTxt?: string[];
@@ -37,8 +56,8 @@ export interface OfferDocument extends BaseDocument {
   productSlug?: string;
   productImageUrl?: string;
   buyerUid: string;
-  buyerName: string;
-  buyerEmail: string;
+  buyerName: Encrypted<string>;
+  buyerEmail: Encrypted<string>;
   storeId: string;
   storeName: string;
   offerAmount: number;
@@ -168,8 +187,17 @@ export const OFFER_FIELDS = {
   SEARCH_TXT: "searchTxt",
 } as const;
 
+/*
+ * 🛑 Derived from the PLAIN shape, not from the document.
+ *
+ * A caller holds a real email; the repository encrypts it on write. Deriving
+ * the input from the document would demand `Encrypted<string>` the caller does
+ * not have, and the only way to satisfy that is `asEncrypted(email)` — which
+ * labels plaintext as ciphertext and is the misuse `asEncrypted`'s own
+ * docstring forbids. The type change belongs where the encryption happens.
+ */
 export type OfferCreateInput = Pick<
-  OfferDocument,
+  OfferPlain,
   | "productId"
   | "productTitle"
   | "productSlug"

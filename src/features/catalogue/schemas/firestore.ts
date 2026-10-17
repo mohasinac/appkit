@@ -14,12 +14,31 @@ import {
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ProductDraftFields } from "../../shipments/schemas/firestore";
+import type { Encrypted } from "../../../security/encrypted";
 
 export const CATALOGUE_COLLECTION = "catalogueItems" as const;
 
 export type CatalogueVisibility = "public" | "private";
 export type CatalogueOwnerRole = "user" | "seller" | "admin";
 export type CatalogueListingStatus = "not_listed" | "pending_admin_approval" | "listed" | "rejected";
+
+/**
+ * `CatalogueItemDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type CatalogueItemPlain = {
+  [K in keyof CatalogueItemDocument]: CatalogueItemDocument[K] extends Encrypted<string> | undefined
+    ? Extract<CatalogueItemDocument[K], undefined> | string
+    : CatalogueItemDocument[K];
+};
 
 export interface CatalogueItemDocument
   extends BaseDocument,

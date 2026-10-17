@@ -26,7 +26,7 @@
  * is testable, and it is the exact shape of every offer written before W2.
  *
  * EXPORTS:
- *   offersSeedData — Array of Partial<OfferDocument> for seed runner
+ *   offersSeedData — Array of Partial<OfferPlain> for seed runner
  *
  * @tag domain:offers,seller
  * @tag layer:seed
@@ -37,7 +37,14 @@
  */
 
 import { withOfferSearchTxt } from "./_helpers/search-txt-wrappers";
-import type { OfferDocument } from "../features/seller/schemas/firestore";
+/*
+ * 🛑 `OfferPlain`: these fixtures hold REAL plaintext and `seed-cli` encrypts
+ * the PII fields on write through the same `OFFER_PII_FIELDS` map the
+ * repository uses. The document type now declares those fields
+ * `Encrypted<string>`, so typing this array as the document would assert that
+ * these literals are ciphertext.
+ */
+import type { OfferPlain } from "../features/seller/schemas/firestore";
 import { OfferStatusValues } from "../features/seller/schemas/firestore";
 import type { StatusChangeEntry } from "../_internal/shared/history/index";
 
@@ -70,7 +77,7 @@ const BUYER_ADMIN = "user-admin-letitrip";
 const STORE = "store-beyblade-arena";
 const PEGASUS_CHAIN_ROOT = "offer-yugi-metal-storm-pegasus-r1";
 
-export const offersSeedData: Partial<OfferDocument>[] = [
+export const offersSeedData: Partial<OfferPlain>[] = [
   // ── 1. PENDING — Rehan → Beyblade Arena — Burst Valkyrie ────────────────
   {
     id: "offer-yugi-burst-valkyrie-pending",

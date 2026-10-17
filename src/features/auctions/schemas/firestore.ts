@@ -8,6 +8,7 @@ import {
 } from "../../../utils/id-generators";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { Encrypted } from "../../../security/encrypted";
 
 export type BidStatus =
   | "active"
@@ -28,12 +29,30 @@ export const BidStatusValues = {
   FORFEITED: "forfeited",
 } as const satisfies Record<string, BidStatus>;
 
+/**
+ * `BidDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type BidPlain = {
+  [K in keyof BidDocument]: BidDocument[K] extends Encrypted<string> | undefined
+    ? Extract<BidDocument[K], undefined> | string
+    : BidDocument[K];
+};
+
 export interface BidDocument extends BaseDocument {
   productId: string;
   productTitle: string;
   userId: string;
   userName: string;
-  userEmail: string;
+  userEmail: Encrypted<string>;
   bidAmount: number;
   currency: string;
   status: BidStatus;
@@ -118,8 +137,17 @@ export const BID_PUBLIC_FIELDS = [
 
 export const BID_UPDATABLE_FIELDS = ["autoMaxBid"] as const;
 
+/*
+ * 🛑 Derived from the PLAIN shape, not from the document.
+ *
+ * A caller holds a real email; the repository encrypts it on write. Deriving
+ * the input from the document would demand `Encrypted<string>` the caller does
+ * not have, and the only way to satisfy that is `asEncrypted(email)` — which
+ * labels plaintext as ciphertext and is the misuse `asEncrypted`'s own
+ * docstring forbids. The type change belongs where the encryption happens.
+ */
 export type BidCreateInput = Omit<
-  BidDocument,
+  BidPlain,
   "id" | "createdAt" | "updatedAt" | "status" | "isWinning"
 >;
 export type BidUpdateInput = Partial<

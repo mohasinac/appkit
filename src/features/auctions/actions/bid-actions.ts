@@ -43,7 +43,7 @@ import {
   AUCTION_CHECKOUT_URL,
 } from "../../../_internal/shared/checkout/lanes";
 import { resolveDate } from "../../../utils";
-import type { BidDocument } from "../schemas";
+import type { BidDocument, BidPlain } from "../schemas";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase";
 import { safeRead } from "../../../errors/safe-read";
 
@@ -54,7 +54,13 @@ export interface PlaceBidInput {
 }
 
 export interface PlaceBidResult {
-  bid: BidDocument;
+  /*
+   * `BidPlain`: `createBid` echoes the plaintext it was handed rather than
+   * re-reading the document (a read-after-write costs a Firestore read per
+   * bid). It was declared `BidDocument` while the repository's own comment
+   * said "return plaintext to caller" — the mismatch the brand surfaced.
+   */
+  bid: BidPlain;
 }
 
 // --- Domain Functions ----------------------------------------------------------
@@ -203,7 +209,7 @@ export async function placeBid(
     bumpedPreviousVisible = Math.min(prevCap, target);
   }
 
-  const bid = await bidRepository.create({
+  const bid = await bidRepository.createBid({
     productId,
     productTitle: product.title,
     userId,
@@ -213,7 +219,7 @@ export async function placeBid(
     currency: product.currency || getDefaultCurrency(),
     bidDate: new Date(),
     autoMaxBid: newCap,
-  } as Parameters<typeof bidRepository.create>[0]);
+  });
 
   await unitOfWork.runBatch((batch) => {
     if (previousWinner && previousWinner.data.id !== bid.id) {
@@ -455,7 +461,7 @@ export async function buyNowAuction(
   // buyout price by the buyer" means. It starts `active`/`isWinning: false`
   // like any other bid (bidRepository.create forces both) and is promoted to
   // `won` by claimAuctionForCheckout when the order actually lands.
-  const bid = await bidRepository.create({
+  const bid = await bidRepository.createBid({
     productId,
     productTitle: product.title,
     userId,
@@ -466,7 +472,7 @@ export async function buyNowAuction(
     bidDate: new Date(),
     autoMaxBid: buyNowPrice,
     isBuyout: true,
-  } as Parameters<typeof bidRepository.create>[0]);
+  });
 
   // Clamped to the auction's own end: a buyout that hasn't been paid for by the
   // time the clock runs out fails anyway, because settlement will have awarded

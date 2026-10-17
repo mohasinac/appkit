@@ -21,13 +21,19 @@ import type {
   SieveModel,
   FirebaseSieveResult,
 } from "../../../providers/db-firebase";
-import type { OfferDocument, OfferCreateInput, OfferUpdateInput } from "../schemas";
+import type {
+  OfferDocument,
+  OfferPlain,
+  OfferCreateInput,
+  OfferUpdateInput,
+} from "../schemas";
 import { OFFER_COLLECTION, OFFER_FIELDS, OFFER_TRACKED_FIELDS, createOfferId } from "../schemas";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
 import type { FirestoreDocument } from "../../../schemas/types";
 import {
   encryptPiiFields,
-  decryptPiiFields,
+  maskPii,
+  revealPii,
   OFFER_PII_FIELDS,
 } from "../../../security";
 
@@ -51,13 +57,42 @@ class OfferRepository extends BaseRepository<OfferDocument> {
   }
 
   /** Override mapDoc to auto-decrypt PII on every offer read */
-  protected override mapDoc<D = OfferDocument>(
-    snap: import("../../../providers/db-firebase").DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<OfferDocument>(snap);
-    return decryptPiiFields(raw, [
-      ...OFFER_PII_FIELDS,
-    ]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `OfferDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealOffer(doc: OfferDocument): OfferPlain {
+    return revealPii<OfferPlain>(doc, OFFER_PII_FIELDS);
+  }
+
+  /** As `revealOffer`, for a list read. */
+  revealOffers(docs: readonly OfferDocument[]): OfferPlain[] {
+    return docs.map((d) => this.revealOffer(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedOffer(doc: OfferDocument): OfferPlain {
+    return maskPii<OfferPlain>(doc, OFFER_PII_FIELDS);
+  }
+
+  /** As `maskedOffer`, for a list read. */
+  maskedOffers(docs: readonly OfferDocument[]): OfferPlain[] {
+    return docs.map((d) => this.maskedOffer(d));
   }
 
   /**
@@ -143,7 +178,14 @@ class OfferRepository extends BaseRepository<OfferDocument> {
 
   // --- Create --------------------------------------------------------------
 
-  override async create(input: OfferCreateInput): Promise<OfferDocument> {
+  /*
+   * 🛑 NOT an `override` of `create`. `BaseRepository.create` promises to
+   * accept the CIPHERTEXT shape; this accepts PLAINTEXT and encrypts, and
+   * `string` vs `Encrypted<string>` is incompatible in both directions, so an
+   * override is a TS2416 either way — correctly, because the two signatures
+   * genuinely disagree about what the caller holds.
+   */
+  async createOffer(input: OfferCreateInput): Promise<OfferPlain> {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 48 * 60 * 60 * 1000); // 48 h
     const id = createOfferId({
@@ -152,7 +194,9 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       date: now,
     });
 
-    const data: Omit<OfferDocument, "id"> = {
+    // Plain in, ciphertext out — `encryptPiiFields` below is what makes the
+    // document type true.
+    const data: Omit<OfferPlain, "id"> = {
       ...input,
       status: "pending",
       expiresAt,

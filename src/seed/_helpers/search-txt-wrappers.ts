@@ -16,7 +16,7 @@ import type { BlogPostDocument } from "../../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../../features/reviews/schemas/firestore";
 import type { OrderDocument } from "../../features/orders/schemas/firestore";
 import type { CouponDocument } from "../../features/promotions/schemas/firestore";
-import type { OfferDocument } from "../../features/seller/schemas/firestore";
+import type { OfferPlain } from "../../features/seller/schemas/firestore";
 import {
   buildCategorySearchTxt,
   buildStoreSearchTxt,
@@ -65,7 +65,17 @@ export function withCouponSearchTxt<T extends Partial<CouponDocument>>(p: T): T 
   return { ...p, searchTxt: buildCouponSearchTxt(p) };
 }
 
-export function withOfferSearchTxt<T extends Partial<OfferDocument>>(p: T): T {
+/*
+ * Bounded by `OfferPlain`, not `OfferDocument`.
+ *
+ * Seed fixtures hold plaintext and `seed-cli` encrypts on write, so the array
+ * this maps over is `Partial<OfferPlain>[]`. `string` and `Encrypted<string>`
+ * are incompatible in both directions, so a document-bounded generic rejects
+ * the plain shape outright. The function reads `buyerName` for tokens and does
+ * not care which it gets — and `buildOfferSearchTxt` is deliberately given the
+ * PLAINTEXT one: tokenising ciphertext would index base64.
+ */
+export function withOfferSearchTxt<T extends Partial<OfferPlain>>(p: T): T {
   return { ...p, searchTxt: buildOfferSearchTxt(p) };
 }
 

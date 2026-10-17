@@ -18,6 +18,7 @@ import {
   CATALOGUE_HISTORY_PII_FIELDS,
   createCatalogueItemId,
   type CatalogueItemDocument,
+  type CatalogueItemPlain,
   type CatalogueItemCreateInput,
   type CatalogueItemUpdateInput,
 } from "../schemas/firestore";
@@ -34,20 +35,39 @@ export interface CatalogueWriteContext {
 
 export class CatalogueRepository extends BaseRepository<CatalogueItemDocument> {
   /**
-   * `ownerEmail` only — NOT `ownerName`.
+   * 🛑 DEAD as written: `CatalogueItemDocument` has no `ownerEmail`.
    *
-   * Per decision D1 names stay partial-match searchable, and catalogue items are
-   * searchable by owner in the admin approvals queue. `CATALOGUE_HISTORY_PII_FIELDS`
-   * lists both, but that constant scrubs status *history*, which has no search
-   * requirement — the two lists are intentionally different.
+   * Kept rather than deleted because it is the declaration that would start
+   * working the moment an owner email is added to the document, and deleting
+   * it would hand that future field plaintext storage by default. The reasoning
+   * it used to carry — "`ownerEmail` only, NOT `ownerName`, because D1 keeps
+   * names searchable" — described a choice between two fields that neither
+   * exist nor can arrive through `CatalogueItemCreateInput`.
    */
   protected override piiFields = ["ownerEmail"] as const;
 
   /** Decrypt on read so callers see the shape they wrote. */
-  protected override mapDoc<D = CatalogueItemDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<CatalogueItemDocument>(snap);
-    return decryptPiiFields(raw, [...this.piiFields]) as unknown as D;
-  }
+  /*
+   * 🛑 `mapDoc` is NOT overridden — it used to call `decryptPiiFields`, and
+   * that call had ALWAYS BEEN A NO-OP.
+   *
+   * Measured 2026-10-17: `CatalogueItemDocument` declares `ownerId` and
+   * `ownerRole` and NO owner name or email. `CatalogueItemCreateInput` is
+   * `Omit<CatalogueItemDocument, …>`, so `ownerEmail` cannot arrive through
+   * the create path either — the `piiFields` override below encrypts a field
+   * that is never present, and the decrypt undid nothing.
+   *
+   * So this repository gets NO `reveal*`/`masked*` accessors: there is no PII
+   * on the document to reveal or to mask, and adding a pair for fields that do
+   * not exist would be the same fiction one level up — a named method whose
+   * name is the only evidence it does anything (Root Cause #92).
+   *
+   * `CATALOGUE_HISTORY_PII_FIELDS` is a different and legitimate thing: it is
+   * the scrub list passed to `withHistory` below, and a history entry listing
+   * PII keys it does not currently carry is DEFENSIVE by design — § "Status
+   * History" requires every adopter to pass the list explicitly so the next
+   * field added has to be triaged rather than defaulting in silently.
+   */
 
   constructor() {
     super(CATALOGUE_COLLECTION);
