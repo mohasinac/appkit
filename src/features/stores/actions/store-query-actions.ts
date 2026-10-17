@@ -19,7 +19,7 @@ import { ProductStatusValues } from "../../products/schemas";
 import { reviewRepository } from "../../reviews/repository/reviews.repository";
 import type { StoreDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas";
-import type { ReviewDocument } from "../../reviews/schemas";
+import type { ReviewPlain } from "../../reviews/schemas";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import type {
   FirebaseSieveResult,
@@ -42,7 +42,7 @@ export interface StoreContentParams {
 }
 
 export interface StoreReviewsResult {
-  reviews: ReviewDocument[];
+  reviews: ReviewPlain[];
   averageRating: number;
   totalReviews: number;
   ratingDistribution: Record<number, number>;
@@ -214,7 +214,13 @@ export async function getStoreReviews(
   const averageRating = totalReviews > 0 ? ratingSum / totalReviews : 0;
 
   return {
-    reviews: allReviews.map(maskPublicReview),
+    /*
+     * `maskedReview`, not `maskPublicReview`. The latter calls `maskName`,
+     * which refuses ciphertext by design and answers "Anonymous" — and these
+     * come from `find*` reads, which do not mask. A public store page was
+     * showing every reviewer as Anonymous.
+     */
+    reviews: allReviews.map((r) => reviewRepository.maskedReview(r)),
     averageRating,
     totalReviews,
     ratingDistribution,

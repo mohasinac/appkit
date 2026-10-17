@@ -311,7 +311,13 @@ export interface SellerPayoutDetails {
 
 export const USER_COLLECTION = "users" as const;
 
-export const DEFAULT_USER_DATA: Partial<UserDocument> = {
+/*
+ * The PLAIN shape: this is spread into a brand-new account's payload at
+ * signup, where every value is plaintext and `createWithId` encrypts. Typed
+ * as the document it would have demanded `Encrypted<string>` from all three
+ * signup routes.
+ */
+export const DEFAULT_USER_DATA: Partial<UserPlain> = {
   role: "user",
   emailVerified: false,
   phoneVerified: false,
@@ -372,8 +378,13 @@ export type UserUpdateInput = Partial<
   Pick<UserDocument, "displayName" | "photoURL">
 >;
 
+/*
+ * Derived from the PLAIN shape: an admin form supplies real values and the
+ * repository encrypts them on write. Deriving from the document demanded
+ * `Encrypted<string>` from the admin action, which nobody has.
+ */
 export type UserAdminUpdateInput = Partial<
-  Omit<UserDocument, "uid" | "id" | "createdAt">
+  Omit<UserPlain, "uid" | "id" | "createdAt">
 >;
 
 export interface UserQueryFilter {

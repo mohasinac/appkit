@@ -1548,8 +1548,6 @@ export { encryptPayoutDetails } from "./security/index";
 export { decryptPayoutDetails } from "./security/index";
 export { encryptShippingConfig } from "./security/index";
 export { decryptShippingConfig } from "./security/index";
-export { encryptPayoutBankAccount } from "./security/index";
-export { decryptPayoutBankAccount } from "./security/index";
 export { maskName } from "./security/index";
 export { maskEmail } from "./security/index";
 export { maskPublicReview } from "./security/index";

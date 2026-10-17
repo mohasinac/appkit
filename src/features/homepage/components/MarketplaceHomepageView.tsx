@@ -2,6 +2,11 @@ import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Main } from "../../../ui";
+// Deep import, not the `ui` barrel and not `@mohasinac/appkit/client`: this is a
+// Server Component, so a runtime value from the client entry would arrive as a
+// client-reference proxy (Root Cause #76). Rendering it as JSX is the supported
+// boundary; importing it from its defining module is Root Cause #18.
+import { TopBannerPortal } from "../../../ui/components/TopBannerPortal";
 import { carouselRepository } from "../../../repositories";
 // Both are React.cache wrappers around a single repository call, shared with
 // other readers in the same request tree (the locale layout for settings,
@@ -256,8 +261,20 @@ export async function MarketplaceHomepageView({
   return (
     <Main>
       <Div className="relative">
+        {/* Portalled ABOVE the title bar rather than rendered here. It used to
+            be `<AnnouncementBar overlay>`, which is `absolute inset-x-0 top-0`
+            over this very Div — i.e. painted on top of the first section, which
+            is the overlap the `overlay` prop existed to create and that its own
+            comment measured against the hero <h1>. The banner is page-owned but
+            belongs above the header, and only the layout can place it there. */}
         {showAnnouncement ? (
-          <AnnouncementBar overlay message={announcementMessage} link={siteSettings?.announcementBar?.link} onDismiss={onBannerDismiss} />
+          <TopBannerPortal>
+            <AnnouncementBar
+              message={announcementMessage}
+              link={siteSettings?.announcementBar?.link}
+              onDismiss={onBannerDismiss}
+            />
+          </TopBannerPortal>
         ) : null}
         {orderedSections.map((section) =>
           renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData, brand),

@@ -6,6 +6,17 @@
 import crypto from "node:crypto";
 import type { JobContext } from "../runtime/types";
 import { EVENT_ENTRY_FIELDS } from "../../../../constants/field-names";
+import { EVENT_ENTRY_PII_FIELDS, maskPii } from "../../../../security";
+
+/**
+ * The winner's display name, masked for a PUBLIC announcement.
+ *
+ * `maskPii` rather than `eventEntryRepository.maskedEntry` because the pool
+ * here is typed as a local `EntryDoc`, not a full `EventEntryDocument` — and
+ * `maskPii` takes a plain object, so no cast is needed to use the shared rule.
+ */
+const maskedWinnerName = (data: { userDisplayName?: string }): string | undefined =>
+  maskPii<{ userDisplayName?: string }>(data, EVENT_ENTRY_PII_FIELDS).userDisplayName;
 
 export interface TriggerEventRaffleInput {
   eventId: string;
@@ -108,7 +119,16 @@ export async function runTriggerEventRaffle(
 
   await eventRef.update({
     raffleWinnerUserId: winner.data.userId,
-    raffleWinnerDisplayName: winner.data.userDisplayName ?? "",
+    /*
+     * 🛑 MASKED, not raw. `userDisplayName` is an `EVENT_ENTRY_PII_FIELDS`
+     * member, so an entry read returns ciphertext — and this writes onto the
+     * EVENT document, where the field is neither encrypted nor decrypted, and
+     * is then shown PUBLICLY as the raffle winner. Masked rather than revealed
+     * because a public winner announcement is exactly the surface that should
+     * read "R*** K***".
+     */
+    raffleWinnerDisplayName:
+      maskedWinnerName(winner.data) ?? "",
     raffleWinnerEntryId: winner.id,
     raffleTriggeredAt: ctx.now,
     raffleEntryCount: entriesSnap.size,
@@ -126,7 +146,8 @@ export async function runTriggerEventRaffle(
   return {
     eventId: input.eventId,
     raffleWinnerUserId: winner.data.userId,
-    raffleWinnerDisplayName: winner.data.userDisplayName,
+    raffleWinnerDisplayName:
+      maskedWinnerName(winner.data), // see above
     raffleEntryCount: entriesSnap.size,
   };
 }

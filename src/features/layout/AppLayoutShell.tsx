@@ -28,6 +28,7 @@ import { SidebarLayout } from "./SidebarLayout";
 import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
 import { useDashboardNav } from "./DashboardNavContext";
+import { TOP_BANNER_SLOT_ID } from "../../ui/components/top-banner-slot";
 import { usePathname } from "next/navigation";
 import { findActiveNavItem } from "../../_internal/client/features/layout/navActive";
 
@@ -799,6 +800,13 @@ export function AppLayoutShell({
           lightMode={normalizedLightBackground}
           darkMode={normalizedDarkBackground}
         />
+
+        {/* The page's topmost band — see `top-banner-slot.ts`.
+            🛑 OUTSIDE the sticky wrapper on purpose: anything inside `headerRef`
+            is measured into `--header-height`, so a dismissible banner in there
+            would make every `StickyToolbar offset="header"` on the page jump the
+            moment it was closed. Out here it simply scrolls away. */}
+        <Div id={TOP_BANNER_SLOT_ID} className="w-full" />
 
         <Div ref={headerRef} className="sticky top-0 z-50 w-full">
           <TitleBar

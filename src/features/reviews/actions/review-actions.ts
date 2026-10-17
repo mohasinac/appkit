@@ -140,7 +140,7 @@ export async function updateReview(
 
   return reviewRepository.update(
     reviewId,
-    updatePayload as Partial<ReviewDocument>,
+    updatePayload as Partial<ReviewPlain>,
   );
 }
 
@@ -202,7 +202,7 @@ export async function adminUpdateReview(
 
   return reviewRepository.update(
     reviewId,
-    updatePayload as Partial<ReviewDocument>,
+    updatePayload as Partial<ReviewPlain>,
   );
 }
 
@@ -264,10 +264,14 @@ export async function listReviewsByProduct(
     pageSize,
   });
 
-  return {
-    ...result,
-    items: result.items.map((item) => maskPublicReview(item) as ReviewDocument),
-  };
+  /*
+   * No second mask. `reviewRepository.listAll` returns `ReviewPlain` already
+   * masked by `maskSieveResult`, so `maskPublicReview` here would mask an
+   * already-masked name — and worse, it was being handed ciphertext before
+   * that method was converted, where `maskName`'s `hasEncPrefix` guard answers
+   * "Anonymous" for every row.
+   */
+  return result;
 }
 
 export async function listAdminReviews(params?: {
@@ -288,7 +292,7 @@ export async function listAdminReviews(params?: {
 
 export async function listReviewsBySeller(
   sellerId: string,
-): Promise<ReviewDocument[]> {
+): Promise<ReviewPlain[]> {
   const products = await productRepository.findByStore(sellerId);
   const productIds = products
     .filter((product) => product.status === ProductStatusValues.PUBLISHED)
@@ -321,12 +325,23 @@ export async function listReviewsBySeller(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
-    .map((item) => maskPublicReview(item) as ReviewDocument);
+    /*
+     * `maskedReview`, not `maskPublicReview`.
+     *
+     * These come from `findApprovedByStore`, a `find*` method that returns raw
+     * documents — only the three `list*` methods mask. `maskPublicReview`
+     * calls `maskName`, which refuses ciphertext by design and answers
+     * "Anonymous", so this public list showed every reviewer as Anonymous.
+     * `maskedReview` decrypts first, then masks.
+     */
+    .map((item) => reviewRepository.maskedReview(item));
 }
 
-export async function getHomepageReviews(): Promise<ReviewDocument[]> {
+export async function getHomepageReviews(): Promise<ReviewPlain[]> {
   const reviews = await reviewRepository.findFeatured(18);
-  return reviews.map((item) => maskPublicReview(item) as ReviewDocument);
+  // `findFeatured` returns raw documents — see the note above on why
+  // `maskPublicReview` cannot be used on them.
+  return reviews.map((item) => reviewRepository.maskedReview(item));
 }
 
 export async function getReviewById(

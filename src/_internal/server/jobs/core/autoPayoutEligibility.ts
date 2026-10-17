@@ -66,6 +66,26 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
       );
       continue;
     }
+    /*
+     * 🛑 REVEALED before building a payout. This is the fix for active data
+     * corruption, not a style change.
+     *
+     * `userRepository.findById` is ciphertext-by-default, and
+     * `payoutRepository.createPayout` ENCRYPTS `sellerEmail` and `upiId`
+     * (`PAYOUT_PII_FIELDS`). Passing the stored values straight through
+     * encrypted them a SECOND time, and nothing in the codebase ever
+     * double-decrypts — so every payout this cron wrote carried a
+     * permanently unreadable `upiId`, which is the field the money is sent to.
+     *
+     * It also poisoned the blind index: `piiIndicesFor` HMACs whatever it is
+     * given, so hashing already-encrypted input produced a valid-looking
+     * `sellerEmailIndex` that can never match a lookup by the real address.
+     *
+     * `payoutDetails` needs its own unwrap because it is encrypted by
+     * `encryptPayoutDetails`, a separate scheme from the `piiFields` path, so
+     * `revealUser` handles it explicitly.
+     */
+    const sellerPlain = userRepository.revealUser(seller);
     const sellerId = store!.ownerId;
 
     /*
@@ -87,8 +107,9 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
 
     const payoutInput = {
       storeId,
-      sellerName: (seller.displayName ?? seller.email ?? sellerId) as string,
-      sellerEmail: (seller.email ?? "") as string,
+      // `displayName` is plaintext by D1; the email fallback must be revealed.
+      sellerName: (seller.displayName ?? sellerPlain.email ?? sellerId) as string,
+      sellerEmail: sellerPlain.email ?? "",
       orderIds: orders.map((o) => o.id),
       amount: netAmount,
       grossAmount,
@@ -102,19 +123,27 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
       currency: getDefaultCurrency(),
       status: "pending" as const,
       paymentMethod:
-        seller.payoutDetails?.method === "upi"
+        sellerPlain.payoutDetails?.method === "upi"
           ? ("upi" as const)
           : ("bank_transfer" as const),
       upiId:
-        seller.payoutDetails?.method === "upi" ? seller.payoutDetails.upiId : undefined,
+        sellerPlain.payoutDetails?.method === "upi"
+          ? sellerPlain.payoutDetails.upiId
+          : undefined,
+      /*
+       * Only the MASKED account fields are copied, which is why this block
+       * escaped the double-encryption above — `accountNumberMasked`,
+       * `ifscCode` and `bankName` are in no PII list. The real
+       * `accountNumber` is deliberately not carried onto the payout.
+       */
       bankAccount:
-        seller.payoutDetails?.method === "bank_transfer" &&
-        seller.payoutDetails.bankAccount
+        sellerPlain.payoutDetails?.method === "bank_transfer" &&
+        sellerPlain.payoutDetails.bankAccount
           ? {
-              accountHolderName: seller.payoutDetails.bankAccount.accountHolderName,
-              accountNumberMasked: seller.payoutDetails.bankAccount.accountNumberMasked,
-              ifscCode: seller.payoutDetails.bankAccount.ifscCode,
-              bankName: seller.payoutDetails.bankAccount.bankName,
+              accountHolderName: sellerPlain.payoutDetails.bankAccount.accountHolderName,
+              accountNumberMasked: sellerPlain.payoutDetails.bankAccount.accountNumberMasked,
+              ifscCode: sellerPlain.payoutDetails.bankAccount.ifscCode,
+              bankName: sellerPlain.payoutDetails.bankAccount.bankName,
             }
           : undefined,
       notes: `Auto-payout — ${orders.length} delivered order(s) past ${AUTO_PAYOUT_WINDOW_DAYS}-day window`,

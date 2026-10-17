@@ -47,17 +47,9 @@ export interface AnnouncementBarProps {
   className?: string;
   /** Called when the user dismisses — consumer wires this to a server action to persist. */
   onDismiss?: (hash: string) => void;
-  /**
-   * Renders as a translucent, backdrop-blurred strip pinned to the top edge
-   * of the nearest positioned ancestor, instead of the default full-bleed
-   * in-flow bar. Used on the homepage to overlay the banner over the first
-   * section (e.g. the Welcome hero) rather than pushing it down with extra
-   * vertical space.
-   */
-  overlay?: boolean;
 }
 
-export function AnnouncementBar({ message, link, className = "", onDismiss, overlay = false }: AnnouncementBarProps) {
+export function AnnouncementBar({ message, link, className = "", onDismiss }: AnnouncementBarProps) {
   const { user } = useAuth();
   const bannerHash = hashBannerMessage(message);
   const userAlreadyDismissed = !!user?.dismissedBannerHash && user.dismissedBannerHash === bannerHash;
@@ -76,32 +68,26 @@ export function AnnouncementBar({ message, link, className = "", onDismiss, over
 
   if (dismissed) return null;
   /*
-   * 🛑 THE OVERLAY IS md AND UP ONLY — IT PAINTED OVER THE HERO HEADING ON
-   * EVERY PHONE WIDTH.
+   * 🛑 THE `overlay` PROP IS GONE — DO NOT REINTRODUCE IT.
    *
-   * `absolute` reserves no space, which is the whole point of the overlay: the
-   * hero's own top padding is sized to sit a ONE-LINE banner over it. A real
-   * announcement wraps on a narrow screen, grows downward, and there is
-   * nothing to stop it.
-   *
-   * Measured on production against the live announcement, against the <h1>:
+   * It rendered this bar `absolute inset-x-0 top-0` over the homepage's first
+   * section, which reserves no space by design. A banner that reserves no space
+   * paints on whatever is beneath it the moment it is taller than the padding
+   * someone sized for it. Measured on production against the hero <h1>:
    *
    *   320px → 30px overlap      768px → 10px clear
    *   390px → 10px overlap     1280px → 10px clear
    *   430px → 10px overlap
    *
-   * So it was every phone width and no tablet or desktop width — which is why
-   * it survived: the breakpoints people check it at are the ones where the
-   * message still fits on one line.
+   * That was patched once by making the overlay `md:` and up, which fixed the
+   * phone widths and left the mechanism in place — a one-line message at a
+   * width nobody checks is one long announcement away from the same bug.
    *
-   * Below `md` it is an ordinary in-flow bar that pushes the hero down, with a
-   * SOLID background (the translucent + blur treatment only reads as
-   * deliberate when there is artwork behind it). From `md` up, the designed
-   * overlay is unchanged.
+   * The bar now renders in normal flow, portalled above the sticky header via
+   * `TopBannerPortal`. It pushes the page down by exactly its own height at
+   * every width, so there is nothing to overlap and no breakpoint to tune.
    */
-  const positionCls = overlay
-    ? "relative md:absolute inset-x-0 top-0 z-20 bg-primary-700 md:bg-primary-700/85 md:backdrop-blur-sm"
-    : "relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700";
+  const positionCls = "relative w-full bg-primary-700";
   return (
     <Div className={`${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">

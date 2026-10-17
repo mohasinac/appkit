@@ -92,12 +92,17 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     return docs.map((d) => this.maskedAddress(d));
   }
 
+  /*
+   * Takes PLAINTEXT, like the base it overrides — this method is what
+   * encrypts (`applyWriteHooks`), so demanding ciphertext from callers
+   * inverted its own contract.
+   */
   override async createWithId(
     id: string,
-    data: Partial<AddressDocument>,
+    data: Partial<AddressPlain>,
   ): Promise<AddressDocument> {
     const encrypted = this.applyWriteHooks(data);
-    return super.createWithId(id, encrypted);
+    return super.createWithId(id, encrypted as Partial<AddressPlain>);
   }
 
   /*
@@ -478,13 +483,14 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     id: string,
     banData: { banReason: string; bannedBy: string },
   ): Promise<AddressDocument> {
+    // Plain write payload — see `update`'s own note.
     return this.update(id, {
       banStatus: "banned",
       banReason: banData.banReason,
       bannedBy: banData.bannedBy,
       bannedAt: new Date(),
       autoBanned: false,
-    } as Partial<AddressDocument>);
+    } as Partial<AddressPlain>);
   }
 
   async clearBanById(id: string): Promise<void> {

@@ -24,7 +24,11 @@
  * @tag sideEffects:none
  */
 
-import type { BidDocument } from "../features/auctions/schemas/firestore";
+/*
+ * `BidPlain`: these fixtures hold real plaintext and `seed-cli` encrypts
+ * `userEmail` on write, so the document type would claim they are ciphertext.
+ */
+import type { BidPlain } from "../features/auctions/schemas/firestore";
 import { buildBidSearchTxt } from "../utils/search-txt-builders";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
@@ -44,14 +48,14 @@ const BIDDER_NAMES: Record<string, string> = {
 };
 
 /*
- * Typed on the document, not `FirestoreDocument`. Once `BidDocument` gained
+ * Typed on the PLAIN shape, not `FirestoreDocument`. Once `BidDocument` gained
  * `statusHistory?: StatusChangeEntry[]`, `Partial<BidDocument>` stopped being
  * assignable to `FirestoreDocument` — an array of objects does not satisfy
  * that index signature. The right fix is to narrow the parameter to what the
  * caller actually passes rather than widen the document to keep a helper
  * happy.
  */
-function withBidDefaults(b: Partial<BidDocument>): Partial<BidDocument> {
+function withBidDefaults(b: Partial<BidPlain>): Partial<BidPlain> {
   return {
     ...b,
     productTitle: b.productTitle as string ?? (b.productId as string ?? "").replace(/^auction-/, "").replace(/-/g, " "),
@@ -80,7 +84,7 @@ function withBidDefaults(b: Partial<BidDocument>): Partial<BidDocument> {
         ((b.productId as string) ?? "").replace(/^auction-/, "").replace(/-/g, " "),
       userName: b.userName as string | undefined,
     }),
-  } as Partial<BidDocument>;
+  } as Partial<BidPlain>;
 }
 
 /**
@@ -95,7 +99,7 @@ function buildLadder(params: {
   currentBid: number;
   bidderIds: string[];
   closed?: boolean;
-}): Partial<BidDocument>[] {
+}): Partial<BidPlain>[] {
   const { productId, productTitle, startingBid, currentBid, bidderIds, closed = false } = params;
   const steps = bidderIds.length;
   const range = currentBid - startingBid;
@@ -117,7 +121,7 @@ function buildLadder(params: {
   });
 }
 
-const _rawBidsSeedData: Partial<BidDocument>[] = [
+const _rawBidsSeedData: Partial<BidPlain>[] = [
   // auction-beyblade-original-dragoon-storm — bidCount: 3, currentBid: 3499
   ...buildLadder({
     productId: "auction-beyblade-original-dragoon-storm",
@@ -198,7 +202,7 @@ const _rawBidsSeedData: Partial<BidDocument>[] = [
   // auction-beyblade-burst-spriggan-requiem-bought-out — a BUYOUT ended it.
   //
   // Three competitive bids that lost, then the buyout that won. A buyout is a
-  // real BidDocument (`isBuyout: true`) — it is not a bid-free purchase, which
+  // real BidPlain (`isBuyout: true`) — it is not a bid-free purchase, which
   // is why the order's `sourceContext.bidCount` is 3 rather than 0: the buyout
   // itself is excluded from the "against N bidders" figure, the three it beat
   // are not. `standingBidAtBuyout` is read from these bids and NOT from
@@ -227,4 +231,4 @@ const _rawBidsSeedData: Partial<BidDocument>[] = [
   },
 ];
 
-export const bidsSeedData = _rawBidsSeedData.map(withBidDefaults) as BidDocument[];
+export const bidsSeedData = _rawBidsSeedData.map(withBidDefaults) as BidPlain[];

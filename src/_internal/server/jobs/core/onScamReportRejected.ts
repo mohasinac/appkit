@@ -28,6 +28,12 @@ export async function handleScamReportRejected(
 
   try {
     const reporter = await userRepository.findById(reportedBy);
+    /*
+     * REVEALED, because this notification is DELIVERED to the reporter and a
+     * masked address cannot receive mail. `findById` is ciphertext-by-default,
+     * so passing `.email` straight through handed the mailer an `enc:v1:` blob.
+     */
+    const reporterPlain = reporter ? userRepository.revealUser(reporter) : null;
     await sendNotification({
       userId: reportedBy,
       type: "scam_report_update",
@@ -36,8 +42,8 @@ export async function handleScamReportRejected(
       message: `Your report for "${name}" could not be verified with the evidence provided. You may submit a new report with additional evidence.`,
       relatedId: scammerId,
       relatedType: "scammer",
-      userEmail: reporter?.email ?? undefined,
-      userPhone: reporter?.phoneNumber ?? undefined,
+      userEmail: reporterPlain?.email ?? undefined,
+      userPhone: reporterPlain?.phoneNumber ?? undefined,
     });
   } catch (err) {
     void normalizeError(err);

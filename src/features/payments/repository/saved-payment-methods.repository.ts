@@ -91,18 +91,26 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
     return docs.map((d) => this.maskedMethod(d));
   }
 
+  /*
+   * Takes PLAINTEXT, like the base it overrides — this method is what
+   * encrypts, so demanding ciphertext from callers inverted its own contract.
+   */
   override async createWithId(
     id: string,
-    data: Partial<SavedPaymentMethodDocument>,
+    data: Partial<SavedPaymentMethodPlain>,
   ): Promise<SavedPaymentMethodDocument> {
-    return super.createWithId(id, this.encrypt(data));
+    return super.createWithId(id, this.encrypt(data) as Partial<SavedPaymentMethodPlain>);
   }
 
+  /*
+   * Takes PLAINTEXT, like the base it overrides — this method is what
+   * encrypts, so demanding ciphertext from callers inverted its own contract.
+   */
   override async update(
     id: string,
-    data: Partial<SavedPaymentMethodDocument>,
+    data: Partial<SavedPaymentMethodPlain>,
   ): Promise<SavedPaymentMethodDocument> {
-    return super.update(id, this.encrypt(data));
+    return super.update(id, this.encrypt(data) as Partial<SavedPaymentMethodPlain>);
   }
 
   /** List all saved methods for a user. Never returns raw `identifier` — only `displayLabel`. */
@@ -299,7 +307,7 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
       bannedBy: banData.bannedBy,
       bannedAt: new Date(),
       autoBanned: false,
-    } as Partial<SavedPaymentMethodDocument>);
+    } as Partial<SavedPaymentMethodPlain>);
   }
 
   async clearBanById(id: string): Promise<void> {

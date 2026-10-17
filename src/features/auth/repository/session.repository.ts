@@ -151,7 +151,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     sessionId: string,
     data?: Partial<SessionUpdateInput>,
   ): Promise<void> {
-    const updateData: Partial<SessionDocument> = {
+    const updateData: Partial<SessionPlain> = {
       lastActivity: new Date(),
     };
 
@@ -166,7 +166,19 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     // that supplies a location — the hot activity ping stays a single write.
     if (data?.location) {
       const current = await this.findById(sessionId); // mapDoc → already decrypted
-      updateData.location = { ...(current?.location ?? {}), ...data.location };
+      /*
+     * Merged off the REVEALED current session, not the stored one.
+     *
+     * `location.city` is one of this repository's three nested PII paths, so
+     * `current.location` holds ciphertext — spreading it into a plaintext
+     * patch would re-encrypt the city on the way down and make it
+     * permanently unreadable, the same defect as the payout crons.
+     */
+    const currentPlain = current ? this.revealSession(current) : null;
+    updateData.location = {
+      ...(currentPlain?.location ?? {}),
+      ...(data.location as Partial<SessionPlain>["location"]),
+    };
     }
 
     try {
@@ -201,7 +213,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
       isActive: false,
       revokedAt: new Date(),
       revokedBy,
-    } as Partial<SessionDocument>);
+    } as Partial<SessionPlain>);
   }
 
   async revokeAllUserSessions(

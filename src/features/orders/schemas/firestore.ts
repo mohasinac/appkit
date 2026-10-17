@@ -928,8 +928,13 @@ export type OrderCreateInput = Omit<
 export type OrderUpdateInput = Partial<
   Pick<OrderDocument, (typeof ORDER_UPDATABLE_FIELDS)[number]>
 >;
+/*
+ * Derived from the PLAIN shape: an admin form supplies real values and the
+ * repository encrypts them on write. Deriving from the document demanded
+ * `Encrypted<string>` from the admin action, which nobody has.
+ */
 export type OrderAdminUpdateInput = Partial<
-  Omit<OrderDocument, "id" | "createdAt">
+  Omit<OrderPlain, "id" | "createdAt">
 >;
 
 export const orderQueryHelpers = {

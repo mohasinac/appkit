@@ -56,11 +56,35 @@ declare const ENCRYPTED_BRAND: unique symbol;
 /**
  * A string that is CIPHERTEXT as it sits in Firestore.
  *
- * Erased at runtime. Assignable to nothing that wants a plain `string`, which
- * is what turns every reader into a decision the compiler insists on.
+ * Erased at runtime — the VALUE is a string, so nothing changes about what is
+ * stored, sent or compared. The TYPE is not a string, and that is the point.
+ *
+ * ## 🛑 This was `T & { brand }`, and that version caught NO readers at all
+ *
+ * An intersection is a SUBTYPE of `string`, so `Encrypted<string>` was
+ * assignable to anything accepting a `string`. Measured directly: the write
+ * direction errored, while `maskName(cipher)`, `` `${cipher}` `` and
+ * `const s: string = cipher` all compiled in silence.
+ *
+ * So the fourteen-repository sweep enumerated every WRITE and not one READ —
+ * and this file's own docstring asserted the opposite, which is why the gap
+ * went unnoticed until `/reviews/[id]` was found rendering "Anonymous" for
+ * every reviewer (`findById` returned ciphertext, an `as Review` cast erased
+ * the brand, and `maskName` refuses ciphertext by design). Nine
+ * cross-repository writes were meanwhile double-encrypting PII, including the
+ * `upiId` two scheduled jobs send money to.
+ *
+ * A nominal shape is assignable to nothing that wants a `string`, so every
+ * reader becomes a compile error naming its file and line. That is the
+ * enumeration the intersection form could never produce.
+ *
+ * `__plain` is phantom — never read, never written, optional so no value has to
+ * carry it. It keeps `Encrypted<"a">` and `Encrypted<"b">` distinct rather than
+ * collapsing both to one opaque brand.
  */
-export type Encrypted<T extends string = string> = T & {
+export type Encrypted<T extends string = string> = {
   readonly [ENCRYPTED_BRAND]: "pii";
+  readonly __plain?: T;
 };
 
 /**
@@ -86,7 +110,26 @@ export type Plaintext<T> = {
    */
   [K in keyof T]: T[K] extends Encrypted<string> | null | undefined
     ? Extract<T[K], null | undefined> | string
-    : // Recurse into PLAIN OBJECT members only.
+    : /*
+       * 🛑 `Exclude<T[K], null | undefined>` before the Date/array test.
+       *
+       * The test used to be `T[K] extends Date | ReadonlyArray<unknown> | …`,
+       * which is FALSE for an OPTIONAL array: `X[] | undefined` is not
+       * assignable to `ReadonlyArray<unknown>`. So every optional array fell
+       * through to the object branch and got mapped — observable in an error
+       * reading `Plaintext<StatusChangeEntry>[]`.
+       *
+       * Harmless only by luck: `orders` declares `items?: OrderDocumentItem[]`,
+       * and the day that gains a PII member the recursion would silently
+       * un-brand it on the write path — the exact failure this type exists to
+       * prevent, one level down.
+       */
+      Exclude<T[K], null | undefined> extends
+        | Date
+        | ReadonlyArray<unknown>
+        | ((...args: never[]) => unknown)
+      ? T[K]
+      : // Recurse into PLAIN OBJECT members only.
       //
       // 🛑 This was non-recursive at first, on the reasoning that recursion is
       // "more power than the other repositories need". `sessions` disproved
@@ -120,7 +163,19 @@ export type Plaintext<T> = {
  * re-labelling — `encryptPii` is the function for that.
  */
 export const asEncrypted = <T extends string>(value: T): Encrypted<T> =>
-  value as Encrypted<T>;
+  /*
+   * `as unknown as` is REQUIRED here, and only here.
+   *
+   * With the nominal brand, `Encrypted<T>` is not a string type, so a direct
+   * cast is a TS2352 ("neither type sufficiently overlaps"). That error is
+   * correct and is the entire point of the nominal shape — this one function
+   * is the sanctioned crossing, which is why the double cast is confined to it
+   * rather than appearing at call sites.
+   *
+   * Its four real callers all pass `""` to BLANK a field on a display-only
+   * read, not to relabel a secret.
+   */
+  value as unknown as Encrypted<T>;
 
 /**
  * Narrow a possibly-undefined ciphertext field. Saves every call site writing

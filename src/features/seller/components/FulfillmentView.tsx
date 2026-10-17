@@ -7,7 +7,13 @@ import { Button } from "../../../ui/components/Button";
 import { Badge } from "../../../ui/components/Badge";
 import { apiClient } from "../../../http";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { OrderDocument } from "../../orders/schemas/firestore";
+/*
+ * `OrderPlain`, not `OrderPlain`: the route reveals before sending, because
+ * this is a client component and decryption needs the key. Declaring the
+ * document type claimed these rows carried ciphertext — which they did, and
+ * the view rendered it.
+ */
+import type { OrderPlain } from "../../orders/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { BarcodeField } from "./BarcodeField";
 import { normalizeError } from "../../../errors/normalize";
@@ -22,7 +28,7 @@ type ViewMode = "scan" | "list";
 
 interface ScanResult {
   product: ProductDocument;
-  order: OrderDocument;
+  order: OrderPlain;
 }
 
 function statusBadgeVariant(
@@ -38,7 +44,7 @@ export function FulfillmentView({
   currentUserId,
 }: FulfillmentViewProps) {
   const [mode, setMode] = useState<ViewMode>("scan");
-  const [orders, setOrders] = useState<OrderDocument[]>([]);
+  const [orders, setOrders] = useState<OrderPlain[]>([]);
   const [scanValue, setScanValue] = useState("");
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
@@ -52,7 +58,7 @@ export function FulfillmentView({
   const fetchOrders = useCallback(async () => {
     setIsLoadingOrders(true);
     try {
-      const res = await apiClient.get<{ orders: OrderDocument[]; total: number }>(
+      const res = await apiClient.get<{ orders: OrderPlain[]; total: number }>(
         SELLER_ENDPOINTS.ORDERS_FULFILLMENT,
       );
       setOrders(res.orders ?? []);

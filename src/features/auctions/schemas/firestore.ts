@@ -147,7 +147,7 @@ export type BidUpdateInput = Partial<
   Pick<BidDocument, (typeof BID_UPDATABLE_FIELDS)[number]>
 >;
 export type BidAdminUpdateInput = Partial<
-  Omit<BidDocument, "id" | "createdAt">
+  Omit<BidPlain, "id" | "createdAt">
 >;
 
 export const bidQueryHelpers = {
