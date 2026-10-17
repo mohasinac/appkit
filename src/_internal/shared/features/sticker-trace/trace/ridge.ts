@@ -285,6 +285,8 @@ function adaptiveHysteresis(
   height: number,
   kLow: number,
   kHigh: number,
+  assist?: Uint8Array,
+  assistWeight = 0,
 ): Uint8Array {
   const background = robustLocalBackground(response, width, height);
 
@@ -298,8 +300,16 @@ function adaptiveHysteresis(
     // have. "A few times the typical local contrast" does hold across the
     // corpus. The floors keep a perfectly flat region (Driger's paper sits at a
     // median response of 0.1) from treating 8-bit quantisation as signal.
-    lowField[i] = Math.max(3, bg * kLow);
-    highField[i] = Math.max(6, bg * kHigh);
+    //
+    // 🛑 The assist LOWERS the bar; it never clears it. Where the colour
+    // channel also sees a boundary the ridge only has to be `1 - weight` as
+    // convincing — so a marginal ridge on the halftone sheet links, while a
+    // pure colour change with NO ridge behind it still fails both thresholds
+    // and does not become a cut line. Letting the assist seed on its own would
+    // turn every gradient band inside a sticker into an outline.
+    const relief = assist && assist[i] ? 1 - assistWeight : 1;
+    lowField[i] = Math.max(3, bg * kLow * relief);
+    highField[i] = Math.max(6, bg * kHigh * relief);
   }
 
   return hysteresisField(response, width, height, lowField, highField);
@@ -349,6 +359,10 @@ export function detectRidges(
     kernelScale: number;
     /** Escape hatch: absolute response values, bypassing the percentiles. */
     absolute?: { low: number; high: number };
+    /** Independent second channel — see trace/quantise and trace/fuse. */
+    assist?: Uint8Array;
+    /** 0..1. How far the assist may lower the ridge's own bar. */
+    assistWeight?: number;
   },
 ): RidgeResult {
   const detrendRadius = Math.max(3, Math.round(7 * opts.kernelScale));
@@ -379,7 +393,15 @@ export function detectRidges(
 
   const barrier = opts.absolute
     ? hysteresis(response, width, height, opts.absolute.low, opts.absolute.high)
-    : adaptiveHysteresis(response, width, height, opts.low, opts.high);
+    : adaptiveHysteresis(
+        response,
+        width,
+        height,
+        opts.low,
+        opts.high,
+        opts.assist,
+        opts.assistWeight ?? 0,
+      );
 
   let set = 0;
   for (let i = 0; i < barrier.length; i++) set += barrier[i]!;
