@@ -12,14 +12,16 @@ import {
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
-  decryptPiiFields,
   encryptPiiFields,
+  maskPii,
+  revealPii,
   LOTTERY_ENTRY_PII_FIELDS,
 } from "../../../security";
 import {
   LOTTERY_ENTRIES_COLLECTION,
   LOTTERY_ENTRY_FIELDS,
   type LotteryEntryDocument,
+  type LotteryEntryPlain,
 } from "../schemas/firestore";
 
 class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
@@ -37,13 +39,46 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     super(LOTTERY_ENTRIES_COLLECTION);
   }
 
-  protected override mapDoc<D = LotteryEntryDocument>(
-    snap: import("../../../providers/db-firebase").DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<LotteryEntryDocument>(snap);
-    return decryptPiiFields(raw, [
-      ...LOTTERY_ENTRY_PII_FIELDS,
-    ]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that is the whole change.
+   *
+   * It used to call `decryptPiiFields` on every read, so ciphertext never left
+   * the database and all five consumers handled plaintext without ever saying
+   * so. Following `SiteSettingsRepository`: reads return what Firestore holds,
+   * and plaintext requires one of the two named methods below.
+   *
+   * The compiler enforces it rather than a convention doing so —
+   * `LotteryEntryDocument`'s PII fields are `Encrypted<string>`, assignable to
+   * nothing that wants a plain `string`, so a reader that skips both accessors
+   * is a compile error naming the file and line.
+   */
+
+  /**
+   * Plaintext PII. **Opt-in and named** — for the admin entries table and the
+   * draw notification, where the real address is the point.
+   */
+  revealEntry(doc: LotteryEntryDocument): LotteryEntryPlain {
+    return revealPii<LotteryEntryPlain>(doc, LOTTERY_ENTRY_PII_FIELDS);
+  }
+
+  /** As `revealEntry`, for a list read. */
+  revealEntries(docs: readonly LotteryEntryDocument[]): LotteryEntryPlain[] {
+    return docs.map((d) => this.revealEntry(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: handing a stored field
+   * straight to `maskName` would return "Anonymous" for every row, because
+   * those helpers refuse ciphertext by design.
+   */
+  maskedEntry(doc: LotteryEntryDocument): LotteryEntryPlain {
+    return maskPii<LotteryEntryPlain>(doc, LOTTERY_ENTRY_PII_FIELDS);
+  }
+
+  /** As `maskedEntry`, for a list read. */
+  maskedEntries(docs: readonly LotteryEntryDocument[]): LotteryEntryPlain[] {
+    return docs.map((d) => this.maskedEntry(d));
   }
 
   /**
@@ -147,8 +182,19 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
   }
 
   /** Create a lottery entry with PII encryption. */
+  /*
+   * 🛑 Takes PLAINTEXT (`LotteryEntryPlain`), returns CIPHERTEXT
+   * (`LotteryEntryDocument`), and the asymmetry is the point.
+   *
+   * The caller holds a real email and phone; this method encrypts them. Typing
+   * the parameter `Omit<LotteryEntryDocument, "id">` would have demanded the
+   * caller hand over `Encrypted<string>` it does not have, and the only way to
+   * satisfy that is `asEncrypted(email)` — which labels plaintext as ciphertext
+   * and is exactly the misuse `asEncrypted`'s own docstring forbids. The
+   * encryption happens here; so does the type change.
+   */
   async createEntry(
-    data: Omit<LotteryEntryDocument, "id">,
+    data: Omit<LotteryEntryPlain, "id">,
   ): Promise<LotteryEntryDocument> {
     try {
       const encrypted = encryptPiiFields(

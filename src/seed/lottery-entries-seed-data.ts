@@ -13,12 +13,22 @@
  * @tag sideEffects:none
  */
 
-import type { LotteryEntryDocument } from "../features/lottery/schemas/firestore";
+/*
+ * 🛑 `LotteryEntryPlain`, not `LotteryEntryDocument`.
+ *
+ * These fixtures hold REAL plaintext; `seed-cli` encrypts the PII fields on
+ * write through the same `LOTTERY_ENTRY_PII_FIELDS` map the repository uses.
+ * The document type now declares those fields `Encrypted<string>`, so typing
+ * this array as the document would be a claim that these literals are
+ * ciphertext — false, and previously hidden by an `as LotteryEntryDocument`
+ * cast on every record. The casts are gone with it.
+ */
+import type { LotteryEntryPlain } from "../features/lottery/schemas/firestore";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const lotteryEntriesSeedData: LotteryEntryDocument[] = [
+export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
   {
     id: "lottery-entry-pokemon-draw-1",
     sourceType: "event",
@@ -36,7 +46,7 @@ export const lotteryEntriesSeedData: LotteryEntryDocument[] = [
     isFlagged: false,
     submittedAt: daysAgo(2),
     drawnAt: daysAgo(2),
-  } as LotteryEntryDocument,
+  },
   {
     id: "lottery-entry-pokemon-draw-2",
     sourceType: "event",
@@ -54,7 +64,7 @@ export const lotteryEntriesSeedData: LotteryEntryDocument[] = [
     isFlagged: false,
     submittedAt: daysAgo(2),
     drawnAt: daysAgo(2),
-  } as LotteryEntryDocument,
+  },
   {
     id: "lottery-entry-pokemon-draw-3",
     sourceType: "event",
@@ -72,7 +82,7 @@ export const lotteryEntriesSeedData: LotteryEntryDocument[] = [
     isFlagged: false,
     submittedAt: daysAgo(1),
     drawnAt: daysAgo(1),
-  } as LotteryEntryDocument,
+  },
   {
     id: "lottery-entry-pokemon-draw-4",
     sourceType: "event",
@@ -90,7 +100,7 @@ export const lotteryEntriesSeedData: LotteryEntryDocument[] = [
     isFlagged: false,
     submittedAt: daysAgo(1),
     drawnAt: daysAgo(1),
-  } as LotteryEntryDocument,
+  },
   {
     id: "lottery-entry-pokemon-draw-5",
     sourceType: "event",
@@ -108,5 +118,5 @@ export const lotteryEntriesSeedData: LotteryEntryDocument[] = [
     isFlagged: false,
     submittedAt: daysAgo(0),
     drawnAt: daysAgo(0),
-  } as LotteryEntryDocument,
+  },
 ];

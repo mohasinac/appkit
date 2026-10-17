@@ -110,6 +110,31 @@ export function maskEmail(email: string | null | undefined): string {
 }
 
 /**
+ * Mask a phone number for display. Keeps the last four digits, which is the
+ * convention every support flow in this codebase already reads out loud.
+ *
+ * "+91 98765 43210" → "***43210"  (digits only, so formatting cannot leak)
+ *
+ * 🛑 Same `hasEncPrefix` guard as its siblings: if the value is still a
+ * ciphertext blob, return a fully-masked placeholder rather than a prefix of
+ * base64. Without it, "***" + the last four characters of an `enc:v1:` payload
+ * would read as a real phone number and be wrong in a way nobody could spot.
+ *
+ * A private copy of this already existed in `pii-redact.ts` for LOG redaction.
+ * That one is deliberately left alone: it has no encryption guard because logs
+ * are written from plaintext in memory, and giving the two one implementation
+ * would mean one of the callers getting a guard it does not need or losing one
+ * it does.
+ */
+export function maskPhone(phone: string | null | undefined): string {
+  if (!phone || typeof phone !== "string") return "***";
+  if (hasEncPrefix(phone)) return "***";
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length < 4) return "***";
+  return `***${digits.slice(-4)}`;
+}
+
+/**
  * Return a copy of a review document with PII fields masked for public display.
  * Admin/owner endpoints should NOT call this — use the raw document instead.
  */

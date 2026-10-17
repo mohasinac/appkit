@@ -17,7 +17,10 @@ import {
   pickWeightedSlot,
 } from "../../../../features/lottery/types";
 import type { LotteryConfig } from "../../../../features/lottery/types";
-import type { LotteryEntryDocument } from "../../../../features/lottery/schemas/firestore";
+import type {
+  LotteryEntryDocument,
+  LotteryEntryPlain,
+} from "../../../../features/lottery/schemas/firestore";
 import { LOTTERY_ENTRIES_COLLECTION } from "../../../../features/lottery/schemas/firestore";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -152,8 +155,16 @@ export async function submitLotteryPullAction(
       return { assignedSlot: chosen, userLotteryNumber: nextNumber };
     });
 
-    // Create the entry document outside the transaction (acceptable — slot is already booked)
-    const entryData: Omit<LotteryEntryDocument, "id"> = {
+    /*
+     * Create the entry document outside the transaction (acceptable — slot is
+     * already booked).
+     *
+     * Typed `LotteryEntryPlain`: this is PLAINTEXT from the session and the
+     * request body, and `createEntry` encrypts it. The document type now says
+     * `Encrypted<string>`, so annotating this `LotteryEntryDocument` is a
+     * compile error — correctly, because the values here are not ciphertext.
+     */
+    const entryData: Omit<LotteryEntryPlain, "id"> = {
       sourceType: data.sourceType,
       ...(data.sourceType === "event" ? { eventId: sourceId } : { productId: sourceId }),
       userId: user.uid,

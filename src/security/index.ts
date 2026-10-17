@@ -46,6 +46,13 @@ export {
   encryptPayoutBankAccount,
   decryptPayoutBankAccount,
 } from "./pii-encrypt";
+/*
+ * The two NAMED PII accessors that replace an unconditional `mapDoc` decrypt.
+ * Server-only — they import `pii-encrypt`, which reaches node:crypto through a
+ * bare runtime require (Root Cause #24), so this must never be re-exported
+ * from the universal client entry.
+ */
+export { revealPii, maskPii, revealPiiAll, maskPiiAll } from "./pii-accessors";
 // Crypto-free display-masking helpers -- sourced from pii-mask.ts (not
 // pii-encrypt.ts) so this barrel stays safe to re-export from the
 // universal client+server index.ts. See pii-mask.ts's header comment.
@@ -53,6 +60,7 @@ export {
   isPiiEncrypted,
   maskName,
   maskEmail,
+  maskPhone,
   maskPublicReview,
   maskPublicBid,
   maskPublicEventEntry,
