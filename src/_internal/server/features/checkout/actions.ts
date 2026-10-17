@@ -2448,8 +2448,15 @@ export async function verifyAndPlacePhonePeOrderAction(
   let userEmail = input.userEmail;
   if (userName === undefined || userEmail === undefined) {
     const userDoc = await userRepository.findById(uid);
+    /*
+     * 🛑 Revealed: `createOrder` encrypts `userEmail`, so handing it the
+     * ciphertext this read returns would double-encrypt it and make the
+     * buyer's address on the order undecryptable. `displayName` is not PII and
+     * needs no reveal.
+     */
+    const userPlain = userDoc ? userRepository.revealUser(userDoc) : null;
     userName = userName ?? userDoc?.displayName ?? "Customer";
-    userEmail = userEmail ?? userDoc?.email ?? "";
+    userEmail = userEmail ?? userPlain?.email ?? "";
   }
   const addressId = input.addressId ?? intent?.addressId;
   const notes = input.notes ?? intent?.notes;

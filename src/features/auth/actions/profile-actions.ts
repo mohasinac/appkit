@@ -130,7 +130,16 @@ export async function getSellerReviews(storeId: string) {
     productId: r.productId,
     productTitle: r.productTitle,
     userId: r.userId,
-    userName: maskPublicReview(r).userName,
+    /*
+     * 🛑 `maskedReview`, not `maskPublicReview`.
+     *
+     * `maskPublicReview` calls `maskName`, which refuses a ciphertext input by
+     * design and answers "Anonymous". Since `ReviewRepository.mapDoc` stopped
+     * decrypting, `r.userName` IS ciphertext — so this rendered every reviewer
+     * on every public profile as "Anonymous". `maskedReview` decrypts first,
+     * then masks, which is the whole reason it exists.
+     */
+    userName: reviewRepository.maskedReview(r).userName,
     userAvatar: r.userAvatar,
     rating: r.rating as Review["rating"],
     title: r.title,
@@ -166,7 +175,16 @@ export async function getReviewsAuthoredBy(userId: string) {
     productId: r.productId,
     productTitle: r.productTitle,
     userId: r.userId,
-    userName: maskPublicReview(r).userName,
+    /*
+     * 🛑 `maskedReview`, not `maskPublicReview`.
+     *
+     * `maskPublicReview` calls `maskName`, which refuses a ciphertext input by
+     * design and answers "Anonymous". Since `ReviewRepository.mapDoc` stopped
+     * decrypting, `r.userName` IS ciphertext — so this rendered every reviewer
+     * on every public profile as "Anonymous". `maskedReview` decrypts first,
+     * then masks, which is the whole reason it exists.
+     */
+    userName: reviewRepository.maskedReview(r).userName,
     userAvatar: r.userAvatar,
     rating: r.rating as Review["rating"],
     title: r.title,
@@ -195,7 +213,16 @@ export async function getReviewsReceivedBy(userId: string) {
     productId: r.productId,
     productTitle: r.productTitle,
     userId: r.userId,
-    userName: maskPublicReview(r).userName,
+    /*
+     * 🛑 `maskedReview`, not `maskPublicReview`.
+     *
+     * `maskPublicReview` calls `maskName`, which refuses a ciphertext input by
+     * design and answers "Anonymous". Since `ReviewRepository.mapDoc` stopped
+     * decrypting, `r.userName` IS ciphertext — so this rendered every reviewer
+     * on every public profile as "Anonymous". `maskedReview` decrypts first,
+     * then masks, which is the whole reason it exists.
+     */
+    userName: reviewRepository.maskedReview(r).userName,
     userAvatar: r.userAvatar,
     rating: r.rating as Review["rating"],
     title: r.title,

@@ -15,7 +15,7 @@ import type { OfferDocument } from "../../../../features/seller/schemas";
 import type { FieldChange } from "../../../shared/history/index";
 // Display masking only — `pii-mask.ts` is the crypto-FREE half that Root Cause
 // #24 split out of `pii-encrypt.ts` precisely so it could be imported freely.
-import { maskEmail, maskName } from "../../../../security/pii-mask";
+import { offerRepository } from "../../../../features/seller/repository/offer.repository";
 
 function toIsoOrUndefined(value: Date | undefined): string | undefined {
   return value instanceof Date ? value.toISOString() : undefined;
@@ -141,11 +141,25 @@ function buyerIdentityFields(
   doc: OfferDocument,
   mode: OfferAdapterOptions["buyerIdentity"],
 ): Partial<Pick<Offer, "buyerUid" | "buyerName" | "buyerEmail">> {
+  /*
+   * 🛑 Both branches go through the repository's named accessors.
+   *
+   * `OfferRepository.mapDoc` no longer decrypts, so `doc.buyerName` and
+   * `doc.buyerEmail` are CIPHERTEXT here. Before this, `"full"` returned the
+   * `enc:v1:` blobs straight to the seller, and `"masked"` handed them to
+   * `maskName`/`maskEmail`, which refuse ciphertext by design and answer
+   * "Anonymous" / "***@***.***" — so neither mode worked, in opposite ways.
+   *
+   * `"full"` is the seller's own view of a buyer who made them an offer, which
+   * is a legitimate plaintext read; `"masked"` is everything else.
+   */
   if (mode === "full") {
-    return { buyerUid: doc.buyerUid, buyerName: doc.buyerName, buyerEmail: doc.buyerEmail };
+    const plain = offerRepository.revealOffer(doc);
+    return { buyerUid: doc.buyerUid, buyerName: plain.buyerName, buyerEmail: plain.buyerEmail };
   }
   if (mode === "masked") {
-    return { buyerName: maskName(doc.buyerName), buyerEmail: maskEmail(doc.buyerEmail) };
+    const masked = offerRepository.maskedOffer(doc);
+    return { buyerName: masked.buyerName, buyerEmail: masked.buyerEmail };
   }
   return {};
 }

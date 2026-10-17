@@ -234,7 +234,12 @@ export async function attachPaymentProofAction(
 
     notifyAdminsOfPaymentProof({
       id: orderId,
-      userName: order.userName,
+      /*
+       * Revealed: this names the buyer to an admin who is about to verify
+       * their payment proof, so a mask would defeat the purpose. `order` comes
+       * from a repository read, which is ciphertext-by-default.
+       */
+      userName: orderRepository.revealOrder(order).userName,
       productTitle: order.productTitle,
       totalPrice: order.totalPrice,
     });

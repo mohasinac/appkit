@@ -214,7 +214,13 @@ export async function placeBid(
     productTitle: product.title,
     userId,
     userName: profile?.displayName ?? userEmail ?? "Anonymous",
-    userEmail: profile?.email ?? userEmail ?? "",
+    /*
+     * 🛑 Revealed, not passed through. `profile` comes from a user read, which
+     * is ciphertext-by-default now — and `createBid` ENCRYPTS what it is given,
+     * so the raw value would be encrypted a SECOND time and become
+     * undecryptable. The `userEmail` parameter is already plaintext.
+     */
+    userEmail: (profile ? userRepository.revealUser(profile).email : null) ?? userEmail ?? "",
     bidAmount: visibleBid,
     currency: product.currency || getDefaultCurrency(),
     bidDate: new Date(),
@@ -466,7 +472,13 @@ export async function buyNowAuction(
     productTitle: product.title,
     userId,
     userName: profile?.displayName ?? userName ?? userEmail ?? "Anonymous",
-    userEmail: profile?.email ?? userEmail ?? "",
+    /*
+     * 🛑 Revealed, not passed through. `profile` comes from a user read, which
+     * is ciphertext-by-default now — and `createBid` ENCRYPTS what it is given,
+     * so the raw value would be encrypted a SECOND time and become
+     * undecryptable. The `userEmail` parameter is already plaintext.
+     */
+    userEmail: (profile ? userRepository.revealUser(profile).email : null) ?? userEmail ?? "",
     bidAmount: buyNowPrice,
     currency,
     bidDate: new Date(),

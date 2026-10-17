@@ -17,7 +17,19 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
   // become the same `null` a removed review produces, which the "Review not
   // found" branch below already handles.
   const doc = await reviewRepository.findById(id);
-  const review = doc as Review | null;
+  /*
+   * 🛑 MASKED, not the raw document.
+   *
+   * `findById` returns ciphertext since `mapDoc` stopped decrypting, and
+   * `ReviewDetailShell` calls `maskName(review.userName)` — which refuses
+   * ciphertext by design and answers "Anonymous". So this page rendered every
+   * reviewer as "Anonymous". `maskedReview` decrypts and then masks, which is
+   * what the shell was always assuming it had been handed.
+   *
+   * The `as Review` cast is what hid it: it erased the brand, so nothing in
+   * the type system could object.
+   */
+  const review = (doc ? reviewRepository.maskedReview(doc) : null) as Review | null;
 
   // storeId === storeSlug for stores in this project (pure slug IDs)
   const storeSlug: string | null = doc?.storeId ?? null;

@@ -28,6 +28,17 @@ export async function handleScamReportCreate(
   if (reportedBy) {
     try {
       const reporter = await userRepository.findById(reportedBy);
+      /*
+       * REVEALED, because this notification is DELIVERED to the reporter and a
+       * masked address cannot receive mail.
+       *
+       * `findById` stopped decrypting when `UserRepository` went
+       * ciphertext-by-default, so `reporter.email` is an `enc:v1:` blob — it
+       * would have been handed to the mailer verbatim. The old intersection
+       * brand could not object, because `Encrypted<string>` was a subtype of
+       * `string`.
+       */
+      const reporterPlain = reporter ? userRepository.revealUser(reporter) : null;
       await sendNotification({
         userId: reportedBy,
         type: "scam_report_update",
@@ -36,8 +47,8 @@ export async function handleScamReportCreate(
         message: `Your report for "${name}" has been received. Our team will review it within 48 hours.`,
         relatedId: scammerId,
         relatedType: "scammer",
-        userEmail: reporter?.email ?? undefined,
-        userPhone: reporter?.phoneNumber ?? undefined,
+        userEmail: reporterPlain?.email ?? undefined,
+        userPhone: reporterPlain?.phoneNumber ?? undefined,
       });
     } catch (err) {
       void normalizeError(err);
