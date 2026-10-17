@@ -65,6 +65,12 @@ export const faqListParamsSchema = z.object({
   homepage: z.coerce.boolean().optional(),
   q: z.string().optional(),
   page: z.coerce.number().optional(),
+  pageSize: z.coerce.number().optional(),
+  /*
+   * Accepted, never emitted — a link built before the `perPage` → `pageSize`
+   * rename. Same deliberate back-compat as `blogListParamsSchema`: this is a
+   * PUBLIC query parameter, so dropping it would 400 somebody's bookmark.
+   */
   perPage: z.coerce.number().optional(),
 });
 

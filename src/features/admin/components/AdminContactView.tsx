@@ -24,7 +24,7 @@ import { AdminContactEditorView } from "./AdminContactEditorView";
 import { apiClient } from "../../../http";
 
 interface AdminContactResponse {
-  submissions?: JsonArray;
+  items?: JsonArray;
   meta?: { filteredTotal?: number; total?: number };
 }
 
@@ -102,7 +102,7 @@ export function AdminContactView({
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.submissions).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `msg-${index}`),
         primary: toStringValue(item.subject, "No subject"),
         secondary:

@@ -73,7 +73,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       filters: filterParts.join(",") || undefined,
       sort: "order",
       order: "asc",
-      perPage: 50,
+      pageSize: 50,
     });
 
     const sections = result.data.sort(
@@ -153,7 +153,7 @@ export const POST = createRouteHandler({
     const existing = await repo.findAll({
       sort: "order",
       order: "desc",
-      perPage: 1,
+      pageSize: 1,
     });
     const maxOrder = existing.data[0]?.order ?? -1;
 

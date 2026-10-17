@@ -44,7 +44,7 @@ export async function GET(
     const repo = db.getRepository<StoreEntity>("stores");
     const result = await repo.findAll({
       filters: `storeSlug==${storeSlug},status==active,isPublic==true`,
-      perPage: 1,
+      pageSize: 1,
     });
 
     const raw = result.data[0];

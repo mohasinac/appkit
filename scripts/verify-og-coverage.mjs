@@ -67,7 +67,11 @@ const OG_EXEMPT_ROUTES = new Set([
 // Re-add new entries here with a tracker ID when a public dynamic detail
 // page legitimately needs to ship without OG.
 const OG_KNOWN_GAPS = new Set([
-  "lottery/[id]", // Lottery feature — OG renderer pending (uses buildLotteryMetadata for metadata; OG image follows in a follow-up)
+  // 🛑 EMPTY, and closed 2026-10-17. `lottery/[id]` was the last entry, carried
+  // since 2026-05-23 on a note saying the renderer "follows in a follow-up".
+  // It now has one (`_internal/server/features/lottery/og.tsx`), built on the
+  // CLIENT config shape so the allow-list that keeps slot prices off the wire
+  // also keeps them out of the image.
 ]);
 
 const DYNAMIC_SEGMENT_RE = /^\[(?:\.{3})?(.+?)\]$/;
@@ -124,6 +128,14 @@ function ogSiblingExists(pagePath) {
 const newMisses = [];
 const knownMisses = [];
 const checked = [];
+/*
+ * A stale entry BLOCKS, like every other registry in this repo's audits. An
+ * entry naming a route that HAS an OG image now, or that is no longer a public
+ * dynamic page, is the registry asserting something untrue — and since this
+ * list is the only thing standing between a missing OG image and a green gate,
+ * an untrue entry is a hole rather than a leftover.
+ */
+const staleGaps = new Set(OG_KNOWN_GAPS);
 
 for (const pagePath of walk(APP_DIR)) {
   const rel = relative(APP_DIR, pagePath).replace(/\\/g, "/");
@@ -132,6 +144,7 @@ for (const pagePath of walk(APP_DIR)) {
   if (!isPublicRoute(routeKey)) continue;
   checked.push(routeKey);
   if (ogSiblingExists(pagePath)) continue;
+  staleGaps.delete(routeKey);
   if (OG_KNOWN_GAPS.has(routeKey)) {
     knownMisses.push(routeKey);
   } else {
@@ -139,7 +152,20 @@ for (const pagePath of walk(APP_DIR)) {
   }
 }
 
-const baselineNote = ` (baseline gaps: ${knownMisses.length} known, awaiting per-feature OG renderers)`;
+// Only mention a baseline when there IS one — a trailing "(baseline gaps: 0)"
+// keeps the vocabulary of a backlog alive after the backlog is gone.
+const baselineNote =
+  knownMisses.length > 0
+    ? ` (baseline gaps: ${knownMisses.length} known, awaiting per-feature OG renderers)`
+    : "";
+
+if (staleGaps.size > 0) {
+  console.error("[verify-og-coverage] FAIL: stale OG_KNOWN_GAPS entr(y|ies) — remove them:");
+  for (const r of staleGaps) {
+    console.error(`  - ${r} :: has an opengraph-image sibling now, or is no longer a public dynamic page`);
+  }
+  process.exit(1);
+}
 
 if (newMisses.length === 0) {
   console.log(`[verify-og-coverage] OK: ${checked.length} public dynamic detail page(s) checked${baselineNote}.`);

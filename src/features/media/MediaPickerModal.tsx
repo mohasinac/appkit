@@ -10,7 +10,13 @@ import { Row, Stack } from "../../ui/components/Layout";
 import { Alert } from "../../ui/components/Alert";
 import { MediaImage } from "./MediaImage";
 import { MediaUploadField } from "./upload/MediaUploadField";
-import { useMediaUpload, useMediaCleanup } from "./index";
+/*
+ * The DEFINING module, not `./index` — Root Cause #18. The barrel re-exports
+ * this very component, so importing back through it made a two-module import
+ * cycle (`audit-import-cycles` component 4), and a cycle makes "which module
+ * owns this symbol" unanswerable for every tool that walks the graph.
+ */
+import { useMediaUpload, useMediaCleanup } from "./hooks/useMedia";
 import { ADMIN_ENDPOINTS } from "../../constants/api-endpoints";
 
 const MEDIA_LIST_ENDPOINT = ADMIN_ENDPOINTS.MEDIA_LIST;

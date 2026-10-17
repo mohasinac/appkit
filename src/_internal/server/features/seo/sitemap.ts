@@ -142,7 +142,7 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.AUCTIONS), "daily", 0.9),
     page(String(ROUTES.PUBLIC.CATEGORIES), "weekly", 0.8),
     page(String(ROUTES.PUBLIC.BRANDS), "weekly", 0.7),
-    page(String(ROUTES.PUBLIC.BLOG), "daily", 0.7),
+    page(String(ROUTES.BLOG.LIST), "daily", 0.7),
     page(String(ROUTES.PUBLIC.EVENTS), "daily", 0.7),
     page(String(ROUTES.PUBLIC.SELLERS), "weekly", 0.6),
     page(String(ROUTES.PUBLIC.ABOUT), "monthly", 0.5),

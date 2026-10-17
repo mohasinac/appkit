@@ -19,39 +19,39 @@ export class PreOrdersRepository {
   async findByCustomer(
     customerId: string,
     page = 1,
-    perPage = 20,
+    pageSize = 20,
   ): Promise<PagedResult<PreOrderItem>> {
     return this.repo.findAll({
       filters: `customerId==${customerId}`,
       sort: "-createdAt",
       page,
-      perPage,
+      pageSize,
     });
   }
 
   async findBySeller(
     sellerId: string,
     page = 1,
-    perPage = 20,
+    pageSize = 20,
   ): Promise<PagedResult<PreOrderItem>> {
     return this.repo.findAll({
       filters: `sellerId==${sellerId}`,
       sort: "-createdAt",
       page,
-      perPage,
+      pageSize,
     });
   }
 
   async findByStatus(
     status: PreOrderStatus,
     page = 1,
-    perPage = 50,
+    pageSize = 50,
   ): Promise<PagedResult<PreOrderItem>> {
     return this.repo.findAll({
       filters: `status==${status}`,
       sort: "-createdAt",
       page,
-      perPage,
+      pageSize,
     });
   }
 

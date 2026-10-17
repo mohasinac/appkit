@@ -16,7 +16,14 @@ import {
   type SieveFilterAliases,
   type SieveModel,
 } from "../../../providers/db-firebase";
-import { cacheManager } from "../../../core";
+/*
+ * The DEFINING module, not the `core` barrel — Root Cause #18. `core/index.ts`
+ * re-exports `unitOfWork`, which imports this very repository, so reaching
+ * `cacheManager` through the barrel closed a six-module import cycle
+ * (`audit-import-cycles` component 2). `CacheManager.ts` imports nothing from
+ * here, so the deep path has one direction only.
+ */
+import { cacheManager } from "../../../core/CacheManager";
 import { serverLogger } from "../../../monitoring";
 import { generateUniqueId, slugify, generateBarcodeId } from "../../../utils";
 import { parseSearchTxtQuery } from "../../../utils/search-txt";

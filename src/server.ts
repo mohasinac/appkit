@@ -1755,6 +1755,15 @@ export {
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
 export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_internal/shared/listing-types/_registry";
+/*
+ * 🛑 `ALL_LISTING_TYPES` / `isListingType` are deliberately NOT re-exported
+ * here. `index.ts` already exports both, and `server-entry.ts` does
+ * `export * from "./index"` — which is what the bare `@mohasinac/appkit`
+ * specifier resolves to (`exports["."] → dist/server-entry.js`). So a Server
+ * Component already reaches them from the bare entry, and adding a second path
+ * through `server.ts` would be an `_internal/` symbol leaking through a third
+ * public barrel for no reader. `audit-appkit-reexports` caught exactly that.
+ */
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 
 // Media context guards — shared by /api/media/sign + legacy /api/media/upload.
@@ -1947,6 +1956,8 @@ export { toClientLotterySlot, toClientLotteryConfig } from "./_internal/server/f
 export { toPublicEvent, toClientSpinPrize } from "./_internal/server/features/events/adapters";
 export type { ClientSpinPrize } from "./_internal/server/features/events/adapters";
 export { buildLotteryMetadata } from "./_internal/server/features/lottery/metadata";
+export { renderLotteryOg, renderLotteryOgImage } from "./_internal/server/features/lottery/og";
+export type { LotteryOgData } from "./_internal/server/features/lottery/og";
 export {
   submitLotteryPullAction,
   flagLotteryEntryAction,

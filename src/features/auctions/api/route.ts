@@ -59,7 +59,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       filters,
       sort,
       page,
-      perPage: pageSize,
+      pageSize: pageSize,
     });
 
     const body: BidListResponse = {

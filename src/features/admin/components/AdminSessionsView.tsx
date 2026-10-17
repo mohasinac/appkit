@@ -29,7 +29,7 @@ function maskIp(ip?: string): string {
 }
 
 interface AdminSessionsResponse {
-  sessions?: JsonArray;
+  items?: JsonArray;
   count?: number;
 }
 
@@ -96,7 +96,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
     // safe to offer at all.
     onRowClick: (row) => setDetail(row),
     mapRows: (response) =>
-      toRecordArray(response.sessions).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const deviceInfo = (item.deviceInfo ?? {}) as Record<string, JsonValue>;
         const userLabel = toStringValue(
           (item as Record<string, JsonValue>).user &&

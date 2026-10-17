@@ -6,7 +6,21 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
-import { ActionRow, Div, Form, Row, Stack, Text } from "../../ui";
+/*
+ * Defining modules, not the `ui` barrel — Root Cause #18.
+ *
+ * `ui/index.ts` re-exports `FormField`, `PaginatedSelect` and
+ * `RecordDetailModal`, and those three import back INTO `features/media` and
+ * `features/shell`. So reaching a primitive through the barrel closed a
+ * ten-module cycle (`audit-import-cycles` component 1) — while the deep paths
+ * below have one direction only. `ui → features/media` is the real dependency
+ * and it stays; the barrel hop is what did not need to exist.
+ */
+import { ActionRow } from "../../ui/components/ActionRow";
+import { Div } from "../../ui/components/Div";
+import { Form } from "../../ui/components/Form";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Text } from "../../ui/components/Typography";
 import { FormShellContext, FormErrorSummary, type FormShellContextValue } from "../../ui/forms";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
 import { useHandMode } from "../../_internal/client/hand-mode";

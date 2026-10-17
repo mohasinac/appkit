@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Alert, Checkbox, Div, Span, Stack, StackedViewShell, Text, useToast } from "../../../ui";
+import { Alert, Checkbox, Div, EmptyState, Span, Stack, StackedViewShell, Text, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -186,6 +186,20 @@ export function AdminAdEditorView({
     enabled: Boolean(adId),
     staleTime: 15_000,
   });
+
+  /*
+   * 🛑 An invented `adId` used to render the full ad editor with empty
+   * defaults. Ads live inside the `siteSettings` singleton rather than their
+   * own collection, so a Save against a non-existent id does not fail on a
+   * missing document — it writes a NEW ad into the settings array, keyed on
+   * whatever was in the URL. That is Root Cause #98's shape with the blast
+   * radius of a shared document.
+   *
+   * Gated on the query having settled: `isLoading` is true on first paint, so
+   * a bare `!adQuery.data` check would flash this at every real ad.
+   */
+  const adMissing =
+    Boolean(adId) && !adQuery.isLoading && !adQuery.isError && !adQuery.data?.item;
 
   React.useEffect(() => {
     const item = adQuery.data?.item;
@@ -379,6 +393,18 @@ export function AdminAdEditorView({
     }
     saveMutation.mutate();
   };
+
+  if (adMissing) {
+    return (
+      <StackedViewShell portal="admin" {...rest} title="Ad not found" sections={[
+        <EmptyState
+          key="missing"
+          title="Ad not found"
+          description="This ad may have been deleted, or the link may be wrong."
+        />,
+      ]} />
+    );
+  }
 
   return (
     <StackedViewShell

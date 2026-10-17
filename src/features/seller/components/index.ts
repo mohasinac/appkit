@@ -38,8 +38,6 @@ export { SellerProductShell } from "./SellerProductShell";
 export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } from "./SellerProductShell";
 export { SellerStoreSetupView } from "./SellerStoreSetupView";
 export type { SellerStoreSetupViewProps } from "./SellerStoreSetupView";
-export { SellerStoreView } from "./SellerStoreView";
-export type { SellerStoreViewProps } from "./SellerStoreView";
 export { SellerStorefrontView } from "./SellerStorefrontView";
 export type { SellerStorefrontViewProps, StorefrontDraft } from "./SellerStorefrontView";
 export { SellerShippingView } from "./SellerShippingView";
@@ -80,8 +78,6 @@ export { SellerCreateProductView as StoreCreateProductView } from "./SellerCreat
 export type { SellerCreateProductViewProps as StoreCreateProductViewProps } from "./SellerCreateProductView";
 export { SellerEditProductView as StoreEditProductView } from "./SellerEditProductView";
 export type { SellerEditProductViewProps as StoreEditProductViewProps } from "./SellerEditProductView";
-export { SellerStoreView as StoreStorefrontView } from "./SellerStoreView";
-export type { SellerStoreViewProps as StoreStorefrontViewProps } from "./SellerStoreView";
 export { SellerShippingView as StoreShippingView } from "./SellerShippingView";
 export type { SellerShippingViewProps as StoreShippingViewProps } from "./SellerShippingView";
 export { SellerAddressesView as StoreAddressesView } from "./SellerAddressesView";

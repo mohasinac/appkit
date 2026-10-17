@@ -93,28 +93,38 @@ const firestore = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// API route schemas — W4 seed cohort. Each entry maps an HTTP-verb-and-path
-// key to its `{ body?, query?, params?, response? }` schema bundle. The
-// `createRouteHandler` helper accepts either a direct Zod schema or one of
-// these keys.
-// ---------------------------------------------------------------------------
-import {
-  postApiWishlist,
-  postApiAuthSession,
-  postApiAdminProductsIdGroup,
-  postApiMediaSign,
-  postApiMediaFinalize,
-  getApiSearchSuggestions,
-} from "./api-routes";
+// API route schemas — see the `api` bucket below.
 
-const api = {
-  "POST /api/wishlist": postApiWishlist,
-  "POST /api/auth/session": postApiAuthSession,
-  "POST /api/admin/products/[id]/group": postApiAdminProductsIdGroup,
-  "POST /api/media/sign": postApiMediaSign,
-  "POST /api/media/finalize": postApiMediaFinalize,
-  "GET /api/search/suggestions": getApiSearchSuggestions,
-} as const;
+/*
+ * 🛑 EMPTY, deliberately, as of 2026-10-17 — and `audit-route-schema-registry`
+ * is retired with it.
+ *
+ * This bucket is an ADDRESSING convenience: it lets a route write
+ * `schema: "POST /api/wishlist"` instead of importing the schema. Measured
+ * before emptying it: 6 keys registered, **0 routes passing a key string**,
+ * and 170 route files passing a schema identifier directly. So nothing has
+ * ever read it by key.
+ *
+ * The audit that policed it reported "576 of 582 routes await registration",
+ * which reads as a migration backlog and is not one. Its own header said so:
+ * *"not a migration backlog winding down, it is a registry almost nothing
+ * uses"*. And the codebase had already chosen the other convention — when
+ * `postApiWishlist` was found declared here while `/api/wishlist` read its
+ * body raw, the fix was to re-export the schema for DIRECT use at the route,
+ * not to adopt the key form.
+ *
+ * The safety property — a handler that reads a body must validate it — is
+ * owned by `audit-unvalidated-request-body`, which is strict-zero and at 0.
+ * Widening THAT rule to see `export async function POST` (it had only matched
+ * `export const POST`) found two genuinely unvalidated bodies on the session
+ * endpoints. That is what 576 registry keys would not have found.
+ *
+ * The bucket stays declared because `audit-schema-registry-completeness`
+ * requires every bucket to exist, and because the registry's own doctrine is
+ * that an empty bucket is honest while a bucket of placeholders "reads as
+ * migrated to everyone who comes after".
+ */
+const api = {} as const;
 
 // ---------------------------------------------------------------------------
 // Form schemas — keyed by form id (matches FormShell/QuickFormDrawer `formId`).

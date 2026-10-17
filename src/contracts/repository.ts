@@ -29,7 +29,7 @@ export interface SieveQuery {
   /** 1-based page number (default: 1) */
   page?: number;
   /** Items per page (default: 20) */
-  perPage?: number;
+  pageSize?: number;
 }
 
 /** Paginated result envelope returned by IReadRepository.findAll() */
@@ -37,7 +37,7 @@ export interface PagedResult<T> {
   data: T[];
   total: number;
   page: number;
-  perPage: number;
+  pageSize: number;
   totalPages: number;
 }
 

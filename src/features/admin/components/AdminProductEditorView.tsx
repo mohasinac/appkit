@@ -51,6 +51,9 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductForm } from "../../products/components/ProductForm";
 import type { ProductFormValue, BrandSelectorRenderArgs } from "../../products/components/ProductForm";
 import { normalizeListingType } from "../../products/utils/listing-type";
+import type { ListingType } from "../../products/types";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { GroupSettingsPanel } from "../../products/components/GroupSettingsPanel";
 import { GroupInlineSelect } from "../../seller/components/GroupInlineSelect";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
@@ -81,39 +84,50 @@ export interface AdminProductEditorViewProps
    * background per its normal staleTime rules.
    */
   initialData?: ProductFormValue;
+  /**
+   * Which listing type a NEW product starts on. Lets a per-type admin listing
+   * ("Art", "Classifieds", …) send the admin straight into a create form for
+   * its own type rather than for `standard` — which is what lets those five
+   * pages have a create button at all. Ignored in edit mode, where the stored
+   * `listingType` is the only correct answer.
+   */
+  initialListingType?: ListingType;
 }
 
-type ProductMode = "standard" | "auction" | "preorder" | "prize-draw" | "classified" | "digital-code" | "live";
-
-function modeFromProduct(product: ProductFormValue): ProductMode {
-  const lt = normalizeListingType(
-    product as { listingType?: import("../../products/types").ListingType },
-  );
-  if (lt === "auction")       return "auction";
-  if (lt === "pre-order")     return "preorder";
-  if (lt === "prize-draw")    return "prize-draw";
-  if (lt === "classified")    return "classified";
-  if (lt === "digital-code")  return "digital-code";
-  if (lt === "live")          return "live";
-  return "standard";
-}
-
-/**
- * SB1-G Phase 4 — applies the selected mode by writing the canonical
- * `listingType` discriminator. Nothing else needs to be written for the mode flip.
+/*
+ * 🛑 The mode IS the `listingType`. There is no second id space.
+ *
+ * This used to be a hand-written `ProductMode` union of SEVEN values plus a
+ * hand-written `Record<ProductMode, ListingType>` translating `"preorder"` to
+ * `"pre-order"`, beside SEVEN hand-written `<TabsTrigger>`s. The union has
+ * NINE members, and both `art` and `stickers` were missing from all three —
+ * Root Cause #61, the tenth hand-maintained enumeration of this union.
+ *
+ * Two live defects, and the second is the expensive one:
+ *
+ *  1. An admin could not CREATE an art or sticker listing anywhere. The five
+ *     admin listing-type pages `listing-type-listing-config.ts` backs had no
+ *     create path, and this is why they could not simply be given one.
+ *  2. `modeFromProduct` fell through to `"standard"` for a type it did not
+ *     know, and `applyMode` is applied to the payload on EVERY save. So
+ *     opening an existing art or sticker listing here and saving any unrelated
+ *     field silently rewrote `listingType` to `"standard"` — removing it from
+ *     `/art` and dropping it into the general catalogue, with a 200 and no
+ *     trace. Root Cause #98's shape: a wrong default, re-sent on save.
+ *
+ * Deriving from `ALL_LISTING_TYPES` + `pluginFor().typeLabel` means a tenth
+ * type gets a tab, a label and a correct round-trip for free.
  */
-function applyMode(product: ProductFormValue, mode: ProductMode): ProductFormValue {
-  const map: Record<ProductMode, import("../../products/types").ListingType> = {
-    standard:       "standard",
-    auction:        "auction",
-    preorder:       "pre-order",
-    "prize-draw":   "prize-draw",
-    classified:     "classified",
-    "digital-code": "digital-code",
-    live:           "live",
-  };
-  return { ...product, listingType: map[mode] };
-}
+type ProductMode = ListingType;
+
+const modeFromProduct = (product: ProductFormValue): ProductMode =>
+  normalizeListingType(product as { listingType?: ListingType });
+
+/** SB1-G Phase 4 — `listingType` is the only listing-kind field on the schema. */
+const applyMode = (product: ProductFormValue, mode: ProductMode): ProductFormValue => ({
+  ...product,
+  listingType: mode,
+});
 
 interface StoreOption {
   id: string;
@@ -179,13 +193,35 @@ export function AdminProductEditorView({
   embedded,
   enabledListingTypes,
   initialData,
+  initialListingType,
   ...rest
 }: AdminProductEditorViewProps) {
   const isEdit = Boolean(productId);
-  const [product, setProduct] = React.useState<ProductFormValue>(EMPTY_PRODUCT);
-  const [mode, setMode] = React.useState<ProductMode>("standard");
+  const startType: ProductMode = initialListingType ?? "standard";
+  const [product, setProduct] = React.useState<ProductFormValue>(() =>
+    applyMode(EMPTY_PRODUCT, startType),
+  );
+  const [mode, setMode] = React.useState<ProductMode>(startType);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const { showToast } = useToast();
+
+  /*
+   * One tab per listing type, in registry order, labelled by the plugin.
+   *
+   * `enabledListingTypes` narrows it when a caller passes one — but the type
+   * the editor is CURRENTLY on always survives the filter. Without that, an
+   * admin opening an existing listing of a disabled type gets a Tabs component
+   * whose `value` matches no trigger: no tab reads as selected, and the next
+   * save still writes that type back, so the control silently disagrees with
+   * the record it is editing.
+   */
+  const modeTabs = React.useMemo(
+    () =>
+      ALL_LISTING_TYPES.filter(
+        (t) => !enabledListingTypes || enabledListingTypes.includes(t) || t === mode,
+      ).map((t) => ({ value: t, label: pluginFor(t).typeLabel })),
+    [enabledListingTypes, mode],
+  );
 
   const productQuery = useQuery({
     queryKey: ["admin", "product", productId],
@@ -285,35 +321,15 @@ export function AdminProductEditorView({
               </Text>
               <Tabs value={mode} onChange={handleModeChange}>
                 <TabsList>
-                  {(!enabledListingTypes || enabledListingTypes.includes("standard")) && (
-                    <TabsTrigger value="standard">Standard</TabsTrigger>
-                  )}
-                  {(!enabledListingTypes || enabledListingTypes.includes("auction")) && (
-                    <TabsTrigger value="auction">Auction</TabsTrigger>
-                  )}
-                  {(!enabledListingTypes || enabledListingTypes.includes("pre-order")) && (
-                    <TabsTrigger value="preorder">Pre-order</TabsTrigger>
-                  )}
-                  {(!enabledListingTypes || enabledListingTypes.includes("prize-draw")) && (
-                    <TabsTrigger value="prize-draw">Prize Draw</TabsTrigger>
-                  )}
-                  {(!enabledListingTypes || enabledListingTypes.includes("classified")) && (
-                    <TabsTrigger value="classified">Classified</TabsTrigger>
-                  )}
-                  {(!enabledListingTypes || enabledListingTypes.includes("digital-code")) && (
-                    <TabsTrigger value="digital-code">Digital Code</TabsTrigger>
-                  )}
-                  {(!enabledListingTypes || enabledListingTypes.includes("live")) && (
-                    <TabsTrigger value="live">Live Item</TabsTrigger>
-                  )}
+                  {modeTabs.map((t) => (
+                    <TabsTrigger key={t.value} value={t.value}>
+                      {t.label}
+                    </TabsTrigger>
+                  ))}
                 </TabsList>
-                <TabsContent value="standard" />
-                <TabsContent value="auction" />
-                <TabsContent value="preorder" />
-                <TabsContent value="prize-draw" />
-                <TabsContent value="classified" />
-                <TabsContent value="digital-code" />
-                <TabsContent value="live" />
+                {modeTabs.map((t) => (
+                  <TabsContent key={t.value} value={t.value} />
+                ))}
               </Tabs>
             </Card>
         </Stack>

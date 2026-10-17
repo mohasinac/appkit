@@ -46,7 +46,7 @@ export async function GET(
     const repo = db.getRepository<CollectionEntity>("collections");
     const result = await repo.findAll({
       filters: `slug==${slug}`,
-      perPage: 1,
+      pageSize: 1,
     });
 
     if (!result.data[0]) {
@@ -97,7 +97,7 @@ export async function PATCH(
     const repo = db.getRepository<CollectionEntity>("collections");
     const result = await repo.findAll({
       filters: `slug==${slug}`,
-      perPage: 1,
+      pageSize: 1,
     });
 
     if (!result.data[0]) {
@@ -148,7 +148,7 @@ export async function DELETE(
     const repo = db.getRepository<CollectionEntity>("collections");
     const result = await repo.findAll({
       filters: `slug==${slug}`,
-      perPage: 1,
+      pageSize: 1,
     });
 
     if (!result.data[0]) {

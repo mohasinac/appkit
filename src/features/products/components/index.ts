@@ -73,8 +73,6 @@ export {
   useProductFeatures,
 } from "./ProductFeaturesContext";
 export type { ProductFeaturesProviderProps } from "./ProductFeaturesContext";
-export { ProductsView } from "./ProductsView";
-export type { ProductsViewProps } from "./ProductsView";
 export { ProductDetailView } from "./ProductDetailView";
 export type { ProductDetailViewProps } from "./ProductDetailView";
 export { AuctionDetailView } from "./AuctionDetailView";

@@ -6,7 +6,6 @@ export type {
   AuthRouteConfig,
 } from "./Guards";
 export { SocialAuthButtons } from "./SocialAuthButtons";
-export { AuthStatusPanel } from "./AuthStatusPanel";
 export { LoginForm } from "./LoginForm";
 export type { LoginFormProps, LoginFormValues } from "./LoginForm";
 export { RegisterForm } from "./RegisterForm";

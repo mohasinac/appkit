@@ -49,7 +49,7 @@ function formatGroup(group: string): string {
 }
 
 interface AdminTeamResponse {
-  users?: JsonArray;
+  items?: JsonArray;
   total?: number;
   meta?: { total?: number };
 }
@@ -117,7 +117,7 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
       { value: "displayName", label: "Name A–Z" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.users).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id ?? item.uid, `employee-${index}`),
         primary: toStringValue(item.displayName, "Unnamed employee"),
         secondary: [

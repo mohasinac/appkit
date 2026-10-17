@@ -30,8 +30,25 @@ function buildReviewFilters(params: SearchParams): string {
   const dateTo = sp(params, "dateTo");
   if (dateFrom) parts.push(sieveFilter("createdAt", SIEVE_OP.GTE, dateFrom));
   if (dateTo) parts.push(sieveFilter("createdAt", SIEVE_OP.LTE, dateTo));
-  const q = sp(params, "q");
-  if (q) parts.push(`productTitle@=*${q}`);
+  /*
+   * 🛑 `q` is deliberately NOT a filter clause, and emitting it as one was a
+   * live defect rather than an untidy spelling.
+   *
+   * `productTitle@=*` is a case-insensitive operator the Firebase adapter
+   * THROWS on, and the Sieve processor runs `throwExceptions: false` — so the
+   * throw became silence and **every clause and the sort were discarded with
+   * it**. `/reviews?q=anything` therefore returned the whole table, newest-ish,
+   * ignoring rating, verified, date range and vote filters too.
+   *
+   * `/api/reviews` fixed exactly this and passes `q` to `listAll` as a
+   * `{ search }` OPT (array-contains over `searchTxt`, which Sieve cannot
+   * express). This SSR view queries the same collection and never got the
+   * back-port — Root Cause #99, which says in as many words: when fixing a
+   * filter in an API route, grep for the SSR view that queries the same
+   * collection. It is also why the view could not self-correct: it hands its
+   * result down as `initialData`, and `staleTime: Infinity` freezes an
+   * unfiltered first paint for that query key forever (Root Cause #30).
+   */
   return parts.join(",");
 }
 
@@ -43,13 +60,18 @@ export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPa
   const sort = sp(searchParams, "sort") || "-createdAt";
   const page = Number(sp(searchParams, "page")) || 1;
   const filters = buildReviewFilters(searchParams);
+  const q = sp(searchParams, "q");
 
   // audit-public-test-data-ok: `ReviewDocument` carries no `isTestData` field —
   // tsc rejects the filter outright, which is the honest signal that reviews
   // have no sandbox concept to strip. A review OF a sandbox product is not
   // flagged today; that is a seed-schema gap, not something a cast should hide.
   const result = await safeRead(
-    () => reviewRepository.listAll({ filters, sorts: sort, page, pageSize: 12 }),
+    () =>
+      reviewRepository.listAll(
+        { filters, sorts: sort, page, pageSize: 12 },
+        q ? { search: q } : undefined,
+      ),
     { route: "/reviews", key: "reviews.listAll", fallback: null },
   );
 

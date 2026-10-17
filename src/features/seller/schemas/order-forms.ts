@@ -81,3 +81,47 @@ export const sellerOrderUpdateSchema = z
   });
 
 export type SellerOrderUpdateValues = z.infer<typeof sellerOrderUpdateSchema>;
+
+/*
+ * ── Two schemas lifted out of a `"use server"` module, 2026-10-17 ──
+ *
+ * `shipOrderSchema` and `markEmiInstallmentPaidSchema` were declared privately
+ * inside `src/actions/seller.actions.ts`. The actions safe-parse with them, so
+ * the rule WAS enforced — but their routes could not reach it: a `"use server"`
+ * module may only export async functions, so a schema declared there is
+ * unexportable by construction.
+ *
+ * The consequence was that `POST /api/store/orders/[id]/ship` and
+ * `PATCH .../emi-installment` both did `parseJsonBody(…).catch(() => ({}))`
+ * and handed the result on `as never` — a route reading a body it could not
+ * validate, with the real check an import away and unreachable.
+ *
+ * Declared here so the route and the action share ONE definition rather than
+ * two copies that drift (Root Cause #75). The action keeps its own `safeParse`:
+ * it is also called directly from a server action, where no route ran first.
+ */
+
+/**
+ * Manual shipment entry. `method` is a literal rather than an enum because
+ * `ManualShippingProvider` is the only provider — see § "Provider Resolution".
+ */
+export const shipOrderSchema = z.object({
+  method: z.literal("custom"),
+  shippingCarrier: z.string().min(1),
+  trackingNumber: z.string().min(1),
+  trackingUrl: z.string().url(),
+});
+
+export type ShipOrderValues = z.infer<typeof shipOrderSchema>;
+
+/**
+ * Marking one EMI installment paid. `installmentIndex` is 1-based, matching
+ * how the schedule is presented to the buyer.
+ */
+export const markEmiInstallmentPaidSchema = z.object({
+  installmentIndex: z.number().int().min(1),
+  transactionId: z.string().min(1).optional(),
+  proofUrl: z.string().min(1).optional(),
+});
+
+export type MarkEmiInstallmentPaidValues = z.infer<typeof markEmiInstallmentPaidSchema>;

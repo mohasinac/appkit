@@ -2,7 +2,11 @@
 import { normalizeError } from "../../errors/normalize";
 
 import { useState, useCallback } from "react";
-import { useToast } from "../../ui";
+// Defining modules, not the sibling barrel — Root Cause #18. `ui/index.ts` and
+// `react/index.ts` re-exported into each other, which is the whole of
+// `audit-import-cycles` component 1: an 18-module knot held together entirely
+// by barrel hops, none of which needed the barrel.
+import { useToast } from "../../ui/components/toast-context";
 
 export interface UseEntityDeleteOptions {
   endpoint?: string | ((id: string) => string);

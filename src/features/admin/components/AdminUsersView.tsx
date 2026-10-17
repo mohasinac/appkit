@@ -40,7 +40,7 @@ import { hardBanReasonSchema } from "../schemas/admin-ops-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 
 interface AdminUsersResponse {
-  users?: JsonArray;
+  items?: JsonArray;
   total?: number;
   meta?: { total?: number };
 }
@@ -181,7 +181,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       { value: "displayName", label: "Name A–Z" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.users).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const isDisabled = Boolean(item.isDisabled ?? item.disabled);
         const isHardBanned = isDisabled && Boolean(item.hardBanReason);
         const softBanCount = Array.isArray(item.softBans) ? item.softBans.length : 0;

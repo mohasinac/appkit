@@ -81,7 +81,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
    */
   if (params.sort) sp.set(LISTING_PARAM_NAMES.sorts.long, params.sort);
   if (params.page) sp.set("page", String(params.page));
-  if (params.perPage) sp.set("pageSize", String(params.perPage));
+  if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   if (params.featured !== undefined)
     sp.set("featured", String(params.featured));
   if (params.minBid !== undefined) sp.set("minBid", String(params.minBid));

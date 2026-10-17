@@ -388,7 +388,14 @@ export function SellerListingTypeView({
     sortOptions: [...plugin.sortOptions],
     columns,
     mapRows: (response) =>
-      toRecordArray(response.products ?? response.items).map((item, index) => ({
+      /*
+       * `items` only. The `?? response.products` fallback is gone because both
+       * endpoints this config reads (`/api/admin/products`, `/api/store/products`)
+       * now emit the canonical key — verified before removing it. A defence
+       * against a shape that no longer exists reads as though the shape still
+       * might, which is how two spellings stay alive forever.
+       */
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `${type}-${index}`),
         title: toStringValue(item.productTitle ?? item.title, "Untitled"),
         price: toCurrency(item.price),

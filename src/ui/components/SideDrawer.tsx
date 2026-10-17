@@ -6,7 +6,11 @@ import { Button } from "./Button";
 import { ActionRow } from "./ActionRow";
 import { Row } from "./Layout";
 import { Heading, Span } from "./Typography";
-import { useSwipe } from "../../react";
+// Defining modules, not the sibling barrel — Root Cause #18. `ui/index.ts` and
+// `react/index.ts` re-exported into each other, which is the whole of
+// `audit-import-cycles` component 1: an 18-module knot held together entirely
+// by barrel hops, none of which needed the barrel.
+import { useSwipe } from "../../react/hooks/useSwipe";
 import { Text } from "./Typography";
 import { SPRING_SNAPPY } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";

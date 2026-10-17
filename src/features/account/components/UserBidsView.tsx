@@ -28,7 +28,7 @@ const STATUS_OPTIONS = [
 ];
 
 interface UserBidsResponse {
-  bids?: BidDocument[];
+  items?: BidDocument[];
   total?: number;
 }
 
@@ -55,7 +55,7 @@ export function UserBidsView() {
     endpoint: ACCOUNT_ENDPOINTS.BIDS,
     sortOptions: SORT_OPTIONS,
     hideTableView: true,
-    mapRows: (response) => response.bids ?? [],
+    mapRows: (response) => response.items ?? [],
     getTotal: (response, rows) => response.total ?? rows.length,
     buildFilters: (state) => (state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (

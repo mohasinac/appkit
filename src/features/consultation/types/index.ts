@@ -32,5 +32,5 @@ export interface ConsultationListResponse {
   data: ConsultationBooking[];
   total: number;
   page: number;
-  perPage: number;
+  pageSize: number;
 }

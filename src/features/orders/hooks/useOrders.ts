@@ -25,7 +25,9 @@ export function useOrders(
   if (params.paymentStatus) sp.set("paymentStatus", params.paymentStatus);
   if (params.sort) sp.set("sort", params.sort);
   if (params.page) sp.set("page", String(params.page));
-  if (params.perPage) sp.set("perPage", String(params.perPage));
+  // `pageSize` is what the route prefers; it keeps reading `perPage` only for
+  // links built before the rename, so there is no reason to emit the old name.
+  if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   const qs = sp.toString();
   // ORDER_ENDPOINTS.LIST ("/api/orders") has no GET route handler — every
   // real caller of this hook wants the current user's own orders, served by

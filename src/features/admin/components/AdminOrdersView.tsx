@@ -27,7 +27,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { AdminOrderEditorView, type AdminOrderItemRow } from "./AdminOrderEditorView";
 
 interface AdminOrdersResponse {
-  orders?: JsonArray;
+  items?: JsonArray;
   meta?: { total?: number };
 }
 
@@ -185,7 +185,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.orders).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const orderId = toStringValue(item.id, `order-${index}`);
         const { image, title, extraCount } = firstOrderItem(item);
         return {

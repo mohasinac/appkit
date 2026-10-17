@@ -30,7 +30,7 @@ const STATUS_OPTIONS = [
 ] as const;
 
 interface AdminShipmentsApiResponse {
-  shipments?: JsonArray;
+  items?: JsonArray;
   meta?: { total?: number };
 }
 
@@ -72,7 +72,7 @@ export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewPro
       { value: "shipmentNumber", label: "Shipment # A–Z" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.shipments).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const totals = (item.totals as Record<string, unknown>) ?? {};
         const totalsComputedAt = item.totalsComputedAt;
         const updatedAt = item.updatedAt;

@@ -188,7 +188,7 @@ export function BlogPostView({
             {post.tags.map((tag) => (
               <Link
                 key={tag}
-                href={`${String(ROUTES.PUBLIC.BLOG)}?tags=${encodeURIComponent(tag)}`}
+                href={`${String(ROUTES.BLOG.LIST)}?tags=${encodeURIComponent(tag)}`}
                 className="inline-block px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] hover:bg-primary/10 text-[var(--appkit-color-text-muted)] hover:text-primary text-[length:var(--appkit-text-xs)] font-medium transition-colors"
               >
                 #{tag}

@@ -31,7 +31,7 @@ export const GET = createRouteHandler({
     const repo = db.getRepository<Record<string, JsonValue>>("stores");
     const result = await repo.findAll({
       filters: `ownerId==${user!.uid}`,
-      perPage: 1,
+      pageSize: 1,
     });
 
     return NextResponse.json({

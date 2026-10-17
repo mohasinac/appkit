@@ -13,7 +13,13 @@
  *   const keys = await resolveKeys();
  *   const client = StandardCheckoutClient.getInstance(keys.phonepeClientId, keys.phonepeClientSecret, Number(keys.phonepeClientVersion), env);
  */
-import { siteSettingsRepository } from "../repositories";
+/*
+ * The DEFINING module, not the `repositories` barrel. That barrel re-exports
+ * `unitOfWork` from `../core`, so coming back through it put this file inside
+ * the same cycle (`audit-import-cycles` component 2) — and Root Cause #18 asks
+ * for the defining module regardless.
+ */
+import { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
 import { normalizeError } from "../errors/normalize";
 
 export interface ResolvedKeys {

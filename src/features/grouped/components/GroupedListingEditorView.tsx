@@ -39,7 +39,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Stack, Text, useToast } from "../../../ui";
+import { EmptyState, Stack, Text, useToast } from "../../../ui";
 import {
   FieldSelect,
   FormShellContext,
@@ -252,6 +252,28 @@ export function GroupedListingEditorView({
 
   if (isEdit && existing.isLoading) {
     return <Text color="muted">Loading…</Text>;
+  }
+
+  /*
+   * 🛑 LOADING and MISSING are different states, and collapsing them is the
+   * defect `audit-admin-detail-notfound` exists for.
+   *
+   * Without this branch, an invented `groupId` fell through to the form below
+   * with every field at its empty default — a complete, saveable editor for a
+   * record that does not exist. `/admin/grouped-listings/zzzznope/edit` looked
+   * ready to Save, and the admin PATCH it would call is the one that used to
+   * silently drop every key but `productIds` (see this file's page header).
+   *
+   * Only reached once the query has SETTLED, so a slow fetch still shows
+   * "Loading…" rather than flashing "not found" at a record that is on its way.
+   */
+  if (isEdit && !existing.isLoading && !existing.data) {
+    return (
+      <EmptyState
+        title="Grouped listing not found"
+        description="This group may have been deleted, or the link may be wrong."
+      />
+    );
   }
 
   return (

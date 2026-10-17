@@ -12,7 +12,7 @@ export class CorporateRepository {
     const result = await this.repo.findAll({
       filters: `status==${status}`,
       sort: "-createdAt",
-      perPage: 100,
+      pageSize: 100,
     });
     return result.data;
   }

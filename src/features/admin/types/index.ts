@@ -36,7 +36,7 @@ export interface DashboardStats {
 export interface AdminListParams {
   q?: string;
   page?: number;
-  perPage?: number;
+  pageSize?: number;
   sort?: string;
   filters?: string;
 }

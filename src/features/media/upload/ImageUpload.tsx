@@ -13,7 +13,24 @@ import { useState, useRef, ChangeEvent } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Label, Progress, Row, Spinner, Stack, Text, useToast } from "../../../ui";
+/*
+ * Defining modules, not the `ui` barrel — Root Cause #18.
+ *
+ * `ui/index.ts` re-exports `FormField`, `PaginatedSelect` and
+ * `RecordDetailModal`, and those three import back INTO `features/media` and
+ * `features/shell`. So reaching a primitive through the barrel closed a
+ * ten-module cycle (`audit-import-cycles` component 1) — while the deep paths
+ * below have one direction only. `ui → features/media` is the real dependency
+ * and it stays; the barrel hop is what did not need to exist.
+ */
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Progress } from "../../../ui/components/Progress";
+import { Spinner } from "../../../ui/components/Spinner";
+import { Label, Text } from "../../../ui/components/Typography";
+import { useToast } from "../../../ui/components/toast-context";
 import { MediaImage } from "../MediaImage";
 import type { ImageCropData } from "../modals/ImageCropModal";
 import CameraCapture from "./CameraCapture";

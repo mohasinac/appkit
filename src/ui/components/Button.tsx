@@ -5,7 +5,13 @@ import { twMerge } from "tailwind-merge";
 import { Loader2 } from "lucide-react";
 import type { ActionDef } from "../../_internal/shared/actions/action-registry";
 import { surfaceError } from "../../client/api/surface-error";
-import { useToastSafe } from "./Toast";
+/*
+ * From `toast-context`, never from `./Toast`. `Toast` renders a `<Button>` as
+ * its dismiss control, so importing the hook from there is a real value cycle
+ * between two primitives — which makes their module initialisation order a
+ * property of the bundler rather than of the code.
+ */
+import { useToastSafe } from "./toast-context";
 import { SHADOW_MAP } from "./surface-tokens";
 import type { ShadowKey } from "./surface-tokens";
 import { resolveIcon, ICON_SIZE, type IconSizeKey } from "../icons/icon-registry";

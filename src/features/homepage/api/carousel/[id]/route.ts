@@ -120,7 +120,7 @@ export const carouselItemPATCH = createRouteHandler({
     if (patch.active === true && !slide.active) {
       const active = await repo.findAll({
         filters: "active==true",
-        perPage: MAX_ACTIVE_SLIDES + 1,
+        pageSize: MAX_ACTIVE_SLIDES + 1,
       });
       if (active.data.length >= MAX_ACTIVE_SLIDES) {
         return NextResponse.json(

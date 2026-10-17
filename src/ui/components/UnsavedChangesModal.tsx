@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { eventBus } from "../../core/EventBus";
-import { UNSAVED_CHANGES_EVENT } from "../../react";
+// Defining modules, not the sibling barrel — Root Cause #18. `ui/index.ts` and
+// `react/index.ts` re-exported into each other, which is the whole of
+// `audit-import-cycles` component 1: an 18-module knot held together entirely
+// by barrel hops, none of which needed the barrel.
+import { UNSAVED_CHANGES_EVENT } from "../../react/hooks/useUnsavedChanges";
 import { Button } from "./Button";
 import { Card } from "./Card";
 import { Heading, Text } from "./Typography";

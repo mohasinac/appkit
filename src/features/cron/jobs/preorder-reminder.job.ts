@@ -40,7 +40,7 @@ export function createPreOrderReminderJob(
       const cutoff = sevenDaysFromNow();
       const result = await preOrderRepo.findAll({
         filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "confirmed"), sieveFilter("expectedShippingDate", SIEVE_OP.LTE, cutoff)),
-        perPage: 500,
+        pageSize: 500,
       });
 
       let processed = 0;

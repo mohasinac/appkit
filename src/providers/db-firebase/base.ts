@@ -76,7 +76,7 @@ export class FirebaseRepository<
 
   async findAll(query?: SieveQuery): Promise<PagedResult<T>> {
     const page = Math.max(1, query?.page ?? 1);
-    const perPage = Math.max(1, Math.min(query?.perPage ?? 20, 500));
+    const pageSize = Math.max(1, Math.min(query?.pageSize ?? 20, 500));
 
     let q: Query = this.getCollection();
 
@@ -125,14 +125,14 @@ export class FirebaseRepository<
     const total = await getFirestoreCount(q);
 
     // -- Paginate --------------------------------------------------------------
-    const offset = (page - 1) * perPage;
-    const pagedSnap = await q.offset(offset).limit(perPage).get();
+    const offset = (page - 1) * pageSize;
+    const pagedSnap = await q.offset(offset).limit(pageSize).get();
 
     const data = pagedSnap.docs.map((d) => this.mapDoc(d));
     const totalPages =
-      total === 0 ? 0 : Math.max(1, Math.ceil(total / perPage));
+      total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
 
-    return { data, total, page, perPage, totalPages };
+    return { data, total, page, pageSize, totalPages };
   }
 
   async findWhere(field: keyof T, op: WhereOp, value: unknown): Promise<T[]> {

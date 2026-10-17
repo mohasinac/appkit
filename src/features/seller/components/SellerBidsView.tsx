@@ -79,7 +79,7 @@ interface BidRow {
 }
 
 interface SellerBidsResponse {
-  bids?: JsonArray;
+  items?: JsonArray;
   total?: number;
   auctions?: { id: string; title: string }[];
 }
@@ -177,7 +177,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     initialView: "list",
     columns,
     mapRows: (response) =>
-      toRecordArray(response.bids).map((item, idx) => ({
+      toRecordArray(response.items).map((item, idx) => ({
         id: toStringValue(item.id, `bid-${idx}`),
         productTitle: toStringValue(item.productTitle, "Unknown auction"),
         productId: toStringValue(item.productId, ""),

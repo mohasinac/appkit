@@ -88,12 +88,6 @@ export type {
 } from "./FeaturedResultsSection";
 export { FeaturedResultsSection } from "./FeaturedResultsSection";
 
-export type {
-  HowItWorksInfoStep,
-  HowItWorksInfoDetail,
-  HowItWorksInfoViewProps,
-} from "./HowItWorksInfoView";
-export { HowItWorksInfoView } from "./HowItWorksInfoView";
 
 // -- New marketplace homepage sections ----------------------------------------
 

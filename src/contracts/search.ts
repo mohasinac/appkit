@@ -2,7 +2,7 @@
 
 export interface SearchOptions {
   page?: number;
-  perPage?: number;
+  pageSize?: number;
   filters?: string;
   facets?: string[];
   sortBy?: string;
@@ -23,7 +23,7 @@ export interface SearchResult<T> {
   hits: SearchHit<T>[];
   total: number;
   page: number;
-  perPage: number;
+  pageSize: number;
   totalPages: number;
   processingTimeMs?: number;
   facets?: Record<string, Record<string, number>>;

@@ -12,7 +12,7 @@ export class HomepageSectionsRepository {
     return this.repo.findAll({
       filters: "isVisible==true",
       sort: "order",
-      perPage: 50,
+      pageSize: 50,
       ...query,
     });
   }

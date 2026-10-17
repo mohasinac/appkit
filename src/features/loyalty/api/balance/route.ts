@@ -36,7 +36,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const repo = db.getRepository<Record<string, JsonValue>>("loyalty_balance");
     const result = await repo.findAll({
       filters: `userId==${userId}`,
-      perPage: 1,
+      pageSize: 1,
     });
 
     return NextResponse.json({

@@ -74,7 +74,7 @@ export async function GET(
     const storesRepo = db.getRepository<StoreEntity>("stores");
     const storeResult = await storesRepo.findAll({
       filters: `storeSlug==${storeSlug},status==active,isPublic==true`,
-      perPage: 1,
+      pageSize: 1,
     });
     const store = storeResult.data[0];
     if (!store) {
@@ -108,14 +108,14 @@ export async function GET(
       sort,
       order: sort.startsWith("-") ? "desc" : "asc",
       page,
-      perPage: pageSize,
+      pageSize: pageSize,
     });
 
     const body: StoreProductsResponse = {
       items: result.data,
       total: result.total,
       page: result.page,
-      pageSize: result.perPage,
+      pageSize: result.pageSize,
       totalPages: result.totalPages,
       hasMore: result.page < result.totalPages,
     };

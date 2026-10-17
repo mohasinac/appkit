@@ -23,7 +23,7 @@ const FEATURED_TABS = [
 ] as const;
 
 interface AdminBlogResponse {
-  posts?: JsonArray;
+  items?: JsonArray;
   meta?: { filteredTotal?: number; total?: number };
 }
 
@@ -72,7 +72,7 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
       { value: "title", label: "Title A–Z" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.posts).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `post-${index}`),
         primary: toStringValue(item.title, "Untitled post"),
         secondary: [

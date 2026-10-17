@@ -8,7 +8,23 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Row, Span, Spinner, Stack, Text } from "../../../ui";
+/*
+ * Defining modules, not the `ui` barrel — Root Cause #18.
+ *
+ * `ui/index.ts` re-exports `FormField`, `PaginatedSelect` and
+ * `RecordDetailModal`, and those three import back INTO `features/media` and
+ * `features/shell`. So reaching a primitive through the barrel closed a
+ * ten-module cycle (`audit-import-cycles` component 1) — while the deep paths
+ * below have one direction only. `ui → features/media` is the real dependency
+ * and it stays; the barrel hop is what did not need to exist.
+ */
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Modal } from "../../../ui/components/Modal";
+import { Spinner } from "../../../ui/components/Spinner";
+import { Span, Text } from "../../../ui/components/Typography";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 

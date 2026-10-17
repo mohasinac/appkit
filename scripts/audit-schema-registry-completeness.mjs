@@ -14,7 +14,9 @@
  *
  * W8 layers additional audits on top:
  *   - audit-firestore-schema-coverage: every CLAUDE.md collection registered.
- *   - audit-route-schema-registry:     every src/app/api/** route bound.
+ *   - (audit-route-schema-registry was retired 2026-10-17 — the `api` bucket
+ *     had 6 keys and zero routes passing one. `audit-unvalidated-request-body`
+ *     owns the real property: a handler that reads a body must validate it.)
  *
  * This audit only checks the registry's shape. It must pass from W1 onward.
  */

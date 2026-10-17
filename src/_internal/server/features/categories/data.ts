@@ -90,12 +90,32 @@ export const getCategoryTree = cache(
 /** Flat category list for sitemap generation. */
 export const listSitemapCategories = cache(
   async (): Promise<Pick<CategoryDocument, "slug" | "updatedAt">[]> => {
-    return categoriesRepository
-      .list({ filters: "isActive==true", sorts: "-updatedAt", page: 1, pageSize: CATEGORIES_SITEMAP_LIMIT })
-      .then((r) => {
-        const docs = (r as { data?: CategoryDocument[] }).data ?? [];
-        return docs.map(({ slug, updatedAt }) => ({ slug, updatedAt }));
-      })
-      .catch(() => []);
+    /*
+     * 🛑 `safeRead`, not `.catch(() => [])`. This function feeds the SITEMAP,
+     * so a swallowed Firestore failure publishes an empty category sitemap to
+     * crawlers and nothing anywhere says why — the single worst place in the
+     * app for a failure that reads as "there is no data". Root Cause #81 is
+     * what a quietly wrong sitemap costs.
+     *
+     * The fallback is still `[]` (a sitemap must render), but the degradation
+     * is now a `DEGRADED_READ` row instead of silence. The file already used
+     * `safeRead` a few lines up; this site was simply missed.
+     */
+    const r = await safeRead(
+      () =>
+        categoriesRepository.list({
+          filters: "isActive==true",
+          sorts: "-updatedAt",
+          page: 1,
+          pageSize: CATEGORIES_SITEMAP_LIMIT,
+        }),
+      {
+        route: "sitemap",
+        key: "categories.listSitemapCategories",
+        fallback: null,
+      },
+    );
+    const docs = (r as { data?: CategoryDocument[] } | null)?.data ?? [];
+    return docs.map(({ slug, updatedAt }) => ({ slug, updatedAt }));
   },
 );

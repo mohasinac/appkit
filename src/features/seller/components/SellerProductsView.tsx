@@ -164,7 +164,7 @@ interface ProductRow {
 }
 
 interface SellerProductsResponse {
-  products?: JsonArray;
+  items?: JsonArray;
   meta?: { total: number; totalPages?: number };
 }
 
@@ -682,7 +682,7 @@ export function SellerProductsView({
     columns: PRODUCT_COLUMNS,
     primaryAction: onCreateClick ? { label: "New Listing", onClick: onCreateClick } : undefined,
     mapRows: (response) => {
-      const rows = toRecordArray(response.products).map((item, index) => {
+      const rows = toRecordArray(response.items).map((item, index) => {
         const lt = normalizeListingType(
           item as { listingType?: import("../../products/types").ListingType },
         );

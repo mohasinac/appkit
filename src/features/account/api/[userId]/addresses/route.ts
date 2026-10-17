@@ -58,7 +58,7 @@ export async function GET(
       filters,
       sort,
       page,
-      perPage: pageSize,
+      pageSize: pageSize,
     });
 
     const totalPages = Math.max(1, Math.ceil(result.total / pageSize));

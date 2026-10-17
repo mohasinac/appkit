@@ -44,7 +44,7 @@ export const SITE_CONFIG: RuntimeSiteConfig = {
     sellers: ROUTES.PUBLIC.SELLERS as string,
     stores: ROUTES.PUBLIC.STORES as string,
     events: ROUTES.PUBLIC.EVENTS as string,
-    blog: ROUTES.PUBLIC.BLOG as string,
+    blog: ROUTES.BLOG.LIST as string,
     categories: ROUTES.PUBLIC.CATEGORIES as string,
     promotions: ROUTES.PUBLIC.PROMOTIONS as string,
     reviews: ROUTES.PUBLIC.REVIEWS as string,

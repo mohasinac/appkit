@@ -6,10 +6,14 @@ export const manifest: FeatureManifest = {
   envKeys: [],
   routes: [
     { segment: "[locale]/stores", exports: { default: "StoresIndexPageView" } },
-    {
-      segment: "[locale]/stores/[storeSlug]",
-      exports: { default: "StoreStorefrontView" },
-    },
+    /*
+     * `[locale]/stores/[storeSlug]` is deliberately ABSENT. It is a bare
+     * `redirect()` to the products tab and renders no view at all, so there is
+     * no appkit export to name — and naming one is exactly how
+     * `StoreStorefrontView` (an alias of the orphaned `SellerStoreView` slot
+     * shell) kept reading as wired for as long as it did. The storefront chrome
+     * lives in the segment's own layout; the tabs below are the real views.
+     */
     {
       segment: "[locale]/stores/[storeSlug]/products",
       exports: { default: "StoreProductsView" },

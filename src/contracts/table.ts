@@ -16,7 +16,7 @@
  *
  * export const myPaginationConfig: PaginationConfig = {
  *   ...DEFAULT_PAGINATION_CONFIG,
- *   perPage: 10,
+ *   pageSize: 10,
  *   showPageSizeSelector: true,
  *   pageSizeOptions: [10, 25, 50],
  * };
@@ -36,8 +36,8 @@
  */
 export interface PaginationConfig {
   /** Items per page sent to the API. Default: 20 */
-  perPage?: number;
-  /** Hard cap on perPage (for page-size selector). Default: 100 */
+  pageSize?: number;
+  /** Hard cap on pageSize (for page-size selector). Default: 100 */
   maxPerPage?: number;
   /** Show a page-size selector UI element. Default: false */
   showPageSizeSelector?: boolean;
@@ -54,7 +54,7 @@ export interface PaginationConfig {
 }
 
 export const DEFAULT_PAGINATION_CONFIG: Required<PaginationConfig> = {
-  perPage: 20,
+  pageSize: 20,
   maxPerPage: 100,
   showPageSizeSelector: false,
   pageSizeOptions: [10, 20, 50, 100],
@@ -124,7 +124,7 @@ export const DEFAULT_TABLE_CONFIG: {
   defaultViewMode: TableViewMode;
   pagination: Required<PaginationConfig>;
 } = {
-  pageSize: DEFAULT_PAGINATION_CONFIG.perPage,
+  pageSize: DEFAULT_PAGINATION_CONFIG.pageSize,
   sticky: DEFAULT_STICKY_CONFIG,
   striped: false,
   selectable: false,

@@ -105,7 +105,7 @@ export async function GET(
       // Slug fallback: search by slug==id, status==published
       const slugResult = await repo.findAll({
         filters: `slug==${id},status==published`,
-        perPage: 1,
+        pageSize: 1,
       });
       item = slugResult.data[0] ?? null;
     }

@@ -29,7 +29,7 @@ import {
 
 
 interface AdminScammersResponse {
-  scammers?: JsonArray;
+  items?: JsonArray;
   meta?: { total?: number; filteredTotal?: number };
   total?: number;
 }
@@ -124,7 +124,7 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
     ],
     columns: SCAMMER_COLUMNS,
     mapRows: (response) =>
-      toRecordArray(response.scammers).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `scammer-${index}`),
         primary: Array.isArray(item.displayNames)
           ? (item.displayNames as string[]).join(", ")

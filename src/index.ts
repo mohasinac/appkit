@@ -3020,11 +3020,7 @@ export { ProfileView } from "./features/account/index";
 // UserAccountHubView - Component for user account hub view.
 export { UserAccountHubView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// UserAddressesView - Component for user addresses view.
-export { UserAddressesView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// UserNotificationsView - Component for user notifications view.
-export { UserNotificationsView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // [CLIENT]-Runs in browser only â€" interactive buyer offers panel with accept/withdraw actions.
 // UserOffersPanel - Interactive buyer offers panel.
@@ -3037,8 +3033,6 @@ export { UserOrderTrackView } from "./features/account/index";
 // UserOrdersView - Component for user orders view.
 export { UserOrdersView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// UserSettingsView - Component for user settings view.
-export { UserSettingsView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component that lets users manage their notification channel and type preferences.
 // NotificationPreferencesPanel - Panel for user notification preferences.
 export { NotificationPreferencesPanel } from "./features/account/index";
@@ -3222,17 +3216,13 @@ export type { UserAccountHubViewProps } from "./features/account/index";
 export type { UserAddress } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserAddressesViewLabels - Type contract for user addresses view labels.
-export type { UserAddressesViewLabels } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserAddressesViewProps - Type contract for user addresses view props.
-export type { UserAddressesViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserNotificationsViewLabels - Type contract for user notifications view labels.
-export type { UserNotificationsViewLabels } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserNotificationsViewProps - Type contract for user notifications view props.
-export type { UserNotificationsViewProps } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserOffer - Type contract for user offer.
 export type { UserOffer } from "./features/account/index";
@@ -3258,10 +3248,8 @@ export type { UserProfile } from "./features/account/index";
 export type { UserProfileStats } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserSettingsViewLabels - Type contract for user settings view labels.
-export type { UserSettingsViewLabels } from "./features/account/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UserSettingsViewProps - Type contract for user settings view props.
-export type { UserSettingsViewProps } from "./features/account/index";
 
 // ./features/account/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -3546,7 +3534,6 @@ export { DEFAULT_TRUST_BAR_ITEMS } from "./features/admin/index";
 // DashboardStatsGrid - Component for dashboard stats grid.
 export { DashboardStatsGrid } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// DemoSeedView — removed from main barrel (dev-only, load via dynamic import)
 // AdminTeamView - Employee management list view.
 export { AdminTeamView } from "./features/admin/index";
 // AdminEmployeeEditorView - Invite/edit employee permissions SideDrawer.
@@ -4670,8 +4657,6 @@ export { CategoryForm } from "./features/categories/index";
 // CategoryGrid - Component for category grid.
 export { CategoryGrid } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// CategoryProductsView - Component for category products view.
-export { CategoryProductsView } from "./features/categories/index";
 // CategoryProductsListing - Client toolbar listing for category detail pages.
 export { CategoryProductsListing } from "./features/categories/index";
 export type { CategoryProductsListingProps } from "./features/categories/index";
@@ -4832,7 +4817,6 @@ export type { CategoryMetrics } from "./features/categories/index";
 export type { CategoryMoveInput } from "./features/categories/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CategoryProductsViewProps - Type contract for category products view props.
-export type { CategoryProductsViewProps } from "./features/categories/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CategorySelectorCreateLabels - Type contract for category selector create labels.
 export type { CategorySelectorCreateLabels } from "./features/categories/index";
@@ -5855,8 +5839,6 @@ export { HomepageSkeleton } from "./features/homepage/index";
 // HomepageView - Component for homepage view.
 export { HomepageView } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HowItWorksInfoView - Component for how it works info view.
-export { HowItWorksInfoView } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HowItWorksSection - Shared export for how it works section.
 export { HowItWorksSection } from "./features/homepage/index";
@@ -6001,13 +5983,10 @@ export type { HomepageViewProps } from "./features/homepage/index";
 export type { HotspotPin } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowItWorksInfoDetail - Type contract for how it works info detail.
-export type { HowItWorksInfoDetail } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowItWorksInfoStep - Type contract for how it works info step.
-export type { HowItWorksInfoStep } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowItWorksInfoViewProps - Type contract for how it works info view props.
-export type { HowItWorksInfoViewProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowItWorksSectionProps - Type contract for how it works section props.
 export type { HowItWorksSectionProps } from "./features/homepage/index";
@@ -7186,8 +7165,6 @@ export { ProductTabs } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ProductsIndexPageView - Component for products index page view.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ProductsView - Component for products view.
-export { ProductsView } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // RelatedProducts - Shared export for related products.
 export { RelatedProducts } from "./features/products/index";
@@ -7240,6 +7217,7 @@ export {
   enabledListingTypes,
   enabledCategoryTypes,
   ALL_LISTING_TYPES,
+  isListingType,
 } from "./_internal/shared/listing-types/feature-flags";
 // SB-UNI-X5 2026-05-13 â€" action telemetry sink.
 export {
@@ -7504,7 +7482,6 @@ export type { ProductUpdateInput } from "./features/products/index";
 export type { ProductVideoField } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ProductsViewProps - Type contract for products view props.
-export type { ProductsViewProps } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // RelatedProductsProps - Type contract for related products props.
 export type { RelatedProductsProps } from "./features/products/index";
@@ -8145,8 +8122,6 @@ export { SellerShippingView } from "./features/seller/index";
 // SellerStoreSetupView - Component for seller store setup view.
 export { SellerStoreSetupView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerStoreView - Component for seller store view.
-export { SellerStoreView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerStorefrontView - Component for seller storefront view.
 export { SellerStorefrontView } from "./features/seller/index";
@@ -8182,7 +8157,6 @@ export { SellerProductsView as StoreProductListingsView } from "./features/selle
 // StoreShippingView - Alias for SellerShippingView.
 export { SellerShippingView as StoreShippingView } from "./features/seller/index";
 // StoreStorefrontView - Alias for SellerStorefrontView.
-export { SellerStorefrontView as StoreStorefrontView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // buildPayoutColumns - Helper for build payout columns.
 export { buildPayoutColumns } from "./features/seller/index";
@@ -8353,7 +8327,6 @@ export type { SellerStore } from "./features/seller/index";
 export type { SellerStoreSetupViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SellerStoreViewProps - Type contract for seller store view props.
-export type { SellerStoreViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SellerStorefrontViewProps - Type contract for seller storefront view props.
 export type { SellerStorefrontViewProps, StorefrontDraft } from "./features/seller/index";
@@ -8390,7 +8363,6 @@ export type { SellerProductsViewProps as StoreProductListingsViewProps } from ".
 // StoreShippingViewProps - Type alias for SellerShippingViewProps.
 export type { SellerShippingViewProps as StoreShippingViewProps } from "./features/seller/index";
 // StoreStorefrontViewProps - Type alias for SellerStorefrontViewProps.
-export type { SellerStorefrontViewProps as StoreStorefrontViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // StoreStatus - Type contract for store status.
 export type { StoreStatus } from "./features/seller/index";
@@ -9143,10 +9115,7 @@ export {
 // Missing core types (already exported above; skipped to avoid duplicates)
 
 // Missing auth feature components
-export {
-  RoleGate, ProtectedRoute, SocialAuthButtons, AuthStatusPanel,
-  LoginForm, RegisterForm, ForgotPasswordView, ResetPasswordView, VerifyEmailView, OAuthLoadingView,
-} from "./features/auth/index";
+export { RoleGate, ProtectedRoute, SocialAuthButtons, LoginForm, RegisterForm, ForgotPasswordView, ResetPasswordView, VerifyEmailView, OAuthLoadingView } from "./features/auth/index";
 export type {
   RoleGateProps, ProtectedRouteProps, AuthGuardUser, AuthRouteConfig,
   LoginFormProps, LoginFormValues, RegisterFormProps, RegisterFormValues,

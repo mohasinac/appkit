@@ -43,7 +43,7 @@ export class FAQsRepository {
     const result = await this.repo.findAll({
       filters: `isActive==true,category==${category}`,
       sort: "order",
-      perPage: 100,
+      pageSize: 100,
     });
     return result.data;
   }

@@ -33,7 +33,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 
 interface AdminPayoutsResponse {
-  payouts?: JsonArray;
+  items?: JsonArray;
   meta?: { total?: number };
 }
 
@@ -140,7 +140,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       { value: sortBy("amount", "DESC"), label: "Highest amount" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.payouts).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `payout-${index}`),
         primary: [`Payout ${toStringValue(item.id, "-")}`, toCurrency(item.amount)].join(" · "),
         secondary: toStringValue(

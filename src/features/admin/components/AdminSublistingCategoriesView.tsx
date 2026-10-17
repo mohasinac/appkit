@@ -69,6 +69,15 @@ export function AdminSublistingCategoriesView({
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: () => undefined,
     rowHrefTemplate: String(ROUTES.ADMIN.SUBLISTING_CATEGORIES_EDIT("{id}")),
+    /*
+     * `/admin/sublisting-categories/new`, its ROUTES key and its POST route all
+     * already existed — the list simply never linked to them, so the page was
+     * reachable only by typing the URL (Root Cause #37's shape).
+     */
+    primaryAction: {
+      label: "Add Sub-listing Category",
+      href: String(ROUTES.ADMIN.SUBLISTING_CATEGORIES_NEW),
+    },
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] => [
           buildBulkAction(ACTIONS.ADMIN["delete-sublisting-category"], async () => {

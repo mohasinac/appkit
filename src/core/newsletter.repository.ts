@@ -108,13 +108,13 @@ export class NewsletterRepository {
     model: NewsletterListModel,
   ): Promise<PagedResult<NewsletterSubscriberDocument>> {
     const page = Number(model.page || "1");
-    const perPage = Number(model.pageSize || "50");
+    const pageSize = Number(model.pageSize || "50");
 
     const result = await this.repo.findAll({
       filters: model.filters,
       sort: model.sorts || "-createdAt",
       page: Number.isFinite(page) ? page : 1,
-      perPage: Number.isFinite(perPage) ? perPage : 50,
+      pageSize: Number.isFinite(pageSize) ? pageSize : 50,
     });
 
     return {

@@ -328,7 +328,7 @@ export interface OrderListResponse {
   items: Order[];
   total: number;
   page: number;
-  perPage: number;
+  pageSize: number;
   totalPages: number;
 }
 
@@ -338,5 +338,5 @@ export interface OrderListParams {
   paymentStatus?: PaymentStatus;
   sort?: string;
   page?: number;
-  perPage?: number;
+  pageSize?: number;
 }

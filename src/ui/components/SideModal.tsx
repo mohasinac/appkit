@@ -1,7 +1,15 @@
 "use client"
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { Button, Div, Heading } from "..";
+/*
+ * 🛑 This was `from ".."` — a component importing its own barrel, which is the
+ * tightest possible cycle: `ui/index.ts` exports `SideModal`, so the module
+ * depended on the file that depends on it. Nothing needed the barrel; all
+ * three symbols are one directory away.
+ */
+import { Button } from "./Button";
+import { Div } from "./Div";
+import { Heading } from "./Typography";
 import { ActionRow } from "./ActionRow";
 import { SPRING_SNAPPY } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";

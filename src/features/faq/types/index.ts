@@ -66,7 +66,13 @@ export interface FAQListParams {
   tags?: string[];
   showOnHomepage?: boolean;
   page?: number;
-  perPage?: number;
+  /*
+   * 🛑 `perPage?` DELETED — this interface declared BOTH spellings, optional,
+   * with no discriminator, so a value could satisfy the type while supplying
+   * neither and no reader could tell which one a caller meant. That is exactly
+   * why `GenericListResponse<T>` was deleted in 2026-08-31 (see
+   * contracts/extend.ts). `pageSize` is the canonical spelling.
+   */
   pageSize?: number;
   sorts?: string;
 }

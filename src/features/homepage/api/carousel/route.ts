@@ -74,7 +74,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       const result = await repo.findAll({
         sort: "order",
         order: "asc",
-        perPage: 100,
+        pageSize: 100,
       });
       slides = result.data;
     } else {
@@ -82,7 +82,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         filters: "active==true",
         sort: "order",
         order: "asc",
-        perPage: MAX_ACTIVE_SLIDES,
+        pageSize: MAX_ACTIVE_SLIDES,
       });
       slides = result.data.slice(0, MAX_ACTIVE_SLIDES);
     }
@@ -158,7 +158,7 @@ export const carouselPOST = createRouteHandler({
     // Guard: max 5 active slides
     const active = await repo.findAll({
       filters: "active==true",
-      perPage: MAX_ACTIVE_SLIDES + 1,
+      pageSize: MAX_ACTIVE_SLIDES + 1,
     });
     const incoming = body as { active?: boolean };
     if (incoming.active !== false && active.data.length >= MAX_ACTIVE_SLIDES) {
@@ -174,7 +174,7 @@ export const carouselPOST = createRouteHandler({
     const existing = await repo.findAll({
       sort: "order",
       order: "desc",
-      perPage: 1,
+      pageSize: 1,
     });
     const maxOrder = existing.data[0]?.order ?? -1;
 

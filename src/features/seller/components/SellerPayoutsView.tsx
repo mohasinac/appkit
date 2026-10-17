@@ -23,7 +23,7 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 
 interface SellerPayoutsResponse {
-  payouts?: JsonArray;
+  items?: JsonArray;
   meta?: { total: number };
 }
 
@@ -273,7 +273,7 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.payouts).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const id = toStringValue(item.id, `payout-${index}`);
         rawByIdRef.current[id] = item;
         return {

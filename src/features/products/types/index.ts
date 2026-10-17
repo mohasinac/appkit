@@ -250,7 +250,7 @@ export interface ProductListParams {
   storeId?: string;
   sort?: string;
   page?: number;
-  perPage?: number;
+  pageSize?: number;
   featured?: boolean;
   /** Auction-specific: current bid range */
   minBid?: number;

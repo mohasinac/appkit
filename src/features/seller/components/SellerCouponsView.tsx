@@ -24,7 +24,7 @@ interface CouponRow {
 }
 
 interface SellerCouponsResponse {
-  coupons?: JsonArray;
+  items?: JsonArray;
   total?: number;
 }
 
@@ -113,7 +113,7 @@ export function SellerCouponsView({
     ],
     hideTableView: true,
     mapRows: (response) =>
-      toRecordArray(response.coupons).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `coupon-${index}`),
         raw: item,
         isActive: getIsActive(item),

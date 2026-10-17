@@ -201,7 +201,7 @@ const EMI_INSTALLMENT_BADGE_VARIANT: Record<string, "success" | "warning" | "dan
 };
 
 interface SellerOrdersResponse {
-  orders?: unknown[];
+  items?: unknown[];
   meta?: { total: number };
 }
 
@@ -795,7 +795,7 @@ export function SellerOrdersView({
     sortOptions: SORT_OPTIONS,
     columns,
     mapRows: (response) =>
-      toRecordArray(response.orders).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
         /*
          * Same legacy fallback as AdminOrdersView: `items[]` is canonical and

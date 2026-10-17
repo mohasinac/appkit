@@ -8,8 +8,13 @@
 export { BaseRepository } from "../providers/db-firebase";
 
 // Unit of Work - atomic multi-collection operations
-export { unitOfWork } from "../core";
-export type { UnitOfWork } from "../core";
+/*
+ * Deep, not `../core`: that barrel pulls in every core module, several of which
+ * import repositories back out of this file. One barrel re-exporting another
+ * barrel is how component 2's cycle stayed closed.
+ */
+export { unitOfWork } from "../core/unit-of-work";
+export type { UnitOfWork } from "../core/unit-of-work";
 
 // Core repositories
 export {

@@ -45,7 +45,7 @@ export function createAuctionExpiryJob(
     async (ctx) => {
       const result = await auctionRepo.findAll({
         filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "live"), sieveFilter("endTime", SIEVE_OP.LTE, ctx.scheduleTime)),
-        perPage: 500,
+        pageSize: 500,
       });
 
       let processed = 0;

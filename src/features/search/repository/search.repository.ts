@@ -48,7 +48,7 @@ export class SearchRepository {
         : "createdAt",
       order: query.sort?.startsWith("-") ? "desc" : "asc",
       page: query.page ?? 1,
-      perPage: query.pageSize ?? 24,
+      pageSize: query.pageSize ?? 24,
     };
 
     const result: PagedResult<SearchProductItem> =
@@ -59,7 +59,7 @@ export class SearchRepository {
       q: query.q ?? "",
       total: result.total,
       page: result.page,
-      pageSize: result.perPage,
+      pageSize: result.pageSize,
       totalPages: result.totalPages,
       hasMore: result.page < result.totalPages,
     };

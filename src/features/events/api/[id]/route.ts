@@ -76,7 +76,7 @@ export async function GET(
     ) {
       const allEntries = await entriesRepo.findAll({
         filters: `eventId==${id}`,
-        perPage: 1000,
+        pageSize: 1000,
       });
 
       const voteCounts: Record<string, number> = {};
@@ -102,7 +102,7 @@ export async function GET(
         filters: `eventId==${id},reviewStatus==approved`,
         sort: "points",
         order: "desc",
-        perPage: 10,
+        pageSize: 10,
       });
 
       leaderboard = leaderboardResult.data.map((entry) => {

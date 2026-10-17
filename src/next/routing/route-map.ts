@@ -77,7 +77,14 @@ export const DEFAULT_ROUTE_MAP = {
     ABOUT: "/about",
     DEVELOPER: "/developer",
     CONTACT: "/contact",
-    BLOG: "/blog",
+    /*
+     * 🛑 No `PUBLIC.BLOG`. `BLOG.LIST` is the one key for "/blog", and it sits
+     * beside `BLOG.ARTICLE` — which is the ONLY blog detail key, so `BLOG` was
+     * always the canonical section and `PUBLIC.BLOG` was an alias of its index.
+     * Two keys for one path is Root Cause #61's family: the duplicate was
+     * reported by `audit-dead-route-key` on every run, and nine call sites had
+     * drifted onto the alias while one used the real key.
+     */
     HELP: "/help",
     HELP_SHOPPING: "/help/shopping",
     HELP_AUCTIONS: "/help/auctions",
@@ -133,7 +140,14 @@ export const DEFAULT_ROUTE_MAP = {
     EVENT_SPIN_RESULTS: (id: string) => `/events/${id}/spin-results`,
     LOTTERIES: "/lottery",
     LOTTERY_DETAIL: (id: string) => `/lottery/${id}`,
-    SUBLISTING_CATEGORIES: "/sublisting-categories",
+    /*
+      * 🛑 There is deliberately NO public `SUBLISTING_CATEGORIES` index key.
+      * `src/app/[locale]/sublisting-categories/` holds only `[slug]/`, so the
+      * index has never existed; the key promised a route with no page behind
+      * it, had zero references anywhere, and `audit-dead-route-key` carried it
+      * as its one grandfathered entry. A sub-listing is reached from the
+      * category or product it belongs to, not from a top-level list.
+      */
     SUBLISTING_CATEGORY: (slug: string) => `/sublisting-categories/${slug}`,
     SUPPORT: "/support",
     SCAMS: "/scams",
@@ -571,7 +585,7 @@ export const PUBLIC_ROUTES = [
   ROUTES.PUBLIC.PROMOTIONS as string,
   ROUTES.PUBLIC.ABOUT as string,
   ROUTES.PUBLIC.CONTACT as string,
-  ROUTES.PUBLIC.BLOG as string,
+  ROUTES.BLOG.LIST as string,
   ROUTES.PUBLIC.HELP as string,
   ROUTES.PUBLIC.TERMS as string,
   ROUTES.PUBLIC.PRIVACY as string,

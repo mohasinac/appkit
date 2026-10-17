@@ -50,11 +50,13 @@ export interface ListingTypeListingRow {
 }
 
 interface ListingTypeListingResponse {
-  /** Admin route shape. */
+  /*
+   * ONE shape. `products?: JsonArray` was the seller route's old spelling and
+   * is gone — both endpoints emit `items` now, and leaving the field declared
+   * would keep `response.products` compiling at any future call site.
+   */
   items?: JsonArray;
   total?: number;
-  /** Seller route shape. */
-  products?: JsonArray;
   meta?: { total?: number };
 }
 
@@ -108,9 +110,15 @@ export function buildListingTypeListingConfig(
     endpoint: isSeller ? SELLER_ENDPOINTS.PRODUCTS : ADMIN_ENDPOINTS.PRODUCTS,
     // The type's own sort set, not a copy-pasted three-option array.
     sortOptions: [...plugin.sortOptions],
-    // The seller route returns `{ products }`, the admin route `{ items }`.
     mapRows: (response) =>
-      toRecordArray(response.items ?? response.products).map((item, index) => ({
+      /*
+       * `items` only. The `?? response.products` fallback is gone because both
+       * endpoints this config reads (`/api/admin/products`, `/api/store/products`)
+       * now emit the canonical key — verified before removing it. A defence
+       * against a shape that no longer exists reads as though the shape still
+       * might, which is how two spellings stay alive forever.
+       */
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `${type}-${index}`),
         primary: toStringValue(item.title ?? item.productTitle, "Untitled listing"),
         secondary: [
@@ -143,5 +151,25 @@ export function buildListingTypeListingConfig(
     rowHrefTemplate: String(
       isSeller ? ROUTES.STORE.PRODUCTS_EDIT("{id}") : ROUTES.ADMIN.PRODUCTS_EDIT("{id}"),
     ),
+    /*
+     * Create, with THIS type preselected.
+     *
+     * All five pages this factory backs (art, classified, digital-codes, live,
+     * stickers) had no create control of any kind. `?listingType=` is read by
+     * the create page and passed to the editor as `initialListingType`, so an
+     * admin landing from the Art list starts on an art listing rather than on
+     * `standard` — which, on a type-scoped list, would create a row that
+     * immediately vanishes from the page it was created on.
+     *
+     * 🛑 A `primaryAction.href` rather than a `toolbarExtra` node: this is a
+     * `.ts` factory and cannot author JSX, which is the structural reason
+     * these five screens went without.
+     */
+    primaryAction: {
+      label: `Add ${plugin.typeLabel}`,
+      href: `${String(
+        isSeller ? ROUTES.STORE.PRODUCTS_NEW : ROUTES.ADMIN.PRODUCTS_NEW,
+      )}?${PRODUCT_FIELDS.LISTING_TYPE}=${encodeURIComponent(type)}`,
+    },
   };
 }

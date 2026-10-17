@@ -66,14 +66,30 @@ export function makeGetStoreListingsInitial(
   pageSize: number,
 ): (storeId: string, page?: number) => Promise<{ items: ProductDocument[]; total: number }> {
   return cache(async (storeId: string, page = 1) => {
-    const result = await productRepository
-      .list({
-        filters: `storeId==${storeId},status==published,listingType==${type}`,
-        sorts: "-createdAt",
-        page,
-        pageSize,
-      })
-      .catch(() => null);
+    /*
+     * 🛑 `safeRead`, not `.catch(() => null)`. This factory backs every
+     * per-type store listing tab, so a swallowed failure renders a seller's
+     * page as "no listings" — which is Root Cause #59's exact shape, where a
+     * `FAILED_PRECONDITION` from a missing composite index was indistinguishable
+     * from an empty catalogue and stayed invisible for weeks.
+     *
+     * Same `null` fallback and same empty render; the difference is that the
+     * failure now lands in `serverErrors` as a `DEGRADED_READ`.
+     */
+    const result = await safeRead(
+      () =>
+        productRepository.list({
+          filters: `storeId==${storeId},status==published,listingType==${type}`,
+          sorts: "-createdAt",
+          page,
+          pageSize,
+        }),
+      {
+        route: `store-listing:${type}`,
+        key: "products.listByStoreAndType",
+        fallback: null,
+      },
+    );
     return { items: result?.items ?? [], total: result?.total ?? 0 };
   });
 }

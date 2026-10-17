@@ -36,5 +36,5 @@ export interface CorporateInquiryListResponse {
   data: CorporateInquiry[];
   total: number;
   page: number;
-  perPage: number;
+  pageSize: number;
 }

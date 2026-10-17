@@ -198,7 +198,16 @@ function resolveBodySchema<T>(
   schema: ParseableSchema<T> | ApiRouteKey,
 ): ParseableSchema<T> | null {
   if (typeof schema !== "string") return schema;
-  const entry = SCHEMAS.api[schema as RegisteredApiRouteKey];
+  /*
+   * `SCHEMAS.api` is empty by design (see its own comment in registry.ts):
+   * the key form had 6 registered keys and ZERO routes passing one, so the
+   * lookup is kept for the contract while `RegisteredApiRouteKey` narrows to
+   * `never`. The cast is what lets an indexed read of an empty literal type
+   * compile; the `!entry` branch below is the whole behaviour — a key string
+   * resolves to nothing and `createRouteHandler` throws "Route schema not
+   * registered", which is the correct answer for a key nobody registered.
+   */
+  const entry = (SCHEMAS.api as Record<string, { body?: unknown } | undefined>)[schema];
   if (!entry || !("body" in entry) || !entry.body) return null;
   return entry.body as unknown as ParseableSchema<T>;
 }

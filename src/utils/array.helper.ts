@@ -57,17 +57,17 @@ export function chunk<T>(array: T[], size: number): T[][] {
 export function paginate<T>(
   array: T[],
   page: number,
-  perPage: number,
+  pageSize: number,
 ): {
   data: T[];
   total: number;
   page: number;
-  perPage: number;
+  pageSize: number;
   totalPages: number;
 } {
   const total = array.length;
-  const totalPages = Math.ceil(total / perPage);
-  const start = (page - 1) * perPage;
-  const end = start + perPage;
-  return { data: array.slice(start, end), total, page, perPage, totalPages };
+  const totalPages = Math.ceil(total / pageSize);
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+  return { data: array.slice(start, end), total, page, pageSize, totalPages };
 }

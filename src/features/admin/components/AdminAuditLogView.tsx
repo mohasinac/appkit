@@ -25,7 +25,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { ViewAuditLogEntryModal, type AuditLogEntryDetail } from "./ViewAuditLogEntryModal";
 
 interface AdminAuditLogResponse {
-  entries?: JsonArray;
+  items?: JsonArray;
   meta?: { total?: number };
 }
 
@@ -104,7 +104,7 @@ export function AdminAuditLogView({ children, ...props }: AdminAuditLogViewProps
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
-      toRecordArray(response.entries).map((item, index) => {
+      toRecordArray(response.items).map((item, index) => {
         const action = toStringValue(item.action, "unknown");
         return {
           id: toStringValue(item.id, `audit-${index}`),

@@ -566,7 +566,7 @@ export { buildEventEntryDetailFields } from "./features/events/components/event-
 export type { EntryFieldRow } from "./features/events/components/event-entry-detail-fields";
 export type { BidDetailViewer } from "./features/auctions/components/bid-detail-fields";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
-export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
+export { ProtectedRoute, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
 export type {
 	AuthGuardUser,
 	ForgotPasswordViewProps,
@@ -604,7 +604,6 @@ export { AddressBook, AddressCard, AddressForm } from "./features/account/index"
 export type { AddressCardAddress, AddressCardProps } from "./features/account/index";
 export { useProfile, useUpdateProfile } from "./features/account/index";
 export { updateProfileSchema } from "./features/account/index";
-export { CategoryProductsView } from "./features/categories/index";
 export type { CategoryItem } from "./features/categories/index";
 export { MediaImage } from "./features/media/index";
 export { StoreSidebar } from "./features/seller/components/SellerSidebar";
@@ -613,8 +612,6 @@ export { StoreProductsView, StoreAboutView } from "./features/stores/index";
 export type { StoreProductItem, StoreAboutViewProps, StoreDetail } from "./features/stores/index";
 export { SearchView } from "./features/search/index";
 export type { SearchViewProps } from "./features/search/index";
-export { UserSettingsView } from "./features/account/index";
-export type { UserSettingsViewProps, UserSettingsViewLabels } from "./features/account/index";
 export { AdSlot } from "./features/homepage/components/AdSlot";
 export { useActiveAd } from "./features/homepage/hooks/useActiveAd";
 export type { ActiveAdRecord, ActiveAdCreative } from "./features/homepage/hooks/useActiveAd";
@@ -767,8 +764,8 @@ export type { SellerPayoutSettingsViewProps, SellerShippingViewProps, SellerRevi
 export { couponDraftToPayload } from "./features/seller/schemas/coupon-form";
 export type { SellerCouponPayload } from "./features/seller/schemas/coupon-form";
 export type { SellerAnalyticsSummary, SellerAnalyticsTopProduct } from "./features/seller/types/index";
-export { UserAccountHubView, UserOrdersView, UserBidsView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView, useNotifications } from "./features/account/index";
-export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, OrderDetailViewProps, OrderDetailViewLabels, UserNotificationsViewProps, UserNotificationsViewLabels, UserReturnsViewProps, UserSupportViewProps } from "./features/account/index";
+export { UserAccountHubView, UserOrdersView, UserBidsView, OrderDetailView, UserReturnsView, useNotifications } from "./features/account/index";
+export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, OrderDetailViewProps, OrderDetailViewLabels, UserReturnsViewProps } from "./features/account/index";
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
@@ -879,6 +876,7 @@ export {
   enabledListingTypes,
   enabledCategoryTypes,
   ALL_LISTING_TYPES,
+  isListingType,
 } from "./_internal/shared/listing-types/feature-flags";
 
 // SB-UNI-X5 2026-05-13 — action telemetry sink (client-safe; defaults to

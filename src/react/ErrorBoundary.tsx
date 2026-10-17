@@ -11,7 +11,12 @@
 
 import { Component, type ReactNode, type ErrorInfo } from "react";
 import { Logger } from "../core/Logger";
-import { Button, Heading, Text } from "../ui";
+// Defining modules, not the sibling barrel — Root Cause #18. `ui/index.ts` and
+// `react/index.ts` re-exported into each other, which is the whole of
+// `audit-import-cycles` component 1: an 18-module knot held together entirely
+// by barrel hops, none of which needed the barrel.
+import { Button } from "../ui/components/Button";
+import { Heading, Text } from "../ui/components/Typography";
 import {
   trackError,
   ErrorCategory,

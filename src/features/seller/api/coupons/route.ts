@@ -47,7 +47,7 @@ export const GET = createRouteHandler({
       filters: `sellerId==${user!.uid}`,
       sort,
       page,
-      perPage: pageSize,
+      pageSize: pageSize,
     });
 
     return NextResponse.json({

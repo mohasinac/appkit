@@ -3,71 +3,31 @@ import React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button } from "./Button";
 import { Text } from "./Typography";
+import {
+  ToastContext,
+  buildToastId,
+  type ToastItem,
+  type ToastPosition,
+  type ToastVariant,
+} from "./toast-context";
 import { SPRING_SNAPPY } from "../../tokens/motion";
 
-export type ToastVariant = "success" | "error" | "warning" | "info" | "loading";
-export type ToastPosition =
-  | "top-right"
-  | "top-left"
-  | "bottom-right"
-  | "bottom-left"
-  | "top-center"
-  | "bottom-center";
-
-interface ToastItem {
-  id: string;
-  message: string;
-  variant: ToastVariant;
-  duration: number;
-  action?: { label: string; onClick: () => void };
-}
-
-interface ToastContextValue {
-  /**
-   * Show a toast. Returns the `dismissId` so long-running ops can later finalize
-   * via `updateToast(id, "success" | "error", finalMessage)`. For the "loading"
-   * variant pass `duration: 0` to keep it pinned until finalized.
-   */
-  showToast: (
-    message: string,
-    variant?: ToastVariant,
-    duration?: number,
-    action?: { label: string; onClick: () => void },
-  ) => string;
-  hideToast: (id: string) => void;
-  /** Replace an existing toast's variant + message (used to finalize loading toasts). */
-  updateToast: (
-    id: string,
-    variant: ToastVariant,
-    message?: string,
-    duration?: number,
-  ) => void;
-}
-
-const ToastContext = React.createContext<ToastContextValue | undefined>(
-  undefined,
-);
-
-function buildToastId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
-export function useToast() {
-  const context = React.useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within ToastProvider");
-  }
-  return context;
-}
-
-/**
- * Like `useToast` but returns `undefined` when no `ToastProvider` is mounted
- * instead of throwing. Use in primitives (e.g. `Button`) that must be safe to
- * render outside a toast context.
+/*
+ * The context, the two hooks and the id helper live in `toast-context.ts` —
+ * see that file for why. Re-exported here so every existing
+ * `from "./Toast"` / barrel importer is unaffected by the split.
+ *
+ * 🛑 `Button` must import `useToastSafe` from `toast-context`, NOT from here:
+ * routing it back through this file would restore the Button ↔ Toast cycle
+ * this split exists to break.
  */
-export function useToastSafe(): ToastContextValue | undefined {
-  return React.useContext(ToastContext);
-}
+export type {
+  ToastVariant,
+  ToastPosition,
+  ToastItem,
+  ToastContextValue,
+} from "./toast-context";
+export { useToast, useToastSafe } from "./toast-context";
 
 export interface ToastProviderProps {
   children: React.ReactNode;

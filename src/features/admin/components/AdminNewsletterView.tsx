@@ -25,7 +25,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 
 interface AdminNewsletterResponse {
-  subscribers?: JsonArray;
+  items?: JsonArray;
   meta?: { filteredTotal?: number; total?: number };
 }
 
@@ -145,7 +145,7 @@ export function AdminNewsletterView({
     // safe to offer at all.
     onRowClick: (row) => setDetail(row),
     mapRows: (response) =>
-      toRecordArray(response.subscribers).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `sub-${index}`),
         primary: toStringValue(item.email, "Unknown email"),
         secondary:

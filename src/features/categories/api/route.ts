@@ -214,7 +214,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (slug) {
       const result = await repo.findAll({
         filters: `slug==${slug}`,
-        perPage: 1,
+        pageSize: 1,
       });
       const category = result.data[0] ?? null;
       if (!category) {
@@ -253,7 +253,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       type !== null;
 
     if (isFiltered) {
-      const perPage =
+      const pageSize =
         pageSizeParam !== null && pageSizeParam > 0 ? pageSizeParam : 200;
       const page = pageParam ?? 1;
 
@@ -287,7 +287,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         const res = isPaged
           ? NextResponse.json({
               success: true,
-              data: { items: [], total: 0, page, perPage, totalPages: 0, hasMore: false },
+              data: { items: [], total: 0, page, pageSize, totalPages: 0, hasMore: false },
             })
           : NextResponse.json({ success: true, data: [] });
         res.headers.set("Cache-Control", CACHE_CONTROL_PUBLIC);
@@ -297,7 +297,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       const needsWindow = listingOnly || terms.length > 0;
 
       const windowed = needsWindow
-        ? await repo.findAll({ filters, sort: "order", order: "asc", perPage: 500 })
+        ? await repo.findAll({ filters, sort: "order", order: "asc", pageSize: 500 })
         : null;
 
       let items: CategoryItem[];
@@ -308,15 +308,15 @@ export async function GET(request: Request): Promise<NextResponse> {
           .filter((d) => (terms.length ? matchesAllSearchTerms(d.searchTxt, terms) : true))
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         total = kept.length;
-        const offset = (page - 1) * perPage;
-        items = (isPaged ? kept.slice(offset, offset + perPage) : kept).map(toCategoryListItem);
+        const offset = (page - 1) * pageSize;
+        items = (isPaged ? kept.slice(offset, offset + pageSize) : kept).map(toCategoryListItem);
       } else {
         const result = await repo.findAll({
           filters,
           sort: "order",
           order: "asc",
           page: pageParam ?? undefined,
-          perPage,
+          pageSize,
         });
         total = result.total;
         items = result.data
@@ -326,7 +326,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
       items = await withLiveTotals(items);
 
-      const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / perPage));
+      const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
 
       /*
        * Shape switches on `?page=`, deliberately, and only there.
@@ -347,7 +347,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       const res = isPaged
         ? NextResponse.json({
             success: true,
-            data: { items, total, page, perPage, totalPages, hasMore: page < totalPages },
+            data: { items, total, page, pageSize, totalPages, hasMore: page < totalPages },
           })
         : NextResponse.json({ success: true, data: items });
       res.headers.set(
@@ -362,7 +362,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       filters,
       sort: "order",
       order: "asc",
-      perPage: 500,
+      pageSize: 500,
     });
     // Project BEFORE nesting — `CategoryTreeNode extends CategoryItem`, so the
     // children carry the public shape too rather than being raw documents

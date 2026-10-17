@@ -175,6 +175,17 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     buildExtraParams: () => scope.extraParams,
     renderAboveContent: scope.renderAboveContent,
     rowHrefTemplate: String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT("{id}")),
+    /*
+     * A prize draw IS a product (`listingType: "prize-draw"`), so it is created
+     * in the product editor like every other type — there is deliberately no
+     * `PRIZE_DRAWS_NEW` admin route, and inventing one would be a second create
+     * path for the same document. `?listingType=` preselects the type so the
+     * row an admin creates from here actually appears here.
+     */
+    primaryAction: {
+      label: "Add Prize Draw",
+      href: `${String(ROUTES.ADMIN.PRODUCTS_NEW)}?${PRODUCT_FIELDS.LISTING_TYPE}=prize-draw`,
+    },
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
       ADMIN_BULK_ACTIONS.prizeDraws.map((id) => ({

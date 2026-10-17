@@ -24,7 +24,7 @@
 
 import React from "react";
 import { Plus } from "lucide-react";
-import { BulkActionBar, Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, StickyToolbar } from "../../../ui";
+import { BulkActionBar, Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, StickyToolbar, TextLink } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { useAdminListing } from "../hooks/useAdminListing";
@@ -160,10 +160,23 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
     isLoading: boolean,
   ) => React.ReactNode;
 
-  // -- Primary "Add X" CTA in the toolbar
+  /*
+   * -- Primary "Add X" CTA in the toolbar
+   *
+   * `onClick` opens a create DRAWER; `href` navigates to a create PAGE. Pass
+   * exactly one.
+   *
+   * `href` exists because a create page was previously unexpressible here, so
+   * four views hand-rolled a `<TextLink>` styled to look like a button inside
+   * `toolbarExtra` (and `audit-create-affordance` had to grow a regex to
+   * recognise those). A config built in a `.ts` file — which is every
+   * `buildXListingConfig` factory — cannot author that JSX at all, which is
+   * why the five per-type admin listing pages had no create control.
+   */
   primaryAction?: {
     label: string;
-    onClick: (panel: { openCreatePanel: () => void }) => void;
+    onClick?: (panel: { openCreatePanel: () => void }) => void;
+    href?: string;
     icon?: React.ReactNode;
   };
 
@@ -369,19 +382,30 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           config.primaryAction || config.toolbarExtra ? (
             <Row align="center" gap="sm">
               {config.toolbarExtra}
-              {config.primaryAction && (
-                <Button gap="sm" 
-                  size="sm"
-                  onClick={() =>
-                    config.primaryAction!.onClick({
-                      openCreatePanel: panel.openCreatePanel,
-                    })
-                  }
-                >
-                  {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
-                  {config.primaryAction.label}
-                </Button>
-              )}
+              {config.primaryAction &&
+                (config.primaryAction.href ? (
+                  // `asChild` so the create PAGE is a real anchor — middle-click
+                  // and copy-link work, and it is not a button that happens to
+                  // navigate (a Known-TS-Pattern this repo bans outright).
+                  <Button gap="sm" size="sm" asChild>
+                    <TextLink variant="inherit" href={config.primaryAction.href}>
+                      {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
+                      {config.primaryAction.label}
+                    </TextLink>
+                  </Button>
+                ) : (
+                  <Button gap="sm"
+                    size="sm"
+                    onClick={() =>
+                      config.primaryAction!.onClick?.({
+                        openCreatePanel: panel.openCreatePanel,
+                      })
+                    }
+                  >
+                    {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
+                    {config.primaryAction.label}
+                  </Button>
+                ))}
             </Row>
           ) : undefined
         }

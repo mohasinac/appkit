@@ -77,6 +77,16 @@ export const ALL_LISTING_TYPES = Object.keys(
   ALL_LISTING_TYPES_MAP,
 ) as ListingType[];
 
+/**
+ * Narrow an untrusted string — a `?listingType=` param, a form value — to a
+ * real member of the union. Backed by the same `Record<ListingType, true>` as
+ * `ALL_LISTING_TYPES`, so it cannot fall behind the union the way a
+ * hand-written list would (Root Cause #61).
+ */
+export function isListingType(value: unknown): value is ListingType {
+  return typeof value === "string" && value in ALL_LISTING_TYPES_MAP;
+}
+
 /** Pull the full list of enabled listing types in canonical iteration order. */
 export function enabledListingTypes(
   settings: FeatureFlagSnapshot | null | undefined,

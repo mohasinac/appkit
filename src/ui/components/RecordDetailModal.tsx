@@ -28,7 +28,20 @@
  */
 
 import type { ReactNode } from "react";
-import { ActionRow, Anchor, Badge, Code, Div, Modal, Row, Stack, Text } from "../index";
+/*
+ * 🛑 This was `from "../index"` — the component importing its own barrel,
+ * while also importing `features/media/MediaImage`. That made `ui/index.ts`
+ * depend on a module that depends on it, the last two-module knot in
+ * `audit-import-cycles`. Every symbol is one directory away.
+ */
+import { ActionRow } from "./ActionRow";
+import { Anchor } from "./Anchor";
+import { Badge } from "./Badge";
+import { Code } from "./Semantic";
+import { Div } from "./Div";
+import { Modal } from "./Modal";
+import { Row, Stack } from "./Layout";
+import { Text } from "./Typography";
 import { MediaImage } from "../../features/media/MediaImage";
 import type { JsonValue } from "../../schemas/types";
 

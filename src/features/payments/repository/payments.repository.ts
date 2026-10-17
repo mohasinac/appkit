@@ -23,7 +23,7 @@ export class PaymentsRepository {
     const result = await this.paymentsRepo.findAll({
       filters: `orderId==${orderId}`,
       sort: "-createdAt",
-      perPage: 20,
+      pageSize: 20,
     });
     return result.data;
   }
@@ -44,7 +44,7 @@ export class PaymentsRepository {
   }
 
   async getSettings(): Promise<PaymentSettings | null> {
-    const result = await this.settingsRepo.findAll({ perPage: 1 });
+    const result = await this.settingsRepo.findAll({ pageSize: 1 });
     return result.data[0] ?? null;
   }
 
