@@ -28,7 +28,7 @@ import type {
   FirebaseSieveResult,
   SieveModel,
 } from "../../../providers/db-firebase";
-import type { ReviewDocument } from "../schemas";
+import type { ReviewPlain, ReviewDocument } from "../schemas";
 
 const ERR_REVIEW_ID_REQUIRED = "Review ID is required";
 
@@ -53,7 +53,12 @@ export interface UpdateReviewActionInput {
 export async function createReview(
   userId: string,
   input: CreateReviewActionInput,
-): Promise<ReviewDocument> {
+  /*
+   * `ReviewPlain`: `createReview` on the repository echoes the input rather
+   * than re-reading, so the reviewer's name comes back as the plaintext that
+   * went in. Declaring `ReviewDocument` claimed it was ciphertext.
+   */
+): Promise<ReviewPlain> {
   const product = await productRepository.findById(input.productId);
   if (!product) {
     throw new NotFoundError("Product not found");
@@ -71,7 +76,7 @@ export async function createReview(
     productId: input.productId,
   });
 
-  return reviewRepository.create({
+  return reviewRepository.createReview({
     productId: input.productId,
     productTitle: product.title,
     listingType: product.listingType,
@@ -252,7 +257,7 @@ export async function listReviewsByProduct(
   productId: string,
   page = 1,
   pageSize = 10,
-): Promise<FirebaseSieveResult<ReviewDocument>> {
+): Promise<FirebaseSieveResult<ReviewPlain>> {
   const result = await reviewRepository.listForProduct(productId, {
     sorts: sortBy("createdAt", "DESC"),
     page,
@@ -270,7 +275,7 @@ export async function listAdminReviews(params?: {
   sorts?: string;
   page?: number;
   pageSize?: number;
-}): Promise<FirebaseSieveResult<ReviewDocument>> {
+}): Promise<FirebaseSieveResult<ReviewPlain>> {
   const sieve: SieveModel = {
     filters: params?.filters,
     sorts: params?.sorts ?? "-createdAt",

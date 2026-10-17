@@ -32,6 +32,9 @@ import type {
   SieveQuery,
   WhereOp,
 } from "../../contracts";
+// Types only — `encrypted.ts` has no runtime imports, so this cannot drag
+// node:crypto into a client bundle (Root Cause #24).
+import type { Plaintext } from "../../security/encrypted";
 import { getAdminDb } from "./admin";
 import {
   prepareForFirestore,
@@ -144,7 +147,24 @@ export class FirebaseRepository<
 
   // -- IWriteRepository -------------------------------------------------------
 
-  async create(data: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T> {
+  /*
+   * 🛑 Accepts the PLAINTEXT shape, because this method ENCRYPTS.
+   *
+   * `applyWriteHooks` runs `encryptPiiFields` over the subclass's `piiFields`,
+   * so a caller legitimately hands over a real email and gets ciphertext in
+   * Firestore. Typing the parameter `Omit<T, …>` demanded `Encrypted<string>`
+   * from every caller — and the only way to produce one without encrypting is
+   * `asEncrypted(value)`, which labels plaintext as ciphertext and is the
+   * misuse that helper's own docstring forbids. The alternative was a cast at
+   * each of the dozens of write sites across fourteen repositories; one honest
+   * signature here is the same change made once.
+   *
+   * `Plaintext<T>` is the identity on any document with no branded field, so
+   * this is a no-op for every repository that holds no PII.
+   */
+  async create(
+    data: Omit<Plaintext<T>, "id" | "createdAt" | "updatedAt">,
+  ): Promise<T> {
     const now = new Date();
     const payload = prepareForFirestore({
       ...data,
@@ -156,7 +176,8 @@ export class FirebaseRepository<
     return this.mapDoc(snap);
   }
 
-  async update(id: string, data: Partial<T>): Promise<T> {
+  /** Accepts the PLAINTEXT shape — see `create` for why. */
+  async update(id: string, data: Partial<Plaintext<T>>): Promise<T> {
     const payload = prepareForFirestore({
       ...data,
       updatedAt: new Date(),

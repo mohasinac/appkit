@@ -1,4 +1,6 @@
 import { normalizeError } from "../../errors/normalize";
+// Types only — `encrypted.ts` has no runtime imports (Root Cause #24).
+import type { Plaintext } from "../../security/encrypted";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import type {
   CollectionReference,
@@ -319,7 +321,24 @@ export abstract class BaseRepository<T extends DocumentData> {
     return present.length;
   }
 
-  async create(data: Partial<T> | FirestoreDocument): Promise<T> {
+  /*
+   * 🛑 Accepts the PLAINTEXT shape, because this method ENCRYPTS.
+   *
+   * `applyWriteHooks` runs `encryptPiiFields` over the subclass's `piiFields`,
+   * so a caller legitimately hands over a real email and Firestore holds
+   * ciphertext. Typing this `Partial<T>` demanded `Encrypted<string>` from
+   * every caller once the PII fields were branded — and the only way to make
+   * one without encrypting is `asEncrypted(value)`, which labels plaintext as
+   * ciphertext and is the misuse that helper's docstring forbids. The
+   * alternative was a cast at each of the dozens of write sites across
+   * fourteen repositories; one honest signature here is that change made once.
+   *
+   * `Plaintext<T>` is the identity on a document with no branded member, so
+   * this is a no-op for every repository holding no PII.
+   */
+  async create(
+    data: Partial<Plaintext<T>> | FirestoreDocument,
+  ): Promise<T> {
     try {
       const cleanData = prepareForFirestore({
         ...this.applyWriteHooks(data as object),
@@ -393,7 +412,8 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
   }
 
-  async update(id: string, data: Partial<T>): Promise<T> {
+  /** Accepts the PLAINTEXT shape — see `create` for why. */
+  async update(id: string, data: Partial<Plaintext<T>>): Promise<T> {
     try {
       const cleanData = prepareForFirestore({
         ...this.applyWriteHooks(data as object),

@@ -12,8 +12,9 @@ import {
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
-  decryptPiiFields,
   encryptPiiFields,
+  maskPii,
+  revealPii,
   EVENT_ENTRY_PII_FIELDS,
 } from "../../../security";
 import {
@@ -21,6 +22,7 @@ import {
   EVENT_ENTRY_FIELDS,
   type EventEntryCreateInput,
   type EventEntryDocument,
+  type EventEntryPlain,
 } from "../schemas";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import type { JsonValue } from "../../../schemas/types";
@@ -61,13 +63,42 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     super(EVENT_ENTRIES_COLLECTION);
   }
 
-  protected override mapDoc<D = EventEntryDocument>(
-    snap: import("../../../providers/db-firebase").DocumentSnapshot,
-  ): D {
-    const raw = super.mapDoc<EventEntryDocument>(snap);
-    return decryptPiiFields(raw, [
-      ...EVENT_ENTRY_PII_FIELDS,
-    ]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
+   *
+   * It used to decrypt on every read, so ciphertext never left the database
+   * and every caller handled plaintext without ever saying so. Following
+   * `SiteSettingsRepository`: reads return what Firestore holds, and plaintext
+   * requires one of the two named methods below.
+   *
+   * A convention would not hold this. `EventEntryDocument`'s PII fields are
+   * `Encrypted<string>`, assignable to nothing that wants a plain `string`, so
+   * a reader that skips both accessors is a compile error naming file and line.
+   */
+
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealEntry(doc: EventEntryDocument): EventEntryPlain {
+    return revealPii<EventEntryPlain>(doc, EVENT_ENTRY_PII_FIELDS);
+  }
+
+  /** As `revealEntry`, for a list read. */
+  revealEntrys(docs: readonly EventEntryDocument[]): EventEntryPlain[] {
+    return docs.map((d) => this.revealEntry(d));
+  }
+
+  /**
+   * Masked PII — **the default for any surface that only needs to identify a
+   * row to a human.** Decrypts first, then masks: the mask helpers refuse
+   * ciphertext by design, so passing a stored field straight in would return
+   * "Anonymous" for every row.
+   */
+  maskedEntry(doc: EventEntryDocument): EventEntryPlain {
+    return maskPii<EventEntryPlain>(doc, EVENT_ENTRY_PII_FIELDS);
+  }
+
+  /** As `maskedEntry`, for a list read. */
+  maskedEntrys(docs: readonly EventEntryDocument[]): EventEntryPlain[] {
+    return docs.map((d) => this.maskedEntry(d));
   }
 
   async listForEvent(
@@ -256,10 +287,17 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
       // Aggregate per user: sum all approved entry points
       const byUser = new Map<string, { displayName: string; totalPoints: number; entryCount: number }>();
       for (const doc of snapshot.docs) {
-        const raw = decryptPiiFields(
+        /*
+         * MASKED, not decrypted. This builds a public LEADERBOARD, so it needs
+         * a name to show and has no business holding the real one — the rows
+         * go straight into a response. `maskPii` decrypts and then masks, which
+         * is required here: `maskName` refuses ciphertext by design, so masking
+         * the stored value directly would render every competitor "Anonymous".
+         */
+        const raw = maskPii<EventEntryPlain>(
           { id: doc.id, ...doc.data() } as FirestoreDocument,
-          [...EVENT_ENTRY_PII_FIELDS],
-        ) as unknown as EventEntryDocument;
+          EVENT_ENTRY_PII_FIELDS,
+        );
         if (!raw.userId) continue;
         const existing = byUser.get(raw.userId);
         const pts = typeof raw.points === "number" ? raw.points : 0;

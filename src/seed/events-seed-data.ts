@@ -16,7 +16,7 @@
 
 import type {
   EventDocument,
-  EventEntryDocument,
+  EventEntryPlain,
 } from "../features/events/schemas";
 import type { LotteryConfig } from "../features/lottery/types";
 import { withEventSearchTxt } from "./_helpers/search-txt-wrappers";
@@ -384,7 +384,12 @@ const _raweventsSeedData: EventDocument[] = [
 
 // ── Event Entries ────────────────────────────────────────────────────────────
 
-export const eventEntriesSeedData: EventEntryDocument[] = [
+/*
+ * 🛑 `EventEntryPlain`: these fixtures hold REAL plaintext and `seed-cli`
+ * encrypts the PII fields on write. The document type now declares them
+ * `Encrypted<string>`, so the document type would be a false claim.
+ */
+export const eventEntriesSeedData: EventEntryPlain[] = [
   // Rehan entered the poll
   {
     id: "entry-poll-yugi-001",
@@ -396,7 +401,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(4),
     createdAt: daysAgo(4),
-  } as EventEntryDocument,
+  },
 
   // Vivaan entered the poll
   {
@@ -409,7 +414,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(3),
     createdAt: daysAgo(3),
-  } as EventEntryDocument,
+  },
 
   // Rehan entered the raffle (and won the original-series raffle)
   {
@@ -422,7 +427,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(25),
     createdAt: daysAgo(25),
-  } as EventEntryDocument,
+  },
 
   // Rehan entered the active raffle
   {
@@ -435,7 +440,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(2),
     createdAt: daysAgo(2),
-  } as EventEntryDocument,
+  },
 
   // Vivaan spun the wheel
   {
@@ -452,7 +457,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(1),
     createdAt: daysAgo(1),
-  } as EventEntryDocument,
+  },
 
   // Rehan spun the wheel twice (spinMaxPerUser: 2 on this event) — demo
   // fixture for the per-identity spin-count enforcement added 2026-08-20.
@@ -469,7 +474,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(2),
     createdAt: daysAgo(2),
-  } as EventEntryDocument,
+  },
 
   // A guest (not logged in) spun the wheel — demo fixture for the
   // guest-participation toggle added 2026-08-20. This event's
@@ -486,7 +491,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(3),
     createdAt: daysAgo(3),
-  } as EventEntryDocument,
+  },
 
   // A guest voted in the poll — demo fixture for allowGuestParticipation on
   // a non-spin event type (poll).
@@ -498,7 +503,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(2),
     createdAt: daysAgo(2),
-  } as EventEntryDocument,
+  },
 ];
 
 /**

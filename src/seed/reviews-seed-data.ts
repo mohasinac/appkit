@@ -15,7 +15,13 @@
  * @tag sideEffects:none
  */
 
-import type { ReviewDocument } from "../features/reviews/schemas/firestore";
+/*
+ * 🛑 `ReviewPlain`: these fixtures hold real reviewer names and `seed-cli`
+ * encrypts `userName` on write. The document type declares it
+ * `Encrypted<string>`, so the document type would be a false claim — and the
+ * `as ReviewDocument[]` cast at the bottom was what hid it.
+ */
+import type { ReviewPlain } from "../features/reviews/schemas/firestore";
 import { withReviewSearchTxt } from "./_helpers/search-txt-wrappers";
 import { seedExtMedia, seedPhoto } from "./_helpers/media";
 
@@ -91,7 +97,7 @@ const buyers = [
   { id: "user-rohit-collector", name: "Mock User 14" },
 ];
 
-const _rawReviewsSeedData: Partial<ReviewDocument>[] = [];
+const _rawReviewsSeedData: Partial<ReviewPlain>[] = [];
 
 for (let i = 0; i < 65; i++) {
   const template = reviewTemplates[i % reviewTemplates.length];
@@ -199,6 +205,6 @@ for (let i = 0; i < 14; i++) {
   });
 }
 
-export const reviewsSeedData = (_rawReviewsSeedData as ReviewDocument[]).map(
+export const reviewsSeedData = (_rawReviewsSeedData as ReviewPlain[]).map(
   withReviewSearchTxt,
 );

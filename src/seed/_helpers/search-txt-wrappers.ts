@@ -13,7 +13,7 @@ import type { StoreDocument } from "../../features/stores/schemas/firestore";
 import type { ScammerDocument } from "../../features/scams/schemas/firestore";
 import type { EventDocument } from "../../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../../features/blog/schemas/firestore";
-import type { ReviewDocument } from "../../features/reviews/schemas/firestore";
+import type { ReviewPlain } from "../../features/reviews/schemas/firestore";
 import type { OrderDocument } from "../../features/orders/schemas/firestore";
 import type { CouponDocument } from "../../features/promotions/schemas/firestore";
 import type { OfferPlain } from "../../features/seller/schemas/firestore";
@@ -53,7 +53,14 @@ export function withBlogSearchTxt<T extends Partial<BlogPostDocument>>(p: T): T 
   return { ...p, searchTxt: buildBlogSearchTxt(p) };
 }
 
-export function withReviewSearchTxt<T extends Partial<ReviewDocument>>(p: T): T {
+/*
+ * Bounded by `ReviewPlain` for the same reason as the offer wrapper: seed
+ * fixtures hold plaintext and `seed-cli` encrypts on write, and
+ * `string`/`Encrypted<string>` are incompatible in both directions.
+ * `buildReviewSearchTxt` deliberately does NOT read `userName` — it is
+ * encrypted, and indexing it would undo the encryption (D1).
+ */
+export function withReviewSearchTxt<T extends Partial<ReviewPlain>>(p: T): T {
   return { ...p, searchTxt: buildReviewSearchTxt(p) };
 }
 

@@ -64,6 +64,25 @@ export type Encrypted<T extends string = string> = T & {
 };
 
 /**
+ * A document type with its `Encrypted<string>` members as plain `string`.
+ *
+ * ONE definition of "the plaintext shape", so each feature's `<Doc>Plain`
+ * alias and `BaseRepository`'s write signature agree by construction. Thirteen
+ * hand-rolled copies of this mapped type is thirteen chances to get the
+ * `undefined` handling subtly different, and the difference only shows up as a
+ * cast somebody adds to make one call site compile (Root Cause #75).
+ *
+ * `Extract<T[K], undefined>` preserves optionality: a field declared
+ * `Encrypted<string> | undefined` stays `string | undefined`, rather than
+ * becoming required.
+ */
+export type Plaintext<T> = {
+  [K in keyof T]: T[K] extends Encrypted<string> | undefined
+    ? Extract<T[K], undefined> | string
+    : T[K];
+};
+
+/**
  * Mark a value as ciphertext. For a repository's own read path, where the value
  * genuinely came out of Firestore encrypted.
  *

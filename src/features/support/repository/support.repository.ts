@@ -294,7 +294,9 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     prior?: SupportTicketDocument | null,
   ): Promise<SupportTicketDocument> {
     const current = prior !== undefined ? prior : await this.getTicketById(ticketId);
-    const patch: Partial<SupportTicketDocument> = {
+    // Plain in, ciphertext out: `this.update` runs the write hook over
+    // `piiFields`, which is what encrypts `assignedToName` on the way down.
+    const patch: Partial<SupportTicketPlain> = {
       ...update,
       ...this.resolutionStamps(current, update.status),
       updatedAt: new Date(),
@@ -329,12 +331,20 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   }
 
   /** Append a timeline entry when the patch touches a tracked field. */
+  /*
+   * Takes and returns the PLAIN shape.
+   *
+   * It only threads a patch through `withHistory` and casts both sides to
+   * `FirestoreDocument` anyway, so it is indifferent to whether the PII in it
+   * is ciphertext — and its callers hold plaintext, because encryption happens
+   * in `this.update`'s write hook downstream.
+   */
   private withTicketHistory(
     current: SupportTicketDocument | null | undefined,
-    patch: Partial<SupportTicketDocument>,
+    patch: Partial<SupportTicketPlain>,
     ctx: TicketWriteContext | undefined,
     defaultTrigger: string,
-  ): Partial<SupportTicketDocument> {
+  ): Partial<SupportTicketPlain> {
     const withEntry = withHistory(
       current as unknown as FirestoreDocument | undefined,
       patch as unknown as FirestoreDocument,

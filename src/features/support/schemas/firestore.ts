@@ -260,8 +260,12 @@ export const SUPPORT_TICKET_PII_FIELDS = [
 // INPUT TYPES
 // ============================================================================
 
+/*
+ * 🛑 Derived from the PLAIN shape — a caller supplies a real email/name and
+ * `BaseRepository`'s write hook encrypts the `piiFields` on the way down.
+ */
 export type SupportTicketCreateInput = Pick<
-  SupportTicketDocument,
+  SupportTicketPlain,
   | "userId"
   | "userEmail"
   | "userDisplayName"
@@ -272,9 +276,13 @@ export type SupportTicketCreateInput = Pick<
   | "storeId"
 >;
 
+/*
+ * 🛑 Derived from the PLAIN shape — a caller supplies a real email/name and
+ * `BaseRepository`'s write hook encrypts the `piiFields` on the way down.
+ */
 export type SupportTicketUpdateInput = Partial<
   Pick<
-    SupportTicketDocument,
+    SupportTicketPlain,
     | "status"
     | "priority"
     | "assignedTo"

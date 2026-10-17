@@ -209,8 +209,18 @@ export function buildBlogSearchTxt(b: Partial<BlogPostDocument>): string[] {
   ]);
 }
 
-/** reviews — title, comment, productTitle. `userName` is PII and excluded. */
-export function buildReviewSearchTxt(r: Partial<ReviewDocument>): string[] {
+/**
+ * reviews — title, comment, productTitle. `userName` is PII and excluded.
+ *
+ * Typed to the three fields it READS, like the offer builder. The exclusion of
+ * `userName` is the privacy property this depends on, and naming only the
+ * non-PII fields in the signature is what proves it — and what lets the
+ * function take the ciphertext document and the plaintext seed shape alike
+ * without a cast.
+ */
+export function buildReviewSearchTxt(
+  r: Partial<Pick<ReviewDocument, "title" | "comment" | "productTitle">>,
+): string[] {
   return buildSearchTxt([r.title, stripHtml(r.comment), r.productTitle]);
 }
 

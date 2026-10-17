@@ -1,6 +1,10 @@
 // --- Repository Interfaces ----------------------------------------------------
 // Segregated per ISP: features that only read never depend on IWriteRepository.
 
+// Types only — `encrypted.ts` carries no runtime imports, so this stays safe
+// for a client bundle (Root Cause #24).
+import type { Plaintext } from "../security/encrypted";
+
 /** Field comparison operators supported by Sieve-style query strings. */
 export type WhereOp =
   | "=="
@@ -59,8 +63,20 @@ export interface IReadRepository<T> {
 
 // --- Write contract --------------------------------------------------------
 export interface IWriteRepository<T> {
-  create(data: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T>;
-  update(id: string, data: Partial<T>): Promise<T>;
+  /*
+   * 🛑 The WRITE side takes `Plaintext<T>`, the read side returns `T`.
+   *
+   * An implementation encrypts the PII fields it declares, so a caller
+   * legitimately hands over a real email and Firestore holds ciphertext.
+   * Declaring `Omit<T, …>` here demanded `Encrypted<string>` from every caller
+   * — producible only by `asEncrypted(value)`, which labels plaintext as
+   * ciphertext and is the misuse that helper's own docstring forbids.
+   *
+   * `Plaintext<T>` is the identity on a document with no branded member, so
+   * this is a no-op for every repository that holds no PII.
+   */
+  create(data: Omit<Plaintext<T>, "id" | "createdAt" | "updatedAt">): Promise<T>;
+  update(id: string, data: Partial<Plaintext<T>>): Promise<T>;
   delete(id: string): Promise<void>;
   batchCreate(
     items: Array<Omit<T, "id" | "createdAt" | "updatedAt">>,

@@ -12,7 +12,8 @@ import {
 import { NotFoundError } from "../../../errors";
 import { REVIEW_MAX_RATING, REVIEW_MIN_RATING } from "../../../_internal/shared/features/reviews/config";
 import {
-  decryptPiiFields,
+  maskPii,
+  revealPii,
   REVIEW_PII_FIELDS,
   REVIEW_PII_INDEX_MAP,
 } from "../../../security";
@@ -21,6 +22,7 @@ import {
   REVIEW_COLLECTION,
   type ReviewCreateInput,
   type ReviewDocument,
+  type ReviewPlain,
 } from "../schemas";
 import type { ReviewStatus } from "../types";
 import { buildReviewSearchTxt } from "../../../utils/search-txt-builders";
@@ -54,17 +56,25 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     super(REVIEW_COLLECTION);
   }
 
-  private decryptSieveResult(
+  /*
+   * 🛑 Was `decryptSieveResult`, an UNCONDITIONAL decrypt on the list path.
+   *
+   * Same defect as the `mapDoc` one and invisible to R3, which only looks at
+   * `mapDoc` — a repository can leak plaintext through any read path, and this
+   * one did it for all three list methods. Renamed rather than deleted because
+   * these three callers are public-facing and genuinely need a displayable
+   * name, so they now take the MASKED form: "R*** K***" rather than the full
+   * name a scraper could harvest alongside every purchase it describes.
+   *
+   * A caller that needs the real name calls `revealReview` on the row it
+   * actually needs, which is one row rather than a page of fifty.
+   */
+  private maskSieveResult(
     result: FirebaseSieveResult<ReviewDocument>,
-  ): FirebaseSieveResult<ReviewDocument> {
+  ): FirebaseSieveResult<ReviewPlain> {
     return {
       ...result,
-      items: result.items.map(
-        (item) =>
-          decryptPiiFields(item, [
-            ...REVIEW_PII_FIELDS,
-          ]) as unknown as ReviewDocument,
-      ),
+      items: this.maskedReviews(result.items),
     };
   }
 
@@ -93,16 +103,60 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     // forgotten call site away from a leak. `voteHelpful` reads the raw snapshot
     // inside its transaction and is unaffected.
     const { helpfulVoterIds: _voters, ...rest } = raw as ReviewDocument;
-    return decryptPiiFields(rest, [
-      ...REVIEW_PII_FIELDS,
-    ]) as unknown as D;
+    /*
+     * 🛑 The DECRYPT is gone; the STRIP stays, and the distinction matters.
+     *
+     * This is the one R3 subject whose `mapDoc` did something besides decrypt,
+     * so the override survives — which is also why the audit's rule had to be
+     * scoped to mapDoc's own body rather than "a decrypt call anywhere in this
+     * file": the named accessors below call one, and a file-level test would
+     * report this correctly-converted repository as unconverted forever.
+     *
+     * `userName` is now ciphertext to every caller. `maskPublicReview` masks
+     * it for the public list, and it refuses ciphertext by design — so that
+     * path goes through `maskedReview` instead, which decrypts first.
+     */
+    return rest as unknown as D;
   }
 
-  override async create(input: ReviewCreateInput): Promise<ReviewDocument> {
+  /** Plaintext PII. **Opt-in and named** — shows up in review and in a grep. */
+  revealReview(doc: ReviewDocument): ReviewPlain {
+    return revealPii<ReviewPlain>(doc, REVIEW_PII_FIELDS);
+  }
+
+  /** As `revealReview`, for a list read. */
+  revealReviews(docs: readonly ReviewDocument[]): ReviewPlain[] {
+    return docs.map((d) => this.revealReview(d));
+  }
+
+  /**
+   * Masked PII — **the default for any public surface.** Decrypts first, then
+   * masks: `maskName` returns "Anonymous" for a ciphertext input by design, so
+   * handing it a stored `userName` would anonymise every reviewer.
+   */
+  maskedReview(doc: ReviewDocument): ReviewPlain {
+    return maskPii<ReviewPlain>(doc, REVIEW_PII_FIELDS);
+  }
+
+  /** As `maskedReview`, for a list read. */
+  maskedReviews(docs: readonly ReviewDocument[]): ReviewPlain[] {
+    return docs.map((d) => this.maskedReview(d));
+  }
+
+  /*
+   * 🛑 NOT an `override`. `BaseRepository.create` promises to accept the
+   * CIPHERTEXT shape; this accepts PLAINTEXT and encrypts, and `string` vs
+   * `Encrypted<string>` is incompatible in both directions, so an override is a
+   * TS2416 either way — correctly, because the signatures disagree about what
+   * the caller holds. Returns `ReviewPlain`: it echoes the input rather than
+   * re-reading.
+   */
+  async createReview(input: ReviewCreateInput): Promise<ReviewPlain> {
     const firstName = input.userName.split(" ")[0] || input.userName;
     const id = createReviewId(input.productTitle, firstName, new Date());
 
-    const reviewData: Omit<ReviewDocument, "id"> = {
+    // Plain in, ciphertext out — the write hook encrypts below.
+    const reviewData: Omit<ReviewPlain, "id"> = {
       ...input,
       helpfulCount: 0,
       reportCount: 0,
@@ -482,7 +536,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   async listForProduct(
     productId: string,
     model: SieveModel,
-  ): Promise<FirebaseSieveResult<ReviewDocument>> {
+  ): Promise<FirebaseSieveResult<ReviewPlain>> {
     const baseQuery = this.getCollection().where(
       REVIEW_FIELDS.PRODUCT_ID,
       "==",
@@ -497,13 +551,13 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
         maxPageSize: 50,
       },
     );
-    return this.decryptSieveResult(result);
+    return this.maskSieveResult(result);
   }
 
   async listForStore(
     storeId: string,
     model: SieveModel,
-  ): Promise<FirebaseSieveResult<ReviewDocument>> {
+  ): Promise<FirebaseSieveResult<ReviewPlain>> {
     const baseQuery = this.getCollection().where(
       REVIEW_FIELDS.STORE_ID,
       "==",
@@ -518,7 +572,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
         maxPageSize: 100,
       },
     );
-    return this.decryptSieveResult(result);
+    return this.maskSieveResult(result);
   }
 
   /**
@@ -536,7 +590,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   async listAll(
     model: SieveModel,
     opts?: { search?: string },
-  ): Promise<FirebaseSieveResult<ReviewDocument>> {
+  ): Promise<FirebaseSieveResult<ReviewPlain>> {
     const plan = planSearchTxt(opts?.search);
     if (plan.empty) return emptySearchResult<ReviewDocument>();
 
@@ -568,7 +622,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     );
     // Refine BEFORE decrypting: the refine reads `searchTxt`, which is never
     // encrypted, and decrypting rows that are about to be dropped is waste.
-    return this.decryptSieveResult(win.finish(result));
+    return this.maskSieveResult(win.finish(result));
   }
 }
 

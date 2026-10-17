@@ -6,6 +6,7 @@ import { generateReviewId } from "../../../utils/id-generators";
 import type { ReviewStatus } from "../types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ListingType } from "../../products/types/index";
+import type { Encrypted } from "../../../security/encrypted";
 
 /** Runtime-accessible review status values — use instead of bare string literals. */
 export const ReviewStatusValues = {
@@ -22,6 +23,24 @@ export interface ReviewVideoField {
   trimEnd?: number;
 }
 
+/**
+ * `ReviewDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type ReviewPlain = {
+  [K in keyof ReviewDocument]: ReviewDocument[K] extends Encrypted<string> | undefined
+    ? Extract<ReviewDocument[K], undefined> | string
+    : ReviewDocument[K];
+};
+
 export interface ReviewDocument extends BaseDocument {
   /** Normalized edge-n-gram search field — see appkit/src/utils/search-txt.ts. */
   searchTxt?: string[];
@@ -35,7 +54,7 @@ export interface ReviewDocument extends BaseDocument {
   userId: string;
   /** Firestore document ID of the reviewer (slug like `user-mohsin-c`). Populated on create; used to build profile links. */
   userSlug?: string;
-  userName: string;
+  userName: Encrypted<string>;
   userAvatar?: string;
   rating: number;
   title: string;
@@ -114,8 +133,14 @@ export const REVIEW_UPDATABLE_FIELDS = [
   "images",
 ] as const;
 
+/*
+ * 🛑 Derived from the PLAIN shape. The caller holds a real name/email and the
+ * repository encrypts on write; deriving from the document would demand
+ * `Encrypted<string>` nobody has, and `asEncrypted(value)` to satisfy it is
+ * the misuse that helper's docstring forbids.
+ */
 export type ReviewCreateInput = Omit<
-  ReviewDocument,
+  ReviewPlain,
   | "id"
   | "createdAt"
   | "updatedAt"

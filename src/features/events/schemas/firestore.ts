@@ -7,6 +7,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { EventType, EventStatus, EntryReviewStatus, SaleConfig, OfferConfig, PollConfig, SurveyConfig, FeedbackConfig, RaffleType, SpinPrize } from "../types";
 import type { LotteryConfig } from "../../lottery/types";
+import type { Encrypted } from "../../../security/encrypted";
 
 export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
@@ -73,12 +74,41 @@ export interface EventDocument extends BaseDocument {
   createdBy: string;
 }
 
+/**
+ * `EventEntryDocument` with its PII as plain `string` — what the two named
+ * repository accessors return.
+ *
+ * 🛑 Derived, never hand-written: a second literal listing the same members
+ * drifts the first time one is added to only one of them, and both still
+ * compile, so the field silently vanishes from every reveal/mask call site.
+ *
+ * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
+ * plain strings too, and no type can express "these characters are asterisks".
+ * The distinction is WHICH named method you called.
+ */
+export type EventEntryPlain = {
+  [K in keyof EventEntryDocument]: EventEntryDocument[K] extends Encrypted<string> | undefined
+    ? Extract<EventEntryDocument[K], undefined> | string
+    : EventEntryDocument[K];
+};
+
 export type EventEntryDocument = {
   id: string;
   eventId: string;
   userId?: string;
-  userDisplayName?: string;
-  userEmail?: string;
+  /*
+   * 🛑 Declared 2026-10-17. `BaseRepository.create` writes `createdAt` and
+   * `EVENT_ENTRY_FIELDS.CREATED_AT` names it, so it has always been a real
+   * stored field — it was simply absent from this type, and every seed record
+   * carried an `as EventEntryDocument` cast that silenced the mismatch. A
+   * field written but undeclared is invisible to type-driven review, which is
+   * Root Cause #70's shape; it surfaced only when the brand forced the casts
+   * out.
+   */
+  createdAt?: Date;
+  updatedAt?: Date;
+  userDisplayName?: Encrypted<string>;
+  userEmail?: Encrypted<string>;
   pollVotes?: string[];
   pollComment?: string;
   formResponses?: Record<string, JsonValue>;
@@ -96,7 +126,7 @@ export type EventEntryDocument = {
   spinPrizeId?: string;
   spinPrizeCouponCode?: string | null;
   spinWonAt?: Date;
-  ipAddress?: string;
+  ipAddress?: Encrypted<string>;
   /**
    * HMAC-SHA256 blind index of a guest (non-logged-in) participant's IP,
    * scoped per event — `hmacBlindIndex(eventId + ":" + rawIp)`. Set only
@@ -212,8 +242,14 @@ export type EventCreateInput = Omit<
 export type EventUpdateInput = Partial<
   Omit<EventDocument, "id" | "createdAt" | "createdBy">
 >;
+/*
+ * 🛑 Derived from the PLAIN shape. The caller holds a real name/email and the
+ * repository encrypts on write; deriving from the document would demand
+ * `Encrypted<string>` nobody has, and `asEncrypted(value)` to satisfy it is
+ * the misuse that helper's docstring forbids.
+ */
 export type EventEntryCreateInput = Omit<
-  EventEntryDocument,
+  EventEntryPlain,
   "id" | "submittedAt"
 >;
 

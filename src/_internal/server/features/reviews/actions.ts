@@ -36,7 +36,7 @@ export async function createReviewAction(input: unknown): Promise<ActionResult<u
       const product = await productRepository.findById(productId);
       const profile = await userRepository.findById(user.uid);
     
-      return reviewRepository.create({
+      return reviewRepository.createReview({
         productId,
         productTitle: product?.title ?? productId,
         storeId: storeId || product?.storeId,
