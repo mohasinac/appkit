@@ -147,7 +147,7 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
       return {
         id,
         title: question,
-        href: category ? `${ROUTES.PUBLIC.FAQS}/${category}` : ROUTES.PUBLIC.FAQS,
+        href: category ? ROUTES.PUBLIC.FAQ_CATEGORY(category) : ROUTES.PUBLIC.FAQS,
         ...(category ? { detail: category.replace(/_/g, " ") } : {}),
       };
     },
