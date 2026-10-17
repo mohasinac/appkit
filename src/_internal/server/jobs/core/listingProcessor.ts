@@ -125,17 +125,36 @@ function getStringArrayOpt(
 const LISTERS: Record<string, Lister> = {
   products: (m, o) =>
     productRepository.list(m, o as Parameters<typeof productRepository.list>[1]),
-  categories: (m) => categoriesRepository.list(m),
-  brands: (m) =>
-    categoriesRepository.list({
-      ...m,
-      filters: m.filters
-        ? `${m.filters},categoryType==brand`
-        : "categoryType==brand",
-    }),
+  /*
+   * 🛑 These four forward `search`, and did not until 2026-10-17.
+   *
+   * `categoriesRepository.list` and `couponsRepository.list` both accept
+   * `opts?: { search?: string }`, and all four listers below were written
+   * `(m) => repo.list(m)` — so a search term reaching the Function was
+   * DISCARDED and the page came back unfiltered with a 200, while the same
+   * route's local fallback filtered correctly. Exactly the divergence the
+   * comment further down records for orders/reviews/blogPosts/events/stores
+   * and faqs, four collections later: category, brand, coupon and
+   * sublisting-category search.
+   *
+   * Found by `audit-lister-opts-forwarding`, which now blocks the shape.
+   */
+  categories: (m, o) =>
+    categoriesRepository.list(m, { search: getStringOpt(o, "search") }),
+  brands: (m, o) =>
+    categoriesRepository.list(
+      {
+        ...m,
+        filters: m.filters
+          ? `${m.filters},categoryType==brand`
+          : "categoryType==brand",
+      },
+      { search: getStringOpt(o, "search") },
+    ),
   orders: (m, o) => orderRepository.listAll(m, { search: getStringOpt(o, "search") }),
   reviews: (m, o) => reviewRepository.listAll(m, { search: getStringOpt(o, "search") }),
-  coupons: (m) => couponsRepository.list(m),
+  coupons: (m, o) =>
+    couponsRepository.list(m, { search: getStringOpt(o, "search") }),
   bids: (m) => bidRepository.list(m),
   payouts: (m) => payoutRepository.list(m),
   blogPosts: (m, o) => blogRepository.listAll(m, { search: getStringOpt(o, "search") }),
@@ -158,14 +177,24 @@ const LISTERS: Record<string, Lister> = {
       tags: getStringArrayOpt(o, "tags"),
     }),
   notifications: (m) => notificationRepository.list(m),
-  scammers: (m) => scammerRepository.listAll(m),
-  sublistingCategories: (m) =>
-    categoriesRepository.list({
-      ...m,
-      filters: m.filters
-        ? `${m.filters},categoryType==sublisting`
-        : "categoryType==sublisting",
-    }),
+  /*
+   * `/api/admin/scammers` passes `{ search: q }` to this same method locally —
+   * its route comment records that the identity arrays "were never searched at
+   * all despite the box promising them" before searchTxt. Through the Function
+   * the opt was dropped again, so the two executors disagreed.
+   */
+  scammers: (m, o) =>
+    scammerRepository.listAll(m, { search: getStringOpt(o, "search") }),
+  sublistingCategories: (m, o) =>
+    categoriesRepository.list(
+      {
+        ...m,
+        filters: m.filters
+          ? `${m.filters},categoryType==sublisting`
+          : "categoryType==sublisting",
+      },
+      { search: getStringOpt(o, "search") },
+    ),
   productFeatures: (m) => productFeaturesRepository.list(m),
   homepageSections: (m) => homepageSectionsRepository.list(m),
   users: (m) => userRepository.list(m),

@@ -20,6 +20,14 @@ export {
 } from "./authorization";
 export type { UserRole } from "./authorization";
 export { redactPii, safeDisplayName, safeDisplayEmail, maskIp } from "./pii-redact";
+/*
+ * The ciphertext-by-default forcing function. Types + two labelling helpers
+ * only — no crypto — so this stays safe in the universal barrel (Root Cause
+ * #24). See `encrypted.ts` for why `tsc` has to be the thing that enumerates
+ * the 147 call sites, and why there is no `plaintext()` free function.
+ */
+export { asEncrypted, asEncryptedMaybe } from "./encrypted";
+export type { Encrypted } from "./encrypted";
 export {
   encryptValue,
   decryptValue,
