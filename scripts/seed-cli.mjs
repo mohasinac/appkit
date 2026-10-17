@@ -206,6 +206,7 @@ const {
   groupedListingsSeedData,
   mediaAssetsSeedData,
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
+  authenticityKnowledgeSeedData,
   partGlossarySeedData, modelCompositionSeedData,
   testerChecklistSeedData, testerResponsesSeedData,
   supportTicketsSeedData, catalogueSeedData,
@@ -316,6 +317,7 @@ const COLLECTION_MAP = {
   mediaAssets: "mediaAssets",
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
+  authenticityKnowledge: "authenticityKnowledge",
   taxCodes: TAX_CODES_COLLECTION,
   // E4/D12 — extracted from the local corpus, generated into the seed.
   partGlossary: PART_GLOSSARY_COLLECTION,
@@ -545,6 +547,7 @@ const SEED_DATA_MAP = {
   mediaAssets: mediaAssetsSeedData,
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
+  authenticityKnowledge: authenticityKnowledgeSeedData,
   taxCodes: taxCodesSeedData,
   partGlossary: partGlossarySeedData,
   modelComposition: modelCompositionSeedData,

@@ -9423,6 +9423,11 @@ export { scammersSeedData } from "./seed/index";
 
 // Product features â€" seed data (FI2)
 export { productFeaturesSeedData } from "./seed/index";
+export {
+  authenticityKnowledgeSeedData,
+  AUTHENTICITY_KNOWLEDGE_COLLECTION,
+  AUTHENTICITY_KNOWLEDGE_COUNT,
+} from "./seed/index";
 /*
  * 🛑 Registering a seed collection takes FOUR edits and three of them are
  * silent if missed: seed/index.ts, THIS re-export, and seed-cli's own import

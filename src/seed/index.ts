@@ -225,6 +225,11 @@ export {
   testerResponsesSeedData,
 } from "../features/tester/seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
+export {
+  authenticityKnowledgeSeedData,
+  AUTHENTICITY_KNOWLEDGE_COLLECTION,
+  AUTHENTICITY_KNOWLEDGE_COUNT,
+} from "./authenticity-knowledge-seed-data";
 export { taxCodesSeedData } from "./tax-codes-seed-data";
 export { offersSeedData } from "./offers-seed-data";
 

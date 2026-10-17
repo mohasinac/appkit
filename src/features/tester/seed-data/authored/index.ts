@@ -80,6 +80,7 @@ import { authored as a_content_discovery__blog } from "./content-discovery__blog
 import { authored as a_content_discovery__coupons } from "./content-discovery__coupons";
 import { authored as a_content_discovery__events } from "./content-discovery__events";
 import { authored as a_content_discovery__faq_help } from "./content-discovery__faq-help";
+import { authored as a_content_discovery__authenticity_checker } from "./content-discovery__authenticity-checker";
 import { authored as a_content_discovery__parts_database } from "./content-discovery__parts-database";
 import { authored as a_content_discovery__category_tabs_franchise_bundles } from "./content-discovery__category-tabs-franchise-bundles";
 import { authored as a_content_discovery__notifications } from "./content-discovery__notifications";
@@ -208,6 +209,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_content_discovery__coupons,
   ...a_content_discovery__events,
   ...a_content_discovery__faq_help,
+  ...a_content_discovery__authenticity_checker,
   ...a_content_discovery__parts_database,
   ...a_content_discovery__category_tabs_franchise_bundles,
   ...a_content_discovery__notifications,

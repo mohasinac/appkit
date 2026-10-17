@@ -3253,6 +3253,38 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       /*
+       * The authenticity checker — 2026-10-18.
+       *
+       * 🛑 Every case here asserts the presence of a HEDGE, or compares two
+       * inputs, because this tool's failure mode is not a crash: it is a
+       * confident, plausible, wrong answer served with HTTP 200. Code-matching
+       * alone cannot detect a counterfeit (one crawled counterfeit catalogue
+       * printed 900+ genuine Takara Tomy codes), the Metal Fight date-code
+       * decoding is disputed with no manufacturer statement, and two of the
+       * spellings a naive build would flag as fake tells are Takara Tomy's own
+       * romanisation and a licensed Indian importer's name.
+       */
+      pageKey: "authenticity-checker",
+      pageLabel: "Authenticity checker — box codes, per-generation checks and the sign-in gate",
+      href: "/tools/authenticity",
+      cases: [
+        { key: "guest-sees-reference-not-a-wall", label: "Signed out, the generation table and universal checks still render — only the lookup is gated" },
+        { key: "no-signin-flash-when-authenticated", label: "A signed-in user never sees 'Sign in to run a lookup' during a hard reload" },
+        { key: "midfake-code-reads-as-batch-not-accusation", label: "A matched midfake code reports a batch, never a counterfeit accusation against the seller" },
+        { key: "date-code-shows-both-readings", label: "A box date code shows BOTH circulating readings and says neither is official" },
+        { key: "real-product-code-is-not-evidence", label: "A well-formed product code is marked neutral and states that real codes appear on fakes" },
+        { key: "name-code-mismatch-asks-rather-than-accuses", label: "A name/code mismatch is a question, and ticking Random Booster re-reads it as expected" },
+        { key: "ambiguous-name-asks-which-model", label: "An ambiguous name asks which release instead of confidently naming one" },
+        { key: "takara-spelling-is-not-flagged", label: "'Storm Pegasis' (the Takara Tomy spelling) is not flagged, while 'Scythee' is" },
+        { key: "funskool-is-not-a-fake-signal", label: "Funskool reads as a licensed importer; Rapidity reads as an unlicensed producer" },
+        { key: "unknown-code-is-not-called-fake", label: "An unrecorded code says 'not recorded' and explicitly not 'fake'" },
+        { key: "asks-generation-when-nothing-inferable", label: "With no generation inferable the tool asks instead of returning a verdict" },
+        { key: "api-refuses-signed-out", label: "POST /api/tools/authenticity returns 401/403 signed out and leaks no assessment" },
+        { key: "json-ld-declares-the-gate", label: "The WebApplication JSON-LD declares the gated region, and its cssSelector matches a real element" },
+      ],
+    },
+    {
+      /*
        * D12 — the parts database, the composition panel, and the part line in a
        * seller's auto-filled description.
        *

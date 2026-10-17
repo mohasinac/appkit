@@ -175,6 +175,13 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   /* The ~169-term feature vocabulary: condition, authenticity, release, type,
    * spin, grade, chase. Hand-curated from the crawl. */
   productFeatures: "permanent",
+  /*
+   * The box-code tables and generation summaries. `permanent` because they
+   * are reference data compiled from archived primary sources, not exercise
+   * fixtures — a purge that cleared them would leave an admin with no way to
+   * answer "what do we say about this code" short of re-running a generator.
+   */
+  authenticityKnowledge: "permanent",
   /* Branding, fees, commissions, watermark, legal pages, and the AES-encrypted
    * credentials. 🛑 A purge here would destroy live API keys. */
   siteSettings: "permanent",
