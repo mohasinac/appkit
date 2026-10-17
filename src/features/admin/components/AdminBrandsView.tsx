@@ -70,7 +70,23 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
 const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
   portal: "admin",
   title: "Brands",
-  // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
+  /*
+   * Restored 2026-10-17. The note that stood here said "restore it when the
+   * collection gains searchTxt" — `categories` has it, and a brand IS a
+   * `categories` row, so `/api/admin/brands` now passes `q` as a search opt.
+   *
+   * `fields` lists what a user can expect to match, and it is a subset of
+   * `buildCategorySearchTxt`'s source list rather than a guess: that builder
+   * also indexes `path`, `itemCode`, `brandCountry`, ancestor names, authored
+   * aliases and generated misspelling variants, so the box reaches further
+   * than it advertises — never less.
+   */
+  search: {
+    placeholder: "Search brands by name, slug or description…",
+    mode: "partial",
+    fields: ["name", "slug", "description"],
+    commit: "debounce",
+  },
   emptyLabel: "No brands found",
   filterKeys: ["isActive"],
   defaultSort: sortBy("order", "ASC"),

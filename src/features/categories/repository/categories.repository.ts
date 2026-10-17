@@ -1103,15 +1103,45 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   /** SB-UNI — discriminator-keyed listing (sublistings, brands, bundles). */
   async listByType(
     type: import("../types").CategoryType,
-    opts: { limit?: number; activeOnly?: boolean } = {},
+    opts: { limit?: number; activeOnly?: boolean; search?: string } = {},
   ): Promise<CategoryDocument[]> {
+    /*
+     * `search` is the SAME searchTxt pushdown `list()` uses, and it is here
+     * rather than left to the callers because the bundle routes query through
+     * this method and not through `list()`.
+     *
+     * They each hand-rolled `b.name?.toLowerCase().includes(q)` over the full
+     * set instead. That is substring-only, so it cannot reach an alias or a
+     * misspelling variant (the whole point of `buildCategorySearchTxt`'s
+     * generated n-grams — "dragon g" finds "Dragoon G", `.includes` never
+     * can), and it read the entire collection on every keystroke. Two copies
+     * of a rule the repository already owns is Root Cause #75's shape.
+     */
+    const plan = planSearchTxt(opts.search);
+    if (plan.empty) return [];
+
     let q: FirebaseFirestore.Query = this.db
       .collection(this.collection)
       .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", type);
     if (opts.activeOnly) q = q.where(CATEGORY_FIELDS.IS_ACTIVE, "==", true);
+    if (plan.head) {
+      q = q.where(CATEGORY_FIELDS.SEARCH_TXT, "array-contains", plan.head);
+    }
     if (opts.limit) q = q.limit(opts.limit);
     const snap = await q.get();
-    return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+    const rows = snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+
+    /*
+     * The remaining terms AND-refine in memory — Firestore allows one
+     * `array-contains` per query, so a second term cannot be pushed down. No
+     * window/page juggling is needed here because this method is already an
+     * unpaginated full read by contract; its callers page in memory.
+     */
+    if (plan.rest.length === 0) return rows;
+    return rows.filter((r) => {
+      const tokens = new Set(r.searchTxt ?? []);
+      return plan.rest.every((t) => tokens.has(t));
+    });
   }
 
   /** SB-UNI — locate a category by slug, optionally constrained by discriminator. */

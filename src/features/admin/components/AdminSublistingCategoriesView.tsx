@@ -38,7 +38,19 @@ export function AdminSublistingCategoriesView({
   const config: ListingViewConfig<SublistingCategoriesResponse, SublistingRow> = {
     portal: "admin",
     title: "Sub-listing Categories",
-    // Search intentionally absent: this endpoint does not read `q`, so the box accepted typing and changed nothing. Restore it when the collection gains searchTxt — audit-listing-search-capability tracks it.
+    /*
+     * Restored 2026-10-17, same reasoning as `AdminBrandsView`. `itemCode` is
+     * named because it is genuinely in `buildCategorySearchTxt`'s source list —
+     * the store-side sibling route was reaching for exactly that lookup with an
+     * in-memory `.includes()` over one page, which could not find a code that
+     * sorted past the page boundary.
+     */
+    search: {
+      placeholder: "Search by name, item code or description…",
+      mode: "partial",
+      fields: ["name", "itemCode", "description"],
+      commit: "debounce",
+    },
     emptyLabel: "No sub-listing categories found",
     filterKeys: [],
     defaultSort: sortBy("name", "ASC"),

@@ -42,6 +42,15 @@ export interface BidDocument extends BaseDocument {
   bidDate: Date;
   autoMaxBid?: number;
   /**
+   * Token index over `productTitle` + `userName`, derived on every write.
+   *
+   * 🛑 `userEmail` is deliberately ABSENT — it is the one entry in
+   * `BID_PII_FIELDS`, and a searchTxt over an encrypted field IS that field in
+   * plaintext (decision D1). `userName` is not in that registry and is already
+   * in `BID_PUBLIC_FIELDS`, so indexing it discloses nothing new.
+   */
+  searchTxt?: string[];
+  /**
    * The order this winning bid was settled into. Written by
    * `finalizeLockedLines` once the winner actually pays; absent on a won-but-
    * unpaid bid, which is what lets /user/bids show a "Pay now" CTA rather than
@@ -87,6 +96,7 @@ export const BID_INDEXED_FIELDS = [
   "isWinning",
   "bidDate",
   "createdAt",
+  "searchTxt",
 ] as const;
 
 export const DEFAULT_BID_DATA: Partial<BidDocument> = {

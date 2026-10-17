@@ -11,9 +11,17 @@ import {
   getFirestoreCount,
   prepareForFirestore,
   parseSieveDateValue,
+  applySieveToFirestore,
 } from "../../../providers/db-firebase";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
+import type { JsonValue } from "../../../schemas/types";
+import { buildBidSearchTxt } from "../../../utils/search-txt-builders";
+import {
+  planSearchTxt,
+  beginSearchWindow,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 import type {
   SieveModel,
   FirebaseSieveResult,
@@ -615,6 +623,12 @@ export class BidRepository extends BaseRepository<BidDocument> {
     productTitle: { canFilter: true, canSort: true },
     userId: { canFilter: true, canSort: false },
     userName: { canFilter: true, canSort: true },
+    /*
+     * Filterable so the grammar admits it; the real read is an
+     * `array-contains` pushdown in `list()`, not a Sieve clause — Sieve cannot
+     * express array membership.
+     */
+    searchTxt: { canFilter: true, canSort: false },
     // Encrypted (BID_PII_FIELDS). Filtering compares plaintext against
     // `enc:v1:…` and matches ZERO rows with a 200; sorting orders by base64
     // noise. It appeared to work only because the column was still
@@ -631,11 +645,65 @@ export class BidRepository extends BaseRepository<BidDocument> {
   /**
    * Paginated, Firestore-native bid list (admin use).
    */
-  async list(model: SieveModel): Promise<FirebaseSieveResult<BidDocument>> {
-    return this.sieveQuery<BidDocument>(model, BidRepository.SIEVE_FIELDS, {
-      defaultPageSize: 50,
-      maxPageSize: 200,
+  /** Derived on every write path via `applyWriteHooks`. */
+  protected override buildSearchTxtFor(
+    data: Record<string, JsonValue>,
+  ): string[] | null {
+    return buildBidSearchTxt(data as Partial<BidDocument>);
+  }
+
+  /**
+   * `opts.search` is a searchTxt PUSHDOWN, not a Sieve clause.
+   *
+   * ## What this replaces, on both of its two surfaces
+   *
+   * `/api/store/bids` searched the bidder with `userName@=`, a CASE-SENSITIVE
+   * prefix — the only thing Firestore can do for a prefix — so a seller typing
+   * "ravi" did not find "Ravi", and "kumar" never found anyone at all.
+   * `/api/user/bids` filtered `productTitle.includes(q)` in memory AFTER
+   * paging, so a match on page 2 was unreachable.
+   *
+   * Token search fixes both: `buildSearchTxt` normalises case and indexes word
+   * prefixes, so the query and the index meet on tokens rather than on a
+   * substring of one field.
+   *
+   * 🛑 `planSearchTxt`'s `empty` guard is the load-bearing part. A query that
+   * normalises to no usable token (`"!!!"`, `"—"`) MUST return nothing —
+   * emitting no clause instead returns the whole collection and calls it a
+   * search result, which is the shape of every silent-search bug in this
+   * codebase.
+   */
+  async list(
+    model: SieveModel,
+    opts?: { search?: string },
+  ): Promise<FirebaseSieveResult<BidDocument>> {
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<BidDocument>();
+
+    if (!plan.head) {
+      return this.sieveQuery<BidDocument>(model, BidRepository.SIEVE_FIELDS, {
+        defaultPageSize: 50,
+        maxPageSize: 200,
+      });
+    }
+
+    const baseQuery = this.getCollection().where(
+      "searchTxt",
+      "array-contains",
+      plan.head,
+    ) as FirebaseFirestore.Query;
+
+    // One bounded window, one raised maxPageSize, one page slice — hand-rolling
+    // the three is how other repositories each ended up with two of them.
+    const win = beginSearchWindow(model, plan);
+    const result = await applySieveToFirestore<BidDocument>({
+      baseQuery,
+      model: win.model,
+      options: { maxPageSize: win.maxPageSize(200) },
+      fields: BidRepository.SIEVE_FIELDS,
+      mapDoc: (snap) => this.mapDoc<BidDocument>(snap),
     });
+    return win.finish(result);
   }
 }
 

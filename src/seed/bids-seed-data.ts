@@ -25,6 +25,7 @@
  */
 
 import type { BidDocument } from "../features/auctions/schemas/firestore";
+import { buildBidSearchTxt } from "../utils/search-txt-builders";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
 const NOW = new Date();
@@ -58,6 +59,27 @@ function withBidDefaults(b: Partial<BidDocument>): Partial<BidDocument> {
     currency: "INR",
     isWinning: b.status === "active" || b.status === "won",
     updatedAt: (b.createdAt ?? NOW) as Date,
+    /*
+     * 🛑 DERIVED here, from the same builder the repository's write hook uses —
+     * never a hand-written token list.
+     *
+     * A seeded row without this is invisible to search forever:
+     * `array-contains` cannot match a field the document does not have, and it
+     * raises nothing (Root Cause #101's shape). Deriving it from
+     * `buildBidSearchTxt` is also what keeps the seed and every runtime write
+     * agreeing on the normalisation — two token lists built two ways is the
+     * mirror-drift trap (Root Cause #42).
+     *
+     * Applied INSIDE `withBidDefaults` on purpose, after `productTitle` is
+     * defaulted above: a derivation placed before it would index the empty
+     * string for every row that relies on the fallback.
+     */
+    searchTxt: buildBidSearchTxt({
+      productTitle:
+        (b.productTitle as string) ??
+        ((b.productId as string) ?? "").replace(/^auction-/, "").replace(/-/g, " "),
+      userName: b.userName as string | undefined,
+    }),
   } as Partial<BidDocument>;
 }
 
