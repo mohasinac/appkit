@@ -155,7 +155,7 @@ const LISTERS: Record<string, Lister> = {
   reviews: (m, o) => reviewRepository.listAll(m, { search: getStringOpt(o, "search") }),
   coupons: (m, o) =>
     couponsRepository.list(m, { search: getStringOpt(o, "search") }),
-  bids: (m) => bidRepository.list(m),
+  bids: (m, o) => bidRepository.list(m, { search: getStringOpt(o, "search") }),
   payouts: (m) => payoutRepository.list(m),
   blogPosts: (m, o) => blogRepository.listAll(m, { search: getStringOpt(o, "search") }),
   events: (m, o) => eventRepository.list(m, { search: getStringOpt(o, "search") }),
