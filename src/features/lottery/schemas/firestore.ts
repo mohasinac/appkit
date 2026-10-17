@@ -3,7 +3,7 @@
  */
 
 import type { LotteryEntryStatus } from "../types";
-import type { Encrypted } from "../../../security/encrypted";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 export const LOTTERY_ENTRIES_COLLECTION = "lotteryEntries" as const;
 
@@ -21,13 +21,7 @@ export const LOTTERY_ENTRIES_COLLECTION = "lotteryEntries" as const;
  * asterisks" — the distinction lives in WHICH named method you called, which
  * is why they are two methods rather than one taking a boolean.
  */
-export type LotteryEntryPlain = {
-  [K in keyof LotteryEntryDocument]: LotteryEntryDocument[K] extends
-    | Encrypted<string>
-    | undefined
-    ? Extract<LotteryEntryDocument[K], undefined> | string
-    : LotteryEntryDocument[K];
-};
+export type LotteryEntryPlain = Plaintext<LotteryEntryDocument>;
 
 export type LotteryEntryDocument = {
   id: string;

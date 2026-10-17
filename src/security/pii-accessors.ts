@@ -50,6 +50,7 @@
  */
 
 import { decryptPiiFields } from "./pii-encrypt";
+import type { FirestoreDocument, FirestoreValue } from "../schemas/types";
 import { maskEmail, maskName, maskPhone } from "./pii-mask";
 
 /** Dotted/`[]` path → its leaf key, which is what the name class reads. */
@@ -96,7 +97,15 @@ export function maskPii<Plain extends object>(
   doc: object,
   piiFields: readonly string[],
 ): Plain {
-  const revealed = revealPii<Record<string, unknown>>(doc, piiFields);
+  /*
+   * `FirestoreDocument`, not `Record<string, unknown>`.
+   *
+   * It is the shape this genuinely has — `decryptPiiFields` already works in
+   * `Record<string, FirestoreValue>` internally — and `unknown` here would
+   * push an `as` cast onto every leaf read below, which is what
+   * `audit-unknown-leakage` exists to stop.
+   */
+  const revealed = revealPii<FirestoreDocument>(doc, piiFields);
 
   for (const field of piiFields) {
     /*
@@ -125,15 +134,15 @@ export function maskPii<Plain extends object>(
  * a non-string leaf is left alone — this walks what is there rather than
  * creating structure to mask.
  */
-function maskAtPath(root: Record<string, unknown>, path: string): void {
+function maskAtPath(root: FirestoreDocument, path: string): void {
   const parts = path.split(".");
-  let node: Record<string, unknown> = root;
+  let node: FirestoreDocument = root;
   for (let i = 0; i < parts.length - 1; i++) {
-    const next = node[parts[i]];
-    if (typeof next !== "object" || next === null) return;
+    const next: FirestoreValue | undefined = node[parts[i]];
+    if (typeof next !== "object" || next === null || Array.isArray(next)) return;
     // Clone on the way down: `revealPii` shallow-copies, so mutating a nested
     // object would write through to the caller's document.
-    const copy = { ...(next as Record<string, unknown>) };
+    const copy: FirestoreDocument = { ...(next as FirestoreDocument) };
     node[parts[i]] = copy;
     node = copy;
   }

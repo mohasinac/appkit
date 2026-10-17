@@ -14,7 +14,7 @@ import type {
 import {
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
-import type { Encrypted } from "../../../security/encrypted";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 // ============================================================================
 // SCHEMA DEFAULTS
@@ -456,22 +456,15 @@ export const USER_FIELDS = {
 // ============================================================================
 
 /**
- * `EmailVerificationTokenDocument` with its PII as plain `string` — what the two named
- * repository accessors return.
+ * `EmailVerificationTokenDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
  *
- * 🛑 Derived, never hand-written: a second literal listing the same members
- * drifts the first time one is added to only one of them, and both still
- * compile, so the field silently vanishes from every reveal/mask call site.
- *
- * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
- * plain strings too, and no type can express "these characters are asterisks".
- * The distinction is WHICH named method you called.
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
  */
-export type EmailVerificationTokenPlain = {
-  [K in keyof EmailVerificationTokenDocument]: EmailVerificationTokenDocument[K] extends Encrypted<string> | undefined
-    ? Extract<EmailVerificationTokenDocument[K], undefined> | string
-    : EmailVerificationTokenDocument[K];
-};
+export type EmailVerificationTokenPlain = Plaintext<EmailVerificationTokenDocument>;
 
 export type EmailVerificationTokenDocument = {
   id?: string;
@@ -483,22 +476,15 @@ export type EmailVerificationTokenDocument = {
 }
 
 /**
- * `PasswordResetTokenDocument` with its PII as plain `string` — what the two named
- * repository accessors return.
+ * `PasswordResetTokenDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
  *
- * 🛑 Derived, never hand-written: a second literal listing the same members
- * drifts the first time one is added to only one of them, and both still
- * compile, so the field silently vanishes from every reveal/mask call site.
- *
- * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
- * plain strings too, and no type can express "these characters are asterisks".
- * The distinction is WHICH named method you called.
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
  */
-export type PasswordResetTokenPlain = {
-  [K in keyof PasswordResetTokenDocument]: PasswordResetTokenDocument[K] extends Encrypted<string> | undefined
-    ? Extract<PasswordResetTokenDocument[K], undefined> | string
-    : PasswordResetTokenDocument[K];
-};
+export type PasswordResetTokenPlain = Plaintext<PasswordResetTokenDocument>;
 
 export type PasswordResetTokenDocument = {
   id?: string;
@@ -569,24 +555,13 @@ export const TOKEN_FIELDS = {
 /**
  * The session shape with its PII as plain `string`.
  *
- * 🛑 Hand-written, unlike every other `*Plain` in the codebase, and the reason
- * is worth stating: `Plaintext<T>` only un-brands TOP-LEVEL members, and all
- * three of this document's PII fields are NESTED (`deviceInfo.ip`,
- * `deviceInfo.userAgent`, `location.city`). A recursive mapped type would
- * un-brand through every object in every document, which is more power than
- * any of the other thirteen need and would quietly un-brand a future nested
- * field nobody triaged.
+ * Was a hand-written twin, because `Plaintext<T>` un-branded top-level members
+ * only and all three of this document's PII fields are NESTED. Making the
+ * generic recurse removed the twin — which is the better outcome: a
+ * hand-written copy of a derived shape is the drift this whole file's
+ * `*Plain` convention exists to avoid.
  */
-export type SessionPlain = Omit<SessionDocument, "deviceInfo" | "location"> & {
-  deviceInfo?: {
-    userAgent?: string;
-    browser?: string;
-    os?: string;
-    device?: string;
-    ip?: string;
-  };
-  location?: { country?: string; city?: string };
-};
+export type SessionPlain = Plaintext<SessionDocument>;
 
 export type SessionDocument = {
   id: string;
@@ -642,8 +617,15 @@ export const SESSION_EXPIRATION_MS = 5 * 24 * 60 * 60 * 1000;
 /** 30 days — auto-cleanup threshold */
 export const SESSION_CLEANUP_AFTER_MS = 30 * 24 * 60 * 60 * 1000;
 
+/*
+ * 🛑 Derived from the PLAIN shape. A caller holds a real IP and user-agent —
+ * `parseUserAgent` just read them off the request — and the repository's write
+ * hook encrypts both. Deriving from the document demanded `Encrypted<string>`
+ * from four auth routes, satisfiable only by `asEncrypted(ip)`, which labels
+ * plaintext as ciphertext.
+ */
 export type SessionCreateInput = Omit<
-  SessionDocument,
+  SessionPlain,
   "id" | "createdAt" | "lastActivity"
 >;
 

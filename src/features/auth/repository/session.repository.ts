@@ -132,7 +132,9 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     const expiresAt = new Date(now.getTime() + SESSION_EXPIRATION_MS);
     const sessionId = generateSessionId();
 
-    const sessionData: Omit<SessionDocument, "id"> = {
+    // Plain in, ciphertext out — the write hook encrypts the three nested
+    // `piiFields` paths below.
+    const sessionData: Omit<SessionPlain, "id"> = {
       userId,
       deviceInfo: data.deviceInfo,
       location: data.location,

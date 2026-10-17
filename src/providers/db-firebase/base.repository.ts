@@ -386,7 +386,8 @@ export abstract class BaseRepository<T extends DocumentData> {
    * NAME: `createWithId` reads as "create" and behaves as "replace", and that
    * gap is what made the wrong conclusion so easy to reach.
    */
-  async createWithId(id: string, data: Partial<T>): Promise<T> {
+  // Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+  async createWithId(id: string, data: Partial<Plaintext<T>>): Promise<T> {
     try {
       const now = new Date();
       const cleanData = prepareForFirestore({
@@ -582,7 +583,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
   createInTx(
     tx: Transaction,
-    data: Partial<T> | FirestoreDocument,
+    data: Partial<Plaintext<T>> | FirestoreDocument,
   ): DocumentReference {
     const docRef = this.getCollection().doc();
     const now = new Date();
@@ -600,7 +601,7 @@ export abstract class BaseRepository<T extends DocumentData> {
   createWithIdInTx(
     tx: Transaction,
     id: string,
-    data: Partial<T> | FirestoreDocument,
+    data: Partial<Plaintext<T>> | FirestoreDocument,
   ): DocumentReference {
     const docRef = this.getCollection().doc(id);
     const now = new Date();
@@ -615,7 +616,8 @@ export abstract class BaseRepository<T extends DocumentData> {
     return docRef as DocumentReference;
   }
 
-  updateInTx(tx: Transaction, id: string, data: Partial<T>): void {
+  // Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+  updateInTx(tx: Transaction, id: string, data: Partial<Plaintext<T>>): void {
     const docRef = this.getCollection().doc(id);
     tx.update(
       docRef,
@@ -630,7 +632,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
   createInBatch(
     batch: WriteBatch,
-    data: Partial<T> | FirestoreDocument,
+    data: Partial<Plaintext<T>> | FirestoreDocument,
   ): DocumentReference {
     const docRef = this.getCollection().doc();
     const now = new Date();
@@ -648,7 +650,7 @@ export abstract class BaseRepository<T extends DocumentData> {
   createWithIdInBatch(
     batch: WriteBatch,
     id: string,
-    data: Partial<T> | FirestoreDocument,
+    data: Partial<Plaintext<T>> | FirestoreDocument,
   ): void {
     const docRef = this.getCollection().doc(id);
     const now = new Date();
@@ -662,7 +664,8 @@ export abstract class BaseRepository<T extends DocumentData> {
     );
   }
 
-  updateInBatch(batch: WriteBatch, id: string, data: Partial<T>): void {
+  // Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+  updateInBatch(batch: WriteBatch, id: string, data: Partial<Plaintext<T>>): void {
     const docRef = this.getCollection().doc(id);
     batch.update(
       docRef,

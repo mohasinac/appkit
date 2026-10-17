@@ -17,7 +17,7 @@
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
-import type { Encrypted } from "../../../security/encrypted";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 // ============================================================================
 // ENUMS
@@ -121,22 +121,15 @@ export interface TicketRelatedParties {
 // ============================================================================
 
 /**
- * `SupportTicketDocument` with its PII as plain `string` — what the two named
- * repository accessors return.
+ * `SupportTicketDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
  *
- * 🛑 Derived, never hand-written: a second literal listing the same members
- * drifts the first time one is added to only one of them, and both still
- * compile, so the field silently vanishes from every reveal/mask call site.
- *
- * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
- * plain strings too, and no type can express "these characters are asterisks".
- * The distinction is WHICH named method you called.
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
  */
-export type SupportTicketPlain = {
-  [K in keyof SupportTicketDocument]: SupportTicketDocument[K] extends Encrypted<string> | undefined
-    ? Extract<SupportTicketDocument[K], undefined> | string
-    : SupportTicketDocument[K];
-};
+export type SupportTicketPlain = Plaintext<SupportTicketDocument>;
 
 export interface SupportTicketDocument extends BaseDocument {
   userId: string;

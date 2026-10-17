@@ -79,7 +79,29 @@ export type Encrypted<T extends string = string> = T & {
 export type Plaintext<T> = {
   [K in keyof T]: T[K] extends Encrypted<string> | undefined
     ? Extract<T[K], undefined> | string
-    : T[K];
+    : // Recurse into PLAIN OBJECT members only.
+      //
+      // 🛑 This was non-recursive at first, on the reasoning that recursion is
+      // "more power than the other repositories need". `sessions` disproved
+      // it: all three of its PII fields are nested (`deviceInfo.ip`,
+      // `deviceInfo.userAgent`, `location.city`), so a top-level-only mapper
+      // left four auth routes unable to pass the plaintext they had literally
+      // just read off the request headers.
+      //
+      // Recursing is also correct in principle on the WRITE path, which is the
+      // only place this type is used: `encryptPiiFields` understands dotted
+      // paths, so it encrypts a nested PII field exactly as it does a
+      // top-level one. Depth is not a property the caller should have to care
+      // about.
+      //
+      // `Date`, arrays and functions are excluded — mapping over a `Date`
+      // would produce an object of its METHODS, which type-checks and is
+      // nonsense, and an array's numeric keys are not PII paths.
+      T[K] extends Date | ReadonlyArray<unknown> | ((...args: never[]) => unknown)
+      ? T[K]
+      : T[K] extends object | undefined
+        ? Extract<T[K], undefined> | Plaintext<Exclude<T[K], undefined>>
+        : T[K];
 };
 
 /**

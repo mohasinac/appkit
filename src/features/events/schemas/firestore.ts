@@ -7,7 +7,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { EventType, EventStatus, EntryReviewStatus, SaleConfig, OfferConfig, PollConfig, SurveyConfig, FeedbackConfig, RaffleType, SpinPrize } from "../types";
 import type { LotteryConfig } from "../../lottery/types";
-import type { Encrypted } from "../../../security/encrypted";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
@@ -75,22 +75,15 @@ export interface EventDocument extends BaseDocument {
 }
 
 /**
- * `EventEntryDocument` with its PII as plain `string` — what the two named
- * repository accessors return.
+ * `EventEntryDocument` with its PII as plain `string` — what the named repository
+ * accessors return, and what a WRITE path accepts (the repository encrypts).
  *
- * 🛑 Derived, never hand-written: a second literal listing the same members
- * drifts the first time one is added to only one of them, and both still
- * compile, so the field silently vanishes from every reveal/mask call site.
- *
- * Not distinguishable from a MASKED value, deliberately — `maskPii` returns
- * plain strings too, and no type can express "these characters are asterisks".
- * The distinction is WHICH named method you called.
+ * `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`.
+ * It is deliberately NOT distinguishable from a MASKED value — `maskPii`
+ * returns plain strings too, and no type can express "these characters are
+ * asterisks". The distinction is which named method you called.
  */
-export type EventEntryPlain = {
-  [K in keyof EventEntryDocument]: EventEntryDocument[K] extends Encrypted<string> | undefined
-    ? Extract<EventEntryDocument[K], undefined> | string
-    : EventEntryDocument[K];
-};
+export type EventEntryPlain = Plaintext<EventEntryDocument>;
 
 export type EventEntryDocument = {
   id: string;

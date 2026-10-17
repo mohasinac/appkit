@@ -79,7 +79,7 @@ export interface IWriteRepository<T> {
   update(id: string, data: Partial<Plaintext<T>>): Promise<T>;
   delete(id: string): Promise<void>;
   batchCreate(
-    items: Array<Omit<T, "id" | "createdAt" | "updatedAt">>,
+    items: Array<Omit<Plaintext<T>, "id" | "createdAt" | "updatedAt">>,
   ): Promise<T[]>;
   batchDelete(ids: string[]): Promise<void>;
 }
@@ -147,7 +147,7 @@ export interface RepositoryLifecycleHooks<T> {
    * If not returned, the original data is used unchanged.
    */
   beforeCreate?: (
-    data: Omit<T, "id" | "createdAt" | "updatedAt">,
+    data: Omit<Plaintext<T>, "id" | "createdAt" | "updatedAt">,
   ) =>
     | Omit<T, "id" | "createdAt" | "updatedAt">
     | Promise<Omit<T, "id" | "createdAt" | "updatedAt">>;
@@ -160,7 +160,7 @@ export interface RepositoryLifecycleHooks<T> {
    */
   beforeUpdate?: (
     id: string,
-    data: Partial<T>,
+    data: Partial<Plaintext<T>>,
   ) => Partial<T> | Promise<Partial<T>>;
   /**
    * Called after a successful `update`. Receives the updated document.
