@@ -140,7 +140,10 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
         createdAt: now,
         updatedAt: now,
       };
-      return this.create(data as unknown as SupportTicketDocument);
+      // Plaintext in; `create` encrypts via the write hook. This used to be
+      // `as unknown as SupportTicketDocument` — a double cast that claimed the
+      // freshly-built literal was already ciphertext.
+      return this.create(data as Partial<SupportTicketPlain>);
     } catch (err) {
       void normalizeError(err);
       throw new DatabaseError("Failed to create support ticket", err);
@@ -319,10 +322,16 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
    * Never fabricated for a ticket resolved before this existed — that one
    * renders an em-dash, the same rule the offer timeline follows.
    */
+  /*
+   * Returns the PLAIN shape. It only ever emits two Date fields, neither of
+   * them PII — but it is SPREAD into a plaintext patch, and a return typed
+   * against the document would poison that patch's inferred type with
+   * `Encrypted<string>` members it never actually sets.
+   */
   private resolutionStamps(
     current: SupportTicketDocument | null | undefined,
     next: TicketStatus | undefined,
-  ): Partial<SupportTicketDocument> {
+  ): Partial<SupportTicketPlain> {
     if (!next || next === current?.status) return {};
     const now = new Date();
     if (next === TicketStatusValues.RESOLVED && !current?.resolvedAt) return { resolvedAt: now };
@@ -359,7 +368,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
         piiFields: SUPPORT_TICKET_PII_FIELDS,
       },
     );
-    return (withEntry as Partial<SupportTicketDocument> | null) ?? patch;
+    return (withEntry as Partial<SupportTicketPlain> | null) ?? patch;
   }
 
   /**
@@ -429,9 +438,11 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
         current,
         {
           assignedTo,
-          // Cast at the ONE place encryption is about to happen, not at the
-          // parameter — see the note on `assignedToName` above.
-          assignedToName: assignedToName as unknown as SupportTicketDocument["assignedToName"],
+          // No cast: `withTicketHistory` takes the PLAIN shape, and this
+          // parameter is plaintext (the write hook encrypts downstream). The
+          // cast that used to sit here existed only because the payload type
+          // claimed ciphertext.
+          assignedToName,
           updatedAt: new Date(),
         },
         ctx,

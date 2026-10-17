@@ -419,14 +419,25 @@ export async function counterOfferByBuyer(
   const chainRoot = offer.chainRootOfferId ?? offer.id;
   const nextRound = (offer.counterRound ?? 1) + 1;
 
+  /*
+   * 🛑 A NINTH double-encryption site, found by the nominal brand.
+   *
+   * A buyer counter creates a NEW offer document carrying the previous round's
+   * buyer identity forward. `offer` came from a read, so those two fields are
+   * ciphertext — and `createOffer` encrypts `buyerName`/`buyerEmail` again
+   * (`OFFER_PII_FIELDS`), so round 2 onward stored a permanently unreadable
+   * buyer. Rounds 1 was fine, which is why nothing looked wrong.
+   */
+  const offerPlain = offerRepository.revealOffer(offer);
+
   const newOffer = await offerRepository.createOffer({
     productId: offer.productId,
     productTitle: offer.productTitle,
     productSlug: offer.productSlug,
     productImageUrl: offer.productImageUrl,
     buyerUid: userId,
-    buyerName: offer.buyerName,
-    buyerEmail: offer.buyerEmail,
+    buyerName: offerPlain.buyerName,
+    buyerEmail: offerPlain.buyerEmail,
     storeId: offer.storeId,
     storeName: offer.storeName,
     offerAmount: counterAmount,
@@ -503,18 +514,30 @@ export async function withdrawOffer(
 
 export async function listBuyerOffers(
   userId: string,
-): Promise<OfferDocument[]> {
+): Promise<OfferPlain[]> {
   const result = await offerRepository.findByBuyer(userId);
-  return result.items;
+  /*
+   * REVEALED: these are the buyer's OWN offers, so showing them their own name
+   * and email in full is the canonical legitimate plaintext read. The seller's
+   * view of the same documents goes through `maskedOffer` instead.
+   */
+  return result.items.map((o) => offerRepository.revealOffer(o));
 }
 
 export async function listSellerOffers(
   userId: string,
-): Promise<OfferDocument[]> {
+  // Masked rows, so the declared type says so.
+): Promise<OfferPlain[]> {
   const store = await storeRepository.findByOwnerId(userId);
   if (!store) return [];
   const result = await offerRepository.findByStore(store.id);
-  return result.items.map(maskOfferForSeller);
+  /*
+   * `maskedOffer`, not `maskOfferForSeller`. The latter calls `maskName`,
+   * which refuses ciphertext by design and answers "Anonymous" — and
+   * `findByStore` returns raw documents. So the seller's own offers list
+   * showed every buyer as Anonymous. `maskedOffer` decrypts first, then masks.
+   */
+  return result.items.map((o) => offerRepository.maskedOffer(o));
 }
 
 // --- Buyer: Checkout accepted offer ----------------------------------------

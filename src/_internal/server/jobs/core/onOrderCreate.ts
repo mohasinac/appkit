@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
+import { ORDER_PII_FIELDS, revealPii } from "../../../../security";
 import { adminNotificationsRepository, storeRepository, userRepository } from "../../../../repositories";
 import { decryptPii } from "../../../../security/index";
 import {
@@ -131,8 +132,18 @@ export async function handleOrderCreate(
    * `decryptPii` was already imported in this file and used for the store
    * owner's phone eleven lines up; the buyer's name was simply missed.
    */
+  /*
+   * The NAMED accessor, not a bare `decryptPii` cast.
+   *
+   * This already decrypted and therefore already WORKED — but through a cast
+   * that defeated the brand, so "is every reader converted?" could not be
+   * answered by grepping for `reveal*`. Routing it through `revealOrder` makes
+   * the decision visible in review and in a grep, which is the whole argument
+   * for named accessors over an inline decrypt.
+   */
   const buyerName =
-    (decryptPii(order.userName) as string | null) ?? order.userName ?? "A customer";
+    revealPii<{ userName?: string }>(order, ORDER_PII_FIELDS).userName ??
+    "A customer";
 
   const message = buildPurchaseAnnouncementMessage({
     buyerName,

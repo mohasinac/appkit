@@ -231,7 +231,8 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     );
     // `null` means no tracked field actually changed — write the patch as-is
     // so an untracked update never grows the array.
-    return this.update(orderId, (withEntry ?? patch) as Partial<OrderDocument>);
+    // Plain: this is a write payload and `update` encrypts.
+    return this.update(orderId, (withEntry ?? patch) as Partial<OrderPlain>);
   }
 
   async updateStatus(

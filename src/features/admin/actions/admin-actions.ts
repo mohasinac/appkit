@@ -21,9 +21,9 @@ import {
 import { getProviders } from "../../../contracts";
 import { getAdminAuth } from "../../../providers/db-firebase";
 import { isAdminUser } from "../../auth/role-predicates";
-import type { OrderAdminUpdateInput, OrderDocument } from "../../orders";
+import type { OrderAdminUpdateInput, OrderDocument, OrderPlain } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";
-import type { UserAdminUpdateInput, UserDocument } from "../../auth";
+import type { UserAdminUpdateInput, UserDocument, UserPlain } from "../../auth";
 import type { ProductAdminUpdateInput, ProductCreateInput, ProductDocument } from "../../products/schemas/firestore";
 import {
   assertPrizeDrawNotLocked,

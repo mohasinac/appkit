@@ -91,7 +91,14 @@ export async function sendCheckoutValueOtp(
     }
 
     const address = await addressesRepository.findById(addressId);
-    const phone = address?.phone?.trim();
+    /*
+   * REVEALED: this phone receives the high-value checkout OTP, so it has to
+   * be the real number. `addressesRepository` is ciphertext-by-default, and
+   * `.trim()` on the stored value is what the nominal brand caught — the
+   * old intersection form let `Encrypted<string>` call string methods.
+   */
+  const addressPlain = address ? addressesRepository.revealAddress(address) : null;
+  const phone = addressPlain?.phone?.trim();
     if (!phone) {
       throw new ValidationError("The selected address has no phone number on file — send the code by email instead.");
     }

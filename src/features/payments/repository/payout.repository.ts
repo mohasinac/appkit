@@ -168,12 +168,12 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   /** Override base update to preserve encryption/indexing for changed PII fields. */
   override async update(
     payoutId: string,
-    data: Partial<PayoutDocument>,
+    data: Partial<PayoutPlain>,
   ): Promise<PayoutDocument> {
     const encrypted = this.applyWriteHooks(
       data,
     );
-    return super.update(payoutId, encrypted as Partial<PayoutDocument>);
+    return super.update(payoutId, encrypted as Partial<PayoutPlain>);
   }
 
   /**
@@ -284,10 +284,10 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   /** Append a timeline entry when the patch touches a tracked field. */
   private withPayoutHistory(
     current: PayoutDocument | null | undefined,
-    patch: Partial<PayoutDocument>,
+    patch: Partial<PayoutPlain>,
     ctx: PayoutWriteContext | undefined,
     defaultTrigger: string,
-  ): Partial<PayoutDocument> {
+  ): Partial<PayoutPlain> {
     const withEntry = withHistory(
       current as unknown as FirestoreDocument | undefined,
       patch as FirestoreDocument,
@@ -302,7 +302,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
         piiFields: PAYOUT_PII_FIELDS,
       },
     );
-    return (withEntry as Partial<PayoutDocument> | null) ?? patch;
+    return (withEntry as Partial<PayoutPlain> | null) ?? patch;
   }
 
   /**

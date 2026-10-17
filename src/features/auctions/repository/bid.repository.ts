@@ -483,7 +483,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
    * Update bid (user can only update autoMaxBid)
    */
   async updateBid(bidId: string, data: BidUpdateInput): Promise<BidDocument> {
-    const updateData: Partial<BidDocument> = {
+    const updateData: Partial<BidPlain> = {
       ...data,
       updatedAt: new Date(),
     };
@@ -498,7 +498,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
     bidId: string,
     data: BidAdminUpdateInput,
   ): Promise<BidDocument> {
-    const updateData: Partial<BidDocument> = {
+    const updateData: Partial<BidPlain> = {
       ...data,
       updatedAt: new Date(),
     };

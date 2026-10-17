@@ -344,6 +344,11 @@ export async function getEventSpinResults(
   );
 
   const entries = await eventEntryRepository.getRecentSpinResults(event.id, limit);
+  /*
+   * Spin results are shown publicly, so the entrant name is MASKED — and it
+   * has to be masked by `maskedEntry`, which decrypts first. `maskName` on the
+   * stored value answers "Anonymous" for every row by design.
+   */
   return entries.map((entry) => ({
     id: entry.id,
     /*
@@ -362,7 +367,15 @@ export async function getEventSpinResults(
      * on for its own label. A caller's OWN spins are served unmasked by
      * `getUserSpinResultsForEvent` — masking is for other people's.
      */
-    userDisplayName: entry.userId ? maskName(entry.userDisplayName) : undefined,
+    /*
+       * `maskedEntry`, not `maskName` on the stored value. `maskName`
+       * refuses ciphertext by design and answers "Anonymous", so this
+       * public list showed every entrant as Anonymous. `maskedEntry`
+       * decrypts first, then masks.
+       */
+      userDisplayName: entry.userId
+        ? eventEntryRepository.maskedEntry(entry).userDisplayName
+        : undefined,
     isGuest: !entry.userId,
     spinPrizeId: entry.spinPrizeId,
     spinPrizeTitle: entry.spinPrizeId ? prizeTitleById.get(entry.spinPrizeId) : undefined,
@@ -396,7 +409,7 @@ export async function getUserSpinResultsForEvent(
   const entries = await eventEntryRepository.getUserSpinResults(event.id, userId);
   return entries.map((entry) => ({
     id: entry.id,
-    userDisplayName: entry.userDisplayName,
+    userDisplayName: eventEntryRepository.maskedEntry(entry).userDisplayName,
     isGuest: false,
     spinPrizeId: entry.spinPrizeId,
     spinPrizeTitle: entry.spinPrizeId ? prizeTitleById.get(entry.spinPrizeId) : undefined,

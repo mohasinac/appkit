@@ -8,7 +8,13 @@ import { Badge } from "../../../ui/components/Badge";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { OrderDocument } from "../../orders/schemas/firestore";
+/*
+ * `OrderPlain`, not `OrderPlain`: the route reveals before sending, because
+ * this is a client component and decryption needs the key. Declaring the
+ * document type claimed these rows carried ciphertext — which they did, and
+ * the view rendered it.
+ */
+import type { OrderPlain } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
 import { useToast } from "../../../ui";
 
@@ -50,7 +56,7 @@ export function AdminFulfillmentView({
   initialStoreName,
 }: AdminFulfillmentViewProps) {
   const [storeId, setStoreId] = useState<string | null>(initialStoreId ?? null);
-  const [orders, setOrders] = useState<OrderDocument[]>([]);
+  const [orders, setOrders] = useState<OrderPlain[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const { showToast } = useToast();
@@ -58,7 +64,7 @@ export function AdminFulfillmentView({
   const fetchOrders = useCallback(async (sid: string) => {
     setIsLoading(true);
     try {
-      const res = await apiClient.get<{ orders: OrderDocument[]; total: number }>(
+      const res = await apiClient.get<{ orders: OrderPlain[]; total: number }>(
         ADMIN_ENDPOINTS.ADMIN_FULFILLMENT(sid),
       );
       setOrders(res.orders ?? []);

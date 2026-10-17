@@ -44,7 +44,7 @@ import {
   finalizeStagedMediaField,
   finalizeStagedMediaArray,
 } from "../../media/finalize";
-import type { UserDocument, SellerPayoutDetails } from "../../auth/schemas/firestore";
+import type { UserPlain, UserDocument, SellerPayoutDetails } from "../../auth/schemas/firestore";
 import type { StoreDocument } from "../../stores/schemas/firestore";
 import { StoreStatusValues } from "../../stores/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
@@ -231,7 +231,7 @@ export async function becomeSeller(
     // time they opened a store.
     ...(isTester ? {} : { role: "seller" as const }),
     storeStatus,
-  } as Partial<UserDocument>);
+  } as Partial<UserPlain>);
 
   serverLogger.info("becomeSeller: application submitted", { userId, storeStatus });
   return { storeStatus };

@@ -332,22 +332,22 @@ export class UserRepository extends BaseRepository<UserDocument> {
   }
 
   async disable(uid: string): Promise<UserDocument> {
-    return this.update(uid, { disabled: true } as Partial<UserDocument>);
+    return this.update(uid, { disabled: true });
   }
 
   async enable(uid: string): Promise<UserDocument> {
-    return this.update(uid, { disabled: false } as Partial<UserDocument>);
+    return this.update(uid, { disabled: false });
   }
 
   async updateRole(uid: string, role: UserRole): Promise<UserDocument> {
-    return this.update(uid, { role } as Partial<UserDocument>);
+    return this.update(uid, { role });
   }
 
   async updateProfile(
     uid: string,
     data: { displayName?: string; photoURL?: string },
   ): Promise<UserDocument> {
-    return this.update(uid, data as Partial<UserDocument>);
+    return this.update(uid, data as Partial<UserPlain>);
   }
 
   async updateProfileWithVerificationReset(
@@ -477,7 +477,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
     uid: string,
     storeStatus: "pending" | "approved" | "rejected",
   ): Promise<UserDocument> {
-    return this.update(uid, { storeStatus } as Partial<UserDocument>);
+    return this.update(uid, { storeStatus });
   }
 
   async listSellers(

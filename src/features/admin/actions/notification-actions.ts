@@ -277,13 +277,21 @@ export async function sendNotification(
     serverLogger.warn("notification-actions: user prefs lookup failed — defaulting to all channels enabled", { userId: input.userId, error: err instanceof Error ? err.message : String(err) });
   }
 
-  // If caller didn't supply userEmail, try to decrypt it from the already-fetched user doc.
-  const resolvedEmail =
-    userEmail ??
-    (fetchedUserDoc?.email ? (decryptPii(fetchedUserDoc.email) as string | undefined) : undefined);
-  const resolvedPhone =
-    userPhone ??
-    (fetchedUserDoc?.phoneNumber ? (decryptPii(fetchedUserDoc.phoneNumber) as string | undefined) : undefined);
+  /*
+   * The NAMED accessor, not two bare `decryptPii` casts.
+   *
+   * These already decrypted and already worked, but the casts defeated the
+   * brand — so a grep for `reveal*` could not tell this reader from an
+   * unconverted one. `revealUser` is the same decision, stated.
+   *
+   * Revealed rather than masked because this notification is DELIVERED: a
+   * masked address cannot receive mail.
+   */
+  const fetchedUserPlain = fetchedUserDoc
+    ? userRepository.revealUser(fetchedUserDoc)
+    : null;
+  const resolvedEmail = userEmail ?? fetchedUserPlain?.email ?? undefined;
+  const resolvedPhone = userPhone ?? fetchedUserPlain?.phoneNumber ?? undefined;
 
   // Map NotificationType to a NotificationTypePrefs key.
   /*

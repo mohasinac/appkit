@@ -180,12 +180,12 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
 
   override async update(
     reviewId: string,
-    data: Partial<ReviewDocument>,
+    data: Partial<ReviewPlain>,
   ): Promise<ReviewDocument> {
     const encrypted = this.applyWriteHooks(
       data,
     );
-    return super.update(reviewId, encrypted as Partial<ReviewDocument>);
+    return super.update(reviewId, encrypted as Partial<ReviewPlain>);
   }
 
   async findByProduct(productId: string): Promise<ReviewDocument[]> {
@@ -584,7 +584,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   protected override buildSearchTxtFor(
     data: Record<string, JsonValue>,
   ): string[] | null {
-    return buildReviewSearchTxt(data as Partial<ReviewDocument>);
+    return buildReviewSearchTxt(data as Partial<ReviewPlain>);
   }
 
   async listAll(
@@ -592,7 +592,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     opts?: { search?: string },
   ): Promise<FirebaseSieveResult<ReviewPlain>> {
     const plan = planSearchTxt(opts?.search);
-    if (plan.empty) return emptySearchResult<ReviewDocument>();
+    if (plan.empty) return emptySearchResult<ReviewPlain>();
 
     let baseQuery = this.getCollection();
     if (plan.head) {
