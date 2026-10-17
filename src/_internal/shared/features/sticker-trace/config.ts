@@ -176,6 +176,10 @@ export function paramsForTier(tier: PrecisionTier, overrides: Partial<TraceParam
     minPartAreaMm2: 12,
     maxParts: MAX_PARTS_PER_SHEET,
     bridgeMm: 0.45,
+    // 1.0 = "merge every boundary weaker than this sheet's median". The median
+    // is a fair split point because a sheet has far more printed edge than cut
+    // line, so the middle of the distribution sits among the printing.
+    mergeStrengthFactor: 1,
 
     smoothMm: preset.smoothMm,
     borderMm: 0,

@@ -156,6 +156,12 @@ export interface TraceParams {
   readonly minPartAreaMm2: number;
   readonly maxParts: number;
   readonly bridgeMm: number;
+  /**
+   * Art sheets only. A region boundary below this multiple of the sheet's
+   * MEDIAN boundary strength is treated as printing rather than a cut, and the
+   * two regions merge. See trace/merge for why this exists at all.
+   */
+  readonly mergeStrengthFactor: number;
 
   /** geometry */
   readonly smoothMm: number;
@@ -214,6 +220,16 @@ export interface TraceDiagnostics {
   readonly droppedBelowMinArea: number;
   readonly droppedTouchingBorder: number;
   readonly bridgedComponents: number;
+  /**
+   * 🛑 True when this scan has no paper background and the tracer therefore
+   * cannot yet segment it reliably. The parts array is still populated so a
+   * human can see what was found, but it will contain far too many regions and
+   * a caller MUST surface this rather than presenting them as a result.
+   *
+   * Measured on the reference corpus, art sheets returned 153-400 parts
+   * against 12-20 real. See trace/segment for why, and what it needs.
+   */
+  readonly artBackgroundUnsupported: boolean;
 }
 
 export interface TraceResult {

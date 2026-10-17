@@ -25,11 +25,63 @@
 import { labelComponents, type ComponentStats } from "../math/label";
 import { close, curvatureSmooth } from "../math/morphology";
 import type { DecodedRaster, TraceDiagnostics, TraceParams } from "../types";
+import type { Rect } from "../types";
 import { backgroundLikeMask, estimatePaper } from "./paper";
+import { sameMaterialScore } from "./cross-profile";
 import { floodFromBorder } from "./flood";
+import { mergeWeakBoundaries } from "./merge";
 import { applyPrefilter, toLuminance } from "./prefilter";
 import { quantiseBoundaries } from "./quantise";
 import { detectRidges } from "./ridge";
+
+/**
+ * Re-derive per-component stats after a merge.
+ *
+ * The merge renumbers labels but cannot cheaply maintain areas and boxes — two
+ * merged regions' boxes are not the union of their stats unless you track it,
+ * and tracking it through union-find is more code than one more linear pass
+ * over a buffer already in cache.
+ */
+function recomputeStats(
+  labels: Int32Array,
+  count: number,
+  width: number,
+  height: number,
+): { labels: Int32Array; count: number; stats: ComponentStats[] } {
+  const area = new Int32Array(count + 1);
+  const minX = new Int32Array(count + 1).fill(width);
+  const minY = new Int32Array(count + 1).fill(height);
+  const maxX = new Int32Array(count + 1).fill(-1);
+  const maxY = new Int32Array(count + 1).fill(-1);
+  const border = new Uint8Array(count + 1);
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const l = labels[y * width + x]!;
+      if (l === 0) continue;
+      area[l] = area[l]! + 1;
+      if (x < minX[l]!) minX[l] = x;
+      if (y < minY[l]!) minY[l] = y;
+      if (x > maxX[l]!) maxX[l] = x;
+      if (y > maxY[l]!) maxY[l] = y;
+      if (x === 0 || y === 0 || x === width - 1 || y === height - 1) border[l] = 1;
+    }
+  }
+
+  const stats: ComponentStats[] = [];
+  for (let l = 1; l <= count; l++) {
+    if (area[l] === 0) continue;
+    const bbox: Rect = {
+      x: minX[l]!,
+      y: minY[l]!,
+      width: maxX[l]! - minX[l]! + 1,
+      height: maxY[l]! - minY[l]! + 1,
+    };
+    stats.push({ label: l, area: area[l]!, bbox, touchesBorder: border[l] === 1 });
+  }
+
+  return { labels, count, stats };
+}
 
 export interface SegmentResult {
   /** Per-pixel component id; 0 is background. */
@@ -82,39 +134,83 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
   });
 
   /*
-   * On an `art` sheet there is no paper to match, so a colour test would admit
-   * nothing and the flood would never start. Treating every non-barrier pixel
-   * as passable is correct there: the cut lines alone decide what is enclosed,
-   * which is exactly what an art-background sheet offers.
+   * 🛑 TWO SEGMENTATION MODELS, and the choice is not a tuning preference.
+   *
+   * A PAPER sheet has real background: the flood starts outside every sticker
+   * and anything it cannot reach is a sticker. Interior artwork edges are
+   * harmless because the outer cut line stops the flood long before it reaches
+   * them.
+   *
+   * An ART sheet has none. The printed field runs to the raster edge, so the
+   * flood starts INSIDE the artwork, gets trapped in every pocket the artwork's
+   * own edges enclose, and emits each pocket as a part. Measured: 209 parts
+   * against ~12 real on torch-pegases, and a threshold sweep down to 1.0%
+   * barrier coverage still gave 36 — monotonic, no minimum. The model is wrong
+   * there, not the constants.
+   *
+   * So an art sheet is segmented by partitioning on the cut lines and then
+   * merging back across the weak ones. See trace/merge.
    */
-  const backgroundLike =
-    paper.detectedType === "art"
-      ? new Uint8Array(width * height).fill(1)
-      : backgroundLikeMask(raster, paper, params.paperTolerance);
+  let labelled: ReturnType<typeof labelComponents>;
+  let beforeBridge: number;
+  let merges = 0;
+  let sameMaterialDropped = 0;
 
-  const flood = floodFromBorder(
-    backgroundLike,
-    ridge.barrier,
-    width,
-    height,
-    params.seedBandPx,
-  );
+  if (paper.detectedType === "art") {
+    // Keep only the barrier pixels whose two sides are the same material —
+    // i.e. a groove, not a boundary between two printed colours. On this
+    // corpus that is what separates a cut from the artwork; amplitude is not.
+    const material = sameMaterialScore(
+      raster,
+      ridge.barrier,
+      filtered,
+      params.paperTolerance * 2,
+    );
+    sameMaterialDropped = Math.round(material.meanScore * 1000);
 
-  // Clean in this order: smooth the silhouette first so the bridge closing is
-  // not fighting comb teeth, then bridge. Reversing them bridges the teeth to
-  // each other and fuses neighbours.
-  let mask = curvatureSmooth(
-    flood.inside,
-    width,
-    height,
-    pxPerMm ? params.smoothMm * pxPerMm : 1,
-  );
+    const open = new Uint8Array(width * height);
+    for (let i = 0; i < open.length; i++) open[i] = ridge.barrier[i] ? 0 : 1;
 
-  const beforeBridge = labelComponents(mask, width, height).count;
-  if (params.bridgeMm > 0) {
-    mask = close(mask, width, height, pxPerMm ? params.bridgeMm * pxPerMm : 2);
+    const regions = labelComponents(open, width, height);
+    beforeBridge = regions.count;
+
+    const merged = mergeWeakBoundaries(
+      regions.labels,
+      regions.count,
+      material.score,
+      width,
+      height,
+      params.mergeStrengthFactor,
+    );
+    merges = merged.mergesApplied;
+
+    labelled = recomputeStats(merged.labels, merged.regionCount, width, height);
+  } else {
+    const backgroundLike = backgroundLikeMask(raster, paper, params.paperTolerance);
+    const flood = floodFromBorder(
+      backgroundLike,
+      ridge.barrier,
+      width,
+      height,
+      params.seedBandPx,
+    );
+
+    // Clean in this order: smooth the silhouette first so the bridge closing is
+    // not fighting comb teeth, then bridge. Reversing them bridges the teeth to
+    // each other and fuses neighbours.
+    let mask = curvatureSmooth(
+      flood.inside,
+      width,
+      height,
+      pxPerMm ? params.smoothMm * pxPerMm : 1,
+    );
+
+    beforeBridge = labelComponents(mask, width, height).count;
+    if (params.bridgeMm > 0) {
+      mask = close(mask, width, height, pxPerMm ? params.bridgeMm * pxPerMm : 2);
+    }
+    labelled = labelComponents(mask, width, height);
   }
-  const labelled = labelComponents(mask, width, height);
 
   const minAreaPx = pxPerMm
     ? Math.max(16, params.minPartAreaMm2 * pxPerMm * pxPerMm)
@@ -157,7 +253,8 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
       componentsFound: labelled.count,
       droppedBelowMinArea: droppedSmall,
       droppedTouchingBorder: droppedSheet,
-      bridgedComponents: Math.max(0, beforeBridge - labelled.count),
+      bridgedComponents: merges || Math.max(0, beforeBridge - labelled.count),
+      artBackgroundUnsupported: paper.detectedType === "art",
     },
   };
 }
