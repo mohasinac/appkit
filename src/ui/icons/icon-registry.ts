@@ -90,6 +90,12 @@ import {
   User,
   X,
   XCircle,
+  CalendarClock,
+  Gift,
+  KeyRound,
+  Palette,
+  Sticker,
+  PawPrint,
   type LucideIcon,
 } from "lucide-react";
 
@@ -163,6 +169,23 @@ export const ICONS = {
   themeLight: Sun,
   themeDark: Moon,
   deals: Tag,
+
+  /*
+   * Listing-type glyphs — one per `ListingType`, consumed by
+   * `ListingTypePlugin.iconKey` so a type chip can carry a leading visual.
+   *
+   * 🛑 Four of the nine reuse an existing verb rather than minting a new icon:
+   * `standard` is `order` (Package), `auction` is `bid` (Gavel), `classified`
+   * is `deals` (Tag), `live` is the only animal glyph here. This registry's
+   * header is explicit that it is deliberately small and not a re-export of
+   * lucide — so a type earns a new entry only when nothing already means it.
+   */
+  preOrder: CalendarClock,
+  prizeDraw: Gift,
+  digitalCode: KeyRound,
+  art: Palette,
+  stickers: Sticker,
+  live: PawPrint,
 } as const;
 
 /** Every valid `iconKey`. A typo is a compile error, not a silent blank. */

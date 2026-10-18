@@ -24,6 +24,8 @@ import type { ListingType } from "../types";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
+import type { IconKey } from "../../../ui/icons/icon-registry";
+
 export interface ListingTab {
   id: string;
   label: string;
@@ -35,6 +37,14 @@ export interface ListingTab {
   collection?: "bundles";
   /** Set when the tab queries a non-product entity (e.g. `stores`). */
   entity?: "stores";
+  /**
+   * Leading glyph, carried from `ListingTypePlugin.iconKey`.
+   *
+   * Only set on tabs backed by ONE listing type. The combined Art & Stickers
+   * tab leaves it unset on purpose: it spans two types with two different
+   * glyphs, and picking either would claim the tab is only that one.
+   */
+  iconName?: IconKey;
 }
 
 /**
@@ -77,7 +87,8 @@ export const ART_STICKERS_LISTING_TYPES: readonly ListingType[] = ["art", "stick
  * straight into `sieveFilter("listingType", EQ, id)`. Never a display label.
  */
 function chipTab(type: ListingType): ListingTab {
-  return { id: type, label: pluginFor(type).chipLabel, listingType: type };
+  const plugin = pluginFor(type);
+  return { id: type, label: plugin.chipLabel, listingType: type, iconName: plugin.iconKey };
 }
 
 /**
@@ -87,7 +98,7 @@ function chipTab(type: ListingType): ListingTab {
  */
 function pluralTab(type: ListingType): ListingTab {
   const plugin = pluginFor(type);
-  return { id: plugin.tabSlug, label: plugin.pluralLabel, listingType: type };
+  return { id: plugin.tabSlug, label: plugin.pluralLabel, listingType: type, iconName: plugin.iconKey };
 }
 
 /**

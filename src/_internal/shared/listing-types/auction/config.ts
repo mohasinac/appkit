@@ -27,6 +27,7 @@ export const config = {
   // /auctions is in MAIN_NAV_ITEMS. An auction card in the general grid renders
   // Buy-Now chrome rather than bid affordances, so it belongs on its own page.
   inGeneralCatalogue: false,
+  iconKey: "bid" as const,
   // An auction is never "sold out" — it ends. Hiding by stock would hide
   // every live auction, since auctions don't carry meaningful stock.
   hideDefault: "ended" as const,

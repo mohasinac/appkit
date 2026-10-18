@@ -9049,6 +9049,9 @@ export { Tabs, TabsList, TabsTrigger, TabsContent, PasswordStrengthIndicator, Ta
 // TabBarShell - rail + overflow scroll arrows around a role="tablist"; TabBarButton / TabsNavSelect - its two trigger flavours
 export { TabBarShell, TabBarButton, TabsNavSelect } from "./ui/index";
 export type { TabBarShellProps, TabBarButtonProps, TabsNavSelectProps } from "./ui/index";
+// OverflowRow - pill/tab row that collapses into a searchable dropdown when it measures wider than its container
+export { OverflowRow } from "./ui/index";
+export type { OverflowRowProps, OverflowRowItem, OverflowRowDotTone, OverflowRowLinkProps } from "./ui/index";
 export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText, RichTextRenderer } from "./ui/index";
 export type { RichTextRendererProps } from "./ui/index";
 export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/index";

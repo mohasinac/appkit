@@ -40,6 +40,7 @@ import {
   type AvailabilityRow,
   type UnavailableClause,
 } from "./availability";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 import type { ListingType } from "../../../features/products/types/index";
 import type { SortOption } from "../../../features/products/constants/sieve";
 import {
@@ -130,6 +131,16 @@ export interface ListingTypePlugin {
    * reachable only by typing the URL.
    */
   inGeneralCatalogue: boolean;
+  /**
+   * Leading glyph for this type's chip, tab and dropdown row.
+   *
+   * 🛑 REQUIRED, like `inGeneralCatalogue` and for the same reason: a tenth
+   * listing type must not compile until someone has answered what it looks
+   * like. An optional field would be silently omitted and that type would be
+   * the one unlabelled row in every picker — the gap being invisible is
+   * exactly the failure the required fields on this interface exist to stop.
+   */
+  iconKey: IconKey;
   /**
    * Which "Show X" default this type's browse surfaces apply. Since 2026-08-24
    * this drives the LABEL of the availability tab bar's middle tab

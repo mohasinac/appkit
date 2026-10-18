@@ -30,6 +30,7 @@ export const config = {
   browseRoute: String(ROUTES.PUBLIC.ART),
   // /art ("Art & Stickers") is in MAIN_NAV_ITEMS and spans art + stickers.
   inGeneralCatalogue: false,
+  iconKey: "stickers" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

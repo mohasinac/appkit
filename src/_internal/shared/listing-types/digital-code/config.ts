@@ -42,6 +42,7 @@ export const config = {
   // Has a dedicated page but NO MAIN_NAV_ITEMS entry, so /products is its only
   // discovery path. Dropping it here would orphan the type (Root Cause #61).
   inGeneralCatalogue: true,
+  iconKey: "digitalCode" as const,
   // "Sold out" for a code pool means codesAvailable hit 0. That was ASSUMED to
   // be mirrored by stockQuantity, and it isn't — seed and production rows exist
   // with a drained pool and non-zero stock. The pool count is authoritative.

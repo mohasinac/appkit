@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { TabBarButton, TabBarShell, TabsNavSelect, TextLink } from "../../../ui";
+import { OverflowRow, TabBarButton, TabBarShell, TextLink } from "../../../ui";
 
 export interface StoreTab {
   value: string;
@@ -64,15 +64,30 @@ export function StoreNavTabs({
    * the wrong element for sizing utilities (Root Cause #29); those now live
    * on `.appkit-tabs-dropdown` in Tabs.style.css.
    */
+  /*
+   * `alwaysCollapsed` — this one is a dropdown BY DESIGN, not by measurement.
+   * It is the listing-type picker, deliberately collapsed however much room
+   * the bar has, so adding a tenth listing type can never push the store's
+   * Reviews and About tabs off the edge. That is a product decision about what
+   * belongs in a row, which no width measurement can make.
+   *
+   * It replaced a native `<select>`, so it is now searchable and keyboard
+   * navigable — which matters here because the option set grows with every
+   * listing type the platform adds.
+   */
   const leading =
     dropdownTabs.length > 0 ? (
-      <TabsNavSelect
+      <OverflowRow
+        items={dropdownTabs.map((tab) => ({
+          id: tab.value,
+          label: tab.label,
+          onSelect: () => handleDropdownChange(tab.value),
+        }))}
         ariaLabel={dropdownPlaceholder}
-        options={dropdownTabs.map((tab) => ({ value: tab.value, label: tab.label }))}
-        value={activeDropdownTab?.value ?? ""}
-        placeholder={activeDropdownTab ? undefined : dropdownPlaceholder}
-        selected={Boolean(activeDropdownTab)}
-        onValueChange={handleDropdownChange}
+        activeId={activeDropdownTab?.value}
+        placeholder={dropdownPlaceholder}
+        searchPlaceholder="Search listing types…"
+        alwaysCollapsed
       />
     ) : undefined;
 
