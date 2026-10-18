@@ -1,0 +1,212 @@
+"use client";
+
+/*
+ * WHY: A retry is where the resume clamp becomes visible or invisible, and
+ *      invisible is the dangerous one. The server may move the resume point
+ *      EARLIER than asked; an operator who requested a fast resume and silently
+ *      got a full re-trace concludes the tool is broken.
+ * WHAT: Name the new attempt, pick a tier and a resume point, see what the
+ *       server will actually do before committing to it.
+ *
+ * 🛑 THE CLAMP IS SHOWN, NEVER SWALLOWED. `explainResume()` already returns the
+ * sentence; this panel's entire reason for existing is that something renders
+ * it. Without the clamp a run resumed from `parts` with a changed ridge
+ * threshold would carry artifacts generated under DIFFERENT parameters than the
+ * run records — and nothing anywhere would contradict it. That is Root Cause
+ * #42's shape, which is why the parameter-to-stage grouping is structural
+ * rather than a convention.
+ *
+ * 🛑 The panel PREDICTS the clamp client-side so the operator sees it before
+ * submitting, and the server computes it again independently. Those are not
+ * redundant: the prediction is an affordance, the server's is the decision.
+ * They share `earliestChangedStage`/`stageIndex`, so they cannot disagree about
+ * which parameter belongs to which stage.
+ *
+ * EXPORTS: StickerRetryPanel
+ *
+ * @tag domain:sticker-trace
+ * @tag layer:feature
+ * @tag pattern:none
+ * @tag access:client
+ * @tag consumers:tools/sticker-tracer
+ * @tag sideEffects:none
+ */
+
+import { useCallback, useMemo, useState } from "react";
+import { normalizeError } from "../../../errors/normalize";
+import { Alert, Button, Card, Form, Heading, Stack, Text } from "../../../ui/index";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldSelect } from "../../../ui/forms/FieldSelect";
+import { TRACE_STAGES } from "../../../_internal/shared/features/sticker-trace/types";
+import type {
+  PrecisionTier,
+  TraceParams,
+  TraceStage,
+} from "../../../_internal/shared/features/sticker-trace/types";
+import {
+  resolveResumeStage,
+  explainResume,
+} from "../../../_internal/shared/features/sticker-trace/resume";
+import { paramsForTier } from "../../../_internal/shared/features/sticker-trace/config";
+import { TIER_HELP } from "../constants/help-content";
+
+const TIERS: PrecisionTier[] = ["draft", "standard", "precise", "max"];
+
+export interface StickerRetryPanelProps {
+  /** The run being retried — its name and params seed the form. */
+  source: { id: string; name: string; tier: PrecisionTier; params?: TraceParams };
+  /** True once the source run's light artifacts have been pruned. */
+  artifactsPruned?: boolean;
+  onSubmit: (input: {
+    name: string;
+    tier: PrecisionTier;
+    requestedResumeStage: TraceStage;
+    paramOverrides?: Record<string, number>;
+  }) => Promise<void>;
+  onCancel?: () => void;
+}
+
+export function StickerRetryPanel({
+  source,
+  artifactsPruned = false,
+  onSubmit,
+  onCancel,
+}: StickerRetryPanelProps) {
+  /*
+   * Seeded with the source's name plus a marker rather than left blank. A name
+   * is MANDATORY and the server rejects an empty one, so an empty field is a
+   * guaranteed round-trip failure on the most common action in the tool.
+   */
+  const [name, setName] = useState(`${source.name} — retry`);
+  const [tier, setTier] = useState<PrecisionTier>(source.tier);
+  const [requested, setRequested] = useState<TraceStage>("decode");
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  /*
+   * The next run's parameters, resolved exactly as the server will resolve
+   * them: tier defaults first, overrides second. Comparing anything else would
+   * predict a clamp the server does not apply, or miss one it does.
+   */
+  const nextParams = useMemo(() => paramsForTier(tier), [tier]);
+
+  const notice = useMemo(() => {
+    if (!source.params) return "";
+    return explainResume(resolveResumeStage(requested, source.params, nextParams));
+  }, [source.params, nextParams, requested]);
+
+  const submit = useCallback(async () => {
+    setPending(true);
+    setError(null);
+    try {
+      await onSubmit({ name: name.trim(), tier, requestedResumeStage: requested });
+    } catch (err) {
+      const n = normalizeError(err);
+      /*
+       * Shown here rather than thrown away. A retry that fails silently leaves
+       * the operator looking at a form that did nothing — and the most likely
+       * failure is a 409 on a name clash or a lapsed session, both of which the
+       * message names precisely.
+       */
+      setError(n.message);
+    } finally {
+      setPending(false);
+    }
+  }, [name, tier, requested, onSubmit]);
+
+  return (
+    <Card variant="default">
+      <Form onSubmit={(e) => e.preventDefault()}>
+        <Stack gap="comfortable">
+          <Heading level={3}>Retry as a new run</Heading>
+
+          {error ? <Alert variant="error">{error}</Alert> : null}
+
+          <Text size="sm" color="muted">
+            This never edits <Text as="span" weight="semibold">{source.name}</Text> —
+            it creates a new attempt beside it, so both stay comparable.
+          </Text>
+
+          <FieldInput
+            name="name"
+            label="Name this attempt"
+            required
+            value={name}
+            onChange={setName}
+          />
+          <Text size="xs" color="muted">
+            Required. You will be comparing this against the others in a week.
+          </Text>
+
+          <FieldSelect
+            name="tier"
+            label="Tier"
+            value={tier}
+            options={TIERS.map((t) => ({ value: t, label: TIER_HELP[t].title }))}
+            onChange={(v) => setTier(v as PrecisionTier)}
+          />
+          <Text size="xs" color="muted">
+            {TIER_HELP[tier].body}
+          </Text>
+
+          <FieldSelect
+            name="resume"
+            label="Resume from"
+            value={requested}
+            options={TRACE_STAGES.map((s) => ({ value: s, label: s }))}
+            onChange={(v) => setRequested(v as TraceStage)}
+          />
+
+          {/*
+            * The clamp. `explainResume` returns an empty string when nothing was
+            * moved, so an absent alert genuinely means "you get what you asked
+            * for" rather than "we forgot to tell you".
+            */}
+          {notice ? (
+            <Alert variant="warning">
+              {notice}
+            </Alert>
+          ) : null}
+
+          {/*
+            * Pruning is a different refusal from the clamp and must not be
+            * folded into it: the clamp is about parameters, this is about bytes
+            * that no longer exist. Resuming against a pruned run would read
+            * every missing artifact as an empty result — a successful-looking
+            * run with no parts.
+            */}
+          {artifactsPruned ? (
+            <Alert variant="warning">
+              This run&apos;s artifacts have been cleared, so the retry starts from
+              the beginning whatever you pick here.
+            </Alert>
+          ) : null}
+
+          {!source.params ? (
+            <Text size="xs" color="muted">
+              This run predates parameter recording, so the resume point cannot be
+              checked ahead of time — the server will decide and tell you.
+            </Text>
+          ) : null}
+
+          <Stack gap="dense">
+            <Button
+              type="submit"
+              variant="primary"
+              isLoading={pending}
+              disabled={pending || name.trim().length === 0}
+              onClick={submit}
+            >
+              Start retry
+            </Button>
+            {onCancel ? (
+              <Button variant="ghost" onClick={onCancel} disabled={pending}>
+                Cancel
+              </Button>
+            ) : null}
+          </Stack>
+        </Stack>
+      </Form>
+    </Card>
+  );
+}

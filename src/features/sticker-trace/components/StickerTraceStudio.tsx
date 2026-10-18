@@ -43,6 +43,8 @@ import type {
 import { CUT_CONTOUR_CSS } from "../../../_internal/shared/features/sticker-trace/cut-contour";
 import { PARAM_HELP, TIER_HELP } from "../constants/help-content";
 import { useLiveTrace } from "../hooks/useLiveTrace";
+import { canvasCodec } from "../../../_internal/client/features/sticker-trace/canvas-codec";
+import { normalizeError } from "../../../errors/normalize";
 
 /*
  * Only `draft` is offered. The hook runs on the main thread and draft's
@@ -83,8 +85,26 @@ const CONTROLS = [
 ];
 
 export interface StickerTraceStudioProps {
-  /** Rendered under the canvas — where a parent puts "commit this as a run". */
-  renderCommit?: (ctx: { params: TraceParams; file: File | null }) => React.ReactNode;
+  /**
+   * Rendered under the canvas — where a parent puts "commit this as a run".
+   *
+   * 🛑 `dimensions` are the scan's NATURAL size, from `codec.probe` — NOT the
+   * raster's. The working raster is capped at the tier's `workingLongEdge`
+   * (1200 at draft), so handing over `raster.width` would record the draft
+   * size as the scan's true size on the sheet document, and every millimetre
+   * derived from it afterwards would be wrong by the downscale factor.
+   *
+   * The browser is the only party that can measure this at all: appkit cannot
+   * probe an image (the codec is injected, Root Cause #24) and reading the
+   * header server-side would mean pulling up to 100 MB into a function, which
+   * is the egress mistake this feature exists to avoid. Null until the probe
+   * lands.
+   */
+  renderCommit?: (ctx: {
+    params: TraceParams;
+    file: File | null;
+    dimensions: { widthPx: number; heightPx: number } | null;
+  }) => React.ReactNode;
 }
 
 export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
@@ -94,6 +114,47 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const { parts, diagnostics, raster, tracing, lastMs, error } = useLiveTrace(source, params);
+
+  /*
+   * The scan's natural size, probed once per file.
+   *
+   * Deliberately separate from the trace: `probe` reads the header only and
+   * does not decode pixels, so this costs nothing next to the trace itself —
+   * and it is the only number the commit flow may record as the scan's size.
+   */
+  const [natural, setNatural] = useState<{ widthPx: number; heightPx: number } | null>(
+    null,
+  );
+  const [probeError, setProbeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!source) {
+      setNatural(null);
+      return;
+    }
+    let live = true;
+    setProbeError(null);
+    void canvasCodec
+      .probe(source)
+      .then((p) => {
+        if (live) setNatural({ widthPx: p.width, heightPx: p.height });
+      })
+      .catch((err) => {
+        const n = normalizeError(err);
+        // A failed probe must not silently fall back to the raster's size —
+        // that is the downscaled one, and a wrong scan size is invisible until
+        // a millimetre figure reaches a cut file. Null blocks the commit.
+        // Recorded on state rather than logged: this is a client component, and
+        // the operator is the one who needs to know the commit is blocked.
+        if (live) {
+          setNatural(null);
+          setProbeError(n.message);
+        }
+      });
+    return () => {
+      live = false;
+    };
+  }, [source]);
 
   const onFile = useCallback((picked: File) => {
     setFile(picked);
@@ -165,6 +226,23 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
           <Card variant="default">
             <Text color="error" role="alert">
               {error}
+            </Text>
+          </Card>
+        ) : null}
+
+        {/*
+          * Separate from the trace error on purpose. A failed trace means the
+          * parameters need work; a failed PROBE means the scan's true size is
+          * unknown, which blocks committing entirely — and silently falling
+          * back to the downscaled raster's size would put a wrong number on the
+          * sheet that only surfaces as a wrong millimetre on a cut file.
+          */}
+        {probeError ? (
+          <Card variant="default">
+            <Text color="error" role="alert">
+              Could not read this scan&apos;s dimensions ({probeError}). You can
+              still tune it, but it cannot be committed as a run until that
+              works — a run needs the real pixel size, not the preview&apos;s.
             </Text>
           </Card>
         ) : null}
@@ -259,7 +337,11 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
           </Card>
         ) : null}
 
-        {renderCommit?.({ params, file })}
+        {renderCommit?.({
+          params,
+          file,
+          dimensions: natural,
+        })}
       </Stack>
     </Section>
   );
