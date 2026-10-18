@@ -372,6 +372,40 @@ export const TOOL_ENDPOINTS = {
   PRICE_INDEX_SEARCH: (q: string) => `/api/tools/price-index?q=${encodeURIComponent(q)}`,
 } as const;
 
+/**
+ * The sticker-sheet kiss-cut tracer. Admin-only, every route behind
+ * `admin:products:write`.
+ *
+ * 🛑 EVERY ONE OF THESE RETURNS JSON. Not one returns bytes — a binary is
+ * always a 5-minute signed GCS URL fetched by the browser directly, which is
+ * why `ASSET` takes a KIND and hands back `{ url, expiresAt }`. Vercel Hobby's
+ * Fast Origin Transfer allowance is 10 GB and exceeding a cap PAUSES THE
+ * PROJECT, which happened here at 52.52 GB (Root Cause #104).
+ * `audit-sticker-trace-egress` is strict-zero on it with no suppression marker.
+ */
+export const STICKER_SHEET_ENDPOINTS = {
+  /** GET the sheet list · POST creates a sheet AND signs its scan upload. */
+  SHEETS: "/api/admin/sticker-sheets",
+  SHEET_BY_ID: (id: string) => `/api/admin/sticker-sheets/${id}`,
+  /** POST finalizes an upload: magic-byte verified, then recorded on the sheet. */
+  UPLOAD: (id: string) => `/api/admin/sticker-sheets/${id}/upload`,
+  /** GET the attempt history · POST starts a run. 🛑 `name` is REQUIRED. */
+  RUNS: (id: string) => `/api/admin/sticker-sheets/${id}/runs`,
+  /** POST a retry as a NEW named run. The response carries the resume clamp. */
+  RUN_RETRY: (id: string, runId: string) =>
+    `/api/admin/sticker-sheets/${id}/runs/${runId}/retry`,
+  /**
+   * Mint a signed read URL. `kind` names WHAT is wanted and the server resolves
+   * the path itself — accepting a path would be a signed-URL mint for any
+   * object in the bucket.
+   */
+  ASSET: (id: string, kind: string, runId?: string) =>
+    `/api/admin/sticker-sheets/${id}/asset?kind=${encodeURIComponent(kind)}` +
+    (runId ? `&runId=${encodeURIComponent(runId)}` : ""),
+  /** The storage meter — bytes AND object count, biggest sheet first. */
+  USAGE: "/api/admin/sticker-sheets/usage",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Checkout
 // ---------------------------------------------------------------------------
@@ -846,6 +880,7 @@ export const API_ENDPOINTS = {
   SUPPORT: SUPPORT_ENDPOINTS,
   SCAMMERS: SCAMMER_ENDPOINTS,
   REPORTS: REPORT_ENDPOINTS,
+  STICKER_SHEETS: STICKER_SHEET_ENDPOINTS,
 } as const;
 
 /** Canonical alias — prefer API_ROUTES over API_ENDPOINTS in new code. */
