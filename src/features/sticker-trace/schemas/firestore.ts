@@ -78,8 +78,28 @@ export interface StoredAsset {
   assetPath: string;
   contentType: string;
   bytes: number;
-  /** Lets a re-upload of identical bytes be recognised rather than re-traced. */
-  sha256: string;
+  /**
+   * Lets a re-upload of identical bytes be recognised rather than re-traced.
+   *
+   * 🛑 OPTIONAL, and CLIENT-SUPPLIED, and therefore a DEDUPE HINT rather than
+   * an integrity check — all three of those are the same fact stated three
+   * ways, and conflating them is how a hash field starts being trusted.
+   *
+   * The server cannot compute it. Hashing the object means downloading all of
+   * it into a Vercel function, and `@ShayBlader Scan 18` is 79 MB — that is
+   * precisely the egress mistake the whole storage module is built to avoid
+   * (Root Cause #104, which paused this project at 52.52 GB against a 10 GB
+   * allowance). GCS does return a server-computed digest in object metadata,
+   * but it is md5/crc32c; putting one of those in a field named `sha256` would
+   * be a worse lie than leaving the field empty.
+   *
+   * The browser already holds the bytes — it decoded them for live tuning — so
+   * it can hash them with SubtleCrypto for free. It was REQUIRED until
+   * 2026-10-19, with no producer and no reader anywhere, which is the shape
+   * that gets a field filled with a fabricated value by the first caller that
+   * has to satisfy the compiler.
+   */
+  sha256?: string;
 }
 
 /**

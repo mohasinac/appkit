@@ -2149,3 +2149,45 @@ export {
  * the primitive instead would make every binding re-invent the lookup.
  */
 export { rasterisePartToBox } from "./_internal/shared/features/sticker-trace/math/rasterize-path";
+
+/*
+ * The sticker-trace ROUTE layer's server surface.
+ *
+ * 🛑 These go in the WIDE barrel, not in `./features/sticker-trace/server`.
+ * That narrow entry exists because a Cloud Function cannot bundle this barrel
+ * at all (it drags in react-server-dom-webpack and @vercel/og's wasm — Root
+ * Cause #18, caught by tsup rather than by review). Next.js route handlers are
+ * the opposite case: they already import this barrel, and adding them to the
+ * narrow entry would widen exactly the thing the narrow entry exists to keep
+ * small.
+ *
+ * Each from its DEFINING module. The run lifecycle lives in `actions.ts`, the
+ * sheet lifecycle in `sheet-actions.ts`, and the projections in `adapters.ts`.
+ */
+export {
+  startStickerTraceRun,
+  retryStickerTraceRun,
+  listStickerTraceRuns,
+  type StartTraceRunInput,
+  type RetryTraceRunInput,
+  type RetryTraceRunResult,
+  type TraceRunHandle,
+  type TraceRunListRow,
+} from "./_internal/server/features/sticker-trace/actions";
+export {
+  createStickerSheet,
+  attachStickerSheetScan,
+  resolveStickerAssetUrl,
+  measureStickerStorage,
+  STICKER_ASSET_KINDS,
+  STICKER_SHEET_MAX_BYTES,
+  type StickerAssetKind,
+  type SheetUsageRow,
+  type StickerStorageUsage,
+} from "./_internal/server/features/sticker-trace/sheet-actions";
+export {
+  toClientStickerSheet,
+  toClientTraceRun,
+  type ClientStickerSheet,
+  type ClientTraceRun,
+} from "./_internal/server/features/sticker-trace/adapters";
