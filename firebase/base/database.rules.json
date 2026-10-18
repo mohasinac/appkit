@@ -153,6 +153,33 @@
     },
 
     // ============================================================
+    // Sticker Kiss-Cut Tracer — per-run progress channel
+    // ============================================================
+    // Stages: queued -> decode -> prefilter -> ridge -> flood -> segment ->
+    //         cluster -> geometry -> parts(n/N) -> exports -> done
+    //
+    // The token encodes ONLY { stickerTraceRunId: runId }, minted by the route
+    // that CREATES the run — the same per-event discipline as the three
+    // channels above, and the reason there is no general-purpose token here
+    // either.
+    //
+    // 🛑 PRUNED AT 60 MINUTES, not the 15 used by bulk_events, and that is a
+    // correctness choice rather than generosity. A `max`-tier fan-out across
+    // sixty parts can exceed fifteen minutes, and a channel pruned mid-run
+    // reads to the client as "it died" — which is the exact false signal this
+    // channel exists to prevent. The DURABLE history lives on the run document
+    // (`events[]`, capped at 100); this node is only the live bar.
+    //
+    // Cleanup: cleanupRtdbEvents.
+    // ============================================================
+    "sticker_trace": {
+      "$runId": {
+        ".read": "auth != null && auth.token.stickerTraceRunId == $runId",
+        ".write": false
+      }
+    },
+
+    // ============================================================
     // Chat Event Bridge — D9, a new-message ping channel
     // ============================================================
     // RTDB-ping-plus-REST, not onSnapshot — `firestore.rules` is

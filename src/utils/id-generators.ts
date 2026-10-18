@@ -264,6 +264,34 @@ export function generateShipmentId(input: GenerateShipmentIdInput): string {
   return `shipment-${supplierSlug}-${y}${m}${d}-${generateRandomString(6)}`;
 }
 
+// --- Sticker sheet (kiss-cut tracer) ---------------------------------------------
+//
+// 🛑 A date + random suffix, NOT a pure slug, and the reason is specific to
+// this feature: re-scanning the same physical sheet is a normal thing to do —
+// a better scanner, a flatter lay, a halftone sheet that needed a second go —
+// and the title is the sheet's name, so both scans carry the same one. A pure
+// `stickersheet-{title}` id would make the second upload silently OVERWRITE
+// the first, destroying its runs' only parent.
+//
+// Compare `product-` / `category-`, which are pure slugs precisely because a
+// second row with the same name IS the same thing.
+
+export interface GenerateStickerSheetIdInput {
+  title: string;
+  date?: Date;
+  customId?: string;
+}
+
+export function generateStickerSheetId(input: GenerateStickerSheetIdInput): string {
+  if (input.customId?.trim()) return input.customId.trim();
+  const titleSlug = slugify(input.title).substring(0, 40).replace(/-+$/, "");
+  const date = input.date || new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `stickersheet-${titleSlug}-${y}${m}${d}-${generateRandomString(6)}`;
+}
+
 // --- Catalogue item (Feature B — personal catalogue) -----------------------------
 //
 // `mycatalog-` prefix (not `catalog-`) — deliberately distinct from the

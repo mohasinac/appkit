@@ -10257,6 +10257,62 @@
       ]
     },
     {
+      "collectionGroup": "stickerTraceRuns",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "sheetId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "stickerTraceRuns",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "stickerSheets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "traceStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "stickerSheets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "scanType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "stores",
       "queryScope": "COLLECTION",
       "fields": [

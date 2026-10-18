@@ -18,6 +18,16 @@ const EMAIL_STALE_MS = 60 * 60 * 1000;
 /** Long enough for an open thread to notice a ping before it prunes; the
  * message itself lives in Firestore regardless — this only clears the ping. */
 const CHAT_STALE_MS = 15 * 60 * 1000;
+/**
+ * 🛑 SIXTY minutes, and the four-times-longer window is load-bearing rather
+ * than cautious. A `max`-tier trace fans out across up to sixty parts and can
+ * exceed fifteen minutes end to end; a channel pruned while the run is still
+ * working reads to the client as "it died", which is the one signal this
+ * channel exists to make impossible. The durable history is on the run
+ * document, so the cost of keeping the node an hour is a handful of small
+ * nodes and the cost of dropping it early is a false failure report.
+ */
+const STICKER_TRACE_STALE_MS = 60 * 60 * 1000;
 const JOBS_TTL_DAYS = 30;
 
 export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
@@ -121,6 +131,42 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
   } catch (emailErr) {
     void normalizeError(emailErr);
     ctx.logger.error("Email events cleanup failed (non-fatal)", emailErr);
+  }
+
+  /*
+   * Sticker kiss-cut tracer progress channels. One node per run, overwritten
+   * in place as the trace advances, so the channel's size is bounded by
+   * concurrent runs rather than by history — but only because this prunes it.
+   * `auction-bids/*` is the Firebase budget's one family with no TTL; do not
+   * make this the second.
+   *
+   * The run DOCUMENT keeps the durable event log, so removing a node loses
+   * nothing a retry panel or a post-mortem reads.
+   */
+  try {
+    const traceSnap = await rtdb.ref(RTDB_PATHS.STICKER_TRACE).get();
+    if (traceSnap.exists()) {
+      const allTraceNodes = traceSnap.val() as Record<string, { updatedAt?: number }>;
+      const staleTraceIds = Object.entries(allTraceNodes)
+        .filter(([, node]) => {
+          const at = node.updatedAt ?? 0;
+          // Missing or non-finite is stale BY DEFINITION — it can never age
+          // out on its own, so leaving it would pin the node forever.
+          return !Number.isFinite(at) || at === 0 || at < now - STICKER_TRACE_STALE_MS;
+        })
+        .map(([id]) => id);
+      if (staleTraceIds.length > 0) {
+        await Promise.all(
+          staleTraceIds.map((id) => rtdb.ref(`${RTDB_PATHS.STICKER_TRACE}/${id}`).remove()),
+        );
+        ctx.logger.info("Sticker trace progress nodes removed", {
+          count: staleTraceIds.length,
+        });
+      }
+    }
+  } catch (traceErr) {
+    void normalizeError(traceErr);
+    ctx.logger.error("Sticker trace cleanup failed (non-fatal)", traceErr);
   }
 
   /*

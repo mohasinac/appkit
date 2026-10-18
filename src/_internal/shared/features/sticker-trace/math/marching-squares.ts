@@ -63,6 +63,62 @@ function lerp(a: number, b: number, iso: number): number {
 }
 
 /**
+ * Cases 5 and 10 are the SADDLES: two diagonal corners inside, two outside.
+ *
+ * Both have two geometrically valid pairings, and the one chosen decides
+ * whether the two regions pinch together at this cell or stay apart. Choosing
+ * inconsistently across neighbouring cells produces rings that cross
+ * themselves, which survives every later stage — RDP simplifies it, the Bézier
+ * fit smooths it, and it emerges as a cut path that doubles back.
+ *
+ * Resolve by the cell's MEAN, which keeps the choice continuous with the
+ * surrounding field instead of arbitrary.
+ *
+ * 🛑 The two codes take OPPOSITE pairings for the same centre value — they are
+ * mirror configurations. Sharing one branch without the inversion would join
+ * the wrong corners on half of all saddles, and the output would still be a
+ * plausible set of closed rings.
+ *
+ * Extracted from the switch rather than inlined: at that depth it tripped
+ * `audit-code-quality`'s DEEP_NESTING, and the two cases had independently
+ * re-derived the same mean.
+ *
+ * 🛑 MEASURED 2026-10-18: this branch is NOT REACHED by any of the reference
+ * scans, at `standard` or at `precise`. Inverting the rule on purpose changed
+ * nothing — not part counts, not total Bézier node counts, not closure — on
+ * five scans at both tiers. The reason is upstream: `close` and
+ * `curvatureSmooth` eliminate the checkerboard-like local patterns a true
+ * diagonal saddle requires, and `softenForSubPixel`'s blur removes what little
+ * survives.
+ *
+ * So the correctness of the inversion rests on INSPECTION (all four
+ * code×centre combinations hand-checked), never on measurement. Do not read
+ * the corpus harness agreeing with itself as evidence about this function.
+ * It is kept because a future tier that traces a less-smoothed field, or any
+ * path that skips the cleaning stages, reaches it immediately — and because
+ * the failure it prevents is a self-crossing cut path, which survives RDP and
+ * the Bézier fit and emerges looking like a plausible outline.
+ */
+function connectSaddle(
+  code: 5 | 10,
+  corners: { tl: number; tr: number; br: number; bl: number },
+  iso: number,
+  edges: { top: number; right: number; bottom: number; left: number },
+  connect: (a: number, b: number) => void,
+): void {
+  const mean = (corners.tl + corners.tr + corners.br + corners.bl) / 4;
+  const centreInside = mean >= iso;
+  const joinLeftToTop = code === 5 ? centreInside : !centreInside;
+  if (joinLeftToTop) {
+    connect(edges.left, edges.top);
+    connect(edges.bottom, edges.right);
+  } else {
+    connect(edges.left, edges.bottom);
+    connect(edges.top, edges.right);
+  }
+}
+
+/**
  * Extract every closed ring at `iso`.
  *
  * `field` may be the binary mask itself or a blurred copy; both are read as
@@ -138,33 +194,21 @@ export function traceContours(
         case 8:
           connect(left, top);
           break;
-        // 5 and 10 are the saddles: two diagonal corners inside, two outside.
-        // The connection chosen decides whether the two regions pinch together
-        // or stay apart, and choosing inconsistently produces rings that cross.
-        // Resolve by the cell's mean, which keeps the choice continuous with
-        // the surrounding field rather than arbitrary.
-        case 5: {
-          const mean = (tl + tr + br + bl) / 4;
-          if (mean >= iso) {
-            connect(left, top);
-            connect(bottom, right);
-          } else {
-            connect(left, bottom);
-            connect(top, right);
-          }
+        /*
+         * The two saddles — see `connectSaddle` for why they are not one case.
+         *
+         * Split rather than shared so each passes a LITERAL: `code` is a
+         * `number` here (it comes out of a bitwise OR), so a shared
+         * `case 5: case 10:` would not narrow it and the helper would have to
+         * accept `number` — making 7 a representable argument for a function
+         * that has no correct answer for it.
+         */
+        case 5:
+          connectSaddle(5, { tl, tr, br, bl }, iso, { top, right, bottom, left }, connect);
           break;
-        }
-        case 10: {
-          const mean = (tl + tr + br + bl) / 4;
-          if (mean >= iso) {
-            connect(left, bottom);
-            connect(top, right);
-          } else {
-            connect(left, top);
-            connect(bottom, right);
-          }
+        case 10:
+          connectSaddle(10, { tl, tr, br, bl }, iso, { top, right, bottom, left }, connect);
           break;
-        }
         default:
           break;
       }
