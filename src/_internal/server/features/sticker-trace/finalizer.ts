@@ -27,8 +27,18 @@ import {
 import { emitProgress, emitTerminalFailure } from "./progress";
 
 export interface FinalizerDeps {
-  /** Builds the cut SVG from geometry.json. Pure given the geometry. */
-  buildCutSvg: (runId: string, sheetId: string) => Promise<Uint8Array>;
+  /**
+   * Builds the cut SVG from geometry.json.
+   *
+   * 🛑 OPTIONAL, and that is a phase boundary rather than laxity. The exporter
+   * belongs to the export suite (machine profiles, node budgets, oversized-part
+   * tiling), not to the fan-out — so the fan-out ships without it and a run
+   * succeeds with no `cutSvgPath`. Requiring it here would have made the whole
+   * Functions pipeline wait on the export work, and a run that traced correctly
+   * is useful before anything can be cut: the parts and the overlay are what a
+   * human reviews.
+   */
+  buildCutSvg?: (runId: string, sheetId: string) => Promise<Uint8Array>;
   writeArtifact: (input: {
     sheetId: string;
     runId: string;
@@ -49,21 +59,39 @@ export async function runFinalizer(
     run = await stickerTraceRunsRepository.findByIdOrFail(runId);
     await emitProgress({ runId, stage: "exports", pct: 94, prior: run });
 
-    const svg = await deps.buildCutSvg(runId, sheetId);
-    const cut = await deps.writeArtifact({
-      sheetId,
-      runId,
-      name: "cut.svg",
-      contentType: "image/svg+xml",
-      body: svg,
-    });
+    /*
+     * No exporter wired yet -> the run still SUCCEEDS, with no cutSvgPath.
+     * Writing a placeholder artifact was the alternative and is worse: a zero
+     * length cut.svg is indistinguishable from a real one that failed to
+     * generate, and the review UI would offer a download that cuts nothing.
+     * An absent field is honest and is what the UI can branch on.
+     */
+    let cutSvgPath: string | undefined;
+    if (deps.buildCutSvg) {
+      const svg = await deps.buildCutSvg(runId, sheetId);
+      const cut = await deps.writeArtifact({
+        sheetId,
+        runId,
+        name: "cut.svg",
+        contentType: "image/svg+xml",
+        body: svg,
+      });
+      cutSvgPath = cut.assetPath;
+    } else {
+      serverLogger.info("Sticker trace finished without a cut file (no exporter wired)", {
+        runId,
+      });
+    }
 
     run = await stickerTraceRunsRepository.markSucceeded(
       runId,
       {
         partCount: run.partCount,
         groupCount: run.groupCount,
-        artifacts: { ...run.artifacts, cutSvgPath: cut.assetPath },
+        artifacts: {
+          ...run.artifacts,
+          ...(cutSvgPath ? { cutSvgPath } : {}),
+        },
       },
       run,
     );
