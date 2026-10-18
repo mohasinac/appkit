@@ -190,6 +190,10 @@ export function ProductDetailActions({
   return (
     <>
       {authModal}
+      {/* The CTA anchor that gates `SideActionDock` is marked one level up, on
+          `ProductDetailPageView`'s buy panel — this component renders NOTHING
+          in its `variant="mobile"` form, and an anchor missing on a phone would
+          hold the dock shut on the surface that needs it most. */}
       <Stack gap="sm">
         <Button
           variant="primary"

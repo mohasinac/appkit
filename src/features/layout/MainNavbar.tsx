@@ -29,6 +29,16 @@ export interface MainNavbarItem {
     label: string;
     description?: string;
     adminOnly?: boolean;
+    /**
+     * Optional stable key, mirroring the parent's. Consumers filter children on
+     * it — a listing type an admin has switched off has to disappear from the
+     * dropdown it moved into, and matching on a translated `label` would break
+     * the moment a second locale ships.
+     */
+    key?: string;
+    /** Same icon the child carried as a top-level item — a merged entry keeps
+     *  its visual in the dropdown, the sidebar and the mobile sheet. */
+    icon?: React.ReactNode;
   }>;
 }
 

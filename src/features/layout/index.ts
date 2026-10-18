@@ -67,7 +67,15 @@ export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
 export { useFormBottomActions } from "./hooks/useFormBottomActions";
 export type { UseFormBottomActionsOptions } from "./hooks/useFormBottomActions";
 
-export { default as BottomActions } from "./BottomActions";
+export { default as SideActionDock } from "./SideActionDock";
+/**
+ * @deprecated The bottom action bar is now a floating side dock. Kept as an
+ * alias so a consumer that mounts it by name keeps compiling and keeps
+ * rendering the same actions — the component it resolves to is
+ * `SideActionDock`.
+ */
+export { default as BottomActions } from "./SideActionDock";
+export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./cta-anchor";
 
 export { BottomChrome } from "./BottomChrome";
 export type { BottomChromeProps } from "./BottomChrome";

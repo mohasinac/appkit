@@ -27,6 +27,7 @@ const CLS_BUNDLE_ROW = "flex items-center justify-between gap-[var(--appkit-spac
 const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
 const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next/routing/route-map";
+import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
@@ -789,7 +790,16 @@ export async function ProductDetailPageView({
               )}
 
               {/* Actions */}
-              <Stack gap="sm">
+              {/*
+                🛑 The CTA ANCHOR — `SideActionDock` reveals itself only once
+                this block has been seen and scrolled past. It is marked HERE,
+                on the always-rendered buy panel, rather than inside
+                `ProductDetailActions`: that component renders nothing at all in
+                its `variant="mobile"` form, and an anchor that does not exist
+                on a phone would hold the dock shut on the one surface that
+                needs it most.
+              */}
+              <Stack gap="sm" {...ctaAnchorProps()}>
                 {renderPrimaryActions ? (
                   renderPrimaryActions({
                     productId: product.id,

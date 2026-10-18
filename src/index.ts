@@ -6175,8 +6175,13 @@ export { AutoBreadcrumbs } from "./features/layout/index";
 // BackToTop - Shared export for back to top.
 export { BackToTop } from "./features/layout/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// BottomActions - Shared export for bottom actions.
+// BottomActions - Shared export for bottom actions. @deprecated — alias of SideActionDock.
 export { BottomActions } from "./features/layout/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// SideActionDock - The floating action dock that replaced the bottom action bar.
+export { SideActionDock } from "./features/layout/index";
+// [SHARED]-Pure helper — marks a page's inline primary CTA so the dock reveals only after it scrolls out of view.
+export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./features/layout/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BottomActionsProvider - Component for bottom actions provider.
 export { BottomActionsProvider } from "./features/layout/index";

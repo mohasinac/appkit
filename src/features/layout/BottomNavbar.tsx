@@ -1,9 +1,11 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AvatarDisplay, Li, Span, TextLink } from "../../ui";
+import { ChevronUp } from "lucide-react";
+import { AvatarDisplay, Div, Drawer, IconButton, Li, Span, TextLink, Ul } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
+import { useHoldToOpen } from "./useHoldToOpen";
 import { useWishlistCount } from "../wishlist/hooks/useWishlistCount";
 import { useCartCount } from "../cart/hooks/useCartCount";
 
@@ -27,6 +29,20 @@ export interface BottomNavItem {
   href: string;
   label: string;
   icon?: React.ReactNode;
+  /**
+   * Sub-items, reached by holding the slot or tapping its caret — the same
+   * contract as the navbar dropdown and the sidebar's nested links.
+   *
+   * 🛑 A tap still FOLLOWS the link. The bottom bar has five slots for a whole
+   * site, so an item that stands for six pages has to surface them somewhere;
+   * without this they exist on desktop and vanish on the surface phones use.
+   */
+  children?: Array<{
+    href: string;
+    label: string;
+    description?: string;
+    icon?: React.ReactNode;
+  }>;
 }
 
 export interface BottomNavbarUser {
@@ -42,6 +58,74 @@ export interface BottomNavbarUser {
     reviewsCount?: number;
     rating?: number;
   } | null;
+}
+
+/**
+ * One bottom-nav slot. A plain item renders exactly as it always did; an item
+ * with children gains the hold gesture and a caret, both of which open the
+ * shared sheet rather than navigating.
+ *
+ * 🛑 The caret is `absolute` and the link fills the slot, so the tap target for
+ * "go to this page" does not shrink — the caret overlays its top corner rather
+ * than taking a column from it.
+ */
+function BottomNavSlot({
+  item,
+  isActive,
+  onOpenChildren,
+  activeClassName,
+  inactiveClassName,
+  iconClassName,
+  labelClassName,
+  fallbackIcon,
+}: {
+  item: BottomNavItem;
+  isActive: boolean;
+  onOpenChildren: (item: BottomNavItem) => void;
+  activeClassName?: string;
+  inactiveClassName?: string;
+  iconClassName?: string;
+  labelClassName?: string;
+  fallbackIcon: React.ReactNode;
+}) {
+  const hasChildren = Boolean(item.children && item.children.length > 0);
+  const holdHandlers = useHoldToOpen(() => onOpenChildren(item), hasChildren);
+
+  const link = (
+    <NavItem
+      href={item.href}
+      label={item.label}
+      icon={item.icon ?? fallbackIcon}
+      isActive={isActive}
+      variant="vertical"
+      activeClassName={activeClassName}
+      inactiveClassName={inactiveClassName}
+      iconClassName={iconClassName}
+      labelClassName={labelClassName}
+    />
+  );
+
+  if (!hasChildren) return link;
+
+  return (
+    <Div className="relative h-full w-full select-none touch-manipulation" {...holdHandlers}>
+      {link}
+      {/* 🛑 `<IconButton>`, not a raw `<button>` — the variant catalogue rule.
+          It extends ButtonHTMLAttributes, so aria-haspopup carries through, and
+          the sizing/focus ring come from the primitive rather than from a
+          className only this file would carry. */}
+      <IconButton
+        size="sm"
+        variant="ghost"
+        rounded="full"
+        onClick={() => onOpenChildren(item)}
+        aria-haspopup="dialog"
+        aria-label={`${item.label} menu`}
+        className="absolute top-0 end-0 text-[var(--appkit-color-text-muted)]"
+        icon={<ChevronUp className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />}
+      />
+    </Div>
+  );
 }
 
 export interface BottomNavbarProps {
@@ -113,6 +197,21 @@ export function BottomNavbar({
   const wishlistCount = useWishlistCount(userId);
   const cartCount = useCartCount(!!userId);
 
+  /*
+   * One sheet for the whole bar, keyed by which item opened it — not one
+   * <Drawer> per slot. Each Drawer portals a fixed overlay, so a sheet per slot
+   * is four overlays stacked on every page for a menu at most one of them is
+   * ever showing.
+   */
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const openItem = navItems?.find((i) => i.key === openKey) ?? null;
+
+  // Close on navigation: the sheet's own links are what navigate, and without
+  // this it stays open over the page it just took you to.
+  useEffect(() => {
+    setOpenKey(null);
+  }, [pathname]);
+
   const labels = {
     mobileNav: "Mobile navigation",
     home: "Home",
@@ -137,20 +236,29 @@ export function BottomNavbar({
     // slot was Wishlist — Wishlist remains reachable from the header/app
     // bar, it's just no longer duplicated in the bottom tab bar).
     const visibleItems = navItems.slice(0, cartHref ? 3 : 4);
+    const isSlotActive = (item: BottomNavItem) => {
+      // 🛑 A child's page counts. "Products" stands for /auctions and /bundles
+      // too now, so matching its own href alone would leave the bar marking
+      // nothing on most of the pages that slot represents.
+      const hrefs = [item.href, ...(item.children ?? []).map((c) => c.href)];
+      return hrefs.some(
+        (href) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`)),
+      );
+    };
     return (
+      <>
       <BottomNavLayout ariaLabel={labels.mobileNav}>
         {visibleItems.map((item) => (
           <Li key={item.key} className="flex-1">
-            <NavItem
-              href={item.href}
-              label={item.label}
-              icon={item.icon ?? defaultIcon}
-              isActive={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"))}
-              variant="vertical"
+            <BottomNavSlot
+              item={item}
+              isActive={isSlotActive(item)}
+              onOpenChildren={(it) => setOpenKey(it.key)}
               activeClassName={activeClassName}
               inactiveClassName={inactiveClassName}
               iconClassName={iconClassName}
               labelClassName={labelClassName}
+              fallbackIcon={defaultIcon}
             />
           </Li>
         ))}
@@ -192,6 +300,53 @@ export function BottomNavbar({
           </button>
         </Li>
       </BottomNavLayout>
+      <Drawer
+        isOpen={!!openItem}
+        onClose={() => setOpenKey(null)}
+        title={openItem?.label}
+        side="bottom"
+      >
+        <Ul className="list-none">
+          {/* The parent's own page is listed FIRST and by name. A sheet that
+              shows only the children hides the destination the slot's tap
+              would have reached, which is the one a visitor was aiming at. */}
+          {openItem && (
+            <Li>
+              <TextLink
+                href={openItem.href}
+                variant="none"
+                className="block rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text)]"
+              >
+                {openItem.label}
+              </TextLink>
+            </Li>
+          )}
+          {(openItem?.children ?? []).map((child) => (
+            <Li key={child.href}>
+              <TextLink
+                href={child.href}
+                variant="none"
+                className="flex items-start gap-[var(--appkit-space-2)] rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)]"
+              >
+                {child.icon && (
+                  <Span className="flex-shrink-0 mt-[var(--appkit-space-0-5)]" aria-hidden="true">
+                    {child.icon}
+                  </Span>
+                )}
+                <Span className="block">
+                <Span weight="medium" className="block">{child.label}</Span>
+                {child.description && (
+                  <Span size="xs" color="muted" className="block mt-[var(--appkit-space-0-5)] whitespace-normal">
+                    {child.description}
+                  </Span>
+                )}
+                </Span>
+              </TextLink>
+            </Li>
+          ))}
+        </Ul>
+      </Drawer>
+      </>
     );
   }
 

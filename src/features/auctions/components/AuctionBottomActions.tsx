@@ -94,6 +94,10 @@ export function AuctionBottomActions(props: AuctionBottomActionsProps) {
             ? `${formatCurrency(currentBid, currency)} · ${bidCount} bid${bidCount !== 1 ? "s" : ""}`
             : `Sign in to see the bid · ${bidCount} bid${bidCount !== 1 ? "s" : ""}`,
           desktop: "after-scroll" as const,
+          // The inline bid panel on the detail page. The dock stays shut until
+          // a bidder has actually seen it and scrolled past — beside it, the
+          // dock would just be a second "Place bid" button.
+          ctaAnchorId: "auction-bid-form",
         },
   );
 

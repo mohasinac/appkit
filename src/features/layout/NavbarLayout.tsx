@@ -2,9 +2,10 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { Div, Li, Nav, Row, Span, Ul } from "../../ui";
+import { Div, IconButton, Li, Nav, Row, Span, Ul } from "../../ui";
 import { NavbarChevron } from "../../ui/components/NavbarChevron";
 import { findActiveNavItem } from "../../_internal/client/features/layout/navActive";
+import { useHoldToOpen } from "./useHoldToOpen";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -28,7 +29,14 @@ export interface NavbarLayoutItem {
    * operate on a phone, and the bottom nav / sidebar already carry the deep
    * structure.
    */
-  children?: Array<{ href: string; label: string; description?: string }>;
+  children?: Array<{
+    href: string;
+    label: string;
+    description?: string;
+    /** Same icon the child carried as a top-level item, so merging an entry
+     *  into a dropdown does not strip the only visual it had. */
+    icon?: React.ReactNode;
+  }>;
 }
 
 export interface NavbarLayoutProps {
@@ -60,21 +68,77 @@ function DefaultNavItem({
       ? "bg-primary-50 dark:bg-[var(--appkit-color-surface-elevated)] text-primary-800 dark:text-white font-semibold px-[var(--appkit-space-3)] border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
       : "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-[var(--appkit-space-3)]";
 
+  const hasChildren = Boolean(item.children && item.children.length > 0);
+
+  /*
+   * Click-to-open state, which exists ONLY for the caret.
+   *
+   * 🛑 Hover and focus stay pure CSS below, and this does not replace them. The
+   * panel opens on `group-hover` / `group-focus-within` with no JS at all, which
+   * is what keeps it usable for a keyboard user on Tab and before hydration.
+   * This adds the third affordance that was genuinely missing: a pointer user
+   * who CLICKS the caret expecting a menu got a navigation instead, because the
+   * caret was inside the parent `<Link>`.
+   */
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const panelId = `nav-panel-${item.href.replace(/[^a-z0-9]+/gi, "-")}`;
+
+  /*
+   * Close on outside click, on Escape, and whenever the route changes.
+   *
+   * The route-change close is the one that is easy to miss and the most
+   * annoying to live with: the panel's own links navigate, and without this the
+   * menu stays open over the page it just took you to. `isActive` is derived
+   * from `pathname` upstream, so the effect re-runs on every navigation.
+   */
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [item.href, isActive]);
+
+  /*
+   * Hold-to-open — the touch affordance, shared with the mobile bottom nav so
+   * one gesture is defined once. See `useHoldToOpen` for why the "did we hold"
+   * flag has to be a ref.
+   */
+  const holdHandlers = useHoldToOpen(() => setOpen(true), hasChildren);
+
   const trigger = (
     <Link
       href={item.href}
       aria-current={isActive ? "page" : undefined}
-      className={`flex items-center gap-[var(--appkit-space-1-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] rounded-lg font-medium transition-colors duration-150 whitespace-nowrap ${activeClasses}`}
+      className={`flex items-center gap-[var(--appkit-space-1-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] rounded-lg font-medium transition-colors duration-150 whitespace-nowrap ${activeClasses}${hasChildren ? " select-none touch-manipulation" : ""}`}
+      {...holdHandlers}
     >
       {item.icon}
       <Span>{item.label}</Span>
-      {item.children && item.children.length > 0 && (
-        <ChevronDown className="w-3.5 h-3.5 shrink-0 opacity-70" aria-hidden="true" />
-      )}
     </Link>
   );
 
-  if (!item.children || item.children.length === 0) return trigger;
+  /*
+   * The explicit narrow, not just `hasChildren`. A boolean derived from
+   * `item.children` does not narrow the field itself, so the `.map` below
+   * cannot see that it is defined — this keeps both the readable guard above
+   * and a non-optional array to iterate.
+   */
+  const children = item.children ?? [];
+  if (!hasChildren || children.length === 0) return trigger;
 
   /*
    * 🛑 Hover/focus-within CSS, not React state, and the trigger is still a real
@@ -82,37 +146,81 @@ function DefaultNavItem({
    *
    * Two things this buys. The group stays usable without JS and without a
    * pointer — `focus-within` opens it on Tab, so a keyboard user reaches the
-   * children; and `aria-haspopup`/`aria-expanded` are deliberately NOT faked,
-   * because nothing here manages expanded state and announcing a state we do
-   * not track is worse than announcing none. The parent is a link whose
-   * children are also reachable from the page it leads to, which is the
-   * progressive-enhancement shape rather than a menu that traps people.
+   * children. And the parent is a real link whose children are also reachable
+   * from the page it leads to, which is the progressive-enhancement shape
+   * rather than a menu that traps people.
+   *
+   * 🛑 The CARET is now a separate button, and `aria-expanded` is real rather
+   * than faked. It used to live INSIDE the parent `<Link>`, so clicking the one
+   * control that looks like a disclosure navigated away instead of disclosing —
+   * the caret was announcing an affordance the markup did not have. It is the
+   * button that owns `aria-expanded`/`aria-controls`, because it is the only
+   * part that tracks state; the hover and focus paths still open the panel
+   * without touching it, which is why the attribute can be false while the
+   * panel is visible. That asymmetry is honest: the button reports what the
+   * BUTTON did, and a hover is not a disclosure a screen reader user performed.
    *
    * The `pt` on the panel is a hover bridge: without it the gap between the
    * trigger and the panel closes the menu as the pointer crosses it.
    */
   return (
-    <Div className="relative group">
-      {trigger}
-      <Div className="absolute left-0 top-full z-20 hidden pt-[var(--appkit-space-1)] group-hover:block group-focus-within:block">
+    <Div ref={wrapRef} className="relative group">
+      <Row align="center" gap="none">
+        {trigger}
+        {/*
+          🛑 `<IconButton>`, not a raw `<button>` — the variant catalogue rule.
+          It extends ButtonHTMLAttributes, so aria-expanded/-controls carry
+          through unchanged; the point of the primitive is that the sizing,
+          focus ring and hover surface come from one place rather than from a
+          className only this file would carry.
+        */}
+        <IconButton
+          type="button"
+          size="sm"
+          variant="ghost"
+          rounded="md"
+          aria-expanded={open}
+          aria-haspopup="true"
+          aria-controls={panelId}
+          aria-label={`${item.label} menu`}
+          onClick={() => setOpen((v) => !v)}
+          icon={
+            <ChevronDown
+              className={`w-3.5 h-3.5 shrink-0 opacity-70 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+              aria-hidden="true"
+            />
+          }
+        />
+      </Row>
+      <Div
+        id={panelId}
+        className={`absolute left-0 top-full z-20 pt-[var(--appkit-space-1)] group-hover:block group-focus-within:block ${open ? "block" : "hidden"}`}
+      >
         <Div surface="elevated" border="default" rounded="lg" shadow="lg" padding="xs">
         <Ul className="min-w-[15rem] list-none">
-          {item.children.map((child) => (
+          {children.map((child) => (
             <Li key={child.href}>
               <Link
                 href={child.href}
-                className="block rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] hover:bg-surface-hover transition-colors duration-150"
+                className="flex items-start gap-[var(--appkit-space-2)] rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] hover:bg-surface-hover transition-colors duration-150"
               >
-                <Span weight="medium">{child.label}</Span>
-                {child.description && (
-                  <Span
-                    size="xs"
-                    color="muted"
-                    className="block mt-[var(--appkit-space-0-5)] whitespace-normal"
-                  >
-                    {child.description}
+                {child.icon && (
+                  <Span className="flex-shrink-0 mt-[var(--appkit-space-0-5)]" aria-hidden="true">
+                    {child.icon}
                   </Span>
                 )}
+                <Span className="block">
+                  <Span weight="medium" className="block">{child.label}</Span>
+                  {child.description && (
+                    <Span
+                      size="xs"
+                      color="muted"
+                      className="block mt-[var(--appkit-space-0-5)] whitespace-normal"
+                    >
+                      {child.description}
+                    </Span>
+                  )}
+                </Span>
               </Link>
             </Li>
           ))}
@@ -186,8 +294,20 @@ export function NavbarLayout({
   // `findActiveNavItem` prefix-matches (`activeHref.startsWith(`${href}/`)`) and
   // resolves ties by LONGEST href, so a root entry like "/" cannot light up on
   // every page and a more specific entry always beats a shorter one.
-  const activeItem = findActiveNavItem(items, activeHref);
-  const isItemActive = (item: NavbarLayoutItem) => activeItem?.href === item.href;
+  //
+  // 🛑 CHILDREN COUNT. A dropdown parent links to one page and stands for
+  // several — "Products" owns /auctions, /bundles and the rest — so resolving
+  // against top-level hrefs alone would mark NOTHING on four of the six pages
+  // the parent represents, which is the same lost-your-place bug described
+  // above, just one level down. Each child is resolved as a candidate carrying
+  // its parent's href, so the longest-match rule still decides and a child
+  // always beats its own shorter parent.
+  const candidates = items.flatMap((item) => [
+    { href: item.href, ownerHref: item.href },
+    ...(item.children ?? []).map((child) => ({ href: child.href, ownerHref: item.href })),
+  ]);
+  const activeItem = findActiveNavItem(candidates, activeHref);
+  const isItemActive = (item: NavbarLayoutItem) => activeItem?.ownerHref === item.href;
 
   if (inline) {
     return (

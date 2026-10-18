@@ -27,6 +27,13 @@ export interface UseBottomActionsOptions {
    */
   desktop?: BottomActionsDesktopMode;
   /**
+   * `id` of this page's inline primary CTA. The floating action dock stays
+   * hidden until that element has been seen and scrolled out of view. Omit it
+   * and the dock appears as soon as there is something to show — which is what
+   * every bulk-selection screen wants.
+   */
+  ctaAnchorId?: string;
+  /**
    * Set false to opt out entirely — no claim is taken, so this consumer is
    * invisible to the stack and cannot displace whoever currently owns the
    * bar. Load-bearing: `useFormBottomActions` is called unconditionally from
@@ -45,6 +52,7 @@ export function useBottomActions(options: UseBottomActionsOptions = {}) {
     setInfoPanel,
     setInfoOpenSignal,
     setDesktopMode,
+    setCtaAnchorId,
     claim,
     release,
     topClaimId,
@@ -129,6 +137,11 @@ export function useBottomActions(options: UseBottomActionsOptions = {}) {
     if (!isTop) return;
     setDesktopMode(options.desktop);
   }, [setDesktopMode, options.desktop, isTop]);
+
+  useEffect(() => {
+    if (!isTop) return;
+    setCtaAnchorId(options.ctaAnchorId);
+  }, [setCtaAnchorId, options.ctaAnchorId, isTop]);
 
   // NOTE: no clearAll() on unmount any more — `release()` above owns that, and
   // only blanks the bar when the stack empties. Clearing here would flash an

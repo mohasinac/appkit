@@ -69,6 +69,10 @@ export function ListingBottomActions({
           })),
           infoLabel,
           desktop: "after-scroll" as const,
+          // The element the CTA scrolls to IS this page's inline buy panel, so
+          // it doubles as the dock's reveal gate — no extra prop at any of the
+          // five listing types that share this registrar.
+          ctaAnchorId: anchorId,
         },
   );
 

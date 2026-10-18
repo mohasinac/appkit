@@ -145,6 +145,20 @@ export interface BottomActionsState {
    * tap, and stay dismissible afterwards.
    */
   infoOpenSignal?: number;
+  /**
+   * `id` of this page's INLINE primary CTA. `SideActionDock` reveals itself
+   * only once that element has been seen and scrolled out of view.
+   *
+   * The alternative — the `data-cta-anchor` attribute — is for a page that
+   * renders its CTA block directly. This exists because the shared listing
+   * registrars already take an `anchorId` (the element their CTA scrolls to),
+   * which is the same element, so they can declare the gate without touching
+   * the view that owns the markup.
+   *
+   * Unset means "reveal immediately", which is correct for every bulk bar: an
+   * admin listing has no Buy button to scroll past.
+   */
+  ctaAnchorId?: string;
 }
 
 // --- Context ------------------------------------------------------------------
@@ -174,6 +188,8 @@ interface BottomActionsContextValue {
   setInfoOpenSignal: (signal: number | undefined) => void;
   /** Set the desktop visibility policy. */
   setDesktopMode: (mode: BottomActionsDesktopMode | undefined) => void;
+  /** Set or clear the inline-CTA anchor id. See BottomActionsState.ctaAnchorId. */
+  setCtaAnchorId: (id: string | undefined) => void;
   /** Clear all state (called on feature unmount). */
   clearAll: () => void;
 
@@ -306,6 +322,10 @@ export function BottomActionsProvider({
     [],
   );
 
+  const setCtaAnchorId = useCallback((ctaAnchorId: string | undefined) => {
+    setState((prev) => (prev.ctaAnchorId === ctaAnchorId ? prev : { ...prev, ctaAnchorId }));
+  }, []);
+
   const clearAll = useCallback(() => {
     actionCallbacksRef.current = new Map();
     bulkCallbacksRef.current = new Map();
@@ -326,6 +346,7 @@ export function BottomActionsProvider({
       setInfoPanel,
       setInfoOpenSignal,
       setDesktopMode,
+      setCtaAnchorId,
       clearAll,
       claim,
       release,
@@ -341,6 +362,7 @@ export function BottomActionsProvider({
       setInfoPanel,
       setInfoOpenSignal,
       setDesktopMode,
+      setCtaAnchorId,
       clearAll,
       claim,
       release,

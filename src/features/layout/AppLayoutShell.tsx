@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 // owns the singleton; nesting another would risk Turbopack chunk-splitting.
 // The actual 2.8.8 SSR crash was a peer-dep duplicate fixed by the
 // scripts/dedupe-peer-deps.mjs postinstall hook (see scripts/ and CLAUDE.md #19).
+import { ChevronDown } from "lucide-react";
 import { AvatarDisplay, BackgroundRenderer, Div, Li, Main, Row, Span, Stack, Text, TextLink, Ul, UnsavedChangesModal } from "../../ui";
 // Role indicator dots — distinct hues per role tier.
 const ROLE_DOT_BG_CLASS: Record<string, string> = {
@@ -18,7 +19,7 @@ import { useAuth } from "../../react/contexts/SessionContext";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";
-import BottomActions from "./BottomActions";
+import SideActionDock from "./SideActionDock";
 import { BottomChrome } from "./BottomChrome";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
 import { BottomNavbar, type BottomNavbarUser } from "./BottomNavbar";
@@ -38,6 +39,17 @@ export interface AppLayoutShellSidebarLink {
   label: string;
   /** Optional icon rendered before the label (emoji string or ReactNode). */
   icon?: React.ReactNode;
+  /**
+   * Sub-links, rendered indented beneath this one.
+   *
+   * 🛑 This mirrors the top navbar's dropdown, and it exists for the same
+   * reason the navbar's does: the sidebar and the mobile sheet are built from
+   * the SAME nav items, so a parent that gained children in the navbar would
+   * otherwise silently lose every one of them here — the merge would read as a
+   * deletion on exactly the surface phones use. One level only, matching
+   * `NavbarLayoutItem`.
+   */
+  children?: AppLayoutShellSidebarLink[];
 }
 
 export interface AppLayoutShellSidebarSection {
@@ -198,6 +210,156 @@ function CollapsibleNavGroup({
   );
 }
 
+/**
+ * Flatten a sidebar section's links for active-item resolution.
+ *
+ * 🛑 Children MUST be in here. `findActiveNavItem` picks the longest prefix
+ * match, so leaving them out means a page that is only reachable as a child —
+ * /auctions under "Products" — marks nothing at all, the same lost-your-place
+ * bug the navbar's own comment documents.
+ */
+function flattenSidebarLinks(
+  items: AppLayoutShellSidebarLink[],
+): AppLayoutShellSidebarLink[] {
+  return items.flatMap((item) => [item, ...(item.children ?? [])]);
+}
+
+/**
+ * A sidebar link that owns sub-links: FIRST tap expands, SECOND tap follows.
+ *
+ * 🛑 The second tap is what keeps this a link rather than a folder. A parent
+ * that only ever toggles makes its own page unreachable from the sidebar — the
+ * catalogue index would be the one shop page you could not open from the menu
+ * that lists the shop. So the destination is the parent's own href, falling
+ * back to its first child when the parent is a grouping with no page of its
+ * own, and `preventDefault` applies only on the expanding tap.
+ *
+ * It differs from the navbar on purpose: there, hover already reveals the menu,
+ * so a click can navigate immediately. A sidebar has no hover, and a thumb has
+ * no caret small enough to aim at reliably — the tap has to do both jobs, in
+ * order.
+ */
+function SidebarParentLink({
+  item,
+  activeItem,
+  activeHref,
+  navItemClass,
+  navItemActiveClass,
+}: {
+  item: AppLayoutShellSidebarLink;
+  activeItem: AppLayoutShellSidebarLink | undefined;
+  activeHref: string;
+  navItemClass: string;
+  navItemActiveClass: string;
+}) {
+  const children = item.children ?? [];
+  const containsActive =
+    !!activeItem && children.some((child) => child.href === activeItem.href);
+  const [expanded, setExpanded] = useState(containsActive);
+
+  // The sidebar stays mounted across client-side navigation, so the lazy
+  // initial state above only ever fires once — re-open when the route moves
+  // into this group.
+  useEffect(() => {
+    if (containsActive) setExpanded(true);
+  }, [containsActive]);
+
+  const isActive = activeItem?.href === item.href;
+  const target = item.href || children[0]?.href || "#";
+
+  return (
+    <Li>
+      <TextLink
+        href={target}
+        variant="none"
+        className={isActive ? navItemActiveClass : navItemClass}
+        aria-current={isActive ? "page" : undefined}
+        aria-expanded={expanded}
+        onClick={(e: React.MouseEvent) => {
+          if (expanded) return;
+          e.preventDefault();
+          setExpanded(true);
+        }}
+      >
+        {item.icon && (
+          <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+            {item.icon}
+          </Span>
+        )}
+        {item.label}
+        <ChevronDown
+          className={`ms-auto w-3.5 h-3.5 shrink-0 opacity-70 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </TextLink>
+      {expanded && (
+        <SidebarSectionLinks
+          items={children}
+          activeHref={activeHref}
+          activeItem={activeItem}
+          navItemClass={navItemClass}
+          navItemActiveClass={navItemActiveClass}
+          nested
+        />
+      )}
+    </Li>
+  );
+}
+
+/** One sidebar link plus its indented sub-links. */
+function SidebarSectionLinks({
+  items,
+  activeHref,
+  activeItem,
+  navItemClass,
+  navItemActiveClass,
+  nested = false,
+}: {
+  items: AppLayoutShellSidebarLink[];
+  activeHref: string;
+  activeItem: AppLayoutShellSidebarLink | undefined;
+  navItemClass: string;
+  navItemActiveClass: string;
+  nested?: boolean;
+}) {
+  return (
+    <Ul spacing="2xs" className={nested ? "ps-[var(--appkit-space-6)]" : undefined}>
+      {items.map((item) => {
+        const isActive = activeItem?.href === item.href;
+        if (item.children && item.children.length > 0) {
+          return (
+            <SidebarParentLink
+              key={`${item.href}-${item.label}`}
+              item={item}
+              activeItem={activeItem}
+              activeHref={activeHref}
+              navItemClass={navItemClass}
+              navItemActiveClass={navItemActiveClass}
+            />
+          );
+        }
+        return (
+          <Li key={`${item.href}-${item.label}`}>
+            <TextLink
+              href={item.href}
+              variant="none"
+              className={isActive ? navItemActiveClass : navItemClass}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {item.icon && (
+                <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                  {item.icon}
+                </Span>
+              )}
+              {item.label}
+            </TextLink>
+          </Li>
+        );
+      })}
+    </Ul>
+  );
+}
+
 function CollapsibleSidebarSection({
   section,
   navItemClass,
@@ -209,7 +371,7 @@ function CollapsibleSidebarSection({
   navItemActiveClass: string;
   activeHref: string;
 }) {
-  const activeItem = findActiveNavItem(section.items, activeHref);
+  const activeItem = findActiveNavItem(flattenSidebarLinks(section.items), activeHref);
   const hasActive = !!activeItem;
   const [open, setOpen] = useState((section.defaultOpen ?? false) || hasActive);
   // Re-sync whenever the route changes — the sidebar stays mounted across
@@ -221,28 +383,13 @@ function CollapsibleSidebarSection({
 
   if (!hasTitle) {
     return (
-      <Ul spacing="2xs">
-        {section.items.map((item) => {
-          const isActive = activeItem?.href === item.href;
-          return (
-            <Li key={`${item.href}-${item.label}`}>
-              <TextLink
-                href={item.href}
-                variant="none"
-                className={isActive ? navItemActiveClass : navItemClass}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {item.icon && (
-                  <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
-                    {item.icon}
-                  </Span>
-                )}
-                {item.label}
-              </TextLink>
-            </Li>
-          );
-        })}
-      </Ul>
+      <SidebarSectionLinks
+        items={section.items}
+        activeHref={activeHref}
+        activeItem={activeItem}
+        navItemClass={navItemClass}
+        navItemActiveClass={navItemActiveClass}
+      />
     );
   }
 
@@ -265,28 +412,13 @@ function CollapsibleSidebarSection({
         </svg>
       </button>
       {open && (
-        <Ul spacing="2xs">
-          {section.items.map((item) => {
-            const isActive = activeItem?.href === item.href;
-            return (
-              <Li key={`${item.href}-${item.label}`}>
-                <TextLink
-                  href={item.href}
-                  variant="none"
-                  className={isActive ? navItemActiveClass : navItemClass}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  {item.icon && (
-                    <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
-                      {item.icon}
-                    </Span>
-                  )}
-                  {item.label}
-                </TextLink>
-              </Li>
-            );
-          })}
-        </Ul>
+        <SidebarSectionLinks
+          items={section.items}
+          activeHref={activeHref}
+          activeItem={activeItem}
+          navItemClass={navItemClass}
+          navItemActiveClass={navItemActiveClass}
+        />
       )}
     </Stack>
   );
@@ -890,9 +1022,20 @@ export function AppLayoutShell({
 
         <BackToTop />
         <FooterLayout {...footer} />
-        <BottomChrome>
-          <BottomActions />
-        </BottomChrome>
+        {/*
+          🛑 `<BottomChrome>` stays, EMPTY of the action bar. It is still the
+          tier container for anything that genuinely bands the bottom edge —
+          `ListingLayout`'s mobile pagination bar portals into its slot — and it
+          is the sole publisher of `--bottom-chrome-height`, which the footer's
+          clearance and `BackToTop` both read. Deleting it would collapse that
+          variable to 0 and put the pagination bar under the tab bar.
+
+          The action dock is deliberately NOT inside it: it floats beside the
+          content, reserves no height, and would otherwise push the footer down
+          by a bar that is a 56px button most of the time.
+        */}
+        <BottomChrome>{null}</BottomChrome>
+        <SideActionDock />
         {showBottomNav && (
           <BottomNavbar
             user={user}
