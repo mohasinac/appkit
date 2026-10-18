@@ -59,7 +59,7 @@ export function medianFilter(
 
   const out = new Float32Array(src.length);
   const size = (radius * 2 + 1) ** 2;
-  const window = new Float32Array(size);
+  const buf = new Float32Array(size);
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -68,10 +68,10 @@ export function medianFilter(
         const sy = Math.min(height - 1, Math.max(0, y + dy));
         for (let dx = -radius; dx <= radius; dx++) {
           const sx = Math.min(width - 1, Math.max(0, x + dx));
-          window[n++] = src[sy * width + sx]!;
+          buf[n++] = src[sy * width + sx]!;
         }
       }
-      const slice = window.subarray(0, n);
+      const slice = buf.subarray(0, n);
       slice.sort();
       out[y * width + x] = slice[n >> 1]!;
     }

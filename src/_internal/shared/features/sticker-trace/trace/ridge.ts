@@ -218,7 +218,7 @@ function robustLocalBackground(
   // cut line and narrower than any sticker.
   const R = 3;
   const smoothed = new Float32Array(cw * ch);
-  const window = new Float32Array((R * 2 + 1) ** 2);
+  const buf = new Float32Array((R * 2 + 1) ** 2);
   for (let cy = 0; cy < ch; cy++) {
     for (let cx = 0; cx < cw; cx++) {
       let n = 0;
@@ -226,10 +226,10 @@ function robustLocalBackground(
         const sy = Math.min(ch - 1, Math.max(0, cy + dy));
         for (let dx = -R; dx <= R; dx++) {
           const sx = Math.min(cw - 1, Math.max(0, cx + dx));
-          window[n++] = coarse[sy * cw + sx]!;
+          buf[n++] = coarse[sy * cw + sx]!;
         }
       }
-      const slice = window.subarray(0, n);
+      const slice = buf.subarray(0, n);
       slice.sort();
       smoothed[cy * cw + cx] = slice[n >> 1]!;
     }
