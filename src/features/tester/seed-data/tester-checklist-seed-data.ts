@@ -3253,6 +3253,40 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       /*
+       * Overflowing pill and tab rows — 2026-10-18.
+       *
+       * 🛑 Every case here is written as an explicit BEFORE → AFTER, because
+       * the defect's symptom is not an error: a row that overflows renders
+       * perfectly, returns HTTP 200, and simply puts some of its items past
+       * the right edge where nothing indicates they exist. A case reading
+       * "check the subcategories show" PASSES against the bug.
+       *
+       * The reported instance had 12 subcategory pills on a 1440px viewport
+       * with the last four unreachable — no scrollbar, no arrow, no hint.
+       *
+       * Width is the thing under test, so every case NAMES A VIEWPORT. A run
+       * at an unstated width cannot distinguish "collapsed correctly" from
+       * "collapsed when it had room", which are opposite defects.
+       */
+      pageKey: "overflowing-pill-rows",
+      pageLabel: "Pill and tab rows that do not fit collapse into a searchable dropdown",
+      href: "/categories",
+      cases: [
+        { key: "wide-row-stays-pills", label: "A subcategory row that FITS still renders as pills, not a dropdown" },
+        { key: "narrow-row-collapses", label: "The same row at a phone width collapses to one dropdown trigger" },
+        { key: "collapsed-dropdown-is-searchable", label: "The collapsed dropdown has a search box that filters as you type" },
+        { key: "collapsed-dropdown-keyboard", label: "Arrow keys and Enter pick an item without touching the mouse" },
+        { key: "every-item-reachable-when-collapsed", label: "Every subcategory is reachable from the dropdown, including ones that used to be off-screen" },
+        { key: "pills-carry-a-leading-image", label: "Subcategory pills and dropdown rows show the category's own cover image" },
+        { key: "missing-image-falls-back-to-initial", label: "A subcategory with no cover image shows an initial, not a blank box or a broken image" },
+        { key: "widening-restores-the-pills", label: "Widening the window back expands the dropdown into pills again" },
+        { key: "subcategory-click-is-client-side", label: "Clicking a subcategory navigates without a full page reload" },
+        { key: "tabs-collapse-by-width-not-count", label: "A tab bar with six short tabs stays a row on desktop instead of collapsing on a count" },
+        { key: "event-tabs-do-not-jump-to-top", label: "Switching event tabs does not scroll the page back to the top" },
+      ],
+    },
+    {
+      /*
        * The authenticity checker — 2026-10-18.
        *
        * 🛑 Every case here asserts the presence of a HEDGE, or compares two

@@ -64,6 +64,17 @@ export interface TabBarShellProps {
    * and the arrows work regardless.
    */
   activeKey?: string;
+  /**
+   * Optional external ref onto the `role="tablist"` element itself.
+   *
+   * Exists so a caller can MEASURE the real tab row without wrapping
+   * `{children}` in a box of its own — a wrapper between the tablist and its
+   * tabs breaks the accessibility tree, since a `role="tablist"` may only
+   * contain `role="tab"` elements. `TabsList` uses this to decide whether the
+   * row fits; the shell keeps driving its own scroll arrows from the same
+   * node.
+   */
+  listRef?: React.RefObject<HTMLDivElement | null>;
   children?: React.ReactNode;
 }
 
@@ -79,9 +90,11 @@ export function TabBarShell({
   ariaLabel = "Tabs",
   leading,
   activeKey = "",
+  listRef: externalListRef,
   children,
 }: TabBarShellProps) {
-  const listRef = useRef<HTMLDivElement>(null);
+  const internalListRef = useRef<HTMLDivElement>(null);
+  const listRef = externalListRef ?? internalListRef;
   const { hasArrows, atStart, atEnd, scrollByPage } = useTabsOverflow(listRef, activeKey);
 
   /*

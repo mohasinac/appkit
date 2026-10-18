@@ -433,6 +433,13 @@ export type {
   TabsNavSelectProps,
 } from "./components/TabBarShell";
 export { TabBarShell, TabBarButton, TabsNavSelect } from "./components/TabBarShell";
+export type {
+  OverflowRowProps,
+  OverflowRowItem,
+  OverflowRowDotTone,
+  OverflowRowLinkProps,
+} from "./components/OverflowRow";
+export { OverflowRow } from "./components/OverflowRow";
 
 export type { FilterDrawerProps } from "./components/FilterDrawer";
 export { FilterDrawer } from "./components/FilterDrawer";

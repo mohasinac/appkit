@@ -156,6 +156,8 @@ export { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/components/Tabs";
 export type { TabsProps, TabsListProps, TabsTriggerProps, TabsContentProps } from "./ui/components/Tabs";
 export { TabBarShell, TabBarButton, TabsNavSelect } from "./ui/components/TabBarShell";
 export type { TabBarShellProps, TabBarButtonProps, TabsNavSelectProps } from "./ui/components/TabBarShell";
+export { OverflowRow } from "./ui/components/OverflowRow";
+export type { OverflowRowProps, OverflowRowItem, OverflowRowDotTone, OverflowRowLinkProps } from "./ui/components/OverflowRow";
 export { SellerProductsView } from "./features/seller/components/SellerProductsView";
 export { SellerOrderDetailPanel } from "./features/seller/components/SellerOrdersView";
 export { SellerPayoutDetailContent } from "./features/seller/components/SellerPayoutsView";

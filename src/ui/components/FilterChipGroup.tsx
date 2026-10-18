@@ -3,6 +3,7 @@
 import React from "react";
 import { Div } from "./Div";
 import { Text } from "./Typography";
+import type { OverflowRowDotTone } from "./OverflowRow";
 
 /**
  * FilterChipGroup — labelled wrap-group of pill buttons.
@@ -37,6 +38,16 @@ export interface FilterChipGroupTab {
    * and a failed count can never hide a filter that has rows (Root Cause #59).
    */
   count?: number;
+  /**
+   * Leading status dot. Lets a status chip be found by colour before the label
+   * is read, which is the whole job of a status filter bar.
+   *
+   * 🛑 Colour is NEVER the only signal — the label is always rendered beside
+   * it, so the dot is redundant reinforcement rather than information. A chip
+   * identified only by colour is unusable to a colour-blind or screen-reader
+   * user, and the dot is `aria-hidden` for exactly that reason.
+   */
+  dotTone?: OverflowRowDotTone;
 }
 
 export interface FilterChipGroupProps {
@@ -170,6 +181,13 @@ export function FilterChipGroup({
               onClick={() => handleClick(tab.id)}
               className={`${CHIP_BASE_CLS} ${isActive ? ACTIVE_CLS : INACTIVE_CLS}`}
             >
+              {tab.dotTone && (
+                <span
+                  className="appkit-overflow-row__dot mr-1.5 inline-block align-middle"
+                  data-tone={tab.dotTone}
+                  aria-hidden="true"
+                />
+              )}
               {tab.label}
               {typeof tab.count === "number" && (
                 <span className={COUNT_CLS}>{tab.count > 99 ? "99+" : tab.count}</span>

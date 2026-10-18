@@ -3,7 +3,6 @@ import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { categoryCrumbs, withTrailHead } from "../utils/breadcrumb-chain";
 import { ownTotalFor, descendantTotalFor } from "../schemas/category-counts";
-import Link from "next/link";
 import {
   categoriesRepository,
   productRepository,
@@ -12,6 +11,8 @@ import {
 import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
+import { OverflowRow, type OverflowRowItem } from "../../../ui";
+import { resolveTaxonomyVisual } from "../utils/taxonomy-visual";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
@@ -42,11 +43,43 @@ import { hidePublicTestData } from "../../../_internal/server/features/tester/vi
 
 const __O = {
   hidden: "overflow-hidden",
-  xAuto: "overflow-x-auto",
 } as const;
 
 /** The page's content width, repeated across every section on this view. */
 const __W = "max-w-7xl mx-auto";
+
+/**
+ * Direct children → the Subcategories row's items.
+ *
+ * 🛑 THE ROLLUP, not the own count — `totalProductCount`, the same number the
+ * header pill reads and the same one `CategoryGrid` shows.
+ *
+ * These chips used to read `metrics.productCount`, which is items filed
+ * DIRECTLY under that child and excludes its own descendants. So on a parent
+ * whose header said 20, the chips beneath it could sum to 5 — two different
+ * questions answered with the same-looking number, side by side, with nothing
+ * saying which was which. The rule the catalogue is built on: a category's
+ * count is its own items plus every descendant's, and clicking it lists
+ * exactly those items.
+ *
+ * Admin surfaces that genuinely need both still show both —
+ * `CategoryTableColumns` renders "own (total)" explicitly.
+ */
+function toSubcategoryItems(children: readonly CategoryItem[]): OverflowRowItem[] {
+  return children.map((child) => {
+    const count = child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0;
+    return {
+      id: child.id,
+      label: child.name,
+      // Omitted rather than rendered as 0 — `count` is "not counted" when
+      // undefined, and a chip reading "0" invites a click that lands on an
+      // empty page.
+      count: count > 0 ? count : undefined,
+      href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug)),
+      ...resolveTaxonomyVisual(child),
+    };
+  });
+}
 
 /**
  * Read and display bounds for this page. Every one of these replaced an
@@ -697,49 +730,23 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               <Text size="xs" color="muted" weight="medium" className="mb-[var(--appkit-space-1-5)]">
                 Subcategories
               </Text>
-            {/* 🛑 The leading `.5` here was a real class — a codemod leftover that
-              * Tailwind never generated. Removed; see the audit note in the
-              * session summary for the other ~12 malformed arbitrary-value
-              * classes of the same shape across appkit. */}
-            <Div layout="flex" gap="2"
-              className={`${__O.xAuto} [scrollbar-width:none]`} padding="b-2xs"
-            >
-              {directChildren.map((child) => (
-                <Link
-                  key={child.id}
-                  href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
-                  // audit-responsive-wrap-ok: deliberate horizontal-scroll chip row (parent has overflow-x-auto) — each chip staying single-line is the intended design, not hidden content
-                  className="flex-shrink-0 flex items-center gap-[var(--appkit-space-1-5)] rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
-                >
-                  {child.display?.icon && (
-                    <Span className="leading-none">{child.display.icon}</Span>
-                  )}
-                  {child.name}
-                  {/*
-                   * 🛑 THE ROLLUP, not the own count — `totalProductCount`, the
-                   * same number the header pill above reads (line ~194) and the
-                   * same one `CategoryGrid` shows.
-                   *
-                   * These chips used to read `metrics.productCount`, which is
-                   * items filed DIRECTLY under that child and excludes its own
-                   * descendants. So on a parent whose header said 20, the chips
-                   * beneath it could sum to 5 — two different questions answered
-                   * with the same-looking number, side by side, with nothing
-                   * saying which was which. The rule the catalogue is built on:
-                   * a category's count is its own items plus every descendant's,
-                   * and clicking it lists exactly those items.
-                   *
-                   * Admin surfaces that genuinely need both still show both —
-                   * CategoryTableColumns renders "own (total)" explicitly.
-                   */}
-                  {(child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0) > 0 && (
-                    <Span size="xs" color="muted">
-                      {(child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0).toLocaleString()}
-                    </Span>
-                  )}
-                </Link>
-              ))}
-            </Div>
+              {/*
+                * `variant="nav"` — these navigate to another page rather than
+                * swapping a panel in place, so they are links with
+                * `aria-current`, not tabs. The row collapses to a searchable
+                * dropdown when the pills measure wider than the container:
+                * this category tree routinely has 12+ direct children (the
+                * screenshot that prompted this had 12, with the last four
+                * unreachable off the right edge).
+                */}
+              <OverflowRow
+                items={toSubcategoryItems(directChildren)}
+                ariaLabel="Subcategories"
+                variant="nav"
+                placeholder="Browse subcategories"
+                searchPlaceholder="Search subcategories…"
+                noResultsText="No matching subcategory"
+              />
             </Div>
               );
             })()}

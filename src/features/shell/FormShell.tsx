@@ -5,7 +5,7 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
-import { ActionRow, Div, Row, Span, Stack, Text } from "../../ui";
+import { ActionRow, Div, OverflowRow, Row, Span, Stack, Text } from "../../ui";
 
 /**
  * Carries the `schema` prop passed to `<FormShell>` down to any nested
@@ -321,23 +321,29 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
-            <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-[1.25rem] bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`} padding="y-xs">
-              {sections.map((sec) => (
-                <Button
-                  variant="outline"
-                  key={sec.id}
-                  type="button"
-                  onClick={() => scrollToSection(sec.id)}
-                  rounded="full"
-                  paddingX="sm"
-                  paddingY="xs"
-                  textSize="xs"
-                  textColor="muted"
-                  className="flex-shrink-0 hover:border-primary hover:text-primary whitespace-nowrap"
-                >
-                  {sec.label}
-                </Button>
-              ))}
+            <Row gap="px" className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 px-[1.25rem] bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]" padding="y-xs">
+              {/*
+                * A long-form listing editor has a dozen-plus sections, which
+                * never fit a phone — this strip used to scroll horizontally
+                * with no affordance, so the later sections ("Shipping",
+                * "Policies") were effectively unreachable from the jump bar
+                * and the only way to them was scrolling the form itself.
+                *
+                * `variant="nav"`: these jump within the page rather than
+                * swapping a panel, so they are not tabs and must not claim
+                * `aria-selected`.
+                */}
+              <OverflowRow
+                items={sections.map((sec) => ({
+                  id: sec.id,
+                  label: sec.label,
+                  onSelect: () => scrollToSection(sec.id),
+                }))}
+                ariaLabel="Form sections"
+                variant="nav"
+                placeholder="Jump to section"
+                searchPlaceholder="Search sections…"
+              />
             </Row>
           )}
 

@@ -1,0 +1,235 @@
+/*
+ * OverflowRow — pill row that becomes a searchable dropdown when it overflows.
+ *
+ * All tokens live here rather than on the call site's className. The expanded
+ * and collapsed states are selected by `[data-collapsed]` written from JS, NOT
+ * by a media query: the decision is a width MEASUREMENT against the row's own
+ * content, which no breakpoint can express (four long labels overflow a phone;
+ * eight short ones fit a desktop).
+ *
+ * 🛑 Do not express the two states as Tailwind `md:`/`lg:` overrides. appkit's
+ * Tailwind build emits NO variant-prefixed utility (see the measured note in
+ * src/tailwind-input.css), so such a rule compiles to nothing and the element
+ * silently keeps its base style.
+ */
+
+.appkit-overflow-row {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ── Expanded ─────────────────────────────────────────────────────────── */
+
+.appkit-overflow-row__row {
+  display: flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+  min-width: 0;
+  /*
+   * No `overflow-x: auto`. A scrollbar here would let the row satisfy its
+   * container at any width, so `scrollWidth` would still exceed `clientWidth`
+   * but nothing would ever look broken enough to collapse — the measurement
+   * and the visible truth must agree.
+   */
+}
+
+.appkit-overflow-row__pill {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--appkit-space-1-5);
+  padding: var(--appkit-space-1-5) var(--appkit-space-4);
+  border: 1px solid var(--appkit-color-border);
+  border-radius: var(--appkit-radius-full);
+  background: var(--appkit-color-surface-elevated);
+  color: var(--appkit-color-text-muted);
+  font-size: var(--appkit-text-sm);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color var(--appkit-duration-fast) var(--appkit-ease-out),
+    border-color var(--appkit-duration-fast) var(--appkit-ease-out),
+    background-color var(--appkit-duration-fast) var(--appkit-ease-out);
+}
+
+.appkit-overflow-row__pill:hover {
+  border-color: var(--appkit-color-primary);
+  color: var(--appkit-color-primary);
+}
+
+.appkit-overflow-row__pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.appkit-overflow-row__pill--active {
+  border-color: var(--appkit-color-primary);
+  background: var(--appkit-color-primary-surface);
+  color: var(--appkit-color-primary);
+}
+
+/* ── Leading visuals ──────────────────────────────────────────────────── */
+
+/*
+ * Sized here rather than by Avatar's own `--xs`, which is a face-sized box.
+ * A pill's visual is an identifying mark at text scale: it must not grow the
+ * pill's line-box, or every row in the app gets taller.
+ */
+.appkit-overflow-row__visual {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  font-size: var(--appkit-text-2xs);
+}
+
+.appkit-overflow-row__emoji {
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.appkit-overflow-row__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--appkit-radius-full);
+  flex-shrink: 0;
+  background: var(--appkit-color-text-faint);
+}
+
+.appkit-overflow-row__dot[data-tone="primary"] { background: var(--appkit-color-primary); }
+.appkit-overflow-row__dot[data-tone="success"] { background: var(--appkit-color-success); }
+.appkit-overflow-row__dot[data-tone="warning"] { background: var(--appkit-color-warning); }
+.appkit-overflow-row__dot[data-tone="error"]   { background: var(--appkit-color-error); }
+.appkit-overflow-row__dot[data-tone="info"]    { background: var(--appkit-color-info); }
+.appkit-overflow-row__dot[data-tone="muted"]   { background: var(--appkit-color-text-faint); }
+
+/*
+ * `opacity` rather than a literal colour so the count stays legible on both
+ * the inactive (surface) and active (primary tint) pill — a fixed colour is
+ * invisible against one of them in some theme (Root Cause #67).
+ */
+.appkit-overflow-row__count {
+  font-size: var(--appkit-text-xs);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+/* ── Collapsed trigger ────────────────────────────────────────────────── */
+
+.appkit-overflow-row__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+  max-width: 100%;
+  padding: var(--appkit-space-2) var(--appkit-space-3);
+  border: 1px solid var(--appkit-color-border);
+  border-radius: var(--appkit-radius-lg);
+  background: var(--appkit-color-surface-elevated);
+  color: var(--appkit-color-text);
+  font-size: var(--appkit-text-sm);
+  font-weight: 500;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.appkit-overflow-row__trigger:hover {
+  border-color: var(--appkit-color-primary);
+}
+
+.appkit-overflow-row__trigger-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* ── Popover ──────────────────────────────────────────────────────────── */
+
+.appkit-overflow-row__popover {
+  position: absolute;
+  z-index: var(--appkit-z-dropdown);
+  top: calc(100% + var(--appkit-space-1));
+  left: 0;
+  width: min(22rem, 100%);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--appkit-color-border);
+  border-radius: var(--appkit-radius-lg);
+  background: var(--appkit-color-surface-elevated);
+  box-shadow: var(--appkit-shadow-lg);
+  overflow: hidden;
+}
+
+.appkit-overflow-row__search {
+  padding: var(--appkit-space-2);
+  border-bottom: 1px solid var(--appkit-color-border-subtle);
+}
+
+.appkit-overflow-row__list {
+  max-height: 18rem;
+  overflow-y: auto;
+  padding: var(--appkit-space-1);
+}
+
+.appkit-overflow-row__option {
+  display: flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+  width: 100%;
+  padding: var(--appkit-space-2) var(--appkit-space-2-5);
+  border: 0;
+  border-radius: var(--appkit-radius-md);
+  background: transparent;
+  color: var(--appkit-color-text);
+  font-size: var(--appkit-text-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.appkit-overflow-row__option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/*
+ * Hover and keyboard focus resolve to the SAME class, set from `activeIndex`
+ * on both `onMouseEnter` and the arrow keys — two different highlights in one
+ * list is what makes a combobox feel like it has two cursors.
+ */
+.appkit-overflow-row__option--active {
+  background: var(--appkit-color-surface-hover);
+}
+
+.appkit-overflow-row__option--selected {
+  color: var(--appkit-color-primary);
+  font-weight: 600;
+}
+
+.appkit-overflow-row__option-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.appkit-overflow-row__option-count {
+  font-size: var(--appkit-text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--appkit-color-text-muted);
+  flex-shrink: 0;
+}
+
+.appkit-overflow-row__check {
+  flex-shrink: 0;
+  color: var(--appkit-color-primary);
+}
+
+.appkit-overflow-row__empty {
+  padding: var(--appkit-space-4);
+  text-align: center;
+  font-size: var(--appkit-text-sm);
+  color: var(--appkit-color-text-muted);
+}

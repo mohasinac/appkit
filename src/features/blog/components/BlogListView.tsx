@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { Article, Button, Div, Grid, Heading, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Article, Div, Grid, Heading, OverflowRow, type OverflowRowItem, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -15,7 +15,6 @@ const __P = {
 
 const __O = {
   hidden: "overflow-hidden",
-  xAuto: "overflow-x-auto",
 } as const;
 
 const CLS_FEATURED_BADGE = "rounded-full bg-warning-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-warning dark:bg-warning-surface dark:text-warning";
@@ -142,28 +141,29 @@ export function BlogCategoryTabs({
   onSelect,
   labels = {},
 }: BlogCategoryTabsProps) {
+  /*
+   * `ALL_ID` is a sentinel, not a category. It cannot be `""` because that is
+   * also `OverflowRow`'s "nothing selected" state, which would leave the
+   * collapsed trigger showing the placeholder instead of "All".
+   */
+  const ALL_ID = "__all__";
+  const items: OverflowRowItem[] = [
+    { id: ALL_ID, label: labels.all ?? "All", onSelect: () => onSelect(null) },
+    ...categories.map((cat) => ({
+      id: cat,
+      label: labels[cat] ?? cat,
+      onSelect: () => onSelect(cat),
+    })),
+  ];
+
   return (
-    <Div layout="flex" gap="2" className={`scrollbar-none ${__O.xAuto}`} padding="b-2xs">
-      <Button
-        onClick={() => onSelect(null)}
-        variant={!active ? "primary" : "ghost"}
-        size="sm"
-        className={`whitespace-nowrap rounded-full px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover"}`}
-      >
-        {labels.all ?? "All"}
-      </Button>
-      {categories.map((cat) => (
-        <Button
-          key={cat}
-          onClick={() => onSelect(cat)}
-          variant={active === cat ? "primary" : "ghost"}
-          size="sm"
-          className={`whitespace-nowrap rounded-full px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover"}`}
-        >
-          {labels[cat] ?? cat}
-        </Button>
-      ))}
-    </Div>
+    <OverflowRow
+      items={items}
+      ariaLabel="Blog categories"
+      activeId={active ?? ALL_ID}
+      searchPlaceholder="Search categories…"
+      noResultsText="No matching category"
+    />
   );
 }
 
