@@ -53,6 +53,18 @@
  */
 export const SEARCH_INDEX_SCHEMA_VERSION = 1;
 
+/**
+ * The incremental build's watermark field.
+ *
+ * 🛑 ONE shared constant for the same reason `SEARCH_TXT_FIELD` is one:
+ * `updatedAt` is a CROSS-COLLECTION convention declared on `BaseDocument`, and
+ * `field-names.ts` repeats it in four separate per-feature blocks. A builder
+ * that queries THIRTEEN collections cannot honestly borrow any single
+ * feature's copy — `PRODUCT_FIELDS.UPDATED_AT` naming the field on a `faqs`
+ * query is a true string and a false statement.
+ */
+export const INDEX_UPDATED_AT_FIELD = "updatedAt";
+
 /** One searchable kind. The artifact carries the table so the client needs no map. */
 export interface SearchIndexType {
   /** Stable key — `product`, `category`, `part`, … Also the i18n label key. */

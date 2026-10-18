@@ -20,7 +20,7 @@
  *
  * ≈ 4,000 reads/day, about 8% of the tier.
  *
- * 🛑 `where("updatedAt", ">", X)` alone needs NO composite index — Firestore
+ * 🛑 A lone `INDEX_UPDATED_AT_FIELD` range clause needs NO composite index — Firestore
  * auto-creates single-field ascending ones — so this cannot produce the
  * swallowed `FAILED_PRECONDITION` of Root Cause #59. Every document extends
  * `BaseDocument`, which declares `updatedAt`, so coverage is structural rather
@@ -57,6 +57,7 @@ import {
   type IndexSource,
 } from "./sources";
 import {
+  INDEX_UPDATED_AT_FIELD,
   SEARCH_INDEX_SCHEMA_VERSION,
   type SearchIndexArtifact,
   type SearchIndexRecord,
@@ -120,8 +121,8 @@ async function readSource(
    * a handful of rows; on a reseed it returns everything, which is correct —
    * a reseed genuinely did change everything.
    */
-  if (since) q = q.where("updatedAt", ">", since);
-  const snap = await q.select(...source.select, "isTestData", "updatedAt").get();
+  if (since) q = q.where(INDEX_UPDATED_AT_FIELD, ">", since);
+  const snap = await q.select(...source.select, "isTestData", INDEX_UPDATED_AT_FIELD).get();
   /*
    * Firestore bills a minimum of one read for a query that matches nothing,
    * so an idle incremental pass still costs one per source. Counting it is
@@ -236,13 +237,13 @@ export async function buildFull(
       }
       dropped += out.dropped;
     } catch (err) {
+      const e = normalizeError(err);
       /*
        * 🛑 A failing source does NOT silently shrink the artifact. A full
        * build that quietly omits `products` would publish a search index
        * missing a third of the site and report success — the exact shape of
        * every silent-degradation bug this codebase keeps recording.
        */
-      const e = normalizeError(err);
       serverLogger.error("searchIndexBuild: source failed during FULL build — aborting", {
         source: source.typeKey,
         collection: source.collection,

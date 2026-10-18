@@ -40,14 +40,21 @@
  */
 
 import type { SearchIndexType } from "../../../../shared/search/index-record";
+import type { FirestoreValue } from "../../../../../schemas/types";
 import { pluginFor } from "../../../../shared/listing-types/_registry";
 // Defined here, not in `_registry` — imported from the DEFINING module
 // (Root Cause #18).
 import { ALL_LISTING_TYPES } from "../../../../shared/listing-types/feature-flags";
 import type { ListingType } from "../../../../../features/products/types";
 
-/** A projected document's fields, as read from Firestore. */
-export type IndexDocData = Record<string, unknown>;
+/*
+ * 🛑 `FirestoreValue`, not `unknown`. `Record<string, unknown>` is what
+ * `audit-unknown-leakage` refuses and it is right to: it says nothing about
+ * what a document can hold, so every read needs a cast and the cast is where
+ * this codebase's boundary bugs live (Root Cause #57, #70, #98).
+ * `search-everything.ts` already made this exact choice for the same reason.
+ */
+export type IndexDocData = Record<string, FirestoreValue>;
 
 const str = (v: unknown): string | null =>
   typeof v === "string" && v.trim() ? v.trim() : null;
