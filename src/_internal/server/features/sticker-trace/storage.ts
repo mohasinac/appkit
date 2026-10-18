@@ -289,3 +289,50 @@ export async function measureSheetBytes(
   for (const f of files) bytes += Number(f.metadata?.size ?? 0);
   return { bytes, objects: files.length };
 }
+
+/**
+ * Download a stored object's bytes.
+ *
+ * 🛑 Takes a RAW assetPath, which is only ever a value this module produced —
+ * `sourceScan.assetPath` or a `runPrefix`-derived artifact path. It must never
+ * be fed a client-supplied string: the bucket's storage rule is
+ * `allow read: if true`, so path containment is enforced here or nowhere.
+ */
+export async function readScanBytes(assetPath: string): Promise<Uint8Array> {
+  if (!assetPath.startsWith(`${SCAN_ROOT}/`)) {
+    // Loud, not a silent empty read: an out-of-tree path means a caller
+    // assembled it rather than reading it off a document, and returning
+    // nothing would look like an empty scan.
+    throw new Error(`Refusing to read outside ${SCAN_ROOT}: ${assetPath}`);
+  }
+  const [buf] = await getAdminStorage().bucket().file(assetPath).download();
+  return new Uint8Array(buf);
+}
+
+/** The shape the coordinator writes and the shards read back. */
+export interface RunGeometry {
+  workingSize: { x: number; y: number; width: number; height: number };
+  parts: { ordinal: number; bbox: { x: number; y: number; width: number; height: number } }[];
+}
+
+/**
+ * Read and parse a run's `geometry.json`.
+ *
+ * 🛑 Parsed HERE rather than in the shard, so the one place that knows the
+ * artifact's name also owns its shape. A shard assembling the path itself
+ * would be a second definition of the layout — and the `parts` array is what
+ * every shard slices, so a disagreement renders the wrong crops rather than
+ * failing.
+ */
+export async function readRunGeometry(
+  runId: string,
+  sheetId: string,
+): Promise<RunGeometry> {
+  const assetPath = `${runPrefix(sheetId, runId)}/geometry.json`;
+  const [buf] = await getAdminStorage().bucket().file(assetPath).download();
+  const parsed = JSON.parse(buf.toString("utf8")) as RunGeometry;
+  if (!parsed || !Array.isArray(parsed.parts) || !parsed.workingSize) {
+    throw new Error(`geometry.json is malformed for run ${runId}`);
+  }
+  return parsed;
+}

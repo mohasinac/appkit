@@ -2126,3 +2126,18 @@ export type {
 export { runCoordinator, type CoordinatorDeps } from "./_internal/server/features/sticker-trace/coordinator";
 export { runShard, type ShardDeps } from "./_internal/server/features/sticker-trace/shard";
 export { runFinalizer, type FinalizerDeps } from "./_internal/server/features/sticker-trace/finalizer";
+
+/*
+ * The sticker-trace storage adapters the Function bindings inject.
+ *
+ * `writeRunArtifact` already matched the handlers' `writeArtifact` dependency
+ * exactly, so there is no wrapper for it — a pass-through named differently
+ * would be a second name for one thing, and the next reader would have to
+ * check whether they differ.
+ */
+export {
+  readScanBytes,
+  readRunGeometry,
+  writeRunArtifact,
+  type RunGeometry,
+} from "./_internal/server/features/sticker-trace/storage";
