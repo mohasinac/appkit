@@ -26,7 +26,7 @@ import { serverLogger } from "../../../../monitoring";
 import { stickerSheetsRepository } from "../../../../features/sticker-trace/repository/sticker-sheets.repository";
 import type { StickerTraceTaskDocument } from "../../../../features/sticker-trace/schemas/firestore";
 import type { ImageCodec } from "../../../shared/features/sticker-trace/codec";
-import type { Rect } from "../../../shared/features/sticker-trace/types";
+import type { CutPath, Rect } from "../../../shared/features/sticker-trace/types";
 import { completeShardAndMaybeElectFinalizer } from "./fanout";
 import { emitPartProgress, emitProgress } from "./progress";
 
@@ -35,10 +35,18 @@ export interface ShardDeps {
   readScan: (assetPath: string) => Promise<Uint8Array>;
   readGeometry: (runId: string, sheetId: string) => Promise<{
     workingSize: Rect;
-    parts: { ordinal: number; bbox: Rect }[];
+    parts: { ordinal: number; bbox: Rect; path: CutPath }[];
   }>;
-  /** Rasterise one part's path into an alpha mask at full resolution. */
-  rasterise: (ordinal: number, bbox: Rect, scale: number) => Promise<Uint8Array>;
+  /**
+   * Rasterise one part's path into an alpha mask covering `bbox`.
+   *
+   * 🛑 Takes the PATH, not an ordinal. An ordinal carries no geometry, so a
+   * signature keyed on it could only be implemented by re-reading
+   * geometry.json for every part — sixty extra downloads per shard for data the
+   * caller already holds. And no `scale`: `bbox` is already in
+   * full-resolution pixels by the time this is called.
+   */
+  rasterise: (path: CutPath, bbox: Rect) => Promise<Uint8Array>;
   writeArtifact: (input: {
     sheetId: string;
     runId: string;
@@ -124,7 +132,7 @@ export async function runShard(
           width: Math.max(1, Math.round(part.bbox.width * scale)),
           height: Math.max(1, Math.round(part.bbox.height * scale)),
         };
-        const alpha = await deps.rasterise(part.ordinal, region, scale);
+        const alpha = await deps.rasterise(part.path, region);
 
         if (task.mode === "full") {
           await writeFullPart(deps, { sheetId, runId, ordinal: part.ordinal, source, region, alpha });

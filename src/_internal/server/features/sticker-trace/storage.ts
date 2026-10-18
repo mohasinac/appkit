@@ -43,6 +43,7 @@
  * @tag sideEffects:storage
  */
 
+import type { CutPath, Rect } from "../../../shared/features/sticker-trace/types";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 import { getAdminStorage } from "../../../../providers/db-firebase";
@@ -309,10 +310,19 @@ export async function readScanBytes(assetPath: string): Promise<Uint8Array> {
   return new Uint8Array(buf);
 }
 
-/** The shape the coordinator writes and the shards read back. */
+/**
+ * The shape the coordinator writes and the shards read back.
+ *
+ * 🛑 `path` is declared because the coordinator ALREADY writes it — the first
+ * version of this interface omitted it, which made the shard's rasterise
+ * dependency take an `ordinal` it could not turn into a mask, and the only way
+ * to implement that honestly was a second geometry read per part inside a
+ * sixty-iteration loop. The field was always in the JSON; the type just did
+ * not say so.
+ */
 export interface RunGeometry {
-  workingSize: { x: number; y: number; width: number; height: number };
-  parts: { ordinal: number; bbox: { x: number; y: number; width: number; height: number } }[];
+  workingSize: Rect;
+  parts: { ordinal: number; bbox: Rect; path: CutPath }[];
 }
 
 /**
