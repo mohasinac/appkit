@@ -27,7 +27,7 @@
  *
  * Pure: no codec, no node, no DOM. Enforced by audit-sticker-trace-purity.
  *
- * EXPORTS: flattenPath, rasterizePathAlpha, makePartRasteriser,
+ * EXPORTS: flattenPath, rasterizePathAlpha, rasterisePartToBox,
  *   FLATTEN_TOLERANCE_PX, SUBSAMPLES_PER_ROW
  *
  * @tag domain:sticker-trace
@@ -267,26 +267,65 @@ function addSpan(cov: Float32Array, xStart: number, xEnd: number, width: number)
 }
 
 /**
- * Bind a run's geometry so the shard can rasterise by ORDINAL.
+ * Rasterise one part's path into an alpha mask covering `bbox`.
  *
- * 🛑 This factory exists because `ShardDeps.rasterise` takes
- * `(ordinal, bbox, scale)` and NO path — so an implementation given only those
- * three arguments cannot know what shape to fill. Closing over the geometry the
- * shard already loaded is the fix; the alternative was widening the dependency
- * at every call site to pass a path the shard would have had to look up anyway.
+ * This matches `ShardDeps.rasterise` exactly: `(path, bbox)`, no ordinal and
+ * no scale.
  *
- * An unknown ordinal THROWS rather than returning an empty mask: a part whose
- * geometry is missing would otherwise render as a fully transparent PNG, which
- * is a plausible-looking file and a silently blank sticker.
+ * 🛑 The scale is DERIVED from the path's own extent onto `bbox`, and that is
+ * the only self-consistent option available. The path is in working-raster
+ * coordinates while `bbox` is already full-resolution, so a mapping is
+ * unavoidable — and the two candidates were: take `scale` as a fourth argument,
+ * or derive it. Taking it would mean the shard computes
+ * `sheet.widthPx / workingSize.width` and the binding computes it again from
+ * its own copy of the geometry, which is two derivations of one number and
+ * exactly the drift Root Cause #75 is about. Deriving it here also guarantees
+ * the mask FILLS the region it was given, which is what the caller needs:
+ * `bbox` comes from the component mask while the path comes from marching
+ * squares, so the two can differ by a fraction of a pixel and a mask that
+ * merely scaled by a shared factor could leave an empty row at one edge.
+ *
+ * 🛑 A FIRST DRAFT of this was `makePartRasteriser(geometry)`, keyed on
+ * ordinal. It was written against a stale signature and deleted: the real
+ * contract hands over the path, and its own comment explains why — an ordinal
+ * "could only be implemented by re-reading geometry.json for every part, sixty
+ * extra downloads per shard for data the caller already holds."
  */
-export function makePartRasteriser(
-  geometry: { parts: readonly { ordinal: number; path: CutPath }[] },
-): (ordinal: number, bbox: Rect, scale: number) => Promise<Uint8Array> {
-  const byOrdinal = new Map(geometry.parts.map((p) => [p.ordinal, p.path]));
-  return async (ordinal, bbox, scale) => {
-    const path = byOrdinal.get(ordinal);
-    if (!path) throw new Error(`No geometry for part ordinal ${ordinal}`);
-    const points = flattenPath(path, scale, { x: bbox.x, y: bbox.y });
-    return rasterizePathAlpha(points, { width: bbox.width, height: bbox.height });
-  };
+export async function rasterisePartToBox(
+  path: CutPath,
+  bbox: Rect,
+): Promise<Uint8Array> {
+  if (bbox.width <= 0 || bbox.height <= 0) return new Uint8Array(0);
+
+  // The path's extent in its own (working) coordinates.
+  const raw = flattenPath(path, 1, { x: 0, y: 0 });
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const p of raw) {
+    if (p.x < minX) minX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y > maxY) maxY = p.y;
+  }
+  const spanX = maxX - minX;
+  const spanY = maxY - minY;
+  if (!(spanX > 0) || !(spanY > 0)) return new Uint8Array(bbox.width * bbox.height);
+
+  /*
+   * ONE uniform factor, from the larger span. A per-axis fit would stretch the
+   * sticker to fill its own bounding box, which is wrong by up to a pixel on a
+   * part whose bbox was rounded outward — and a stretched cut outline no longer
+   * matches the artwork it was traced from.
+   */
+  const scale = Math.max(bbox.width / spanX, bbox.height / spanY);
+
+  // Centre the scaled path inside the box, so any rounding slack is split
+  // between the two edges rather than all landing on one.
+  const originX = minX * scale - (bbox.width - spanX * scale) / 2;
+  const originY = minY * scale - (bbox.height - spanY * scale) / 2;
+
+  const points = flattenPath(path, scale, { x: originX, y: originY });
+  return rasterizePathAlpha(points, { width: bbox.width, height: bbox.height });
 }

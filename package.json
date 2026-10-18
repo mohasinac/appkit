@@ -189,6 +189,10 @@
     "./hooks/*": {
       "types": "./dist/hooks/*.d.ts",
       "import": "./dist/hooks/*.js"
+    },
+    "./features/sticker-trace/server": {
+      "types": "./dist/features/sticker-trace/server.d.ts",
+      "import": "./dist/features/sticker-trace/server.js"
     }
   },
   "files": [

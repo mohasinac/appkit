@@ -2141,3 +2141,11 @@ export {
   writeRunArtifact,
   type RunGeometry,
 } from "./_internal/server/features/sticker-trace/storage";
+
+/*
+ * The part rasteriser factory. Exported rather than the raw
+ * `rasterizePathAlpha` because `ShardDeps.rasterise` is keyed on ORDINAL and
+ * carries no path — the factory is what closes that gap, and handing a consumer
+ * the primitive instead would make every binding re-invent the lookup.
+ */
+export { rasterisePartToBox } from "./_internal/shared/features/sticker-trace/math/rasterize-path";
