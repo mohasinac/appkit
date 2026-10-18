@@ -77,14 +77,14 @@ export const PUBLIC_STICKER_SHEET_FIELDS = [
   "updatedAt",
 ] as const;
 
-export const PRIVATE_STICKER_SHEET_FIELDS = {
-  sourceScan:
-    "carries assetPath (a raw private Storage path) and sha256. Only `bytes` " +
-    "is surfaced, as sourceScanBytes, for the usage meter.",
-  artifacts:
-    "every member is a raw private Storage path. The client gets booleans here " +
-    "and a 5-minute signed URL from an authenticated route.",
-} as const;
+export const PRIVATE_STICKER_SHEET_FIELDS = [
+  // Carries assetPath (a raw private Storage path) and sha256. Only `bytes` is
+  // surfaced, as sourceScanBytes, for the usage meter.
+  "sourceScan",
+  // Every member is a raw private Storage path. The client gets booleans here
+  // and a 5-minute signed URL from an authenticated route.
+  "artifacts",
+] as const;
 
 export const PUBLIC_TRACE_RUN_FIELDS = [
   "id",
@@ -109,15 +109,15 @@ export const PUBLIC_TRACE_RUN_FIELDS = [
   "updatedAt",
 ] as const;
 
-export const PRIVATE_TRACE_RUN_FIELDS = {
-  artifacts:
-    "raw private Storage paths (preview/overlay/geometry/cutSvg/thumbAtlas). " +
-    "Surfaced as hasPreview/hasOverlay/hasGeometry/hasCutSvg/hasThumbAtlas.",
-  promoted:
-    "partAssetPaths plus the three export paths are all raw Storage paths. " +
-    "`at`/`by` are surfaced as promotedAt/promotedBy, and the count as " +
-    "promotedPartCount.",
-} as const;
+export const PRIVATE_TRACE_RUN_FIELDS = [
+  // Raw private Storage paths (preview/overlay/geometry/cutSvg/thumbAtlas).
+  // Surfaced as hasPreview/hasOverlay/hasGeometry/hasCutSvg/hasThumbAtlas.
+  "artifacts",
+  // partAssetPaths plus the three export paths are all raw Storage paths.
+  // `at`/`by` are surfaced as promotedAt/promotedBy, the count as
+  // promotedPartCount.
+  "promoted",
+] as const;
 
 /* --------------------------------------------------------------------------- */
 
@@ -215,12 +215,12 @@ export function toClientStickerSheet(doc: StickerSheetDocument): ClientStickerSh
     id: doc.id,
     title: doc.title,
     scanType: doc.scanType,
-    ...(doc.dpi !== undefined ? { dpi: doc.dpi } : {}),
-    ...(doc.dpiSource !== undefined ? { dpiSource: doc.dpiSource } : {}),
+    dpi: doc.dpi,
+    dpiSource: doc.dpiSource,
     widthPx: doc.widthPx,
     heightPx: doc.heightPx,
     sourceScanBytes: doc.sourceScan?.bytes ?? 0,
-    ...(doc.activeRunId !== undefined ? { activeRunId: doc.activeRunId } : {}),
+    activeRunId: doc.activeRunId,
     traceStatus: doc.traceStatus,
     partCount: doc.partCount,
     groupCount: doc.groupCount,
@@ -247,18 +247,18 @@ export function toClientTraceRun(doc: StickerTraceRunDocument): ClientTraceRun {
     tier: doc.tier,
     params: doc.params,
     requestedBy: doc.requestedBy,
-    ...(doc.startedAt !== undefined ? { startedAt: doc.startedAt } : {}),
-    ...(doc.finishedAt !== undefined ? { finishedAt: doc.finishedAt } : {}),
-    ...(doc.durationMs !== undefined ? { durationMs: doc.durationMs } : {}),
+    startedAt: doc.startedAt,
+    finishedAt: doc.finishedAt,
+    durationMs: doc.durationMs,
     status: doc.status,
-    ...(doc.stage !== undefined ? { stage: doc.stage } : {}),
+    stage: doc.stage,
     events: doc.events ?? [],
-    ...(doc.eventsTruncated !== undefined ? { eventsTruncated: doc.eventsTruncated } : {}),
+    eventsTruncated: doc.eventsTruncated,
     partCount: doc.partCount,
     groupCount: doc.groupCount,
-    ...(doc.shardCount !== undefined ? { shardCount: doc.shardCount } : {}),
-    ...(doc.error !== undefined ? { error: doc.error } : {}),
-    ...(doc.artifactsPruned !== undefined ? { artifactsPruned: doc.artifactsPruned } : {}),
+    shardCount: doc.shardCount,
+    error: doc.error,
+    artifactsPruned: doc.artifactsPruned,
     hasPreview: Boolean(a.previewPath),
     hasOverlay: Boolean(a.overlayPath),
     hasGeometry: Boolean(a.geometryPath),
