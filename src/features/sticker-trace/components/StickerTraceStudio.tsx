@@ -41,6 +41,7 @@ import type {
   TraceParams,
 } from "../../../_internal/shared/features/sticker-trace/types";
 import { CUT_CONTOUR_CSS } from "../../../_internal/shared/features/sticker-trace/cut-contour";
+import { PARAM_HELP, TIER_HELP } from "../constants/help-content";
 import { useLiveTrace } from "../hooks/useLiveTrace";
 
 /*
@@ -61,31 +62,24 @@ const TIER: PrecisionTier = "draft";
  * their tier defaults. The full set belongs in the run's advanced panel, where
  * it is edited deliberately rather than dragged.
  */
+/*
+ * The four parameters worth a live control.
+ *
+ * 🛑 Deliberately NOT every parameter. `TraceParams` has two dozen members and
+ * a form of two dozen sliders is a form nobody reads — these are the four the
+ * corpus work actually moved when a scan came out wrong, and the rest keep
+ * their tier defaults.
+ *
+ * 🛑 The hint text comes from PARAM_HELP, not from a literal here. It used to
+ * be a second, shorter paraphrase of the same explanation, which is the copy
+ * that drifts: the inline hint is the one people actually read, so it has to be
+ * the same words the help panel shows.
+ */
 const CONTROLS = [
-  {
-    key: "ridgeHysteresisLow" as const,
-    label: "Ridge sensitivity (low)",
-    hint: "Lower finds fainter cut lines, and more noise with them.",
-    step: 0.01,
-  },
-  {
-    key: "ridgeHysteresisHigh" as const,
-    label: "Ridge sensitivity (high)",
-    hint: "Where a line is certain enough to seed from.",
-    step: 0.01,
-  },
-  {
-    key: "paperTolerance" as const,
-    label: "Paper tolerance",
-    hint: "How far from the sampled paper colour still counts as background.",
-    step: 1,
-  },
-  {
-    key: "minPartAreaMm2" as const,
-    label: "Min part area (mm²)",
-    hint: "Drops speckle. Raise it if the count is full of fragments.",
-    step: 5,
-  },
+  { key: "ridgeHysteresisLow" as const, step: 0.01 },
+  { key: "ridgeHysteresisHigh" as const, step: 0.01 },
+  { key: "paperTolerance" as const, step: 1 },
+  { key: "minPartAreaMm2" as const, step: 5 },
 ];
 
 export interface StickerTraceStudioProps {
@@ -185,7 +179,7 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
                     <FieldInput
                       name={c.key}
                       type="number"
-                      label={c.label}
+                      label={PARAM_HELP[c.key]?.title ?? c.key}
                       step={c.step}
                       value={String(params[c.key])}
                       onChange={(v) => {
@@ -196,7 +190,7 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
                       }}
                     />
                     <Text size="xs" color="muted">
-                      {c.hint}
+                      {PARAM_HELP[c.key]?.body}
                     </Text>
                   </Stack>
                 ))}
@@ -205,12 +199,11 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
                   label="Tier"
                   value={TIER}
                   disabled
-                  options={[{ value: TIER, label: "Draft — interactive" }]}
+                  options={[{ value: TIER, label: TIER_HELP[TIER].title }]}
                   onChange={() => undefined}
                 />
                 <Text size="xs" color="muted">
-                  Heavier tiers are chosen when you commit a run; they are too slow
-                  to drag a slider against.
+                  {TIER_HELP[TIER].body}
                 </Text>
               </Stack>
             </Card>
