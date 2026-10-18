@@ -4,6 +4,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonObjectWithUndefined } from "@mohasinac/appkit/client";
 import React, { useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -29,6 +30,8 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import type { ApiClientError } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { toUserMessage } from "../../../errors/error-display-map";
 import type {
   EventItem,
   EventType,
@@ -434,6 +437,10 @@ export function AdminEventEditorView({
   const [slugManual, setSlugManual] = React.useState(false);
   const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
   const [triggerMessage, setTriggerMessage] = React.useState<string | null>(null);
+  // Root translator (no namespace) — `toUserMessage` passes fully-qualified
+  // `errors.codes.*` keys and resolves them itself. Same precedent as
+  // `PlaceBidFormClient` and `SpinWheelView`.
+  const t = useTranslations();
   const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
   const [raffleEntryCount, setRaffleEntryCount] = React.useState<number | null>(null);
   const [raffleGithubUrl, setRaffleGithubUrl] = React.useState("");
@@ -566,7 +573,22 @@ export function AdminEventEditorView({
       if (typeof data?.raffleEntryCount === "number") setRaffleEntryCount(data.raffleEntryCount);
     },
     onError: (err) => {
-      setTriggerMessage(err instanceof Error ? err.message : "Trigger failed");
+      /*
+       * 🛑 `err.message` was printed straight into the panel — the shape Root
+       * Cause #86 is about, and the ternary was inverted besides: the authored
+       * sentence only showed when the value was NOT an Error, i.e. almost
+       * never, so the normal case rendered raw server text to an admin.
+       *
+       * The route now returns a stable `code` for every refusal, so the copy
+       * resolves through `errors.codes.*`. The one that matters is
+       * `RAFFLE_ALREADY_DRAWN` — "a winner has already been drawn" is a
+       * completely different instruction from the old generic failure, and it
+       * is what a second click gets now that the draw is transactional.
+       */
+      const e = normalizeError(err);
+      setTriggerMessage(
+        toUserMessage(e.code, t, { fallback: "Could not draw a winner." }),
+      );
     },
   });
 
@@ -832,7 +854,27 @@ export function AdminEventEditorView({
                       <Text size="sm" weight="medium" className={CLS_RAFFLE_HEADING}>
                         {raffleWinnerName ? `Winner: ${raffleWinnerName}` : "Raffle not yet triggered"}
                       </Text>
-                      <Button type="button" variant="primary" size="sm" onClick={() => triggerRaffleMutation.mutate()} disabled={triggerRaffleMutation.isPending || Boolean(raffleWinnerName)}>
+                      {/*
+                        * `action=` is what gates this behind a confirmation
+                        * dialog. The control was an inline primary Button with
+                        * a hardcoded label and NO confirmation, on the single
+                        * most irreversible operation in the events feature: it
+                        * writes a winner onto the event, announces them
+                        * publicly, and sends them a notification that cannot
+                        * be recalled. One stray click did all three (Rule #7
+                        * item 4 — a `danger` action must carry a confirmation).
+                        *
+                        * `children` still override the registry label, which is
+                        * what keeps the three-state text below; the registry
+                        * supplies the dialog, the aria-label and the variant.
+                        */}
+                      <Button
+                        type="button"
+                        action={ACTIONS.EVENT["draw-raffle-winner"]}
+                        size="sm"
+                        onClick={() => triggerRaffleMutation.mutate()}
+                        disabled={triggerRaffleMutation.isPending || Boolean(raffleWinnerName)}
+                      >
                         {triggerRaffleMutation.isPending ? "Triggering…" : raffleWinnerName ? "Already triggered" : "Trigger Raffle Now"}
                       </Button>
                     </Row>

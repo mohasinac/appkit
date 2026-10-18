@@ -264,10 +264,19 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
 }
 
 export async function runAuctionSettlement(ctx: JobContext): Promise<void> {
-  if (ctx.env("FEATURE_AUCTIONS") !== "true") {
-    ctx.logger.info("FEATURE_AUCTIONS disabled — skipping auction settlement");
-    return;
-  }
+  /*
+   * 🛑 `FEATURE_AUCTIONS` gate DELETED 2026-10-19, and this one was live.
+   *
+   * The flag mechanism was retired on 2026-08-29, but `audit-feature-flags`
+   * only matched `process.env.FEATURE_*` and this read it through
+   * `ctx.env(...)` — so it survived unseen. This is a SCHEDULED Firebase
+   * Function, which reads `functions/.env.<projectId>`, and measured on
+   * 2026-10-19 that file contains exactly one flag: `FEATURE_PAYOUTS=true`.
+   * `FEATURE_AUCTIONS` was never set there, so this sweep returned on its
+   * first line on every run — no expired auction was ever settled in
+   * production, no winner ever got a cart line, and the only trace was an
+   * `info` log saying it had been skipped.
+   */
   ctx.logger.info("Starting auction settlement sweep");
 
   const expired = await productRepository.getExpiredAuctions(ctx.now);

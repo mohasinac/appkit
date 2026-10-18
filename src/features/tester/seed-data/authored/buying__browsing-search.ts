@@ -287,12 +287,29 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /.",
       "Scroll down looking for a 'Raffles' or 'Spin Wheels' strip.",
+      "Read the TYPE of EVERY card in that strip — open each one if the card does not say. Write down any card that is not a raffle or a spin wheel.",
       "Open /events in a new tab.",
       "Note which events have a raffle or spin-wheel type and are currently active.",
     ],
-    expectedBehaviour: "If any raffle or spin-wheel event is active on /events, the homepage shows a 'Raffles & Spin Wheels' strip containing those events. The strip is absent only when genuinely no raffle event is active.",
-    expectedUiState: "The homepage shows a 'Raffles & Spin Wheels' heading with at least one event card beneath it (e.g. 'Daily Beyblade Pull! Spin for a Prize'). The same event must also appear on /events.",
-    endResult: "Nothing is persisted.",
+    expectedBehaviour: "If any raffle or spin-wheel event is active on /events, the homepage shows a 'Raffles & Spin Wheels' strip containing those events AND NOTHING ELSE. The strip is absent only when genuinely no raffle or spin-wheel event is active.",
+    expectedUiState: "The homepage shows a 'Raffles & Spin Wheels' heading with at least one event card beneath it (e.g. 'Daily Beyblade Pull! Spin for a Prize'). Every card in the strip is a raffle or a spin wheel. The same events must also appear on /events.",
+    /*
+     * 🛑 Step 3 — reading each card's TYPE — is the case.
+     *
+     * The strip filtered on `hasRaffle`, which was not in the events repository's
+     * SIEVE_FIELDS. The Sieve adapter runs with `throwExceptions: false`, so an
+     * unallowlisted field does not raise: the clause was SILENTLY DISCARDED and
+     * the query degraded to `status == active` sorted by start date. The strip
+     * rendered the six most recently-started active events of any type — sales,
+     * polls, feedback forms — under a heading promising raffles.
+     *
+     * Every card was a real, live, correctly-rendered event, which is exactly
+     * why this read as working. Only the heading was false, and the old case
+     * asked for "at least one event card", which that satisfied.
+     */
+    expectedData: { nonPrizeEventsInStrip: 0 },
+    endResult:
+      "BEFORE: the strip listed active events of ANY type — a clearance sale and a poll appeared under 'Raffles & Spin Wheels' — because the raffle filter was being dropped before the query ran. AFTER: every card in the strip is a raffle or a spin wheel. Nothing is persisted.",
   },
   "checklist-buying-browsing-search-homepage-prize-draws-section": {
     roles: ["guest"],

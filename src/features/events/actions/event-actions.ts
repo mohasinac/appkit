@@ -19,6 +19,7 @@ import {
 } from "../../../errors";
 import { resolveDate } from "../../../utils";
 import { hashGuestIdentity } from "../../../security/rate-limit";
+import { RAFFLE_MAX_ENTRIES_PER_USER } from "../../../_internal/shared/features/events/config";
 
 const ERR_EVENT_NOT_FOUND = "Event not found";
 
@@ -413,8 +414,33 @@ export async function getUserSpinResultsForEvent(
     isGuest: false,
     spinPrizeId: entry.spinPrizeId,
     spinPrizeTitle: entry.spinPrizeId ? prizeTitleById.get(entry.spinPrizeId) : undefined,
+    // Safe here and ONLY here — `userId` comes from a verified session, so
+    // this is the caller's own prize. The public feed must not carry it.
+    spinPrizeCouponCode: entry.spinPrizeCouponCode ?? undefined,
     spinWonAt: entry.spinWonAt ? new Date(entry.spinWonAt).toISOString() : undefined,
   }));
+}
+
+/**
+ * Has this signed-in user already entered this event?
+ *
+ * Exists so the participate page can render a raffle's already-entered state on
+ * FIRST PAINT. The form tracked it in `useState(0)`, which a reload reset — so
+ * a returning entrant saw an inviting empty form, submitted, and was refused.
+ * A refusal the page could have predicted is a worse experience than a form
+ * that says so up front.
+ *
+ * Reuses `hasUserEntered` (one `(eventId, userId)` equality pair, an index that
+ * is already proven by `countUserEntries`) rather than counting, because the
+ * limit is one — see `RAFFLE_MAX_ENTRIES_PER_USER`.
+ */
+export async function hasUserEnteredEvent(
+  eventId: string,
+  userId: string,
+): Promise<boolean> {
+  const event = await eventRepository.findByIdOrSlug(eventId);
+  if (!event) return false;
+  return eventEntryRepository.hasUserEntered(event.id, userId);
 }
 
 /**
@@ -625,6 +651,37 @@ export async function enterEvent(
     }
   }
 
+  /*
+   * 🛑 The same hole, one event type over: a signed-in user could enter the
+   * SAME RAFFLE as many times as they liked, and every entry joined the
+   * winner pool.
+   *
+   * Guests were deduped by hashed IP, surveys enforced `maxEntriesPerUser`,
+   * polls got the guard documented above — and raffle, the one type where a
+   * duplicate entry is a direct and quantifiable unfairness, had none. The
+   * client-side guard was inert in two independent ways: `submissionCount` is
+   * `useState(0)` that is never hydrated from the server, so a reload resets
+   * it; and `maxEntriesPerUser` was not passed to `EventRaffleEntryForm` at
+   * all, so it defaulted to 1 while nothing enforced it.
+   *
+   * The limit is `RAFFLE_MAX_ENTRIES_PER_USER`, shared with the form that
+   * renders "you've used all N entry slots" — there is no raffle config to
+   * consult (`maxEntriesPerUser` lives on `SurveyConfig` only), and two
+   * mirrored literals is how the UI came to claim a limit nothing enforced.
+   *
+   * Reuses the same `countUserEntries` as the survey and poll paths, so the
+   * read cost and the `(eventId, userId)` index it needs are already proven.
+   */
+  if (user && event.type === "raffle") {
+    const priorEntries = await eventEntryRepository.countUserEntries(
+      resolvedEventId,
+      user.uid,
+    );
+    if (priorEntries >= RAFFLE_MAX_ENTRIES_PER_USER) {
+      throw new ValidationError(ERROR_MESSAGES.EVENT.ALREADY_ENTERED);
+    }
+  }
+
   if (event.type === "poll" && event.pollConfig) {
     const validOptionIds = (event.pollConfig as any).options.map(
       (o: any) => o.id,
@@ -655,9 +712,26 @@ export async function enterEvent(
     }
   }
 
+  /*
+   * 🛑 `raffle` was absent here, and that is what kept the raffle draw broken
+   * even after its pool query was fixed.
+   *
+   * `runTriggerEventRaffle` builds its pool from `reviewStatus == "approved"`.
+   * With raffle missing from this list every live entry was written `pending`,
+   * so a freshly-entered raffle still drew from an empty pool — the fix to the
+   * query alone would have changed nothing a user could see.
+   *
+   * A raffle entry is a name and an optional message. There is no submitted
+   * content to moderate, which is why it belongs with `poll` and `feedback`
+   * rather than behind `survey`'s `entryReviewRequired` opt-in. An admin can
+   * still FLAG an individual entry, and flagging correctly drops it from the
+   * pool — that is the moderation path, not a standing review queue of every
+   * entrant.
+   */
   const autoApprove =
     event.type === "poll" ||
     event.type === "feedback" ||
+    event.type === "raffle" ||
     (event.type === "survey" &&
       !(event.surveyConfig as any)?.entryReviewRequired);
 

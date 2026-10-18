@@ -121,6 +121,17 @@ export const NOTIFICATION_RELATED_TYPE_VALUES = [
   "store",
   // D9 — the chat thread the message belongs to.
   "conversation",
+  /*
+   * The event a raffle win belongs to. Added 2026-10-19 with the raffle-winner
+   * notification: `runTriggerEventRaffle` recorded a winner and told nobody,
+   * so the only way to learn you had won was to revisit the event page.
+   *
+   * Declared here rather than sent behind an `as never` — see the note above
+   * this array about `catalogueItem`, and the exhaustiveness check in
+   * `resolveNotificationActionUrl` that makes the destination a compile-time
+   * question.
+   */
+  "event",
 ] as const;
 
 export type NotificationRelatedType =

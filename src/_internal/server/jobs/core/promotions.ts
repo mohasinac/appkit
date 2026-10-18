@@ -18,10 +18,13 @@ export async function runPromotions(
   _input: void,
   ctx: JobContext,
 ): Promise<PromotionsCallableResult> {
-  if (ctx.env("FEATURE_EVENTS") !== "true") {
-    ctx.logger.info("FEATURE_EVENTS disabled — skipping promotions");
-    return { promotedProducts: [], featuredProducts: [], activeCoupons: [] };
-  }
+  /*
+   * `FEATURE_EVENTS` gate deleted 2026-10-19 — see `auctionSettlement.ts`.
+   * Unset in the Functions env, and this branch returned three EMPTY ARRAYS,
+   * which is indistinguishable from "nothing is promoted right now" to every
+   * caller. A refusal shaped like a valid empty answer is the worst of the
+   * nine; the spin route at least produced a 503 somebody could see.
+   */
   ctx.logger.info("Promotions data requested");
   const now = new Date();
   const nowIso = now.toISOString();

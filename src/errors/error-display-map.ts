@@ -1,5 +1,10 @@
 import { normalizeError } from "./normalize";
-import { ERROR_CODES, BID_ERROR_CODES, OFFER_ERROR_CODES } from "./error-codes";
+import {
+  ERROR_CODES,
+  BID_ERROR_CODES,
+  OFFER_ERROR_CODES,
+  EVENT_DRAW_ERROR_CODES,
+} from "./error-codes";
 import { HTTP_ERROR_CODES } from "./error-mapping";
 
 /**
@@ -199,6 +204,46 @@ export const ERROR_DISPLAY_MAP: Record<string, ErrorDisplayEntry> = {
   },
   [OFFER_ERROR_CODES.WRONG_STATE]: {
     messageKey: k(OFFER_ERROR_CODES.WRONG_STATE),
+  },
+
+  // ---------- Event prize draws (spin wheel + raffle) ----------
+  // No `field` on any of these: the spin wheel is a button, not a form, and the
+  // raffle draw is an admin action. There is no input to route an error onto.
+  [EVENT_DRAW_ERROR_CODES.IDENTITY_REQUIRED]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.IDENTITY_REQUIRED),
+  },
+  [EVENT_DRAW_ERROR_CODES.LOGIN_REQUIRED]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.LOGIN_REQUIRED),
+  },
+  [EVENT_DRAW_ERROR_CODES.EVENT_NOT_FOUND]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.EVENT_NOT_FOUND),
+  },
+  [EVENT_DRAW_ERROR_CODES.EVENT_NOT_ACTIVE]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.EVENT_NOT_ACTIVE),
+  },
+  [EVENT_DRAW_ERROR_CODES.SPIN_NO_PRIZES]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.SPIN_NO_PRIZES),
+  },
+  [EVENT_DRAW_ERROR_CODES.SPIN_OUTSIDE_WINDOW]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.SPIN_OUTSIDE_WINDOW),
+  },
+  [EVENT_DRAW_ERROR_CODES.SPIN_ALREADY_USED]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.SPIN_ALREADY_USED),
+  },
+  [EVENT_DRAW_ERROR_CODES.NOT_A_SPIN_WHEEL]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.NOT_A_SPIN_WHEEL),
+  },
+  [EVENT_DRAW_ERROR_CODES.RAFFLE_NOT_A_RAFFLE]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.RAFFLE_NOT_A_RAFFLE),
+  },
+  [EVENT_DRAW_ERROR_CODES.RAFFLE_ALREADY_DRAWN]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.RAFFLE_ALREADY_DRAWN),
+  },
+  [EVENT_DRAW_ERROR_CODES.RAFFLE_NO_ELIGIBLE_ENTRIES]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.RAFFLE_NO_ELIGIBLE_ENTRIES),
+  },
+  [EVENT_DRAW_ERROR_CODES.UNKNOWN_REASON]: {
+    messageKey: k(EVENT_DRAW_ERROR_CODES.UNKNOWN_REASON),
   },
 
   // ---------- HTTP / mapped wire codes (from error-mapping.ts) ----------

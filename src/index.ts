@@ -5149,6 +5149,15 @@ export type { AdminEventEditorViewProps } from "./features/events/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENTS_COLLECTION - Constant used across modules.
 export { EVENTS_COLLECTION } from "./features/events/index";
+/*
+ * [SHARED] RAFFLE_MAX_ENTRIES_PER_USER — one entry per person in a raffle.
+ *
+ * Public because the consumer's participate page must hand the SAME number to
+ * `EventRaffleEntryForm` that `enterEvent` enforces server-side. Two mirrored
+ * literals is the shape that caused the bug: the form already said "you've
+ * used all 1 entry slot" while the server enforced nothing at all.
+ */
+export { RAFFLE_MAX_ENTRIES_PER_USER } from "./_internal/shared/features/events/config";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EVENT_ADMIN_SORT_OPTIONS - Constant used across modules.
 export { EVENT_ADMIN_SORT_OPTIONS } from "./features/events/index";

@@ -33,6 +33,37 @@ export const OFFER_ERROR_CODES = {
   WRONG_STATE: "OFFER_WRONG_STATE",
 } as const;
 
+/**
+ * Event prize-draw refusals — the spin wheel and the raffle draw.
+ *
+ * These exist because every refusal on those two surfaces used to render as the
+ * single string "Spin failed. Please try again.": the client threw a native
+ * `Error`, so `normalizeError` produced no code, so `toUserMessage` could only
+ * return its fallback. A closed window, an exhausted per-user cap and a
+ * misconfigured event were indistinguishable to the person spinning, and a
+ * 401 never opened the login modal.
+ *
+ * Statuses live beside the reasons in
+ * `_internal/server/jobs/core/event-draw-reasons.ts`; `audit-error-display-i18n`
+ * requires a matching `errors.codes.*` key in `messages/en.json` for every
+ * value below.
+ */
+export const EVENT_DRAW_ERROR_CODES = {
+  IDENTITY_REQUIRED: "EVENT_IDENTITY_REQUIRED",
+  LOGIN_REQUIRED: "EVENT_LOGIN_REQUIRED",
+  EVENT_NOT_FOUND: "EVENT_NOT_FOUND",
+  EVENT_NOT_ACTIVE: "EVENT_NOT_ACTIVE",
+  SPIN_NO_PRIZES: "SPIN_NO_PRIZES",
+  SPIN_OUTSIDE_WINDOW: "SPIN_OUTSIDE_WINDOW",
+  SPIN_ALREADY_USED: "SPIN_ALREADY_USED",
+  NOT_A_SPIN_WHEEL: "EVENT_NOT_A_SPIN_WHEEL",
+  RAFFLE_NOT_A_RAFFLE: "RAFFLE_NOT_A_RAFFLE",
+  RAFFLE_ALREADY_DRAWN: "RAFFLE_ALREADY_DRAWN",
+  RAFFLE_NO_ELIGIBLE_ENTRIES: "RAFFLE_NO_ELIGIBLE_ENTRIES",
+  /** A reason the status map has never heard of — a bug in the core, mapped 500. */
+  UNKNOWN_REASON: "EVENT_DRAW_UNKNOWN_REASON",
+} as const;
+
 export const ERROR_CODES = {
   // Authentication
   AUTH_INVALID_CREDENTIALS: "AUTH_001",

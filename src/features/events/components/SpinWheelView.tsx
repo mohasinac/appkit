@@ -1,9 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Row, Span, Stack, Text, useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
-import type { SpinPrize } from "../types";
+// `DisplaySpinPrize`, not `SpinPrize` — see that type's note. A view typed
+// against the stored shape makes `weight` (the odds) and `couponId` REQUIRED of
+// every caller, which is how a public wheel came to be handed both.
+import type { DisplaySpinPrize } from "../types";
 
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
@@ -17,7 +21,7 @@ const CLS_ERROR_TEXT = "text-[length:var(--appkit-text-sm)] text-error dark:text
 
 export interface SpinWheelViewProps {
   eventId: string;
-  prizes: SpinPrize[];
+  prizes: DisplaySpinPrize[];
   alreadyUsed?: boolean;
   initialPrizeId?: string;
   initialCouponCode?: string;
@@ -81,6 +85,10 @@ export function SpinWheelView({
   const [error, setError] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { showToast } = useToast();
+  // Root translator (no namespace) — `toUserMessage` passes fully-qualified
+  // `errors.codes.*` keys and resolves them itself, so a missing key degrades
+  // to generic copy rather than throwing MISSING_MESSAGE at render time.
+  const t = useTranslations();
 
   const now = Date.now();
   const startMs = windowStart ? new Date(windowStart).getTime() : null;
@@ -103,6 +111,12 @@ export function SpinWheelView({
           setResultPrizeId(result.spinPrizeId);
           setResultCoupon(result.spinPrizeCouponCode);
         } else {
+          /*
+           * A 2xx with no prize. The server now refuses with a real status and
+           * code for every reason it knows (`reasonToHttp`), so reaching here
+           * means the response was shaped unexpectedly rather than refused —
+           * the generic fallback is the honest answer.
+           */
           setError(l.errorFallback);
         }
       }, ANIMATION_MS);
@@ -112,14 +126,40 @@ export function SpinWheelView({
       if (isAuthError(err)) {
         setShowLoginModal(true);
       } else {
-        setError(l.errorFallback);
-        showToast(toUserMessage(e.code, undefined, { fallback: l.errorFallback }), "error");
+        /*
+         * 🛑 Show the SERVER'S reason, not one sentence for all of them.
+         *
+         * Both lines below used to be `l.errorFallback` — "Spin failed. Please
+         * try again." — so a closed window, an exhausted per-user cap, a
+         * misconfigured wheel and a genuine fault were indistinguishable, and
+         * the retry that sentence invites could never succeed for most of them.
+         *
+         * `t` is the ROOT, unnamespaced translator: `toUserMessage` resolves
+         * absolute `errors.codes.*` keys, which a namespaced translator cannot
+         * reach. Omitting it (as this did) makes `toUserMessage` return the
+         * fallback unconditionally — so the per-reason copy existed in
+         * `messages/en.json` and was unreachable. Same reasoning as
+         * `PlaceBidFormClient`.
+         *
+         * This only resolves because `onSpin` now throws an `ApiError` carrying
+         * the response's `code` and `status`; while it threw a native `Error`,
+         * `normalizeError` produced no code and `isAuthError` saw no status, so
+         * a 401 never opened the login modal either.
+         */
+        const message = toUserMessage(e.code, t, { fallback: l.errorFallback });
+        setError(message);
+        showToast(message, "error");
       }
     }
-  }, [disabled, eventId, l.errorFallback, onSpin, showToast]);
+  }, [disabled, eventId, l.errorFallback, onSpin, showToast, t]);
 
+  /*
+   * Looked up in the FULL prize list, not `activePrizes`. A prize deactivated
+   * after somebody won it would otherwise render neither the prize box nor an
+   * error — the win simply vanished from the page.
+   */
   const wonPrize = resultPrizeId
-    ? activePrizes.find((p) => p.id === resultPrizeId)
+    ? prizes.find((p) => p.id === resultPrizeId)
     : undefined;
 
   return (

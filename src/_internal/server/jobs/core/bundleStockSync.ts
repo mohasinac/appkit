@@ -64,10 +64,9 @@ async function sweepBundleMembers(
 }
 
 export async function runBundleStockSync(ctx: JobContext): Promise<void> {
-  if (ctx.env("FEATURE_BUNDLES") !== "true") {
-    ctx.logger.info("FEATURE_BUNDLES disabled — skipping bundle stock sync");
-    return;
-  }
+  // `FEATURE_BUNDLES` gate deleted 2026-10-19 — see `auctionSettlement.ts` for
+  // why these survived the 2026-08-29 flag retirement. Unset in
+  // `functions/.env.letitrip-in-app`, so this scheduled sweep had never run.
   ctx.logger.info("Bundle stock sync starting (SB-UNI-V categories)");
 
   const snap = await ctx.db

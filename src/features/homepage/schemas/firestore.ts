@@ -805,9 +805,15 @@ export interface EventRafflesSectionConfig {
   title?: string;
   subtitle?: string;
   maxItems?: number;
+  /**
+   * Which prize-event types the strip spans. The two concrete values are
+   * `EventType` members, matched against the `type` field — see
+   * `EventRafflesSection` for why `hasRaffle` was the wrong field and what it
+   * silently did instead.
+   */
   raffleType?: "raffle" | "spin_wheel" | "all";
-  showEntryCount?: boolean;
-  showCountdown?: boolean;
+  showEntryCount?: boolean; // NO-RENDERER: EventCard has no entry-count prop; adding one touches every EventCard consumer and is its own change.
+  showCountdown?: boolean; // NO-RENDERER: EventCard has no countdown prop; same reason as showEntryCount.
 }
 
 export interface GoogleReviewsSectionConfig {

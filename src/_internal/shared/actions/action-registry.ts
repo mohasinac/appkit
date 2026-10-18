@@ -1180,6 +1180,36 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    /*
+     * The raffle draw. Added 2026-10-19 — before this there was NO control to
+     * draw a raffle anywhere in the product: the endpoint and its
+     * `ADMIN_ENDPOINTS.EVENT_TRIGGER_RAFFLE` constant existed with zero
+     * callers, and the tester case whose step 3 reads "trigger the raffle
+     * draw" was literally unexecutable.
+     *
+     * `kind: "danger"` with a REQUIRED confirmation, because a draw is
+     * genuinely irreversible: it writes the winner onto the event, and the
+     * winner's notification cannot be recalled. The server enforces the
+     * one-draw invariant transactionally and answers 409
+     * `RAFFLE_ALREADY_DRAWN` on a second attempt, so this dialog is the
+     * courtesy and that 409 is the guarantee.
+     */
+    "draw-raffle-winner": {
+      iconKey: "verify",
+      id: "event.draw-raffle-winner",
+      label: "Draw raffle winner",
+      ariaLabel: "Pick a random winner from the approved entries",
+      description:
+        "Picks one winner at random from this event's approved entries, records them on the event, and notifies them.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Draw the raffle winner?",
+        body: "One winner will be picked at random from the approved entries, announced on the event page, and notified. A raffle can only be drawn once — this action cannot be undone.",
+        confirmLabel: "Yes, draw the winner",
+        confirmKind: "danger",
+      },
+    },
   },
   USER: {
     "cancel-order": {

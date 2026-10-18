@@ -22,10 +22,10 @@ function getBusinessDayCutoff(daysAgo: number): Date {
 }
 
 export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
-  if (ctx.env("FEATURE_PAYOUTS") !== "true") {
-    ctx.logger.info("FEATURE_PAYOUTS disabled — skipping auto-payout eligibility");
-    return;
-  }
+  // `FEATURE_PAYOUTS` gate deleted 2026-10-19 — see `auctionSettlement.ts`.
+  // This was the one flag actually set (`functions/.env.letitrip-in-app`), so
+  // unlike its four siblings this job was running; removing the gate is a
+  // no-op in behaviour and removes the lever that could silently stop payouts.
   ctx.logger.info("Starting daily auto-payout eligibility sweep", {
     windowDays: AUTO_PAYOUT_WINDOW_DAYS,
   });

@@ -16,7 +16,8 @@ import {
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { AdminEventEditorView } from "./AdminEventEditorView";
-import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
+import { apiClient } from "../../../http";
 
 /**
  * Derived from the `EventType` union (2026-08-24).
@@ -102,14 +103,42 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
       label: "Add Event",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
     },
-    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
-    buildBulkActions: (selection): BulkActionItem[] =>
-      ADMIN_BULK_ACTIONS.events.map((id) => ({
-        id,
-        label: ROW_ACTION_META[id].label,
-        destructive: ROW_ACTION_META[id].destructive,
-        onClick: () => selection.clearSelection(),
-      })),
+    /*
+     * Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+     *
+     * 🛑 This used to map every preset id to `onClick: () => clearSelection()`
+     * — so the bulk bar rendered a red "Delete" that selected rows, asked
+     * nothing, deleted nothing, and then cleared the checkboxes, which reads
+     * exactly like a successful delete until the list refreshes. A destructive
+     * control that silently no-ops is worse than an absent one (Rule #8).
+     *
+     * Wired self-contained against `DELETE /api/admin/events/[id]`, following
+     * `AdminBundlesView`; the `.filter` keeps `AdminFaqsView`'s discipline that
+     * an unwired preset id is OMITTED rather than shown inert, so the next id
+     * added to the preset cannot reintroduce this.
+     */
+    buildBulkActions: (selection): BulkActionItem[] => {
+      const handlers: Partial<
+        Record<(typeof ADMIN_BULK_ACTIONS.events)[number], () => Promise<void>>
+      > = {
+        [ROW_ACTION_ID.DELETE]: async () => {
+          await Promise.all(
+            selection.selectedIds.map((id) =>
+              apiClient.delete(ADMIN_ENDPOINTS.EVENT_BY_ID(id)),
+            ),
+          );
+          selection.clearSelection();
+        },
+      };
+      return ADMIN_BULK_ACTIONS.events
+        .filter((id) => handlers[id])
+        .map((id) => ({
+          id,
+          label: ROW_ACTION_META[id].label,
+          destructive: ROW_ACTION_META[id].destructive,
+          onClick: handlers[id]!,
+        }));
+    },
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
         <FilterChipGroup

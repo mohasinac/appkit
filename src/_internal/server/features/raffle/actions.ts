@@ -20,6 +20,7 @@ import {
   type AssignSpinPrizeInput,
   type AssignSpinPrizeResult,
 } from "../../jobs/core/assignSpinPrize";
+import { resolveEventRef } from "../../jobs/core/_event-ref";
 import type { JobContext, JobLogger } from "../../jobs/runtime/types";
 
 function buildContext(job: string): JobContext {
@@ -52,4 +53,34 @@ export async function assignSpinPrizeAction(
   return wrapAction(async () =>
     runAssignSpinPrize(input, buildContext("user.assignSpinPrize")),
   );
+}
+
+/**
+ * Resolve a slug-or-id to the canonical event DOCUMENT ID.
+ *
+ * Exists for one caller — `POST /api/events/[id]/spin`, which must hash a
+ * guest's identity against a stable key BEFORE calling the spin action.
+ *
+ * 🛑 Why this is not just a nicety. Public URLs link by slug, so the route
+ * received a slug and did `hashGuestIdentity(slug, request)`, while
+ * `enterEvent` hashes on the resolved doc id. Two identities for one guest on
+ * one event. While the spin core's lookup was broken that was invisible (every
+ * spin 404'd); the moment the lookup was fixed it would have become a silent
+ * `spinMaxPerUser` bypass — exhaust your spins on `/events/<slug>/participate`
+ * and get a fresh allowance on `/events/<docId>/participate`.
+ *
+ * Returns `null` for an unknown event; the route then lets the spin action
+ * produce the single authoritative `event_not_found` rather than guessing at
+ * one here.
+ */
+export async function resolveEventIdAction(
+  idOrSlug: string,
+): Promise<ActionResult<string | null>> {
+  return wrapAction(async () => {
+    const resolved = await resolveEventRef(
+      buildContext("user.resolveEventId").db,
+      idOrSlug,
+    );
+    return resolved?.id ?? null;
+  });
 }

@@ -9,12 +9,35 @@
  * find/create/assign/mark-used sequence runs inside a single Firestore
  * transaction so two rapid spins from the same identity can't both win a
  * prize (the old read-then-`ref.update()` version had this race).
+ *
+ * ## Every non-success branch returns a `reason`, and that is load-bearing
+ *
+ * Both entry points — `POST /api/events/[id]/spin` and the Firebase callable —
+ * decide success by `if (data.reason && !data.spinPrizeId)`. A branch that
+ * returns early WITHOUT a reason is therefore reported to the caller as a
+ * successful spin that awarded nothing. Reasons come from
+ * `EVENT_DRAW_REASON`; `reasonToHttp` turns each into one status and one
+ * stable code for both entry points (Root Cause #85).
+ *
+ * The `FEATURE_PRIZE_DRAWS` gate that used to open this function was DELETED
+ * on 2026-10-19. The whole `FEATURE_*` mechanism had already been retired —
+ * `audit-feature-flags` bans it strict-zero and `.env.example` declares no
+ * such key — but that audit only matched `process.env.FEATURE_*`, and this
+ * read it as `ctx.env("FEATURE_PRIZE_DRAWS")`, which the regex could not see.
+ * So an env var nothing documented was never set in production and every spin
+ * returned 503 `feature_disabled` while the Spin button rendered enabled.
  */
 
 import crypto from "node:crypto";
 import type { JobContext } from "../runtime/types";
-import { EVENT_ENTRY_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
+import {
+  EVENT_ENTRY_FIELDS,
+  EVENT_FIELDS,
+  COMMON_FIELDS,
+} from "../../../../constants/field-names";
 import { resolveDate } from "../../../../utils";
+import { resolveEventRef } from "./_event-ref";
+import { EVENT_DRAW_REASON } from "./event-draw-reasons";
 
 export interface AssignSpinPrizeInput {
   eventId: string;
@@ -25,6 +48,7 @@ export interface AssignSpinPrizeInput {
 }
 
 export interface AssignSpinPrizeResult {
+  /** The canonical DOCUMENT ID, even when the caller passed a slug. */
   eventId: string;
   userId?: string;
   spinPrizeId?: string;
@@ -36,6 +60,15 @@ export interface AssignSpinPrizeResult {
 
 interface SpinPrize {
   id: string;
+  /**
+   * Absent means ACTIVE — matching `SpinWheelView`'s own
+   * `prizes.filter(p => p.isActive !== false)`. The two gates used to
+   * disagree: the client hid an inactive prize while this core summed every
+   * prize's weight regardless, so a wheel whose prizes were all inactive
+   * rendered a disabled button and a wheel with one active prize could still
+   * award an inactive one.
+   */
+  isActive?: boolean;
   /** Matches the stored field name on `EventDocument.spinPrizes` (the admin
    * editor and its Zod schema both call it `label`, not `title` — an
    * earlier version of this file used `title` here, which never matched
@@ -49,6 +82,9 @@ interface SpinPrize {
 }
 
 interface EventForSpin {
+  type?: string;
+  status?: string;
+  endsAt?: Date;
   spinPrizes?: SpinPrize[];
   spinMaxPerUser?: number;
   // Matches EventDocument's canonical field type (appkit/src/features/events/schemas/firestore.ts).
@@ -63,9 +99,10 @@ interface SpinEntryData {
   spinUsed?: boolean;
   spinCount?: number;
   spinPrizeId?: string;
+  /** Written `?? null` on every spin, so a read can legitimately be null. */
+  spinPrizeCouponCode?: string | null;
 }
 
-const EVENTS_COLLECTION = "events";
 const EVENT_ENTRIES_COLLECTION = "eventEntries";
 const COUPONS_COLLECTION = "coupons";
 
@@ -73,36 +110,72 @@ export async function runAssignSpinPrize(
   input: AssignSpinPrizeInput,
   ctx: JobContext,
 ): Promise<AssignSpinPrizeResult> {
-  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
-    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping spin prize assignment");
-    return { eventId: input.eventId, userId: input.userId, reason: "feature_disabled" };
-  }
-  const { eventId, userId, guestIpHash } = input;
+  const { userId, guestIpHash } = input;
 
   if (!userId && !guestIpHash) {
-    return { eventId, userId, reason: "identity_required" };
+    return {
+      eventId: input.eventId,
+      userId,
+      reason: EVENT_DRAW_REASON.IDENTITY_REQUIRED,
+    };
   }
 
-  const eventSnap = await ctx.db.collection(EVENTS_COLLECTION).doc(eventId).get();
-  if (!eventSnap.exists) {
-    return { eventId, userId, reason: "event_not_found" };
+  /*
+   * 🛑 Slug-or-id, not `.doc(eventId)`. Public URLs link by SLUG (`EventCard`
+   * builds its href from `event.slug ?? event.id`, and the participate tab
+   * reuses that param), so a spin launched from any card link used to resolve
+   * to nothing and return `event_not_found` — a 404 on every attempt, forever.
+   *
+   * Every query and write below uses the RESOLVED `eventId`, never the
+   * caller's input: carrying the slug forward is what let one guest count as
+   * two identities and silently reset `spinMaxPerUser`.
+   */
+  const resolved = await resolveEventRef<EventForSpin>(ctx.db, input.eventId);
+  if (!resolved) {
+    return {
+      eventId: input.eventId,
+      userId,
+      reason: EVENT_DRAW_REASON.EVENT_NOT_FOUND,
+    };
   }
-  const event = eventSnap.data() as EventForSpin;
+  const eventId = resolved.id;
+  const event = resolved.data;
+
+  /*
+   * The page redirects a non-running event to the overview, so these were
+   * never reachable through the UI — but `POST /api/events/<ended>/spin`
+   * answered 200 and awarded a prize. A redirect is navigation, not a
+   * precondition.
+   */
+  if (event.type && event.type !== EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL) {
+    return { eventId, userId, reason: EVENT_DRAW_REASON.NOT_A_SPIN_WHEEL };
+  }
+  const endsAt = resolveDate(event.endsAt);
+  if (
+    event.status !== EVENT_FIELDS.STATUS_VALUES.ACTIVE ||
+    (endsAt && ctx.now > endsAt)
+  ) {
+    return { eventId, userId, reason: EVENT_DRAW_REASON.NOT_ACTIVE };
+  }
 
   if (!userId && !event.allowGuestParticipation) {
-    return { eventId, userId, reason: "login_required" };
+    return { eventId, userId, reason: EVENT_DRAW_REASON.LOGIN_REQUIRED };
   }
 
-  const prizes = Array.isArray(event.spinPrizes) ? event.spinPrizes : [];
+  // Active prizes only — see the `isActive` note on SpinPrize. The weighted
+  // pick below iterates this same array, so the gate and the draw agree.
+  const prizes = (Array.isArray(event.spinPrizes) ? event.spinPrizes : []).filter(
+    (p) => p.isActive !== false,
+  );
   const totalWeight = prizes.reduce((s, p) => s + (p.weight ?? 0), 0);
   if (totalWeight <= 0) {
-    return { eventId, userId, reason: "no_prizes_configured" };
+    return { eventId, userId, reason: EVENT_DRAW_REASON.NO_PRIZES_CONFIGURED };
   }
 
   const windowStart = resolveDate(event.spinWindowStart);
   const windowEnd = resolveDate(event.spinWindowEnd);
   if ((windowStart && ctx.now < windowStart) || (windowEnd && ctx.now > windowEnd)) {
-    return { eventId, userId, reason: "outside_spin_window" };
+    return { eventId, userId, reason: EVENT_DRAW_REASON.OUTSIDE_SPIN_WINDOW };
   }
 
   const maxPerUser =
@@ -126,11 +199,23 @@ export async function runAssignSpinPrize(
     const priorSpinCount = existingData?.spinCount ?? (existingData?.spinUsed ? 1 : 0);
 
     if (priorSpinCount >= maxPerUser) {
+      /*
+       * 🛑 `reason` is REQUIRED here, and its absence was a bug.
+       *
+       * Both entry points gate on `if (data.reason && !data.spinPrizeId)`, so
+       * this branch used to fall through to `successResponse(…, "Spin
+       * recorded")` — HTTP 200 for a refusal. When the stored entry happened
+       * to carry no `spinPrizeId`, the client then saw a 200 with no prize and
+       * printed "Spin failed. Please try again." for what is really "you have
+       * already spun".
+       */
       return {
         eventId,
         userId,
         spinPrizeId: existingData?.spinPrizeId,
+        spinPrizeCouponCode: existingData?.spinPrizeCouponCode ?? undefined,
         alreadyUsed: true,
+        reason: EVENT_DRAW_REASON.ALREADY_USED,
       };
     }
 

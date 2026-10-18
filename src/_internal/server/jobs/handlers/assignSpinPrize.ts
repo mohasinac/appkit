@@ -4,32 +4,32 @@ import {
   type AssignSpinPrizeInput,
   type AssignSpinPrizeResult,
 } from "../core/assignSpinPrize";
+import { reasonToHttp } from "../core/event-draw-reasons";
 
-function httpError(message: string, status: number): Error {
+function httpError(message: string, status: number, code: string): Error {
   const err = new Error(message);
-  (err as Error & { httpStatus: number }).httpStatus = status;
+  (err as Error & { httpStatus: number; code: string }).httpStatus = status;
+  (err as Error & { httpStatus: number; code: string }).code = code;
   return err;
 }
 
+/**
+ * Statuses come from `reasonToHttp`, shared with `POST /api/events/[id]/spin`.
+ *
+ * This used to be a hand-written if-chain, and it disagreed with the route it
+ * mirrors: `identity_required` was 400 here and 401 there, and there was no
+ * `feature_disabled` branch at all, so that reason fell through as a SUCCESS.
+ * Two entry points, one handler, two behaviours — Root Cause #85.
+ */
 export const assignSpinPrizeHandler: CallableHandler<
   AssignSpinPrizeInput,
   AssignSpinPrizeResult
 > = async (input: AssignSpinPrizeInput, ctx: JobContext) => {
   const result = await runAssignSpinPrize(input, ctx);
-  if (result.reason === "event_not_found") {
-    throw httpError("Event not found", 404);
-  }
-  if (result.reason === "identity_required") {
-    throw httpError("No user or guest identity provided", 400);
-  }
-  if (result.reason === "login_required") {
-    throw httpError("You must be logged in to spin this wheel", 401);
-  }
-  if (result.reason === "outside_spin_window") {
-    throw httpError("This spin wheel is not open right now", 403);
-  }
-  if (result.reason === "no_prizes_configured") {
-    throw httpError("No spin prizes configured for this event", 422);
+  // Mirrors the route's own success test: a reason with no prize is a refusal.
+  if (result.reason && !result.spinPrizeId) {
+    const { status, code, message } = reasonToHttp(result.reason);
+    throw httpError(message, status, code);
   }
   return result;
 };

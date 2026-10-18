@@ -25,10 +25,7 @@ export interface WeeklyPayoutEligibilityResult {
 export async function runWeeklyPayoutEligibility(
   ctx: JobContext,
 ): Promise<WeeklyPayoutEligibilityResult> {
-  if (ctx.env("FEATURE_PAYOUTS") !== "true") {
-    ctx.logger.info("FEATURE_PAYOUTS disabled — skipping weekly payout eligibility");
-    return { payoutsCreated: 0, ordersProcessed: 0, payoutIds: [] };
-  }
+  // `FEATURE_PAYOUTS` gate deleted 2026-10-19 — see `autoPayoutEligibility.ts`.
   ctx.logger.info("Starting weekly payout eligibility sweep");
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings.commissions;

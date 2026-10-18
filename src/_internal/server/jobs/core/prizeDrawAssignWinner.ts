@@ -27,11 +27,11 @@ export async function assignPrizeDrawWinner(
   ctx: JobContext,
   args: { orderId: string; productId: string },
 ): Promise<AssignPrizeDrawWinnerResult> {
-  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
-    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping winner assignment");
-    return { kind: "not_eligible" };
-  }
-
+  // The `FEATURE_PRIZE_DRAWS` gate here was deleted 2026-10-19 with the other
+  // four readers — see the header of `assignSpinPrize.ts`. This one was the
+  // worst-shaped of them: it returned `kind: "not_eligible"`, which every
+  // caller treats as "this order does not win anything", so with the env var
+  // unset a paid prize-draw entry was silently recorded as a non-winner.
   const { orderId, productId } = args;
   const orderRef = ctx.db.collection(ORDER_COLLECTION).doc(orderId);
   const productRef = ctx.db.collection(PRODUCT_COLLECTION).doc(productId);

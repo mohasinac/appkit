@@ -21,10 +21,7 @@ const PRIZE_DRAW_LISTING_TYPE = "prize-draw";
  * "closed".
  */
 export async function runPrizeDrawExpiryReveal(ctx: JobContext): Promise<void> {
-  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
-    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping prize-draw expiry reveal");
-    return;
-  }
+  // `FEATURE_PRIZE_DRAWS` gate deleted 2026-10-19 — see `assignSpinPrize.ts`.
   ctx.logger.info("Prize-draw expiry reveal sweep starting");
 
   const snap = await ctx.db

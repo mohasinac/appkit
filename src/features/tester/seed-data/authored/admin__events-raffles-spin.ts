@@ -86,20 +86,35 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open 'QA Event raffle-open' in the admin and read the entry list.",
-      "Trigger the raffle draw and read the winner named.",
+      "Open 'QA Event raffle-open' in the admin editor and read the entry list and the 'Pool size' readout in the raffle panel.",
+      "Press 'Trigger Raffle Now'. A CONFIRMATION DIALOG must appear first — read it, then confirm.",
+      "Read the winner named and the pool size reported.",
       "RELOAD and read the winner again.",
       "Read whether the winner's name and entry are both recorded on the event.",
-      "Sign in as the winning buyer and check they were notified.",
-      "Sign back in as admin and attempt to draw a second time, reading what happens.",
+      "Sign in as the winning buyer and open the notification bell; read the notification and follow its link.",
+      "Sign back in as admin, reopen the event, and read the button's label and enabled state. Then attempt a second draw.",
     ],
     expectedBehaviour:
-      "The draw picks once with real randomness, records the winner on the event, and notifies them. A second draw must be refused — redrawing replaces a winner who has already been told they won, and the notification cannot be recalled.",
+      "The draw picks once with real randomness, records the winner on the event, and notifies them. A second draw must be refused — redrawing replaces a winner who has already been told they won, and the notification cannot be recalled. A pool size of 0 on an event that visibly has entries is itself the failure: it means the eligibility query and the entry writer disagree about which field marks an entry eligible.",
     expectedUiState:
-      "The winner is named and survives the reload. The event records both the winner and their entry. The buyer has a notification. The second draw attempt is refused rather than producing a new winner.",
-    expectedData: { drawsPermitted: 1 },
+      "A confirmation dialog gates the draw. The winner is named and survives the reload. The event records both the winner and their entry. The buyer has one notification that deep-links to the event's winner page. On reopening, the button reads 'Already triggered' and is disabled; forcing a second draw is refused naming the existing winner, never with a generic failure.",
+    /*
+     * `drawsPermitted: 1` was already here and had never been exercised. The
+     * other three are the preconditions that made it unexercisable:
+     *   poolSizeNotZero       — the draw queried `status == "CONFIRMED"`, which
+     *                           nothing writes at entry time, so EVERY draw
+     *                           returned "no eligible entries"
+     *   winnerNotifications   — the winner was recorded and never told
+     *   confirmationDialogs   — an irreversible action with no confirmation
+     */
+    expectedData: {
+      drawsPermitted: 1,
+      poolSizeNotZero: true,
+      winnerNotifications: 1,
+      confirmationDialogs: 1,
+    },
     endResult:
-      "Delete the event afterwards. A second draw succeeding is the most serious failure on this page.",
+      "BEFORE: there was no confirmation dialog, the draw answered 'no eligible entries' on an event with entries (so no winner could ever be drawn), and on the rare path it did write a winner that person was never notified. AFTER: the dialog gates it, one winner is drawn and notified, and the second attempt is refused naming the existing winner. Delete the event afterwards. A second draw succeeding is the most serious failure on this page.",
   },
   "checklist-admin-events-raffles-spin-spin-wheel-create": {
     roles: ["admin", "buyer"],
@@ -110,15 +125,28 @@ export const authored: Record<string, AuthoredCase> = {
       "Define three prizes with labels and weights, set a maximum of 2 spins per user, and set a spin window covering today.",
       "Save, RELOAD, and read every prize, weight, the maximum and the window.",
       "Open the event's public page at /events/{its id} and read the wheel and its segments.",
-      "Check the wheel shows the prize labels and does NOT disclose their weights.",
+      "View SOURCE (or the network payload) for /events/{its id}/participate and search the response text for the string 'weight'. Then search it for 'couponId'.",
     ],
     inputs: { title: "QA Event spin-create", prizeCount: 3, maxPerUser: 2 },
     expectedBehaviour:
       "Prizes, weights, the per-user maximum and the window all round-trip. Weights are the odds and belong server-side — a public wheel that renders them tells every visitor which segment is worthless.",
     expectedUiState:
-      "After the reload all four groups of settings hold. The public wheel shows three labelled segments and no weight values anywhere on the page or in its source.",
-    expectedData: { weightsInPublicSource: 0 },
-    endResult: "Leave the event in place — the limits case reads it.",
+      "After the reload all four groups of settings hold. The public wheel shows three labelled segments.",
+    /*
+     * 🛑 The last step searches the PAYLOAD, not the rendered wheel, and that
+     * is the whole case.
+     *
+     * It previously read "check the wheel does NOT disclose their weights" —
+     * and the rendered wheel has never shown a weight, so a tester looked at
+     * three labelled segments and passed. Meanwhile the participate page cast
+     * the stored prize array straight into a client prop, so every weight AND
+     * every internal coupon document id was sitting in the RSC payload of a
+     * public page. The case asserted `weightsInPublicSource: 0` and could not
+     * see the thing it was counting.
+     */
+    expectedData: { weightsInPublicSource: 0, couponIdsInPublicSource: 0 },
+    endResult:
+      "BEFORE: the payload contained 'weight: 15', 'weight: 25', 'weight: 10' and a 'couponId' for any prize carrying a coupon. AFTER: neither string appears anywhere in it, while the three labels still render. Leave the event in place — the limits case reads it.",
   },
   "checklist-admin-events-raffles-spin-spin-wheel-limits-enforced": {
     roles: ["admin", "buyer"],
@@ -127,18 +155,34 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as rehan.sheikh@gmail.com / TempPass123! and open 'QA Event spin-create'.",
       "Spin once and read the prize and the remaining count.",
       "Spin a second time and read the remaining count.",
-      "Attempt a third spin and read the refusal.",
-      "RELOAD the page and attempt another spin.",
+      "Attempt a third spin and read the refusal WORD FOR WORD.",
+      "RELOAD the page and read the Spin button's state before clicking anything.",
+      "An event is reachable by two URL spellings — its SLUG and its DOCUMENT ID. Note which one you have been using, then open the OTHER one as the same account and attempt a spin.",
       "Sign out and sign in as admin@letitrip.in / TempPass123!, then narrow the spin window so it is closed.",
-      "Sign back in as the buyer and attempt a spin, reading the refusal.",
+      "Sign back in as the buyer and attempt a spin, reading that refusal word for word too.",
     ],
     inputs: { maxPerUser: 2 },
     expectedBehaviour:
-      "The per-user cap and the window are both enforced server-side. A cap held in the browser resets on refresh and is no cap at all, and the two refusals must read differently — 'no spins left' and 'the window is closed' are different facts and a single generic message tells the buyer neither.",
+      "The per-user cap and the window are both enforced server-side, the cap is scoped to the PERSON rather than to the URL spelling, and the two refusals read differently — 'no spins left' and 'the window is closed' are different facts and a single generic message tells the buyer neither.",
     expectedUiState:
-      "The remaining count falls with each spin and the third is refused naming the limit. After the reload it is still refused. With the window closed the refusal names the window instead. A fresh spin available after a reload is the failure.",
-    expectedData: { spinsAfterReload: 0 },
-    endResult: "Delete the event afterwards.",
+      "The third attempt is refused naming the limit. After the reload the button is already disabled with the spent state shown, without a round trip. The other URL spelling is refused identically. With the window closed the refusal names the window instead.",
+    /*
+     * Three invariants, each of which was broken in a different way:
+     *   spinsAfterReload       — the cap itself
+     *   spinsViaOtherUrlForm   — the guest/identity hash was scoped to the
+     *                            SLUG while enterEvent scoped it to the doc id,
+     *                            so the two URL spellings were two identities
+     *                            and the other one handed out a fresh allowance
+     *   distinctRefusalMessages — both refusals were the same sentence
+     */
+    expectedData: {
+      maxPerUser: 2,
+      spinsAfterReload: 0,
+      spinsViaOtherUrlForm: 0,
+      distinctRefusalMessages: 2,
+    },
+    endResult:
+      "BEFORE: every refusal on this page read 'Spin failed. Please try again.', the button stayed enabled after a reload so the cap cost a round trip to discover, and the other URL spelling granted a fresh set of spins. AFTER: 'You've already used your spins for this event.' and 'The spin window isn't open right now.' are distinct, the button is pre-disabled, and both URL spellings share one allowance. Delete the event afterwards.",
   },
   "checklist-admin-events-raffles-spin-event-entries-admin-view": {
     roles: ["admin"],

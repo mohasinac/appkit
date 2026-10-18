@@ -127,6 +127,15 @@ export function resolveNotificationActionUrl(
         ? String(ROUTES.ADMIN.STORE_DETAIL(relatedId))
         : String(ROUTES.STORE.DASHBOARD);
 
+    case "event":
+      /*
+       * The public winner page — the same destination for everyone, like
+       * `product` and `review`. An admin who drew the raffle and the buyer who
+       * won it both want to see the announcement, and that announcement IS the
+       * public page; there is no admin-side winner view to send them to.
+       */
+      return String(ROUTES.PUBLIC.EVENT_WINNER(relatedId));
+
     case "conversation":
       // D9 — one universal inbox, reachable from any portal; there is no
       // admin-specific thread view (admins moderate via reports, not a

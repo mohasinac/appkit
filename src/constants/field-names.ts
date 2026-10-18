@@ -528,7 +528,6 @@ export const EVENT_ENTRY_FIELDS = {
   USER_ID: "userId",
   USER_DISPLAY_NAME: "userDisplayName",
   USER_EMAIL: "userEmail",
-  STATUS: "status",
   RAFFLE_ELIGIBLE: "raffleEligible",
   SPIN_USED: "spinUsed",
   SPIN_COUNT: "spinCount",
@@ -538,10 +537,46 @@ export const EVENT_ENTRY_FIELDS = {
   GUEST_IP_HASH: "guestIpHash",
   CREATED_AT: "createdAt",
 
+  /*
+   * 🛑 TWO status fields, different meanings, and conflating them cost the
+   * raffle feature its entire working life.
+   *
+   *   `status`       — RSVP / attendance. CONFIRMED | WAITLISTED | CANCELLED.
+   *                    Written ONLY by an admin clicking Confirm / Waitlist /
+   *                    Cancel in `AdminAllEventEntriesView`, which also filters
+   *                    on it. Never set when an entry is created.
+   *   `reviewStatus` — moderation of what the entrant SUBMITTED.
+   *                    pending | approved | flagged. Written on every entry
+   *                    path, and indexed `(eventId, reviewStatus, submittedAt)`.
+   *
+   * `EventEntryDocument.status`'s own doc comment claims it "drives raffle
+   * eligibility", and `runTriggerEventRaffle` duly queried
+   * `status == "CONFIRMED"`. But nothing writes `status` at creation time, so
+   * the pool was empty unless an admin had hand-confirmed every entry one row
+   * at a time — on a raffle seeded with 1,892 entries. Every draw returned
+   * `no_eligible_entries`; the raffle had never once been drawable.
+   *
+   * Eligibility moved to `reviewStatus == "approved"` on 2026-10-19 (and
+   * `enterEvent` now auto-approves raffle entries, since a raffle entry is a
+   * name plus an optional message and there is nothing to moderate). `status`
+   * stays because its admin workflow is real — it just is not the gate.
+   *
+   * Both mirror `EVENT_ENTRY_FIELDS` in
+   * `features/events/schemas/firestore.ts`, which is the source of truth for
+   * the document shape — verify there before adding a value here (Root Cause
+   * #34).
+   */
+  STATUS: "status",
   STATUS_VALUES: {
     CONFIRMED: "CONFIRMED",
     WAITLISTED: "WAITLISTED",
     CANCELLED: "CANCELLED",
+  },
+  REVIEW_STATUS: "reviewStatus",
+  REVIEW_STATUS_VALUES: {
+    PENDING: "pending",
+    APPROVED: "approved",
+    FLAGGED: "flagged",
   },
 } as const;
 

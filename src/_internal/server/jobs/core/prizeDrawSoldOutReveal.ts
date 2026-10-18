@@ -39,8 +39,7 @@ export async function handlePrizeDrawSoldOut(
   input: HandlePrizeDrawSoldOutInput,
   ctx: JobContext,
 ): Promise<void> {
-  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") return;
-
+  // `FEATURE_PRIZE_DRAWS` gate deleted 2026-10-19 — see `assignSpinPrize.ts`.
   const { productId, before, after } = input;
   if (!after) return;
   if (after.listingType !== "prize-draw") return;

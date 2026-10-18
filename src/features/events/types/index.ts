@@ -63,12 +63,41 @@ export type RaffleType =
   | "open_raffle"
   | "spin_wheel";
 
+/**
+ * A spin prize as STORED on the event document. `weight` IS the odds and
+ * `couponId` is an internal document id — neither may reach a browser.
+ *
+ * Authored by the admin editor, read by `assignSpinPrize`. For anything that
+ * renders, use `DisplaySpinPrize` below.
+ */
 export interface SpinPrize {
   id: string;
   label: string;
   couponId?: string;
   weight: number;
   isActive: boolean;
+}
+
+/**
+ * A spin prize as a VIEW may see it: what it is, not what it is worth.
+ *
+ * 🛑 This exists because `SpinWheelView.prizes` was typed `SpinPrize[]`, which
+ * made `weight` and `couponId` REQUIRED of every caller — so handing the public
+ * wheel the full stored prize, odds included, was the only way to satisfy the
+ * compiler. The participate page duly cast the stored array straight into a
+ * `"use client"` prop and published the odds of every wheel (Root Cause #70).
+ *
+ * A rendering surface that demands the secret will be given the secret. The
+ * structural subset is the fix: `SpinPrize` is assignable to this, so the admin
+ * editor keeps passing stored prizes, while a client payload narrowed by
+ * `toClientSpinPrize` now satisfies it too — and re-adding `weight` to a
+ * client-bound type becomes a deliberate act rather than the path of least
+ * resistance.
+ */
+export interface DisplaySpinPrize {
+  id: string;
+  label: string;
+  isActive?: boolean;
 }
 export type EventStatus = "draft" | "active" | "paused" | "ended" | "cancelled";
 
@@ -268,6 +297,15 @@ export interface SpinResultEntry {
   spinPrizeId?: string;
   spinPrizeTitle?: string;
   spinWonAt?: string;
+  /**
+   * The coupon code the spin awarded, for the caller's OWN results only.
+   *
+   * 🛑 `getEventSpinResults` — the PUBLIC masked feed of everyone's recent
+   * spins — must never populate this. A coupon code is a bearer token: anyone
+   * who can read it can redeem it. Only `getUserSpinResultsForEvent`, which
+   * takes a `userId` the server supplies from a verified session, sets it.
+   */
+  spinPrizeCouponCode?: string;
 }
 
 // --- List response ------------------------------------------------------------

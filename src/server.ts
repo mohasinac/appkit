@@ -983,7 +983,21 @@ export { updateEvent } from "./features/events/server";
 export {
   triggerEventRaffleAction,
   assignSpinPrizeAction,
+  // resolveEventIdAction — slug-or-id → canonical doc id, so the spin route can
+  // scope a guest's identity hash to a stable key (see the action's own note).
+  resolveEventIdAction,
 } from "./_internal/server/features/raffle/actions";
+/*
+ * [SERVER-ONLY] The ONE reason → {status, code} map for the two event
+ * prize-draw cores, shared by both API routes and both Firebase handlers.
+ * Four hand-written copies disagreed before this (Root Cause #85).
+ */
+export {
+  reasonToHttp,
+  EVENT_DRAW_REASON,
+  type EventDrawReason,
+  type EventDrawHttpMapping,
+} from "./_internal/server/jobs/core/event-draw-reasons";
 // [SERVER-ONLY] S-SBUNI-RULES — refund action (Razorpay + manual paths)
 export {
   processRefundAction,
