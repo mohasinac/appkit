@@ -259,7 +259,32 @@ export function searchIndex(
   const hits = collect(terms, false);
 
   hits.sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
-  return hits.slice(0, limit);
+
+  /*
+   * 🛑 Dedupe by DESTINATION, not by key. Two types can legitimately resolve
+   * to the same page: `model` (a composition) and `category` (the model leaf)
+   * both render `/categories/{s}`, because a composition has no page of its
+   * own. Found running the first real build — 222 model records sit on top of
+   * 1,144 categories, so a bey name could return two rows that go to the same
+   * place, which reads as a duplicate-results bug rather than as two ways of
+   * finding one thing.
+   *
+   * Keeping the HIGHER-scoring one is what preserves the value of both: the
+   * composition's name is often the longer, more specific form ("Aero Knight
+   * MS (Aero Knight Metal Sky)" against the category's "Aero Knight MS"), so
+   * whichever actually matched the query is the one worth showing.
+   *
+   * After the sort, so "first seen" is "best scoring".
+   */
+  const seen = new Set<string>();
+  const deduped: ResolvedEntity[] = [];
+  for (const hit of hits) {
+    if (seen.has(hit.href)) continue;
+    seen.add(hit.href);
+    deduped.push(hit);
+    if (deduped.length >= limit) break;
+  }
+  return deduped;
 }
 
 /**
