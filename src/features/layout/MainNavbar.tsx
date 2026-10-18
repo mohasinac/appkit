@@ -18,7 +18,18 @@ export interface MainNavbarItem {
   /** RBAC permission key — item hidden when user lacks this permission. */
   requiredPermission?: string;
   /** Sub-items, rendered as a dropdown. One level only — see NavbarLayoutItem. */
-  children?: Array<{ href: string; label: string; description?: string }>;
+  /*
+   * `adminOnly` hides a child from everyone else. 🛑 It is a presentation
+   * filter, NOT a security boundary — the whole nav tree already ships to
+   * every browser (LayoutShellClient documents this and names the real fix),
+   * so the guard that matters is the route's own server-side layout.
+   */
+  children?: Array<{
+    href: string;
+    label: string;
+    description?: string;
+    adminOnly?: boolean;
+  }>;
 }
 
 export interface MainNavbarProps {

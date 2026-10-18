@@ -167,6 +167,14 @@ export const DEFAULT_ROUTE_MAP = {
     TOOLS: "/tools",
     TOOL_PRICE_INDEX: "/tools/price-index",
     /*
+     * Admin-only, and under a PUBLIC prefix on purpose — it is a tool, and
+     * /tools is where tools live. The guard is the layout, not the path: a
+     * non-admin is redirected server-side before any HTML is produced, so
+     * there is nothing indexable at this URL regardless of robots.txt.
+     */
+    TOOL_STICKER_TRACER: "/tools/sticker-tracer",
+    TOOL_STICKER_SHEET: (sheetId: string) => `/tools/sticker-tracer/${sheetId}`,
+    /*
      * The PARTS database. A reference surface, so it lives beside the other
      * two things that answer a question rather than sell you something.
      *

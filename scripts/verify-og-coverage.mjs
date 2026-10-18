@@ -55,6 +55,15 @@ const OG_EXEMPT_ROUTES = new Set([
   "profile/[userId]/[tab]",
   // Authenticated preview surface (token-gated).
   "preview/[token]",
+  /*
+   * Admin-only tool under a public prefix. An OG card would be actively
+   * WRONG here, not merely unnecessary: an OG image is a public image URL
+   * with its content baked into the pixels, so no sign-in gate reaches it
+   * and no markup describes it — the same reason every money-bearing og.tsx
+   * was stripped. This route also carries `noIndex`, a robots.txt Disallow
+   * and a server-side redirect, so nothing is ever meant to unfurl it.
+   */
+  "tools/sticker-tracer/[sheetId]",
 ]);
 
 // Known gaps awaiting follow-up tracker entries. Listed here so the gate

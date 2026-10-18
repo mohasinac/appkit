@@ -29,6 +29,16 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
            * eslint-disable here was treating a real finding as noise.
            */
           ROUTES.USER.WISHLIST,
+          /*
+           * Admin-only tool under a public prefix. Belongs here for the same
+           * reason /admin/ does, and takes the CONSTANT rather than a literal
+           * so a route rename cannot leave this entry pointing at nothing.
+           *
+           * 🛑 A Disallow stops the crawl, which means the page's own
+           * `noindex` is never read — the layout's server-side redirect is
+           * what actually guarantees there is no indexable content here.
+           */
+          ROUTES.PUBLIC.TOOL_STICKER_TRACER,
           "/preview/",
           "/track/",
           "/unauthorized/",
