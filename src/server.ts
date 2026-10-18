@@ -2112,3 +2112,17 @@ export type {
   EncodedImage,
   Rect as StickerRect,
 } from "./_internal/shared/features/sticker-trace/types";
+
+/*
+ * The sticker-trace pipeline handlers. Exported because the Function bindings
+ * in functions/src/ are their only callers and cannot reach `_internal/*`,
+ * which is deliberately not an exported subpath — the same public-API case as
+ * the ImageCodec port above.
+ *
+ * 🛑 Each *Deps interface ships WITH its handler. A caller that can import the
+ * handler but not its dependency shape has to hand-write that object, and a
+ * hand-written copy of a contract drifts from it (Root Cause #42, one layer up).
+ */
+export { runCoordinator, type CoordinatorDeps } from "./_internal/server/features/sticker-trace/coordinator";
+export { runShard, type ShardDeps } from "./_internal/server/features/sticker-trace/shard";
+export { runFinalizer, type FinalizerDeps } from "./_internal/server/features/sticker-trace/finalizer";
