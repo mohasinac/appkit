@@ -2094,3 +2094,21 @@ export type {
   CourierRatingVote,
   CourierStats,
 } from "./_internal/shared/features/shipping/courier-rating";
+
+/*
+ * The sticker-trace codec PORT. Exported because a consumer implements it —
+ * functions/src/sticker-trace/sharp-codec.ts is the server half, and the
+ * browser half is the client one. A port whose implementors cannot import it
+ * is not a seam, and `_internal/*` is deliberately not an exported subpath.
+ */
+export type {
+  ImageCodec,
+  DecodeOptions,
+  PreviewOptions,
+  ProbeResult,
+} from "./_internal/shared/features/sticker-trace/codec";
+export type {
+  DecodedRaster,
+  EncodedImage,
+  Rect as StickerRect,
+} from "./_internal/shared/features/sticker-trace/types";
