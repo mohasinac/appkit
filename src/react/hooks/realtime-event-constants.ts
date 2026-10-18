@@ -22,6 +22,14 @@ export const RealtimeEventType = {
   CHAT: "chat",
   BID: "bid",
   BULK: "bulk",
+  /*
+   * The sticker kiss-cut tracer's per-run progress channel. Added rather than
+   * reusing BULK: the type selects this event's message strings and its
+   * claim/path conventions, and a trace reports a STAGE out of eleven where a
+   * bulk job reports a count — borrowing BULK's vocabulary would make the
+   * progress row say the wrong thing about every failure.
+   */
+  STICKER_TRACE: "sticker-trace",
 } as const;
 
 export type RealtimeEventType =
