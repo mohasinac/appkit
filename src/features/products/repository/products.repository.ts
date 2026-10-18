@@ -1699,6 +1699,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     }
 
     // Longest term first — only ONE may become the array-contains clause.
+    // audit-listing-search-ok: builder, not an entry point. The empty guard is
+    // `if (plan.empty) return emptySearchResult()` in `list()` (~line 1783),
+    // which is one of only two callers of this private method; the other,
+    // `countByListingTypes`, declares no `search` in its opts type and so
+    // structurally cannot pass one.
     const searchTxt = parseSearchTxtQuery(opts?.search ?? "");
 
     if (searchTxt.length > 0) {

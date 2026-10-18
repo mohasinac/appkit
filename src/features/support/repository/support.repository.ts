@@ -13,7 +13,11 @@ import type {
 import { DatabaseError } from "../../../errors";
 import { SUPPORT_TICKET_FIELDS } from "../../../constants/field-names";
 import { buildSearchTxt } from "../../../utils/search-txt";
-import { planSearchTxt, emptySearchResult } from "../../../utils/search-txt-query";
+import {
+  planSearchTxt,
+  emptySearchResult,
+  beginSearchWindow,
+} from "../../../utils/search-txt-query";
 import { sieveAnd, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import type { JsonValue } from "../../../schemas/types";
 import { maskPii, revealPii } from "../../../security/pii-accessors";
@@ -184,9 +188,9 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     /*
      * The term is tokenised the same way the index was built, and only the
      * FIRST token is pushed down — Firestore allows one `array-contains` per
-     * query. The rest are applied in memory by `sieveQuery`'s own pass, which
-     * is what keeps a two-word search from silently matching on the first word
-     * alone (the partial-pushdown trap in Root Cause #62).
+     * query. The rest are AND-refined in memory by `beginSearchWindow` /
+     * `finish` below, which is what keeps a two-word search from matching on
+     * one word alone (the partial-pushdown trap in Root Cause #62).
      */
     const clauses = [
       sieveFilter(SUPPORT_TICKET_FIELDS.STORE_ID, SIEVE_OP.EQ, storeId),
@@ -218,17 +222,33 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
       ) as typeof baseQuery;
     }
 
+    /*
+     * 🛑 The comment above used to claim `sieveQuery` applied the remaining
+     * terms "in memory by its own pass". It does not and never did — nothing
+     * read `plan.rest`, so a two-word search returned every ticket matching
+     * the LONGEST word, with `truncated` unset so the pager also claimed the
+     * result was complete. The claim was the only thing standing where the
+     * refine should have been (Root Cause #50's shape: a named guarantee with
+     * no implementation behind it).
+     *
+     * `beginSearchWindow` is the three-part conversion, and all three parts
+     * have to happen together — fetch a window, RAISE `maxPageSize` to it, and
+     * hand `finish` the page to slice. Doing one and three without two leaves
+     * Sieve clamping the window back to a page, which reads exactly like a
+     * working conversion and silently no-ops.
+     */
+    const win = beginSearchWindow({ page, pageSize }, plan);
     const model: SieveModel = {
       filters: sieveAnd(...clauses.slice(1)),
       sorts: "-createdAt",
-      page,
-      pageSize,
+      ...win.model,
     };
-    return this.sieveQuery<SupportTicketDocument>(
+    const result = await this.sieveQuery<SupportTicketDocument>(
       model,
       SupportRepository.SIEVE_FIELDS,
-      { defaultPageSize: pageSize, maxPageSize: 50, baseQuery },
+      { defaultPageSize: pageSize, maxPageSize: win.maxPageSize(50), baseQuery },
     );
+    return win.finish(result);
   }
 
   async getTicketById(ticketId: string): Promise<SupportTicketDocument | null> {

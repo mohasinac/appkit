@@ -1,11 +1,28 @@
 /**
  * D2 Fix 4 — which collections `/search` spans, and how each row becomes a hit.
  *
- * 🛑 SIX SOURCES, not fifteen. The redirect page maps 15 `SearchResourceType`
+ * 🛑 NINE SOURCES, not fifteen. The redirect page maps 15 `SearchResourceType`
  * values, but nine of them are LISTING TYPES inside `products` — auctions,
  * pre-orders, prize-draws, classified, digital-codes, live, art, bundles. One
  * `products` query covers all of them, and a per-type query would be nine
  * fan-outs returning overlapping rows from one collection.
+ *
+ * 🛑 THREE MORE WERE PLANNED FOR THIS PASS AND DELIBERATELY LEFT OUT. Each
+ * would have been a source that renders as a working group and matches
+ * nothing, which is worse than an absent one:
+ *
+ *   partGlossary (752 rows) and groupedListings (10) — **0% `searchTxt`
+ *     coverage**, measured 2026-10-19. This file's mechanism is a single
+ *     `array-contains` push-down on that field, so a source over either
+ *     returns zero rows for every query, forever, with a 200. They are the
+ *     headline gap and they are answered by the prebuilt client index, which
+ *     needs a title and a slug rather than tokens — not by adding a token
+ *     writer for 762 documents to serve a query path that index replaces.
+ *
+ *   coupons — 100% token coverage, but there is no per-coupon public route.
+ *     Every hit would link to `/promotions`, which is already this group's
+ *     `moreHref`, so eleven rows would all point at one page. The code is
+ *     worth finding; a group of identical links is not the way.
  *
  * 🛑 Every field here was read off the live documents, not assumed. `stores`
  * uses `storeName` (not `name`), `faqs` uses `question` + `seo.slug`, and
@@ -152,5 +169,100 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
       };
     },
     moreHref: (q) => withQ(ROUTES.PUBLIC.FAQS, q),
+  },
+  {
+    key: "events",
+    label: "Events",
+    collection: "events",
+    /*
+     * 🛑 No `where` clause, and that is forced rather than lazy. Measured on
+     * the live collection: `active` 8, `draft` 1, `paused` 1, `ended` 1,
+     * `cancelled` 1. The public set is "not draft, not cancelled" — three
+     * values — and `where` here applies `==` only, so a single clause would
+     * either publish drafts or hide every paused and ended event. Firestore
+     * cannot express the negation either (Root Cause #59). Same in-memory
+     * shape the `categories` source uses, for the same reason.
+     *
+     * `ended` stays visible deliberately: a search answers "do you have this",
+     * and an event that happened is a real answer with a real page.
+     */
+    select: ["title", "slug", "type", "status"],
+    toHit: (id: string, d: SearchDocData): SearchHit | null => {
+      const title = str(d.title);
+      if (!title) return null;
+      const status = str(d.status);
+      if (status === "draft" || status === "cancelled") return null;
+      const detail = str(d.type);
+      return {
+        id,
+        title,
+        href: ROUTES.PUBLIC.EVENT_DETAIL(str(d.slug) ?? id),
+        ...(detail ? { detail: detail.replace(/_/g, " ") } : {}),
+      };
+    },
+    moreHref: (q) => withQ(ROUTES.PUBLIC.EVENTS, q),
+  },
+  {
+    key: "reviews",
+    label: "Reviews",
+    collection: "reviews",
+    // All 79 live rows are `approved`; the clause is still explicit, because a
+    // rejected review surfacing publicly is the failure that matters here.
+    where: [["status", "approved"]],
+    /*
+     * 🛑 `productTitle` as the detail, NEVER `userName`. The field exists on
+     * the document and is deliberately absent from `buildReviewSearchTxt`
+     * because it is encrypted; `maskPublicReview` is what the public read path
+     * uses. A search hit is a public surface and has no business carrying a
+     * reviewer's name even in a subtitle.
+     */
+    select: ["title", "productTitle", "status"],
+    toHit: (id: string, d: SearchDocData): SearchHit | null => {
+      const title = str(d.title);
+      if (!title) return null;
+      const detail = str(d.productTitle);
+      return {
+        id,
+        title,
+        href: ROUTES.PUBLIC.REVIEW_DETAIL(id),
+        ...(detail ? { detail } : {}),
+      };
+    },
+    moreHref: (q) => withQ(ROUTES.PUBLIC.REVIEWS, q),
+  },
+  {
+    key: "scammers",
+    label: "Scam reports",
+    collection: "scammerProfiles",
+    /*
+     * 🛑 `verified` ONLY, and this clause is the whole point of the source.
+     * Measured live: `verified` 3, `pending_review` 1, `rejected` 1. Surfacing
+     * an unverified or rejected accusation in site-wide search publishes an
+     * allegation the moderation queue has not accepted — against a named
+     * person, with their phone and UPI on the page. The scam registry is
+     * deliberately public and plaintext-indexed for SEO, which makes getting
+     * this clause right more load-bearing here than anywhere else, not less.
+     */
+    where: [["status", "verified"]],
+    /*
+     * 🛑 `displayNames` is an ARRAY, not a string — read off the live
+     * documents, which is what this file's header asks for and what caught it.
+     * A `str(d.displayName)` would have returned null for every row and the
+     * group would simply never have appeared.
+     */
+    select: ["displayNames", "scamType", "slug"],
+    toHit: (id: string, d: SearchDocData): SearchHit | null => {
+      const names = Array.isArray(d.displayNames) ? (d.displayNames as string[]) : [];
+      const title = str(names[0]);
+      if (!title) return null;
+      const detail = str(d.scamType);
+      return {
+        id,
+        title,
+        href: ROUTES.PUBLIC.SCAM_DETAIL(str(d.slug) ?? id),
+        ...(detail ? { detail: detail.replace(/_/g, " ") } : {}),
+      };
+    },
+    moreHref: (q) => withQ(ROUTES.PUBLIC.SCAMS, q),
   },
 ] as const;
