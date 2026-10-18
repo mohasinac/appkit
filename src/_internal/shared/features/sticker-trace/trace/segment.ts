@@ -100,6 +100,32 @@ export interface SegmentResult {
  * Dropping it is right, and reporting it is what makes the failure legible:
  * without the count in diagnostics, "the flood failed" and "this sheet has no
  * stickers" look identical downstream.
+ *
+ * 🛑 KNOWN UNSUPPORTED, measured rather than assumed: a MONTAGE of several
+ * full-bleed sheets in one scan. `@ShayBlader Scan 18` is six sticker sheets in
+ * a 2x3 grid, each printed edge-to-edge in a different colour, white gutters
+ * between. At `standard` it returns ZERO parts by both models —
+ *
+ *     paper path   6 components, 1 sheet-sized, 5 specks, backgroundCoverage 7.8%
+ *     art path     1060 components, 1059 below the minimum area
+ *
+ * — because `estimatePaper` samples the outer frame and the gutters, gets
+ * 253,253,253, and reports `paper` for a scan that has no single background
+ * colour: the orange panel and the green panel disagree, and one estimate is
+ * wrong for five of the six.
+ *
+ * A projection-profile panel splitter was built for this and REVERTED. Measured
+ * over the corpus it was wrong in both directions at once: the montage still
+ * read as 1 panel, while single-sheet `driger G` (15 parts today) split into 5
+ * and `6894368129` into 2. The threshold had no separation to stand on — the
+ * highest non-gutter row reached 0.918 against a 0.92 cut-off, a margin of
+ * 0.002. Tightening it is the shape of tuning a constant until the numbers
+ * flatter it; the model is wrong for a montage, not the constant.
+ *
+ * So the honest handling is to DETECT and REPORT it — one sheet-sized component
+ * plus a low `backgroundCoverage` is the signature — and tell the admin to scan
+ * sheets individually or crop the montage. Every scan the user produces
+ * themselves is a single sheet; this one came from a third party.
  */
 const MAX_PART_FRACTION = 0.6;
 
@@ -156,6 +182,12 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
   let beforeBridge: number;
   let merges = 0;
   let sameMaterialDropped = 0;
+  /*
+   * 1 on the art path, where the flood never runs and the question of "was
+   * there anything to flood through" does not arise. Reporting 0 there would
+   * read as a failure on every art sheet.
+   */
+  let backgroundCoverage = 1;
 
   if (paper.detectedType === "art") {
     /*
@@ -207,6 +239,10 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
     labelled = recomputeStats(merged.labels, merged.regionCount, width, height);
   } else {
     const backgroundLike = backgroundLikeMask(raster, paper, params.paperTolerance);
+    let bgCount = 0;
+    for (let i = 0; i < backgroundLike.length; i++) if (backgroundLike[i]) bgCount++;
+    backgroundCoverage = bgCount / (width * height);
+
     const flood = floodFromBorder(
       backgroundLike,
       ridge.barrier,
@@ -272,7 +308,8 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
       fusedCoverage: ridge.coverage,
       componentsFound: labelled.count,
       droppedBelowMinArea: droppedSmall,
-      droppedTouchingBorder: droppedSheet,
+      droppedSheetSized: droppedSheet,
+      backgroundCoverage,
       bridgedComponents: merges || Math.max(0, beforeBridge - labelled.count),
       artBackgroundUnsupported: false,
     },

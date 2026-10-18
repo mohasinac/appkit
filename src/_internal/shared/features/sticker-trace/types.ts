@@ -218,7 +218,28 @@ export interface TraceDiagnostics {
   readonly fusedCoverage: number;
   readonly componentsFound: number;
   readonly droppedBelowMinArea: number;
-  readonly droppedTouchingBorder: number;
+  /**
+   * Components covering more than MAX_PART_FRACTION of the raster.
+   *
+   * 🛑 Named for what it counts. It was `droppedTouchingBorder`, which told a
+   * reader diagnosing a zero-part scan that a sticker had run off the edge —
+   * a different and wrong story. A sheet-sized component means the flood never
+   * got IN, and that is the one thing worth knowing at that moment.
+   */
+  readonly droppedSheetSized: number;
+  /**
+   * Fraction of the raster the paper path could flood through.
+   *
+   * The paper model needs real background; `isAvailable`-style negation has
+   * nothing to work with when there is none. Measured across this corpus at
+   * `standard`, the three paper scans that segment correctly sit at 27.7%,
+   * 51.3% and 74.2%, and the one that returns zero parts sits at **7.8%** — so
+   * this is the statistic that separates "this sheet has no stickers" from
+   * "this model cannot read this scan", which otherwise look identical.
+   *
+   * 1 on an art scan, where the question does not arise.
+   */
+  readonly backgroundCoverage: number;
   readonly bridgedComponents: number;
   /**
    * Reserved. Art-background sheets WERE unsupported — see the git history for
