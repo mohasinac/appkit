@@ -26,7 +26,10 @@
 import { ValidationError } from "../../../../errors/validation-error";
 import { stickerSheetsRepository } from "../../../../features/sticker-trace/repository/sticker-sheets.repository";
 import { stickerTraceRunsRepository } from "../../../../features/sticker-trace/repository/sticker-trace-runs.repository";
-import { TraceRunStatusValues } from "../../../../features/sticker-trace/schemas/firestore";
+import {
+  TraceRunStatusValues,
+  type StickerTraceRunDocument,
+} from "../../../../features/sticker-trace/schemas/firestore";
 import { paramsForTier } from "../../../shared/features/sticker-trace/config";
 import {
   explainResume,
@@ -202,4 +205,87 @@ export async function retryStickerTraceRun(
   });
 
   return { ...handle, resume, notice };
+}
+
+/**
+ * One row of a sheet's attempt history.
+ *
+ * 🛑 A PROJECTION, not the run document. Every `*Path` on a run is a raw
+ * Storage path under `private/sticker-sheets/…` and must never reach a client
+ * — the bucket's own rule is `allow read: if true`, so containment is the
+ * application's job. The panel needs to know an artifact EXISTS so it can
+ * offer a link; the path itself is resolved to a short-lived signed URL by an
+ * authenticated route when the link is actually clicked.
+ *
+ * `events` is omitted too: up to 100 entries per run times N runs is a large
+ * payload for a list nobody expands, and the detail view fetches one run.
+ */
+export interface TraceRunListRow {
+  id: string;
+  name: string;
+  tier: StickerTraceRunDocument["tier"];
+  status: StickerTraceRunDocument["status"];
+  stage: StickerTraceRunDocument["stage"];
+  partCount: number;
+  groupCount: number;
+  durationMs: number | null;
+  createdAt: Date;
+  finishedAt: Date | null;
+  /** Whether this run is the sheet's currently accepted result. */
+  isActive: boolean;
+  /** True once promoted — i.e. full-resolution parts exist. */
+  isPromoted: boolean;
+  /** Which artifacts exist, WITHOUT their paths. */
+  has: {
+    preview: boolean;
+    overlay: boolean;
+    geometry: boolean;
+    cutSvg: boolean;
+    thumbAtlas: boolean;
+  };
+  /** Present only on a failure, already user-safe. */
+  error: StickerTraceRunDocument["error"] | null;
+}
+
+/**
+ * A sheet's attempt history, newest first.
+ *
+ * Served by the `(sheetId, createdAt desc)` composite index deployed in P4, so
+ * this is one query regardless of how many runs a sheet has accumulated.
+ *
+ * 🛑 `activeRunId` comes from the SHEET, not from a flag on each run. A
+ * per-run `isActive` boolean would be a mirror that needs clearing on every
+ * other run whenever one is promoted — and the first write path that forgot
+ * would show two active runs with nothing contradicting it (Root Cause #42).
+ * One read of the sheet decides it for the whole list.
+ */
+export async function listStickerTraceRuns(
+  sheetId: string,
+  limit = 50,
+): Promise<TraceRunListRow[]> {
+  const sheet = await stickerSheetsRepository.findByIdOrFail(sheetId);
+  const runs = await stickerTraceRunsRepository.listBySheet(sheetId, limit);
+
+  return runs.map((run) => ({
+    id: run.id,
+    name: run.name,
+    tier: run.tier,
+    status: run.status,
+    stage: run.stage,
+    partCount: run.partCount,
+    groupCount: run.groupCount,
+    durationMs: run.durationMs ?? null,
+    createdAt: run.createdAt,
+    finishedAt: run.finishedAt ?? null,
+    isActive: sheet.activeRunId === run.id,
+    isPromoted: Boolean(run.promoted),
+    has: {
+      preview: Boolean(run.artifacts?.previewPath),
+      overlay: Boolean(run.artifacts?.overlayPath),
+      geometry: Boolean(run.artifacts?.geometryPath),
+      cutSvg: Boolean(run.artifacts?.cutSvgPath),
+      thumbAtlas: Boolean(run.artifacts?.thumbAtlasPath),
+    },
+    error: run.error ?? null,
+  }));
 }
