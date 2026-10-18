@@ -40,6 +40,11 @@
  */
 
 import type { SearchIndexType } from "../../../../shared/search/index-record";
+import { pluginFor } from "../../../../shared/listing-types/_registry";
+// Defined here, not in `_registry` — imported from the DEFINING module
+// (Root Cause #18).
+import { ALL_LISTING_TYPES } from "../../../../shared/listing-types/feature-flags";
+import type { ListingType } from "../../../../../features/products/types";
 
 /** A projected document's fields, as read from Firestore. */
 export type IndexDocData = Record<string, unknown>;
@@ -78,6 +83,12 @@ export interface IndexSource {
    * every changed product would have been ADDED as a duplicate rather than
    * replaced, while categories and stores looked fine.
    */
+  /**
+   * Resolve the type PER DOCUMENT, when one collection holds several.
+   * `products` is the only such collection today: all nine listing types live
+   * in it and each has its own detail route.
+   */
+  readonly typeKeyOf?: (d: IndexDocData) => string;
   readonly slugOf: (id: string, d: IndexDocData) => string | null;
   readonly toRecord: (id: string, d: IndexDocData) => BuiltRecord | null;
 }
@@ -90,7 +101,37 @@ export interface IndexSource {
  * that scored equally, not a statement about importance.
  */
 export const INDEX_TYPES: readonly SearchIndexType[] = [
-  { key: "product", hrefTemplate: "/products/{s}", moreHref: "/products", weight: 1.0 },
+  /*
+   * 🛑 ONE ENTRY PER LISTING TYPE, DERIVED from the plugin registry — not one
+   * `product` entry for the whole collection.
+   *
+   * The first draft had a single `{ key: "product", hrefTemplate:
+   * "/products/{s}" }`, which is Root Cause #48 rebuilt from scratch: "a
+   * per-listing-type detailRoute() that silently defaults to the standard
+   * product page". An auction lives at `/auctions/{slug}`, a pre-order at
+   * `/pre-orders/{slug}`, a classified at `/classified/{slug}`. Every one of
+   * those results would have rendered correctly and navigated to the wrong
+   * page — the exact failure that made non-standard listings "revert to
+   * standard" the first time.
+   *
+   * `detailRoute` and `browseRoute` come from `pluginFor`, so a tenth listing
+   * type is covered the day it is added rather than the day someone notices.
+   * Hand-writing them here would be the eleventh enumeration of that union
+   * (Root Cause #61).
+   */
+  ...ALL_LISTING_TYPES.map((t: ListingType): SearchIndexType => {
+    const plugin = pluginFor(t);
+    return {
+      key: t,
+      // `detailRoute` builds a concrete path, so hand it the placeholder and
+      // let it produce the template. One source of truth, no second mapping.
+      hrefTemplate: plugin.detailRoute("{s}"),
+      moreHref: String(plugin.browseRoute),
+      // Standard listings are the catalogue's centre of gravity; the rest sit
+      // just below so a same-score tie favours the commonest thing.
+      weight: t === "standard" ? 1.0 : 0.98,
+    };
+  }),
   { key: "category", hrefTemplate: "/categories/{s}", moreHref: "/categories", weight: 0.95 },
   { key: "brand", hrefTemplate: "/brands/{s}", moreHref: "/brands", weight: 0.9 },
   { key: "part", hrefTemplate: "/parts/{s}", moreHref: "/parts", weight: 0.9 },
@@ -119,7 +160,16 @@ const facet = (pairs: ReadonlyArray<readonly [string, unknown]>): string | undef
 
 export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
   {
-    typeKey: "product",
+    /*
+     * 🛑 The type key is RESOLVED PER DOCUMENT — see `typeKeyOf`. A source
+     * normally maps one collection to one type, but `products` holds all nine
+     * listing types and each has its own detail route.
+     */
+    typeKey: "standard",
+    typeKeyOf: (d) => {
+      const lt = str(d.listingType);
+      return lt && (ALL_LISTING_TYPES as readonly string[]).includes(lt) ? lt : "standard";
+    },
     collection: "products",
     where: [["status", "published"]],
     select: ["title", "slug", "brand", "categoryNames", "listingType", "condition", "franchiseSlug"],
@@ -128,10 +178,25 @@ export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
       const title = str(d.title);
       if (!title) return null;
       const names = Array.isArray(d.categoryNames) ? (d.categoryNames as string[]) : [];
+      /*
+       * 🛑 The enum VALUES go in `detail`, which is SEARCHED — the `facets`
+       * string is filter-only and never matched as text. Without this,
+       * typing "auction" or "sealed" finds nothing, because the only place
+       * those words appeared was a facet nobody searches. Humanised, so
+       * "pre-order" and "digital code" read as words rather than slugs.
+       */
+      const human = (v: unknown) => (str(v) ?? "").replace(/[-_]/g, " ");
       return {
         title,
         // Leaf-first, so [0] is the most specific label.
-        detail: [str(d.brand), str(names[0])].filter(Boolean).join(" · "),
+        detail: [
+          str(d.brand),
+          str(names[0]),
+          human(d.listingType),
+          human(d.condition),
+        ]
+          .filter(Boolean)
+          .join(" · "),
         facets: facet([
           ["lt", d.listingType],
           ["cn", d.condition],

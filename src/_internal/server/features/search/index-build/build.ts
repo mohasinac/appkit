@@ -98,9 +98,13 @@ type IndexRow = IndexDocData & { isTestData?: boolean; __id: string };
  * the ADD path cannot disagree — and so re-keying a previous artifact (which
  * has only the slug) lands on the same string.
  */
+function typeKeyFor(source: IndexSource, d: IndexDocData): string {
+  return source.typeKeyOf ? source.typeKeyOf(d) : source.typeKey;
+}
+
 function keyOf(source: IndexSource, id: string, d: IndexDocData): string | null {
   const slug = source.slugOf(id, d);
-  return slug ? `${source.typeKey}:${slug}` : null;
+  return slug ? `${typeKeyFor(source, d)}:${slug}` : null;
 }
 
 async function readSource(
@@ -130,7 +134,6 @@ function toRecords(
   source: IndexSource,
   docs: ReadonlyArray<{ id: string; data(): IndexDocData }>,
 ): { kept: Array<[string, SearchIndexRecord]>; removed: string[]; dropped: number } {
-  const typeIdx = typeIndexFor(source.typeKey);
   const kept: Array<[string, SearchIndexRecord]> = [];
   const removed: string[] = [];
   let dropped = 0;
@@ -170,7 +173,19 @@ function toRecords(
       removed.push(key);
       continue;
     }
-    const slug = key.slice(source.typeKey.length + 1);
+    /*
+     * 🛑 Resolved per DOCUMENT, not per source. `products` holds all nine
+     * listing types and each has its own detail route, so a single type index
+     * for the collection would send every auction to /products/{slug} —
+     * Root Cause #48, rebuilt.
+     */
+    const typeKey = typeKeyFor(source, row);
+    const typeIdx = typeIndexFor(typeKey);
+    if (typeIdx < 0) {
+      dropped++;
+      continue;
+    }
+    const slug = key.slice(typeKey.length + 1);
     const tuple: SearchIndexRecord =
       rec.facets === undefined
         ? [typeIdx, rec.title, rec.detail, slug]
@@ -214,8 +229,11 @@ export async function buildFull(
       const { docs, reads: r } = await readSource(db, source, null);
       reads += r;
       const out = toRecords(source, docs);
-      for (const [k, rec] of out.kept) keyed[k] = rec;
-      perType[source.typeKey] = (perType[source.typeKey] ?? 0) + out.kept.length;
+      for (const [k, rec] of out.kept) {
+        keyed[k] = rec;
+        const tk = INDEX_TYPES[rec[0]]?.key ?? source.typeKey;
+        perType[tk] = (perType[tk] ?? 0) + 1;
+      }
       dropped += out.dropped;
     } catch (err) {
       /*
