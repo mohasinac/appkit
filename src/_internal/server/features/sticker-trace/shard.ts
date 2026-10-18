@@ -48,6 +48,36 @@ export interface ShardDeps {
   }) => Promise<{ assetPath: string }>;
 }
 
+
+/**
+ * One promoted part at full resolution.
+ *
+ * Extracted because the inline version sat at brace-depth 6 and tripped
+ * audit-code-quality's DEEP_NESTING — which was a fair call: the render is a
+ * distinct step, and naming it makes the mode branch in `runShard` read as the
+ * decision it is rather than as two blocks of plumbing.
+ */
+async function writeFullPart(
+  deps: ShardDeps,
+  input: {
+    sheetId: string;
+    runId: string;
+    ordinal: number;
+    source: Uint8Array;
+    region: Rect;
+    alpha: Uint8Array;
+  },
+): Promise<void> {
+  const png = await deps.codec.encodePngRegion(input.source, input.region, input.alpha);
+  await deps.writeArtifact({
+    sheetId: input.sheetId,
+    runId: input.runId,
+    name: `part-${String(input.ordinal).padStart(3, "0")}.png`,
+    contentType: png.contentType,
+    body: png.bytes,
+  });
+}
+
 /**
  * Render this shard's parts, then report done.
  *
@@ -97,14 +127,7 @@ export async function runShard(
         const alpha = await deps.rasterise(part.ordinal, region, scale);
 
         if (task.mode === "full") {
-          const png = await deps.codec.encodePngRegion(source, region, alpha);
-          await deps.writeArtifact({
-            sheetId,
-            runId,
-            name: `part-${String(part.ordinal).padStart(3, "0")}.png`,
-            contentType: png.contentType,
-            body: png.bytes,
-          });
+          await writeFullPart(deps, { sheetId, runId, ordinal: part.ordinal, source, region, alpha });
         } else {
           tiles.push({ raster: await deps.codec.decodeTile(source, region), ordinal: part.ordinal });
         }
@@ -118,10 +141,15 @@ export async function runShard(
           message: n.message,
         });
       }
-      await emitPartProgress(runId, rendered, mine.length, {
-        shardsDone: task.shardIndex,
-        shardsTotal: task.shardIndex !== undefined ? undefined : undefined,
-      });
+      /*
+       * No shard counters here on purpose. A shard knows its own index but not
+       * how many others have finished — that lives in the transactional
+       * counter — and the first draft of this call passed
+       * `task.shardIndex !== undefined ? undefined : undefined`, which is
+       * always undefined: a nonsense expression that typechecked and published
+       * nothing.
+       */
+      await emitPartProgress(runId, rendered, mine.length);
     }
 
     /*
