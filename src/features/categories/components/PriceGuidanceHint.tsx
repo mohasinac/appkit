@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Stack, Text } from "../../../ui";
+import { PricesOnly, Stack, Text } from "../../../ui";
 import { apiClient } from "../../../http";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -65,30 +65,35 @@ export function PriceGuidanceHint({
   if (!guidance?.market) return null;
 
   const { median, p25, p75 } = guidance.market;
-  // audit-guest-price-ok: this component is never mounted on a public page —
-  // its own docstring above says so — and the data source itself enforces
-  // it server-side: /api/categories/[id]/price-guidance is seller/admin/
-  // moderator-gated (createRouteHandler roles), unlike its public,
-  // CDN-cached description-template sibling which strips priceGuidance
-  // specifically because it is NOT gated. A signed-out caller gets a 403
-  // before this component ever has a number to format.
   const fmt = (n: number) => formatCurrency(n, currency);
   // p25/p75 are independently optional (see CategoryPriceGuidance's own
   // docstring) — a range renders only when BOTH are present, never a
   // half-range that would misreport the band's shape.
   const range = p25 !== undefined && p75 !== undefined ? ` (${fmt(p25)}–${fmt(p75)})` : "";
 
+  /*
+   * `<PricesOnly>` rather than `<GatedPrice>`: this is advisory guidance
+   * BESIDE the seller's own price input, not a listing's primary price, so a
+   * viewer who may not see prices should get nothing here — a "Sign in to see
+   * price" prompt inside a seller form would be nonsense. In practice it
+   * never renders for a guest anyway, because the data source
+   * (`/api/categories/[id]/price-guidance`) is seller/admin/moderator-gated
+   * and 403s before there is a number to format; the wrapper makes that
+   * guarantee visible at the render site instead of implied by the route.
+   */
   return (
-    <Stack gap="2xs" className={className}>
-      <Text size="xs" color="muted">
-        Market median:{" "}
-        <Text as="span" weight="medium" color="primary">
-          {fmt(median)}
+    <PricesOnly>
+      <Stack gap="2xs" className={className}>
+        <Text size="xs" color="muted">
+          Market median:{" "}
+          <Text as="span" weight="medium" color="primary">
+            {fmt(median)}
+          </Text>
+          {range}
+          {basisNote?.suffix ? ` ${basisNote.suffix}` : ""}
         </Text>
-        {range}
-        {basisNote?.suffix ? ` ${basisNote.suffix}` : ""}
-      </Text>
-      {basisNote?.note && <Text size="xs" color="faint">{basisNote.note}</Text>}
-    </Stack>
+        {basisNote?.note && <Text size="xs" color="faint">{basisNote.note}</Text>}
+      </Stack>
+    </PricesOnly>
   );
 }

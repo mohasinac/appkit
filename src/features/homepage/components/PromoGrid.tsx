@@ -17,16 +17,18 @@ export const PROMO_GRID_MAX_BANNERS = 4 as const;
  * Two fixes made in the same pass:
  * 1. `resolveMediaUrl(banner.image)!` was a non-null assertion on a function
  *    that genuinely returns `undefined` for an empty slug — an admin saving a
- *    banner with no image picked would crash `next/image`, not render a
- *    broken-image placeholder. Falls back to a plain colour tile instead.
+ *    banner with no image picked would crash `next/image`. The image slot now
+ *    simply renders nothing: the `<Link>` already carries its own dark
+ *    background and the gradient + caption paint on top regardless, so a
+ *    placeholder tile would have been a second element doing what the card
+ *    behind it already does.
  * 2. `--dark-section-alt` / `--dark-section-card` / `--color-red` /
  *    `--font-bangers` were undefined anywhere in the codebase — this
- *    component would have rendered on a transparent background with the
- *    browser default font. Replaced with `bg-zinc-950`/`bg-zinc-900`
- *    (CLAUDE.md's sanctioned "structural neutral" literals, not a raw hex)
- *    and `text-error`/`family="display"`. The dark surfaces are
- *    intentionally hardcoded, not themed — see the docstring on
- *    `PromoGridSectionConfig` for why no admin background field was added.
+ *    component would have rendered on a transparent background with no
+ *    borders. The section now uses the `media-dark` SURFACE TOKEN (the real
+ *    theme-invariant dark preset), plus `text-error` / `family="display"`.
+ *    It is dark in every theme by design — see `PromoGridSectionConfig`'s
+ *    docstring for why no admin background field was added (Root Cause #67).
  */
 export interface PromoBannerConfig {
   id: string;
@@ -55,11 +57,11 @@ export function PromoGrid({
   return (
     <Section
       paddingY="y-4xl"
-      // audit-variant-ok: deliberately theme-INVARIANT dark surface, not a
-      // themed token — see PromoGridSectionConfig's own docstring (Root
-      // Cause #67): this section is always dark by design, in every theme,
-      // so no surface/color variant preset applies.
-      className="bg-zinc-950 border-t border-b border-white/[0.06]"
+      // `media-dark` IS the theme-invariant dark surface token (bg-zinc-900)
+      // — exactly what this always-dark section needs, so no raw className
+      // colour and no suppression marker.
+      surface="media-dark"
+      className="border-t border-b border-white/[0.06]"
     >
       <Div className="mx-auto max-w-7xl" padding="x-md">
         <Row
@@ -112,14 +114,7 @@ export function PromoGrid({
                         : "(max-width: 640px) 50vw, 30vw"
                     }
                   />
-                ) : (
-                  // No image slug resolved — a plain dark tile rather than
-                  // crashing `next/image` on an undefined `src`.
-                  // audit-variant-ok: same theme-invariant dark surface as the
-                  // section background above — no image resolved, no themed
-                  // preset applies here either.
-                  <Div className="absolute inset-0 bg-zinc-800" aria-hidden="true" />
-                )}
+                ) : null}
                 <Div
                   className={`absolute inset-0 ${i === 0 ? "[background:linear-gradient(to_top,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.3)_50%,transparent_100%)]" : "[background:linear-gradient(to_top,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.15)_100%)]"}`}
                 />

@@ -162,13 +162,18 @@ export async function CollectionCardsSection({
                     <Link
                       key={row.slug}
                       href={hrefFor(row.slug)}
-                      // audit-content-alignment-ok: a self-contained icon tile — the
-                      // caption centers under the thumbnail above it by design, same
-                      // as SpinWheelView's widget-text precedent, not marketing copy
-                      className="group rounded-xl border border-[var(--appkit-color-border)] text-center transition-all hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600"
+                      className="group rounded-xl border border-[var(--appkit-color-border)] transition-all hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600"
                     >
+                      {/*
+                       * The Stack's `align` is the CROSS axis of a flex column —
+                       * it centres the thumbnail and the label BOX horizontally
+                       * without touching `text-align`, so the label's own copy
+                       * stays left-aligned per the site convention. The centring
+                       * utility audit-content-alignment forbids is deliberately
+                       * absent; do not reintroduce it to tidy the caption.
+                       */}
                       <Stack align="center" gap="xs" padding="sm">
-                        <Div className="h-16 w-16 overflow-hidden" rounded="lg">
+                        <Div className="h-16 w-16" rounded="lg" overflow="hidden">
                           <MediaImage src={row.image} alt={row.name} size="thumbnail" />
                         </Div>
                         <Text size="xs" weight="medium" className="line-clamp-2">

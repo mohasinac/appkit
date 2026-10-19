@@ -47,6 +47,7 @@ import type { CarouselSlide } from "../types/index";
 import type {
   HomepageSectionDocument,
   SectionType,
+  SectionConfig,
   WelcomeSectionConfig,
   StatsSectionConfig,
   CarouselSectionConfig,
@@ -139,7 +140,18 @@ const AD_SLOT_MAP: Record<string, keyof MarketplaceHomepageViewAdSlots> = {
 export type SectionSurface = "homepage" | "category" | "brand" | "product" | "store";
 
 interface SectionRenderCtx {
-  config: unknown;
+  /**
+   * The stored section config, as the 25-member `SectionConfig` union.
+   *
+   * 🛑 NOT `unknown`. Each registry entry still narrows with a cast to its
+   * own member, because the union is NOT discriminated (no `type` field on
+   * the config objects themselves — the discriminator lives on the
+   * `HomepageSectionDocument` wrapping it, which is why `SECTION_REGISTRY` is
+   * keyed by `SectionType` in the first place). But the union is the honest
+   * type: it says "one of the 25 known config shapes", where `unknown` said
+   * "anything at all" and would have accepted a caller passing a string.
+   */
+  config: SectionConfig;
   newsletterFormSlot: React.ReactNode;
   faqItems: FaqItem[];
   slides: CarouselSlide[];
