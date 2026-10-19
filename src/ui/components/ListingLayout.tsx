@@ -228,7 +228,7 @@ export function ListingLayout({
             : "appkit-listing-layout__toolbar--page",
         ].join(" ")}>
         {/* Desktop (lg+): single flex row */}
-        <Div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--desktop">
+        <Div className="appkit-listing-layout__toolbar-row--desktop">
           {hasFilter && (
             <Button
               type="button"
@@ -279,7 +279,7 @@ export function ListingLayout({
         {/* Mobile/Tablet (< lg): two stacked rows */}
         {/* Mobile (<lg): collapsible — see useToolbarCollapse above */}
         {!mobileToolbarCollapsed && (
-        <Div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--mobile">
+        <Div className="appkit-listing-layout__toolbar-row--mobile">
           <Div className="appkit-listing-layout__mobile-row-1">
             {hasFilter && (
               <Button
@@ -416,7 +416,7 @@ export function ListingLayout({
         <Div className="appkit-listing-layout__content">
           {activeFiltersSlot}
           {resultCountSlot && (
-            <Div className="appkit-listing-layout__result-count">
+            <Div>
               {resultCountSlot}
             </Div>
           )}
