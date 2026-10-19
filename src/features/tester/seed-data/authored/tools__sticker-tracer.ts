@@ -319,9 +319,9 @@ export const authored: Record<string, AuthoredCase> = {
       "Visit /tools and read the cards.",
     ],
     expectedBehaviour:
-      "The guard is the layout's server-side session read, so a non-admin is redirected before any HTML is produced. The nav child is filtered out client-side, which is presentation only — the redirect is the real boundary.",
+      "A non-admin is refused. MEASURED on production 2026-10-19: the response is a 200 carrying an Unauthorized state, NOT a 307 — but no tracer UI is served, which is the property that matters. The nav child is filtered client-side, which is presentation only.",
     expectedUiState:
-      "The tracer URL does not render; the browser lands elsewhere. The Tools dropdown does not list 'Sticker sheet tracer'. /tools itself renders normally with its other cards.",
+      "An unauthorized / sign-in state, not the tracer. The phrase 'Choose a scan' appears nowhere on the page. The Tools dropdown does not list 'Sticker sheet tracer'. /tools itself renders normally with its other cards.",
     endResult:
       "BEFORE/AFTER is unchanged for a buyer — this case exists to prove the gate holds. Nothing is created or persisted.",
   },
@@ -334,11 +334,12 @@ export const authored: Record<string, AuthoredCase> = {
       "Navigate directly to /tools/sticker-tracer.",
       "Then visit /tools.",
       "View source on /tools/sticker-tracer's response and search for 'Choose a scan'.",
+      "In the same source, confirm a <meta name=\"robots\" content=\"noindex, nofollow\"> tag is present.",
     ],
     expectedBehaviour:
-      "A signed-out visitor is redirected to login. No part of the tracer UI is sent to the browser, because the layout redirects before rendering rather than hiding controls after.",
+      "A signed-out visitor gets no tracer UI. 🛑 MEASURED on production: a 200 with a sign-in state and `<title>Sticker sheet tracer</title>`, NOT a redirect — so the plan's premise that 'a crawler gets a redirect and there is no indexable content at that URL' is FALSE. What actually keeps it out of the index is the `noindex, nofollow` meta plus the robots.txt Disallow, both verified live. That is exactly why all three protections were specified as non-redundant.",
     expectedUiState:
-      "The login page, with a redirect back to the tracer. /tools renders normally and is unaffected. The phrase 'Choose a scan' appears nowhere in the response body.",
+      "A sign-in state rather than the tracer. `Choose a scan` appears NOWHERE in the response body — that absence is the real assertion. /tools renders normally and is unaffected.",
     endResult:
       "BEFORE/AFTER unchanged for a guest — this proves the gate is server-side rather than a hidden control. Nothing is persisted.",
   },
