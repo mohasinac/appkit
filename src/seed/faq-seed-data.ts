@@ -1856,6 +1856,108 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
     createdAt: daysAgo(30),
     updatedAt: daysAgo(2),
   },
+  // ── STICKER SHEETS (3) ──────────────────────────────────────────────────────
+  //
+  // 🛑 FILED UNDER `product_information`, NOT A NEW `stickers` CATEGORY.
+  // The plan called for one, on the premise that the seeded set was
+  // Shipping/Returns/Payments/Auctions/Pre-orders — that list came from a stale
+  // paragraph in CLAUDE.md. The real union already carries `product_information`
+  // (FAQ_CATEGORY_LABELS), which is exactly what these are. Adding a tenth
+  // category for three entries would mean extending a compile-checked union,
+  // the admin option list and every chip derived from it, to say something an
+  // existing value already says.
+  //
+  // 🛑 THREE, NOT SIX. The plan drafted six questions and said plainly that the
+  // answers to half of them need product facts nobody has yet. Those three are
+  // listed below as questions ONLY, and are deliberately NOT seeded — `faqs` is
+  // a public, indexed collection with its own seo.slug, so a placeholder answer
+  // there is a confident lie on a page Google will read.
+  //
+  //   · "What size are the stickers?"           needs: real sheet + part dimensions
+  //   · "Are they weatherproof / dishwasher-safe?" needs: material + laminate spec
+  //   · "Can I buy a single sticker rather than a whole sheet?"
+  //       needs: the per-part listings from Part Two. Today the honest answer is
+  //       "no", and seeding that now would have to be rewritten the week the
+  //       grouped parent+parts listings ship.
+  //
+  // The three below need no product facts — they explain what a kiss cut IS,
+  // which is true of every kiss-cut sticker ever made.
+
+  {
+    id: "faq-what-is-a-kiss-cut-sticker",
+    question: "What is a kiss-cut sticker?",
+    answer: html(`<p>A <strong>kiss cut</strong> goes through the sticker's vinyl but <em>not</em> through the paper backing behind it. The sheet stays in one piece, and each sticker peels off individually when you want it.</p><p>A <strong>die cut</strong> goes all the way through both layers, so every sticker is already a separate loose piece.</p><p>Kiss-cut sheets are what vintage Beyblade stickers were originally made as: one sheet, many stickers, each outlined along its own shape.</p>`),
+    category: "product_information",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: false,
+    order: 1,
+    priority: 5,
+    tags: ["stickers", "kiss-cut", "die-cut", "sheets"],
+    relatedFAQs: ["faq-sticker-white-border", "faq-how-to-apply-a-sticker"],
+    useSiteSettings: true,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: {
+      slug: "faq-what-is-a-kiss-cut-sticker",
+      metaTitle: "What is a kiss-cut sticker? | LetItRip",
+      metaDescription: "A kiss cut goes through the vinyl but not the backing, so the sheet stays whole and each sticker peels off on its own.",
+    },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "faq-sticker-white-border",
+    question: "Why do some stickers have a white border around them?",
+    answer: html(`<p>That border is part of the cut, not a printing mistake. A cutter cannot follow fine detail perfectly, so the cut line is placed slightly <em>outside</em> the artwork — the small margin that leaves is what stops a sliver of artwork being shaved off if the blade drifts by a fraction of a millimetre.</p><p>Where the original sticker was designed with a border, we keep it. Where it was cut tight to the art, we cut tight to the art.</p>`),
+    category: "product_information",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: false,
+    order: 2,
+    priority: 4,
+    tags: ["stickers", "border", "cutting", "bleed"],
+    relatedFAQs: ["faq-what-is-a-kiss-cut-sticker"],
+    useSiteSettings: true,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: {
+      slug: "faq-sticker-white-border",
+      metaTitle: "Why do stickers have a white border? | LetItRip",
+      metaDescription: "The margin around a sticker is part of the cut — it stops the blade shaving artwork if it drifts a fraction of a millimetre.",
+    },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "faq-how-to-apply-a-sticker",
+    question: "How do I apply a sticker so it does not lift at the edges?",
+    answer: html(`<p>Clean the surface first and let it dry completely — most lifting is a dusty or slightly greasy surface rather than the adhesive.</p><p>Peel the sticker from one corner rather than lifting it flat, lay that edge down first, then press across the sticker in one direction so the air pushes out ahead of your finger instead of being trapped under it.</p><p>Press firmly for a few seconds once it is down, and leave it a day before getting it wet.</p>`),
+    category: "product_information",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: false,
+    order: 3,
+    priority: 3,
+    tags: ["stickers", "application", "how-to"],
+    relatedFAQs: ["faq-what-is-a-kiss-cut-sticker"],
+    useSiteSettings: true,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: {
+      slug: "faq-how-to-apply-a-sticker",
+      metaTitle: "How to apply a sticker without lifting edges | LetItRip",
+      metaDescription: "Clean the surface, lay one edge first, and press across in one direction so air pushes out ahead of your finger.",
+    },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
 ];
 
 /**
