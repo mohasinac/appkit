@@ -122,6 +122,9 @@ import { authored as a_selling__listing_type_fields_roundtrip } from "./selling_
 import { authored as a_selling__media_limits } from "./selling__media-limits";
 import { authored as a_selling__seller_bids_bundles_filters } from "./selling__seller-bids-bundles-filters";
 import { authored as a_tools__sticker_tracer } from "./tools__sticker-tracer";
+import { authored as a_tools__sticker_promote_to_listings } from "./tools__sticker-promote-to-listings";
+import { authored as a_buying__spares_and_groups } from "./buying__spares-and-groups";
+import { authored as a_selling__spares_and_group_editing } from "./selling__spares-and-group-editing";
 import { authored as a_selling__seller_catalog_org } from "./selling__seller-catalog-org";
 import { authored as a_selling__seller_custom_brands } from "./selling__seller-custom-brands";
 import { authored as a_selling__seller_guide } from "./selling__seller-guide";
@@ -257,6 +260,9 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_selling__media_limits,
   ...a_selling__seller_bids_bundles_filters,
   ...a_tools__sticker_tracer,
+  ...a_tools__sticker_promote_to_listings,
+  ...a_buying__spares_and_groups,
+  ...a_selling__spares_and_group_editing,
   ...a_selling__seller_catalog_org,
   ...a_selling__seller_custom_brands,
   ...a_selling__seller_guide,

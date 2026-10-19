@@ -5861,9 +5861,6 @@ export { HeroBanner } from "./features/homepage/index";
 // HeroCarousel - Shared export for hero carousel.
 export { HeroCarousel } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HeroSection - Shared export for hero section.
-export { HeroSection } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HomepageSkeleton - Shared export for homepage skeleton.
 export { HomepageSkeleton } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

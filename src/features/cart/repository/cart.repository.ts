@@ -240,6 +240,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
      * line while a value over 100 would make it negative.
      */
     const pct = Math.min(100, Math.max(0, discountPercent ?? 0));
+    // audit-money-units-ok: pct/100 is a PERCENTAGE divisor (0-100 -> 0-1 fraction), not a paise conversion — raw/discounted are decimal rupees throughout.
     const discounted = pct > 0 ? raw * (1 - pct / 100) : raw;
 
     // audit-money-units-ok: decimal rupees throughout; rounding to 2dp, not paise conversion.
