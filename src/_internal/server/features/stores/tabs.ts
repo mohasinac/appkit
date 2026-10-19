@@ -1,6 +1,13 @@
-"use server";
-
 /*
+ * 🛑 Deliberately NO `"use server"`. That directive marks every export as a
+ * client-callable RPC endpoint, and these are not — they are read helpers
+ * invoked from a Server Component (`StoreDetailLayoutView`) and a server
+ * page (`/stores/[slug]`). Declaring it anyway also obliges every export to
+ * return `ActionResult<T>` (`audit-server-action-envelope`), which would
+ * wrap a path string in an envelope nobody unwraps. The sibling helpers
+ * this file sits beside — `adapters.ts`, `denormalize.ts` and
+ * `listing-tab-counts.ts`, which it calls — carry no directive either.
+ *
  * WHY: `StoreDetailLayoutView`'s nav bar and the bare `/stores/[slug]`
  *      redirect both need "which tabs does this store actually have
  *      something in, and in what order". Before this file the redirect
