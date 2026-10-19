@@ -1994,7 +1994,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
   async list(
     model: SieveModel,
-    opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string },
+    // `brandName` was already honoured by `buildScopedQuery` and simply not
+    // declared here, so a brand-scoped caller had to express the brand as a
+    // Sieve clause instead — a second spelling of one filter.
+    opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string; brandName?: string },
   ): Promise<FirebaseSieveResult<ProductDocument>> {
     /*
      * 🛑 THE EMPTY GUARD — a non-blank query that yields NO usable token must

@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { EmptyState, Tabs, TabsList, TabsTrigger } from "../../../ui";
+import { AvailabilityScopeHint } from "../../products/components/AvailabilityScopeHint";
+import type { ListingType } from "../../products/types/index";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
@@ -37,6 +39,21 @@ const TAB_TYPE_MAP: Record<string, { kind: "listing" | "category" | "entity"; ty
   bundles: { kind: "category", type: "bundle" },
   stores: { kind: "entity", type: "stores" },
 };
+
+/**
+ * The listing types a tab spans, for the availability-scope hint.
+ *
+ * Derived from `TAB_TYPE_MAP` rather than hand-written: that map is already
+ * built from `ALL_LISTING_TYPES`, so a tenth type is covered without a second
+ * enumeration (Root Cause #61). The combined Art & Stickers tab is the one
+ * entry that spans two, and `GENERIC_TAB_LISTING_TYPES` already says so.
+ */
+function typesForTab(id: string): ListingType[] {
+  const generic = GENERIC_TAB_LISTING_TYPES[id];
+  if (generic) return generic as ListingType[];
+  const mapping = TAB_TYPE_MAP[id];
+  return mapping?.kind === "listing" ? [mapping.type as ListingType] : [];
+}
 
 /** Listing types rendered by the shared products listing rather than a dedicated one. */
 const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
@@ -76,6 +93,12 @@ export interface CategoryDetailTabsProps {
    * were structurally uncountable and could never hide (Root Cause #61).
    */
   counts?: Record<string, number | undefined>;
+  /**
+   * Every published row per tab, all availability scopes. Drives hide-at-zero
+   * and the "N ended — show all" hint; see `ListingTabCountResult`. Omitted,
+   * it falls back to `counts`, i.e. the pre-split behaviour.
+   */
+  totals?: Record<string, number | undefined>;
   /** Enabled listing types (e.g. ["standard","auction","pre-order"]). When omitted, all tabs shown. */
   enabledListingTypes?: string[];
   /** Enabled category types (e.g. ["category","brand","bundle"]). When omitted, all tabs shown. */
@@ -89,10 +112,16 @@ export function CategoryDetailTabs({
   initialBundles = [],
   initialStores = [],
   counts,
+  totals,
   enabledListingTypes,
   enabledCategoryTypes,
 }: CategoryDetailTabsProps) {
   const countFor = (id: CategoryTabId): number | undefined => counts?.[id];
+  // Falls back to the badge when no totals map is supplied, so a caller that
+  // has not been migrated keeps today's hide behaviour rather than hiding
+  // everything.
+  const totalFor = (id: CategoryTabId): number | undefined =>
+    totals?.[id] ?? counts?.[id];
 
   const visibleTabs = CATEGORY_PAGE_TABS.filter((t) => {
     const mapping = TAB_TYPE_MAP[t.id];
@@ -104,11 +133,13 @@ export function CategoryDetailTabs({
         if (!enabledCategoryTypes.includes(mapping.type)) return false;
       }
     }
-    // Hide a tab only when its count is known and explicitly zero. `undefined`
-    // now means the count query FAILED (every tab is counted), so keeping it
-    // visible is the fail-open choice: an empty tab is a far smaller error than
-    // hiding a tab that holds real listings.
-    const count = countFor(t.id as CategoryTabId);
+    // 🛑 TOTAL, not the badge. The badge counts what the default (available)
+    // scope renders, and a tab whose rows have all ended badges 0 while still
+    // holding a browsable archive behind the Ended/All scopes — hiding it
+    // would strand that archive. `undefined` still means the count query
+    // FAILED, so the tab stays visible: an empty tab is a far smaller error
+    // than hiding a tab that holds real listings (Root Cause #59).
+    const count = totalFor(t.id as CategoryTabId);
     return count === undefined || count > 0;
   });
 
@@ -137,6 +168,16 @@ export function CategoryDetailTabs({
           ))}
         </TabsList>
       </Tabs>
+
+      {/* One line above whichever panel is open, naming the rows the Available
+          scope is withholding. Rendered HERE rather than inside each of the
+          four panel components, because only this level holds both numbers —
+          and four copies of the rule is how they drift (Root Cause #75). */}
+      <AvailabilityScopeHint
+        total={totalFor(activeTab)}
+        available={countFor(activeTab)}
+        types={typesForTab(activeTab)}
+      />
 
       {/* Types with a dedicated listing component (bid ladder, delivery-date
           sorts, entry counters) get it; every other type renders through the

@@ -32,6 +32,7 @@ import type { ListingType } from "../../../../features/products/types";
 import {
   listingTabCounts,
   type ListingTabCounts,
+  type ListingTabCountResult,
 } from "../products/listing-tab-counts";
 
 type SiteSettingsSnapshot = Parameters<typeof isListingTypeEnabled>[1];
@@ -47,7 +48,12 @@ export interface ResolvedStoreTabs {
   dropdownTabs: StoreTabLink[];
   /** Coupons (if any), Reviews (if any), About — always non-empty. */
   tabs: StoreTabLink[];
-  listingCounts: ListingTabCounts;
+  /**
+   * Both numbers, because they answer different questions: `available` is what
+   * each tab badges, `total` is what decides whether the tab exists at all.
+   * See `ListingTabCountResult`.
+   */
+  listingCounts: ListingTabCountResult;
   couponsCount: number;
   reviewsCount: number;
 }
@@ -105,7 +111,7 @@ export async function resolveStoreTabs(
           .then((r) => r.total)
           .catch(() => 0),
       ])
-    : [{} as ListingTabCounts, 0, 0];
+    : [{ available: {}, total: {} } as ListingTabCountResult, 0, 0];
 
   const visibleStoreTabs = STORE_PAGE_TABS.filter((tab) => {
     if (tab.id === "bundles") {
@@ -120,13 +126,15 @@ export async function resolveStoreTabs(
     // that leads to an empty page. `undefined` means the count query FAILED,
     // not zero, so the tab stays visible rather than hiding real stock
     // behind a swallowed error (Root Cause #59).
-    const count = listingCounts[tab.id];
+    // TOTAL, not the badge: a tab whose rows have all ended still has an
+    // archive behind the Ended/All scopes, and hiding it would strand that.
+    const count = listingCounts.total[tab.id];
     return count === undefined || count > 0;
   });
 
   const dropdownTabs: StoreTabLink[] = visibleStoreTabs.map((tab) => ({
     value: tab.id,
-    label: tabLabel(tab.label, listingCounts[tab.id]),
+    label: tabLabel(tab.label, listingCounts.available[tab.id]),
     href: STORE_LISTING_HREF[tab.id](storeSlug),
   }));
 

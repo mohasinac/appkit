@@ -63,7 +63,21 @@ function readModePreference(): ModePreference {
   } catch (_err) {
     void normalizeError(_err); /* localStorage unavailable in privacy/iframe context */
   }
-  return "auto";
+  /*
+   * 🛑 LIGHT, not "auto" — a product decision, not a technical one.
+   *
+   * "auto" follows `prefers-color-scheme`, and most phones and an increasing
+   * share of desktops now report dark. That made dark the de-facto default
+   * for a storefront whose product photography is shot on white: every
+   * listing tile rendered a bright cut-out against a near-black card, which
+   * is the opposite of how the catalogue was designed to read.
+   *
+   * This changes the DEFAULT only. A visitor who has chosen either mode has
+   * "light"/"dark"/"auto" in localStorage and is returned above, untouched —
+   * including anyone who deliberately picked "auto". The dark theme itself is
+   * unchanged and one click away.
+   */
+  return "light";
 }
 
 function resolveEffectiveMode(preference: ModePreference): ThemeMode {

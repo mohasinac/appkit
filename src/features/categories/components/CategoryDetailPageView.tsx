@@ -26,6 +26,7 @@ import { getGroupsForCategory } from "../../../_internal/server/features/grouped
 import {
   listingTabCounts,
   type ListingTabCounts,
+  type ListingTabCountResult,
 } from "../../../_internal/server/features/products/listing-tab-counts";
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
@@ -205,7 +206,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     // Four of the ten tabs used to have no count at all and could never hide.
     categoriesIn
       ? listingTabCounts(CATEGORY_PAGE_TABS, { categoriesIn })
-      : Promise.resolve({} as ListingTabCounts),
+      : Promise.resolve({ available: {}, total: {} } as ListingTabCountResult),
     // SB-UNI-D — bundles fetched from the categories collection. We pull
     // all active bundle rows; the carousel filters by category affinity.
     categoriesIn
@@ -479,14 +480,23 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // `tabCounts` is keyed by tabSlug and already covers every listing type plus
   // bundles; `stores` is added here because this page resolves its store list
   // eagerly to render the tab body anyway.
-  const counts: ListingTabCounts = { ...tabCounts, stores: storeCount };
+  // Two maps, not one: the BADGE is what the default (available) scope will
+  // render, while HIDING must stay keyed on the total — a tab whose rows have
+  // all ended still has a browsable archive behind the Ended/All scopes.
+  // `stores` is added to both because this page resolves its store list
+  // eagerly to render the tab body anyway, and a store has no availability
+  // scope of its own.
+  const counts: ListingTabCounts = { ...tabCounts.available, stores: storeCount };
+  const totals: ListingTabCounts = { ...tabCounts.total, stores: storeCount };
 
   // Header pills read the same numbers the tabs do. `?? 0` is safe here (a pill
   // simply doesn't render) — unlike the tab bar, where an unknown count must
   // stay visible rather than collapse to "hide me".
-  const productCount = counts.products ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
-  const auctionCount = counts.auctions ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
-  const preOrderCount = counts["pre-orders"] ?? 0;
+  // Header pills read TOTALS, deliberately: "47 products" is a statement about
+  // what this category holds, not about what one scope is currently showing.
+  const productCount = totals.products ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
+  const auctionCount = totals.auctions ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
+  const preOrderCount = totals["pre-orders"] ?? 0;
 
   /*
    * G3b — OWN vs CHILDREN, so one number stops answering two questions.
@@ -954,6 +964,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             initialBundles={bundlesResult ?? []}
             initialStores={categoryStores}
             counts={counts}
+            totals={totals}
             enabledListingTypes={enabledListingTypes(settings)}
             enabledCategoryTypes={enabledCategoryTypes(settings)}
           />

@@ -53,11 +53,46 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
+import { buildSearchTxt } from "../utils/search-txt";
 
 const STORE_ID = "store-letitrip-official";
 const STORE_NAME = "LetItRip Official";
 const BRAND_SLUG = "brand-takara-tomy";
 const BRAND = "Takara-Tomy";
+
+/**
+ * Build the `searchTxt` prefix index for a row.
+ *
+ * 🛑 THIS FILE SHIPPED WITHOUT IT AND EVERY LISTING WAS UNSEARCHABLE.
+ *
+ * `searchTxt` is the ONLY field the public product search queries. A row
+ * without it is not ranked lower — it is absent. Measured on production
+ * before this fix: 12 of the 14 real listings had no `searchTxt` at all, and
+ * the only two that did were the auction and the pre-order, whose own files
+ * already applied a tokeniser. So `?q=aero` returned 1 of the 3 AeroPegasus
+ * products and `?q=beyblade` returned 2 of 14, while a nonsense control
+ * correctly returned 0 — the search was working perfectly against an index
+ * that was almost empty.
+ *
+ * CLAUDE.md documents this exact trap on this exact pipeline: a wrapper
+ * missed when a seed file is created, with no error anywhere, because an
+ * absent field is indistinguishable from "no match" at every layer above.
+ *
+ * 🛑 Applied LAST, after `withDerivedCategoryNames`. The category names are
+ * derived by that wrapper, so tokenising before it indexes `undefined` and
+ * silently loses every category term ("Basic Line", "Beyblade X Tops") from
+ * the index.
+ */
+function withSearchTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
+  return {
+    ...p,
+    searchTxt: buildSearchTxt([
+      p.title, p.description, p.brand, p.brandSlug,
+      p.categoryNames, p.tags, p.condition,
+      p.specifications?.map((s) => `${s.name} ${s.value}`),
+    ]),
+  };
+}
 
 const _raw: Partial<ProductDocument>[] = [
   // ===== Standalone tops =====
@@ -458,4 +493,5 @@ export const productsBeybladeXSeedData: Partial<ProductDocument>[] = _raw
     seedPurpose: "permanent" as const,
   }))
   .map(withFinalSale)
-  .map(withDerivedCategoryNames);
+  .map(withDerivedCategoryNames)
+  .map(withSearchTokens);

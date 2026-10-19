@@ -743,7 +743,16 @@ async function defaultExecutor(query: PublicProductQuery): Promise<ExecutorResul
 }
 
 /** Render one `UnavailableClause` as a Sieve clause against a fixed `now`. */
-function clauseToSieve(clause: UnavailableClause, now: Date): string {
+/**
+ * One unavailable clause → a Sieve fragment, with `"NOW"` bound to this
+ * query's timestamp.
+ *
+ * Exported so `listing-tab-counts` builds its clause queries with THIS
+ * function rather than a second copy. A rule reachable by copy-paste is one
+ * that gets copied wrong (Root Cause #75), and the two would only diverge the
+ * day someone adds a third `op`.
+ */
+export function clauseToSieve(clause: UnavailableClause, now: Date): string {
   const value = clause.value === "NOW" ? now.toISOString() : clause.value;
   return clause.op === "lt"
     ? sieveFilter(clause.field, SIEVE_OP.LT, value)

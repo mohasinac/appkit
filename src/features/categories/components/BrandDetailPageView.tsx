@@ -25,6 +25,7 @@ import { getGroupsForBrand } from "../../../_internal/server/features/grouped/da
 import {
   listingTabCounts,
   type ListingTabCounts,
+  type ListingTabCountResult,
 } from "../../../_internal/server/features/products/listing-tab-counts";
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
@@ -86,7 +87,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     // therefore never hide, however empty the brand was.
     brandName
       ? listingTabCounts(CATEGORY_PAGE_TABS, { brandName })
-      : Promise.resolve({} as ListingTabCounts),
+      : Promise.resolve({ available: {}, total: {} } as ListingTabCountResult),
     // SB-UNI-D — bundles are categoryType:"bundle" rows on the categories
     // collection, tagged to a brand via the real brandSlug field (added
     // 2026-08-21 — previously a fragile seo.keywords string-match heuristic).
@@ -142,16 +143,24 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   // Keyed by tabSlug. `bundles` is overridden with the brand-scoped figure —
   // `listingTabCounts` cannot narrow bundles by brand (a bundle's brand lives on
   // `brandSlug`, which this page already filters on locally).
+  // Badge = available scope; hiding + the header pill = total. See the same
+  // split in `CategoryDetailPageView` and `ListingTabCountResult`.
   const counts: ListingTabCounts = {
-    ...tabCounts,
-    products: tabCounts.products ?? brand?.metrics?.productCount ?? 0,
-    auctions: tabCounts.auctions ?? brand?.metrics?.auctionCount ?? 0,
+    ...tabCounts.available,
+    products: tabCounts.available.products ?? brand?.metrics?.productCount ?? 0,
+    auctions: tabCounts.available.auctions ?? brand?.metrics?.auctionCount ?? 0,
+    bundles: brandBundles.length,
+  };
+  const totals: ListingTabCounts = {
+    ...tabCounts.total,
+    products: tabCounts.total.products ?? brand?.metrics?.productCount ?? 0,
+    auctions: tabCounts.total.auctions ?? brand?.metrics?.auctionCount ?? 0,
     bundles: brandBundles.length,
   };
 
   // Header total — `?? 0` is right here (a pill just doesn't render), unlike the
   // tab bar where an unknown count must keep its tab visible.
-  const totalItems = Object.values(counts).reduce<number>(
+  const totalItems = Object.values(totals).reduce<number>(
     (sum, n) => sum + (n ?? 0),
     0,
   );
@@ -386,6 +395,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               initialProductsData={productsResult ?? undefined}
               initialBundles={brandBundles as any}
               counts={counts}
+              totals={totals}
               enabledListingTypes={enabledListingTypes(settings)}
               enabledCategoryTypes={enabledCategoryTypes(settings)}
             />
