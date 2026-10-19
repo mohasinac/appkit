@@ -10,20 +10,29 @@
  * this shape is browsed, and what the category detail page already supports
  * (it fetches every descendant and renders them tier-grouped).
  *
- * ## 🛑 Parts cannot be matched on `categoryType`
+ * ## 🛑 There is no Parts tab, and that is deliberate
  *
- * Brands, franchises and bundles each carry a discriminator. Parts deliberately
- * DO NOT — `gen-category-parts.mjs` omits `categoryType` because 92 files read
- * it and a new value opts a row out of every path that works. So a part is
- * identified by its ANCESTRY: a leaf whose chain passes through one of the four
- * `*-parts` nodes. That is a fact about where it lives, not a flag that can
- * drift from it.
+ * It was removed 2026-10-20. Parts have a better home than a flat tab over
+ * 752 leaves: `/parts/[classification]/[code]` is a purpose-built part
+ * catalogue with composition data, and the `spares` listing type sells loose
+ * parts. A fifth tab listing every part leaf duplicated the worse half of
+ * both.
+ *
+ * The part leaves themselves are untouched and still reachable by drilling
+ * down from their `*-parts` node, which is also why no `categoryType` was
+ * involved: a part is identified by ANCESTRY, never by a discriminator
+ * (`gen-category-parts.mjs` omits `categoryType` because 92 files read it and
+ * a new value opts a row out of every path that works).
+ *
+ * 🛑 Do not confuse this with the product-detail **Parts composition tab**
+ * ("What it is made of"), gated by `LISTING_TYPE_HAS_COMPOSITION`. That is a
+ * different feature on a different surface and is unaffected.
  *
  * ## Why the tabs partition ONE payload
  *
- * The listing already fetches `?flat=true` once. Deriving all five tabs from
+ * The listing already fetches `?flat=true` once. Deriving all four tabs from
  * that single cached response costs no extra request — a per-tab query would
- * turn one fetch into five for the same data.
+ * turn one fetch into four for the same data.
  *
  * @tag domain:categories
  * @tag layer:constants
@@ -31,15 +40,7 @@
  * @tag sideEffects:none
  */
 
-/** The tier-2 nodes every part leaf hangs beneath. */
-export const PART_PARENT_IDS: readonly string[] = [
-  "category-original-parts",
-  "category-metal-parts",
-  "category-burst-parts",
-  "category-x-parts",
-];
-
-export type CategoryTabKey = "categories" | "brands" | "franchises" | "parts" | "bundles";
+export type CategoryTabKey = "categories" | "brands" | "franchises" | "bundles";
 
 export interface CategoryTabDef {
   key: CategoryTabKey;
@@ -49,13 +50,12 @@ export interface CategoryTabDef {
 /**
  * 🛑 No "All" tab. It was the default and it was the problem — it is what
  * rendered 1,185 undifferentiated rows. Every tab here answers a question
- * ("which parts do you have?"); "all" answers none of them.
+ * ("which brands do you carry?"); "all" answers none of them.
  */
 export const CATEGORY_TABS: readonly CategoryTabDef[] = [
   { key: "categories", label: "Categories" },
   { key: "brands", label: "Brands" },
   { key: "franchises", label: "Franchises" },
-  { key: "parts", label: "Parts" },
   { key: "bundles", label: "Bundles" },
 ];
 
@@ -65,26 +65,9 @@ export const DEFAULT_CATEGORY_TAB: CategoryTabKey = "categories";
 interface TabbableCategory {
   categoryType?: string | null;
   tier?: number | null;
-  parentIds?: readonly string[] | null;
-  isLeaf?: boolean | null;
 }
 
 const typeOf = (c: TabbableCategory): string => String(c.categoryType ?? "");
-
-/**
- * A LEAF whose ancestry passes through a `*-parts` node.
- *
- * 🛑 `isLeaf` is required, not incidental. Without it the tab also matches the
- * 20 classification NODES — "Attack Rings", "Weight Disks" — because their own
- * `parentIds` include a `*-parts` node too, giving 772 entries that mix groups
- * with the parts inside them. A part is a leaf by itself; the classification is
- * a branch you reach by drilling down.
- */
-export function isPartCategory(c: TabbableCategory): boolean {
-  if (typeOf(c)) return false; // brand / bundle / franchise / sublisting
-  if (c.isLeaf !== true) return false;
-  return (c.parentIds ?? []).some((p) => PART_PARENT_IDS.includes(String(p)));
-}
 
 /**
  * Does this row belong on the given tab?
@@ -102,13 +85,11 @@ export function matchesCategoryTab(c: TabbableCategory, tab: CategoryTabKey): bo
       return type === "franchise";
     case "bundles":
       return type === "bundle";
-    case "parts":
-      return isPartCategory(c);
     case "categories":
       /*
-       * A plain, top-level category. Parts are excluded by the type check
-       * being empty AND tier 0 — no part leaf is tier 0 — but a reader should
-       * not have to derive that, so the root test carries the meaning.
+       * A plain, top-level category. Part and model leaves are excluded by the
+       * tier test — no leaf is tier 0 — but a reader should not have to derive
+       * that, so the root test carries the meaning.
        */
       return type === "" && Number(c.tier ?? -1) === 0;
     default:

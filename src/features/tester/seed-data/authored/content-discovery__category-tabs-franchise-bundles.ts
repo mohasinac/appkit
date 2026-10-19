@@ -1,7 +1,7 @@
 /*
  * WHY: Authored six-part procedures for the categories-index tabs, the
  *      franchise unit and the bundle collage (2026-10-14).
- * WHAT: 8 cases, keyed by full checklist id.
+ * WHAT: 9 cases, keyed by full checklist id.
  *
  * 🛑 EVERY CASE IS BEFORE → AFTER, because every defect this work produced
  * rendered a page that looked fine:
@@ -9,16 +9,18 @@
  *   1. The index rendered all 1,185 rows flat — six roots buried under 752
  *      part leaves. A case reading "the categories page loads" passes against
  *      that.
- *   2. The Parts tab first returned 772, catching the 20 classification NODES
- *      as well as the leaves, because their own `parentIds` also pass through
- *      a `*-parts` node. A list mixing "Attack Rings" with attack rings is not
- *      visibly wrong.
- *   3. Seven franchises have no stock. Active, each is a card opening an empty
+ *   2. Seven franchises have no stock. Active, each is a card opening an empty
  *      shop; absent, seventeen `CharacterHotspot` links stay 404. Both look
  *      correct from any single page — which is why two cases here check the
  *      index and the detail page SEPARATELY.
- *   4. Every bundle also carries a placeholder cover, so a collage tested
+ *   3. Every bundle also carries a placeholder cover, so a collage tested
  *      after the cover never renders — and one grey tile is not "broken".
+ *
+ * 🛑 A fifth PARTS tab was removed 2026-10-20 and its case deleted with it.
+ * Parts live at `/parts/[classification]/[code]` and in the spares listing
+ * type; a flat tab over 752 leaves was the worse half of both. The
+ * product-detail Parts COMPOSITION tab is unrelated and still covered, on the
+ * `parts-database` page.
  *
  * So each case counts an exact number or compares two surfaces. Several carry
  * a nonsense control, because a filter that returns everything looks identical
@@ -53,37 +55,22 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is changed; this case only reads.",
   },
 
-  "checklist-content-discovery-category-tabs-franchise-bundles-five-tabs-no-all": {
+  "checklist-content-discovery-category-tabs-franchise-bundles-four-tabs-no-all-no-parts": {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
       "Open /categories.",
       "Read the tab bar.",
-      "Confirm there are exactly five tabs: Categories, Brands, Franchises, Parts, Bundles.",
+      "Confirm there are exactly four tabs: Categories, Brands, Franchises, Bundles.",
       "Answer no if a tab labelled 'All' is present.",
+      "Answer no if a tab labelled 'Parts' is present.",
+      "Open a product detail page for a named-model Beyblade — for example /categories/category-ace-dragon-sting-charge-zan reached through Spinning Tops, or any complete-top listing — and confirm its own 'Parts' / 'What it is made of' composition section is STILL there. That is a different tab on a different surface and must not have been removed.",
     ],
     expectedBehaviour:
-      "BEFORE: the tabs were All / Categories / Brands, and 'All' was the DEFAULT — it is what rendered the 1,185 rows. AFTER: five tabs, no 'All'. Every tab answers a question ('which parts do you have?'); 'all' answered none of them, which is why it was removed rather than reordered.",
-    expectedUiState: "Five tabs, named exactly as above, with no 'All'.",
-    expectedData: { tabCount: 5, hasAllTab: false },
-    endResult: "Nothing is changed; this case only reads.",
-  },
-
-  "checklist-content-discovery-category-tabs-franchise-bundles-parts-tab-is-leaves-only": {
-    roles: ["guest"],
-    startPage: "/categories",
-    steps: [
-      "Open /categories and click the Parts tab.",
-      "Read the total the pager reports.",
-      "Confirm it reads 752 and not 772.",
-      "Scan the first page and confirm every card is an individual PART — '1B', 'Ten Heavy', 'Neo Right SG'.",
-      "Answer no if a classification GROUP appears as a card: 'Attack Rings', 'Weight Disks', 'Performance Tips', 'Bit Chips'.",
-    ],
-    expectedBehaviour:
-      "BEFORE: the tab returned 772, because the predicate matched any row whose ancestry passes a `*-parts` node — which is true of the 20 classification NODES as well as the leaves beneath them. The list mixed groups with their own contents and was not visibly wrong. AFTER: leaves only, 752. A part is a leaf by itself; a classification is a branch you reach by drilling down.",
+      "BEFORE the first fix: the tabs were All / Categories / Brands, and 'All' was the DEFAULT — it is what rendered the 1,185 rows. BEFORE this one: a fifth 'Parts' tab listed all 752 part leaves flat, duplicating /parts and the spares listing type with a worse version of both. AFTER: four tabs, no 'All' and no 'Parts'. The part leaves still exist and are still reached by drilling into a `*-parts` node; only the flat shortcut tab is gone. The product-level composition tab is untouched — removing that would have deleted the part database's own reason to exist.",
     expectedUiState:
-      "752 parts reported. Every card is a single part; no classification group appears.",
-    expectedData: { partsTotal: 752, classificationNodesShown: 0 },
+      "Four tabs, named exactly as above. No 'All', no 'Parts'. A model listing still shows its composition section.",
+    expectedData: { tabCount: 4, hasAllTab: false, hasPartsTab: false },
     endResult: "Nothing is changed; this case only reads.",
   },
 
@@ -91,18 +78,18 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/categories",
     steps: [
-      "Open /categories and note the total each of the five tabs reports: Categories, Brands, Franchises, Parts, Bundles.",
-      "Expect 6, 28, 8, 752, 5.",
+      "Open /categories and note the total each of the four tabs reports: Categories, Brands, Franchises, Bundles.",
+      "Expect 6, 28, 8, 5.",
       "Pick one brand by name on the Brands tab — for example Takara-Tomy.",
-      "Open each of the other four tabs and search for that same name.",
+      "Open each of the other three tabs and search for that same name.",
       "Answer no if it appears on any tab other than Brands.",
       "Repeat once with a bundle name taken from the Bundles tab.",
     ],
     expectedBehaviour:
       "Brands, franchises and bundles are all tier-0 rows, so a predicate that tested the tier before the discriminator would list every one of them under Categories as well. The type check has to come first. A row on two tabs double-counts the catalogue and makes the totals unreadable.",
     expectedUiState:
-      "Tab totals read 6 / 28 / 8 / 752 / 5. The sampled brand and bundle each appear on exactly one tab.",
-    expectedData: { categories: 6, brands: 28, franchises: 8, parts: 752, bundles: 5 },
+      "Tab totals read 6 / 28 / 8 / 5. The sampled brand and bundle each appear on exactly one tab.",
+    expectedData: { categories: 6, brands: 28, franchises: 8, bundles: 5 },
     endResult: "Nothing is changed; this case only reads.",
   },
 
@@ -180,16 +167,16 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Resize the viewport to a phone width, around 390px.",
       "Open /categories.",
-      "Look at the tab row that used to read Categories / Brands / Franchises / Parts / Bundles.",
-      "BEFORE a fix landed 2026-10-19: this was five `<Button variant=\"ghost\">`s in a plain row with a hand-written underline — no `role=\"tablist\"`, no overflow handling, and on a narrow viewport the later tabs ran past the right edge with no scrollbar and no visible way to reach them.",
+      "Look at the tab row reading Categories / Brands / Franchises / Bundles.",
+      "BEFORE a fix landed 2026-10-19: this was a plain row of `<Button variant=\"ghost\">`s with a hand-written underline — no `role=\"tablist\"`, no overflow handling, and on a narrow viewport the later tabs ran past the right edge with no scrollbar and no visible way to reach them.",
       "AFTER: the row is `<OverflowRow>`. Confirm it has collapsed into a single trigger button showing the active tab's name plus a chevron.",
-      "Click the trigger. Confirm a searchable dropdown opens listing all five tabs.",
+      "Click the trigger. Confirm a searchable dropdown opens listing all four tabs.",
       "Pick a different tab from the dropdown and confirm the page re-filters to it.",
     ],
     expectedBehaviour:
-      "A row of controls that does not fit its container must become a trigger that opens a searchable list, not a row the visitor has to discover can be scrolled. `<OverflowRow>` is the one primitive this project built for exactly this shape (see CLAUDE.md § Overflowing Pill & Tab Rows) — the old row predates it and was never migrated.",
+      "A row of controls that does not fit its container must become a trigger that opens a searchable list, not a row the visitor has to discover can be scrolled. `<OverflowRow>` is the one primitive this project built for exactly this shape (see CLAUDE.md § Overflowing Pill & Tab Rows) — the old row predates it and was never migrated. 🛑 Four tabs can still overflow 390px: the threshold is MEASURED width, never a count (that is why `TabsList`'s old `items.length > 5` rule was deleted), so dropping the fifth tab does not retire this case.",
     expectedUiState:
-      "At 390px: one trigger button, not five separate tab buttons. Opening it shows all five tabs in a dropdown, each clickable, with the active one marked.",
+      "At 390px: one trigger button, not four separate tab buttons. Opening it shows all four tabs in a dropdown, each clickable, with the active one marked.",
     expectedData: { tabsVisibleAsRowAt390px: false, collapsedTriggerPresent: true },
     endResult: "Nothing is changed; this case only reads.",
   },

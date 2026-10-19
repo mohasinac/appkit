@@ -3566,31 +3566,32 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
        *
        *   1. The index rendered all 1,185 rows flat. Nothing errored; it just
        *      buried the six roots under 752 part leaves.
-       *   2. The Parts tab first matched 772 rows — it also caught the 20
-       *      classification NODES, whose own parentIds pass through a
-       *      `*-parts` node. A tab mixing "Attack Rings" with the attack rings
-       *      inside it looks entirely reasonable.
-       *   3. Seven franchises have NO stock. Seeded active they would each be
+       *   2. Seven franchises have NO stock. Seeded active they would each be
        *      a card opening an empty shop; omitted entirely, seventeen
        *      CharacterHotspot links stay 404. Both failure modes look fine
        *      from one page.
-       *   4. Every bundle carries a placeholder cover image, so a collage
+       *   3. Every bundle carries a placeholder cover image, so a collage
        *      checked AFTER the cover would never render — and a card showing
        *      one grey tile is not visibly broken.
+       *
+       * 🛑 There was a fifth tab, Parts, removed 2026-10-20 — parts belong to
+       * `/parts` and the spares listing type, not to a flat tab over 752
+       * leaves. Its own case went with it. The product-detail Parts
+       * COMPOSITION tab is a different surface and still has cases, on the
+       * `parts-database` page above.
        */
       pageKey: "category-tabs-franchise-bundles",
       pageLabel: "Categories index tabs, the franchise unit and the bundle collage",
       href: "/categories",
       cases: [
         { key: "index-shows-roots-only", label: "The Categories tab lists the six roots and NO deeper category" },
-        { key: "five-tabs-no-all", label: "There are exactly five tabs and none of them is 'All'" },
-        { key: "parts-tab-is-leaves-only", label: "The Parts tab lists part leaves and NOT the 20 classification nodes" },
+        { key: "four-tabs-no-all-no-parts", label: "There are exactly four tabs — no 'All', and no 'Parts'" },
         { key: "tabs-do-not-overlap", label: "No single row appears on two tabs" },
         { key: "franchise-index-hides-unstocked", label: "The franchise index shows only stocked franchises, not all eight" },
         { key: "unstocked-franchise-page-resolves", label: "An unstocked franchise page loads and says so, rather than 404ing or showing an empty grid" },
         { key: "franchise-detail-lists-its-products", label: "The Beyblade franchise page lists its listings, with a nonsense slug as the control" },
         { key: "bundle-card-shows-a-collage", label: "A bundle card shows a collage of its members, not its placeholder cover" },
-        { key: "tabs-collapse-on-narrow-viewport", label: "On a phone-width viewport the five tabs collapse into a searchable dropdown, not a row running off-screen" },
+        { key: "tabs-collapse-on-narrow-viewport", label: "On a phone-width viewport the four tabs collapse into a searchable dropdown, not a row running off-screen" },
         { key: "tabs-hover-changes-ink", label: "On desktop, hovering an inactive tab visibly changes its text colour" },
       ],
     },
